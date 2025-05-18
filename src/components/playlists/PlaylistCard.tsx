@@ -17,6 +17,7 @@ import {
   PlayCircleOutline as PlayIcon,
 } from '@mui/icons-material';
 import { Playlist } from '../../types/playlist.types';
+import { useNavigate } from 'react-router-dom';
 
 interface PlaylistCardProps {
   playlist: Playlist;
@@ -27,23 +28,37 @@ interface PlaylistCardProps {
 
 export const PlaylistCard = ({ playlist, onEdit, onDelete, onToggleActive }: PlaylistCardProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (event?: React.MouseEvent<HTMLElement>) => {
+    event?.stopPropagation();
     setAnchorEl(null);
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     onEdit(playlist);
     handleMenuClose();
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     onDelete(playlist.id);
     handleMenuClose();
+  };
+
+  const handleToggleActive = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+    onToggleActive(playlist.id, event.target.checked);
+  };
+
+  const handleCardClick = () => {
+    navigate(`/playlists/${playlist.id}`);
   };
 
   return (
@@ -59,7 +74,7 @@ export const PlaylistCard = ({ playlist, onEdit, onDelete, onToggleActive }: Pla
       <CardActions sx={{ justifyContent: 'space-between', p: 2 }}>
         <Switch
           checked={playlist.is_active}
-          onChange={(event) => onToggleActive(playlist.id, event.target.checked)}
+          onChange={handleToggleActive}
           color="primary"
         />
         <IconButton onClick={handleMenuClick}>

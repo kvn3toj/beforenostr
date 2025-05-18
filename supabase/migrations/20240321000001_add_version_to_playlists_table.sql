@@ -1,0 +1,1 @@
+alter table playlists add column version integer not null default 1; 

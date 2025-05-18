@@ -13,6 +13,7 @@ export const useCreateMundoMutation = () => {
       toast.success('Mundo creado exitosamente');
     },
     onError: (error: Error) => {
+      console.error('Error hook creando mundo:', error);
       toast.error(`Error al crear el mundo: ${error.message}`);
     },
   });

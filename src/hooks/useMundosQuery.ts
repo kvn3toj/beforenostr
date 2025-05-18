@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchMundos } from '../services/mundo.service';
+import { fetchMundos, FetchMundosParams } from '../services/mundo.service';
 import { Mundo } from '../types/mundo.types';
 
-export const useMundosQuery = () => {
-  return useQuery<Mundo[]>({
-    queryKey: ['mundos'],
-    queryFn: fetchMundos,
+export const useMundosQuery = (params: FetchMundosParams) => {
+  return useQuery<{ data: Mundo[]; count: number }>({
+    queryKey: ['mundos', params],
+    queryFn: () => fetchMundos(params),
   });
 }; 

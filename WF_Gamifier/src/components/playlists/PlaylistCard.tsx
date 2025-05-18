@@ -8,9 +8,11 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Box,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Playlist } from '../../types/playlist';
+import { useNavigate } from 'react-router-dom';
 
 interface PlaylistCardProps {
   playlist: Playlist;
@@ -23,23 +25,47 @@ export const PlaylistCard: React.FC<PlaylistCardProps> = ({
   onToggleActive,
   onDelete,
 }) => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (event?: React.MouseEvent<HTMLElement>) => {
+    event?.stopPropagation();
     setAnchorEl(null);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     handleMenuClose();
     onDelete(playlist.id);
   };
 
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+    onToggleActive(playlist.id, event.target.checked);
+  };
+
+  const handleCardClick = () => {
+    navigate(`/playlists/${playlist.id}`);
+  };
+
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Card 
+      sx={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column',
+        cursor: 'pointer',
+        '&:hover': {
+          backgroundColor: 'action.hover',
+        },
+      }}
+      onClick={handleCardClick}
+    >
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography variant="h6" component="h2" gutterBottom>
           {playlist.name}
@@ -51,7 +77,8 @@ export const PlaylistCard: React.FC<PlaylistCardProps> = ({
       <CardActions sx={{ justifyContent: 'space-between', p: 2 }}>
         <Switch
           checked={playlist.is_active}
-          onChange={(e) => onToggleActive(playlist.id, e.target.checked)}
+          onChange={handleSwitchChange}
+          onClick={(e) => e.stopPropagation()}
           inputProps={{ 'aria-label': 'Activar/Desactivar playlist' }}
         />
         <IconButton
@@ -64,6 +91,7 @@ export const PlaylistCard: React.FC<PlaylistCardProps> = ({
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
+          onClick={(e) => e.stopPropagation()}
         >
           <MenuItem onClick={handleDelete}>Eliminar</MenuItem>
         </Menu>
