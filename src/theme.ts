@@ -77,9 +77,10 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     },
     MuiCard: {
       styleOverrides: {
-        root: {
+        root: ({ theme, ownerState }) => ({
           borderRadius: 12,
-        },
+          backgroundColor: ownerState && ownerState.meritLevel === 'high' ? theme.palette.warning.light : 'inherit',
+        }),
       },
     },
   },

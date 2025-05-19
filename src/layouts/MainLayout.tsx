@@ -30,8 +30,9 @@ import {
   ExpandMore,
   Brightness4 as DarkModeIcon,
   Brightness7 as LightModeIcon,
+  Star as StarIcon,
+  SmartToy as SmartToyIcon,
 } from '@mui/icons-material';
-import { useAuth } from '../hooks/useAuth';
 import { useThemeContext } from '../contexts/ThemeContext';
 
 const drawerWidth = 240;
@@ -44,7 +45,6 @@ export const MainLayout = () => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { logout } = useAuth();
   const { mode, toggleTheme } = useThemeContext();
 
   const handleDrawerToggle = () => {
@@ -194,6 +194,50 @@ export const MainLayout = () => {
             </ListItem>
           </List>
         </Collapse>
+        <ListItem disablePadding>
+          <ListItemButton 
+            onClick={() => navigate('/ai-test')}
+            selected={location.pathname === '/ai-test'}
+            sx={{
+              '&.Mui-selected': {
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                },
+              },
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: 'inherit' }}>
+              <StarIcon />
+            </ListItemIcon>
+            <ListItemText primary="Calling" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton 
+            onClick={() => navigate('/nostr-demo')}
+            selected={location.pathname === '/nostr-demo'}
+            sx={{
+              '&.Mui-selected': {
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                },
+              },
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: 'inherit' }}>
+              <SmartToyIcon />
+            </ListItemIcon>
+            <ListItemText primary="Nostr" />
+          </ListItemButton>
+        </ListItem>
         <ListItem disablePadding>
           <ListItemButton 
             onClick={() => navigate('/settings')}
