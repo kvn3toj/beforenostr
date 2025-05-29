@@ -9,6 +9,7 @@ import { Filter } from 'nostr-tools';
 
 export const NostrProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [receivedEvents, setReceivedEvents] = useState<Event[]>([]);
   const [profiles, setProfiles] = useState<Map<string, NostrProfile>>(new Map());
@@ -122,53 +123,69 @@ export const NostrProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   }, [setReceivedEvents, setProfiles, setMundos, setPlaylists, setExperiencias, parseProfileContent, getMundoDTag, getPlaylistDTag, getExperienciaDTag, parseMundoContent, parsePlaylistContent, parseExperienciaContent, parseContent, getEventTag]);
 
-  useEffect(() => {
-    console.log('Initializing Nostr client...');
-    const privateKey = getPrivateKey();
+  // Función para conectar manualmente
+  const connectToNostr = useCallback(async () => {
+    if (isConnecting || isConnected) return;
+    
+    console.log('Connecting to Nostr...');
+    setIsConnecting(true);
+    
+    try {
+      const privateKey = getPrivateKey();
 
-    if (privateKey) {
-      const publicKey = getPublicKey();
-      console.log('Found private key, connecting with public key:', publicKey);
-      const newClient = new CoomunityNostrClient(privateKey, relayUrls);
-      clientRef.current = newClient;
-      setIsConnected(true);
-      setPublicKey(publicKey);
+      if (privateKey) {
+        const publicKey = getPublicKey();
+        console.log('Found private key, connecting with public key:', publicKey);
+        const newClient = new CoomunityNostrClient(privateKey, relayUrls);
+        clientRef.current = newClient;
+        setPublicKey(publicKey);
 
-      // Define filters for the main subscription
-      const mainFilters: Filter[] = [
-        { // Filter for events authored by the current user
-          authors: [publicKey],
-          kinds: [1, 11000, 11001, 31002, 31003, 31004], // Include desired kinds, exclude kind 0
-        },
-        { // Filter for events tagging the user (e.g., replies, mentions, or specific tags like #p)
-          '#p': [publicKey],
-          kinds: [1, 11000, 11001, 31002, 31003, 31004], // Include desired kinds, exclude kind 0
-        }
-      ];
+        // Define filters for the main subscription
+        const mainFilters: Filter[] = [
+          { // Filter for events authored by the current user
+            authors: [publicKey],
+            kinds: [1, 11000, 11001, 31002, 31003, 31004], // Include desired kinds, exclude kind 0
+          },
+          { // Filter for events tagging the user (e.g., replies, mentions, or specific tags like #p)
+            '#p': [publicKey],
+            kinds: [1, 11000, 11001, 31002, 31003, 31004], // Include desired kinds, exclude kind 0
+          }
+        ];
 
-      newClient.connect(mainFilters, handleEventReceived);
+        await newClient.connect(mainFilters, handleEventReceived);
+        setIsConnected(true);
 
-      // Initial load from IndexedDB
-      loadEvents(publicKey);
+        // Initial load from IndexedDB
+        loadEvents(publicKey);
 
-    } else {
-      console.log('No private key found, client not initialized.');
-      // Maybe handle a public-only mode or prompt for key generation
+      } else {
+        console.log('No private key found, client not initialized.');
+        // Maybe handle a public-only mode or prompt for key generation
+      }
+    } catch (error) {
+      console.error('Error connecting to Nostr:', error);
+    } finally {
+      setIsConnecting(false);
     }
+  }, [isConnecting, isConnected, relayUrls, handleEventReceived, loadEvents]);
 
+  // Auto-disconnect on unmount
+  useEffect(() => {
     return () => {
       if (clientRef.current) {
         console.log('Disconnecting Nostr client...');
         clientRef.current.disconnect();
       }
     };
-  }, [relayUrls, handleEventReceived, loadEvents]);
+  }, []);
 
   return (
     <NostrContext.Provider
       value={{
         client: clientRef.current,
         isConnected,
+        isConnecting,
+        connectToNostr,
         publicKey,
         receivedEvents,
         mundos: Array.from(mundos.values()),

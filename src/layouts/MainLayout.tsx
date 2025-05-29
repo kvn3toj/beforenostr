@@ -2,347 +2,406 @@ import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
+  Drawer,
+  CssBaseline,
   AppBar,
   Toolbar,
   IconButton,
   Typography,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  CssBaseline,
+  Avatar,
+  Menu,
+  MenuItem,
+  Divider,
   useTheme,
   useMediaQuery,
-  Collapse,
-  Tooltip,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
+  Close as CloseIcon,
+  AccountCircle as AccountCircleIcon,
+  Logout as LogoutIcon,
+  Person as PersonIcon,
+} from '@mui/icons-material';
+
+// Importar los nuevos componentes
+import { NavigationMenu, NavigationItem } from '../components/common/Navigation/NavigationMenu';
+
+// Iconos de Material UI - Importaciones por defecto
+import {
   Home as HomeIcon,
   AccountTree as AccountTreeIcon,
-  Settings as SettingsIcon,
   Category as CategoryIcon,
   PlayCircleOutline as PlayCircleOutlineIcon,
   ListAlt as ListAltIcon,
-  ExpandLess,
-  ExpandMore,
-  Brightness4 as DarkModeIcon,
-  Brightness7 as LightModeIcon,
+  Settings as SettingsIcon,
   Star as StarIcon,
   SmartToy as SmartToyIcon,
-} from '@mui/icons-material';
-import { useThemeContext } from '../contexts/ThemeContext';
+  People as PeopleIcon,
+  Security as SecurityIcon,
+  Analytics as AnalyticsIcon,
+  History as HistoryIcon,
+} from '../components/common/Icons';
 
-const drawerWidth = 240;
+import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../store/authStore';
+
+const drawerWidth = 280;
+
+// Componente del Logo minimalista
+const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({ collapsed = false }) => {
+  const navigate = useNavigate();
+  
+  return (
+    <Box
+      component="button"
+      onClick={() => navigate('/')}
+      sx={{
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        padding: collapsed ? '8px' : '16px 24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: collapsed ? 'center' : 'flex-start',
+        width: '100%',
+        '&:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        },
+        transition: 'all 0.3s ease',
+        borderRadius: '8px',
+        margin: collapsed ? '8px' : '16px',
+        marginBottom: collapsed ? '16px' : '24px',
+      }}
+      aria-label="Ir al inicio"
+    >
+      {collapsed ? (
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 'bold',
+            background: 'linear-gradient(45deg, #CDA83A, #FFD700)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
+          C
+        </Typography>
+      ) : (
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 'bold',
+            color: '#FFFFFF',
+            letterSpacing: '0.5px',
+          }}
+        >
+          CoomÜnity
+        </Typography>
+      )}
+    </Box>
+  );
+};
 
 export const MainLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openServices, setOpenServices] = useState(false);
-  const [openUPlay, setOpenUPlay] = useState(false);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
+  const { user, logout } = useAuthStore();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { mode, toggleTheme } = useThemeContext();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Verificar si el usuario es administrador
+  const isAdmin = user?.roles?.includes('admin') || false;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuAnchor(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+    handleUserMenuClose();
+  };
+
+  const handleProfile = () => {
+    navigate('/profile');
+    handleUserMenuClose();
+  };
+
+  // Configurar elementos de navegación
+  const navigationItems: NavigationItem[] = [
+    {
+      id: 'home',
+      label: t('nav_home'),
+      icon: <HomeIcon />,
+      path: '/',
+    },
+    {
+      id: 'mundos',
+      label: t('nav_mundos'),
+      icon: <AccountTreeIcon />,
+      path: '/mundos',
+    },
+    {
+      id: 'services',
+      label: t('nav_services'),
+      icon: <CategoryIcon />,
+      category: 'Servicios',
+      children: [
+        {
+          id: 'uplay',
+          label: t('nav_uplay'),
+          icon: <PlayCircleOutlineIcon />,
+          children: [
+            {
+              id: 'playlists',
+              label: t('nav_gamified_playlists'),
+              icon: <ListAltIcon />,
+              path: '/playlists',
+            },
+            {
+              id: 'playlist-direct',
+              label: 'Playlists (Directo)',
+              icon: <PlayCircleOutlineIcon />,
+              path: '/playlist-direct',
+            },
+          ],
+        },
+        {
+          id: 'umarket',
+          label: t('nav_umarket'),
+          icon: <PlayCircleOutlineIcon />,
+          disabled: true,
+        },
+        {
+          id: 'usocial',
+          label: t('nav_usocial'),
+          icon: <PlayCircleOutlineIcon />,
+          disabled: true,
+        },
+      ],
+    },
+    // Sección de Administración - Solo para admins
+    ...(isAdmin ? [{
+      id: 'administration',
+      label: t('nav_administration'),
+      icon: <SecurityIcon />,
+      category: 'Administración',
+      divider: true,
+      children: [
+        {
+          id: 'users',
+          label: t('nav_users'),
+          icon: <PeopleIcon />,
+          path: '/users',
+        },
+        {
+          id: 'roles',
+          label: t('nav_roles'),
+          icon: <SecurityIcon />,
+          path: '/roles',
+        },
+        {
+          id: 'permissions',
+          label: t('nav_permissions'),
+          icon: <SecurityIcon />,
+          path: '/permissions',
+        },
+        {
+          id: 'items',
+          label: t('nav_items'),
+          icon: <CategoryIcon />,
+          path: '/items',
+        },
+        {
+          id: 'analytics',
+          label: 'Analytics',
+          icon: <AnalyticsIcon />,
+          path: '/analytics',
+        },
+        {
+          id: 'audit-logs',
+          label: t('nav_audit_logs'),
+          icon: <HistoryIcon />,
+          path: '/audit-logs',
+        },
+        {
+          id: 'settings',
+          label: 'Configuración',
+          icon: <SettingsIcon />,
+          path: '/settings',
+        },
+      ],
+    }] : []),
+    {
+      id: 'ai-test',
+      label: t('nav_ai_test'),
+      icon: <StarIcon />,
+      path: '/ai-test',
+      divider: true,
+      category: 'Herramientas',
+    },
+    {
+      id: 'nostr-demo',
+      label: t('nav_nostr'),
+      icon: <SmartToyIcon />,
+      path: '/nostr-demo',
+    },
+  ];
+
   const drawerContent = (
-    <div>
-      <Toolbar />
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton 
-            onClick={() => navigate('/')}
-            selected={location.pathname === '/'}
-            sx={{
-              '&.Mui-selected': {
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                },
-              },
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inicio" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton 
-            onClick={() => navigate('/mundos')}
-            selected={location.pathname === '/mundos' || location.pathname.startsWith('/mundos/')}
-            sx={{
-              '&.Mui-selected': {
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                },
-              },
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>
-              <AccountTreeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Mundos" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton 
-            onClick={() => setOpenServices(!openServices)}
-            sx={{
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>
-              <CategoryIcon />
-            </ListItemIcon>
-            <ListItemText primary="Servicios" />
-            {openServices ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-        </ListItem>
-        <Collapse in={openServices} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem disablePadding>
-              <ListItemButton 
-                onClick={() => setOpenUPlay(!openUPlay)}
-                sx={{ 
-                  pl: 4,
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ color: 'inherit' }}>
-                  <PlayCircleOutlineIcon />
-                </ListItemIcon>
-                <ListItemText primary="ÜPlay" />
-                {openUPlay ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-            </ListItem>
-            <Collapse in={openUPlay} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItem disablePadding>
-                  <ListItemButton 
-                    onClick={() => navigate('/playlists')}
-                    selected={location.pathname.startsWith('/playlists')}
-                    sx={{ 
-                      pl: 6,
-                      '&.Mui-selected': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                        '&:hover': {
-                          backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                        },
-                      },
-                      '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      },
-                    }}
-                  >
-                    <ListItemIcon sx={{ color: 'inherit' }}>
-                      <PlayCircleOutlineIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Gamified Playlists" />
-                  </ListItemButton>
-                </ListItem>
-              </List>
-            </Collapse>
-            {/* Placeholder for other services */}
-            <ListItem disablePadding>
-              <ListItemButton 
-                sx={{ 
-                  pl: 4,
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ color: 'inherit' }}>
-                  <PlayCircleOutlineIcon />
-                </ListItemIcon>
-                <ListItemText primary="ÜMarket" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton 
-                sx={{ 
-                  pl: 4,
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ color: 'inherit' }}>
-                  <PlayCircleOutlineIcon />
-                </ListItemIcon>
-                <ListItemText primary="ÜSocial" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Collapse>
-        <ListItem disablePadding>
-          <ListItemButton 
-            onClick={() => navigate('/ai-test')}
-            selected={location.pathname === '/ai-test'}
-            sx={{
-              '&.Mui-selected': {
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                },
-              },
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>
-              <StarIcon />
-            </ListItemIcon>
-            <ListItemText primary="Calling" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton 
-            onClick={() => navigate('/nostr-demo')}
-            selected={location.pathname === '/nostr-demo'}
-            sx={{
-              '&.Mui-selected': {
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                },
-              },
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>
-              <SmartToyIcon />
-            </ListItemIcon>
-            <ListItemText primary="Nostr" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton 
-            onClick={() => navigate('/settings')}
-            selected={location.pathname === '/settings'}
-            sx={{
-              '&.Mui-selected': {
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                },
-              },
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Configuración" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </div>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Logo en el drawer */}
+      <MinimalLogo collapsed={false} />
+      
+      {/* Navegación */}
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
+        <NavigationMenu
+          items={navigationItems}
+          onItemClick={() => setMobileOpen(false)}
+        />
+      </Box>
+    </Box>
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <CssBaseline />
+      
+      {/* Header minimalista */}
       <AppBar
         position="fixed"
-        color="secondary"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          zIndex: theme.zIndex.drawer + 1,
+          backgroundColor: '#FFFFFF',
+          color: '#333333',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          borderBottom: '1px solid #E0E0E0',
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: 'space-between', minHeight: '64px !important' }}>
+          {/* Botón de menú hamburguesa */}
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label="toggle menu"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{
+              color: '#333333',
+              '&:hover': {
+                backgroundColor: 'rgba(0,0,0,0.04)',
+              },
+            }}
           >
-            <MenuIcon />
+            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Gamifier Admin
-          </Typography>
-          <Tooltip title={`Cambiar a modo ${mode === 'light' ? 'oscuro' : 'claro'}`}>
-            <IconButton color="inherit" onClick={toggleTheme}>
-              {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+
+          {/* Logo en el header (solo en móvil cuando el drawer está cerrado) */}
+          {isMobile && !mobileOpen && (
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 'bold',
+                color: '#333333',
+                letterSpacing: '0.5px',
+              }}
+            >
+              CoomÜnity
+            </Typography>
+          )}
+
+          {/* Espacio flexible */}
+          <Box sx={{ flexGrow: 1 }} />
+
+          {/* Usuario */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: '#666666', display: { xs: 'none', sm: 'block' } }}>
+              {user?.email || 'Usuario'}
+            </Typography>
+            <IconButton
+              onClick={handleUserMenuOpen}
+              sx={{
+                color: '#333333',
+                '&:hover': {
+                  backgroundColor: 'rgba(0,0,0,0.04)',
+                },
+              }}
+            >
+              <Avatar sx={{ width: 32, height: 32, bgcolor: '#CDA83A' }}>
+                {user?.email?.charAt(0).toUpperCase() || 'U'}
+              </Avatar>
             </IconButton>
-          </Tooltip>
+          </Box>
         </Toolbar>
       </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+
+      {/* Menú de usuario */}
+      <Menu
+        anchorEl={userMenuAnchor}
+        open={Boolean(userMenuAnchor)}
+        onClose={handleUserMenuClose}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: drawerWidth,
-              backgroundColor: 'secondary.main',
-              color: '#FFFFFF',
-            },
-          }}
-        >
-          {drawerContent}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: drawerWidth,
-              backgroundColor: 'secondary.main',
-              color: '#FFFFFF',
-            },
-          }}
-          open
-        >
-          {drawerContent}
-        </Drawer>
-      </Box>
+        <MenuItem onClick={handleProfile}>
+          <PersonIcon sx={{ mr: 1 }} />
+          Perfil
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleLogout}>
+          <LogoutIcon sx={{ mr: 1 }} />
+          Cerrar Sesión
+        </MenuItem>
+      </Menu>
+
+      {/* Navigation Drawer */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: drawerWidth,
+            backgroundColor: '#2C3E50',
+            color: '#FFFFFF',
+            border: 'none',
+            boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+
+      {/* Main Content */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: '100%',
+          minHeight: '100vh',
+          backgroundColor: '#F8F9FA',
+          transition: 'margin 0.3s ease',
         }}
       >
-        <Toolbar />
+        {/* Spacer for fixed header */}
+        <Box sx={{ height: 64 }} />
+        
+        {/* Page Content */}
         <Outlet />
       </Box>
     </Box>

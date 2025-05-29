@@ -12,7 +12,7 @@ import { DataTable, ColumnDefinition } from '../components/common/DataTable/Data
 import { useAuditLogsQuery } from '../hooks/system/useAuditLogsQuery';
 import { useHasRole } from '../hooks/useHasRole';
 import type { AuditLog } from '../types/system.types';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
 import { FetchAuditLogsParams } from '../services/system.service';
 

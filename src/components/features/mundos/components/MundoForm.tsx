@@ -2,20 +2,19 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  Box,
-  Button,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormHelperText,
-  Switch,
-  FormControlLabel,
-  Stack,
-} from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
+import FormHelperText from '@mui/material/FormHelperText';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Stack from '@mui/material/Stack';
+// Comentado temporalmente debido a incompatibilidades de versión con React 19
+// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { es } from 'date-fns/locale';
 import { CreateMundoData } from '../../../../types/mundo.types';
 
@@ -95,7 +94,8 @@ export const MundoForm: React.FC<MundoFormProps> = ({
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+    // Comentado temporalmente debido a incompatibilidades de versión con React 19
+    // <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -142,23 +142,23 @@ export const MundoForm: React.FC<MundoFormProps> = ({
               label="Activo"
             />
 
-            {/* Fechas de Publicación y Despublicación */}
+            {/* Fechas de Publicación y Despublicación - Reemplazado temporalmente con TextField */}
             <Stack direction="row" spacing={2}>
               <Controller
                 name="published_at"
                 control={control}
                 render={({ field }) => (
-                  <DateTimePicker
+                  <TextField
+                    fullWidth
                     label="Fecha de Publicación"
-                    value={field.value}
-                    onChange={field.onChange}
-                    slotProps={{
-                      textField: {
-                        fullWidth: true,
-                        error: !!errors.published_at,
-                        helperText: errors.published_at?.message,
-                        disabled: isLoading,
-                      },
+                    type="datetime-local"
+                    value={field.value ? new Date(field.value.getTime() - field.value.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
+                    onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
+                    error={!!errors.published_at}
+                    helperText={errors.published_at?.message}
+                    disabled={isLoading}
+                    InputLabelProps={{
+                      shrink: true,
                     }}
                   />
                 )}
@@ -168,17 +168,17 @@ export const MundoForm: React.FC<MundoFormProps> = ({
                 name="unpublished_at"
                 control={control}
                 render={({ field }) => (
-                  <DateTimePicker
+                  <TextField
+                    fullWidth
                     label="Fecha de Despublicación"
-                    value={field.value}
-                    onChange={field.onChange}
-                    slotProps={{
-                      textField: {
-                        fullWidth: true,
-                        error: !!errors.unpublished_at,
-                        helperText: errors.unpublished_at?.message,
-                        disabled: isLoading,
-                      },
+                    type="datetime-local"
+                    value={field.value ? new Date(field.value.getTime() - field.value.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
+                    onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
+                    error={!!errors.unpublished_at}
+                    helperText={errors.unpublished_at?.message}
+                    disabled={isLoading}
+                    InputLabelProps={{
+                      shrink: true,
                     }}
                   />
                 )}
@@ -205,6 +205,6 @@ export const MundoForm: React.FC<MundoFormProps> = ({
           </Button>
         </DialogActions>
       </form>
-    </LocalizationProvider>
+    // </LocalizationProvider>
   );
 }; 

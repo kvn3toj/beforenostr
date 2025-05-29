@@ -1,6 +1,9 @@
 import { Card, CardContent, Box, CardActionArea, Typography, Button, CardActions } from '@mui/material';
 import { PlaylistItem } from '../../types/playlistItem.types';
-import { Settings as SettingsIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useTranslation } from 'react-i18next';
+import { extractIframeSrc } from '../../utils/videoUtils';
 
 interface PlaylistItemCardProps {
   item: PlaylistItem;
@@ -14,6 +17,7 @@ export const PlaylistItemCard = ({ item, onNavigate, onDelete }: PlaylistItemCar
     const titleMatch = item.content.match(/title="([^"]*?)"/);
     return titleMatch ? titleMatch[1] : 'Video';
   };
+  const { t } = useTranslation();
 
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -26,10 +30,33 @@ export const PlaylistItemCard = ({ item, onNavigate, onDelete }: PlaylistItemCar
             width: '100%',
             aspectRatio: '16/9',
             overflow: 'hidden',
-            position: 'relative'
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#000',
           }}
-          dangerouslySetInnerHTML={{ __html: item.content }}
-        />
+        >
+          {(() => {
+            const src = extractIframeSrc(item.content);
+            if (src) {
+              return (
+                <iframe
+                  src={src}
+                  title={item.title || getIframeTitle()}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ width: '100%', height: '100%', border: 0 }}
+                />
+              );
+            }
+            return (
+              <Box sx={{ color: 'white', textAlign: 'center', width: '100%' }}>
+                {t('video_content_not_available')}
+              </Box>
+            );
+          })()}
+        </Box>
         <CardContent>
           <Typography variant="subtitle1" component="div" noWrap>
             {/* Usar título del item si existe, o extraer del iframe */}

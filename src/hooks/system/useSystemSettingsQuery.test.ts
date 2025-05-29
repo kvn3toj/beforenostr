@@ -3,6 +3,15 @@ import { vi } from 'vitest';
 import { useSystemSettingsQuery } from './useSystemSettingsQuery';
 import { fetchSystemSettings } from '../../services/system.service';
 import type { SystemSettings } from '../../types/system.types';
+import { useQuery } from '@tanstack/react-query';
+
+type MockUseQueryResult<TData = unknown, TError = unknown> = {
+  data: TData | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the system service
 vi.mock('../../services/system.service', () => ({
@@ -39,7 +48,7 @@ describe('useSystemSettingsQuery', () => {
       isLoading: true,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult);
 
     const { result } = renderHook(() => useSystemSettingsQuery());
 
@@ -59,7 +68,7 @@ describe('useSystemSettingsQuery', () => {
       isLoading: false,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<SystemSettings>);
 
     const { result } = renderHook(() => useSystemSettingsQuery());
 
@@ -85,7 +94,7 @@ describe('useSystemSettingsQuery', () => {
       isLoading: false,
       isError: true,
       error: mockError,
-    } as any);
+    } as MockUseQueryResult<undefined, Error>);
 
     const { result } = renderHook(() => useSystemSettingsQuery());
 
@@ -118,7 +127,7 @@ describe('useSystemSettingsQuery', () => {
 
   it('should handle empty settings', async () => {
     // Mock fetchSystemSettings to return null
-    vi.mocked(fetchSystemSettings).mockResolvedValue(null as any);
+    vi.mocked(fetchSystemSettings).mockResolvedValue(null);
 
     // Mock useQuery to return success state with null data
     vi.mocked(useQuery).mockReturnValue({
@@ -126,7 +135,7 @@ describe('useSystemSettingsQuery', () => {
       isLoading: false,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<SystemSettings | null>);
 
     const { result } = renderHook(() => useSystemSettingsQuery());
 

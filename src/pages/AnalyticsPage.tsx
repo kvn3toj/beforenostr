@@ -46,26 +46,6 @@ import { useLeastInteractedMundosQuery } from '../hooks/analytics/useLeastIntera
 import { TimeInterval, TimeSeriesDataPoint, ContentViewMetric, ContentInteractionMetric } from '../types/analytics.types';
 import { DataTable, ColumnDefinition } from '../components/common/DataTable/DataTable';
 
-// Función auxiliar para obtener el número de semana
-const getWeekNumber = (date: Date): number => {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-};
-
-// Extender el prototipo de Date para añadir getWeek
-declare global {
-  interface Date {
-    getWeek(): number;
-  }
-}
-
-Date.prototype.getWeek = function(): number {
-  return getWeekNumber(this);
-};
-
 // Componente para mostrar una métrica individual
 interface MetricCardProps {
   title: string;

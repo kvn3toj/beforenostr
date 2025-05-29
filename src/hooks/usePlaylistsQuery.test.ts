@@ -4,6 +4,8 @@ import { usePlaylistsQuery } from './usePlaylistsQuery';
 import { fetchPlaylists } from '../services/playlist.service';
 import type { Playlist } from '../types/playlist.types';
 import type { FetchPlaylistsParams } from '../services/playlist.service';
+import { UseQueryResult } from '@tanstack/react-query';
+import type { PaginatedResponse } from '../types/api';
 
 // Mock the playlist service
 vi.mock('../services/playlist.service', () => ({
@@ -14,6 +16,12 @@ vi.mock('../services/playlist.service', () => ({
 vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn(),
 }));
+
+// Define a type for the mocked useQuery result
+type MockUseQueryResult<TData = unknown, TError = unknown> = Pick<
+  UseQueryResult<TData, TError>,
+  'data' | 'isLoading' | 'isError' | 'error' | 'isSuccess'
+>;
 
 describe('usePlaylistsQuery', () => {
   const mockParams: FetchPlaylistsParams = {
@@ -57,7 +65,7 @@ describe('usePlaylistsQuery', () => {
     },
   ];
 
-  const mockResponse = {
+  const mockResponse: PaginatedResponse<Playlist> = {
     data: mockPlaylists,
     count: 2,
   };
@@ -74,7 +82,7 @@ describe('usePlaylistsQuery', () => {
       isError: false,
       error: null,
       isSuccess: false,
-    } as any);
+    } as MockUseQueryResult<PaginatedResponse<Playlist>>);
 
     const { result } = renderHook(() => usePlaylistsQuery(mockParams));
 
@@ -94,7 +102,7 @@ describe('usePlaylistsQuery', () => {
       isError: false,
       error: null,
       isSuccess: true,
-    } as any);
+    } as MockUseQueryResult<PaginatedResponse<Playlist>>);
 
     const { result } = renderHook(() => usePlaylistsQuery(mockParams));
 
@@ -121,7 +129,7 @@ describe('usePlaylistsQuery', () => {
       isError: true,
       error: mockError,
       isSuccess: false,
-    } as any);
+    } as MockUseQueryResult<PaginatedResponse<Playlist>, Error>);
 
     const { result } = renderHook(() => usePlaylistsQuery(mockParams));
 
@@ -157,7 +165,7 @@ describe('usePlaylistsQuery', () => {
       isError: false,
       error: null,
       isSuccess: false,
-    } as any);
+    } as MockUseQueryResult<PaginatedResponse<Playlist>>);
 
     // First render with initial params
     const { rerender } = renderHook((params) => usePlaylistsQuery(params), {

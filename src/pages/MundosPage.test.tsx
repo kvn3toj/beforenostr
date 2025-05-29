@@ -1,11 +1,19 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { MundosPage } from './MundosPage';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, UseMutationResult } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'sonner';
 import type { Mundo } from '../types/mundo.types';
+import { useMundosQuery } from '../hooks/useMundosQuery';
+import { useMutation } from '@tanstack/react-query';
+
+// Define a type for the mocked useMutation result
+type MockUseMutationResult<TData = unknown, TError = unknown, TVariables = unknown, TContext = unknown> = Pick<
+  UseMutationResult<TData, TError, TVariables, TContext>,
+  'mutate' | 'isPending' | 'error'
+>;
 
 // Mock hooks
 vi.mock('../hooks/useAuth', () => ({
@@ -34,28 +42,29 @@ vi.mock('@tanstack/react-query', async () => {
   };
 });
 
-// Mock components
+// Mock ConfirmDialog: render a real dialog
 vi.mock('../components/common/ConfirmDialog', () => ({
-  ConfirmDialog: vi.fn(({ open, onClose, onConfirm, title, message }) => (
+  ConfirmDialog: vi.fn(({ open, onClose, onConfirm, title, message }) =>
     open ? (
-      <div data-testid="confirm-dialog">
-        <div data-testid="dialog-title">{title}</div>
-        <div data-testid="dialog-message">{message}</div>
-        <button data-testid="dialog-confirm" onClick={onConfirm}>Confirm</button>
-        <button data-testid="dialog-cancel" onClick={onClose}>Cancel</button>
-      </div>
+      <dialog open role="dialog" aria-labelledby="confirm-dialog-title">
+        <h2 id="confirm-dialog-title">{title}</h2>
+        <p>{message}</p>
+        <button onClick={onClose}>Cancelar</button>
+        <button onClick={onConfirm}>Eliminar</button>
+      </dialog>
     ) : null
-  )),
+  ),
 }));
 
+// Mock MundoForm: render a real form
 vi.mock('../components/features/mundos/components/MundoForm', () => ({
   MundoForm: vi.fn(({ onSubmit, onClose, defaultValues, isLoading }) => (
-    <div data-testid="mundo-form">
-      {isLoading && <div data-testid="form-loading">Loading...</div>}
-      {defaultValues && <div data-testid="form-default-values">{JSON.stringify(defaultValues)}</div>}
-      <button data-testid="form-submit" onClick={() => onSubmit({ name: 'Test Mundo', description: 'Test Description' })}>Submit</button>
-      <button data-testid="form-cancel" onClick={onClose}>Cancel</button>
-    </div>
+    <form aria-label="Formulario de mundo" onSubmit={e => { e.preventDefault(); onSubmit({ name: 'Test Mundo', description: 'Test Description' }); }}>
+      <input name="name" defaultValue={defaultValues?.name || ''} aria-label="Nombre" />
+      <input name="description" defaultValue={defaultValues?.description || ''} aria-label="Descripción" />
+      <button type="button" onClick={onClose}>Cancelar</button>
+      <button type="submit">Guardar</button>
+    </form>
   )),
 }));
 
@@ -92,58 +101,92 @@ describe('MundosPage', () => {
       id: '1',
       name: 'Mundo 1',
       description: 'Descripción del Mundo 1',
-      is_active: true,
+      thumbnail_url: null,
+      created_by: 'user-id',
       created_at: '2024-01-01',
       updated_at: '2024-01-01',
+      is_active: true,
+      published_at: null,
+      unpublished_at: null,
+      version: 1,
     },
     {
       id: '2',
       name: 'Mundo 2',
       description: 'Descripción del Mundo 2',
-      is_active: false,
+      thumbnail_url: null,
+      created_by: 'user-id',
       created_at: '2024-01-02',
       updated_at: '2024-01-02',
+      is_active: false,
+      published_at: null,
+      unpublished_at: null,
+      version: 1,
     },
   ];
 
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Default mock implementations
+    // Default mock implementations for useMundosQuery
     vi.mocked(useMundosQuery).mockReturnValue({
       data: { data: mockMundos, count: mockMundos.length },
       isLoading: false,
       isError: false,
       error: null,
+      isPending: false,
+      isSuccess: true,
+      isIdle: false,
+      isFetching: false,
+      isRefetching: false,
+      isPlaceholderData: false,
+      isFetched: true,
+      isFetchedAfterMount: true,
+      isLoadingError: false,
+      isRefetchError: false,
+      refetch: vi.fn(),
+      remove: vi.fn(),
+      status: 'success',
+      fetchStatus: 'idle',
+      dataUpdatedAt: 0,
+      errorUpdatedAt: 0,
+      failureCount: 0,
+      failureReason: null,
+      isStale: false,
+      variables: undefined,
     });
 
+    // Default mock implementations for useMutation
     vi.mocked(useMutation).mockReturnValue({
       mutate: vi.fn(),
+      mutateAsync: vi.fn(),
       isPending: false,
+      isSuccess: false,
+      isIdle: true,
+      isError: false,
       error: null,
-    } as any);
+      data: undefined,
+      variables: undefined,
+      reset: vi.fn(),
+      status: 'idle',
+    });
   });
 
-  it('should render successfully with data', async () => {
+  it('should render successfully with data', () => {
     render(<MundosPage />, { wrapper: TestWrapper });
 
-    // Verify page title and create button
     expect(screen.getByText('Mundos')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /crear nuevo mundo/i })).toBeInTheDocument();
-
-    // Verify table data
     expect(screen.getByText('Mundo 1')).toBeInTheDocument();
     expect(screen.getByText('Mundo 2')).toBeInTheDocument();
     expect(screen.getByText('Descripción del Mundo 1')).toBeInTheDocument();
     expect(screen.getByText('Descripción del Mundo 2')).toBeInTheDocument();
     expect(screen.getByText('Activo')).toBeInTheDocument();
     expect(screen.getByText('Inactivo')).toBeInTheDocument();
-
-    // Verify pagination controls
     expect(screen.getByText('1-2 de 2')).toBeInTheDocument();
   });
 
-  it('should show loading state', async () => {
+  it('should show loading state', () => {
     vi.mocked(useMundosQuery).mockReturnValue({
       data: undefined,
       isLoading: true,
@@ -156,7 +199,7 @@ describe('MundosPage', () => {
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
-  it('should show error state', async () => {
+  it('should show error state', () => {
     vi.mocked(useMundosQuery).mockReturnValue({
       data: undefined,
       isLoading: false,
@@ -169,7 +212,7 @@ describe('MundosPage', () => {
     expect(screen.getByText('Error al cargar los datos')).toBeInTheDocument();
   });
 
-  it('should show empty state', async () => {
+  it('should show empty state', () => {
     vi.mocked(useMundosQuery).mockReturnValue({
       data: { data: [], count: 0 },
       isLoading: false,
@@ -240,7 +283,7 @@ describe('MundosPage', () => {
       const createButton = screen.getByRole('button', { name: /crear nuevo mundo/i });
       await userEvent.click(createButton);
       
-      expect(screen.getByTestId('mundo-form')).toBeInTheDocument();
+      expect(screen.getByRole('form', { name: /formulario de mundo/i })).toBeInTheDocument();
     });
 
     it('should close create dialog when clicking cancel', async () => {
@@ -249,28 +292,27 @@ describe('MundosPage', () => {
       const createButton = screen.getByRole('button', { name: /crear nuevo mundo/i });
       await userEvent.click(createButton);
       
-      const cancelButton = screen.getByTestId('form-cancel');
+      const cancelButton = screen.getByRole('button', { name: /cancelar/i });
       await userEvent.click(cancelButton);
       
-      expect(screen.queryByTestId('mundo-form')).not.toBeInTheDocument();
+      expect(screen.queryByRole('form', { name: /formulario de mundo/i })).not.toBeInTheDocument();
     });
 
     it('should call create mutation and handle success', async () => {
       const mockMutate = vi.fn();
-      const mockOnSuccess = vi.fn();
       
       vi.mocked(useMutation).mockReturnValue({
         mutate: mockMutate,
         isPending: false,
         error: null,
-      } as any);
+      } as MockUseMutationResult);
 
       render(<MundosPage />, { wrapper: TestWrapper });
       
       const createButton = screen.getByRole('button', { name: /crear nuevo mundo/i });
       await userEvent.click(createButton);
       
-      const submitButton = screen.getByTestId('form-submit');
+      const submitButton = screen.getByRole('button', { name: /guardar/i });
       await userEvent.click(submitButton);
       
       expect(mockMutate).toHaveBeenCalledWith({
@@ -280,7 +322,7 @@ describe('MundosPage', () => {
       
       await waitFor(() => {
         expect(toast.success).toHaveBeenCalled();
-        expect(screen.queryByTestId('mundo-form')).not.toBeInTheDocument();
+        expect(screen.queryByRole('form', { name: /formulario de mundo/i })).not.toBeInTheDocument();
       });
     });
 
@@ -292,19 +334,19 @@ describe('MundosPage', () => {
         mutate: mockMutate,
         isPending: false,
         error: mockError,
-      } as any);
+      } as MockUseMutationResult);
 
       render(<MundosPage />, { wrapper: TestWrapper });
       
       const createButton = screen.getByRole('button', { name: /crear nuevo mundo/i });
       await userEvent.click(createButton);
       
-      const submitButton = screen.getByTestId('form-submit');
+      const submitButton = screen.getByRole('button', { name: /guardar/i });
       await userEvent.click(submitButton);
       
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalled();
-        expect(screen.getByTestId('mundo-form')).toBeInTheDocument();
+        expect(screen.getByRole('form', { name: /formulario de mundo/i })).toBeInTheDocument();
       });
     });
   });
@@ -316,7 +358,7 @@ describe('MundosPage', () => {
       const editButton = screen.getAllByLabelText('Editar')[0];
       await userEvent.click(editButton);
       
-      expect(screen.getByTestId('mundo-form')).toBeInTheDocument();
+      expect(screen.getByRole('form', { name: /formulario de mundo/i })).toBeInTheDocument();
     });
 
     it('should pre-fill form with mundo data', async () => {
@@ -325,8 +367,10 @@ describe('MundosPage', () => {
       const editButton = screen.getAllByLabelText('Editar')[0];
       await userEvent.click(editButton);
       
-      const defaultValues = JSON.parse(screen.getByTestId('form-default-values').textContent || '{}');
-      expect(defaultValues).toEqual(mockMundos[0]);
+      const nameInput = screen.getByLabelText('Nombre');
+      expect(nameInput).toHaveValue(mockMundos[0].name);
+      const descInput = screen.getByLabelText('Descripción');
+      expect(descInput).toHaveValue(mockMundos[0].description);
     });
 
     it('should close edit dialog when clicking cancel', async () => {
@@ -335,10 +379,10 @@ describe('MundosPage', () => {
       const editButton = screen.getAllByLabelText('Editar')[0];
       await userEvent.click(editButton);
       
-      const cancelButton = screen.getByTestId('form-cancel');
+      const cancelButton = screen.getByRole('button', { name: /cancelar/i });
       await userEvent.click(cancelButton);
       
-      expect(screen.queryByTestId('mundo-form')).not.toBeInTheDocument();
+      expect(screen.queryByRole('form', { name: /formulario de mundo/i })).not.toBeInTheDocument();
     });
 
     it('should call update mutation and handle success', async () => {
@@ -348,14 +392,14 @@ describe('MundosPage', () => {
         mutate: mockMutate,
         isPending: false,
         error: null,
-      } as any);
+      } as MockUseMutationResult);
 
       render(<MundosPage />, { wrapper: TestWrapper });
       
       const editButton = screen.getAllByLabelText('Editar')[0];
       await userEvent.click(editButton);
       
-      const submitButton = screen.getByTestId('form-submit');
+      const submitButton = screen.getByRole('button', { name: /guardar/i });
       await userEvent.click(submitButton);
       
       expect(mockMutate).toHaveBeenCalledWith({
@@ -366,7 +410,7 @@ describe('MundosPage', () => {
       
       await waitFor(() => {
         expect(toast.success).toHaveBeenCalled();
-        expect(screen.queryByTestId('mundo-form')).not.toBeInTheDocument();
+        expect(screen.queryByRole('form', { name: /formulario de mundo/i })).not.toBeInTheDocument();
       });
     });
 
@@ -378,19 +422,19 @@ describe('MundosPage', () => {
         mutate: mockMutate,
         isPending: false,
         error: mockError,
-      } as any);
+      } as MockUseMutationResult);
 
       render(<MundosPage />, { wrapper: TestWrapper });
       
       const editButton = screen.getAllByLabelText('Editar')[0];
       await userEvent.click(editButton);
       
-      const submitButton = screen.getByTestId('form-submit');
+      const submitButton = screen.getByRole('button', { name: /guardar/i });
       await userEvent.click(submitButton);
       
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalled();
-        expect(screen.getByTestId('mundo-form')).toBeInTheDocument();
+        expect(screen.getByRole('form', { name: /formulario de mundo/i })).toBeInTheDocument();
       });
     });
   });
@@ -402,8 +446,8 @@ describe('MundosPage', () => {
       const deleteButton = screen.getAllByLabelText('Eliminar')[0];
       await userEvent.click(deleteButton);
       
-      expect(screen.getByTestId('confirm-dialog')).toBeInTheDocument();
-      expect(screen.getByTestId('dialog-message')).toHaveTextContent(mockMundos[0].name);
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByText(mockMundos[0].name)).toBeInTheDocument();
     });
 
     it('should close delete dialog when clicking cancel', async () => {
@@ -412,10 +456,10 @@ describe('MundosPage', () => {
       const deleteButton = screen.getAllByLabelText('Eliminar')[0];
       await userEvent.click(deleteButton);
       
-      const cancelButton = screen.getByTestId('dialog-cancel');
+      const cancelButton = screen.getByRole('button', { name: /cancelar/i });
       await userEvent.click(cancelButton);
       
-      expect(screen.queryByTestId('confirm-dialog')).not.toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
     it('should call delete mutation and handle success', async () => {
@@ -425,21 +469,21 @@ describe('MundosPage', () => {
         mutate: mockMutate,
         isPending: false,
         error: null,
-      } as any);
+      } as MockUseMutationResult);
 
       render(<MundosPage />, { wrapper: TestWrapper });
       
       const deleteButton = screen.getAllByLabelText('Eliminar')[0];
       await userEvent.click(deleteButton);
       
-      const confirmButton = screen.getByTestId('dialog-confirm');
+      const confirmButton = screen.getByRole('button', { name: /eliminar/i });
       await userEvent.click(confirmButton);
       
       expect(mockMutate).toHaveBeenCalledWith(mockMundos[0].id);
       
       await waitFor(() => {
         expect(toast.success).toHaveBeenCalled();
-        expect(screen.queryByTestId('confirm-dialog')).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
     });
 
@@ -451,19 +495,19 @@ describe('MundosPage', () => {
         mutate: mockMutate,
         isPending: false,
         error: mockError,
-      } as any);
+      } as MockUseMutationResult);
 
       render(<MundosPage />, { wrapper: TestWrapper });
       
       const deleteButton = screen.getAllByLabelText('Eliminar')[0];
       await userEvent.click(deleteButton);
       
-      const confirmButton = screen.getByTestId('dialog-confirm');
+      const confirmButton = screen.getByRole('button', { name: /eliminar/i });
       await userEvent.click(confirmButton);
       
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalled();
-        expect(screen.getByTestId('confirm-dialog')).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
       });
     });
   });

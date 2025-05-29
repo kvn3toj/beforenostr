@@ -7,7 +7,7 @@ export const useCreateMundoMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ data, userId }: { data: CreateMundoData; userId: string }) => createMundo(data, userId),
+    mutationFn: (data: CreateMundoData) => createMundo(data),
     onSuccess: (newMundo: Mundo) => {
       queryClient.invalidateQueries({ queryKey: ['mundos'] });
       toast.success('Mundo creado exitosamente');

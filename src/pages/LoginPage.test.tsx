@@ -5,13 +5,12 @@ import { LoginPage } from './LoginPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'sonner';
+import { authService } from '../services/auth.service';
 
-// Mock supabase client
-vi.mock('../services/supabaseClient', () => ({
-  supabase: {
-    auth: {
-      signInWithPassword: vi.fn(),
-    },
+// Mock auth service
+vi.mock('../services/auth.service', () => ({
+  authService: {
+    login: vi.fn(),
   },
 }));
 
@@ -60,14 +59,14 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 describe('LoginPage', () => {
   const mockNavigate = vi.fn();
-  const mockSignInWithPassword = vi.fn();
+  const mockLogin = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
     
     // Setup default mocks
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
-    vi.mocked(supabase.auth.signInWithPassword).mockImplementation(mockSignInWithPassword);
+    vi.mocked(authService.login).mockImplementation(mockLogin);
   });
 
   it('should render login form with all required fields', () => {
@@ -80,11 +79,11 @@ describe('LoginPage', () => {
   });
 
   it('should handle successful login', async () => {
-    const mockUser = { id: 'user-123', email: 'test@example.com' };
-    mockSignInWithPassword.mockResolvedValueOnce({
-      data: { user: mockUser },
-      error: null,
-    });
+    const mockAuthResponse = { 
+      access_token: 'token123',
+      user: { id: 'user-123', email: 'test@example.com', name: 'Test User', avatarUrl: null }
+    };
+    mockLogin.mockResolvedValueOnce(mockAuthResponse);
 
     render(<LoginPage />, { wrapper: TestWrapper });
 
@@ -96,7 +95,7 @@ describe('LoginPage', () => {
     await userEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }));
 
     // Verify the API call
-    expect(mockSignInWithPassword).toHaveBeenCalledWith({
+    expect(mockLogin).toHaveBeenCalledWith({
       email: 'test@example.com',
       password: 'password123',
     });
@@ -108,10 +107,7 @@ describe('LoginPage', () => {
   });
 
   it('should handle invalid credentials error', async () => {
-    mockSignInWithPassword.mockResolvedValueOnce({
-      data: { user: null },
-      error: { message: 'Invalid login credentials' },
-    });
+    mockLogin.mockRejectedValueOnce(new Error('Invalid login credentials'));
 
     render(<LoginPage />, { wrapper: TestWrapper });
 
@@ -132,10 +128,7 @@ describe('LoginPage', () => {
   });
 
   it('should handle unconfirmed email error', async () => {
-    mockSignInWithPassword.mockResolvedValueOnce({
-      data: { user: null },
-      error: { message: 'Email not confirmed' },
-    });
+    mockLogin.mockRejectedValueOnce(new Error('Email not confirmed'));
 
     render(<LoginPage />, { wrapper: TestWrapper });
 
@@ -156,7 +149,7 @@ describe('LoginPage', () => {
   });
 
   it('should handle unexpected error', async () => {
-    mockSignInWithPassword.mockRejectedValueOnce(new Error('Network error'));
+    mockLogin.mockRejectedValueOnce(new Error('Network error'));
 
     render(<LoginPage />, { wrapper: TestWrapper });
 
@@ -177,7 +170,7 @@ describe('LoginPage', () => {
   });
 
   it('should disable form during loading state', async () => {
-    mockSignInWithPassword.mockImplementation(() => new Promise(() => {})); // Never resolves
+    mockLogin.mockImplementation(() => new Promise(() => {})); // Never resolves
 
     render(<LoginPage />, { wrapper: TestWrapper });
 

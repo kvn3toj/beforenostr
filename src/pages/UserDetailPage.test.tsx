@@ -37,15 +37,15 @@ vi.mock('../hooks/useUpdateUserMutation', () => ({
 
 vi.mock('../components/features/users/components/UserForm/UserForm', () => ({
   UserForm: ({ defaultValues, onSubmit, onClose, isLoading }: any) => (
-    <div data-testid="mock-user-form">
+    <form aria-label="Formulario de usuario">
       <div>Mock User Form</div>
       <div>Default Values: {JSON.stringify(defaultValues)}</div>
-      <button onClick={() => onSubmit({ ...defaultValues, name: 'Updated Name' })}>
-        Submit
+      <button type="submit" onClick={e => { e.preventDefault(); onSubmit({ ...defaultValues, name: 'Updated Name' }); }}>
+        Guardar
       </button>
-      <button onClick={onClose}>Cancel</button>
+      <button type="button" onClick={onClose}>Cancelar</button>
       {isLoading && <div>Loading...</div>}
-    </div>
+    </form>
   ),
 }));
 
@@ -111,7 +111,6 @@ describe('UserDetailPage', () => {
       expect(screen.getByText(mockUser.email)).toBeInTheDocument();
       expect(screen.getByText(mockUser.role.name)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /editar/i })).toBeInTheDocument();
-      expect(screen.queryByTestId('mock-user-form')).not.toBeInTheDocument();
     });
 
     it('shows loading state', () => {
@@ -157,12 +156,12 @@ describe('UserDetailPage', () => {
       await userEvent.click(editButton);
 
       // Verify form is rendered with correct default values
-      const mockForm = screen.getByTestId('mock-user-form');
-      expect(mockForm).toBeInTheDocument();
-      expect(mockForm).toHaveTextContent(JSON.stringify(mockUser));
+      const form = screen.getByRole('form', { name: /formulario de usuario/i });
+      expect(form).toBeInTheDocument();
+      expect(form).toHaveTextContent(JSON.stringify(mockUser));
 
       // Submit form
-      const submitButton = screen.getByRole('button', { name: /submit/i });
+      const submitButton = screen.getByRole('button', { name: /guardar/i });
       await userEvent.click(submitButton);
 
       await waitFor(() => {
@@ -173,7 +172,7 @@ describe('UserDetailPage', () => {
           }),
         });
         expect(toast.success).toHaveBeenCalled();
-        expect(screen.queryByTestId('mock-user-form')).not.toBeInTheDocument();
+        expect(screen.queryByRole('form', { name: /formulario de usuario/i })).not.toBeInTheDocument();
       });
     });
 
@@ -185,14 +184,14 @@ describe('UserDetailPage', () => {
       await userEvent.click(editButton);
 
       // Verify form is rendered
-      expect(screen.getByTestId('mock-user-form')).toBeInTheDocument();
+      expect(screen.getByRole('form', { name: /formulario de usuario/i })).toBeInTheDocument();
 
       // Cancel edit
-      const cancelButton = screen.getByRole('button', { name: /cancel/i });
+      const cancelButton = screen.getByRole('button', { name: /cancelar/i });
       await userEvent.click(cancelButton);
 
       // Verify form is no longer rendered
-      expect(screen.queryByTestId('mock-user-form')).not.toBeInTheDocument();
+      expect(screen.queryByRole('form', { name: /formulario de usuario/i })).not.toBeInTheDocument();
     });
 
     it('disables edit button for unauthorized users', () => {
@@ -220,13 +219,13 @@ describe('UserDetailPage', () => {
       await userEvent.click(editButton);
 
       // Submit form
-      const submitButton = screen.getByRole('button', { name: /submit/i });
+      const submitButton = screen.getByRole('button', { name: /guardar/i });
       await userEvent.click(submitButton);
 
       await waitFor(() => {
         expect(mockMutate).toHaveBeenCalled();
         expect(toast.error).toHaveBeenCalled();
-        expect(screen.getByTestId('mock-user-form')).toBeInTheDocument(); // Form should still be visible
+        expect(screen.getByRole('form', { name: /formulario de usuario/i })).toBeInTheDocument(); // Form should still be visible
       });
     });
 

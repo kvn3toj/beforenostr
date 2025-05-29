@@ -2,14 +2,16 @@ import React from 'react';
 import { Box, Typography, Paper, List, ListItem, ListItemText, Avatar, ListItemAvatar, CardActions, IconButton } from '@mui/material';
 import { Event } from 'nostr-tools/core';
 import ReactMarkdown from 'react-markdown';
-import NoteIcon from '@mui/icons-material/Note';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import PublicIcon from '@mui/icons-material/Public';
-import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
-import SchoolIcon from '@mui/icons-material/School';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import {
+  Note as NoteIcon,
+  Favorite as FavoriteIcon,
+  AccountBalanceWallet as AccountBalanceWalletIcon,
+  EmojiEvents as EmojiEventsIcon,
+  Public as PublicIcon,
+  PlaylistPlay as PlaylistPlayIcon,
+  School as SchoolIcon,
+  Visibility as VisibilityIcon,
+} from '../common/Icons';
 
 import type { MeritTransaction, NostrProfile, MundoContent, PlaylistContent, ExperienciaContent } from '../../types/nostr';
 

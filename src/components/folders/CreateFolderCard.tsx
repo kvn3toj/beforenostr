@@ -5,7 +5,7 @@ import {
   Typography,
   Box,
 } from '@mui/material';
-import { CreateNewFolder as CreateFolderIcon } from '@mui/icons-material';
+import CreateFolderIcon from '@mui/icons-material/CreateNewFolder';
 
 interface CreateFolderCardProps {
   onClick: () => void;

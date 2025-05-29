@@ -4,6 +4,14 @@ import { useUpdateSystemSettingsMutation } from './useUpdateSystemSettingsMutati
 import { updateSystemSettings } from '../../services/system.service';
 import type { SystemSettings, UpdateSystemSettingsData } from '../../types/system.types';
 import { toast } from 'sonner';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+type MockUseMutationResult<TData = unknown, TError = unknown, TVariables = unknown, TContext = unknown> = {
+  mutate: jest.Mock<TData, [TVariables]>;
+  isPending: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the system service
 vi.mock('../../services/system.service', () => ({
@@ -55,7 +63,7 @@ describe('useUpdateSystemSettingsMutation', () => {
       mutate: vi.fn(),
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useUpdateSystemSettingsMutation());
 
@@ -73,7 +81,7 @@ describe('useUpdateSystemSettingsMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult<SystemSettings, Error, { id: string, data: UpdateSystemSettingsData }>);
 
     const { result } = renderHook(() => useUpdateSystemSettingsMutation());
 
@@ -97,7 +105,7 @@ describe('useUpdateSystemSettingsMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: mockError,
-    } as any);
+    } as MockUseMutationResult<SystemSettings, Error, { id: string, data: UpdateSystemSettingsData }>);
 
     const { result } = renderHook(() => useUpdateSystemSettingsMutation());
 
@@ -117,7 +125,7 @@ describe('useUpdateSystemSettingsMutation', () => {
       mutate: vi.fn(),
       isPending: true,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useUpdateSystemSettingsMutation());
 
@@ -133,13 +141,13 @@ describe('useUpdateSystemSettingsMutation', () => {
     const mockInvalidateQueries = vi.fn();
     vi.mocked(useQueryClient).mockReturnValue({
       invalidateQueries: mockInvalidateQueries,
-    } as any);
+    });
 
     vi.mocked(useMutation).mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult<SystemSettings, Error, { id: string, data: UpdateSystemSettingsData }>);
 
     const { result } = renderHook(() => useUpdateSystemSettingsMutation());
 

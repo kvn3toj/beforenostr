@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { googleAIService } from '../services/google-ai.service';
-import { Button, TextField, Box, Typography, CircularProgress } from '@mui/material';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import DOMPurify from 'dompurify';
 
 export function AITest() {
   const [prompt, setPrompt] = useState('');
@@ -75,7 +80,7 @@ export function AITest() {
               borderRadius: 1,
               whiteSpace: 'pre-wrap'
             }}
-            dangerouslySetInnerHTML={{ __html: response }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(response) }}
           />
         </Box>
       )}

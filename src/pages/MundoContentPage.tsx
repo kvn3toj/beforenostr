@@ -1,7 +1,12 @@
 // MundoContentPage.tsx
 
-import React, { useState } from 'react';
-import { Container, CircularProgress, Alert, Box, Typography, Grid } from '@mui/material';
+import React, { useState, useMemo } from 'react';
+import Container from '@mui/material/Container';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { Grid } from '@mui/material';
 import { PlaylistCard } from '../components/playlists/PlaylistCard';
 import { CreatePlaylistCard } from '../components/playlists/CreatePlaylistCard';
 import { CreatePlaylistDialog } from '../components/playlists/CreatePlaylistDialog';
@@ -12,16 +17,18 @@ import { CreateFolderDialog } from '../components/folders/CreateFolderDialog';
 import { EditFolderNameDialog } from '../components/folders/EditFolderNameDialog';
 import { usePlaylistsQuery } from '../hooks/usePlaylistsQuery';
 import { useFoldersQuery } from '../hooks/useFoldersQuery';
-import { useCreatePlaylistMutation } from '../hooks/useCreatePlaylistMutation';
-import { useUpdatePlaylistStatusMutation } from '../hooks/useUpdatePlaylistStatusMutation';
-import { useDeletePlaylistMutation } from '../hooks/useDeletePlaylistMutation';
-import { useCreateFolderMutation } from '../hooks/useCreateFolderMutation';
+import { useCreatePlaylistMutation } from '../hooks/features/playlists/useCreatePlaylistMutation';
+import { useUpdatePlaylistStatusMutation } from '../hooks/features/playlists/useUpdatePlaylistStatusMutation';
+import { useDeletePlaylistMutation } from '../hooks/features/playlists/useDeletePlaylistMutation';
+import { useCreateFolderMutation } from '../hooks/features/mundos/useCreateFolderMutation';
 import { useUpdateFolderPinMutation } from '../hooks/useUpdateFolderPinMutation';
 import { useDeleteFolderMutation } from '../hooks/useDeleteFolderMutation';
+import { useUpdateFolderNameMutation } from '../hooks/useUpdateFolderNameMutation';
 import { useAuth } from '../hooks/useAuth';
 import { toast } from 'sonner';
 import type { PlaylistFolder } from '../types/folder.types';
-import { useUpdateFolderNameMutation } from '../hooks/useUpdateFolderNameMutation';
+import type { Playlist } from '../types/playlist.types';
+import type { FetchPlaylistsParams } from '../services/playlist.service';
 import { useParams, Navigate } from 'react-router-dom';
 
 export const MundoContentPage: React.FC = () => {
@@ -30,7 +37,7 @@ export const MundoContentPage: React.FC = () => {
   
   // Verificar que existe el mundoId
   if (!mundoId) {
-    return <Navigate to="/mundos" />;
+    return <Navigate to="/select-mundo" replace />;
   }
   
   // Estados para diálogos
@@ -44,8 +51,22 @@ export const MundoContentPage: React.FC = () => {
   const { user } = useAuth();
   
   // Query hooks
-  const { data: playlists = [], isLoading: isLoadingPlaylists, error: errorPlaylists } = usePlaylistsQuery();
-  const { data: folders = [], isLoading: isLoadingFolders, error: errorFolders } = useFoldersQuery(mundoId);
+  const playlistQueryParams: FetchPlaylistsParams = {
+    page: 0,
+    pageSize: 100,
+    sortBy: null,
+    sortDirection: null,
+    filters: {
+      mundo_id: mundoId,
+      is_active: true,
+    },
+  };
+  const { data: playlistsData, isLoading: isLoadingPlaylists, error: errorPlaylists } = usePlaylistsQuery(playlistQueryParams);
+  const { data: foldersData, isLoading: isLoadingFolders, error: errorFolders } = useFoldersQuery(mundoId);
+
+  // Access data safely, default to empty array if data is null/undefined or missing .data
+  const playlists = playlistsData?.data || [];
+  const folders = foldersData || [];
 
   // Debug logs
   console.log('[MundoContentPage] Renderizando. Estado:', {
@@ -64,7 +85,7 @@ export const MundoContentPage: React.FC = () => {
   const { mutate: deletePlaylistMutate, isPending: isDeletingPlaylist } = useDeletePlaylistMutation();
 
   // Mutaciones Carpetas
-  const { mutate: createFolderMutate, isPending: isCreatingFolder } = useCreateFolderMutation(mundoId);
+  const { mutate: createFolderMutate, isPending: isCreatingFolder } = useCreateFolderMutation();
   const { mutate: updatePinMutate } = useUpdateFolderPinMutation(mundoId);
   const { mutate: deleteFolderMutate, isPending: isDeletingFolder } = useDeleteFolderMutation(mundoId);
   const { mutate: updateFolderNameMutate, isPending: isUpdatingName } = useUpdateFolderNameMutation(mundoId);
@@ -79,9 +100,18 @@ export const MundoContentPage: React.FC = () => {
       return;
     }
     
-    const playlistData = { name, mundo_id: mundoId };
-    createPlaylistMutate({ data: playlistData, userId }, {
-      onSuccess: handleCloseCreatePlaylistDialog
+    const playlistData = {
+      name,
+      mundo_id: mundoId,
+      published_at: null,
+      unpublished_at: null,
+    };
+    
+    // El hook maneja onSuccess y onError internamente
+    createPlaylistMutate(playlistData, {
+      onSuccess: () => {
+        handleCloseCreatePlaylistDialog();
+      }
     });
   };
 
@@ -96,8 +126,12 @@ export const MundoContentPage: React.FC = () => {
     }
     
     const folderData = { name, mundo_id: mundoId };
+    
+    // El hook maneja onSuccess y onError internamente
     createFolderMutate({ data: folderData, userId }, {
-      onSuccess: handleCloseCreateFolderDialog
+      onSuccess: () => {
+        handleCloseCreateFolderDialog();
+      }
     });
   };
 
@@ -106,7 +140,13 @@ export const MundoContentPage: React.FC = () => {
   const handleDeletePlaylistDialogClose = () => setDeletingPlaylistId(null);
   const handleDeletePlaylistConfirm = () => {
     if (!deletingPlaylistId) return;
-    deletePlaylistMutate(deletingPlaylistId, { onSuccess: handleDeletePlaylistDialogClose });
+    
+    // El hook maneja onSuccess y onError internamente
+    deletePlaylistMutate(deletingPlaylistId, {
+      onSuccess: () => {
+        handleDeletePlaylistDialogClose();
+      }
+    });
   };
 
   // Manejadores Eliminación Carpeta
@@ -114,16 +154,24 @@ export const MundoContentPage: React.FC = () => {
   const handleDeleteFolderDialogClose = () => setDeletingFolderId(null);
   const handleDeleteFolderConfirm = () => {
     if (!deletingFolderId) return;
-    deleteFolderMutate(deletingFolderId, { onSuccess: handleDeleteFolderDialogClose });
+    
+    // El hook maneja onSuccess y onError internamente
+    deleteFolderMutate(deletingFolderId, {
+      onSuccess: () => {
+        handleDeleteFolderDialogClose();
+      }
+    });
   };
 
   // Manejadores Toggle Estado Playlist
   const handleTogglePlaylistActive = (id: string, isActive: boolean) => {
+    // El hook maneja onSuccess y onError internamente
     updatePlaylistStatusMutate({ id, isActive });
   };
 
   // Manejadores Toggle Pin Carpeta
   const handleToggleFolderPin = (id: string, isPinned: boolean) => {
+    // El hook maneja onSuccess y onError internamente
     updatePinMutate({ folderId: id, isPinned });
   };
 
@@ -136,11 +184,33 @@ export const MundoContentPage: React.FC = () => {
   
   const handleEditFolderSubmit = (newName: string) => {
     if (!editingFolder) return;
+    
+    // El hook maneja onSuccess y onError internamente
     updateFolderNameMutate(
       { id: editingFolder.id, name: newName },
-      { onSuccess: handleCloseEditFolderDialog }
+      {
+        onSuccess: () => {
+          handleCloseEditFolderDialog();
+        }
+      }
     );
   };
+
+  // Implement playlist edit handler (placeholder)
+  const handleEditPlaylistClick = (playlist: Playlist) => {
+    console.log("Editar playlist:", playlist.id);
+    // TODO: Implement actual playlist editing logic, e.g., open a dialog
+  };
+
+  // --- Memoized Data and Render Variables ---
+  // Use useMemo to prevent re-filtering on every render if data hasn't changed
+  const folderToDelete = useMemo(() => {
+    return folders.find((f: PlaylistFolder) => f.id === deletingFolderId);
+  }, [folders, deletingFolderId]);
+
+  const playlistToDelete = useMemo(() => {
+    return playlists.find((p: Playlist) => p.id === deletingPlaylistId);
+  }, [playlists, deletingPlaylistId]);
 
   // --- Renderizado ---
   const isLoading = isLoadingPlaylists || isLoadingFolders;
@@ -157,17 +227,10 @@ export const MundoContentPage: React.FC = () => {
   if (error) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert severity="error">Error al cargar datos: { (error as Error)?.message ?? 'Error desconocido'}</Alert>
+        <Alert severity="error">Error al cargar datos: { error?.message ?? 'Error desconocido'}</Alert>
       </Container>
     );
   }
-
-  const pinnedFolders = folders.filter(f => f.is_pinned && !f.is_deleted);
-  const regularFolders = folders.filter(f => !f.is_pinned && !f.is_deleted);
-  const activePlaylists = playlists; // Asumimos que fetchPlaylists ya filtra por activas si es necesario
-
-  const folderToDelete = folders.find(f => f.id === deletingFolderId);
-  const playlistToDelete = playlists.find(p => p.id === deletingPlaylistId);
 
   return (
     <Container maxWidth="lg">
@@ -184,7 +247,7 @@ export const MundoContentPage: React.FC = () => {
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <CreateFolderCard onClick={handleOpenCreateFolderDialog} />
           </Grid>
-          {folders.map((folder) => (
+          {folders.map((folder: PlaylistFolder) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={folder.id}>
               <FolderCard
                 folder={folder}
@@ -204,13 +267,13 @@ export const MundoContentPage: React.FC = () => {
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <CreatePlaylistCard onClick={handleOpenCreatePlaylistDialog} />
           </Grid>
-          {playlists.map((playlist) => (
+          {playlists.map((playlist: Playlist) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={playlist.id}>
               <PlaylistCard
                 playlist={playlist}
                 onToggleActive={handleTogglePlaylistActive}
                 onDelete={handleDeletePlaylistClick}
-                onEdit={() => console.log("Editar playlist pendiente:", playlist.id)}
+                onEdit={() => handleEditPlaylistClick(playlist)}
               />
             </Grid>
           ))}
@@ -252,7 +315,7 @@ export const MundoContentPage: React.FC = () => {
       <ConfirmDialog
         open={!!deletingFolderId}
         title="Eliminar Carpeta"
-        message={`¿Deseas eliminar este elemento? Se moverá '${folderToDelete?.name ?? ''}' a la papelera y se eliminará definitivamente en 30 días.`}
+        message={`¿Estás seguro de que deseas eliminar la carpeta "${folderToDelete?.name ?? ''}"? Se moverá a la papelera y se eliminará definitivamente en 30 días.`}
         onConfirm={handleDeleteFolderConfirm}
         onClose={handleDeleteFolderDialogClose}
         isLoading={isDeletingFolder}

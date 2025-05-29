@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient';
+import { apiService } from './api.service';
 import {
   TotalCountMetric,
   UsersCreatedOverTimeMetric,
@@ -14,40 +14,39 @@ import {
   LeastInteractedMundosMetric,
 } from '../types/analytics.types';
 
+// Configuración de la API
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const ANALYTICS_ENDPOINT = `${API_BASE_URL}/analytics`;
+
+// Función auxiliar para manejar errores de analíticas
+const handleAnalyticsError = (functionName: string, error: unknown, fallbackValue: any) => {
+  console.warn(`[Analytics] ${functionName} - Backend no disponible:`, error);
+  return fallbackValue;
+};
+
+// Funciones principales de métricas
 export const fetchTotalUsers = async (): Promise<TotalCountMetric> => {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*', { count: 'exact', head: true });
-
-  if (error) {
-    throw new Error(`Error fetching total users: ${error.message}`);
+  try {
+    return await apiService.get<TotalCountMetric>('/analytics/total-users');
+  } catch (error) {
+    return handleAnalyticsError('fetchTotalUsers', error, { count: 0 });
   }
-
-  return { count: data?.length || 0 };
 };
 
 export const fetchTotalPlaylists = async (): Promise<TotalCountMetric> => {
-  const { data, error } = await supabase
-    .from('playlists')
-    .select('*', { count: 'exact', head: true });
-
-  if (error) {
-    throw new Error(`Error fetching total playlists: ${error.message}`);
+  try {
+    return await apiService.get<TotalCountMetric>('/analytics/total-playlists');
+  } catch (error) {
+    return handleAnalyticsError('fetchTotalPlaylists', error, { count: 0 });
   }
-
-  return { count: data?.length || 0 };
 };
 
 export const fetchTotalMundos = async (): Promise<TotalCountMetric> => {
-  const { data, error } = await supabase
-    .from('mundos')
-    .select('*', { count: 'exact', head: true });
-
-  if (error) {
-    throw new Error(`Error fetching total mundos: ${error.message}`);
+  try {
+    return await apiService.get<TotalCountMetric>('/analytics/total-mundos');
+  } catch (error) {
+    return handleAnalyticsError('fetchTotalMundos', error, { count: 0 });
   }
-
-  return { count: data?.length || 0 };
 };
 
 export const fetchUsersCreatedOverTime = async ({
@@ -55,24 +54,19 @@ export const fetchUsersCreatedOverTime = async ({
   startDate,
   endDate,
 }: TimeRangeParams): Promise<UsersCreatedOverTimeMetric> => {
-  const { data, error } = await supabase.rpc('get_users_created_over_time', {
-    interval_param: interval,
-    start_date: startDate,
-    end_date: endDate,
-  });
-
-  if (error) {
-    throw new Error(`Error fetching users created over time: ${error.message}`);
+  try {
+    const params = new URLSearchParams();
+    if (interval) params.append('interval', interval);
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    
+    const queryString = params.toString();
+    const url = queryString ? `/analytics/users-created-over-time?${queryString}` : '/analytics/users-created-over-time';
+    
+    return await apiService.get<UsersCreatedOverTimeMetric>(url);
+  } catch (error) {
+    return handleAnalyticsError('fetchUsersCreatedOverTime', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_users_created_over_time');
-  }
-
-  return data.map(point => ({
-    time_period: point.time_period,
-    count: point.count,
-  }));
 };
 
 export const fetchPlaylistsCreatedOverTime = async ({
@@ -80,24 +74,19 @@ export const fetchPlaylistsCreatedOverTime = async ({
   startDate,
   endDate,
 }: TimeRangeParams): Promise<TimeSeriesDataPoint[]> => {
-  const { data, error } = await supabase.rpc('get_playlists_created_over_time', {
-    interval_param: interval,
-    start_date: startDate,
-    end_date: endDate,
-  });
-
-  if (error) {
-    throw new Error(`Error fetching playlists created over time: ${error.message}`);
+  try {
+    const params = new URLSearchParams();
+    if (interval) params.append('interval', interval);
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    
+    const queryString = params.toString();
+    const url = queryString ? `/analytics/playlists-created-over-time?${queryString}` : '/analytics/playlists-created-over-time';
+    
+    return await apiService.get<TimeSeriesDataPoint[]>(url);
+  } catch (error) {
+    return handleAnalyticsError('fetchPlaylistsCreatedOverTime', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_playlists_created_over_time');
-  }
-
-  return data.map(point => ({
-    time_period: point.time_period,
-    count: point.count,
-  }));
 };
 
 export const fetchMundosCreatedOverTime = async ({
@@ -105,66 +94,35 @@ export const fetchMundosCreatedOverTime = async ({
   startDate,
   endDate,
 }: TimeRangeParams): Promise<TimeSeriesDataPoint[]> => {
-  const { data, error } = await supabase.rpc('get_mundos_created_over_time', {
-    interval_param: interval,
-    start_date: startDate,
-    end_date: endDate,
-  });
-
-  if (error) {
-    throw new Error(`Error fetching mundos created over time: ${error.message}`);
+  try {
+    const params = new URLSearchParams();
+    if (interval) params.append('interval', interval);
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    
+    const queryString = params.toString();
+    const url = queryString ? `/analytics/mundos-created-over-time?${queryString}` : '/analytics/mundos-created-over-time';
+    
+    return await apiService.get<TimeSeriesDataPoint[]>(url);
+  } catch (error) {
+    return handleAnalyticsError('fetchMundosCreatedOverTime', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_mundos_created_over_time');
-  }
-
-  return data.map(point => ({
-    time_period: point.time_period,
-    count: point.count,
-  }));
 };
 
 export const fetchTopViewedPlaylists = async (): Promise<TopViewedPlaylistsMetric> => {
-  const { data, error } = await supabase.rpc('get_top_viewed_playlists', {
-    limit_param: 10
-  });
-
-  if (error) {
-    throw new Error(`Error fetching top viewed playlists: ${error.message}`);
+  try {
+    return await apiService.get<TopViewedPlaylistsMetric>('/analytics/top-viewed-playlists');
+  } catch (error) {
+    return handleAnalyticsError('fetchTopViewedPlaylists', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_top_viewed_playlists');
-  }
-
-  return data.map(item => ({
-    id: item.id,
-    name: item.name,
-    view_count: item.view_count,
-    thumbnail_url: item.thumbnail_url
-  }));
 };
 
 export const fetchTopViewedMundos = async (): Promise<TopViewedMundosMetric> => {
-  const { data, error } = await supabase.rpc('get_top_viewed_mundos', {
-    limit_param: 10
-  });
-
-  if (error) {
-    throw new Error(`Error fetching top viewed mundos: ${error.message}`);
+  try {
+    return await apiService.get<TopViewedMundosMetric>('/analytics/top-viewed-mundos');
+  } catch (error) {
+    return handleAnalyticsError('fetchTopViewedMundos', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_top_viewed_mundos');
-  }
-
-  return data.map(item => ({
-    id: item.id,
-    name: item.name,
-    view_count: item.view_count,
-    thumbnail_url: item.thumbnail_url
-  }));
 };
 
 export const fetchActiveUsersOverTime = async ({
@@ -172,138 +130,146 @@ export const fetchActiveUsersOverTime = async ({
   startDate,
   endDate,
 }: TimeRangeParams): Promise<ActiveUsersOverTimeMetric> => {
-  const { data, error } = await supabase.rpc('get_active_users_over_time', {
-    interval_param: interval,
-    start_date: startDate,
-    end_date: endDate,
-  });
-
-  if (error) {
-    throw new Error(`Error fetching active users over time: ${error.message}`);
+  try {
+    const params = new URLSearchParams();
+    if (interval) params.append('interval', interval);
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    
+    const queryString = params.toString();
+    const url = queryString ? `/analytics/active-users-over-time?${queryString}` : '/analytics/active-users-over-time';
+    
+    return await apiService.get<ActiveUsersOverTimeMetric>(url);
+  } catch (error) {
+    return handleAnalyticsError('fetchActiveUsersOverTime', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_active_users_over_time');
-  }
-
-  return data.map(point => ({
-    time_period: point.time_period,
-    count: point.count,
-  }));
 };
 
 export const fetchTopInteractedContent = async (): Promise<TopInteractedContentMetric> => {
-  const { data, error } = await supabase.rpc('get_top_interacted_content', {
-    limit_param: 10
-  });
-
-  if (error) {
-    throw new Error(`Error fetching top interacted content: ${error.message}`);
+  try {
+    return await apiService.get<TopInteractedContentMetric>('/analytics/top-interacted-content');
+  } catch (error) {
+    return handleAnalyticsError('fetchTopInteractedContent', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_top_interacted_content');
-  }
-
-  return data.map(item => ({
-    id: item.id,
-    name: item.name,
-    interaction_count: item.interaction_count,
-    content_type: item.content_type,
-    thumbnail_url: item.thumbnail_url
-  }));
 };
 
 export const fetchLeastViewedPlaylists = async (): Promise<LeastViewedPlaylistsMetric> => {
-  const { data, error } = await supabase.rpc('get_least_viewed_playlists', {
-    limit_param: 10
-  });
-
-  if (error) {
-    throw new Error(`Error fetching least viewed playlists: ${error.message}`);
+  try {
+    return await apiService.get<LeastViewedPlaylistsMetric>('/analytics/least-viewed-playlists');
+  } catch (error) {
+    return handleAnalyticsError('fetchLeastViewedPlaylists', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_least_viewed_playlists');
-  }
-
-  return data.map(item => ({
-    id: item.id,
-    name: item.name,
-    view_count: item.view_count,
-    thumbnail_url: item.thumbnail_url
-  }));
 };
 
 export const fetchLeastViewedMundos = async (): Promise<LeastViewedMundosMetric> => {
-  const { data, error } = await supabase.rpc('get_least_viewed_mundos', {
-    limit_param: 10
-  });
-
-  if (error) {
-    throw new Error(`Error fetching least viewed mundos: ${error.message}`);
+  try {
+    return await apiService.get<LeastViewedMundosMetric>('/analytics/least-viewed-mundos');
+  } catch (error) {
+    return handleAnalyticsError('fetchLeastViewedMundos', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_least_viewed_mundos');
-  }
-
-  return data.map(item => ({
-    id: item.id,
-    name: item.name,
-    view_count: item.view_count,
-    thumbnail_url: item.thumbnail_url
-  }));
 };
 
 export const fetchLeastInteractedPlaylists = async (): Promise<LeastInteractedPlaylistsMetric> => {
-  const { data, error } = await supabase.rpc('get_least_interacted_playlists', {
-    limit_param: 10
-  });
-
-  if (error) {
-    throw new Error(`Error fetching least interacted playlists: ${error.message}`);
+  try {
+    return await apiService.get<LeastInteractedPlaylistsMetric>('/analytics/least-interacted-playlists');
+  } catch (error) {
+    return handleAnalyticsError('fetchLeastInteractedPlaylists', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_least_interacted_playlists');
-  }
-
-  return data.map(item => ({
-    id: item.id,
-    name: item.name,
-    interaction_count: item.interaction_count,
-    content_type: 'playlist',
-    thumbnail_url: item.thumbnail_url
-  }));
 };
 
 export const fetchLeastInteractedMundos = async (): Promise<LeastInteractedMundosMetric> => {
-  const { data, error } = await supabase.rpc('get_least_interacted_mundos', {
-    limit_param: 10
-  });
-
-  if (error) {
-    throw new Error(`Error fetching least interacted mundos: ${error.message}`);
+  try {
+    return await apiService.get<LeastInteractedMundosMetric>('/analytics/least-interacted-mundos');
+  } catch (error) {
+    return handleAnalyticsError('fetchLeastInteractedMundos', error, []);
   }
-
-  if (!Array.isArray(data)) {
-    throw new Error('Invalid response format from get_least_interacted_mundos');
-  }
-
-  return data.map(item => ({
-    id: item.id,
-    name: item.name,
-    interaction_count: item.interaction_count,
-    content_type: 'mundo',
-    thumbnail_url: item.thumbnail_url
-  }));
 };
 
-// Nota: En el futuro, estas funciones podrían ser reemplazadas por llamadas RPC
-// más eficientes, por ejemplo:
-// export const fetchTotalUsers = async (): Promise<TotalCountMetric> => {
-//   const { data, error } = await supabase.rpc('get_total_users_count');
-//   if (error) throw new Error(`Error fetching total users: ${error.message}`);
-//   return data;
-// }; 
+// Funciones de engagement de usuarios (estas sí están implementadas en el backend)
+export const recordUserEngagement = async (engagementData: {
+  contentItemId: string;
+  engagementType: string;
+  duration?: number;
+  metadata?: Record<string, any>;
+}) => {
+  try {
+    return await apiService.post('/analytics/events', engagementData);
+  } catch (error) {
+    return handleAnalyticsError('recordUserEngagement', error, null);
+  }
+};
+
+export const getMyEngagement = async () => {
+  try {
+    return await apiService.get('/analytics/me/engagement');
+  } catch (error) {
+    return handleAnalyticsError('getMyEngagement', error, []);
+  }
+};
+
+export const getUserEngagement = async (userId: string) => {
+  try {
+    return await apiService.get(`/analytics/users/${userId}/engagement`);
+  } catch (error) {
+    return handleAnalyticsError('getUserEngagement', error, []);
+  }
+};
+
+export const getContentItemEngagement = async (itemId: string) => {
+  try {
+    return await apiService.get(`/analytics/items/${itemId}/engagement`);
+  } catch (error) {
+    return handleAnalyticsError('getContentItemEngagement', error, []);
+  }
+};
+
+// Funciones adicionales simplificadas para compatibilidad
+export const getSystemStats = async () => {
+  try {
+    return await apiService.get('/analytics/system-stats');
+  } catch (error) {
+    return handleAnalyticsError('getSystemStats', error, {
+      totalUsers: 0,
+      totalMundos: 0,
+      totalPlaylists: 0,
+      totalVideos: 0
+    });
+  }
+};
+
+export const getUserStats = async () => {
+  try {
+    return await apiService.get('/analytics/user-stats');
+  } catch (error) {
+    return handleAnalyticsError('getUserStats', error, {
+      activeUsers: 0,
+      newUsers: 0,
+      topUsers: []
+    });
+  }
+};
+
+export const getContentStats = async () => {
+  try {
+    return await apiService.get('/analytics/content-stats');
+  } catch (error) {
+    return handleAnalyticsError('getContentStats', error, {
+      topPlaylists: [],
+      topMundos: [],
+      recentActivity: []
+    });
+  }
+};
+
+// Alias para compatibilidad con código existente
+export const getUsersCreatedOverTime = fetchUsersCreatedOverTime;
+export const getPlaylistsCreatedOverTime = fetchPlaylistsCreatedOverTime;
+export const getMundosCreatedOverTime = fetchMundosCreatedOverTime;
+export const getTopViewedPlaylists = fetchTopViewedPlaylists;
+export const getTopViewedMundos = fetchTopViewedMundos;
+export const getActiveUsersOverTime = fetchActiveUsersOverTime;
+export const getTopInteractedContent = fetchTopInteractedContent;
+export const getLeastViewedPlaylists = fetchLeastViewedPlaylists;
+export const getLeastViewedMundos = fetchLeastViewedMundos;
+export const getLeastInteractedPlaylists = fetchLeastInteractedPlaylists;
+export const getLeastInteractedMundos = fetchLeastInteractedMundos; 

@@ -1,0 +1,7 @@
+./WF_Gamifier/src/types/playlist.ts
+./WF_Gamifier/src/components/playlists/CreatePlaylistDialog.tsx
+./WF_Gamifier/src/components/playlists/CreatePlaylistCard.tsx
+./WF_Gamifier/src/components/playlists/PlaylistCard.tsx
+./WF_Gamifier/src/components/common/ConfirmDialog.tsx
+./WF_Gamifier/src/hooks/usePlaylist.ts
+./WF_Gamifier/src/pages/PlaylistDetailPage.tsx

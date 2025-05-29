@@ -1,24 +1,32 @@
 import { useAuthStore } from '../store/authStore'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 export const useAuth = () => {
-  const { user, session, logout } = useAuthStore()
-  const [isLoading, setIsLoading] = useState(true)
+  const { 
+    user, 
+    token, 
+    isAuthenticated, 
+    isLoading,
+    login,
+    register,
+    logout,
+    initializeAuth,
+    getCurrentUser
+  } = useAuthStore()
 
+  // Inicializar autenticación al montar el hook
   useEffect(() => {
-    // Simulamos un pequeño delay para asegurar que la sesión se ha cargado
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 100)
-
-    return () => clearTimeout(timer)
-  }, [session])
+    initializeAuth()
+  }, [initializeAuth])
 
   return {
     user,
-    session,
-    logout,
-    isAuthenticated: !!session,
+    token,
+    isAuthenticated,
     isLoading,
+    login,
+    register,
+    logout,
+    getCurrentUser,
   }
 } 

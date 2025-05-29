@@ -6,6 +6,8 @@ import type { CoomunityNostrClient } from '../lib/CoomunityNostrClient';
 export type NostrContextType = {
   client: CoomunityNostrClient | null;
   isConnected: boolean;
+  isConnecting: boolean;
+  connectToNostr: () => Promise<void>;
   publicKey: string | null;
   receivedEvents: Event[];
   mundos: Event[];

@@ -1,12 +1,17 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import * as path from 'path';
 // import { VitePWA } from 'vite-plugin-pwa' // Comentado
 
-// https://vite.dev/config/
-export default defineConfig({
+// https://vitejs.dev/config/
+const config = {
   plugins: [
     react(),
+    nodePolyfills({ 
+      include: ['buffer', 'process'] 
+    }),
     /* // Comentado
     VitePWA({
       registerType: 'autoUpdate',
@@ -31,21 +36,108 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(__dirname, './src'),
+      // Usar versiones reales de CommonJS para módulos problemáticos
+      'react-is': 'react-is/cjs/react-is.development.js',
+      'prop-types': 'prop-types/index.js',
+      'hoist-non-react-statics': 'hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js',
     }
   },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/setupTests.ts'],
-    css: true,
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/setupTests.ts',
-      ],
+  optimizeDeps: {
+    force: true, // Forzar re-optimización
+    exclude: [
+      // Excluir módulos problemáticos que causan EMFILE
+      '@mui/icons-material/*',
+      '@mui/x-date-pickers/*',
+      'date-fns/*',
+      'date-fns/locale/*',
+      '@tanstack/*', // Excluir toda la librería de react-query
+      'nostr-tools',
+      'react-router-dom',
+      '@google/generative-ai',
+    ],
+    include: [
+      // Incluir solo módulos específicos necesarios
+      '@mui/material',
+      '@emotion/react',
+      '@emotion/styled',
+      'date-fns/esm/format',
+      'date-fns/esm/formatDistance',
+      'react-is',
+      'prop-types',
+      'hoist-non-react-statics',
+    ],
+    // Configuración para manejar interoperabilidad CommonJS/ESM
+    commonjsOptions: {
+      include: [/node_modules/], // Incluir todos los módulos de node_modules
+      // Configurar exports específicos para módulos problemáticos
+      namedExports: {
+        'react-is': [
+          'isValidElementType', 
+          'isContextConsumer', 
+          'isForwardRef', 
+          'isMemo', 
+          'isProfiler', 
+          'isFragment', 
+          'isLazy', 
+          'isPortal', 
+          'isProvider', 
+          'isStrictMode', 
+          'isSuspense',
+          'isElement',
+          'isValidElement'
+        ],
+        'prop-types': [
+          'PropTypes', 
+          'checkPropTypes',
+          'resetWarningCache'
+        ],
+        'hoist-non-react-statics': ['default']
+      },
+      // Transformar módulos mixtos para mejor compatibilidad
+      transformMixedEsModules: true,
     },
+  },
+  define: {
+    global: 'globalThis',
+  },
+  test: {
+    environment: 'jsdom',
+    deps: {
+      optimizer: {
+        web: {
+          include: [
+            // Array vacío para evitar EMFILE en tests
+            // No optimizar librerías problemáticas en el entorno de testing
+          ]
+        }
+      }
+    }
+  },
+  server: {
+    port: 3000,
+  },
+  preview: {
+    port: 3000,
+  },
+  // Configuración adicional para SSR si es necesario
+  ssr: {
+    noExternal: [
+      // Forzar que estos módulos se procesen en lugar de ser externalizados
+      'react-is',
+      'prop-types',
+      'hoist-non-react-statics',
+    ]
+  },
+  // Configuración de build para manejar CommonJS en producción
+  build: {
+    rollupOptions: {
+      output: {
+        // Configuración para manejar módulos CommonJS en el build
+        interop: 'auto' as const,
+      }
+    }
   }
-})
+};
+
+export default defineConfig(config);

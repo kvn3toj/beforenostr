@@ -26,7 +26,7 @@ import {
   ViewList as ViewListIcon,
   ViewModule as ViewModuleIcon,
   Restore as RestoreIcon,
-} from '@mui/icons-material';
+} from '../components/common/Icons';
 import { usePlaylistQuery } from '../hooks/usePlaylistQuery';
 import { usePlaylistItemsQuery } from '../hooks/usePlaylistItemsQuery';
 import { useCreatePlaylistItemMutation } from '../hooks/useCreatePlaylistItemMutation';
@@ -36,7 +36,7 @@ import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { toast } from 'sonner';
 import { usePlaylistVersionsQuery } from '../hooks/features/playlists/usePlaylistVersionsQuery';
 import { useRestorePlaylistVersionMutation } from '../hooks/features/playlists/useRestorePlaylistVersionMutation';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
 import { PlaylistVersion } from '../types/playlist.types';
 

@@ -4,6 +4,14 @@ import { useUpdateRoleMutation } from './useUpdateRoleMutation';
 import { updateRole, UpdateRoleData } from '../../../services/role.service';
 import { Role } from '../../../types/user.types';
 import { toast } from 'sonner';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+type MockUseMutationResult<TData = unknown, TError = unknown, TVariables = unknown, TContext = unknown> = {
+  mutate: jest.Mock<TData, [TVariables]>;
+  isPending: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the role service
 vi.mock('../../../services/role.service', () => ({
@@ -52,7 +60,7 @@ describe('useUpdateRoleMutation', () => {
       mutate: vi.fn(),
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useUpdateRoleMutation());
 
@@ -70,7 +78,7 @@ describe('useUpdateRoleMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult<Role, Error, { id: string, data: UpdateRoleData }>);
 
     const { result } = renderHook(() => useUpdateRoleMutation());
 
@@ -91,13 +99,13 @@ describe('useUpdateRoleMutation', () => {
     // Mock updateRole to throw error
     vi.mocked(updateRole).mockRejectedValue(mockError);
 
-    // Mock useMutation to return error state
+    // Mock useMutation to simulate error
     const mockMutate = vi.fn();
     vi.mocked(useMutation).mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       error: mockError,
-    } as any);
+    } as MockUseMutationResult<Role, Error, { id: string, data: UpdateRoleData }>);
 
     const { result } = renderHook(() => useUpdateRoleMutation());
 
@@ -112,12 +120,12 @@ describe('useUpdateRoleMutation', () => {
   });
 
   it('should show loading state during mutation', async () => {
-    // Mock useMutation to return loading state
+    // Mock useMutation to simulate loading state
     vi.mocked(useMutation).mockReturnValue({
       mutate: vi.fn(),
       isPending: true,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useUpdateRoleMutation());
 
@@ -134,7 +142,7 @@ describe('useUpdateRoleMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult<Role, Error, { id: string, data: UpdateRoleData }>);
 
     const { result } = renderHook(() => useUpdateRoleMutation());
 

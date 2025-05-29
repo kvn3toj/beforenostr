@@ -1,110 +1,234 @@
-import { supabase } from './supabaseClient';
+import { apiService } from './api.service';
 import { Mundo, CreateMundoData, UpdateMundoData, MundoVersion } from '../types/mundo.types';
-import { useAuthStore } from '../store/authStore';
+
+// Configuración de endpoints
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const MUNDOS_ENDPOINT = '/mundos'; // Usar el endpoint /mundos que está funcionando
 
 export interface FetchMundosParams {
-  page: number; // 0-indexed
-  pageSize: number;
-  sortBy: string | null;
-  sortDirection: 'asc' | 'desc' | null;
-  filters: {
+  page?: number;
+  pageSize?: number;
+  sortBy?: string | null;
+  sortDirection?: 'asc' | 'desc' | null;
+  filters?: {
     name?: string;
     is_active?: boolean;
   };
 }
 
-export const fetchMundos = async (params: FetchMundosParams): Promise<{ data: Mundo[]; count: number }> => {
-  let query = supabase
-    .from('mundos')
-    .select('*', { count: 'exact' });
+export interface MundosResponse {
+  data: Mundo[];
+  count: number;
+  pagination?: {
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+}
 
-  // Aplicar filtrado
-  if (params.filters.name) {
-    query = query.ilike('name', `%${params.filters.name}%`);
+/**
+ * Obtiene la lista de mundos desde el backend
+ */
+export const fetchMundos = async (params: FetchMundosParams = {}): Promise<MundosResponse> => {
+  console.log('[Mundos] fetchMundos llamado con params:', params);
+  
+  try {
+    // Construir query parameters si se proporcionan
+    const searchParams = new URLSearchParams();
+    
+    if (params.page !== undefined) {
+      searchParams.append('page', params.page.toString());
+    }
+    if (params.pageSize !== undefined) {
+      searchParams.append('limit', params.pageSize.toString());
+    }
+    if (params.sortBy) {
+      searchParams.append('sortBy', params.sortBy);
+    }
+    if (params.sortDirection) {
+      searchParams.append('sortDirection', params.sortDirection);
+    }
+    if (params.filters?.name) {
+      searchParams.append('name', params.filters.name);
+    }
+    if (params.filters?.is_active !== undefined) {
+      searchParams.append('isActive', params.filters.is_active.toString());
+    }
+    
+    const queryString = searchParams.toString();
+    const url = queryString ? `${MUNDOS_ENDPOINT}?${queryString}` : MUNDOS_ENDPOINT;
+    
+    console.log('[Mundos] Haciendo petición a:', url);
+    
+    const response = await apiService.get<Mundo[]>(url);
+    console.log('[Mundos] Respuesta recibida:', response);
+    
+    // El backend devuelve un array directo de Mundos
+    // Necesitamos convertirlo al formato esperado por el frontend
+    if (Array.isArray(response)) {
+      console.log('[Mundos] Respuesta es array, convirtiendo formato. Items:', response.length);
+      return {
+        data: response,
+        count: response.length,
+        pagination: {
+          page: params.page || 1,
+          limit: params.pageSize || 10,
+          totalPages: Math.ceil(response.length / (params.pageSize || 10)),
+          hasNextPage: false,
+          hasPreviousPage: false
+        }
+      };
+    }
+    
+    // Si ya viene en el formato correcto, devolverlo tal como está
+    console.log('[Mundos] Respuesta ya en formato correcto');
+    return response as MundosResponse;
+    
+  } catch (error) {
+    console.error('[Mundos] Error al obtener mundos:', error);
+    console.error('[Mundos] Error message:', error?.message);
+    console.error('[Mundos] Error stack:', error?.stack);
+    
+    // En caso de error, devolver estructura vacía
+    throw new Error(`Error al obtener mundos: ${error?.message || 'Error desconocido'}`);
   }
-  if (params.filters.is_active !== undefined) {
-    query = query.eq('is_active', params.filters.is_active);
-  }
-
-  // Aplicar ordenamiento
-  if (params.sortBy) {
-    query = query.order(params.sortBy, { ascending: params.sortDirection === 'asc' });
-  } else {
-    // Ordenamiento por defecto si no se especifica sortBy
-    query = query.order('created_at', { ascending: false });
-  }
-
-  // Aplicar paginación (range es inclusivo en ambos extremos)
-  const start = params.page * params.pageSize;
-  const end = start + params.pageSize - 1;
-  query = query.range(start, end);
-
-  const { data, error, count } = await query;
-
-  if (error) {
-    console.error('Error fetching mundos:', error);
-    throw error;
-  }
-
-  return { data: data || [], count: count ?? 0 };
 };
 
-export const createMundo = async (data: CreateMundoData, userId: string): Promise<Mundo> => {
-  const { data: newMundo, error } = await supabase
-    .from('mundos')
-    .insert([{
-      ...data,
-      created_by: userId,
-      published_at: data.published_at,
-      unpublished_at: data.unpublished_at,
-    }])
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error creating mundo:', error);
-    throw error;
+/**
+ * Obtiene un mundo específico por ID
+ */
+export const fetchMundoById = async (id: string): Promise<Mundo> => {
+  console.log('[Mundos] fetchMundoById llamado con id:', id);
+  
+  try {
+    // Usar el endpoint específico /mundos/id/:id para evitar conflictos con rutas
+    const response = await apiService.get<Mundo>(`${MUNDOS_ENDPOINT}/id/${id}`);
+    console.log('[Mundos] Mundo obtenido:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al obtener mundo por ID:', error);
+    throw new Error(`Error al obtener mundo: ${error?.message || 'Error desconocido'}`);
   }
-
-  return newMundo;
 };
 
+/**
+ * Crea un nuevo mundo
+ */
+export const createMundo = async (mundoData: CreateMundoData): Promise<Mundo> => {
+  console.log('[Mundos] createMundo llamado con data:', mundoData);
+  
+  try {
+    const response = await apiService.post<Mundo>(MUNDOS_ENDPOINT, mundoData);
+    console.log('[Mundos] Mundo creado:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al crear mundo:', error);
+    throw new Error(`Error al crear mundo: ${error?.message || 'Error desconocido'}`);
+  }
+};
+
+/**
+ * Actualiza un mundo existente
+ */
+export const updateMundo = async (id: string, mundoData: UpdateMundoData): Promise<Mundo> => {
+  console.log('[Mundos] updateMundo llamado con id:', id, 'data:', mundoData);
+  
+  try {
+    const response = await apiService.put<Mundo>(`${MUNDOS_ENDPOINT}/${id}`, mundoData);
+    console.log('[Mundos] Mundo actualizado:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al actualizar mundo:', error);
+    throw new Error(`Error al actualizar mundo: ${error?.message || 'Error desconocido'}`);
+  }
+};
+
+/**
+ * Elimina un mundo (soft delete)
+ */
+export const deleteMundo = async (id: string): Promise<Mundo> => {
+  console.log('[Mundos] deleteMundo llamado con id:', id);
+  
+  try {
+    const response = await apiService.delete<Mundo>(`${MUNDOS_ENDPOINT}/${id}`);
+    console.log('[Mundos] Mundo eliminado:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al eliminar mundo:', error);
+    throw new Error(`Error al eliminar mundo: ${error?.message || 'Error desconocido'}`);
+  }
+};
+
+/**
+ * Publica un mundo
+ */
+export const publishMundo = async (id: string): Promise<Mundo> => {
+  console.log('[Mundos] publishMundo llamado con id:', id);
+  
+  try {
+    const response = await apiService.post<Mundo>(`${MUNDOS_ENDPOINT}/${id}/publish`);
+    console.log('[Mundos] Mundo publicado:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al publicar mundo:', error);
+    throw new Error(`Error al publicar mundo: ${error?.message || 'Error desconocido'}`);
+  }
+};
+
+/**
+ * Despublica un mundo
+ */
+export const unpublishMundo = async (id: string): Promise<Mundo> => {
+  console.log('[Mundos] unpublishMundo llamado con id:', id);
+  
+  try {
+    const response = await apiService.post<Mundo>(`${MUNDOS_ENDPOINT}/${id}/unpublish`);
+    console.log('[Mundos] Mundo despublicado:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al despublicar mundo:', error);
+    throw new Error(`Error al despublicar mundo: ${error?.message || 'Error desconocido'}`);
+  }
+};
+
+/**
+ * Obtiene las versiones de un mundo
+ */
 export const fetchMundoVersions = async (mundoId: string): Promise<MundoVersion[]> => {
-  const { data, error } = await supabase
-    .from('mundo_versions')
-    .select('*')
-    .eq('mundo_id', mundoId)
-    .order('version', { ascending: false });
-
-  if (error) {
-    console.error('Error fetching mundo versions:', error);
-    throw error;
+  console.log('[Mundos] fetchMundoVersions llamado con mundoId:', mundoId);
+  
+  try {
+    const response = await apiService.get<MundoVersion[]>(`${MUNDOS_ENDPOINT}/${mundoId}/versions`);
+    console.log('[Mundos] Versiones obtenidas:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al obtener versiones:', error);
+    // En caso de error, devolver array vacío para no romper la UI
+    console.warn('[Mundos] Devolviendo array vacío de versiones');
+    return [];
   }
-
-  return data || [];
 };
 
+/**
+ * Crea una nueva versión de un mundo
+ */
 export const createMundoVersion = async (
   mundoId: string,
   mundoData: Mundo,
   userId: string
 ): Promise<MundoVersion> => {
-  // Get the current version number
-  const { data: currentVersion } = await supabase
-    .from('mundos')
-    .select('version')
-    .eq('id', mundoId)
-    .single();
+  console.log('[Mundos] createMundoVersion llamado con mundoId:', mundoId, 'userId:', userId);
+  
+  try {
+    // Obtener la versión actual
+    const currentMundo = await fetchMundoById(mundoId);
+    const newVersion = (currentMundo?.version || 0) + 1;
 
-  const newVersion = (currentVersion?.version || 0) + 1;
-
-  // Create the version record
-  const { data, error } = await supabase
-    .from('mundo_versions')
-    .insert([{
-      mundo_id: mundoId,
+    // Crear el registro de versión
+    const versionData = {
       version: newVersion,
-      timestamp: new Date().toISOString(),
       changed_by_user_id: userId,
       name: mundoData.name,
       description: mundoData.description,
@@ -112,155 +236,54 @@ export const createMundoVersion = async (
       is_active: mundoData.is_active,
       published_at: mundoData.published_at,
       unpublished_at: mundoData.unpublished_at,
-    }])
-    .select()
-    .single();
+    };
 
-  if (error) {
-    console.error('Error creating mundo version:', error);
-    throw error;
-  }
+    const response = await apiService.post<MundoVersion>(`${MUNDOS_ENDPOINT}/${mundoId}/versions`, versionData);
 
-  // Update the version number in the main mundo
-  await supabase
-    .from('mundos')
-    .update({ version: newVersion })
-    .eq('id', mundoId);
+    // Actualizar el número de versión en el mundo principal
+    await updateMundo(mundoId, { version: newVersion });
 
-  return data;
-};
-
-export const updateMundo = async (
-  id: string,
-  data: UpdateMundoData,
-  userId: string
-): Promise<Mundo> => {
-  // First, get the current mundo data
-  const { data: currentMundo, error: fetchError } = await supabase
-    .from('mundos')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (fetchError) {
-    console.error('Error fetching current mundo:', fetchError);
-    throw fetchError;
-  }
-
-  // Update the mundo
-  const { data: updatedMundo, error: updateError } = await supabase
-    .from('mundos')
-    .update({
-      ...data,
-      published_at: data.published_at,
-      unpublished_at: data.unpublished_at,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (updateError) {
-    console.error('Error updating mundo:', updateError);
-    throw updateError;
-  }
-
-  // Create a new version
-  await createMundoVersion(id, updatedMundo, userId);
-
-  return updatedMundo;
-};
-
-export const deleteMundo = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('mundos')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error deleting mundo:', error);
-    throw error;
+    console.log('[Mundos] Versión creada:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al crear versión:', error);
+    throw new Error(`Error al crear versión: ${error?.message || 'Error desconocido'}`);
   }
 };
 
+/**
+ * Restaura una versión específica de un mundo
+ */
 export const restoreMundoVersion = async (
   mundoId: string,
   versionId: string
 ): Promise<Mundo> => {
-  // First, get the version data
-  const { data: version, error: versionError } = await supabase
-    .from('mundo_versions')
-    .select('*')
-    .eq('id', versionId)
-    .single();
-
-  if (versionError) {
-    console.error('Error fetching mundo version:', versionError);
-    throw versionError;
+  console.log('[Mundos] restoreMundoVersion llamado con mundoId:', mundoId, 'versionId:', versionId);
+  
+  try {
+    const response = await apiService.post<Mundo>(`${MUNDOS_ENDPOINT}/${mundoId}/versions/${versionId}/restore`);
+    console.log('[Mundos] Versión restaurada:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al restaurar versión:', error);
+    throw new Error(`Error al restaurar versión: ${error?.message || 'Error desconocido'}`);
   }
-
-  // Get the current version number
-  const { data: currentVersion } = await supabase
-    .from('mundos')
-    .select('version')
-    .eq('id', mundoId)
-    .single();
-
-  const newVersion = (currentVersion?.version || 0) + 1;
-
-  // Update the mundo with the version data
-  const { data: updatedMundo, error: updateError } = await supabase
-    .from('mundos')
-    .update({
-      name: version.name,
-      description: version.description,
-      thumbnail_url: version.thumbnail_url,
-      is_active: version.is_active,
-      published_at: version.published_at,
-      unpublished_at: version.unpublished_at,
-      updated_at: new Date().toISOString(),
-      version: newVersion
-    })
-    .eq('id', mundoId)
-    .select()
-    .single();
-
-  if (updateError) {
-    console.error('Error restoring mundo version:', updateError);
-    throw updateError;
-  }
-
-  // Create a new version record for the restoration
-  await supabase
-    .from('mundo_versions')
-    .insert([{
-      mundo_id: mundoId,
-      version: newVersion,
-      timestamp: new Date().toISOString(),
-      changed_by_user_id: version.changed_by_user_id,
-      name: version.name,
-      description: version.description,
-      thumbnail_url: version.thumbnail_url,
-      is_active: version.is_active,
-      published_at: version.published_at,
-      unpublished_at: version.unpublished_at,
-      restored_from_version: versionId
-    }]);
-
-  return updatedMundo;
 };
 
-export const fetchMundoById = async (id: string): Promise<Mundo> => {
-  const { data, error } = await supabase
-    .from('mundos')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    console.error('Error fetching mundo by ID:', error);
-    throw error;
+/**
+ * Obtiene las playlists de un mundo específico
+ */
+export const fetchMundoPlaylists = async (mundoId: string): Promise<any[]> => {
+  console.log('[Mundos] fetchMundoPlaylists llamado con mundoId:', mundoId);
+  
+  try {
+    const response = await apiService.get<any[]>(`${MUNDOS_ENDPOINT}/${mundoId}/playlists`);
+    console.log('[Mundos] Playlists obtenidas:', response);
+    return response;
+  } catch (error) {
+    console.error('[Mundos] Error al obtener playlists del mundo:', error);
+    // En caso de error, devolver array vacío para no romper la UI
+    console.warn('[Mundos] Devolviendo array vacío de playlists');
+    return [];
   }
-
-  return data;
 }; 

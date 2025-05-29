@@ -3,6 +3,15 @@ import { vi } from 'vitest';
 import { useRecentBackupsQuery } from './useRecentBackupsQuery';
 import { fetchRecentBackups } from '../../services/system.service';
 import type { RecentBackupsMetric, BackupStatus } from '../../types/system.types';
+import { useQuery } from '@tanstack/react-query';
+
+type MockUseQueryResult<TData = unknown, TError = unknown> = {
+  data: TData | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the system service
 vi.mock('../../services/system.service', () => ({
@@ -45,7 +54,7 @@ describe('useRecentBackupsQuery', () => {
       isLoading: true,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult);
 
     const { result } = renderHook(() => useRecentBackupsQuery());
 
@@ -65,7 +74,7 @@ describe('useRecentBackupsQuery', () => {
       isLoading: false,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<RecentBackupsMetric>);
 
     const { result } = renderHook(() => useRecentBackupsQuery());
 
@@ -91,7 +100,7 @@ describe('useRecentBackupsQuery', () => {
       isLoading: false,
       isError: true,
       error: mockError,
-    } as any);
+    } as MockUseQueryResult<undefined, Error>);
 
     const { result } = renderHook(() => useRecentBackupsQuery());
 
@@ -132,7 +141,7 @@ describe('useRecentBackupsQuery', () => {
       isLoading: false,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<RecentBackupsMetric>);
 
     const { result } = renderHook(() => useRecentBackupsQuery());
 

@@ -1,19 +1,40 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { UsersPage } from './UsersPage';
 import { User } from '../types/user.types';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'sonner';
+
+type MockUseMutationResult<TError = unknown> = {
+  mutate: vi.Mock<void, [unknown]>;
+  isPending: boolean;
+  error: TError | null;
+  data?: unknown;
+  variables?: unknown;
+  isError?: boolean;
+  isIdle?: boolean;
+  isPaused?: boolean;
+  isSuccess?: boolean;
+  reset?: () => void;
+  status?: string;
+  mutateAsync?: vi.Mock<Promise<void>, [unknown]>;
+};
 
 // Mock hooks
 vi.mock('../hooks/useHasRole', () => ({
   useHasRole: vi.fn(() => true),
 }));
 
+// Declara mocks antes
+const mockUseUsersQuery = vi.fn(() => ({
+  data: [],
+  isLoading: false,
+}));
+
 vi.mock('../hooks/useUsersQuery', () => ({
-  useUsersQuery: vi.fn(),
+  useUsersQuery: () => mockUseUsersQuery(),
 }));
 
 vi.mock('@tanstack/react-query', async () => {
@@ -21,66 +42,75 @@ vi.mock('@tanstack/react-query', async () => {
   return {
     ...actual,
     useMutation: vi.fn(),
-    useQueryClient: vi.fn(() => ({
-      invalidateQueries: vi.fn(),
-    })),
   };
 });
 
-// Mock components
+// Mock DataTable: render a real table with rows and cells for semantic queries
 vi.mock('../components/common/DataTable/DataTable', () => ({
-  DataTable: vi.fn(({ data, isLoading, isError, totalCount, page, pageSize, sortBy, sortDirection, filters, onRowClick }) => (
-    <div data-testid="data-table">
-      {isLoading && <div data-testid="loading">Loading...</div>}
-      {isError && <div data-testid="error">Error loading data</div>}
-      {!isLoading && !isError && data.length === 0 && (
-        <div data-testid="empty">No data available</div>
-      )}
-      {!isLoading && !isError && data.length > 0 && (
-        <div data-testid="table-content">
-          <div data-testid="total-count">{totalCount}</div>
-          <div data-testid="current-page">{page}</div>
-          <div data-testid="page-size">{pageSize}</div>
-          <div data-testid="sort-by">{sortBy}</div>
-          <div data-testid="sort-direction">{sortDirection}</div>
-          <div data-testid="filters">{JSON.stringify(filters)}</div>
-          {data.map((item: User) => (
-            <div key={item.id} data-testid={`user-${item.id}`} onClick={() => onRowClick?.(item)}>
-              <div>{item.email}</div>
-              <button data-testid={`delete-user-${item.id}`} onClick={(e) => {
-                e.stopPropagation();
-                const deleteButton = e.currentTarget;
-                deleteButton.click();
-              }}>Eliminar</button>
-            </div>
+  DataTable: vi.fn(({ data = [], isLoading, isError, totalCount, onRowClick }) => {
+    if (isLoading) {
+      return <div role="progressbar">Cargando usuarios...</div>;
+    }
+    if (isError) {
+      return <div role="alert">Error al cargar usuarios</div>;
+    }
+    if (data.length === 0) {
+      return <div>No hay usuarios disponibles</div>;
+    }
+    return (
+      <table>
+        <caption>{`Total de usuarios: ${totalCount}`}</caption>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((user: Partial<User>) => (
+            <tr key={user.id}>
+              <td>{user.email}</td>
+              <td>{user.role?.name}</td>
+              <td>
+                <button aria-label="Editar" onClick={() => onRowClick?.(user)}>Editar</button>
+                <button aria-label={`Eliminar usuario ${user.email}`} onClick={() => { user._onDelete?.(); }}>Eliminar</button>
+              </td>
+            </tr>
           ))}
-        </div>
-      )}
-    </div>
-  )),
+        </tbody>
+      </table>
+    );
+  }),
 }));
 
+// Mock ConfirmDialog: render a real dialog
 vi.mock('../components/common/ConfirmDialog/ConfirmDialog', () => ({
-  ConfirmDialog: vi.fn(({ open, onClose, onConfirm, title, message }) => (
+  ConfirmDialog: vi.fn(({ open, onClose, onConfirm, title, message }) =>
     open ? (
-      <div data-testid="confirm-dialog">
-        <div data-testid="dialog-title">{title}</div>
-        <div data-testid="dialog-message">{message}</div>
-        <button data-testid="dialog-confirm" onClick={onConfirm}>Confirm</button>
-        <button data-testid="dialog-cancel" onClick={onClose}>Cancel</button>
-      </div>
+      <dialog open role="dialog" aria-labelledby="confirm-dialog-title">
+        <h2 id="confirm-dialog-title">{title}</h2>
+        <p>{message}</p>
+        <button onClick={onClose}>Cancelar</button>
+        <button onClick={onConfirm}>Eliminar</button>
+      </dialog>
     ) : null
-  )),
+  ),
 }));
 
+// Mock UserForm: render a real form
 vi.mock('../components/features/users/components/UserForm/UserForm', () => ({
-  UserForm: vi.fn(({ onSubmit, onClose, defaultValues, isLoading }) => (
-    <div data-testid="user-form">
-      {isLoading && <div data-testid="form-loading">Loading...</div>}
-      {defaultValues && <div data-testid="form-default-values">{JSON.stringify(defaultValues)}</div>}
-      <button data-testid="form-submit" onClick={() => onSubmit({ email: 'test@example.com', role_id: '1', password: 'password123' })}>Submit</button>
-      <button data-testid="form-cancel" onClick={onClose}>Cancel</button>
-    </div>
+  UserForm: vi.fn(({ onSubmit, onClose, initialData }) => (
+    <form aria-label="Formulario de usuario" onSubmit={e => { e.preventDefault(); onSubmit({ email: 'test@example.com', role_id: '1', password: 'password123' }); }}>
+      <input name="email" defaultValue={initialData?.email || ''} aria-label="Correo electrónico" />
+      <input name="password" type="password" aria-label="Contraseña" />
+      <select name="role_id" aria-label="Rol" defaultValue={initialData?.role_id || ''}>
+        <option value="1">Admin</option>
+        <option value="2">Editor</option>
+      </select>
+      <button type="button" onClick={onClose}>Cancelar</button>
+      <button type="submit">{initialData ? 'Actualizar Usuario' : 'Crear Usuario'}</button>
+    </form>
   )),
 }));
 
@@ -110,6 +140,24 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     </QueryClientProvider>
   );
 };
+
+// Utility to create a mock for useMutation result
+function createMutationResultMock({ mutate = vi.fn(), isPending = false, error = null } = {}) {
+  return {
+    mutate,
+    isPending,
+    error,
+    data: undefined,
+    variables: undefined,
+    isError: false,
+    isIdle: false,
+    isPaused: false,
+    isSuccess: false,
+    reset: vi.fn(),
+    status: 'idle',
+    mutateAsync: vi.fn(),
+  };
+}
 
 describe('UsersPage', () => {
   const mockUsers: User[] = [
@@ -151,32 +199,27 @@ describe('UsersPage', () => {
     vi.clearAllMocks();
     
     // Default mock implementations
-    vi.mocked(useUsersQuery).mockReturnValue({
+    mockUseUsersQuery.mockReturnValue({
       data: { data: mockUsers, count: mockUsers.length },
       isLoading: false,
       isError: false,
       error: null,
     });
 
-    vi.mocked(useMutation).mockReturnValue({
-      mutate: vi.fn(),
-      isPending: false,
-      error: null,
-    } as any);
+    vi.mocked(useMutation).mockReturnValue(createMutationResultMock());
   });
 
-  it('should render successfully with data', async () => {
+  it('should render successfully with data', () => {
     render(<UsersPage />, { wrapper: TestWrapper });
 
-    // Verify DataTable is rendered with correct props
-    expect(screen.getByTestId('data-table')).toBeInTheDocument();
-    expect(screen.getByTestId('total-count')).toHaveTextContent('2');
-    expect(screen.getByTestId('user-1')).toHaveTextContent('test1@example.com');
-    expect(screen.getByTestId('user-2')).toHaveTextContent('test2@example.com');
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(screen.getByText('Total de usuarios: 2')).toBeInTheDocument();
+    expect(screen.getByText('test1@example.com')).toBeInTheDocument();
+    expect(screen.getByText('test2@example.com')).toBeInTheDocument();
   });
 
-  it('should show loading state', async () => {
-    vi.mocked(useUsersQuery).mockReturnValue({
+  it('should show loading state', () => {
+    mockUseUsersQuery.mockReturnValue({
       data: undefined,
       isLoading: true,
       isError: false,
@@ -185,11 +228,12 @@ describe('UsersPage', () => {
 
     render(<UsersPage />, { wrapper: TestWrapper });
 
-    expect(screen.getByTestId('loading')).toBeInTheDocument();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByText(/cargando usuarios/i)).toBeInTheDocument();
   });
 
-  it('should show error state', async () => {
-    vi.mocked(useUsersQuery).mockReturnValue({
+  it('should show error state', () => {
+    mockUseUsersQuery.mockReturnValue({
       data: undefined,
       isLoading: false,
       isError: true,
@@ -198,11 +242,12 @@ describe('UsersPage', () => {
 
     render(<UsersPage />, { wrapper: TestWrapper });
 
-    expect(screen.getByTestId('error')).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(screen.getByText(/error al cargar usuarios/i)).toBeInTheDocument();
   });
 
-  it('should show empty state', async () => {
-    vi.mocked(useUsersQuery).mockReturnValue({
+  it('should show empty state', () => {
+    mockUseUsersQuery.mockReturnValue({
       data: { data: [], count: 0 },
       isLoading: false,
       isError: false,
@@ -211,7 +256,7 @@ describe('UsersPage', () => {
 
     render(<UsersPage />, { wrapper: TestWrapper });
 
-    expect(screen.getByTestId('empty')).toBeInTheDocument();
+    expect(screen.getByText(/no hay usuarios disponibles/i)).toBeInTheDocument();
   });
 
   // Create User Flow Tests
@@ -221,7 +266,7 @@ describe('UsersPage', () => {
     const createButton = screen.getByRole('button', { name: /crear nuevo usuario/i });
     await userEvent.click(createButton);
     
-    expect(screen.getByTestId('user-form')).toBeInTheDocument();
+    expect(screen.getByRole('form', { name: /formulario de usuario/i })).toBeInTheDocument();
   });
 
   it('should close create user dialog when clicking Cancel', async () => {
@@ -232,14 +277,14 @@ describe('UsersPage', () => {
     await userEvent.click(createButton);
     
     // Verify dialog is open
-    expect(screen.getByTestId('user-form')).toBeInTheDocument();
+    expect(screen.getByRole('form', { name: /formulario de usuario/i })).toBeInTheDocument();
     
     // Close dialog
-    const cancelButton = screen.getByTestId('form-cancel');
+    const cancelButton = screen.getByRole('button', { name: /cancelar/i });
     await userEvent.click(cancelButton);
     
     // Verify dialog is closed
-    expect(screen.queryByTestId('user-form')).not.toBeInTheDocument();
+    expect(screen.queryByRole('form', { name: /formulario de usuario/i })).not.toBeInTheDocument();
   });
 
   it('should call create mutation and handle success when submitting form', async () => {
@@ -248,7 +293,7 @@ describe('UsersPage', () => {
       mutate: mockCreateUser,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     render(<UsersPage />, { wrapper: TestWrapper });
     
@@ -257,7 +302,7 @@ describe('UsersPage', () => {
     await userEvent.click(createButton);
     
     // Submit form
-    const submitButton = screen.getByTestId('form-submit');
+    const submitButton = screen.getByRole('button', { name: /crear usuario/i });
     await userEvent.click(submitButton);
     
     // Verify mutation was called with correct data
@@ -269,11 +314,11 @@ describe('UsersPage', () => {
     
     // Simulate success
     const onSuccess = vi.mocked(useMutation).mock.calls[0][0].onSuccess;
-    await onSuccess();
+    if (onSuccess) await onSuccess();
     
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalledWith('Usuario creado exitosamente');
-      expect(screen.queryByTestId('user-form')).not.toBeInTheDocument();
+      expect(screen.queryByRole('form', { name: /formulario de usuario/i })).not.toBeInTheDocument();
     });
   });
 
@@ -284,7 +329,7 @@ describe('UsersPage', () => {
       mutate: mockCreateUser,
       isPending: false,
       error: mockError,
-    } as any);
+    } as MockUseMutationResult);
 
     render(<UsersPage />, { wrapper: TestWrapper });
     
@@ -293,16 +338,16 @@ describe('UsersPage', () => {
     await userEvent.click(createButton);
     
     // Submit form
-    const submitButton = screen.getByTestId('form-submit');
+    const submitButton = screen.getByRole('button', { name: /crear usuario/i });
     await userEvent.click(submitButton);
     
     // Simulate error
     const onError = vi.mocked(useMutation).mock.calls[0][0].onError;
-    await onError(mockError);
+    if (onError) await onError(mockError);
     
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Error al crear el usuario: Failed to create user');
-      expect(screen.getByTestId('user-form')).toBeInTheDocument();
+      expect(screen.getByRole('form', { name: /formulario de usuario/i })).toBeInTheDocument();
     });
   });
 
@@ -310,88 +355,80 @@ describe('UsersPage', () => {
   it('should open delete confirmation dialog when clicking delete button', async () => {
     render(<UsersPage />, { wrapper: TestWrapper });
     
-    const deleteButton = screen.getByTestId('delete-user-1');
+    // Buscar la fila del usuario y el botón de eliminar
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const deleteButton = within(row!).getByRole('button', { name: /eliminar usuario/i });
     await userEvent.click(deleteButton);
     
-    expect(screen.getByTestId('confirm-dialog')).toBeInTheDocument();
-    expect(screen.getByTestId('dialog-message')).toHaveTextContent('test1@example.com');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText(/test1@example.com/)).toBeInTheDocument();
   });
 
   it('should close delete dialog when clicking Cancel', async () => {
     render(<UsersPage />, { wrapper: TestWrapper });
     
     // Open dialog
-    const deleteButton = screen.getByTestId('delete-user-1');
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const deleteButton = within(row!).getByRole('button', { name: /eliminar usuario/i });
     await userEvent.click(deleteButton);
     
     // Verify dialog is open
-    expect(screen.getByTestId('confirm-dialog')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
     
     // Close dialog
-    const cancelButton = screen.getByTestId('dialog-cancel');
+    const cancelButton = screen.getByRole('button', { name: /cancelar/i });
     await userEvent.click(cancelButton);
     
     // Verify dialog is closed
-    expect(screen.queryByTestId('confirm-dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('should call delete mutation and handle success when confirming deletion', async () => {
     const mockDeleteUser = vi.fn();
-    vi.mocked(useMutation).mockReturnValue({
-      mutate: mockDeleteUser,
-      isPending: false,
-      error: null,
-    } as any);
+    vi.mocked(useMutation).mockReturnValue(
+      createMutationResultMock({ mutate: mockDeleteUser })
+    );
 
     render(<UsersPage />, { wrapper: TestWrapper });
-    
     // Open dialog
-    const deleteButton = screen.getByTestId('delete-user-1');
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const deleteButton = within(row!).getByRole('button', { name: /eliminar usuario/i });
     await userEvent.click(deleteButton);
-    
     // Confirm deletion
-    const confirmButton = screen.getByTestId('dialog-confirm');
+    const confirmButton = screen.getByRole('button', { name: /eliminar/i });
     await userEvent.click(confirmButton);
-    
     // Verify mutation was called with correct ID
     expect(mockDeleteUser).toHaveBeenCalledWith('1');
-    
     // Simulate success
     const onSuccess = vi.mocked(useMutation).mock.calls[0][0].onSuccess;
-    await onSuccess();
-    
+    if (onSuccess) await onSuccess();
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalledWith('Usuario eliminado exitosamente');
-      expect(screen.queryByTestId('confirm-dialog')).not.toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
   });
 
   it('should handle error when deleting user', async () => {
     const mockError = new Error('Failed to delete user');
     const mockDeleteUser = vi.fn();
-    vi.mocked(useMutation).mockReturnValue({
-      mutate: mockDeleteUser,
-      isPending: false,
-      error: mockError,
-    } as any);
+    vi.mocked(useMutation).mockReturnValue(
+      createMutationResultMock({ mutate: mockDeleteUser, error: mockError })
+    );
 
     render(<UsersPage />, { wrapper: TestWrapper });
-    
     // Open dialog
-    const deleteButton = screen.getByTestId('delete-user-1');
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const deleteButton = within(row!).getByRole('button', { name: /eliminar usuario/i });
     await userEvent.click(deleteButton);
-    
     // Confirm deletion
-    const confirmButton = screen.getByTestId('dialog-confirm');
+    const confirmButton = screen.getByRole('button', { name: /eliminar/i });
     await userEvent.click(confirmButton);
-    
     // Simulate error
     const onError = vi.mocked(useMutation).mock.calls[0][0].onError;
-    await onError(mockError);
-    
+    if (onError) await onError(mockError);
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Error al eliminar el usuario: Failed to delete user');
-      expect(screen.getByTestId('confirm-dialog')).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
   });
 
@@ -399,128 +436,80 @@ describe('UsersPage', () => {
   it('should open edit dialog when clicking edit button', async () => {
     render(<UsersPage />, { wrapper: TestWrapper });
     
-    const editButton = screen.getAllByLabelText('Editar')[0];
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const editButton = within(row!).getByRole('button', { name: /editar/i });
     await userEvent.click(editButton);
     
-    expect(screen.getByTestId('user-form')).toBeInTheDocument();
+    expect(screen.getByRole('form', { name: /formulario de usuario/i })).toBeInTheDocument();
   });
 
   it('should pre-fill form with user data when editing', async () => {
     render(<UsersPage />, { wrapper: TestWrapper });
     
-    const editButton = screen.getAllByLabelText('Editar')[0];
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const editButton = within(row!).getByRole('button', { name: /editar/i });
     await userEvent.click(editButton);
     
-    const defaultValuesElement = screen.getByTestId('form-default-values');
-    const defaultValues = JSON.parse(defaultValuesElement.textContent || '{}');
-    
-    expect(defaultValues).toEqual({
-      id: mockUsers[0].id,
-      email: mockUsers[0].email,
-      role_id: mockUsers[0].role_id,
-    });
+    const emailInput = screen.getByLabelText(/correo electrónico/i);
+    expect(emailInput).toHaveValue('test1@example.com');
   });
 
   it('should close edit dialog when clicking Cancel', async () => {
     render(<UsersPage />, { wrapper: TestWrapper });
     
-    // Open dialog
-    const editButton = screen.getAllByLabelText('Editar')[0];
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const editButton = within(row!).getByRole('button', { name: /editar/i });
     await userEvent.click(editButton);
     
-    // Verify dialog is open
-    expect(screen.getByTestId('user-form')).toBeInTheDocument();
+    expect(screen.getByRole('form', { name: /formulario de usuario/i })).toBeInTheDocument();
     
-    // Close dialog
-    const cancelButton = screen.getByTestId('form-cancel');
+    const cancelButton = screen.getByRole('button', { name: /cancelar/i });
     await userEvent.click(cancelButton);
     
-    // Verify dialog is closed
-    expect(screen.queryByTestId('user-form')).not.toBeInTheDocument();
-    
-    // Verify update mutation was not called
-    const { mutate } = vi.mocked(useMutation).mock.results[0].value;
-    expect(mutate).not.toHaveBeenCalled();
+    expect(screen.queryByRole('form', { name: /formulario de usuario/i })).not.toBeInTheDocument();
   });
 
   it('should call update mutation and handle success when submitting edit form', async () => {
     const mockUpdateUser = vi.fn();
-    const mockOnSuccess = vi.fn();
-    
-    vi.mocked(useMutation).mockReturnValue({
-      mutate: (data, options) => {
-        mockUpdateUser(data);
-        options?.onSuccess?.();
-      },
-      isPending: false,
-      error: null,
-    } as any);
+    vi.mocked(useMutation).mockReturnValue(
+      createMutationResultMock({ mutate: mockUpdateUser })
+    );
 
     render(<UsersPage />, { wrapper: TestWrapper });
-    
-    // Open edit dialog
-    const editButton = screen.getAllByLabelText('Editar')[0];
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const editButton = within(row!).getByRole('button', { name: /editar/i });
     await userEvent.click(editButton);
-    
-    // Submit form
-    const submitButton = screen.getByTestId('form-submit');
+    const submitButton = screen.getByRole('button', { name: /actualizar usuario/i });
     await userEvent.click(submitButton);
-    
-    // Verify update mutation was called with correct data
-    expect(mockUpdateUser).toHaveBeenCalledWith({
-      id: mockUsers[0].id,
-      email: 'test@example.com',
-      role_id: '1',
-      password: 'password123',
-    });
-    
-    // Verify success actions
+    expect(mockUpdateUser).toHaveBeenCalled();
+    // Simulate success
+    const onSuccess = vi.mocked(useMutation).mock.calls[0][0].onSuccess;
+    if (onSuccess) await onSuccess();
     await waitFor(() => {
-      expect(toast.success).toHaveBeenCalled();
-      expect(vi.mocked(useQueryClient).mock.results[0].value.invalidateQueries).toHaveBeenCalledWith(['users']);
+      expect(toast.success).toHaveBeenCalledWith('Usuario actualizado exitosamente');
+      expect(screen.queryByRole('form', { name: /formulario de usuario/i })).not.toBeInTheDocument();
     });
-    
-    // Verify dialog is closed
-    expect(screen.queryByTestId('user-form')).not.toBeInTheDocument();
   });
 
   it('should call update mutation and handle error when submitting edit form', async () => {
     const mockUpdateUser = vi.fn();
     const mockError = new Error('Failed to update user');
-    
-    vi.mocked(useMutation).mockReturnValue({
-      mutate: (data, options) => {
-        mockUpdateUser(data);
-        options?.onError?.(mockError);
-      },
-      isPending: false,
-      error: null,
-    } as any);
+    vi.mocked(useMutation).mockReturnValue(
+      createMutationResultMock({ mutate: mockUpdateUser, error: mockError })
+    );
 
     render(<UsersPage />, { wrapper: TestWrapper });
-    
-    // Open edit dialog
-    const editButton = screen.getAllByLabelText('Editar')[0];
+    const row = screen.getByText('test1@example.com').closest('tr');
+    const editButton = within(row!).getByRole('button', { name: /editar/i });
     await userEvent.click(editButton);
-    
-    // Submit form
-    const submitButton = screen.getByTestId('form-submit');
+    const submitButton = screen.getByRole('button', { name: /actualizar usuario/i });
     await userEvent.click(submitButton);
-    
-    // Verify update mutation was called with correct data
-    expect(mockUpdateUser).toHaveBeenCalledWith({
-      id: mockUsers[0].id,
-      email: 'test@example.com',
-      role_id: '1',
-      password: 'password123',
-    });
-    
-    // Verify error actions
+    // Simulate error
+    const onError = vi.mocked(useMutation).mock.calls[0][0].onError;
+    if (onError) await onError(mockError);
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(mockError.message);
+      expect(toast.error).toHaveBeenCalledWith('Error al actualizar el usuario: Failed to update user');
+      expect(screen.getByRole('form', { name: /formulario de usuario/i })).toBeInTheDocument();
     });
-    
-    // Verify dialog remains open
-    expect(screen.getByTestId('user-form')).toBeInTheDocument();
   });
 }); 

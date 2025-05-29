@@ -1,133 +1,44 @@
 import { useState } from 'react';
-import {
-  Container,
-  Typography,
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
-  Chip,
-  Tooltip,
-  TextField,
-  Stack,
-} from '@mui/material';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+
 import { DataTable, ColumnDefinition } from '../components/common/DataTable/DataTable';
 import { CreatePlaylistForm } from '../components/playlists/CreatePlaylistForm';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
+import { AddVideoModal } from '../components/features/video/AddVideoModal';
 import { usePlaylistsQuery } from '../hooks/usePlaylistsQuery';
-import { useUpdatePlaylistStatusMutation } from '../hooks/useUpdatePlaylistStatusMutation';
+import { useUpdatePlaylistStatusMutation } from '../hooks/features/playlists/useUpdatePlaylistStatusMutation';
 import { useAuth } from '../hooks/useAuth';
 import { useHasRole } from '../hooks/useHasRole';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createPlaylist, deletePlaylist, updatePlaylist, FetchPlaylistsParams } from '../services/playlist.service';
+import { useCreatePlaylistMutation } from '../hooks/features/playlists/useCreatePlaylistMutation';
+import { useDeletePlaylistMutation } from '../hooks/features/playlists/useDeletePlaylistMutation';
+import { useUpdatePlaylistMutation } from '../hooks/features/playlists/useUpdatePlaylistMutation';
 import { toast } from 'sonner';
 import { currentMundoId } from '../constants';
-import type { Playlist } from '../types/playlist.types';
-import { format } from 'date-fns';
+import type { Playlist, CreatePlaylistData } from '../types/playlist.types';
+import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
-
-// Define the columns configuration for the playlists table
-const playlistColumns: ColumnDefinition<Playlist>[] = [
-  {
-    header: 'Nombre',
-    field: 'name',
-    width: '20%',
-    sortField: 'name',
-  },
-  {
-    header: 'Estado',
-    width: '10%',
-    align: 'center',
-    sortField: 'is_active',
-    render: (playlist) => (
-      <Chip
-        label={playlist.is_active ? 'Activa' : 'Inactiva'}
-        color={playlist.is_active ? 'success' : 'default'}
-        size="small"
-      />
-    ),
-  },
-  {
-    header: 'Publicación',
-    width: '20%',
-    sortField: 'published_at',
-    render: (playlist) => (
-      <Typography variant="body2">
-        {playlist.published_at 
-          ? format(new Date(playlist.published_at), 'PPp', { locale: es })
-          : 'No programada'}
-      </Typography>
-    ),
-  },
-  {
-    header: 'Despublicación',
-    width: '20%',
-    sortField: 'unpublished_at',
-    render: (playlist) => (
-      <Typography variant="body2">
-        {playlist.unpublished_at 
-          ? format(new Date(playlist.unpublished_at), 'PPp', { locale: es })
-          : 'No programada'}
-      </Typography>
-    ),
-  },
-  {
-    header: 'Creado',
-    field: 'created_at',
-    width: '15%',
-    sortField: 'created_at',
-    render: (playlist) => (
-      <Typography variant="body2">
-        {format(new Date(playlist.created_at), 'PPp', { locale: es })}
-      </Typography>
-    ),
-  },
-  {
-    header: 'Acciones',
-    width: '15%',
-    align: 'center',
-    render: (playlist) => (
-      <Box display="flex" gap={1} justifyContent="center">
-        <Tooltip title={canManagePlaylists ? "Editar playlist" : "No tienes permisos para editar playlists"}>
-          <span>
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleEditClick(playlist);
-              }}
-              disabled={!canManagePlaylists}
-            >
-              <EditIcon fontSize="small" />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title={canManagePlaylists ? "Eliminar playlist" : "No tienes permisos para eliminar playlists"}>
-          <span>
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteClick(playlist);
-              }}
-              disabled={!canManagePlaylists}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </span>
-        </Tooltip>
-      </Box>
-    ),
-  },
-];
+import { useTranslation } from 'react-i18next';
+import { extractErrorMessage } from '../utils/errorUtils';
 
 export const GamifiedPlaylistsPage = () => {
+  const { t } = useTranslation();
   // Verificar permisos
   const isSuperAdmin = useHasRole('Super Admin');
   const isContentAdmin = useHasRole('Content Admin');
@@ -137,6 +48,7 @@ export const GamifiedPlaylistsPage = () => {
   const [isCreatePlaylistDialogOpen, setIsCreatePlaylistDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false);
   const [playlistToEdit, setPlaylistToEdit] = useState<Playlist | null>(null);
   const [playlistToDelete, setPlaylistToDelete] = useState<Playlist | null>(null);
 
@@ -153,7 +65,6 @@ export const GamifiedPlaylistsPage = () => {
 
   // User info
   const { user } = useAuth();
-  const queryClient = useQueryClient();
 
   // Queries
   const {
@@ -170,6 +81,13 @@ export const GamifiedPlaylistsPage = () => {
 
   const playlists = playlistsData?.data || [];
   const totalCount = playlistsData?.count || 0;
+
+  // Debug logging
+  console.log('[GamifiedPlaylistsPage] playlistsData:', playlistsData);
+  console.log('[GamifiedPlaylistsPage] playlists array:', playlists);
+  console.log('[GamifiedPlaylistsPage] totalCount:', totalCount);
+  console.log('[GamifiedPlaylistsPage] isLoading:', isLoading);
+  console.log('[GamifiedPlaylistsPage] error:', error);
 
   // Handlers para paginación, ordenamiento y filtrado
   const handlePageChange = (newPage: number) => {
@@ -204,53 +122,9 @@ export const GamifiedPlaylistsPage = () => {
   };
 
   // Mutations
-  const { mutate: createPlaylistMutate, isPending: isCreatingPlaylist } = useMutation({
-    mutationFn: async (data: { name: string; mundo_id: string }) => {
-      const userId = user?.id;
-      if (!userId) {
-        throw new Error('Usuario no autenticado');
-      }
-      return createPlaylist(data, userId);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['playlists'] });
-      setIsCreatePlaylistDialogOpen(false);
-      toast.success('Playlist creada exitosamente');
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al crear la playlist: ${error.message}`);
-    },
-  });
-
-  const { mutate: updatePlaylistMutate, isPending: isUpdatingPlaylist } = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: { name: string; mundo_id: string } }) => {
-      return updatePlaylist(id, data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['playlists'] });
-      setIsEditDialogOpen(false);
-      setPlaylistToEdit(null);
-      toast.success('Playlist actualizada exitosamente');
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al actualizar la playlist: ${error.message}`);
-    },
-  });
-
-  const { mutate: deletePlaylistMutate, isPending: isDeletingPlaylist } = useMutation({
-    mutationFn: async (id: string) => {
-      return deletePlaylist(id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['playlists'] });
-      setIsDeleteDialogOpen(false);
-      setPlaylistToDelete(null);
-      toast.success('Playlist eliminada exitosamente');
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al eliminar la playlist: ${error.message}`);
-    },
-  });
+  const { mutate: createPlaylistMutate, isPending: isCreatingPlaylist } = useCreatePlaylistMutation();
+  const { mutate: deletePlaylistMutate, isPending: isDeletingPlaylist } = useDeletePlaylistMutation();
+  const { mutate: updatePlaylistMutate, isPending: isUpdatingPlaylist } = useUpdatePlaylistMutation();
 
   const { mutate: updatePlaylistStatusMutate } = useUpdatePlaylistStatusMutation();
 
@@ -258,8 +132,24 @@ export const GamifiedPlaylistsPage = () => {
   const handleOpenCreatePlaylistDialog = () => setIsCreatePlaylistDialogOpen(true);
   const handleCloseCreatePlaylistDialog = () => setIsCreatePlaylistDialogOpen(false);
   
-  const handleCreatePlaylistSubmit = (data: { name: string; mundo_id: string }) => {
-    createPlaylistMutate(data);
+  const handleCreatePlaylistSubmit = (data: CreatePlaylistData) => {
+    if (!user?.id) {
+      toast.error('Usuario no autenticado');
+      return;
+    }
+    
+    console.log('[GamifiedPlaylistsPage] Creating playlist with data:', data);
+    
+    createPlaylistMutate(data, {
+      onSuccess: () => {
+        setIsCreatePlaylistDialogOpen(false);
+        toast.success('Playlist creada exitosamente');
+      },
+      onError: (error) => {
+        console.error('[GamifiedPlaylistsPage] Error creating playlist:', error);
+        toast.error('Error al crear la playlist: ' + extractErrorMessage(error, t));
+      },
+    });
   };
 
   const handleEditClick = (playlist: Playlist) => {
@@ -267,9 +157,19 @@ export const GamifiedPlaylistsPage = () => {
     setIsEditDialogOpen(true);
   };
 
-  const handleEditSubmit = (data: { name: string; mundo_id: string }) => {
+  const handleEditSubmit = (data: CreatePlaylistData) => {
     if (playlistToEdit) {
-      updatePlaylistMutate({ id: playlistToEdit.id, data });
+      updatePlaylistMutate({ id: playlistToEdit.id, data }, {
+        onSuccess: () => {
+          setIsEditDialogOpen(false);
+          setPlaylistToEdit(null);
+          toast.success('Playlist actualizada exitosamente');
+        },
+        onError: (error) => {
+          console.error('[GamifiedPlaylistsPage] Error updating playlist:', error);
+          toast.error('Error al actualizar la playlist: ' + extractErrorMessage(error, t));
+        },
+      });
     }
   };
 
@@ -299,13 +199,32 @@ export const GamifiedPlaylistsPage = () => {
 
   const handleDeleteConfirm = () => {
     if (playlistToDelete) {
-      deletePlaylistMutate(playlistToDelete.id);
+      deletePlaylistMutate(playlistToDelete.id, {
+        onSuccess: () => {
+          setIsDeleteDialogOpen(false);
+          setPlaylistToDelete(null);
+        },
+        onError: () => {
+          // El toast ya lo maneja el hook
+        },
+      });
     }
   };
 
   const handleDeleteCancel = () => {
     setIsDeleteDialogOpen(false);
     setPlaylistToDelete(null);
+  };
+
+  // Handlers para el modal de video
+  const handleOpenAddVideoModal = () => setIsAddVideoModalOpen(true);
+  const handleCloseAddVideoModal = () => setIsAddVideoModalOpen(false);
+  
+  const handleAddVideo = (iframeCode: string) => {
+    // Por ahora, solo log del iframe
+    console.log('Adding video with iframe:', iframeCode);
+    toast.success('Video cargado exitosamente (funcionalidad de backend pendiente)');
+    handleCloseAddVideoModal();
   };
 
   const handleRowClick = (playlist: Playlist) => {
@@ -318,25 +237,47 @@ export const GamifiedPlaylistsPage = () => {
       <Box py={4}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
           <Typography variant="h4" component="h1">
-            Gamified Playlists
+            {t('gamified_playlists_title')}
           </Typography>
-          <Tooltip title={canManagePlaylists ? "Crear nueva playlist" : "No tienes permisos para crear playlists"}>
-            <span>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleOpenCreatePlaylistDialog}
-                disabled={!canManagePlaylists}
-              >
-                Crear Playlist
-              </Button>
-            </span>
-          </Tooltip>
+          <Stack direction="row" spacing={2}>
+            <Tooltip title={canManagePlaylists ? "Añadir nuevo video a una playlist" : t('tooltip_no_permission_create_playlists')}>
+              <span>
+                <Button
+                  variant="contained"
+                  startIcon={<VideoLibraryIcon />}
+                  onClick={handleOpenAddVideoModal}
+                  disabled={!canManagePlaylists}
+                  data-testid="add-video-button"
+                  sx={{
+                    backgroundColor: '#FF6B35', // Color naranjo prominente como en el wireframe
+                    '&:hover': {
+                      backgroundColor: '#E55A2B',
+                    },
+                    fontWeight: 'bold',
+                  }}
+                >
+                  + Añadir nuevo video
+                </Button>
+              </span>
+            </Tooltip>
+            <Tooltip title={canManagePlaylists ? t('create_new_playlist_button_tooltip') : t('tooltip_no_permission_create_playlists')}>
+              <span>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={handleOpenCreatePlaylistDialog}
+                  disabled={!canManagePlaylists}
+                >
+                  {t('create_new_playlist_button')}
+                </Button>
+              </span>
+            </Tooltip>
+          </Stack>
         </Box>
 
         <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
           <TextField
-            label="Buscar por nombre"
+            label={t('search_by_name_placeholder')}
             variant="outlined"
             size="small"
             value={filters.name}
@@ -347,12 +288,12 @@ export const GamifiedPlaylistsPage = () => {
 
         <DataTable
           data={playlists}
-          columns={playlistColumns}
+          columns={getPlaylistColumns(t, canManagePlaylists, handleEditClick, handleDeleteClick)}
           isLoading={isLoading}
           isError={!!error}
-          errorMessage={error?.message}
+          errorMessage={error ? extractErrorMessage(error, t) : undefined}
           onRowClick={handleRowClick}
-          emptyMessage="No hay playlists disponibles"
+          emptyMessage={t('empty_playlists_table_message')}
           // Pagination props
           page={page}
           pageSize={pageSize}
@@ -376,9 +317,9 @@ export const GamifiedPlaylistsPage = () => {
         fullWidth
       >
         <DialogTitle>
-          Crear Nueva Playlist
+          {t('dialog_title_create_playlist')}
           <IconButton
-            aria-label="close"
+            aria-label={t('close_dialog_aria_label')}
             onClick={handleCloseCreatePlaylistDialog}
             sx={{
               position: 'absolute',
@@ -410,9 +351,9 @@ export const GamifiedPlaylistsPage = () => {
         fullWidth
       >
         <DialogTitle>
-          Editar Playlist
+          {t('dialog_title_edit_playlist')}
           <IconButton
-            aria-label="close"
+            aria-label={t('close_dialog_aria_label')}
             onClick={handleCloseEditDialog}
             sx={{
               position: 'absolute',
@@ -430,7 +371,11 @@ export const GamifiedPlaylistsPage = () => {
               isLoading={isUpdatingPlaylist}
               defaultValues={playlistToEdit ? {
                 name: playlistToEdit.name,
+                description: playlistToEdit.description || '',
                 mundo_id: playlistToEdit.mundo_id,
+                is_active: playlistToEdit.is_active,
+                published_at: playlistToEdit.published_at,
+                unpublished_at: playlistToEdit.unpublished_at,
               } : undefined}
             />
           </Box>
@@ -442,10 +387,146 @@ export const GamifiedPlaylistsPage = () => {
         open={isDeleteDialogOpen}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        title="Eliminar Playlist"
-        message={`¿Estás seguro de que deseas eliminar la playlist "${playlistToDelete?.name}"? Esta acción no se puede deshacer.`}
+        title={t('dialog_title_delete_playlist')}
+        message={t('dialog_confirm_delete_playlist_message', { name: playlistToDelete?.name })}
         isLoading={isDeletingPlaylist}
+      />
+
+      {/* Add Video Modal */}
+      <AddVideoModal
+        open={isAddVideoModalOpen}
+        onClose={handleCloseAddVideoModal}
+        onAddVideo={handleAddVideo}
       />
     </Container>
   );
-}; 
+};
+
+// Define the columns configuration for the playlists table outside the component
+// to avoid re-creation on every render and allow access to t() via a function.
+const getPlaylistColumns = (t: (key: string, options?: object) => string, canManagePlaylists: boolean, handleEditClick: (playlist: Playlist) => void, handleDeleteClick: (playlist: Playlist) => void): ColumnDefinition<Playlist>[] => [
+  {
+    header: t('table_header_name'),
+    field: 'name',
+    width: '20%',
+    sortField: 'name',
+  },
+  {
+    header: t('table_header_status'),
+    width: '10%',
+    align: 'center',
+    sortField: 'is_active',
+    render: (playlist) => (
+      <Chip
+        label={playlist.is_active ? t('playlist_status_active') : t('playlist_status_inactive')}
+        color={playlist.is_active ? 'success' : 'default'}
+        size="small"
+      />
+    ),
+  },
+  {
+    header: t('table_header_published_at'),
+    width: '15%',
+    sortField: 'published_at',
+    render: (playlist) => {
+      try {
+        return (
+          <Typography variant="body2">
+            {playlist.published_at && playlist.published_at !== 'null'
+              ? format(new Date(playlist.published_at), 'PPp', { locale: es })
+              : t('playlist_date_not_scheduled')}
+          </Typography>
+        );
+      } catch (error) {
+        return (
+          <Typography variant="body2">
+            {t('playlist_date_not_scheduled')}
+          </Typography>
+        );
+      }
+    },
+  },
+  {
+    header: t('table_header_unpublished_at'),
+    width: '15%',
+    sortField: 'unpublished_at',
+    render: (playlist) => {
+      try {
+        return (
+          <Typography variant="body2">
+            {playlist.unpublished_at && playlist.unpublished_at !== 'null'
+              ? format(new Date(playlist.unpublished_at), 'PPp', { locale: es })
+              : t('playlist_date_not_scheduled')}
+          </Typography>
+        );
+      } catch (error) {
+        return (
+          <Typography variant="body2">
+            {t('playlist_date_not_scheduled')}
+          </Typography>
+        );
+      }
+    },
+  },
+  {
+    header: t('table_header_created_at'),
+    field: 'created_at',
+    width: '15%',
+    sortField: 'created_at',
+    render: (playlist) => {
+      try {
+        return (
+          <Typography variant="body2">
+            {playlist.created_at && playlist.created_at !== 'null'
+              ? format(new Date(playlist.created_at), 'PPp', { locale: es })
+              : '-'}
+          </Typography>
+        );
+      } catch (error) {
+        return (
+          <Typography variant="body2">
+            -
+          </Typography>
+        );
+      }
+    },
+  },
+  {
+    header: t('table_header_actions'),
+    width: '15%',
+    align: 'center',
+    render: (playlist) => (
+      <Box display="flex" gap={1} justifyContent="center">
+        <Tooltip title={canManagePlaylists ? t('tooltip_edit_playlist') : t('tooltip_no_permission_edit_playlists')}>
+          <span>
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEditClick(playlist);
+              }}
+              disabled={!canManagePlaylists}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
+        <Tooltip title={canManagePlaylists ? t('tooltip_delete_playlist') : t('tooltip_no_permission_delete_playlists')}>
+          <span>
+            <IconButton
+              size="small"
+              color="error"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteClick(playlist);
+              }}
+              disabled={!canManagePlaylists}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
+      </Box>
+    ),
+  },
+]; 

@@ -1,4 +1,5 @@
-import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+// Eliminar imports, variables y funciones no utilizadas y comentarios obsoletos
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize the Google AI client
 const apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY;

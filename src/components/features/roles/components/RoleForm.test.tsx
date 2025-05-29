@@ -97,11 +97,12 @@ describe('RoleForm', () => {
     const submitButton = screen.getByRole('button', { name: /crear rol/i });
     await userEvent.click(submitButton);
 
-    // Verify onSubmit was called with correct data
+    // Verify onSubmit was called with correct data (react-hook-form passes data as first argument)
     await waitFor(() => {
-      expect(mockOnSubmit).toHaveBeenCalledWith({
-        name: 'Valid Role Name',
-      });
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        { name: 'Valid Role Name' },
+        expect.any(Object) // The event object
+      );
     });
 
     // Verify no validation errors are shown
@@ -114,21 +115,27 @@ describe('RoleForm', () => {
     // Try invalid characters
     const nameInput = screen.getByLabelText('Nombre del Rol');
     await userEvent.type(nameInput, 'Invalid@Name');
-    await userEvent.tab(); // Trigger blur
+    
+    // Submit to trigger validation
+    const submitButton = screen.getByRole('button', { name: /crear rol/i });
+    await userEvent.click(submitButton);
 
     // Verify validation error is shown
     await waitFor(() => {
       expect(screen.getByText('El nombre solo puede contener letras, números, espacios, guiones y guiones bajos')).toBeInTheDocument();
     });
 
-    // Try valid characters
+    // Clear and try valid characters
     await userEvent.clear(nameInput);
     await userEvent.type(nameInput, 'Valid-Name_123');
-    await userEvent.tab(); // Trigger blur
+    await userEvent.click(submitButton);
 
-    // Verify no validation error is shown
+    // Verify onSubmit is called with valid data
     await waitFor(() => {
-      expect(screen.queryByText(/el nombre solo puede contener/i)).not.toBeInTheDocument();
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        { name: 'Valid-Name_123' },
+        expect.any(Object)
+      );
     });
   });
 
@@ -138,7 +145,10 @@ describe('RoleForm', () => {
     // Try too short name
     const nameInput = screen.getByLabelText('Nombre del Rol');
     await userEvent.type(nameInput, 'Ab');
-    await userEvent.tab(); // Trigger blur
+    
+    // Submit to trigger validation
+    const submitButton = screen.getByRole('button', { name: /crear rol/i });
+    await userEvent.click(submitButton);
 
     // Verify validation error is shown
     await waitFor(() => {
@@ -148,7 +158,7 @@ describe('RoleForm', () => {
     // Try too long name
     await userEvent.clear(nameInput);
     await userEvent.type(nameInput, 'A'.repeat(51));
-    await userEvent.tab(); // Trigger blur
+    await userEvent.click(submitButton);
 
     // Verify validation error is shown
     await waitFor(() => {

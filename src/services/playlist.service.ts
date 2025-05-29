@@ -1,8 +1,9 @@
-import { supabase } from './supabaseClient';
-import { Playlist, PlaylistVersion } from '../types/playlist.types';
+import { Playlist, PlaylistVersion, CreatePlaylistData, UpdatePlaylistData } from '../types/playlist.types';
+import { apiService } from './api.service';
 
-export type CreatePlaylistData = Pick<Playlist, 'name' | 'mundo_id' | 'published_at' | 'unpublished_at'>;
-export type UpdatePlaylistData = Pick<Playlist, 'name' | 'mundo_id' | 'published_at' | 'unpublished_at'>;
+// Configuración del backend - ajustar según tu configuración
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const PLAYLISTS_ENDPOINT = `${API_BASE_URL}/playlists`;
 
 export interface FetchPlaylistsParams {
   page: number; // 0-indexed
@@ -16,129 +17,102 @@ export interface FetchPlaylistsParams {
   };
 }
 
-export const fetchPlaylists = async (params: FetchPlaylistsParams): Promise<{ data: Playlist[]; count: number }> => {
-  let query = supabase
-    .from('playlists')
-    .select('*, mundo:mundo_id(*)', { count: 'exact' });
-
-  // Aplicar filtrado
-  if (params.filters.name) {
-    query = query.ilike('name', `%${params.filters.name}%`);
+// Helper function para manejar respuestas HTTP
+const handleResponse = async (response: Response) => {
+  if (!response.ok) {
+    let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorData.error || errorMessage;
+    } catch {
+      // Si no se puede parsear el JSON, usar el mensaje por defecto
+    }
+    throw new Error(errorMessage);
   }
-  if (params.filters.mundo_id) {
-    query = query.eq('mundo_id', params.filters.mundo_id);
-  }
-  if (params.filters.is_active !== undefined) {
-    query = query.eq('is_active', params.filters.is_active);
-  }
+  return response.json();
+};
 
-  // Aplicar ordenamiento
-  if (params.sortBy) {
-    query = query.order(params.sortBy, { ascending: params.sortDirection === 'asc' });
-  } else {
-    // Ordenamiento por defecto si no se especifica sortBy
-    query = query.order('created_at', { ascending: false });
-  }
-
-  // Aplicar paginación (range es inclusivo en ambos extremos)
-  const start = params.page * params.pageSize;
-  const end = start + params.pageSize - 1;
-  query = query.range(start, end);
-
-  const { data, error, count } = await query;
-
-  if (error) {
+export const fetchPlaylists = async (): Promise<Playlist[]> => {
+  console.log('[Playlists] fetchPlaylists llamado');
+  try {
+    // Usar el endpoint que funciona con datos reales
+    const url = '/playlists-direct';
+    console.log('[Playlists] Haciendo petición a:', url);
+    
+    const response = await apiService.get(url);
+    console.log('[Playlists] Respuesta recibida:', response);
+    
+    // El backend devuelve un array directo
+    if (Array.isArray(response)) {
+      console.log('[Playlists] Respuesta es array. Items:', response.length);
+      return response;
+    }
+    
+    // Si viene en formato { data: [...] }, extraer el array
+    if (response && response.data && Array.isArray(response.data)) {
+      console.log('[Playlists] Respuesta en formato {data: [...]}. Items:', response.data.length);
+      return response.data;
+    }
+    
+    console.warn('[Playlists] Respuesta inesperada del backend:', response);
+    return [];
+  } catch (error) {
+    console.error('[Playlists] Error detallado:', error);
+    console.error('[Playlists] Error message:', error?.message);
+    console.error('[Playlists] Error stack:', error?.stack);
     console.error('Error fetching playlists:', error);
     throw error;
   }
-
-  return { data: data || [], count: count ?? 0 };
 };
 
-export const createPlaylist = async (playlistData: CreatePlaylistData, userId: string): Promise<Playlist> => {
-  console.log('Creando playlist con user ID:', userId);
-
-  const { data, error } = await supabase
-    .from('playlists')
-    .insert([{
-      name: playlistData.name,
-      mundo_id: playlistData.mundo_id,
-      description: '', // Valor por defecto
-      order_index: 0,  // Valor por defecto
-      is_active: true, // Valor por defecto
-      created_by: userId,
-      published_at: playlistData.published_at,
-      unpublished_at: playlistData.unpublished_at,
-    }])
-    .select()
-    .single();
-
-  if (error) {
+export const createPlaylist = async (data: CreatePlaylistData): Promise<Playlist> => {
+  try {
+    console.log('[Playlists] Creating playlist with data:', data);
+    return await apiService.post<Playlist>('/playlists', data);
+  } catch (error) {
     console.error('Error creating playlist:', error);
     throw error;
   }
-
-  return data;
 };
 
-export const updatePlaylistStatus = async (id: string, isActive: boolean): Promise<Playlist> => {
-  const { data, error } = await supabase
-    .from('playlists')
-    .update({ 
-      is_active: isActive, 
-      updated_at: new Date().toISOString() 
-    })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error updating playlist status:', error);
+export const updatePlaylist = async (id: string, data: UpdatePlaylistData): Promise<Playlist> => {
+  try {
+    return await apiService.put<Playlist>(`/playlists/${id}`, data);
+  } catch (error) {
+    console.error(`Error updating playlist ${id}:`, error);
     throw error;
   }
-
-  return data;
 };
 
 export const deletePlaylist = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('playlists')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error deleting playlist:', error);
+  try {
+    await apiService.delete<void>(`/playlists/${id}`);
+  } catch (error) {
+    console.error(`Error deleting playlist ${id}:`, error);
     throw error;
   }
 };
 
 export const fetchPlaylistById = async (id: string): Promise<Playlist> => {
-  const { data, error } = await supabase
-    .from('playlists')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    console.error('Error fetching playlist by ID:', error);
+  try {
+    return await apiService.get<Playlist>(`/playlists/${id}`);
+  } catch (error) {
+    console.error(`Error fetching playlist ${id}:`, error);
     throw error;
   }
-
-  return data;
 };
 
 export const fetchPlaylistVersions = async (playlistId: string): Promise<PlaylistVersion[]> => {
-  const { data, error } = await supabase
-    .from('playlist_versions')
-    .select('*')
-    .eq('playlist_id', playlistId)
-    .order('version', { ascending: false });
+  const response = await fetch(`${PLAYLISTS_ENDPOINT}/${playlistId}/versions`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      // Agregar headers de autenticación si es necesario
+      // 'Authorization': `Bearer ${token}`,
+    },
+  });
 
-  if (error) {
-    console.error('Error fetching playlist versions:', error);
-    throw error;
-  }
-
+  const data = await handleResponse(response);
   return data || [];
 };
 
@@ -147,22 +121,15 @@ export const createPlaylistVersion = async (
   playlistData: Playlist,
   userId: string
 ): Promise<PlaylistVersion> => {
-  // Get the current version number
-  const { data: currentVersion } = await supabase
-    .from('playlists')
-    .select('version')
-    .eq('id', playlistId)
-    .single();
-
-  const newVersion = (currentVersion?.version || 0) + 1;
-
-  // Create the version record
-  const { data, error } = await supabase
-    .from('playlist_versions')
-    .insert([{
+  const response = await fetch(`${PLAYLISTS_ENDPOINT}/${playlistId}/versions`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      // Agregar headers de autenticación si es necesario
+      // 'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
       playlist_id: playlistId,
-      version: newVersion,
-      timestamp: new Date().toISOString(),
       changed_by_user_id: userId,
       name: playlistData.name,
       description: playlistData.description,
@@ -171,122 +138,41 @@ export const createPlaylistVersion = async (
       is_active: playlistData.is_active,
       published_at: playlistData.published_at,
       unpublished_at: playlistData.unpublished_at,
-    }])
-    .select()
-    .single();
+    }),
+  });
 
-  if (error) {
-    console.error('Error creating playlist version:', error);
-    throw error;
-  }
-
-  // Update the version number in the main playlist
-  await supabase
-    .from('playlists')
-    .update({ version: newVersion })
-    .eq('id', playlistId);
-
-  return data;
+  return handleResponse(response);
 };
 
-export const updatePlaylist = async (
-  id: string,
-  playlistData: UpdatePlaylistData,
-  userId: string
-): Promise<Playlist> => {
-  // First, get the current playlist data
-  const currentPlaylist = await fetchPlaylistById(id);
+export const updatePlaylistStatus = async (id: string, isActive: boolean): Promise<Playlist> => {
+  const response = await fetch(`${PLAYLISTS_ENDPOINT}/${id}`, {
+    method: 'PATCH',
+    headers: { 
+      'Content-Type': 'application/json',
+      // Agregar headers de autenticación si es necesario
+      // 'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ 
+      is_active: isActive, 
+      updated_at: new Date().toISOString() 
+    }),
+  });
 
-  // Update the playlist
-  const { data, error } = await supabase
-    .from('playlists')
-    .update({
-      name: playlistData.name,
-      mundo_id: playlistData.mundo_id,
-      published_at: playlistData.published_at,
-      unpublished_at: playlistData.unpublished_at,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error updating playlist:', error);
-    throw error;
-  }
-
-  // Create a new version
-  await createPlaylistVersion(id, data, userId);
-
-  return data;
+  return handleResponse(response);
 };
 
 export const restorePlaylistVersion = async (
   playlistId: string,
   versionId: string
 ): Promise<Playlist> => {
-  // First, get the version data
-  const { data: version, error: versionError } = await supabase
-    .from('playlist_versions')
-    .select('*')
-    .eq('id', versionId)
-    .single();
+  const response = await fetch(`${PLAYLISTS_ENDPOINT}/${playlistId}/versions/${versionId}/restore`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      // Agregar headers de autenticación si es necesario
+      // 'Authorization': `Bearer ${token}`,
+    },
+  });
 
-  if (versionError) {
-    console.error('Error fetching playlist version:', versionError);
-    throw versionError;
-  }
-
-  // Get the current version number
-  const { data: currentVersion } = await supabase
-    .from('playlists')
-    .select('version')
-    .eq('id', playlistId)
-    .single();
-
-  const newVersion = (currentVersion?.version || 0) + 1;
-
-  // Update the playlist with the version data
-  const { data: updatedPlaylist, error: updateError } = await supabase
-    .from('playlists')
-    .update({
-      name: version.name,
-      description: version.description,
-      mundo_id: version.mundo_id,
-      order_index: version.order_index,
-      is_active: version.is_active,
-      published_at: version.published_at,
-      unpublished_at: version.unpublished_at,
-      updated_at: new Date().toISOString(),
-      version: newVersion
-    })
-    .eq('id', playlistId)
-    .select()
-    .single();
-
-  if (updateError) {
-    console.error('Error restoring playlist version:', updateError);
-    throw updateError;
-  }
-
-  // Create a new version record for the restoration
-  await supabase
-    .from('playlist_versions')
-    .insert([{
-      playlist_id: playlistId,
-      version: newVersion,
-      timestamp: new Date().toISOString(),
-      changed_by_user_id: version.changed_by_user_id,
-      name: version.name,
-      description: version.description,
-      mundo_id: version.mundo_id,
-      order_index: version.order_index,
-      is_active: version.is_active,
-      published_at: version.published_at,
-      unpublished_at: version.unpublished_at,
-      restored_from_version: versionId
-    }]);
-
-  return updatedPlaylist;
+  return handleResponse(response);
 }; 

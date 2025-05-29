@@ -3,6 +3,15 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { usePlaylistQuery } from './usePlaylistQuery';
 import { fetchPlaylistById } from '../../../services/playlist.service';
 import type { Playlist } from '../../../types/playlist.types';
+import { useQuery } from '@tanstack/react-query';
+
+type MockUseQueryResult<TData = unknown, TError = unknown> = {
+  data: TData | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the playlist service
 vi.mock('../../../services/playlist.service', () => ({
@@ -42,7 +51,7 @@ describe('usePlaylistQuery', () => {
       isLoading: false,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<Playlist | undefined, Error>);
 
     const { result } = renderHook(() => usePlaylistQuery(undefined));
 
@@ -60,7 +69,7 @@ describe('usePlaylistQuery', () => {
       isLoading: true,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<Playlist | undefined, Error>);
 
     const { result } = renderHook(() => usePlaylistQuery(mockPlaylistId));
 
@@ -80,7 +89,7 @@ describe('usePlaylistQuery', () => {
       isLoading: false,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<Playlist, Error>);
 
     const { result } = renderHook(() => usePlaylistQuery(mockPlaylistId));
 
@@ -106,7 +115,7 @@ describe('usePlaylistQuery', () => {
       isLoading: false,
       isError: true,
       error: mockError,
-    } as any);
+    } as MockUseQueryResult<Playlist | undefined, Error>);
 
     const { result } = renderHook(() => usePlaylistQuery(mockPlaylistId));
 
@@ -140,13 +149,13 @@ describe('usePlaylistQuery', () => {
         isLoading: false,
         isError: false,
         error: null,
-      } as any)
+      } as MockUseQueryResult<Playlist, Error>)
       .mockReturnValueOnce({
         data: newMockPlaylist,
         isLoading: false,
         isError: false,
         error: null,
-      } as any);
+      } as MockUseQueryResult<Playlist, Error>);
 
     const { result, rerender } = renderHook(
       ({ id }) => usePlaylistQuery(id),

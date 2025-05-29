@@ -2,10 +2,23 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { GamifiedPlaylistsPage } from './GamifiedPlaylistsPage';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useMutation, useQueryClient } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'sonner';
 import type { Playlist } from '../types/playlist.types';
+import { CreatePlaylistForm } from '../components/playlists/CreatePlaylistForm';
+import { DeletePlaylistDialog } from '../components/playlists/DeletePlaylistDialog';
+import { PlaylistTable } from '../components/playlists/PlaylistTable';
+import { usePlaylistsQuery } from '../hooks/features/playlists/usePlaylistsQuery';
+import { useDeletePlaylistMutation } from '../hooks/features/playlists/useDeletePlaylistMutation';
+import { useCreatePlaylistMutation } from '../hooks/features/playlists/useCreatePlaylistMutation';
+
+type MockUseMutationResult<TData = unknown, TError = unknown, TVariables = unknown, TContext = unknown> = {
+  mutate: jest.Mock<TData, [TVariables]>;
+  isPending: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock hooks
 vi.mock('../hooks/useAuth', () => ({
@@ -23,14 +36,12 @@ vi.mock('../hooks/usePlaylistsQuery', () => ({
   usePlaylistsQuery: vi.fn(),
 }));
 
-vi.mock('@tanstack/react-query', async () => {
-  const actual = await vi.importActual('@tanstack/react-query');
+vi.mock('@tanstack/react-query', async (importOriginal) => {
+  const actual = await importOriginal();
   return {
     ...actual,
+    useQueryClient: vi.fn(),
     useMutation: vi.fn(),
-    useQueryClient: vi.fn(() => ({
-      invalidateQueries: vi.fn(),
-    })),
   };
 });
 
@@ -121,7 +132,7 @@ describe('GamifiedPlaylistsPage', () => {
       mutate: vi.fn(),
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
   });
 
   it('should render successfully with data', async () => {

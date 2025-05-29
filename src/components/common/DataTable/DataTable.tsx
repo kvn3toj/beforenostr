@@ -1,24 +1,21 @@
-import {
-  Box,
-  CircularProgress,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Alert,
-  TablePagination,
-  TableSortLabel,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
-import { format } from 'date-fns';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
+import TablePagination from '@mui/material/TablePagination';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { ArrowUpward as ArrowUpwardIcon, ArrowDownward as ArrowDownwardIcon } from '../Icons';
 
 // Define the type for column definitions
 export interface ColumnDefinition<T> {

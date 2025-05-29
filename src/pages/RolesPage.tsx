@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Typography,
-  Container,
-  Box,
-  Button,
-  IconButton,
-  Chip,
-  Dialog,
-  DialogTitle,
-  TextField,
-  Stack,
-  Tooltip,
-  List,
-  ListItem,
-  ListItemText,
-  CircularProgress,
-  Alert,
-  FormControlLabel,
-  Checkbox,
-  DialogActions,
-  FormGroup,
-} from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import DialogActions from '@mui/material/DialogActions';
+import FormGroup from '@mui/material/FormGroup';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { DataTable, ColumnDefinition } from '../components/common/DataTable/DataTable';
 import { Role, AvailablePermission } from '../types/user.types';
 import { useRolesQuery } from '../hooks/useRolesQuery';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createRole, updateRole, deleteRole, UpdateRoleData, FetchRolesParams } from '../services/role.service';
@@ -37,6 +36,7 @@ import { toast } from 'sonner';
 import { useHasRole } from '../hooks/useHasRole';
 import { useAvailablePermissionsQuery } from '../hooks/features/roles/useAvailablePermissionsQuery';
 import { useUpdateRolePermissionsMutation } from '../hooks/features/roles/useUpdateRolePermissionsMutation';
+import { useCanPerformAction } from '../hooks/useCanPerformAction';
 
 // Type for update mutation data
 type UpdateRoleMutationData = {
@@ -45,8 +45,11 @@ type UpdateRoleMutationData = {
 };
 
 export const RolesPage: React.FC = () => {
+  console.log('>>> RolesPage: Component rendering');
+  
   // Verificar permisos
-  const canManageRoles = useHasRole('Super Admin');
+  const canManageRoles = useCanPerformAction('create_role');
+  console.log('>>> RolesPage: canManageRoles:', canManageRoles);
 
   // States for dialogs
   const [isCreateRoleDialogOpen, setIsCreateRoleDialogOpen] = useState(false);
@@ -76,8 +79,26 @@ export const RolesPage: React.FC = () => {
     filters,
   });
 
+  console.log('>>> RolesPage: useRolesQuery status:', { isLoading, error, rolesData });
+
   const roles = rolesData?.data || [];
   const totalCount = rolesData?.count || 0;
+
+  console.log('>>> RolesPage: Data processed:', { roles, totalCount, rolesLength: roles.length });
+
+  // Log detailed role data for debugging
+  if (roles.length > 0) {
+    console.log('>>> RolesPage: First role data:', roles[0]);
+    roles.forEach((role, index) => {
+      console.log(`>>> RolesPage: Role ${index}:`, {
+        id: role.id,
+        name: role.name,
+        createdAt: role.createdAt,
+        createdAt_type: typeof role.createdAt,
+        permissions: role.permissions
+      });
+    });
+  }
 
   const queryClient = useQueryClient();
 
@@ -230,14 +251,30 @@ export const RolesPage: React.FC = () => {
     },
     {
       header: 'Creado',
-      field: 'created_at',
+      field: 'createdAt',
       width: '20%',
-      sortField: 'created_at',
-      render: (role) => (
-        <Typography noWrap>
-          {format(new Date(role.created_at), 'PP', { locale: es })}
-        </Typography>
-      ),
+      sortField: 'createdAt',
+      render: (role) => {
+        console.log('>>> RolesPage: Formatting date for role:', role.name, 'createdAt:', role.createdAt);
+        try {
+          if (!role.createdAt) {
+            return <Typography noWrap>-</Typography>;
+          }
+          const date = new Date(role.createdAt);
+          if (isNaN(date.getTime())) {
+            console.error('>>> RolesPage: Invalid date for role:', role.name, 'createdAt:', role.createdAt);
+            return <Typography noWrap>Fecha inválida</Typography>;
+          }
+          return (
+            <Typography noWrap>
+              {format(date, 'PP', { locale: es })}
+            </Typography>
+          );
+        } catch (error) {
+          console.error('>>> RolesPage: Error formatting date for role:', role.name, error);
+          return <Typography noWrap>Error en fecha</Typography>;
+        }
+      },
     },
     {
       header: 'Acciones',
@@ -330,6 +367,34 @@ export const RolesPage: React.FC = () => {
     }
     deleteRoleMutation(roleToDelete.id);
   };
+
+  // Early returns AFTER all hooks have been declared
+  if (isLoading) {
+    console.log('>>> RolesPage: Loading state');
+    return (
+      <Container maxWidth="lg">
+        <Box sx={{ my: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+          <CircularProgress />
+          <Typography sx={{ ml: 2 }}>Loading roles...</Typography>
+        </Box>
+      </Container>
+    );
+  }
+
+  if (error) {
+    console.error('>>> RolesPage: Error loading roles:', error);
+    return (
+      <Container maxWidth="lg">
+        <Box sx={{ my: 4 }}>
+          <Alert severity="error">
+            Error loading roles: {error?.message}
+          </Alert>
+        </Box>
+      </Container>
+    );
+  }
+
+  console.log('>>> RolesPage: About to render main content with roles:', roles.length);
 
   return (
     <Container maxWidth="lg">

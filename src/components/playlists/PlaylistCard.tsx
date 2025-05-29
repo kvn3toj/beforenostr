@@ -10,12 +10,10 @@ import {
   MenuItem,
   Box,
 } from '@mui/material';
-import {
-  MoreVert as MoreVertIcon,
-  Edit as EditIcon,
-  DeleteOutline as DeleteIcon,
-  PlayCircleOutline as PlayIcon,
-} from '@mui/icons-material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import { Playlist } from '../../types/playlist.types';
 import { useNavigate } from 'react-router-dom';
 

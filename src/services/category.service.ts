@@ -1,80 +1,116 @@
-import { supabase } from './supabaseClient';
+import { apiService } from './api.service';
 import { Category } from '../types/category.types';
 
-// Obtener todas las categorías
+// TODO: Reemplazar con datos reales una vez que el backend implemente los endpoints de categorías
+const MOCK_CATEGORIES: Category[] = [
+  { id: '1', name: 'Educación', created_at: new Date().toISOString() },
+  { id: '2', name: 'Entretenimiento', created_at: new Date().toISOString() },
+  { id: '3', name: 'Tecnología', created_at: new Date().toISOString() },
+  { id: '4', name: 'Ciencia', created_at: new Date().toISOString() },
+];
+
+// Flag para habilitar/deshabilitar llamadas al backend
+const BACKEND_CATEGORIES_ENABLED = false;
+
 export const fetchCategories = async (): Promise<Category[]> => {
-  const { data, error } = await supabase
-    .from('categories')
-    .select('id, name, created_at')
-    .order('name', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching categories:', error);
-    throw error;
+  if (!BACKEND_CATEGORIES_ENABLED) {
+    console.info('[Categories] Usando datos mock - endpoints de backend no implementados');
+    return MOCK_CATEGORIES;
   }
-
-  return data || [];
+  
+  try {
+    return await apiService.get('/categories');
+  } catch (error) {
+    console.warn('[Categories] Backend no disponible, devolviendo datos mock');
+    return MOCK_CATEGORIES;
+  }
 };
 
-// Crear una nueva categoría
 export const createCategory = async (name: string): Promise<Category> => {
-  const { data, error } = await supabase
-    .from('categories')
-    .insert([{ name }])
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error creating category:', error);
-    throw error;
+  if (!BACKEND_CATEGORIES_ENABLED) {
+    console.info('[Categories] Simulando creación de categoría - endpoints de backend no implementados');
+    const newCategory: Category = {
+      id: Date.now().toString(),
+      name,
+      created_at: new Date().toISOString()
+    };
+    MOCK_CATEGORIES.push(newCategory);
+    return newCategory;
   }
 
-  return data;
+  try {
+    return await apiService.post('/categories', { name });
+  } catch (error) {
+    console.warn('[Categories] Backend no disponible para crear categoría');
+    throw error;
+  }
+};
+
+export const updateCategory = async (id: string, categoryData: any): Promise<Category> => {
+  if (!BACKEND_CATEGORIES_ENABLED) {
+    console.info('[Categories] Simulando actualización de categoría - endpoints de backend no implementados');
+    const category = MOCK_CATEGORIES.find(c => c.id === id);
+    if (category) {
+      category.name = categoryData.name || category.name;
+      return category;
+    }
+    throw new Error('Categoría no encontrada');
+  }
+
+  try {
+    return await apiService.put(`/categories/${id}`, categoryData);
+  } catch (error) {
+    console.warn('[Categories] Backend no disponible para actualizar categoría');
+    throw error;
+  }
+};
+
+export const deleteCategory = async (id: string): Promise<void> => {
+  if (!BACKEND_CATEGORIES_ENABLED) {
+    console.info('[Categories] Simulando eliminación de categoría - endpoints de backend no implementados');
+    const index = MOCK_CATEGORIES.findIndex(c => c.id === id);
+    if (index !== -1) {
+      MOCK_CATEGORIES.splice(index, 1);
+    }
+    return;
+  }
+
+  try {
+    return await apiService.delete(`/categories/${id}`);
+  } catch (error) {
+    console.warn('[Categories] Backend no disponible para eliminar categoría');
+    throw error;
+  }
 };
 
 // Obtener los IDs de categorías asignadas a un item específico
 export const fetchItemCategoryIds = async (itemId: string): Promise<string[]> => {
-  const { data, error } = await supabase
-    .from('playlist_item_categories')
-    .select('category_id')
-    .eq('item_id', itemId);
-
-  if (error) {
-    console.error('Error fetching item categories:', error);
-    throw error;
+  if (!BACKEND_CATEGORIES_ENABLED) {
+    console.info('[Categories] Simulando categorías de item - endpoints de backend no implementados');
+    // Retornar algunas categorías mock para demostración
+    return ['1', '2'];
   }
 
-  // Transformar el array de objetos a un array de IDs
-  return (data || []).map(item => item.category_id);
+  try {
+    const data = await apiService.get(`/items/${itemId}/categories`);
+    return data || [];
+  } catch (error) {
+    console.warn('[Categories] Backend no disponible para obtener categorías del item');
+    return [];
+  }
 };
 
 // Asignar múltiples categorías a un item (reemplazando las existentes)
 export const setItemCategories = async (itemId: string, categoryIds: string[]): Promise<void> => {
-  // 1. Borrar asociaciones antiguas
-  const { error: deleteError } = await supabase
-    .from('playlist_item_categories')
-    .delete()
-    .eq('item_id', itemId);
-
-  if (deleteError) {
-    console.error('Error deleting item categories:', deleteError);
-    throw deleteError;
+  if (!BACKEND_CATEGORIES_ENABLED) {
+    console.info('[Categories] Simulando asignación de categorías - endpoints de backend no implementados');
+    return;
   }
 
-  // 2. Insertar nuevas asociaciones (si hay alguna)
-  if (categoryIds.length > 0) {
-    const newLinks = categoryIds.map(catId => ({ 
-      item_id: itemId, 
-      category_id: catId 
-    }));
-    
-    const { error: insertError } = await supabase
-      .from('playlist_item_categories')
-      .insert(newLinks);
-    
-    if (insertError) {
-      console.error('Error inserting item categories:', insertError);
-      throw insertError;
-    }
+  try {
+    await apiService.put(`/items/${itemId}/categories`, { categoryIds });
+  } catch (error) {
+    console.warn('[Categories] Backend no disponible para asignar categorías');
+    throw error;
   }
 }; 

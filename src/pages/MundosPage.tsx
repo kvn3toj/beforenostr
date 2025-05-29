@@ -1,27 +1,42 @@
 import React, { useState } from 'react';
-import { Typography, Container, Box, IconButton, Chip, Button, Dialog, DialogTitle, Tooltip, TextField, Stack } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import Tooltip from '@mui/material/Tooltip';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
+import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon, Public as WorldIcon, Visibility as ViewIcon } from '../components/common/Icons';
 import { useMundosQuery } from '../hooks/useMundosQuery';
 import { DataTable, ColumnDefinition } from '../components/common/DataTable/DataTable';
 import { Mundo, CreateMundoData, UpdateMundoData } from '../types/mundo.types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createMundo, updateMundo, deleteMundo, FetchMundosParams } from '../services/mundo.service';
+import { useQueryClient } from '@tanstack/react-query';
 import { MundoForm } from '../components/features/mundos/components/MundoForm';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { toast } from 'sonner';
 import { useAuth } from '../hooks/useAuth';
 import { useHasRole } from '../hooks/useHasRole';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
-
-// Type for update mutation data
-type UpdateMundoMutationData = {
-  id: string;
-  data: UpdateMundoData;
-};
+import { useTranslation } from 'react-i18next';
+import { useCreateMundoMutation } from '../hooks/features/mundos/useCreateMundoMutation';
+import { useUpdateMundoMutation } from '../hooks/features/mundos/useUpdateMundoMutation';
+import { useDeleteMundoMutation } from '../hooks/features/mundos/useDeleteMundoMutation';
 
 export const MundosPage: React.FC = () => {
+  const { t } = useTranslation();
   // Verificar permisos
   const isSuperAdmin = useHasRole('Super Admin');
   const isContentAdmin = useHasRole('Content Admin');
@@ -56,8 +71,24 @@ export const MundosPage: React.FC = () => {
   const mundos = mundosData?.data || [];
   const totalCount = mundosData?.count || 0;
 
+  // Debug logging
+  console.log('[MundosPage] mundosData:', mundosData);
+  console.log('[MundosPage] mundos array:', mundos);
+  console.log('[MundosPage] totalCount:', totalCount);
+  console.log('[MundosPage] isLoading:', isLoading);
+  console.log('[MundosPage] error:', error);
+
   const queryClient = useQueryClient();
   const { user } = useAuth();
+
+  // Use new mutation hooks
+  const { mutate: createMundoMutation, isPending: isCreating } = useCreateMundoMutation();
+  const { mutate: updateMundoMutation, isPending: isUpdating } = useUpdateMundoMutation();
+  const { mutate: deleteMundoMutation, isPending: isDeleting } = useDeleteMundoMutation();
+
+  // Calcular estadísticas
+  const activeMundos = mundos.filter(mundo => mundo.is_active).length;
+  const inactiveMundos = mundos.filter(mundo => !mundo.is_active).length;
 
   // Handlers para paginación, ordenamiento y filtrado
   const handlePageChange = (newPage: number) => {
@@ -91,6 +122,15 @@ export const MundosPage: React.FC = () => {
     setPage(0); // Reset a la primera página al cambiar filtro
   };
 
+  const handleStatusFilterChange = (event: any) => {
+    const value = event.target.value;
+    setFilters({ 
+      ...filters, 
+      is_active: value === 'all' ? undefined : value === 'active' 
+    });
+    setPage(0);
+  };
+
   // Handlers
   const handleEditClick = (mundo: Mundo) => {
     setMundoToEdit(mundo);
@@ -115,77 +155,107 @@ export const MundosPage: React.FC = () => {
   // Define column configuration for the mundos table
   const mundoColumns: ColumnDefinition<Mundo>[] = [
     {
-      header: 'Nombre',
+      header: t('table_header_name'),
       field: 'name',
-      width: '20%',
+      width: '25%',
       sortField: 'name',
-    },
-    {
-      header: 'Descripción',
-      field: 'description',
-      width: '20%',
       render: (mundo) => (
-        <Typography noWrap>
-          {mundo.description || '-'}
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <WorldIcon color="primary" fontSize="small" />
+          <Box>
+            <Typography variant="subtitle2" fontWeight="medium">
+              {mundo.name}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              ID: {mundo.id.slice(0, 8)}...
+            </Typography>
+          </Box>
+        </Box>
       ),
     },
     {
-      header: 'Estado',
+      header: t('table_header_description'),
+      field: 'description',
+      width: '30%',
+      render: (mundo) => (
+        <Tooltip title={mundo.description || '-'}>
+          <Typography 
+            noWrap 
+            sx={{ 
+              maxWidth: '200px',
+              color: mundo.description ? 'text.primary' : 'text.secondary',
+              fontStyle: mundo.description ? 'normal' : 'italic'
+            }}
+          >
+            {mundo.description || 'Sin descripción'}
+          </Typography>
+        </Tooltip>
+      ),
+    },
+    {
+      header: t('table_header_status'),
       field: 'is_active',
-      width: '10%',
+      width: '15%',
       align: 'center',
       sortField: 'is_active',
       render: (mundo) => (
         <Chip
-          label={mundo.is_active ? 'Activo' : 'Inactivo'}
+          label={mundo.is_active ? t('mundo_status_active') : t('mundo_status_inactive')}
           color={mundo.is_active ? 'success' : 'error'}
           size="small"
+          variant="filled"
         />
       ),
     },
     {
-      header: 'Publicación',
-      width: '15%',
-      sortField: 'published_at',
-      render: (mundo) => (
-        <Typography variant="body2">
-          {mundo.published_at 
-            ? format(new Date(mundo.published_at), 'PPp', { locale: es })
-            : 'No programada'}
-        </Typography>
-      ),
-    },
-    {
-      header: 'Despublicación',
-      width: '15%',
-      sortField: 'unpublished_at',
-      render: (mundo) => (
-        <Typography variant="body2">
-          {mundo.unpublished_at 
-            ? format(new Date(mundo.unpublished_at), 'PPp', { locale: es })
-            : 'No programada'}
-        </Typography>
-      ),
-    },
-    {
-      header: 'Creado',
+      header: t('table_header_created_at'),
       field: 'created_at',
-      width: '10%',
+      width: '15%',
       sortField: 'created_at',
-      render: (mundo) => (
-        <Typography variant="body2">
-          {format(new Date(mundo.created_at), 'PPp', { locale: es })}
-        </Typography>
-      ),
+      render: (mundo) => {
+        try {
+          return (
+            <Box>
+              <Typography variant="body2">
+                {mundo.created_at && mundo.created_at !== 'null'
+                  ? format(new Date(mundo.created_at), 'dd/MM/yyyy', { locale: es })
+                  : '-'}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {mundo.created_at && mundo.created_at !== 'null'
+                  ? format(new Date(mundo.created_at), 'HH:mm', { locale: es })
+                  : ''}
+              </Typography>
+            </Box>
+          );
+        } catch (error) {
+          return (
+            <Typography variant="body2" color="text.secondary">
+              -
+            </Typography>
+          );
+        }
+      },
     },
     {
-      header: 'Acciones',
-      width: '10%',
+      header: t('table_header_actions'),
+      width: '15%',
       align: 'center',
       render: (mundo) => (
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-          <Tooltip title={canManageMundos ? "Editar mundo" : "No tienes permisos para editar mundos"}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>
+          <Tooltip title="Ver detalles">
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                // TODO: Implementar vista de detalles
+                console.log('Ver detalles:', mundo);
+              }}
+            >
+              <ViewIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={canManageMundos ? t('tooltip_edit_mundo') : t('tooltip_no_permission_edit_mundos')}>
             <span>
               <IconButton
                 size="small"
@@ -199,7 +269,7 @@ export const MundosPage: React.FC = () => {
               </IconButton>
             </span>
           </Tooltip>
-          <Tooltip title={canManageMundos ? "Eliminar mundo" : "No tienes permisos para eliminar mundos"}>
+          <Tooltip title={canManageMundos ? t('tooltip_delete_mundo') : t('tooltip_no_permission_delete_mundos')}>
             <span>
               <IconButton
                 size="small"
@@ -219,183 +289,236 @@ export const MundosPage: React.FC = () => {
     },
   ];
 
-  // Create mutation
-  const { mutate: createMundoMutation, isPending: isCreating } = useMutation({
-    mutationFn: (data: CreateMundoData) => {
-      if (!user?.id) {
-        throw new Error('Usuario no autenticado');
-      }
-      return createMundo(data, user.id);
-    },
-    onSuccess: () => {
-      toast.success('Mundo creado exitosamente');
-      setIsCreateMundoDialogOpen(false);
-      queryClient.invalidateQueries({ queryKey: ['mundos'] });
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al crear el mundo: ${error.message}`);
-    },
-  });
-
-  // Update mutation
-  const { mutate: updateMundoMutation, isPending: isUpdating } = useMutation({
-    mutationFn: ({ id, data }: UpdateMundoMutationData) => updateMundo(id, data),
-    onSuccess: () => {
-      toast.success('Mundo actualizado exitosamente');
-      handleCloseEditDialog();
-      queryClient.invalidateQueries({ queryKey: ['mundos'] });
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al actualizar el mundo: ${error.message}`);
-    },
-  });
-
-  // Delete mutation
-  const { mutate: deleteMundoMutation, isPending: isDeleting } = useMutation({
-    mutationFn: (id: string) => deleteMundo(id),
-    onSuccess: () => {
-      toast.success('Mundo eliminado exitosamente');
-      handleCloseDeleteDialog();
-      queryClient.invalidateQueries({ queryKey: ['mundos'] });
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al eliminar el mundo: ${error.message}`);
-    },
-  });
-
+  // Handlers
   const handleRowClick = (mundo: Mundo) => {
+    // Navegar o mostrar detalles del mundo si es necesario
     console.log('Row clicked:', mundo);
-    // TODO: Implement navigation to mundo details
   };
 
   const handleCreateMundo = (data: CreateMundoData) => {
     createMundoMutation(data);
+    setIsCreateMundoDialogOpen(false); // Close dialog on mutate call
   };
 
   const handleUpdateMundo = (data: UpdateMundoData) => {
-    if (!mundoToEdit) {
-      toast.error('Error: No hay mundo seleccionado para editar');
-      return;
+    if (mundoToEdit) {
+      updateMundoMutation({ id: mundoToEdit.id, data });
+      handleCloseEditDialog(); // Close dialog on mutate call
+    } else {
+      toast.error(t('error_no_mundo_to_edit'));
     }
-    updateMundoMutation({ id: mundoToEdit.id, data });
   };
 
   const handleConfirmDelete = () => {
-    if (!mundoToDelete) {
-      toast.error('Error: No hay mundo seleccionado para eliminar');
-      return;
+    if (mundoToDelete) {
+      deleteMundoMutation(mundoToDelete.id);
+      handleCloseDeleteDialog(); // Close dialog on mutate call
+    } else {
+      toast.error(t('error_no_mundo_to_delete'));
     }
-    deleteMundoMutation(mundoToDelete.id);
   };
 
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1">
-            Gestión de Mundos
-          </Typography>
-          <Tooltip title={canManageMundos ? "Crear nuevo mundo" : "No tienes permisos para crear mundos"}>
-            <span>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setIsCreateMundoDialogOpen(true)}
-                disabled={!canManageMundos}
-              >
-                Crear Nuevo Mundo
-              </Button>
-            </span>
-          </Tooltip>
-        </Box>
+    <Container maxWidth="xl">
+      {/* Header Section */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <WorldIcon color="primary" />
+          {t('mundos_management_title')}
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          Gestiona los mundos de tu plataforma de gamificación
+        </Typography>
 
-        <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-          <TextField
-            label="Buscar por nombre"
-            variant="outlined"
-            size="small"
-            value={filters.name}
-            onChange={handleFilterChange}
-            sx={{ minWidth: 300 }}
-          />
-        </Stack>
+        {/* Statistics Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography color="text.secondary" gutterBottom variant="body2">
+                      Total Mundos
+                    </Typography>
+                    <Typography variant="h4">
+                      {totalCount}
+                    </Typography>
+                  </Box>
+                  <WorldIcon color="primary" sx={{ fontSize: 40 }} />
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography color="text.secondary" gutterBottom variant="body2">
+                      Mundos Activos
+                    </Typography>
+                    <Typography variant="h4" color="success.main">
+                      {activeMundos}
+                    </Typography>
+                  </Box>
+                  <Chip label="Activo" color="success" size="small" />
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography color="text.secondary" gutterBottom variant="body2">
+                      Mundos Inactivos
+                    </Typography>
+                    <Typography variant="h4" color="error.main">
+                      {inactiveMundos}
+                    </Typography>
+                  </Box>
+                  <Chip label="Inactivo" color="error" size="small" />
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box>
+                    <Typography color="text.secondary" gutterBottom variant="body2">
+                      Tasa de Actividad
+                    </Typography>
+                    <Typography variant="h4" color="info.main">
+                      {totalCount > 0 ? Math.round((activeMundos / totalCount) * 100) : 0}%
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    width: 40, 
+                    height: 40, 
+                    borderRadius: '50%', 
+                    bgcolor: 'info.light',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Typography variant="caption" color="info.contrastText" fontWeight="bold">
+                      %
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
 
-        <DataTable
-          data={mundos}
-          columns={mundoColumns}
-          isLoading={isLoading}
-          isError={!!error}
-          errorMessage={error?.message}
-          onRowClick={handleRowClick}
-          emptyMessage="No hay mundos disponibles. ¡Crea tu primer mundo!"
-          // Pagination props
-          page={page}
-          pageSize={pageSize}
-          totalCount={totalCount}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          // Sorting props
-          sortBy={sortBy}
-          sortDirection={sortDirection}
-          onSortChange={handleSortChange}
-          // Filter props
-          filters={filters}
-        />
-
-        {/* Create Mundo Dialog */}
-        <Dialog
-          open={isCreateMundoDialogOpen}
-          onClose={() => setIsCreateMundoDialogOpen(false)}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle>Crear Nuevo Mundo</DialogTitle>
-          <MundoForm
-            onSubmit={handleCreateMundo}
-            isLoading={isCreating}
-            onClose={() => setIsCreateMundoDialogOpen(false)}
-          />
-        </Dialog>
-
-        {/* Edit Mundo Dialog */}
-        <Dialog
-          open={isEditDialogOpen}
-          onClose={handleCloseEditDialog}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle>Editar Mundo</DialogTitle>
-          {mundoToEdit && (
-            <MundoForm
-              onSubmit={handleUpdateMundo}
-              isLoading={isUpdating}
-              onClose={handleCloseEditDialog}
-              defaultValues={{
-                name: mundoToEdit.name,
-                description: mundoToEdit.description || undefined,
-                thumbnail_url: mundoToEdit.thumbnail_url || undefined,
-                is_active: mundoToEdit.is_active,
-                published_at: mundoToEdit.published_at,
-                unpublished_at: mundoToEdit.unpublished_at,
+        {/* Controls Section */}
+        <Card sx={{ p: 3, mb: 3 }}>
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ xs: 'stretch', md: 'center' }}>
+            {/* Create Button */}
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={() => setIsCreateMundoDialogOpen(true)}
+              disabled={!canManageMundos}
+              sx={{
+                whiteSpace: 'nowrap',
+                minWidth: { xs: '100%', md: 'auto' },
               }}
-            />
-          )}
-        </Dialog>
+            >
+              {t('create_new_mundo_button')}
+            </Button>
 
-        {/* Delete Confirmation Dialog */}
-        <ConfirmDialog
-          open={isDeleteDialogOpen}
-          onClose={handleCloseDeleteDialog}
-          onConfirm={handleConfirmDelete}
-          title="Confirmar Eliminación"
-          message={
-            mundoToDelete
-              ? `¿Estás seguro de que deseas eliminar el mundo "${mundoToDelete.name}"? Esta acción no se puede deshacer.`
-              : 'Error: Mundo no encontrado'
-          }
-          isLoading={isDeleting}
-        />
+            {/* Spacer */}
+            <Box sx={{ flexGrow: 1 }} />
+
+            {/* Filters */}
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ minWidth: { xs: '100%', md: 'auto' } }}>
+              <TextField
+                label={t('search_by_name_placeholder')}
+                variant="outlined"
+                size="small"
+                value={filters.name}
+                onChange={handleFilterChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ minWidth: '250px' }}
+              />
+              <FormControl size="small" sx={{ minWidth: '150px' }}>
+                <InputLabel>Estado</InputLabel>
+                <Select
+                  value={filters.is_active === undefined ? 'all' : filters.is_active ? 'active' : 'inactive'}
+                  onChange={handleStatusFilterChange}
+                  label="Estado"
+                >
+                  <MenuItem value="all">Todos</MenuItem>
+                  <MenuItem value="active">Activos</MenuItem>
+                  <MenuItem value="inactive">Inactivos</MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+          </Stack>
+        </Card>
       </Box>
+
+      {/* Data Table */}
+      <DataTable
+        columns={mundoColumns}
+        data={mundos}
+        totalCount={totalCount}
+        page={page}
+        pageSize={pageSize}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        onSortChange={handleSortChange}
+        loading={isLoading}
+        error={error}
+        onRowClick={handleRowClick}
+        emptyMessage={t('empty_mundos_table_message')}
+      />
+
+      {/* Create Mundo Dialog */}
+      <Dialog open={isCreateMundoDialogOpen} onClose={() => setIsCreateMundoDialogOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>{t('create_new_mundo_button')}</DialogTitle>
+        <MundoForm
+          onSubmit={handleCreateMundo}
+          onCancel={() => setIsCreateMundoDialogOpen(false)}
+          isLoading={isCreating}
+        />
+      </Dialog>
+
+      {/* Edit Mundo Dialog */}
+      <Dialog open={isEditDialogOpen} onClose={handleCloseEditDialog} fullWidth maxWidth="sm">
+        <DialogTitle>{t('tooltip_edit_mundo')}</DialogTitle>
+        {mundoToEdit && (
+          <MundoForm
+            initialData={mundoToEdit}
+            onSubmit={handleUpdateMundo}
+            onCancel={handleCloseEditDialog}
+            isLoading={isUpdating}
+          />
+        )}
+      </Dialog>
+
+      {/* Delete Mundo Confirmation Dialog */}
+      <ConfirmDialog
+        open={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        title={t('dialog_title_confirm_deletion')}
+        message={t('dialog_confirm_delete_mundo_message', { name: mundoToDelete?.name })}
+        isLoading={isDeleting}
+        confirmButtonText={t('button_delete')}
+        cancelButtonText={t('button_cancel')}
+      />
     </Container>
   );
 }; 

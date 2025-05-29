@@ -2,33 +2,34 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  Box,
-  Button,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormControlLabel,
-  Switch,
-  FormHelperText,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  CircularProgress,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import FormHelperText from '@mui/material/FormHelperText';
+import CircularProgress from '@mui/material/CircularProgress';
 import { CreateUserData, UpdateUserData } from '../../../types/user.types';
-import { useRolesQuery } from '../../../hooks/useRolesQuery';
 
-// Schema for user form validation
-const userFormSchema = z.object({
+// Schema for user form validation aligned with backend DTOs
+const createUserSchema = z.object({
   email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres').optional(),
-  role_id: z.string().min(1, 'El rol es requerido'),
-  is_active: z.boolean().default(true),
+  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
+  name: z.string().optional(),
+  avatarUrl: z.string().url('URL inválida').optional().or(z.literal('')),
+  isActive: z.boolean().default(true),
 });
 
-type UserFormData = z.infer<typeof userFormSchema>;
+const editUserSchema = z.object({
+  email: z.string().email('Email inválido'),
+  name: z.string().optional(),
+  avatarUrl: z.string().url('URL inválida').optional().or(z.literal('')),
+  isActive: z.boolean().default(true),
+});
+
+type UserFormData = z.infer<typeof createUserSchema>;
 
 interface UserFormProps {
   onSubmit: (data: CreateUserData | UpdateUserData) => void;
@@ -45,63 +46,29 @@ export const UserForm: React.FC<UserFormProps> = ({
   defaultValues,
   isEdit = false,
 }) => {
-  // Fetch roles using the custom hook
-  const { data: roles, isLoading: isLoadingRoles, isError: isErrorRoles } = useRolesQuery();
-
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<UserFormData>({
-    resolver: zodResolver(userFormSchema),
+    resolver: zodResolver(isEdit ? editUserSchema : createUserSchema),
     defaultValues: {
-      is_active: true,
+      isActive: true,
       ...defaultValues,
     },
   });
 
   const handleFormSubmit = (data: UserFormData) => {
-    // If it's an edit and password is empty, remove it from the data
-    if (isEdit && !data.password) {
-      const { password, ...dataWithoutPassword } = data;
-      onSubmit(dataWithoutPassword);
-    } else {
-      onSubmit(data as CreateUserData);
-    }
-  };
-
-  // Determine the role select state and helper text
-  const getRoleSelectState = () => {
-    if (isLoadingRoles) {
-      return {
-        disabled: true,
-        helperText: 'Cargando roles...',
-        showLoading: true,
-      };
-    }
-    if (isErrorRoles) {
-      return {
-        disabled: true,
-        helperText: 'Error al cargar roles',
-        showLoading: false,
-      };
-    }
-    if (!roles?.length) {
-      return {
-        disabled: true,
-        helperText: 'No hay roles disponibles',
-        showLoading: false,
-      };
-    }
-    return {
-      disabled: isLoading,
-      helperText: errors.role_id?.message,
-      showLoading: false,
+    // Clean up empty strings for optional fields
+    const cleanedData = {
+      ...data,
+      name: data.name?.trim() || undefined,
+      avatarUrl: data.avatarUrl?.trim() || undefined,
     };
-  };
 
-  const roleSelectState = getRoleSelectState();
+    onSubmit(cleanedData);
+  };
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -115,62 +82,60 @@ export const UserForm: React.FC<UserFormProps> = ({
             {...register('email')}
             error={!!errors.email}
             helperText={errors.email?.message}
-            disabled={isLoading}
+            disabled={isLoading || isEdit} // Email should not be editable in edit mode
           />
 
-          {/* Password Field */}
-          <TextField
-            label="Contraseña"
-            type="password"
-            fullWidth
-            {...register('password')}
-            error={!!errors.password}
-            helperText={
-              errors.password?.message ||
-              (isEdit ? 'Dejar en blanco para mantener la contraseña actual' : undefined)
-            }
-            disabled={isLoading}
-          />
-
-          {/* Role Field */}
-          <FormControl fullWidth error={!!errors.role_id}>
-            <InputLabel>Rol</InputLabel>
-            <Controller
-              name="role_id"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label="Rol"
-                  disabled={roleSelectState.disabled}
-                  endAdornment={
-                    roleSelectState.showLoading ? (
-                      <CircularProgress size={20} sx={{ mr: 2 }} />
-                    ) : null
-                  }
-                >
-                  {roles?.map((role) => (
-                    <MenuItem key={role.id} value={role.id}>
-                      {role.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
+          {/* Password Field - Only show in create mode */}
+          {!isEdit && (
+            <TextField
+              label="Contraseña"
+              type="password"
+              fullWidth
+              {...register('password')}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              disabled={isLoading}
             />
-            <FormHelperText>
-              {roleSelectState.helperText}
-            </FormHelperText>
-          </FormControl>
+          )}
+
+          {/* Name Field */}
+          <TextField
+            label="Nombre"
+            type="text"
+            fullWidth
+            {...register('name')}
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            disabled={isLoading}
+          />
+
+          {/* Avatar URL Field */}
+          <TextField
+            label="URL del Avatar"
+            type="url"
+            fullWidth
+            {...register('avatarUrl')}
+            error={!!errors.avatarUrl}
+            helperText={errors.avatarUrl?.message}
+            disabled={isLoading}
+          />
 
           {/* Active Status Field */}
-          <FormControlLabel
-            control={
-              <Switch
-                {...register('is_active')}
-                disabled={isLoading}
+          <Controller
+            name="isActive"
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={field.value}
+                    onChange={field.onChange}
+                    disabled={isLoading}
+                  />
+                }
+                label="Usuario Activo"
               />
-            }
-            label="Usuario Activo"
+            )}
           />
         </Box>
       </DialogContent>

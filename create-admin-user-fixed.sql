@@ -53,4 +53,13 @@ BEGIN
   ELSE
     RAISE NOTICE 'El perfil de administrador ya existe.';
   END IF;
-END $$; 
+END $$;
+
+-- Actualizar la contraseña del usuario admin existente
+-- Hash para "admin123" usando bcrypt con salt rounds 10
+UPDATE users 
+SET password = '$2b$10$EixZaYVK1fsbw1ZcfRHAu.Q4.X1pLkllX.iDo3TxOqRqoqAh5PQ6.' 
+WHERE email = 'admin@gamifier.com';
+
+-- Verificar que el usuario existe
+SELECT id, email, name FROM users WHERE email = 'admin@gamifier.com'; 

@@ -94,8 +94,9 @@ export const UserDetailPage: React.FC = () => {
             onClose={() => setIsEditing(false)}
             defaultValues={{
               email: user.email,
-              role_id: user.role_id,
-              is_active: user.is_active,
+              name: user.name,
+              avatarUrl: user.avatarUrl,
+              isActive: user.isActive,
             }}
             isEdit={true}
           />
@@ -123,10 +124,19 @@ export const UserDetailPage: React.FC = () => {
 
             <Grid item xs={12}>
               <Typography variant="subtitle1" color="text.secondary">
+                Nombre
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {user.name || 'No especificado'}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" color="text.secondary">
                 Estado
               </Typography>
               <Typography variant="body1" gutterBottom>
-                {user.is_active ? 'Activo' : 'Inactivo'}
+                {user.isActive ? 'Activo' : 'Inactivo'}
               </Typography>
             </Grid>
 
@@ -135,17 +145,17 @@ export const UserDetailPage: React.FC = () => {
                 Fecha de Creación
               </Typography>
               <Typography variant="body1" gutterBottom>
-                {new Date(user.created_at).toLocaleDateString()}
+                {new Date(user.createdAt).toLocaleDateString()}
               </Typography>
             </Grid>
 
-            {user.updated_at && (
+            {user.updatedAt && (
               <Grid item xs={12}>
                 <Typography variant="subtitle1" color="text.secondary">
                   Última Actualización
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {new Date(user.updated_at).toLocaleDateString()}
+                  {new Date(user.updatedAt).toLocaleDateString()}
                 </Typography>
               </Grid>
             )}

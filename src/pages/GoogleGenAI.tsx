@@ -6201,7 +6201,7 @@ import {
   6. **Imports and TypeScript:**
      ✅ All necessary imports are present:
      \`\`\`typescript
-     import { DeleteIcon } from '@mui/icons-material';
+     import DeleteIcon from '@mui/icons-material/Delete';
      import { IconButton } from '@mui/material';
      import { ConfirmDialog } from '../components/common/ConfirmDialog';
      import { useMutation, useQueryClient } from '@tanstack/react-query';

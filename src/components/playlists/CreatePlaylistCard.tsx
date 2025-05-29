@@ -5,7 +5,7 @@ import {
   Typography,
   Box,
 } from '@mui/material';
-import { AddCircleOutline as AddIcon } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/AddCircleOutline';
 
 interface CreatePlaylistCardProps {
   onClick: () => void;

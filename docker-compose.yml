@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      # Use variables from your .env file for database credentials
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      # Persistent data storage for the database
+      - db_data:/var/lib/postgresql/data
+    ports:
+      # Expose the database port (optional, remove in production if not needed externally)
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      # Load DATABASE_URL, JWT_SECRET, and PORT from the .env file
+      # DATABASE_URL is constructed here to reference the 'db' service name
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?schema=public
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: ${PORT}
+    ports:
+      # Map the container's port to a port on the host
+      - "${PORT}:${PORT}"
+    depends_on:
+      # Ensure the database is healthy before starting the app
+      db:
+        condition: service_healthy
+    # Uncomment the following lines for local development with live reloading (requires nodemon/ts-node-dev)
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
+    # command: npm run start:dev
+    env_file:
+      - .env
+
+volumes:
+  db_data: 

@@ -1,0 +1,79 @@
+%% @backgroundColor(#ffffff)
+graph TD
+    A[Fase 1: Unificación Backend] --> B(1. Confirmación Arquitectónica)
+    B --> C(2. Diseño DB Final - Prisma)
+    C --> D(3. Implementación Módulos Backend)
+    C --> E(4. Implementación RBAC)
+    D --> F(5. Definición API REST)
+    E --> F
+    F --> G(6. Configuración Infra Docker)
+    G --> H(Despliegue/Testing)
+    H --> I(Listo para Frontend Integración)
+    D --> D1[Auth Module]
+    D --> D2[Users Module]
+    D --> D3[Roles/Permissions Modules]
+    D --> D4[Content Module]
+    D --> D5[Merits Module]
+    D --> D6[Wallet Module]
+    D --> D7[Challenges Module]
+    D --> D8[Analytics Module]
+    D --> D9[Admin Module]
+    E --> E1[JWT Strategy]
+    E --> E2[Roles/Permissions Guards]
+    E --> E3[Custom Decorators]
+    F --> F1[Define Endpoints]
+    F --> F2[Implement Controllers]
+    F --> F3[Implement DTOs]
+    F --> F4[Add Swagger Docs]
+    %% Estados Conceptuales (Basado en código generado en chat, no en workspace físico)
+    D1 --> D1_Status(Código Generado - OK)
+    D2 --> D2_Status(Código Generado - OK)
+    D3 --> D3_Status(Código Generado - OK\nGuards Aplicados a RBAC/Users Ctrl)
+    D4 --> D4_Status(Código Generado - OK)
+    D5 --> D5_Status(Código Generado - OK)
+    B --> B_Status(Pendiente Inicializar\nen Workspace)
+    C --> C_Status(Diseño Finalizado\nschema.prisma - OK)
+    D --> D_Status(Código Generado\nPrisma Module/Service - OK)
+    G --> G_Status(Definido Conceptualmente\nDockerfile/docker-compose - OK)
+    %% Areas que requieren definición detallada/implementación
+    D5 --> D5_Status(Pendiente Definición Detalle\ne Implementación)
+    D6 --> D6_Status(Pendiente Definición Detalle\ne Implementación)
+    D7 --> D7_Status(Pendiente Definición Detalle\ne Implementación)
+    D8 --> D8_Status(Pendiente Definición Detalle\ne Implementación)
+    D9 --> D9_Status(Pendiente Implementación)
+    F --> F_Status(Definida con Controladores\nGenerados - OK)
+    H --> H_Status(Pendiente Ejecución)
+    I --> I_Status(Meta de Fase 1)
+    %% Enlaces de Dependencia Lógica Adicional
+    D --> D1
+    D --> D2
+    D --> D3
+    D --> D4
+    D --> D5
+    D --> D6
+    D --> D7
+    D --> D8
+    D --> D9
+    E --> E1
+    E --> E2
+    E --> E3
+    D_Status --> D1
+    D_Status --> D2
+    D_Status --> D3
+    D_Status --> D4
+    D_Status --> D5
+    D_Status --> D6
+    D_Status --> D7
+    D_Status --> D8
+    D_Status --> D9
+    %% Styling for Clarity
+    classDef status fill:#f9f,stroke:#333,stroke-width:2px
+    class D1_Status,D2_Status,D3_Status,D4_Status,D5_Status,D6_Status,D7_Status,D8_Status,D9_Status,C_Status,D_Status,G_Status status
+    classDef pending fill:#ff9,stroke:#333,stroke-width:2px
+    class B_Status,D5_Status,D6_Status,D7_Status,D8_Status,D9_Status,F_Status,H_Status pending
+    classDef completed fill:#9f9,stroke:#333,stroke-width:2px
+    class I_Status completed
+    classDef module fill:#ccf,stroke:#333,stroke-width:2px
+    class D,E,F module
+    classDef submodule fill:#eef,stroke:#333,stroke-width:1px
+    class D1,D2,D3,D4,D5,D6,D7,D8,D9,E1,E2,E3,F1,F2,F3,F4 submodule 

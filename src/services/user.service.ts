@@ -1,108 +1,165 @@
-import { supabase } from './supabaseClient';
-import { User, CreateUserData, UpdateUserData } from '../types/user.types';
+import { apiService } from './api.service';
+
+// Interfaces aligned with backend DTOs
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  avatarUrl?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  lastLogin?: string;
+  // Role information if included in response
+  role?: {
+    id: string;
+    name: string;
+    permissions: string[];
+  };
+}
+
+export interface CreateUserData {
+  email: string;
+  password: string;
+  name?: string;
+  avatarUrl?: string;
+  isActive?: boolean;
+}
+
+export interface UpdateUserData {
+  name?: string;
+  avatarUrl?: string;
+  isActive?: boolean;
+}
 
 export interface FetchUsersParams {
   page: number; // 0-indexed
   pageSize: number;
-  sortBy: string | null;
-  sortDirection: 'asc' | 'desc' | null;
-  filters: {
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  filters?: {
     email?: string;
     role_id?: string;
     is_active?: boolean;
   };
 }
 
-export const fetchUsers = async (params: FetchUsersParams): Promise<{ data: User[]; count: number }> => {
-  let query = supabase
-    .from('users')
-    .select('*, role:role_id(*)', { count: 'exact' });
+export interface UsersResponse {
+  data: User[];
+  count: number;
+  total: number;
+  page: number;
+  pageSize: number;
+}
 
-  // Aplicar filtrado
-  if (params.filters.email) {
-    query = query.ilike('email', `%${params.filters.email}%`);
-  }
-  if (params.filters.role_id) {
-    query = query.eq('role_id', params.filters.role_id);
-  }
-  if (params.filters.is_active !== undefined) {
-    query = query.eq('is_active', params.filters.is_active);
-  }
+// Main user service functions
+export const fetchUsers = async (params: FetchUsersParams): Promise<UsersResponse> => {
+  try {
+    const searchParams = new URLSearchParams();
+    
+    // Paginación
+    searchParams.append('page', params.page.toString());
+    searchParams.append('pageSize', params.pageSize.toString());
+    
+    // Ordenamiento
+    if (params.sortBy) {
+      searchParams.append('sortBy', params.sortBy);
+      searchParams.append('sortDirection', params.sortDirection || 'asc');
+    }
+    
+    // Filtros
+    if (params.filters?.email) {
+      searchParams.append('email', params.filters.email);
+    }
+    if (params.filters?.role_id) {
+      searchParams.append('role_id', params.filters.role_id);
+    }
+    if (params.filters?.is_active !== undefined) {
+      searchParams.append('is_active', params.filters.is_active.toString());
+    }
 
-  // Aplicar ordenamiento
-  if (params.sortBy) {
-    query = query.order(params.sortBy, { ascending: params.sortDirection === 'asc' });
-  } else {
-    // Ordenamiento por defecto si no se especifica sortBy
-    query = query.order('created_at', { ascending: false });
-  }
-
-  // Aplicar paginación (range es inclusivo en ambos extremos)
-  const start = params.page * params.pageSize;
-  const end = start + params.pageSize - 1;
-  query = query.range(start, end);
-
-  const { data, error, count } = await query;
-
-  if (error) {
+    const response = await apiService.get<UsersResponse>(
+      `/users?${searchParams.toString()}`
+    );
+    
+    return response;
+  } catch (error) {
     console.error('Error fetching users:', error);
-    throw new Error(`Error fetching users: ${error.message}`);
+    throw error;
   }
-
-  return { data: data as User[], count: count ?? 0 };
 };
 
 export const fetchUserById = async (id: string): Promise<User> => {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*, role:role_id(*)')
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    throw new Error(`Error fetching user: ${error.message}`);
+  try {
+    return await apiService.get<User>(`/users/${id}`);
+  } catch (error) {
+    console.error(`Error fetching user ${id}:`, error);
+    throw error;
   }
-
-  return data as User;
 };
 
-// Stub functions for future implementation
-export const createUser = async (data: CreateUserData): Promise<User> => {
-  const { data: newUser, error } = await supabase
-    .from('users')
-    .insert([data])
-    .select('*, role:role_id(*)')
-    .single();
-
-  if (error) {
-    throw new Error(`Error creating user: ${error.message}`);
+export const fetchCurrentUserProfile = async (): Promise<User> => {
+  try {
+    return await apiService.get<User>('/users/me');
+  } catch (error) {
+    console.error('Error fetching current user profile:', error);
+    throw error;
   }
+};
 
-  return newUser as User;
+export const createUser = async (data: CreateUserData): Promise<User> => {
+  try {
+    const response = await apiService.post<{ user: User; access_token: string }>('/auth/register', data);
+    return response.user;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
 };
 
 export const updateUser = async (id: string, data: UpdateUserData): Promise<User> => {
-  const { data: updatedUser, error } = await supabase
-    .from('users')
-    .update(data)
-    .eq('id', id)
-    .select('*, role:role_id(*)')
-    .single();
-
-  if (error) {
-    throw new Error(`Error updating user: ${error.message}`);
+  try {
+    return await apiService.patch<User>(`/users/${id}`, data);
+  } catch (error) {
+    console.error(`Error updating user ${id}:`, error);
+    throw error;
   }
-
-  return updatedUser as User;
 };
 
 export const deleteUser = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('users')
-    .delete()
-    .eq('id', id);
+  try {
+    await apiService.delete<void>(`/users/${id}`);
+  } catch (error) {
+    console.error(`Error deleting user ${id}:`, error);
+    throw error;
+  }
+};
 
-  if (error) {
-    throw new Error(`Error deleting user: ${error.message}`);
+// Admin-specific functions (if needed in the future)
+export const fetchAllUsersAdmin = async (): Promise<User[]> => {
+  try {
+    return await apiService.get<User[]>('/admin/users');
+  } catch (error) {
+    console.error('Error fetching all users (admin):', error);
+    throw error;
+  }
+};
+
+// Role assignment functions (using the roles endpoints)
+export const assignRoleToUser = async (userId: string, roleId: string): Promise<void> => {
+  try {
+    await apiService.post<void>(`/roles/users/${userId}/assign-role`, { roleId });
+  } catch (error) {
+    console.error(`Error assigning role ${roleId} to user ${userId}:`, error);
+    throw error;
+  }
+};
+
+export const removeRoleFromUser = async (userId: string, roleId: string): Promise<void> => {
+  try {
+    await apiService.delete<void>(`/roles/users/${userId}/roles/${roleId}`);
+  } catch (error) {
+    console.error(`Error removing role ${roleId} from user ${userId}:`, error);
+    throw error;
   }
 }; 

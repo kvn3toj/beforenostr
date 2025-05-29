@@ -2,14 +2,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  Box,
-  Button,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormHelperText,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
+import FormHelperText from '@mui/material/FormHelperText';
 import { Role } from '../../../types/user.types';
 
 // Schema for role form validation

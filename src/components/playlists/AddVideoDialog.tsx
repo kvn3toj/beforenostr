@@ -10,6 +10,8 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { extractIframeSrc } from '../../utils/videoUtils';
 
 interface AddVideoDialogProps {
   open: boolean;
@@ -23,6 +25,7 @@ export const AddVideoDialog = ({ open, onClose, onAddVideo, isLoading }: AddVide
   const [previewContent, setPreviewContent] = useState('');
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useTranslation();
 
   const handleLoadClick = () => {
     if (!iframeInput.includes('<iframe') || !iframeInput.includes('src=')) {
@@ -74,9 +77,32 @@ export const AddVideoDialog = ({ open, onClose, onAddVideo, isLoading }: AddVide
                 borderColor: 'divider',
                 borderRadius: 1,
                 overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#000',
               }}
-              dangerouslySetInnerHTML={{ __html: previewContent }}
-            />
+            >
+              {(() => {
+                const src = extractIframeSrc(previewContent);
+                if (src) {
+                  return (
+                    <iframe
+                      src={src}
+                      title={t('video_preview')}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      style={{ width: '100%', height: '100%', border: 0 }}
+                    />
+                  );
+                }
+                return (
+                  <Box sx={{ color: 'white', textAlign: 'center', width: '100%' }}>
+                    {t('video_content_not_available')}
+                  </Box>
+                );
+              })()}
+            </Box>
           )}
         </Box>
       </DialogContent>

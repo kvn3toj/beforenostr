@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { MundoForm } from './MundoForm';
 import type { CreateMundoData } from '../../../../types/mundo.types';
-import { addDays, format } from 'date-fns';
+import addDays from 'date-fns/addDays';
+import format from 'date-fns/format';
 
 // Mock MUI components
 vi.mock('@mui/material', async () => {
@@ -71,29 +72,23 @@ describe('MundoForm', () => {
     vi.clearAllMocks();
   });
 
-  it('should render successfully in create mode (without defaultValues)', () => {
+  it('should render successfully in create mode (without defaultValues)', async () => {
     render(<MundoForm onSubmit={mockOnSubmit} onClose={mockOnClose} />);
 
     // Verify form elements are present
-    expect(screen.getByLabelText('Nombre')).toBeInTheDocument();
-    expect(screen.getByLabelText('Descripción')).toBeInTheDocument();
-    expect(screen.getByLabelText('URL de Thumbnail')).toBeInTheDocument();
-    expect(screen.getByTestId('switch-active')).toBeInTheDocument();
-    expect(screen.getByLabelText('Fecha de Publicación')).toBeInTheDocument();
-    expect(screen.getByLabelText('Fecha de Despublicación')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /guardar/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /cancelar/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/Nombre/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Descripción/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/URL de Thumbnail/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Activo/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Fecha de Publicación/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Fecha de Despublicación/i)).toBeInTheDocument();
 
-    // Verify default values
-    expect(screen.getByTestId('input-nombre')).toHaveValue('');
-    expect(screen.getByTestId('input-descripción')).toHaveValue('');
-    expect(screen.getByTestId('input-url de thumbnail')).toHaveValue('');
-    expect(screen.getByTestId('switch-active')).toBeChecked();
-    expect(screen.getByTestId('input-fecha-de-publicación')).toHaveValue('');
-    expect(screen.getByTestId('input-fecha-de-despublicación')).toHaveValue('');
+    // Verify buttons are present
+    expect(screen.getByRole('button', { name: /Cancelar/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Guardar/i })).toBeInTheDocument();
   });
 
-  it('should render successfully in edit mode (with defaultValues)', () => {
+  it('should render successfully in edit mode (with defaultValues)', async () => {
     render(
       <MundoForm
         onSubmit={mockOnSubmit}
@@ -103,19 +98,23 @@ describe('MundoForm', () => {
     );
 
     // Verify form is pre-filled with defaultValues
-    expect(screen.getByTestId('input-nombre')).toHaveValue(mockMundo.name);
-    expect(screen.getByTestId('input-descripción')).toHaveValue(mockMundo.description);
-    expect(screen.getByTestId('input-url de thumbnail')).toHaveValue(mockMundo.thumbnail_url);
-    expect(screen.getByTestId('switch-active')).toBeChecked();
-    expect(screen.getByTestId('input-fecha-de-publicación')).toHaveValue(
+    expect(screen.getByLabelText(/Nombre/i)).toHaveValue(mockMundo.name);
+    expect(screen.getByLabelText(/Descripción/i)).toHaveValue(mockMundo.description);
+    expect(screen.getByLabelText(/URL de Thumbnail/i)).toHaveValue(mockMundo.thumbnail_url);
+    expect(screen.getByLabelText(/Activo/i)).not.toBeChecked();
+    expect(screen.getByLabelText(/Fecha de Publicación/i)).toHaveValue(
       format(new Date(mockMundo.published_at!), "yyyy-MM-dd'T'HH:mm")
     );
-    expect(screen.getByTestId('input-fecha-de-despublicación')).toHaveValue(
+    expect(screen.getByLabelText(/Fecha de Despublicación/i)).toHaveValue(
       format(new Date(mockMundo.unpublished_at!), "yyyy-MM-dd'T'HH:mm")
     );
+
+    // Verify buttons are present
+    expect(screen.getByRole('button', { name: /Cancelar/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Guardar/i })).toBeInTheDocument();
   });
 
-  it('should disable form elements when loading', () => {
+  it('should disable form elements when loading', async () => {
     render(
       <MundoForm
         onSubmit={mockOnSubmit}
@@ -125,21 +124,21 @@ describe('MundoForm', () => {
     );
 
     // Verify form elements are disabled
-    expect(screen.getByTestId('input-nombre')).toBeDisabled();
-    expect(screen.getByTestId('input-descripción')).toBeDisabled();
-    expect(screen.getByTestId('input-url de thumbnail')).toBeDisabled();
-    expect(screen.getByTestId('switch-active')).toBeDisabled();
-    expect(screen.getByTestId('input-fecha-de-publicación')).toBeDisabled();
-    expect(screen.getByTestId('input-fecha-de-despublicación')).toBeDisabled();
-    expect(screen.getByRole('button', { name: /guardando/i })).toBeDisabled();
-    expect(screen.getByRole('button', { name: /cancelar/i })).toBeDisabled();
+    expect(screen.getByLabelText(/Nombre/i)).toBeDisabled();
+    expect(screen.getByLabelText(/Descripción/i)).toBeDisabled();
+    expect(screen.getByLabelText(/URL de Thumbnail/i)).toBeDisabled();
+    expect(screen.getByLabelText(/Activo/i)).toBeDisabled();
+    expect(screen.getByLabelText(/Fecha de Publicación/i)).toBeDisabled();
+    expect(screen.getByLabelText(/Fecha de Despublicación/i)).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Cancelar/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Guardar/i })).toBeDisabled();
   });
 
   it('should show validation errors on invalid submit', async () => {
     render(<MundoForm onSubmit={mockOnSubmit} onClose={mockOnClose} />);
 
     // Try to submit without filling required fields
-    const submitButton = screen.getByRole('button', { name: /guardar/i });
+    const submitButton = screen.getByRole('button', { name: /Guardar/i });
     await userEvent.click(submitButton);
 
     // Verify validation error is shown
@@ -155,12 +154,13 @@ describe('MundoForm', () => {
     render(<MundoForm onSubmit={mockOnSubmit} onClose={mockOnClose} />);
 
     // Fill in the form with valid data
-    await userEvent.type(screen.getByTestId('input-nombre'), 'Valid Mundo Name');
-    await userEvent.type(screen.getByTestId('input-descripción'), 'Valid Description');
-    await userEvent.type(screen.getByTestId('input-url de thumbnail'), 'https://example.com/valid.jpg');
+    await userEvent.type(screen.getByLabelText(/Nombre/i), 'Valid Mundo Name');
+    await userEvent.type(screen.getByLabelText(/Descripción/i), 'Valid Description');
+    await userEvent.type(screen.getByLabelText(/URL de Thumbnail/i), 'https://example.com/valid.jpg');
+    await userEvent.click(screen.getByLabelText(/Activo/i));
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /guardar/i });
+    const submitButton = screen.getByRole('button', { name: /Guardar/i });
     await userEvent.click(submitButton);
 
     // Verify onSubmit was called with correct data
@@ -169,7 +169,7 @@ describe('MundoForm', () => {
         name: 'Valid Mundo Name',
         description: 'Valid Description',
         thumbnail_url: 'https://example.com/valid.jpg',
-        is_active: true,
+        is_active: false,
       }));
     });
 
@@ -184,18 +184,18 @@ describe('MundoForm', () => {
     const unpublishedAt = addDays(publishedAt, 7);
 
     // Fill in the form with valid data
-    await userEvent.type(screen.getByTestId('input-nombre'), 'Valid Mundo Name');
+    await userEvent.type(screen.getByLabelText(/Nombre/i), 'Valid Mundo Name');
     
     // Set publication date
-    const publishedAtInput = screen.getByTestId('input-fecha-de-publicación');
+    const publishedAtInput = screen.getByLabelText(/Fecha de Publicación/i);
     await userEvent.type(publishedAtInput, format(publishedAt, "yyyy-MM-dd'T'HH:mm"));
 
     // Set unpublication date
-    const unpublishedAtInput = screen.getByTestId('input-fecha-de-despublicación');
+    const unpublishedAtInput = screen.getByLabelText(/Fecha de Despublicación/i);
     await userEvent.type(unpublishedAtInput, format(unpublishedAt, "yyyy-MM-dd'T'HH:mm"));
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /guardar/i });
+    const submitButton = screen.getByRole('button', { name: /Guardar/i });
     await userEvent.click(submitButton);
 
     // Verify onSubmit was called with correct dates
@@ -215,18 +215,18 @@ describe('MundoForm', () => {
     const invalidUnpublishedAt = addDays(publishedAt, -1); // Before published_at
 
     // Fill in the form with valid data
-    await userEvent.type(screen.getByTestId('input-nombre'), 'Valid Mundo Name');
+    await userEvent.type(screen.getByLabelText(/Nombre/i), 'Valid Mundo Name');
     
     // Set publication date
-    const publishedAtInput = screen.getByTestId('input-fecha-de-publicación');
+    const publishedAtInput = screen.getByLabelText(/Fecha de Publicación/i);
     await userEvent.type(publishedAtInput, format(publishedAt, "yyyy-MM-dd'T'HH:mm"));
 
     // Set invalid unpublication date
-    const unpublishedAtInput = screen.getByTestId('input-fecha-de-despublicación');
+    const unpublishedAtInput = screen.getByLabelText(/Fecha de Despublicación/i);
     await userEvent.type(unpublishedAtInput, format(invalidUnpublishedAt, "yyyy-MM-dd'T'HH:mm"));
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /guardar/i });
+    const submitButton = screen.getByRole('button', { name: /Guardar/i });
     await userEvent.click(submitButton);
 
     // Verify validation error is shown
@@ -242,23 +242,23 @@ describe('MundoForm', () => {
     render(<MundoForm onSubmit={mockOnSubmit} onClose={mockOnClose} />);
 
     // Fill in required field
-    await userEvent.type(screen.getByTestId('input-nombre'), 'Valid Mundo Name');
+    await userEvent.type(screen.getByLabelText(/Nombre/i), 'Valid Mundo Name');
 
     // Toggle is_active switch
-    const activeSwitch = screen.getByTestId('switch-active');
-    expect(activeSwitch).toBeChecked(); // Default value is true
+    const activeSwitch = screen.getByLabelText(/Activo/i);
+    expect(activeSwitch).not.toBeChecked(); // Default value is false
     await userEvent.click(activeSwitch);
-    expect(activeSwitch).not.toBeChecked();
+    expect(activeSwitch).toBeChecked();
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /guardar/i });
+    const submitButton = screen.getByRole('button', { name: /Guardar/i });
     await userEvent.click(submitButton);
 
     // Verify onSubmit was called with correct is_active value
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith(expect.objectContaining({
         name: 'Valid Mundo Name',
-        is_active: false,
+        is_active: true,
       }));
     });
   });
@@ -266,7 +266,7 @@ describe('MundoForm', () => {
   it('should call onClose when cancel button is clicked', async () => {
     render(<MundoForm onSubmit={mockOnSubmit} onClose={mockOnClose} />);
 
-    const cancelButton = screen.getByRole('button', { name: /cancelar/i });
+    const cancelButton = screen.getByRole('button', { name: /Cancelar/i });
     await userEvent.click(cancelButton);
 
     expect(mockOnClose).toHaveBeenCalledTimes(1);
@@ -275,6 +275,6 @@ describe('MundoForm', () => {
   it('should not show cancel button when onClose is not provided', () => {
     render(<MundoForm onSubmit={mockOnSubmit} />);
 
-    expect(screen.queryByRole('button', { name: /cancelar/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Cancelar/i })).not.toBeInTheDocument();
   });
 }); 

@@ -5,6 +5,7 @@ import { createRole } from '../../../services/role.service';
 import { Role } from '../../../types/user.types';
 import { CreateRoleData } from '../../../components/features/roles/components/RoleForm';
 import { toast } from 'sonner';
+import { UseMutationResult } from '@tanstack/react-query';
 
 // Mock the role service
 vi.mock('../../../services/role.service', () => ({
@@ -26,6 +27,12 @@ vi.mock('sonner', () => ({
     error: vi.fn(),
   },
 }));
+
+// Define a type for the mocked useMutation result
+type MockUseMutationResult<TData = unknown, TError = unknown, TVariables = unknown, TContext = unknown> = Pick<
+  UseMutationResult<TData, TError, TVariables, TContext>,
+  'mutate' | 'isPending' | 'error'
+>;
 
 describe('useCreateRoleMutation', () => {
   const mockCreateRoleData: CreateRoleData = {
@@ -52,7 +59,7 @@ describe('useCreateRoleMutation', () => {
       mutate: vi.fn(),
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useCreateRoleMutation());
 
@@ -70,7 +77,7 @@ describe('useCreateRoleMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useCreateRoleMutation());
 
@@ -97,7 +104,7 @@ describe('useCreateRoleMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: mockError,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useCreateRoleMutation());
 
@@ -117,7 +124,7 @@ describe('useCreateRoleMutation', () => {
       mutate: vi.fn(),
       isPending: true,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useCreateRoleMutation());
 
@@ -134,7 +141,7 @@ describe('useCreateRoleMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useCreateRoleMutation());
 

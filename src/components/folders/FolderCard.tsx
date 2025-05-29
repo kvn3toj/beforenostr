@@ -9,14 +9,12 @@ import {
   MenuItem,
   Box,
 } from '@mui/material';
-import {
-  MoreVert as MoreVertIcon,
-  Edit as EditIcon,
-  DeleteOutline as DeleteIcon,
-  Folder as FolderIcon,
-  PushPin as PinIcon,
-  PushPinOutlined as UnpinIcon,
-} from '@mui/icons-material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import FolderIcon from '@mui/icons-material/Folder';
+import PinIcon from '@mui/icons-material/PushPin';
+import UnpinIcon from '@mui/icons-material/PushPinOutlined';
 import { PlaylistFolder } from '../../types/folder.types';
 
 interface FolderCardProps {

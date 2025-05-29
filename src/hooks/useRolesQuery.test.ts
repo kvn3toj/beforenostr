@@ -3,6 +3,16 @@ import { vi } from 'vitest';
 import { useRolesQuery } from './useRolesQuery';
 import { fetchRoles, FetchRolesParams } from '../services/role.service';
 import { Role } from '../types/user.types';
+import { useQuery } from '@tanstack/react-query';
+
+type MockUseQueryResult<TData = unknown, TError = unknown> = {
+  data: TData | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: TError | null;
+  isSuccess: boolean;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the role service
 vi.mock('../services/role.service', () => ({
@@ -59,7 +69,7 @@ describe('useRolesQuery', () => {
       isError: false,
       error: null,
       isSuccess: false,
-    } as any);
+    } as MockUseQueryResult);
 
     const { result } = renderHook(() => useRolesQuery(mockParams));
 
@@ -76,7 +86,7 @@ describe('useRolesQuery', () => {
       isError: false,
       error: null,
       isSuccess: true,
-    } as any);
+    } as MockUseQueryResult<{ data: Role[], count: number }>);
 
     const { result } = renderHook(() => useRolesQuery(mockParams));
 
@@ -101,7 +111,7 @@ describe('useRolesQuery', () => {
       isError: true,
       error: mockError,
       isSuccess: false,
-    } as any);
+    } as MockUseQueryResult<undefined, Error>);
 
     const { result } = renderHook(() => useRolesQuery(mockParams));
 
@@ -133,7 +143,7 @@ describe('useRolesQuery', () => {
       isError: false,
       error: null,
       isSuccess: true,
-    } as any);
+    } as MockUseQueryResult<{ data: Role[], count: number }>);
 
     const { rerender } = renderHook((params) => useRolesQuery(params), {
       initialProps: mockParams,

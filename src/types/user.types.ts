@@ -1,9 +1,10 @@
 export interface Role {
   id: string;
   name: string;
-  permissions: string[];
-  created_at: string;
-  updated_at: string;
+  description?: string;
+  permissions: string[] | Array<{ id: string; name: string; description?: string }>;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type AvailablePermission = string;
@@ -12,19 +13,38 @@ export type AvailablePermissionsList = AvailablePermission[];
 export interface User {
   id: string;
   email: string;
-  role_id: string;
-  role: Role; // This comes from the join in the query
-  created_at: string;
-  updated_at: string;
-  last_login: string | null;
-  is_active: boolean;
+  name?: string;
+  avatarUrl?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  lastLogin?: string;
+  role?: {
+    id: string;
+    name: string;
+    permissions: string[];
+  };
 }
 
-// Types for CRUD operations
-export type CreateUserData = Omit<User, 'id' | 'created_at' | 'updated_at' | 'last_login' | 'role'> & {
-  password: string; // Required for user creation
+export type CreateUserData = {
+  email: string;
+  password: string;
+  name?: string;
+  avatarUrl?: string;
+  isActive?: boolean;
 };
 
-export type UpdateUserData = Partial<Omit<User, 'id' | 'created_at' | 'updated_at' | 'last_login' | 'role'>> & {
-  password?: string; // Optional for updates
-}; 
+export type UpdateUserData = {
+  name?: string;
+  avatarUrl?: string;
+  isActive?: boolean;
+};
+
+export interface UserAuditSnapshot {
+  id: string;
+  email: string;
+  name?: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+} 

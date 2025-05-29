@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef, ErrorInfo } from 'react';
 import { Container, Box, Typography, Button, Paper, Stack, Snackbar, Alert as MuiAlert, Fade } from '@mui/material';
 import { Event } from 'nostr-tools/core';
-import { formatDistanceToNow } from 'date-fns';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { es } from 'date-fns/locale';
 import NostrForms from '../components/nostr/NostrForms';
 import NostrEventList from '../components/nostr/NostrEventList';
@@ -94,6 +94,8 @@ const NostrDemoPage: React.FC = () => {
   const {
     client,
     isConnected,
+    isConnecting,
+    connectToNostr,
     receivedEvents: contextReceivedEvents,
     profiles: contextProfiles,
     mundos: contextMundos,
@@ -103,10 +105,17 @@ const NostrDemoPage: React.FC = () => {
     getProfilePicture,
     getLud16,
     parseMundoContent,
-    getMundoDTag,
+    getMundoIdentifier,
     parsePlaylistContent,
     parseExperienciaContent,
   } = useNostrContext();
+
+  // Conectar a Nostr al cargar la página
+  useEffect(() => {
+    if (!isConnected && !isConnecting) {
+      connectToNostr();
+    }
+  }, [isConnected, isConnecting, connectToNostr]);
 
   // Suscripción personal
   useEffect(() => {
@@ -387,6 +396,8 @@ const NostrDemoPage: React.FC = () => {
     setMundoSnackbar({ ...mundoSnackbar, open: false });
   };
 
+  // Ya no necesitamos este useEffect porque la conexión se maneja en el contexto
+
   return (
     <ErrorBoundary>
       <Container maxWidth="md">
@@ -474,7 +485,7 @@ const NostrDemoPage: React.FC = () => {
                   getUserDisplayName={getUserDisplayName}
                   getProfilePicture={getProfilePicture}
                   // parseMundoContent={parseMundoContent}
-                  getMundoDTag={getMundoDTag}
+                  getMundoDTag={getMundoIdentifier}
                   parsePlaylistContent={parsePlaylistContent}
                   parseExperienciaContent={parseExperienciaContent}
                 />

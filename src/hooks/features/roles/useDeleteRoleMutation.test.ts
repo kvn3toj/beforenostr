@@ -3,6 +3,14 @@ import { vi } from 'vitest';
 import { useDeleteRoleMutation } from './useDeleteRoleMutation';
 import { deleteRole } from '../../../services/role.service';
 import { toast } from 'sonner';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+type MockUseMutationResult<TData = unknown, TError = unknown, TVariables = unknown, TContext = unknown> = {
+  mutate: jest.Mock<TData, [TVariables]>;
+  isPending: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the role service
 vi.mock('../../../services/role.service', () => ({
@@ -39,7 +47,7 @@ describe('useDeleteRoleMutation', () => {
       mutate: vi.fn(),
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useDeleteRoleMutation());
 
@@ -57,7 +65,7 @@ describe('useDeleteRoleMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult<void, Error, string>);
 
     const { result } = renderHook(() => useDeleteRoleMutation());
 
@@ -78,13 +86,13 @@ describe('useDeleteRoleMutation', () => {
     // Mock deleteRole to throw error
     vi.mocked(deleteRole).mockRejectedValue(mockError);
 
-    // Mock useMutation to return error state
+    // Mock useMutation to simulate error
     const mockMutate = vi.fn();
     vi.mocked(useMutation).mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       error: mockError,
-    } as any);
+    } as MockUseMutationResult<void, Error, string>);
 
     const { result } = renderHook(() => useDeleteRoleMutation());
 
@@ -99,12 +107,12 @@ describe('useDeleteRoleMutation', () => {
   });
 
   it('should show loading state during mutation', async () => {
-    // Mock useMutation to return loading state
+    // Mock useMutation to simulate loading state
     vi.mocked(useMutation).mockReturnValue({
       mutate: vi.fn(),
       isPending: true,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useDeleteRoleMutation());
 
@@ -121,7 +129,7 @@ describe('useDeleteRoleMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult<void, Error, string>);
 
     const { result } = renderHook(() => useDeleteRoleMutation());
 

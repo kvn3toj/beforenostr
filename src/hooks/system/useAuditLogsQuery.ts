@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchAuditLogs, FetchAuditLogsParams } from '../../services/system.service';
-import { AuditLog } from '../../types/system.types';
+import { fetchAuditLogs, FetchAuditLogsParams, AuditLog } from '../../services/auditLog.service';
 
 export const useAuditLogsQuery = (params: FetchAuditLogsParams) => {
   return useQuery<{ data: AuditLog[]; count: number }, Error>({
-    queryKey: ['system', 'auditLogs', params],
+    queryKey: ['admin', 'auditLogs', params],
     queryFn: () => fetchAuditLogs(params),
   });
 }; 

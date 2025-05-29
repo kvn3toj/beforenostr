@@ -1,8 +1,10 @@
 import React from 'react';
 import { Box, Typography, Paper, Avatar, Card, CardHeader, CardContent, CardActions, Button, Alert, Grid, IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import {
+  Edit as EditIcon,
+  Visibility as VisibilityIcon,
+  EmojiEvents as EmojiEventsIcon,
+} from '../common/Icons';
 import { Event } from 'nostr-tools/core';
 import { useNostrContext } from '../../contexts/NostrContext';
 import type { MundoContent, PlaylistContent, ExperienciaContent, NostrProfile } from '../../types/nostr';

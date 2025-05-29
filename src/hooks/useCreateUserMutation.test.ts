@@ -4,6 +4,14 @@ import { useCreateUserMutation } from './useCreateUserMutation';
 import { createUser } from '../services/user.service';
 import { CreateUserData, User } from '../types/user.types';
 import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+
+type MockUseMutationResult<TData = unknown, TError = unknown, TVariables = unknown, TContext = unknown> = {
+  mutate: jest.Mock<TData, [TVariables]>;
+  isPending: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the user service
 vi.mock('../services/user.service', () => ({
@@ -63,7 +71,7 @@ describe('useCreateUserMutation', () => {
       mutate: vi.fn(),
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useCreateUserMutation());
 
@@ -81,7 +89,7 @@ describe('useCreateUserMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult<User, Error, CreateUserData>);
 
     const { result } = renderHook(() => useCreateUserMutation());
 
@@ -112,7 +120,7 @@ describe('useCreateUserMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: mockError,
-    } as any);
+    } as MockUseMutationResult<User, Error, CreateUserData>);
 
     const { result } = renderHook(() => useCreateUserMutation());
 
@@ -137,7 +145,7 @@ describe('useCreateUserMutation', () => {
       mutate: vi.fn(),
       isPending: true,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useCreateUserMutation());
 

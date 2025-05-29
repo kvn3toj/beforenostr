@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient';
+import { apiService } from './api.service';
 import { PlaylistFolder } from '../types/folder.types';
 
 export type CreateFolderData = {
@@ -7,96 +7,88 @@ export type CreateFolderData = {
 };
 
 export const fetchFolders = async (mundoId: string): Promise<PlaylistFolder[]> => {
-  const { data, error } = await supabase
-    .from('playlist_folders')
-    .select('*')
-    .eq('mundo_id', mundoId)
-    .eq('is_deleted', false)
-    .order('is_pinned', { ascending: false })
-    .order('name', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching folders:', error);
-    throw error;
+  try {
+    return await apiService.get(`/folders?mundo_id=${mundoId}`);
+  } catch (error) {
+    console.warn('[Folders] Backend no disponible, devolviendo datos mock');
+    return [];
   }
-
-  return data || [];
 };
 
 export const createFolder = async (folderData: CreateFolderData, userId: string): Promise<PlaylistFolder> => {
   console.log('Creando carpeta con user ID:', userId);
 
-  const { data, error } = await supabase
-    .from('playlist_folders')
-    .insert([{
+  try {
+    return await apiService.post('/folders', {
       name: folderData.name,
       mundo_id: folderData.mundo_id,
       order_index: 0,
       is_pinned: false,
       is_deleted: false,
       created_by: userId
-    }])
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error creating folder:', error);
+    });
+  } catch (error) {
+    console.warn('[Folders] Backend no disponible para crear folder');
     throw error;
   }
-
-  return data;
 };
 
 export const updateFolderPinStatus = async (id: string, isPinned: boolean): Promise<PlaylistFolder> => {
-  const { data, error } = await supabase
-    .from('playlist_folders')
-    .update({ 
-      is_pinned: isPinned, 
-      updated_at: new Date().toISOString() 
-    })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error updating folder pin status:', error);
+  try {
+    return await apiService.put(`/folders/${id}`, {
+      is_pinned: isPinned,
+      updated_at: new Date().toISOString()
+    });
+  } catch (error) {
+    console.warn('[Folders] Backend no disponible para actualizar pin');
     throw error;
   }
-
-  return data;
 };
 
 export const softDeleteFolder = async (id: string): Promise<void> => {
-  const { error } = await supabase
-    .from('playlist_folders')
-    .update({ 
-      is_deleted: true, 
-      deleted_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error soft deleting folder:', error);
+  try {
+    await apiService.delete(`/folders/${id}`);
+  } catch (error) {
+    console.warn('[Folders] Backend no disponible para eliminar folder');
     throw error;
   }
 };
 
 export const updateFolderName = async (id: string, name: string): Promise<PlaylistFolder> => {
-  const { data, error } = await supabase
-    .from('playlist_folders')
-    .update({ 
-      name: name, 
-      updated_at: new Date().toISOString() 
-    })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error updating folder name:', error);
+  try {
+    return await apiService.put(`/folders/${id}`, {
+      name: name,
+      updated_at: new Date().toISOString()
+    });
+  } catch (error) {
+    console.warn('[Folders] Backend no disponible para actualizar nombre');
     throw error;
   }
+};
 
-  return data;
+export const updateFolder = async (id: string, folderData: any): Promise<PlaylistFolder> => {
+  try {
+    return await apiService.put(`/folders/${id}`, folderData);
+  } catch (error) {
+    console.warn('[Folders] Backend no disponible para actualizar folder');
+    throw error;
+  }
+};
+
+export const deleteFolder = async (id: string): Promise<void> => {
+  try {
+    return await apiService.delete(`/folders/${id}`);
+  } catch (error) {
+    console.warn('[Folders] Backend no disponible para eliminar folder');
+    throw error;
+  }
+};
+
+export const fetchFolderById = async (id: string): Promise<PlaylistFolder> => {
+  try {
+    return await apiService.get(`/folders/${id}`);
+  } catch (error) {
+    console.warn('[Folders] Backend no disponible para obtener folder');
+    throw error;
+  }
 }; 

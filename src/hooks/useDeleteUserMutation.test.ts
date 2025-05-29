@@ -3,6 +3,14 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { useDeleteUserMutation } from './useDeleteUserMutation';
 import { deleteUser } from '../services/user.service';
 import { toast } from 'sonner';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+type MockUseMutationResult<TData = unknown, TError = unknown, TVariables = unknown, TContext = unknown> = {
+  mutate: jest.Mock<TData, [TVariables]>;
+  isPending: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the user service
 vi.mock('../services/user.service', () => ({
@@ -39,7 +47,7 @@ describe('useDeleteUserMutation', () => {
       mutate: vi.fn(),
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useDeleteUserMutation());
 
@@ -57,7 +65,7 @@ describe('useDeleteUserMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: null,
-    } as any);
+    } as MockUseMutationResult<void, Error, string>);
 
     const { result } = renderHook(() => useDeleteUserMutation());
 
@@ -88,7 +96,7 @@ describe('useDeleteUserMutation', () => {
       mutate: mockMutate,
       isPending: false,
       error: mockError,
-    } as any);
+    } as MockUseMutationResult<void, Error, string>);
 
     const { result } = renderHook(() => useDeleteUserMutation());
 
@@ -113,7 +121,7 @@ describe('useDeleteUserMutation', () => {
       mutate: vi.fn(),
       isPending: true,
       error: null,
-    } as any);
+    } as MockUseMutationResult);
 
     const { result } = renderHook(() => useDeleteUserMutation());
 

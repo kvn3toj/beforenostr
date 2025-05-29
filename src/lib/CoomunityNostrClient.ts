@@ -159,23 +159,23 @@ export class CoomunityNostrClient {
   }
 
   private async attemptConnection(url: string): Promise<void> {
-    const state = this.relayStates.get(url);
+    // Asegurarse de que url es un string
+    const relayUrl = typeof url === 'string' ? url : String(url);
+    const state = this.relayStates.get(relayUrl);
     if (!state) {
-      this.relayStates.set(url, {
+      this.relayStates.set(relayUrl, {
         status: 'connecting',
         lastAttempt: Date.now(),
         retryCount: 0,
         nextRetryDelay: this.INITIAL_RETRY_DELAY
       });
     }
-
-    this.updateRelayState(url, 'connecting');
-
+    this.updateRelayState(relayUrl, 'connecting');
     return new Promise<void>((resolve, reject) => {
       const timeout = setTimeout(() => {
-        const error = new Error(`Timeout al conectar a ${url} después de 10 segundos`);
+        const error = new Error(`Timeout al conectar a ${relayUrl} después de 10 segundos`);
         console.error('Error de timeout:', {
-          url,
+          url: relayUrl,
           timestamp: new Date().toISOString(),
           error: error.message,
           retryCount: state?.retryCount,
@@ -185,13 +185,12 @@ export class CoomunityNostrClient {
             'Firewall bloqueando la conexión'
           ]
         });
-        this.updateRelayState(url, 'disconnected');
+        this.updateRelayState(relayUrl, 'disconnected');
         reject(error);
       }, 10000);
-
       try {
-        console.log(`Intentando conectar a ${url}...`, {
-          url,
+        console.log(`Intentando conectar a ${relayUrl}...`, {
+          url: relayUrl,
           timestamp: new Date().toISOString(),
           retryCount: state?.retryCount,
           nextRetryDelay: state?.nextRetryDelay,
@@ -201,13 +200,12 @@ export class CoomunityNostrClient {
             language: navigator.language
           }
         });
-
-        const ws = new WebSocket(url);
+        const ws = new WebSocket(relayUrl);
 
         ws.onopen = () => {
           clearTimeout(timeout);
-          console.log(`Conexión exitosa a ${url}`, {
-            url,
+          console.log(`Conexión exitosa a ${relayUrl}`, {
+            url: relayUrl,
             timestamp: new Date().toISOString(),
             readyState: ws.readyState,
             protocol: ws.protocol,
@@ -215,13 +213,13 @@ export class CoomunityNostrClient {
             connectionTime: Date.now() - (state?.lastAttempt || Date.now())
           });
 
-          this.activeRelays.set(url, ws);
-          this.updateRelayState(url, 'connected');
+          this.activeRelays.set(relayUrl, ws);
+          this.updateRelayState(relayUrl, 'connected');
           
           // Reset retry count on successful connection
-          const currentState = this.relayStates.get(url);
+          const currentState = this.relayStates.get(relayUrl);
           if (currentState) {
-            this.relayStates.set(url, {
+            this.relayStates.set(relayUrl, {
               ...currentState,
               retryCount: 0,
               nextRetryDelay: this.INITIAL_RETRY_DELAY
@@ -237,7 +235,7 @@ export class CoomunityNostrClient {
         };
 
         ws.onmessage = (event) => {
-          this.handleMessage(url, event.data as string);
+          this.handleMessage(relayUrl, event.data as string);
         };
 
         ws.onerror = (errorEvent) => {
@@ -245,7 +243,7 @@ export class CoomunityNostrClient {
           // Intentar obtener detalles del error si está disponible en el evento
           const actualError = (errorEvent as ErrorEvent).error || new Error('Error desconocido en WebSocket');
           const errorDetails = {
-            url,
+            url: relayUrl,
             timestamp: new Date().toISOString(),
             type: errorEvent.type,
             readyState: ws.readyState,
@@ -265,14 +263,14 @@ export class CoomunityNostrClient {
             }
           };
           console.error('Error en WebSocket:', errorDetails);
-          this.updateRelayState(url, 'disconnected');
-          reject(new Error(`Error en la conexión a ${url}: ${errorDetails.error}`));
+          this.updateRelayState(relayUrl, 'disconnected');
+          reject(new Error(`Error en la conexión a ${relayUrl}: ${errorDetails.error}`));
         };
 
         ws.onclose = (event) => {
           clearTimeout(timeout);
           const closeDetails = {
-            url,
+            url: relayUrl,
             timestamp: new Date().toISOString(),
             code: event.code,
             reason: event.reason || 'Sin razón especificada',
@@ -281,22 +279,22 @@ export class CoomunityNostrClient {
             possibleCauses: this.getPossibleCausesForCloseCode(event.code)
           };
           console.log('Conexión WebSocket cerrada:', closeDetails);
-          this.activeRelays.delete(url);
-          this.updateRelayState(url, 'disconnected');
+          this.activeRelays.delete(relayUrl);
+          this.updateRelayState(relayUrl, 'disconnected');
           
           // Intentar reconexión si no fue un cierre intencional
           if (event.code !== 1000) {
-            const currentState = this.relayStates.get(url);
+            const currentState = this.relayStates.get(relayUrl);
             if (currentState && currentState.retryCount < this.MAX_RETRIES) {
               const nextDelay = this.getNextRetryDelay(currentState.nextRetryDelay);
-              this.relayStates.set(url, {
+              this.relayStates.set(relayUrl, {
                 ...currentState,
                 retryCount: currentState.retryCount + 1,
                 nextRetryDelay: nextDelay
               });
 
-              console.log(`Programando reconexión a ${url}`, {
-                url,
+              console.log(`Programando reconexión a ${relayUrl}`, {
+                url: relayUrl,
                 timestamp: new Date().toISOString(),
                 previousCloseCode: event.code,
                 retryCount: currentState.retryCount + 1,
@@ -305,9 +303,9 @@ export class CoomunityNostrClient {
               });
 
               setTimeout(() => {
-                this.attemptConnection(url).catch(error => {
-                  console.error(`Error en reconexión a ${url}:`, {
-                    url,
+                this.attemptConnection(relayUrl).catch(error => {
+                  console.error(`Error en reconexión a ${relayUrl}:`, {
+                    url: relayUrl,
                     timestamp: new Date().toISOString(),
                     error: error instanceof Error ? error.message : 'Error desconocido',
                     retryCount: currentState.retryCount + 1,
@@ -320,8 +318,8 @@ export class CoomunityNostrClient {
                 });
               }, nextDelay);
             } else {
-              console.log(`Máximo número de reintentos alcanzado para ${url}`, {
-                url,
+              console.log(`Máximo número de reintentos alcanzado para ${relayUrl}`, {
+                url: relayUrl,
                 timestamp: new Date().toISOString(),
                 maxRetries: this.MAX_RETRIES,
                 lastCloseCode: event.code,
@@ -334,7 +332,7 @@ export class CoomunityNostrClient {
       } catch (error) {
         clearTimeout(timeout);
         const errorDetails = {
-          url,
+          url: relayUrl,
           timestamp: new Date().toISOString(),
           error: error instanceof Error ? error.message : 'Error desconocido',
           stack: error instanceof Error ? error.stack : undefined,
@@ -345,8 +343,8 @@ export class CoomunityNostrClient {
           ]
         };
         console.error('Error al crear WebSocket:', errorDetails);
-        this.updateRelayState(url, 'disconnected');
-        reject(new Error(`Error al intentar conectar a ${url}: ${errorDetails.error}`));
+        this.updateRelayState(relayUrl, 'disconnected');
+        reject(new Error(`Error al intentar conectar a ${relayUrl}: ${errorDetails.error}`));
       }
     });
   }

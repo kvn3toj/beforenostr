@@ -1,3 +1,15 @@
+-- Crear usuario administrador
+INSERT INTO users (id, email, password, name, isActive, createdAt, updatedAt)
+VALUES ('admin-user-001', 'admin@gamifier.com', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin User', true, '2025-05-29 00:00:00', '2025-05-29 00:00:00');
+
+-- Crear rol de administrador
+INSERT INTO roles (id, name, description, createdAt, updatedAt)
+VALUES ('admin-role-001', 'admin', 'Administrator role with full access', '2025-05-29 00:00:00', '2025-05-29 00:00:00');
+
+-- Asignar rol de administrador al usuario
+INSERT INTO user_roles (userId, roleId, assignedAt)
+VALUES ('admin-user-001', 'admin-role-001', '2025-05-29 00:00:00');
+
 -- Crear usuario admin si no existe
 -- IMPORTANTE: Este script debe ejecutarse con permisos de administrador en la base de datos
 DO $$

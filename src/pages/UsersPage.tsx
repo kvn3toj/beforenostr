@@ -1,42 +1,42 @@
 import React, { useState } from 'react';
-import {
-  Typography,
-  Container,
-  Box,
-  IconButton,
-  Chip,
-  Button,
-  Dialog,
-  DialogTitle,
-  Tooltip,
-  TextField,
-  Stack,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import Tooltip from '@mui/material/Tooltip';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import { EditIcon, DeleteIcon } from '../components/common/Icons';
 import { useUsersQuery } from '../hooks/useUsersQuery';
 import { DataTable, ColumnDefinition } from '../components/common/DataTable/DataTable';
 import { User, CreateUserData, UpdateUserData } from '../types/user.types';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createUser, updateUser, deleteUser } from '../services/user.service';
+import { useQueryClient } from '@tanstack/react-query';
 import { UserForm } from '../components/features/users/components/UserForm';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { toast } from 'sonner';
 import { useHasRole } from '../hooks/useHasRole';
-
-// Type for update mutation data
-type UpdateUserMutationData = {
-  id: string;
-  data: UpdateUserData;
-};
+import { useTranslation } from 'react-i18next';
+import { useCreateUserMutation } from '../hooks/features/users/useCreateUserMutation';
+import { useUpdateUserMutation } from '../hooks/features/users/useUpdateUserMutation';
+import { useDeleteUserMutation } from '../hooks/features/users/useDeleteUserMutation';
+import { USER_ROLES } from '../constants/roles';
+import { QUERY_KEYS } from '../constants/queryKeys';
 
 export const UsersPage: React.FC = () => {
+  console.log('>>> UsersPage: Component rendering');
+  const { t } = useTranslation();
   // Verificar permisos
-  const canCreateUsers = useHasRole('Super Admin');
-  const canEditUsers = useHasRole('Super Admin');
-  const canDeleteUsers = useHasRole('Super Admin');
+  const canCreateUsers = useHasRole(USER_ROLES.SUPER_ADMIN);
+  const canEditUsers = useHasRole(USER_ROLES.SUPER_ADMIN);
+  const canDeleteUsers = useHasRole(USER_ROLES.SUPER_ADMIN);
+
+  console.log('>>> UsersPage: Permissions:', { canCreateUsers, canEditUsers, canDeleteUsers });
 
   // States for dialogs
   const [isCreateUserDialogOpen, setIsCreateUserDialogOpen] = useState(false);
@@ -56,6 +56,8 @@ export const UsersPage: React.FC = () => {
     is_active: undefined as boolean | undefined,
   });
 
+  console.log('>>> UsersPage: Query params:', { page, pageSize, sortBy, sortDirection, filters });
+
   // Queries and mutations
   const { data: usersData, isLoading, error } = useUsersQuery({
     page,
@@ -65,51 +67,33 @@ export const UsersPage: React.FC = () => {
     filters,
   });
 
+  console.log('>>> UsersPage: useUsersQuery status:', { 
+    isLoading, 
+    error: error?.message || error, 
+    usersData,
+    hasData: !!usersData,
+    dataLength: usersData?.data?.length 
+  });
+
   const users = usersData?.data || [];
   const totalCount = usersData?.count || 0;
+
+  console.log('>>> UsersPage: Processed data:', { 
+    usersCount: users.length, 
+    totalCount,
+    firstUser: users[0] ? { id: users[0].id, email: users[0].email } : null
+  });
 
   const queryClient = useQueryClient();
 
   // Create mutation
-  const { mutate: createUserMutation, isPending: isCreating } = useMutation({
-    mutationFn: (data: CreateUserData) => createUser(data),
-    onSuccess: () => {
-      toast.success('Usuario creado exitosamente');
-      setIsCreateUserDialogOpen(false);
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al crear el usuario: ${error.message}`);
-    },
-  });
+  const { mutate: createUserMutation, isPending: isCreating } = useCreateUserMutation();
 
   // Update mutation
-  const { mutate: updateUserMutation, isPending: isUpdating } = useMutation({
-    mutationFn: ({ id, data }: UpdateUserMutationData) => updateUser(id, data),
-    onSuccess: () => {
-      toast.success('Usuario actualizado exitosamente');
-      setIsEditDialogOpen(false);
-      setUserToEdit(null);
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al actualizar el usuario: ${error.message}`);
-    },
-  });
+  const { mutate: updateUserMutation, isPending: isUpdating } = useUpdateUserMutation();
 
   // Delete mutation
-  const { mutate: deleteUserMutation, isPending: isDeleting } = useMutation({
-    mutationFn: (id: string) => deleteUser(id),
-    onSuccess: () => {
-      toast.success('Usuario eliminado exitosamente');
-      setIsDeleteDialogOpen(false);
-      setUserToDelete(null);
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
-    onError: (error: Error) => {
-      toast.error(`Error al eliminar el usuario: ${error.message}`);
-    },
-  });
+  const { mutate: deleteUserMutation, isPending: isDeleting } = useDeleteUserMutation();
 
   // Handlers for pagination, sorting, and filtering
   const handlePageChange = (newPage: number) => {
@@ -146,19 +130,19 @@ export const UsersPage: React.FC = () => {
   // Define column configuration for the users table
   const userColumns: ColumnDefinition<User>[] = [
     {
-      header: 'Email',
+      header: t('table_header_email'),
       field: 'email',
       width: '25%',
       sortField: 'email',
     },
     {
-      header: 'Rol',
+      header: t('table_header_role'),
       field: 'role.name',
       width: '15%',
       sortField: 'role_id',
       render: (user) => (
         <Chip
-          label={user.role.name}
+          label={user.role?.name || 'Sin rol'}
           color="primary"
           size="small"
           variant="outlined"
@@ -166,50 +150,52 @@ export const UsersPage: React.FC = () => {
       ),
     },
     {
-      header: 'Estado',
-      field: 'is_active',
+      header: t('table_header_status'),
+      field: 'isActive',
       width: '15%',
       align: 'center',
-      sortField: 'is_active',
+      sortField: 'isActive',
       render: (user) => (
         <Chip
-          label={user.is_active ? 'Activo' : 'Inactivo'}
-          color={user.is_active ? 'success' : 'error'}
+          label={user.isActive ? t('user_status_active') : t('user_status_inactive')}
+          color={user.isActive ? 'success' : 'error'}
           size="small"
         />
       ),
     },
     {
-      header: 'Último Login',
-      field: 'last_login',
+      header: t('table_header_last_login'),
+      field: 'lastLogin',
       width: '20%',
-      sortField: 'last_login',
+      sortField: 'lastLogin',
       render: (user) => (
         <Typography noWrap>
-          {user.last_login
-            ? format(new Date(user.last_login), 'PPpp', { locale: es })
-            : 'Nunca'}
+          {user.lastLogin && user.lastLogin !== null
+            ? format(new Date(user.lastLogin), 'PPpp', { locale: es })
+            : t('user_last_login_never')}
         </Typography>
       ),
     },
     {
-      header: 'Creado',
-      field: 'created_at',
+      header: t('table_header_created_at'),
+      field: 'createdAt',
       width: '15%',
-      sortField: 'created_at',
+      sortField: 'createdAt',
       render: (user) => (
         <Typography noWrap>
-          {format(new Date(user.created_at), 'PP', { locale: es })}
+          {user.createdAt 
+            ? format(new Date(user.createdAt), 'PP', { locale: es })
+            : 'N/A'}
         </Typography>
       ),
     },
     {
-      header: 'Acciones',
+      header: t('table_header_actions'),
       width: '10%',
       align: 'center',
       render: (user) => (
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-          <Tooltip title={canEditUsers ? "Editar usuario" : "No tienes permiso para editar usuarios"}>
+          <Tooltip title={canEditUsers ? t('tooltip_edit_user') : t('tooltip_no_permission_edit_users')}>
             <span>
               <IconButton
                 size="small"
@@ -224,7 +210,7 @@ export const UsersPage: React.FC = () => {
               </IconButton>
             </span>
           </Tooltip>
-          <Tooltip title={canDeleteUsers ? "Eliminar usuario" : "No tienes permiso para eliminar usuarios"}>
+          <Tooltip title={canDeleteUsers ? t('tooltip_delete_user') : t('tooltip_no_permission_delete_users')}>
             <span>
               <IconButton
                 size="small"
@@ -252,14 +238,15 @@ export const UsersPage: React.FC = () => {
 
   const handleCreateUser = (data: CreateUserData) => {
     createUserMutation(data);
+    setIsCreateUserDialogOpen(false);
   };
 
   const handleUpdateUser = (data: UpdateUserData) => {
-    if (!userToEdit) {
-      toast.error('Error: No hay usuario seleccionado para editar');
-      return;
+    if (userToEdit) {
+      updateUserMutation({ id: userToEdit.id, data });
+      setIsEditDialogOpen(false);
+      setUserToEdit(null);
     }
-    updateUserMutation({ id: userToEdit.id, data });
   };
 
   const handleCloseEditDialog = () => {
@@ -273,110 +260,122 @@ export const UsersPage: React.FC = () => {
   };
 
   const handleConfirmDelete = () => {
-    if (!userToDelete) {
-      toast.error('Error: No hay usuario seleccionado para eliminar');
-      return;
+    if (userToDelete) {
+      deleteUserMutation(userToDelete.id);
+      setIsDeleteDialogOpen(false);
+      setUserToDelete(null);
     }
-    deleteUserMutation(userToDelete.id);
   };
 
-  return (
-    <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1">
-            Gestión de Usuarios
-          </Typography>
-          <Tooltip title={canCreateUsers ? "Crear nuevo usuario" : "No tienes permiso para crear usuarios"}>
-            <span>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setIsCreateUserDialogOpen(true)}
-                disabled={!canCreateUsers}
-              >
-                Crear Nuevo Usuario
-              </Button>
-            </span>
-          </Tooltip>
-        </Box>
+  const handleClearFilters = () => {
+    setFilters({ email: '', role_id: '', is_active: undefined });
+    setPage(0);
+  };
 
-        <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+  const handleApplyFilters = (newFilters: typeof filters) => {
+    setFilters(newFilters);
+    setPage(0);
+  };
+
+  const handleIsActiveFilterChange = (value: string) => {
+    setFilters({ ...filters, is_active: value === '' ? undefined : value === 'true' });
+    setPage(0);
+  };
+
+  const handleRoleFilterChange = (value: string) => {
+    setFilters({ ...filters, role_id: value });
+    setPage(0);
+  };
+
+  if (isLoading) {
+    console.log('>>> UsersPage: Loading state - showing loading message');
+    return <Typography>{t('loading_users')}</Typography>;
+  }
+
+  if (error) {
+    console.error('>>> UsersPage: Error loading users:', error);
+    console.error('>>> UsersPage: Error details:', { 
+      message: error.message, 
+      stack: error.stack,
+      name: error.name 
+    });
+    return <Typography color="error">{t('error_loading_users', { message: error.message })}</Typography>;
+  }
+
+  console.log('>>> UsersPage: Rendering main content with users:', users.length);
+
+  return (
+    <Container maxWidth="xl">
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h4" component="h1">
+          {t('users_page_title')}
+        </Typography>
+        {canCreateUsers && (
+          <Button variant="contained" onClick={() => setIsCreateUserDialogOpen(true)}>
+            {t('button_create_user')}
+          </Button>
+        )}
+      </Box>
+      <Box sx={{ mb: 2 }}>
+        <Stack direction="row" spacing={2} alignItems="center">
           <TextField
-            label="Buscar por email"
+            label={t('filter_by_email')}
             variant="outlined"
             size="small"
             value={filters.email}
             onChange={handleFilterChange}
-            sx={{ minWidth: 300 }}
           />
+          {/* Add role and status filters here */}
+          <Button onClick={handleClearFilters}>{t('button_clear_filters')}</Button>
         </Stack>
-
-        <DataTable
-          data={users}
-          columns={userColumns}
-          isLoading={isLoading}
-          isError={!!error}
-          errorMessage={error?.message}
-          onRowClick={handleRowClick}
-          emptyMessage="No hay usuarios disponibles"
-          // Pagination props
-          page={page}
-          pageSize={pageSize}
-          totalCount={totalCount}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          // Sorting props
-          sortBy={sortBy}
-          sortDirection={sortDirection}
-          onSortChange={handleSortChange}
-          // Filter props
-          filters={filters}
-        />
-
-        {/* Create User Dialog */}
-        <Dialog
-          open={isCreateUserDialogOpen}
-          onClose={() => setIsCreateUserDialogOpen(false)}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle>Crear Nuevo Usuario</DialogTitle>
-          <UserForm
-            onSubmit={handleCreateUser}
-            onCancel={() => setIsCreateUserDialogOpen(false)}
-            isSubmitting={isCreating}
-          />
-        </Dialog>
-
-        {/* Edit User Dialog */}
-        <Dialog
-          open={isEditDialogOpen}
-          onClose={handleCloseEditDialog}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle>Editar Usuario</DialogTitle>
-          {userToEdit && (
-            <UserForm
-              initialData={userToEdit}
-              onSubmit={handleUpdateUser}
-              onCancel={handleCloseEditDialog}
-              isSubmitting={isUpdating}
-            />
-          )}
-        </Dialog>
-
-        {/* Delete Confirmation Dialog */}
-        <ConfirmDialog
-          open={isDeleteDialogOpen}
-          title="Eliminar Usuario"
-          message={`¿Estás seguro de que deseas eliminar el usuario ${userToDelete?.email}?`}
-          onConfirm={handleConfirmDelete}
-          onCancel={handleCloseDeleteDialog}
-          isSubmitting={isDeleting}
-        />
       </Box>
+      <DataTable
+        data={users}
+        columns={userColumns}
+        totalItems={totalCount}
+        page={page}
+        pageSize={pageSize}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        onSortChange={handleSortChange}
+        sortBy={sortBy}
+        sortDirection={sortDirection}
+      />
+
+      {/* Create User Dialog */}
+      <Dialog open={isCreateUserDialogOpen} onClose={() => setIsCreateUserDialogOpen(false)}>
+        <DialogTitle>{t('dialog_title_create_user')}</DialogTitle>
+        <UserForm 
+          onSubmit={handleCreateUser} 
+          isLoading={isCreating} 
+          onClose={() => setIsCreateUserDialogOpen(false)}
+          isEdit={false}
+        />
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={isEditDialogOpen} onClose={handleCloseEditDialog}>
+        <DialogTitle>{t('dialog_title_edit_user')}</DialogTitle>
+        {userToEdit && (
+          <UserForm 
+            onSubmit={handleUpdateUser} 
+            defaultValues={userToEdit} 
+            isLoading={isUpdating}
+            onClose={handleCloseEditDialog}
+            isEdit={true}
+          />
+        )}
+      </Dialog>
+
+      {/* Delete User Confirm Dialog */}
+      <ConfirmDialog
+        open={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        title={t('dialog_title_delete_user')}
+        message={t('dialog_message_delete_user', { email: userToDelete?.email })}
+        isConfirming={isDeleting}
+      />
     </Container>
   );
 }; 

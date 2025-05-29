@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../services/supabaseClient';
+import { fetchPlaylistById } from '../services/playlist.service';
 import { Playlist } from '../types/playlist.types';
 
 export const usePlaylist = (playlistId: string | undefined) => {
@@ -7,19 +7,7 @@ export const usePlaylist = (playlistId: string | undefined) => {
     queryKey: ['playlist', playlistId],
     queryFn: async () => {
       if (!playlistId) return null;
-
-      const { data, error } = await supabase
-        .from('playlists')
-        .select('*')
-        .eq('id', playlistId)
-        .single();
-
-      if (error) {
-        console.error('Error fetching playlist:', error);
-        throw error;
-      }
-
-      return data;
+      return await fetchPlaylistById(playlistId);
     },
     enabled: !!playlistId,
   });

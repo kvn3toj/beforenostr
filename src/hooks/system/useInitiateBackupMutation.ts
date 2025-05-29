@@ -9,8 +9,9 @@ export const useInitiateBackupMutation = () => {
     mutationFn: initiateManualBackup,
     onSuccess: (data) => {
       toast.success(data.message || 'Backup manual iniciado con éxito');
-      // Invalidate the recent backups query to refresh the list
+      // Invalidate queries relacionadas con backups y audit logs
       queryClient.invalidateQueries({ queryKey: ['system', 'recentBackups'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'auditLogs'] });
     },
     onError: (error: Error) => {
       toast.error(`Error al iniciar backup: ${error.message}`);

@@ -3,6 +3,15 @@ import { vi } from 'vitest';
 import { useAvailablePermissionsQuery } from './useAvailablePermissionsQuery';
 import { fetchAvailablePermissions } from '../../../services/role.service';
 import { AvailablePermissionsList } from '../../../types/user.types';
+import { useQuery } from '@tanstack/react-query';
+
+type MockUseQueryResult<TData = unknown, TError = unknown> = {
+  data: TData | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: TError | null;
+  // Add other properties as needed for the specific mock
+};
 
 // Mock the role service
 vi.mock('../../../services/role.service', () => ({
@@ -37,7 +46,7 @@ describe('useAvailablePermissionsQuery', () => {
       isLoading: true,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult);
 
     const { result } = renderHook(() => useAvailablePermissionsQuery());
 
@@ -57,7 +66,7 @@ describe('useAvailablePermissionsQuery', () => {
       isLoading: false,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<AvailablePermissionsList, Error>);
 
     const { result } = renderHook(() => useAvailablePermissionsQuery());
 
@@ -83,7 +92,7 @@ describe('useAvailablePermissionsQuery', () => {
       isLoading: false,
       isError: true,
       error: mockError,
-    } as any);
+    } as MockUseQueryResult<undefined, Error>);
 
     const { result } = renderHook(() => useAvailablePermissionsQuery());
 
@@ -124,7 +133,7 @@ describe('useAvailablePermissionsQuery', () => {
       isLoading: false,
       isError: false,
       error: null,
-    } as any);
+    } as MockUseQueryResult<AvailablePermissionsList, Error>);
 
     const { result } = renderHook(() => useAvailablePermissionsQuery());
 

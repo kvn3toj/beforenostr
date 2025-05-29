@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Mundo {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  imageUrl    String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdById String?
+  version     Int        @default(1)
+  playlists   Playlist[]
+
+  @@index([isActive])
+  @@index([createdById])
+  @@map("mundos")
+}
+
+model Playlist {
+  id           String      @id @default(uuid())
+  mundoId      String
+  name         String
+  description  String?
+  imageUrl     String?
+  orderInMundo Int?        @default(0)
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  createdById  String?
+  version      Int         @default(1)
+  mundo        Mundo       @relation(fields: [mundoId], references: [id])
+  videoItems   VideoItem[]
+
+  @@index([mundoId])
+  @@index([isActive])
+  @@index([createdById])
+  @@index([orderInMundo])
+  @@map("playlists")
+}
+
+model VideoItem {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?
+  content     String
+  playlistId  String
+  itemTypeId  String
+  order       Int        @default(0)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  questions   Question[]
+  subtitles   Subtitle[]
+  playlist    Playlist   @relation(fields: [playlistId], references: [id])
+
+  @@index([playlistId])
+  @@index([itemTypeId])
+  @@map("video_items")
+}
+
+model Subtitle {
+  id           Int       @id @default(autoincrement())
+  videoItemId  Int
+  languageCode String
+  format       String    @default("srt")
+  content      String?
+  contentUrl   String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  videoItem    VideoItem @relation(fields: [videoItemId], references: [id])
+
+  @@index([videoItemId])
+  @@map("subtitles")
+}
+
+model Question {
+  id            Int            @id @default(autoincrement())
+  videoItemId   Int
+  timestamp     Int            // Tiempo de inicio en segundos
+  endTimestamp  Int?           // Tiempo de fin en segundos (opcional)
+  type          String
+  text          String
+  languageCode  String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  answerOptions AnswerOption[]
+  videoItem     VideoItem      @relation(fields: [videoItemId], references: [id])
+
+  @@index([videoItemId])
+  @@index([timestamp])
+  @@index([endTimestamp])
+  @@map("questions")
+}
+
+model AnswerOption {
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  text       String
+  isCorrect  Boolean  @default(false)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+  @@map("answer_options")
+}
+
+model User {
+  id                  String           @id @default(uuid())
+  email               String           @unique
+  password            String
+  name                String?
+  avatarUrl           String?
+  isActive            Boolean          @default(true)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  assignedPermissions RolePermission[] @relation("PermissionAssigner")
+  assignedRoles       UserRole[]       @relation("RoleAssigner")
+  userRoles           UserRole[]
+
+  @@index([email])
+  @@index([isActive])
+  @@map("users")
+}
+
+model Role {
+  id              String           @id @default(uuid())
+  name            String           @unique
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+  userRoles       UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  userId       String
+  roleId       String
+  assignedAt   DateTime @default(now())
+  assignedById String?
+  assignedBy   User?    @relation("RoleAssigner", fields: [assignedById], references: [id])
+  role         Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@index([assignedById])
+  @@map("user_roles")
+}
+
+model Permission {
+  id              String           @id @default(uuid())
+  name            String           @unique
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  assignedAt   DateTime   @default(now())
+  assignedById String?
+  assignedBy   User?      @relation("PermissionAssigner", fields: [assignedById], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@index([assignedById])
+  @@map("role_permissions")
+}

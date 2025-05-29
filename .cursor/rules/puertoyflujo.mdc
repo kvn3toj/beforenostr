@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+REGLA CRÍTICA PARA CURSOR: PROTOCOLO DE INICIALIZACIÓN DE TESTS DE PLAYWRIGHT
+INSTRUCCIÓN OBLIGATORIA Y PRIORITARIA: De ahora en adelante, al generar o modificar CUALQUIER test de Playwright que involucre navegación UI y autenticación, DEBES seguir el siguiente protocolo estricto:
+Verificación de playwright.config.ts:
+Siempre asume y verifica (si el contexto lo permite) que la propiedad baseURL en playwright.config.ts está configurada con la URL base real y correcta de tu frontend.
+Valor preferido para este proyecto: http://localhost:3000 (dado el historial).
+Si el test se ejecuta en un entorno donde el frontend está en otro puerto (ej. 5173), el usuario deberá ajustar baseURL manualmente en playwright.config.ts.
+NUNCA hardcodees la URL completa (http://localhost:3000/login) dentro de page.goto() en los tests. Siempre usa rutas relativas (page.goto('/login'), page.goto('/'), page.goto('/users')). Playwright resolverá esto usando la baseURL.
+Flujo de Autenticación en test.beforeAll (o test.beforeEach si es necesario):
+Para cualquier test que requiera que el usuario esté autenticado, el bloque test.beforeAll (o test.beforeEach) DEBE contener los siguientes pasos de forma explícita:
+await page.goto('/login'); (Navegar explícitamente a la página de login).
+await page.fill('input[name="email"]', 'admin@gamifier.com'); (Rellenar email del administrador correcto).
+await page.fill('input[name="password"]', 'admin123'); (Rellenar contraseña del administrador correcta).
+await page.click('button[type="submit"]'); (Hacer clic en el botón de login).
+await page.waitForURL('**/'); (Esperar la redirección a la página principal después del login).
+await expect(page.getByText('Gamifier Admin')).toBeVisible(); (Aserción para confirmar que el dashboard principal se cargó).
+NO asumas que el navegador ya está en la página de login o que la sesión ya está iniciada. Siempre inicia el flujo de prueba desde la navegación explícita a /login.
+Reporte de Errores y Contexto:
+Siempre incluye page.on('console', ...) y page.on('pageerror', ...) en el beforeEach de los tests para capturar errores de JavaScript en el navegador.
+Reporta cualquier desviación de baseURL o del flujo de login que Playwright detecte.

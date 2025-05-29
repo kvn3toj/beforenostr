@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useReducer } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -16,11 +16,12 @@ import {
   Tab,
   Button,
 } from '@mui/material';
-import { ArrowBack as ArrowBackIcon, Restore as RestoreIcon } from '@mui/icons-material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import RestoreIcon from '@mui/icons-material/Restore';
 import { useMundoVersionsQuery } from '../hooks/features/mundos/useMundoVersionsQuery';
 import { useRestoreMundoVersionMutation } from '../hooks/features/mundos/useRestoreMundoVersionMutation';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
 import { MundoVersion } from '../types/mundo.types';
 
@@ -50,12 +51,60 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
+// Define the state interface for the reducer
+interface MundoDetailState {
+  isRestoreConfirmDialogOpen: boolean;
+  versionToRestore: MundoVersion | null;
+}
+
+// Define the initial state
+const initialState: MundoDetailState = {
+  isRestoreConfirmDialogOpen: false,
+  versionToRestore: null,
+};
+
+// Define action types
+type MundoDetailAction =
+  | { type: 'OPEN_RESTORE_DIALOG'; payload: MundoVersion }
+  | { type: 'CLOSE_RESTORE_DIALOG' }
+  | { type: 'SET_VERSION_TO_RESTORE'; payload: MundoVersion | null }
+  | { type: 'RESET_RESTORE_STATE' }; // Optional: to reset just the restore state
+
+// Implement the reducer function
+const mundoDetailReducer = (state: MundoDetailState, action: MundoDetailAction): MundoDetailState => {
+  switch (action.type) {
+    case 'OPEN_RESTORE_DIALOG':
+      return {
+        ...state,
+        isRestoreConfirmDialogOpen: true,
+        versionToRestore: action.payload,
+      };
+    case 'CLOSE_RESTORE_DIALOG':
+      return {
+        ...state,
+        isRestoreConfirmDialogOpen: false,
+        versionToRestore: null, // Clear the version when closing
+      };
+    case 'SET_VERSION_TO_RESTORE':
+      return {
+        ...state,
+        versionToRestore: action.payload,
+      };
+    case 'RESET_RESTORE_STATE':
+      return initialState;
+    default:
+      return state;
+  }
+};
+
 export const MundoDetailPage = () => {
   const { mundoId } = useParams<{ mundoId: string }>();
   const navigate = useNavigate();
   const [tabValue, setTabValue] = useState(0);
-  const [versionToRestore, setVersionToRestore] = useState<MundoVersion | null>(null);
-  const [isRestoreConfirmDialogOpen, setIsRestoreConfirmDialogOpen] = useState(false);
+  
+  // Use useReducer for managing restore dialog state
+  const [state, dispatch] = useReducer(mundoDetailReducer, initialState);
+  const { isRestoreConfirmDialogOpen, versionToRestore } = state;
 
   const { data: versions, isLoading, isError, error } = useMundoVersionsQuery(mundoId);
   const { mutate: restoreVersion, isPending: isRestoring } = useRestoreMundoVersionMutation();
@@ -65,8 +114,7 @@ export const MundoDetailPage = () => {
   };
 
   const handleRestoreClick = (version: MundoVersion) => {
-    setVersionToRestore(version);
-    setIsRestoreConfirmDialogOpen(true);
+    dispatch({ type: 'OPEN_RESTORE_DIALOG', payload: version });
   };
 
   const handleRestoreConfirm = () => {
@@ -75,8 +123,7 @@ export const MundoDetailPage = () => {
         { mundoId, versionId: versionToRestore.id },
         {
           onSuccess: () => {
-            setIsRestoreConfirmDialogOpen(false);
-            setVersionToRestore(null);
+            dispatch({ type: 'CLOSE_RESTORE_DIALOG' });
           },
         }
       );
@@ -84,8 +131,7 @@ export const MundoDetailPage = () => {
   };
 
   const handleRestoreCancel = () => {
-    setIsRestoreConfirmDialogOpen(false);
-    setVersionToRestore(null);
+    dispatch({ type: 'CLOSE_RESTORE_DIALOG' });
   };
 
   return (
