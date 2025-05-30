@@ -21,18 +21,23 @@ import {
   PlaylistAdd as PlaylistAddIcon,
   Timeline as TimelineIcon,
   SmartDisplay as VideoIcon,
+  AutoAwesome as AIIcon,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useQuestionsQuery } from '../../../hooks/features/questions/useQuestionsQuery';
 import { useCreateQuestionMutation } from '../../../hooks/features/questions/useCreateQuestionMutation';
 import { useUpdateQuestionMutation } from '../../../hooks/features/questions/useUpdateQuestionMutation';
 import { useDeleteQuestionMutation } from '../../../hooks/features/questions/useDeleteQuestionMutation';
+import { useVideoItemQuery } from '../../../hooks/features/video/useVideoItemQuery';
 import { QuestionCard } from './QuestionCard';
 import { QuestionForm } from './QuestionForm';
 import { VideoTimeline } from '../video/VideoTimeline';
+import { AIQuestionGeneratorModal } from './AIQuestionGeneratorModal';
+import { QuestionFormModal } from './QuestionFormModal';
 import type { Question } from '@prisma/client';
 import { CreateQuestionDto } from '../../../questions/dto/create-question.dto';
 import { UpdateQuestionDto } from '../../../questions/dto/update-question.dto';
+import { GeneratedQuestion } from '../../../lib/aiQuestionGenerator';
 
 interface QuestionManagerProps {
   videoItemId: number;
@@ -42,6 +47,8 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
   const { t } = useTranslation();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAIGeneratorOpen, setIsAIGeneratorOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
   const [questionToDelete, setQuestionToDelete] = useState<Question | null>(null);
   const [currentTime, setCurrentTime] = useState(0); // Estado para el tiempo actual del video
@@ -53,12 +60,19 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
     error 
   } = useQuestionsQuery({ videoItemId });
 
+  // Obtener información del video item incluyendo duración
+  const { 
+    data: videoItem, 
+    isLoading: isLoadingVideoItem,
+    error: videoItemError 
+  } = useVideoItemQuery(videoItemId);
+
   const createQuestionMutation = useCreateQuestionMutation();
   const updateQuestionMutation = useUpdateQuestionMutation();
   const deleteQuestionMutation = useDeleteQuestionMutation();
 
-  // Configuración del video (mock temporal)
-  const videoDuration = 300; // 5 minutos como valor temporal
+  // Obtener duración del video
+  const videoDuration = videoItem?.duration || 600; // Usar duración del video o 10 minutos por defecto
 
   // Handlers
   const handleCreateQuestion = () => {
@@ -115,6 +129,76 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
     setQuestionToDelete(null);
   };
 
+  // Handler para el generador AI
+  const handleOpenAIGenerator = () => {
+    setIsAIGeneratorOpen(true);
+  };
+
+  const handleCloseAIGenerator = () => {
+    setIsAIGeneratorOpen(false);
+  };
+
+  // Handler para el formulario de preguntas múltiples
+  const handleOpenFormModal = () => {
+    setIsFormModalOpen(true);
+  };
+
+  const handleCloseFormModal = () => {
+    setIsFormModalOpen(false);
+  };
+
+  const handleFormSubmit = async (formQuestions: CreateQuestionDto[]) => {
+    try {
+      console.log('🎯 Procesando formulario de preguntas múltiples:', formQuestions);
+
+      // Crear todas las preguntas del formulario
+      for (const questionData of formQuestions) {
+        await createQuestionMutation.mutateAsync({
+          ...questionData,
+          videoItemId,
+        });
+      }
+
+      console.log('✅ Todas las preguntas del formulario fueron creadas exitosamente');
+      setIsFormModalOpen(false);
+    } catch (error) {
+      console.error('❌ Error creando preguntas del formulario:', error);
+      // El error se maneja automáticamente por la mutación
+    }
+  };
+
+  const handleQuestionsGenerated = async (generatedQuestions: GeneratedQuestion[]) => {
+    try {
+      console.log('🎯 Procesando preguntas generadas por IA:', generatedQuestions);
+
+      // Convertir las preguntas generadas al formato del sistema
+      for (const genQuestion of generatedQuestions) {
+        const questionData: CreateQuestionDto = {
+          videoItemId,
+          timestamp: genQuestion.timestamp,
+          endTimestamp: genQuestion.endTimestamp,
+          type: genQuestion.type as any,
+          text: genQuestion.text,
+          languageCode: 'es-ES', // Por defecto, pero se puede hacer configurable
+          isActive: true,
+          answerOptions: genQuestion.options ? genQuestion.options.map((option, index) => ({
+            text: option,
+            isCorrect: index === genQuestion.correctAnswer,
+            order: index
+          })) : undefined
+        };
+
+        // Crear la pregunta usando la mutación existente
+        await createQuestionMutation.mutateAsync(questionData);
+      }
+
+      console.log('✅ Todas las preguntas AI fueron creadas exitosamente');
+    } catch (error) {
+      console.error('❌ Error creando preguntas AI:', error);
+      // El error se maneja automáticamente por la mutación
+    }
+  };
+
   // Handlers del VideoTimeline
   const handleQuestionClick = (question: Question) => {
     console.log('Pregunta clickeada:', question);
@@ -130,7 +214,7 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
   };
 
   // Estados de carga combinados
-  const isLoading_combined = isLoading;
+  const isLoading_combined = isLoading || isLoadingVideoItem;
   const isFormLoading = createQuestionMutation.isPending || updateQuestionMutation.isPending;
 
   // Renderizado
@@ -140,14 +224,14 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
         <Stack spacing={3} alignItems="center">
           <CircularProgress size={56} thickness={4} />
           <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
-            Cargando preguntas interactivas...
+            {isLoadingVideoItem ? 'Cargando información del video...' : 'Cargando preguntas interactivas...'}
           </Typography>
         </Stack>
       </Box>
     );
   }
 
-  if (error) {
+  if (error || videoItemError) {
     return (
       <Alert 
         severity="error" 
@@ -161,10 +245,10 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
         }}
       >
         <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-          Error al cargar las preguntas
+          {videoItemError ? 'Error al cargar el video' : 'Error al cargar las preguntas'}
         </Typography>
         <Typography variant="body2">
-          {(error as Error)?.message || 'Error desconocido'}
+          {((error || videoItemError) as Error)?.message || 'Error desconocido'}
         </Typography>
       </Alert>
     );
@@ -253,9 +337,38 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
                   Crear Nueva Pregunta
                 </Button>
                 <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<AIIcon />}
+                  onClick={handleOpenAIGenerator}
+                  disabled={isFormLoading}
+                  sx={{ 
+                    bgcolor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: 'white',
+                    border: 'none',
+                    py: 1.5,
+                    px: 3,
+                    borderRadius: 2,
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    fontSize: '1rem',
+                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 8px 25px rgba(102, 126, 234, 0.4)',
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  🤖 Generar con IA
+                </Button>
+                <Button
                   variant="outlined"
                   size="large"
                   startIcon={<PlaylistAddIcon />}
+                  onClick={handleOpenFormModal}
                   sx={{ 
                     color: 'white',
                     borderColor: 'rgba(255,255,255,0.5)',
@@ -501,6 +614,22 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
           </Button>
         </DialogActions>
       </Dialog>
+      
+      {/* Modal del Generador AI */}
+      <AIQuestionGeneratorModal
+        open={isAIGeneratorOpen}
+        onClose={handleCloseAIGenerator}
+        videoItemId={videoItemId}
+        onQuestionsGenerated={handleQuestionsGenerated}
+      />
+
+      {/* Modal de formulario de preguntas */}
+      <QuestionFormModal
+        open={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        onSubmit={handleFormSubmit}
+        videoDuration={videoDuration}
+      />
     </Container>
   );
 }; 

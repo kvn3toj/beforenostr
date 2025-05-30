@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateMeritDto } from './dto/create-merit.dto';
 import { UpdateMeritDto } from './dto/update-merit.dto';
-import { Merit, Prisma } from '@prisma/client';
+import type { Merit } from '../../generated/prisma';
 
 @Injectable()
 export class MeritsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
+    console.log('>>> MeritsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+  }
 
   create(createMeritDto: CreateMeritDto): Promise<Merit> {
     return this.prisma.merit.create({ data: createMeritDto });

@@ -166,6 +166,7 @@ const normalizeContentItem = (item: any): ContentItem => {
     playlistId: item.playlistId,
     itemTypeId: item.itemTypeId,
     content: item.content,
+    duration: item.duration,
     order: item.order,
     isActive: item.isActive ?? true,
     isDeleted: item.isDeleted ?? false,

@@ -34,6 +34,7 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { SubtitleManager } from '../components/features/subtitles/SubtitleManager';
 import { QuestionManager } from '../components/features/questions/QuestionManager';
+import { VideoPermissionsManager } from '../components/features/video/VideoPermissionsManager';
 import { extractVideoUrl, convertToEmbedUrl } from '../utils/videoUtils';
 
 const ASPECT_RATIO_16_9_PADDING = '56.25%';
@@ -362,6 +363,16 @@ export const VideoConfigPage = () => {
   const iframeSrc = extractVideoUrl(item.content);
   const embedUrl = iframeSrc ? convertToEmbedUrl(iframeSrc) : null;
   
+  const handlePermissionsSave = (permissions: any, isDraft: boolean) => {
+    console.log('Saving permissions:', permissions, 'isDraft:', isDraft);
+    // TODO: Implementar guardado de permisos en el backend
+    if (isDraft) {
+      toast.success('Permisos guardados en borradores');
+    } else {
+      toast.success('Permisos guardados y video publicado');
+    }
+  };
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Cabecera */}
@@ -434,7 +445,7 @@ export const VideoConfigPage = () => {
             <Tab label="Configuración" {...a11yProps(0)} />
             <Tab label={t('subtitles_tab_label')} {...a11yProps(1)} />
             <Tab label={t('questions_tab_label')} {...a11yProps(2)} />
-            <Tab label="Permisos" {...a11yProps(3)} disabled />
+            <Tab label="Permisos" {...a11yProps(3)} />
           </Tabs>
         </Box>
         
@@ -531,15 +542,22 @@ export const VideoConfigPage = () => {
         
         {/* Tab: Preguntas */}
         <TabPanel value={tabValue} index={2}>
-          {itemId && <QuestionManager videoItemId={parseInt(itemId)} />}
+          {itemId && !isNaN(parseInt(itemId)) && <QuestionManager videoItemId={parseInt(itemId)} />}
         </TabPanel>
         
         {/* Tab: Permisos */}
         <TabPanel value={tabValue} index={3}>
-          <Typography variant="body1">
-            Configura quién puede ver este video.
-            Funcionalidad pendiente de implementar.
-          </Typography>
+          {itemId && !isNaN(parseInt(itemId)) ? (
+            <VideoPermissionsManager 
+              videoItemId={parseInt(itemId)} 
+              onSave={handlePermissionsSave}
+              isLoading={isUpdatingItem}
+            />
+          ) : (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              ID de video inválido. No se pueden cargar los permisos.
+            </Alert>
+          )}
         </TabPanel>
       </Box>
 

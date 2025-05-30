@@ -12,14 +12,14 @@ export default defineConfig({
     timeout: 15000,
   },
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3001',
     trace: 'on-first-retry',
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
     actionTimeout: 10000,
     navigationTimeout: 30000,
-    headless: !!process.env.CI,
-    slowMo: process.env.CI ? 0 : 500,
+    headless: false,
+    slowMo: 1000,
   },
   projects: [
     {
@@ -41,8 +41,8 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    url: 'http://localhost:3001',
+    reuseExistingServer: true,
     timeout: 120000,
   },
 }); 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Inject } from '@nestjs/common';
 import { MeritsService } from './merits.service';
 import { CreateMeritDto } from './dto/create-merit.dto';
 import { UpdateMeritDto } from './dto/update-merit.dto';
@@ -13,7 +13,9 @@ import { Roles } from '../../rbac/decorators/roles.decorator'; // Assuming this 
 @Roles('admin')
 @Controller('merits')
 export class MeritsController {
-  constructor(private readonly meritsService: MeritsService) {}
+  constructor(@Inject(MeritsService) private readonly meritsService: MeritsService) {
+    console.log('>>> MeritsController CONSTRUCTOR: this.meritsService IS', this.meritsService ? 'DEFINED' : 'UNDEFINED');
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a new merit type (Admin only)' })
@@ -56,5 +58,18 @@ export class MeritsController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   remove(@Param('id') id: string) {
     return this.meritsService.remove(id);
+  }
+
+  /**
+   * Endpoint de prueba para verificar conectividad
+   */
+  @Get('ping')
+  async ping() {
+    console.log('>>> MeritsController.ping: Merits module is working');
+    return { 
+      message: 'Merits module is working', 
+      timestamp: new Date().toISOString(),
+      module: 'Merits Management'
+    };
   }
 } 

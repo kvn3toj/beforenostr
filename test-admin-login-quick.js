@@ -1,58 +1,98 @@
-const { chromium } = require('playwright');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-(async () => {
-  console.log('🚀 Testing admin login in frontend...\n');
+async function testAdminLogin() {
+  console.log('🔐 Probando login del administrador...');
+  console.log('='.repeat(50));
   
-  const browser = await chromium.launch({ headless: false });
-  const page = await browser.newPage();
+  const loginData = {
+    email: 'admin@gamifier.com',
+    password: 'admin123'
+  };
   
   try {
-    // Ir a la página de login
-    console.log('📄 Navigating to login page...');
-    await page.goto('http://localhost:3000/login');
-    await page.waitForLoadState('networkidle');
+    console.log('📤 Enviando solicitud de login...');
+    console.log('   Email:', loginData.email);
+    console.log('   Password:', loginData.password);
     
-    // Llenar las credenciales
-    console.log('🔐 Filling login credentials...');
-    await page.fill('input[name="email"]', 'admin@gamifier.com');
-    await page.fill('input[name="password"]', 'admin123');
+    const response = await fetch('http://localhost:3002/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(loginData)
+    });
     
-    // Hacer click en login
-    console.log('👆 Clicking login button...');
-    await page.click('button[type="submit"]');
+    console.log('📥 Respuesta recibida:');
+    console.log('   Status:', response.status);
+    console.log('   Status Text:', response.statusText);
     
-    // Esperar la redirección o respuesta
-    console.log('⏳ Waiting for login response...');
-    await page.waitForTimeout(3000);
+    const responseData = await response.json();
     
-    // Verificar si hubo redirección exitosa
-    const currentUrl = page.url();
-    console.log('📍 Current URL:', currentUrl);
+    console.log('🔍 Respuesta completa:');
+    console.log(JSON.stringify(responseData, null, 2));
     
-    if (currentUrl.includes('/login')) {
-      console.log('❌ Still on login page - login might have failed');
+    if (response.ok) {
+      console.log('✅ ¡Login exitoso!');
+      console.log('   Token:', responseData.token ? 'Presente' : 'Ausente');
+      console.log('   Access Token:', responseData.access_token ? 'Presente' : 'Ausente');
+      console.log('   Usuario:', responseData.user?.email || 'No disponible');
+      console.log('   ID Usuario:', responseData.user?.id || 'No disponible');
+      console.log('   Activo:', responseData.user?.isActive !== undefined ? responseData.user.isActive : 'No disponible');
       
-      // Buscar mensajes de error
-      const errorMessage = await page.locator('text=/error|invalid|incorrect/i').first().textContent().catch(() => null);
-      if (errorMessage) {
-        console.log('🔴 Error message found:', errorMessage);
+      if (responseData.token) {
+        console.log('🎯 Token JWT:', responseData.token.substring(0, 50) + '...');
       }
-    } else {
-      console.log('✅ Redirected from login page - login appears successful!');
       
-      // Buscar elementos que confirmen que estamos logueados
-      const userInfo = await page.locator('text=/admin|usuario|user/i').first().textContent().catch(() => null);
-      if (userInfo) {
-        console.log('👤 User info found:', userInfo);
+      if (responseData.access_token) {
+        console.log('🎯 Access Token:', responseData.access_token.substring(0, 50) + '...');
+      }
+      
+      // Probar una llamada autenticada
+      if (responseData.token || responseData.access_token) {
+        console.log('\n🔒 Probando llamada autenticada...');
+        const token = responseData.token || responseData.access_token;
+        
+        const protectedResponse = await fetch('http://localhost:3002/users/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        console.log('   Status de llamada protegida:', protectedResponse.status);
+        
+        if (protectedResponse.ok) {
+          const profileData = await protectedResponse.json();
+          console.log('   ✅ Perfil obtenido:', profileData.email);
+        } else {
+          console.log('   ❌ Error en llamada protegida');
+        }
+      }
+      
+    } else {
+      console.log('❌ Error en login:');
+      console.log('   Error:', responseData.message || responseData.error || 'Error desconocido');
+      
+      if (responseData.details) {
+        console.log('   Detalles:', responseData.details);
       }
     }
     
-    await page.waitForTimeout(5000); // Pausa para observar
-    
   } catch (error) {
-    console.error('❌ Error during test:', error.message);
+    console.log('❌ Error de conexión:');
+    console.log('   Mensaje:', error.message);
+    console.log('   Tipo:', error.code || 'Error de red');
+    
+    // Verificar si el backend está corriendo
+    try {
+      const healthCheck = await fetch('http://localhost:3002/health');
+      if (healthCheck.ok) {
+        console.log('🔍 Backend está corriendo, el problema es específico del login');
+      }
+    } catch (healthError) {
+      console.log('🔍 Backend NO está respondiendo');
+    }
   }
-  
-  await browser.close();
-  console.log('\n✅ Admin login test completed.');
-})(); 
+}
+
+testAdminLogin(); 

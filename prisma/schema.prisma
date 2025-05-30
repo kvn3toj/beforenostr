@@ -19,6 +19,7 @@ model Mundo {
   createdById String?
   version     Int        @default(1)
   playlists   Playlist[]
+  worlds      World[]    // Relación con los nuevos Worlds de CoomÜnity
 
   @@index([isActive])
   @@index([createdById])
@@ -39,6 +40,7 @@ model Playlist {
   version      Int         @default(1)
   mundo        Mundo       @relation(fields: [mundoId], references: [id])
   videoItems   VideoItem[]
+  gamifiedPlaylists GamifiedPlaylist[]
 
   @@index([mundoId])
   @@index([isActive])
@@ -48,22 +50,28 @@ model Playlist {
 }
 
 model VideoItem {
-  id          Int        @id @default(autoincrement())
+  id          Int                @id @default(autoincrement())
   title       String
   description String?
   content     String
   playlistId  String
   itemTypeId  String
-  order       Int        @default(0)
-  isActive    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  order       Int                @default(0)
+  isActive    Boolean            @default(true)
+  isDeleted   Boolean            @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  duration    Int?
   questions   Question[]
   subtitles   Subtitle[]
-  playlist    Playlist   @relation(fields: [playlistId], references: [id])
+  permissions VideoPermissions?
+  playlist    Playlist           @relation(fields: [playlistId], references: [id])
+  activities  Activity[]         // Relación con actividades de CoomÜnity
 
   @@index([playlistId])
   @@index([itemTypeId])
+  @@index([isDeleted])
   @@map("video_items")
 }
 
@@ -86,16 +94,17 @@ model Subtitle {
 model Question {
   id            Int            @id @default(autoincrement())
   videoItemId   Int
-  timestamp     Int            // Tiempo de inicio en segundos
-  endTimestamp  Int?           // Tiempo de fin en segundos (opcional)
+  timestamp     Int
   type          String
   text          String
   languageCode  String
   isActive      Boolean        @default(true)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  endTimestamp  Int?
   answerOptions AnswerOption[]
   videoItem     VideoItem      @relation(fields: [videoItemId], references: [id])
+  userAnswers   UserAnswer[]
 
   @@index([videoItemId])
   @@index([timestamp])
@@ -118,26 +127,64 @@ model AnswerOption {
 }
 
 model User {
-  id                  String           @id @default(uuid())
-  email               String           @unique
+  id                  String             @id @default(uuid())
+  email               String             @unique
   password            String
   name                String?
   avatarUrl           String?
-  isActive            Boolean          @default(true)
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-  assignedPermissions RolePermission[] @relation("PermissionAssigner")
-  assignedRoles       UserRole[]       @relation("RoleAssigner")
+  isActive            Boolean            @default(true)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  assignedPermissions RolePermission[]   @relation("PermissionAssigner")
+  assignedRoles       UserRole[]         @relation("RoleAssigner")
   userRoles           UserRole[]
+  videoPermissions    VideoPermissions[]
+  
+  // Nuevos campos para CoomÜnity
+  username            String?            @unique
+  firstName           String?
+  lastName            String?
+  documentType        String?            // 'cedula', 'passport', 'dni', etc.
+  documentNumber      String?
+  phone               String?
+  country             String?
+  address             String?
+  status              String             @default("ACTIVE") // ACTIVE, INACTIVE, FAILED_INITIAL_CHALLENGE, SUSPENDED, PENDING_VERIFICATION
+  topUserCount        Int                @default(0) // Número de veces que fue "Top"
+  
+  // Relaciones CoomÜnity
+  tokens              Token[]
+  merits              Merit[]
+  wallet              Wallet?
+  transactionsFrom    Transaction[]      @relation("TransactionFrom")
+  transactionsTo      Transaction[]      @relation("TransactionTo")
+  userGroups          UserGroup[]
+  publications        Publication[]
+  comments            Comment[]
+  notifications       Notification[]
+  createdWorlds       World[]            @relation("WorldCreator")
+  createdExperiences  Experience[]       @relation("ExperienceCreator")
+  createdActivities   Activity[]         @relation("ActivityCreator")
+  userAnswers         UserAnswer[]
+  invitationsSent     GiftCard[]         @relation("InviterUser")
+  invitationsReceived UserInvitation[]
+  createdReports      Report[]           @relation("ReportCreator")
+  personalityId       String?
+  personality         Personality?       @relation(fields: [personalityId], references: [id])
+  createdTemplates    UIComponentTemplate[] @relation("TemplateCreator")
+  ownedGroups         Group[]            @relation("GroupOwner")
+  createdInvitationTemplates InvitationTemplate[] @relation("InvitationTemplateCreator")
 
   @@index([email])
   @@index([isActive])
+  @@index([username])
+  @@index([status])
   @@map("users")
 }
 
 model Role {
   id              String           @id @default(uuid())
-  name            String           @unique
+  name            String           @unique // ADMIN, SUPER_ADMIN, UX_USER, UI_USER, BUYER, SEEKER, SOLVER, PROMOTER, PERFORMER, SUPPORTER, VALIDATOR, ARBITRATOR, MODERATOR, GOVERNANCE_MEMBER, CONSCIOUS_CONSUMER, ENTREPRENEUR
   description     String?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -174,6 +221,42 @@ model Permission {
   @@map("permissions")
 }
 
+model VideoPermissions {
+  id                      String    @id @default(uuid())
+  videoItemId             Int       @unique
+  // Derechos de visualización del jugador
+  showWaveCount           Boolean   @default(true)
+  showVideos              Boolean   @default(true)
+  showVideoSubtitles      Boolean   @default(true)
+  showComments            Boolean   @default(true)
+  showPublishDate         Boolean   @default(true)
+  // Configuraciones de video
+  showVideoDuration       Boolean   @default(true)
+  showLikeButton          Boolean   @default(true)
+  allowRewindForward      Boolean   @default(false)
+  // Configuraciones de comentarios
+  allowViewComments       Boolean   @default(true)
+  allowMakeComments       Boolean   @default(true)
+  showLikeComments        Boolean   @default(true)
+  sortCommentsByAffinity  Boolean   @default(false)
+  showCommenterName       Boolean   @default(false)
+  // Posición en playlist
+  playlistPosition        String    @default("position1") // position1, position2, position3, final
+  // Estado
+  isDraft                 Boolean   @default(false)
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  createdById             String?
+  // Relaciones
+  videoItem               VideoItem @relation(fields: [videoItemId], references: [id], onDelete: Cascade)
+  createdBy               User?     @relation(fields: [createdById], references: [id])
+
+  @@index([videoItemId])
+  @@index([isDraft])
+  @@index([createdById])
+  @@map("video_permissions")
+}
+
 model RolePermission {
   roleId       String
   permissionId String
@@ -188,4 +271,455 @@ model RolePermission {
   @@index([permissionId])
   @@index([assignedById])
   @@map("role_permissions")
+}
+
+model World {
+  id          String       @id @default(uuid())
+  name        String       // ONE, DUO, TRIKETA, ECOVILLAS
+  description String?
+  type        String       // TRANSITORIO, MEDIANA_DURACION
+  creatorId   String
+  status      String       @default("ACTIVE") // ACTIVE, INACTIVE, UNDER_CONSTRUCTION
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  mundoId     String?      // Relación opcional con Mundo existente
+  
+  creator     User         @relation("WorldCreator", fields: [creatorId], references: [id])
+  mundo       Mundo?       @relation(fields: [mundoId], references: [id])
+  stages      Stage[]
+
+  @@index([creatorId])
+  @@index([status])
+  @@index([mundoId])
+  @@map("worlds")
+}
+
+model Stage {
+  id          String      @id @default(uuid())
+  worldId     String
+  name        String      // BUYER, SEEKER, SOLVER, PROMOTER, PERFORMER, SUPPORTER, VALIDATOR
+  order       Int
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  world       World       @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  experiences Experience[]
+
+  @@index([worldId])
+  @@index([order])
+  @@map("stages")
+}
+
+model Experience {
+  id                    String            @id @default(uuid())
+  stageId               String
+  title                 String
+  description           String?
+  type                  String            // GAMIFIED_SOLVER, GAMIFIED_CLIENT, REFORMATORY
+  gamificationFramework String?           @default("Octalysis")
+  creatorId             String
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  
+  stage                 Stage             @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  creator               User              @relation("ExperienceCreator", fields: [creatorId], references: [id])
+  activities            Activity[]
+
+  @@index([stageId])
+  @@index([creatorId])
+  @@map("experiences")
+}
+
+model Activity {
+  id              String            @id @default(uuid())
+  experienceId    String
+  title           String
+  description     String?
+  type            String            // VIDEO, AUDIO, TEXT, SURVEY, QUESTIONNAIRE, ANIMATION, VISUAL, BEHAVIOR
+  multimediaType  String?           // AUDIO, AUDIOVISUAL, VISUAL
+  contentUrl      String?           // Para embebidos
+  duration        Int?              // Para videos/audios en segundos
+  order           Int               @default(0)
+  status          String            @default("ACTIVE") // ACTIVE, INACTIVE, DRAFT, ARCHIVED
+  creatorId       String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  videoItemId     Int?              // Relación opcional con VideoItem existente
+  
+  experience      Experience        @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  creator         User              @relation("ActivityCreator", fields: [creatorId], references: [id])
+  videoItem       VideoItem?        @relation(fields: [videoItemId], references: [id])
+  gamifiedPlaylists GamifiedPlaylist[]
+  questions       ActivityQuestion[]
+
+  @@index([experienceId])
+  @@index([creatorId])
+  @@index([order])
+  @@index([status])
+  @@index([videoItemId])
+  @@map("activities")
+}
+
+model GamifiedPlaylist {
+  id           String                @id @default(uuid())
+  activityId   String?               // Relación opcional con Activity
+  playlistId   String?               // Relación opcional con Playlist existente
+  name         String
+  type         String                // CONTEST, FREE
+  sequenceType String                // SEQUENTIAL, NON_SEQUENTIAL
+  status       String                @default("ACTIVE") // ACTIVE, INACTIVE, DRAFT
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  
+  activity     Activity?             @relation(fields: [activityId], references: [id])
+  playlist     Playlist?             @relation(fields: [playlistId], references: [id])
+
+  @@index([activityId])
+  @@index([playlistId])
+  @@index([status])
+  @@map("gamified_playlists")
+}
+
+model ActivityQuestion {
+  id                      String                  @id @default(uuid())
+  activityId              String
+  type                    String                  // SYNCHRONOUS, ASYNCHRONOUS
+  questionType            String                  // ATTENTION, PROFILING, SURVEY, SLIDER, DRAG_DROP, MULTIPLE_CHOICE
+  questionText            String
+  options                 String?                 // JSON string para opciones múltiples
+  correctAnswer           String?                 // JSON string respuesta correcta si aplica
+  ondasList               String?                 // JSON string Öndas a otorgar (array de números)
+  displayTimeSeconds      Int?                    // Para preguntas sincrónicas
+  optionalDisplaySeconds  Int?                    // Para preguntas opcionales
+  createdAt               DateTime                @default(now())
+  
+  activity                Activity                @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  userAnswers             UserAnswer[]
+
+  @@index([activityId])
+  @@map("activity_questions")
+}
+
+model UserAnswer {
+  id              String            @id @default(uuid())
+  userId          String
+  questionId      Int?              // Para preguntas de VideoItem existentes
+  activityQuestionId String?        // Para preguntas de Activity nuevas
+  answerGiven     String            // JSON string respuesta dada por el usuario
+  isCorrect       Boolean?          // Si la respuesta es correcta (si aplica)
+  ondasEarned     Int               @default(0)
+  createdAt       DateTime          @default(now())
+  
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question        Question?         @relation(fields: [questionId], references: [id])
+  activityQuestion ActivityQuestion? @relation(fields: [activityQuestionId], references: [id])
+
+  @@index([userId])
+  @@index([questionId])
+  @@index([activityQuestionId])
+  @@map("user_answers")
+}
+
+model Token {
+  id           String        @id @default(uuid())
+  userId       String
+  amount       Float
+  type         String        // PROMOTIONAL_UNIT, SUBSCRIPTION_UNIT, CIRCULATING_UNIT, TEST_UNIT, TOIN
+  status       String        @default("ACTIVE") // ACTIVE, EXPIRED, USED, FROZEN
+  caducityDate DateTime?     // Solo para tokens con caducidad
+  source       String        // GIFT_CARD, PURCHASE, CONVERSION, REWARD, INITIAL_GRANT
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([caducityDate])
+  @@map("tokens")
+}
+
+model Merit {
+  id               String      @id @default(uuid())
+  userId           String
+  amount           Float
+  type             String      // MERITO, ONDA, VIBRA
+  source           String      // INTERACTION, CONTRIBUTION, INVITATION_PERFORMANCE, CHALLENGE_COMPLETION, COMMUNITY_PARTICIPATION, CONTENT_CREATION
+  relatedEntityId  String?     // ID de la entidad relacionada (activityId, transactionId, etc.)
+  createdAt        DateTime    @default(now())
+  
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([source])
+  @@map("merits")
+}
+
+model Wallet {
+  id                String        @id @default(uuid())
+  userId            String        @unique
+  blockchainAddress String?       @unique
+  balanceUnits      Float         @default(0)
+  balanceToins      Float         @default(0)
+  status            String        @default("ACTIVE") // ACTIVE, INACTIVE, SUSPENDED, PENDING_VERIFICATION
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactionsFrom  Transaction[] @relation("WalletFrom")
+  transactionsTo    Transaction[] @relation("WalletTo")
+
+  @@index([userId])
+  @@index([blockchainAddress])
+  @@index([status])
+  @@map("wallets")
+}
+
+model Transaction {
+  id          String            @id @default(uuid())
+  fromUserId  String?           // Puede ser null para transacciones del sistema
+  toUserId    String
+  amount      Float
+  tokenType   String            // Referencia al tipo de token/merit
+  type        String            // PAY, RECEIVE, EXCHANGE, RECHARGE, CONVERT, AWARD
+  status      String            @default("PENDING") // PENDING, COMPLETED, FAILED, CANCELLED
+  description String?
+  createdAt   DateTime          @default(now())
+  
+  fromUser    User?             @relation("TransactionFrom", fields: [fromUserId], references: [id])
+  toUser      User              @relation("TransactionTo", fields: [toUserId], references: [id])
+  fromWallet  Wallet?           @relation("WalletFrom", fields: [fromUserId], references: [userId])
+  toWallet    Wallet            @relation("WalletTo", fields: [toUserId], references: [userId])
+
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@index([type])
+  @@index([status])
+  @@map("transactions")
+}
+
+model Group {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  ownerId     String
+  type        String      // CLAN, FRIEND, CLIENT, ALLY, GOVERNANCE_BODY, COMMUNITY_OF_PRACTICE
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  owner       User        @relation("GroupOwner", fields: [ownerId], references: [id])
+  userGroups  UserGroup[]
+
+  @@index([ownerId])
+  @@index([type])
+  @@map("groups")
+}
+
+model UserGroup {
+  userId       String
+  groupId      String
+  roleInGroup  String      @default("MEMBER") // MEMBER, LEADER, ARBITRATOR, MODERATOR
+  joinedAt     DateTime    @default(now())
+  
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group        Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+  @@index([userId])
+  @@index([groupId])
+  @@map("user_groups")
+}
+
+model Publication {
+  id        String            @id @default(uuid())
+  userId    String
+  content   String
+  type      String            // TEXT, IMAGE, VIDEO
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+
+  @@index([userId])
+  @@index([type])
+  @@map("publications")
+}
+
+model Comment {
+  id             String    @id @default(uuid())
+  userId         String
+  publicationId  String?   // Para comentarios en publicaciones
+  activityId     String?   // Para comentarios en actividades
+  text           String
+  createdAt      DateTime  @default(now())
+  
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publication    Publication? @relation(fields: [publicationId], references: [id])
+
+  @@index([userId])
+  @@index([publicationId])
+  @@index([activityId])
+  @@map("comments")
+}
+
+model Notification {
+  id        String            @id @default(uuid())
+  userId    String
+  type      String            // NEW_PUBLICATION, MERIT_AWARDED, CHALLENGE_ALERT, TRANSACTION_COMPLETED, GROUP_INVITATION, SYSTEM_ANNOUNCEMENT
+  message   String
+  read      Boolean           @default(false)
+  createdAt DateTime          @default(now())
+  
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@index([type])
+  @@map("notifications")
+}
+
+model InvitationTemplate {
+  id        String    @id @default(uuid())
+  name      String
+  content   String    // JSON string para personalización
+  creatorId String
+  createdAt DateTime  @default(now())
+  
+  creator   User      @relation("InvitationTemplateCreator", fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+  @@map("invitation_templates")
+}
+
+model GiftCard {
+  id              String            @id @default(uuid())
+  inviterId       String            // Solver Padre
+  invitedName     String
+  invitedEmail    String
+  token           String            @unique // Para URL única
+  unitsAmount     Float
+  suggestions     String?           // JSON string de productos/servicios sugeridos
+  status          String            @default("SENT") // SENT, REDEEMED, EXPIRED
+  createdAt       DateTime          @default(now())
+  
+  inviter         User              @relation("InviterUser", fields: [inviterId], references: [id])
+  userInvitations UserInvitation[]
+
+  @@index([inviterId])
+  @@index([token])
+  @@index([status])
+  @@map("gift_cards")
+}
+
+model UserInvitation {
+  id           String              @id @default(uuid())
+  giftCardId   String
+  invitedUserId String?            // Si se registró
+  status       String              @default("PENDING") // PENDING, ACCEPTED, DECLINED
+  createdAt    DateTime            @default(now())
+  
+  giftCard     GiftCard            @relation(fields: [giftCardId], references: [id])
+  invitedUser  User?               @relation(fields: [invitedUserId], references: [id])
+
+  @@index([giftCardId])
+  @@index([invitedUserId])
+  @@index([status])
+  @@map("user_invitations")
+}
+
+model Report {
+  id          String    @id @default(uuid())
+  name        String
+  type        String
+  parameters  String?   // JSON string de parámetros
+  generatedAt DateTime  @default(now())
+  data        String    // JSON string de datos del reporte
+  creatorId   String
+  
+  creator     User      @relation("ReportCreator", fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+  @@index([type])
+  @@map("reports")
+}
+
+model Configuration {
+  id        String    @id @default(uuid())
+  key       String    @unique
+  value     String    // JSON string para flexibilidad
+  type      String    // SYSTEM, FEATURE, GAMIFICATION_PARAM
+  updatedAt DateTime  @updatedAt
+
+  @@index([type])
+  @@map("configurations")
+}
+
+model Log {
+  id        String    @id @default(uuid())
+  level     String    // ERROR, WARN, INFO, DEBUG
+  message   String
+  context   String?
+  timestamp DateTime  @default(now())
+  metadata  String?   // JSON string para datos adicionales
+
+  @@index([level])
+  @@index([timestamp])
+  @@map("logs")
+}
+
+model AnalyticsData {
+  id        String    @id @default(uuid())
+  userId    String?   // Puede ser null para eventos del sistema
+  eventType String
+  eventData String    // JSON string de datos del evento
+  timestamp DateTime  @default(now())
+
+  @@index([userId])
+  @@index([eventType])
+  @@index([timestamp])
+  @@map("analytics_data")
+}
+
+model Ranking {
+  id        String      @id @default(uuid())
+  name      String
+  type      String      // MERITS, UNITS, TOP_USERS, ACTIVITY_COMPLETION
+  period    String      // DAILY, WEEKLY, MONTHLY, CONTEST
+  data      String      // JSON string de posiciones y datos
+  createdAt DateTime    @default(now())
+
+  @@index([type])
+  @@index([period])
+  @@map("rankings")
+}
+
+model Personality {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  traits      String    // JSON string de características de personalidad
+  createdAt   DateTime  @default(now())
+  
+  users       User[]
+
+  @@map("personalities")
+}
+
+model UIComponentTemplate {
+  id           String    @id @default(uuid())
+  name         String
+  type         String    // 'video_player', 'chat_widget', etc.
+  templateJson String    // JSON string de configuración del componente UI Kit
+  creatorId    String
+  createdAt    DateTime  @default(now())
+  
+  creator      User      @relation("TemplateCreator", fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+  @@index([type])
+  @@map("ui_component_templates")
 }

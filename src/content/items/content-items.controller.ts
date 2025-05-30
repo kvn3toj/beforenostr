@@ -95,4 +95,60 @@ export class ContentItemsController {
     console.log('>>> ContentItemsController.findVersions: Called with id =', id);
     return this.contentItemsService.findVersionsByItemId(id);
   }
+
+  @Post('test-create-video')
+  @ApiOperation({ summary: 'Test creation of a new video with automatic duration calculation' })
+  @ApiResponse({ status: 201, description: 'Test video created successfully with duration' })
+  async testCreateVideo() {
+    console.log('>>> ContentItemsController.testCreateVideo: Creating test video...');
+    
+    // Crear un video de prueba con contenido de YouTube
+    const testVideoDto = {
+      title: 'Test Video - Auto Duration',
+      description: 'Video de prueba para verificar cálculo automático de duración',
+      content: JSON.stringify({
+        type: 'youtube_video',
+        videoId: 'EEZkQv25uEs', // Economía Sagrada - sabemos que debería dar 729s
+        url: 'https://www.youtube.com/watch?v=EEZkQv25uEs',
+        title: 'Test Video - Auto Duration',
+        author: 'Test Author',
+        category: 'Test Category',
+        description: 'Video de prueba para verificar cálculo automático de duración'
+      }),
+      playlistId: '33333333-3333-3333-3333-333333333333', // Usar playlist existente
+      itemTypeId: 'video',
+      order: 999,
+      isActive: true
+    };
+
+    try {
+      const createdVideo = await this.contentItemsService.create(testVideoDto, 'test-user');
+      
+      console.log('>>> ContentItemsController.testCreateVideo: Test video created successfully');
+      
+      return {
+        success: true,
+        message: 'Test video created with automatic duration calculation',
+        video: {
+          id: createdVideo.id,
+          title: createdVideo.title,
+          duration: createdVideo.duration,
+          durationFormatted: createdVideo.duration ? 
+            `${Math.floor(createdVideo.duration/60)}:${(createdVideo.duration%60).toString().padStart(2,'0')}` : 
+            'No duration',
+          expectedDuration: 729,
+          durationCorrect: createdVideo.duration === 729,
+          createdAt: createdVideo.createdAt
+        },
+        testing: {
+          expectedDuration: '729s (12:09)',
+          actualDuration: createdVideo.duration ? `${createdVideo.duration}s` : 'null',
+          autoCalculationWorking: createdVideo.duration === 729
+        }
+      };
+    } catch (error) {
+      console.error('>>> ContentItemsController.testCreateVideo: Error:', error);
+      throw error;
+    }
+  }
 } 

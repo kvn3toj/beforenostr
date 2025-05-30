@@ -9,6 +9,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useAuth } from '../hooks/useAuth'
 import { toast } from 'sonner'
+import { CoomUnityLogo } from '../components/common/Logo/CoomUnityLogo'
 
 export const RegisterPage = () => {
   const navigate = useNavigate()
@@ -113,12 +114,22 @@ export const RegisterPage = () => {
     <Container maxWidth="sm">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 4,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
+        {/* Logo de CoomÜnity Gamifier */}
+        <Box sx={{ mb: 4 }}>
+          <CoomUnityLogo 
+            size="large" 
+            variant="full" 
+            clickable={false}
+            color="#333333"
+          />
+        </Box>
+
         <Typography component="h1" variant="h4" gutterBottom>
           Crear Cuenta
         </Typography>

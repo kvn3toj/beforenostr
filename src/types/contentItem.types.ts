@@ -5,6 +5,7 @@ export interface ContentItem {
   playlistId: string;
   itemTypeId: string;
   content: string;
+  duration?: number; // Duración del video en segundos
   order?: number;
   isActive: boolean;
   isDeleted: boolean;

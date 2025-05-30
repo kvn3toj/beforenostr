@@ -14,6 +14,7 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
+  GlobalStyles,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -21,10 +22,13 @@ import {
   AccountCircle as AccountCircleIcon,
   Logout as LogoutIcon,
   Person as PersonIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
 
 // Importar los nuevos componentes
 import { NavigationMenu, NavigationItem } from '../components/common/Navigation/NavigationMenu';
+import { CoomUnityLogo } from '../components/common/Logo/CoomUnityLogo';
 
 // Iconos de Material UI - Importaciones por defecto
 import {
@@ -46,78 +50,27 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
 
 const drawerWidth = 280;
-
-// Componente del Logo minimalista
-const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({ collapsed = false }) => {
-  const navigate = useNavigate();
-  
-  return (
-    <Box
-      component="button"
-      onClick={() => navigate('/')}
-      sx={{
-        background: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        padding: collapsed ? '8px' : '16px 24px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: collapsed ? 'center' : 'flex-start',
-        width: '100%',
-        '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        },
-        transition: 'all 0.3s ease',
-        borderRadius: '8px',
-        margin: collapsed ? '8px' : '16px',
-        marginBottom: collapsed ? '16px' : '24px',
-      }}
-      aria-label="Ir al inicio"
-    >
-      {collapsed ? (
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: 'bold',
-            background: 'linear-gradient(45deg, #CDA83A, #FFD700)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          C
-        </Typography>
-      ) : (
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 'bold',
-            color: '#FFFFFF',
-            letterSpacing: '0.5px',
-          }}
-        >
-          CoomÜnity
-        </Typography>
-      )}
-    </Box>
-  );
-};
+const collapsedDrawerWidth = 72;
 
 export const MainLayout = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useTranslation();
+  
   const { user, logout } = useAuthStore();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  // Verificar si el usuario es administrador
-  const isAdmin = user?.roles?.includes('admin') || false;
+  
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    if (isMobile) {
+      setMobileOpen(!mobileOpen);
+    } else {
+      setCollapsed(!collapsed);
+    }
   };
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -128,16 +81,19 @@ export const MainLayout = () => {
     setUserMenuAnchor(null);
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleProfile = () => {
     handleUserMenuClose();
+    navigate('/profile');
   };
 
-  const handleProfile = () => {
-    navigate('/profile');
+  const handleLogout = () => {
     handleUserMenuClose();
+    logout();
+    navigate('/login');
   };
+
+  // Verificar si el usuario es administrador
+  const isAdmin = user?.roles?.includes('admin') || false;
 
   // Configurar elementos de navegación
   const navigationItems: NavigationItem[] = [
@@ -262,16 +218,32 @@ export const MainLayout = () => {
 
   const drawerContent = (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Logo en el drawer */}
-      <MinimalLogo collapsed={false} />
-      
       {/* Navegación */}
-      <Box sx={{ flex: 1, overflow: 'auto' }}>
+      <Box sx={{ flex: 1, overflow: 'auto', pt: 2 }}>
         <NavigationMenu
           items={navigationItems}
+          collapsed={collapsed}
           onItemClick={() => setMobileOpen(false)}
         />
       </Box>
+
+      {/* Botón de colapso para desktop */}
+      {!isMobile && (
+        <Box sx={{ p: 1, borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
+          <IconButton
+            onClick={() => setCollapsed(!collapsed)}
+            sx={{
+              width: '100%',
+              color: '#FFFFFF',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              },
+            }}
+          >
+            {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </Box>
+      )}
     </Box>
   );
 
@@ -279,15 +251,33 @@ export const MainLayout = () => {
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <CssBaseline />
       
-      {/* Header minimalista */}
+      {/* Estilos globales para corregir el gap del drawer */}
+      <GlobalStyles
+        styles={{
+          '.MuiDrawer-paper': {
+            top: '64px !important',
+            height: 'calc(100vh - 64px) !important',
+            marginTop: '0 !important',
+            paddingTop: '0 !important',
+          },
+          '.MuiDrawer-paperAnchorLeft': {
+            top: '64px !important',
+            height: 'calc(100vh - 64px) !important',
+          },
+        }}
+      />
+      
+      {/* Header con logo */}
       <AppBar
         position="fixed"
         sx={{
           zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: '#FFFFFF',
-          color: '#333333',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          borderBottom: '1px solid #E0E0E0',
+          backgroundColor: '#272727',
+          color: '#FFFFFF',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          borderBottom: 'none',
+          // Eliminar bordes redondeados del header
+          borderRadius: 0,
         }}
       >
         <Toolbar sx={{ justifyContent: 'space-between', minHeight: '64px !important' }}>
@@ -298,47 +288,49 @@ export const MainLayout = () => {
             edge="start"
             onClick={handleDrawerToggle}
             sx={{
-              color: '#333333',
+              color: '#FFFFFF',
               '&:hover': {
-                backgroundColor: 'rgba(0,0,0,0.04)',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
               },
             }}
           >
-            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+            {isMobile ? (mobileOpen ? <CloseIcon /> : <MenuIcon />) : (collapsed ? <MenuIcon /> : <CloseIcon />)}
           </IconButton>
 
-          {/* Logo en el header (solo en móvil cuando el drawer está cerrado) */}
-          {isMobile && !mobileOpen && (
-            <Typography
-              variant="h6"
+          {/* Logo CoomÜnity Gamifier en el header */}
+          <Box sx={{ display: 'flex', alignItems: 'center', ml: 2 }}>
+            <CoomUnityLogo 
+              size="medium"
+              variant="full"
+              clickable={true}
+              color="#FFFFFF"
               sx={{
-                fontWeight: 'bold',
-                color: '#333333',
-                letterSpacing: '0.5px',
+                '&:hover': {
+                  opacity: 0.8,
+                },
+                transition: 'opacity 0.2s ease',
               }}
-            >
-              CoomÜnity
-            </Typography>
-          )}
+            />
+          </Box>
 
           {/* Espacio flexible */}
           <Box sx={{ flexGrow: 1 }} />
 
           {/* Usuario */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ color: '#666666', display: { xs: 'none', sm: 'block' } }}>
+            <Typography variant="body2" sx={{ color: '#FFFFFF', display: { xs: 'none', sm: 'block' } }}>
               {user?.email || 'Usuario'}
             </Typography>
             <IconButton
               onClick={handleUserMenuOpen}
               sx={{
-                color: '#333333',
+                color: '#FFFFFF',
                 '&:hover': {
-                  backgroundColor: 'rgba(0,0,0,0.04)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 },
               }}
             >
-              <Avatar sx={{ width: 32, height: 32, bgcolor: '#CDA83A' }}>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: '#CEA93A' }}>
                 {user?.email?.charAt(0).toUpperCase() || 'U'}
               </Avatar>
             </IconButton>
@@ -365,22 +357,59 @@ export const MainLayout = () => {
         </MenuItem>
       </Menu>
 
-      {/* Navigation Drawer */}
+      {/* Desktop Drawer */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', sm: 'block' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: collapsed ? collapsedDrawerWidth : drawerWidth,
+            backgroundColor: '#272727',
+            borderRight: 'none',
+            boxShadow: '4px 0 16px rgba(0, 0, 0, 0.1)',
+            transition: 'width 0.3s ease',
+            borderRadius: 0,
+            overflow: 'hidden',
+          },
+        }}
+        open
+        anchor="left"
+        variant="permanent"
+        PaperProps={{
+          sx: {
+            top: '64px !important',
+            height: 'calc(100vh - 64px) !important',
+            position: 'fixed !important',
+          }
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+
+      {/* Mobile Drawer */}
       <Drawer
         variant="temporary"
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true,
+          keepMounted: true, // Better open performance on mobile.
         }}
         sx={{
-          '& .MuiDrawer-paper': { 
-            boxSizing: 'border-box', 
+          display: { xs: 'block', sm: 'none' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
             width: drawerWidth,
-            backgroundColor: '#2C3E50',
-            color: '#FFFFFF',
-            border: 'none',
-            boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
+            backgroundColor: '#272727',
+            borderRight: 'none',
+            boxShadow: '4px 0 16px rgba(0, 0, 0, 0.1)',
+            borderRadius: 0,
+            overflow: 'hidden',
+            top: '64px !important',
+            height: 'calc(100vh - 64px) !important',
+            position: 'fixed !important',
+            marginTop: '0 !important',
+            paddingTop: '0 !important',
           },
         }}
       >
@@ -396,11 +425,10 @@ export const MainLayout = () => {
           minHeight: '100vh',
           backgroundColor: '#F8F9FA',
           transition: 'margin 0.3s ease',
+          marginLeft: isMobile ? 0 : (collapsed ? `${collapsedDrawerWidth}px` : `${drawerWidth}px`),
+          marginTop: '64px',
         }}
       >
-        {/* Spacer for fixed header */}
-        <Box sx={{ height: 64 }} />
-        
         {/* Page Content */}
         <Outlet />
       </Box>

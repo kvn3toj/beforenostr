@@ -57,47 +57,89 @@ const MinimalMetricCard: React.FC<MetricCardProps> = ({
   return (
     <Card 
       sx={{ 
-        height: '120px',
+        height: '140px',
         cursor: onClick ? 'pointer' : 'default',
-        transition: 'all 0.2s ease-in-out',
-        border: '1px solid #E0E0E0',
-        boxShadow: 'none',
+        transition: 'all 0.3s ease-in-out',
+        border: '1px solid #F3F4F6',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+        borderRadius: '16px',
         '&:hover': onClick ? {
-          transform: 'translateY(-2px)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          borderColor: color,
+          transform: 'translateY(-4px)',
+          boxShadow: '0 8px 24px rgba(206, 169, 58, 0.15)',
+          borderColor: '#CEA93A',
         } : {},
       }}
       onClick={onClick}
     >
-      <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-          <Box
-            sx={{
-              width: 40,
-              height: 40,
-              borderRadius: '8px',
-              backgroundColor: `${color}15`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: color,
-            }}
-          >
-            {icon}
-          </Box>
-          {onClick && (
-            <IconButton size="small" sx={{ color: '#999999' }}>
-              <ArrowForwardIcon fontSize="small" />
-            </IconButton>
-          )}
+      <CardContent sx={{ 
+        p: 3, 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        '&:last-child': { pb: 3 } 
+      }}>
+        <Box
+          sx={{
+            width: 48,
+            height: 48,
+            borderRadius: '12px',
+            backgroundColor: `${color}15`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: color,
+            mb: 2,
+          }}
+        >
+          {icon}
         </Box>
-        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333333', mb: 0.5 }}>
-          {isLoading ? '...' : (value?.toLocaleString() || '0')}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
+        
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: '#6B7280', 
+            fontWeight: 500,
+            fontSize: '0.875rem',
+            lineHeight: 1.2,
+            mb: 1
+          }}
+        >
           {title}
         </Typography>
+        
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            fontWeight: 'bold', 
+            color: '#1F2937',
+            fontSize: '1.5rem',
+            lineHeight: 1,
+            letterSpacing: '-0.025em'
+          }}
+        >
+          {isLoading ? '...' : (value?.toLocaleString() || '0')}
+        </Typography>
+        
+        {onClick && (
+          <IconButton 
+            size="small" 
+            sx={{ 
+              color: '#9CA3AF',
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              '&:hover': {
+                color: '#CEA93A',
+                backgroundColor: 'rgba(206, 169, 58, 0.1)',
+              }
+            }}
+          >
+            <ArrowForwardIcon fontSize="small" />
+          </IconButton>
+        )}
       </CardContent>
     </Card>
   );
@@ -124,13 +166,14 @@ const MinimalActionCard: React.FC<QuickActionProps> = ({
       sx={{ 
         height: '100px',
         cursor: 'pointer',
-        transition: 'all 0.2s ease-in-out',
-        border: '1px solid #E0E0E0',
-        boxShadow: 'none',
+        transition: 'all 0.3s ease-in-out',
+        border: '1px solid #F3F4F6',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+        borderRadius: '16px',
         '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          borderColor: color,
+          transform: 'translateY(-4px)',
+          boxShadow: '0 8px 24px rgba(206, 169, 58, 0.15)',
+          borderColor: '#CEA93A',
         },
       }}
       onClick={onClick}
@@ -139,10 +182,10 @@ const MinimalActionCard: React.FC<QuickActionProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Box
             sx={{
-              width: 40,
-              height: 40,
-              borderRadius: '8px',
-              backgroundColor: `${color}15`,
+              width: 48,
+              height: 48,
+              borderRadius: '12px',
+              backgroundColor: `${color}10`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -152,14 +195,23 @@ const MinimalActionCard: React.FC<QuickActionProps> = ({
             {icon}
           </Box>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#333333', mb: 0.5 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1F2937', mb: 0.5 }}>
               {title}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{ color: '#6B7280', fontWeight: 500 }}>
               {description}
             </Typography>
           </Box>
-          <IconButton size="small" sx={{ color: '#999999' }}>
+          <IconButton 
+            size="small" 
+            sx={{ 
+              color: '#9CA3AF',
+              '&:hover': {
+                color: '#CEA93A',
+                backgroundColor: 'rgba(206, 169, 58, 0.1)',
+              }
+            }}
+          >
             <ArrowForwardIcon fontSize="small" />
           </IconButton>
         </Box>
@@ -184,28 +236,28 @@ export const HomePage: React.FC = () => {
       title: 'Crear Mundo',
       description: 'Nuevo mundo gamificado',
       icon: <AddIcon />,
-      color: '#2196F3',
+      color: '#CEA93A',
       onClick: () => navigate('/mundos'),
     },
     {
       title: 'Gestionar Usuarios',
       description: 'Administrar usuarios',
       icon: <PeopleIcon />,
-      color: '#4CAF50',
+      color: '#6B7280',
       onClick: () => navigate('/users'),
     },
     {
       title: 'Ver Analytics',
       description: 'Métricas y estadísticas',
       icon: <AnalyticsIcon />,
-      color: '#FF9800',
+      color: '#3B82F6',
       onClick: () => navigate('/analytics'),
     },
     {
       title: 'Configuración',
       description: 'Ajustes del sistema',
       icon: <SettingsIcon />,
-      color: '#9C27B0',
+      color: '#8B5CF6',
       onClick: () => navigate('/settings'),
     },
   ];
@@ -242,7 +294,7 @@ export const HomePage: React.FC = () => {
             component="h1" 
             sx={{ 
               fontWeight: 'bold', 
-              color: '#333333',
+              color: '#1F2937',
               mb: 1,
               fontSize: { xs: '2rem', md: '3rem' }
             }}
@@ -251,9 +303,9 @@ export const HomePage: React.FC = () => {
           </Typography>
           <Typography 
             variant="h6" 
-            color="text.secondary" 
             sx={{ 
               fontWeight: 400,
+              color: '#6B7280',
               fontSize: { xs: '1rem', md: '1.25rem' }
             }}
           >
@@ -267,7 +319,7 @@ export const HomePage: React.FC = () => {
             variant="h5" 
             sx={{ 
               fontWeight: 600, 
-              color: '#333333', 
+              color: '#1F2937', 
               mb: 3,
               fontSize: { xs: '1.25rem', md: '1.5rem' }
             }}
@@ -277,40 +329,40 @@ export const HomePage: React.FC = () => {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
               <MinimalMetricCard
-                title="Usuarios"
+                title="Total de Usuarios"
                 value={usersData?.count}
                 icon={<PeopleIcon />}
-                color="#2196F3"
+                color="#3B82F6"
                 isLoading={isLoadingUsers}
                 onClick={() => navigate('/users')}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <MinimalMetricCard
-                title="Mundos"
+                title="Mundos Creados"
                 value={mundosData?.count}
                 icon={<WorldIcon />}
-                color="#4CAF50"
+                color="#CEA93A"
                 isLoading={isLoadingMundos}
                 onClick={() => navigate('/mundos')}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <MinimalMetricCard
-                title="Playlists"
+                title="Playlists Activas"
                 value={playlistsData?.count}
                 icon={<PlaylistIcon />}
-                color="#FF9800"
+                color="#10B981"
                 isLoading={isLoadingPlaylists}
                 onClick={() => navigate('/playlists')}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <MinimalMetricCard
-                title="Actividad"
+                title="Eventos Recientes"
                 value={recentActivity.length}
                 icon={<TrendingUpIcon />}
-                color="#9C27B0"
+                color="#8B5CF6"
                 isLoading={false}
                 onClick={() => navigate('/analytics')}
               />
@@ -325,7 +377,7 @@ export const HomePage: React.FC = () => {
               variant="h5" 
               sx={{ 
                 fontWeight: 600, 
-                color: '#333333', 
+                color: '#1F2937', 
                 mb: 3,
                 fontSize: { xs: '1.25rem', md: '1.5rem' }
               }}
@@ -347,7 +399,7 @@ export const HomePage: React.FC = () => {
               variant="h5" 
               sx={{ 
                 fontWeight: 600, 
-                color: '#333333', 
+                color: '#1F2937', 
                 mb: 3,
                 fontSize: { xs: '1.25rem', md: '1.5rem' }
               }}
@@ -358,9 +410,9 @@ export const HomePage: React.FC = () => {
             <Paper 
               sx={{ 
                 p: 3, 
-                border: '1px solid #E0E0E0',
-                boxShadow: 'none',
-                borderRadius: '12px'
+                border: '1px solid #F3F4F6',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                borderRadius: '16px'
               }}
             >
               <Stack spacing={3}>
@@ -372,15 +424,15 @@ export const HomePage: React.FC = () => {
                           width: 8,
                           height: 8,
                           borderRadius: '50%',
-                          backgroundColor: activity.type === 'user' ? '#2196F3' : 
-                                         activity.type === 'mundo' ? '#4CAF50' : '#FF9800',
+                          backgroundColor: activity.type === 'user' ? '#3B82F6' : 
+                                         activity.type === 'mundo' ? '#CEA93A' : '#10B981',
                         }}
                       />
                       <Box sx={{ flex: 1 }}>
-                        <Typography variant="body2" sx={{ color: '#333333', fontWeight: 500 }}>
+                        <Typography variant="body2" sx={{ color: '#1F2937', fontWeight: 500 }}>
                           {activity.message}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ color: '#6B7280' }}>
                           Hace {activity.time}
                         </Typography>
                       </Box>
@@ -398,11 +450,13 @@ export const HomePage: React.FC = () => {
                 size="small" 
                 sx={{ 
                   mt: 3,
-                  borderColor: '#E0E0E0',
-                  color: '#666666',
+                  borderColor: '#E5E7EB',
+                  color: '#6B7280',
+                  borderRadius: '12px',
                   '&:hover': {
-                    borderColor: '#2196F3',
-                    backgroundColor: '#F3F4F6',
+                    borderColor: '#CEA93A',
+                    backgroundColor: 'rgba(206, 169, 58, 0.05)',
+                    color: '#CEA93A',
                   }
                 }}
                 onClick={() => navigate('/audit-logs')}
