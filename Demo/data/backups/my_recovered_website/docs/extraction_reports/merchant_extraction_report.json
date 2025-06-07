@@ -1,0 +1,657 @@
+{
+  "summary": {
+    "totalResources": 87,
+    "totalSize": "5.41 MB",
+    "timestamp": "2025-06-03T02:13:20.902Z",
+    "initialUrl": "https://dev.coomunity.co/merchant/a1598e94",
+    "finalUrl": "https://coomunity.co/place/home"
+  },
+  "resourcesByType": [
+    {
+      "type": "other",
+      "count": 6,
+      "totalSize": "157.7 KB",
+      "files": [
+        {
+          "filename": "001_home_ec560419.txt",
+          "url": "https://coomunity.co/place/home",
+          "size": "49.1 KB",
+          "status": 200
+        },
+        {
+          "filename": "002_cfc946fd4c7d1c74_c19ca72b.txt",
+          "url": "https://coomunity.co/place/matches/view/cfc946fd4c7d1c74",
+          "size": "3.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "003_38000e9aad777d56_36eb93b5.txt",
+          "url": "https://coomunity.co/place/matches/view/38000e9aad777d56",
+          "size": "26.2 KB",
+          "status": 200
+        },
+        {
+          "filename": "004_5ec50c53a993c83a_b9fa9502.txt",
+          "url": "https://coomunity.co/place/matches/view/5ec50c53a993c83a",
+          "size": "26.2 KB",
+          "status": 200
+        },
+        {
+          "filename": "005_39fec052dc194c31_89b4a1c7.txt",
+          "url": "https://coomunity.co/place/matches/view/39fec052dc194c31",
+          "size": "26.2 KB",
+          "status": 200
+        },
+        {
+          "filename": "006_90ab85b5c77c25a1_f91fb540.txt",
+          "url": "https://coomunity.co/place/matches/view/90ab85b5c77c25a1",
+          "size": "26.2 KB",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "type": "css",
+      "count": 17,
+      "totalSize": "1568.4 KB",
+      "files": [
+        {
+          "filename": "001_custom_e699c00b.css",
+          "url": "https://coomunity.co/place//assets/v0.2/css/custom.css?v=1748916664",
+          "size": "13.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "002_material-kit_26069410.css",
+          "url": "https://coomunity.co/place//assets/v0.2/css/material-kit.css?v=2.2.0",
+          "size": "528.5 KB",
+          "status": 200
+        },
+        {
+          "filename": "003_css_1c222f9b.css",
+          "url": "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons",
+          "size": "26.4 KB",
+          "status": 200
+        },
+        {
+          "filename": "004_styles_1f88566e.css",
+          "url": "https://coomunity.co/place//assets/css/styles.css?v=1748916664",
+          "size": "0.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "005_tour.min_6a8d218b.css",
+          "url": "https://coomunity.co/place//assets/v0.2/css/tour.min.css?v=1748916664",
+          "size": "3.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "006_tagify_323cf092.css",
+          "url": "https://coomunity.co/place//assets/plugins/tagify-master/tagify.css",
+          "size": "8.3 KB",
+          "status": 200
+        },
+        {
+          "filename": "007_clock_cd3c3bdb.css",
+          "url": "https://coomunity.co/place/assets/v0.2/css/clock.css",
+          "size": "5.4 KB",
+          "status": 200
+        },
+        {
+          "filename": "008_css_1e03dd8a.css",
+          "url": "https://fonts.googleapis.com/css?family=Montserrat:400,600,700&display=swap",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "009_bulma-extensions.min_b6dc62aa.css",
+          "url": "https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/dist/css/bulma-extensions.min.css",
+          "size": "202.4 KB",
+          "status": 200
+        },
+        {
+          "filename": "010_css2_bda03187.css",
+          "url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap",
+          "size": "23.3 KB",
+          "status": 200
+        },
+        {
+          "filename": "011_custom_e699c00b.css",
+          "url": "https://coomunity.co/place/assets/v0.2/css/custom.css?v=0.0.1",
+          "size": "13.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "013_tour.min_6a8d218b.css",
+          "url": "https://coomunity.co/place/assets/v0.2/css/tour.min.css?v=0.0.1",
+          "size": "3.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "012_material-kit_26069410.css",
+          "url": "https://coomunity.co/place/assets/v0.2/css/material-kit.css?v=2.2.0",
+          "size": "528.5 KB",
+          "status": 200
+        },
+        {
+          "filename": "014_bulma.min_a6bbc38b.css",
+          "url": "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css",
+          "size": "186.1 KB",
+          "status": 200
+        },
+        {
+          "filename": "015_custom_e699c00b.css",
+          "url": "https://coomunity.co/place//assets/v0.2/css/custom.css?v=1748916797",
+          "size": "13.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "016_styles_1f88566e.css",
+          "url": "https://coomunity.co/place//assets/css/styles.css?v=1748916797",
+          "size": "0.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "017_tour.min_6a8d218b.css",
+          "url": "https://coomunity.co/place//assets/v0.2/css/tour.min.css?v=1748916797",
+          "size": "3.8 KB",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "type": "images",
+      "count": 22,
+      "totalSize": "775.1 KB",
+      "files": [
+        {
+          "filename": "001_logo_8453c949.png",
+          "url": "https://coomunity.co/place/assets/images/logo.png",
+          "size": "13.9 KB",
+          "status": 200
+        },
+        {
+          "filename": "002_notifications_4a6322f8.png",
+          "url": "https://coomunity.co/place/assets/images/icons/notifications.png",
+          "size": "1.3 KB",
+          "status": 200
+        },
+        {
+          "filename": "003_icon-close_9c0b02b6.png",
+          "url": "https://coomunity.co/place/assets/v0.2/img/icon-close.png",
+          "size": "0.4 KB",
+          "status": 200
+        },
+        {
+          "filename": "004_logo_lukas_54759c3d.png",
+          "url": "https://coomunity.co/place/assets/images/core/logo_lukas.png",
+          "size": "1.9 KB",
+          "status": 200
+        },
+        {
+          "filename": "005_servicio-domicilio_c31c4cf6.png",
+          "url": "https://coomunity.co/place//assets/images/core/servicio-domicilio.png",
+          "size": "1.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "008_servicio-domicilio-gris_d4160d6e.png",
+          "url": "https://coomunity.co/place//assets/images/core/servicio-domicilio-gris.png",
+          "size": "1.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "007_mi-sitio-gris_724bb556.png",
+          "url": "https://coomunity.co/place//assets/images/core/mi-sitio-gris.png",
+          "size": "2.3 KB",
+          "status": 200
+        },
+        {
+          "filename": "006_virtual_c5e992dc.png",
+          "url": "https://coomunity.co/place//assets/images/core/virtual.png",
+          "size": "1.2 KB",
+          "status": 200
+        },
+        {
+          "filename": "009_virtual-gris_6ede02a7.png",
+          "url": "https://coomunity.co/place//assets/images/core/virtual-gris.png",
+          "size": "1.4 KB",
+          "status": 200
+        },
+        {
+          "filename": "011_oo_907cf658.png",
+          "url": "https://coomunity.co/assets/img/btn/oo.png",
+          "size": "0.9 KB",
+          "status": 200
+        },
+        {
+          "filename": "012_cam-gris_65ee1999.png",
+          "url": "https://coomunity.co/assets/img/btn/cam-gris.png",
+          "size": "0.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "013_user-gris_aaf866ae.png",
+          "url": "https://coomunity.co/assets/img/btn/user-gris.png",
+          "size": "0.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "010_credit-card_dcdf8193.svg",
+          "url": "https://coomunity.co/place/assets/v0.2/img/gift-card/credit-card.svg",
+          "size": "730.9 KB",
+          "status": 200
+        },
+        {
+          "filename": "014_rombo-supplier_88a15697.png",
+          "url": "https://coomunity.co/place/assets/images/menu/rombo-supplier.png",
+          "size": "1.0 KB",
+          "status": 200
+        },
+        {
+          "filename": "015_rombo_ac44c3e7.png",
+          "url": "https://coomunity.co/assets/img/btn/rombo.png",
+          "size": "0.9 KB",
+          "status": 200
+        },
+        {
+          "filename": "016_favicon_996d8248.png",
+          "url": "https://coomunity.co/place//assets/v0.2/img/favicon.png",
+          "size": "2.7 KB",
+          "status": 200
+        },
+        {
+          "filename": "017_cp_loading_3f857b95.svg",
+          "url": "https://coomunity.co/assets/img/cp/cp_loading.svg",
+          "size": "0.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "018_cart_4e618d15.png",
+          "url": "https://coomunity.co/place/assets/images/icons/cart.png",
+          "size": "0.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "019_avatar_50c19f54.jpg",
+          "url": "https://coomunity.co/assets/img/avatar.jpg",
+          "size": "3.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "020_error_d5088e71.png",
+          "url": "https://coomunity.co/assets/img/error.png",
+          "size": "4.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "021_chat-blanco_d00eab11.png",
+          "url": "https://coomunity.co/place/assets/v0.2/img/matches/chat-blanco.png",
+          "size": "0.7 KB",
+          "status": 200
+        },
+        {
+          "filename": "022_anular-acuerdo_9a29a725.png",
+          "url": "https://coomunity.co/place/assets/v0.2/img/matches/anular-acuerdo.png",
+          "size": "1.0 KB",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "type": "js",
+      "count": 39,
+      "totalSize": "3001.5 KB",
+      "files": [
+        {
+          "filename": "001_jquery.min_986d2bae.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/core/jquery.min.js",
+          "size": "142.3 KB",
+          "status": 200
+        },
+        {
+          "filename": "002_tagify_4ac5ffe1.js",
+          "url": "https://coomunity.co/place//assets/plugins/tagify-master/tagify.js",
+          "size": "80.0 KB",
+          "status": 200
+        },
+        {
+          "filename": "003_clock_4d13539e.js",
+          "url": "https://coomunity.co/place/assets/v0.2/js/clock.js",
+          "size": "12.3 KB",
+          "status": 200
+        },
+        {
+          "filename": "004_all_18592082.js",
+          "url": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.js",
+          "size": "1173.9 KB",
+          "status": 200
+        },
+        {
+          "filename": "005_popper.min_10a554dd.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/core/popper.min.js",
+          "size": "32.7 KB",
+          "status": 200
+        },
+        {
+          "filename": "006_bootstrap-material-design.min_479f5022.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/core/bootstrap-material-design.min.js",
+          "size": "74.9 KB",
+          "status": 200
+        },
+        {
+          "filename": "007_moment.min_cd1f2ca9.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/plugins/moment.min.js",
+          "size": "50.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "008_nouislider.min_18e086c6.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/plugins/nouislider.min.js",
+          "size": "23.0 KB",
+          "status": 200
+        },
+        {
+          "filename": "009_bootstrap-datetimepicker_4df98b35.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/plugins/bootstrap-datetimepicker.js",
+          "size": "51.1 KB",
+          "status": 200
+        },
+        {
+          "filename": "010_bootstrap-tagsinput_ada40916.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/plugins/bootstrap-tagsinput.js",
+          "size": "21.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "012_material-kit_c869ffd3.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/material-kit.js?v=2.2.0",
+          "size": "13.2 KB",
+          "status": 200
+        },
+        {
+          "filename": "011_jasny-bootstrap.min_6be1aa33.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/plugins/jasny-bootstrap.min.js",
+          "size": "10.3 KB",
+          "status": 200
+        },
+        {
+          "filename": "013_custom_1d4acbb7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/custom.js?v=1748916664",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "014_bootstrap-selectpicker_6d41121b.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/plugins/bootstrap-selectpicker.js",
+          "size": "113.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "015_tour.min_4819df7f.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/tour.min.js?v=1748916664",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "016_wizard_2828f5f7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/wizard.js?v=1748916664",
+          "size": "14.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "017_buttons_8c9210b3.js",
+          "url": "https://buttons.github.io/buttons.js",
+          "size": "19.0 KB",
+          "status": 200
+        },
+        {
+          "filename": "018_js_a171191b.js",
+          "url": "https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE",
+          "size": "256.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "019_hotjar-1778678_f1c2be41.js",
+          "url": "https://static.hotjar.com/c/hotjar-1778678.js?sv=6",
+          "size": "14.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "020_modules.2dbb02b97399cf4f9135_5626a395.js",
+          "url": "https://script.hotjar.com/modules.2dbb02b97399cf4f9135.js",
+          "size": "224.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "021_common_bfd23fd0.js",
+          "url": "https://maps.googleapis.com/maps-api-v3/api/js/61/2/common.js",
+          "size": "119.2 KB",
+          "status": 200
+        },
+        {
+          "filename": "022_util_f9858c61.js",
+          "url": "https://maps.googleapis.com/maps-api-v3/api/js/61/2/util.js",
+          "size": "320.1 KB",
+          "status": 200
+        },
+        {
+          "filename": "023_jquery-3.4.1.min_220afd74.js",
+          "url": "https://code.jquery.com/jquery-3.4.1.min.js",
+          "size": "86.1 KB",
+          "status": 200
+        },
+        {
+          "filename": "025_tour.min_4819df7f.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/tour.min.js?v=1748916773",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "024_custom_1d4acbb7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/custom.js?v=1748916773",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "026_wizard_2828f5f7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/wizard.js?v=1748916773",
+          "size": "14.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "027_browser-perf.8417c6bba72228fa2e29_fb9f7dae.js",
+          "url": "https://script.hotjar.com/browser-perf.8417c6bba72228fa2e29.js",
+          "size": "5.1 KB",
+          "status": 200
+        },
+        {
+          "filename": "028_custom_1d4acbb7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/custom.js?v=1748916779",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "029_tour.min_4819df7f.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/tour.min.js?v=1748916779",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "030_wizard_2828f5f7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/wizard.js?v=1748916779",
+          "size": "14.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "031_custom_1d4acbb7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/custom.js?v=1748916785",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "032_tour.min_4819df7f.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/tour.min.js?v=1748916785",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "033_wizard_2828f5f7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/wizard.js?v=1748916785",
+          "size": "14.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "035_custom_1d4acbb7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/custom.js?v=1748916791",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "034_tour.min_4819df7f.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/tour.min.js?v=1748916791",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "036_wizard_2828f5f7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/wizard.js?v=1748916791",
+          "size": "14.8 KB",
+          "status": 200
+        },
+        {
+          "filename": "037_custom_1d4acbb7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/custom.js?v=1748916797",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "038_tour.min_4819df7f.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/tour.min.js?v=1748916797",
+          "size": "5.6 KB",
+          "status": 200
+        },
+        {
+          "filename": "039_wizard_2828f5f7.js",
+          "url": "https://coomunity.co/place//assets/v0.2/js/wizard.js?v=1748916797",
+          "size": "14.8 KB",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "type": "fonts",
+      "count": 1,
+      "totalSize": "34.6 KB",
+      "files": [
+        {
+          "filename": "001_JTUSjIg1_i6t8kCHKm459WlhyyTh89Y_ea21cc6e.woff2",
+          "url": "https://fonts.gstatic.com/s/montserrat/v30/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2",
+          "size": "34.6 KB",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "type": "data",
+      "count": 2,
+      "totalSize": "3.0 KB",
+      "files": [
+        {
+          "filename": "001_gen_204_8a80554c.json",
+          "url": "https://maps.googleapis.com/maps/api/mapsjs/gen_204?csp_test=true",
+          "size": "0.0 KB",
+          "status": 200
+        },
+        {
+          "filename": "002_notifications_ca9db8d9.json",
+          "url": "https://coomunity.co/place/notifications",
+          "size": "2.9 KB",
+          "status": 200
+        }
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "action": "load",
+      "description": "Carga inicial de la página después de redirecciones",
+      "timestamp": "2025-06-03T02:11:13.882Z",
+      "htmlSnapshot": "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z.html",
+      "newResourcesFound": 49,
+      "currentUrl": "https://coomunity.co/place/home"
+    },
+    {
+      "action": "scroll",
+      "description": "Desplazamiento completo hasta el final de la página",
+      "timestamp": "2025-06-03T02:11:18.902Z",
+      "htmlSnapshot": "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z.html",
+      "newResourcesFound": 0,
+      "currentUrl": "https://coomunity.co/place/home"
+    },
+    {
+      "action": "click",
+      "description": "Clic en BUTTON \"\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\" (selector: button:not([disabled]))",
+      "timestamp": "2025-06-03T02:11:31.058Z",
+      "htmlSnapshot": "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z.html",
+      "newResourcesFound": 4,
+      "currentUrl": "https://coomunity.co/place/home"
+    },
+    {
+      "action": "navigate",
+      "description": "Navegación a enlace interno: Nuevo match 19/4/2020        Soporte al Usuario con amor (https://coomunity.co/place/matches/view/cfc946fd4c7d1c74)",
+      "timestamp": "2025-06-03T02:12:53.478Z",
+      "htmlSnapshot": "merchant_home_04_internal_link__place_matches_view_cfc946fd4c7d1c74_2025-06-03T02-12-53-470Z.html",
+      "newResourcesFound": 9,
+      "currentUrl": "https://coomunity.co/place/matches/view/cfc946fd4c7d1c74"
+    },
+    {
+      "action": "navigate",
+      "description": "Navegación a enlace interno: Nuevo match 19/4/2020        Soporte al Usuario con amor (https://coomunity.co/place/matches/view/38000e9aad777d56)",
+      "timestamp": "2025-06-03T02:12:59.342Z",
+      "htmlSnapshot": "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z.html",
+      "newResourcesFound": 7,
+      "currentUrl": "https://coomunity.co/place/matches/view/38000e9aad777d56"
+    },
+    {
+      "action": "navigate",
+      "description": "Navegación a enlace interno: Nuevo match 19/4/2020        Soporte al Usuario con amor (https://coomunity.co/place/matches/view/5ec50c53a993c83a)",
+      "timestamp": "2025-06-03T02:13:05.205Z",
+      "htmlSnapshot": "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z.html",
+      "newResourcesFound": 4,
+      "currentUrl": "https://coomunity.co/place/matches/view/5ec50c53a993c83a"
+    },
+    {
+      "action": "navigate",
+      "description": "Navegación a enlace interno: Nuevo match 19/4/2020        Soporte al Usuario con amor (https://coomunity.co/place/matches/view/39fec052dc194c31)",
+      "timestamp": "2025-06-03T02:13:11.079Z",
+      "htmlSnapshot": "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z.html",
+      "newResourcesFound": 4,
+      "currentUrl": "https://coomunity.co/place/matches/view/39fec052dc194c31"
+    },
+    {
+      "action": "navigate",
+      "description": "Navegación a enlace interno: Nuevo match 19/4/2020        Soporte al Usuario con amor (https://coomunity.co/place/matches/view/90ab85b5c77c25a1)",
+      "timestamp": "2025-06-03T02:13:16.942Z",
+      "htmlSnapshot": "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z.html",
+      "newResourcesFound": 4,
+      "currentUrl": "https://coomunity.co/place/matches/view/90ab85b5c77c25a1"
+    },
+    {
+      "action": "complete",
+      "description": "Estado final después de todas las interacciones",
+      "timestamp": "2025-06-03T02:13:20.901Z",
+      "htmlSnapshot": "merchant_home_09_final_state_2025-06-03T02-13-20-890Z.html",
+      "newResourcesFound": 0,
+      "currentUrl": "https://coomunity.co/place/home"
+    }
+  ],
+  "counters": {
+    "css": 17,
+    "js": 39,
+    "images": 22,
+    "fonts": 1,
+    "data": 2,
+    "other": 6
+  }
+}

@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>CoomÜnity - Plataforma de Comunidad Descentralizada</title>
+    <meta name="description" content="Descubre CoomÜnity: la plataforma que conecta comunidades a través de experiencias inmersivas con Pilgrim, Merchant y Red Pill.">
+    
+    <!-- Unified Styles con todas las heurísticas UX -->
+    <link rel="stylesheet" href="/shared/css/unified-styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/shared/images/favicon.ico" type="image/x-icon">
+    
+    <!-- Meta tags para SEO -->
+    <meta property="og:title" content="CoomÜnity - Plataforma de Comunidad Descentralizada">
+    <meta property="og:description" content="Conecta, explora y construye comunidades descentralizadas">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://demo.coomunity.com">
+    
+    <!-- Accessibility improvements -->
+    <meta name="theme-color" content="#0ea5e9">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Google Analytics 4 (GA4) - CoomÜnity Platform -->
+  <!-- 
+    ⚠️  IMPORTANTE: Reemplaza 'G-COOMUNITY123' con tu Measurement ID real de GA4
+    Obtén tu ID en: https://analytics.google.com/
+  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-COOMUNITY123"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // Configuración básica de GA4
+    gtag('config', 'G-COOMUNITY123', {
+      // Configuraciones UX específicas para CoomÜnity
+      page_title: document.title,
+      page_location: window.location.href,
+      custom_map: {
+        'custom_parameter_1': 'section_name',
+        'custom_parameter_2': 'ux_heuristic',
+        'custom_parameter_3': 'user_journey_step'
+      },
+      // Configuraciones de privacidad
+      anonymize_ip: true,
+      allow_google_signals: false,
+      cookie_expires: 63072000, // 2 años
+      // Enhanced ecommerce para tracking de conversiones UX
+      send_page_view: true
+    });
+
+    // Función helper para tracking de eventos UX
+    window.trackUXEvent = function(eventName, parameters) {
+      gtag('event', eventName, {
+        event_category: 'UX_Heuristics',
+        event_label: parameters.section || 'unknown',
+        value: parameters.value || 1,
+        ...parameters
+      });
+    };
+
+    // Track página cargada inicialmente
+    gtag('event', 'page_view_enhanced', {
+      page_title: document.title,
+      page_location: window.location.href,
+      content_group1: window.location.pathname.split('/')[1] || 'home',
+      timestamp: new Date().toISOString()
+    });
+  </script>
+  <!-- Fin Google Analytics 4 -->
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only">Saltar al contenido principal</a>
+
+    <!-- Enhanced Header con navegación intuitiva -->
+    <header class="minimalist-header enhanced-navbar">
+        <div class="minimalist-container">
+            <nav class="minimalist-nav enhanced-nav" role="navigation" aria-label="Navegación principal">
+                <a href="#" class="minimalist-nav-brand enhanced-brand" data-command="home">
+                    <span class="brand-icon">🌐</span>
+                    CoomÜnity
+                </a>
+                
+                <!-- Enhanced Navigation con shortcuts -->
+                <ul class="minimalist-nav-links enhanced-nav-links" role="menubar">
+                    <li role="menuitem">
+                        <a href="/sections/pilgrim/" class="minimalist-nav-link enhanced-nav-item" data-section="pilgrim">
+                            <span class="nav-icon">🚀</span>
+                            Pilgrim
+                            <span class="nav-description">Experiencias inmersivas</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="/sections/merchant/" class="minimalist-nav-link enhanced-nav-item" data-section="merchant">
+                            <span class="nav-icon">🏪</span>
+                            Merchant
+                            <span class="nav-description">Comercio descentralizado</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="/sections/red-pill/" class="minimalist-nav-link enhanced-nav-item" data-section="red-pill">
+                            <span class="nav-icon">💊</span>
+                            Red Pill
+                            <span class="nav-description">Exploración interactiva</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="/docs/" class="minimalist-nav-link enhanced-nav-item" data-section="docs" data-command="help">
+                            <span class="nav-icon">📚</span>
+                            Documentación
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Search Bar con Auto-save -->
+                <div class="minimalist-search">
+                    <input type="text" 
+                           class="search-input" 
+                           placeholder="Buscar demos, características, documentación..."
+                           aria-label="Buscar en CoomÜnity"
+                           data-auto-save
+                           data-draft-save="main-search"
+                           data-help="Búsqueda inteligente: Encuentra demos, características y documentación. Los términos se guardan automáticamente mientras escribes.">
+                    <button class="search-btn" aria-label="Buscar">
+                        <span class="search-icon">🔍</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="enhanced-mobile-toggle" aria-label="Alternar menú de navegación" aria-expanded="false">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="minimalist-main" role="main">
+        <div class="minimalist-container">
+            
+            <!-- Hero Section con diseño minimalista -->
+            <section class="minimalist-section-large" aria-labelledby="hero-title">
+                <div class="fade-in">
+                    <h1 id="hero-title" class="minimalist-title">
+                        Bienvenido a CoomÜnity
+                    </h1>
+                    <p class="minimalist-subtitle">
+                        Explora el futuro de las comunidades descentralizadas a través de tres experiencias únicas: 
+                        Pilgrim, Merchant y Red Pill. Cada demo demuestra las capacidades avanzadas de nuestra plataforma.
+                    </p>
+                </div>
+            </section>
+
+            <hr class="minimalist-divider">
+
+            <!-- Demos Grid con cards minimalistas -->
+            <section class="minimalist-section adaptive-container" aria-labelledby="demos-title" data-adaptive="grid">
+                <h2 id="demos-title" class="minimalist-title fade-in-delay-1">Experiencias Disponibles</h2>
+                
+                <div class="minimalist-grid minimalist-grid-3 adaptive-grid" data-adaptive="layout">
+                    <!-- Pilgrim Demo Card -->
+                    <article class="minimalist-card customizable-panel contextual-card fade-in-delay-1" 
+                             id="pilgrim-card" 
+                             data-adaptive="card"
+                             data-personalized="pilgrim-preferences"
+                             data-help="Demo Pilgrim: Explora experiencias de viaje auténticas. Utiliza la navegación inteligente para descubrir destinos únicos y conectar con otros viajeros.">
+                        <div class="minimalist-card-header">
+                            <span class="minimalist-card-icon context-aware">🚀</span>
+                            <h3 class="minimalist-card-title">Pilgrim</h3>
+                            <p class="minimalist-card-description">
+                                Plataforma de experiencias de viaje que conecta a exploradores con 
+                                destinos auténticos y comunidades locales.
+                            </p>
+                        </div>
+                        <div class="minimalist-card-content">
+                            <ul class="minimalist-list">
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">🧭</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Navegación Inteligente</div>
+                                        <div class="minimalist-list-description">Análisis contextual en tiempo real</div>
+                                    </div>
+                                </li>
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">🔍</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Búsqueda Avanzada</div>
+                                        <div class="minimalist-list-description">Filtros semánticos y visuales</div>
+                                    </div>
+                                </li>
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">📊</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Analytics</div>
+                                        <div class="minimalist-list-description">Métricas de interacción detalladas</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="minimalist-card-footer">
+                            <a href="/sections/pilgrim/" class="minimalist-btn minimalist-btn-primary" 
+                               data-help="Accede a la demo completa de Pilgrim con todas las funcionalidades de navegación y exploración.">
+                                <span>Explorar Pilgrim</span>
+                                <span>→</span>
+                            </a>
+                            <a href="/sections/pilgrim/improved/" class="minimalist-btn minimalist-btn-secondary"
+                               data-help="Versión mejorada de Pilgrim con funcionalidades adicionales y optimizaciones.">
+                                Versión Mejorada
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Merchant Demo Card -->
+                    <article class="minimalist-card customizable-panel fade-in-delay-2" id="merchant-card"
+                             data-help="Demo Merchant: Plataforma de comercio descentralizado. Explora las funcionalidades de gestión de inventario, pagos seguros y análisis de ventas.">
+                        <div class="minimalist-card-header">
+                            <span class="minimalist-card-icon">🏪</span>
+                            <h3 class="minimalist-card-title">Merchant</h3>
+                            <p class="minimalist-card-description">
+                                Plataforma de comercio descentralizado con gestión de inventario, 
+                                pagos seguros y análisis de mercado.
+                            </p>
+                        </div>
+                        <div class="minimalist-card-content">
+                            <ul class="minimalist-list">
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">💳</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Pagos Seguros</div>
+                                        <div class="minimalist-list-description">Múltiples métodos de pago</div>
+                                    </div>
+                                </li>
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">📦</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Gestión de Inventario</div>
+                                        <div class="minimalist-list-description">Control en tiempo real</div>
+                                    </div>
+                                </li>
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">📈</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Análisis de Ventas</div>
+                                        <div class="minimalist-list-description">Reportes detallados</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="minimalist-card-footer">
+                            <a href="/sections/merchant/" class="minimalist-btn minimalist-btn-primary"
+                               data-help="Accede a la demo principal de Merchant para explorar todas las funcionalidades de comercio.">
+                                <span>Explorar Merchant</span>
+                                <span>→</span>
+                            </a>
+                            <button class="minimalist-btn minimalist-btn-ghost" onclick="showMerchantVariations()"
+                                    data-help="Explora diferentes estados de la interfaz: normal, cargando, error y vacío para ver cómo se maneja cada situación.">
+                                Ver Variaciones
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Red Pill Demo Card -->
+                    <article class="minimalist-card customizable-panel fade-in-delay-3" id="red-pill-card"
+                             data-help="Demo Red Pill: Experiencia interactiva única que te permite explorar conexiones ocultas y capas profundas de información.">
+                        <div class="minimalist-card-header">
+                            <span class="minimalist-card-icon">💊</span>
+                            <h3 class="minimalist-card-title">Red Pill</h3>
+                            <p class="minimalist-card-description">
+                                Experiencia interactiva de exploración que revela capas ocultas de información 
+                                y conexiones entre contenidos.
+                            </p>
+                        </div>
+                        <div class="minimalist-card-content">
+                            <ul class="minimalist-list">
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">🕳️</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Exploración Profunda</div>
+                                        <div class="minimalist-list-description">Descubre conexiones ocultas</div>
+                                    </div>
+                                </li>
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">🎭</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Experiencia Inmersiva</div>
+                                        <div class="minimalist-list-description">Narrativa interactiva</div>
+                                    </div>
+                                </li>
+                                <li class="minimalist-list-item">
+                                    <span class="minimalist-list-icon">🌐</span>
+                                    <div class="minimalist-list-content">
+                                        <div class="minimalist-list-title">Red de Conocimiento</div>
+                                        <div class="minimalist-list-description">Mapeo de información</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="minimalist-card-footer">
+                            <a href="/sections/red-pill/" class="minimalist-btn minimalist-btn-primary"
+                               data-help="Sumérgete en la experiencia Red Pill completa. Prepárate para una jornada de descubrimiento único.">
+                                <span>Tomar la Píldora</span>
+                                <span>🕳️</span>
+                            </a>
+                            <button class="minimalist-btn minimalist-btn-ghost" onclick="showRedPillJourneys()"
+                                    data-help="Explora diferentes tipos de jornadas Red Pill: principal, completa, colaborativa e interactiva.">
+                                Ver Jornadas
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <hr class="minimalist-divider">
+
+            <!-- Features Section -->
+            <section class="minimalist-section" aria-labelledby="features-title">
+                <h2 id="features-title" class="minimalist-title">Características Principales</h2>
+                
+                <blockquote class="minimalist-quote fade-in">
+                    <p class="minimalist-quote-text">
+                        CoomÜnity representa el futuro de las comunidades digitales, donde la descentralización 
+                        se encuentra con la experiencia de usuario excepcional.
+                    </p>
+                    <cite class="minimalist-quote-author">Equipo de Desarrollo CoomÜnity</cite>
+                </blockquote>
+
+                <div class="minimalist-grid minimalist-grid-2">
+                    <div class="minimalist-card fade-in-delay-1">
+                        <h3 class="minimalist-card-title">🔐 Seguridad Avanzada</h3>
+                        <p class="minimalist-text">
+                            Implementación de protocolos de seguridad de última generación con 
+                            encriptación end-to-end y validación descentralizada.
+                        </p>
+                        <div class="minimalist-progress">
+                            <div class="minimalist-progress-bar" style="width: 95%"></div>
+                        </div>
+                        <p class="minimalist-caption">95% de seguridad implementada</p>
+                    </div>
+
+                    <div class="minimalist-card fade-in-delay-2">
+                        <h3 class="minimalist-card-title">⚡ Rendimiento Optimizado</h3>
+                        <p class="minimalist-text">
+                            Arquitectura optimizada para carga rápida y experiencia fluida 
+                            en todos los dispositivos y conexiones.
+                        </p>
+                        <div class="minimalist-progress">
+                            <div class="minimalist-progress-bar" style="width: 88%"></div>
+                        </div>
+                        <p class="minimalist-caption">88% de optimización completada</p>
+                    </div>
+
+                    <div class="minimalist-card fade-in-delay-3">
+                        <h3 class="minimalist-card-title">🌍 Accesibilidad Universal</h3>
+                        <p class="minimalist-text">
+                            Diseño inclusivo que garantiza el acceso a todos los usuarios, 
+                            independientemente de sus capacidades o dispositivos.
+                        </p>
+                        <div class="minimalist-progress">
+                            <div class="minimalist-progress-bar" style="width: 92%"></div>
+                        </div>
+                        <p class="minimalist-caption">92% de estándares WCAG cumplidos</p>
+                    </div>
+
+                    <div class="minimalist-card fade-in-delay-4">
+                        <h3 class="minimalist-card-title">🎨 Experiencia Minimalista</h3>
+                        <p class="minimalist-text">
+                            Interfaz limpia y enfocada que prioriza el contenido y 
+                            facilita la navegación intuitiva.
+                        </p>
+                        <div class="minimalist-progress">
+                            <div class="minimalist-progress-bar" style="width: 96%"></div>
+                        </div>
+                        <p class="minimalist-caption">96% de principios UX aplicados</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technology Stack -->
+            <section class="minimalist-section" aria-labelledby="tech-title">
+                <h2 id="tech-title" class="minimalist-title">Stack Tecnológico</h2>
+                
+                <table class="minimalist-table fade-in">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Tecnología</th>
+                            <th>Propósito</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>HTML5, CSS3, JavaScript ES6+</td>
+                            <td>Interfaz de usuario moderna</td>
+                            <td><span class="text-success">✓ Implementado</span></td>
+                        </tr>
+                        <tr>
+                            <td>Frameworks</td>
+                            <td>Progressive Web App</td>
+                            <td>Experiencia nativa</td>
+                            <td><span class="text-warning">⚠ En desarrollo</span></td>
+                        </tr>
+                        <tr>
+                            <td>Blockchain</td>
+                            <td>Ethereum, IPFS</td>
+                            <td>Descentralización</td>
+                            <td><span class="text-warning">⚠ Beta</span></td>
+                        </tr>
+                        <tr>
+                            <td>Analytics</td>
+                            <td>Custom Analytics Engine</td>
+                            <td>Métricas de usuario</td>
+                            <td><span class="text-success">✓ Activo</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+
+    <!-- Adaptive Controls Panel -->
+    <div class="adaptive-controls" data-adaptive="controls" role="toolbar" aria-label="Controles de personalización">
+        <button class="adaptive-control" 
+                data-adaptive-control="density" 
+                data-current-density="normal"
+                aria-label="Cambiar densidad de la interfaz"
+                title="Cambiar densidad">
+            🎛️
+        </button>
+        <button class="adaptive-control" 
+                data-adaptive-control="theme" 
+                aria-label="Cambiar tema de color"
+                title="Cambiar tema">
+            🎨
+        </button>
+        <button class="adaptive-control" 
+                data-adaptive-control="personalization" 
+                aria-label="Ajustar nivel de personalización"
+                title="Personalización">
+            ⚙️
+        </button>
+    </div>
+
+    <!-- Context Indicators -->
+    <div class="context-indicators" data-adaptive="indicators" style="display: none;">
+        <div class="context-indicator" data-context="time"></div>
+        <div class="context-indicator" data-context="device"></div>
+        <div class="context-indicator" data-context="connection"></div>
+    </div>
+
+    <!-- Minimalist Footer -->
+    <footer class="minimalist-footer" role="contentinfo">
+        <div class="minimalist-container">
+            <p>&copy; 2024 CoomÜnity. Construyendo el futuro de las comunidades descentralizadas.</p>
+            <p class="minimalist-caption">
+                <a href="/privacy" class="minimalist-nav-link">Privacidad</a> • 
+                <a href="/terms" class="minimalist-nav-link">Términos</a> • 
+                <a href="/accessibility" class="minimalist-nav-link">Accesibilidad</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <div class="minimalist-floating">
+        <button class="minimalist-fab" aria-label="Acciones rápidas" onclick="window.flexibilityManager?.toggleQuickActions()">
+            ⚡
+        </button>
+    </div>
+
+    <!-- Scripts para todos los sistemas UX -->
+    <!-- Sistema de inicialización segura de managers - PREVENCIÓN DE TIMEOUTS -->
+    <script src="/shared/js/manager-initialization.js"></script>
+    
+    <!-- Managers principales con carga robusta -->
+    <script src="/shared/js/recognition-manager.js"></script>
+    <script src="/shared/js/error-prevention-manager.js"></script>
+    <script src="/shared/js/flexibility-manager.js"></script>
+    <script src="/shared/js/help-documentation-manager.js"></script>
+    <script src="/shared/js/consistency-standards-manager.js"></script>
+    <script src="/shared/js/error-recovery-manager.js"></script>
+    <script src="/shared/js/user-control-freedom-manager.js"></script>
+    <script src="/shared/js/visual-hierarchy-manager.js"></script>
+    <script src="/shared/js/performance-loading-manager.js"></script>
+    <script src="/shared/js/adaptive-contextual-manager.js"></script>
+    
+    <!-- Mejoras adaptativas específicas para resolver problemas de usabilidad -->
+    <script src="/shared/js/adaptive-enhancements.js"></script>
+    
+    <!-- Demo-specific functionality con manejo robusto de errores -->
+    <script>
+        // Inicialización de funcionalidades específicas con try-catch robusto
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Iniciando funcionalidades específicas de demo...');
+            
+            // Esperar a que el sistema de managers esté listo
+            if (window.managerInit) {
+                window.managerInit.onReady(() => {
+                    console.log('✅ Managers listos, inicializando funcionalidades...');
+                    initializeDemoFunctionalities();
+                });
+            } else {
+                // Fallback si el sistema de inicialización no está disponible
+                console.warn('⚠️ Sistema de inicialización no disponible, usando inicialización directa');
+                setTimeout(initializeDemoFunctionalities, 1000);
+            }
+            
+            function initializeDemoFunctionalities() {
+                try {
+                    // Funciones para mostrar variaciones de demos
+                    window.showMerchantVariations = function() {
+                        try {
+                            const variations = [
+                                { name: 'Estado Normal', url: '/sections/merchant/' },
+                                { name: 'Estado Cargando', url: '/sections/merchant/loading/' },
+                                { name: 'Estado Error', url: '/sections/merchant/error/' },
+                                { name: 'Estado Vacío', url: '/sections/merchant/empty/' }
+                            ];
+                            
+                            // Usar el sistema de llamadas seguras
+                            if (window.safeCall) {
+                                window.safeCall('errorPreventionManager', 'showConfirmationDialog', {
+                                    title: 'Variaciones de Merchant',
+                                    message: 'Selecciona qué variación quieres explorar:',
+                                    type: 'info',
+                                    customActions: variations.map(v => ({
+                                        text: v.name,
+                                        action: () => window.location.href = v.url
+                                    }))
+                                }).catch(error => {
+                                    console.warn('⚠️ Error mostrando variaciones de Merchant:', error);
+                                    // Fallback simple
+                                    const choice = prompt('Selecciona variación:\n' + variations.map((v, i) => `${i+1}. ${v.name}`).join('\n'));
+                                    const index = parseInt(choice) - 1;
+                                    if (index >= 0 && index < variations.length) {
+                                        window.location.href = variations[index].url;
+                                    }
+                                });
+                            } else if (window.errorPreventionManager) {
+                                window.errorPreventionManager.showConfirmationDialog({
+                                    title: 'Variaciones de Merchant',
+                                    message: 'Selecciona qué variación quieres explorar:',
+                                    type: 'info',
+                                    customActions: variations.map(v => ({
+                                        text: v.name,
+                                        action: () => window.location.href = v.url
+                                    }))
+                                });
+                            }
+                        } catch (error) {
+                            console.error('❌ Error en showMerchantVariations:', error);
+                        }
+                    };
+
+                    window.showRedPillJourneys = function() {
+                        try {
+                            const journeys = [
+                                { name: 'Jornada Principal', url: '/sections/red-pill/' },
+                                { name: 'Exploración Completa', url: '/sections/red-pill/complete/' },
+                                { name: 'Modo Colaborativo', url: '/sections/red-pill/collaborative/' },
+                                { name: 'Experiencia Interactiva', url: '/sections/red-pill/interactive/' }
+                            ];
+                            
+                            // Usar el sistema de llamadas seguras
+                            if (window.safeCall) {
+                                window.safeCall('errorPreventionManager', 'showConfirmationDialog', {
+                                    title: 'Jornadas Red Pill',
+                                    message: 'Elige tu aventura:',
+                                    type: 'info',
+                                    customActions: journeys.map(j => ({
+                                        text: j.name,
+                                        action: () => window.location.href = j.url
+                                    }))
+                                }).catch(error => {
+                                    console.warn('⚠️ Error mostrando jornadas Red Pill:', error);
+                                    // Fallback simple
+                                    const choice = prompt('Elige tu aventura:\n' + journeys.map((j, i) => `${i+1}. ${j.name}`).join('\n'));
+                                    const index = parseInt(choice) - 1;
+                                    if (index >= 0 && index < journeys.length) {
+                                        window.location.href = journeys[index].url;
+                                    }
+                                });
+                            } else if (window.errorPreventionManager) {
+                                window.errorPreventionManager.showConfirmationDialog({
+                                    title: 'Jornadas Red Pill',
+                                    message: 'Elige tu aventura:',
+                                    type: 'info',
+                                    customActions: journeys.map(j => ({
+                                        text: j.name,
+                                        action: () => window.location.href = j.url
+                                    }))
+                                });
+                            }
+                        } catch (error) {
+                            console.error('❌ Error en showRedPillJourneys:', error);
+                        }
+                    };
+
+                    // Añadir efectos de scroll al header con manejo de errores
+                    try {
+                        let lastScrollY = window.scrollY;
+                        window.addEventListener('scroll', () => {
+                            try {
+                                const header = document.querySelector('.minimalist-header');
+                                if (header) {
+                                    if (window.scrollY > 50) {
+                                        header.classList.add('scrolled');
+                                    } else {
+                                        header.classList.remove('scrolled');
+                                    }
+                                    lastScrollY = window.scrollY;
+                                }
+                            } catch (error) {
+                                console.warn('⚠️ Error en scroll handler:', error);
+                            }
+                        });
+                    } catch (error) {
+                        console.warn('⚠️ Error configurando scroll effects:', error);
+                    }
+
+                    // Activar animaciones al hacer scroll con manejo de errores
+                    try {
+                        const observerOptions = {
+                            root: null,
+                            rootMargin: '0px',
+                            threshold: 0.1
+                        };
+
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                try {
+                                    if (entry.isIntersecting) {
+                                        entry.target.style.animationPlayState = 'running';
+                                    }
+                                } catch (error) {
+                                    console.warn('⚠️ Error en intersection observer:', error);
+                                }
+                            });
+                        }, observerOptions);
+
+                        document.querySelectorAll('.fade-in, .scale-in, .slide-in-left, .slide-in-right').forEach(el => {
+                            try {
+                                el.style.animationPlayState = 'paused';
+                                observer.observe(el);
+                            } catch (error) {
+                                console.warn('⚠️ Error observando elemento:', error);
+                            }
+                        });
+                    } catch (error) {
+                        console.warn('⚠️ Error configurando intersection observer:', error);
+                    }
+
+                    // Mejorar búsqueda con sugerencias
+                    try {
+                        const searchInput = document.querySelector('.search-input');
+                        if (searchInput) {
+                            searchInput.addEventListener('input', function(e) {
+                                try {
+                                    const query = e.target.value.toLowerCase();
+                                    if (query.length > 2) {
+                                        // Esta funcionalidad será manejada por el flexibility-manager
+                                        console.log('Búsqueda:', query);
+                                    }
+                                } catch (error) {
+                                    console.warn('⚠️ Error en búsqueda:', error);
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Error configurando búsqueda:', error);
+                    }
+
+                    // Auto-save para formularios con llamadas seguras
+                    try {
+                        if (window.safeCall) {
+                            window.safeCall('errorPreventionManager', 'enableAutoSave')
+                                .catch(error => console.warn('⚠️ Error habilitando auto-save:', error));
+                        } else if (window.errorPreventionManager && typeof window.errorPreventionManager.enableAutoSave === 'function') {
+                            window.errorPreventionManager.enableAutoSave();
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Error configurando auto-save:', error);
+                    }
+
+                    // Demostrar funcionalidad de error recovery con manejo robusto
+                    try {
+                        if (window.errorRecovery || window.errorRecoveryManager) {
+                            const errorManager = window.errorRecovery || window.errorRecoveryManager;
+                            
+                            // Ejemplo de error simulado para demo (opcional)
+                            window.simulateErrorDemo = function() {
+                                try {
+                                    if (typeof errorManager.reportError === 'function') {
+                                        errorManager.reportError({
+                                            type: 'demo',
+                                            severity: 'info',
+                                            message: 'Esta es una demostración del sistema de recuperación de errores.',
+                                            recoveryActions: [
+                                                { type: 'retry', label: 'Reintentar', primary: true },
+                                                { type: 'dismiss', label: 'Entendido' }
+                                            ]
+                                        });
+                                    }
+                                } catch (error) {
+                                    console.warn('⚠️ Error en simulateErrorDemo:', error);
+                                }
+                            };
+
+                            // Botón de demo para mostrar el sistema de error recovery
+                            setTimeout(() => {
+                                try {
+                                    const errorDemoBtn = document.createElement('button');
+                                    errorDemoBtn.textContent = '🚨 Demo Error Recovery';
+                                    errorDemoBtn.className = 'minimalist-btn minimalist-btn-ghost';
+                                    errorDemoBtn.style.position = 'fixed';
+                                    errorDemoBtn.style.top = '100px';
+                                    errorDemoBtn.style.right = '20px';
+                                    errorDemoBtn.style.zIndex = '1000';
+                                    errorDemoBtn.style.fontSize = '12px';
+                                    errorDemoBtn.style.padding = '8px 12px';
+                                    errorDemoBtn.onclick = window.simulateErrorDemo;
+                                    errorDemoBtn.title = 'Clic para ver una demostración del sistema de recuperación de errores';
+                                    document.body.appendChild(errorDemoBtn);
+                                } catch (error) {
+                                    console.warn('⚠️ Error creando botón de demo:', error);
+                                }
+                            }, 3000);
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Error configurando error recovery demo:', error);
+                    }
+
+                    // Demostrar funcionalidad de ayuda contextual después de la carga
+                    setTimeout(() => {
+                        try {
+                            if (window.safeCall) {
+                                // Usar llamadas seguras para el help manager
+                                const demoCards = document.querySelectorAll('.demo-card');
+                                demoCards.forEach(card => {
+                                    try {
+                                        const title = card.querySelector('h3')?.textContent || 'Demo';
+                                        const helpText = `Esta es la demo "${title}". Haz clic para explorar las funcionalidades y características únicas de esta sección.`;
+                                        window.safeCall('helpDocumentationManager', 'addContextualHelpToElement', card, helpText)
+                                            .catch(error => console.warn('⚠️ Error añadiendo ayuda contextual:', error));
+                                    } catch (error) {
+                                        console.warn('⚠️ Error procesando demo card:', error);
+                                    }
+                                });
+
+                                // Añadir ayuda al botón de accesibilidad si existe
+                                const accessibilityBtn = document.querySelector('[aria-label*="accesibilidad"]');
+                                if (accessibilityBtn) {
+                                    window.safeCall('helpDocumentationManager', 'addContextualHelpToElement', 
+                                        accessibilityBtn, 
+                                        'Controles de accesibilidad para mejorar la experiencia. Incluye opciones de alto contraste, texto grande y reducción de animaciones.'
+                                    ).catch(error => console.warn('⚠️ Error añadiendo ayuda de accesibilidad:', error));
+                                }
+                            } else if (window.helpDocumentationManager && typeof window.helpDocumentationManager.addContextualHelpToElement === 'function') {
+                                // Fallback directo
+                                const demoCards = document.querySelectorAll('.demo-card');
+                                demoCards.forEach(card => {
+                                    try {
+                                        const title = card.querySelector('h3')?.textContent || 'Demo';
+                                        const helpText = `Esta es la demo "${title}". Haz clic para explorar las funcionalidades y características únicas de esta sección.`;
+                                        window.helpDocumentationManager.addContextualHelpToElement(card, helpText);
+                                    } catch (error) {
+                                        console.warn('⚠️ Error añadiendo ayuda contextual (fallback):', error);
+                                    }
+                                });
+
+                                const accessibilityBtn = document.querySelector('[aria-label*="accesibilidad"]');
+                                if (accessibilityBtn) {
+                                    try {
+                                        window.helpDocumentationManager.addContextualHelpToElement(
+                                            accessibilityBtn, 
+                                            'Controles de accesibilidad para mejorar la experiencia. Incluye opciones de alto contraste, texto grande y reducción de animaciones.'
+                                        );
+                                    } catch (error) {
+                                        console.warn('⚠️ Error añadiendo ayuda de accesibilidad (fallback):', error);
+                                    }
+                                }
+                            }
+                        } catch (error) {
+                            console.warn('⚠️ Error configurando ayuda contextual:', error);
+                        }
+                    }, 1000);
+                    
+                    console.log('✅ Funcionalidades de demo inicializadas correctamente');
+                } catch (error) {
+                    console.error('❌ Error crítico en initializeDemoFunctionalities:', error);
+                }
+            }
+        });
+
+        // Función para demostrar el sistema de notificaciones con manejo de errores
+        function showNotificationDemo() {
+            try {
+                if (window.safeCall) {
+                    window.safeCall('feedbackManager', 'showNotification', {
+                        type: 'success',
+                        message: '¡Bienvenido a CoomÜnity! Todas las funcionalidades UX están activas.',
+                        duration: 5000
+                    }).catch(error => console.warn('⚠️ Error mostrando notificación:', error));
+                } else if (window.feedbackManager && typeof window.feedbackManager.showNotification === 'function') {
+                    window.feedbackManager.showNotification({
+                        type: 'success',
+                        message: '¡Bienvenido a CoomÜnity! Todas las funcionalidades UX están activas.',
+                        duration: 5000
+                    });
+                }
+            } catch (error) {
+                console.warn('⚠️ Error en showNotificationDemo:', error);
+            }
+        }
+
+        // Función para demostrar el sistema de ayuda con manejo de errores
+        function showHelpDemo() {
+            try {
+                if (window.safeCall) {
+                    // Mostrar una sugerencia sobre el widget de ayuda
+                    const helpWidget = document.querySelector('.help-widget-trigger');
+                    if (helpWidget) {
+                        window.safeCall('helpDocumentationManager', 'highlightElement',
+                            '.help-widget-trigger',
+                            'El widget de ayuda está disponible en la esquina inferior derecha. Presiona F1 o haz clic aquí para obtener asistencia.',
+                            4000
+                        ).catch(error => console.warn('⚠️ Error destacando elemento de ayuda:', error));
+                    }
+                } else if (window.helpDocumentationManager && typeof window.helpDocumentationManager.highlightElement === 'function') {
+                    const helpWidget = document.querySelector('.help-widget-trigger');
+                    if (helpWidget) {
+                        window.helpDocumentationManager.highlightElement(
+                            '.help-widget-trigger',
+                            'El widget de ayuda está disponible en la esquina inferior derecha. Presiona F1 o haz clic aquí para obtener asistencia.',
+                            4000
+                        );
+                    }
+                }
+            } catch (error) {
+                console.warn('⚠️ Error en showHelpDemo:', error);
+            }
+        }
+
+        // Mostrar notificación de bienvenida después de 2 segundos con manejo de errores
+        setTimeout(() => {
+            try {
+                showNotificationDemo();
+            } catch (error) {
+                console.warn('⚠️ Error ejecutando showNotificationDemo:', error);
+            }
+        }, 2000);
+        
+        // Mostrar demo de ayuda después de 8 segundos (para usuarios nuevos) con manejo de errores
+        setTimeout(() => {
+            try {
+                showHelpDemo();
+            } catch (error) {
+                console.warn('⚠️ Error ejecutando showHelpDemo:', error);
+            }
+        }, 8000);
+    </script>
+
+    <!-- Initialize Adaptive Manager -->
+    <script>
+        // Initialize adaptive and contextual manager
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Marcar elementos como contextuales dinámicamente
+                document.body.dataset.context = 'loaded';
+                document.body.classList.add('context-aware');
+                
+                // Inicializar el manager adaptativo
+                if (typeof AdaptiveContextualManager !== 'undefined') {
+                    window.adaptiveManager = new AdaptiveContextualManager();
+                    console.log('✅ Adaptive & Contextual Manager initialized');
+                }
+            } catch (error) {
+                console.warn('⚠️ Error inicializando Adaptive Manager:', error);
+            }
+        });
+    </script>
+
+    <!-- Enhanced Mobile Navigation Script - FIREFOX/SAFARI COMPATIBILITY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 Inicializando navegación móvil mejorada...');
+            
+            try {
+                // Inicializar menú móvil con manejo robusto de errores
+                const mobileToggle = document.querySelector('.enhanced-mobile-toggle');
+                const navLinks = document.querySelector('.enhanced-nav-links');
+                
+                if (mobileToggle && navLinks) {
+                    console.log('✅ Elementos de navegación móvil encontrados');
+                    
+                    // Estado del menú
+                    let isMenuOpen = false;
+                    
+                    // Función para alternar el menú
+                    function toggleMobileMenu() {
+                        try {
+                            isMenuOpen = !isMenuOpen;
+                            
+                            // Actualizar aria-expanded
+                            mobileToggle.setAttribute('aria-expanded', isMenuOpen.toString());
+                            
+                            // Alternar clases
+                            if (isMenuOpen) {
+                                navLinks.classList.add('mobile-menu-open');
+                                document.body.classList.add('mobile-menu-active');
+                                console.log('📱 Menú móvil abierto');
+                            } else {
+                                navLinks.classList.remove('mobile-menu-open');
+                                document.body.classList.remove('mobile-menu-active');
+                                console.log('📱 Menú móvil cerrado');
+                            }
+                            
+                            // Manejar foco para accesibilidad
+                            if (isMenuOpen) {
+                                // Enfocar el primer enlace del menú
+                                const firstLink = navLinks.querySelector('.enhanced-nav-item');
+                                if (firstLink) {
+                                    setTimeout(() => firstLink.focus(), 100);
+                                }
+                            } else {
+                                // Devolver foco al botón hamburguesa
+                                mobileToggle.focus();
+                            }
+                        } catch (error) {
+                            console.error('❌ Error en toggleMobileMenu:', error);
+                        }
+                    }
+                    
+                    // Event listener para el botón hamburguesa
+                    mobileToggle.addEventListener('click', function(e) {
+                        try {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleMobileMenu();
+                        } catch (error) {
+                            console.error('❌ Error en click del menú móvil:', error);
+                        }
+                    });
+                    
+                    // Cerrar menú al hacer clic fuera
+                    document.addEventListener('click', function(e) {
+                        try {
+                            if (isMenuOpen && !mobileToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                                toggleMobileMenu();
+                            }
+                        } catch (error) {
+                            console.warn('⚠️ Error en click outside handler:', error);
+                        }
+                    });
+                    
+                    // Cerrar menú con tecla Escape
+                    document.addEventListener('keydown', function(e) {
+                        try {
+                            if (e.key === 'Escape' && isMenuOpen) {
+                                toggleMobileMenu();
+                            }
+                        } catch (error) {
+                            console.warn('⚠️ Error en keydown handler:', error);
+                        }
+                    });
+                    
+                    // Cerrar menú al hacer clic en un enlace
+                    const navItems = navLinks.querySelectorAll('.enhanced-nav-item');
+                    navItems.forEach(item => {
+                        try {
+                            item.addEventListener('click', function() {
+                                try {
+                                    if (isMenuOpen) {
+                                        setTimeout(() => toggleMobileMenu(), 150);
+                                    }
+                                } catch (error) {
+                                    console.warn('⚠️ Error cerrando menú en nav item click:', error);
+                                }
+                            });
+                        } catch (error) {
+                            console.warn('⚠️ Error añadiendo listener a nav item:', error);
+                        }
+                    });
+                    
+                    // Manejar cambios de tamaño de ventana
+                    window.addEventListener('resize', function() {
+                        try {
+                            // Cerrar menú en desktop
+                            if (window.innerWidth > 768 && isMenuOpen) {
+                                toggleMobileMenu();
+                            }
+                        } catch (error) {
+                            console.warn('⚠️ Error en resize handler:', error);
+                        }
+                    });
+                    
+                    console.log('✅ Navegación móvil inicializada correctamente');
+                } else {
+                    console.warn('⚠️ Elementos de navegación móvil no encontrados');
+                    
+                    // Crear elementos si no existen (fallback)
+                    if (!mobileToggle) {
+                        console.log('🔧 Creando botón hamburguesa fallback...');
+                        const header = document.querySelector('.minimalist-header');
+                        if (header) {
+                            const fallbackToggle = document.createElement('button');
+                            fallbackToggle.className = 'enhanced-mobile-toggle';
+                            fallbackToggle.setAttribute('aria-label', 'Alternar menú de navegación');
+                            fallbackToggle.setAttribute('aria-expanded', 'false');
+                            fallbackToggle.innerHTML = `
+                                <span class="hamburger-line"></span>
+                                <span class="hamburger-line"></span>
+                                <span class="hamburger-line"></span>
+                            `;
+                            header.appendChild(fallbackToggle);
+                            console.log('✅ Botón hamburguesa fallback creado');
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error crítico inicializando navegación móvil:', error);
+            }
+        });
+    </script>
+</body>
+</html>

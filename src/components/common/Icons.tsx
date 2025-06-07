@@ -74,12 +74,24 @@ import NoteIcon from '@mui/icons-material/Note';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PublicIcon from '@mui/icons-material/Public';
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import SchoolIcon from '@mui/icons-material/School';
 
 // Playlist specific icons
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
+// Gamification and social icons
+import StoreIcon from '@mui/icons-material/Store';
+import ShareIcon from '@mui/icons-material/Share';
+import GroupsIcon from '@mui/icons-material/Groups';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonIcon from '@mui/icons-material/Person';
+
+// Additional icons that may be needed
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 // Export all icons with consistent naming - using both named exports and re-exports
 export {
@@ -133,10 +145,18 @@ export {
   FavoriteIcon as Favorite,
   AccountBalanceWalletIcon as AccountBalanceWallet,
   EmojiEventsIcon as EmojiEvents,
+  AttachMoneyIcon as AttachMoney,
   PublicIcon as Public,
   PlaylistPlayIcon as PlaylistPlay,
   SchoolIcon as School,
   AddCircleOutlineIcon as AddCircleOutline,
+  StoreIcon as Store,
+  ShareIcon as Share,
+  GroupsIcon as Groups,
+  FitnessCenterIcon as FitnessCenter,
+  PersonAddIcon as PersonAdd,
+  PersonIcon as Person,
+  NotificationsIcon as Notifications,
 };
 
 // Also export the original icons for backward compatibility
@@ -191,8 +211,16 @@ export {
   FavoriteIcon,
   AccountBalanceWalletIcon,
   EmojiEventsIcon,
+  AttachMoneyIcon,
   PublicIcon,
   PlaylistPlayIcon,
   SchoolIcon,
   AddCircleOutlineIcon,
+  StoreIcon,
+  ShareIcon,
+  GroupsIcon,
+  FitnessCenterIcon,
+  PersonAddIcon,
+  PersonIcon,
+  NotificationsIcon,
 }; 

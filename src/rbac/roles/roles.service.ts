@@ -3,9 +3,10 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateRoleDto, UpdateRoleDto } from './dto';
 import { AssignPermissionsDto } from './dto/assign-permissions.dto';
 import { AssignRoleDto } from './dto/assign-role.dto';
+import { LoggerService } from '../../common/logger';
 // import { AuditLogsService } from '../../admin/audit-logs/audit-logs.service'; // Temporarily commented
 // import { AuthenticatedUser } from '../../types/auth.types'; // Temporarily commented
-import { Role, Permission, UserRole } from '@prisma/client';
+import type { Role, Permission, UserRole } from '../../generated/prisma';
 
 @Injectable()
 export class RolesService {
@@ -87,6 +88,154 @@ export class RolesService {
     });
     if (!role) throw new NotFoundException('Role not found');
     return role;
+  }
+
+  async assignPermissionsToRole(roleId: string, permissionIds: string[]): Promise<Role> {
+    console.log('>>> RolesService.assignPermissionsToRole: Starting...');
+    console.log('>>> RolesService.assignPermissionsToRole: roleId:', roleId);
+    console.log('>>> RolesService.assignPermissionsToRole: permissionIds:', permissionIds);
+    console.log('>>> RolesService.assignPermissionsToRole: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    
+    try {
+      // Verificar que el rol existe
+      const existingRole = await this.prisma.role.findUnique({ 
+        where: { id: roleId },
+        include: {
+          rolePermissions: {
+            include: {
+              permission: true
+            }
+          }
+        }
+      });
+      
+      if (!existingRole) {
+        throw new NotFoundException('Role not found');
+      }
+
+      // Verificar que todos los permisos existen
+      const existingPermissions = await this.prisma.permission.findMany({
+        where: { id: { in: permissionIds } }
+      });
+
+      const foundPermissionIds = existingPermissions.map(p => p.id);
+      const missingPermissions = permissionIds.filter(id => !foundPermissionIds.includes(id));
+      
+      if (missingPermissions.length > 0) {
+        throw new NotFoundException(`Permissions not found: ${missingPermissions.join(', ')}`);
+      }
+
+      // Usar transacción para actualizar permisos del rol
+      const updatedRole = await this.prisma.$transaction(async (tx) => {
+        // 1. Eliminar permisos existentes del rol
+        await tx.rolePermission.deleteMany({
+          where: { roleId: roleId }
+        });
+
+        // 2. Crear nuevos permisos para el rol
+        const rolePermissionsData = permissionIds.map(permissionId => ({
+          roleId: roleId,
+          permissionId: permissionId,
+          assignedById: null // TODO: Obtener el ID del usuario actual cuando esté disponible
+        }));
+
+        await tx.rolePermission.createMany({
+          data: rolePermissionsData
+        });
+
+        // 3. Obtener el rol actualizado con sus permisos
+        return await tx.role.findUnique({
+          where: { id: roleId },
+          include: {
+            rolePermissions: {
+              include: {
+                permission: true
+              }
+            },
+            userRoles: {
+              include: {
+                user: true
+              }
+            }
+          }
+        });
+      });
+
+      if (!updatedRole) {
+        throw new Error('Failed to update role permissions');
+      }
+
+      console.log('>>> RolesService.assignPermissionsToRole: SUCCESS, updated role with', updatedRole.rolePermissions.length, 'permissions');
+      return updatedRole;
+      
+    } catch (error) {
+      console.error('>>> RolesService.assignPermissionsToRole: ERROR:', error);
+      throw error;
+    }
+  }
+
+  async removePermissionsFromRole(roleId: string, permissionIds: string[]): Promise<Role> {
+    console.log('>>> RolesService.removePermissionsFromRole: Starting...');
+    console.log('>>> RolesService.removePermissionsFromRole: roleId:', roleId);
+    console.log('>>> RolesService.removePermissionsFromRole: permissionIds:', permissionIds);
+    console.log('>>> RolesService.removePermissionsFromRole: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    
+    try {
+      // Verificar que el rol existe
+      const existingRole = await this.prisma.role.findUnique({ 
+        where: { id: roleId },
+        include: {
+          rolePermissions: {
+            include: {
+              permission: true
+            }
+          }
+        }
+      });
+      
+      if (!existingRole) {
+        throw new NotFoundException('Role not found');
+      }
+
+      // Usar transacción para eliminar permisos específicos del rol
+      const updatedRole = await this.prisma.$transaction(async (tx) => {
+        // 1. Eliminar solo los permisos especificados del rol
+        await tx.rolePermission.deleteMany({
+          where: { 
+            roleId: roleId,
+            permissionId: { in: permissionIds }
+          }
+        });
+
+        // 2. Obtener el rol actualizado con sus permisos restantes
+        return await tx.role.findUnique({
+          where: { id: roleId },
+          include: {
+            rolePermissions: {
+              include: {
+                permission: true
+              }
+            },
+            userRoles: {
+              include: {
+                user: true
+              }
+            }
+          }
+        });
+      });
+
+      if (!updatedRole) {
+        throw new Error('Failed to remove role permissions');
+      }
+
+      console.log('>>> RolesService.removePermissionsFromRole: SUCCESS, role now has', updatedRole.rolePermissions.length, 'permissions');
+      return updatedRole;
+      
+    } catch (error) {
+      console.error('>>> RolesService.removePermissionsFromRole: ERROR:', error);
+      throw error;
+    }
   }
 
   // Temporarily commented methods that use AuthenticatedUser and auditLogsService

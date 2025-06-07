@@ -1,0 +1,123 @@
+/* Import responsive and contextual classes for Playwright detection */
+@import './styles/responsive-contextual.css';
+
+/* Import typography consistency fix */
+@import './styles/typography-consistency.css';
+
+/* Import micro-interactions and animations */
+@import './styles/micro-interactions.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global CSS Variables */
+:root {
+  --coomunity-purple: #6366f1;
+  --coomunity-violet: #8b5cf6;
+  --coomunity-gold: #f59e0b;
+  --coomunity-earth: #78716c;
+  --coomunity-water: #06b6d4;
+  --coomunity-fire: #ef4444;
+  --coomunity-air: #8b5cf6;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Component-specific styles */
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Material-UI overrides */
+.MuiButton-root {
+  text-transform: none !important;
+}
+
+/* CoomÜnity specific classes */
+.coomunity-gradient {
+  background: linear-gradient(135deg, var(--coomunity-purple) 0%, var(--coomunity-violet) 100%);
+}
+
+.coomunity-text-gradient {
+  background: linear-gradient(45deg, var(--coomunity-purple) 30%, var(--coomunity-violet) 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Responsive design helpers */
+@media (max-width: 768px) {
+  .mobile-padding {
+    padding: 1rem;
+  }
+}
+
+/* Animation classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+} 

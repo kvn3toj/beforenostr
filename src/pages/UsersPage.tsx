@@ -4,11 +4,9 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import Tooltip from '@mui/material/Tooltip';
-import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { EditIcon, DeleteIcon } from '../components/common/Icons';
 import { useUsersQuery } from '../hooks/useUsersQuery';
@@ -28,9 +26,24 @@ import { useDeleteUserMutation } from '../hooks/features/users/useDeleteUserMuta
 import { USER_ROLES } from '../constants/roles';
 import { QUERY_KEYS } from '../constants/queryKeys';
 
+// Importar componentes del Design System
+import { Button, TextField } from '../components/design-system';
+import { colors, spacing, textStyles } from '../components/design-system';
+
+// Importar Live Regions para anuncios dinámicos
+import { useAnnouncement, StatusRegion } from '../components/common/LiveRegion/LiveRegion';
+
 export const UsersPage: React.FC = () => {
   console.log('>>> UsersPage: Component rendering');
   const { t } = useTranslation();
+  
+  // Hook para anuncios dinámicos
+  const { announce, AnnouncementRegion } = useAnnouncement();
+  
+  // Estados para mensajes de feedback
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  
   // Verificar permisos
   const canCreateUsers = useHasRole(USER_ROLES.SUPER_ADMIN);
   const canEditUsers = useHasRole(USER_ROLES.SUPER_ADMIN);
@@ -87,13 +100,46 @@ export const UsersPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   // Create mutation
-  const { mutate: createUserMutation, isPending: isCreating } = useCreateUserMutation();
+  const { mutate: createUserMutation, isPending: isCreating } = useCreateUserMutation({
+    onSuccess: () => {
+      announce('Usuario creado exitosamente');
+      setSuccessMessage('Usuario creado exitosamente');
+      setTimeout(() => setSuccessMessage(''), 5000);
+    },
+    onError: (error) => {
+      announce('Error al crear usuario');
+      setErrorMessage('Error al crear usuario: ' + error.message);
+      setTimeout(() => setErrorMessage(''), 5000);
+    }
+  });
 
   // Update mutation
-  const { mutate: updateUserMutation, isPending: isUpdating } = useUpdateUserMutation();
+  const { mutate: updateUserMutation, isPending: isUpdating } = useUpdateUserMutation({
+    onSuccess: () => {
+      announce('Usuario actualizado exitosamente');
+      setSuccessMessage('Usuario actualizado exitosamente');
+      setTimeout(() => setSuccessMessage(''), 5000);
+    },
+    onError: (error) => {
+      announce('Error al actualizar usuario');
+      setErrorMessage('Error al actualizar usuario: ' + error.message);
+      setTimeout(() => setErrorMessage(''), 5000);
+    }
+  });
 
   // Delete mutation
-  const { mutate: deleteUserMutation, isPending: isDeleting } = useDeleteUserMutation();
+  const { mutate: deleteUserMutation, isPending: isDeleting } = useDeleteUserMutation({
+    onSuccess: () => {
+      announce('Usuario eliminado exitosamente');
+      setSuccessMessage('Usuario eliminado exitosamente');
+      setTimeout(() => setSuccessMessage(''), 5000);
+    },
+    onError: (error) => {
+      announce('Error al eliminar usuario');
+      setErrorMessage('Error al eliminar usuario: ' + error.message);
+      setTimeout(() => setErrorMessage(''), 5000);
+    }
+  });
 
   // Handlers for pagination, sorting, and filtering
   const handlePageChange = (newPage: number) => {
@@ -127,7 +173,7 @@ export const UsersPage: React.FC = () => {
     setPage(0); // Reset to first page when changing filters
   };
 
-  // Define column configuration for the users table
+  // Define column configuration for the users table with improved accessibility
   const userColumns: ColumnDefinition<User>[] = [
     {
       header: t('table_header_email'),
@@ -137,12 +183,12 @@ export const UsersPage: React.FC = () => {
     },
     {
       header: t('table_header_role'),
-      field: 'role.name',
+      field: 'primaryRole.name',
       width: '15%',
       sortField: 'role_id',
       render: (user) => (
         <Chip
-          label={user.role?.name || 'Sin rol'}
+          label={user.primaryRole?.name || 'Sin rol'}
           color="primary"
           size="small"
           variant="outlined"
@@ -205,6 +251,7 @@ export const UsersPage: React.FC = () => {
                   setIsEditDialogOpen(true);
                 }}
                 disabled={!canEditUsers}
+                aria-label={`Editar usuario ${user.email}`}
               >
                 <EditIcon fontSize="small" />
               </IconButton>
@@ -221,6 +268,7 @@ export const UsersPage: React.FC = () => {
                   setIsDeleteDialogOpen(true);
                 }}
                 disabled={!canDeleteUsers}
+                aria-label={`Eliminar usuario ${user.email}`}
               >
                 <DeleteIcon fontSize="small" />
               </IconButton>
@@ -306,33 +354,79 @@ export const UsersPage: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h4" component="h1">
+      {/* Live Regions para anuncios dinámicos */}
+      <AnnouncementRegion />
+      <StatusRegion message={successMessage} type="success" visible={!!successMessage} />
+      <StatusRegion message={errorMessage} type="error" visible={!!errorMessage} />
+      
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        mb: spacing.lg,
+        p: `${spacing.lg}px ${spacing.md}px`,
+        backgroundColor: colors.background.paper,
+        borderRadius: `${spacing.md}px`,
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+      }}>
+        <Typography 
+          variant="h4" 
+          component="h1"
+          sx={{ 
+            color: colors.text.primary,
+            fontWeight: 600 
+          }}
+        >
           {t('users_page_title')}
         </Typography>
         {canCreateUsers && (
-          <Button variant="contained" onClick={() => setIsCreateUserDialogOpen(true)}>
+          <Button 
+            variant="primary" 
+            size="medium"
+            onClick={() => setIsCreateUserDialogOpen(true)}
+            aria-label="Abrir formulario para crear nuevo usuario"
+          >
             {t('button_create_user')}
           </Button>
         )}
       </Box>
-      <Box sx={{ mb: 2 }}>
-        <Stack direction="row" spacing={2} alignItems="center">
+      
+      <Box sx={{ 
+        mb: spacing.lg,
+        p: spacing.lg,
+        backgroundColor: colors.background.paper,
+        borderRadius: `${spacing.md}px`,
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)'
+      }}>
+        <Stack direction="row" spacing={spacing.md} alignItems="center">
           <TextField
             label={t('filter_by_email')}
             variant="outlined"
-            size="small"
+            size="medium"
             value={filters.email}
             onChange={handleFilterChange}
+            placeholder="Buscar por email..."
+            sx={{ minWidth: '250px' }}
+            aria-describedby="email-filter-help"
           />
-          {/* Add role and status filters here */}
-          <Button onClick={handleClearFilters}>{t('button_clear_filters')}</Button>
+          <Typography id="email-filter-help" variant="body2" sx={{ display: 'none' }}>
+            Filtrar usuarios por dirección de correo electrónico
+          </Typography>
+          <Button 
+            variant="outline" 
+            size="medium" 
+            onClick={handleClearFilters}
+            aria-label="Limpiar todos los filtros aplicados"
+          >
+            {t('button_clear_filters')}
+          </Button>
         </Stack>
       </Box>
+      
       <DataTable
         data={users}
         columns={userColumns}
-        totalItems={totalCount}
+        totalCount={totalCount}
         page={page}
         pageSize={pageSize}
         onPageChange={handlePageChange}
@@ -340,11 +434,25 @@ export const UsersPage: React.FC = () => {
         onSortChange={handleSortChange}
         sortBy={sortBy}
         sortDirection={sortDirection}
+        caption="Lista de usuarios del sistema con información de perfil y acciones disponibles"
+        aria-label="Tabla de usuarios"
+        aria-describedby="users-table-description"
       />
+      
+      <Typography id="users-table-description" variant="body2" sx={{ display: 'none' }}>
+        Tabla que muestra todos los usuarios registrados en el sistema. Incluye información como email, rol, estado y fecha de creación. Permite editar y eliminar usuarios según los permisos.
+      </Typography>
 
       {/* Create User Dialog */}
-      <Dialog open={isCreateUserDialogOpen} onClose={() => setIsCreateUserDialogOpen(false)}>
-        <DialogTitle>{t('dialog_title_create_user')}</DialogTitle>
+      <Dialog open={isCreateUserDialogOpen} onClose={() => setIsCreateUserDialogOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle sx={{ 
+          fontWeight: 600, 
+          color: colors.primary.main,
+          fontSize: textStyles.h5.fontSize,
+          padding: `${spacing.lg}px ${spacing.lg}px ${spacing.md}px`
+        }}>
+          ✨ Crear Nuevo Usuario
+        </DialogTitle>
         <UserForm 
           onSubmit={handleCreateUser} 
           isLoading={isCreating} 
@@ -354,8 +462,15 @@ export const UsersPage: React.FC = () => {
       </Dialog>
 
       {/* Edit User Dialog */}
-      <Dialog open={isEditDialogOpen} onClose={handleCloseEditDialog}>
-        <DialogTitle>{t('dialog_title_edit_user')}</DialogTitle>
+      <Dialog open={isEditDialogOpen} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
+        <DialogTitle sx={{ 
+          fontWeight: 600, 
+          color: colors.primary.main,
+          fontSize: textStyles.h5.fontSize,
+          padding: `${spacing.lg}px ${spacing.lg}px ${spacing.md}px`
+        }}>
+          ✏️ Editar Usuario: {userToEdit?.email}
+        </DialogTitle>
         {userToEdit && (
           <UserForm 
             onSubmit={handleUpdateUser} 
@@ -372,8 +487,8 @@ export const UsersPage: React.FC = () => {
         open={isDeleteDialogOpen}
         onClose={handleCloseDeleteDialog}
         onConfirm={handleConfirmDelete}
-        title={t('dialog_title_delete_user')}
-        message={t('dialog_message_delete_user', { email: userToDelete?.email })}
+        title="⚠️ Confirmar Eliminación de Usuario"
+        message={`¿Estás seguro de que deseas eliminar al usuario "${userToDelete?.email}"? Esta acción no se puede deshacer.`}
         isConfirming={isDeleting}
       />
     </Container>

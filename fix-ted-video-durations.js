@@ -1,90 +1,163 @@
 const fetch = require('node-fetch');
+const sqlite3 = require('sqlite3').verbose();
 
-async function fixTedVideoDurations() {
-  console.log('🔧 Fixing TED Video Durations');
-  console.log('==============================\n');
+// Duraciones conocidas de videos TED (obtenidas manualmente)
+const knownDurations = {
+  'EEZkQv25uEs': 729,  // Sacred Economics with Charles Eisenstein - A Short Film (12:09)
+  // Podemos añadir más aquí después
+};
 
-  // Videos problemáticos identificados en el análisis
-  const problematicVideos = [
-    { id: 29, expectedDuration: 1080, title: "Las primeras 20 horas - Cómo aprender cualquier cosa" },
-    { id: 31, expectedDuration: 1080, title: "En defensa del consumo colaborativo" },
-    { id: 32, expectedDuration: 1080, title: "Cómo construir una economía basada en el lugar que vives" },
-    { id: 34, expectedDuration: 1080, title: "Jugar puede crear un mejor mundo" },
-    { id: 35, expectedDuration: 1080, title: "¿Eres un dador o quitador?" },
-    { id: 36, expectedDuration: 1080, title: "¿Quién eres, realmente? El rompecabezas de la personalidad" },
-    { id: 37, expectedDuration: 1080, title: "¿Por qué todos necesitamos practicar primeros auxilios emocionales?" },
-    { id: 38, expectedDuration: 1080, title: "La prisión de la mente" }
-  ];
-
-  console.log(`📊 Found ${problematicVideos.length} videos to fix\n`);
-
-  for (const video of problematicVideos) {
-    try {
-      console.log(`🔧 Fixing Video ${video.id}: "${video.title}"`);
-      
-      // Primero obtener el video actual
-      const getResponse = await fetch(`http://localhost:3002/video-items/${video.id}`);
-      
-      if (!getResponse.ok) {
-        console.log(`  ❌ Failed to get video ${video.id}: ${getResponse.status}`);
-        continue;
-      }
-      
-      const currentVideo = await getResponse.json();
-      console.log(`  📊 Current duration: ${currentVideo.duration}s (${Math.floor(currentVideo.duration/60)}:${(currentVideo.duration%60).toString().padStart(2, '0')})`);
-      console.log(`  🎯 Target duration: ${video.expectedDuration}s (${Math.floor(video.expectedDuration/60)}:${(video.expectedDuration%60).toString().padStart(2, '0')})`);
-      
-      // Actualizar la duración usando API directa
-      const updateData = {
-        duration: video.expectedDuration
-      };
-      
-      const updateResponse = await fetch(`http://localhost:3002/video-items/${video.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-admin-token', // Placeholder para autenticación
-        },
-        body: JSON.stringify(updateData)
-      });
-      
-      if (updateResponse.ok) {
-        console.log(`  ✅ Duration updated successfully!`);
-      } else {
-        console.log(`  ⚠️ Update failed: ${updateResponse.status}`);
-        // Intentar actualización directa de base de datos como alternativa
-        console.log(`  🔄 Trying database update alternative...`);
-        
-        // Usando endpoint de prueba/actualización directa
-        const directResponse = await fetch(`http://localhost:3002/video-items/test-duration/${video.id}`);
-        if (directResponse.ok) {
-          console.log(`  ✅ Successfully tested, video should be consistent now`);
-        }
-      }
-      
-    } catch (error) {
-      console.log(`  ❌ Error processing video ${video.id}: ${error.message}`);
+async function getYouTubeDuration(videoId) {
+  console.log(`🔍 Getting duration for video ID: ${videoId}`);
+  
+  try {
+    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    const response = await fetch(videoUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      },
+      timeout: 15000
+    });
+    
+    if (!response.ok) {
+      console.log(`❌ Failed to fetch: ${response.status}`);
+      return null;
     }
     
-    console.log(''); // Línea en blanco
+    const html = await response.text();
     
-    // Pausa para no sobrecargar el servidor
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Buscar duración en el HTML
+    const match = html.match(/"lengthSeconds":"(\d+)"/);
+    if (match) {
+      const duration = parseInt(match[1]);
+      console.log(`✅ Found duration: ${duration} seconds (${Math.floor(duration/60)}:${(duration%60).toString().padStart(2,'0')})`);
+      return duration;
+    }
+    
+    console.log('⚠️ No duration pattern found');
+    return null;
+    
+  } catch (error) {
+    console.error(`❌ Error: ${error.message}`);
+    return null;
   }
+}
+
+function extractYouTubeId(url) {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+  return match ? match[1] : null;
+}
+
+async function fixTedVideoDurations() {
+  console.log('🚀 Starting TED video duration fix...\n');
   
-  console.log('🎯 SUMMARY');
-  console.log('==========');
-  console.log('Attempted to fix durations for all identified problematic TED videos.');
-  console.log('Run the inconsistency finder again to verify the fixes.');
-  console.log('');
-  console.log('🧪 VERIFICATION COMMANDS:');
-  console.log('node find-duration-inconsistencies.js  # Re-run full analysis');
-  console.log('');
-  console.log('🌐 MANUAL VERIFICATION:');
-  problematicVideos.forEach(video => {
-    console.log(`http://localhost:3000/items/${video.id}/config`);
+  return new Promise((resolve, reject) => {
+    const db = new sqlite3.Database('./prisma/dev.db', (err) => {
+      if (err) {
+        console.error('❌ Error opening database:', err.message);
+        reject(err);
+        return;
+      }
+      console.log('✅ Connected to SQLite database');
+    });
+    
+    // Obtener todos los videos
+    db.all(`
+      SELECT id, title, content, duration 
+      FROM VideoItem 
+      WHERE isDeleted != 1 OR isDeleted IS NULL
+    `, async (err, rows) => {
+      if (err) {
+        console.error('❌ Error querying videos:', err.message);
+        db.close();
+        reject(err);
+        return;
+      }
+      
+      console.log(`📊 Found ${rows.length} videos to process\n`);
+      
+      let updated = 0;
+      let errors = 0;
+      let verified = 0;
+      
+      for (const video of rows) {
+        console.log(`\n🎯 Processing video ${video.id}: ${video.title}`);
+        console.log(`   Current duration: ${video.duration} seconds`);
+        console.log(`   Content: ${video.content}`);
+        
+        // Solo procesar videos de YouTube
+        if (!video.content.includes('youtube.com') && !video.content.includes('youtu.be')) {
+          console.log('⏭️ Skipping non-YouTube video');
+          continue;
+        }
+        
+        const videoId = extractYouTubeId(video.content);
+        if (!videoId) {
+          console.log('❌ Could not extract video ID');
+          errors++;
+          continue;
+        }
+        
+        let realDuration = null;
+        
+        // Primero verificar si tenemos la duración conocida
+        if (knownDurations[videoId]) {
+          realDuration = knownDurations[videoId];
+          console.log(`📚 Using known duration: ${realDuration}s`);
+        } else {
+          // Obtener duración via scraping
+          realDuration = await getYouTubeDuration(videoId);
+        }
+        
+        if (realDuration && realDuration > 0) {
+          if (video.duration !== realDuration) {
+            // Actualizar en la base de datos
+            db.run(`
+              UPDATE VideoItem 
+              SET duration = ? 
+              WHERE id = ?
+            `, [realDuration, video.id], function(err) {
+              if (err) {
+                console.error(`❌ Error updating video ${video.id}:`, err.message);
+                errors++;
+              } else {
+                console.log(`✅ UPDATED: ${video.duration}s → ${realDuration}s`);
+                updated++;
+              }
+            });
+          } else {
+            console.log(`✅ VERIFIED: Duration already correct (${realDuration}s)`);
+            verified++;
+          }
+        } else {
+          console.log(`❌ ERROR: Could not get duration`);
+          errors++;
+        }
+        
+        // Pausa para no sobrecargar YouTube
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
+      // Esperar un poco para que las actualizaciones se completen
+      setTimeout(() => {
+        console.log(`\n🎉 COMPLETED!`);
+        console.log(`   📊 Total videos: ${rows.length}`);
+        console.log(`   ✅ Updated: ${updated}`);
+        console.log(`   ✅ Verified: ${verified}`);
+        console.log(`   ❌ Errors: ${errors}`);
+        
+        db.close((err) => {
+          if (err) {
+            console.error('❌ Error closing database:', err.message);
+            reject(err);
+          } else {
+            console.log('✅ Database connection closed');
+            resolve();
+          }
+        });
+      }, 2000);
+    });
   });
 }
 
-// Ejecutar la corrección
 fixTedVideoDurations().catch(console.error); 

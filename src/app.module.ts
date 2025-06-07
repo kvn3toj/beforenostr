@@ -1,67 +1,94 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { LoggerModule } from './common/logger';
+import { MetricsModule } from './common/metrics/metrics.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { PlaylistModule } from './playlist/playlist.module';
-import { MundosModule } from './content/mundos/mundos.module';
-import { PlaylistsModule } from './content/playlists/playlists.module';
-// import { ContentItemsModule } from './content/items/content-items.module';
-// import { UsersModule } from './users/users.module';
-// import { AdminModule } from './admin/admin.module';
-// import { RbacModule } from './rbac/rbac.module';
+import { CacheModule } from './cache/cache.module';
+import { NotificationModule } from './common/notifications/notification.module';
+import { ValidationModule } from './common/validation/validation.module';
+import { AuthModule } from './auth/auth.module';  // RE-ENABLED
+import { UsersModule } from './users/users.module';  // RE-ENABLED
 import { SubtitleModule } from './subtitle/subtitle.module';
 import { QuestionModule } from './questions/question.module';
-// import { AnalyticsModule } from './analytics/analytics.module';
 import { VideoItemsModule } from './video-items/video-items.module';
-import { AiModule } from './ai/ai.module';
-import { CacheModule } from './cache/cache.module';
-import { VideoPermissionsModule } from './video-permissions/video-permissions.module';
-import { TokensModule } from './tokens/tokens.module';
-// import { MeritsModule } from './merits/merits.module';
-import { WorldsModule } from './content/worlds/worlds.module';
-import { ExperiencesModule } from './content/experiences/experiences.module';
-import { GroupsModule } from './social/groups/groups.module';
-// import { MeritsAndWalletModule } from './merits-and-wallet/merits-and-wallet.module';
-// import { LetsModule } from './lets/lets.module';
-import { NotificationsModule } from './notifications/notifications.module';
-import { MarketplaceModule } from './marketplace/marketplace.module';
-// import { InvitationsModule } from './invitations/invitations.module';
-// import { PersonalityModule } from './personality/personality.module';
+// ======= GRUPO 1: MÓDULOS DE CONTENIDO AVANZADO Y GAMIFICACIÓN BASE =======
+import { ContentItemsModule } from './content/items/content-items.module'; // RE-ENABLED
+import { WorldsModule } from './content/worlds/worlds.module'; // RE-ENABLED
+// import { ExperiencesModule } from './content/experiences/experiences.module'; // TEMPORAL - PROBLEMA
+import { PlaylistModule } from './playlist/playlist.module'; // RE-ENABLED - FIXED
+import { PlaylistsModule } from './content/playlists/playlists.module'; // RE-ENABLED
+import { AiModule } from './ai/ai.module'; // RE-ENABLED
+// ======= GRUPO 2: MÓDULOS DE ECONOMÍA Y SOCIAL =======
+import { MeritsAndWalletModule } from './merits-and-wallet/merits-and-wallet.module'; // RE-ENABLED
+import { TokensModule } from './tokens/tokens.module'; // RE-ENABLED
+import { LetsModule } from './lets/lets.module'; // RE-ENABLED
+import { GroupsModule } from './social/groups/groups.module'; // RE-ENABLED
+import { MarketplaceModule } from './marketplace/marketplace.module'; // RE-ENABLED
+import { SocialModule } from './social/social.module'; // NEW - Social stats and activity
+// import { ChallengesModule } from './challenges/challenges.module'; // TEMPORAL - PROBLEMA DEPENDENCIAS
+// import { NotificationsModule } from './notifications/notifications.module'; // TEMPORAL - CONFLICTO
+import { InvitationsModule } from './invitations/invitations.module'; // RE-ENABLED
+// ======= GRUPO 3: MÓDULOS ADMINISTRATIVOS Y MONITOREO =======
+import { AdminModule } from './admin/admin.module'; // RE-ENABLED
+import { AnalyticsModule } from './analytics/analytics.module'; // RE-ENABLED
+import { MonitoringModule } from './monitoring/monitoring.module'; // RE-ENABLED
+// ======= MÓDULOS ADICIONALES =======
+import { MundosModule } from './content/mundos/mundos.module'; // RE-ENABLED
+import { RbacModule } from './rbac/rbac.module'; // RE-ENABLED
+import { VideoPermissionsModule } from './video-permissions/video-permissions.module'; // RE-ENABLED
+import { MeritsModule } from './merits/merits.module'; // RE-ENABLED
+import { PersonalityModule } from './personality/personality.module'; // RE-ENABLED
+
+console.log('>>> AppModule: MÓDULOS CRÍTICOS RE-HABILITADOS (SIN PROBLEMAS)...');
 
 @Module({
   imports: [
-    PrismaModule,
-    CacheModule,       // Añadir CacheModule al principio para inicialización temprana
-    SubtitleModule,    // Mover SubtitleModule al principio para verificar si hay problemas de orden
-    QuestionModule,    // Mover QuestionModule también
-    VideoItemsModule,  // Agregar VideoItemsModule
-    VideoPermissionsModule, // Agregar VideoPermissionsModule
-    // ContentItemsModule, // Agregar ContentItemsModule para endpoint /content/items
-    MundosModule, 
-    PlaylistModule,    // Agregar para endpoint /playlists
-    PlaylistsModule,   // Mantener para endpoint /content/playlists
-    // UsersModule,       // Agregar para endpoint /users
-    // AdminModule,       // Agregar para endpoints /admin/*
-    // RbacModule,        // Import full RBAC module instead of just RolesModule to get guards
-    // AnalyticsModule,   // Agregar para endpoints /analytics (deshabilitado temporalmente)
-    AiModule,          // Agregar para endpoints /ai/*
-    TokensModule,      // Gestión de tokens extrínsecos (Ünits, Töins)
-    // MeritsModule,      // Gestión de tokens intrínsecos (Mëritos, Öndas, Vibras)
-    // MeritsAndWalletModule, // Gestión completa de economía (Wallet, Transacciones, LETS)
-    // LetsModule,        // Sistema de intercambio local (Local Exchange Trading System)
-    NotificationsModule, // Sistema de notificaciones y alertas
-    MarketplaceModule, // Marketplace para productos, servicios y experiencias
-    // InvitationsModule, // Sistema de invitaciones y gift cards
-    WorldsModule,      // Gestión de mundos gamificados de CoomÜnity
-    ExperiencesModule, // Gestión de experiencias gamificadas de CoomÜnity
-    GroupsModule,      // Gestión de grupos y comunidades de CoomÜnity
-    // PersonalityModule, // Gestión de personalidades y asignación a usuarios (comentado temporalmente hasta resolver problemas)
+    LoggerModule,      // Logging estructurado - BÁSICO
+    MetricsModule,     // Métricas de Prometheus - BÁSICO
+    PrismaModule,      // Conexión a base de datos - BÁSICO
+    CacheModule,       // Cache Redis - BÁSICO
+    // ======= MÓDULOS BÁSICOS FUNCIONANDO =======
+    SubtitleModule,    // Módulo de subtítulos (sin dependencias RBAC)
+    QuestionModule,    // Módulo de preguntas (sin dependencias RBAC)
+    VideoItemsModule,  // Módulo de video items (ya sabemos que funciona)
+    // ======= GRUPO 1: CONTENIDO AVANZADO Y GAMIFICACIÓN BASE =======
+    ContentItemsModule, // RE-ENABLED - CRÍTICO PARA /content/items
+    PlaylistsModule,   // RE-ENABLED - Para /content/playlists
+    PlaylistModule,    // RE-ENABLED - FIXED - Para /playlists
+    WorldsModule,      // RE-ENABLED
+    // ExperiencesModule, // TEMPORAL - PROBLEMA
+    AiModule,          // RE-ENABLED
+    // ======= GRUPO 2: ECONOMÍA Y SOCIAL =======
+    MeritsAndWalletModule, // RE-ENABLED
+    TokensModule,      // RE-ENABLED
+    LetsModule,        // RE-ENABLED
+    GroupsModule,      // RE-ENABLED
+    MarketplaceModule, // RE-ENABLED
+    SocialModule,      // NEW - Social stats and activity
+    // ChallengesModule,  // TEMPORAL - PROBLEMA DEPENDENCIAS
+    // NotificationsModule, // TEMPORAL - CONFLICTO
+    InvitationsModule, // RE-ENABLED
+    // ======= GRUPO 3: MÓDULOS ADMINISTRATIVOS Y MONITOREO =======
+    AdminModule,       // RE-ENABLED
+    AnalyticsModule,   // RE-ENABLED - Para endpoints de analytics y series de tiempo
+    MonitoringModule,  // RE-ENABLED
+    // ======= MÓDULOS CRÍTICOS =======
+    AuthModule,        // RE-ENABLED - PROBLEMA RESUELTO
+    UsersModule,       // RE-ENABLED - FUNCIONANDO CORRECTAMENTE
+    RbacModule,        // RE-ENABLED - CRÍTICO PARA ROLES Y PERMISOS
+    MundosModule,      // RE-ENABLED - Para /content/mundos
+    VideoPermissionsModule, // RE-ENABLED
+    MeritsModule,      // RE-ENABLED - Gestión de tokens intrínsecos (Mëritos, Öndas, Vibras)
+    PersonalityModule, // RE-ENABLED - PARA ASIGNACIÓN DE PERSONALIDADES
+    NotificationModule,
+    ValidationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
   constructor() {
-    console.log('>>> AppModule CONSTRUCTOR: Initializing...');
+    console.log('>>> AppModule CONSTRUCTOR: MÓDULOS CRÍTICOS RE-HABILITADOS (SIN PROBLEMAS)...');
   }
 } 

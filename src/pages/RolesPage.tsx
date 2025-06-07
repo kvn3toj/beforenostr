@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -37,6 +37,8 @@ import { useHasRole } from '../hooks/useHasRole';
 import { useAvailablePermissionsQuery } from '../hooks/features/roles/useAvailablePermissionsQuery';
 import { useUpdateRolePermissionsMutation } from '../hooks/features/roles/useUpdateRolePermissionsMutation';
 import { useCanPerformAction } from '../hooks/useCanPerformAction';
+import { formatDate } from '../utils/dateUtils';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 // Type for update mutation data
 type UpdateRoleMutationData = {
@@ -44,12 +46,26 @@ type UpdateRoleMutationData = {
   data: UpdateRoleData;
 };
 
-export const RolesPage: React.FC = () => {
+export const RolesPage: React.FC = React.memo(() => {
   console.log('>>> RolesPage: Component rendering');
   
   // Verificar permisos
   const canManageRoles = useCanPerformAction('create_role');
   console.log('>>> RolesPage: canManageRoles:', canManageRoles);
+
+  // Initialize analytics tracking
+  const { trackPermissionsFunnel, trackPageVisit, trackInteraction, trackError } = useAnalytics();
+
+  // Track page visit when component mounts
+  React.useEffect(() => {
+    trackPageVisit('roles_page', {
+      userCanManageRoles: canManageRoles,
+      timestamp: new Date().toISOString()
+    });
+    trackPermissionsFunnel('ROLES_PAGE_VISITED', {
+      hasManagePermissions: canManageRoles
+    });
+  }, [canManageRoles, trackPageVisit, trackPermissionsFunnel]);
 
   // States for dialogs
   const [isCreateRoleDialogOpen, setIsCreateRoleDialogOpen] = useState(false);
@@ -161,8 +177,55 @@ export const RolesPage: React.FC = () => {
     }
   }, [roleToManagePermissions]);
 
+  // Effect to track permissions dialog state and available permissions loading
+  useEffect(() => {
+    if (isPermissionsDialogOpen && roleToManagePermissions) {
+      // Track when permissions dialog is opened
+      trackPermissionsFunnel('PERMISSIONS_DIALOG_OPENED', {
+        roleId: roleToManagePermissions.id,
+        roleName: roleToManagePermissions.name,
+        currentPermissionCount: roleToManagePermissions.permissions.length
+      });
+
+      // Track available permissions loading state
+      if (isLoadingPermissions) {
+        trackPermissionsFunnel('PERMISSIONS_LOADING_STARTED', {
+          roleId: roleToManagePermissions.id,
+          roleName: roleToManagePermissions.name
+        });
+      } else if (isErrorPermissions) {
+        trackError('permissions_loading_error', permissionsError || new Error('Unknown permissions error'), {
+          funnel: 'permissions_management',
+          step: 'permissions_loading',
+          roleId: roleToManagePermissions.id
+        });
+        trackPermissionsFunnel('PERMISSIONS_LOADING_FAILED', {
+          roleId: roleToManagePermissions.id,
+          roleName: roleToManagePermissions.name,
+          error: permissionsError?.message || 'Unknown error'
+        });
+      } else if (availablePermissions) {
+        trackPermissionsFunnel('PERMISSIONS_LOADING_SUCCESS', {
+          roleId: roleToManagePermissions.id,
+          roleName: roleToManagePermissions.name,
+          availablePermissionCount: availablePermissions.length,
+          currentPermissionCount: roleToManagePermissions.permissions.length
+        });
+      }
+    }
+  }, [isPermissionsDialogOpen, roleToManagePermissions, isLoadingPermissions, isErrorPermissions, availablePermissions, permissionsError, trackPermissionsFunnel, trackError]);
+
   // Handler for permission checkbox changes
   const handlePermissionChange = (permission: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Track permission selection change
+    trackPermissionsFunnel('PERMISSION_TOGGLED', {
+      roleId: roleToManagePermissions?.id,
+      roleName: roleToManagePermissions?.name,
+      permission,
+      checked: event.target.checked,
+      currentPermissionCount: selectedPermissions.length
+    });
+
     if (event.target.checked) {
       setSelectedPermissions([...selectedPermissions, permission]);
     } else {
@@ -174,8 +237,28 @@ export const RolesPage: React.FC = () => {
   const handleSavePermissions = () => {
     if (!roleToManagePermissions) {
       toast.error('Error: No hay rol seleccionado para actualizar permisos');
+      trackError('permissions_save_error', new Error('No role selected for permissions update'), {
+        funnel: 'permissions_management',
+        step: 'save_attempt'
+      });
       return;
     }
+
+    const originalPermissions = roleToManagePermissions.permissions;
+    const addedPermissions = selectedPermissions.filter(p => !originalPermissions.includes(p));
+    const removedPermissions = originalPermissions.filter(p => !selectedPermissions.includes(p));
+
+    // Track save attempt with details
+    trackPermissionsFunnel('PERMISSIONS_SAVE_ATTEMPTED', {
+      roleId: roleToManagePermissions.id,
+      roleName: roleToManagePermissions.name,
+      originalPermissionCount: originalPermissions.length,
+      newPermissionCount: selectedPermissions.length,
+      addedPermissions,
+      removedPermissions,
+      totalChanges: addedPermissions.length + removedPermissions.length
+    });
+
     updatePermissionsMutation({
       roleId: roleToManagePermissions.id,
       permissions: selectedPermissions
@@ -186,6 +269,28 @@ export const RolesPage: React.FC = () => {
 
   // Handler for closing permissions dialog
   const handleClosePermissionsDialog = () => {
+    // Track abandonment if changes were made but not saved
+    if (roleToManagePermissions) {
+      const originalPermissions = roleToManagePermissions.permissions;
+      const hasChanges = JSON.stringify(selectedPermissions.sort()) !== JSON.stringify(originalPermissions.sort());
+      
+      if (hasChanges) {
+        trackPermissionsFunnel('PERMISSIONS_DIALOG_ABANDONED', {
+          roleId: roleToManagePermissions.id,
+          roleName: roleToManagePermissions.name,
+          originalPermissionCount: originalPermissions.length,
+          modifiedPermissionCount: selectedPermissions.length,
+          hadUnsavedChanges: true
+        });
+      } else {
+        trackPermissionsFunnel('PERMISSIONS_DIALOG_CLOSED', {
+          roleId: roleToManagePermissions.id,
+          roleName: roleToManagePermissions.name,
+          hadUnsavedChanges: false
+        });
+      }
+    }
+
     setIsPermissionsDialogOpen(false);
     setRoleToManagePermissions(null);
     setSelectedPermissions([]);
@@ -223,115 +328,138 @@ export const RolesPage: React.FC = () => {
     setPage(0); // Reset to first page when changing filters
   };
 
-  // Define column configuration for the roles table
-  const roleColumns: ColumnDefinition<Role>[] = [
+  // Memoized render functions for columns
+  const renderPermissions = useCallback((role: Role) => (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, maxWidth: 300 }}>
+      {role.permissions.map((permission, index) => (
+        <Chip
+          key={`${role.id}-permission-${index}`}
+          label={permission}
+          size="small"
+          variant="outlined"
+          color="primary"
+        />
+      ))}
+    </Box>
+  ), []);
+
+  const renderDate = useCallback((role: Role) => (
+    <Typography noWrap>
+      {formatDate(role.createdAt)}
+    </Typography>
+  ), []);
+
+  const renderActions = useCallback((role: Role) => (
+    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+      <Tooltip title={canManageRoles ? "Gestionar permisos" : "No tienes permiso para gestionar permisos"}>
+        <span>
+          <IconButton
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation();
+              
+              // Track role selection for permissions management
+              trackPermissionsFunnel('ROLE_SELECTED_FOR_PERMISSIONS', {
+                roleId: role.id,
+                roleName: role.name,
+                currentPermissionCount: role.permissions.length,
+                userCanManageRoles: canManageRoles
+              });
+              trackInteraction('permissions_management_click', {
+                roleId: role.id,
+                roleName: role.name
+              });
+
+              setRoleToManagePermissions(role);
+              setIsPermissionsDialogOpen(true);
+            }}
+            disabled={!canManageRoles}
+          >
+            <SettingsIcon fontSize="small" />
+          </IconButton>
+        </span>
+      </Tooltip>
+      <Tooltip title={canManageRoles ? "Editar rol" : "No tienes permiso para editar roles"}>
+        <span>
+          <IconButton
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation();
+              
+              // Track role edit interaction
+              trackInteraction('role_edit_click', {
+                roleId: role.id,
+                roleName: role.name
+              });
+
+              setRoleToEdit(role);
+              setIsEditDialogOpen(true);
+            }}
+            disabled={!canManageRoles}
+          >
+            <EditIcon fontSize="small" />
+          </IconButton>
+        </span>
+      </Tooltip>
+      <Tooltip title={canManageRoles ? "Eliminar rol" : "No tienes permiso para eliminar roles"}>
+        <span>
+          <IconButton
+            size="small"
+            color="error"
+            onClick={(e) => {
+              e.stopPropagation();
+              
+              // Track role delete interaction
+              trackInteraction('role_delete_click', {
+                roleId: role.id,
+                roleName: role.name
+              });
+
+              setRoleToDelete(role);
+              setIsDeleteDialogOpen(true);
+            }}
+            disabled={!canManageRoles}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </span>
+      </Tooltip>
+    </Box>
+  ), [canManageRoles, trackPermissionsFunnel, trackInteraction]);
+
+  // Memoized columns with stable render functions
+  const roleColumns = useMemo(() => [
     {
       header: 'Nombre',
       field: 'name',
-      width: '25%',
+      width: '20%',
       sortField: 'name',
     },
     {
+      header: 'Descripción',
+      field: 'description',
+      width: '30%',
+      sortField: 'description',
+    },
+    {
       header: 'Permisos',
-      field: 'permissions',
-      width: '35%',
-      render: (role) => (
-        <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-          {role.permissions.map((permission) => (
-            <Chip
-              key={permission}
-              label={permission}
-              size="small"
-              variant="outlined"
-              color="primary"
-            />
-          ))}
-        </Box>
-      ),
+      width: '30%',
+      render: renderPermissions,
     },
     {
       header: 'Creado',
       field: 'createdAt',
       width: '20%',
       sortField: 'createdAt',
-      render: (role) => {
-        console.log('>>> RolesPage: Formatting date for role:', role.name, 'createdAt:', role.createdAt);
-        try {
-          if (!role.createdAt) {
-            return <Typography noWrap>-</Typography>;
-          }
-          const date = new Date(role.createdAt);
-          if (isNaN(date.getTime())) {
-            console.error('>>> RolesPage: Invalid date for role:', role.name, 'createdAt:', role.createdAt);
-            return <Typography noWrap>Fecha inválida</Typography>;
-          }
-          return (
-            <Typography noWrap>
-              {format(date, 'PP', { locale: es })}
-            </Typography>
-          );
-        } catch (error) {
-          console.error('>>> RolesPage: Error formatting date for role:', role.name, error);
-          return <Typography noWrap>Error en fecha</Typography>;
-        }
-      },
+      render: renderDate,
     },
     {
       header: 'Acciones',
       width: '20%',
       align: 'center',
-      render: (role) => (
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-          <Tooltip title={canManageRoles ? "Gestionar permisos" : "No tienes permiso para gestionar permisos"}>
-            <span>
-              <IconButton
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setRoleToManagePermissions(role);
-                  setIsPermissionsDialogOpen(true);
-                }}
-                disabled={!canManageRoles}
-              >
-                <SettingsIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title={canManageRoles ? "Editar rol" : "No tienes permiso para editar roles"}>
-            <span>
-              <IconButton
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setRoleToEdit(role);
-                  setIsEditDialogOpen(true);
-                }}
-                disabled={!canManageRoles}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title={canManageRoles ? "Eliminar rol" : "No tienes permiso para eliminar roles"}>
-            <span>
-              <IconButton
-                size="small"
-                color="error"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setRoleToDelete(role);
-                  setIsDeleteDialogOpen(true);
-                }}
-                disabled={!canManageRoles}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        </Box>
-      ),
+      render: renderActions,
     },
-  ];
+  ], [canManageRoles, renderPermissions, renderDate, renderActions]);
 
   const handleRowClick = (role: Role) => {
     console.log('Row clicked:', role);
@@ -553,4 +681,4 @@ export const RolesPage: React.FC = () => {
       </Box>
     </Container>
   );
-}; 
+}); 

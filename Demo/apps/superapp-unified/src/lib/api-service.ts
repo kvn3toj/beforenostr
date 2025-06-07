@@ -1,0 +1,947 @@
+/**
+ * 🌐 API Service - Servicio centralizado para comunicación con el backend
+ * 
+ * Maneja todas las llamadas HTTP al backend de CoomÜnity de manera consistente,
+ * incluyendo autenticación JWT, manejo de errores, y configuración centralizada.
+ */
+
+// 🔧 Configuración de la API
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_TIMEOUT = 10000; // 10 segundos
+
+// 🏷️ Tipos de respuesta de la API
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+  timestamp?: string;
+}
+
+// 🔐 Interface para usuario del contexto de autenticación
+interface AuthUser {
+  id: string;
+  email: string;
+  access_token?: string;
+  role?: string;
+}
+
+// 🔐 Headers de autenticación
+interface RequestHeaders {
+  'Content-Type': string;
+  'Authorization'?: string;
+  'X-Requested-With': string;
+}
+
+class ApiService {
+  private baseURL: string;
+  private timeout: number;
+
+  constructor() {
+    this.baseURL = API_BASE_URL;
+    this.timeout = API_TIMEOUT;
+  }
+
+  /**
+   * 🔑 Obtener token JWT actual
+   */
+  private getAuthToken(): string | null {
+    try {
+      // Primero intentar obtener el token directamente
+      const token = localStorage.getItem('coomunity_token');
+      if (token && token !== 'null' && token !== 'undefined') {
+        return token;
+      }
+
+      // Si no hay token directo, intentar extraerlo del usuario
+      const userStr = localStorage.getItem('coomunity_user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        return user.access_token || null;
+      }
+
+      return null;
+    } catch (error) {
+      console.warn('Error obteniendo token de autenticación:', error);
+      return null;
+    }
+  }
+
+  /**
+   * 🎯 Crear headers para las peticiones
+   */
+  private createHeaders(includeAuth: boolean = true): RequestHeaders {
+    const headers: RequestHeaders = {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    };
+
+    if (includeAuth) {
+      const token = this.getAuthToken();
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
+
+    return headers;
+  }
+
+  /**
+   * 🚨 Manejar respuestas de error HTTP
+   */
+  private async handleErrorResponse(response: Response): Promise<Error> {
+    let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+    let errorCategory: 'network' | 'auth' | 'validation' | 'business' | 'server' | 'unknown' = 'unknown';
+    
+    try {
+      const errorBody = await response.json();
+      if (errorBody.message) {
+        errorMessage = errorBody.message;
+      } else if (errorBody.error) {
+        errorMessage = errorBody.error;
+      } else if (errorBody.details) {
+        errorMessage = errorBody.details;
+      }
+    } catch {
+      // Si no se puede parsear el error como JSON, usar el status text
+    }
+
+    // Manejo específico por códigos de estado con categorización
+    switch (response.status) {
+      case 401:
+        errorCategory = 'auth';
+        // Token inválido o expirado
+        this.handleUnauthorized();
+        return this.createCategorizedError('Sesión expirada. Por favor, inicia sesión nuevamente.', errorCategory, response.status);
+      
+      case 403:
+        errorCategory = 'auth';
+        return this.createCategorizedError('No tienes permisos para realizar esta acción.', errorCategory, response.status);
+      
+      case 404:
+        errorCategory = 'business';
+        return this.createCategorizedError('Recurso no encontrado.', errorCategory, response.status);
+      
+      case 422:
+        errorCategory = 'validation';
+        return this.createCategorizedError(errorMessage || 'Datos de entrada inválidos.', errorCategory, response.status);
+      
+      case 429:
+        errorCategory = 'network';
+        return this.createCategorizedError('Demasiadas peticiones. Intenta más tarde.', errorCategory, response.status);
+      
+      case 500:
+        errorCategory = 'server';
+        return this.createCategorizedError('Error interno del servidor. Intenta más tarde.', errorCategory, response.status);
+      
+      case 502:
+      case 503:
+      case 504:
+        errorCategory = 'network';
+        return this.createCategorizedError('Servicio temporalmente no disponible. Intenta más tarde.', errorCategory, response.status);
+      
+      default:
+        if (response.status >= 400 && response.status < 500) {
+          errorCategory = 'business';
+        } else if (response.status >= 500) {
+          errorCategory = 'server';
+        }
+        return this.createCategorizedError(errorMessage, errorCategory, response.status);
+    }
+  }
+
+  /**
+   * 🏷️ Crear error categorizado con metadata adicional
+   */
+  private createCategorizedError(message: string, category: string, statusCode: number): Error {
+    const error = new Error(message);
+    (error as any).category = category;
+    (error as any).statusCode = statusCode;
+    (error as any).timestamp = new Date().toISOString();
+    (error as any).isRetriable = this.isRetriableError(category, statusCode);
+    (error as any).userFriendly = this.isUserFriendlyError(category, statusCode);
+    
+    return error;
+  }
+
+  /**
+   * 🔄 Determinar si un error es reintetable
+   */
+  private isRetriableError(category: string, statusCode: number): boolean {
+    // Errores de red y servidor son generalmente reintetables
+    if (category === 'network' || category === 'server') return true;
+    
+    // Algunos códigos específicos son reintetables
+    if ([408, 429, 502, 503, 504].includes(statusCode)) return true;
+    
+    // Timeout errors son reintetables
+    if (statusCode === 0) return true; // Network timeout
+    
+    // Errores de autenticación, validación y business logic no son reintetables
+    return false;
+  }
+
+  /**
+   * 👤 Determinar si un error debe mostrarse al usuario
+   */
+  private isUserFriendlyError(category: string, statusCode: number): boolean {
+    // Errores de validación y business logic son relevantes para el usuario
+    if (category === 'validation' || category === 'business') return true;
+    
+    // Errores de autenticación son relevantes
+    if (category === 'auth') return true;
+    
+    // Errores de red persistentes son relevantes
+    if (category === 'network' && [429, 502, 503, 504].includes(statusCode)) return true;
+    
+    // Errores de servidor críticos son relevantes
+    if (category === 'server' && statusCode === 500) return true;
+    
+    return false;
+  }
+
+  /**
+   * 📢 Sistema de notificaciones de errores
+   */
+  private notifyError(error: Error, endpoint: string, method: string): void {
+    const errorData = {
+      message: error.message,
+      category: (error as any).category || 'unknown',
+      statusCode: (error as any).statusCode,
+      endpoint,
+      method,
+      timestamp: new Date().toISOString(),
+      isRetriable: (error as any).isRetriable || false,
+      userFriendly: (error as any).userFriendly || false,
+    };
+
+    // En desarrollo, log detallado
+    if (import.meta.env.DEV) {
+      console.group(`🚨 API Error: ${method} ${endpoint}`);
+      console.error('Error Details:', errorData);
+      console.error('Original Error:', error);
+      console.groupEnd();
+    }
+
+    // Disparar evento personalizado para que los componentes puedan escuchar
+    window.dispatchEvent(new CustomEvent('api-error', { 
+      detail: errorData 
+    }));
+
+    // Mostrar notificación al usuario solo si es relevante
+    if (errorData.userFriendly) {
+      this.showUserNotification(errorData);
+    }
+
+    // Enviar métricas de error para monitoring
+    this.sendErrorMetrics(errorData);
+  }
+
+  /**
+   * 🔔 Mostrar notificación al usuario
+   */
+  private showUserNotification(errorData: any): void {
+    // Personalizar mensaje según la categoría
+    let userMessage = errorData.message;
+    let notificationType: 'error' | 'warning' | 'info' = 'error';
+
+    switch (errorData.category) {
+      case 'validation':
+        notificationType = 'warning';
+        userMessage = `Datos inválidos: ${errorData.message}`;
+        break;
+      case 'auth':
+        notificationType = 'error';
+        userMessage = 'Problema de autenticación. Por favor, verifica tu sesión.';
+        break;
+      case 'network':
+        notificationType = 'warning';
+        userMessage = 'Problema de conexión. Verificando...';
+        break;
+      case 'server':
+        notificationType = 'error';
+        userMessage = 'Error del servidor. Nuestro equipo ha sido notificado.';
+        break;
+      case 'business':
+        notificationType = 'info';
+        break;
+    }
+
+    // Disparar evento para el sistema de notificaciones
+    window.dispatchEvent(new CustomEvent('user-notification', {
+      detail: {
+        type: notificationType,
+        message: userMessage,
+        category: errorData.category,
+        duration: errorData.category === 'validation' ? 5000 : 8000,
+        actions: errorData.isRetriable ? [{ label: 'Reintentar', action: 'retry' }] : undefined,
+      }
+    }));
+  }
+
+  /**
+   * 📊 Enviar métricas de error para monitoring
+   */
+  private sendErrorMetrics(errorData: any): void {
+    // Disparar evento para el sistema de monitoring
+    window.dispatchEvent(new CustomEvent('api-metrics', {
+      detail: {
+        type: 'error',
+        endpoint: errorData.endpoint,
+        method: errorData.method,
+        statusCode: errorData.statusCode,
+        category: errorData.category,
+        timestamp: Date.now(),
+        isRetriable: errorData.isRetriable,
+      }
+    }));
+  }
+
+  /**
+   * 🔐 Manejar errores de autenticación
+   */
+  private handleUnauthorized(): void {
+    // Limpiar tokens
+    localStorage.removeItem('coomunity_token');
+    localStorage.removeItem('coomunity_user');
+    
+    // Disparar evento para que la app maneje la redirección
+    window.dispatchEvent(new CustomEvent('auth-expired', {
+      detail: { 
+        message: 'Tu sesión ha expirado. Redirigiendo al login...',
+        timestamp: Date.now()
+      }
+    }));
+    
+    // Redireccionar después de un breve delay para mostrar el mensaje
+    setTimeout(() => {
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+    }, 2000);
+  }
+
+  /**
+   * 🌐 Método principal para realizar peticiones HTTP con retry inteligente
+   */
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {},
+    retryCount: number = 0
+  ): Promise<T> {
+    const maxRetries = 3;
+    const url = `${this.baseURL}${endpoint}`;
+    const method = options.method || 'GET';
+    
+    // Configurar headers
+    const headers = this.createHeaders();
+    
+    // Configurar timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+    
+    try {
+      // Disparar evento de inicio de request para métricas
+      const requestStartTime = Date.now();
+      window.dispatchEvent(new CustomEvent('api-request-start', {
+        detail: { endpoint, method, timestamp: requestStartTime }
+      }));
+
+      const response = await fetch(url, {
+        ...options,
+        headers: { ...headers, ...options.headers },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      // Disparar evento de respuesta para métricas
+      const requestDuration = Date.now() - requestStartTime;
+      window.dispatchEvent(new CustomEvent('api-request-complete', {
+        detail: { 
+          endpoint, 
+          method, 
+          statusCode: response.status,
+          duration: requestDuration,
+          success: response.ok,
+          timestamp: Date.now()
+        }
+      }));
+
+      if (!response.ok) {
+        const error = await this.handleErrorResponse(response);
+        
+        // Determinar si se debe reintentar
+        const shouldRetry = retryCount < maxRetries && (error as any).isRetriable;
+        
+        if (shouldRetry) {
+          // Calcular delay con backoff exponencial
+          const delay = Math.min(1000 * Math.pow(2, retryCount), 10000);
+          
+          console.warn(`🔄 Reintentando petición ${method} ${endpoint} en ${delay}ms (intento ${retryCount + 1}/${maxRetries})`);
+          
+          // Esperar antes del reintento
+          await new Promise(resolve => setTimeout(resolve, delay));
+          
+          // Reintentar recursivamente
+          return this.request<T>(endpoint, options, retryCount + 1);
+        }
+        
+        // Si no se puede reintentar, notificar error y lanzar
+        this.notifyError(error, endpoint, method);
+        throw error;
+      }
+
+      // Parsear respuesta
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        
+        // Verificar si la respuesta tiene formato de error del backend
+        if (data.success === false) {
+          const error = new Error(data.message || data.error || 'Error del servidor');
+          (error as any).category = 'business';
+          (error as any).statusCode = response.status;
+          this.notifyError(error, endpoint, method);
+          throw error;
+        }
+        
+        return data;
+      } else {
+        // Para respuestas no-JSON (ej. texto plano, archivos)
+        return response.text() as unknown as T;
+      }
+
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      // Manejar errores de red/timeout
+      if (error instanceof Error) {
+        let categorizedError: Error;
+        
+        if (error.name === 'AbortError') {
+          // Timeout
+          categorizedError = this.createCategorizedError(
+            'La petición tardó demasiado en responder. Verifica tu conexión.',
+            'network',
+            0
+          );
+        } else if (error.message.includes('fetch')) {
+          // Error de red
+          categorizedError = this.createCategorizedError(
+            'Error de conexión. Verifica tu conexión a internet.',
+            'network',
+            0
+          );
+        } else {
+          // Error desconocido
+          categorizedError = this.createCategorizedError(
+            error.message,
+            'unknown',
+            0
+          );
+        }
+        
+        // Determinar si se debe reintentar para errores de red
+        const shouldRetry = retryCount < maxRetries && 
+          (categorizedError as any).isRetriable &&
+          (error.name === 'AbortError' || error.message.includes('fetch'));
+        
+        if (shouldRetry) {
+          const delay = Math.min(1000 * Math.pow(2, retryCount), 10000);
+          
+          console.warn(`🔄 Reintentando petición ${method} ${endpoint} tras error de red en ${delay}ms (intento ${retryCount + 1}/${maxRetries})`);
+          
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return this.request<T>(endpoint, options, retryCount + 1);
+        }
+        
+        this.notifyError(categorizedError, endpoint, method);
+        throw categorizedError;
+      }
+      
+      throw error;
+    }
+  }
+
+  /**
+   * 🟢 GET Request
+   */
+  async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'GET',
+    });
+  }
+
+  /**
+   * 🟡 POST Request
+   */
+  async post<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  /**
+   * 🟠 PUT Request
+   */
+  async put<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  /**
+   * 🔴 DELETE Request
+   */
+  async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'DELETE',
+    });
+  }
+
+  /**
+   * 🟣 PATCH Request
+   */
+  async patch<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  /**
+   * 🔍 Health Check del backend
+   */
+  async healthCheck(): Promise<{ status: string; timestamp: string }> {
+    try {
+      return await this.get('/health');
+    } catch (error) {
+      throw new Error('Backend no disponible');
+    }
+  }
+
+  /**
+   * 🔐 Verificar si el usuario está autenticado
+   */
+  isAuthenticated(): boolean {
+    return this.getAuthToken() !== null;
+  }
+
+  /**
+   * 🎯 Realizar petición sin autenticación (para login, registro, etc.)
+   */
+  async requestWithoutAuth<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const url = `${this.baseURL}${endpoint}`;
+    const controller = new AbortController();
+
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          ...options.headers,
+        },
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw await this.handleErrorResponse(response);
+      }
+
+      const data = await response.json();
+      
+      if (import.meta.env.DEV) {
+        console.log(`✅ API Success (No Auth): ${options.method || 'GET'} ${endpoint}`, data);
+      }
+
+      return data;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      if (error.name === 'AbortError') {
+        throw new Error(`Request timeout: ${endpoint}`);
+      }
+      
+      console.error(`❌ API Error (No Auth): ${options.method || 'GET'} ${endpoint}`, error);
+      throw error;
+    }
+  }
+}
+
+// 🏭 Instancia singleton del servicio
+export const apiService = new ApiService();
+
+// 🎯 Métodos de conveniencia específicos para la aplicación
+
+/**
+ * 🔐 Servicios de Autenticación
+ */
+export const authAPI = {
+  login: (email: string, password: string) =>
+    apiService.requestWithoutAuth('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
+
+  register: (email: string, password: string, fullName?: string) =>
+    apiService.requestWithoutAuth('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+        full_name: fullName,
+        name: fullName,
+      }),
+    }),
+
+  getCurrentUser: () => apiService.get('/auth/me'),
+
+  updateProfile: (updates: any) => apiService.put('/auth/profile', updates),
+
+  logout: () => apiService.post('/auth/logout'),
+};
+
+/**
+ * 🎮 Servicios de Gamificación
+ */
+export const gameAPI = {
+  getUserStats: (userId: string) => apiService.get(`/game/user/${userId}`),
+  getLeaderboard: () => apiService.get('/game/leaderboard'),
+  updateUserStats: (userId: string, stats: any) => 
+    apiService.put(`/game/user/${userId}`, stats),
+};
+
+/**
+ * 👤 Servicios de Usuario
+ */
+export const userAPI = {
+  getProfile: (userId: string) => apiService.get(`/users/${userId}`),
+  updateProfile: (userId: string, updates: any) => 
+    apiService.put(`/users/${userId}`, updates),
+  getUsers: () => apiService.get('/users'),
+};
+
+/**
+ * 🏪 Servicios de Marketplace
+ */
+export const marketplaceAPI = {
+  getProducts: () => apiService.get('/marketplace/products'),
+  getProduct: (productId: string) => apiService.get(`/marketplace/products/${productId}`),
+  createProduct: (product: any) => apiService.post('/marketplace/products', product),
+};
+
+/**
+ * 💰 Servicios de Wallet
+ */
+export const walletAPI = {
+  getBalance: (userId: string) => apiService.get(`/wallet/${userId}/balance`),
+  getTransactions: (userId: string) => apiService.get(`/wallet/${userId}/transactions`),
+  transfer: (fromUserId: string, toUserId: string, amount: number) =>
+    apiService.post('/wallet/transfer', { fromUserId, toUserId, amount }),
+  
+  // 🏆 Servicios de Méritos
+  getMerits: (userId: string) => apiService.get(`/merits/user/${userId}`),
+  getAllMerits: () => apiService.get('/merits'),
+  getMeritsLeaderboard: (limit = 10) => apiService.get(`/merits/leaderboard?limit=${limit}`),
+  awardMerit: (userId: string, meritType: string, amount: number, description?: string) =>
+    apiService.post('/merits/award', { userId, meritType, amount, description }),
+  getMeritHistory: (userId: string, page = 0, limit = 20) => 
+    apiService.get(`/merits/user/${userId}/history?page=${page}&limit=${limit}`),
+};
+
+/**
+ * 🤝 Servicios de Red Social/Chat
+ * Migrado para conectar con el backend NestJS real
+ */
+export const socialAPI = {
+  // Gestión de matches
+  getMatches: () => {
+    return apiService.get('/social/matches');
+  },
+  
+  getMatch: (matchId: string) => {
+    return apiService.get(`/social/matches/${matchId}`);
+  },
+  
+  // Gestión de mensajes
+  getMessages: (matchId: string, page = 0, limit = 50) => {
+    return apiService.get(`/social/matches/${matchId}/messages?page=${page}&limit=${limit}`);
+  },
+  
+  sendMessage: (matchId: string, content: string, type: 'text' | 'emoji' | 'audio' = 'text') => {
+    return apiService.post(`/social/matches/${matchId}/messages`, {
+      content,
+      type,
+      timestamp: new Date().toISOString()
+    });
+  },
+  
+  // Estados de usuario
+  updateUserStatus: (status: 'online' | 'away' | 'offline') => {
+    return apiService.patch('/social/status', { status });
+  },
+  
+  // Notificaciones
+  getNotifications: () => {
+    return apiService.get('/social/notifications');
+  },
+  
+  markNotificationAsRead: (notificationId: string) => {
+    return apiService.patch(`/social/notifications/${notificationId}/read`);
+  },
+
+  // 📝 Feed Social - Gestión de publicaciones
+  getPosts: (page = 0, limit = 20) => {
+    return apiService.get(`/social/posts?page=${page}&limit=${limit}`);
+  },
+
+  getPost: (postId: string) => {
+    return apiService.get(`/social/posts/${postId}`);
+  },
+
+  createPost: (content: string, type: 'text' | 'image' | 'video' = 'text', media?: File) => {
+    const formData = new FormData();
+    formData.append('content', content);
+    formData.append('type', type);
+    if (media) {
+      formData.append('media', media);
+    }
+    
+    return apiService.post('/social/posts', formData, {
+      headers: {
+        // No establecer Content-Type para permitir multipart/form-data automático
+      }
+    });
+  },
+
+  deletePost: (postId: string) => {
+    return apiService.delete(`/social/posts/${postId}`);
+  },
+
+  // 👍 Likes en publicaciones
+  likePost: (postId: string) => {
+    return apiService.post(`/social/posts/${postId}/like`);
+  },
+
+  unlikePost: (postId: string) => {
+    return apiService.delete(`/social/posts/${postId}/like`);
+  },
+
+  getPostLikes: (postId: string) => {
+    return apiService.get(`/social/posts/${postId}/likes`);
+  },
+
+  // 💬 Comentarios en publicaciones
+  getPostComments: (postId: string, page = 0, limit = 10) => {
+    return apiService.get(`/social/posts/${postId}/comments?page=${page}&limit=${limit}`);
+  },
+
+  createComment: (postId: string, content: string) => {
+    return apiService.post(`/social/posts/${postId}/comments`, {
+      content,
+      timestamp: new Date().toISOString()
+    });
+  },
+
+  deleteComment: (postId: string, commentId: string) => {
+    return apiService.delete(`/social/posts/${postId}/comments/${commentId}`);
+  },
+
+  likeComment: (postId: string, commentId: string) => {
+    return apiService.post(`/social/posts/${postId}/comments/${commentId}/like`);
+  },
+};
+
+/**
+ * 🔗 Servicio de WebSocket para chat en tiempo real
+ */
+class ChatWebSocketService {
+  private socket: WebSocket | null = null;
+  private matchId: string | null = null;
+  private userId: string | null = null;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
+  private onMessageCallback: ((message: any) => void) | null = null;
+  private onStatusCallback: ((status: string) => void) | null = null;
+
+  connect(matchId: string, userId: string, onMessage?: (message: any) => void, onStatus?: (status: string) => void) {
+    this.matchId = matchId;
+    this.userId = userId;
+    this.onMessageCallback = onMessage || null;
+    this.onStatusCallback = onStatus || null;
+
+    const wsUrl = `${import.meta.env.VITE_WS_URL || 'ws://localhost:3001'}/chat`;
+    
+    try {
+      this.socket = new WebSocket(wsUrl);
+      
+      this.socket.onopen = () => {
+        console.log('🔗 WebSocket chat conectado');
+        this.reconnectAttempts = 0;
+        
+        // Enviar información de conexión
+        this.send({
+          type: 'join',
+          matchId: this.matchId,
+          userId: this.userId
+        });
+      };
+
+      this.socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          
+          switch (data.type) {
+            case 'message':
+              this.onMessageCallback?.(data.message);
+              break;
+            case 'status':
+              this.onStatusCallback?.(data.status);
+              break;
+            case 'user_status':
+              this.onStatusCallback?.(data);
+              break;
+          }
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
+        }
+      };
+
+      this.socket.onclose = () => {
+        console.log('🔌 WebSocket chat desconectado');
+        this.attemptReconnect();
+      };
+
+      this.socket.onerror = (error) => {
+        console.error('❌ Error en WebSocket chat:', error);
+      };
+
+    } catch (error) {
+      console.error('Error conectando WebSocket:', error);
+    }
+  }
+
+  private attemptReconnect() {
+    if (this.reconnectAttempts < this.maxReconnectAttempts && this.matchId && this.userId) {
+      this.reconnectAttempts++;
+      console.log(`🔄 Reintentando conexión WebSocket (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+      
+      setTimeout(() => {
+        this.connect(this.matchId!, this.userId!, this.onMessageCallback!, this.onStatusCallback!);
+      }, 2000 * this.reconnectAttempts);
+    }
+  }
+
+  send(data: any) {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify(data));
+    }
+  }
+
+  sendMessage(content: string, type: 'text' | 'emoji' | 'audio' = 'text') {
+    this.send({
+      type: 'message',
+      matchId: this.matchId,
+      userId: this.userId,
+      content,
+      messageType: type,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  updateStatus(status: 'online' | 'away' | 'offline') {
+    this.send({
+      type: 'status_update',
+      matchId: this.matchId,
+      userId: this.userId,
+      status
+    });
+  }
+
+  disconnect() {
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+    }
+    this.matchId = null;
+    this.userId = null;
+    this.onMessageCallback = null;
+    this.onStatusCallback = null;
+    this.reconnectAttempts = 0;
+  }
+}
+
+export const chatWebSocketService = new ChatWebSocketService();
+
+/**
+ * 🎥 Servicios de Videos
+ */
+export const videosAPI = {
+  getCategories: () => {
+    // Intentar endpoint específico primero, pero lanzar error para fallback
+    return apiService.get('/videos/categories');
+  },
+  getVideos: (category?: string) => {
+    // Usar endpoint real que funciona
+    const endpoint = category && category !== 'all' 
+      ? `/video-items?category=${encodeURIComponent(category)}`
+      : '/video-items';
+    return apiService.get(endpoint);
+  },
+  getPlaylists: () => apiService.get('/videos/playlists'),
+};
+
+/**
+ * 🌍 Servicios de Mundos/Worlds
+ */
+export const mundosAPI = {
+  // Obtener todos los mundos (endpoint simple para la SuperApp)
+  getMundos: () => apiService.get('/mundos'),
+  
+  // Obtener mundo específico por ID
+  getMundo: (mundoId: string) => apiService.get(`/mundos/${mundoId}`),
+  
+  // Obtener mundo por slug
+  getMundoBySlug: (slug: string) => apiService.get(`/mundos/slug/${slug}`),
+  
+  // Obtener playlists de un mundo específico
+  getMundoPlaylists: (mundoId: string) => apiService.get(`/mundos/${mundoId}/playlists`),
+  
+  // Endpoint de test/conectividad
+  testMundos: () => apiService.get('/mundos/test'),
+};
+
+/**
+ * 📊 Servicios de Estadísticas y Analytics
+ */
+export const statsAPI = {
+  getGeneralStats: () => apiService.get('/stats/general'),
+  getSearchStats: () => apiService.get('/stats/search'),
+  getUserStats: (userId: string) => apiService.get(`/stats/user/${userId}`),
+};
+
+/**
+ * 📝 Servicios de Formularios
+ */
+export const formsAPI = {
+  submit: (formType: string, data: any) => 
+    apiService.post(`/forms/${formType}`, data),
+};
+
+export default apiService; 

@@ -1,0 +1,47 @@
+{
+  "totalForms": 1,
+  "forms": [
+    {
+      "index": 0,
+      "action": "https://coomunity.co/place/login/send/token",
+      "method": "post",
+      "inputCount": 2,
+      "hasHiddenInputs": true,
+      "hasPhoneInput": true,
+      "hasSubmitButton": true,
+      "details": {
+        "action": "https://coomunity.co/place/login/send/token",
+        "method": "post",
+        "className": "",
+        "id": "",
+        "inputs": [
+          {
+            "type": "hidden",
+            "name": "mobile",
+            "id": "mobile",
+            "value": "",
+            "placeholder": "",
+            "required": false,
+            "pattern": ""
+          },
+          {
+            "type": "tel",
+            "name": "",
+            "id": "intl-tel-input",
+            "value": "",
+            "placeholder": "321 1234567",
+            "required": true,
+            "pattern": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "submit",
+            "textContent": "Enviar código al WhatsApp",
+            "className": "mt-4 btn btn-rose btn-round"
+          }
+        ]
+      }
+    }
+  ]
+}

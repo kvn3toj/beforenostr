@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { QuestionService } from './question.service';
+import { QuestionValidationService } from '../common/validation/question-validation.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { FindAllQuestionsDto } from './dto/find-all-questions.dto';
@@ -34,9 +35,13 @@ import type { Question } from '../generated/prisma';
 
 @Controller('questions')
 export class QuestionController {
-  constructor(@Inject(QuestionService) private readonly questionService: QuestionService) {
+  constructor(
+    @Inject(QuestionService) private readonly questionService: QuestionService,
+    @Inject(QuestionValidationService) private readonly validationService: QuestionValidationService,
+  ) {
     console.log('>>> QuestionController CONSTRUCTOR called');
     console.log('>>> QuestionController CONSTRUCTOR: this.questionService IS', this.questionService ? 'DEFINED' : 'UNDEFINED');
+    console.log('>>> QuestionController CONSTRUCTOR: this.validationService IS', this.validationService ? 'DEFINED' : 'UNDEFINED');
     if (!this.questionService) {
       console.error('>>> QuestionController CONSTRUCTOR: QuestionService is not available!');
     }
@@ -50,6 +55,27 @@ export class QuestionController {
       timestamp: new Date().toISOString(),
       controller: 'QuestionController'
     };
+  }
+
+  @Get('testvalidation')
+  async testValidation() {
+    console.log('>>> QuestionController.testValidation: Testing validation service');
+    try {
+      // Verificar que el servicio de validación esté disponible
+      if (!this.questionService) {
+        return { error: 'QuestionService not available' };
+      }
+
+      // Intentar obtener estadísticas básicas usando Prisma directamente
+      return { 
+        message: 'Validation test endpoint', 
+        timestamp: new Date().toISOString(),
+        questionServiceAvailable: !!this.questionService
+      };
+    } catch (error) {
+      console.error('>>> QuestionController.testValidation: ERROR:', error);
+      return { error: error.message };
+    }
   }
 
   @Get('test')
@@ -262,6 +288,67 @@ export class QuestionController {
       return; // Return 204 No Content
     } catch (error) {
       console.error('>>> QuestionController.remove: ERROR:', error);
+      throw error;
+    }
+  }
+
+  // ============ VALIDATION ENDPOINTS ============
+
+  @Get('validation/stats')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get question validation statistics' })
+  @ApiResponse({ status: 200, description: 'Validation statistics retrieved successfully.' })
+  async getValidationStats() {
+    console.log('>>> QuestionController.getValidationStats: Starting');
+    
+    try {
+      const stats = await this.validationService.getValidationStats();
+      console.log('>>> QuestionController.getValidationStats: SUCCESS');
+      return stats;
+    } catch (error) {
+      console.error('>>> QuestionController.getValidationStats: ERROR:', error);
+      throw error;
+    }
+  }
+
+  @Post('validation/run-all')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Run validation for all questions in the system' })
+  @ApiResponse({ status: 200, description: 'Validation completed successfully.' })
+  // @UseGuards(AuthGuard('jwt'), RolesGuard)
+  // @Roles('admin')
+  async runFullValidation() {
+    console.log('>>> QuestionController.runFullValidation: Starting');
+    
+    try {
+      const summary = await this.validationService.validateAllQuestionTimestamps();
+      console.log('>>> QuestionController.runFullValidation: SUCCESS');
+      return summary;
+    } catch (error) {
+      console.error('>>> QuestionController.runFullValidation: ERROR:', error);
+      throw error;
+    }
+  }
+
+  @Get('validation/video/:videoId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Validate questions for a specific video' })
+  @ApiResponse({ status: 200, description: 'Validation results for the video.' })
+  async validateVideoQuestions(@Param('videoId', ParseIntPipe) videoId: number) {
+    console.log('>>> QuestionController.validateVideoQuestions: Starting with videoId:', videoId);
+    
+    try {
+      const results = await this.validationService.validateQuestionTimestamps(videoId);
+      console.log('>>> QuestionController.validateVideoQuestions: SUCCESS');
+      return {
+        videoId,
+        totalQuestions: results.length,
+        validQuestions: results.filter(r => r.isValid).length,
+        invalidQuestions: results.filter(r => !r.isValid).length,
+        results
+      };
+    } catch (error) {
+      console.error('>>> QuestionController.validateVideoQuestions: ERROR:', error);
       throw error;
     }
   }

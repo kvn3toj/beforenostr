@@ -1,0 +1,315 @@
+{
+  "timestamp": "2025-06-03T23:27:09.749Z",
+  "testType": "screen_reader_compatibility",
+  "results": {
+    "loginFlow": {
+      "landmarks": {
+        "landmarks": [
+          {
+            "type": "main",
+            "found": true
+          },
+          {
+            "type": "form",
+            "found": true
+          }
+        ],
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Iniciar Sesión"
+          }
+        ]
+      },
+      "formFields": [
+        {
+          "type": "text",
+          "id": "email",
+          "hasLabel": true,
+          "labelText": "Correo Electrónico *",
+          "hasAriaLabel": false,
+          "ariaLabelText": null,
+          "hasAriaDescribedby": true,
+          "ariaDescribedby": "email-help",
+          "required": true,
+          "hasAriaRequired": false
+        },
+        {
+          "type": "password",
+          "id": "password",
+          "hasLabel": true,
+          "labelText": "Contraseña *",
+          "hasAriaLabel": false,
+          "ariaLabelText": null,
+          "hasAriaDescribedby": true,
+          "ariaDescribedby": "password-help",
+          "required": true,
+          "hasAriaRequired": false
+        }
+      ],
+      "buttons": [
+        {
+          "text": "",
+          "type": "button",
+          "hasAriaLabel": true,
+          "ariaLabel": "Mostrar contraseña",
+          "hasAriaDescribedby": false,
+          "disabled": false,
+          "hasAriaDisabled": false,
+          "role": null,
+          "tabIndex": 0
+        },
+        {
+          "text": "Iniciar Sesión",
+          "type": "submit",
+          "hasAriaLabel": false,
+          "ariaLabel": null,
+          "hasAriaDescribedby": false,
+          "disabled": true,
+          "hasAriaDisabled": true,
+          "role": "button",
+          "tabIndex": -1
+        },
+        {
+          "text": "",
+          "type": "button",
+          "hasAriaLabel": true,
+          "ariaLabel": "Open Tanstack query devtools",
+          "hasAriaDescribedby": false,
+          "disabled": false,
+          "hasAriaDisabled": false,
+          "role": null,
+          "tabIndex": 0
+        }
+      ]
+    },
+    "navigation": {
+      "skipLinks": [],
+      "mainNav": {
+        "found": false
+      }
+    },
+    "userManagement": {
+      "table": {
+        "found": false
+      },
+      "actionButtons": []
+    },
+    "formInteractions": {},
+    "tableNavigation": {},
+    "modalInteractions": {},
+    "liveRegions": {
+      "regions": [
+        {
+          "ariaLive": "polite",
+          "role": null,
+          "ariaAtomic": "false",
+          "ariaRelevant": "additions text",
+          "content": "",
+          "visible": true
+        }
+      ]
+    },
+    "keyboardNavigation": {
+      "focusableElements": [
+        {
+          "index": 0,
+          "tagName": "a",
+          "type": null,
+          "role": null,
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "Saltar al contenido principal",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 1,
+          "tagName": "button",
+          "type": "button",
+          "role": null,
+          "tabIndex": 0,
+          "ariaLabel": "Colapsar menú de navegación",
+          "text": "",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 2,
+          "tagName": "button",
+          "type": "button",
+          "role": null,
+          "tabIndex": 0,
+          "ariaLabel": "Abrir menú de usuario para usuario",
+          "text": "U",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 3,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "Home",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 4,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "Worlds",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 5,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "Services",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 6,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "nav_content",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 7,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "nav_gamification",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 8,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "nav_management",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 9,
+          "tagName": "button",
+          "type": "button",
+          "role": null,
+          "tabIndex": 0,
+          "ariaLabel": "Open Tanstack query devtools",
+          "text": "",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 10,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "Home",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 11,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "Worlds",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 12,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "Services",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 13,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "nav_content",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 14,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "nav_gamification",
+          "hasVisibleFocus": false
+        },
+        {
+          "index": 15,
+          "tagName": "div",
+          "type": null,
+          "role": "button",
+          "tabIndex": 0,
+          "ariaLabel": null,
+          "text": "nav_management",
+          "hasVisibleFocus": false
+        }
+      ],
+      "tabSequence": 10
+    },
+    "ariaImplementation": {
+      "stats": {
+        "elementsWithAriaLabel": 6,
+        "elementsWithAriaLabelledby": 0,
+        "elementsWithAriaDescribedby": 0,
+        "elementsWithRole": 15,
+        "liveRegions": 1,
+        "hiddenElements": 24,
+        "expandableElements": 0,
+        "requiredFields": 0
+      },
+      "issues": []
+    },
+    "screenReaderOptimization": {}
+  },
+  "scoring": {
+    "totalScore": 65,
+    "maxScore": 100,
+    "percentage": 65,
+    "scores": {
+      "loginFlow": 20,
+      "navigation": 0,
+      "tableAccessibility": 0,
+      "liveRegions": 15,
+      "keyboardNavigation": 15,
+      "ariaImplementation": 15
+    },
+    "grade": "NECESITA MEJORAS"
+  },
+  "recommendations": [
+    {
+      "priority": "MEDIUM",
+      "category": "Navigation",
+      "issue": "No se encontraron skip links",
+      "solution": "Implementar skip links para navegación rápida"
+    }
+  ]
+}

@@ -118,13 +118,46 @@ export const fetchAvailablePermissions = async (): Promise<AvailablePermissionsL
   }
 };
 
+// Función auxiliar para convertir nombres de permisos a IDs
+const convertPermissionNamesToIds = async (permissionNames: string[]): Promise<string[]> => {
+  try {
+    // Obtener todos los permisos con sus IDs y nombres
+    const allPermissions = await apiService.get<Array<{ id: string; name: string; description?: string }>>('/permissions');
+    
+    // Crear un mapa nombre -> ID
+    const nameToIdMap = new Map(allPermissions.map(p => [p.name, p.id]));
+    
+    // Convertir nombres a IDs
+    const permissionIds = permissionNames.map(name => {
+      const id = nameToIdMap.get(name);
+      if (!id) {
+        throw new Error(`Permission not found: ${name}`);
+      }
+      return id;
+    });
+    
+    console.log('>>> convertPermissionNamesToIds: Converted', permissionNames, 'to', permissionIds);
+    return permissionIds;
+  } catch (error) {
+    console.error('Error converting permission names to IDs:', error);
+    throw error;
+  }
+};
+
 // ===== ROLE PERMISSIONS MANAGEMENT =====
 
 export const updateRolePermissions = async (roleId: string, permissions: string[]): Promise<Role> => {
   try {
-    // Usar el endpoint de asignación de permisos del backend
+    console.log('>>> updateRolePermissions: Starting with permissions:', permissions);
+    
+    // Convertir nombres de permisos a IDs antes de enviar al backend
+    const permissionIds = await convertPermissionNamesToIds(permissions);
+    
+    console.log('>>> updateRolePermissions: Sending permissionIds:', permissionIds);
+    
+    // Usar el endpoint de asignación de permisos del backend con IDs
     const roleRaw = await apiService.post<any>(`/roles/${roleId}/assign-permissions`, { 
-      permissionIds: permissions 
+      permissionIds: permissionIds 
     });
     return normalizeRole(roleRaw);
   } catch (error) {
@@ -133,8 +166,15 @@ export const updateRolePermissions = async (roleId: string, permissions: string[
   }
 };
 
-export const assignPermissionsToRole = async (roleId: string, permissionIds: string[]): Promise<Role> => {
+export const assignPermissionsToRole = async (roleId: string, permissionNames: string[]): Promise<Role> => {
   try {
+    console.log('>>> assignPermissionsToRole: Starting with permission names:', permissionNames);
+    
+    // Convertir nombres de permisos a IDs antes de enviar al backend
+    const permissionIds = await convertPermissionNamesToIds(permissionNames);
+    
+    console.log('>>> assignPermissionsToRole: Sending permissionIds:', permissionIds);
+    
     const roleRaw = await apiService.post<any>(`/roles/${roleId}/assign-permissions`, { 
       permissionIds 
     });
@@ -145,8 +185,15 @@ export const assignPermissionsToRole = async (roleId: string, permissionIds: str
   }
 };
 
-export const removePermissionsFromRole = async (roleId: string, permissionIds: string[]): Promise<Role> => {
+export const removePermissionsFromRole = async (roleId: string, permissionNames: string[]): Promise<Role> => {
   try {
+    console.log('>>> removePermissionsFromRole: Starting with permission names:', permissionNames);
+    
+    // Convertir nombres de permisos a IDs antes de enviar al backend
+    const permissionIds = await convertPermissionNamesToIds(permissionNames);
+    
+    console.log('>>> removePermissionsFromRole: Sending permissionIds:', permissionIds);
+    
     const roleRaw = await apiService.post<any>(`/roles/${roleId}/remove-permissions`, { 
       permissionIds 
     });

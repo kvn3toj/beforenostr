@@ -30,6 +30,7 @@ export interface UpdateUserData {
   name?: string;
   avatarUrl?: string;
   isActive?: boolean;
+  personalityId?: string;
 }
 
 export interface FetchUsersParams {
@@ -162,4 +163,19 @@ export const removeRoleFromUser = async (userId: string, roleId: string): Promis
     console.error(`Error removing role ${roleId} from user ${userId}:`, error);
     throw error;
   }
+};
+
+// Export a userService object for compatibility
+export const userService = {
+  fetchUsers,
+  fetchUserById,
+  fetchCurrentUserProfile,
+  createUser,
+  updateUser,
+  deleteUser,
+  fetchAllUsersAdmin,
+  assignRoleToUser,
+  removeRoleFromUser,
+  // Alias for getUsers to match the NewInvitationPage import - Fixed to use correct endpoint
+  getUsers: () => fetchUsers({ page: 0, pageSize: 100 }).then(response => response.data)
 }; 

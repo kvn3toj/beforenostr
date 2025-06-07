@@ -1,0 +1,173 @@
+{
+  "timestamp": "2025-06-03T22:27:26.069Z",
+  "status": "NEEDS_REVIEW",
+  "summary": {
+    "totalCombinations": 10,
+    "passedAA": 7,
+    "passedAAA": 2,
+    "criticalPassed": 2,
+    "criticalTotal": 3,
+    "aaComplianceRate": 70,
+    "aaaComplianceRate": 20,
+    "criticalComplianceRate": 67
+  },
+  "improvements": [
+    {
+      "name": "Botón primario",
+      "originalRatio": 2.24,
+      "currentRatio": 3.55,
+      "improvement": 1.31,
+      "nowCompliant": false,
+      "wasCompliant": false
+    },
+    {
+      "name": "Botón de advertencia",
+      "originalRatio": 2.15,
+      "currentRatio": 4.34,
+      "improvement": 2.19,
+      "nowCompliant": false,
+      "wasCompliant": false
+    },
+    {
+      "name": "Texto deshabilitado",
+      "originalRatio": 2.41,
+      "currentRatio": 5.06,
+      "improvement": 2.65,
+      "nowCompliant": true,
+      "wasCompliant": false
+    },
+    {
+      "name": "Botón de éxito",
+      "originalRatio": 2.54,
+      "currentRatio": 5.02,
+      "improvement": 2.48,
+      "nowCompliant": true,
+      "wasCompliant": false
+    },
+    {
+      "name": "Botón de error",
+      "originalRatio": 3.76,
+      "currentRatio": 5.62,
+      "improvement": 1.86,
+      "nowCompliant": true,
+      "wasCompliant": false
+    }
+  ],
+  "detailedResults": [
+    {
+      "name": "Texto principal sobre fondo",
+      "importance": "CRÍTICO",
+      "element": "Párrafos, títulos principales",
+      "foreground": "#2C2C2C",
+      "background": "#F8F9FA",
+      "ratio": 13.25,
+      "level": "AAA",
+      "passesAA": true,
+      "passesAAA": true
+    },
+    {
+      "name": "Texto secundario sobre fondo",
+      "importance": "ALTO",
+      "element": "Subtítulos, texto descriptivo",
+      "foreground": "#5A5A5A",
+      "background": "#F8F9FA",
+      "ratio": 6.54,
+      "level": "AA",
+      "passesAA": true,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón primario (texto sobre fondo)",
+      "importance": "CRÍTICO",
+      "element": "Botones de acción principal",
+      "foreground": "#FFFFFF",
+      "background": "#A0853D",
+      "ratio": 3.55,
+      "level": "FAIL",
+      "passesAA": false,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón secundario (texto sobre fondo)",
+      "importance": "CRÍTICO",
+      "element": "Botones de navegación, menú",
+      "foreground": "#FFFFFF",
+      "background": "#272727",
+      "ratio": 14.94,
+      "level": "AAA",
+      "passesAA": true,
+      "passesAAA": true
+    },
+    {
+      "name": "Botón de error (texto sobre fondo)",
+      "importance": "ALTO",
+      "element": "Botones de eliminación, cancelar",
+      "foreground": "#FFFFFF",
+      "background": "#C62828",
+      "ratio": 5.62,
+      "level": "AA",
+      "passesAA": true,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón de éxito (texto sobre fondo)",
+      "importance": "ALTO",
+      "element": "Botones de confirmación, guardar",
+      "foreground": "#FFFFFF",
+      "background": "#0D8043",
+      "ratio": 5.02,
+      "level": "AA",
+      "passesAA": true,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón de advertencia (texto sobre fondo)",
+      "importance": "ALTO",
+      "element": "Botones de precaución",
+      "foreground": "#FFFFFF",
+      "background": "#CC5400",
+      "ratio": 4.34,
+      "level": "FAIL",
+      "passesAA": false,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón de información (texto sobre fondo)",
+      "importance": "ALTO",
+      "element": "Botones informativos",
+      "foreground": "#FFFFFF",
+      "background": "#1976D2",
+      "ratio": 4.6,
+      "level": "AA",
+      "passesAA": true,
+      "passesAAA": false
+    },
+    {
+      "name": "Texto deshabilitado sobre fondo",
+      "importance": "MEDIO",
+      "element": "Elementos deshabilitados",
+      "foreground": "#6B6B6B",
+      "background": "#F8F9FA",
+      "ratio": 5.06,
+      "level": "AA",
+      "passesAA": true,
+      "passesAAA": false
+    },
+    {
+      "name": "Texto de pistas sobre fondo",
+      "importance": "MEDIO",
+      "element": "Placeholders, hints",
+      "foreground": "#9E9E9E",
+      "background": "#F8F9FA",
+      "ratio": 2.54,
+      "level": "FAIL",
+      "passesAA": false,
+      "passesAAA": false
+    }
+  ],
+  "nextSteps": [
+    "Revisar elementos que no cumplen AA",
+    "Aplicar ajustes adicionales de contraste",
+    "Validar cambios antes de continuar"
+  ]
+}

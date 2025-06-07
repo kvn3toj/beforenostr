@@ -1,0 +1,45 @@
+{
+  "name": "coomunity-demo",
+  "version": "1.0.0",
+  "description": "CoomÜnity Demo - SuperApp with UX Heuristics Testing",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "playwright test",
+    "test:ux": "playwright test tests/e2e/ux-heuristics/",
+    "test:ux:master": "playwright test tests/e2e/ux-heuristics/00-master-ux-validation.spec.ts",
+    "test:ux:visibility": "playwright test tests/e2e/ux-heuristics/01-visibility-system-status.spec.ts",
+    "test:ux:consistency": "playwright test tests/e2e/ux-heuristics/02-consistency-standards.spec.ts",
+    "test:ux:adaptive": "playwright test tests/e2e/ux-heuristics/03-adaptive-contextual.spec.ts",
+    "test:ux:performance": "playwright test tests/e2e/ux-heuristics/04-performance-loading.spec.ts",
+    "test:ux:headed": "playwright test --headed tests/e2e/ux-heuristics/",
+    "test:ux:debug": "playwright test --debug tests/e2e/ux-heuristics/",
+    "test:ux:report": "playwright show-report",
+    "server:local": "cd data/backups/my_recovered_website && python3 -m http.server 8080",
+    "ux:full": "npm run server:local & sleep 3 && npm run test:ux:master && npm run test:ux:report"
+  },
+  "dependencies": {
+    "next": "14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "14.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "coomunity",
+    "ux-testing",
+    "playwright",
+    "heuristics",
+    "ui-testing"
+  ]
+}

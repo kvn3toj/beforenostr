@@ -1,17 +1,19 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, Get, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-// import { AuthService } from './auth.service'; // Temporarily commented
+import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(@Inject('AuthService') private readonly authService: any) {
+  constructor(@Inject(AuthService) private readonly authService: AuthService) {
     console.log('>>> AuthController initialized');
     console.log('>>> AuthController - this.authService:', this.authService);
     if (this.authService === undefined) {
       console.error('>>> AuthController - ERROR: AuthService is undefined!');
+    } else {
+      console.log('>>> AuthController - SUCCESS: AuthService is defined!');
     }
   }
 

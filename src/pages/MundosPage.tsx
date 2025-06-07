@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -37,6 +38,7 @@ import { useDeleteMundoMutation } from '../hooks/features/mundos/useDeleteMundoM
 
 export const MundosPage: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   // Verificar permisos
   const isSuperAdmin = useHasRole('Super Admin');
   const isContentAdmin = useHasRole('Content Admin');
@@ -248,8 +250,7 @@ export const MundosPage: React.FC = () => {
               size="small"
               onClick={(e) => {
                 e.stopPropagation();
-                // TODO: Implementar vista de detalles
-                console.log('Ver detalles:', mundo);
+                navigate(`/mundos/${mundo.id}`);
               }}
             >
               <ViewIcon fontSize="small" />
@@ -291,8 +292,8 @@ export const MundosPage: React.FC = () => {
 
   // Handlers
   const handleRowClick = (mundo: Mundo) => {
-    // Navegar o mostrar detalles del mundo si es necesario
-    console.log('Row clicked:', mundo);
+    // Navegar a la página de detalle del mundo
+    navigate(`/mundos/${mundo.id}`);
   };
 
   const handleCreateMundo = (data: CreateMundoData) => {
@@ -486,8 +487,10 @@ export const MundosPage: React.FC = () => {
       />
 
       {/* Create Mundo Dialog */}
-      <Dialog open={isCreateMundoDialogOpen} onClose={() => setIsCreateMundoDialogOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>{t('create_new_mundo_button')}</DialogTitle>
+      <Dialog open={isCreateMundoDialogOpen} onClose={() => setIsCreateMundoDialogOpen(false)} fullWidth maxWidth="md">
+        <DialogTitle sx={{ fontWeight: 600, color: 'primary.main' }}>
+          🌍 Crear Nuevo Mundo
+        </DialogTitle>
         <MundoForm
           onSubmit={handleCreateMundo}
           onCancel={() => setIsCreateMundoDialogOpen(false)}
@@ -496,8 +499,10 @@ export const MundosPage: React.FC = () => {
       </Dialog>
 
       {/* Edit Mundo Dialog */}
-      <Dialog open={isEditDialogOpen} onClose={handleCloseEditDialog} fullWidth maxWidth="sm">
-        <DialogTitle>{t('tooltip_edit_mundo')}</DialogTitle>
+      <Dialog open={isEditDialogOpen} onClose={handleCloseEditDialog} fullWidth maxWidth="md">
+        <DialogTitle sx={{ fontWeight: 600, color: 'primary.main' }}>
+          ✏️ Editar Mundo: {mundoToEdit?.name}
+        </DialogTitle>
         {mundoToEdit && (
           <MundoForm
             initialData={mundoToEdit}
@@ -513,11 +518,11 @@ export const MundosPage: React.FC = () => {
         open={isDeleteDialogOpen}
         onClose={handleCloseDeleteDialog}
         onConfirm={handleConfirmDelete}
-        title={t('dialog_title_confirm_deletion')}
-        message={t('dialog_confirm_delete_mundo_message', { name: mundoToDelete?.name })}
+        title="⚠️ Confirmar Eliminación de Mundo"
+        message={`¿Estás seguro de que deseas eliminar el mundo "${mundoToDelete?.name}"? Esta acción no se puede deshacer y eliminará también todo su contenido asociado.`}
         isLoading={isDeleting}
-        confirmButtonText={t('button_delete')}
-        cancelButtonText={t('button_cancel')}
+        confirmButtonText="Eliminar"
+        cancelButtonText="Cancelar"
       />
     </Container>
   );

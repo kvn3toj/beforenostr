@@ -1,0 +1,149 @@
+{
+  "communicationTools": [
+    {
+      "text": "Juan Manuel Escobar Ramírez\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t:joy::kissing_heart::heart::heart_eyes::blush::grin::+1::relaxed::pensive::smile::sob::kiss::unamused::flushed::stuck_out_tongue_winking_eye::see_no_evil::wink::smiley::cry::stuck_out_tongue_closed_eyes::scream::rage::smirk::disappointed::sweat_smile::kissing_closed_eyes::speak_no_evil::relieved::grinning::yum::ok_hand::neutral_face::confused:",
+      "className": "container-fluid wrapper-chat",
+      "id": "",
+      "tagName": "DIV"
+    },
+    {
+      "text": ":joy::kissing_heart::heart::heart_eyes::blush::grin::+1::relaxed::pensive::smile::sob::kiss::unamused::flushed::stuck_out_tongue_winking_eye::see_no_evil::wink::smiley::cry::stuck_out_tongue_closed_eyes::scream::rage::smirk::disappointed::sweat_smile::kissing_closed_eyes::speak_no_evil::relieved::grinning::yum::ok_hand::neutral_face::confused:",
+      "className": "col-lg-12 col-md-12 discussion-message",
+      "id": "",
+      "tagName": "DIV"
+    },
+    {
+      "text": ":joy::kissing_heart::heart::heart_eyes::blush::grin::+1::relaxed::pensive::smile::sob::kiss::unamused::flushed::stuck_out_tongue_winking_eye::see_no_evil::wink::smiley::cry::stuck_out_tongue_closed_eyes::scream::rage::smirk::disappointed::sweat_smile::kissing_closed_eyes::speak_no_evil::relieved::grinning::yum::ok_hand::neutral_face::confused:",
+      "className": "d-message",
+      "id": "",
+      "tagName": "UL"
+    },
+    {
+      "text": ":joy::kissing_heart::heart::heart_eyes::blush::grin::+1::relaxed::pensive::smile::sob::kiss::unamused::flushed::stuck_out_tongue_winking_eye::see_no_evil::wink::smiley::cry::stuck_out_tongue_closed_eyes::scream::rage::smirk::disappointed::sweat_smile::kissing_closed_eyes::speak_no_evil::relieved::grinning::yum::ok_hand::neutral_face::confused:",
+      "className": "message-block",
+      "id": "",
+      "tagName": "LI"
+    },
+    {
+      "text": "",
+      "className": "input-message",
+      "id": "",
+      "tagName": "INPUT"
+    },
+    {
+      "text": "",
+      "className": "emoji-wysiwyg-editor input-message",
+      "id": "",
+      "tagName": "DIV"
+    },
+    {
+      "text": "",
+      "className": "btn-msg btn-chat hide",
+      "id": "",
+      "tagName": "BUTTON"
+    },
+    {
+      "text": "",
+      "className": "btn-audio btn-chat",
+      "id": "recordButton",
+      "tagName": "BUTTON"
+    },
+    {
+      "text": "",
+      "className": "btn-stop btn-chat hide",
+      "id": "stopButton",
+      "tagName": "BUTTON"
+    }
+  ],
+  "chatInterface": {
+    "hasMessageInput": true,
+    "hasSendButton": false,
+    "hasMessageHistory": true,
+    "chatContainer": {
+      "className": "container-fluid wrapper-chat",
+      "id": ""
+    }
+  },
+  "messageElements": [
+    {
+      "text": ":joy::kissing_heart::heart::heart_eyes::blush::grin::+1::relaxed::pensive::smile::sob::kiss::unamused::flushed::stuck_out_tongue_winking_eye::see_no_evil::wink::smiley::cry::stuck_out_tongue_closed_eyes::scream::rage::smirk::disappointed::sweat_smile::kissing_closed_eyes::speak_no_evil::relieved::grinning::yum::ok_hand::neutral_face::confused:",
+      "className": "col-lg-12 col-md-12 discussion-message",
+      "id": "",
+      "timestamp": "No timestamp",
+      "author": "No author"
+    },
+    {
+      "text": ":joy::kissing_heart::heart::heart_eyes::blush::grin::+1::relaxed::pensive::smile::sob::kiss::unamused::flushed::stuck_out_tongue_winking_eye::see_no_evil::wink::smiley::cry::stuck_out_tongue_closed_eyes::scream::rage::smirk::disappointed::sweat_smile::kissing_closed_eyes::speak_no_evil::relieved::grinning::yum::ok_hand::neutral_face::confused:",
+      "className": "d-message",
+      "id": "",
+      "timestamp": "No timestamp",
+      "author": "No author"
+    },
+    {
+      "text": ":joy::kissing_heart::heart::heart_eyes::blush::grin::+1::relaxed::pensive::smile::sob::kiss::unamused::flushed::stuck_out_tongue_winking_eye::see_no_evil::wink::smiley::cry::stuck_out_tongue_closed_eyes::scream::rage::smirk::disappointed::sweat_smile::kissing_closed_eyes::speak_no_evil::relieved::grinning::yum::ok_hand::neutral_face::confused:",
+      "className": "message-block",
+      "id": "",
+      "timestamp": "No timestamp",
+      "author": "No author"
+    },
+    {
+      "text": "",
+      "className": "input-message",
+      "id": "",
+      "timestamp": "No timestamp",
+      "author": "No author"
+    },
+    {
+      "text": "",
+      "className": "emoji-wysiwyg-editor input-message",
+      "id": "",
+      "timestamp": "No timestamp",
+      "author": "No author"
+    },
+    {
+      "text": "",
+      "className": "send-msg",
+      "id": "",
+      "timestamp": "No timestamp",
+      "author": "No author"
+    },
+    {
+      "text": "",
+      "className": "btn-msg btn-chat hide",
+      "id": "",
+      "timestamp": "No timestamp",
+      "author": "No author"
+    }
+  ],
+  "userInteractions": [
+    {
+      "text": "",
+      "className": "btn-msg btn-chat hide",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "",
+      "className": "btn-audio btn-chat",
+      "id": "recordButton",
+      "type": "button"
+    },
+    {
+      "text": "",
+      "className": "btn-stop btn-chat hide",
+      "id": "stopButton",
+      "type": "button"
+    },
+    {
+      "text": "Avanzar",
+      "className": "next",
+      "id": "",
+      "type": "button"
+    }
+  ],
+  "matchConnection": {
+    "matchId": "38000e9aad777d56",
+    "hasBackToMatch": true,
+    "matchContext": "No context found"
+  }
+}

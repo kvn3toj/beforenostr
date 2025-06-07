@@ -16,61 +16,58 @@ const ITEM_TYPES_ENDPOINT = `${API_BASE_URL}/content/item-types`;
 
 export const fetchContentItems = async (params: FetchContentItemsParams): Promise<{ data: ContentItem[]; count: number }> => {
   try {
-    // Temporarily use the test endpoint that works without authentication
-    const response = await apiService.get<{ status: string; itemCount: number; items: any[] }>('/content/items/test');
+    // Use the correct video-items endpoint that actually exists in the backend
+    const response = await apiService.get<any[]>('/video-items');
     
-    if (response.status === 'ok') {
-      const allItems = normalizeContentItems(response.items);
-      
-      // Apply filters
-      let filteredItems = allItems;
-      
-      if (params.filters.title) {
-        filteredItems = filteredItems.filter(item => 
-          item.title.toLowerCase().includes(params.filters.title!.toLowerCase())
-        );
-      }
-      
-      if (params.filters.playlistId) {
-        filteredItems = filteredItems.filter(item => 
-          item.playlistId === params.filters.playlistId
-        );
-      }
-      
-      if (params.filters.itemTypeId) {
-        filteredItems = filteredItems.filter(item => 
-          item.itemTypeId === params.filters.itemTypeId
-        );
-      }
-      
-      if (params.filters.isActive !== undefined) {
-        filteredItems = filteredItems.filter(item => 
-          item.isActive === params.filters.isActive
-        );
-      }
-      
-      // Apply sorting
-      if (params.sortBy) {
-        filteredItems.sort((a, b) => {
-          const aValue = (a as any)[params.sortBy!];
-          const bValue = (b as any)[params.sortBy!];
-          const comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-          return params.sortDirection === 'desc' ? -comparison : comparison;
-        });
-      }
-      
-      // Apply pagination
-      const startIndex = params.page * params.pageSize;
-      const endIndex = startIndex + params.pageSize;
-      const paginatedItems = filteredItems.slice(startIndex, endIndex);
-      
-      return {
-        data: paginatedItems,
-        count: filteredItems.length
-      };
-    } else {
-      throw new Error('Backend returned error status');
+    // Convert video-items response to ContentItem format expected by frontend
+    const allItems = normalizeContentItems(response);
+    
+    // Apply filters
+    let filteredItems = allItems;
+    
+    if (params.filters.title) {
+      filteredItems = filteredItems.filter(item => 
+        item.title.toLowerCase().includes(params.filters.title!.toLowerCase())
+      );
     }
+    
+    if (params.filters.playlistId) {
+      filteredItems = filteredItems.filter(item => 
+        item.playlistId === params.filters.playlistId
+      );
+    }
+    
+    if (params.filters.itemTypeId) {
+      filteredItems = filteredItems.filter(item => 
+        item.itemTypeId === params.filters.itemTypeId
+      );
+    }
+    
+    if (params.filters.isActive !== undefined) {
+      filteredItems = filteredItems.filter(item => 
+        item.isActive === params.filters.isActive
+      );
+    }
+    
+    // Apply sorting
+    if (params.sortBy) {
+      filteredItems.sort((a, b) => {
+        const aValue = (a as any)[params.sortBy!];
+        const bValue = (b as any)[params.sortBy!];
+        const comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+        return params.sortDirection === 'desc' ? -comparison : comparison;
+      });
+    }
+    
+    // Apply pagination
+    const startIndex = params.page * params.pageSize;
+    const endIndex = startIndex + params.pageSize;
+    const paginatedItems = filteredItems.slice(startIndex, endIndex);
+    
+    return {
+      data: paginatedItems,
+      count: filteredItems.length
+    };
   } catch (error) {
     console.error('Error fetching content items:', error);
     throw error;

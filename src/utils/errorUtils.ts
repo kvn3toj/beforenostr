@@ -26,7 +26,7 @@ export function extractErrorMessage(
       return apiError.response.data.error;
     }
     // Si el error es un objeto pero no tiene la estructura response.data,
-    // pero sí tiene una propiedad 'message' (podría ser un Error estándar o un error de Supabase)
+    // pero sí tiene una propiedad 'message' (podría ser un Error estándar o un error del backend)
     if (apiError.message) {
       return apiError.message;
     }

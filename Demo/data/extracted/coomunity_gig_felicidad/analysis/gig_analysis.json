@@ -1,0 +1,19 @@
+{
+  "pageType": "login",
+  "gigDetails": {
+    "title": "No title found",
+    "description": "Selecciona tu país y escribe tu número de teléfono",
+    "author": "No author found",
+    "category": "No category found",
+    "price": "No price found",
+    "tags": []
+  },
+  "accessLevel": "requires_authentication",
+  "contentFound": {
+    "title": false,
+    "description": true,
+    "author": false,
+    "price": false,
+    "tags": false
+  }
+}

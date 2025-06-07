@@ -1,0 +1,39 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# CoomÜnity SuperApp Module Definitions
+
+This rule clarifies the specific roles and functionalities of key modules within the `apps/superapp-unified/` directory.
+
+**Instructions:**
+
+1.  **Marketplace Module (GMP Gamified Match Place):**
+    *   This module is the platform for the **exchange of value**.
+    *   It includes listings and functionalities for both **products and services**.
+    *   Do not assume it is exclusively for products or services; it encompasses both.
+
+2.  **ÜPlay Module (GPL Gamified Play List):**
+    *   This module is the **interactive gamified video player**.
+    *   It handles the display and interaction with videos, including gamified elements, questions, and timers.
+    *   Do not confuse this module with the Marketplace or a platform solely for services/gigs.
+
+3.  **Social Module:**
+    *   This module handles social interactions, community features, and collaboration tools.
+    *   Includes features like profiles, messaging, and community engagement.
+
+4.  **UStats Module:**
+    *   This module provides statistics, analytics, and dashboard functionalities.
+    *   Displays user metrics, progress tracking, and performance indicators.
+
+5.  Refer to these modules by their official names where appropriate: "GMP Gamified Match Place" for Marketplace, and "GPL Gamified Play List" for ÜPlay.
+
+**Core CoomÜnity Concepts:**
+
+*   **Ayni:** Reciprocity principle - balanced exchange of value
+*   **Mëritos:** Merit-based rewards system for contributing to the Common Good
+*   **Bien Común:** Common Good - prioritizing collective benefit over individual gain
+*   **Lükas:** CoomÜnity's internal currency for value exchange
+*   **Öndas:** Vibrational energy units representing positive contributions
+*   **Emprendedores Confiables:** Trusted Entrepreneurs who have earned credibility through Mëritos

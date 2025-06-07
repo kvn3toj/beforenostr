@@ -1,0 +1,51 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Dashboard",
+    "results": "Resultados",
+    "profile": "Mi Perfil",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "language": "Idioma / Language"
+  },
+  "auth": {
+    "loginTitle": "Iniciar Sesión",
+    "loginSubtitle": "Inicia sesión para guardar tus respuestas y ver tus resultados",
+    "continueWith": "Continuar con {provider}",
+    "continueAsGuest": "Continuar como invitado",
+    "register": "Registrarse",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+  },
+  "quiz": {
+    "introTitle": "Primer paso",
+    "introSubtitle": "Jon, veamos qué tan bien te llevas con lo Establecido",
+    "videoInstructions": "Observa el video y toma una decisión al final",
+    "continueButton": "Avanzar",
+    "processingButton": "Procesando...",
+    "ratingDisagree": "No estoy de acuerdo",
+    "ratingAgree": "Estoy de acuerdo",
+    "completeAllPrompt": "Por favor, responde todas las preguntas antes de continuar.",
+    "thankYouMessage": "¡Gracias por completar el quiz!"
+  },
+  "categories": {
+    "established": "Lo Establecido",
+    "creativity": "Creatividad",
+    "innovation": "Innovación",
+    "leadership": "Liderazgo",
+    "entrepreneurship": "Emprendimiento"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "viewDashboard": "Ver mi Dashboard",
+    "myResults": "Mis Resultados"
+  },
+  "results": {
+    "title": "Resultados del Quiz",
+    "subtitle": "A continuación se muestra un análisis de tus respuestas",
+    "categoryScore": "Puntuación para {category}",
+    "download": "Descargar Resultados",
+    "share": "Compartir",
+    "retake": "Volver a tomar el quiz",
+    "noResults": "No has completado ningún quiz todavía"
+  }
+}

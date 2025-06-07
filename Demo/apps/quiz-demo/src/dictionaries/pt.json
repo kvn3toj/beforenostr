@@ -1,0 +1,51 @@
+{
+  "navigation": {
+    "home": "Início",
+    "dashboard": "Painel",
+    "results": "Resultados",
+    "profile": "Meu Perfil",
+    "login": "Entrar",
+    "logout": "Sair",
+    "language": "Idioma / Language"
+  },
+  "auth": {
+    "loginTitle": "Entrar",
+    "loginSubtitle": "Entre para salvar suas respostas e ver seus resultados",
+    "continueWith": "Continuar com {provider}",
+    "continueAsGuest": "Continuar como convidado",
+    "register": "Registrar-se",
+    "alreadyHaveAccount": "Já tem uma conta?"
+  },
+  "quiz": {
+    "introTitle": "Primeiro passo",
+    "introSubtitle": "Jon, vamos ver como você se relaciona com o Estabelecido",
+    "videoInstructions": "Assista ao vídeo e tome uma decisão no final",
+    "continueButton": "Avançar",
+    "processingButton": "Processando...",
+    "ratingDisagree": "Não concordo",
+    "ratingAgree": "Concordo",
+    "completeAllPrompt": "Por favor, responda todas as perguntas antes de continuar.",
+    "thankYouMessage": "Obrigado por completar o questionário!"
+  },
+  "categories": {
+    "established": "O Estabelecido",
+    "creativity": "Criatividade",
+    "innovation": "Inovação",
+    "leadership": "Liderança",
+    "entrepreneurship": "Empreendedorismo"
+  },
+  "profile": {
+    "title": "Meu Perfil",
+    "viewDashboard": "Ver meu Painel",
+    "myResults": "Meus Resultados"
+  },
+  "results": {
+    "title": "Resultados do Questionário",
+    "subtitle": "Abaixo está uma análise das suas respostas",
+    "categoryScore": "Pontuação para {category}",
+    "download": "Baixar Resultados",
+    "share": "Compartilhar",
+    "retake": "Refazer o questionário",
+    "noResults": "Você ainda não completou nenhum questionário"
+  }
+}

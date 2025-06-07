@@ -1,0 +1,11 @@
+{
+  "parameters": {
+    "param": "coaching",
+    "category": "trasciende"
+  },
+  "impact": {
+    "affectsFormAction": false,
+    "hasSpecificScripts": false,
+    "hasSpecificMetadata": false
+  }
+}

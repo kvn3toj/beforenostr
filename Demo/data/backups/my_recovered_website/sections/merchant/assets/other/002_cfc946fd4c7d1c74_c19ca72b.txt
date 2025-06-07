@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<title>Coomunity App</title>
+    <base href="https://coomunity.co/place/">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/dist/css/bulma-extensions.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+	<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="https://wikiki.github.io/node_modules/bulma-extensions/bulma-tagsinput/dist/js/bulma-tagsinput.min.js"></script>
+	<!-- Hotjar Tracking Code for coomunity.co -->
+	<script>
+		(function(h,o,t,j,a,r){
+			h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+			h._hjSettings={hjid:1778678,hjsv:6};
+			a=o.getElementsByTagName('head')[0];
+			r=o.createElement('script');r.async=1;
+			r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+			a.appendChild(r);
+		})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+	</script>
+	<style>
+		body { line-height: 1.1; }
+		body, button, input, select, textarea { font-family: 'Poppins', sans-serif; }
+		html, body { background-size: contain; background-attachment: fixed; background-position: center; }
+		body .footer.is-role, body .navbar.is-role, body .bg-search { background-color: #DC1A5B !important; }
+		.is-borderless { border: 0px; }
+		.section { padding: 3rem 1.5rem; overflow: hidden; }
+	</style>
+
+	
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+	<link rel="stylesheet" type="text/css" href="https://coomunity.co/place/assets/v0.2/css/material-kit.css?v=2.2.0" />
+	<link rel="stylesheet" type="text/css" href="https://coomunity.co/place/assets/v0.2/css/custom.css?v=0.0.1" />
+	<link rel="stylesheet" type="text/css" href="https://coomunity.co/place/assets/v0.2/css/tour.min.css?v=0.0.1" />
+
+</head>
+<body class="has-navbar-fixed-top"> <style>
+	.container-fluid{
+		padding: 0;
+	}
+	.has-navbar-fixed-top{
+		padding: 0 !important;
+	} 
+	.white{
+		color: #fff;
+	}
+	.content-black{
+		background: #000;
+		min-height: 100vh;
+		overflow: hidden;
+	}
+	p{
+		font-weight: 100;
+		color: #fff;
+		font-size: 1.2em;
+	}
+	</style>
+	<div class="content-black content-notification">	
+		<div class="row content-black d-flex justify-content-center align-items-center">
+			<div class="col-10 d-flex justify-content-center align-items-center">
+				<img class="icono-c" src="/assets/img/error.png" alt="">
+			</div>
+			<div class="col-md-5 ml-auto mr-auto mt-5 mb-4 text-center">				
+				<h3 class="title white"><strong>Lo sentimos ha ocurrido un error:</strong></h3>
+				<p>No existe el match que buscas.</p>
+				<button class="btn btn-md btn-rose btn-round mt-3 mb-2" onclick="goBack()">Volver atrás</button>
+			</div>
+			<!-- <hr>
+			<div class="col-md-10 ml-auto mr-auto mt-3 text-center">				
+				<small class="text-center white">Si crees que esto es un error, haz una captura de esta pantalla y ponte en contacto con nuestro <a href="/pqrs">Centro de Ayuda.</a></small><br/>
+			</div> -->
+		</div>
+	</div> 
+<!-- <section class="section bg-image-pattern">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<h3>Lo sentimos ha ocurrido un error:</h3>
+				<p>No existe el match que buscas.</p>
+				<button onclick="goBack()">Volver atrás</button>
+			</div>
+		</div>
+	</div>
+</section> -->
+</body>	
+<script>
+	function goBack() {
+		window.history.back();
+	}
+</script>
+</html>	

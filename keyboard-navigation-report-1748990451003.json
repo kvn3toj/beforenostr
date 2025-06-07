@@ -1,0 +1,120 @@
+{
+  "timestamp": "2025-06-03T22:40:50.989Z",
+  "tests": {
+    "skipLink": false,
+    "loginKeyboard": true,
+    "focusVisible": true,
+    "tabNavigation": true,
+    "elementCount": 16
+  },
+  "tabOrder": [
+    {
+      "tag": "A",
+      "id": "",
+      "text": "Crear Cuenta",
+      "position": "627,668",
+      "ariaLabel": "Ir a la página de registro para crear una nueva cuenta"
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "",
+      "position": "206,1235",
+      "ariaLabel": "Close tanstack query devtools"
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "TANSTACKReact Query v5",
+      "position": "229,10",
+      "ariaLabel": "Close Tanstack query devtools"
+    },
+    {
+      "tag": "INPUT",
+      "id": "radiogroup-cl-2-item-cl-4-input",
+      "text": "",
+      "position": "232,114",
+      "ariaLabel": ""
+    },
+    {
+      "tag": "INPUT",
+      "id": "",
+      "text": "",
+      "position": "279,36",
+      "ariaLabel": "Filter queries by query key"
+    },
+    {
+      "tag": "SELECT",
+      "id": "",
+      "text": "Sort by statusSort by query ha",
+      "position": "279,198",
+      "ariaLabel": ""
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "Asc",
+      "position": "276,344",
+      "ariaLabel": "Sort order ascending"
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "",
+      "position": "276,1127",
+      "ariaLabel": "Clear query cache"
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "",
+      "position": "276,1161",
+      "ariaLabel": "Mock offline behavior"
+    },
+    {
+      "tag": "BUTTON",
+      "id": "",
+      "text": "",
+      "position": "276,1195",
+      "ariaLabel": "Open in picture-in-picture mode"
+    },
+    {
+      "tag": "BUTTON",
+      "id": "dropdownmenu-cl-6-trigger",
+      "text": "",
+      "position": "276,1229",
+      "ariaLabel": ""
+    },
+    {
+      "tag": "BODY",
+      "id": "",
+      "text": "\n    Saltar al formulario de i",
+      "position": "-486,0",
+      "ariaLabel": ""
+    },
+    {
+      "tag": "A",
+      "id": "",
+      "text": "Saltar al formulario de inicio",
+      "position": "8,8",
+      "ariaLabel": ""
+    },
+    {
+      "tag": "INPUT",
+      "id": "email",
+      "text": "",
+      "position": "462,405",
+      "ariaLabel": ""
+    },
+    {
+      "tag": "INPUT",
+      "id": "password",
+      "text": "",
+      "position": "543,405",
+      "ariaLabel": ""
+    }
+  ],
+  "recommendations": [
+    "Implementar skip link visible en login"
+  ]
+}

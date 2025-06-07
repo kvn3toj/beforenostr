@@ -8,12 +8,12 @@ import { DebugUsersController } from './users.controller.debug';
 import { MinimalUsersController } from './users.controller.minimal';
 import { UsersTestController } from './users-test.controller';
 import { PrismaModule } from '../prisma/prisma.module';
-import { RbacModule } from '../rbac/rbac.module';
-// import { AuthModule } from '../auth/auth.module'; // Temporarily commented to isolate DI issue
+// import { RbacModule } from '../rbac/rbac.module'; // COMENTADO TEMPORALMENTE - DEPENDENCIA CIRCULAR CON AuthModule
+// import { AuthModule } from '../auth/auth.module'; // COMENTADO TEMPORALMENTE - DEPENDENCIA CIRCULAR
 // import { AuditLogsModule } from '../admin/audit-logs/audit-logs.module'; // Temporarily commented
 
 @Module({
-  imports: [PrismaModule, RbacModule], // Added RbacModule for RolesGuard
+  imports: [PrismaModule /* RbacModule, AuthModule */], // COMENTADO TEMPORALMENTE - DEPENDENCIA CIRCULAR
   controllers: [UsersController, SimpleUsersController, DebugUsersController, MinimalUsersController, UsersTestController],
   providers: [
     UsersService,
@@ -24,6 +24,6 @@ import { RbacModule } from '../rbac/rbac.module';
 })
 export class UsersModule {
   constructor() {
-    console.log('>>> UsersModule CONSTRUCTOR: Initializing...');
+    console.log('>>> UsersModule CONSTRUCTOR: Initializing (without RBAC to avoid circular dependency)...');
   }
 } 

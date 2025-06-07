@@ -48,10 +48,8 @@ export class ChallengesController {
   @ApiResponse({ status: 201, description: 'The created challenge.' })
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
-  create(@Body() createChallengeDto: CreateChallengeDto) {
-    // Note: createdBy should ideally come from the authenticated user, not the body
-    // createChallengeDto.createdBy = req.user.id; // Example if using @Req()
-    return this.challengesService.create(createChallengeDto);
+  create(@Body() createChallengeDto: CreateChallengeDto, @Req() req) {
+    return this.challengesService.create(createChallengeDto, req.user);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -62,8 +60,8 @@ export class ChallengesController {
   @ApiResponse({ status: 200, description: 'The updated challenge.' })
   @ApiResponse({ status: 404, description: 'Challenge not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
-  update(@Param('id') id: string, @Body() updateChallengeDto: UpdateChallengeDto) {
-    return this.challengesService.update(id, updateChallengeDto);
+  update(@Param('id') id: string, @Body() updateChallengeDto: UpdateChallengeDto, @Req() req) {
+    return this.challengesService.update(id, updateChallengeDto, req.user);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -74,8 +72,8 @@ export class ChallengesController {
   @ApiResponse({ status: 200, description: 'Challenge successfully deleted.' })
   @ApiResponse({ status: 404, description: 'Challenge not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
-  remove(@Param('id') id: string) {
-    return this.challengesService.remove(id);
+  remove(@Param('id') id: string, @Req() req) {
+    return this.challengesService.remove(id, req.user);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

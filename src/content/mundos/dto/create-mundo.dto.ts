@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsUrl } from 'class-validator';
 
 export class CreateMundoDto {
   @ApiProperty({ description: 'The name of the mundo' })
@@ -16,6 +16,11 @@ export class CreateMundoDto {
   @IsString()
   @IsNotEmpty()
   slug: string;
+
+  @ApiProperty({ description: 'URL of the mundo thumbnail/image', required: false })
+  @IsUrl()
+  @IsOptional()
+  imageUrl?: string;
 
   @ApiProperty({ description: 'Whether the mundo is active', required: false, default: true })
   @IsBoolean()

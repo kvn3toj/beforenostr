@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { HomePage } from './pages/HomePage'
 import { MainLayout } from './layouts/MainLayout'
 import { MundosPage } from './pages/MundosPage'
+import { MundoDetailPage } from './pages/MundoDetailPage'
 import { MundoContentPage } from './pages/MundoContentPage'
 import { PlaylistDetailPage } from './pages/PlaylistDetailPage'
 import { VideoConfigPage } from './pages/VideoConfigPage'
@@ -22,6 +23,17 @@ import { AnalyticsPage } from './pages/AnalyticsPage'
 import { AuditLogsPage } from './pages/AuditLogsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { ProfilePage } from './pages/ProfilePage'
+import { TokensPage } from './pages/TokensPage'
+import { WalletPage } from './pages/WalletPage'
+import { MeritsPage } from './pages/MeritsPage'
+import { GroupsPage } from './pages/GroupsPage'
+import { ChallengesPage } from './pages/ChallengesPage'
+import { CreateChallengePage } from './pages/CreateChallengePage'
+import { SocialPage } from './pages/SocialPage'
+import { MarketplacePage } from './pages/MarketplacePage'
+import { InvitationsPage } from './pages/InvitationsPage'
+import { NewInvitationPage } from './pages/NewInvitationPage'
+import { PersonalitiesPage } from './pages/PersonalitiesPage'
 import { AITest } from './components/AITest'
 import { Toaster } from 'sonner'
 import { createAppTheme } from './theme'
@@ -52,6 +64,7 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/mundos" element={<MundosPage />} />
+              <Route path="/mundos/:mundoId" element={<MundoDetailPage />} />
               <Route path="/mundos/:mundoId/contenido" element={<MundoContentPage />} />
               <Route path="/playlists" element={<GamifiedPlaylistsPage />} />
               <Route path="/playlist-direct" element={<PlaylistDirectPage />} />
@@ -67,6 +80,19 @@ function App() {
               <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/audit-logs" element={<AuditLogsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              
+              {/* Rutas de gamificación */}
+              <Route path="/tokens" element={<TokensPage />} />
+              <Route path="/wallet" element={<WalletPage />} />
+              <Route path="/merits" element={<MeritsPage />} />
+              <Route path="/groups" element={<GroupsPage />} />
+              <Route path="/challenges" element={<ChallengesPage />} />
+              <Route path="/challenges/create" element={<CreateChallengePage />} />
+              <Route path="/social" element={<SocialPage />} />
+              <Route path="/marketplace" element={<MarketplacePage />} />
+              <Route path="/invitations" element={<InvitationsPage />} />
+              <Route path="/invitations/new" element={<NewInvitationPage />} />
+              <Route path="/personalities" element={<PersonalitiesPage />} />
               
               {/* Ruta de perfil de usuario */}
               <Route path="/profile" element={<ProfilePage />} />

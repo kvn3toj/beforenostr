@@ -130,9 +130,27 @@ export class UsersController {
 
   @Get('me')
   @ApiOperation({ summary: 'Obtener el perfil del usuario autenticado' })
+  @ApiResponse({ status: 200, description: 'Perfil del usuario autenticado' })
   async getMe(@Req() req) {
-    // Return the authenticated user from the JWT strategy
-    return req.user;
+    console.log('>>> UsersController.getMe: Starting...');
+    console.log('>>> UsersController.getMe: User from token:', req.user?.sub || req.user?.id);
+    console.log('>>> UsersController.getMe: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
+    
+    try {
+      // Obtener el ID del usuario del token JWT
+      const userId = req.user?.sub || req.user?.id;
+      if (!userId) {
+        throw new Error('Usuario no identificado en el token');
+      }
+      
+      console.log('>>> UsersController.getMe: Calling service.findCurrentUser with ID:', userId);
+      const user = await this.usersService.findCurrentUser(userId);
+      console.log('>>> UsersController.getMe: SUCCESS, returning user profile');
+      return user;
+    } catch (error) {
+      console.error('>>> UsersController.getMe: ERROR:', error);
+      throw error;
+    }
   }
 
   @Get('debug-roles')

@@ -441,10 +441,11 @@ export const ItemsPage: React.FC = () => {
                         <TableCell sx={{ py: 2 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Box
+                              onClick={() => handleEditItem(item.id)}
                               sx={{
                                 width: 80,
                                 height: 45,
-                                borderRadius: 1,
+                                borderRadius: 2,
                                 overflow: 'hidden',
                                 backgroundColor: 'grey.100',
                                 display: 'flex',
@@ -453,14 +454,26 @@ export const ItemsPage: React.FC = () => {
                                 border: '1px solid',
                                 borderColor: 'divider',
                                 position: 'relative',
+                                cursor: 'pointer',
+                                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                                '&:hover': {
+                                  transform: 'scale(1.05)',
+                                  boxShadow: theme.shadows[4],
+                                }
                               }}
                             >
                               {thumbnailUrl ? (
                                 <>
-                                  <Avatar
+                                  <Box
+                                    component="img"
                                     src={thumbnailUrl}
-                                    variant="rectangular"
-                                    sx={{ width: '100%', height: '100%' }}
+                                    alt={item.title}
+                                    sx={{ 
+                                      width: '100%', 
+                                      height: '100%',
+                                      objectFit: 'cover',
+                                      borderRadius: 2,
+                                    }}
                                   />
                                   <Box
                                     sx={{
@@ -487,12 +500,19 @@ export const ItemsPage: React.FC = () => {
                             <Box sx={{ flex: 1, minWidth: 0 }}>
                               <Typography 
                                 variant="subtitle2" 
+                                onClick={() => handleEditItem(item.id)}
                                 sx={{ 
                                   fontWeight: 600,
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap',
-                                  mb: 0.5
+                                  mb: 0.5,
+                                  cursor: 'pointer',
+                                  transition: 'color 0.2s ease',
+                                  '&:hover': {
+                                    color: theme.palette.primary.main,
+                                    textDecoration: 'underline'
+                                  }
                                 }}
                               >
                                 {item.title}

@@ -15,9 +15,11 @@ import {
   Tabs,
   Tab,
   Button,
+  Chip,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RestoreIcon from '@mui/icons-material/Restore';
+import { useMundoQuery } from '../hooks/features/mundos/useMundoQuery';
 import { useMundoVersionsQuery } from '../hooks/features/mundos/useMundoVersionsQuery';
 import { useRestoreMundoVersionMutation } from '../hooks/features/mundos/useRestoreMundoVersionMutation';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
@@ -106,7 +108,11 @@ export const MundoDetailPage = () => {
   const [state, dispatch] = useReducer(mundoDetailReducer, initialState);
   const { isRestoreConfirmDialogOpen, versionToRestore } = state;
 
-  const { data: versions, isLoading, isError, error } = useMundoVersionsQuery(mundoId);
+  // Fetch mundo details
+  const { data: mundo, isLoading: isMundoLoading, isError: isMundoError, error: mundoError } = useMundoQuery(mundoId);
+  
+  // Fetch versions (optional - will show error gracefully if endpoint doesn't exist)
+  const { data: versions, isLoading: isVersionsLoading, isError: isVersionsError, error: versionsError } = useMundoVersionsQuery(mundoId);
   const { mutate: restoreVersion, isPending: isRestoring } = useRestoreMundoVersionMutation();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -147,91 +153,183 @@ export const MundoDetailPage = () => {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h4" component="h1">
-            Detalles del Mundo
+            {mundo?.name || 'Detalles del Mundo'}
           </Typography>
         </Box>
 
-        {/* Tabs */}
-        <Paper sx={{ mb: 4 }}>
-          <Tabs value={tabValue} onChange={handleTabChange} aria-label="mundo tabs">
-            <Tab label="Información" />
-            <Tab label="Historial de versiones" />
-          </Tabs>
+        {/* Loading state for mundo */}
+        {isMundoLoading && (
+          <Box display="flex" justifyContent="center" my={4}>
+            <CircularProgress />
+          </Box>
+        )}
 
-          {/* Information Tab */}
-          <TabPanel value={tabValue} index={0}>
-            <Typography variant="h5" component="h2" gutterBottom>
-              Información del Mundo
-            </Typography>
-            {/* Add mundo information here */}
-          </TabPanel>
+        {/* Error state for mundo */}
+        {isMundoError && (
+          <Alert severity="error" sx={{ my: 2 }}>
+            Error al cargar el mundo: {mundoError instanceof Error ? mundoError.message : 'Error desconocido'}
+          </Alert>
+        )}
 
-          {/* Versions Tab */}
-          <TabPanel value={tabValue} index={1}>
-            <Typography variant="h5" component="h2" gutterBottom>
-              Historial de versiones
-            </Typography>
+        {/* Mundo content */}
+        {mundo && (
+          <Paper sx={{ mb: 4 }}>
+            <Tabs value={tabValue} onChange={handleTabChange} aria-label="mundo tabs">
+              <Tab label="Información" />
+              <Tab label="Historial de versiones" />
+            </Tabs>
 
-            {isLoading && (
-              <Box display="flex" justifyContent="center" my={4}>
-                <CircularProgress />
+            {/* Information Tab */}
+            <TabPanel value={tabValue} index={0}>
+              <Typography variant="h5" component="h2" gutterBottom>
+                Información del Mundo
+              </Typography>
+              
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  {mundo.name}
+                </Typography>
+                
+                <Box sx={{ mb: 2 }}>
+                  <Chip 
+                    label={mundo.isActive ? 'Activo' : 'Inactivo'} 
+                    color={mundo.isActive ? 'success' : 'error'} 
+                    size="small" 
+                  />
+                </Box>
+
+                {mundo.description && (
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                      Descripción:
+                    </Typography>
+                    <Typography variant="body1">
+                      {mundo.description}
+                    </Typography>
+                  </Box>
+                )}
+
+                {mundo.imageUrl && (
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                      Imagen:
+                    </Typography>
+                    <Box
+                      component="img"
+                      src={mundo.imageUrl}
+                      alt={mundo.name}
+                      sx={{
+                        maxWidth: '300px',
+                        maxHeight: '200px',
+                        objectFit: 'cover',
+                        borderRadius: 1,
+                        border: '1px solid',
+                        borderColor: 'divider'
+                      }}
+                      onError={(e) => {
+                        // Hide image if it fails to load
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </Box>
+                )}
+
+                <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Creado:
+                    </Typography>
+                    <Typography variant="body2">
+                      {format(new Date(mundo.createdAt), "d 'de' MMMM 'de' yyyy", { locale: es })}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Actualizado:
+                    </Typography>
+                    <Typography variant="body2">
+                      {format(new Date(mundo.updatedAt), "d 'de' MMMM 'de' yyyy", { locale: es })}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      ID:
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                      {mundo.id}
+                    </Typography>
+                  </Box>
+                </Box>
               </Box>
-            )}
+            </TabPanel>
 
-            {isError && (
-              <Alert severity="error" sx={{ my: 2 }}>
-                Error al cargar el historial de versiones: {error instanceof Error ? error.message : 'Error desconocido'}
-              </Alert>
-            )}
+            {/* Versions Tab */}
+            <TabPanel value={tabValue} index={1}>
+              <Typography variant="h5" component="h2" gutterBottom>
+                Historial de versiones
+              </Typography>
 
-            {!isLoading && !isError && versions && versions.length === 0 && (
-              <Alert severity="info" sx={{ my: 2 }}>
-                No hay versiones anteriores disponibles
-              </Alert>
-            )}
+              {isVersionsLoading && (
+                <Box display="flex" justifyContent="center" my={4}>
+                  <CircularProgress />
+                </Box>
+              )}
 
-            {versions && versions.length > 0 && (
-              <Paper sx={{ mt: 2 }}>
-                <List>
-                  {versions.map((version, index) => (
-                    <Box key={version.id}>
-                      <ListItem
-                        secondaryAction={
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            startIcon={<RestoreIcon />}
-                            onClick={() => handleRestoreClick(version)}
-                          >
-                            Restaurar
-                          </Button>
-                        }
-                      >
-                        <ListItemText
-                          primary={
-                            <Typography variant="subtitle1">
-                              Versión {version.version}
-                            </Typography>
+              {isVersionsError && (
+                <Alert severity="info" sx={{ my: 2 }}>
+                  El historial de versiones no está disponible para este mundo.
+                </Alert>
+              )}
+
+              {!isVersionsLoading && !isVersionsError && versions && versions.length === 0 && (
+                <Alert severity="info" sx={{ my: 2 }}>
+                  No hay versiones anteriores disponibles
+                </Alert>
+              )}
+
+              {versions && versions.length > 0 && (
+                <Paper sx={{ mt: 2 }}>
+                  <List>
+                    {versions.map((version, index) => (
+                      <Box key={version.id}>
+                        <ListItem
+                          secondaryAction={
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              startIcon={<RestoreIcon />}
+                              onClick={() => handleRestoreClick(version)}
+                            >
+                              Restaurar
+                            </Button>
                           }
-                          secondary={
-                            <>
-                              <Typography component="span" variant="body2" color="text.primary">
-                                {version.name}
+                        >
+                          <ListItemText
+                            primary={
+                              <Typography variant="subtitle1">
+                                Versión {version.version}
                               </Typography>
-                              {' — '}
-                              {format(new Date(version.timestamp), "d 'de' MMMM 'de' yyyy 'a las' HH:mm", { locale: es })}
-                            </>
-                          }
-                        />
-                      </ListItem>
-                      {index < versions.length - 1 && <Divider />}
-                    </Box>
-                  ))}
-                </List>
-              </Paper>
-            )}
-          </TabPanel>
-        </Paper>
+                            }
+                            secondary={
+                              <>
+                                <Typography component="span" variant="body2" color="text.primary">
+                                  {version.name}
+                                </Typography>
+                                {' — '}
+                                {format(new Date(version.timestamp), "d 'de' MMMM 'de' yyyy 'a las' HH:mm", { locale: es })}
+                              </>
+                            }
+                          />
+                        </ListItem>
+                        {index < versions.length - 1 && <Divider />}
+                      </Box>
+                    ))}
+                  </List>
+                </Paper>
+              )}
+            </TabPanel>
+          </Paper>
+        )}
       </Box>
 
       {/* Restore Version Confirmation Dialog */}

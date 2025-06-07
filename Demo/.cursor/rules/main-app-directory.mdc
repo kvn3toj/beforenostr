@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+Description: Instructs the AI to focus on the main unified application directory.
+Globs:
+  - "apps/superapp-unified/**/*"
+---
+
+# Main Application Directory Rule
+This rule defines the primary working directory for the main CoomÜnity unified application.
+
+**Instruction:**
+
+1.  The main application code is located exclusively within the `apps/superapp-unified/` directory.
+2.  When generating or analyzing code related to the main application, **prioritize context and file paths from within `apps/superapp-unified/`**.
+3.  Unless explicitly referenced using `@file`, **ignore or deprioritize files and context from older, static versions of the codebase**, such as those found in `data/backups/my_recovered_website/` or `data/extracted/`.
+4.  The application is built using **React, TypeScript, Vite, and Material UI**. Adhere to best practices for this tech stack.
+
+
+Globs: This is crucial. "apps/superapp-unified/**/*" is a glob pattern that tells Cursor AI to apply this rule automatically whenever you are working on any file (**/*) inside the apps/superapp-unified/ directory or its subdirectories[1][2][7].
+# Main Application Directory Rule and the following text: This is the actual content of the rule that will be included in the AI's context when the rule is applied. It explicitly states the correct directory and instructs the AI to prioritize it and ignore older ones.

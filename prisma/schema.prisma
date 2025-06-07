@@ -40,6 +40,7 @@ model Playlist {
   version      Int         @default(1)
   mundo        Mundo       @relation(fields: [mundoId], references: [id])
   videoItems   VideoItem[]
+  contentItems ContentItem[]
   gamifiedPlaylists GamifiedPlaylist[]
 
   @@index([mundoId])
@@ -54,6 +55,9 @@ model VideoItem {
   title       String
   description String?
   content     String
+  url         String?            // URL original del video (puede ser de cualquier plataforma)
+  platform    String             @default("youtube") // Plataforma del video: youtube, vimeo, local, uploaded
+  externalId  String?            // ID específico de la plataforma (YouTube ID, Vimeo ID, etc.)
   playlistId  String
   itemTypeId  String
   order       Int                @default(0)
@@ -63,6 +67,14 @@ model VideoItem {
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   duration    Int?
+  
+  // ===== METADATOS AVANZADOS (Fase 4.2) =====
+  thumbnailUrl String?           // URL de la miniatura de alta calidad
+  language     String?           // Código de idioma (ej. 'es', 'en')
+  tags         String?           // Array de tags/palabras clave almacenado como JSON string
+  categories   String?           // Array de categorías almacenado como JSON string
+  quality      String?           // JSON para detalles de calidad (resolution, aspectRatio, bitrate, codec)
+  
   questions   Question[]
   subtitles   Subtitle[]
   permissions VideoPermissions?
@@ -72,6 +84,9 @@ model VideoItem {
   @@index([playlistId])
   @@index([itemTypeId])
   @@index([isDeleted])
+  @@index([platform])
+  @@index([externalId])
+  @@index([language])
   @@map("video_items")
 }
 
@@ -672,15 +687,25 @@ model Log {
 }
 
 model AnalyticsData {
-  id        String    @id @default(uuid())
-  userId    String?   // Puede ser null para eventos del sistema
-  eventType String
-  eventData String    // JSON string de datos del evento
-  timestamp DateTime  @default(now())
+  id           String    @id @default(uuid())
+  userId       String?   // Puede ser null para eventos del sistema
+  eventType    String
+  videoItemId  String?   // ID del video relacionado
+  playlistId   String?   // ID de la playlist relacionada
+  mundoId      String?   // ID del mundo relacionado
+  sessionId    String?   // ID de sesión para agrupar actividades
+  eventData    String?   // JSON string de datos adicionales del evento
+  metadata     String?   // JSON string para metadatos adicionales (timestamps, duración, etc.)
+  timestamp    DateTime  @default(now())
+  createdAt    DateTime  @default(now())
 
   @@index([userId])
   @@index([eventType])
+  @@index([videoItemId])
+  @@index([playlistId])
+  @@index([sessionId])
   @@index([timestamp])
+  @@index([createdAt])
   @@map("analytics_data")
 }
 
@@ -722,4 +747,43 @@ model UIComponentTemplate {
   @@index([creatorId])
   @@index([type])
   @@map("ui_component_templates")
+}
+
+model ItemType {
+  id          String        @id @default(uuid())
+  name        String        @unique
+  description String?
+  isActive    Boolean       @default(true)
+  isDeleted   Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  contentItems ContentItem[]
+
+  @@index([isActive])
+  @@index([isDeleted])
+  @@map("item_types")
+}
+
+model ContentItem {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  content     String    // JSON content or HTML
+  playlistId  String
+  itemTypeId  String
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  isDeleted   Boolean   @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  playlist    Playlist  @relation(fields: [playlistId], references: [id])
+  itemType    ItemType  @relation(fields: [itemTypeId], references: [id])
+
+  @@index([playlistId])
+  @@index([itemTypeId])
+  @@index([isDeleted])
+  @@map("content_items")
 }

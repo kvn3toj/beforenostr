@@ -94,4 +94,73 @@ async function testVideo30() {
 }
 
 // Ejecutar el test
-testVideo30().catch(console.error); 
+testVideo30().catch(console.error);
+
+async function testRealYouTubeDuration() {
+  console.log('🔍 Real YouTube Duration Test with Detailed Logs\n');
+
+  const videoUrl = 'https://www.youtube.com/watch?v=EEZkQv25uEs';
+  
+  try {
+    console.log('1️⃣ Testing calculate-duration endpoint...');
+    
+    const response = await fetch('http://localhost:3002/video-items/calculate-duration', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: videoUrl })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('📄 Response:', JSON.stringify(data, null, 2));
+      
+      if (data.duration === 300) {
+        console.log('⚠️ Still getting 300 seconds - checking cache...');
+        
+        // Test 2: Try to clear cache or use a different video
+        console.log('\n2️⃣ Testing with a different YouTube video...');
+        
+        const differentVideo = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'; // Rick Roll - known duration
+        const response2 = await fetch('http://localhost:3002/video-items/calculate-duration', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: differentVideo })
+        });
+        
+        if (response2.ok) {
+          const data2 = await response2.json();
+          console.log('📄 Different video response:', JSON.stringify(data2, null, 2));
+        }
+        
+        // Test 3: Force recalculate to see logs
+        console.log('\n3️⃣ Testing force recalculate to see backend logs...');
+        
+        const response3 = await fetch('http://localhost:3002/video-items/force-recalculate-durations', {
+          method: 'POST'
+        });
+        
+        if (response3.ok) {
+          const data3 = await response3.json();
+          console.log('📄 Force recalculate response:');
+          console.log(`   Total: ${data3.total}`);
+          console.log(`   Updated: ${data3.updated}`);
+          console.log(`   Verified: ${data3.verified}`);
+          console.log(`   Errors: ${data3.errors}`);
+          
+          if (data3.results && data3.results.length > 0) {
+            console.log('📊 First result:', JSON.stringify(data3.results[0], null, 2));
+          }
+        }
+      } else {
+        console.log('✅ Got real duration!');
+      }
+    } else {
+      console.log(`❌ Request failed: ${response.status} ${response.statusText}`);
+    }
+
+  } catch (error) {
+    console.error('❌ Test failed:', error.message);
+  }
+}
+
+testRealYouTubeDuration().catch(console.error); 

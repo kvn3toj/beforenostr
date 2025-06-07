@@ -17,6 +17,21 @@ export class MeritsController {
     console.log('>>> MeritsController CONSTRUCTOR: this.meritsService IS', this.meritsService ? 'DEFINED' : 'UNDEFINED');
   }
 
+  /**
+   * Endpoint de prueba para verificar conectividad - DEBE IR ANTES que :id
+   */
+  @Get('ping')
+  @ApiOperation({ summary: 'Test endpoint' })
+  @ApiResponse({ status: 200, description: 'Test successful.' })
+  async ping() {
+    console.log('>>> MeritsController.ping: Merits module is working');
+    return { 
+      message: 'Merits module is working', 
+      timestamp: new Date().toISOString(),
+      module: 'Merits Management'
+    };
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new merit type (Admin only)' })
   @ApiResponse({ status: 201, description: 'The merit has been successfully created.' })
@@ -58,18 +73,5 @@ export class MeritsController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   remove(@Param('id') id: string) {
     return this.meritsService.remove(id);
-  }
-
-  /**
-   * Endpoint de prueba para verificar conectividad
-   */
-  @Get('ping')
-  async ping() {
-    console.log('>>> MeritsController.ping: Merits module is working');
-    return { 
-      message: 'Merits module is working', 
-      timestamp: new Date().toISOString(),
-      module: 'Merits Management'
-    };
   }
 } 

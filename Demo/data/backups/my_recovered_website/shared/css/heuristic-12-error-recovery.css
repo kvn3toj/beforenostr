@@ -1,0 +1,671 @@
+/* ========================================================================
+   🚨 HEURÍSTICA UX 12: ERROR RECOVERY (RECUPERACIÓN DE ERRORES)
+   ========================================================================
+   
+   Principios Clave:
+   - Mensajes de error claros y útiles
+   - Opciones de recuperación evidentes
+   - Prevención de pérdida de datos
+   - Feedback inmediato sobre errores
+   - Guidance hacia la solución
+   
+   ======================================================================== */
+
+/* =====================================
+   🔧 CSS CUSTOM PROPERTIES - ERROR RECOVERY
+   ===================================== */
+
+:root {
+  /* Error Recovery Colors */
+  --error-recovery-critical: #dc2626;
+  --error-recovery-critical-bg: #fef2f2;
+  --error-recovery-critical-border: #fecaca;
+  
+  --error-recovery-warning: #f59e0b;
+  --error-recovery-warning-bg: #fffbeb;
+  --error-recovery-warning-border: #fed7aa;
+  
+  --error-recovery-info: #3b82f6;
+  --error-recovery-info-bg: #eff6ff;
+  --error-recovery-info-border: #bfdbfe;
+  
+  --error-recovery-success: #10b981;
+  --error-recovery-success-bg: #f0fdf4;
+  --error-recovery-success-border: #bbf7d0;
+  
+  /* Recovery Actions */
+  --recovery-primary: var(--color-primary-600);
+  --recovery-secondary: var(--color-neutral-600);
+  --recovery-retry: var(--color-warning-600);
+  --recovery-cancel: var(--color-neutral-500);
+  
+  /* Animations */
+  --error-shake-duration: 0.6s;
+  --error-fade-duration: 0.3s;
+  --error-slide-duration: 0.4s;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --error-recovery-critical: #ef4444;
+    --error-recovery-critical-bg: #1f1415;
+    --error-recovery-critical-border: #451a1a;
+    
+    --error-recovery-warning: #fbbf24;
+    --error-recovery-warning-bg: #1f1b13;
+    --error-recovery-warning-border: #451a03;
+    
+    --error-recovery-info: #60a5fa;
+    --error-recovery-info-bg: #0f172a;
+    --error-recovery-info-border: #1e293b;
+    
+    --error-recovery-success: #34d399;
+    --error-recovery-success-bg: #0f1b16;
+    --error-recovery-success-border: #14532d;
+  }
+}
+
+/* =====================================
+   🚨 ERROR STATES & CONTAINERS
+   ===================================== */
+
+/* Error State Mixin */
+.error-state {
+  position: relative;
+  border-color: var(--error-recovery-critical-border);
+  background-color: var(--error-recovery-critical-bg);
+  color: var(--error-recovery-critical);
+  animation: errorShake var(--error-shake-duration) ease-in-out;
+}
+
+/* Error Messages Container */
+.error-recovery-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-index-modal);
+  pointer-events: none;
+  padding: var(--spacing-md);
+}
+
+.error-recovery-message {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: var(--spacing-sm);
+  padding: var(--spacing-md);
+  pointer-events: auto;
+  position: relative;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  transform: translateY(-100px);
+  opacity: 0;
+  animation: errorSlideIn var(--error-slide-duration) ease-out forwards;
+}
+
+/* Error Message Types */
+.error-recovery-message.critical {
+  border-left: 4px solid var(--error-recovery-critical);
+  background: var(--error-recovery-critical-bg);
+}
+
+.error-recovery-message.warning {
+  border-left: 4px solid var(--error-recovery-warning);
+  background: var(--error-recovery-warning-bg);
+}
+
+.error-recovery-message.info {
+  border-left: 4px solid var(--error-recovery-info);
+  background: var(--error-recovery-info-bg);
+}
+
+.error-recovery-message.success {
+  border-left: 4px solid var(--error-recovery-success);
+  background: var(--error-recovery-success-bg);
+}
+
+/* =====================================
+   📝 ERROR MESSAGE STRUCTURE
+   ===================================== */
+
+.error-message-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-message-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.error-message-title {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  margin: 0;
+  color: inherit;
+}
+
+.error-message-description {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-neutral-700);
+}
+
+.error-message-code {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  background: var(--color-neutral-100);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  margin-top: var(--spacing-xs);
+  color: var(--color-neutral-600);
+}
+
+/* =====================================
+   🔧 RECOVERY ACTIONS
+   ===================================== */
+
+.error-recovery-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-md);
+}
+
+.error-recovery-btn {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  min-height: 36px;
+}
+
+.error-recovery-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Recovery Button Variants */
+.error-recovery-btn.primary {
+  background: var(--recovery-primary);
+  color: white;
+  border-color: var(--recovery-primary);
+}
+
+.error-recovery-btn.primary:hover {
+  background: var(--color-primary-700);
+  border-color: var(--color-primary-700);
+}
+
+.error-recovery-btn.secondary {
+  background: transparent;
+  color: var(--recovery-secondary);
+  border-color: var(--color-neutral-300);
+}
+
+.error-recovery-btn.secondary:hover {
+  background: var(--color-neutral-50);
+  border-color: var(--color-neutral-400);
+}
+
+.error-recovery-btn.retry {
+  background: var(--recovery-retry);
+  color: white;
+  border-color: var(--recovery-retry);
+}
+
+.error-recovery-btn.retry:hover {
+  background: var(--color-warning-700);
+  border-color: var(--color-warning-700);
+}
+
+.error-recovery-btn.cancel {
+  background: transparent;
+  color: var(--recovery-cancel);
+  border-color: var(--color-neutral-300);
+}
+
+.error-recovery-btn.cancel:hover {
+  background: var(--color-neutral-100);
+}
+
+/* =====================================
+   💾 AUTO-SAVE & DATA RECOVERY
+   ===================================== */
+
+.auto-save-indicator {
+  position: fixed;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  background: var(--color-neutral-800);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  z-index: var(--z-index-tooltip);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all var(--transition-base);
+  pointer-events: none;
+}
+
+.auto-save-indicator.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.auto-save-indicator.saving {
+  background: var(--color-warning-600);
+}
+
+.auto-save-indicator.saved {
+  background: var(--color-success-600);
+}
+
+.auto-save-indicator.error {
+  background: var(--error-recovery-critical);
+}
+
+/* Data Recovery Panel */
+.data-recovery-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2xl);
+  padding: var(--spacing-xl);
+  max-width: 500px;
+  width: 90vw;
+  z-index: var(--z-index-modal);
+  animation: errorFadeIn var(--error-fade-duration) ease-out;
+}
+
+.data-recovery-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.data-recovery-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--spacing-md);
+  color: var(--color-warning-600);
+}
+
+.data-recovery-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-neutral-900);
+}
+
+.data-recovery-description {
+  color: var(--color-neutral-600);
+  line-height: var(--line-height-relaxed);
+}
+
+/* =====================================
+   🔄 RETRY MECHANISMS
+   ===================================== */
+
+.retry-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.retry-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-neutral-200);
+  border-top: 3px solid var(--recovery-retry);
+  border-radius: 50%;
+  animation: retrySpinner 1s linear infinite;
+  margin-bottom: var(--spacing-md);
+}
+
+.retry-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-600);
+  margin-top: var(--spacing-sm);
+}
+
+.retry-counter.warning {
+  color: var(--recovery-retry);
+  font-weight: var(--font-weight-medium);
+}
+
+/* =====================================
+   ⚠️ FORM ERROR RECOVERY
+   ===================================== */
+
+.form-field-error {
+  position: relative;
+}
+
+.form-field-error .input,
+.form-field-error .textarea,
+.form-field-error .select {
+  border-color: var(--error-recovery-critical);
+  background-color: var(--error-recovery-critical-bg);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.form-field-error .input:focus,
+.form-field-error .textarea:focus,
+.form-field-error .select:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+  outline: none;
+}
+
+.field-error-message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--error-recovery-critical);
+}
+
+.field-error-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.field-recovery-suggestion {
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: var(--error-recovery-info-bg);
+  border: 1px solid var(--error-recovery-info-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--error-recovery-info);
+}
+
+/* =====================================
+   🌐 NETWORK ERROR RECOVERY
+   ===================================== */
+
+.network-error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: var(--z-index-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: errorFadeIn var(--error-fade-duration) ease-out;
+}
+
+.network-error-modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  max-width: 400px;
+  width: 90vw;
+  text-align: center;
+}
+
+.network-status-indicator {
+  position: fixed;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  z-index: var(--z-index-notification);
+  transition: all var(--transition-base);
+}
+
+.network-status-indicator.online {
+  background: var(--error-recovery-success);
+  color: white;
+}
+
+.network-status-indicator.offline {
+  background: var(--error-recovery-critical);
+  color: white;
+  animation: networkPulse 2s infinite;
+}
+
+/* =====================================
+   🎯 ERROR BOUNDARY COMPONENTS
+   ===================================== */
+
+.error-boundary {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  background: var(--error-recovery-critical-bg);
+  border: 1px solid var(--error-recovery-critical-border);
+  border-radius: var(--radius-lg);
+}
+
+.error-boundary-icon {
+  width: 64px;
+  height: 64px;
+  color: var(--error-recovery-critical);
+  margin-bottom: var(--spacing-md);
+}
+
+.error-boundary-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--error-recovery-critical);
+}
+
+.error-boundary-message {
+  color: var(--color-neutral-700);
+  margin-bottom: var(--spacing-lg);
+  max-width: 400px;
+}
+
+/* =====================================
+   📱 RESPONSIVE ERROR RECOVERY
+   ===================================== */
+
+@media (max-width: 768px) {
+  .error-recovery-container {
+    padding: var(--spacing-sm);
+  }
+  
+  .error-recovery-message {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .error-recovery-actions {
+    flex-direction: column;
+  }
+  
+  .error-recovery-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .data-recovery-panel {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md);
+    width: calc(100vw - var(--spacing-xl));
+  }
+}
+
+/* =====================================
+   🎨 ANIMATIONS
+   ===================================== */
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+@keyframes errorSlideIn {
+  from {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes errorFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes retrySpinner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes networkPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* =====================================
+   ♿ ACCESSIBILITY
+   ===================================== */
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  .error-recovery-message {
+    border-width: 2px;
+  }
+  
+  .error-recovery-btn {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .error-recovery-message,
+  .data-recovery-panel,
+  .network-error-overlay {
+    animation: none;
+  }
+  
+  .retry-spinner {
+    animation: none;
+    border: 3px solid var(--recovery-retry);
+  }
+  
+  .error-state {
+    animation: none;
+  }
+}
+
+/* Screen Reader Only Content */
+.sr-only-error {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus Management */
+.error-recovery-btn:focus,
+.error-recovery-modal:focus {
+  outline: 2px solid var(--color-primary-600);
+  outline-offset: 2px;
+}
+
+/* =====================================
+   🎯 UTILITY CLASSES
+   ===================================== */
+
+.hide-on-error {
+  display: none !important;
+}
+
+.show-on-error {
+  display: block !important;
+}
+
+.error-shake {
+  animation: errorShake var(--error-shake-duration) ease-in-out;
+}
+
+.error-highlight {
+  background: var(--error-recovery-critical-bg) !important;
+  border-color: var(--error-recovery-critical) !important;
+}
+
+.recovery-loading {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =====================================
+   📊 ERROR RECOVERY METRICS
+   ===================================== */
+
+.error-recovery-stats {
+  position: fixed;
+  bottom: var(--spacing-md);
+  left: var(--spacing-md);
+  background: var(--color-neutral-900);
+  color: white;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  z-index: var(--z-index-tooltip);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.error-recovery-stats.visible {
+  opacity: 0.8;
+}
+
+.error-recovery-stats:hover {
+  opacity: 1;
+}
+
+/* End of Heuristic 12: Error Recovery CSS */ 

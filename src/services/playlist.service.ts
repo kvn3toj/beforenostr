@@ -35,8 +35,10 @@ const handleResponse = async (response: Response) => {
 export const fetchPlaylists = async (): Promise<Playlist[]> => {
   console.log('[Playlists] fetchPlaylists llamado');
   try {
-    // Usar el endpoint que funciona con datos reales
-    const url = '/playlists-direct';
+    // CORREGIDO: Usar el endpoint correcto que requiere mundoId
+    // Por ahora usamos el primer mundo disponible como ejemplo
+    const mundoId = '11111111-1111-1111-1111-111111111111'; // Mundo de Gamificación Educativa
+    const url = `/content/mundos/${mundoId}/playlists`;
     console.log('[Playlists] Haciendo petición a:', url);
     
     const response = await apiService.get(url);

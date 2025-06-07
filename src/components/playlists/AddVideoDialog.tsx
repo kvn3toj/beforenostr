@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { extractIframeSrc } from '../../utils/videoUtils';
+import { useAnalytics } from '../../hooks/useAnalytics';
+import React from 'react';
 
 interface AddVideoDialogProps {
   open: boolean;
@@ -26,23 +28,94 @@ export const AddVideoDialog = ({ open, onClose, onAddVideo, isLoading }: AddVide
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [error, setError] = useState('');
   const { t } = useTranslation();
+  
+  // Initialize analytics tracking
+  const { trackItemCreationFunnel, trackError } = useAnalytics();
+
+  // Track funnel start when dialog opens
+  React.useEffect(() => {
+    if (open && !isPreviewMode) {
+      trackItemCreationFunnel('ITEM_CREATION_STARTED', {
+        itemType: 'video',
+        source: 'add_video_dialog',
+        timestamp: new Date().toISOString()
+      });
+    }
+  }, [open, isPreviewMode, trackItemCreationFunnel]);
+
+  // Track URL input
+  React.useEffect(() => {
+    if (iframeInput && iframeInput.length > 20) { // Basic URL length check
+      trackItemCreationFunnel('ITEM_URL_ADDED', {
+        urlLength: iframeInput.length,
+        hasIframe: iframeInput.includes('<iframe'),
+        hasYoutube: iframeInput.includes('youtube'),
+        hasVimeo: iframeInput.includes('vimeo')
+      });
+    }
+  }, [iframeInput, trackItemCreationFunnel]);
 
   const handleLoadClick = () => {
-    if (!iframeInput.includes('<iframe') || !iframeInput.includes('src=')) {
-      setError('Invalid iframe code. Please paste a valid iframe embed code.');
-      return;
-    }
+    try {
+      if (!iframeInput.includes('<iframe') || !iframeInput.includes('src=')) {
+        setError('Invalid iframe code. Please paste a valid iframe embed code.');
+        trackError('Invalid iframe code provided', 'AddVideoDialog.handleLoadClick');
+        return;
+      }
 
-    setError('');
-    setPreviewContent(iframeInput);
-    setIsPreviewMode(true);
+      setError('');
+      setPreviewContent(iframeInput);
+      setIsPreviewMode(true);
+      
+      // Track successful form filling
+      trackItemCreationFunnel('ITEM_FORM_FILLED', {
+        iframeValid: true,
+        hasPreview: true,
+        videoUrl: extractIframeSrc(iframeInput) || 'unknown'
+      });
+    } catch (error) {
+      trackItemCreationFunnel('ITEM_CREATION_FAILED', {
+        error: error instanceof Error ? error.message : 'Unknown error during load',
+        step: 'load_preview'
+      });
+      trackError(
+        error instanceof Error ? error.message : 'Load preview error',
+        'AddVideoDialog.handleLoadClick'
+      );
+    }
   };
 
   const handleSaveClick = () => {
-    onAddVideo(iframeInput);
+    try {
+      // Track save attempt
+      trackItemCreationFunnel('ITEM_CREATION_SUCCESS', {
+        videoUrl: extractIframeSrc(iframeInput) || 'unknown',
+        timestamp: new Date().toISOString()
+      });
+      
+      onAddVideo(iframeInput);
+    } catch (error) {
+      trackItemCreationFunnel('ITEM_CREATION_FAILED', {
+        error: error instanceof Error ? error.message : 'Unknown error during save',
+        step: 'save_video'
+      });
+      trackError(
+        error instanceof Error ? error.message : 'Save video error',
+        'AddVideoDialog.handleSaveClick'
+      );
+    }
   };
 
   const handleClose = () => {
+    // Track dialog close (potential abandonment)
+    if (iframeInput && !isPreviewMode) {
+      trackItemCreationFunnel('ITEM_CREATION_FAILED', {
+        error: 'User closed dialog before completion',
+        step: 'dialog_closed',
+        abandonment: true
+      });
+    }
+    
     setIframeInput('');
     setPreviewContent('');
     setIsPreviewMode(false);

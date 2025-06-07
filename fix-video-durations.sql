@@ -33,9 +33,16 @@ UPDATE video_items SET duration = 1080 WHERE id = 37;
 -- Duración real estimada: 18 minutos (1080s) vs almacenada: 8 minutos (480s)
 UPDATE video_items SET duration = 1080 WHERE id = 38;
 
+-- Video 39: Sacred Economics with Charles Eisenstein - A Short Film
+-- URL: https://www.youtube.com/watch?v=EEZkQv25uEs
+-- Duración real: 729 segundos (12:09)
+UPDATE video_items 
+SET duration = 729 
+WHERE id = 39 AND content LIKE '%EEZkQv25uEs%';
+
 -- Verificar las actualizaciones
 SELECT id, title, duration, 
        printf('%d:%02d', duration / 60, duration % 60) as formatted_duration
 FROM video_items 
-WHERE id IN (29, 31, 32, 34, 35, 36, 37, 38)
+WHERE id IN (29, 31, 32, 34, 35, 36, 37, 38, 39)
 ORDER BY id; 

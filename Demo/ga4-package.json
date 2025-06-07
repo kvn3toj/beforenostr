@@ -1,0 +1,30 @@
+{
+  "name": "ga4-integration-coomunity",
+  "version": "1.0.0",
+  "description": "Google Analytics 4 Integration Script for CoomÜnity Platform",
+  "main": "ga4-integration-script.ts",
+  "scripts": {
+    "build": "tsc ga4-integration-script.ts",
+    "start": "ts-node ga4-integration-script.ts",
+    "integrate": "ts-node ga4-integration-script.ts",
+    "install-deps": "npm install"
+  },
+  "dependencies": {
+    "glob": "^10.3.10"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/glob": "^8.1.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  },
+  "keywords": [
+    "google-analytics",
+    "ga4",
+    "ux-tracking",
+    "coomunity",
+    "typescript"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT"
+} 

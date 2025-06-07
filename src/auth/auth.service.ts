@@ -4,18 +4,20 @@ import * as bcrypt from 'bcryptjs';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuditLogsService } from '../admin/audit-logs/audit-logs.service';
+// import { AuditLogsService } from '../admin/audit-logs/audit-logs.service'; // COMENTADO TEMPORALMENTE - CARPETA MOVIDA
+// import { UsersService } from '../users/users.service'; // COMENTADO TEMPORALMENTE - DEPENDENCIA CIRCULAR
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(JwtService) private readonly jwtService: JwtService,
-    @Inject(AuditLogsService) private readonly auditLogsService: AuditLogsService,
+    // @Inject(AuditLogsService) private readonly auditLogsService: AuditLogsService, // COMENTADO TEMPORALMENTE - CARPETA MOVIDA
+    // private readonly usersService: UsersService, // COMENTADO TEMPORALMENTE - DEPENDENCIA CIRCULAR
   ) {
     console.log('>>> AuthService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     console.log('>>> AuthService CONSTRUCTOR: this.jwtService IS', this.jwtService ? 'DEFINED' : 'UNDEFINED');
-    console.log('>>> AuthService CONSTRUCTOR: this.auditLogsService IS', this.auditLogsService ? 'DEFINED' : 'UNDEFINED');
+    // console.log('>>> AuthService CONSTRUCTOR: this.auditLogsService IS', this.auditLogsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   async validateUser(email: string, password: string) {

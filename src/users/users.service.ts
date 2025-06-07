@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 // import { AuditLogsService } from '../admin/audit-logs/audit-logs.service'; // Temporarily commented
 // import { AuthenticatedUser } from '../types/auth.types'; // Temporarily commented
 // import { UserAuditSnapshot } from '../types/user.types'; // Temporarily commented
-import { User } from '@prisma/client';
+import type { User } from '../generated/prisma';
 
 // Tipo explícito para snapshots de usuario en logs de auditoría
 // export interface UserAuditSnapshot {
@@ -70,7 +70,14 @@ export class UsersService {
       where.isActive = filters.is_active;
     }
     
-    // TODO: Implementar filtro por role_id cuando tengamos la relación con roles
+    // Filtro por role_id
+    if (filters?.role_id) {
+      where.userRoles = {
+        some: {
+          roleId: filters.role_id,
+        },
+      };
+    }
     
     // Construir el objeto orderBy para ordenamiento
     const orderBy: any = {};
@@ -88,16 +95,26 @@ export class UsersService {
         skip: page * pageSize,
         take: pageSize,
         include: {
-          // TODO: Incluir relación con roles cuando esté disponible
-          // role: true,
+          userRoles: {
+            include: {
+              role: true,
+            },
+          },
         },
       }),
       this.prisma.user.count({ where }),
     ]);
     
+    // Formatear los usuarios para incluir la información de roles de manera más accesible
+    const formattedUsers = users.map(user => ({
+      ...user,
+      roles: user.userRoles.map(ur => ur.role),
+      primaryRole: user.userRoles.length > 0 ? user.userRoles[0].role : null,
+    }));
+    
     return {
-      data: users,
-      count: users.length,
+      data: formattedUsers,
+      count: formattedUsers.length,
       total,
       page,
       pageSize,
@@ -115,6 +132,60 @@ export class UsersService {
       return user;
     } catch (error) {
       console.error('>>> UsersService.findOne: ERROR:', error);
+      throw error;
+    }
+  }
+
+  async findCurrentUser(id: string) {
+    console.log('>>> UsersService.findCurrentUser: Starting with id:', id);
+    console.log('>>> UsersService.findCurrentUser: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id },
+        include: {
+          userRoles: {
+            include: {
+              role: {
+                include: {
+                  rolePermissions: {
+                    include: {
+                      permission: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      console.log('>>> UsersService.findCurrentUser: Query result:', user ? 'FOUND' : 'NOT FOUND');
+      if (!user) throw new NotFoundException('Usuario no encontrado');
+      
+      // Formatear la respuesta para que coincida con lo que espera el frontend
+      const formattedUser = {
+        id: user.id,
+        email: user.email,
+        name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Usuario',
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        avatarUrl: user.avatarUrl,
+        isActive: user.isActive,
+        status: user.status,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        roles: user.userRoles.map(ur => ur.role.name),
+        permissions: user.userRoles.flatMap(ur => 
+          ur.role.rolePermissions.map(rp => rp.permission.name)
+        )
+      };
+      
+      console.log('>>> UsersService.findCurrentUser: SUCCESS, returning formatted user');
+      return formattedUser;
+    } catch (error) {
+      console.error('>>> UsersService.findCurrentUser: ERROR:', error);
       throw error;
     }
   }
@@ -155,9 +226,61 @@ export class UsersService {
     //   updatedAt: existingUser.updatedAt,
     // };
 
+    // Extraer el roleId de los datos para manejo especial
+    const { roleId, ...userData } = data;
+
+    // Actualizar los datos del usuario (excluyendo roleId)
     const updatedUser = await this.prisma.user.update({
       where: { id },
-      data,
+      data: userData,
+    });
+
+    // Si se proporciona un roleId, manejar la asignación de rol
+    if (roleId !== undefined) {
+      if (roleId === null || roleId === '') {
+        // Remover todos los roles del usuario
+        await this.prisma.userRole.deleteMany({
+          where: { userId: id },
+        });
+      } else {
+        // Verificar que el rol existe
+        const roleExists = await this.prisma.role.findUnique({
+          where: { id: roleId },
+        });
+        
+        if (!roleExists) {
+          throw new NotFoundException('Rol no encontrado');
+        }
+
+        // Remover roles existentes y asignar el nuevo rol
+        await this.prisma.$transaction(async (tx) => {
+          // Eliminar roles existentes
+          await tx.userRole.deleteMany({
+            where: { userId: id },
+          });
+          
+          // Asignar el nuevo rol
+          await tx.userRole.create({
+            data: {
+              userId: id,
+              roleId: roleId,
+              assignedById: user.id, // El usuario que hace la asignación
+            },
+          });
+        });
+      }
+    }
+
+    // Obtener el usuario actualizado con los roles incluidos
+    const finalUser = await this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        userRoles: {
+          include: {
+            role: true,
+          },
+        },
+      },
     });
 
     // const newValue: UserAuditSnapshot = {
@@ -178,7 +301,7 @@ export class UsersService {
     //     newValue: newValue,
     // });
 
-    return updatedUser;
+    return finalUser as User;
   }
 
   async remove(id: string, user: any): Promise<User> {

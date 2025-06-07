@@ -3,13 +3,15 @@ import { useNavigate, Link } from 'react-router-dom'
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useAuth } from '../hooks/useAuth'
 import { toast } from 'sonner'
 import { CoomUnityLogo } from '../components/common/Logo/CoomUnityLogo'
+// Importar componentes del Design System
+import { Button, TextField } from '../components/design-system'
+import { colors, spacing } from '../components/design-system'
+import { skipLinkFocusStyles, hiddenSkipLinkStyles } from '../utils/accessibility/focus-styles'
 
 export const LoginPage = () => {
   const navigate = useNavigate()
@@ -91,89 +93,178 @@ export const LoginPage = () => {
   }
 
   return (
-    <Container maxWidth="sm">
+    <>
+      {/* Skip Link para Accesibilidad */}
       <Box
+        component="a"
+        href="#login-form"
         sx={{
-          marginTop: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          ...hiddenSkipLinkStyles,
+          backgroundColor: colors.accessibility.skipLinkBackground,
+          color: colors.accessibility.skipLink,
+          textDecoration: 'none',
+          borderRadius: '4px',
+          fontSize: '14px',
+          fontWeight: 600,
+          border: `2px solid ${colors.accessibility.focusRing}`,
+          ...skipLinkFocusStyles,
         }}
       >
-        {/* Logo de CoomÜnity Gamifier */}
-        <Box sx={{ mb: 4 }}>
-          <CoomUnityLogo 
-            size="large" 
-            variant="full" 
-            clickable={false}
-            color="#333333"
-          />
-        </Box>
+        Saltar al formulario de inicio de sesión
+      </Box>
 
-        <Typography component="h1" variant="h4" gutterBottom>
-          Iniciar Sesión
-        </Typography>
-        
-        {error && (
-          <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+      <Container maxWidth="sm" component="main" role="main">
+        <Box
+          component="section"
+          sx={{
+            marginTop: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            backgroundColor: colors.background.paper,
+            borderRadius: `${spacing.md}px`,
+            padding: `${spacing['2xl']}px`,
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)',
+          }}
+          aria-labelledby="login-heading"
+        >
+          {/* Logo de CoomÜnity Gamifier */}
+          <Box sx={{ mb: 4 }}>
+            <CoomUnityLogo 
+              size="large" 
+              variant="full" 
+              clickable={false}
+              color={colors.text.primary}
+            />
+          </Box>
 
-        <Box component="form" onSubmit={handleLogin} sx={{ mt: 1, width: '100%' }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Correo Electrónico"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Contraseña"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading || !email || !password}
+          <Typography 
+            id="login-heading"
+            component="h1" 
+            variant="h4" 
+            gutterBottom
+            sx={{ 
+              color: colors.text.primary,
+              fontWeight: 600,
+              marginBottom: spacing.lg
+            }}
           >
-            {isLoading ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Iniciando sesión...
-              </>
-            ) : (
-              'Iniciar Sesión'
-            )}
-          </Button>
+            Iniciar Sesión
+          </Typography>
           
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography variant="body2">
-              ¿No tienes una cuenta?{' '}
-              <Link to="/register" style={{ textDecoration: 'none' }}>
-                Crear Cuenta
-              </Link>
-            </Typography>
+          {error && (
+            <Alert 
+              severity="error" 
+              sx={{ width: '100%', mb: spacing.md }}
+              role="alert"
+              aria-live="polite"
+            >
+              {error}
+            </Alert>
+          )}
+
+          <Box 
+            id="login-form"
+            component="form" 
+            onSubmit={handleLogin} 
+            noValidate
+            sx={{ 
+              mt: spacing.sm, 
+              width: '100%',
+              '& > *': {
+                marginBottom: `${spacing.lg}px !important`,
+              }
+            }}
+            aria-label="Formulario de inicio de sesión"
+          >
+            <TextField
+              required
+              fullWidth
+              id="email"
+              label="Correo Electrónico"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
+              placeholder="Ingresa tu correo electrónico"
+              size="large"
+              aria-describedby="email-help"
+              error={!!error && error.includes('email')}
+            />
+            
+            <TextField
+              required
+              fullWidth
+              name="password"
+              label="Contraseña"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+              placeholder="Ingresa tu contraseña"
+              showPasswordToggle
+              size="large"
+              aria-describedby="password-help"
+              error={!!error && error.includes('contraseña')}
+            />
+            
+            <Button
+              type="submit"
+              fullWidth
+              variant="primary"
+              size="large"
+              disabled={isLoading || !email || !password}
+              loading={isLoading}
+              sx={{ mt: spacing.xl }}
+              aria-describedby={isLoading ? "loading-message" : undefined}
+            >
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            </Button>
+            
+            {isLoading && (
+              <Typography 
+                id="loading-message"
+                variant="body2"
+                sx={{ 
+                  color: colors.text.secondary,
+                  textAlign: 'center',
+                  mt: spacing.sm
+                }}
+                aria-live="polite"
+              >
+                Por favor espera mientras procesamos tu solicitud...
+              </Typography>
+            )}
+            
+            <Box sx={{ textAlign: 'center', mt: spacing.lg }}>
+              <Typography 
+                variant="body2"
+                sx={{ 
+                  color: colors.text.secondary,
+                  fontSize: '0.875rem'
+                }}
+              >
+                ¿No tienes una cuenta?{' '}
+                <Link 
+                  to="/register" 
+                  style={{ 
+                    textDecoration: 'none',
+                    color: colors.primary.main,
+                    fontWeight: 500
+                  }}
+                  aria-label="Ir a la página de registro para crear una nueva cuenta"
+                >
+                  Crear Cuenta
+                </Link>
+              </Typography>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </>
   )
 } 

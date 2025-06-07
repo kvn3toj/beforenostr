@@ -1,0 +1,533 @@
+<!DOCTYPE html><html lang="es"><head>
+
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+
+	<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/assets/img/icons/blanco/favicon.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title></title>
+	<meta name="description" content="">
+
+	<!-- og:tags -->
+	<!--
+	<meta property="og:title" content="" />
+	<meta property="og:url" content="" />
+	<meta property="og:type" content="website" />
+	<meta property="og:image" content="https://../assets/img/fb.jpg" />
+	<meta property="og:image:secure_url" content="https://../assets/img/fb.jpg" />
+	<meta property="og:description" content="" />
+	<meta property="og:site_name" content="" />
+	<meta property="fb:app_id" content="" />
+	-->
+	<link rel="stylesheet" type="text/css" href="/assets/css/tour.min.css?v=1748917746">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600|Montserrat:400,500,600|Material+Icons">
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/assets/css/material-kit.css?v=2.2.0">
+	<link rel="stylesheet" type="text/css" href="/assets/css/style-1.css?v=1748917746">
+	
+	
+	<!-- Hotjar Tracking Code for https://coomunity.co/ -->
+	<!-- very usefull -->
+	<script>
+		(function(h,o,t,j,a,r){
+			h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+			h._hjSettings={hjid:1689339,hjsv:6};
+			a=o.getElementsByTagName('head')[0];
+			r=o.createElement('script');r.async=1;
+			r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+			a.appendChild(r);
+		})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+	</script><script async="" src="https://static.hotjar.com/c/hotjar-1689339.js?sv=6"></script>
+
+</head>
+<body>
+
+	<div class="main">
+	<div class="container-fluid application">
+
+		<style>
+			.bg-black { background-color: #000; }
+			/* .btn-red { background-color: #ed1846 !important; border-color: #ed1846 !important; } */
+			.border-bottom-red { border-bottom: 8px #ed1846 solid; }
+			.slider-blue-red { background: #DC195B; }
+			.slider-blue-red .noUi-connect { background-color: #090909; }
+			.slider-blue-red .noUi-handle {
+				border-color: #DC195B;
+				background: #DC195B;
+			}
+			.custom_blur { 
+				filter: blur(5px);
+				-webkit-filter: blur(5px);
+				user-select: none; 
+				-webkit-transition: all 0.3s ease;
+				-moz-transition: all 0.3s ease;
+				-o-transition: all 0.3s ease;
+				transition: all 0.3s ease;
+			}
+			.custom_blur:after{
+				position: absolute;
+				top: 0;
+				left: 0;
+				content: "";
+				width: 100%;
+				height: 100%;
+			}
+			.custom_blur.disable_blur { filter: blur(0px); -webkit-filter: blur(0px);}
+			.custom_blur.disable_blur:after{display: none;}
+			#options { display: none; position: absolute; height: 100%; width: 100%; z-index: 10;}
+			#left-option { display: inline-block; height: 100%; width: 50%; left: 0%; position: relative; z-index: 1;/* animation: red-pill 3s infinite; */}
+			#right-option { display: inline-block; float: right; height: 100%; width: 50%; left: 50%; position: absolute; z-index: 1; /* animation: blue-pill 3s infinite; */}
+			.iframe-container {
+				overflow: hidden;
+				padding-top: 56.25%;
+				position: relative;	
+			}
+			.iframe-container iframe {
+				border: 0;
+				height: 100%;
+				left: 0;
+				position: absolute;
+				top: 0;
+				width: 100%;
+			}
+			.container-fw {
+				margin-left: -15px;
+				margin-right: -15px;
+				position: relative;
+				z-index: 1;
+			}
+			.iframe4-3 {
+				padding-top: 75%;
+			}
+			.noUi-horizontal {
+				height: 4px;
+			}
+			.noUi-horizontal .noUi-handle {
+				width: 19px;
+				height: 19px;
+			}
+			#options video {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+			.slider.inverted {
+				background: #090909;
+			}
+			.slider.inverted .noUi-connect {
+				background-color: #dc195b;
+			}
+			.logo{
+				max-width: 150px;
+			}
+			#in-profile {
+				z-index: 1;
+				position: relative;
+			}
+			.information{
+				/* max-width: 363px; */
+				padding: 22px !important;
+				align-items: center;
+			}
+			.img-match{
+				max-width: 24px;
+				margin-right: 12px;
+				margin-left: 4px;
+			}
+			body, p{
+				font-family: 'Poppins';
+			}
+			h1, h2, h3, h4, h5, .title{
+				font-family: 'Montserrat', sans-serif;
+			}
+			.ttour-overlay{
+			z-index: 5;
+			}
+			.ttour-overlay {
+				pointer-events: none;
+			}
+			.ttour-tip {
+			pointer-events: all;
+			}
+			.lh-13{
+				line-height: 1.3em;
+			}
+		</style>		
+		
+		<!-- video -->
+		<div class="container-fw bg-black border-bottom-red">
+			<div class="">
+
+				<div id="options" style="display: block;">
+					<video playsinline="" preload="" loop="" id="loop" muted="">
+						<source src="/assets/assets/videos/loop/LoopMorpheo.mp4" type="video/mp4">
+						<source src="/assets/assets/videos/loop/LoopMorpheo.webm" type="video/webm">
+						<!-- <source src="movie.ogg" type="video/ogg"> -->
+						Your browser does not support the video tag.
+					</video>
+					<div id="left-option"></div>
+					<div id="right-option" onclick="rightOptionClick()"></div>
+				</div>
+
+				<div class="iframe-container __embed-responsive __embed-responsive-16by9 iframe4-3">
+					<!-- <iframe src="https://player.vimeo.com/video/388723112" id="vimeo" class="embed-responsive-item"  frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
+						<iframe id="vimeo" src="https://player.vimeo.com/video/410367713?title=0&amp;byline=0&amp;portrait=0" width="640" height="480" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="" data-ready="true"></iframe>
+<!-- 
+					<iframe src="https://player.vimeo.com/video/388723112" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
+				</div>
+			</div>
+		</div>
+		<!-- /video -->
+
+		<form method="post" novalidate="">
+		<input type="hidden" name="activation_code" value="<br />
+<b>Notice</b>:  Undefined variable: activation_code in <b>/var/www/demo.coomunity.co/views/red-pill.php</b> on line <b>189</b><br />
+">
+		<input type="hidden" name="stage" value="candidate">
+
+		<!-- questions -->
+		<div id="questions" class="row custom_blur disable_blur">
+		<div class="col-md-8 ml-auto mr-auto">
+
+			<p>&nbsp;</p>
+
+			<h3 class="text-muted text-center"><strong>Primer paso</strong></h3>
+			<h2 class="title text-center lh-13"><strong>Kvn, veamos qué tan bien te llevas con lo Establecido</strong></h2>
+		
+						<div class="content-questions d-flex justify-content-center flex-column" id="questions">
+				<div class="row pt-3">
+					<div class="col-12 text-center">
+						<img src="/assets/img/simbolo.png">
+					</div>
+				</div>
+															<!-- <script>
+								setTimeout(() => {
+									setResponseRate('.btn-id-1', '0');							
+								}, 100);
+							</script> -->
+							<div class="row wrapper" rate="" data-id="1" data-rate="0" data-value="">
+								<div class="col-12 text-center mt-4">
+									<p>En el mundo de los negocios es mejor cooperar que competir</p>
+								</div>
+								<div class="col-12 text-center mt-2 p-0">
+									<div class="item step-1 border-black hover" style="height: 100px;">
+										<div>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-3  btn-id-1" onclick="loadAnimationMatch(this, '1', '-3');">
+												<div class="ripple-container"></div>
+											<div class="ripple-container"></div></button>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-2" onclick="loadAnimationMatch(this, '1', '-2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-1" onclick="loadAnimationMatch(this, '1', '-1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-gray width" onclick="loadAnimationMatch(this, '1', '0');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-1" onclick="loadAnimationMatch(this, '1', '1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-2" onclick="loadAnimationMatch(this, '1', '2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-3 " onclick="loadAnimationMatch(this, '1', '3');">
+												<div class="ripple-container"></div>
+											</button>	
+										</div>
+										<div class="row mt-2 d-flex justify-content-center">
+											<div class="col-12 d-flex justify-content-between pr-4 pl-4">
+												<p>No estoy de acuerdo</p>
+												<p>Estoy de acuerdo</p>
+											</div>
+										</div>
+										
+										<span class="information" style="line-height: 18px; background: rgb(0, 0, 0); display: flex;">
+											<img class="img-match" src="/assets/img/match-white.png" alt="">
+											<span class="text-left value">El <strong>4.09%</strong>  de quienes han recorrido El Cämino piensa igual que tú</span>
+										</span>
+									</div>
+								</div>
+								<hr class="hr" style="margin: 0px auto;">
+								
+							</div>
+													<!-- <script>
+								setTimeout(() => {
+									setResponseRate('.btn-id-2', '0');							
+								}, 100);
+							</script> -->
+							<div class="row wrapper" rate="" data-id="2" data-rate="0" data-value="">
+								<div class="col-12 text-center mt-4">
+									<p>Tratar de cambiar al mundo con pequeñas acciones es perder el tiempo</p>
+								</div>
+								<div class="col-12 text-center mt-2 p-0">
+									<div class="item  border-red">
+										<div>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-3  btn-id-2" onclick="loadAnimationMatch(this, '2', '-3');">
+												<div class="ripple-container"></div>
+											</button>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-2" onclick="loadAnimationMatch(this, '2', '-2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-1" onclick="loadAnimationMatch(this, '2', '-1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-gray width" onclick="loadAnimationMatch(this, '2', '0');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-1" onclick="loadAnimationMatch(this, '2', '1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-2" onclick="loadAnimationMatch(this, '2', '2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-3 " onclick="loadAnimationMatch(this, '2', '3');">
+												<div class="ripple-container"></div>
+											</button>	
+										</div>
+										<div class="row mt-2 d-flex justify-content-center">
+											<div class="col-12 d-flex justify-content-between pr-4 pl-4">
+												<p>No estoy de acuerdo</p>
+												<p>Estoy de acuerdo</p>
+											</div>
+										</div>
+										
+										<span class="information" style="line-height: 18px">
+											<img class="img-match" src="/assets/img/match-white.png" alt="">
+											<span class="text-left value"></span>
+										</span>
+									</div>
+								</div>
+								<hr class="hr">
+								
+							</div>
+													<!-- <script>
+								setTimeout(() => {
+									setResponseRate('.btn-id-3', '0');							
+								}, 100);
+							</script> -->
+							<div class="row wrapper" rate="" data-id="3" data-rate="0" data-value="">
+								<div class="col-12 text-center mt-4">
+									<p>Para mejorar la economía hay que apoyar al emprendedor local</p>
+								</div>
+								<div class="col-12 text-center mt-2 p-0">
+									<div class="item  border-black">
+										<div>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-3  btn-id-3" onclick="loadAnimationMatch(this, '3', '-3');">
+												<div class="ripple-container"></div>
+											</button>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-2" onclick="loadAnimationMatch(this, '3', '-2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-1" onclick="loadAnimationMatch(this, '3', '-1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-gray width" onclick="loadAnimationMatch(this, '3', '0');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-1" onclick="loadAnimationMatch(this, '3', '1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-2" onclick="loadAnimationMatch(this, '3', '2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-3 " onclick="loadAnimationMatch(this, '3', '3');">
+												<div class="ripple-container"></div>
+											</button>	
+										</div>
+										<div class="row mt-2 d-flex justify-content-center">
+											<div class="col-12 d-flex justify-content-between pr-4 pl-4">
+												<p>No estoy de acuerdo</p>
+												<p>Estoy de acuerdo</p>
+											</div>
+										</div>
+										
+										<span class="information" style="line-height: 18px">
+											<img class="img-match" src="/assets/img/match-white.png" alt="">
+											<span class="text-left value"></span>
+										</span>
+									</div>
+								</div>
+								<hr class="hr">
+								
+							</div>
+													<!-- <script>
+								setTimeout(() => {
+									setResponseRate('.btn-id-4', '0');							
+								}, 100);
+							</script> -->
+							<div class="row wrapper" rate="" data-id="4" data-rate="0" data-value="">
+								<div class="col-12 text-center mt-4">
+									<p>Vivir de mi propósito es un cuento de hadas</p>
+								</div>
+								<div class="col-12 text-center mt-2 p-0">
+									<div class="item  border-red">
+										<div>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-3  btn-id-4" onclick="loadAnimationMatch(this, '4', '-3');">
+												<div class="ripple-container"></div>
+											</button>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-2" onclick="loadAnimationMatch(this, '4', '-2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-1" onclick="loadAnimationMatch(this, '4', '-1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-gray width" onclick="loadAnimationMatch(this, '4', '0');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-1" onclick="loadAnimationMatch(this, '4', '1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-2" onclick="loadAnimationMatch(this, '4', '2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-3 " onclick="loadAnimationMatch(this, '4', '3');">
+												<div class="ripple-container"></div>
+											</button>	
+										</div>
+										<div class="row mt-2 d-flex justify-content-center">
+											<div class="col-12 d-flex justify-content-between pr-4 pl-4">
+												<p>No estoy de acuerdo</p>
+												<p>Estoy de acuerdo</p>
+											</div>
+										</div>
+										
+										<span class="information" style="line-height: 18px">
+											<img class="img-match" src="/assets/img/match-white.png" alt="">
+											<span class="text-left value"></span>
+										</span>
+									</div>
+								</div>
+								<hr class="hr">
+								
+							</div>
+													<!-- <script>
+								setTimeout(() => {
+									setResponseRate('.btn-id-5', '0');							
+								}, 100);
+							</script> -->
+							<div class="row wrapper" rate="" data-id="5" data-rate="0" data-value="">
+								<div class="col-12 text-center mt-4">
+									<p>Para ganar siempre hay que aplicar la regla del "vivo bobo"</p>
+								</div>
+								<div class="col-12 text-center mt-2 p-0">
+									<div class="item  border-red">
+										<div>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-3  btn-id-5" onclick="loadAnimationMatch(this, '5', '-3');">
+												<div class="ripple-container"></div>
+											</button>
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-2" onclick="loadAnimationMatch(this, '5', '-2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-red width-1" onclick="loadAnimationMatch(this, '5', '-1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-gray width" onclick="loadAnimationMatch(this, '5', '0');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-1" onclick="loadAnimationMatch(this, '5', '1');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-2" onclick="loadAnimationMatch(this, '5', '2');">
+												<div class="ripple-container"></div>
+											</button>	
+											<button type="button" class="btn btn-social btn-just-icon btn-round border-black width-3 " onclick="loadAnimationMatch(this, '5', '3');">
+												<div class="ripple-container"></div>
+											</button>	
+										</div>
+										<div class="row mt-2 d-flex justify-content-center">
+											<div class="col-12 d-flex justify-content-between pr-4 pl-4">
+												<p>No estoy de acuerdo</p>
+												<p>Estoy de acuerdo</p>
+											</div>
+										</div>
+										
+										<span class="information" style="line-height: 18px">
+											<img class="img-match" src="/assets/img/match-white.png" alt="">
+											<span class="text-left value"></span>
+										</span>
+									</div>
+								</div>
+								<hr class="hr">
+								
+							</div>
+									</div>
+
+		</div>
+		</div>
+		<!-- /questions -->
+
+		<!-- sender -->
+		<div id="sender" class="row custom_blur disable_blur">
+			<div class="col-md-8 ml-auto mr-auto pt-5 pb-4 text-center">
+				
+				<button id="sender-submit-button" type="button" class="btn btn-rose btn-round btn-lg" onclick="reloadPage()">Avanzar</button>
+
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+
+				<div align="center">
+					<img src="/assets/img/svg/logo.svg" class="mt-2 center logo">
+				</div>
+
+			</div>
+		</div>
+		<!-- /sender -->
+
+		</form>
+
+
+    </div>
+	</div>
+	<div class="modal" tabindex="-1" role="dialog" id="modalCloseApp" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-4">
+						<img src="/assets/img/error.png" alt="">
+					</div>
+					<div class="col-8">
+						<p class="white">Es muy pronto para abandonar el Cämino... </p>
+						<hr>
+						<p class="white">¿Realmente quieres salir?</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="/red-pill/reject" class="p-3 white">Sí</a>
+				<a class="p-3 white" data-dismiss="modal">No
+			</a></div><a class="p-3 white" data-dismiss="modal">
+			</a></div><a class="p-3 white" data-dismiss="modal">
+		</a></div><a class="p-3 white" data-dismiss="modal">
+	</a></div><a class="p-3 white" data-dismiss="modal">
+
+	<script type="text/javascript" src="/assets/js/core/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/js/core/popper.min.js"></script>
+	<script type="text/javascript" src="/assets/js/core/bootstrap-material-design.min.js"></script>
+	<script type="text/javascript" src="/assets/js/plugins/moment.min.js"></script>
+	<script type="text/javascript" src="/assets/js/plugins/nouislider.min.js"></script>
+	<script type="text/javascript" src="/assets/js/plugins/jasny-bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/js/material-kit.js?v=2.2.0"></script>
+	<script type="text/javascript" src="https://player.vimeo.com/api/player.js"></script>
+	<script type="text/javascript" src="/assets/js/red-pill.js?v=1.0.9"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+	<script type="text/javascript" src="/assets/js/tour.js?v=1748917746"></script>
+	<script type="text/javascript" src="/assets/js/javascript-1.js?v=1748917746"></script>
+	<script>
+		
+	var url_ajax = '/red-pill/c8862dd1';
+	function rightOptionClick()
+	{
+		player.pause().then(function() {
+			$('#modalCloseApp').modal();
+			$('#modalCloseApp').css("display","flex")
+		});
+	}
+	</script>
+
+
+</a><div class="ttour-shadow ttour-shadow-954"><div class="ttour-overlay" style="left: 423.333px; top: 2182.8px; width: 1693.33px; height: 73px;"><div class="ttour-wrapper"><div class="ttour-tip tip-0 top" style=""><div class="ttour-header"><h1></h1></div><div class="ttour-body"> Dinos qué tanto resuenas con los enunciados, tocando en uno de los círculos.</div><div class="ttour-footer"><div class="ttour-bullets"><div class="ttour-bullet active"></div></div><button class="next">Avanzar</button></div><div class="ttour-arrow"></div></div></div></div></div></body></html>

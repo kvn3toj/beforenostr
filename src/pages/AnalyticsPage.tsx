@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Typography,
   Container,
@@ -371,11 +371,24 @@ export const AnalyticsPage: React.FC = () => {
   const theme = useTheme();
   const [interval, setInterval] = useState<TimeInterval>('day');
   
-  // Calcular fechas por defecto (último mes)
-  const endDate = new Date().toISOString();
-  const startDate = new Date();
-  startDate.setMonth(startDate.getMonth() - 1);
-  const startDateStr = startDate.toISOString();
+  // ✅ CORRECIÓN: Estabilizar las fechas con useMemo para evitar re-cálculos en cada render
+  const { startDateStr, endDate } = useMemo(() => {
+    const end = new Date();
+    const start = new Date();
+    start.setMonth(start.getMonth() - 1);
+    
+    return {
+      endDate: end.toISOString(),
+      startDateStr: start.toISOString()
+    };
+  }, []); // Empty dependency array - solo calcular una vez
+  
+  // Parámetros estables para React Query
+  const timeParams = useMemo(() => ({
+    interval,
+    startDate: startDateStr,
+    endDate,
+  }), [interval, startDateStr, endDate]);
 
   const {
     data: usersData,
@@ -403,33 +416,21 @@ export const AnalyticsPage: React.FC = () => {
     isLoading: isLoadingUsersCreated,
     isError: isErrorUsersCreated,
     error: usersCreatedError,
-  } = useUsersCreatedOverTimeQuery({
-    interval,
-    startDate: startDateStr,
-    endDate,
-  });
+  } = useUsersCreatedOverTimeQuery(timeParams);
 
   const {
     data: playlistsCreatedData,
     isLoading: isLoadingPlaylistsCreated,
     isError: isErrorPlaylistsCreated,
     error: playlistsCreatedError,
-  } = usePlaylistsCreatedOverTimeQuery({
-    interval,
-    startDate: startDateStr,
-    endDate,
-  });
+  } = usePlaylistsCreatedOverTimeQuery(timeParams);
 
   const {
     data: mundosCreatedData,
     isLoading: isLoadingMundosCreated,
     isError: isErrorMundosCreated,
     error: mundosCreatedError,
-  } = useMundosCreatedOverTimeQuery({
-    interval,
-    startDate: startDateStr,
-    endDate,
-  });
+  } = useMundosCreatedOverTimeQuery(timeParams);
 
   const {
     data: topViewedPlaylists,
@@ -450,11 +451,7 @@ export const AnalyticsPage: React.FC = () => {
     isLoading: isLoadingActiveUsers,
     isError: isErrorActiveUsers,
     error: activeUsersError,
-  } = useActiveUsersOverTimeQuery({
-    interval,
-    startDate: startDateStr,
-    endDate,
-  });
+  } = useActiveUsersOverTimeQuery(timeParams);
 
   const {
     data: topInteractedContent,

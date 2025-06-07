@@ -6,9 +6,10 @@ import { UserChallengesController } from './user-challenges/user-challenges.cont
 import { PrismaModule } from '../prisma/prisma.module'; // Assuming PrismaModule is available
 import { TransactionsService } from '../merits-and-wallet/transactions/transactions.service'; // Adjust path as necessary
 import { MeritsAndWalletModule } from '../merits-and-wallet/merits-and-wallet.module';
+import { AdminModule } from '../admin/admin.module'; // For AuditLogsService
 
 @Module({
-  imports: [PrismaModule, MeritsAndWalletModule], // Import necessary modules
+  imports: [PrismaModule, MeritsAndWalletModule, AdminModule], // Import necessary modules
   controllers: [ChallengesController, UserChallengesController],
   providers: [ChallengesService, UserChallengesService],
   exports: [ChallengesService, UserChallengesService], // Export services if needed elsewhere

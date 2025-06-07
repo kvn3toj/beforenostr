@@ -2,8 +2,7 @@ export interface Mundo {
   id: string;
   name: string;
   description: string | null;
-  thumbnailUrl?: string | null;
-  thumbnail_url?: string | null;
+  imageUrl?: string | null;
   createdBy?: string | null;
   created_by?: string | null;
   createdAt: string;
@@ -31,8 +30,7 @@ export interface MundoVersion {
   changed_by_user_id?: string;
   name: string;
   description: string | null;
-  thumbnailUrl?: string | null;
-  thumbnail_url?: string | null;
+  imageUrl?: string | null;
   isActive: boolean;
   is_active?: boolean;
   publishedAt?: string | null;
@@ -51,8 +49,7 @@ export interface CreateMundoData {
   name: string;
   description?: string;
   slug?: string;
-  thumbnailUrl?: string;
-  thumbnail_url?: string;
+  imageUrl?: string;
   isActive?: boolean;
   is_active?: boolean;
   publishedAt?: string | null;
@@ -65,8 +62,7 @@ export interface UpdateMundoData {
   name?: string;
   description?: string;
   slug?: string;
-  thumbnailUrl?: string;
-  thumbnail_url?: string;
+  imageUrl?: string;
   isActive?: boolean;
   is_active?: boolean;
   publishedAt?: string | null;

@@ -1,0 +1,14 @@
+/* Extracted from: merchant_home_09_final_state_2025-06-03T02-13-20-890Z.html */
+/* Block index: 5 */
+/* Extracted at: 2025-06-03T02:16:25.483Z */
+
+.footer {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			z-index: 10;
+			display: flex;
+			width: 100vw;
+			padding: 0px;
+			height: 4px;
+		}

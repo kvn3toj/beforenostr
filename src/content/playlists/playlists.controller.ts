@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Put, Delete, Param, Body, UseGuards, Query, Req
+  Controller, Get, Post, Put, Delete, Param, Body, UseGuards, Query, Req, Inject
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -13,7 +13,9 @@ import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 @ApiBearerAuth()
 @Controller('content') // Base path for content entities
 export class PlaylistsController {
-  constructor(private readonly playlistsService: PlaylistsService) {}
+  constructor(@Inject(PlaylistsService) private readonly playlistsService: PlaylistsService) {
+    console.log('>>> PlaylistsController CONSTRUCTOR: this.playlistsService IS', this.playlistsService ? 'DEFINED' : 'UNDEFINED');
+  }
 
   @Get('mundos/:mundoId/playlists')
   @ApiOperation({ summary: 'Get all active playlists for a specific mundo' })

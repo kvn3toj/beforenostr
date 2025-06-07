@@ -495,12 +495,16 @@ export const VideoConfigPage = () => {
                     />
                   )}
                   renderTags={(value, getTagProps) =>
-                    value.map((option, index) => (
-                      <Chip
-                        label={option.name}
-                        {...getTagProps({ index })}
-                      />
-                    ))
+                    value.map((option, index) => {
+                      const { key, ...chipProps } = getTagProps({ index });
+                      return (
+                        <Chip
+                          key={key}
+                          label={option.name}
+                          {...chipProps}
+                        />
+                      );
+                    })
                   }
                   sx={{ flexGrow: 1 }}
                 />

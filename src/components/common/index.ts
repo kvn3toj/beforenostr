@@ -4,6 +4,7 @@ export { LoadingSpinner } from './LoadingSpinner/LoadingSpinner';
 export { ErrorMessage } from './ErrorMessage/ErrorMessage';
 export { DataTable } from './DataTable/DataTable';
 export { ConfirmDialog } from './ConfirmDialog';
+export * from './LiveRegion/LiveRegion';
 
 // New UI Components
 export { GamifierButton } from './Button';
@@ -16,4 +17,6 @@ export { ResponsiveContainer, AdminPageContainer, ResponsiveGrid } from './Layou
 export type { ColumnDefinition } from './DataTable/DataTable';
 export type { FilterOption, FilterValues } from './FilterPanel';
 export type { NavigationItem } from './Navigation';
-export type { BreadcrumbItem } from './Header'; 
+export type { BreadcrumbItem } from './Header';
+export { FocusTrap } from './FocusTrap';
+export { SkipLinks, SkipLinkSets } from './SkipLinks'; 

@@ -1,0 +1,33 @@
+{
+  "project": "pilgrim_demo",
+  "timestamp": "2025-06-03T02:16:25.487Z",
+  "processedFiles": 1,
+  "totalExtractedFiles": {
+    "css": 3,
+    "js": 3
+  },
+  "reports": [
+    {
+      "htmlFile": "demo_pilgrim_index_full_assets.html",
+      "timestamp": "2025-06-03T02:16:25.486Z",
+      "extractedFiles": {
+        "css": [
+          "demo_pilgrim_index_full_assets_style_block_1.css",
+          "demo_pilgrim_index_full_assets_style_block_2.css",
+          "demo_pilgrim_index_full_assets_style_block_3.css"
+        ],
+        "js": [
+          "demo_pilgrim_index_full_assets_script_block_1.js",
+          "demo_pilgrim_index_full_assets_script_block_13.js",
+          "demo_pilgrim_index_full_assets_script_block_14.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 3,
+        "totalJsBlocks": 3,
+        "cssFilesSize": 6675,
+        "jsFilesSize": 7420
+      }
+    }
+  ]
+}

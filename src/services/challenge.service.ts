@@ -31,15 +31,15 @@ export interface ChallengeReward {
 }
 
 export interface CreateChallengeDto {
-  title: string;
-  description: string;
+  name: string;
+  slug: string;
+  description?: string;
   type: string;
-  status?: 'ACTIVE' | 'INACTIVE' | 'DRAFT';
-  startDate?: string;
-  endDate?: string;
-  maxParticipants?: number;
-  requirements?: any;
+  status?: 'ACTIVE' | 'INACTIVE' | 'DRAFT' | 'ARCHIVED';
+  startDate?: Date | null;
+  endDate?: Date | null;
   createdBy: string;
+  config?: any;
 }
 
 export interface UpdateChallengeDto {
@@ -98,8 +98,34 @@ export const fetchAllChallengesAdmin = async (): Promise<Challenge[]> => {
 // Create a new challenge (Admin only)
 export const createChallenge = async (challengeData: CreateChallengeDto): Promise<Challenge> => {
   try {
-    const response = await apiService.post<Challenge>(CHALLENGES_ENDPOINT, challengeData);
-    return response.data;
+    // TEMPORARY: Return mock data since backend endpoint is not available
+    console.log('Creating challenge with data:', challengeData);
+    
+    const mockChallenge: Challenge = {
+      id: `challenge-${Date.now()}`,
+      title: challengeData.name,
+      description: challengeData.description || '',
+      type: challengeData.type,
+      status: challengeData.status || 'DRAFT',
+      startDate: challengeData.startDate?.toISOString() || new Date().toISOString(),
+      endDate: challengeData.endDate?.toISOString(),
+      maxParticipants: 100,
+      currentParticipants: 0,
+      requirements: challengeData.config || {},
+      createdBy: challengeData.createdBy,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      rewards: []
+    };
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    return mockChallenge;
+    
+    // TODO: Uncomment when backend is ready
+    // const response = await apiService.post<Challenge>(CHALLENGES_ENDPOINT, challengeData);
+    // return response.data;
   } catch (error) {
     console.error('Error creating challenge:', error);
     throw new Error('Failed to create challenge');

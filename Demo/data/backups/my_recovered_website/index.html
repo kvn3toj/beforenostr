@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url=public/">
+    <title>CoomÜnity - Redirigiendo...</title>
+
+  <!-- Google Analytics 4 (GA4) - CoomÜnity Platform -->
+  <!-- 
+    ⚠️  IMPORTANTE: Reemplaza 'G-COOMUNITY123' con tu Measurement ID real de GA4
+    Obtén tu ID en: https://analytics.google.com/
+  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-COOMUNITY123"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // Configuración básica de GA4
+    gtag('config', 'G-COOMUNITY123', {
+      // Configuraciones UX específicas para CoomÜnity
+      page_title: document.title,
+      page_location: window.location.href,
+      custom_map: {
+        'custom_parameter_1': 'section_name',
+        'custom_parameter_2': 'ux_heuristic',
+        'custom_parameter_3': 'user_journey_step'
+      },
+      // Configuraciones de privacidad
+      anonymize_ip: true,
+      allow_google_signals: false,
+      cookie_expires: 63072000, // 2 años
+      // Enhanced ecommerce para tracking de conversiones UX
+      send_page_view: true
+    });
+
+    // Función helper para tracking de eventos UX
+    window.trackUXEvent = function(eventName, parameters) {
+      gtag('event', eventName, {
+        event_category: 'UX_Heuristics',
+        event_label: parameters.section || 'unknown',
+        value: parameters.value || 1,
+        ...parameters
+      });
+    };
+
+    // Track página cargada inicialmente
+    gtag('event', 'page_view_enhanced', {
+      page_title: document.title,
+      page_location: window.location.href,
+      content_group1: window.location.pathname.split('/')[1] || 'home',
+      timestamp: new Date().toISOString()
+    });
+  </script>
+  <!-- Fin Google Analytics 4 -->
+</head>
+<body>
+    <p>Redirigiendo a <a href="public/">la página principal</a>...</p>
+</body>
+</html>

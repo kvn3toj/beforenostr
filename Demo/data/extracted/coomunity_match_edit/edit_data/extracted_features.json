@@ -1,0 +1,98 @@
+{
+  "editForms": [
+    {
+      "tagName": "FORM",
+      "className": "",
+      "id": "form",
+      "action": null,
+      "method": "post",
+      "hasInputs": true,
+      "hasTextareas": true,
+      "hasSelects": false
+    }
+  ],
+  "editableFields": [
+    {
+      "type": "number",
+      "name": "price",
+      "id": "price",
+      "placeholder": "",
+      "value": "50",
+      "required": false,
+      "className": "input ",
+      "isContentEditable": false
+    },
+    {
+      "type": "date",
+      "name": "agreed_delivery_time",
+      "id": "",
+      "placeholder": "",
+      "value": "2020-05-19",
+      "required": false,
+      "className": "input ",
+      "isContentEditable": false
+    },
+    {
+      "type": "textarea",
+      "name": "details",
+      "id": "",
+      "placeholder": "...escribe aquí",
+      "value": "",
+      "required": false,
+      "className": "textarea",
+      "isContentEditable": false
+    }
+  ],
+  "statusOptions": [],
+  "saveActions": [
+    {
+      "text": "×",
+      "className": "close",
+      "id": "",
+      "type": "button",
+      "tagName": "BUTTON"
+    },
+    {
+      "text": "Entendido",
+      "className": "btn btn-primary",
+      "id": "",
+      "type": "button",
+      "tagName": "BUTTON"
+    },
+    {
+      "text": "",
+      "className": "btn-hexa btn-hexa-color btn-hexa-big",
+      "id": "primary-float",
+      "type": "button",
+      "tagName": "BUTTON"
+    },
+    {
+      "text": "",
+      "className": "btn-hexa btn-mid",
+      "id": "",
+      "type": "button",
+      "tagName": "BUTTON"
+    },
+    {
+      "text": "",
+      "className": "btn-hexa btn-mid",
+      "id": "",
+      "type": "button",
+      "tagName": "BUTTON"
+    },
+    {
+      "text": "",
+      "className": "btn-hexa btn-mid",
+      "id": "",
+      "type": "button",
+      "tagName": "BUTTON"
+    }
+  ],
+  "matchManagement": {
+    "matchId": "38000e9aad777d56",
+    "hasDeleteOption": false,
+    "hasCancelOption": false,
+    "hasBackToMatch": true,
+    "editContext": "No context found"
+  }
+}

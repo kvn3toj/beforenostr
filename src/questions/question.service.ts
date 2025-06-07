@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Inject, forwardRef } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { QuestionValidationService } from '../common/validation/question-validation.service';
 import { CreateQuestionDto, CreateAnswerOptionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto, UpdateAnswerOptionDto } from './dto/update-question.dto';
 import { FindAllQuestionsDto } from './dto/find-all-questions.dto';
@@ -12,8 +13,12 @@ type QuestionWithAnswers = Question & {
 
 @Injectable()
 export class QuestionService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
+  constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(QuestionValidationService) private readonly questionValidationService: QuestionValidationService,
+  ) {
     console.log('>>> QuestionService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    console.log('>>> QuestionService CONSTRUCTOR: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
   }
 
   // Helper method for validating answer options for multiple-choice
@@ -41,6 +46,20 @@ export class QuestionService {
          throw new BadRequestException('Multiple-choice questions must have answer options.');
       }
 
+      // ✅ NUEVA FUNCIONALIDAD: Validar timestamps antes de crear la pregunta
+      console.log('>>> QuestionService.create: Validating question timestamps...');
+      const timestampValidation = await this.questionValidationService.validateQuestionBeforeSave(
+        questionData.videoItemId,
+        questionData.timestamp,
+        questionData.endTimestamp
+      );
+
+      if (!timestampValidation.isValid) {
+        console.log('>>> QuestionService.create: Timestamp validation failed:', timestampValidation.error);
+        throw new BadRequestException(`Question timestamp validation failed: ${timestampValidation.error}`);
+      }
+
+      console.log('>>> QuestionService.create: Timestamp validation passed, proceeding with creation');
       console.log('>>> QuestionService.create: About to call prisma.question.create');
       const result = await this.prisma.question.create({
         data: {
@@ -144,6 +163,38 @@ export class QuestionService {
       // Validate options if updating options for a multiple-choice question
       if (questionData.type === 'multiple-choice' && answerOptions !== undefined) {
           this.validateMultipleChoiceOptions(answerOptions);
+      }
+
+      // ✅ NUEVA FUNCIONALIDAD: Validar timestamps si se están actualizando
+      if (questionData.timestamp !== undefined || questionData.endTimestamp !== undefined || questionData.videoItemId !== undefined) {
+        console.log('>>> QuestionService.update: Validating updated question timestamps...');
+        
+        // Obtener la pregunta actual para usar valores existentes si no se proporcionan nuevos
+        const currentQuestion = await this.prisma.question.findUnique({
+          where: { id },
+          select: { videoItemId: true, timestamp: true, endTimestamp: true }
+        });
+
+        if (!currentQuestion) {
+          throw new NotFoundException(`Question with ID ${id} not found.`);
+        }
+
+        const videoItemId = questionData.videoItemId ?? currentQuestion.videoItemId;
+        const timestamp = questionData.timestamp ?? currentQuestion.timestamp;
+        const endTimestamp = questionData.endTimestamp ?? currentQuestion.endTimestamp;
+
+        const timestampValidation = await this.questionValidationService.validateQuestionBeforeSave(
+          videoItemId,
+          timestamp,
+          endTimestamp
+        );
+
+        if (!timestampValidation.isValid) {
+          console.log('>>> QuestionService.update: Timestamp validation failed:', timestampValidation.error);
+          throw new BadRequestException(`Question timestamp validation failed: ${timestampValidation.error}`);
+        }
+
+        console.log('>>> QuestionService.update: Timestamp validation passed, proceeding with update');
       }
 
       // Handle updating answer options: delete removed, create new, update existing

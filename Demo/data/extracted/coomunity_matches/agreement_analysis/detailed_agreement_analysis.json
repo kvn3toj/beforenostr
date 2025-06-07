@@ -1,0 +1,20 @@
+{
+  "matchId": "38000e9aad777d56",
+  "matchDetails": {
+    "matchId": "38000e9aad777d56",
+    "title": "Servicio 1",
+    "description": "No description found",
+    "status": "No status found"
+  },
+  "agreementElements": [],
+  "userProfiles": [
+    {
+      "text": "",
+      "className": "iprofile",
+      "id": "iprofile",
+      "hasImage": false
+    }
+  ],
+  "communicationAvailable": true,
+  "statusTracking": []
+}

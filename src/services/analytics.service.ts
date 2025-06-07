@@ -272,4 +272,230 @@ export const getTopInteractedContent = fetchTopInteractedContent;
 export const getLeastViewedPlaylists = fetchLeastViewedPlaylists;
 export const getLeastViewedMundos = fetchLeastViewedMundos;
 export const getLeastInteractedPlaylists = fetchLeastInteractedPlaylists;
-export const getLeastInteractedMundos = fetchLeastInteractedMundos; 
+export const getLeastInteractedMundos = fetchLeastInteractedMundos;
+
+// Interfaces para tracking de eventos
+export interface AnalyticsEvent {
+  eventType: string;
+  userId: string;
+  sessionId?: string;
+  metadata?: Record<string, any>;
+  videoItemId?: string;
+  playlistId?: string;
+  mundoId?: string;
+}
+
+export interface FunnelStep {
+  funnelName: string;
+  stepName: string;
+  stepOrder: number;
+  userId: string;
+  success: boolean;
+  errorMessage?: string;
+  metadata?: Record<string, any>;
+}
+
+// Tipos de eventos de funnel para Gamifier Admin
+export enum AdminFunnelEvents {
+  // User Creation Funnel
+  USER_CREATION_STARTED = 'user_creation_started',
+  USER_FORM_FILLED = 'user_form_filled',
+  USER_CREATION_SUCCESS = 'user_creation_success',
+  USER_CREATION_FAILED = 'user_creation_failed',
+  
+  // Video/Item Creation Funnel
+  ITEM_CREATION_STARTED = 'item_creation_started',
+  ITEM_FORM_FILLED = 'item_form_filled',
+  ITEM_URL_ADDED = 'item_url_added',
+  ITEM_DURATION_CALCULATED = 'item_duration_calculated',
+  ITEM_CREATION_SUCCESS = 'item_creation_success',
+  ITEM_CREATION_FAILED = 'item_creation_failed',
+  
+  // Role & Permissions Funnel
+  ROLES_PAGE_VISITED = 'roles_page_visited',
+  ROLE_SELECTED = 'role_selected',
+  PERMISSIONS_EDIT_STARTED = 'permissions_edit_started',
+  PERMISSIONS_MODIFIED = 'permissions_modified',
+  PERMISSIONS_SAVE_SUCCESS = 'permissions_save_success',
+  PERMISSIONS_SAVE_FAILED = 'permissions_save_failed',
+  
+  // Navigation Events
+  PAGE_VISITED = 'page_visited',
+  COMPONENT_INTERACTION = 'component_interaction',
+  ERROR_OCCURRED = 'error_occurred'
+}
+
+class AnalyticsService {
+  private sessionId: string;
+  private currentUserId: string | null = null;
+
+  constructor() {
+    this.sessionId = this.generateSessionId();
+    this.initializeUserId();
+  }
+
+  private generateSessionId(): string {
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private initializeUserId(): void {
+    // Try to get user ID from localStorage or auth context
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        this.currentUserId = payload.sub;
+      } catch (error) {
+        console.warn('[AnalyticsService] Could not parse user ID from token:', error);
+      }
+    }
+  }
+
+  setUserId(userId: string): void {
+    this.currentUserId = userId;
+  }
+
+  async trackEvent(eventData: Partial<AnalyticsEvent>): Promise<void> {
+    try {
+      if (!this.currentUserId) {
+        console.warn('[AnalyticsService] No user ID available for tracking');
+        return;
+      }
+
+      const fullEventData: AnalyticsEvent = {
+        userId: this.currentUserId,
+        sessionId: this.sessionId,
+        ...eventData,
+        eventType: eventData.eventType || 'unknown_event',
+        metadata: {
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          url: window.location.href,
+          ...eventData.metadata
+        }
+      };
+
+      console.log('[AnalyticsService] Tracking event:', fullEventData);
+
+      await apiService.post('/analytics/data', fullEventData);
+    } catch (error) {
+      console.error('[AnalyticsService] Error tracking event:', error);
+      // Don't throw error to avoid breaking user flow
+    }
+  }
+
+  async trackFunnelStep(step: FunnelStep): Promise<void> {
+    const eventType = `funnel_${step.funnelName}_${step.stepName}`;
+    
+    await this.trackEvent({
+      eventType,
+      metadata: {
+        funnelName: step.funnelName,
+        stepName: step.stepName,
+        stepOrder: step.stepOrder,
+        success: step.success,
+        errorMessage: step.errorMessage,
+        ...step.metadata
+      }
+    });
+  }
+
+  // Convenience methods for common admin funnel tracking
+  async trackUserCreationFunnel(step: keyof typeof AdminFunnelEvents, metadata?: Record<string, any>): Promise<void> {
+    const stepMapping = {
+      USER_CREATION_STARTED: { stepName: 'started', stepOrder: 1, success: true },
+      USER_FORM_FILLED: { stepName: 'form_filled', stepOrder: 2, success: true },
+      USER_CREATION_SUCCESS: { stepName: 'success', stepOrder: 3, success: true },
+      USER_CREATION_FAILED: { stepName: 'failed', stepOrder: 3, success: false }
+    };
+
+    const stepInfo = stepMapping[step];
+    if (stepInfo) {
+      await this.trackFunnelStep({
+        funnelName: 'user_creation',
+        userId: this.currentUserId!,
+        ...stepInfo,
+        metadata
+      });
+    }
+  }
+
+  async trackItemCreationFunnel(step: keyof typeof AdminFunnelEvents, metadata?: Record<string, any>): Promise<void> {
+    const stepMapping = {
+      ITEM_CREATION_STARTED: { stepName: 'started', stepOrder: 1, success: true },
+      ITEM_FORM_FILLED: { stepName: 'form_filled', stepOrder: 2, success: true },
+      ITEM_URL_ADDED: { stepName: 'url_added', stepOrder: 3, success: true },
+      ITEM_DURATION_CALCULATED: { stepName: 'duration_calculated', stepOrder: 4, success: true },
+      ITEM_CREATION_SUCCESS: { stepName: 'success', stepOrder: 5, success: true },
+      ITEM_CREATION_FAILED: { stepName: 'failed', stepOrder: 5, success: false }
+    };
+
+    const stepInfo = stepMapping[step];
+    if (stepInfo) {
+      await this.trackFunnelStep({
+        funnelName: 'item_creation',
+        userId: this.currentUserId!,
+        ...stepInfo,
+        metadata
+      });
+    }
+  }
+
+  async trackPermissionsFunnel(step: keyof typeof AdminFunnelEvents, metadata?: Record<string, any>): Promise<void> {
+    const stepMapping = {
+      ROLES_PAGE_VISITED: { stepName: 'page_visited', stepOrder: 1, success: true },
+      ROLE_SELECTED: { stepName: 'role_selected', stepOrder: 2, success: true },
+      PERMISSIONS_EDIT_STARTED: { stepName: 'edit_started', stepOrder: 3, success: true },
+      PERMISSIONS_MODIFIED: { stepName: 'modified', stepOrder: 4, success: true },
+      PERMISSIONS_SAVE_SUCCESS: { stepName: 'save_success', stepOrder: 5, success: true },
+      PERMISSIONS_SAVE_FAILED: { stepName: 'save_failed', stepOrder: 5, success: false }
+    };
+
+    const stepInfo = stepMapping[step];
+    if (stepInfo) {
+      await this.trackFunnelStep({
+        funnelName: 'permissions_management',
+        userId: this.currentUserId!,
+        ...stepInfo,
+        metadata
+      });
+    }
+  }
+
+  // General page tracking
+  async trackPageVisit(pageName: string, metadata?: Record<string, any>): Promise<void> {
+    await this.trackEvent({
+      eventType: AdminFunnelEvents.PAGE_VISITED,
+      metadata: {
+        pageName,
+        ...metadata
+      }
+    });
+  }
+
+  // Component interaction tracking
+  async trackInteraction(component: string, action: string, metadata?: Record<string, any>): Promise<void> {
+    await this.trackEvent({
+      eventType: AdminFunnelEvents.COMPONENT_INTERACTION,
+      metadata: {
+        component,
+        action,
+        ...metadata
+      }
+    });
+  }
+
+  // Error tracking
+  async trackError(errorMessage: string, context: string, metadata?: Record<string, any>): Promise<void> {
+    await this.trackEvent({
+      eventType: AdminFunnelEvents.ERROR_OCCURRED,
+      metadata: {
+        errorMessage,
+        context,
+        ...metadata
+      }
+    });
+  }
+}
+
+export const analyticsService = new AnalyticsService(); 

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Inject,
   // UseGuards,
 } from '@nestjs/common';
 import { PersonalityService } from './personality.service';
@@ -28,7 +29,7 @@ import {
 // @UseGuards(JwtAuthGuard)
 @Controller('personality')
 export class PersonalityController {
-  constructor(private readonly personalityService: PersonalityService) {
+  constructor(@Inject(PersonalityService) private readonly personalityService: PersonalityService) {
     console.log('>>> PersonalityController CONSTRUCTOR: this.personalityService IS', this.personalityService ? 'DEFINED' : 'UNDEFINED');
   }
 
@@ -47,6 +48,20 @@ export class PersonalityController {
   @ApiResponse({ status: 200, description: 'List of all personalities' })
   findAll() {
     return this.personalityService.findAll();
+  }
+
+  @Get('ping')
+  @ApiOperation({ summary: 'Health check for personality module' })
+  @ApiResponse({ status: 200, description: 'Personality module is working' })
+  ping() {
+    return { message: 'Personality module is working', timestamp: new Date().toISOString() };
+  }
+
+  @Get('test')
+  @ApiOperation({ summary: 'Simple test endpoint' })
+  @ApiResponse({ status: 200, description: 'Simple test response' })
+  test() {
+    return { message: 'Test endpoint working', service: this.personalityService ? 'DEFINED' : 'UNDEFINED' };
   }
 
   @Get('stats')
@@ -120,12 +135,5 @@ export class PersonalityController {
   @ApiResponse({ status: 404, description: 'User not found' })
   removeFromUser(@Param('userId') userId: string) {
     return this.personalityService.removeFromUser(userId);
-  }
-
-  @Get('ping')
-  @ApiOperation({ summary: 'Health check for personality module' })
-  @ApiResponse({ status: 200, description: 'Personality module is working' })
-  ping() {
-    return { message: 'Personality module is working', timestamp: new Date().toISOString() };
   }
 } 

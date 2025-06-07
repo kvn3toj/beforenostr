@@ -60,9 +60,13 @@ class ApiService {
 
   async get<T>(endpoint: string): Promise<T> {
     try {
+      console.log(`[ApiService] GET ${API_BASE_URL}${endpoint}`);
+      
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
+        credentials: 'include', // Incluir cookies y headers de autenticación explícitamente
+        mode: 'cors', // Modo CORS explícito
       });
 
       return this.handleResponse<T>(response);
@@ -74,9 +78,13 @@ class ApiService {
 
   async post<T>(endpoint: string, data?: any): Promise<T> {
     try {
+      console.log(`[ApiService] POST ${API_BASE_URL}${endpoint}`);
+      
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
+        credentials: 'include', // Incluir cookies y headers de autenticación explícitamente
+        mode: 'cors', // Modo CORS explícito
         body: data ? JSON.stringify(data) : undefined,
       });
 
@@ -89,9 +97,13 @@ class ApiService {
 
   async put<T>(endpoint: string, data?: any): Promise<T> {
     try {
+      console.log(`[ApiService] PUT ${API_BASE_URL}${endpoint}`);
+      
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'PUT',
         headers: this.getAuthHeaders(),
+        credentials: 'include', // Incluir cookies y headers de autenticación explícitamente
+        mode: 'cors', // Modo CORS explícito
         body: data ? JSON.stringify(data) : undefined,
       });
 
@@ -104,9 +116,13 @@ class ApiService {
 
   async patch<T>(endpoint: string, data?: any): Promise<T> {
     try {
+      console.log(`[ApiService] PATCH ${API_BASE_URL}${endpoint}`);
+      
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'PATCH',
         headers: this.getAuthHeaders(),
+        credentials: 'include', // Incluir cookies y headers de autenticación explícitamente
+        mode: 'cors', // Modo CORS explícito
         body: data ? JSON.stringify(data) : undefined,
       });
 
@@ -119,9 +135,13 @@ class ApiService {
 
   async delete<T>(endpoint: string): Promise<T> {
     try {
+      console.log(`[ApiService] DELETE ${API_BASE_URL}${endpoint}`);
+      
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'DELETE',
         headers: this.getAuthHeaders(),
+        credentials: 'include', // Incluir cookies y headers de autenticación explícitamente
+        mode: 'cors', // Modo CORS explícito
       });
 
       return this.handleResponse<T>(response);

@@ -42,12 +42,15 @@
     "src/tokens/**/*",
     "src/merits/**/*",
     "src/cache/**/*",
+    "src/common/**/*",
     "src/social/**/*",
     "src/merits-and-wallet/**/*",
     "src/lets/**/*",
     "src/notifications/**/*",
     "src/marketplace/**/*",
-    "src/invitations/**/*"
+    "src/invitations/**/*",
+    "src/monitoring/**/*",
+    "src/personality/**/*"
   ],
   "exclude": [
     "src/**/*.spec.ts",

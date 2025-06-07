@@ -16,6 +16,7 @@ import Tooltip from '@mui/material/Tooltip';
 import format from 'date-fns/format';
 import { es } from 'date-fns/locale';
 import { ArrowUpward as ArrowUpwardIcon, ArrowDownward as ArrowDownwardIcon } from '../Icons';
+import React from 'react';
 
 // Define the type for column definitions
 export interface ColumnDefinition<T> {
@@ -49,6 +50,10 @@ interface DataTableProps<T> {
   onSortChange: (field: string) => void;
   // Filter props
   filters?: Record<string, any>;
+  // Accessibility props
+  caption?: string; // Caption describing the table
+  'aria-label'?: string; // Aria label for the table
+  'aria-describedby'?: string; // Element ID that describes the table
 }
 
 export function DataTable<T>({
@@ -71,7 +76,27 @@ export function DataTable<T>({
   onSortChange,
   // Filter props
   filters,
+  // Accessibility props
+  caption,
+  'aria-label': ariaLabel,
+  'aria-describedby': ariaDescribedBy,
 }: DataTableProps<T>) {
+  // Generar ID único para la tabla
+  const tableId = React.useMemo(() => 
+    `datatable-${Math.random().toString(36).substr(2, 9)}`, []
+  );
+
+  // Helper function to get aria-sort value
+  const getAriaSort = (column: ColumnDefinition<T>) => {
+    if (!column.sortField) return undefined;
+    
+    if (sortBy === column.sortField) {
+      return sortDirection === 'asc' ? 'ascending' : sortDirection === 'desc' ? 'descending' : 'none';
+    }
+    
+    return 'none';
+  };
+
   // Helper function to render cell content
   const renderCell = (item: T, column: ColumnDefinition<T>) => {
     if (column.render) {
@@ -114,8 +139,9 @@ export function DataTable<T>({
   // Loading state
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" p={3}>
-        <CircularProgress />
+      <Box display="flex" justifyContent="center" alignItems="center" p={3} role="status" aria-live="polite">
+        <CircularProgress aria-label="Cargando datos" />
+        <Typography variant="body2" sx={{ ml: 2 }}>Cargando datos...</Typography>
       </Box>
     );
   }
@@ -123,7 +149,7 @@ export function DataTable<T>({
   // Error state
   if (isError) {
     return (
-      <Alert severity="error" sx={{ mt: 2 }}>
+      <Alert severity="error" sx={{ mt: 2 }} role="alert">
         {errorMessage}
       </Alert>
     );
@@ -136,37 +162,92 @@ export function DataTable<T>({
       : emptyMessage;
     
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" p={3}>
+      <Box display="flex" justifyContent="center" alignItems="center" p={3} role="status">
         <Typography color="text.secondary">{message}</Typography>
       </Box>
     );
   }
 
   return (
-    <Paper>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
+    <Paper elevation={1} sx={{ overflow: 'hidden' }}>
+      <TableContainer role="region" aria-label="Contenedor de tabla de datos">
+        <Table 
+          id={tableId}
+          role="table"
+          aria-label={ariaLabel || 'Tabla de datos'}
+          aria-describedby={ariaDescribedBy}
+          aria-rowcount={totalCount}
+          aria-colcount={columns.length}
+        >
+          {caption && (
+            <caption 
+              style={{ 
+                captionSide: 'top', 
+                textAlign: 'left', 
+                padding: '16px',
+                fontWeight: 600,
+                fontSize: '1.1rem',
+                color: '#1976d2'
+              }}
+            >
+              {caption}
+            </caption>
+          )}
+          <TableHead role="rowgroup">
+            <TableRow role="row" aria-rowindex={1}>
               {columns.map((column, index) => (
                 <TableCell
                   key={index}
+                  component="th"
+                  scope="col"
                   align={column.align || 'left'}
                   style={{ width: column.width }}
                   onClick={() => column.sortField && onSortChange(column.sortField)}
+                  aria-sort={getAriaSort(column)}
+                  aria-colindex={index + 1}
+                  role="columnheader"
+                  tabIndex={column.sortField ? 0 : -1}
+                  onKeyDown={(e) => {
+                    if (column.sortField && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      onSortChange(column.sortField);
+                    }
+                  }}
                   sx={{
                     cursor: column.sortField ? 'pointer' : 'default',
                     userSelect: 'none',
+                    fontWeight: 600,
+                    backgroundColor: 'grey.50',
+                    borderBottom: '2px solid',
+                    borderBottomColor: 'primary.main',
                     '&:hover': column.sortField ? { backgroundColor: 'action.hover' } : {},
+                    '&:focus': column.sortField ? { 
+                      backgroundColor: 'action.selected', 
+                      outline: '2px solid',
+                      outlineColor: 'primary.main',
+                      outlineOffset: '-2px'
+                    } : {},
                   }}
+                  aria-label={column.sortField ? 
+                    `${column.header}. Columna ordenable. ${
+                      sortBy === column.sortField 
+                        ? `Actualmente ordenada ${sortDirection === 'asc' ? 'ascendente' : 'descendente'}` 
+                        : 'Hacer clic para ordenar'
+                    }` : 
+                    column.header
+                  }
                 >
                   <Box display="flex" alignItems="center">
                     {column.tooltip ? (
                       <Tooltip title={column.tooltip}>
-                        <Typography component="span">{column.header}</Typography>
+                        <Typography component="span" sx={{ fontWeight: 'inherit' }}>
+                          {column.header}
+                        </Typography>
                       </Tooltip>
                     ) : (
-                      <Typography component="span">{column.header}</Typography>
+                      <Typography component="span" sx={{ fontWeight: 'inherit' }}>
+                        {column.header}
+                      </Typography>
                     )}
                     {renderSortIndicator(column)}
                   </Box>
@@ -174,21 +255,55 @@ export function DataTable<T>({
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody role="rowgroup">
             {data.map((item, rowIndex) => (
               <TableRow
                 key={rowIndex}
                 onClick={() => onRowClick?.(item)}
+                role="row"
+                aria-rowindex={page * pageSize + rowIndex + 2} // +2 because header is row 1
+                tabIndex={onRowClick ? 0 : -1}
+                onKeyDown={(e) => {
+                  if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    onRowClick(item);
+                  }
+                }}
                 sx={{
                   cursor: onRowClick ? 'pointer' : 'default',
-                  '&:hover': onRowClick ? { backgroundColor: 'action.hover' } : {},
+                  '&:nth-of-type(even)': {
+                    backgroundColor: 'grey.25',
+                  },
+                  '&:hover': onRowClick ? { 
+                    backgroundColor: 'action.hover',
+                    '& td': {
+                      backgroundColor: 'transparent'
+                    }
+                  } : {},
+                  '&:focus': onRowClick ? { 
+                    backgroundColor: 'action.selected', 
+                    outline: '2px solid',
+                    outlineColor: 'primary.main',
+                    outlineOffset: '-2px',
+                    '& td': {
+                      backgroundColor: 'transparent'
+                    }
+                  } : {},
                 }}
+                aria-label={onRowClick ? `Fila ${rowIndex + 1} de ${data.length}. Hacer clic para ver detalles` : undefined}
               >
                 {columns.map((column, colIndex) => (
                   <TableCell
                     key={colIndex}
                     align={column.align || 'left'}
                     style={{ width: column.width }}
+                    role="gridcell"
+                    aria-colindex={colIndex + 1}
+                    sx={{
+                      borderBottom: '1px solid',
+                      borderBottomColor: 'divider',
+                      py: 2,
+                    }}
                   >
                     {renderCell(item, column)}
                   </TableCell>
@@ -207,7 +322,13 @@ export function DataTable<T>({
         onRowsPerPageChange={(event) => onPageSizeChange(parseInt(event.target.value, 10))}
         rowsPerPageOptions={[5, 10, 25, 50]}
         labelRowsPerPage="Filas por página"
-        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`}
+        aria-label="Navegación de páginas de la tabla"
+        sx={{
+          borderTop: '1px solid',
+          borderTopColor: 'divider',
+          backgroundColor: 'grey.50',
+        }}
       />
     </Paper>
   );

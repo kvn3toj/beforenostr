@@ -1,0 +1,377 @@
+/* ============================================================================
+   MICRO-INTERACTIONS AND ANIMATIONS CSS
+   Archivo dedicado para mejorar la experiencia de usuario con animaciones sutiles
+   ============================================================================ */
+
+/* ===== CONFIGURACIÓN BASE DE TRANSICIONES ===== */
+:root {
+  /* Timing functions suaves y naturales */
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-snap: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  /* Duraciones estándar */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  
+  /* Offsets para animaciones staggered */
+  --stagger-delay: 50ms;
+}
+
+/* ===== MICRO-INTERACCIONES PARA BOTONES ===== */
+.btn-micro-interactive {
+  transition: all var(--duration-normal) var(--ease-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-micro-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btn-micro-interactive:active {
+  transform: translateY(0);
+  transition-duration: var(--duration-fast);
+}
+
+/* Efecto ripple para botones */
+.btn-micro-interactive::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-normal) var(--ease-smooth), 
+              height var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
+}
+
+.btn-micro-interactive:active::before {
+  width: 300px;
+  height: 300px;
+  transition-duration: 0ms;
+}
+
+/* ===== MICRO-INTERACCIONES PARA NAVEGACIÓN ===== */
+.nav-item-interactive {
+  transition: all var(--duration-normal) var(--ease-smooth);
+  position: relative;
+}
+
+.nav-item-interactive:hover {
+  transform: scale(1.05);
+}
+
+.nav-item-interactive.active {
+  transform: scale(1.1);
+}
+
+.nav-item-interactive:active {
+  transform: scale(0.95);
+  transition-duration: var(--duration-fast);
+}
+
+/* Indicador animado para tab activo */
+.nav-active-indicator {
+  position: relative;
+}
+
+.nav-active-indicator::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--coomunity-purple);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width var(--duration-normal) var(--ease-smooth);
+}
+
+.nav-active-indicator.active::after {
+  width: 80%;
+}
+
+/* ===== MICRO-INTERACCIONES PARA CARDS ===== */
+.card-micro-interactive {
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+  position: relative;
+}
+
+.card-micro-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-micro-interactive:hover::before {
+  opacity: 1;
+}
+
+.card-micro-interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ===== MICRO-INTERACCIONES PARA ICONOS ===== */
+.icon-micro-interactive {
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+}
+
+.icon-micro-interactive:hover {
+  transform: scale(1.15);
+  color: var(--coomunity-purple);
+}
+
+.icon-micro-interactive:active {
+  transform: scale(0.9);
+  transition-duration: var(--duration-fast);
+}
+
+/* Efecto de rotación para iconos específicos */
+.icon-rotate-hover {
+  transition: transform var(--duration-normal) var(--ease-smooth);
+}
+
+.icon-rotate-hover:hover {
+  transform: rotate(15deg);
+}
+
+/* ===== MICRO-INTERACCIONES PARA AVATARES ===== */
+.avatar-micro-interactive {
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+  position: relative;
+}
+
+.avatar-micro-interactive:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.avatar-micro-interactive::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border: 2px solid var(--coomunity-purple);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
+}
+
+.avatar-micro-interactive:hover::after {
+  opacity: 1;
+}
+
+/* ===== ANIMACIONES DE ENTRADA ===== */
+.animate-slide-up {
+  animation: slideUp var(--duration-slow) var(--ease-smooth);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown var(--duration-slow) var(--ease-smooth);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--duration-slow) var(--ease-smooth);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--duration-slow) var(--ease-bounce);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== ANIMACIONES STAGGERED ===== */
+.animate-stagger-1 { animation-delay: calc(var(--stagger-delay) * 1); }
+.animate-stagger-2 { animation-delay: calc(var(--stagger-delay) * 2); }
+.animate-stagger-3 { animation-delay: calc(var(--stagger-delay) * 3); }
+.animate-stagger-4 { animation-delay: calc(var(--stagger-delay) * 4); }
+.animate-stagger-5 { animation-delay: calc(var(--stagger-delay) * 5); }
+
+/* ===== FEEDBACK VISUAL PARA ACCIONES ===== */
+.pulse-success {
+  animation: pulseSuccess var(--duration-slow) var(--ease-smooth);
+}
+
+@keyframes pulseSuccess {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.pulse-error {
+  animation: pulseError var(--duration-slow) var(--ease-smooth);
+}
+
+@keyframes pulseError {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+/* ===== MICRO-INTERACCIONES PARA FORMULARIOS ===== */
+.input-micro-interactive {
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.input-micro-interactive:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* ===== MICRO-INTERACCIONES PARA BADGES Y CHIPS ===== */
+.badge-micro-interactive {
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+}
+
+.badge-micro-interactive:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== ANIMACIONES DE CARGA ESPECIALES ===== */
+.loading-bounce {
+  animation: loadingBounce 1.4s infinite ease-in-out both;
+}
+
+@keyframes loadingBounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  } 
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* ===== MICRO-INTERACCIONES PARA TABS ===== */
+.tab-micro-interactive {
+  transition: all var(--duration-normal) var(--ease-smooth);
+  position: relative;
+}
+
+.tab-micro-interactive:hover {
+  color: var(--coomunity-purple);
+  transform: translateY(-2px);
+}
+
+.tab-micro-interactive.active {
+  color: var(--coomunity-purple);
+}
+
+/* ===== UTILIDADES DE ANIMACIÓN ===== */
+.animate-on-hover:hover .hover-target {
+  transform: scale(1.1);
+  transition: transform var(--duration-normal) var(--ease-smooth);
+}
+
+.shake-on-error {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* ===== TRANSICIONES SUAVES PARA CAMBIOS DE ESTADO ===== */
+.smooth-state-transition {
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+/* ===== RESPONSIVIDAD - Reducir animaciones en móviles si es necesario ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Reducir efectos en móviles para mejor performance */
+  .card-micro-interactive:hover {
+    transform: translateY(-2px);
+  }
+  
+  .btn-micro-interactive:hover {
+    transform: translateY(-1px);
+  }
+} 

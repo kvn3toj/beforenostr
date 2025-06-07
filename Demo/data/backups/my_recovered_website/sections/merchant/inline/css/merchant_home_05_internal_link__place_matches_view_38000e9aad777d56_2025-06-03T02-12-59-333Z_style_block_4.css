@@ -1,0 +1,199 @@
+/* Extracted from: merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z.html */
+/* Block index: 4 */
+/* Extracted at: 2025-06-03T02:16:25.445Z */
+
+.color{
+			color:  #DC1A5B ;
+		}
+		.notification.is-info, .is-danger{
+			color:  #DC1A5B ;
+			background-color: #fff;
+			border: solid 1px #DC1A5B ;
+		}	
+		.button{
+			font-weight: 400;
+			justify-content: center;
+			font-size: 1.0em !important;
+		}
+		.btn-color-match, .btn-color-match:focus, .btn-color-match:hover{
+			background-color: #DC1A5B !important;
+			color: #fff;
+			border: none;
+			width: 80% !important;
+		}
+		.btn-black, .btn-black:focus, .btn-black:hover{
+			background-color: #fff;
+			color: #000;
+			border: solid 1px #000;	
+			width: 80% !important;
+		}
+		.btn-outline, .btn-outline:active, .btn-outline:focus, .btn-outline:hover{
+			background-color: #fff;
+			color: #DC1A5B;
+			border: solid 1px #DC1A5B;
+			padding: 5px 6px;
+			width: 80% !important;
+			background-color: transparent;
+		}
+		.h5.ln-in{
+			line-height: 1.2em;
+		}
+		.level:not(:last-child){
+			margin-bottom: 1em;
+		}
+		.icon.is-small img{
+			max-height: 18px;
+			margin-right: 6px;
+		}
+		.lvl-cm.active, .in-progress-cm{
+			background: #DC1A5B;
+		}
+		.progress-cm {
+			width: 83%;
+			height: 4px;
+			background: #dbdbdb;
+			margin: auto;
+			display: block;
+			margin-bottom: 5px;
+			position: relative;
+		}
+		.in-progress-cm {
+			height: 4px;
+		}
+		.lvl-cm {
+			float: left;
+			width: 15px;
+			height: 15px;
+			border-radius: 50%;
+			position: relative;
+			top: -10px;
+			background: #dbdbdb;
+			position: absolute;
+    		top: -6px;
+		}
+		.progress-cm div:nth-child(2) {
+			margin-left: 0;
+		}
+		.in-progress-cm {
+			height: 4px;
+		}
+		.progress-cm div:nth-child(3) {
+			left: calc(33.3% - 7.5px);
+		}
+		.progress-cm div:nth-child(4) {
+			left: calc(66.6% - 7.5px);
+		}
+		.progress-cm .lvl-cm:last-child {
+			position: absolute;
+			right: 19px !important;
+			left: calc(100% - 15px);
+		}
+		.fw-5{
+			font-weight: 500;
+		}
+		.section{
+			padding: 42px 0;
+		}
+		.rate-solver p,
+		#rate-seeker p{
+			margin: 0;
+			width: 100%;
+			text-align: left;
+		}
+		.rate-solver form,
+		#rate-seeker form{
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		#rate-seeker div.has-text-centered:first-child{
+			width: 100%;
+		}
+		.rate-solver .has-addons{
+			border-radius: 23px;
+    		overflow: hidden;
+		}
+		.rate-solver .button{
+			border-radius: 23px;
+			color: #DC1A5B;
+			border: 1px solid #DC1A5B;
+		}
+		#rate-seeker .button{
+			color: #DC1A5B;
+			border: 1px solid #DC1A5B;
+		}
+		.rate-solver .button.is-info.is-hovered, 
+		.rate-solver .button.is-info:hover,
+		.rate-solver .button.is-info,
+		#rate-seeker .button.is-info.is-hovered, 
+		#rate-seeker .button.is-info:hover,
+		#rate-seeker .button.is-info{
+			background-color: #DC1A5B !important;
+			color: #fff !important;
+		}
+		.rate-solver .field.has-addons .control:first-child:not(:only-child) .button,
+		#rate-seeker .field.has-addons .control:first-child:not(:only-child) .button{
+			border-bottom-right-radius: 0;
+   			border-top-right-radius: 0;
+			border-bottom-left-radius: 23px;
+   			border-top-left-radius: 23px;
+		}
+		.rate-solver .field.has-addons .control:last-child:not(:only-child) .button,
+		#rate-seeker .field.has-addons .control:last-child:not(:only-child) .button{
+			border-bottom-left-radius: 0;
+   			border-top-left-radius: 0;
+			border-bottom-right-radius: 23px;
+   			border-top-right-radius: 23px;
+		}
+		.rate-solver .button:not(#buttonRate) span{
+			font-size: 12px;
+		}
+		.btn-secondary{
+			background: none;
+			background-color: transparent !important;
+			color:  #DC1A5B !important;
+		}
+		#btn-merit{
+			border-radius: 23px;
+			color: #fff !important;
+			background-color: #DC1A5B;
+			text-transform: capitalize;
+			padding-top: 6px;
+		}
+		#content-btn-merit {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		#content-btn-merit img{
+			width: 24px;
+		}
+		.btn.btn-primary:focus, .btn.btn-primary:active, .btn.btn-primary:hover {
+			box-shadow: 0 14px 26px -12px rgba(0, 0, 0, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0,0, 0, 0.2);
+		}
+		.closed-rate{
+			width: 100%;
+		}
+		.closed-rate img{
+			width: 18px;
+			margin-right: 6px
+		}
+		.w-100{
+			width:100%;
+		}
+		.flex-center{
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+		}
+		.btn-recharge{
+			padding: 10px !important;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+		}
+		.content-name{
+			max-width: 70%;
+		}

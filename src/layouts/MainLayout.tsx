@@ -15,6 +15,7 @@ import {
   useTheme,
   useMediaQuery,
   GlobalStyles,
+  Container,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -29,6 +30,7 @@ import {
 // Importar los nuevos componentes
 import { NavigationMenu, NavigationItem } from '../components/common/Navigation/NavigationMenu';
 import { CoomUnityLogo } from '../components/common/Logo/CoomUnityLogo';
+import { SkipLinks, SkipLinkSets } from '../components/common/SkipLinks/SkipLinks';
 
 // Iconos de Material UI - Importaciones por defecto
 import {
@@ -44,18 +46,47 @@ import {
   Security as SecurityIcon,
   Analytics as AnalyticsIcon,
   History as HistoryIcon,
+  AttachMoney as AttachMoneyIcon,
+  AccountBalanceWallet as AccountBalanceWalletIcon,
+  EmojiEvents as EmojiEventsIcon,
+  Store as StoreIcon,
+  Share as ShareIcon,
+  Groups as GroupsIcon,
+  FitnessCenter as FitnessCenterIcon,
+  PersonAdd as PersonAddIcon,
 } from '../components/common/Icons';
 
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
+import { responsiveUtils } from '../theme';
+import { colors } from '../components/design-system/tokens/colors';
+import { navigationFocusStyles } from '../utils/accessibility/focus-styles';
 
-const drawerWidth = 280;
-const collapsedDrawerWidth = 72;
+// === CONSTANTES RESPONSIVAS ===
+const drawerWidth = {
+  mobile: 280,
+  tablet: 280,
+  desktop: 280,
+  collapsed: 72,
+};
+
+// Altura del header responsiva
+const headerHeight = {
+  mobile: 56,
+  tablet: 64,
+  desktop: 64,
+};
 
 export const MainLayout = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  
+  // === BREAKPOINTS RESPONSIVOS ===
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('xl'));
+  
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -64,6 +95,18 @@ export const MainLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+
+  // === HELPERS RESPONSIVOS ===
+  const getCurrentDrawerWidth = () => {
+    if (isMobile) return drawerWidth.mobile;
+    if (collapsed) return drawerWidth.collapsed;
+    return drawerWidth.desktop;
+  };
+
+  const getCurrentHeaderHeight = () => {
+    if (isMobile) return headerHeight.mobile;
+    return headerHeight.desktop;
+  };
 
   const handleDrawerToggle = () => {
     if (isMobile) {
@@ -137,24 +180,83 @@ export const MainLayout = () => {
         {
           id: 'umarket',
           label: t('nav_umarket'),
-          icon: <PlayCircleOutlineIcon />,
-          disabled: true,
+          icon: <StoreIcon />,
+          path: '/marketplace',
+          disabled: false,
         },
         {
           id: 'usocial',
           label: t('nav_usocial'),
-          icon: <PlayCircleOutlineIcon />,
-          disabled: true,
+          icon: <ShareIcon />,
+          path: '/social',
+          disabled: false,
+        },
+        {
+          id: 'cops',
+          label: 'CoPs',
+          icon: <GroupsIcon />,
+          path: '/groups',
+          disabled: false,
         },
       ],
     },
-    // Sección de Administración - Solo para admins
-    ...(isAdmin ? [{
-      id: 'administration',
-      label: t('nav_administration'),
-      icon: <SecurityIcon />,
-      category: 'Administración',
-      divider: true,
+    {
+      id: 'content',
+      label: t('nav_content'),
+      icon: <CategoryIcon />,
+      category: 'Contenido',
+      children: [
+        {
+          id: 'videos',
+          label: t('nav_videos'),
+          icon: <PlayCircleOutlineIcon />,
+          path: '/videos',
+        },
+        {
+          id: 'items',
+          label: t('nav_items'),
+          icon: <ListAltIcon />,
+          path: '/items',
+        },
+      ],
+    },
+    {
+      id: 'gamification',
+      label: t('nav_gamification'),
+      icon: <EmojiEventsIcon />,
+      category: 'Gamificación',
+      children: [
+        {
+          id: 'personalities',
+          label: t('nav_personalities'),
+          icon: <SmartToyIcon />,
+          path: '/personalities',
+        },
+        {
+          id: 'merits',
+          label: t('nav_merits'),
+          icon: <StarIcon />,
+          path: '/merits',
+        },
+        {
+          id: 'invitations',
+          label: t('nav_invitations'),
+          icon: <PersonAddIcon />,
+          path: '/invitations',
+        },
+        {
+          id: 'wallet',
+          label: t('nav_wallet'),
+          icon: <AccountBalanceWalletIcon />,
+          path: '/wallet',
+        },
+      ],
+    },
+    {
+      id: 'management',
+      label: t('nav_management'),
+      icon: <SettingsIcon />,
+      category: 'Gestión',
       children: [
         {
           id: 'users',
@@ -169,22 +271,16 @@ export const MainLayout = () => {
           path: '/roles',
         },
         {
-          id: 'permissions',
-          label: t('nav_permissions'),
-          icon: <SecurityIcon />,
-          path: '/permissions',
-        },
-        {
-          id: 'items',
-          label: t('nav_items'),
-          icon: <CategoryIcon />,
-          path: '/items',
-        },
-        {
           id: 'analytics',
-          label: 'Analytics',
+          label: t('nav_analytics'),
           icon: <AnalyticsIcon />,
           path: '/analytics',
+        },
+        {
+          id: 'settings',
+          label: t('nav_settings'),
+          icon: <SettingsIcon />,
+          path: '/settings',
         },
         {
           id: 'audit-logs',
@@ -192,194 +288,335 @@ export const MainLayout = () => {
           icon: <HistoryIcon />,
           path: '/audit-logs',
         },
-        {
-          id: 'settings',
-          label: 'Configuración',
-          icon: <SettingsIcon />,
-          path: '/settings',
-        },
       ],
-    }] : []),
-    {
-      id: 'ai-test',
-      label: t('nav_ai_test'),
-      icon: <StarIcon />,
-      path: '/ai-test',
-      divider: true,
-      category: 'Herramientas',
-    },
-    {
-      id: 'nostr-demo',
-      label: t('nav_nostr'),
-      icon: <SmartToyIcon />,
-      path: '/nostr-demo',
     },
   ];
 
+  // === DRAWER CONTENT ===
   const drawerContent = (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Navegación */}
-      <Box sx={{ flex: 1, overflow: 'auto', pt: 2 }}>
-        <NavigationMenu
-          items={navigationItems}
-          collapsed={collapsed}
-          onItemClick={() => setMobileOpen(false)}
-        />
-      </Box>
-
-      {/* Botón de colapso para desktop */}
-      {!isMobile && (
-        <Box sx={{ p: 1, borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
-          <IconButton
-            onClick={() => setCollapsed(!collapsed)}
-            sx={{
-              width: '100%',
-              color: '#FFFFFF',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              },
-            }}
-          >
-            {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </Box>
-      )}
-    </Box>
+    <NavigationMenu
+      items={navigationItems}
+      currentPath={location.pathname}
+      onNavigate={(path: string) => {
+        navigate(path);
+        if (isMobile) {
+          setMobileOpen(false);
+        }
+      }}
+      collapsed={collapsed && !isMobile}
+    />
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        minHeight: '100vh',
+        backgroundColor: '#F8F9FA',
+      }}
+    >
       <CssBaseline />
-      
-      {/* Estilos globales para corregir el gap del drawer */}
+
+      {/* Skip Links para Accesibilidad */}
+      <SkipLinks 
+        links={[
+          { 
+            href: '#main-content', 
+            label: 'Saltar al contenido principal',
+            description: 'Salta directamente al área principal de contenido evitando la navegación y encabezado'
+          },
+          { 
+            href: '#navigation-drawer', 
+            label: 'Saltar a la navegación',
+            description: 'Accede al menú lateral de navegación principal del sistema'
+          },
+          { 
+            href: '#user-menu-button', 
+            label: 'Saltar al menú de usuario',
+            description: 'Accede directamente al menú de usuario con opciones de perfil y cerrar sesión'
+          }
+        ]}
+      />
+
+      {/* === GLOBAL STYLES RESPONSIVOS === */}
       <GlobalStyles
         styles={{
-          '.MuiDrawer-paper': {
-            top: '64px !important',
-            height: 'calc(100vh - 64px) !important',
-            marginTop: '0 !important',
-            paddingTop: '0 !important',
+          '*': {
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#888 #f1f1f1',
           },
-          '.MuiDrawer-paperAnchorLeft': {
-            top: '64px !important',
-            height: 'calc(100vh - 64px) !important',
+          '*::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '*::-webkit-scrollbar-track': {
+            background: '#f1f1f1',
+          },
+          '*::-webkit-scrollbar-thumb': {
+            background: '#888',
+            borderRadius: '4px',
+          },
+          '*::-webkit-scrollbar-thumb:hover': {
+            background: '#555',
           },
         }}
       />
-      
-      {/* Header con logo */}
+
+      {/* === TOP BAR RESPONSIVO === */}
       <AppBar
+        component="header"
+        role="banner"
         position="fixed"
         sx={{
-          zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: '#272727',
-          color: '#FFFFFF',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-          borderBottom: 'none',
-          // Eliminar bordes redondeados del header
-          borderRadius: 0,
+          width: {
+            xs: '100%',
+            sm: collapsed ? `calc(100% - ${drawerWidth.collapsed}px)` : `calc(100% - ${getCurrentDrawerWidth()}px)`,
+          },
+          ml: {
+            xs: 0,
+            sm: collapsed ? `${drawerWidth.collapsed}px` : `${getCurrentDrawerWidth()}px`,
+          },
+          backgroundColor: '#FFFFFF',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+          borderBottom: '1px solid #E5E7EB',
+          height: {
+            xs: headerHeight.mobile,
+            sm: headerHeight.tablet,
+            md: headerHeight.desktop,
+          },
+          transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
         }}
       >
-        <Toolbar sx={{ justifyContent: 'space-between', minHeight: '64px !important' }}>
-          {/* Botón de menú hamburguesa */}
+        <Toolbar
+          sx={{
+            minHeight: {
+              xs: `${headerHeight.mobile}px !important`,
+              sm: `${headerHeight.tablet}px !important`,
+              md: `${headerHeight.desktop}px !important`,
+            },
+            paddingX: {
+              xs: theme.spacing(1),
+              sm: theme.spacing(2),
+              md: theme.spacing(3),
+            },
+          }}
+        >
+          {/* === BOTÓN DE MENÚ RESPONSIVO === */}
           <IconButton
             color="inherit"
-            aria-label="toggle menu"
+            aria-label={isMobile 
+              ? (mobileOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación")
+              : (collapsed ? "Expandir menú de navegación" : "Colapsar menú de navegación")
+            }
+            aria-describedby="nav-toggle-description"
             edge="start"
             onClick={handleDrawerToggle}
             sx={{
-              color: '#FFFFFF',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              mr: {
+                xs: theme.spacing(1),
+                sm: theme.spacing(2),
               },
+              color: '#374151',
+              padding: {
+                xs: theme.spacing(1),
+                sm: theme.spacing(1.5),
+              },
+              '&:hover': {
+                backgroundColor: 'rgba(55, 65, 81, 0.04)',
+              },
+              ...navigationFocusStyles,
             }}
           >
-            {isMobile ? (mobileOpen ? <CloseIcon /> : <MenuIcon />) : (collapsed ? <MenuIcon /> : <CloseIcon />)}
+            {isMobile ? (
+              mobileOpen ? <CloseIcon fontSize="inherit" /> : <MenuIcon fontSize="inherit" />
+            ) : (
+              collapsed ? <ChevronRightIcon fontSize="inherit" /> : <ChevronLeftIcon fontSize="inherit" />
+            )}
           </IconButton>
+          
+          {/* Hidden description for navigation toggle */}
+          <div id="nav-toggle-description" style={{ 
+            position: 'absolute', 
+            width: '1px', 
+            height: '1px', 
+            padding: 0, 
+            margin: '-1px', 
+            overflow: 'hidden', 
+            clip: 'rect(0, 0, 0, 0)', 
+            whiteSpace: 'nowrap', 
+            border: 0 
+          }}>
+            {isMobile 
+              ? 'Controla la visibilidad del menú de navegación móvil' 
+              : 'Alterna entre vista expandida y contraída del menú lateral'
+            }
+          </div>
 
-          {/* Logo CoomÜnity Gamifier en el header */}
-          <Box sx={{ display: 'flex', alignItems: 'center', ml: 2 }}>
-            <CoomUnityLogo 
-              size="medium"
-              variant="full"
-              clickable={true}
-              color="#FFFFFF"
-              sx={{
-                '&:hover': {
-                  opacity: 0.8,
-                },
-                transition: 'opacity 0.2s ease',
-              }}
-            />
-          </Box>
+          {/* Logo responsivo solo en mobile */}
+          {isMobile && (
+            <Box sx={{ mr: 'auto' }}>
+              <CoomUnityLogo 
+                size="small" 
+                variant="symbol" 
+                clickable={false}
+                color="#374151"
+              />
+            </Box>
+          )}
 
-          {/* Espacio flexible */}
-          <Box sx={{ flexGrow: 1 }} />
+          {/* Spacer para empujar el contenido del usuario a la derecha */}
+          {!isMobile && <Box sx={{ flexGrow: 1 }} />}
 
-          {/* Usuario */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ color: '#FFFFFF', display: { xs: 'none', sm: 'block' } }}>
-              {user?.email || 'Usuario'}
-            </Typography>
+          {/* === SECCIÓN DEL USUARIO === */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
             <IconButton
+              id="user-menu-button"
               onClick={handleUserMenuOpen}
+              aria-label={`Abrir menú de usuario para ${user?.email || 'usuario'}`}
+              aria-describedby="user-menu-description"
+              aria-controls={Boolean(userMenuAnchor) ? 'user-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={Boolean(userMenuAnchor) ? 'true' : undefined}
               sx={{
-                color: '#FFFFFF',
+                p: 0,
+                color: '#374151',
+                transition: 'all 0.2s ease-in-out',
+                borderRadius: '50%',
                 '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  backgroundColor: 'rgba(55, 65, 81, 0.04)',
+                  transform: 'scale(1.05)',
                 },
+                ...navigationFocusStyles,
               }}
             >
-              <Avatar sx={{ width: 32, height: 32, bgcolor: '#CEA93A' }}>
+              <Avatar
+              sx={{
+                width: {
+                  xs: 32,
+                  sm: 36,
+                  md: 40,
+                },
+                height: {
+                  xs: 32,
+                  sm: 36,
+                  md: 40,
+                },
+                backgroundColor: colors.primary.main,
+                color: colors.primary.contrastText,
+                fontWeight: 600,
+                fontSize: {
+                  xs: '0.875rem',
+                  sm: '1rem',
+                  md: '1.125rem',
+                },
+              }}
+              alt={`Avatar de ${user?.email || 'usuario'}`}
+              >
                 {user?.email?.charAt(0).toUpperCase() || 'U'}
               </Avatar>
             </IconButton>
+            
+            {/* Hidden description for user menu button */}
+            <div id="user-menu-description" style={{ 
+              position: 'absolute', 
+              width: '1px', 
+              height: '1px', 
+              padding: 0, 
+              margin: '-1px', 
+              overflow: 'hidden', 
+              clip: 'rect(0, 0, 0, 0)', 
+              whiteSpace: 'nowrap', 
+              border: 0 
+            }}>
+              Menú con opciones de perfil de usuario, configuración y cerrar sesión
+            </div>
           </Box>
         </Toolbar>
       </AppBar>
 
       {/* Menú de usuario */}
       <Menu
+        id="user-menu"
         anchorEl={userMenuAnchor}
         open={Boolean(userMenuAnchor)}
         onClose={handleUserMenuClose}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        aria-labelledby="user-menu-button"
+        // Estilos responsivos para el menú
+        sx={{
+          '& .MuiPaper-root': {
+            minWidth: {
+              xs: '160px',
+              sm: '180px',
+              md: '200px',
+            },
+          },
+          '& .MuiMenuItem-root': {
+            padding: {
+              xs: theme.spacing(1),
+              sm: theme.spacing(1.5),
+            },
+            fontSize: {
+              xs: '0.875rem',
+              sm: '1rem',
+            },
+          },
+        }}
       >
         <MenuItem onClick={handleProfile}>
-          <PersonIcon sx={{ mr: 1 }} />
+          <PersonIcon sx={{ 
+            mr: 1,
+            fontSize: {
+              xs: '1.25rem',
+              sm: '1.5rem',
+            },
+          }} />
           Perfil
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>
-          <LogoutIcon sx={{ mr: 1 }} />
+          <LogoutIcon sx={{ 
+            mr: 1,
+            fontSize: {
+              xs: '1.25rem',
+              sm: '1.5rem',
+            },
+          }} />
           Cerrar Sesión
         </MenuItem>
       </Menu>
 
-      {/* Desktop Drawer */}
+      {/* === DESKTOP DRAWER RESPONSIVO === */}
       <Drawer
+        id="navigation-drawer"
         variant="permanent"
+        component="nav"
+        aria-label="Navegación principal"
         sx={{
           display: { xs: 'none', sm: 'block' },
           '& .MuiDrawer-paper': {
             boxSizing: 'border-box',
-            width: collapsed ? collapsedDrawerWidth : drawerWidth,
+            width: collapsed ? drawerWidth.collapsed : getCurrentDrawerWidth(),
             backgroundColor: '#272727',
             borderRight: 'none',
             boxShadow: '4px 0 16px rgba(0, 0, 0, 0.1)',
-            transition: 'width 0.3s ease',
+            transition: theme.transitions.create('width', {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
             borderRadius: 0,
             overflow: 'hidden',
           },
         }}
         open
         anchor="left"
-        variant="permanent"
         PaperProps={{
           sx: {
-            top: '64px !important',
-            height: 'calc(100vh - 64px) !important',
+            [`top: ${getCurrentHeaderHeight()}px !important`]: {},
+            [`height: calc(100vh - ${getCurrentHeaderHeight()}px) !important`]: {},
             position: 'fixed !important',
           }
         }}
@@ -387,11 +624,14 @@ export const MainLayout = () => {
         {drawerContent}
       </Drawer>
 
-      {/* Mobile Drawer */}
+      {/* === MOBILE DRAWER RESPONSIVO === */}
       <Drawer
+        id="navigation-drawer-mobile"
         variant="temporary"
         open={mobileOpen}
         onClose={handleDrawerToggle}
+        component="nav"
+        aria-label="Navegación principal móvil"
         ModalProps={{
           keepMounted: true, // Better open performance on mobile.
         }}
@@ -399,14 +639,14 @@ export const MainLayout = () => {
           display: { xs: 'block', sm: 'none' },
           '& .MuiDrawer-paper': {
             boxSizing: 'border-box',
-            width: drawerWidth,
+            width: drawerWidth.mobile,
             backgroundColor: '#272727',
             borderRight: 'none',
             boxShadow: '4px 0 16px rgba(0, 0, 0, 0.1)',
             borderRadius: 0,
             overflow: 'hidden',
-            top: '64px !important',
-            height: 'calc(100vh - 64px) !important',
+            [`top: ${getCurrentHeaderHeight()}px !important`]: {},
+            [`height: calc(100vh - ${getCurrentHeaderHeight()}px) !important`]: {},
             position: 'fixed !important',
             marginTop: '0 !important',
             paddingTop: '0 !important',
@@ -416,21 +656,67 @@ export const MainLayout = () => {
         {drawerContent}
       </Drawer>
 
-      {/* Main Content */}
+      {/* === MAIN CONTENT RESPONSIVO === */}
       <Box
+        id="main-content"
         component="main"
+        role="main"
+        tabIndex={-1}
         sx={{
           flexGrow: 1,
           width: '100%',
           minHeight: '100vh',
           backgroundColor: '#F8F9FA',
-          transition: 'margin 0.3s ease',
-          marginLeft: isMobile ? 0 : (collapsed ? `${collapsedDrawerWidth}px` : `${drawerWidth}px`),
-          marginTop: '64px',
+          transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+          // Margen responsivo según el estado del drawer
+          marginLeft: {
+            xs: 0,
+            sm: collapsed ? `${drawerWidth.collapsed}px` : `${getCurrentDrawerWidth()}px`,
+          },
+          marginTop: {
+            xs: `${headerHeight.mobile}px`,
+            sm: `${headerHeight.tablet}px`,
+            md: `${headerHeight.desktop}px`,
+          },
+          // Padding responsivo para el contenido principal
+          padding: {
+            xs: theme.spacing(1),
+            sm: theme.spacing(2),
+            md: theme.spacing(3),
+            lg: theme.spacing(4),
+          },
+          '&:focus': {
+            outline: 'none',
+          },
         }}
       >
-        {/* Page Content */}
-        <Outlet />
+        {/* === CONTENEDOR RESPONSIVO PARA EL CONTENIDO === */}
+        <Container
+          maxWidth={false}
+          disableGutters
+          sx={{
+            maxWidth: {
+              xs: '100%',
+              sm: '100%',
+              md: '100%',
+              lg: isLargeDesktop ? '1400px' : '1200px',
+              xl: '1600px',
+            },
+            margin: '0 auto',
+            // Padding horizontal responsivo
+            paddingX: {
+              xs: 0,
+              sm: theme.spacing(1),
+              md: theme.spacing(2),
+            },
+          }}
+        >
+          {/* Page Content */}
+          <Outlet />
+        </Container>
       </Box>
     </Box>
   );
