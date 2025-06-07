@@ -698,17 +698,28 @@ export function useDashboardData(userId: string) {
   };
 }
 
-// 🔧 Hook para configuración híbrida (mock + real)
+// 🔧 Hook para configuración híbrida (mock + real) - MIGRADO Fase 2.4
 export function useHybridData<T>(
   realDataHook: () => any,
   mockData: T,
-  fallbackToMock: boolean = true
+  fallbackToMock: boolean = false // 🚀 Por defecto NO usar fallbacks para migración completa
 ) {
   const backendAvailability = useBackendAvailability();
   const realDataQuery = realDataHook();
   
-  // Decidir qué datos usar
-  const shouldUseMock = fallbackToMock && (backendAvailability.shouldUseMock || realDataQuery.isError);
+  // 🎯 PRIORIDAD: Siempre intentar backend real primero
+  const shouldUseMock = fallbackToMock && 
+    backendAvailability.shouldUseMock && 
+    realDataQuery.isError;
+  
+  // 📊 Logging inmediato para migración
+  if (shouldUseMock) {
+    console.warn('🔄 [Hybrid] Usando datos mock como fallback - Backend no disponible');
+  } else if (realDataQuery.data) {
+    console.info('✅ [Hybrid] Usando datos del backend NestJS real');
+  } else if (realDataQuery.isLoading) {
+    console.info('⏳ [Hybrid] Cargando datos del backend NestJS...');
+  }
   
   return {
     data: shouldUseMock ? mockData : realDataQuery.data,
@@ -717,6 +728,13 @@ export function useHybridData<T>(
     isUsingMock: shouldUseMock,
     isUsingReal: !shouldUseMock && !!realDataQuery.data,
     refetch: realDataQuery.refetch,
+    // 🆕 Métrica adicional para monitoreo de migración
+    migrationStatus: {
+      backendAvailable: backendAvailability.isAvailable,
+      preferReal: !fallbackToMock,
+      usingFallback: shouldUseMock,
+      source: shouldUseMock ? 'mock' : 'backend'
+    }
   };
 }
 

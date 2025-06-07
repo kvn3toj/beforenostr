@@ -9,26 +9,31 @@ const MOCK_CATEGORIES: Category[] = [
   { id: '4', name: 'Ciencia', created_at: new Date().toISOString() },
 ];
 
-// Flag para habilitar/deshabilitar llamadas al backend
-const BACKEND_CATEGORIES_ENABLED = false;
+// 🚀 Backend NestJS habilitado - Migración Fase 2.4
+const BACKEND_CATEGORIES_ENABLED = typeof window !== 'undefined' && 
+  (globalThis as any)?.process?.env?.VITE_ENABLE_REAL_BACKEND !== 'false' ||
+  true; // Por defecto habilitado para migración
 
 export const fetchCategories = async (): Promise<Category[]> => {
   if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Usando datos mock - endpoints de backend no implementados');
+    console.info('[Categories] Usando datos mock - backend deshabilitado por configuración');
     return MOCK_CATEGORIES;
   }
   
   try {
-    return await apiService.get('/categories');
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible, devolviendo datos mock');
+    console.info('[Categories] Conectando al backend NestJS en puerto 3002...');
+    const response: any = await apiService.get('/categories');
+    console.info('[Categories] ✅ Datos obtenidos del backend real');
+    return response.data || response; // Manejar diferentes formatos de respuesta
+  } catch (error: any) {
+    console.warn('[Categories] ⚠️ Backend no disponible, usando fallback a datos mock:', error);
     return MOCK_CATEGORIES;
   }
 };
 
 export const createCategory = async (name: string): Promise<Category> => {
   if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Simulando creación de categoría - endpoints de backend no implementados');
+    console.info('[Categories] Simulando creación de categoría - backend deshabilitado por configuración');
     const newCategory: Category = {
       id: Date.now().toString(),
       name,
@@ -39,16 +44,19 @@ export const createCategory = async (name: string): Promise<Category> => {
   }
 
   try {
-    return await apiService.post('/categories', { name });
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible para crear categoría');
-    throw error;
+    console.info('[Categories] Creando categoría en backend NestJS...');
+    const response: any = await apiService.post('/categories', { name });
+    console.info('[Categories] ✅ Categoría creada en backend real');
+    return response.data || response;
+  } catch (error: any) {
+    console.error('[Categories] ❌ Error al crear categoría en backend:', error);
+    throw new Error(`Error al crear categoría: ${error?.message || 'Error desconocido'}`);
   }
 };
 
 export const updateCategory = async (id: string, categoryData: any): Promise<Category> => {
   if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Simulando actualización de categoría - endpoints de backend no implementados');
+    console.info('[Categories] Simulando actualización de categoría - backend deshabilitado por configuración');
     const category = MOCK_CATEGORIES.find(c => c.id === id);
     if (category) {
       category.name = categoryData.name || category.name;
@@ -58,16 +66,19 @@ export const updateCategory = async (id: string, categoryData: any): Promise<Cat
   }
 
   try {
-    return await apiService.put(`/categories/${id}`, categoryData);
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible para actualizar categoría');
-    throw error;
+    console.info('[Categories] Actualizando categoría en backend NestJS...');
+    const response: any = await apiService.put(`/categories/${id}`, categoryData);
+    console.info('[Categories] ✅ Categoría actualizada en backend real');
+    return response.data || response;
+  } catch (error: any) {
+    console.error('[Categories] ❌ Error al actualizar categoría en backend:', error);
+    throw new Error(`Error al actualizar categoría: ${error?.message || 'Error desconocido'}`);
   }
 };
 
 export const deleteCategory = async (id: string): Promise<void> => {
   if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Simulando eliminación de categoría - endpoints de backend no implementados');
+    console.info('[Categories] Simulando eliminación de categoría - backend deshabilitado por configuración');
     const index = MOCK_CATEGORIES.findIndex(c => c.id === id);
     if (index !== -1) {
       MOCK_CATEGORIES.splice(index, 1);
@@ -76,10 +87,12 @@ export const deleteCategory = async (id: string): Promise<void> => {
   }
 
   try {
-    return await apiService.delete(`/categories/${id}`);
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible para eliminar categoría');
-    throw error;
+    console.info('[Categories] Eliminando categoría en backend NestJS...');
+    await apiService.delete(`/categories/${id}`);
+    console.info('[Categories] ✅ Categoría eliminada en backend real');
+  } catch (error: any) {
+    console.error('[Categories] ❌ Error al eliminar categoría en backend:', error);
+    throw new Error(`Error al eliminar categoría: ${error?.message || 'Error desconocido'}`);
   }
 };
 

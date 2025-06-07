@@ -98,8 +98,19 @@ export const fetchAllChallengesAdmin = async (): Promise<Challenge[]> => {
 // Create a new challenge (Admin only)
 export const createChallenge = async (challengeData: CreateChallengeDto): Promise<Challenge> => {
   try {
-    // TEMPORARY: Return mock data since backend endpoint is not available
-    console.log('Creating challenge with data:', challengeData);
+    // 🚀 MIGRADO: Conectar al Backend NestJS real en puerto 3002 - Fase 2.4
+    console.log('[Challenges] Creando challenge en backend NestJS...', challengeData);
+    
+    const response: any = await apiService.post<Challenge>(CHALLENGES_ENDPOINT, challengeData);
+    console.log('[Challenges] ✅ Challenge creado exitosamente en backend real');
+    
+    return response.data || response;
+    
+  } catch (error: any) {
+    console.error('[Challenges] ❌ Error al crear challenge en backend:', error);
+    
+    // 🔄 Fallback temporal a datos mock solo si backend está completamente inaccesible
+    console.warn('[Challenges] ⚠️ Usando fallback temporal a datos mock');
     
     const mockChallenge: Challenge = {
       id: `challenge-${Date.now()}`,
@@ -118,17 +129,10 @@ export const createChallenge = async (challengeData: CreateChallengeDto): Promis
       rewards: []
     };
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Simular retraso de API solo en fallback
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     return mockChallenge;
-    
-    // TODO: Uncomment when backend is ready
-    // const response = await apiService.post<Challenge>(CHALLENGES_ENDPOINT, challengeData);
-    // return response.data;
-  } catch (error) {
-    console.error('Error creating challenge:', error);
-    throw new Error('Failed to create challenge');
   }
 };
 

@@ -5,6 +5,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Toaster } from 'sonner';
 
+// 🚀 MIGRACIÓN FASE 2.4 - Configuración Backend NestJS
+import { MigrationUtils } from './lib/migration-config';
+
 // 🚀 NUEVOS SISTEMAS PHASE 3 - Performance y UX Avanzado
 import { NotificationProvider } from './components/common/NotificationSystem';
 import { useLazyLoading } from './components/common/LazyLoader';
@@ -69,9 +72,32 @@ const SocialFeed = lazy(() => import('./pages/SocialFeed').then(module => ({ def
 const Mundos = lazy(() => import('./pages/Mundos').then(module => ({ default: module.Mundos })));
 const PWADemo = lazy(() => import('./pages/PWADemo').then(module => ({ default: module.default })));
 
-// 🎯 Componente para inicializar lazy loading inteligente
+// 🎯 Componente para inicializar lazy loading inteligente y migración
 const LazyLoadingInitializer: React.FC = () => {
   useLazyLoading(); // Hook que preloads módulos críticos
+  
+  // 🚀 Inicializar configuración de migración
+  React.useEffect(() => {
+    // Log del estado de migración en desarrollo
+    const isDev = typeof window !== 'undefined' && 
+      window.location.hostname === 'localhost';
+      
+    if (isDev) {
+      console.log('🚀 Inicializando CoomÜnity SuperApp con Backend NestJS...');
+      MigrationUtils.logMigrationStatus();
+    }
+    
+    // Verificar conectividad con backend
+    fetch('http://localhost:3002/health')
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Backend NestJS conectado:', data);
+      })
+      .catch((error: any) => {
+        console.warn('⚠️ Backend NestJS no disponible, usando fallbacks:', error);
+      });
+  }, []);
+  
   return null;
 };
 
