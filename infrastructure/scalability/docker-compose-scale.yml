@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  # Load Balancer Nginx
+  nginx-lb:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-simple.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend-1
+      - backend-2
+    networks:
+      - coomunity-network
+    restart: unless-stopped
+
+  # Backend Instance 1 (simulado con nginx)
+  backend-1:
+    image: nginx:alpine
+    environment:
+      - INSTANCE_ID=backend-1
+    volumes:
+      - ./backend-mock.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - coomunity-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Backend Instance 2 (simulado con nginx)
+  backend-2:
+    image: nginx:alpine
+    environment:
+      - INSTANCE_ID=backend-2
+    volumes:
+      - ./backend-mock.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - coomunity-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Redis para caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    networks:
+      - coomunity-network
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # PostgreSQL para desarrollo
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=coomunity_dev
+      - POSTGRES_USER=coomunity
+      - POSTGRES_PASSWORD=coomunity123
+    ports:
+      - "5433:5432"
+    networks:
+      - coomunity-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Prometheus para monitoreo
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus-simple.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - coomunity-network
+    restart: unless-stopped
+
+  # Grafana para dashboards
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3003:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=coomunity2025
+      - GF_SECURITY_ADMIN_USER=admin
+    networks:
+      - coomunity-network
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+
+networks:
+  coomunity-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  postgres_data:
+  grafana_data:

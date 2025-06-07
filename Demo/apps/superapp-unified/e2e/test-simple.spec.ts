@@ -1,0 +1,1 @@
+import { test, expect } from "@playwright/test"; test.describe("FASE 2.4", () => { test("validar app", async ({ page }) => { await page.goto("http://localhost:3004"); const title = await page.title(); console.log("Título:", title); expect(title).toBeTruthy(); }); });

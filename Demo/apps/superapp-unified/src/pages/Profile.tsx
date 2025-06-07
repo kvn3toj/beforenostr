@@ -34,7 +34,10 @@ import {
   Switch,
   FormControlLabel,
   Rating,
-  Slider
+  Slider,
+  Skeleton,
+  Snackbar,
+  CircularProgress
 } from '@mui/material';
 import {
   Person,
@@ -68,123 +71,44 @@ import {
   BusinessCenter,
   SportsEsports,
   VideoLibrary,
-  Palette
+  Palette,
+  Save,
+  Cancel
 } from '@mui/icons-material';
+import { useAuth } from '../contexts/AuthContext';
 
-// Datos del perfil del usuario basados en el ecosistema CoomÜnity
-const userProfileData = {
-  personal: {
-    id: 'usr_640baa58', // Basado en IDs vistos en el proyecto
-    name: 'Ana García Mendoza',
-    email: 'ana.garcia@coomunity.co',
-    phone: '+57 300 123 4567',
-    avatar: '/assets/img/avatars/ana-garcia.jpg',
-    coverImage: '/assets/img/covers/profile-cover.jpg',
-    bio: 'Diseñadora UX/UI especializada en interfaces intuitivas y experiencias de usuario excepcionales. Apasionada por la innovación y el desarrollo de comunidades digitales.',
-    location: 'Medellín, Colombia',
-    joinDate: '2024-03-15',
-    verified: true,
-    publicProfile: true
-  },
-  
-  coommunityStats: {
-    level: 7,
-    ucoins: 1250,
-    totalEarnings: 2850000, // COP
-    completedGigs: 23,
-    averageRating: 4.8,
-    totalReviews: 15,
-    ayniPoints: 340,
-    communityRank: 'Pionero',
-    memberSince: '8 meses'
-  },
-  
-  activities: {
-    marketplace: {
-      gigsCompleted: 23,
-      servicesOffered: 8,
-      clientSatisfaction: 98,
-      responseTime: '2 horas'
-    },
-    uplay: {
-      participatedEvents: 12,
-      organizerRating: 4.9,
-      eventsHosted: 3,
-      networkConnections: 89
-    },
-    social: {
-      postsShared: 45,
-      communitiesJoined: 7,
-      helpfulVotes: 156,
-      mentoringSessions: 12
-    },
-    pilgrim: {
-      journeysCompleted: 8,
-      skillsLearned: 15,
-      certificatesEarned: 5,
-      learningStreak: 23
-    }
-  },
-  
-  skills: [
-    { name: 'Diseño UX/UI', level: 95, category: 'design' },
-    { name: 'Figma', level: 90, category: 'tools' },
-    { name: 'React.js', level: 85, category: 'development' },
-    { name: 'Design Thinking', level: 88, category: 'methodology' },
-    { name: 'Prototipado', level: 92, category: 'design' },
-    { name: 'Investigación UX', level: 87, category: 'research' }
-  ],
-  
-  achievements: [
-    { 
-      id: 1, 
-      title: 'Pionero CoomÜnity', 
-      description: 'Miembro fundador de la comunidad', 
-      date: '2024-03-15',
-      rarity: 'legendary'
-    },
-    { 
-      id: 2, 
-      title: 'Mentor Destacado', 
-      description: '10+ sesiones de mentoría completadas', 
-      date: '2024-08-22',
-      rarity: 'epic'
-    },
-    { 
-      id: 3, 
-      title: 'Diseñador Estrella', 
-      description: 'Rating promedio 4.8+ en diseño', 
-      date: '2024-10-15',
-      rarity: 'rare'
-    },
-    { 
-      id: 4, 
-      title: 'Colaborador Activo', 
-      description: '100+ interacciones en comunidad', 
-      date: '2024-11-02',
-      rarity: 'common'
-    }
-  ],
-  
-  preferences: {
-    language: 'español',
-    timezone: 'America/Bogota',
-    currency: 'COP',
-    notifications: {
-      email: true,
-      push: true,
-      sms: false,
-      marketing: false
-    },
-    privacy: {
-      profileVisible: true,
-      showEarnings: false,
-      showLocation: true,
-      showEmail: false
-    },
-    theme: 'system' // light, dark, system
-  }
-};
+// 🔄 Interfaces para datos del perfil extendido (del backend)
+interface ExtendedProfile {
+  bio?: string;
+  location?: string;
+  phone?: string;
+  website?: string;
+  skills?: string[];
+  preferences?: {
+    language?: string;
+    timezone?: string;
+    currency?: string;
+    notifications?: {
+      email: boolean;
+      push: boolean;
+      sms: boolean;
+      marketing: boolean;
+    };
+    privacy?: {
+      profileVisible: boolean;
+      showEarnings: boolean;
+      showLocation: boolean;
+      showEmail: boolean;
+    };
+    theme?: 'light' | 'dark' | 'system';
+  };
+  stats?: {
+    level?: number;
+    points?: number;
+    completedTasks?: number;
+    memberSince?: string;
+  };
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -202,47 +126,148 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`profile-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && (
+        <Box sx={{ py: 3 }}>
+          {children}
+        </Box>
+      )}
     </div>
   );
 }
 
 export const Profile: React.FC = () => {
   const theme = useTheme();
+  const { user, loading: authLoading, updateProfile } = useAuth();
+  
+  // 🎯 Estados locales
   const [tabValue, setTabValue] = useState(0);
-  const [editMode, setEditMode] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [privacySettings, setPrivacySettings] = useState(userProfileData.preferences.privacy);
-  const [notifications, setNotifications] = useState(userProfileData.preferences.notifications);
+  const [saving, setSaving] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [profileData, setProfileData] = useState<ExtendedProfile>({});
 
+  // 🎯 Estados para edición
+  const [editingData, setEditingData] = useState({
+    full_name: '',
+    bio: '',
+    location: '',
+    phone: '',
+    website: ''
+  });
+
+  // 🔄 Inicializar datos de edición cuando el usuario cambie
+  useEffect(() => {
+    if (user) {
+      setEditingData({
+        full_name: user.full_name || '',
+        bio: profileData.bio || '',
+        location: profileData.location || '',
+        phone: profileData.phone || '',
+        website: profileData.website || ''
+      });
+    }
+  }, [user, profileData]);
+
+  // 🎯 Manejadores de eventos
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
-  const getRarityColor = (rarity: string) => {
-    switch (rarity) {
-      case 'legendary': return '#FFD700';
-      case 'epic': return '#9C27B0';
-      case 'rare': return '#2196F3';
-      case 'common': return '#4CAF50';
-      default: return '#757575';
+  const handleEditProfile = () => {
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    
+    setSaving(true);
+    try {
+      // 🔄 Actualizar perfil usando AuthContext
+      await updateProfile({
+        full_name: editingData.full_name,
+        // Nota: Otros campos pueden requerir endpoint específico del backend
+      });
+
+      setSnackbarMessage('Perfil actualizado exitosamente');
+      setSnackbarOpen(true);
+      setEditDialogOpen(false);
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+      setSnackbarMessage(error.message || 'Error al actualizar el perfil');
+      setSnackbarOpen(true);
+    } finally {
+      setSaving(false);
     }
   };
 
-  const getSkillCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'design': return <Palette />;
-      case 'tools': return <Settings />;
-      case 'development': return <SportsEsports />;
-      case 'methodology': return <School />;
-      case 'research': return <Analytics />;
-      default: return <Work />;
+  const handleCancelEdit = () => {
+    // Restaurar datos originales
+    if (user) {
+      setEditingData({
+        full_name: user.full_name || '',
+        bio: profileData.bio || '',
+        location: profileData.location || '',
+        phone: profileData.phone || '',
+        website: profileData.website || ''
+      });
     }
+    setEditDialogOpen(false);
   };
+
+  // 🚨 Estados de carga y error
+  if (authLoading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Card sx={{ mb: 3 }}>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 3 }}>
+              <Skeleton variant="circular" width={120} height={120} />
+              <Box sx={{ flex: 1 }}>
+                <Skeleton variant="text" sx={{ fontSize: '2rem', width: '60%' }} />
+                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '40%' }} />
+                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '80%' }} />
+              </Box>
+            </Box>
+            <Grid container spacing={3}>
+              {[...Array(4)].map((_, index) => (
+                <Grid item xs={6} sm={3} key={index}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
+                    <Skeleton variant="text" sx={{ fontSize: '0.875rem' }} />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Alert severity="warning">
+          <Typography variant="h6">No hay usuario autenticado</Typography>
+          <Typography variant="body2">
+            Por favor, inicia sesión para ver tu perfil.
+          </Typography>
+        </Alert>
+      </Container>
+    );
+  }
+
+  // 🎯 Datos calculados desde el usuario autenticado
+  const displayName = user.full_name || user.email?.split('@')[0] || 'Usuario';
+  const memberSince = new Date(user.created_at).toLocaleDateString('es-ES', { 
+    year: 'numeric', 
+    month: 'long' 
+  });
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
-      {/* Header del Perfil */}
+      {/* 🎯 Header del Perfil con datos reales */}
       <Card sx={{ mb: 3, overflow: 'hidden' }}>
         {/* Cover Image */}
         <Box 
@@ -258,28 +283,31 @@ export const Profile: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 3, width: '100%' }}>
             {/* Avatar */}
             <Avatar
-              src={userProfileData.personal.avatar}
+              src={user.avatar_url}
               sx={{ 
                 width: 120, 
                 height: 120, 
                 border: '4px solid white',
-                boxShadow: theme.shadows[3]
+                boxShadow: theme.shadows[3],
+                fontSize: '3rem'
               }}
-            />
+            >
+              {displayName.charAt(0).toUpperCase()}
+            </Avatar>
             
             {/* Información Principal */}
             <Box sx={{ flex: 1, color: 'white', pb: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                 <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
-                  {userProfileData.personal.name}
+                  {displayName}
                 </Typography>
-                {userProfileData.personal.verified && (
+                {user.role === 'admin' && (
                   <Verified sx={{ color: '#1DA1F2', fontSize: 28 }} />
                 )}
                 <Chip 
-                  label={userProfileData.coommunityStats.communityRank}
+                  label={user.role === 'admin' ? 'Administrador' : 'Miembro'}
                   sx={{ 
-                    bgcolor: 'rgba(255,255,255,0.2)', 
+                    bgcolor: user.role === 'admin' ? 'rgba(29,161,242,0.2)' : 'rgba(255,255,255,0.2)', 
                     color: 'white',
                     fontWeight: 'bold'
                   }}
@@ -287,25 +315,20 @@ export const Profile: React.FC = () => {
               </Box>
               
               <Typography variant="h6" component="h2" sx={{ opacity: 0.9, mb: 1 }}>
-                {userProfileData.personal.bio}
+                {user.email}
               </Typography>
               
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <LocationOn sx={{ fontSize: 18 }} />
-                  <Typography variant="body2">{userProfileData.personal.location}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <CalendarMonth sx={{ fontSize: 18 }} />
                   <Typography variant="body2">
-                    Miembro desde {userProfileData.coommunityStats.memberSince}
+                    Miembro desde {memberSince}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <Star sx={{ fontSize: 18 }} />
+                  <Person sx={{ fontSize: 18 }} />
                   <Typography variant="body2">
-                    {userProfileData.coommunityStats.averageRating}/5 
-                    ({userProfileData.coommunityStats.totalReviews} reseñas)
+                    ID: {user.id.slice(0, 8)}...
                   </Typography>
                 </Box>
               </Box>
@@ -315,27 +338,25 @@ export const Profile: React.FC = () => {
             <Box sx={{ display: 'flex', gap: 1 }}>
               <IconButton 
                 sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
-                onClick={() => setEditDialogOpen(true)}
+                onClick={handleEditProfile}
+                disabled={saving}
               >
                 <Edit />
               </IconButton>
               <IconButton sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}>
                 <PhotoCamera />
               </IconButton>
-              <IconButton sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}>
-                <Settings />
-              </IconButton>
             </Box>
           </Box>
         </Box>
         
-        {/* Stats Rápidas */}
+        {/* Stats Rápidas - Con datos reales disponibles */}
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" component="div" color="primary" sx={{ fontWeight: 'bold' }}>
-                  {userProfileData.coommunityStats.level}
+                  {profileData.stats?.level || 1}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">Nivel</Typography>
               </Box>
@@ -343,76 +364,104 @@ export const Profile: React.FC = () => {
             <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" component="div" color="warning.main" sx={{ fontWeight: 'bold' }}>
-                  {userProfileData.coommunityStats.ucoins}
+                  {profileData.stats?.points || 0}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">ÜCoins</Typography>
+                <Typography variant="body2" color="text.secondary">Puntos</Typography>
               </Box>
             </Grid>
             <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" component="div" color="success.main" sx={{ fontWeight: 'bold' }}>
-                  {userProfileData.coommunityStats.completedGigs}
+                  {profileData.stats?.completedTasks || 0}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">Gigs Completados</Typography>
+                <Typography variant="body2" color="text.secondary">Tareas Completadas</Typography>
               </Box>
             </Grid>
             <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" component="div" color="info.main" sx={{ fontWeight: 'bold' }}>
-                  {userProfileData.coommunityStats.ayniPoints}
+                  {user.role === 'admin' ? '∞' : '100'}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">Puntos Ayni</Typography>
+                <Typography variant="body2" color="text.secondary">Límite Acciones</Typography>
               </Box>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
 
-      {/* Tabs de Navegación */}
+      {/* 🎯 Tabs de Navegación */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tabValue} onChange={handleTabChange} aria-label="profile tabs">
-          <Tab label="Actividades" icon={<Timeline />} />
-          <Tab label="Habilidades" icon={<Work />} />
-          <Tab label="Logros" icon={<EmojiEvents />} />
-          <Tab label="Configuración" icon={<Settings />} />
+          <Tab 
+            label="Información" 
+            icon={<Person />} 
+            id="profile-tab-0"
+            aria-controls="profile-tabpanel-0"
+          />
+          <Tab 
+            label="Actividad" 
+            icon={<Timeline />}
+            id="profile-tab-1"
+            aria-controls="profile-tabpanel-1"
+          />
+          <Tab 
+            label="Configuración" 
+            icon={<Settings />}
+            id="profile-tab-2"
+            aria-controls="profile-tabpanel-2"
+          />
         </Tabs>
       </Box>
 
-      {/* Tab Panel 0: Actividades */}
+      {/* 🎯 Tab Panel 0: Información Personal */}
       <TabPanel value={tabValue} index={0}>
         <Grid container spacing={3}>
-          {/* Marketplace */}
+          {/* Información Básica */}
           <Grid item xs={12} md={6}>
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                  <BusinessCenter color="primary" />
-                  <Typography variant="h6" component="h3" color="primary">Marketplace</Typography>
+                  <Person color="primary" />
+                  <Typography variant="h6" component="h3" color="primary">
+                    Información Personal
+                  </Typography>
                 </Box>
                 
                 <List dense>
                   <ListItem sx={{ px: 0 }}>
+                    <ListItemIcon>
+                      <Email />
+                    </ListItemIcon>
                     <ListItemText
-                      primary="Gigs Completados"
-                      secondary={`${userProfileData.activities.marketplace.gigsCompleted} proyectos`}
+                      primary="Email"
+                      secondary={user.email}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
+                    <ListItemIcon>
+                      <Person />
+                    </ListItemIcon>
                     <ListItemText
-                      primary="Servicios Ofrecidos"
-                      secondary={`${userProfileData.activities.marketplace.servicesOffered} categorías`}
+                      primary="Nombre Completo"
+                      secondary={user.full_name || 'No especificado'}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
+                    <ListItemIcon>
+                      <CalendarMonth />
+                    </ListItemIcon>
                     <ListItemText
-                      primary="Satisfacción del Cliente"
-                      secondary={`${userProfileData.activities.marketplace.clientSatisfaction}%`}
+                      primary="Miembro Desde"
+                      secondary={memberSince}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
+                    <ListItemIcon>
+                      <Security />
+                    </ListItemIcon>
                     <ListItemText
-                      primary="Tiempo de Respuesta"
-                      secondary={userProfileData.activities.marketplace.responseTime}
+                      primary="Rol"
+                      secondary={user.role === 'admin' ? 'Administrador' : 'Usuario'}
                     />
                   </ListItem>
                 </List>
@@ -420,116 +469,43 @@ export const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          {/* ÜPlay */}
+          {/* Configuración Rápida */}
           <Grid item xs={12} md={6}>
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                  <SportsEsports color="secondary" />
-                  <Typography variant="h6" component="h3" color="secondary">ÜPlay</Typography>
+                  <Settings color="primary" />
+                  <Typography variant="h6" component="h3" color="primary">
+                    Estado de la Cuenta
+                  </Typography>
                 </Box>
                 
                 <List dense>
                   <ListItem sx={{ px: 0 }}>
+                    <ListItemIcon>
+                      <Verified color="success" />
+                    </ListItemIcon>
                     <ListItemText
-                      primary="Eventos Participados"
-                      secondary={`${userProfileData.activities.uplay.participatedEvents} eventos`}
+                      primary="Estado de Verificación"
+                      secondary="Cuenta verificada"
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
+                    <ListItemIcon>
+                      <Security color="info" />
+                    </ListItemIcon>
                     <ListItemText
-                      primary="Rating como Organizador"
-                      secondary={`${userProfileData.activities.uplay.organizerRating}/5.0`}
+                      primary="Token de Autenticación"
+                      secondary={user.access_token ? 'Activo' : 'No disponible'}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
+                    <ListItemIcon>
+                      <Public color="warning" />
+                    </ListItemIcon>
                     <ListItemText
-                      primary="Eventos Organizados"
-                      secondary={`${userProfileData.activities.uplay.eventsHosted} eventos`}
-                    />
-                  </ListItem>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Conexiones de Red"
-                      secondary={`${userProfileData.activities.uplay.networkConnections} personas`}
-                    />
-                  </ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Social */}
-          <Grid item xs={12} md={6}>
-            <Card elevation={2} sx={{ borderRadius: 3 }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                  <Group color="success" />
-                  <Typography variant="h6" component="h3" color="success">Social</Typography>
-                </Box>
-                
-                <List dense>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Posts Compartidos"
-                      secondary={`${userProfileData.activities.social.postsShared} publicaciones`}
-                    />
-                  </ListItem>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Comunidades Unidas"
-                      secondary={`${userProfileData.activities.social.communitiesJoined} grupos`}
-                    />
-                  </ListItem>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Votos Útiles Recibidos"
-                      secondary={`${userProfileData.activities.social.helpfulVotes} votos`}
-                    />
-                  </ListItem>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Sesiones de Mentoría"
-                      secondary={`${userProfileData.activities.social.mentoringSessions} sesiones`}
-                    />
-                  </ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Pilgrim */}
-          <Grid item xs={12} md={6}>
-            <Card elevation={2} sx={{ borderRadius: 3 }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                  <VideoLibrary color="warning" />
-                  <Typography variant="h6" component="h3" color="warning">Pilgrim</Typography>
-                </Box>
-                
-                <List dense>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Jornadas Completadas"
-                      secondary={`${userProfileData.activities.pilgrim.journeysCompleted} jornadas`}
-                    />
-                  </ListItem>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Habilidades Aprendidas"
-                      secondary={`${userProfileData.activities.pilgrim.skillsLearned} nuevas skills`}
-                    />
-                  </ListItem>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Certificados Obtenidos"
-                      secondary={`${userProfileData.activities.pilgrim.certificatesEarned} certificados`}
-                    />
-                  </ListItem>
-                  <ListItem sx={{ px: 0 }}>
-                    <ListItemText
-                      primary="Racha de Aprendizaje"
-                      secondary={`${userProfileData.activities.pilgrim.learningStreak} días`}
+                      primary="Perfil Público"
+                      secondary="Visible para otros usuarios"
                     />
                   </ListItem>
                 </List>
@@ -539,379 +515,84 @@ export const Profile: React.FC = () => {
         </Grid>
       </TabPanel>
 
-      {/* Tab Panel 1: Habilidades */}
+      {/* 🎯 Tab Panel 1: Actividad (Placeholder) */}
       <TabPanel value={tabValue} index={1}>
+        <Alert severity="info" sx={{ mb: 3 }}>
+          <Typography variant="h6">Módulo de Actividad</Typography>
+          <Typography variant="body2">
+            Esta sección mostrará el historial de actividades del usuario una vez que se conecte 
+            completamente con los endpoints del backend de estadísticas y actividades.
+          </Typography>
+        </Alert>
+        
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Card>
               <CardContent>
-                <Typography variant="h6" component="h3" gutterBottom color="primary">
-                  🎯 Habilidades y Competencias
+                <Typography variant="h6" color="primary" gutterBottom>
+                  🚧 Próximamente: Historial de Actividades
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  Basado en tu desempeño en proyectos y evaluaciones de la comunidad
+                <Typography variant="body2" color="text.secondary">
+                  - Actividades en Marketplace<br/>
+                  - Participación en ÜPlay<br/>
+                  - Interacciones sociales<br/>
+                  - Progreso en Pilgrim Journey
                 </Typography>
-                
-                <Grid container spacing={3}>
-                  {userProfileData.skills.map((skill, index) => (
-                    <Grid item xs={12} md={6} key={index}>
-                      <Box sx={{ mb: 2 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            {getSkillCategoryIcon(skill.category)}
-                            <Typography variant="subtitle2" fontWeight="bold">
-                              {skill.name}
-                            </Typography>
-                          </Box>
-                          <Typography variant="body2" color="primary" fontWeight="bold">
-                            {skill.level}%
-                          </Typography>
-                        </Box>
-                        <LinearProgress
-                          variant="determinate"
-                          value={skill.level}
-                          sx={{
-                            height: 8,
-                            borderRadius: 4,
-                            bgcolor: 'grey.200',
-                            '& .MuiLinearProgress-bar': {
-                              borderRadius: 4,
-                              bgcolor: skill.level >= 90 ? 'success.main' : 
-                                      skill.level >= 75 ? 'primary.main' : 
-                                      skill.level >= 60 ? 'warning.main' : 'error.main'
-                            }
-                          }}
-                        />
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
-
-                <Alert severity="info" sx={{ mt: 3 }}>
-                  <Typography variant="body2">
-                    💡 <strong>Consejo:</strong> Completa más proyectos relacionados con estas habilidades 
-                    para aumentar tu nivel y acceder a oportunidades premium en el Marketplace.
-                  </Typography>
-                </Alert>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
       </TabPanel>
 
-      {/* Tab Panel 2: Logros */}
+      {/* 🎯 Tab Panel 2: Configuración */}
       <TabPanel value={tabValue} index={2}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
+            <Alert severity="warning" sx={{ mb: 3 }}>
+              <Typography variant="h6">Configuraciones de Usuario</Typography>
+              <Typography variant="body2">
+                Las configuraciones se sincronizarán con el backend una vez que se implementen 
+                los endpoints correspondientes en el backend NestJS.
+              </Typography>
+            </Alert>
+          </Grid>
+          
+          <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
                 <Typography variant="h6" component="h3" gutterBottom color="primary">
-                  🏆 Logros y Reconocimientos
+                  🔔 Notificaciones
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  Insignias ganadas por tu participación activa en CoomÜnity
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Configuración pendiente de integración con backend
                 </Typography>
-                
-                <Grid container spacing={2}>
-                  {userProfileData.achievements.map((achievement) => (
-                    <Grid item xs={12} sm={6} md={4} key={achievement.id}>
-                      <Card 
-                        elevation={1} 
-                        sx={{ 
-                          borderRadius: 3,
-                          border: `2px solid ${getRarityColor(achievement.rarity)}`,
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
-                            transform: 'translateY(-4px)',
-                            boxShadow: 3
-                          }
-                        }}
-                      >
-                        <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                          <EmojiEvents 
-                            sx={{ 
-                              fontSize: 48, 
-                              color: getRarityColor(achievement.rarity),
-                              mb: 2 
-                            }} 
-                          />
-                          <Typography variant="h6" component="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
-                            {achievement.title}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                            {achievement.description}
-                          </Typography>
-                          <Chip 
-                            label={achievement.rarity.toUpperCase()}
-                            size="small"
-                            sx={{ 
-                              bgcolor: getRarityColor(achievement.rarity) + '20',
-                              color: getRarityColor(achievement.rarity),
-                              fontWeight: 'bold'
-                            }}
-                          />
-                          <Typography variant="caption" display="block" sx={{ mt: 1, opacity: 0.7 }}>
-                            {new Date(achievement.date).toLocaleDateString('es-CO')}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
 
-                <Box sx={{ mt: 4, textAlign: 'center' }}>
-                  <Alert severity="success">
-                    <Typography variant="body2">
-                      🎉 <strong>¡Próximo logro!</strong> Completa 5 gigs más para desbloquear 
-                      "Maestro del Marketplace" (Legendary)
-                    </Typography>
-                  </Alert>
-                </Box>
+          <Grid item xs={12} md={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" component="h3" gutterBottom color="primary">
+                  🔒 Privacidad
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Configuración pendiente de integración con backend
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
       </TabPanel>
 
-      {/* Tab Panel 3: Configuración */}
-      <TabPanel value={tabValue} index={3}>
-        <Grid container spacing={3}>
-          {/* Privacidad */}
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" component="h3" gutterBottom color="primary">
-                  🔐 Configuración de Privacidad
-                </Typography>
-                
-                <List>
-                  <ListItem>
-                    <ListItemIcon>
-                      <Public />
-                    </ListItemIcon>
-                    <ListItemText primary="Perfil Visible Públicamente" />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={privacySettings.profileVisible}
-                          onChange={(e) => setPrivacySettings({
-                            ...privacySettings,
-                            profileVisible: e.target.checked
-                          })}
-                        />
-                      }
-                      label=""
-                    />
-                  </ListItem>
-                  
-                  <ListItem>
-                    <ListItemIcon>
-                      <LocalAtm />
-                    </ListItemIcon>
-                    <ListItemText primary="Mostrar Ingresos" />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={privacySettings.showEarnings}
-                          onChange={(e) => setPrivacySettings({
-                            ...privacySettings,
-                            showEarnings: e.target.checked
-                          })}
-                        />
-                      }
-                      label=""
-                    />
-                  </ListItem>
-                  
-                  <ListItem>
-                    <ListItemIcon>
-                      <LocationOn />
-                    </ListItemIcon>
-                    <ListItemText primary="Mostrar Ubicación" />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={privacySettings.showLocation}
-                          onChange={(e) => setPrivacySettings({
-                            ...privacySettings,
-                            showLocation: e.target.checked
-                          })}
-                        />
-                      }
-                      label=""
-                    />
-                  </ListItem>
-                  
-                  <ListItem>
-                    <ListItemIcon>
-                      <Email />
-                    </ListItemIcon>
-                    <ListItemText primary="Mostrar Email" />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={privacySettings.showEmail}
-                          onChange={(e) => setPrivacySettings({
-                            ...privacySettings,
-                            showEmail: e.target.checked
-                          })}
-                        />
-                      }
-                      label=""
-                    />
-                  </ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Notificaciones */}
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" component="h3" gutterBottom color="primary">
-                  🔔 Configuración de Notificaciones
-                </Typography>
-                
-                <List>
-                  <ListItem>
-                    <ListItemIcon>
-                      <Email />
-                    </ListItemIcon>
-                    <ListItemText primary="Notificaciones por Email" />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={notifications.email}
-                          onChange={(e) => setNotifications({
-                            ...notifications,
-                            email: e.target.checked
-                          })}
-                        />
-                      }
-                      label=""
-                    />
-                  </ListItem>
-                  
-                  <ListItem>
-                    <ListItemIcon>
-                      <Notifications />
-                    </ListItemIcon>
-                    <ListItemText primary="Notificaciones Push" />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={notifications.push}
-                          onChange={(e) => setNotifications({
-                            ...notifications,
-                            push: e.target.checked
-                          })}
-                        />
-                      }
-                      label=""
-                    />
-                  </ListItem>
-                  
-                  <ListItem>
-                    <ListItemIcon>
-                      <Phone />
-                    </ListItemIcon>
-                    <ListItemText primary="Notificaciones SMS" />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={notifications.sms}
-                          onChange={(e) => setNotifications({
-                            ...notifications,
-                            sms: e.target.checked
-                          })}
-                        />
-                      }
-                      label=""
-                    />
-                  </ListItem>
-                  
-                  <ListItem>
-                    <ListItemIcon>
-                      <TrendingUp />
-                    </ListItemIcon>
-                    <ListItemText primary="Marketing y Promociones" />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={notifications.marketing}
-                          onChange={(e) => setNotifications({
-                            ...notifications,
-                            marketing: e.target.checked
-                          })}
-                        />
-                      }
-                      label=""
-                    />
-                  </ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Configuraciones Generales */}
-          <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" component="h3" gutterBottom color="primary">
-                  ⚙️ Configuraciones Generales
-                </Typography>
-                
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={4}>
-                    <FormControl fullWidth>
-                      <InputLabel>Idioma</InputLabel>
-                      <Select value={userProfileData.preferences.language} label="Idioma">
-                        <MenuItem value="español">Español</MenuItem>
-                        <MenuItem value="english">English</MenuItem>
-                        <MenuItem value="português">Português</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  
-                  <Grid item xs={12} md={4}>
-                    <FormControl fullWidth>
-                      <InputLabel>Zona Horaria</InputLabel>
-                      <Select value={userProfileData.preferences.timezone} label="Zona Horaria">
-                        <MenuItem value="America/Bogota">Bogotá (COT)</MenuItem>
-                        <MenuItem value="America/Mexico_City">Ciudad de México (CST)</MenuItem>
-                        <MenuItem value="America/Argentina/Buenos_Aires">Buenos Aires (ART)</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  
-                  <Grid item xs={12} md={4}>
-                    <FormControl fullWidth>
-                      <InputLabel>Moneda Preferida</InputLabel>
-                      <Select value={userProfileData.preferences.currency} label="Moneda Preferida">
-                        <MenuItem value="COP">COP - Peso Colombiano</MenuItem>
-                        <MenuItem value="USD">USD - Dólar Americano</MenuItem>
-                        <MenuItem value="EUR">EUR - Euro</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-
-                <Alert severity="success" sx={{ mt: 3 }}>
-                  <Typography variant="body2">
-                    ✅ <strong>Perfil Completo:</strong> Tu perfil está 100% completo. 
-                    Esto mejora tu visibilidad en el Marketplace y aumenta las oportunidades de negocio.
-                  </Typography>
-                </Alert>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </TabPanel>
-
-      {/* Diálogo de Edición */}
-      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>✏️ Editar Perfil</DialogTitle>
+      {/* 🎯 Diálogo de Edición de Perfil */}
+      <Dialog open={editDialogOpen} onClose={handleCancelEdit} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Edit color="primary" />
+            Editar Perfil
+          </Box>
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -919,8 +600,13 @@ export const Profile: React.FC = () => {
             label="Nombre Completo"
             fullWidth
             variant="outlined"
-            defaultValue={userProfileData.personal.name}
+            value={editingData.full_name}
+            onChange={(e) => setEditingData(prev => ({
+              ...prev,
+              full_name: e.target.value
+            }))}
             sx={{ mb: 2 }}
+            disabled={saving}
           />
           <TextField
             margin="dense"
@@ -929,30 +615,69 @@ export const Profile: React.FC = () => {
             rows={3}
             fullWidth
             variant="outlined"
-            defaultValue={userProfileData.personal.bio}
+            value={editingData.bio}
+            onChange={(e) => setEditingData(prev => ({
+              ...prev,
+              bio: e.target.value
+            }))}
             sx={{ mb: 2 }}
+            disabled={saving}
+            placeholder="Cuéntanos sobre ti..."
           />
           <TextField
             margin="dense"
             label="Ubicación"
             fullWidth
             variant="outlined"
-            defaultValue={userProfileData.personal.location}
+            value={editingData.location}
+            onChange={(e) => setEditingData(prev => ({
+              ...prev,
+              location: e.target.value
+            }))}
             sx={{ mb: 2 }}
+            disabled={saving}
+            placeholder="Ciudad, País"
           />
           <TextField
             margin="dense"
             label="Teléfono"
             fullWidth
             variant="outlined"
-            defaultValue={userProfileData.personal.phone}
+            value={editingData.phone}
+            onChange={(e) => setEditingData(prev => ({
+              ...prev,
+              phone: e.target.value
+            }))}
+            disabled={saving}
+            placeholder="+57 300 123 4567"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setEditDialogOpen(false)}>Cancelar</Button>
-          <Button variant="contained">Guardar Cambios</Button>
+          <Button 
+            onClick={handleCancelEdit} 
+            disabled={saving}
+            startIcon={<Cancel />}
+          >
+            Cancelar
+          </Button>
+          <Button 
+            onClick={handleSaveProfile} 
+            variant="contained"
+            disabled={saving}
+            startIcon={saving ? <CircularProgress size={16} /> : <Save />}
+          >
+            {saving ? 'Guardando...' : 'Guardar Cambios'}
+          </Button>
         </DialogActions>
       </Dialog>
+
+      {/* 🎯 Snackbar para notificaciones */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </Container>
   );
 }; 

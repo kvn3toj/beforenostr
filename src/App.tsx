@@ -15,6 +15,7 @@ import { PlaylistDirectPage } from './pages/PlaylistDirectPage'
 import { PlaylistRedirectPage } from './pages/PlaylistRedirectPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
+import { BetaRegisterPage } from './pages/BetaRegisterPage'
 import { UsersPage } from './pages/UsersPage'
 import { RolesPage } from './pages/RolesPage'
 import { PermissionsPage } from './pages/PermissionsPage'
@@ -59,6 +60,7 @@ function App() {
             {/* Rutas de autenticación (sin layout) */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/beta-register" element={<BetaRegisterPage />} />
             
             {/* Rutas principales (con layout) */}
             <Route element={<MainLayout />}>

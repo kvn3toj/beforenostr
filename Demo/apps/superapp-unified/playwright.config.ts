@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   testDir: './tests',
@@ -11,12 +15,18 @@ export default defineConfig({
     ['html', { outputFolder: 'playwright-report' }],
     ['json', { outputFile: 'test-results/results.json' }]
   ],
+  
+  // Configuración dinámica de baseURL
   use: {
-    baseURL: 'http://localhost:3000',
+    // El baseURL se configurará dinámicamente en globalSetup
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
   },
+
+  // Setup global para detectar puerto antes de ejecutar tests
+  globalSetup: path.resolve(__dirname, 'utils/global-setup.cjs'),
 
   projects: [
     {
@@ -41,10 +51,11 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
+  // Configuración del servidor web (opcional, para CI)
+  webServer: process.env.CI ? {
     command: 'npm run dev',
     port: 3000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120 * 1000,
-  },
+  } : undefined,
 }); 

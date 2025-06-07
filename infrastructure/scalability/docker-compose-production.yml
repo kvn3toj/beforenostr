@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  # Load Balancer Nginx
+  nginx-lb:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-production.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend-real
+    networks:
+      - coomunity-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend Real (conecta al NestJS externo)
+  backend-real:
+    image: nginx:alpine
+    volumes:
+      - ./backend-proxy.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - coomunity-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://host.docker.internal:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Redis para caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - coomunity-network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL para datos
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: coomunity_production
+      POSTGRES_USER: coomunity
+      POSTGRES_PASSWORD: coomunity_secure_2025
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-production.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - coomunity-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coomunity -d coomunity_production"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Prometheus para métricas
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus-production.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - coomunity-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+
+  # Grafana para dashboards
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3003:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: coomunity2025
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana-production-dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana-production-datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - coomunity-network
+
+volumes:
+  redis-data:
+  postgres-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  coomunity-network:
+    driver: bridge

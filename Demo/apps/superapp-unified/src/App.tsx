@@ -5,6 +5,11 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Toaster } from 'sonner';
 
+// 🚀 NUEVOS SISTEMAS PHASE 3 - Performance y UX Avanzado
+import { NotificationProvider } from './components/common/NotificationSystem';
+import { useLazyLoading } from './components/common/LazyLoader';
+import UXWriter from './components/common/UXWriter';
+
 // Importar hook de monitoreo
 import { usePageViewTracking } from './hooks/useMonitoring';
 
@@ -23,14 +28,15 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Core Pages
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import BetaRegister from './pages/BetaRegister';
 import { Home } from './pages/Home';
 
 // Skeleton loaders for lazy-loaded components
 import { DashboardSkeleton, AppLayoutSkeleton } from './components/ui/SkeletonLoaders';
 
-// ⚡ LAZY LOADED PAGES - Code Splitting Implementation
+// ⚡ LAZY LOADED PAGES - Code Splitting Implementation con LazyLoader optimizado
 // These components will be loaded on-demand when user navigates to them
 
 // Profile Module - Heavy component (34KB, 958 lines)
@@ -62,6 +68,12 @@ const SocialChat = lazy(() => import('./pages/SocialChat').then(module => ({ def
 const SocialFeed = lazy(() => import('./pages/SocialFeed').then(module => ({ default: module.SocialFeed })));
 const Mundos = lazy(() => import('./pages/Mundos').then(module => ({ default: module.Mundos })));
 const PWADemo = lazy(() => import('./pages/PWADemo').then(module => ({ default: module.default })));
+
+// 🎯 Componente para inicializar lazy loading inteligente
+const LazyLoadingInitializer: React.FC = () => {
+  useLazyLoading(); // Hook que preloads módulos críticos
+  return null;
+};
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -426,6 +438,7 @@ const AppWithTracking: React.FC = () => {
         {/* 🔐 Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/beta-register" element={<BetaRegister />} />
 
         {/* 🏠 Protected Main App Routes */}
         <Route 
@@ -654,9 +667,12 @@ const App: React.FC = () => {
       <ThemeProvider theme={coomunityTheme}>
         <CssBaseline />
         <AuthProvider>
-          <Router>
-            <AppWithTracking />
-          </Router>
+          <NotificationProvider>
+            <Router>
+              <LazyLoadingInitializer />
+              <AppWithTracking />
+            </Router>
+          </NotificationProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

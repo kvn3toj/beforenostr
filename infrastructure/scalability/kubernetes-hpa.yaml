@@ -1,0 +1,332 @@
+# Kubernetes Horizontal Pod Autoscaler Configuration
+# File: infrastructure/scalability/kubernetes-hpa.yaml
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: coomunity-backend-hpa
+  namespace: coomunity-production
+  labels:
+    app: coomunity-backend
+    component: autoscaler
+    environment: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coomunity-backend-deployment
+  
+  # Scaling configuration
+  minReplicas: 3
+  maxReplicas: 50
+  
+  # Scaling behavior
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300  # 5 minutes
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+      - type: Pods
+        value: 2
+        periodSeconds: 60
+      selectPolicy: Min
+    scaleUp:
+      stabilizationWindowSeconds: 60   # 1 minute
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+      - type: Pods
+        value: 5
+        periodSeconds: 60
+      selectPolicy: Max
+  
+  # Metrics for scaling decisions
+  metrics:
+  # CPU utilization
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  
+  # Memory utilization
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  
+  # Custom metrics for CoomÜnity specific scaling
+  - type: Pods
+    pods:
+      metric:
+        name: active_connections_per_pod
+      target:
+        type: AverageValue
+        averageValue: "100"
+  
+  - type: Pods
+    pods:
+      metric:
+        name: ayni_transactions_per_second_per_pod
+      target:
+        type: AverageValue
+        averageValue: "10"
+
+---
+# Vertical Pod Autoscaler for resource optimization
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: coomunity-backend-vpa
+  namespace: coomunity-production
+  labels:
+    app: coomunity-backend
+    component: vpa
+    environment: production
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coomunity-backend-deployment
+  
+  updatePolicy:
+    updateMode: "Auto"
+  
+  resourcePolicy:
+    containerPolicies:
+    - containerName: coomunity-backend
+      minAllowed:
+        cpu: 100m
+        memory: 128Mi
+      maxAllowed:
+        cpu: 2000m
+        memory: 4Gi
+      controlledResources: ["cpu", "memory"]
+
+---
+# Pod Disruption Budget to ensure availability during scaling
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: coomunity-backend-pdb
+  namespace: coomunity-production
+  labels:
+    app: coomunity-backend
+    component: pdb
+    environment: production
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: coomunity-backend
+      environment: production
+
+---
+# ServiceMonitor for Prometheus metrics collection
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: coomunity-backend-metrics
+  namespace: coomunity-production
+  labels:
+    app: coomunity-backend
+    component: monitoring
+    environment: production
+spec:
+  selector:
+    matchLabels:
+      app: coomunity-backend
+      environment: production
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+    honorLabels: true
+  - port: health
+    interval: 10s
+    path: /health
+    honorLabels: true
+
+---
+# Custom Resource Definition for CoomÜnity specific metrics
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: coomunitymetrics.monitoring.coomunity.global
+spec:
+  group: monitoring.coomunity.global
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              ayniTransactionsPerSecond:
+                type: number
+                description: "Number of Ayni transactions per second"
+              meritosEarnedPerMinute:
+                type: number
+                description: "Méritos earned per minute"
+              ondasGeneratedPerHour:
+                type: number
+                description: "Öndas generated per hour"
+              activeUsersCount:
+                type: integer
+                description: "Number of active users"
+              bienComunContributions:
+                type: number
+                description: "Bien Común contributions metric"
+          status:
+            type: object
+            properties:
+              lastUpdated:
+                type: string
+                format: date-time
+              healthy:
+                type: boolean
+  scope: Namespaced
+  names:
+    plural: coomunitymetrics
+    singular: coomunitymetric
+    kind: CoomUnityMetric
+
+---
+# KEDA ScaledObject for advanced autoscaling based on custom metrics
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: coomunity-backend-scaledobject
+  namespace: coomunity-production
+  labels:
+    app: coomunity-backend
+    component: keda-scaler
+    environment: production
+spec:
+  scaleTargetRef:
+    name: coomunity-backend-deployment
+  
+  pollingInterval: 30
+  cooldownPeriod: 300
+  idleReplicaCount: 3
+  minReplicaCount: 3
+  maxReplicaCount: 100
+  
+  triggers:
+  # Redis queue length trigger
+  - type: redis
+    metadata:
+      address: redis-cluster.coomunity-production.svc.cluster.local:6379
+      listName: ayni_processing_queue
+      listLength: "10"
+      enableTLS: "false"
+  
+  # PostgreSQL connection count trigger
+  - type: postgresql
+    metadata:
+      connection: postgresql://monitor:password@postgres-primary.coomunity-production.svc.cluster.local:5432/coomunity?sslmode=require
+      query: "SELECT count(*) FROM pg_stat_activity WHERE state = 'active'"
+      targetQueryValue: "80"
+  
+  # Prometheus metrics trigger for CoomÜnity specific metrics
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus.monitoring.svc.cluster.local:9090
+      metricName: coomunity_ayni_transactions_per_second
+      threshold: "50"
+      query: sum(rate(coomunity_ayni_transactions_total[1m]))
+  
+  # HTTP requests per second trigger
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus.monitoring.svc.cluster.local:9090
+      metricName: coomunity_http_requests_per_second
+      threshold: "1000"
+      query: sum(rate(http_requests_total{job="coomunity-backend"}[1m]))
+
+---
+# Network Policy for secure communication
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: coomunity-backend-netpol
+  namespace: coomunity-production
+  labels:
+    app: coomunity-backend
+    component: security
+    environment: production
+spec:
+  podSelector:
+    matchLabels:
+      app: coomunity-backend
+      environment: production
+  
+  policyTypes:
+  - Ingress
+  - Egress
+  
+  ingress:
+  # Allow traffic from load balancer
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 3002
+  
+  # Allow traffic from monitoring
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 9090  # metrics port
+  
+  egress:
+  # Allow traffic to PostgreSQL
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: coomunity-production
+    - podSelector:
+        matchLabels:
+          app: postgresql
+    ports:
+    - protocol: TCP
+      port: 5432
+  
+  # Allow traffic to Redis
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: coomunity-production
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - protocol: TCP
+      port: 6379
+  
+  # Allow DNS resolution
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+  
+  # Allow HTTPS outbound (for external APIs)
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443 

@@ -32,7 +32,13 @@
     "test:monitoring": "playwright test monitoring-verification-fixed.spec.ts --project=chromium",
     "test:monitoring:quick": "playwright test monitoring-verification-fixed.spec.ts --project=chromium --grep='Complete Monitoring Stack Integration' --reporter=line",
     "verify:monitoring": "./scripts/verify-monitoring.sh",
-    "monitoring:status": "echo '🔍 Monitoring Status:' && npm run verify:monitoring"
+    "monitoring:status": "echo '🔍 Monitoring Status:' && npm run verify:monitoring",
+    "test:auto": "node scripts/test-with-port-detection.cjs",
+    "test:auto:file": "node scripts/test-with-port-detection.cjs",
+    "test:auto:headless": "node scripts/test-with-port-detection.cjs --headless",
+    "test:auto:debug": "node scripts/test-with-port-detection.cjs --debug",
+    "test:smart": "node scripts/test-with-port-detection.cjs",
+    "test:port-detect": "node scripts/test-with-port-detection.cjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -53,6 +59,7 @@
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.53.0",
     "react-router-dom": "^6.22.2",
     "sonner": "^2.0.3",
