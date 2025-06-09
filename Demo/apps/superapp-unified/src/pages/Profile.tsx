@@ -83,6 +83,30 @@ import {
   UpdateProfileData 
 } from '../hooks/useUserProfile';
 
+// 🔧 SOLUCIÓN: Función segura para formatear fechas
+const formatSafeDate = (dateString?: string, options?: Intl.DateTimeFormatOptions): string => {
+  if (!dateString) return 'No especificada';
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) {
+      console.warn(`⚠️ Fecha inválida detectada: ${dateString}`);
+      return 'Fecha inválida';
+    }
+    
+    return date.toLocaleDateString('es-ES', options || {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.error(`❌ Error al formatear fecha: ${dateString}`, error);
+    return 'Error en fecha';
+  }
+};
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -258,10 +282,7 @@ export const Profile: React.FC = () => {
 
   // 🎯 Datos calculados desde el perfil obtenido
   const displayName = profileData.full_name || profileData.email?.split('@')[0] || 'Usuario';
-  const memberSince = new Date(profileData.created_at).toLocaleDateString('es-ES', { 
-    year: 'numeric', 
-    month: 'long' 
-  });
+  const memberSince = formatSafeDate(profileData.created_at);
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>

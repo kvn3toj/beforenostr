@@ -56,27 +56,40 @@ import {
   ChallengeTask 
 } from '../types/challenges';
 
-// Helper functions (reutilizadas del ChallengeCard)
+// Helper functions for styling
 const getDifficultyColor = (difficulty: ChallengeDifficulty) => {
   switch (difficulty) {
-    case 'BEGINNER': return 'success';
-    case 'INTERMEDIATE': return 'warning';
-    case 'ADVANCED': return 'error';
-    case 'EXPERT': return 'secondary';
-    default: return 'default';
+    case 'BEGINNER':
+      return 'success';
+    case 'INTERMEDIATE':
+      return 'warning';
+    case 'ADVANCED':
+      return 'error';
+    case 'EXPERT':
+      return 'secondary';
+    default:
+      return 'default';
   }
 };
 
 const getCategoryColor = (category: ChallengeCategory) => {
   switch (category) {
-    case 'LEARNING': return '#2196F3';
-    case 'SOCIAL': return '#FF9800';
-    case 'WELLNESS': return '#4CAF50';
-    case 'CREATIVITY': return '#9C27B0';
-    case 'COMMUNITY': return '#FF5722';
-    case 'SUSTAINABILITY': return '#8BC34A';
-    case 'INNOVATION': return '#607D8B';
-    default: return '#757575';
+    case 'LEARNING':
+      return '#2196F3';
+    case 'SOCIAL':
+      return '#FF9800';
+    case 'WELLNESS':
+      return '#4CAF50';
+    case 'CREATIVITY':
+      return '#9C27B0';
+    case 'COMMUNITY':
+      return '#FF5722';
+    case 'SUSTAINABILITY':
+      return '#8BC34A';
+    case 'INNOVATION':
+      return '#607D8B';
+    default:
+      return '#757575';
   }
 };
 
@@ -86,6 +99,30 @@ const formatDuration = (duration?: number) => {
   if (duration < 7) return `${duration} días`;
   if (duration < 30) return `${Math.round(duration / 7)} semanas`;
   return `${Math.round(duration / 30)} meses`;
+};
+
+// 🔧 SOLUCIÓN: Función segura para formatear fechas
+const formatSafeDate = (dateString?: string): string => {
+  if (!dateString) return 'No especificada';
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) {
+      console.warn(`⚠️ Fecha inválida detectada: ${dateString}`);
+      return 'Fecha inválida';
+    }
+    
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.error(`❌ Error al formatear fecha: ${dateString}`, error);
+    return 'Error en fecha';
+  }
 };
 
 export const ChallengeDetailPage: React.FC = () => {
@@ -498,7 +535,7 @@ export const ChallengeDetailPage: React.FC = () => {
                     </ListItemIcon>
                     <ListItemText 
                       primary="Fecha límite" 
-                      secondary={new Date(challenge.endDate).toLocaleDateString()} 
+                      secondary={formatSafeDate(challenge.endDate)} 
                     />
                   </ListItem>
                 )}

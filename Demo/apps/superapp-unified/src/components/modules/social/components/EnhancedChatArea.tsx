@@ -52,6 +52,31 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 
+// 🔧 SOLUCIÓN: Función segura para formatear fechas
+const formatSafeDate = (dateString?: string, options?: Intl.DateTimeFormatOptions): string => {
+  if (!dateString) return 'Fecha no válida';
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) {
+      console.warn(`⚠️ Fecha inválida detectada en chat: ${dateString}`);
+      return 'Fecha inválida';
+    }
+    
+    return date.toLocaleDateString('es-ES', options || {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.error(`❌ Error al formatear fecha en chat: ${dateString}`, error);
+    return 'Error en fecha';
+  }
+};
+
 interface Message {
   id: string;
   content: string;
@@ -277,10 +302,23 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
 
   // Format timestamp
   const formatTimestamp = useCallback((timestamp: string) => {
-    return formatDistanceToNow(new Date(timestamp), { 
-      addSuffix: true, 
-      locale: es 
-    });
+    try {
+      const date = new Date(timestamp);
+      
+      // Verificar si la fecha es válida
+      if (isNaN(date.getTime())) {
+        console.warn(`⚠️ Fecha inválida detectada en chat: ${timestamp}`);
+        return 'Fecha inválida';
+      }
+      
+      return formatDistanceToNow(date, { 
+        addSuffix: true, 
+        locale: es 
+      });
+    } catch (error) {
+      console.error(`❌ Error al formatear timestamp en chat: ${timestamp}`, error);
+      return 'Hace un momento';
+    }
   }, []);
 
   // Group messages by date
@@ -288,11 +326,21 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
     const groups: { [key: string]: Message[] } = {};
     
     messages.forEach((message: Message) => {
-      const date = new Date(message.timestamp).toDateString();
-      if (!groups[date]) {
-        groups[date] = [];
+      try {
+        const date = new Date(message.timestamp);
+        const dateString = isNaN(date.getTime()) ? 'Fecha inválida' : date.toDateString();
+        
+        if (!groups[dateString]) {
+          groups[dateString] = [];
+        }
+        groups[dateString].push(message);
+      } catch (error) {
+        console.error(`❌ Error al agrupar mensaje por fecha: ${message.timestamp}`, error);
+        if (!groups['Fecha inválida']) {
+          groups['Fecha inválida'] = [];
+        }
+        groups['Fecha inválida'].push(message);
       }
-      groups[date].push(message);
     });
     
     return groups;
@@ -577,7 +625,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
             {/* Date separator */}
             <Box sx={{ textAlign: 'center', my: 2 }}>
               <Chip
-                label={new Date(date).toLocaleDateString('es-ES', {
+                label={formatSafeDate(date, {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
