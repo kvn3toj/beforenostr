@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../lib/api-service';
+import { checkMockAuthStatus, validateMockUser, logAuthFlowStep } from '../utils/testMockAuth';
 
 // User interface - optimizada para backend NestJS
 interface User {
@@ -7,7 +8,7 @@ interface User {
   email: string;
   full_name?: string;
   avatar_url?: string;
-  role?: 'user' | 'admin';
+  role?: 'user' | 'admin' | 'Super Admin' | 'Content Admin';
   created_at: string;
   // Campos adicionales del backend NestJS
   access_token?: string;
@@ -35,7 +36,24 @@ export const useAuth = () => {
 };
 
 // Configuración del backend NestJS
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:3002';
+
+// 🧪 **MOCK USER PARA DESARROLLO/TESTING**
+const MOCK_AUTHENTICATED_USER: User = {
+  id: 'mock-user-id-coomunity-tester-123',
+  email: 'tester@coomunity.com',
+  full_name: 'CoomÜnity Tester',
+  avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+  role: 'Super Admin', // Super Admin para acceso completo a todas las funcionalidades
+  created_at: new Date().toISOString(),
+  access_token: 'mock-jwt-token-for-testing-do-not-use-in-production',
+  refresh_token: 'mock-refresh-token-for-testing',
+};
+
+// 🔧 **FUNCIÓN PARA VERIFICAR SI EL MOCK ESTÁ HABILITADO**
+const isMockAuthEnabled = (): boolean => {
+  return (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
+};
 
 // 🔄 Función para mapear respuesta del backend al formato User del frontend
 const mapBackendUserToFrontend = (backendUser: any, access_token?: string): User => {
@@ -53,6 +71,14 @@ const mapBackendUserToFrontend = (backendUser: any, access_token?: string): User
 
 // Función para realizar login con backend NestJS
 const backendSignIn = async (email: string, password: string): Promise<User> => {
+  // 🧪 **MOCK: Si el mock está habilitado, devolver usuario mock**
+  if (isMockAuthEnabled()) {
+    console.log('[Auth Mock] Mock login habilitado - usando usuario de prueba');
+    // Simular delay de red para UX realista
+    await new Promise(resolve => setTimeout(resolve, 800));
+    return { ...MOCK_AUTHENTICATED_USER };
+  }
+
   try {
     const response = await authAPI.login(email, password);
     
@@ -83,6 +109,18 @@ const backendSignIn = async (email: string, password: string): Promise<User> => 
 
 // Función para realizar registro con backend NestJS
 const backendSignUp = async (email: string, password: string, fullName?: string): Promise<User> => {
+  // 🧪 **MOCK: Si el mock está habilitado, devolver usuario mock actualizado**
+  if (isMockAuthEnabled()) {
+    console.log('[Auth Mock] Mock registro habilitado - usando usuario de prueba');
+    // Simular delay de red para UX realista
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return { 
+      ...MOCK_AUTHENTICATED_USER,
+      email: email, // Usar el email proporcionado
+      full_name: fullName || MOCK_AUTHENTICATED_USER.full_name
+    };
+  }
+
   try {
     const response = await authAPI.register(email, password, fullName);
     
@@ -113,6 +151,12 @@ const backendSignUp = async (email: string, password: string, fullName?: string)
 
 // Función para verificar si el usuario está autenticado
 const checkAuthFromToken = async (): Promise<User | null> => {
+  // 🧪 **MOCK: Si el mock está habilitado, devolver usuario mock directamente**
+  if (isMockAuthEnabled()) {
+    console.log('[Auth Mock] Mock auth verificación habilitada - auto-autenticando usuario de prueba');
+    return { ...MOCK_AUTHENTICATED_USER };
+  }
+
   try {
     const savedToken = localStorage.getItem('coomunity_token');
     
@@ -152,10 +196,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        // 🧪 **VERIFICACIÓN INICIAL DEL MOCK**
+        const mockEnabled = checkMockAuthStatus();
+        logAuthFlowStep('Starting authentication check', { mockEnabled });
+        
         const authenticatedUser = await checkAuthFromToken();
         setUser(authenticatedUser);
+        
+        // 🧪 **VALIDACIÓN DEL USUARIO MOCK**
+        if (authenticatedUser && mockEnabled) {
+          validateMockUser(authenticatedUser);
+        }
+        
+        // 🧪 **MOCK: Si hay usuario mock, guardarlo en localStorage para consistencia**
+        if (isMockAuthEnabled() && authenticatedUser) {
+          try {
+            localStorage.setItem('coomunity_user', JSON.stringify(authenticatedUser));
+            localStorage.setItem('coomunity_token', authenticatedUser.access_token || '');
+            logAuthFlowStep('Mock user saved to localStorage');
+          } catch (error) {
+            console.warn('[Auth Mock] Error guardando usuario mock en localStorage:', error);
+          }
+        }
+        
+        logAuthFlowStep('Authentication check completed', { 
+          userAuthenticated: !!authenticatedUser,
+          userId: authenticatedUser?.id,
+          mockMode: mockEnabled
+        });
       } catch (error) {
         console.error('[Auth] Error en verificación inicial:', error);
+        logAuthFlowStep('Authentication check failed', { error: error.message });
         setUser(null);
       } finally {
         setLoading(false);
@@ -212,14 +283,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     setLoading(true);
     try {
-      // Intentar logout en el backend (opcional, no crítico si falla)
-      if (user?.access_token) {
-        try {
-          await authAPI.logout();
-        } catch (error) {
-          console.warn('[Auth] Error en logout del backend:', error);
-          // No lanzar error, continuar con logout local
+      // 🧪 **MOCK: Si el mock está habilitado, saltear logout del backend**
+      if (!isMockAuthEnabled()) {
+        // Intentar logout en el backend (opcional, no crítico si falla)
+        if (user?.access_token) {
+          try {
+            await authAPI.logout();
+          } catch (error) {
+            console.warn('[Auth] Error en logout del backend:', error);
+            // No lanzar error, continuar con logout local
+          }
         }
+      } else {
+        console.log('[Auth Mock] Mock logout - saltando llamada al backend');
       }
 
       // Limpiar estado local
@@ -246,6 +322,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setLoading(true);
     try {
+      // 🧪 **MOCK: Si el mock está habilitado, simular actualización local**
+      if (isMockAuthEnabled()) {
+        console.log('[Auth Mock] Mock update profile - actualizando usuario mock localmente');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const updatedUser = { ...user, ...updates };
+        setUser(updatedUser);
+        
+        try {
+          localStorage.setItem('coomunity_user', JSON.stringify(updatedUser));
+        } catch (error) {
+          console.warn('[Auth Mock] Error guardando perfil actualizado:', error);
+        }
+        return;
+      }
+
       // Actualizar en backend usando authAPI
       const profileData = await authAPI.updateProfile(updates);
       

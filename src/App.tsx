@@ -29,6 +29,7 @@ import { WalletPage } from './pages/WalletPage'
 import { MeritsPage } from './pages/MeritsPage'
 import { GroupsPage } from './pages/GroupsPage'
 import { ChallengesPage } from './pages/ChallengesPage'
+import { ChallengeDetailPage } from './pages/ChallengeDetailPage'
 import { CreateChallengePage } from './pages/CreateChallengePage'
 import { SocialPage } from './pages/SocialPage'
 import { MarketplacePage } from './pages/MarketplacePage'
@@ -89,6 +90,7 @@ function App() {
               <Route path="/merits" element={<MeritsPage />} />
               <Route path="/groups" element={<GroupsPage />} />
               <Route path="/challenges" element={<ChallengesPage />} />
+              <Route path="/challenges/:challengeId" element={<ChallengeDetailPage />} />
               <Route path="/challenges/create" element={<CreateChallengePage />} />
               <Route path="/social" element={<SocialPage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />

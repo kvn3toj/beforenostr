@@ -76,39 +76,12 @@ import {
   Cancel
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
-
-// 🔄 Interfaces para datos del perfil extendido (del backend)
-interface ExtendedProfile {
-  bio?: string;
-  location?: string;
-  phone?: string;
-  website?: string;
-  skills?: string[];
-  preferences?: {
-    language?: string;
-    timezone?: string;
-    currency?: string;
-    notifications?: {
-      email: boolean;
-      push: boolean;
-      sms: boolean;
-      marketing: boolean;
-    };
-    privacy?: {
-      profileVisible: boolean;
-      showEarnings: boolean;
-      showLocation: boolean;
-      showEmail: boolean;
-    };
-    theme?: 'light' | 'dark' | 'system';
-  };
-  stats?: {
-    level?: number;
-    points?: number;
-    completedTasks?: number;
-    memberSince?: string;
-  };
-}
+import { 
+  useCurrentUserProfile, 
+  useUpdateUserProfile, 
+  profileValidation,
+  UpdateProfileData 
+} from '../hooks/useUserProfile';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -137,18 +110,26 @@ function TabPanel(props: TabPanelProps) {
 
 export const Profile: React.FC = () => {
   const theme = useTheme();
-  const { user, loading: authLoading, updateProfile } = useAuth();
+  const { user } = useAuth();
+  
+  // 🎯 Hooks de datos usando Smart Query
+  const { 
+    data: profileData, 
+    isLoading: profileLoading, 
+    error: profileError 
+  } = useCurrentUserProfile();
+  
+  const updateProfileMutation = useUpdateUserProfile();
   
   // 🎯 Estados locales
   const [tabValue, setTabValue] = useState(0);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [profileData, setProfileData] = useState<ExtendedProfile>({});
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   // 🎯 Estados para edición
-  const [editingData, setEditingData] = useState({
+  const [editingData, setEditingData] = useState<UpdateProfileData>({
     full_name: '',
     bio: '',
     location: '',
@@ -156,18 +137,18 @@ export const Profile: React.FC = () => {
     website: ''
   });
 
-  // 🔄 Inicializar datos de edición cuando el usuario cambie
+  // 🔄 Inicializar datos de edición cuando el perfil cambie
   useEffect(() => {
-    if (user) {
+    if (profileData) {
       setEditingData({
-        full_name: user.full_name || '',
+        full_name: profileData.full_name || '',
         bio: profileData.bio || '',
         location: profileData.location || '',
         phone: profileData.phone || '',
         website: profileData.website || ''
       });
     }
-  }, [user, profileData]);
+  }, [profileData]);
 
   // 🎯 Manejadores de eventos
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -179,15 +160,20 @@ export const Profile: React.FC = () => {
   };
 
   const handleSaveProfile = async () => {
-    if (!user) return;
+    if (!profileData) return;
     
-    setSaving(true);
+    // 🔍 Validar datos antes de enviar
+    const validation = profileValidation.validateProfileData(editingData);
+    if (!validation.isValid) {
+      setValidationErrors(validation.errors);
+      return;
+    }
+    
+    setValidationErrors([]);
+    
     try {
-      // 🔄 Actualizar perfil usando AuthContext
-      await updateProfile({
-        full_name: editingData.full_name,
-        // Nota: Otros campos pueden requerir endpoint específico del backend
-      });
+      // 🔄 Actualizar perfil usando el hook de Smart Query
+      await updateProfileMutation.mutateAsync(editingData);
 
       setSnackbarMessage('Perfil actualizado exitosamente');
       setSnackbarOpen(true);
@@ -196,27 +182,26 @@ export const Profile: React.FC = () => {
       console.error('Error updating profile:', error);
       setSnackbarMessage(error.message || 'Error al actualizar el perfil');
       setSnackbarOpen(true);
-    } finally {
-      setSaving(false);
     }
   };
 
   const handleCancelEdit = () => {
     // Restaurar datos originales
-    if (user) {
+    if (profileData) {
       setEditingData({
-        full_name: user.full_name || '',
+        full_name: profileData.full_name || '',
         bio: profileData.bio || '',
         location: profileData.location || '',
         phone: profileData.phone || '',
         website: profileData.website || ''
       });
     }
+    setValidationErrors([]);
     setEditDialogOpen(false);
   };
 
   // 🚨 Estados de carga y error
-  if (authLoading) {
+  if (profileLoading) {
     return (
       <Container maxWidth="lg" sx={{ py: 3 }}>
         <Card sx={{ mb: 3 }}>
@@ -245,11 +230,24 @@ export const Profile: React.FC = () => {
     );
   }
 
-  if (!user) {
+  if (profileError) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Alert severity="error">
+          <Typography variant="h6">Error al cargar el perfil</Typography>
+          <Typography variant="body2">
+            {profileError?.message || 'No se pudo obtener la información del perfil'}
+          </Typography>
+        </Alert>
+      </Container>
+    );
+  }
+
+  if (!profileData) {
     return (
       <Container maxWidth="lg" sx={{ py: 3 }}>
         <Alert severity="warning">
-          <Typography variant="h6">No hay usuario autenticado</Typography>
+          <Typography variant="h6">No hay datos del perfil</Typography>
           <Typography variant="body2">
             Por favor, inicia sesión para ver tu perfil.
           </Typography>
@@ -258,9 +256,9 @@ export const Profile: React.FC = () => {
     );
   }
 
-  // 🎯 Datos calculados desde el usuario autenticado
-  const displayName = user.full_name || user.email?.split('@')[0] || 'Usuario';
-  const memberSince = new Date(user.created_at).toLocaleDateString('es-ES', { 
+  // 🎯 Datos calculados desde el perfil obtenido
+  const displayName = profileData.full_name || profileData.email?.split('@')[0] || 'Usuario';
+  const memberSince = new Date(profileData.created_at).toLocaleDateString('es-ES', { 
     year: 'numeric', 
     month: 'long' 
   });
@@ -283,7 +281,7 @@ export const Profile: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 3, width: '100%' }}>
             {/* Avatar */}
             <Avatar
-              src={user.avatar_url}
+              src={profileData.avatar_url}
               sx={{ 
                 width: 120, 
                 height: 120, 
@@ -301,13 +299,13 @@ export const Profile: React.FC = () => {
                 <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
                   {displayName}
                 </Typography>
-                {user.role === 'admin' && (
+                {profileData.role === 'admin' && (
                   <Verified sx={{ color: '#1DA1F2', fontSize: 28 }} />
                 )}
                 <Chip 
-                  label={user.role === 'admin' ? 'Administrador' : 'Miembro'}
+                  label={profileData.role === 'admin' ? 'Administrador' : 'Miembro'}
                   sx={{ 
-                    bgcolor: user.role === 'admin' ? 'rgba(29,161,242,0.2)' : 'rgba(255,255,255,0.2)', 
+                    bgcolor: profileData.role === 'admin' ? 'rgba(29,161,242,0.2)' : 'rgba(255,255,255,0.2)', 
                     color: 'white',
                     fontWeight: 'bold'
                   }}
@@ -315,7 +313,7 @@ export const Profile: React.FC = () => {
               </Box>
               
               <Typography variant="h6" component="h2" sx={{ opacity: 0.9, mb: 1 }}>
-                {user.email}
+                {profileData.email}
               </Typography>
               
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
@@ -328,7 +326,7 @@ export const Profile: React.FC = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <Person sx={{ fontSize: 18 }} />
                   <Typography variant="body2">
-                    ID: {user.id.slice(0, 8)}...
+                    ID: {profileData.id.slice(0, 8)}...
                   </Typography>
                 </Box>
               </Box>
@@ -339,7 +337,7 @@ export const Profile: React.FC = () => {
               <IconButton 
                 sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
                 onClick={handleEditProfile}
-                disabled={saving}
+                disabled={updateProfileMutation.isPending}
               >
                 <Edit />
               </IconButton>
@@ -434,7 +432,7 @@ export const Profile: React.FC = () => {
                     </ListItemIcon>
                     <ListItemText
                       primary="Email"
-                      secondary={user.email}
+                      secondary={profileData.email}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
@@ -443,7 +441,7 @@ export const Profile: React.FC = () => {
                     </ListItemIcon>
                     <ListItemText
                       primary="Nombre Completo"
-                      secondary={user.full_name || 'No especificado'}
+                      secondary={profileData.full_name || 'No especificado'}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
@@ -461,7 +459,7 @@ export const Profile: React.FC = () => {
                     </ListItemIcon>
                     <ListItemText
                       primary="Rol"
-                      secondary={user.role === 'admin' ? 'Administrador' : 'Usuario'}
+                      secondary={profileData.role === 'admin' ? 'Administrador' : 'Usuario'}
                     />
                   </ListItem>
                 </List>
@@ -496,7 +494,7 @@ export const Profile: React.FC = () => {
                     </ListItemIcon>
                     <ListItemText
                       primary="Token de Autenticación"
-                      secondary={user.access_token ? 'Activo' : 'No disponible'}
+                      secondary={user?.access_token ? 'Activo' : 'No disponible'}
                     />
                   </ListItem>
                   <ListItem sx={{ px: 0 }}>
@@ -594,6 +592,18 @@ export const Profile: React.FC = () => {
           </Box>
         </DialogTitle>
         <DialogContent>
+          {/* 🚨 Mostrar errores de validación */}
+          {validationErrors.length > 0 && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              <Typography variant="h6">Errores de validación:</Typography>
+              <ul style={{ margin: 0, paddingLeft: 20 }}>
+                {validationErrors.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </Alert>
+          )}
+          
           <TextField
             autoFocus
             margin="dense"
@@ -606,7 +616,7 @@ export const Profile: React.FC = () => {
               full_name: e.target.value
             }))}
             sx={{ mb: 2 }}
-            disabled={saving}
+            disabled={updateProfileMutation.isPending}
           />
           <TextField
             margin="dense"
@@ -621,7 +631,7 @@ export const Profile: React.FC = () => {
               bio: e.target.value
             }))}
             sx={{ mb: 2 }}
-            disabled={saving}
+            disabled={updateProfileMutation.isPending}
             placeholder="Cuéntanos sobre ti..."
           />
           <TextField
@@ -635,7 +645,7 @@ export const Profile: React.FC = () => {
               location: e.target.value
             }))}
             sx={{ mb: 2 }}
-            disabled={saving}
+            disabled={updateProfileMutation.isPending}
             placeholder="Ciudad, País"
           />
           <TextField
@@ -648,14 +658,14 @@ export const Profile: React.FC = () => {
               ...prev,
               phone: e.target.value
             }))}
-            disabled={saving}
+            disabled={updateProfileMutation.isPending}
             placeholder="+57 300 123 4567"
           />
         </DialogContent>
         <DialogActions>
           <Button 
             onClick={handleCancelEdit} 
-            disabled={saving}
+            disabled={updateProfileMutation.isPending}
             startIcon={<Cancel />}
           >
             Cancelar
@@ -663,10 +673,10 @@ export const Profile: React.FC = () => {
           <Button 
             onClick={handleSaveProfile} 
             variant="contained"
-            disabled={saving}
-            startIcon={saving ? <CircularProgress size={16} /> : <Save />}
+            disabled={updateProfileMutation.isPending}
+            startIcon={updateProfileMutation.isPending ? <CircularProgress size={16} /> : <Save />}
           >
-            {saving ? 'Guardando...' : 'Guardar Cambios'}
+            {updateProfileMutation.isPending ? 'Guardando...' : 'Guardar Cambios'}
           </Button>
         </DialogActions>
       </Dialog>

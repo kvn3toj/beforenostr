@@ -8,8 +8,8 @@
 **CoomÜnity Global** es una plataforma gamificada para economía colaborativa basada en filosofía de Bien Común y reciprocidad (Ayni).
 
 ### **Arquitectura Real Confirmada:**
-- **Backend NestJS**: Puerto 3002 (YA COMPLETADO Y FUNCIONAL)
-- **SuperApp Frontend**: Puerto 3000 en `Demo/apps/superapp-unified/` (EN DESARROLLO ACTIVO)
+- **Backend NestJS**: Puerto 3002 (YA COMPLETADO Y FUNCIONAL) 
+- **SuperApp Frontend**: Puerto 3001 en `Demo/apps/superapp-unified/` (EN DESARROLLO ACTIVO)
 - **Stack Principal**: React, TypeScript, Material UI, Tailwind CSS, Vite, React Query
 
 ---
@@ -40,33 +40,48 @@
 - Responsive design por defecto
 
 ### 5. **TESTING CON PLAYWRIGHT**
-- Usar `baseURL` relativo en `page.goto()` (ej. `/login`, NO `http://localhost:3000/login`)
+- **CRÍTICO**: Evitar instalaciones múltiples de Playwright (solo en SuperApp, NO en directorio padre)
+- Usar `baseURL` relativo en `page.goto()` (ej. `/login`, NO `http://localhost:3001/login`)
 - Selectores semánticos preferidos sobre text-based
 - Múltiples estrategias de verificación
 - Screenshots automáticos en errores
+- Si hay conflictos de versiones, eliminar `@playwright/test` del directorio padre
+- Versión actual confirmada: `@playwright/test@1.52.0` (más reciente disponible)
 
-### 6. **CONVENCIONES DE NAMING**
+### 6. **GESTIÓN DE DEPENDENCIAS**
+- **Material UI**: Resolver conflictos con `npm install --legacy-peer-deps`
+- **React Versions**: SuperApp usa React 18+ (compatible con MUI v7)
+- **Playwright**: Mantener solo una instalación en `Demo/apps/superapp-unified/`
+- Verificar versiones con `npm ls @playwright/test` antes de resolucionar problemas
+
+### 7. **CONVENCIONES DE NAMING**
 - Componentes: `PascalCase` (VideoItemCard)
 - Hooks: `camelCase` con prefijo `use` (useVideoData)
 - Services: `camelCase` con sufijo `Service` (videoItemService)
 - Types/Interfaces: `PascalCase` con sufijo descriptivo (VideoItemProps)
 
-### 7. **PROTOCOLO DE COMUNICACIÓN**
+### 8. **PROTOCOLO DE COMUNICACIÓN**
 Usar prefijos para claridad:
 - `[BACKEND]` - Backend NestJS (puerto 3002)
-- `[SUPERAPP]` - Frontend SuperApp (puerto 3000)
+- `[SUPERAPP]` - Frontend SuperApp (puerto 3001)
 - `[GLOBAL]` - Afecta múltiples componentes
 
-### 8. **DIRECTORIO DE TRABAJO**
+### 9. **DIRECTORIO DE TRABAJO**
 - **SuperApp Principal**: `Demo/apps/superapp-unified/`
-- **Puerto de desarrollo**: 3000 (confirmado en .env real)
-- **API Backend**: `http://localhost:3002`
+- **Puerto de desarrollo**: 3001 (confirmado en .env real: `VITE_BASE_URL=http://localhost:3001`)
+- **API Backend**: `http://localhost:3002` (confirmado en .env: `VITE_API_BASE_URL=http://localhost:3002`)
 
-### 9. **DEFINICIONES DE MÓDULOS**
+### 10. **DEFINICIONES DE MÓDULOS**
 - **ÜPlay**: Módulo principal de video gamificado para uso regular
 - **Pilgrim Journey**: Experiencia de onboarding única para nuevos usuarios invitados
 
-### 10. **ALINEACIÓN FILOSÓFICA**
+### 11. **RESOLUCIÓN DE CONFLICTOS AUTOMÁTICA**
+- **Playwright Conflictos**: Ejecutar `find . -name "@playwright" -type d` para detectar instalaciones múltiples
+- **Dependency Conflicts**: Usar `npm ls [package]` para verificar versiones antes de troubleshooting
+- **Port Conflicts**: Verificar `.env` con `cat .env` antes de asumir puertos
+- **Process Conflicts**: Usar `ps aux | grep -E "(node|tsx|npm)" | grep -v grep` para ver procesos activos
+
+### 12. **ALINEACIÓN FILOSÓFICA**
 - Evaluar cómo las implementaciones se alinean con CoomÜnity (Bien Común, Ayni, Reciprocidad)
 - Evitar diseños que fomenten adicción o rompan principios de reciprocidad
 
@@ -75,19 +90,22 @@ Usar prefijos para claridad:
 ## 🚨 ERRORES COMUNES A EVITAR
 
 ### ❌ NO Hagas:
-1. Usar puerto 3001 para SuperApp (es 3000 según .env real)
-2. Leer archivos `.env` directamente con herramientas de archivo
-3. Hardcodear URLs completas en tests de Playwright
-4. Componentes sin manejo de errores
-5. Dependencias faltantes en useEffect
-6. Inyección de dependencias implícita en NestJS
+1. Usar puerto 3000 para SuperApp (es 3001 según .env real)
+2. Instalar Playwright en múltiples directorios (solo en SuperApp)
+3. Leer archivos `.env` directamente con herramientas de archivo
+4. Hardcodear URLs completas en tests de Playwright
+5. Componentes sin manejo de errores
+6. Dependencias faltantes en useEffect
+7. Inyección de dependencias implícita en NestJS
 
 ### ✅ SÍ Haz:
 1. Conectar con Backend NestJS en puerto 3002
-2. Usar JWT del Backend NestJS compartido
+2. Usar JWT del Backend NestJS compartido  
 3. Trabajar en el directorio correcto (`Demo/apps/superapp-unified/`)
-4. Verificar disponibilidad de puertos antes de iniciar servidores
-5. Usar comandos de terminal para archivos sensibles
+4. Usar SuperApp en puerto 3001 (según .env real)
+5. Mantener Playwright solo en directorio SuperApp (evitar conflictos)
+6. Verificar disponibilidad de puertos antes de iniciar servidores
+7. Usar comandos de terminal para archivos sensibles
 
 ---
 
@@ -107,6 +125,15 @@ cd Demo/apps/superapp-unified/ && npm run dev
 ### **Verificar .env:**
 ```bash
 cat Demo/apps/superapp-unified/.env
+```
+
+### **Verificar Estados de Servicios:**
+```bash
+# Verificar SuperApp (Puerto 3001)
+curl http://localhost:3001 -I
+
+# Verificar Backend (Puerto 3002) 
+curl http://localhost:3002/health -v
 ```
 
 ---
@@ -129,7 +156,7 @@ cat Demo/apps/superapp-unified/.env
 
 3. **Ejecutar test con navegador visible:**
    ```bash
-   # Para SuperApp (Puerto 3000)
+   # Para SuperApp (Puerto 3001)
    [SUPERAPP] cd Demo/apps/superapp-unified/ && npx playwright test e2e/test-relevante.spec.ts --headed
    ```
 

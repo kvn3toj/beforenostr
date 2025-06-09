@@ -26,48 +26,122 @@ import './styles/performance-optimizations.css';
 import { AppLayout } from './components/layout/AppLayout';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { DevMockBanner } from './components/DevMockBanner';
 
 // Core Pages
-import Login from './pages/Login';
-import Register from './pages/Register';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 import BetaRegister from './pages/BetaRegister';
 import { Home } from './pages/Home';
 
 // Skeleton loaders for lazy-loaded components
-import { DashboardSkeleton, AppLayoutSkeleton } from './components/ui/SkeletonLoaders';
+import {
+  DashboardSkeleton,
+  AppLayoutSkeleton,
+} from './components/ui/SkeletonLoaders';
 
 // ⚡ LAZY LOADED PAGES - Code Splitting Implementation con LazyLoader optimizado
 // These components will be loaded on-demand when user navigates to them
 
 // Profile Module - Heavy component (34KB, 958 lines)
-const Profile = lazy(() => import('./pages/Profile').then(module => ({ default: module.Profile })));
+const Profile = lazy(() =>
+  import('./pages/Profile').then((module) => ({ default: module.Profile }))
+);
 
-// Wallet Module - Heavy component (32KB, 929 lines) 
-const Wallet = lazy(() => import('./pages/Wallet').then(module => ({ default: module.Wallet })));
+// Wallet Module - Heavy component (32KB, 929 lines)
+const Wallet = lazy(() =>
+  import('./pages/Wallet').then((module) => ({ default: module.Wallet }))
+);
 
 // Video Home Module - Heavy component (41KB, 1,175 lines)
-const VideoHome = lazy(() => import('./pages/VideoHome').then(module => ({ default: module.VideoHome })));
+const VideoHome = lazy(() =>
+  import('./pages/VideoHome').then((module) => ({ default: module.VideoHome }))
+);
 
 // Module Pages - Medium priority lazy loading
-const Marketplace = lazy(() => import('./pages/Marketplace').then(module => ({ default: module.Marketplace })));
-const ProductDetails = lazy(() => import('./pages/ProductDetails').then(module => ({ default: module.ProductDetails })));
-const UPlay = lazy(() => import('./pages/UPlay').then(module => ({ default: module.UPlay })));
-const VideoPlayer = lazy(() => import('./pages/VideoPlayer').then(module => ({ default: module.VideoPlayer })));
-const Analytics = lazy(() => import('./pages/Analytics').then(module => ({ default: module.Analytics })));
-const Social = lazy(() => import('./pages/Social').then(module => ({ default: module.Social })));
+const Marketplace = lazy(() =>
+  import('./pages/Marketplace').then((module) => ({
+    default: module.Marketplace,
+  }))
+);
+const ProductDetails = lazy(() =>
+  import('./pages/ProductDetails').then((module) => ({
+    default: module.ProductDetails,
+  }))
+);
+const UPlay = lazy(() =>
+  import('./pages/UPlay').then((module) => ({ default: module.UPlay }))
+);
+const VideoPlayer = lazy(() =>
+  import('./pages/VideoPlayer').then((module) => ({
+    default: module.VideoPlayer,
+  }))
+);
+const Analytics = lazy(() =>
+  import('./pages/Analytics').then((module) => ({ default: module.Analytics }))
+);
+const Social = lazy(() =>
+  import('./pages/Social').then((module) => ({ default: module.Social }))
+);
+
+// Groups Module - Community of Practice (CoPs) - Heavy component (26KB, 903 lines)
+const GroupsPage = lazy(() =>
+  import('./pages/GroupsPage').then((module) => ({ default: module.default }))
+);
+
+// Challenges Module - Medium priority lazy loading
+const ChallengesPage = lazy(() =>
+  import('./pages/ChallengesPage').then((module) => ({
+    default: module.ChallengesPage,
+  }))
+);
+const ChallengeDetailPage = lazy(() =>
+  import('./pages/ChallengeDetailPage').then((module) => ({
+    default: module.ChallengeDetailPage,
+  }))
+);
 
 // Admin Pages - High priority lazy loading (admin-only access)
-const AdminLayout = lazy(() => import('./components/admin/AdminLayout').then(module => ({ default: module.AdminLayout })));
-const AdminProtectedRoute = lazy(() => import('./components/admin/AdminProtectedRoute').then(module => ({ default: module.AdminProtectedRoute })));
+const AdminLayout = lazy(() =>
+  import('./components/admin/AdminLayout').then((module) => ({
+    default: module.AdminLayout,
+  }))
+);
+const AdminProtectedRoute = lazy(() =>
+  import('./components/admin/AdminProtectedRoute').then((module) => ({
+    default: module.AdminProtectedRoute,
+  }))
+);
 
 // Pilgrim Experience - Medium priority lazy loading
-const PilgrimJourney = lazy(() => import('./components/pilgrim/PilgrimJourney').then(module => ({ default: module.PilgrimJourney })));
+const PilgrimJourney = lazy(() =>
+  import('./components/pilgrim/PilgrimJourney').then((module) => ({
+    default: module.PilgrimJourney,
+  }))
+);
 
 // Additional components not already declared above
-const SocialChat = lazy(() => import('./pages/SocialChat').then(module => ({ default: module.SocialChat })));
-const SocialFeed = lazy(() => import('./pages/SocialFeed').then(module => ({ default: module.SocialFeed })));
-const Mundos = lazy(() => import('./pages/Mundos').then(module => ({ default: module.Mundos })));
-const PWADemo = lazy(() => import('./pages/PWADemo').then(module => ({ default: module.default })));
+const SocialChat = lazy(() =>
+  import('./pages/SocialChat').then((module) => ({
+    default: module.SocialChat,
+  }))
+);
+const SocialFeed = lazy(() =>
+  import('./pages/SocialFeed').then((module) => ({
+    default: module.SocialFeed,
+  }))
+);
+const Mundos = lazy(() =>
+  import('./pages/Mundos').then((module) => ({ default: module.Mundos }))
+);
+const PWADemo = lazy(() =>
+  import('./pages/PWADemo').then((module) => ({ default: module.default }))
+);
+const InteractiveVideoDemo = lazy(() =>
+  import('./pages/InteractiveVideoDemo').then((module) => ({
+    default: module.default,
+  }))
+);
 
 // 🎯 Componente para inicializar lazy loading inteligente
 const LazyLoadingInitializer: React.FC = () => {
@@ -75,61 +149,200 @@ const LazyLoadingInitializer: React.FC = () => {
   return null;
 };
 
+// 📊 CONFIGURACIÓN AVANZADA DE CACHÉ REACT QUERY - FASE 2.5
+// Estrategias de caché específicas por tipo de dato para optimizar rendimiento y UX
+
+// Cache times constants - Organizados por criticidad y frecuencia de cambio
+const CACHE_TIMES = {
+  // 🔥 Datos críticos que cambian frecuentemente
+  REAL_TIME: {
+    staleTime: 1000 * 30, // 30 segundos
+    gcTime: 1000 * 60 * 5, // 5 minutos
+  },
+  // ⚡ Datos dinámicos con cambios moderados
+  DYNAMIC: {
+    staleTime: 1000 * 60 * 2, // 2 minutos
+    gcTime: 1000 * 60 * 10, // 10 minutos
+  },
+  // 📊 Datos estándar con cambios ocasionales
+  STANDARD: {
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    gcTime: 1000 * 60 * 30, // 30 minutos
+  },
+  // 🏛️ Datos semi-estáticos que cambian poco
+  SEMI_STATIC: {
+    staleTime: 1000 * 60 * 15, // 15 minutos
+    gcTime: 1000 * 60 * 60, // 1 hora
+  },
+  // 📋 Datos estáticos que raramente cambian
+  STATIC: {
+    staleTime: 1000 * 60 * 60, // 1 hora
+    gcTime: 1000 * 60 * 120, // 2 horas
+  },
+} as const;
+
+// 🎯 Cache strategies por tipo de dato específico de CoomÜnity
+const getCacheConfigForQueryType = (
+  queryKey: readonly unknown[]
+): Partial<any> => {
+  const key = String(queryKey[0]);
+
+  // 🔥 DATOS REAL-TIME - Wallet, Social Feed, Notificaciones
+  if (['wallet', 'social-feed', 'notifications', 'live-chat'].includes(key)) {
+    return {
+      ...CACHE_TIMES.REAL_TIME,
+      refetchOnWindowFocus: true,
+      refetchInterval: 1000 * 60, // 1 minuto para datos críticos
+    };
+  }
+
+  // ⚡ DATOS DINÁMICOS - Méritos, Transacciones, Estadísticas personales, Challenges
+  if (
+    [
+      'merits',
+      'transactions',
+      'user-stats',
+      'achievements',
+      'progress',
+      'challenges',
+    ].includes(key)
+  ) {
+    return {
+      ...CACHE_TIMES.DYNAMIC,
+      refetchOnWindowFocus: true,
+    };
+  }
+
+  // 🎮 DATOS DE CONTENIDO DINÁMICO - Videos activos, Comments, Likes
+  if (
+    [
+      'video-player',
+      'comments',
+      'likes',
+      'video-progress',
+      'current-playlist',
+    ].includes(key)
+  ) {
+    return {
+      ...CACHE_TIMES.DYNAMIC,
+      refetchOnWindowFocus: false, // No interrumpir reproducción
+    };
+  }
+
+  // 📊 DATOS ESTÁNDAR - Profile, Settings, Preferences
+  if (
+    ['user-profile', 'user-settings', 'preferences', 'dashboard'].includes(key)
+  ) {
+    return {
+      ...CACHE_TIMES.STANDARD,
+      refetchOnWindowFocus: false,
+    };
+  }
+
+  // 🏛️ DATOS SEMI-ESTÁTICOS - Mundos, Categories, Content Lists
+  if (
+    [
+      'worlds',
+      'categories',
+      'video-list',
+      'playlists',
+      'marketplace-items',
+    ].includes(key)
+  ) {
+    return {
+      ...CACHE_TIMES.SEMI_STATIC,
+      refetchOnWindowFocus: false,
+    };
+  }
+
+  // 📋 DATOS ESTÁTICOS - System config, Terms, Help content
+  if (
+    ['system-config', 'terms', 'help', 'static-content', 'app-config'].includes(
+      key
+    )
+  ) {
+    return {
+      ...CACHE_TIMES.STATIC,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    };
+  }
+
+  // 🎯 DEFAULT - Configuración estándar para queries no categorizadas
+  return CACHE_TIMES.STANDARD;
+};
+
 // Create React Query client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // 🧠 CACHE INTELIGENTE - Configuración Avanzada Optimizada
-      staleTime: 1000 * 60 * 5, // 5 minutes - Datos considerados "frescos"
-      gcTime: 1000 * 60 * 30, // 30 minutes - Tiempo en cache después de ser "stale" (antes cacheTime)
+      // 🧠 CACHE INTELIGENTE - Configuración Base Optimizada FASE 2.5
+      ...CACHE_TIMES.STANDARD, // Configuración estándar por defecto
+
+      // 🔄 Estrategia de reintentos inteligente
       retry: (failureCount, error) => {
-        // Retry strategy personalizada basada en el tipo de error
         if (failureCount >= 3) return false;
-        
-        // Categorizar errores por tipo
+
+        // Categorizar errores por tipo para manejo específico
         const errorMessage = error?.message || '';
-        const isNetworkError = errorMessage.includes('Network') || errorMessage.includes('fetch');
-        const isTimeoutError = errorMessage.includes('timeout') || errorMessage.includes('Timeout');
-        const isServerError = error instanceof Error && 
-          ((error as any).statusCode >= 500 || (error as any).category === 'server');
-        
-        // Más reintentos para errores de red y servidor
+        const statusCode = (error as any)?.status || (error as any)?.statusCode;
+        const isNetworkError =
+          errorMessage.includes('Network') || errorMessage.includes('fetch');
+        const isTimeoutError =
+          errorMessage.includes('timeout') || errorMessage.includes('Timeout');
+        const isServerError =
+          statusCode >= 500 || (error as any).category === 'server';
+        const isAuthError =
+          statusCode === 401 ||
+          statusCode === 403 ||
+          (error as any).category === 'auth';
+        const isValidationError =
+          statusCode === 400 || (error as any).category === 'validation';
+
+        // 🚫 No reintentar errores de autenticación y validación
+        if (isAuthError || isValidationError) {
+          return false;
+        }
+
+        // 🔄 Más reintentos para errores de red y servidor
         if (isNetworkError || isServerError) {
           return failureCount < 5;
         }
         if (isTimeoutError) {
           return failureCount < 4;
         }
-        
-        // Menos reintentos para errores de autenticación y validación
-        if ((error as any).category === 'auth' || (error as any).category === 'validation') {
-          return false;
-        }
-        
+
         return failureCount < 3;
       },
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Backoff exponencial
-      refetchOnWindowFocus: false, // Evitar refetch automático al volver a la ventana
-      refetchOnReconnect: true, // Refetch al reconectar a internet
-      refetchOnMount: true, // Refetch al montar componente si los datos están stale
-      // Cache strategies por tipo de query
-      networkMode: 'online', // Solo hacer queries cuando hay conexión
-      // Configuración para prefetching inteligente
-      refetchInterval: false, // Deshabilitado por defecto, habilitado específicamente por query
-      refetchIntervalInBackground: false, // No refetch en background por defecto
-      // Configuración para detectar datos obsoletos
-      structuralSharing: true, // Optimización para evitar re-renders innecesarios
+
+      // 🌐 Configuración de refetch inteligente
+      refetchOnWindowFocus: false, // Controlado específicamente por tipo de query
+      refetchOnReconnect: true, // Siempre refetch al reconectar
+      refetchOnMount: true, // Refetch al montar si datos están stale
+      networkMode: 'online', // Solo queries con conexión
+
+      // ⚡ Optimizaciones de performance
+      refetchInterval: false, // Controlado específicamente por query
+      refetchIntervalInBackground: false,
+      structuralSharing: true, // Evitar re-renders innecesarios
+
+      // 🎯 Meta función para aplicar configuración específica por tipo
+      meta: {
+        applyTypeSpecificConfig: true,
+      },
     },
     mutations: {
       // 🔄 MUTACIONES - Configuración Optimizada
       retry: (failureCount, error) => {
         // Solo reintentar mutaciones para errores de red/servidor
         if (failureCount >= 2) return false;
-        
-        const isRetriable = (error as any).isRetriable || 
-          (error as any).category === 'network' || 
+
+        const isRetriable =
+          (error as any).isRetriable ||
+          (error as any).category === 'network' ||
           (error as any).category === 'server';
-        
+
         return isRetriable;
       },
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
@@ -142,22 +355,26 @@ const queryClient = new QueryClient({
       onError: (error, variables, context) => {
         // Rollback optimistic updates en caso de error
         console.error('Mutation error:', error);
-        
+
         // Disparar evento para notificaciones de usuario
-        window.dispatchEvent(new CustomEvent('mutation-error', {
-          detail: { error, variables, context }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('mutation-error', {
+            detail: { error, variables, context },
+          })
+        );
       },
       onSuccess: (data, variables, context) => {
         // Log de éxito y métricas
         if (import.meta.env.DEV) {
           console.log('Mutation success:', { data, variables });
         }
-        
+
         // Disparar evento para tracking de éxito
-        window.dispatchEvent(new CustomEvent('mutation-success', {
-          detail: { data, variables, context }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('mutation-success', {
+            detail: { data, variables, context },
+          })
+        );
       },
       onSettled: () => {
         // Invalidar queries relacionadas después de la mutación
@@ -170,36 +387,39 @@ const queryClient = new QueryClient({
 });
 
 // 📊 Configurar event listeners para manejo global de errores de React Query
-queryClient.getQueryCache().subscribe(event => {
+queryClient.getQueryCache().subscribe((event) => {
   if (event.type === 'queryError') {
     const { query, error } = event;
     const errorCategory = (error as any).category || 'unknown';
     const statusCode = (error as any).statusCode;
-    
+
     console.error('Query error:', {
       error: error.message,
       category: errorCategory,
       statusCode,
       queryKey: query.queryKey,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    
+
     // Disparar evento para monitoring y notificaciones
-    window.dispatchEvent(new CustomEvent('query-error', {
-      detail: { 
-        error, 
-        query: query.queryKey, 
-        category: errorCategory,
-        statusCode,
-        timestamp: Date.now()
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('query-error', {
+        detail: {
+          error,
+          query: query.queryKey,
+          category: errorCategory,
+          statusCode,
+          timestamp: Date.now(),
+        },
+      })
+    );
   }
-  
+
   if (event.type === 'querySuccess') {
     const { query } = event;
-    const queryDuration = Date.now() - (query.state.dataUpdatedAt || Date.now());
-    
+    const queryDuration =
+      Date.now() - (query.state.dataUpdatedAt || Date.now());
+
     if (import.meta.env.DEV) {
       console.log('Query success:', {
         queryKey: query.queryKey,
@@ -207,59 +427,65 @@ queryClient.getQueryCache().subscribe(event => {
         cacheHit: query.state.isFetching === false,
       });
     }
-    
+
     // Disparar evento para métricas de performance
-    window.dispatchEvent(new CustomEvent('query-success', {
-      detail: {
-        queryKey: query.queryKey,
-        duration: queryDuration,
-        cacheHit: query.state.isFetching === false,
-        timestamp: Date.now()
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('query-success', {
+        detail: {
+          queryKey: query.queryKey,
+          duration: queryDuration,
+          cacheHit: query.state.isFetching === false,
+          timestamp: Date.now(),
+        },
+      })
+    );
   }
 });
 
-queryClient.getMutationCache().subscribe(event => {
+queryClient.getMutationCache().subscribe((event) => {
   if (event.type === 'mutationError') {
     const { mutation, error } = event;
     const errorCategory = (error as any).category || 'unknown';
-    
+
     console.error('Mutation error:', {
       error: error.message,
       category: errorCategory,
-      mutationKey: mutation.options.mutationKey
+      mutationKey: mutation.options.mutationKey,
     });
-    
+
     // Notificar error solo si es relevante para el usuario
     if (errorCategory !== 'validation' && errorCategory !== 'business') {
-      window.dispatchEvent(new CustomEvent('user-notification', {
-        detail: {
-          type: 'error',
-          message: error.message,
-          category: errorCategory
-        }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('user-notification', {
+          detail: {
+            type: 'error',
+            message: error.message,
+            category: errorCategory,
+          },
+        })
+      );
     }
   }
-  
+
   if (event.type === 'mutationSuccess') {
     const { mutation } = event;
-    
+
     if (import.meta.env.DEV) {
       console.log('Mutation success:', {
         mutationKey: mutation.options.mutationKey,
       });
     }
-    
+
     // Disparar evento para tracking de mutaciones exitosas
-    window.dispatchEvent(new CustomEvent('mutation-metrics', {
-      detail: {
-        mutationKey: mutation.options.mutationKey,
-        success: true,
-        timestamp: Date.now()
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('mutation-metrics', {
+        detail: {
+          mutationKey: mutation.options.mutationKey,
+          success: true,
+          timestamp: Date.now(),
+        },
+      })
+    );
   }
 });
 
@@ -346,7 +572,8 @@ const coomunityTheme = createTheme({
           textTransform: 'none',
           borderRadius: '12px !important',
           padding: '8px 16px',
-          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
+          fontFamily:
+            '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
           '&.btn': {
             borderRadius: '12px !important',
           },
@@ -374,48 +601,56 @@ const coomunityTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+          boxShadow:
+            '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
         },
       },
     },
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
+          fontFamily:
+            '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
         },
       },
     },
     MuiListItemText: {
       styleOverrides: {
         root: {
-          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
+          fontFamily:
+            '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
         },
         primary: {
-          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
+          fontFamily:
+            '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
         },
         secondary: {
-          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
+          fontFamily:
+            '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
         },
       },
     },
     MuiChip: {
       styleOverrides: {
         root: {
-          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
+          fontFamily:
+            '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
         },
       },
     },
     MuiTab: {
       styleOverrides: {
         root: {
-          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
+          fontFamily:
+            '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
         },
       },
     },
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
+          fontFamily:
+            '"Inter", "Roboto", "Helvetica", "Arial", sans-serif !important',
         },
       },
     },
@@ -429,11 +664,8 @@ const AppWithTracking: React.FC = () => {
 
   return (
     <>
-      <Toaster 
-        position="top-center"
-        richColors
-        closeButton
-      />
+      <DevMockBanner />
+      <Toaster position="top-center" richColors closeButton />
       <Routes>
         {/* 🔐 Public Routes */}
         <Route path="/login" element={<Login />} />
@@ -441,8 +673,8 @@ const AppWithTracking: React.FC = () => {
         <Route path="/beta-register" element={<BetaRegister />} />
 
         {/* 🏠 Protected Main App Routes */}
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
             <ProtectedRoute>
               <AppLayout />
@@ -454,196 +686,258 @@ const AppWithTracking: React.FC = () => {
           <Route path="home" element={<Home />} />
 
           {/* 👤 Profile Module - Lazy Loaded */}
-          <Route 
-            path="profile" 
+          <Route
+            path="profile"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Profile />
               </Suspense>
-            } 
+            }
           />
 
           {/* 🏪 Marketplace Module - Lazy Loaded */}
-          <Route 
-            path="marketplace" 
+          <Route
+            path="marketplace"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Marketplace />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="marketplace/product/:id" 
+          <Route
+            path="marketplace/product/:id"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <ProductDetails />
               </Suspense>
-            } 
+            }
           />
 
           {/* 🎵 ÜPlay Module - Lazy Loaded */}
-          <Route 
-            path="play" 
+          <Route
+            path="play"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
-                <VideoHome />
+                <UPlay />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="play/video/:id" 
+          <Route
+            path="play/video/:id"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <VideoPlayer videoId="1" />
               </Suspense>
-            } 
+            }
           />
 
           {/* 📹 Videos Module - Lazy Loaded */}
-          <Route 
-            path="videos" 
+          <Route
+            path="videos"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <VideoHome />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="videos/player/:id" 
+          <Route
+            path="videos/player/:id"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <VideoPlayer videoId="1" />
               </Suspense>
-            } 
+            }
           />
 
           {/* 🌍 Mundos Module - Lazy Loaded */}
-          <Route 
-            path="mundos" 
+          <Route
+            path="mundos"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Mundos />
               </Suspense>
-            } 
+            }
           />
 
           {/* 🤝 Social Module - Lazy Loaded */}
-          <Route 
-            path="social" 
+          <Route
+            path="social"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <SocialFeed />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="social/matches" 
+          <Route
+            path="social/matches"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Social />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="social/gigs" 
+          <Route
+            path="social/gigs"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Social />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="social/gossip" 
+          <Route
+            path="social/gossip"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Social />
               </Suspense>
-            } 
+            }
+          />
+
+          {/* 👥 Groups Module (CoPs) - Lazy Loaded */}
+          <Route
+            path="groups"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <GroupsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="groups/explore"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <GroupsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="groups/my-groups"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <GroupsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="groups/:id"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <GroupsPage />
+              </Suspense>
+            }
+          />
+
+          {/* 🏆 Challenges Module - Lazy Loaded */}
+          <Route
+            path="challenges"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <ChallengesPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="challenges/:challengeId"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <ChallengeDetailPage />
+              </Suspense>
+            }
           />
 
           {/* 💰 Wallet Module - Lazy Loaded */}
-          <Route 
-            path="wallet" 
+          <Route
+            path="wallet"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Wallet />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="wallet/transactions" 
+          <Route
+            path="wallet/transactions"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Wallet />
               </Suspense>
-            } 
+            }
           />
 
           {/* 📊 Analytics Module - Lazy Loaded */}
-          <Route 
-            path="analytics" 
+          <Route
+            path="analytics"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Analytics />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="stats" 
+          <Route
+            path="stats"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Analytics />
               </Suspense>
-            } 
+            }
           />
 
           {/* 🎮 Pilgrim Module - Lazy Loaded */}
-          <Route 
-            path="pilgrim" 
+          <Route
+            path="pilgrim"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <PilgrimJourney />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="pilgrim/journey" 
+          <Route
+            path="pilgrim/journey"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <PilgrimJourney />
               </Suspense>
-            } 
+            }
+          />
+
+          {/* 🎬 Interactive Video Demo - Lazy Loaded */}
+          <Route
+            path="interactive-video"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <InteractiveVideoDemo />
+              </Suspense>
+            }
           />
 
           {/* 📱 PWA Demo Module - Lazy Loaded */}
-          <Route 
-            path="pwa" 
+          <Route
+            path="pwa"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <PWADemo />
               </Suspense>
-            } 
+            }
           />
-          <Route 
-            path="pwa-demo" 
+          <Route
+            path="pwa-demo"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <PWADemo />
               </Suspense>
-            } 
+            }
           />
         </Route>
 
         {/* ⚙️ Admin Routes - Lazy Loaded */}
-        <Route 
-          path="/admin" 
+        <Route
+          path="/admin"
           element={
             <Suspense fallback={<AppLayoutSkeleton />}>
               <AdminProtectedRoute />
             </Suspense>
           }
         >
-          <Route 
+          <Route
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <AdminLayout />
@@ -679,4 +973,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App; 
+export default App;

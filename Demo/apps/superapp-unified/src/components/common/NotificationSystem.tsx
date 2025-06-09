@@ -1,11 +1,17 @@
 /**
  * 🔔 NotificationSystem - Sistema de Notificaciones Avanzado
- * 
+ *
  * Sistema completo de notificaciones con soporte para diferentes tipos,
  * persistencia, acciones personalizadas y integración con el backend.
  */
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+} from 'react';
 import {
   Snackbar,
   Alert,
@@ -30,7 +36,7 @@ import {
   Zoom,
   Collapse,
   Divider,
-  Stack
+  Stack,
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -48,7 +54,7 @@ import {
   School as LearningIcon,
   TrendingUp as ProgressIcon,
   Delete as DeleteIcon,
-  MarkAsUnread as MarkReadIcon
+  MarkAsUnread as MarkReadIcon,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '../../lib/api-service';
@@ -57,17 +63,17 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 // 🏷️ Tipos de notificaciones
-export type NotificationType = 
-  | 'success' 
-  | 'error' 
-  | 'warning' 
-  | 'info' 
-  | 'achievement' 
-  | 'payment' 
-  | 'message' 
-  | 'order' 
-  | 'social' 
-  | 'learning' 
+export type NotificationType =
+  | 'success'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'achievement'
+  | 'payment'
+  | 'message'
+  | 'order'
+  | 'social'
+  | 'learning'
   | 'progress';
 
 export interface NotificationAction {
@@ -99,7 +105,7 @@ interface NotificationState {
   unreadCount: number;
 }
 
-type NotificationAction_Reducer = 
+type NotificationAction_Reducer =
   | { type: 'ADD_NOTIFICATION'; payload: Notification }
   | { type: 'REMOVE_NOTIFICATION'; payload: string }
   | { type: 'MARK_AS_READ'; payload: string }
@@ -111,38 +117,58 @@ type NotificationAction_Reducer =
 // 🎨 Iconos por tipo de notificación
 const getNotificationIcon = (type: NotificationType) => {
   switch (type) {
-    case 'success': return <SuccessIcon />;
-    case 'error': return <ErrorIcon />;
-    case 'warning': return <WarningIcon />;
-    case 'info': return <InfoIcon />;
-    case 'achievement': return <AchievementIcon />;
-    case 'payment': return <PaymentIcon />;
-    case 'message': return <MessageIcon />;
-    case 'order': return <OrderIcon />;
-    case 'social': return <SocialIcon />;
-    case 'learning': return <LearningIcon />;
-    case 'progress': return <ProgressIcon />;
-    default: return <InfoIcon />;
+    case 'success':
+      return <SuccessIcon />;
+    case 'error':
+      return <ErrorIcon />;
+    case 'warning':
+      return <WarningIcon />;
+    case 'info':
+      return <InfoIcon />;
+    case 'achievement':
+      return <AchievementIcon />;
+    case 'payment':
+      return <PaymentIcon />;
+    case 'message':
+      return <MessageIcon />;
+    case 'order':
+      return <OrderIcon />;
+    case 'social':
+      return <SocialIcon />;
+    case 'learning':
+      return <LearningIcon />;
+    case 'progress':
+      return <ProgressIcon />;
+    default:
+      return <InfoIcon />;
   }
 };
 
 // 🎨 Colores por tipo
 const getNotificationColor = (type: NotificationType) => {
   switch (type) {
-    case 'success': return 'success';
-    case 'error': return 'error';
-    case 'warning': return 'warning';
-    case 'achievement': return 'primary';
-    case 'payment': return 'success';
-    case 'message': return 'info';
-    case 'social': return 'secondary';
-    default: return 'info';
+    case 'success':
+      return 'success';
+    case 'error':
+      return 'error';
+    case 'warning':
+      return 'warning';
+    case 'achievement':
+      return 'primary';
+    case 'payment':
+      return 'success';
+    case 'message':
+      return 'info';
+    case 'social':
+      return 'secondary';
+    default:
+      return 'info';
   }
 };
 
 // 🔄 Reducer para gestión de estado
 const notificationReducer = (
-  state: NotificationState, 
+  state: NotificationState,
   action: NotificationAction_Reducer
 ): NotificationState => {
   switch (action.type) {
@@ -151,55 +177,60 @@ const notificationReducer = (
       return {
         ...state,
         notifications: newNotifications,
-        unreadCount: newNotifications.filter(n => !n.read).length
+        unreadCount: newNotifications.filter((n) => !n.read).length,
       };
-    
+
     case 'REMOVE_NOTIFICATION':
-      const filteredNotifications = state.notifications.filter(n => n.id !== action.payload);
+      const filteredNotifications = state.notifications.filter(
+        (n) => n.id !== action.payload
+      );
       return {
         ...state,
         notifications: filteredNotifications,
-        unreadCount: filteredNotifications.filter(n => !n.read).length
+        unreadCount: filteredNotifications.filter((n) => !n.read).length,
       };
-    
+
     case 'MARK_AS_READ':
-      const updatedNotifications = state.notifications.map(n =>
+      const updatedNotifications = state.notifications.map((n) =>
         n.id === action.payload ? { ...n, read: true } : n
       );
       return {
         ...state,
         notifications: updatedNotifications,
-        unreadCount: updatedNotifications.filter(n => !n.read).length
+        unreadCount: updatedNotifications.filter((n) => !n.read).length,
       };
-    
+
     case 'MARK_ALL_AS_READ':
-      const allReadNotifications = state.notifications.map(n => ({ ...n, read: true }));
+      const allReadNotifications = state.notifications.map((n) => ({
+        ...n,
+        read: true,
+      }));
       return {
         ...state,
         notifications: allReadNotifications,
-        unreadCount: 0
+        unreadCount: 0,
       };
-    
+
     case 'CLEAR_ALL':
       return {
         ...state,
         notifications: [],
-        unreadCount: 0
+        unreadCount: 0,
       };
-    
+
     case 'TOGGLE_DRAWER':
       return {
         ...state,
-        showDrawer: !state.showDrawer
+        showDrawer: !state.showDrawer,
       };
-    
+
     case 'SET_NOTIFICATIONS':
       return {
         ...state,
         notifications: action.payload,
-        unreadCount: action.payload.filter(n => !n.read).length
+        unreadCount: action.payload.filter((n) => !n.read).length,
       };
-    
+
     default:
       return state;
   }
@@ -208,51 +239,96 @@ const notificationReducer = (
 // 🎯 Context para notificaciones
 interface NotificationContextType {
   state: NotificationState;
-  addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => void;
+  addNotification: (
+    notification: Omit<Notification, 'id' | 'timestamp'>
+  ) => void;
   removeNotification: (id: string) => void;
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
   clearAll: () => void;
   toggleDrawer: () => void;
-  showSuccess: (title: string, message?: string, actions?: NotificationAction[]) => void;
-  showError: (title: string, message?: string, actions?: NotificationAction[]) => void;
-  showWarning: (title: string, message?: string, actions?: NotificationAction[]) => void;
-  showInfo: (title: string, message?: string, actions?: NotificationAction[]) => void;
+  showSuccess: (
+    title: string,
+    message?: string,
+    actions?: NotificationAction[]
+  ) => void;
+  showError: (
+    title: string,
+    message?: string,
+    actions?: NotificationAction[]
+  ) => void;
+  showWarning: (
+    title: string,
+    message?: string,
+    actions?: NotificationAction[]
+  ) => void;
+  showInfo: (
+    title: string,
+    message?: string,
+    actions?: NotificationAction[]
+  ) => void;
   showAchievement: (title: string, message?: string, data?: any) => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const NotificationContext = createContext<NotificationContextType | undefined>(
+  undefined
+);
 
 // 🎪 Provider del sistema de notificaciones
-export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  
+
   const [state, dispatch] = useReducer(notificationReducer, {
     notifications: [],
     showDrawer: false,
-    unreadCount: 0
+    unreadCount: 0,
   });
+
+  // 🧪 Verificar si mock auth está habilitado
+  const isMockEnabled =
+    (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
 
   // Fetch notifications from backend
   const { data: backendNotifications = [] } = useQuery({
     queryKey: ['notifications', user?.id],
     queryFn: async () => {
+      // En modo mock, retornar notificaciones de ejemplo
+      if (isMockEnabled) {
+        return [
+          {
+            id: 'mock-1',
+            title: '¡Bienvenido a CoomÜnity!',
+            message: 'Tu cuenta ha sido configurada exitosamente',
+            type: 'info',
+            read: false,
+            created_at: new Date().toISOString(),
+          },
+        ];
+      }
+
       try {
         return await apiService.get('/notifications');
       } catch (error: any) {
         // Handle 404 gracefully - endpoint not implemented yet
         if (error.statusCode === 404) {
-          console.info('📍 Notifications endpoint not available yet - using local notifications only');
+          console.info(
+            '📍 Notifications endpoint not available yet - using local notifications only'
+          );
           return [];
         }
         // Re-throw other errors
         throw error;
       }
     },
-    enabled: !!user,
-    refetchInterval: 30000, // Poll every 30 seconds
+    enabled: !!user && !isMockEnabled, // Deshabilitar en modo mock
+    refetchInterval: isMockEnabled ? false : 30000, // No hacer polling en modo mock
     retry: (failureCount, error: any) => {
+      // No retry en modo mock
+      if (isMockEnabled) return false;
+
       // Don't retry 404 errors (endpoint not implemented)
       if (error?.statusCode === 404) {
         return false;
@@ -266,12 +342,20 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   // Mark notification as read mutation
   const markAsReadMutation = useMutation({
     mutationFn: async (notificationId: string) => {
+      // En modo mock, simular operación exitosa sin petición al backend
+      if (isMockEnabled) {
+        console.info('📍 Mock mode: Marking notification as read locally');
+        return { success: true, local: true, mock: true };
+      }
+
       try {
         return await apiService.put(`/notifications/${notificationId}/read`);
       } catch (error: any) {
         // Handle 404 gracefully - endpoint not implemented yet
         if (error.statusCode === 404) {
-          console.info('📍 Mark as read endpoint not available yet - handling locally only');
+          console.info(
+            '📍 Mark as read endpoint not available yet - handling locally only'
+          );
           return { success: true, local: true };
         }
         throw error;
@@ -279,7 +363,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     },
     onSuccess: (result) => {
       // Only invalidate queries if the backend operation was successful
-      if (!result?.local) {
+      if (!result?.local && !result?.mock) {
         queryClient.invalidateQueries({ queryKey: ['notifications'] });
       }
     },
@@ -293,7 +377,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       } catch (error: any) {
         // Handle 404 gracefully - endpoint not implemented yet
         if (error.statusCode === 404) {
-          console.info('📍 Delete notification endpoint not available yet - handling locally only');
+          console.info(
+            '📍 Delete notification endpoint not available yet - handling locally only'
+          );
           return { success: true, local: true };
         }
         throw error;
@@ -315,33 +401,42 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, [backendNotifications]);
 
   // 🎯 Funciones del contexto
-  const addNotification = useCallback((notification: Omit<Notification, 'id' | 'timestamp'>) => {
-    const newNotification: Notification = {
-      ...notification,
-      id: `notification-${Date.now()}-${Math.random()}`,
-      timestamp: new Date().toISOString(),
-      read: false
-    };
-    
-    dispatch({ type: 'ADD_NOTIFICATION', payload: newNotification });
-    
-    // Auto-remove if not persistent
-    if (!notification.persistent) {
-      const duration = notification.autoHideDuration || 5000;
-      setTimeout(() => {
-        dispatch({ type: 'REMOVE_NOTIFICATION', payload: newNotification.id });
-      }, duration);
-    }
-  }, []);
+  const addNotification = useCallback(
+    (notification: Omit<Notification, 'id' | 'timestamp'>) => {
+      const newNotification: Notification = {
+        ...notification,
+        id: `notification-${Date.now()}-${Math.random()}`,
+        timestamp: new Date().toISOString(),
+        read: false,
+      };
+
+      dispatch({ type: 'ADD_NOTIFICATION', payload: newNotification });
+
+      // Auto-remove if not persistent
+      if (!notification.persistent) {
+        const duration = notification.autoHideDuration || 5000;
+        setTimeout(() => {
+          dispatch({
+            type: 'REMOVE_NOTIFICATION',
+            payload: newNotification.id,
+          });
+        }, duration);
+      }
+    },
+    []
+  );
 
   const removeNotification = useCallback((id: string) => {
     dispatch({ type: 'REMOVE_NOTIFICATION', payload: id });
   }, []);
 
-  const markAsRead = useCallback((id: string) => {
-    dispatch({ type: 'MARK_AS_READ', payload: id });
-    markAsReadMutation.mutate(id);
-  }, [markAsReadMutation]);
+  const markAsRead = useCallback(
+    (id: string) => {
+      dispatch({ type: 'MARK_AS_READ', payload: id });
+      markAsReadMutation.mutate(id);
+    },
+    [markAsReadMutation]
+  );
 
   const markAllAsRead = useCallback(() => {
     dispatch({ type: 'MARK_ALL_AS_READ' });
@@ -356,32 +451,53 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, []);
 
   // 🎨 Funciones de conveniencia
-  const showSuccess = useCallback((title: string, message = '', actions?: NotificationAction[]) => {
-    addNotification({ type: 'success', title, message, actions });
-  }, [addNotification]);
+  const showSuccess = useCallback(
+    (title: string, message = '', actions?: NotificationAction[]) => {
+      addNotification({ type: 'success', title, message, actions });
+    },
+    [addNotification]
+  );
 
-  const showError = useCallback((title: string, message = '', actions?: NotificationAction[]) => {
-    addNotification({ type: 'error', title, message, actions, persistent: true });
-  }, [addNotification]);
+  const showError = useCallback(
+    (title: string, message = '', actions?: NotificationAction[]) => {
+      addNotification({
+        type: 'error',
+        title,
+        message,
+        actions,
+        persistent: true,
+      });
+    },
+    [addNotification]
+  );
 
-  const showWarning = useCallback((title: string, message = '', actions?: NotificationAction[]) => {
-    addNotification({ type: 'warning', title, message, actions });
-  }, [addNotification]);
+  const showWarning = useCallback(
+    (title: string, message = '', actions?: NotificationAction[]) => {
+      addNotification({ type: 'warning', title, message, actions });
+    },
+    [addNotification]
+  );
 
-  const showInfo = useCallback((title: string, message = '', actions?: NotificationAction[]) => {
-    addNotification({ type: 'info', title, message, actions });
-  }, [addNotification]);
+  const showInfo = useCallback(
+    (title: string, message = '', actions?: NotificationAction[]) => {
+      addNotification({ type: 'info', title, message, actions });
+    },
+    [addNotification]
+  );
 
-  const showAchievement = useCallback((title: string, message = '', data?: any) => {
-    addNotification({ 
-      type: 'achievement', 
-      title, 
-      message, 
-      data,
-      persistent: true,
-      autoHideDuration: 8000
-    });
-  }, [addNotification]);
+  const showAchievement = useCallback(
+    (title: string, message = '', data?: any) => {
+      addNotification({
+        type: 'achievement',
+        title,
+        message,
+        data,
+        persistent: true,
+        autoHideDuration: 8000,
+      });
+    },
+    [addNotification]
+  );
 
   const contextValue: NotificationContextType = {
     state,
@@ -395,7 +511,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     showError,
     showWarning,
     showInfo,
-    showAchievement
+    showAchievement,
   };
 
   return (
@@ -411,12 +527,21 @@ const NotificationDisplay: React.FC = () => {
   const context = useContext(NotificationContext);
   if (!context) return null;
 
-  const { state, removeNotification, markAsRead, markAllAsRead, clearAll, toggleDrawer } = context;
+  const {
+    state,
+    removeNotification,
+    markAsRead,
+    markAllAsRead,
+    clearAll,
+    toggleDrawer,
+  } = context;
   const { notifications, showDrawer, unreadCount } = state;
 
   // Notificaciones activas (no leídas y no persistentes)
-  const activeNotifications = notifications.filter(n => !n.read && !n.persistent);
-  
+  const activeNotifications = notifications.filter(
+    (n) => !n.read && !n.persistent
+  );
+
   return (
     <>
       {/* Snackbars para notificaciones temporales */}
@@ -484,19 +609,26 @@ const NotificationDisplay: React.FC = () => {
         open={showDrawer}
         onClose={toggleDrawer}
         PaperProps={{
-          sx: { width: { xs: '100%', sm: 400 } }
+          sx: { width: { xs: '100%', sm: 400 } },
         }}
       >
         <Box sx={{ p: 2 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 2,
+            }}
+          >
             <Typography variant="h6">
               Notificaciones
               {unreadCount > 0 && (
-                <Chip 
-                  label={unreadCount} 
-                  size="small" 
-                  color="primary" 
-                  sx={{ ml: 1 }} 
+                <Chip
+                  label={unreadCount}
+                  size="small"
+                  color="primary"
+                  sx={{ ml: 1 }}
                 />
               )}
             </Typography>
@@ -514,7 +646,9 @@ const NotificationDisplay: React.FC = () => {
 
           {notifications.length === 0 ? (
             <Box sx={{ textAlign: 'center', py: 4 }}>
-              <NotificationsIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+              <NotificationsIcon
+                sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }}
+              />
               <Typography variant="body1" color="text.secondary">
                 No tienes notificaciones
               </Typography>
@@ -525,23 +659,25 @@ const NotificationDisplay: React.FC = () => {
                 <React.Fragment key={notification.id}>
                   <ListItem
                     sx={{
-                      bgcolor: notification.read ? 'transparent' : 'action.hover',
+                      bgcolor: notification.read
+                        ? 'transparent'
+                        : 'action.hover',
                       borderRadius: 1,
                       mb: 1,
-                      opacity: notification.read ? 0.7 : 1
+                      opacity: notification.read ? 0.7 : 1,
                     }}
                   >
                     <ListItemAvatar>
-                      <Avatar 
-                        sx={{ 
+                      <Avatar
+                        sx={{
                           bgcolor: `${getNotificationColor(notification.type)}.main`,
-                          color: 'white'
+                          color: 'white',
                         }}
                       >
                         {getNotificationIcon(notification.type)}
                       </Avatar>
                     </ListItemAvatar>
-                    
+
                     <ListItemText
                       primary={notification.title}
                       secondary={
@@ -550,17 +686,22 @@ const NotificationDisplay: React.FC = () => {
                             {notification.message}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {formatDistanceToNow(new Date(notification.timestamp), { 
-                              addSuffix: true, 
-                              locale: es 
-                            })}
+                            {formatDistanceToNow(
+                              new Date(notification.timestamp),
+                              {
+                                addSuffix: true,
+                                locale: es,
+                              }
+                            )}
                           </Typography>
                         </Box>
                       }
-                      onClick={() => !notification.read && markAsRead(notification.id)}
+                      onClick={() =>
+                        !notification.read && markAsRead(notification.id)
+                      }
                       sx={{ cursor: notification.read ? 'default' : 'pointer' }}
                     />
-                    
+
                     <ListItemSecondaryAction>
                       <IconButton
                         size="small"
@@ -570,7 +711,7 @@ const NotificationDisplay: React.FC = () => {
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
-                  
+
                   {notification.actions && notification.actions.length > 0 && (
                     <Box sx={{ px: 2, pb: 1 }}>
                       <Stack direction="row" spacing={1}>
@@ -591,7 +732,7 @@ const NotificationDisplay: React.FC = () => {
                       </Stack>
                     </Box>
                   )}
-                  
+
                   {index < notifications.length - 1 && <Divider />}
                 </React.Fragment>
               ))}
@@ -615,9 +756,11 @@ const NotificationDisplay: React.FC = () => {
 export const useNotifications = () => {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error('useNotifications must be used within a NotificationProvider');
+    throw new Error(
+      'useNotifications must be used within a NotificationProvider'
+    );
   }
   return context;
 };
 
-export default NotificationProvider; 
+export default NotificationProvider;

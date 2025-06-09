@@ -40,6 +40,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { useWalletData, useWalletTransactions, useBackendAvailability } from '../hooks/useRealBackendData';
+import { CreateTransactionModal } from '../components/modules/wallet/CreateTransactionModal';
 
 // 🎭 Mock data (fallback when backend is unavailable)
 const mockWalletData = {
@@ -167,6 +168,7 @@ export const Wallet: React.FC = () => {
   const { user } = useAuth();
   const [tabValue, setTabValue] = useState(0);
   const [balanceVisible, setBalanceVisible] = useState(true);
+  const [createTransactionModalOpen, setCreateTransactionModalOpen] = useState(false);
 
   // 🔗 Conectar al backend real con fallback a mock data
   const backendAvailability = useBackendAvailability();
@@ -373,6 +375,7 @@ export const Wallet: React.FC = () => {
               startIcon={<Send />}
               fullWidth
               sx={{ py: 2 }}
+              onClick={() => setCreateTransactionModalOpen(true)}
             >
               Enviar Dinero
             </Button>
@@ -573,6 +576,16 @@ export const Wallet: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
+
+      {/* 💳 Modal para crear nueva transacción */}
+      <CreateTransactionModal
+        open={createTransactionModalOpen}
+        onClose={() => setCreateTransactionModalOpen(false)}
+        walletBalance={{
+          balance: normalizedWalletData.balance,
+          ucoins: normalizedWalletData.ucoins,
+        }}
+      />
     </Container>
   );
 }; 

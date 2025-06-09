@@ -1,12 +1,13 @@
 /**
  * 🌐 API Service - Servicio centralizado para comunicación con el backend
- * 
+ *
  * Maneja todas las llamadas HTTP al backend de CoomÜnity de manera consistente,
  * incluyendo autenticación JWT, manejo de errores, y configuración centralizada.
  */
 
 // 🔧 Configuración de la API
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
 const API_TIMEOUT = 10000; // 10 segundos
 
 // 🏷️ Tipos de respuesta de la API
@@ -29,7 +30,7 @@ interface AuthUser {
 // 🔐 Headers de autenticación
 interface RequestHeaders {
   'Content-Type': string;
-  'Authorization'?: string;
+  Authorization?: string;
   'X-Requested-With': string;
 }
 
@@ -91,8 +92,14 @@ class ApiService {
    */
   private async handleErrorResponse(response: Response): Promise<Error> {
     let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-    let errorCategory: 'network' | 'auth' | 'validation' | 'business' | 'server' | 'unknown' = 'unknown';
-    
+    let errorCategory:
+      | 'network'
+      | 'auth'
+      | 'validation'
+      | 'business'
+      | 'server'
+      | 'unknown' = 'unknown';
+
     try {
       const errorBody = await response.json();
       if (errorBody.message) {
@@ -112,55 +119,94 @@ class ApiService {
         errorCategory = 'auth';
         // Token inválido o expirado
         this.handleUnauthorized();
-        return this.createCategorizedError('Sesión expirada. Por favor, inicia sesión nuevamente.', errorCategory, response.status);
-      
+        return this.createCategorizedError(
+          'Sesión expirada. Por favor, inicia sesión nuevamente.',
+          errorCategory,
+          response.status
+        );
+
       case 403:
         errorCategory = 'auth';
-        return this.createCategorizedError('No tienes permisos para realizar esta acción.', errorCategory, response.status);
-      
+        return this.createCategorizedError(
+          'No tienes permisos para realizar esta acción.',
+          errorCategory,
+          response.status
+        );
+
       case 404:
         errorCategory = 'business';
-        return this.createCategorizedError('Recurso no encontrado.', errorCategory, response.status);
-      
+        return this.createCategorizedError(
+          'Recurso no encontrado.',
+          errorCategory,
+          response.status
+        );
+
       case 422:
         errorCategory = 'validation';
-        return this.createCategorizedError(errorMessage || 'Datos de entrada inválidos.', errorCategory, response.status);
-      
+        return this.createCategorizedError(
+          errorMessage || 'Datos de entrada inválidos.',
+          errorCategory,
+          response.status
+        );
+
       case 429:
         errorCategory = 'network';
-        return this.createCategorizedError('Demasiadas peticiones. Intenta más tarde.', errorCategory, response.status);
-      
+        return this.createCategorizedError(
+          'Demasiadas peticiones. Intenta más tarde.',
+          errorCategory,
+          response.status
+        );
+
       case 500:
         errorCategory = 'server';
-        return this.createCategorizedError('Error interno del servidor. Intenta más tarde.', errorCategory, response.status);
-      
+        return this.createCategorizedError(
+          'Error interno del servidor. Intenta más tarde.',
+          errorCategory,
+          response.status
+        );
+
       case 502:
       case 503:
       case 504:
         errorCategory = 'network';
-        return this.createCategorizedError('Servicio temporalmente no disponible. Intenta más tarde.', errorCategory, response.status);
-      
+        return this.createCategorizedError(
+          'Servicio temporalmente no disponible. Intenta más tarde.',
+          errorCategory,
+          response.status
+        );
+
       default:
         if (response.status >= 400 && response.status < 500) {
           errorCategory = 'business';
         } else if (response.status >= 500) {
           errorCategory = 'server';
         }
-        return this.createCategorizedError(errorMessage, errorCategory, response.status);
+        return this.createCategorizedError(
+          errorMessage,
+          errorCategory,
+          response.status
+        );
     }
   }
 
   /**
    * 🏷️ Crear error categorizado con metadata adicional
    */
-  private createCategorizedError(message: string, category: string, statusCode: number): Error {
+  private createCategorizedError(
+    message: string,
+    category: string,
+    statusCode: number
+  ): Error {
     const error = new Error(message);
     (error as any).category = category;
     (error as any).statusCode = statusCode;
     (error as any).timestamp = new Date().toISOString();
     (error as any).isRetriable = this.isRetriableError(category, statusCode);
-    (error as any).userFriendly = this.isUserFriendlyError(category, statusCode);
-    
+    (error as any).userFriendly = this.isUserFriendlyError(
+      category,
+      statusCode
+    );
+
     return error;
   }
 
@@ -170,13 +216,13 @@ class ApiService {
   private isRetriableError(category: string, statusCode: number): boolean {
     // Errores de red y servidor son generalmente reintetables
     if (category === 'network' || category === 'server') return true;
-    
+
     // Algunos códigos específicos son reintetables
     if ([408, 429, 502, 503, 504].includes(statusCode)) return true;
-    
+
     // Timeout errors son reintetables
     if (statusCode === 0) return true; // Network timeout
-    
+
     // Errores de autenticación, validación y business logic no son reintetables
     return false;
   }
@@ -187,16 +233,17 @@ class ApiService {
   private isUserFriendlyError(category: string, statusCode: number): boolean {
     // Errores de validación y business logic son relevantes para el usuario
     if (category === 'validation' || category === 'business') return true;
-    
+
     // Errores de autenticación son relevantes
     if (category === 'auth') return true;
-    
+
     // Errores de red persistentes son relevantes
-    if (category === 'network' && [429, 502, 503, 504].includes(statusCode)) return true;
-    
+    if (category === 'network' && [429, 502, 503, 504].includes(statusCode))
+      return true;
+
     // Errores de servidor críticos son relevantes
     if (category === 'server' && statusCode === 500) return true;
-    
+
     return false;
   }
 
@@ -224,9 +271,11 @@ class ApiService {
     }
 
     // Disparar evento personalizado para que los componentes puedan escuchar
-    window.dispatchEvent(new CustomEvent('api-error', { 
-      detail: errorData 
-    }));
+    window.dispatchEvent(
+      new CustomEvent('api-error', {
+        detail: errorData,
+      })
+    );
 
     // Mostrar notificación al usuario solo si es relevante
     if (errorData.userFriendly) {
@@ -252,7 +301,8 @@ class ApiService {
         break;
       case 'auth':
         notificationType = 'error';
-        userMessage = 'Problema de autenticación. Por favor, verifica tu sesión.';
+        userMessage =
+          'Problema de autenticación. Por favor, verifica tu sesión.';
         break;
       case 'network':
         notificationType = 'warning';
@@ -268,15 +318,19 @@ class ApiService {
     }
 
     // Disparar evento para el sistema de notificaciones
-    window.dispatchEvent(new CustomEvent('user-notification', {
-      detail: {
-        type: notificationType,
-        message: userMessage,
-        category: errorData.category,
-        duration: errorData.category === 'validation' ? 5000 : 8000,
-        actions: errorData.isRetriable ? [{ label: 'Reintentar', action: 'retry' }] : undefined,
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('user-notification', {
+        detail: {
+          type: notificationType,
+          message: userMessage,
+          category: errorData.category,
+          duration: errorData.category === 'validation' ? 5000 : 8000,
+          actions: errorData.isRetriable
+            ? [{ label: 'Reintentar', action: 'retry' }]
+            : undefined,
+        },
+      })
+    );
   }
 
   /**
@@ -284,17 +338,19 @@ class ApiService {
    */
   private sendErrorMetrics(errorData: any): void {
     // Disparar evento para el sistema de monitoring
-    window.dispatchEvent(new CustomEvent('api-metrics', {
-      detail: {
-        type: 'error',
-        endpoint: errorData.endpoint,
-        method: errorData.method,
-        statusCode: errorData.statusCode,
-        category: errorData.category,
-        timestamp: Date.now(),
-        isRetriable: errorData.isRetriable,
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('api-metrics', {
+        detail: {
+          type: 'error',
+          endpoint: errorData.endpoint,
+          method: errorData.method,
+          statusCode: errorData.statusCode,
+          category: errorData.category,
+          timestamp: Date.now(),
+          isRetriable: errorData.isRetriable,
+        },
+      })
+    );
   }
 
   /**
@@ -304,15 +360,17 @@ class ApiService {
     // Limpiar tokens
     localStorage.removeItem('coomunity_token');
     localStorage.removeItem('coomunity_user');
-    
+
     // Disparar evento para que la app maneje la redirección
-    window.dispatchEvent(new CustomEvent('auth-expired', {
-      detail: { 
-        message: 'Tu sesión ha expirado. Redirigiendo al login...',
-        timestamp: Date.now()
-      }
-    }));
-    
+    window.dispatchEvent(
+      new CustomEvent('auth-expired', {
+        detail: {
+          message: 'Tu sesión ha expirado. Redirigiendo al login...',
+          timestamp: Date.now(),
+        },
+      })
+    );
+
     // Redireccionar después de un breve delay para mostrar el mensaje
     setTimeout(() => {
       if (window.location.pathname !== '/login') {
@@ -332,20 +390,22 @@ class ApiService {
     const maxRetries = 3;
     const url = `${this.baseURL}${endpoint}`;
     const method = options.method || 'GET';
-    
+
     // Configurar headers
     const headers = this.createHeaders();
-    
+
     // Configurar timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
-    
+
     try {
       // Disparar evento de inicio de request para métricas
       const requestStartTime = Date.now();
-      window.dispatchEvent(new CustomEvent('api-request-start', {
-        detail: { endpoint, method, timestamp: requestStartTime }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('api-request-start', {
+          detail: { endpoint, method, timestamp: requestStartTime },
+        })
+      );
 
       const response = await fetch(url, {
         ...options,
@@ -357,36 +417,41 @@ class ApiService {
 
       // Disparar evento de respuesta para métricas
       const requestDuration = Date.now() - requestStartTime;
-      window.dispatchEvent(new CustomEvent('api-request-complete', {
-        detail: { 
-          endpoint, 
-          method, 
-          statusCode: response.status,
-          duration: requestDuration,
-          success: response.ok,
-          timestamp: Date.now()
-        }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('api-request-complete', {
+          detail: {
+            endpoint,
+            method,
+            statusCode: response.status,
+            duration: requestDuration,
+            success: response.ok,
+            timestamp: Date.now(),
+          },
+        })
+      );
 
       if (!response.ok) {
         const error = await this.handleErrorResponse(response);
-        
+
         // Determinar si se debe reintentar
-        const shouldRetry = retryCount < maxRetries && (error as any).isRetriable;
-        
+        const shouldRetry =
+          retryCount < maxRetries && (error as any).isRetriable;
+
         if (shouldRetry) {
           // Calcular delay con backoff exponencial
           const delay = Math.min(1000 * Math.pow(2, retryCount), 10000);
-          
-          console.warn(`🔄 Reintentando petición ${method} ${endpoint} en ${delay}ms (intento ${retryCount + 1}/${maxRetries})`);
-          
+
+          console.warn(
+            `🔄 Reintentando petición ${method} ${endpoint} en ${delay}ms (intento ${retryCount + 1}/${maxRetries})`
+          );
+
           // Esperar antes del reintento
-          await new Promise(resolve => setTimeout(resolve, delay));
-          
+          await new Promise((resolve) => setTimeout(resolve, delay));
+
           // Reintentar recursivamente
           return this.request<T>(endpoint, options, retryCount + 1);
         }
-        
+
         // Si no se puede reintentar, notificar error y lanzar
         this.notifyError(error, endpoint, method);
         throw error;
@@ -396,29 +461,30 @@ class ApiService {
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
-        
+
         // Verificar si la respuesta tiene formato de error del backend
         if (data.success === false) {
-          const error = new Error(data.message || data.error || 'Error del servidor');
+          const error = new Error(
+            data.message || data.error || 'Error del servidor'
+          );
           (error as any).category = 'business';
           (error as any).statusCode = response.status;
           this.notifyError(error, endpoint, method);
           throw error;
         }
-        
+
         return data;
       } else {
         // Para respuestas no-JSON (ej. texto plano, archivos)
         return response.text() as unknown as T;
       }
-
     } catch (error) {
       clearTimeout(timeoutId);
-      
+
       // Manejar errores de red/timeout
       if (error instanceof Error) {
         let categorizedError: Error;
-        
+
         if (error.name === 'AbortError') {
           // Timeout
           categorizedError = this.createCategorizedError(
@@ -441,25 +507,28 @@ class ApiService {
             0
           );
         }
-        
+
         // Determinar si se debe reintentar para errores de red
-        const shouldRetry = retryCount < maxRetries && 
+        const shouldRetry =
+          retryCount < maxRetries &&
           (categorizedError as any).isRetriable &&
           (error.name === 'AbortError' || error.message.includes('fetch'));
-        
+
         if (shouldRetry) {
           const delay = Math.min(1000 * Math.pow(2, retryCount), 10000);
-          
-          console.warn(`🔄 Reintentando petición ${method} ${endpoint} tras error de red en ${delay}ms (intento ${retryCount + 1}/${maxRetries})`);
-          
-          await new Promise(resolve => setTimeout(resolve, delay));
+
+          console.warn(
+            `🔄 Reintentando petición ${method} ${endpoint} tras error de red en ${delay}ms (intento ${retryCount + 1}/${maxRetries})`
+          );
+
+          await new Promise((resolve) => setTimeout(resolve, delay));
           return this.request<T>(endpoint, options, retryCount + 1);
         }
-        
+
         this.notifyError(categorizedError, endpoint, method);
         throw categorizedError;
       }
-      
+
       throw error;
     }
   }
@@ -475,9 +544,13 @@ class ApiService {
   }
 
   /**
-   * 🟡 POST Request
+   * �� POST Request
    */
-  async post<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+  async post<T>(
+    endpoint: string,
+    data?: any,
+    options?: RequestInit
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'POST',
@@ -488,7 +561,11 @@ class ApiService {
   /**
    * 🟠 PUT Request
    */
-  async put<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+  async put<T>(
+    endpoint: string,
+    data?: any,
+    options?: RequestInit
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'PUT',
@@ -509,7 +586,11 @@ class ApiService {
   /**
    * 🟣 PATCH Request
    */
-  async patch<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+  async patch<T>(
+    endpoint: string,
+    data?: any,
+    options?: RequestInit
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'PATCH',
@@ -521,6 +602,14 @@ class ApiService {
    * 🔍 Health Check del backend
    */
   async healthCheck(): Promise<{ status: string; timestamp: string }> {
+    // 🧪 Si mock auth está habilitado, retornar estado mock sin consultar backend
+    if ((import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true') {
+      return {
+        status: 'ok-mock',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
     try {
       return await this.get('/health');
     } catch (error) {
@@ -545,40 +634,212 @@ class ApiService {
     const url = `${this.baseURL}${endpoint}`;
     const controller = new AbortController();
 
+    const requestOptions = {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        Origin: window.location.origin,
+        ...options.headers,
+      },
+      mode: 'cors' as RequestMode,
+      credentials: 'include' as RequestCredentials,
+    };
+
+    // Log detallado de la petición en desarrollo
+    if (import.meta.env.DEV) {
+      console.group(
+        `🔄 API Request (No Auth): ${options.method || 'GET'} ${endpoint}`
+      );
+      console.log('🎯 URL:', url);
+      console.log('⚙️ Base URL:', this.baseURL);
+      console.log(
+        '📦 Request Options:',
+        JSON.stringify(requestOptions, null, 2)
+      );
+      console.log('🌍 Origin:', window.location.origin);
+      console.log('⏱️ Timeout:', this.timeout);
+      console.groupEnd();
+    }
+
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
     try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-          ...options.headers,
-        },
-      });
+      // Pre-flight verification en desarrollo
+      if (import.meta.env.DEV) {
+        console.log('🚀 Iniciando fetch request...');
+
+        // Quick connectivity check for better error reporting
+        try {
+          const healthCheck = await fetch(`${this.baseURL}/health`, {
+            method: 'HEAD',
+            mode: 'cors',
+            signal: AbortSignal.timeout(3000),
+          });
+          console.log('🏥 Backend health check:', {
+            status: healthCheck.status,
+            accessible: healthCheck.ok,
+          });
+        } catch (healthError) {
+          console.warn('⚠️ Backend health check failed:', healthError.message);
+        }
+      }
+
+      const response = await fetch(url, requestOptions);
 
       clearTimeout(timeoutId);
+
+      if (import.meta.env.DEV) {
+        console.log('📨 Response received:', {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+          ok: response.ok,
+        });
+      }
 
       if (!response.ok) {
         throw await this.handleErrorResponse(response);
       }
 
       const data = await response.json();
-      
+
       if (import.meta.env.DEV) {
-        console.log(`✅ API Success (No Auth): ${options.method || 'GET'} ${endpoint}`, data);
+        console.log(
+          `✅ API Success (No Auth): ${options.method || 'GET'} ${endpoint}`,
+          data
+        );
       }
 
       return data;
-    } catch (error) {
+    } catch (error: any) {
       clearTimeout(timeoutId);
-      
-      if (error.name === 'AbortError') {
-        throw new Error(`Request timeout: ${endpoint}`);
+
+      if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+        const timeoutError = new Error(
+          `Request timeout after ${this.timeout}ms. The backend at ${this.baseURL} may be slow or unreachable.`
+        );
+        (timeoutError as any).category = 'timeout';
+        (timeoutError as any).troubleshooting = [
+          'Check if the backend server is running',
+          'Verify network connectivity',
+          'Try again in a few seconds',
+        ];
+        console.error('⏰ Request Timeout:', timeoutError);
+        throw timeoutError;
       }
-      
-      console.error(`❌ API Error (No Auth): ${options.method || 'GET'} ${endpoint}`, error);
+
+      // Enhanced error handling for network connectivity issues
+      if (
+        error.message.includes('fetch') ||
+        error.message.includes('Failed to fetch')
+      ) {
+        const networkError = new Error(
+          `Cannot connect to backend at ${this.baseURL}. ` +
+            `Please ensure the backend server is running and accessible from ${window.location.origin}. ` +
+            `Original error: ${error.message}`
+        );
+        (networkError as any).category = 'network';
+        (networkError as any).originalError = error;
+        (networkError as any).troubleshooting = [
+          'Start the backend server: npm run start:backend:dev',
+          `Verify backend responds at: ${this.baseURL}/health`,
+          `Check CORS configuration allows origin: ${window.location.origin}`,
+          'Review browser network tab for detailed error information',
+          'Ensure no firewall or antivirus is blocking the connection',
+        ];
+
+        // Enhanced debugging for network issues
+        console.group(`🚨 NETWORK ERROR - Cannot connect to backend`);
+        console.error('💥 Error Message:', error.message);
+        console.error('🏷️ Error Type:', error.name);
+        console.error('📄 Full Error:', error);
+        console.error('🔗 Endpoint URL:', url);
+        console.error('⚙️ Base URL:', this.baseURL);
+        console.error('🌍 Current Origin:', window.location.origin);
+        console.error('🔍 Navigator Online:', navigator.onLine);
+        console.error('🌐 User Agent:', navigator.userAgent);
+
+        console.error('🔧 Troubleshooting steps:');
+        console.error(
+          '   1. Check if backend is running:',
+          `npm run start:backend:dev`
+        );
+        console.error('   2. Test backend health:', `${this.baseURL}/health`);
+        console.error(
+          '   3. Verify CORS allows origin:',
+          window.location.origin
+        );
+        console.error('   4. Check browser network tab for details');
+        console.error(
+          '   5. Try manual test:',
+          `curl -X ${options.method || 'GET'} ${url} -H "Content-Type: application/json" ${
+            requestOptions.body ? `-d '${requestOptions.body}'` : ''
+          }`
+        );
+
+        // Display user-friendly error notification
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent('api-connection-error', {
+              detail: {
+                type: 'network',
+                message: 'Cannot connect to backend server',
+                backendUrl: this.baseURL,
+                troubleshooting: (networkError as any).troubleshooting,
+                timestamp: Date.now(),
+              },
+            })
+          );
+        }
+
+        console.groupEnd();
+        throw networkError;
+      }
+
+      // Handle CORS-specific errors
+      if (
+        error.message.includes('CORS') ||
+        error.message.includes('cross-origin')
+      ) {
+        const corsError = new Error(
+          `CORS Error: Backend at ${this.baseURL} is not configured to allow requests from ${window.location.origin}. ` +
+            `Please check the backend CORS configuration.`
+        );
+        (corsError as any).category = 'cors';
+        (corsError as any).troubleshooting = [
+          'Check backend CORS configuration',
+          `Ensure ${window.location.origin} is in allowed origins`,
+          'Verify Access-Control-Allow-Origin header',
+          'Check that credentials are properly configured',
+        ];
+        throw corsError;
+      }
+
+      // Debugging exhaustivo para otros errores
+      console.group(
+        `❌ API Error (No Auth): ${options.method || 'GET'} ${endpoint}`
+      );
+      console.error('💥 Error Message:', error.message);
+      console.error('🏷️ Error Type:', error.name || error.constructor.name);
+      console.error('📄 Full Error:', error);
+      console.error('🔗 Endpoint URL:', url);
+      console.error('⚙️ Base URL:', this.baseURL);
+      console.error(
+        '📋 Request Options:',
+        JSON.stringify(requestOptions, null, 2)
+      );
+      console.error('🌍 Current Origin:', window.location.origin);
+      console.error('🔍 Navigator Online:', navigator.onLine);
+      console.error('🌐 User Agent:', navigator.userAgent);
+      console.groupEnd();
+
+      // Add category if not already present
+      if (!(error as any).category) {
+        (error as any).category = 'unknown';
+      }
+
       throw error;
     }
   }
@@ -623,7 +884,7 @@ export const authAPI = {
 export const gameAPI = {
   getUserStats: (userId: string) => apiService.get(`/game/user/${userId}`),
   getLeaderboard: () => apiService.get('/game/leaderboard'),
-  updateUserStats: (userId: string, stats: any) => 
+  updateUserStats: (userId: string, stats: any) =>
     apiService.put(`/game/user/${userId}`, stats),
 };
 
@@ -632,7 +893,7 @@ export const gameAPI = {
  */
 export const userAPI = {
   getProfile: (userId: string) => apiService.get(`/users/${userId}`),
-  updateProfile: (userId: string, updates: any) => 
+  updateProfile: (userId: string, updates: any) =>
     apiService.put(`/users/${userId}`, updates),
   getUsers: () => apiService.get('/users'),
 };
@@ -642,8 +903,10 @@ export const userAPI = {
  */
 export const marketplaceAPI = {
   getProducts: () => apiService.get('/marketplace/products'),
-  getProduct: (productId: string) => apiService.get(`/marketplace/products/${productId}`),
-  createProduct: (product: any) => apiService.post('/marketplace/products', product),
+  getProduct: (productId: string) =>
+    apiService.get(`/marketplace/products/${productId}`),
+  createProduct: (product: any) =>
+    apiService.post('/marketplace/products', product),
 };
 
 /**
@@ -651,18 +914,32 @@ export const marketplaceAPI = {
  */
 export const walletAPI = {
   getBalance: (userId: string) => apiService.get(`/wallet/${userId}/balance`),
-  getTransactions: (userId: string) => apiService.get(`/wallet/${userId}/transactions`),
+  getTransactions: (userId: string) =>
+    apiService.get(`/wallet/${userId}/transactions`),
   transfer: (fromUserId: string, toUserId: string, amount: number) =>
     apiService.post('/wallet/transfer', { fromUserId, toUserId, amount }),
-  
+
   // 🏆 Servicios de Méritos
   getMerits: (userId: string) => apiService.get(`/merits/user/${userId}`),
   getAllMerits: () => apiService.get('/merits'),
-  getMeritsLeaderboard: (limit = 10) => apiService.get(`/merits/leaderboard?limit=${limit}`),
-  awardMerit: (userId: string, meritType: string, amount: number, description?: string) =>
-    apiService.post('/merits/award', { userId, meritType, amount, description }),
-  getMeritHistory: (userId: string, page = 0, limit = 20) => 
-    apiService.get(`/merits/user/${userId}/history?page=${page}&limit=${limit}`),
+  getMeritsLeaderboard: (limit = 10) =>
+    apiService.get(`/merits/leaderboard?limit=${limit}`),
+  awardMerit: (
+    userId: string,
+    meritType: string,
+    amount: number,
+    description?: string
+  ) =>
+    apiService.post('/merits/award', {
+      userId,
+      meritType,
+      amount,
+      description,
+    }),
+  getMeritHistory: (userId: string, page = 0, limit = 20) =>
+    apiService.get(
+      `/merits/user/${userId}/history?page=${page}&limit=${limit}`
+    ),
 };
 
 /**
@@ -674,34 +951,40 @@ export const socialAPI = {
   getMatches: () => {
     return apiService.get('/social/matches');
   },
-  
+
   getMatch: (matchId: string) => {
     return apiService.get(`/social/matches/${matchId}`);
   },
-  
+
   // Gestión de mensajes
   getMessages: (matchId: string, page = 0, limit = 50) => {
-    return apiService.get(`/social/matches/${matchId}/messages?page=${page}&limit=${limit}`);
+    return apiService.get(
+      `/social/matches/${matchId}/messages?page=${page}&limit=${limit}`
+    );
   },
-  
-  sendMessage: (matchId: string, content: string, type: 'text' | 'emoji' | 'audio' = 'text') => {
+
+  sendMessage: (
+    matchId: string,
+    content: string,
+    type: 'text' | 'emoji' | 'audio' = 'text'
+  ) => {
     return apiService.post(`/social/matches/${matchId}/messages`, {
       content,
       type,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   },
-  
+
   // Estados de usuario
   updateUserStatus: (status: 'online' | 'away' | 'offline') => {
     return apiService.patch('/social/status', { status });
   },
-  
+
   // Notificaciones
   getNotifications: () => {
     return apiService.get('/social/notifications');
   },
-  
+
   markNotificationAsRead: (notificationId: string) => {
     return apiService.patch(`/social/notifications/${notificationId}/read`);
   },
@@ -715,18 +998,22 @@ export const socialAPI = {
     return apiService.get(`/social/posts/${postId}`);
   },
 
-  createPost: (content: string, type: 'text' | 'image' | 'video' = 'text', media?: File) => {
+  createPost: (
+    content: string,
+    type: 'text' | 'image' | 'video' = 'text',
+    media?: File
+  ) => {
     const formData = new FormData();
     formData.append('content', content);
     formData.append('type', type);
     if (media) {
       formData.append('media', media);
     }
-    
+
     return apiService.post('/social/posts', formData, {
       headers: {
         // No establecer Content-Type para permitir multipart/form-data automático
-      }
+      },
     });
   },
 
@@ -749,13 +1036,15 @@ export const socialAPI = {
 
   // 💬 Comentarios en publicaciones
   getPostComments: (postId: string, page = 0, limit = 10) => {
-    return apiService.get(`/social/posts/${postId}/comments?page=${page}&limit=${limit}`);
+    return apiService.get(
+      `/social/posts/${postId}/comments?page=${page}&limit=${limit}`
+    );
   },
 
   createComment: (postId: string, content: string) => {
     return apiService.post(`/social/posts/${postId}/comments`, {
       content,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   },
 
@@ -764,7 +1053,9 @@ export const socialAPI = {
   },
 
   likeComment: (postId: string, commentId: string) => {
-    return apiService.post(`/social/posts/${postId}/comments/${commentId}/like`);
+    return apiService.post(
+      `/social/posts/${postId}/comments/${commentId}/like`
+    );
   },
 };
 
@@ -780,33 +1071,38 @@ class ChatWebSocketService {
   private onMessageCallback: ((message: any) => void) | null = null;
   private onStatusCallback: ((status: string) => void) | null = null;
 
-  connect(matchId: string, userId: string, onMessage?: (message: any) => void, onStatus?: (status: string) => void) {
+  connect(
+    matchId: string,
+    userId: string,
+    onMessage?: (message: any) => void,
+    onStatus?: (status: string) => void
+  ) {
     this.matchId = matchId;
     this.userId = userId;
     this.onMessageCallback = onMessage || null;
     this.onStatusCallback = onStatus || null;
 
     const wsUrl = `${import.meta.env.VITE_WS_URL || 'ws://localhost:3001'}/chat`;
-    
+
     try {
       this.socket = new WebSocket(wsUrl);
-      
+
       this.socket.onopen = () => {
         console.log('🔗 WebSocket chat conectado');
         this.reconnectAttempts = 0;
-        
+
         // Enviar información de conexión
         this.send({
           type: 'join',
           matchId: this.matchId,
-          userId: this.userId
+          userId: this.userId,
         });
       };
 
       this.socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          
+
           switch (data.type) {
             case 'message':
               this.onMessageCallback?.(data.message);
@@ -831,19 +1127,29 @@ class ChatWebSocketService {
       this.socket.onerror = (error) => {
         console.error('❌ Error en WebSocket chat:', error);
       };
-
     } catch (error) {
       console.error('Error conectando WebSocket:', error);
     }
   }
 
   private attemptReconnect() {
-    if (this.reconnectAttempts < this.maxReconnectAttempts && this.matchId && this.userId) {
+    if (
+      this.reconnectAttempts < this.maxReconnectAttempts &&
+      this.matchId &&
+      this.userId
+    ) {
       this.reconnectAttempts++;
-      console.log(`🔄 Reintentando conexión WebSocket (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-      
+      console.log(
+        `🔄 Reintentando conexión WebSocket (${this.reconnectAttempts}/${this.maxReconnectAttempts})`
+      );
+
       setTimeout(() => {
-        this.connect(this.matchId!, this.userId!, this.onMessageCallback!, this.onStatusCallback!);
+        this.connect(
+          this.matchId!,
+          this.userId!,
+          this.onMessageCallback!,
+          this.onStatusCallback!
+        );
       }, 2000 * this.reconnectAttempts);
     }
   }
@@ -861,7 +1167,7 @@ class ChatWebSocketService {
       userId: this.userId,
       content,
       messageType: type,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 
@@ -870,7 +1176,7 @@ class ChatWebSocketService {
       type: 'status_update',
       matchId: this.matchId,
       userId: this.userId,
-      status
+      status,
     });
   }
 
@@ -899,9 +1205,10 @@ export const videosAPI = {
   },
   getVideos: (category?: string) => {
     // Usar endpoint real que funciona
-    const endpoint = category && category !== 'all' 
-      ? `/video-items?category=${encodeURIComponent(category)}`
-      : '/video-items';
+    const endpoint =
+      category && category !== 'all'
+        ? `/video-items?category=${encodeURIComponent(category)}`
+        : '/video-items';
     return apiService.get(endpoint);
   },
   getPlaylists: () => apiService.get('/videos/playlists'),
@@ -913,16 +1220,17 @@ export const videosAPI = {
 export const mundosAPI = {
   // Obtener todos los mundos (endpoint simple para la SuperApp)
   getMundos: () => apiService.get('/mundos'),
-  
+
   // Obtener mundo específico por ID
   getMundo: (mundoId: string) => apiService.get(`/mundos/${mundoId}`),
-  
+
   // Obtener mundo por slug
   getMundoBySlug: (slug: string) => apiService.get(`/mundos/slug/${slug}`),
-  
+
   // Obtener playlists de un mundo específico
-  getMundoPlaylists: (mundoId: string) => apiService.get(`/mundos/${mundoId}/playlists`),
-  
+  getMundoPlaylists: (mundoId: string) =>
+    apiService.get(`/mundos/${mundoId}/playlists`),
+
   // Endpoint de test/conectividad
   testMundos: () => apiService.get('/mundos/test'),
 };
@@ -940,8 +1248,54 @@ export const statsAPI = {
  * 📝 Servicios de Formularios
  */
 export const formsAPI = {
-  submit: (formType: string, data: any) => 
+  submit: (formType: string, data: any) =>
     apiService.post(`/forms/${formType}`, data),
 };
 
-export default apiService; 
+/**
+ * 🎫 Servicios de Invitaciones y Registro Beta
+ */
+export const invitationAPI = {
+  // Validar código de invitación
+  validateCode: (code: string) =>
+    apiService.requestWithoutAuth('/invitations/validate', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    }),
+
+  // Registrar usuario con código de invitación
+  registerWithInvitation: (registrationData: {
+    invitationCode: string;
+    email: string;
+    fullName: string;
+    country: string;
+    experience?: string;
+    motivation?: string;
+    philosophyAnswers: {
+      ayni: string;
+      bienComun: string;
+      cooperacion: string;
+    };
+    acceptTerms: boolean;
+    joinDiscord: boolean;
+  }) =>
+    apiService.requestWithoutAuth('/auth/register-beta', {
+      method: 'POST',
+      body: JSON.stringify(registrationData),
+    }),
+
+  // Obtener información del código de invitación
+  getInvitationInfo: (code: string) =>
+    apiService.requestWithoutAuth(`/invitations/info/${code}`, {
+      method: 'GET',
+    }),
+
+  // Verificar disponibilidad de email para registro beta
+  checkEmailAvailability: (email: string) =>
+    apiService.requestWithoutAuth('/auth/check-email', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+};
+
+export default apiService;

@@ -59,45 +59,42 @@ import { apiService } from '../../../../lib/api-service';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { formatDuration } from 'date-fns';
 
+// ✅ Adaptado para usar la estructura real del Backend NestJS
 interface VideoContent {
-  id: string;
+  id: number;
   title: string;
   description: string;
-  videoUrl: string;
-  thumbnailUrl: string;
+  url: string;
+  thumbnailUrl?: string;
   duration: number;
-  category: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  tags: string[];
-  creator: {
+  platform: string;
+  externalId: string;
+  categories: string; // JSON string
+  tags: string; // JSON string
+  playlist: {
     id: string;
     name: string;
-    avatar: string;
-    verified: boolean;
+    description: string;
+    imageUrl: string;
   };
-  interactions: {
+  questions: {
+    id: number;
+    videoItemId: number;
     timestamp: number;
-    type: 'quiz' | 'reflection' | 'poll' | 'insight' | 'checkpoint';
-    data: any;
+    endTimestamp?: number;
+    type: 'multiple-choice' | 'true-false' | 'open-text';
+    text: string;
+    languageCode: string;
+    isActive: boolean;
   }[];
-  gamification: {
-    xpReward: number;
-    achievements: string[];
-    challenges: string[];
-  };
-  stats: {
-    views: number;
-    likes: number;
-    completionRate: number;
-    averageRating: number;
-  };
 }
 
+// ✅ Adaptado para la estructura del Backend NestJS  
 interface UserProgress {
-  videoId: string;
+  videoItemId: number;
   currentTime: number;
   completed: boolean;
-  completedInteractions: string[];
+  completedQuestions: number[]; // IDs de preguntas completadas
   xpEarned: number;
   achievements: string[];
   rating?: number;
@@ -107,13 +104,13 @@ interface UserProgress {
 }
 
 interface InteractiveVideoPlayerProps {
-  videoId: string;
+  videoItemId: number; // ✅ Adaptado para usar ID numérico del Backend NestJS
   autoplay?: boolean;
   onComplete?: () => void;
 }
 
 const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
-  videoId,
+  videoItemId,
   autoplay = false,
   onComplete
 }) => {
@@ -146,67 +143,109 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
   const [notes, setNotes] = useState('');
   const [showStats, setShowStats] = useState(false);
 
-  // Fetch video content
+  // ✅ Fetch video content from real Backend NestJS endpoint
   const { data: video, isLoading: videoLoading } = useQuery({
-    queryKey: ['video', videoId],
-    queryFn: () => apiService.get(`/videos/${videoId}`),
-    enabled: !!videoId,
+    queryKey: ['video-item', videoItemId],
+    queryFn: async () => {
+      return await apiService.get(`/video-items/${videoItemId}`);
+    },
+    enabled: !!videoItemId,
   });
 
-  // Fetch user progress
+  // ✅ Fetch questions for the video from real Backend NestJS endpoint
+  const { data: questions, isLoading: questionsLoading } = useQuery({
+    queryKey: ['video-questions', videoItemId],
+    queryFn: async () => {
+      return await apiService.get(`/questions/search?videoItemId=${videoItemId}`);
+    },
+    enabled: !!videoItemId,
+  });
+
+  // ✅ Fetch user progress (mock for now, to be implemented in backend)
   const { data: progress, isLoading: progressLoading } = useQuery({
-    queryKey: ['video-progress', videoId, user?.id],
-    queryFn: () => apiService.get(`/videos/${videoId}/progress`),
-    enabled: !!videoId && !!user,
+    queryKey: ['video-progress', videoItemId, user?.id],
+    queryFn: () => {
+      // Mock progress data until backend implements this endpoint
+      return Promise.resolve({
+        videoItemId,
+        currentTime: 0,
+        completed: false,
+        completedQuestions: [],
+        xpEarned: 0,
+        achievements: [],
+        notes: '',
+        bookmarked: false,
+        liked: false,
+      } as UserProgress);
+    },
+    enabled: !!videoItemId && !!user,
   });
 
-  // Update progress mutation
+  // ✅ Update progress mutation (mock for now, to be implemented in backend)
   const updateProgressMutation = useMutation({
     mutationFn: async (progressData: Partial<UserProgress>) => {
-      return apiService.put(`/videos/${videoId}/progress`, progressData);
+      // Mock implementation until backend implements this endpoint
+      console.log('🔄 [Mock] Updating progress:', progressData);
+      return Promise.resolve(progressData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['video-progress', videoId] });
+      queryClient.invalidateQueries({ queryKey: ['video-progress', videoItemId] });
     },
   });
 
-  // Complete interaction mutation
-  const completeInteractionMutation = useMutation({
-    mutationFn: async (interactionData: {
-      interactionId: string;
-      response: any;
+  // ✅ Complete question interaction mutation (to be implemented in backend)
+  const completeQuestionMutation = useMutation({
+    mutationFn: async (questionData: {
+      questionId: number;
+      answer: any;
       timestamp: number;
+      isCorrect?: boolean;
     }) => {
-      return apiService.post(`/videos/${videoId}/interactions`, interactionData);
+      // TODO: Implement real endpoint in backend
+      // For now, we'll mock this and log the interaction
+      console.log('🎯 [Mock] Question answered:', questionData);
+      
+      // Simulate successful response
+      return Promise.resolve({
+        success: true,
+        xpEarned: 10,
+        achievementEarned: null,
+        questionData
+      });
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['video-progress', videoId] });
+      queryClient.invalidateQueries({ queryKey: ['video-progress', videoItemId] });
       
       // Show achievement if earned
       if (data.achievementEarned) {
         setShowAchievement(data.achievementEarned);
       }
+      
+      // Show feedback
+      console.log('✅ Question submitted successfully:', data);
     },
   });
 
-  // Rate video mutation
+  // ✅ Rate video mutation (mock for now, to be implemented in backend)
   const rateVideoMutation = useMutation({
     mutationFn: async (rating: number) => {
-      return apiService.post(`/videos/${videoId}/rating`, { rating });
+      console.log('⭐ [Mock] Rating video:', rating);
+      return Promise.resolve({ rating });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['video', videoId] });
+      queryClient.invalidateQueries({ queryKey: ['video-item', videoItemId] });
     },
   });
 
-  // Toggle like mutation
+  // ✅ Toggle like mutation (mock for now, to be implemented in backend)
   const toggleLikeMutation = useMutation({
     mutationFn: async () => {
-      return apiService.post(`/videos/${videoId}/like`);
+      console.log('❤️ [Mock] Toggling like for video');
+      return Promise.resolve({ liked: true });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['video', videoId] });
-      queryClient.invalidateQueries({ queryKey: ['video-progress', videoId] });
+      queryClient.invalidateQueries({ queryKey: ['video-item', videoItemId] });
+      queryClient.invalidateQueries({ queryKey: ['video-progress', videoItemId] });
     },
   });
 
@@ -238,35 +277,29 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
         });
       }
       
-      // Check for interactions
-      if (video?.interactions) {
-        const interaction = video.interactions.find(
-          (int: any) => Math.abs(int.timestamp - time) < 1 && 
-          !progress?.completedInteractions.includes(int.id)
+      // ✅ Check for questions at current timestamp using questions with answerOptions
+      // Priorizar questions del endpoint específico que incluye answerOptions
+      const questionsToCheck = questions?.length > 0 ? questions : video?.questions || [];
+      
+      if (questionsToCheck.length > 0) {
+        const currentQuestion = questionsToCheck.find(
+          (question) => 
+            time >= question.timestamp && 
+            time <= (question.endTimestamp || question.timestamp + 15) && 
+            question.isActive &&
+            !progress?.completedQuestions.includes(question.id)
         );
         
-        if (interaction && !activeInteraction) {
-          setActiveInteraction(interaction);
+        if (currentQuestion && !activeInteraction) {
+          setActiveInteraction(currentQuestion);
           handlePause();
           
-          switch (interaction.type) {
-            case 'quiz':
-              setShowQuiz(true);
-              break;
-            case 'reflection':
-              setShowReflection(true);
-              break;
-            case 'poll':
-              // Handle poll
-              break;
-            case 'insight':
-              setShowInsights(true);
-              break;
-          }
+          // Always show quiz dialog for any question type
+          setShowQuiz(true);
         }
       }
     }
-  }, [video, progress, activeInteraction, duration, updateProgressMutation, handlePause]);
+  }, [questions, video?.questions, progress, activeInteraction, duration, updateProgressMutation, handlePause]);
 
   const handleSeek = useCallback((newTime: number) => {
     if (videoRef.current) {
@@ -306,13 +339,14 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
     }
   }, []);
 
-  // Interaction handlers
+  // ✅ Question interaction handlers
   const handleQuizSubmit = useCallback(() => {
-    if (activeInteraction) {
-      completeInteractionMutation.mutate({
-        interactionId: activeInteraction.id,
-        response: quizAnswers,
+    if (activeInteraction && quizAnswers[activeInteraction.id]) {
+      completeQuestionMutation.mutate({
+        questionId: activeInteraction.id,
+        answer: quizAnswers[activeInteraction.id],
         timestamp: currentTime,
+        isCorrect: undefined, // Backend will determine this
       });
       
       setShowQuiz(false);
@@ -320,13 +354,13 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
       setQuizAnswers({});
       handlePlay();
     }
-  }, [activeInteraction, quizAnswers, currentTime, completeInteractionMutation, handlePlay]);
+  }, [activeInteraction, quizAnswers, currentTime, completeQuestionMutation, handlePlay]);
 
   const handleReflectionSubmit = useCallback(() => {
-    if (activeInteraction) {
-      completeInteractionMutation.mutate({
-        interactionId: activeInteraction.id,
-        response: { reflection: reflectionText },
+    if (activeInteraction && reflectionText.trim()) {
+      completeQuestionMutation.mutate({
+        questionId: activeInteraction.id,
+        answer: reflectionText,
         timestamp: currentTime,
       });
       
@@ -335,7 +369,7 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
       setReflectionText('');
       handlePlay();
     }
-  }, [activeInteraction, reflectionText, currentTime, completeInteractionMutation, handlePlay]);
+  }, [activeInteraction, reflectionText, currentTime, completeQuestionMutation, handlePlay]);
 
   // Format time
   const formatTime = useCallback((seconds: number) => {
@@ -349,16 +383,17 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
     return duration > 0 ? (currentTime / duration) * 100 : 0;
   }, [currentTime, duration]);
 
-  // Get interaction markers
-  const interactionMarkers = useMemo(() => {
-    if (!video?.interactions || duration === 0) return [];
+  // ✅ Get question markers for timeline using questions with answerOptions
+  const questionMarkers = useMemo(() => {
+    const questionsToUse = questions?.length > 0 ? questions : video?.questions || [];
+    if (!questionsToUse.length || duration === 0) return [];
     
-    return video.interactions.map((interaction: any) => ({
-      ...interaction,
-      position: (interaction.timestamp / duration) * 100,
-      completed: progress?.completedInteractions.includes(interaction.id),
+    return questionsToUse.map((question) => ({
+      ...question,
+      position: (question.timestamp / duration) * 100,
+      completed: progress?.completedQuestions.includes(question.id),
     }));
-  }, [video?.interactions, duration, progress?.completedInteractions]);
+  }, [questions, video?.questions, duration, progress?.completedQuestions]);
 
   // Auto-hide controls
   useEffect(() => {
@@ -403,12 +438,14 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
     }
   }, [progress]);
 
-  if (videoLoading || progressLoading) {
+  if (videoLoading || progressLoading || questionsLoading) {
     return (
       <Box sx={{ p: 2 }}>
         <LinearProgress />
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          Cargando video...
+          {videoLoading ? 'Cargando video...' : 
+           questionsLoading ? 'Cargando preguntas...' : 
+           'Cargando progreso...'}
         </Typography>
       </Box>
     );
@@ -426,10 +463,10 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
 
   return (
     <Box ref={containerRef} sx={{ position: 'relative', bgcolor: 'black', borderRadius: 2, overflow: 'hidden' }}>
-      {/* Video Element */}
+      {/* ✅ Video Element with real URL from backend */}
       <video
         ref={videoRef}
-        src={video.videoUrl}
+        src={video.url}
         poster={video.thumbnailUrl}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
@@ -477,10 +514,11 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
               }}
             />
             
-            {/* Interaction Markers */}
-            {interactionMarkers.map((marker, index) => (
+            {/* ✅ Question Markers */}
+            {questionMarkers.map((marker, index) => (
               <Box
-                key={index}
+                key={marker.id}
+                data-testid="question-marker"
                 sx={{
                   position: 'absolute',
                   left: `${marker.position}%`,
@@ -488,7 +526,7 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
                   transform: 'translateX(-50%)',
                 }}
               >
-                <Tooltip title={`${marker.type} - ${formatTime(marker.timestamp)}`}>
+                <Tooltip title={`Pregunta ${marker.type} - ${formatTime(marker.timestamp)}`}>
                   <IconButton
                     size="small"
                     sx={{
@@ -498,12 +536,7 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
                     }}
                     onClick={() => handleSeek(marker.timestamp)}
                   >
-                    {marker.type === 'quiz' && <QuizIcon fontSize="small" />}
-                    {marker.type === 'reflection' && <ReflectionIcon fontSize="small" />}
-                    {marker.type === 'insight' && <InsightIcon fontSize="small" />}
-                    {marker.type === 'checkpoint' && (
-                      marker.completed ? <CompletedIcon fontSize="small" /> : <IncompleteIcon fontSize="small" />
-                    )}
+                    <QuizIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -516,6 +549,7 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
               <IconButton
                 onClick={isPlaying ? handlePause : handlePlay}
                 sx={{ color: 'white' }}
+                aria-label={isPlaying ? 'pause' : 'play'}
               >
                 {isPlaying ? <PauseIcon /> : <PlayIcon />}
               </IconButton>
@@ -574,15 +608,17 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
                     {video.title}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <Avatar src={video.creator.avatar} sx={{ width: 24, height: 24 }} />
-                    <Typography variant="body2">{video.creator.name}</Typography>
-                    {video.creator.verified && <StarIcon fontSize="small" color="primary" />}
+                    <Avatar sx={{ width: 24, height: 24 }}>
+                      {video.playlist.name.charAt(0)}
+                    </Avatar>
+                    <Typography variant="body2">{video.playlist.name}</Typography>
+                    <StarIcon fontSize="small" color="primary" />
                   </Box>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    <Chip label={video.category} size="small" color="primary" />
-                    <Chip label={video.difficulty} size="small" variant="outlined" />
-                    {video.tags.slice(0, 3).map((tag) => (
-                      <Chip key={tag} label={tag} size="small" variant="outlined" />
+                    <Chip label={video.platform} size="small" color="primary" />
+                    <Chip label={`${Math.floor(video.duration / 60)}:${(video.duration % 60).toString().padStart(2, '0')}`} size="small" variant="outlined" />
+                    {JSON.parse(video.categories || '[]').slice(0, 2).map((category: string) => (
+                      <Chip key={category} label={category} size="small" variant="outlined" />
                     ))}
                   </Box>
                 </Box>
@@ -643,29 +679,66 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
           </Box>
         </DialogTitle>
         <DialogContent>
-          {activeInteraction?.data && (
+          {activeInteraction && (
             <Box>
               <Typography variant="h6" gutterBottom>
-                {activeInteraction.data.question}
+                {activeInteraction.text}
               </Typography>
-              <FormControl component="fieldset" fullWidth>
-                <RadioGroup
+              
+              {/* ✅ Handle different question types with real backend data */}
+              {activeInteraction.type === 'multiple-choice' && activeInteraction.answerOptions && (
+                <FormControl component="fieldset" fullWidth>
+                  <RadioGroup
+                    value={quizAnswers[activeInteraction.id] || ''}
+                    onChange={(e) => setQuizAnswers(prev => ({
+                      ...prev,
+                      [activeInteraction.id]: e.target.value
+                    }))}
+                  >
+                    {/* ✅ Use real answer options from backend */}
+                    {activeInteraction.answerOptions
+                      .sort((a, b) => a.order - b.order)
+                      .map((option) => (
+                        <FormControlLabel 
+                          key={option.id}
+                          value={option.id.toString()} 
+                          control={<Radio />} 
+                          label={option.text} 
+                        />
+                      ))}
+                  </RadioGroup>
+                </FormControl>
+              )}
+              
+              {activeInteraction.type === 'true-false' && (
+                <FormControl component="fieldset" fullWidth>
+                  <RadioGroup
+                    value={quizAnswers[activeInteraction.id] || ''}
+                    onChange={(e) => setQuizAnswers(prev => ({
+                      ...prev,
+                      [activeInteraction.id]: e.target.value
+                    }))}
+                  >
+                    <FormControlLabel value="true" control={<Radio />} label="Verdadero" />
+                    <FormControlLabel value="false" control={<Radio />} label="Falso" />
+                  </RadioGroup>
+                </FormControl>
+              )}
+              
+              {activeInteraction.type === 'open-text' && (
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={3}
+                  placeholder="Escribe tu respuesta aquí..."
                   value={quizAnswers[activeInteraction.id] || ''}
                   onChange={(e) => setQuizAnswers(prev => ({
                     ...prev,
                     [activeInteraction.id]: e.target.value
                   }))}
-                >
-                  {activeInteraction.data.options.map((option: string, index: number) => (
-                    <FormControlLabel
-                      key={index}
-                      value={option}
-                      control={<Radio />}
-                      label={option}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
+                  sx={{ mt: 2 }}
+                />
+              )}
             </Box>
           )}
         </DialogContent>

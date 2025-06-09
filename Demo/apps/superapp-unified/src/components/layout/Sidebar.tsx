@@ -71,6 +71,18 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     section: 'modules',
   },
   {
+    label: 'Grupos',
+    icon: <People />,
+    path: '/groups',
+    section: 'modules',
+  },
+  {
+    label: 'Desafíos',
+    icon: <EmojiEvents />,
+    path: '/challenges',
+    section: 'modules',
+  },
+  {
     label: 'Wallet',
     icon: <AccountBalanceWallet />,
     path: '/wallet',

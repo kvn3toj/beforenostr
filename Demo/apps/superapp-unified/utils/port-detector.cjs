@@ -29,7 +29,7 @@ async function detectSuperAppPort() {
     }
 
     // Método 2: Verificar puertos comunes en orden
-    const commonPorts = [3000, 3001, 3005, 3006, 3007, 3008, 3009, 3010];
+    const commonPorts = [3003, 3001, 3000, 3005, 3006, 3007, 3008, 3009, 3010];
     for (const port of commonPorts) {
       const isActive = await checkPortActive(port);
       if (isActive) {
