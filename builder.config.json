@@ -1,0 +1,6 @@
+{
+  "command": "turbo run dev",
+  "serverUrl": "http://localhost:3001",
+  "authenticateProxy": false,
+  "commitMode": "commits"
+}

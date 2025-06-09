@@ -1,0 +1,154 @@
+# CoomÜnity SuperApp Module Definitions
+
+This rule clarifies the specific roles and functionalities of key modules within the `apps/superapp-unified/` directory.
+
+**Instructions:**
+
+1.  **Marketplace Module (GMP Gamified Match Place):**
+    *   This module is the platform for the **exchange of value**.
+    *   It includes listings and functionalities for both **products and services**.
+    *   Do not assume it is exclusively for products or services; it encompasses both.
+
+2.  **ÜPlay Module (GPL Gamified Play List):**
+    *   This module is the **interactive gamified video player**.
+    *   It handles the display and interaction with videos, including gamified elements, questions, and timers.
+    *   Do not confuse this module with the Marketplace or a platform solely for services/gigs.
+
+3.  **Social Module:**
+    *   This module handles social interactions, community features, and collaboration tools.
+    *   Includes features like profiles, messaging, and community engagement.
+
+4.  **UStats Module:**
+    *   This module provides statistics, analytics, and dashboard functionalities.
+    *   Displays user metrics, progress tracking, and performance indicators.
+
+5.  Refer to these modules by their official names where appropriate: "GMP Gamified Match Place" for Marketplace, and "GPL Gamified Play List" for ÜPlay.
+
+**Core CoomÜnity Concepts:**
+
+*   **Ayni:** Reciprocity principle - balanced exchange of value
+*   **Mëritos:** Merit-based rewards system for contributing to the Common Good
+*   **Bien Común:** Common Good - prioritizing collective benefit over individual gain
+*   **Lükas:** CoomÜnity's internal currency for value exchange
+*   **Öndas:** Vibrational energy units representing positive contributions
+*   **Emprendedores Confiables:** Trusted Entrepreneurs who have earned credibility through Mëritos
+
+# Playwright Testing Rules for CoomÜnity SuperApp
+
+This rule provides comprehensive guidelines for successfully executing Playwright tests in the CoomÜnity SuperApp project.
+
+**Critical Prerequisites:**
+
+1.  **Environment Setup:**
+    *   Ensure both Backend (port 3002) and SuperApp Frontend (port 3001) are running
+    *   Verify `VITE_ENABLE_MOCK_AUTH=true` is set in the environment
+    *   Navigate to the correct directory: `Demo/apps/superapp-unified/`
+
+2.  **Port Detection:**
+    *   The Playwright global setup automatically detects the SuperApp port
+    *   Default expected port is 3001, but auto-detection handles port conflicts
+    *   Backend should be running on port 3002 for full functionality
+
+**Playwright Execution Commands:**
+
+1.  **Basic Test Execution:**
+    ```bash
+    cd Demo/apps/superapp-unified
+    npx playwright test
+    ```
+
+2.  **Specific Test File:**
+    ```bash
+    npx playwright test e2e/[test-file-name].spec.ts
+    ```
+
+3.  **Single Browser (Recommended for Development):**
+    ```bash
+    npx playwright test --project=chromium --headed
+    ```
+
+4.  **Debug Mode:**
+    ```bash
+    npx playwright test --debug
+    ```
+
+5.  **UI Mode (Interactive):**
+    ```bash
+    npx playwright test --ui
+    ```
+
+**Test File Naming Convention:**
+
+*   Use descriptive names: `[module-name]-[test-type].spec.ts`
+*   Examples: `challenges-content-verification.spec.ts`, `groups-functionality.spec.ts`
+*   Place all test files in the `e2e/` directory
+
+**Common Test Patterns:**
+
+1.  **Module Verification Tests:**
+    *   Basic loading and React mounting
+    *   Error detection (JavaScript console errors)
+    *   Navigation functionality
+    *   Content presence verification
+
+2.  **Content-Specific Tests:**
+    *   CoomÜnity terminology verification (Ayni, Méritos, etc.)
+    *   UI element presence and functionality
+    *   Search functionality
+    *   Responsive design verification
+    *   Authentication integration
+
+**Troubleshooting Guidelines:**
+
+1.  **Port Issues:**
+    *   If tests fail with connection errors, verify both services are running
+    *   Check the global setup logs for port detection messages
+    *   Ensure no port conflicts with other services
+
+2.  **Test File Creation:**
+    *   Always use the `edit_file` tool to create test files
+    *   Avoid direct file creation commands that may fail
+    *   Use existing test files as templates when possible
+
+3.  **Mock Authentication:**
+    *   Tests assume mock authentication is enabled
+    *   Verify `VITE_ENABLE_MOCK_AUTH=true` in environment
+    *   Tests should not require real authentication flows
+
+**Best Practices:**
+
+1.  **Test Isolation:**
+    *   Each test should be independent and not rely on previous test state
+    *   Use proper setup and teardown when necessary
+
+2.  **Waiting Strategies:**
+    *   Use `page.waitForSelector('#root')` to ensure React has mounted
+    *   Add appropriate timeouts for dynamic content loading
+    *   Use `page.waitForTimeout()` sparingly and only when necessary
+
+3.  **Error Handling:**
+    *   Distinguish between expected errors (404 notifications) and critical errors
+    *   Filter console errors appropriately in tests
+    *   Log meaningful information for debugging
+
+4.  **Reporting:**
+    *   Use `npx playwright show-report` to view detailed test results
+    *   HTML reports provide comprehensive test execution details
+    *   Screenshots and videos are automatically captured on failures
+
+**Module-Specific Considerations:**
+
+*   **Challenges Module:** Verify CoomÜnity terminology, search functionality, and responsive design
+*   **Groups Module:** Test CRUD operations, user interactions, and data persistence
+*   **ÜPlay Module:** Focus on video player functionality and gamification elements
+*   **Marketplace Module:** Test product/service listings and exchange functionality
+
+**Command Execution Protocol:**
+
+1.  Always navigate to the correct directory first
+2.  Verify services are running before executing tests
+3.  Use single-browser execution for faster development cycles
+4.  Check HTML reports for detailed failure analysis
+5.  Use headed mode for visual debugging when needed
+
+This rule ensures consistent and successful Playwright test execution across the CoomÜnity SuperApp project. 

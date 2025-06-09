@@ -6,7 +6,7 @@ import { defineConfig, devices } from '@playwright/test';
  * ACTUALIZADA: Apunta a la aplicación React unificada en localhost:3000
  */
 export default defineConfig({
-  testDir: './tests/e2e',
+  testDir: './apps/superapp-unified/e2e',
   
   /* Configuración de ejecución */
   fullyParallel: true,
@@ -19,7 +19,7 @@ export default defineConfig({
   
   /* Reporter configuración */
   reporter: [
-    ['html', { outputFolder: 'test-results/html-report', open: 'never' }],
+    ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['list'],
     ['json', { outputFile: 'test-results/results.json' }],
     ['junit', { outputFile: 'test-results/junit.xml' }]

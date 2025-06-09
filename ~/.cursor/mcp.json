@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-notion"],
+      "env": {
+        "NOTION_API_KEY": "notion_api_key_placeholder",
+        "NOTION_DATABASE_ID": "database_id_placeholder"
+      }
+    },
+    "sentry": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sentry"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "sentry_token_placeholder",
+        "SENTRY_ORG": "coomunity",
+        "SENTRY_PROJECT": "superapp"
+      }
+    },
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-linear"],
+      "env": {
+        "LINEAR_API_KEY": "linear_api_key_placeholder"
+      }
+    },
+    "web-search": {
+      "command": "npx",
+      "args": ["-y", "duckduckgo-mcp-server"]
+    }
+  }
+} 
