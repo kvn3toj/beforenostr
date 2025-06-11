@@ -13,6 +13,13 @@ import UXWriter from './components/common/UXWriter';
 // Importar hook de monitoreo
 import { usePageViewTracking } from './hooks/useMonitoring';
 
+// Importar diagnostics para desarrollo
+import {
+  ConnectionDiagnostics,
+  useConnectionDiagnostics,
+} from './components/debug/ConnectionDiagnostics';
+import ErrorLogger from './components/debug/ErrorLogger';
+
 // Importar corrección CSS para cursor pointer
 import './styles/cursor-fix.css';
 // Importar CSS para indicadores de carga
@@ -46,6 +53,11 @@ import {
 // Profile Module - Heavy component (34KB, 958 lines)
 const Profile = lazy(() =>
   import('./pages/Profile').then((module) => ({ default: module.Profile }))
+);
+
+// Settings Module - User configuration page
+const Settings = lazy(() =>
+  import('./pages/Settings').then((module) => ({ default: module.Settings }))
 );
 
 // Wallet Module - Heavy component (32KB, 929 lines)
@@ -662,10 +674,23 @@ const AppWithTracking: React.FC = () => {
   // Hook para tracking automático de navegación
   usePageViewTracking();
 
+  // Hook para diagnostics de conexión en desarrollo
+  const { showDiagnostics, closeDiagnostics } = useConnectionDiagnostics();
+
   return (
     <>
       <DevMockBanner />
       <Toaster position="top-center" richColors closeButton />
+
+      {/* Connection Diagnostics - Solo en desarrollo */}
+      <ConnectionDiagnostics
+        show={showDiagnostics}
+        onClose={closeDiagnostics}
+      />
+
+      {/* Error Logger - Solo en desarrollo */}
+      <ErrorLogger />
+
       <Routes>
         {/* 🔐 Public Routes */}
         <Route path="/login" element={<Login />} />
@@ -691,6 +716,16 @@ const AppWithTracking: React.FC = () => {
             element={
               <Suspense fallback={<DashboardSkeleton />}>
                 <Profile />
+              </Suspense>
+            }
+          />
+
+          {/* ⚙️ Settings Module - User Configuration */}
+          <Route
+            path="settings"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <Settings />
               </Suspense>
             }
           />

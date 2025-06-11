@@ -79,8 +79,8 @@ async function debugAuthConnection() {
         Origin: window.location.origin,
       },
       body: JSON.stringify({
-        email: 'admin@gamifier.com',
-        password: 'admin123',
+        email: 'test@coomunity.com',
+        password: 'test123',
       }),
     });
 

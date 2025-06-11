@@ -59,6 +59,24 @@ import { apiService } from '../../../../lib/api-service';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { formatDuration } from 'date-fns';
 
+// 🎥 Video URL utilities
+const getVideoType = (url: string): 'youtube' | 'direct' => {
+  return url.includes('youtube.com') || url.includes('youtu.be') ? 'youtube' : 'direct';
+};
+
+const getYouTubeVideoId = (url: string): string | null => {
+  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+  return match ? match[1] : null;
+};
+
+const getYouTubeEmbedUrl = (url: string): string => {
+  const videoId = getYouTubeVideoId(url);
+  if (videoId) {
+    return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0&showinfo=0&controls=0&autoplay=1`;
+  }
+  return url;
+};
+
 // ✅ Adaptado para usar la estructura real del Backend NestJS
 interface VideoContent {
   id: number;
@@ -118,6 +136,7 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
   const queryClient = useQueryClient();
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   
   // Video state
   const [isPlaying, setIsPlaying] = useState(autoplay);
@@ -128,6 +147,10 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [showControls, setShowControls] = useState(true);
+  
+  // 🎥 Video type detection
+  const [videoType, setVideoType] = useState<'youtube' | 'direct'>('direct');
+  const [embedUrl, setEmbedUrl] = useState<string>('');
   
   // Interaction state
   const [activeInteraction, setActiveInteraction] = useState<any>(null);
@@ -142,6 +165,10 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
   const [showNotes, setShowNotes] = useState(false);
   const [notes, setNotes] = useState('');
   const [showStats, setShowStats] = useState(false);
+  
+  // 🎯 State for video info overlay visibility
+  const [showVideoInfo, setShowVideoInfo] = useState(true);
+  const videoInfoTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // ✅ Fetch video content from real Backend NestJS endpoint
   const { data: video, isLoading: videoLoading } = useQuery({
@@ -251,18 +278,40 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
 
   // Video event handlers
   const handlePlay = useCallback(() => {
-    if (videoRef.current) {
+    if (videoType === 'youtube' && iframeRef.current) {
+      // Para YouTube, enviamos comando de play via postMessage
+      iframeRef.current.contentWindow?.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+      setIsPlaying(true);
+    } else if (videoRef.current) {
       videoRef.current.play();
       setIsPlaying(true);
     }
-  }, []);
+    
+    // 🎯 Hide video info overlay after 3 seconds when playing
+    if (videoInfoTimerRef.current) {
+      clearTimeout(videoInfoTimerRef.current);
+    }
+    videoInfoTimerRef.current = setTimeout(() => {
+      setShowVideoInfo(false);
+    }, 3000);
+  }, [videoType]);
 
   const handlePause = useCallback(() => {
-    if (videoRef.current) {
+    if (videoType === 'youtube' && iframeRef.current) {
+      // Para YouTube, enviamos comando de pause via postMessage
+      iframeRef.current.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+      setIsPlaying(false);
+    } else if (videoRef.current) {
       videoRef.current.pause();
       setIsPlaying(false);
     }
-  }, []);
+    
+    // 🎯 Show video info overlay when paused
+    if (videoInfoTimerRef.current) {
+      clearTimeout(videoInfoTimerRef.current);
+    }
+    setShowVideoInfo(true);
+  }, [videoType]);
 
   const handleTimeUpdate = useCallback(() => {
     if (videoRef.current) {
@@ -300,6 +349,40 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
       }
     }
   }, [questions, video?.questions, progress, activeInteraction, duration, updateProgressMutation, handlePause]);
+
+  // 🎥 YouTube time simulation (since we can't get real-time from embedded player)
+  useEffect(() => {
+    if (videoType === 'youtube' && isPlaying) {
+      const interval = setInterval(() => {
+        setCurrentTime(prev => {
+          const newTime = prev + 1;
+          
+          // Check for questions at current timestamp for YouTube
+          const questionsToCheck = questions?.length > 0 ? questions : video?.questions || [];
+          
+          if (questionsToCheck.length > 0) {
+            const currentQuestion = questionsToCheck.find(
+              (question) => 
+                newTime >= question.timestamp && 
+                newTime <= (question.endTimestamp || question.timestamp + 15) && 
+                question.isActive &&
+                !progress?.completedQuestions.includes(question.id)
+            );
+            
+            if (currentQuestion && !activeInteraction) {
+              setActiveInteraction(currentQuestion);
+              handlePause();
+              setShowQuiz(true);
+            }
+          }
+          
+          return newTime;
+        });
+      }, 1000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [videoType, isPlaying, questions, video?.questions, progress, activeInteraction, handlePause]);
 
   const handleSeek = useCallback((newTime: number) => {
     if (videoRef.current) {
@@ -405,7 +488,19 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
       timer = setTimeout(() => setShowControls(false), 3000);
     };
     
-    const handleMouseMove = () => resetTimer();
+    const handleMouseMove = () => {
+      resetTimer();
+      // 🎯 Show video info overlay on mouse move during playback
+      if (isPlaying) {
+        setShowVideoInfo(true);
+        if (videoInfoTimerRef.current) {
+          clearTimeout(videoInfoTimerRef.current);
+        }
+        videoInfoTimerRef.current = setTimeout(() => {
+          setShowVideoInfo(false);
+        }, 4000); // Hide again after 4 seconds
+      }
+    };
     
     if (isPlaying) {
       containerRef.current?.addEventListener('mousemove', handleMouseMove);
@@ -438,6 +533,41 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
     }
   }, [progress]);
 
+  // 🎯 Cleanup video info timer on unmount
+  useEffect(() => {
+    return () => {
+      if (videoInfoTimerRef.current) {
+        clearTimeout(videoInfoTimerRef.current);
+      }
+    };
+  }, []);
+
+  // 🎯 Initialize video info overlay state based on playing status
+  useEffect(() => {
+    if (!isPlaying) {
+      setShowVideoInfo(true);
+      if (videoInfoTimerRef.current) {
+        clearTimeout(videoInfoTimerRef.current);
+      }
+    }
+  }, [isPlaying]);
+
+  // 🎥 Video type detection and URL setup
+  useEffect(() => {
+    if (video?.url) {
+      const type = getVideoType(video.url);
+      setVideoType(type);
+      
+      if (type === 'youtube') {
+        setEmbedUrl(getYouTubeEmbedUrl(video.url));
+        // Para YouTube, simulamos duración desde metadata del backend
+        setDuration(video.duration || 600); // Default 10 min si no hay duración
+      } else {
+        setEmbedUrl(video.url);
+      }
+    }
+  }, [video?.url, video?.duration]);
+
   if (videoLoading || progressLoading || questionsLoading) {
     return (
       <Box sx={{ p: 2 }}>
@@ -463,21 +593,37 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
 
   return (
     <Box ref={containerRef} sx={{ position: 'relative', bgcolor: 'black', borderRadius: 2, overflow: 'hidden' }}>
-      {/* ✅ Video Element with real URL from backend */}
-      <video
-        ref={videoRef}
-        src={video.url}
-        poster={video.thumbnailUrl}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        style={{
-          width: '100%',
-          height: isFullscreen ? '100vh' : '400px',
-          objectFit: 'contain',
-        }}
-      />
+      {/* ✅ Video Element with real URL from backend - Support for YouTube and direct videos */}
+      {videoType === 'youtube' ? (
+        <iframe
+          ref={iframeRef}
+          src={embedUrl}
+          title={video.title}
+          style={{
+            width: '100%',
+            height: isFullscreen ? '100vh' : '400px',
+            border: 'none',
+          }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={embedUrl}
+          poster={video.thumbnailUrl}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          autoPlay={autoplay}
+          style={{
+            width: '100%',
+            height: isFullscreen ? '100vh' : '400px',
+            objectFit: 'contain',
+          }}
+        />
+      )}
 
       {/* Video Controls Overlay */}
       <Zoom in={showControls || !isPlaying}>
@@ -599,9 +745,10 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
 
       {/* Video Info Overlay */}
       {!isFullscreen && (
-        <Box sx={{ position: 'absolute', top: 16, left: 16, right: 16 }}>
-          <Card sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white' }}>
-            <CardContent sx={{ pb: '16px !important' }}>
+        <Zoom in={showVideoInfo}>
+          <Box sx={{ position: 'absolute', top: 16, left: 16, right: 16 }}>
+            <Card sx={{ bgcolor: 'rgba(0,0,0,0.7)', color: 'white' }}>
+              <CardContent sx={{ pb: '16px !important' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="h6" gutterBottom>
@@ -668,6 +815,7 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
             </CardContent>
           </Card>
         </Box>
+        </Zoom>
       )}
 
       {/* Quiz Dialog */}

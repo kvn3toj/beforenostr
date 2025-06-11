@@ -10,6 +10,11 @@ export class CreateRankingDto {
   @IsString()
   type: string;
 
+  @ApiProperty({ description: 'Período del ranking', enum: ['DAILY', 'WEEKLY', 'MONTHLY', 'CONTEST'], default: 'DAILY' })
+  @IsString()
+  @IsOptional()
+  period?: string;
+
   @ApiProperty({ description: 'ID del usuario' })
   @IsString()
   @IsUUID()

@@ -123,6 +123,7 @@ export class AnalyticsService {
         data: {
           name: createRankingDto.name,
           type: createRankingDto.type,
+          period: createRankingDto.period || 'DAILY', // Default period
           data: JSON.stringify({
             userId: createRankingDto.userId,
             score: createRankingDto.score,

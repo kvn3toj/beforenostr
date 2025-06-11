@@ -26,7 +26,8 @@ import { LetsModule } from './lets/lets.module'; // RE-ENABLED
 import { GroupsModule } from './social/groups/groups.module'; // RE-ENABLED
 import { MarketplaceModule } from './marketplace/marketplace.module'; // RE-ENABLED
 import { SocialModule } from './social/social.module'; // NEW - Social stats and activity
-// import { ChallengesModule } from './challenges/challenges.module'; // TEMPORAL - PROBLEMA DEPENDENCIAS
+// import { ChallengesModule } from './challenges/challenges.module'; // RE-ENABLED - DEPENDENCIAS RESUELTAS
+import { ChallengesPublicModule } from './challenges/challenges-public.module'; // TEMPORARY PUBLIC MODULE
 // import { NotificationsModule } from './notifications/notifications.module'; // TEMPORAL - CONFLICTO
 import { InvitationsModule } from './invitations/invitations.module'; // RE-ENABLED
 // ======= GRUPO 3: MÓDULOS ADMINISTRATIVOS Y MONITOREO =======
@@ -66,7 +67,8 @@ console.log('>>> AppModule: MÓDULOS CRÍTICOS RE-HABILITADOS (SIN PROBLEMAS)...
     GroupsModule,      // RE-ENABLED
     MarketplaceModule, // RE-ENABLED
     SocialModule,      // NEW - Social stats and activity
-    // ChallengesModule,  // TEMPORAL - PROBLEMA DEPENDENCIAS
+    // ChallengesModule,  // RE-ENABLED - DEPENDENCIAS RESUELTAS
+    ChallengesPublicModule,  // TEMPORARY PUBLIC MODULE
     // NotificationsModule, // TEMPORAL - CONFLICTO
     InvitationsModule, // RE-ENABLED
     // ======= GRUPO 3: MÓDULOS ADMINISTRATIVOS Y MONITOREO =======

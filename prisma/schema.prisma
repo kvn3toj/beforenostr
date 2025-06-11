@@ -189,6 +189,7 @@ model User {
   createdTemplates    UIComponentTemplate[] @relation("TemplateCreator")
   ownedGroups         Group[]            @relation("GroupOwner")
   createdInvitationTemplates InvitationTemplate[] @relation("InvitationTemplateCreator")
+  userChallenges      UserChallenge[]
 
   @@index([email])
   @@index([isActive])
@@ -786,4 +787,64 @@ model ContentItem {
   @@index([itemTypeId])
   @@index([isDeleted])
   @@map("content_items")
+}
+
+// ===== CHALLENGES SYSTEM =====
+
+model Challenge {
+  id          String            @id @default(uuid())
+  title       String
+  description String?
+  type        String            // CUSTOM, AUTOMATED
+  status      String            @default("ACTIVE") // DRAFT, ACTIVE, INACTIVE, ARCHIVED
+  startDate   DateTime
+  endDate     DateTime
+  config      String            @default("{}") // JSON string for automated challenge configuration
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  
+  rewards     ChallengeReward[]
+  userChallenges UserChallenge[]
+
+  @@index([status])
+  @@index([type])
+  @@index([startDate])
+  @@index([endDate])
+  @@map("challenges")
+}
+
+model ChallengeReward {
+  id          String    @id @default(uuid())
+  challengeId String
+  type        String    // MERITS, UNITS, TOKENS, BADGE
+  amount      Float?    // For numeric rewards
+  description String?
+  metadata    String?   // JSON string for additional reward data
+  createdAt   DateTime  @default(now())
+  
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@index([challengeId])
+  @@index([type])
+  @@map("challenge_rewards")
+}
+
+model UserChallenge {
+  id          String    @id @default(uuid())
+  userId      String
+  challengeId String
+  status      String    @default("ACTIVE") // ACTIVE, COMPLETED, FAILED, ABANDONED
+  progress    Float     @default(0) // Progress percentage (0-100)
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  metadata    String?   // JSON string for challenge-specific data
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, challengeId])
+  @@index([userId])
+  @@index([challengeId])
+  @@index([status])
+  @@map("user_challenges")
 }

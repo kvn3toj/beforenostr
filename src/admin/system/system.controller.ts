@@ -4,7 +4,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Adjust path
 import { RolesGuard } from '../../rbac/guards/roles.guard'; // Adjust path
 import { Roles } from '../../rbac/decorators/roles.decorator'; // Adjust path
-import { AuthenticatedUser } from '../../../types/auth.types'; // Adjust path
+import { AuthenticatedUser } from '../../types/auth.types'; // Adjust path
 
 @ApiTags('admin/system')
 @ApiBearerAuth()

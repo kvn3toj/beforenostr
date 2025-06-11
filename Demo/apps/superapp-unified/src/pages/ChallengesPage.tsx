@@ -42,6 +42,30 @@ import {
   ChallengeType 
 } from '../types/challenges';
 
+// 🔧 SOLUCIÓN: Función segura para formatear fechas (agregada al inicio del archivo)
+const formatSafeDate = (dateString?: string): string => {
+  if (!dateString) return 'No especificada';
+  
+  try {
+    const date = new Date(dateString);
+    
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) {
+      console.warn(`⚠️ Fecha inválida detectada: ${dateString}`);
+      return 'Fecha inválida';
+    }
+    
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.error(`❌ Error al formatear fecha: ${dateString}`, error);
+    return 'Error en fecha';
+  }
+};
+
 // Loading skeleton component
 const ChallengeCardSkeleton: React.FC = () => (
   <Card sx={{ height: 400 }}>

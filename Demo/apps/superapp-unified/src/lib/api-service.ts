@@ -5,10 +5,11 @@
  * incluyendo autenticación JWT, manejo de errores, y configuración centralizada.
  */
 
-// 🔧 Configuración de la API
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
-const API_TIMEOUT = 10000; // 10 segundos
+import { ENV, EnvironmentHelpers } from './environment';
+
+// 🔧 Configuración de la API - usando configuración inteligente de entorno
+const API_BASE_URL = ENV.apiBaseUrl;
+const API_TIMEOUT = EnvironmentHelpers.getApiTimeout();
 
 // 🏷️ Tipos de respuesta de la API
 export interface ApiResponse<T = any> {
@@ -48,6 +49,11 @@ class ApiService {
    */
   private getAuthToken(): string | null {
     try {
+      // Si el mock auth está habilitado, devolver token mock
+      if (EnvironmentHelpers.shouldUseMockAuth()) {
+        return 'mock-jwt-token-for-testing-do-not-use-in-production';
+      }
+
       // Primero intentar obtener el token directamente
       const token = localStorage.getItem('coomunity_token');
       if (token && token !== 'null' && token !== 'undefined') {
@@ -117,10 +123,15 @@ class ApiService {
     switch (response.status) {
       case 401:
         errorCategory = 'auth';
-        // Token inválido o expirado
-        this.handleUnauthorized();
+        // Token inválido o expirado - but in mock mode, be less aggressive
+        if (!EnvironmentHelpers.shouldUseMockAuth()) {
+          this.handleUnauthorized();
+        }
+        const authMessage = EnvironmentHelpers.shouldUseMockAuth()
+          ? 'Autenticación mock - algunos endpoints pueden requerir implementación backend'
+          : 'Sesión expirada. Por favor, inicia sesión nuevamente.';
         return this.createCategorizedError(
-          'Sesión expirada. Por favor, inicia sesión nuevamente.',
+          authMessage,
           errorCategory,
           response.status
         );
@@ -135,8 +146,16 @@ class ApiService {
 
       case 404:
         errorCategory = 'business';
+        // For development, be more specific about which endpoint wasn't found
+        const endpoint = response.url
+          ? new URL(response.url).pathname
+          : 'unknown endpoint';
+        const message = EnvironmentHelpers.shouldLogDebug()
+          ? `Endpoint not available: ${endpoint}. This may be expected during development if the backend endpoint hasn't been implemented yet.`
+          : 'Recurso no encontrado.';
+
         return this.createCategorizedError(
-          'Recurso no encontrado.',
+          message,
           errorCategory,
           response.status
         );
@@ -207,6 +226,18 @@ class ApiService {
       statusCode
     );
 
+    // Improve error serialization for debugging
+    (error as any).toJSON = () => ({
+      name: error.name,
+      message: error.message,
+      category,
+      statusCode,
+      timestamp: (error as any).timestamp,
+      isRetriable: (error as any).isRetriable,
+      userFriendly: (error as any).userFriendly,
+      stack: error.stack,
+    });
+
     return error;
   }
 
@@ -265,8 +296,8 @@ class ApiService {
     // En desarrollo, log detallado
     if (import.meta.env.DEV) {
       console.group(`🚨 API Error: ${method} ${endpoint}`);
-      console.error('Error Details:', errorData);
-      console.error('Original Error:', error);
+      console.error('Error Details:', JSON.stringify(errorData, null, 2));
+      console.error('Original Error:', error.message || error);
       console.groupEnd();
     }
 
@@ -411,6 +442,8 @@ class ApiService {
         ...options,
         headers: { ...headers, ...options.headers },
         signal: controller.signal,
+        credentials: 'include', // ✅ Incluir credenciales para CORS
+        mode: 'cors', // ✅ Modo CORS explícito
       });
 
       clearTimeout(timeoutId);
@@ -638,9 +671,7 @@ class ApiService {
       ...options,
       signal: controller.signal,
       headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        Origin: window.location.origin,
+        ...EnvironmentHelpers.getCorsHeaders(),
         ...options.headers,
       },
       mode: 'cors' as RequestMode,
@@ -666,23 +697,75 @@ class ApiService {
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
     try {
-      // Pre-flight verification en desarrollo
+      // Enhanced pre-flight verification with better diagnostics
       if (import.meta.env.DEV) {
         console.log('🚀 Iniciando fetch request...');
 
-        // Quick connectivity check for better error reporting
+        // Comprehensive backend connectivity check
         try {
+          const healthCheckController = new AbortController();
+          setTimeout(() => healthCheckController.abort(), 3000);
+
           const healthCheck = await fetch(`${this.baseURL}/health`, {
-            method: 'HEAD',
+            method: 'GET',
             mode: 'cors',
-            signal: AbortSignal.timeout(3000),
+            signal: healthCheckController.signal,
+            headers: {
+              Origin: window.location.origin,
+            },
           });
+
           console.log('🏥 Backend health check:', {
             status: healthCheck.status,
+            statusText: healthCheck.statusText,
             accessible: healthCheck.ok,
+            headers: Object.fromEntries(healthCheck.headers.entries()),
+            cors: healthCheck.headers.get('access-control-allow-origin'),
           });
-        } catch (healthError) {
-          console.warn('⚠️ Backend health check failed:', healthError.message);
+
+          // Check for CORS headers specifically
+          const corsOrigin = healthCheck.headers.get(
+            'access-control-allow-origin'
+          );
+          if (
+            !corsOrigin ||
+            (corsOrigin !== '*' && corsOrigin !== window.location.origin)
+          ) {
+            console.warn(
+              '⚠️ CORS Warning: Backend may not allow this origin:',
+              {
+                expectedOrigin: window.location.origin,
+                receivedCorsOrigin: corsOrigin,
+              }
+            );
+          }
+        } catch (healthError: any) {
+          console.warn('⚠️ Backend health check failed:', {
+            message: healthError.message,
+            name: healthError.name,
+            stack: healthError.stack,
+          });
+
+          // Try OPTIONS request to diagnose CORS
+          try {
+            const optionsCheck = await fetch(`${this.baseURL}${endpoint}`, {
+              method: 'OPTIONS',
+              mode: 'cors',
+              signal: AbortSignal.timeout(2000),
+              headers: {
+                Origin: window.location.origin,
+                'Access-Control-Request-Method': options.method || 'GET',
+                'Access-Control-Request-Headers': 'Content-Type,Authorization',
+              },
+            });
+
+            console.log('🔍 CORS OPTIONS check:', {
+              status: optionsCheck.status,
+              headers: Object.fromEntries(optionsCheck.headers.entries()),
+            });
+          } catch (optionsError) {
+            console.warn('⚠️ CORS OPTIONS check failed:', optionsError.message);
+          }
         }
       }
 
@@ -750,34 +833,21 @@ class ApiService {
           'Ensure no firewall or antivirus is blocking the connection',
         ];
 
-        // Enhanced debugging for network issues
+        // Enhanced debugging for network issues using environment helpers
+        const troubleshootingInfo = EnvironmentHelpers.getTroubleshootingInfo();
+
         console.group(`🚨 NETWORK ERROR - Cannot connect to backend`);
         console.error('💥 Error Message:', error.message);
         console.error('🏷️ Error Type:', error.name);
         console.error('📄 Full Error:', error);
         console.error('🔗 Endpoint URL:', url);
         console.error('⚙️ Base URL:', this.baseURL);
-        console.error('🌍 Current Origin:', window.location.origin);
-        console.error('🔍 Navigator Online:', navigator.onLine);
-        console.error('🌐 User Agent:', navigator.userAgent);
+        console.error('🌍 Environment Info:', troubleshootingInfo);
 
         console.error('🔧 Troubleshooting steps:');
-        console.error(
-          '   1. Check if backend is running:',
-          `npm run start:backend:dev`
-        );
-        console.error('   2. Test backend health:', `${this.baseURL}/health`);
-        console.error(
-          '   3. Verify CORS allows origin:',
-          window.location.origin
-        );
-        console.error('   4. Check browser network tab for details');
-        console.error(
-          '   5. Try manual test:',
-          `curl -X ${options.method || 'GET'} ${url} -H "Content-Type: application/json" ${
-            requestOptions.body ? `-d '${requestOptions.body}'` : ''
-          }`
-        );
+        troubleshootingInfo.troubleshootingSteps.forEach((step, index) => {
+          console.error(`   ${step}`);
+        });
 
         // Display user-friendly error notification
         if (typeof window !== 'undefined') {
@@ -913,11 +983,11 @@ export const marketplaceAPI = {
  * 💰 Servicios de Wallet
  */
 export const walletAPI = {
-  getBalance: (userId: string) => apiService.get(`/wallet/${userId}/balance`),
+  getBalance: (userId: string) => apiService.get(`/wallets/user/${userId}`),
   getTransactions: (userId: string) =>
-    apiService.get(`/wallet/${userId}/transactions`),
+    apiService.get(`/wallets/user/${userId}/transactions`), // This endpoint might not exist yet
   transfer: (fromUserId: string, toUserId: string, amount: number) =>
-    apiService.post('/wallet/transfer', { fromUserId, toUserId, amount }),
+    apiService.post('/wallets/transfer', { fromUserId, toUserId, amount }), // This endpoint might not exist yet
 
   // 🏆 Servicios de Méritos
   getMerits: (userId: string) => apiService.get(`/merits/user/${userId}`),

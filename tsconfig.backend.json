@@ -50,13 +50,13 @@
     "src/marketplace/**/*",
     "src/invitations/**/*",
     "src/monitoring/**/*",
-    "src/personality/**/*"
+    "src/personality/**/*",
+    "src/challenges/**/*"
   ],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "src/e2e/**/*",
-    "src/challenges/**/*",
     "src/services/**/*",
     "src/setupTests.ts",
     "src/components/**/*",

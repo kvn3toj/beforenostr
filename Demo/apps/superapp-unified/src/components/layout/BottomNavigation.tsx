@@ -8,18 +8,18 @@ import {
   Box,
   useTheme,
 } from '@mui/material';
-import { Home, ShoppingCart, Groups, PlayArrow } from '@mui/icons-material';
+import { PlayArrow, BarChart, Groups, ShoppingCart } from '@mui/icons-material';
 
 const MOBILE_NAV_ITEMS = [
   {
-    label: 'Home',
-    value: '/',
-    icon: <Home />,
+    label: 'ÜPlay',
+    value: '/play',
+    icon: <PlayArrow />,
   },
   {
-    label: 'ÜMarket',
-    value: '/marketplace',
-    icon: <ShoppingCart />,
+    label: 'ÜStats',
+    value: '/stats',
+    icon: <BarChart />,
   },
   {
     label: 'ÜSocial',
@@ -27,10 +27,10 @@ const MOBILE_NAV_ITEMS = [
     icon: <Groups />,
   },
   {
-    label: 'ÜPlay',
-    value: '/play',
-    icon: <PlayArrow />,
-    badge: 3, // Add badge for ÜPlay
+    label: 'ÜMarket',
+    value: '/marketplace',
+    icon: <ShoppingCart />,
+    highlight: true, // Para resaltar ÜMarket como en el wireframe
   },
 ];
 
@@ -70,7 +70,7 @@ export const BottomNavigation: React.FC = () => {
         right: 0,
         zIndex: 1000,
         display: { xs: 'block', md: 'none' }, // Only on mobile
-        backgroundColor: '#F3EDF7', // Material Design 3 surface container
+        backgroundColor: '#FFFFFF', // Fondo blanco como en el wireframe
       }}
       elevation={3}
     >
@@ -83,7 +83,7 @@ export const BottomNavigation: React.FC = () => {
         data-context-type="mobile-nav-tabs"
         sx={{
           height: 70,
-          backgroundColor: '#F3EDF7',
+          backgroundColor: '#FFFFFF',
           '& .MuiBottomNavigationAction-root': {
             minWidth: 'auto',
             padding: '12px 0px 16px 0px',
@@ -91,10 +91,20 @@ export const BottomNavigation: React.FC = () => {
             '&.Mui-selected': {
               color: '#1D1B20',
               fontWeight: 600,
+            },
+            '&.highlight-action': {
               '& .MuiBottomNavigationAction-iconWrapper': {
-                backgroundColor: '#E8DEF8',
-                borderRadius: '16px',
-                padding: '4px 20px',
+                backgroundColor: '#E91E63',
+                borderRadius: '50%',
+                width: '56px',
+                height: '56px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              '& .MuiSvgIcon-root': {
+                color: '#FFFFFF',
+                fontSize: '24px',
               },
             },
           },
@@ -109,20 +119,36 @@ export const BottomNavigation: React.FC = () => {
       >
         {MOBILE_NAV_ITEMS.map((item) => {
           const isSelected = getCurrentValue() === item.value;
+          const isHighlight = item.highlight && isSelected;
+
           const IconComponent = () => (
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: 32,
-                height: 32,
-                borderRadius: isSelected ? '16px' : 0,
-                backgroundColor: isSelected ? '#E8DEF8' : 'transparent',
+                width: isHighlight ? 56 : 32,
+                height: isHighlight ? 56 : 32,
+                borderRadius: isHighlight ? '50%' : isSelected ? '16px' : 0,
+                backgroundColor: isHighlight
+                  ? '#E91E63'
+                  : isSelected
+                    ? '#E8DEF8'
+                    : 'transparent',
                 position: 'relative',
+                transition: 'all 0.2s ease',
               }}
             >
-              {item.icon}
+              <Box
+                sx={{
+                  color: isHighlight ? '#FFFFFF' : 'inherit',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {item.icon}
+              </Box>
               {item.badge && (
                 <Badge
                   badgeContent={item.badge}
@@ -155,7 +181,7 @@ export const BottomNavigation: React.FC = () => {
               title={`Ir a ${item.label}`}
               className={`bottom-nav-action contextual-control nav-item-interactive nav-active-indicator ${
                 isSelected ? 'active' : ''
-              }`}
+              } ${isHighlight ? 'highlight-action' : ''}`}
               data-contextual="navigation-action"
               data-context-type="nav-tab"
               data-nav-target={item.value}

@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateConfigDto, AppConfigValue } from './dto/create-config.dto';
 import { UpdateConfigDto } from './dto/update-config.dto';
-import { AppConfig } from '@prisma/client';
+import { Configuration } from '../../generated/prisma';
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
-import { AuthenticatedUser } from '../../../types/auth.types';
+import { AuthenticatedUser } from '../../types/auth.types';
 
 @Injectable()
 export class ConfigService {
@@ -13,9 +13,9 @@ export class ConfigService {
     private readonly auditLogsService: AuditLogsService,
   ) {}
 
-  async create(createConfigDto: CreateConfigDto, user: AuthenticatedUser): Promise<AppConfig> {
+  async create(createConfigDto: CreateConfigDto, user: AuthenticatedUser): Promise<Configuration> {
     // TODO: Associate createdBy user ID from req.user
-    const newConfig = await this.prisma.appConfig.create({
+    const newConfig = await this.prisma.configuration.create({
       data: {
         ...createConfigDto,
         value: createConfigDto.value ?? {},
@@ -36,13 +36,13 @@ export class ConfigService {
     return newConfig;
   }
 
-  async findAll(): Promise<AppConfig[]> {
+  async findAll(): Promise<Configuration[]> {
     // TODO: Consider masking sensitive values for non-admin users
-    return this.prisma.appConfig.findMany();
+    return this.prisma.configuration.findMany();
   }
 
-  async findOne(id: string): Promise<AppConfig | null> {
-    const config = await this.prisma.appConfig.findUnique({
+  async findOne(id: string): Promise<Configuration | null> {
+    const config = await this.prisma.configuration.findUnique({
       where: { id },
     });
     if (!config) {
@@ -52,17 +52,17 @@ export class ConfigService {
     return config;
   }
 
-  async findOneByKey(key: string): Promise<AppConfig | null> {
-    const config = await this.prisma.appConfig.findUnique({
+  async findOneByKey(key: string): Promise<Configuration | null> {
+    const config = await this.prisma.configuration.findUnique({
       where: { key },
     });
      // TODO: Consider masking sensitive values for non-admin users
     return config; // Can return null if not found, controller handles 404
   }
 
-  async update(id: string, updateConfigDto: UpdateConfigDto, user: AuthenticatedUser): Promise<AppConfig> {
+  async update(id: string, updateConfigDto: UpdateConfigDto, user: AuthenticatedUser): Promise<Configuration> {
      // TODO: Associate updatedBy user ID from req.user
-    const existingConfig = await this.prisma.appConfig.findUnique({
+    const existingConfig = await this.prisma.configuration.findUnique({
         where: { id }
     });
 
@@ -70,10 +70,10 @@ export class ConfigService {
         throw new NotFoundException(`Config with ID ${id} not found`);
     }
 
-    // Capture old value before update (excluding sensitive values)
-    const oldValue = { ...existingConfig, value: existingConfig.isSensitive ? '[SENSITIVE]' : existingConfig.value };
+    // Capture old value before update
+    const oldValue = { ...existingConfig };
 
-    const updatedConfig = await this.prisma.appConfig.update({
+    const updatedConfig = await this.prisma.configuration.update({
       where: { id },
       data: {
         ...updateConfigDto,
@@ -82,8 +82,8 @@ export class ConfigService {
       },
     });
 
-    // Capture new value after update (excluding sensitive values)
-    const newValue = { ...updatedConfig, value: updatedConfig.isSensitive ? '[SENSITIVE]' : updatedConfig.value };
+    // Capture new value after update
+    const newValue = { ...updatedConfig };
 
     // Log config update
     await this.auditLogsService.createLog({
@@ -99,8 +99,8 @@ export class ConfigService {
     return updatedConfig;
   }
 
-  async remove(id: string, user: AuthenticatedUser): Promise<AppConfig> {
-     const existingConfig = await this.prisma.appConfig.findUnique({
+  async remove(id: string, user: AuthenticatedUser): Promise<Configuration> {
+     const existingConfig = await this.prisma.configuration.findUnique({
         where: { id }
     });
 
@@ -108,10 +108,10 @@ export class ConfigService {
         throw new NotFoundException(`Config with ID ${id} not found`);
     }
 
-    // Capture old value before deletion (excluding sensitive values)
-    const oldValue = { ...existingConfig, value: existingConfig.isSensitive ? '[SENSITIVE]' : existingConfig.value };
+    // Capture old value before deletion
+    const oldValue = { ...existingConfig };
 
-    const deletedConfig = await this.prisma.appConfig.delete({
+    const deletedConfig = await this.prisma.configuration.delete({
       where: { id },
     });
 

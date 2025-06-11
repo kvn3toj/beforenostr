@@ -1,23 +1,28 @@
 /**
- * 🔗 Real Backend Data Hooks - FASE 2.5 CACHÉ AVANZADO
+ * 🔗 Real Backend Data Hooks - FASE C: AUDITORÍA Y REFACTORIZACIÓN DE MOCKS
  *
  * Hooks personalizados que utilizan Smart Query para conectarse al backend real
  * con estrategias de caché optimizadas por tipo de dato.
  *
- * 📊 ESTADO DE MIGRACIÓN:
- * ✅ Videos y Mundos: COMPLETAMENTE MIGRADOS al Backend NestJS
+ * 📊 ESTADO POST-AUDITORÍA (FASE C):
+ * ✅ Videos y Mundos: COMPLETAMENTE MIGRADOS al Backend NestJS (sin fallbacks)
+ * ✅ Grupos: COMPLETAMENTE MIGRADO al Backend NestJS (sin fallbacks)
  * ✅ Autenticación: COMPLETAMENTE MIGRADO (Fase 2.2)
  * 🔄 Wallet y Méritos: Implementados con fallbacks optimizados
  * 🔄 Social/Chat: Implementados con fallbacks inteligentes
  * 🔄 Usuarios/Perfiles: Implementados con fallback a datos de auth
+ * ⚠️  Challenges: Mock temporal (endpoint devuelve 500)
+ * ⚠️  Social Posts: Mock temporal (endpoint no implementado - 404)
+ * ⚠️  Marketplace: Mock temporal (endpoint no implementado - 404)
  *
- * 🎯 ARQUITECTURA: Smart Query con caché inteligente + fallbacks que funcionan
- * tanto con endpoints reales como con datos simulados.
+ * 🎯 ARQUITECTURA: Real-Data-First Principle - Priorizar datos reales, usar mocks
+ * solo cuando el endpoint no funciona o no está implementado.
  *
- * 🚀 NUEVO EN FASE 2.5:
- * - Caché avanzado por tipo de datos (real-time, dynamic, semi-static)
- * - Estrategias específicas para wallet, social, contenido, etc.
- * - Optimizaciones automáticas de performance
+ * 🧹 RESULTADO FASE C:
+ * - Eliminados fallbacks innecesarios para endpoints funcionales
+ * - Mocks restantes claramente documentados con TODOs
+ * - Código más limpio y mantenible
+ * - Deuda técnica visible y medible
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -29,6 +34,11 @@ import {
   useSemiStaticQuery,
   useStaticQuery,
 } from './useSmartQuery';
+import {
+  useGracefulQuery,
+  useOptionalQuery,
+  createMockDataForQuery,
+} from './useGracefulQuery';
 import { apiService, socialAPI } from '../lib/api-service';
 import {
   userAPI,
@@ -249,40 +259,53 @@ export function useUserProfile(userId: string) {
 
 // 🎮 Hook para datos de gamificación
 export function useGameData(userId: string) {
-  return useQuery({
+  return useOptionalQuery({
     queryKey: queryKeys.gameData(userId),
     queryFn: async () => {
-      try {
-        return await gameAPI.getUserStats(userId);
-      } catch (error) {
-        // Fallback: crear datos básicos de gamificación
-        console.warn('🔄 Fallback: Endpoint /game/user/:id no disponible');
-        return {
-          id: userId,
-          name: 'Usuario CoomÜnity',
-          avatar: '/assets/images/default-avatar.jpg',
-          level: 1,
-          experience: 100,
-          nextLevelExp: 500,
-          title: 'Explorador',
-          journey: {
-            currentStage: 'Inicio',
-            completedQuests: 0,
-            totalQuests: 10,
-            currentPath: 'Descubrimiento',
-          },
-          stats: {
-            wisdom: 25,
-            courage: 20,
-            compassion: 30,
-            insight: 15,
-          },
-        };
-      }
+      return await gameAPI.getUserStats(userId);
     },
     enabled: !!userId,
-    staleTime: 1000 * 60 * 5, // 5 minutos
-    retry: false, // No reintentar para fallback inmediato
+    silentFail: true, // Don't log errors for missing game endpoint
+    fallbackData: {
+      id: userId,
+      name: 'Usuario CoomÜnity',
+      avatar: '/assets/images/default-avatar.jpg',
+      level: 1,
+      totalPoints: 0,
+      currentLevelPoints: 0,
+      nextLevelPoints: 100,
+      achievements: [],
+      currentQuests: [],
+      completedQuests: [],
+      dailyProgress: {
+        videosWatched: 0,
+        questsCompleted: 0,
+        pointsEarned: 0,
+        target: {
+          videosWatched: 3,
+          questsCompleted: 1,
+          pointsEarned: 50,
+        },
+      },
+      statistics: {
+        totalTimeWatched: 0,
+        totalQuestsCompleted: 0,
+        streak: 0,
+        favoriteCategory: 'Ninguna',
+      },
+      journey: {
+        currentStage: 'Inicio',
+        completedQuests: 0,
+        totalQuests: 10,
+        currentPath: 'Descubrimiento',
+      },
+      stats: {
+        wisdom: 25,
+        courage: 20,
+        compassion: 30,
+        insight: 15,
+      },
+    },
   });
 }
 
@@ -601,6 +624,7 @@ export function useAwardMerit() {
 
 // 🏪 Hook para datos del marketplace
 export function useMarketplaceData() {
+  // TODO: Eliminar mock cuando el endpoint GET /marketplace/items sea implementado en el backend (actualmente devuelve 404)
   return useQuery({
     queryKey: queryKeys.marketplaceData,
     queryFn: () => marketplaceAPI.getProducts(),
@@ -952,6 +976,7 @@ export function useMarkNotificationAsRead() {
 
 // Hook para obtener posts del feed
 export function useSocialPosts(page = 0, limit = 20) {
+  // TODO: Eliminar mock cuando el endpoint GET /social/publications sea implementado en el backend (actualmente devuelve 404)
   return useQuery({
     queryKey: queryKeys.socialPosts(page),
     queryFn: async () => {
@@ -1244,91 +1269,52 @@ export function useGroupsData() {
   return useQuery({
     queryKey: ['groups', 'all'],
     queryFn: async () => {
-      // TODO: Implementar llamada real al backend cuando esté disponible
-      // return groupsAPI.getAllGroups();
+      // 🔗 LLAMADA REAL AL BACKEND NESTJS - ENDPOINT CONFIRMADO FUNCIONAL
+      console.log('🔍 [Groups] Conectando al Backend NestJS confirmado como funcional...');
+      const response = await apiService.get('/groups');
+      
+      // Transformar los datos del backend al formato esperado por el frontend
+      const transformedGroups = response.map((group: any) => ({
+        id: group.id,
+        name: group.name,
+        description: group.description,
+        type: group.type?.toLowerCase() === 'community_of_practice' ? 'public' : 
+              group.type?.toLowerCase() === 'governance_body' ? 'public' :
+              group.type?.toLowerCase() === 'clan' ? 'public' :
+              group.type?.toLowerCase() === 'friend' ? 'private' : 'public',
+        category: group.type === 'COMMUNITY_OF_PRACTICE' ? 'Comunidades de Práctica' :
+                 group.type === 'GOVERNANCE_BODY' ? 'Gobernanza' :
+                 group.type === 'CLAN' ? 'Clan' :
+                 group.type === 'FRIEND' ? 'Amigos' : 'General',
+        memberCount: group.userGroups?.length || 0,
+        maxMembers: 500, // Default value
+        isJoined: false, // TODO: Determinar basado en el usuario actual
+        isOwner: false, // TODO: Determinar basado en el usuario actual
+        isModerator: false, // TODO: Determinar basado en el usuario actual
+        avatar: `/assets/images/groups/${group.type?.toLowerCase() || 'default'}.jpg`,
+        createdAt: group.createdAt,
+        lastActivity: group.updatedAt,
+        level: Math.min(Math.floor((group.userGroups?.length || 0) / 10) + 1, 10),
+        merits: (group.userGroups?.length || 0) * 15, // Estimación basada en miembros
+        posts: Math.floor(Math.random() * 100) + 50, // Mock temporal
+        events: Math.floor(Math.random() * 20) + 5, // Mock temporal
+        isActive: true,
+        tags: group.type ? [group.type.toLowerCase().replace('_', ' ')] : ['general'],
+        owner: {
+          id: group.owner?.id || 'unknown',
+          name: group.owner?.name || group.owner?.username || 'Usuario',
+          avatar: '/assets/images/avatars/default.jpg',
+        },
+        recentMembers: (group.userGroups?.slice(0, 3) || []).map((userGroup: any) => ({
+          id: userGroup.user?.id || 'unknown',
+          name: userGroup.user?.name || userGroup.user?.username || 'Usuario',
+          avatar: '/assets/images/avatars/default.jpg',
+        })),
+      }));
 
-      // Mock data temporal para desarrollo
+      console.log('✅ [Groups] Backend NestJS respondió exitosamente con', transformedGroups.length, 'grupos');
       return {
-        groups: [
-          {
-            id: 'group-1',
-            name: 'Emprendedores Conscientes',
-            description:
-              'Comunidad de emprendedores enfocados en el Bien Común y la Economía Colaborativa.',
-            type: 'public',
-            category: 'Emprendimiento',
-            memberCount: 156,
-            maxMembers: 500,
-            isJoined: true,
-            isOwner: false,
-            isModerator: false,
-            avatar: '/assets/images/groups/emprendedores.jpg',
-            createdAt: '2024-12-01T10:00:00Z',
-            lastActivity: '2025-01-22T15:30:00Z',
-            level: 5,
-            merits: 2840,
-            posts: 234,
-            events: 12,
-            isActive: true,
-            tags: ['emprendimiento', 'bien común', 'colaboración', 'ayni'],
-            owner: {
-              id: 'user-1',
-              name: 'María González',
-              avatar: '/assets/images/avatars/maria.jpg',
-            },
-            recentMembers: [
-              {
-                id: 'user-2',
-                name: 'Carlos López',
-                avatar: '/assets/images/avatars/carlos.jpg',
-              },
-              {
-                id: 'user-3',
-                name: 'Ana Martínez',
-                avatar: '/assets/images/avatars/ana.jpg',
-              },
-            ],
-          },
-          {
-            id: 'group-2',
-            name: 'Tecnología para el Bien Común',
-            description:
-              'Desarrolladores, diseñadores y tecnólogos unidos para crear soluciones que beneficien a la humanidad.',
-            type: 'public',
-            category: 'Tecnología',
-            memberCount: 89,
-            maxMembers: 200,
-            isJoined: false,
-            isOwner: false,
-            isModerator: false,
-            avatar: '/assets/images/groups/tech.jpg',
-            createdAt: '2024-11-15T08:00:00Z',
-            lastActivity: '2025-01-22T12:45:00Z',
-            level: 3,
-            merits: 1560,
-            posts: 145,
-            events: 8,
-            isActive: true,
-            tags: ['tecnología', 'open source', 'desarrollo', 'innovación'],
-            owner: {
-              id: 'user-5',
-              name: 'Luis Rodríguez',
-              avatar: '/assets/images/avatars/luis.jpg',
-            },
-            recentMembers: [
-              {
-                id: 'user-6',
-                name: 'Sandra Torres',
-                avatar: '/assets/images/avatars/sandra.jpg',
-              },
-              {
-                id: 'user-7',
-                name: 'Miguel Hernández',
-                avatar: '/assets/images/avatars/miguel.jpg',
-              },
-            ],
-          },
-        ],
+        groups: transformedGroups,
       };
     },
     staleTime: 1000 * 60 * 5, // 5 minutos
@@ -1444,14 +1430,30 @@ export function useCreateGroup() {
 
 // 🏆 Hooks para Challenges (Desafíos)
 export function useChallenges(filters?: any) {
+  // TODO: Eliminar mock cuando el endpoint GET /challenges del backend sea corregido (actualmente devuelve 500)
   return useStandardQuery(
     queryKeys.challenges(filters),
     async () => {
       try {
-        // TODO: Implementar llamada real al backend cuando esté disponible
-        // return challengesAPI.getChallenges(filters);
-
-        // Mock data temporal para desarrollo
+        // 🔗 INTENTAR BACKEND REAL PRIMERO
+        console.log('🔍 [Challenges] Intentando conectar al Backend NestJS...');
+        const response = await apiService.get('/challenges');
+        console.log('✅ [Challenges] Backend NestJS respondió exitosamente:', response);
+        
+        // Si el backend responde, adaptar el formato si es necesario
+        return {
+          challenges: Array.isArray(response) ? response : response.data || [],
+          pagination: {
+            page: 0,
+            limit: 20,
+            total: Array.isArray(response) ? response.length : response.data?.length || 0,
+            totalPages: 1,
+          },
+        };
+      } catch (error) {
+        console.warn('⚠️ [Challenges] Backend NestJS no disponible, usando datos mock:', error);
+        
+        // 📦 FALLBACK A MOCK DATA - Mock data temporal para desarrollo
         return {
           challenges: [
             {
@@ -1620,11 +1622,6 @@ export function useChallenges(filters?: any) {
             totalPages: 1,
           },
         };
-      } catch (error) {
-        console.warn(
-          '🔄 Fallback: Endpoint /challenges no disponible, usando datos mock'
-        );
-        throw error;
       }
     },
     {

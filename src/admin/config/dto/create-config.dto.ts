@@ -19,20 +19,10 @@ export class CreateConfigDto {
   @IsOptional()
   value: any;
 
-  @ApiProperty({ description: 'The configuration type', required: false })
+  @ApiProperty({ description: 'The configuration type (SYSTEM, FEATURE, GAMIFICATION_PARAM)', required: true })
   @IsString()
-  @IsOptional()
-  type?: string;
-
-  @ApiProperty({ description: 'A description of the configuration setting' })
-  @IsString()
-  @IsOptional()
-  description?: string;
-
-  @ApiProperty({ description: 'Whether the configuration value is sensitive' })
-  @IsBoolean()
-  @IsOptional()
-  isSensitive?: boolean;
+  @IsNotEmpty()
+  type: string;
 }
 
 export class UpdateConfigDto extends PartialType(CreateConfigDto) {} 

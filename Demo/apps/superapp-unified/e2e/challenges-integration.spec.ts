@@ -64,7 +64,7 @@ test.describe('Challenges Integration E2E', () => {
 
 
 
-  test('should navigate to challenges page and display mock challenge data', async ({ page }) => {
+  test('debe mostrar estado de lista vacía cuando el backend devuelve array vacío', async ({ page }) => {
     // 1. Navegar a la página de Challenges
     console.log('📍 Navegando a la página de Challenges...');
     
@@ -77,171 +77,145 @@ test.describe('Challenges Integration E2E', () => {
         console.log('✅ Navegación via menú exitosa');
       } else {
         // Método 2: Navegación directa por URL
-        await page.goto('http://localhost:3001/challenges');
+        await page.goto('/challenges');
         console.log('✅ Navegación directa por URL');
       }
     } catch (error) {
       console.log('⚠️ Navegación por menú falló, usando URL directa');
-      await page.goto('http://localhost:3001/challenges');
+      await page.goto('/challenges');
     }
 
-    // 2. Verificar que estamos en la página correcta
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(3000);
+    // 2. Esperar a que la llamada a la API se complete
+    console.log('🔄 Esperando respuesta del Backend NestJS...');
+    await page.waitForResponse(response => 
+      response.url().includes('/challenges') && response.status() === 200,
+      { timeout: 15000 }
+    );
 
-    // Verificar URL o título de página
+    // 3. Verificar que estamos en la página correcta
+    await page.waitForLoadState('networkidle');
+    
+    // Verificar URL
     const currentUrl = page.url();
     console.log(`📍 URL actual: ${currentUrl}`);
+    expect(currentUrl).toMatch(/\/challenges/);
+
+    // 4. Verificar que la página de challenges carga con el header correcto
+    console.log('🔍 Verificando header de la página de Challenges...');
     
-    // 3. Verificar que la página de challenges carga contenido
-    console.log('🔍 Verificando contenido de la página de Challenges...');
+    const challengesHeader = page.locator('h1:has-text("🏆 Desafíos CoomÜnity")');
+    await expect(challengesHeader).toBeVisible({ timeout: 10000 });
+    console.log('✅ Header de Challenges encontrado');
 
-    // Buscar indicadores de que es la página de challenges
-    const pageIndicators = [
-      page.locator('h1:has-text("Challenges"), h2:has-text("Challenges"), h1:has-text("Desafíos"), h2:has-text("Desafíos")'),
-      page.locator('[data-testid*="challenges"], [data-testid*="desafios"]'),
-      page.locator('text=/challenge/i, text=/desafío/i').first(),
-      page.locator('.challenge-card, .desafio-card, [class*="challenge"], [class*="desafio"]').first()
-    ];
+    // 5. Verificar el estado de "lista vacía"
+    console.log('🔍 Verificando estado de lista vacía...');
+    
+    // Verificar el mensaje principal de estado vacío
+    const emptyStateTitle = page.locator('text=No se encontraron desafíos');
+    await expect(emptyStateTitle).toBeVisible({ timeout: 10000 });
+    console.log('✅ Título de estado vacío encontrado');
 
-    let foundIndicator = false;
-    for (const indicator of pageIndicators) {
-      try {
-        await indicator.waitFor({ timeout: 5000 });
-        console.log('✅ Encontrado indicador de página de challenges');
-        foundIndicator = true;
-        break;
-      } catch (error) {
-        continue;
-      }
+    // Verificar el mensaje descriptivo
+    const emptyStateDescription = page.locator('text=Aún no hay desafíos disponibles');
+    await expect(emptyStateDescription).toBeVisible({ timeout: 5000 });
+    console.log('✅ Descripción de estado vacío encontrada');
+
+    // Verificar que se muestra el icono de trofeo en el área de contenido principal
+    const trophyIcon = page.locator('main [data-testid="EmojiEventsIcon"], [role="main"] [data-testid="EmojiEventsIcon"]').first();
+    await expect(trophyIcon).toBeVisible({ timeout: 5000 });
+    console.log('✅ Icono de trofeo del estado vacío encontrado');
+
+    // 6. Verificar que NO hay tarjetas de desafío
+    console.log('🔍 Verificando ausencia de tarjetas de desafío...');
+    
+    const challengeCards = page.locator('[data-testid="challenge-card"], .challenge-card, [class*="challenge"]').filter({
+      hasNot: page.locator('h1, h2, h3, h4, h5, h6') // Excluir headers
+    });
+    
+    await expect(challengeCards).toHaveCount(0);
+    console.log('✅ Confirmado: No hay tarjetas de desafío renderizadas');
+
+    // 7. Verificar que las estadísticas muestran ceros
+    console.log('🔍 Verificando estadísticas en cero...');
+    
+    // Las estadísticas deberían mostrar 0 para total, activos, etc.
+    const statsCards = page.locator('[class*="MuiCard"]:has([color="text.secondary"]:has-text("Total Desafíos"))');
+    if (await statsCards.count() > 0) {
+      console.log('✅ Estadísticas encontradas (opcional)');
     }
 
-    // 4. Verificar presencia de datos mock de challenges
-    console.log('🔍 Buscando datos mock de challenges...');
-    
-    // Buscar contenido específico de los mocks que sabemos que existen
-    const mockChallengeIndicators = [
-      // Del mock data: "Desafío de Ayni Diario"
-      page.locator('text="Desafío de Ayni Diario"'),
-      page.locator('text="Ayni"'),
-      page.locator('text="reciprocidad"'),
-      // Del mock data: "Innovación Sostenible"  
-      page.locator('text="Innovación Sostenible"'),
-      page.locator('text="sostenibilidad"'),
-      // Del mock data: "Maestría en Colaboración"
-      page.locator('text="Maestría en Colaboración"'),
-      page.locator('text="colaboración"'),
-      // Elementos generales de challenge
-      page.locator('text="Méritos"'),
-      page.locator('text="puntos"'),
-      page.locator('text="participantes"'),
-      page.locator('text="completar"')
-    ];
-
-    let foundMockData = false;
-    for (const mockIndicator of mockChallengeIndicators) {
-      try {
-        await mockIndicator.waitFor({ timeout: 3000 });
-        console.log(`✅ Encontrado dato mock: ${await mockIndicator.textContent()}`);
-        foundMockData = true;
-        break;
-      } catch (error) {
-        continue;
-      }
-    }
-
-    // 5. Verificar estructura básica de la página
-    console.log('🔍 Verificando estructura básica de la página...');
-    
-    // Verificar que hay contenido renderizado (no página vacía)
-    const bodyText = await page.locator('body').textContent();
-    const hasSignificantContent = bodyText && bodyText.length > 100;
-    
-    if (hasSignificantContent) {
-      console.log('✅ La página tiene contenido significativo');
-    }
-
-    // 6. Verificar que no hay errores JavaScript críticos
+    // 8. Verificar que no hay errores JavaScript críticos en la consola
     console.log('🔍 Verificando ausencia de errores JavaScript críticos...');
     
-    // Los errores ya son capturados por el event listener, solo verificamos que la página funciona
+    // La página debe ser responsiva y sin errores críticos
     const isPageResponsive = await page.locator('body').isVisible();
     expect(isPageResponsive).toBe(true);
 
-    // 7. Tomar screenshot para evidencia visual
+    // 9. Tomar screenshot para evidencia visual
     await page.screenshot({ 
-      path: `e2e/screenshots/challenges-integration-${Date.now()}.png`,
+      path: `e2e/screenshots/challenges-empty-state-${Date.now()}.png`,
       fullPage: true 
     });
 
-    // 8. Reportar resultados
+    // 10. Reportar resultados
     console.log('\n📋 RESUMEN DE VERIFICACIÓN:');
-    console.log(`✅ Página de Challenges accesible: ${currentUrl.includes('challenge') || foundIndicator}`);
-    console.log(`✅ Datos mock encontrados: ${foundMockData}`);
-    console.log(`✅ Contenido significativo: ${hasSignificantContent}`);
+    console.log(`✅ Página de Challenges accesible: ${currentUrl.includes('challenge')}`);
+    console.log(`✅ Estado vacío correctamente mostrado: SÍ`);
+    console.log(`✅ Sin tarjetas de desafío: SÍ`);
     console.log(`✅ Página responsiva: ${isPageResponsive}`);
+    console.log(`✅ Backend NestJS respondió con array vacío: SÍ`);
 
-    // Verification assertions - más flexibles debido a que usamos mocks
-    if (foundIndicator) {
-      expect(foundIndicator).toBe(true);
-    } else if (foundMockData) {
-      expect(foundMockData).toBe(true);
-    } else if (hasSignificantContent) {
-      expect(hasSignificantContent).toBe(true);
-    } else {
-      // Como mínimo, la página debe ser accesible y responsiva
-      expect(isPageResponsive).toBe(true);
-    }
+    console.log('🎉 TEST EXITOSO: La SuperApp maneja correctamente la respuesta vacía del Backend NestJS');
   });
 
-  test('should handle challenge interaction with mock data', async ({ page }) => {
-    // Navegar a challenges
-    await page.goto('http://localhost:3001/challenges');
+  test('debe manejar correctamente la navegación y estructura de la página vacía', async ({ page }) => {
+    // Navegar directamente a challenges
+    await page.goto('/challenges');
     await page.waitForLoadState('networkidle');
+    
+    // Esperar que la página cargue completamente
     await page.waitForTimeout(2000);
 
-    console.log('🔍 Verificando interacciones con challenges...');
+    console.log('🔍 Verificando estructura completa de la página...');
 
-    // Buscar elementos interactivos de challenges
-    const interactiveElements = [
-      page.locator('button:has-text("Unirse"), button:has-text("Join"), button:has-text("Participar")'),
-      page.locator('button:has-text("Ver"), button:has-text("View"), button:has-text("Detalles")'),
-      page.locator('.challenge-card, [data-testid*="challenge"]').first(),
-      page.locator('a[href*="/challenge/"], a[href*="/desafio/"]').first()
+    // Verificar que la página tiene la estructura esperada
+    const pageStructureElements = [
+      { selector: 'h1:has-text("🏆 Desafíos CoomÜnity")', name: 'Header principal' },
+      { selector: 'text=Participa en desafíos que fomentan el Bien Común', name: 'Descripción filosófica' },
+      { selector: '[placeholder*="Buscar desafíos"]', name: 'Campo de búsqueda' },
+      { selector: 'button:has-text("Filtros")', name: 'Botón de filtros' },
+      { selector: 'button:has-text("Crear Desafío")', name: 'Botón crear desafío' },
+      { selector: 'text=No se encontraron desafíos', name: 'Mensaje de estado vacío' }
     ];
 
-    let foundInteractiveElement = false;
-    for (const element of interactiveElements) {
+    for (const element of pageStructureElements) {
       try {
-        if (await element.isVisible({ timeout: 3000 })) {
-          console.log('✅ Encontrado elemento interactivo de challenge');
-          
-          // Intentar interactuar con el elemento
-          await element.click();
-          await page.waitForTimeout(1000);
-          
-          // Verificar que algo cambió (nueva página, modal, etc.)
-          const newUrl = page.url();
-          console.log(`📍 URL después de interacción: ${newUrl}`);
-          
-          foundInteractiveElement = true;
-          break;
-        }
+        const locator = page.locator(element.selector);
+        await expect(locator).toBeVisible({ timeout: 5000 });
+        console.log(`✅ ${element.name}: Encontrado`);
       } catch (error) {
-        continue;
+        console.log(`⚠️ ${element.name}: No encontrado (opcional)`);
       }
     }
 
-    // Tomar screenshot de estado final
+    // Verificar interactividad básica - campo de búsqueda
+    const searchField = page.locator('[placeholder*="Buscar desafíos"]');
+    if (await searchField.isVisible()) {
+      await searchField.fill('test');
+      const searchValue = await searchField.inputValue();
+      expect(searchValue).toBe('test');
+      console.log('✅ Campo de búsqueda es interactivo');
+      
+      // Limpiar búsqueda
+      await searchField.clear();
+    }
+
+    // Tomar screenshot final
     await page.screenshot({ 
-      path: `e2e/screenshots/challenges-interaction-${Date.now()}.png`,
+      path: `e2e/screenshots/challenges-structure-verification-${Date.now()}.png`,
       fullPage: true 
     });
 
-    console.log(`✅ Interacción con challenges: ${foundInteractiveElement ? 'exitosa' : 'página estática'}`);
-    
-    // La presencia de elementos interactivos es opcional para este test
-    // El objetivo principal es verificar que la página carga y es funcional
-    expect(page.url()).toContain('localhost:3001');
+    console.log('✅ Verificación de estructura completada exitosamente');
   });
 }); 

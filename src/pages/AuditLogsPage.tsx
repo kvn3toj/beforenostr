@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Typography,
   Container,
   Box,
-  TextField,
-  Stack,
   Chip,
 } from '@mui/material';
 import { Navigate } from 'react-router-dom';
@@ -12,9 +10,6 @@ import { DataTable, ColumnDefinition } from '../components/common/DataTable/Data
 import { useAuditLogsQuery } from '../hooks/system/useAuditLogsQuery';
 import { useHasRole } from '../hooks/useHasRole';
 import type { AuditLog } from '../types/system.types';
-import format from 'date-fns/format';
-import { es } from 'date-fns/locale';
-import { FetchAuditLogsParams } from '../services/system.service';
 
 // Función auxiliar para formatear la fecha
 const formatDate = (dateString: string) => {
@@ -29,12 +24,15 @@ const formatDate = (dateString: string) => {
 };
 
 // Función auxiliar para formatear los cambios
-const formatChanges = (changes: Record<string, any> | null) => {
+const formatChanges = (changes: Record<string, unknown> | null) => {
   if (!changes) return '-';
   return JSON.stringify(changes, null, 2);
 };
 
 export const AuditLogsPage: React.FC = () => {
+  // Obtener datos de auditoría - debe llamarse antes de cualquier return condicional
+  const { data: auditLogsData, isLoading, error } = useAuditLogsQuery({});
+
   // Verificar permisos
   const isSuperAdmin = useHasRole('Super Admin');
 
@@ -43,8 +41,8 @@ export const AuditLogsPage: React.FC = () => {
     return <Navigate to="/" replace />;
   }
 
-  // Obtener datos de auditoría
-  const { data: auditLogs, isLoading, error } = useAuditLogsQuery();
+  // Extraer el array de logs de la respuesta
+  const auditLogs = auditLogsData?.data || [];
 
   // Definir columnas de la tabla
   const auditLogColumns: ColumnDefinition<AuditLog>[] = [

@@ -16,7 +16,7 @@ import {
   Divider,
   TextField,
   InputAdornment,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -27,7 +27,7 @@ import {
   Logout,
   Settings,
   AdminPanelSettings,
-  Sync as SyncIcon
+  Sync as SyncIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -46,7 +46,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
   // Simulate periodic sync operations
   useEffect(() => {
     const interval = setInterval(() => {
-      if (Math.random() < 0.4) { // 40% chance every 8 seconds
+      if (Math.random() < 0.4) {
+        // 40% chance every 8 seconds
         setIsSyncing(true);
         setTimeout(() => {
           setIsSyncing(false);
@@ -81,23 +82,23 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
   const isMenuOpen = Boolean(anchorEl);
 
   return (
-    <AppBar 
+    <AppBar
       component="header"
       role="banner"
       data-testid="app-header"
-      position="sticky" 
+      position="sticky"
       elevation={0}
       sx={{
         borderBottom: 1,
         borderColor: 'divider',
         backgroundColor: 'primary.main',
         color: 'text.primary',
-        zIndex: theme.zIndex.drawer + 1
+        zIndex: theme.zIndex.drawer + 1,
       }}
     >
-      <Toolbar 
-        component="nav" 
-        role="navigation" 
+      <Toolbar
+        component="nav"
+        role="navigation"
         aria-label="Navegación principal"
         sx={{ gap: 2 }}
       >
@@ -121,8 +122,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
 
         {/* Logo and Brand */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             style={{ textDecoration: 'none', color: 'inherit' }}
             aria-label="Ir a la página principal de CoomÜnity"
             title="Ir a la página principal"
@@ -148,7 +149,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
 
         {/* Sync indicator */}
         {isSyncing && (
-          <Box 
+          <Box
             className="sync-indicator contextual-loading responsive-element animate-fade-in"
             data-loading="true"
             data-contextual="sync-status"
@@ -156,12 +157,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
             data-responsive="sync-display"
             sx={{ ml: 2, display: 'flex', alignItems: 'center' }}
           >
-            <CircularProgress 
-              className="sync-spinner loading contextual-progress loading-bounce" 
-              size={16} 
-              sx={{ color: 'white', mr: 1 }} 
+            <CircularProgress
+              className="sync-spinner loading contextual-progress loading-bounce"
+              size={16}
+              sx={{ color: 'white', mr: 1 }}
             />
-            <Typography variant="caption" sx={{ color: 'white', fontSize: '0.7rem' }}>
+            <Typography
+              variant="caption"
+              sx={{ color: 'white', fontSize: '0.7rem' }}
+            >
               Sincronizando
             </Typography>
           </Box>
@@ -213,9 +217,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
             className="search-input contextual-input"
             data-contextual="search-input"
             data-context-type="global-search-field"
-            inputProps={{ 
+            inputProps={{
               'aria-label': 'Buscar en CoomÜnity',
-              'title': 'Buscar en CoomÜnity'
+              title: 'Buscar en CoomÜnity',
             }}
             sx={{
               color: 'inherit',
@@ -273,8 +277,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
           data-contextual="user-profile"
           data-context-type="profile-access"
         >
-          <Avatar 
-            src={user?.avatar_url} 
+          <Avatar
+            src={user?.avatar_url}
             alt={user?.full_name}
             className="user-avatar contextual-data avatar-micro-interactive"
             data-contextual="user-avatar"
@@ -282,7 +286,158 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
             sx={{ width: 32, height: 32 }}
           />
         </IconButton>
+
+        {/* Profile Menu Dropdown */}
+        <Menu
+          id="primary-search-account-menu"
+          anchorEl={anchorEl}
+          open={isMenuOpen}
+          onClose={handleMenuClose}
+          onClick={handleMenuClose}
+          PaperProps={{
+            elevation: 3,
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+              mt: 1.5,
+              minWidth: 200,
+              '& .MuiAvatar-root': {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              '&:before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: 'background.paper',
+                transform: 'translateY(-50%) rotate(45deg)',
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          aria-label="Menú de perfil de usuario"
+          className="profile-menu contextual-menu"
+          data-contextual="user-profile-menu"
+          data-context-type="profile-actions"
+        >
+          {/* User Info Header */}
+          <Box sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Avatar
+                src={user?.avatar_url}
+                alt={user?.full_name}
+                sx={{ width: 40, height: 40 }}
+              />
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography variant="subtitle2" noWrap sx={{ fontWeight: 600 }}>
+                  {user?.full_name || 'Usuario'}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  noWrap
+                  sx={{ display: 'block' }}
+                >
+                  {user?.email}
+                </Typography>
+                {user?.role && (
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: 'primary.main',
+                      fontWeight: 500,
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    {user.role}
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          </Box>
+
+          {/* Menu Items */}
+          <MenuItem
+            onClick={() => {
+              handleMenuClose();
+              navigate('/profile');
+            }}
+            className="profile-menu-item contextual-action"
+            data-contextual="profile-view"
+            data-context-type="profile-navigation"
+            sx={{ py: 1.5 }}
+          >
+            <AccountCircle sx={{ mr: 2, color: 'text.secondary' }} />
+            <Typography variant="body2">Ver Perfil</Typography>
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              handleMenuClose();
+              navigate('/settings');
+            }}
+            className="settings-menu-item contextual-action"
+            data-contextual="settings-access"
+            data-context-type="settings-navigation"
+            sx={{ py: 1.5 }}
+          >
+            <Settings sx={{ mr: 2, color: 'text.secondary' }} />
+            <Typography variant="body2">Configuración</Typography>
+          </MenuItem>
+
+          {/* Admin Panel - Only for admin users */}
+          {(user?.role === 'admin' ||
+            user?.role === 'Super Admin' ||
+            user?.role === 'Content Admin') && (
+            <MenuItem
+              onClick={() => {
+                handleMenuClose();
+                navigate('/admin');
+              }}
+              className="admin-menu-item contextual-action"
+              data-contextual="admin-access"
+              data-context-type="admin-navigation"
+              sx={{ py: 1.5 }}
+            >
+              <AdminPanelSettings sx={{ mr: 2, color: 'warning.main' }} />
+              <Typography variant="body2">Panel de Administración</Typography>
+            </MenuItem>
+          )}
+
+          <Divider sx={{ my: 1 }} />
+
+          {/* Sign Out */}
+          <MenuItem
+            onClick={handleSignOut}
+            className="signout-menu-item contextual-action logout-action"
+            data-contextual="user-logout"
+            data-context-type="session-termination"
+            sx={{
+              py: 1.5,
+              color: 'error.main',
+              '&:hover': {
+                backgroundColor: 'error.light',
+                color: 'error.contrastText',
+              },
+            }}
+            aria-label="Cerrar sesión"
+            title="Cerrar sesión actual"
+          >
+            <Logout sx={{ mr: 2 }} />
+            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              Cerrar Sesión
+            </Typography>
+          </MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );
-}; 
+};

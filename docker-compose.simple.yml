@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # PostgreSQL - Base de Datos Principal
+  postgres:
+    image: postgres:15-alpine
+    container_name: coomunity-postgres-simple
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-coomunity_prod}
+      POSTGRES_USER: ${DB_USER:-coomunity_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-coomunity_user} -d ${DB_NAME:-coomunity_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Redis - Cache y Sessions
+  redis:
+    image: redis:7-alpine
+    container_name: coomunity-redis-simple
+    ports:
+      - "16379:6379"
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "auth", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  postgres_data:
+  redis_data: 

@@ -19,15 +19,14 @@ WORKDIR /app
 
 # Copiar archivos de configuración de packages
 COPY package*.json ./
-COPY turbo.json ./
 
 # ================================================================
 # Dependencies Stage - Instalar dependencias
 # ================================================================
 FROM base AS deps
 
-# Instalar dependencias de producción y desarrollo
-RUN npm ci --include=dev && npm cache clean --force
+# Instalar dependencias de producción y desarrollo con legacy-peer-deps para MUI v7
+RUN npm install --legacy-peer-deps && npm cache clean --force
 
 # ================================================================
 # Development Stage - Para desarrollo local con hot reload

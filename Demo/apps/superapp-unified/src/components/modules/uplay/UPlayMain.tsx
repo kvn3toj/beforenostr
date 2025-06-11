@@ -493,7 +493,6 @@ const UPlayMain: React.FC = () => {
 
     return (
       <Card
-        data-testid="video-card"
         sx={{
           mb: 2,
           cursor: 'pointer',
@@ -507,6 +506,7 @@ const UPlayMain: React.FC = () => {
               ? 'linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(156, 39, 176, 0.1) 100%)'
               : 'white',
         }}
+        data-testid="video-card"
       >
         <CardContent onClick={() => handlePlayVideo(video)}>
           <Grid container spacing={2} alignItems="center">

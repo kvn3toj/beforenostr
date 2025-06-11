@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Req, NotFoundException } from '@nestjs/common';
 import { ConfigService } from './config.service';
 import { CreateConfigDto } from './dto/create-config.dto';
 import { UpdateConfigDto } from './dto/update-config.dto';
@@ -9,7 +9,7 @@ import { Roles } from '../../rbac/decorators/roles.decorator'; // Adjust path
 import { Request } from 'express';
 
 interface AuthenticatedRequest extends Request {
-    user: { id: string; /* other user properties */ };
+    user: { id: string; email: string; roles: string[]; };
 }
 
 @ApiTags('admin/config')
@@ -27,7 +27,7 @@ export class ConfigController {
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   create(@Req() req: AuthenticatedRequest, @Body() createConfigDto: CreateConfigDto) {
     // TODO: Pass req.user.id to service for createdBy
-    return this.configService.create(createConfigDto);
+    return this.configService.create(createConfigDto, req.user);
   }
 
   @Get()
@@ -68,7 +68,7 @@ export class ConfigController {
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() updateConfigDto: UpdateConfigDto) {
      // TODO: Pass req.user.id to service for updatedBy
-    return this.configService.update(id, updateConfigDto);
+    return this.configService.update(id, updateConfigDto, req.user);
   }
 
   @Delete(':id')
@@ -76,7 +76,7 @@ export class ConfigController {
   @ApiResponse({ status: 200, description: 'Configuration setting successfully deleted.' })
   @ApiResponse({ status: 404, description: 'Config not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
-  remove(@Param('id') id: string) {
-    return this.configService.remove(id);
+  remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.configService.remove(id, req.user);
   }
 } 

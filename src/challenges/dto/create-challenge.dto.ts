@@ -17,10 +17,15 @@ enum ChallengeStatus {
 }
 
 export class CreateChallengeDto {
-  @ApiProperty({ description: 'The name of the challenge' })
+  @ApiProperty({ description: 'The title of the challenge' })
   @IsString()
   @IsNotEmpty()
-  name: string;
+  title: string;
+
+  @ApiProperty({ description: 'The name of the challenge (legacy)' })
+  @IsString()
+  @IsOptional()
+  name?: string;
 
   @ApiProperty({ description: 'A unique slug for the challenge' })
   @IsString()
@@ -37,7 +42,7 @@ export class CreateChallengeDto {
   @IsNotEmpty()
   type: ChallengeType;
 
-  @ApiProperty({ description: 'Configuration data for the challenge (JSONB)', type: 'object' })
+  @ApiProperty({ description: 'Configuration data for the challenge (JSONB)' })
   @IsOptional()
   config?: ChallengeConfig;
 
@@ -49,14 +54,14 @@ export class CreateChallengeDto {
   @ApiProperty({ description: 'The start date of the challenge' })
   @Type(() => Date)
   @IsDate()
-  @IsOptional()
-  startDate?: Date;
+  @IsNotEmpty()
+  startDate: Date;
 
   @ApiProperty({ description: 'The end date of the challenge' })
   @Type(() => Date)
   @IsDate()
-  @IsOptional()
-  endDate?: Date;
+  @IsNotEmpty()
+  endDate: Date;
 
   @ApiProperty({ description: 'The ID of the user who created the challenge' })
   @IsString()

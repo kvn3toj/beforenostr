@@ -25,7 +25,7 @@ async function bootstrap() {
 
   // Enhanced CORS configuration with better debugging and dynamic port support
   app.enableCors({
-    origin: (origin, callback) => {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       // Log all CORS requests for debugging
       loggerService.log(
         `CORS Request from origin: ${origin || 'no-origin'}`,
@@ -38,7 +38,7 @@ async function bootstrap() {
         return callback(null, true);
       }
 
-      // Enhanced localhost/127.0.0.1 regex to handle more cases
+      // Enhanced localhost/127.0.0.1 regex to handle more cases including all port ranges
       const localhostRegex =
         /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)(:\d+)?$/;
       if (localhostRegex.test(origin)) {
@@ -49,14 +49,21 @@ async function bootstrap() {
         return callback(null, true);
       }
 
-      // Handle Vite dev server dynamic ports (typically high port numbers)
-      const viteDevRegex = /^https?:\/\/(localhost|127\.0\.0\.1):[4-6]\d{4}$/;
+      // Handle Vite dev server dynamic ports - expanded to handle ALL port ranges
+      // This includes test environment ports like 48752
+      const viteDevRegex = /^https?:\/\/(localhost|127\.0\.0\.1):(\d{1,5})$/;
       if (viteDevRegex.test(origin)) {
-        loggerService.log(
-          `CORS: Allowing Vite dev server origin: ${origin}`,
-          'CORS'
-        );
-        return callback(null, true);
+        const portMatch = origin.match(/:(\d{1,5})$/);
+        const port = portMatch ? parseInt(portMatch[1]) : 0;
+
+        // Allow any port between 1024-65535 for development/testing
+        if (port >= 1024 && port <= 65535) {
+          loggerService.log(
+            `CORS: Allowing development/test origin with port ${port}: ${origin}`,
+            'CORS'
+          );
+          return callback(null, true);
+        }
       }
 
       // Permitir orígenes específicos para desarrollo y producción

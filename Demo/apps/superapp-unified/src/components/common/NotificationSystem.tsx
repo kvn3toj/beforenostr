@@ -57,10 +57,12 @@ import {
   MarkAsUnread as MarkReadIcon,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useOptionalQuery } from '../../hooks/useGracefulQuery';
 import { apiService } from '../../lib/api-service';
 import { useAuth } from '../../contexts/AuthContext';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { safeFormatDistance as safeDateFormat } from '../../utils/dateUtils';
 
 // 🏷️ Tipos de notificaciones
 export type NotificationType =
@@ -112,7 +114,7 @@ type NotificationAction_Reducer =
   | { type: 'MARK_ALL_AS_READ' }
   | { type: 'CLEAR_ALL' }
   | { type: 'TOGGLE_DRAWER' }
-  | { type: 'SET_NOTIFICATIONS'; payload: Notification[] };
+  | { type: 'SET_NOTIFICATIONS'; payload: Notification[] | any }; // ✅ Permitir any para manejar datos inesperados
 
 // 🎨 Iconos por tipo de notificación
 const getNotificationIcon = (type: NotificationType) => {
@@ -225,10 +227,12 @@ const notificationReducer = (
       };
 
     case 'SET_NOTIFICATIONS':
+      // ✅ Validar que el payload sea un array antes de usar filter
+      const notifications = Array.isArray(action.payload) ? action.payload : [];
       return {
         ...state,
-        notifications: action.payload,
-        unreadCount: action.payload.filter((n) => !n.read).length,
+        notifications,
+        unreadCount: notifications.filter((n) => !n.read).length,
       };
 
     default:
@@ -291,13 +295,13 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   const isMockEnabled =
     (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
 
-  // Fetch notifications from backend
-  const { data: backendNotifications = [] } = useQuery({
+  // Fetch notifications from backend using graceful query
+  const { data: backendNotifications = [] } = useOptionalQuery({
     queryKey: ['notifications', user?.id],
     queryFn: async () => {
       // En modo mock, retornar notificaciones de ejemplo
       if (isMockEnabled) {
-        return [
+        const mockData = [
           {
             id: 'mock-1',
             title: '¡Bienvenido a CoomÜnity!',
@@ -307,24 +311,18 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
             created_at: new Date().toISOString(),
           },
         ];
+        console.log('🧪 Mock notifications data:', mockData);
+        return mockData;
       }
 
-      try {
-        return await apiService.get('/notifications');
-      } catch (error: any) {
-        // Handle 404 gracefully - endpoint not implemented yet
-        if (error.statusCode === 404) {
-          console.info(
-            '📍 Notifications endpoint not available yet - using local notifications only'
-          );
-          return [];
-        }
-        // Re-throw other errors
-        throw error;
-      }
+      const result = await apiService.get(`/notifications/user/${user.id}`);
+      console.log('📊 Backend notifications data type:', typeof result, 'data:', result);
+      return result;
     },
-    enabled: !!user && !isMockEnabled, // Deshabilitar en modo mock
-    refetchInterval: isMockEnabled ? false : 30000, // No hacer polling en modo mock
+    enabled: !!user && !isMockEnabled, // Only enable for real backend
+    refetchInterval: isMockEnabled ? false : 30000,
+    fallbackData: [], // Always return empty array on errors
+    silentFail: true, // Don't log errors for notifications
     retry: (failureCount, error: any) => {
       // No retry en modo mock
       if (isMockEnabled) return false;
@@ -395,8 +393,16 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Sync with backend notifications
   useEffect(() => {
-    if (backendNotifications.length > 0) {
+    console.log('🔄 Syncing notifications - Type:', typeof backendNotifications, 'IsArray:', Array.isArray(backendNotifications), 'Data:', backendNotifications);
+    
+    // ✅ Validar que backendNotifications sea un array válido
+    if (Array.isArray(backendNotifications) && backendNotifications.length > 0) {
+      console.log('✅ Dispatching valid notifications array:', backendNotifications);
       dispatch({ type: 'SET_NOTIFICATIONS', payload: backendNotifications });
+    } else if (backendNotifications && !Array.isArray(backendNotifications)) {
+      console.warn('⚠️ Received non-array data for notifications:', backendNotifications);
+      // Si no es array, inicializar con array vacío
+      dispatch({ type: 'SET_NOTIFICATIONS', payload: [] });
     }
   }, [backendNotifications]);
 
@@ -686,13 +692,7 @@ const NotificationDisplay: React.FC = () => {
                             {notification.message}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {formatDistanceToNow(
-                              new Date(notification.timestamp),
-                              {
-                                addSuffix: true,
-                                locale: es,
-                              }
-                            )}
+                            {safeDateFormat(notification.timestamp)}
                           </Typography>
                         </Box>
                       }

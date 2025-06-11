@@ -25,8 +25,8 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, loading } = useAuth();
-  const [email, setEmail] = useState('admin@gamifier.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('superapp@coomunity.com');
+  const [password, setPassword] = useState('superapp123');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [networkError, setNetworkError] = useState<any>(null);
@@ -294,10 +294,10 @@ export const Login: React.FC = () => {
             'Content-Type': 'application/json',
             Origin: window.location.origin,
           },
-          body: JSON.stringify({
-            email: 'admin@gamifier.com',
-            password: 'admin123',
-          }),
+                  body: JSON.stringify({
+          email: 'superapp@coomunity.com',
+          password: 'superapp123',
+        }),
         });
 
         if (loginResponse.ok) {
@@ -485,10 +485,10 @@ export const Login: React.FC = () => {
                   <br />
                   <strong>📋 Credenciales válidas:</strong>
                   <br />
-                  • admin@gamifier.com / admin123
+                  • superapp@coomunity.com / superapp123
                   <br />
-                  • user@gamifier.com / 123456
-                  <br />• test1@gamifier.com / 123456
+                  • Usuario específico para SuperApp CoomÜnity
+                  <br />• (Diferentes del Gamifier Admin)
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
                   <Button
