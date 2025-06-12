@@ -198,6 +198,8 @@ Este proyecto utiliza un **Agente IA especializado** configurado con reglas espe
 
 ### **Contacto Técnico:**
 - **Workspace Activo:** `apps/superapp-unified/`
+
+<!-- CI Pipeline Test - Verificación funcional del workflow de GitHub Actions -->
 - **Backend API:** `http://localhost:3002`
 - **Admin Panel:** `http://localhost:3000`
 - **SuperApp:** `http://localhost:3001`
