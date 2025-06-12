@@ -26,6 +26,13 @@ import {
   LinearProgress,
   Tooltip,
   Divider,
+  Alert,
+  CardMedia,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemButton,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -50,6 +57,11 @@ import {
   ExpandLess as ExpandLessIcon,
   Psychology as PsychologyIcon,
   Lightbulb as LightbulbIcon,
+  VideoLibrary as VideoLibraryIcon,
+  OndemandVideo as OndemandVideoIcon,
+  PlayCircle as PlayCircleIcon,
+  AccessTime as AccessTimeIcon,
+  Category as CategoryIcon,
 } from '@mui/icons-material';
 
 // Import enhanced mock data hook
@@ -58,6 +70,9 @@ import {
   MockVideo,
   MockPlaylist,
 } from '../../../hooks/useUPlayMockData';
+
+// 🔥 Hook para datos reales del backend
+import { useVideos } from '../../../hooks/useRealBackendData';
 
 // Enhanced types for mobile experience
 interface EnhancedMockUserStats {
@@ -87,6 +102,24 @@ interface VideoProgress {
   lastWatched: Date;
 }
 
+// Tipo para videos del backend
+interface BackendVideo {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+  platform: string;
+  externalId: string;
+  duration: number;
+  categories: string;
+  tags: string;
+  thumbnailUrl: string;
+  playlist?: {
+    name: string;
+    description: string;
+  };
+}
+
 // Enhanced placeholder component with better design
 const VideoThumbnail: React.FC<{
   width: number | string;
@@ -94,7 +127,8 @@ const VideoThumbnail: React.FC<{
   className?: string;
   isPlaying?: boolean;
   progress?: number;
-}> = ({ width, height, className, isPlaying = false, progress = 0 }) => (
+  thumbnailUrl?: string;
+}> = React.memo(({ width, height, className, isPlaying = false, progress = 0, thumbnailUrl }) => (
   <Box
     className={className}
     sx={{
@@ -107,48 +141,56 @@ const VideoThumbnail: React.FC<{
       borderRadius: 2,
       position: 'relative',
       overflow: 'hidden',
-      background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+      background: thumbnailUrl 
+        ? `url(${thumbnailUrl})` 
+        : 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
     }}
   >
-    {/* Enhanced geometric shapes */}
-    <Box
-      sx={{
-        position: 'absolute',
-        top: '25%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: 0,
-        height: 0,
-        borderLeft: '16px solid transparent',
-        borderRight: '16px solid transparent',
-        borderBottom: '28px solid #94a3b8',
-        opacity: 0.7,
-      }}
-    />
-    <Box
-      sx={{
-        position: 'absolute',
-        bottom: '25%',
-        left: '30%',
-        width: '12px',
-        height: '16px',
-        backgroundColor: '#64748b',
-        borderRadius: 1,
-        opacity: 0.6,
-      }}
-    />
-    <Box
-      sx={{
-        position: 'absolute',
-        bottom: '25%',
-        right: '30%',
-        width: '18px',
-        height: '18px',
-        backgroundColor: '#475569',
-        borderRadius: '50%',
-        opacity: 0.6,
-      }}
-    />
+    {/* Fallback geometric shapes if no thumbnail */}
+    {!thumbnailUrl && (
+      <>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '25%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '16px solid transparent',
+            borderRight: '16px solid transparent',
+            borderBottom: '28px solid #94a3b8',
+            opacity: 0.7,
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '25%',
+            left: '30%',
+            width: '12px',
+            height: '16px',
+            backgroundColor: '#64748b',
+            borderRadius: 1,
+            opacity: 0.6,
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '25%',
+            right: '30%',
+            width: '18px',
+            height: '18px',
+            backgroundColor: '#475569',
+            borderRadius: '50%',
+            opacity: 0.6,
+          }}
+        />
+      </>
+    )}
 
     {/* Play overlay */}
     {isPlaying && (
@@ -193,213 +235,303 @@ const VideoThumbnail: React.FC<{
         />
       </Box>
     )}
+
+    {/* Dark overlay for better text readability */}
+    <Box
+      sx={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '100%',
+        background: 'linear-gradient(transparent 60%, rgba(0,0,0,0.7) 100%)',
+        pointerEvents: 'none',
+      }}
+    />
   </Box>
-);
+));
 
-// Enhanced status chip with better styling
-const EnhancedStatusChip: React.FC<{
-  icon: React.ReactNode;
-  label: string;
-  value?: string | number;
-  color?: 'primary' | 'secondary' | 'warning' | 'error' | 'success';
-}> = ({ icon, label, value, color = 'primary' }) => (
-  <Chip
-    icon={
-      <Avatar
-        sx={{
-          width: 20,
-          height: 20,
-          backgroundColor:
-            color === 'primary'
-              ? '#6366f1'
-              : color === 'warning'
-                ? '#f59e0b'
-                : color === 'success'
-                  ? '#10b981'
-                  : color === 'error'
-                    ? '#ef4444'
-                    : '#8b5cf6',
-          '& .MuiAvatar-img': { width: '70%', height: '70%' },
-        }}
-      >
-        {icon}
-      </Avatar>
-    }
-    label={value ? `${label}: ${value}` : label}
-    variant="outlined"
-    size="small"
-    sx={{
-      borderColor:
-        color === 'primary'
-          ? '#6366f1'
-          : color === 'warning'
-            ? '#f59e0b'
-            : color === 'success'
-              ? '#10b981'
-              : color === 'error'
-                ? '#ef4444'
-                : '#8b5cf6',
-      color: '#1e293b',
-      fontFamily: 'Roboto',
-      fontSize: '12px',
-      fontWeight: 600,
-      height: 28,
-      '& .MuiChip-label': {
-        paddingLeft: 1,
-      },
-    }}
-  />
-);
-
-// Enhanced video card for horizontal lists
-const EnhancedVideoCard: React.FC<{
-  video: MockVideo;
+// Componente para mostrar un video del backend
+const BackendVideoCard: React.FC<{
+  video: BackendVideo;
   onClick?: () => void;
-  progress?: VideoProgress;
-}> = ({ video, onClick, progress }) => (
-  <Box
-    sx={{
-      width: 140,
-      flexShrink: 0,
-      cursor: onClick ? 'pointer' : 'default',
-      transition: 'transform 0.2s ease-in-out',
-      '&:hover': onClick
-        ? {
-            transform: 'translateY(-4px) scale(1.02)',
-          }
-        : {},
-    }}
-    onClick={onClick}
-  >
-    <Box sx={{ position: 'relative' }}>
-      <VideoThumbnail
-        width={140}
-        height={78}
-        progress={progress?.progress || 0}
-        isPlaying={false}
-      />
+  showFullInfo?: boolean;
+}> = React.memo(({ video, onClick, showFullInfo = false }) => {
+  // Parsear categorías y tags
+  const categories = React.useMemo(() => {
+    try {
+      return JSON.parse(video.categories || '[]');
+    } catch {
+      return [];
+    }
+  }, [video.categories]);
 
-      {/* Video duration */}
-      <Chip
-        label={`${Math.floor(video.duration / 60)}:${(video.duration % 60).toString().padStart(2, '0')}`}
-        size="small"
+  const tags = React.useMemo(() => {
+    try {
+      return JSON.parse(video.tags || '[]');
+    } catch {
+      return [];
+    }
+  }, [video.tags]);
+
+  // Formatear duración
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleClick = React.useCallback(() => {
+    if (onClick) {
+      onClick();
+    }
+  }, [onClick]);
+
+  if (showFullInfo) {
+    // Vista completa para lista
+    return (
+      <Card
         sx={{
-          position: 'absolute',
-          bottom: 8,
-          right: 8,
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          color: 'white',
-          fontSize: '10px',
-          height: 20,
+          mb: 2,
+          borderRadius: 3,
+          overflow: 'hidden',
+          cursor: onClick ? 'pointer' : 'default',
+          transition: 'all 0.3s ease',
+          '&:hover': onClick
+            ? {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+              }
+            : {},
         }}
-      />
+        onClick={handleClick}
+      >
+        <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
+          <Box sx={{ position: 'relative' }}>
+            <VideoThumbnail
+              width={120}
+              height={90}
+              thumbnailUrl={video.thumbnailUrl}
+            />
+            
+            {/* Platform indicator */}
+            <Chip
+              label={video.platform.toUpperCase()}
+              size="small"
+              sx={{
+                position: 'absolute',
+                bottom: 4,
+                right: 4,
+                backgroundColor: 'rgba(255,0,0,0.9)',
+                color: 'white',
+                fontSize: '10px',
+                height: 16,
+              }}
+            />
+          </Box>
 
-      {/* Questions indicator */}
-      {progress?.totalQuestions && (
-        <Badge
-          badgeContent={progress.totalQuestions}
-          color="secondary"
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                mb: 1,
+                fontSize: '16px',
+                lineHeight: 1.3,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {video.title}
+            </Typography>
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                mb: 1,
+                fontSize: '14px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {video.description}
+            </Typography>
+
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+              <Chip
+                icon={<AccessTimeIcon />}
+                label={formatDuration(video.duration)}
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: '11px', height: 20 }}
+              />
+              
+              {categories.length > 0 && (
+                <Chip
+                  icon={<CategoryIcon />}
+                  label={categories[0]}
+                  size="small"
+                  sx={{
+                    fontSize: '11px',
+                    height: 20,
+                    backgroundColor: '#e3f2fd',
+                    color: '#1976d2',
+                  }}
+                />
+              )}
+            </Stack>
+
+            {video.playlist && (
+              <Typography
+                variant="caption"
+                color="primary"
+                sx={{ fontWeight: 600 }}
+              >
+                📚 {video.playlist.name}
+              </Typography>
+            )}
+          </Box>
+        </Box>
+      </Card>
+    );
+  }
+
+  // Vista compacta para carrusel horizontal
+  return (
+    <Box
+      sx={{
+        width: 140,
+        flexShrink: 0,
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'transform 0.2s ease-in-out',
+        '&:hover': onClick
+          ? {
+              transform: 'translateY(-4px) scale(1.02)',
+            }
+          : {},
+      }}
+      onClick={handleClick}
+    >
+      <Box sx={{ position: 'relative' }}>
+        <VideoThumbnail
+          width={140}
+          height={78}
+          thumbnailUrl={video.thumbnailUrl}
+        />
+
+        {/* Video duration */}
+        <Chip
+          label={formatDuration(video.duration)}
+          size="small"
+          sx={{
+            position: 'absolute',
+            bottom: 8,
+            right: 8,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            color: 'white',
+            fontWeight: 600,
+            fontSize: '11px',
+            height: 20,
+          }}
+        />
+
+        {/* Platform indicator */}
+        <Chip
+          label={video.platform.toUpperCase()}
+          size="small"
           sx={{
             position: 'absolute',
             top: 8,
-            right: 8,
-            '& .MuiBadge-badge': {
-              fontSize: '9px',
-              height: 16,
-              minWidth: 16,
-            },
+            left: 8,
+            backgroundColor: 'rgba(255,0,0,0.9)',
+            color: 'white',
+            fontWeight: 600,
+            fontSize: '10px',
+            height: 20,
+          }}
+        />
+      </Box>
+
+      <Box sx={{ mt: 1.5, px: 0.5 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: '#1e293b',
+            fontFamily: 'Roboto',
+            fontSize: '13px',
+            fontWeight: 600,
+            lineHeight: 1.3,
+            mb: 0.5,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
           }}
         >
-          <QuizIcon sx={{ color: 'white', fontSize: 16 }} />
-        </Badge>
-      )}
-    </Box>
+          {video.title}
+        </Typography>
 
-    <Box sx={{ mt: 1.5, px: 0.5 }}>
-      <Typography
-        variant="body2"
-        sx={{
-          color: '#1e293b',
-          fontFamily: 'Roboto',
-          fontSize: '13px',
-          fontWeight: 600,
-          lineHeight: 1.3,
-          mb: 0.5,
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}
-      >
-        {video.title}
-      </Typography>
-
-      <Typography
-        variant="caption"
-        sx={{
-          color: '#64748b',
-          fontFamily: 'Roboto',
-          fontSize: '11px',
-          fontWeight: 400,
-          lineHeight: 1.2,
-          display: 'block',
-          mb: 1,
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}
-      >
-        {video.description}
-      </Typography>
-
-      {/* Progress and rewards */}
-      {progress && (
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Chip
-            icon={<DiamondIcon />}
-            label={`+${progress.meritsEarned}`}
-            size="small"
+        {video.playlist && (
+          <Typography
+            variant="caption"
             sx={{
-              height: 18,
-              fontSize: '9px',
-              backgroundColor: '#fef3c7',
-              color: '#92400e',
-              '& .MuiChip-icon': { fontSize: 10 },
+              color: '#64748b',
+              fontFamily: 'Roboto',
+              fontSize: '11px',
+              fontWeight: 400,
+              lineHeight: 1.2,
+              mb: 1,
+              display: 'block',
             }}
-          />
-          {progress.completed && (
+          >
+            📚 {video.playlist.name}
+          </Typography>
+        )}
+
+        {/* Categories */}
+        {categories.length > 0 && (
+          <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap' }}>
             <Chip
-              icon={<TrophyIcon />}
-              label="✓"
+              label={categories[0]}
               size="small"
               sx={{
                 height: 18,
                 fontSize: '9px',
-                backgroundColor: '#d1fae5',
-                color: '#065f46',
-                '& .MuiChip-icon': { fontSize: 10 },
+                backgroundColor: '#e3f2fd',
+                color: '#1976d2',
               }}
             />
-          )}
-        </Stack>
-      )}
+          </Stack>
+        )}
+      </Box>
     </Box>
-  </Box>
-);
+  );
+});
 
-const UPlayMobileHome: React.FC = () => {
+interface UPlayMobileHomeProps {
+  isDesktop?: boolean;
+}
+
+const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
 
-  // Enhanced state management
+  // Enhanced state management - ALWAYS call hooks in the same order
   const [showStats, setShowStats] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
   const [currentStreak, setCurrentStreak] = useState(3);
+  const [showAllVideos, setShowAllVideos] = useState(false);
 
-  // Enhanced mock user stats
-  const enhancedUserStats: EnhancedMockUserStats = {
+  // Enhanced mock user stats - stable reference to prevent re-renders
+  const enhancedUserStats: EnhancedMockUserStats = React.useMemo(() => ({
     name: 'Lucía',
     activePlayers: 150,
     burnedPlayers: 50,
@@ -414,10 +546,10 @@ const UPlayMobileHome: React.FC = () => {
     totalWatchTime: 45600, // seconds
     achievements: 15,
     ranking: 47,
-  };
+  }), []);
 
-  // Enhanced mock data with progress
-  const mockVideoProgress: VideoProgress[] = [
+  // Enhanced mock data with progress - stable reference
+  const mockVideoProgress: VideoProgress[] = React.useMemo(() => [
     {
       videoId: 1,
       progress: 35,
@@ -436,130 +568,200 @@ const UPlayMobileHome: React.FC = () => {
       meritsEarned: 75,
       lastWatched: new Date(Date.now() - 86400000),
     },
-  ];
+  ], []);
 
-  // Use enhanced mock data hook
+  // Use enhanced mock data hook para fallback
   const {
-    isLoading,
+    isLoading: isMockLoading,
     continueWatching,
-    staffPlaylists,
-    myPlaylists,
-    createdPlaylist,
     formatDuration,
     getProgressText,
+    isPreviewEnvironment,
   } = useUPlayMockData();
 
-  const handleVideoClick = (video: MockVideo) => {
-    console.log('Playing video:', video.title);
-    navigate('/interactive-video');
-  };
+  // 🔥 Usar datos reales del backend (principal)
+  const { 
+    data: backendVideos, 
+    isLoading: isBackendLoading,
+    isError: isBackendError 
+  } = useVideos();
 
-  const handleContinueWatching = () => {
-    console.log('Continuing video:', continueWatching.title);
-    navigate('/interactive-video');
-  };
+  // Combinar estados de loading
+  const isLoading = isBackendLoading;
 
-  const handleInteractiveDemo = () => {
-    navigate('/interactive-video');
-  };
+  // Log para debugging
+  React.useEffect(() => {
+    console.log('🔥 DEBUG UPlayMobileHome:');
+    console.log('  - isBackendLoading:', isBackendLoading);
+    console.log('  - isBackendError:', isBackendError);
+    console.log('  - backendVideos:', backendVideos);
+    console.log('  - backendVideos length:', backendVideos?.length);
+  }, [isBackendLoading, isBackendError, backendVideos]);
 
-  const handleShowStats = () => {
+  // Procesar videos del backend
+  const processedVideos = React.useMemo(() => {
+    if (!backendVideos || !Array.isArray(backendVideos)) {
+      console.log('🔥 No hay datos del backend válidos');
+      return [];
+    }
+
+    // Filtrar solo videos activos
+    const activeVideos = backendVideos.filter((video: any) => video.isActive);
+    
+    console.log('🔥 Videos activos del backend:', activeVideos.length);
+    return activeVideos as BackendVideo[];
+  }, [backendVideos]);
+
+  // Agrupar videos por playlist para mejor organización
+  const videosByPlaylist = React.useMemo(() => {
+    const grouped: Record<string, BackendVideo[]> = {};
+    
+    processedVideos.forEach((video) => {
+      const playlistName = video.playlist?.name || 'Sin Playlist';
+      if (!grouped[playlistName]) {
+        grouped[playlistName] = [];
+      }
+      grouped[playlistName].push(video);
+    });
+
+    return grouped;
+  }, [processedVideos]);
+
+  // Memoized handlers to prevent function recreation on every render
+  const handleVideoClick = React.useCallback((video: BackendVideo) => {
+    console.log('🔥 Playing video from backend:', video.title);
+    console.log('🔥 Video URL:', video.url);
+    console.log('🔥 Video data:', video);
+    
+    // Mapear a rutas existentes o usar ID del video
+    const videoId = video.externalId || video.id.toString();
+    
+    console.log('🔥 Navigating to video ID:', videoId);
+    navigate(`/uplay/video/${videoId}`, {
+      state: { 
+        from: '/uplay',
+        videoData: video // Pasar datos del video
+      },
+    });
+  }, [navigate]);
+
+  const handleContinueWatching = React.useCallback(() => {
+    // Si hay videos del backend, usar el primero como "continuar viendo"
+    if (processedVideos.length > 0) {
+      handleVideoClick(processedVideos[0]);
+    } else {
+      console.log('Continuing with mock video:', continueWatching.title);
+      navigate('/uplay/video/coomunity-intro', {
+        state: { from: '/uplay' },
+      });
+    }
+  }, [navigate, processedVideos, continueWatching.title, handleVideoClick]);
+
+  const handleShowStats = React.useCallback(() => {
     setShowStats(!showStats);
-  };
+  }, [showStats]);
 
+  const handleToggleAllVideos = React.useCallback(() => {
+    setShowAllVideos(!showAllVideos);
+  }, [showAllVideos]);
+
+  // Enhanced status chip component for cleaner code
+  const EnhancedStatusChip: React.FC<{
+    icon: React.ReactNode;
+    label: string;
+    value: string | number;
+    color: 'success' | 'error' | 'warning' | 'info';
+  }> = React.memo(({ icon, label, value, color }) => (
+    <Chip
+      icon={icon}
+      label={`${label}: ${value}`}
+      sx={{
+        height: 28,
+        fontSize: '12px',
+        fontWeight: 600,
+        backgroundColor:
+          color === 'success'
+            ? '#d1fae5'
+            : color === 'error'
+            ? '#fee2e2'
+            : color === 'warning'
+            ? '#fef3c7'
+            : '#dbeafe',
+        color:
+          color === 'success'
+            ? '#065f46'
+            : color === 'error'
+            ? '#991b1b'
+            : color === 'warning'
+            ? '#92400e'
+            : '#1e40af',
+        '& .MuiChip-icon': {
+          color:
+            color === 'success'
+              ? '#10b981'
+              : color === 'error'
+              ? '#ef4444'
+              : color === 'warning'
+              ? '#f59e0b'
+              : '#3b82f6',
+        },
+      }}
+    />
+  ));
+
+  // Loading state
   if (isLoading) {
     return (
-      <Box
-        sx={{
-          width: '100vw',
-          minHeight: '100vh',
-          backgroundColor: '#f8fafc',
-          p: 2,
-        }}
-      >
-        <Skeleton
-          variant="rectangular"
-          width="100%"
-          height={64}
-          sx={{ mb: 2, borderRadius: 2 }}
-        />
-        <Skeleton variant="text" width="60%" height={28} sx={{ mb: 1 }} />
-        <Skeleton variant="text" width="40%" height={24} sx={{ mb: 3 }} />
-        <Skeleton
-          variant="rectangular"
-          width="100%"
-          height={220}
-          sx={{ mb: 3, borderRadius: 3 }}
-        />
-        <Stack direction="row" spacing={2}>
-          <Skeleton
-            variant="rectangular"
-            width={140}
-            height={78}
-            sx={{ borderRadius: 2 }}
-          />
-          <Skeleton
-            variant="rectangular"
-            width={140}
-            height={78}
-            sx={{ borderRadius: 2 }}
-          />
-          <Skeleton
-            variant="rectangular"
-            width={140}
-            height={78}
-            sx={{ borderRadius: 2 }}
-          />
-        </Stack>
+      <Box>
+        <AppBar
+          position="sticky"
+          elevation={0}
+          sx={{
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            color: 'white',
+          }}
+        >
+          <Toolbar sx={{ minHeight: 64, px: 2 }}>
+            <IconButton edge="start" sx={{ mr: 1, color: 'white' }}>
+              <MenuIcon />
+            </IconButton>
+            <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                ÜPlay
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '11px', opacity: 0.9 }}>
+                Cargando contenido...
+              </Typography>
+            </Box>
+          </Toolbar>
+        </AppBar>
+
+        <Container maxWidth="sm" sx={{ px: 2, py: 4 }}>
+          <Stack spacing={3} alignItems="center">
+            <CircularProgress size={60} sx={{ color: '#6366f1' }} />
+            <Typography variant="h6" color="text.secondary">
+              Cargando videos...
+            </Typography>
+            
+            {/* Loading skeletons */}
+            {[1, 2, 3].map((i) => (
+              <Skeleton
+                key={i}
+                variant="rectangular"
+                width="100%"
+                height={100}
+                sx={{ borderRadius: 2 }}
+              />
+            ))}
+          </Stack>
+        </Container>
       </Box>
     );
   }
 
   return (
-    <Box
-      sx={{
-        width: '100vw',
-        minHeight: '100vh',
-        backgroundColor: '#f8fafc',
-        position: 'relative',
-      }}
-    >
-      {/* Enhanced Status Bar */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          width: '100%',
-          height: 44,
-          px: 3,
-          py: 1,
-          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-          color: 'white',
-        }}
-      >
-        <Typography
-          sx={{
-            fontFamily: 'Roboto',
-            fontSize: '14px',
-            fontWeight: 600,
-            lineHeight: '16px',
-          }}
-        >
-          9:30
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <Badge badgeContent={currentStreak} color="error">
-            <FireIcon sx={{ fontSize: 16 }} />
-          </Badge>
-          <Typography sx={{ fontSize: '12px', fontWeight: 500 }}>
-            📶 🔋 85%
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* Enhanced Top App Bar */}
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+      {/* Enhanced Header */}
       <AppBar
         position="sticky"
         elevation={0}
@@ -616,12 +818,69 @@ const UPlayMobileHome: React.FC = () => {
       </AppBar>
 
       {/* Main Content */}
-      <Container maxWidth="sm" sx={{ px: 2, py: 2, pb: 10 }}>
+      <Container 
+        maxWidth={isDesktop ? "lg" : "sm"} 
+        sx={{ 
+          px: isDesktop ? 4 : 2, 
+          py: isDesktop ? 4 : 2, 
+          pb: 10 
+        }}
+      >
+        {/* Desktop-specific layout improvements */}
+        {isDesktop && (
+          <Box sx={{ mb: 4, textAlign: 'center' }}>
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontWeight: 800,
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                mb: 1
+              }}
+            >
+              Bienvenido a ÜPlay
+            </Typography>
+            <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
+              Experiencia gamificada de aprendizaje colaborativo
+            </Typography>
+          </Box>
+        )}
+
+        {/* Status de conexión con Backend */}
+        <Box sx={{ mb: 2 }}>
+          <Alert 
+            severity={isBackendError ? "error" : "success"} 
+            icon={<VideoLibraryIcon />}
+            sx={{ 
+              borderRadius: 2,
+              backgroundColor: isBackendError ? '#ffebee' : '#e8f5e8',
+              border: `1px solid ${isBackendError ? '#f44336' : '#4caf50'}`,
+              fontSize: '14px',
+              '& .MuiAlert-message': {
+                fontWeight: 600
+              }
+            }}
+          >
+            {isBackendError ? (
+              <>❌ <strong>Sin conexión al backend:</strong> Usando datos de demostración</>
+            ) : (
+              <>✅ <strong>Conectado al backend:</strong> {processedVideos.length} videos disponibles</>
+            )}
+          </Alert>
+        </Box>
+
         {/* Enhanced Status Chips */}
         <Stack
           direction="row"
           spacing={1}
-          sx={{ mb: 3, flexWrap: 'wrap', gap: 1 }}
+          sx={{ 
+            mb: 3, 
+            flexWrap: 'wrap', 
+            gap: 1,
+            justifyContent: isDesktop ? 'center' : 'flex-start'
+          }}
         >
           <EnhancedStatusChip
             icon={<PersonIcon sx={{ fontSize: 12 }} />}
@@ -636,126 +895,361 @@ const UPlayMobileHome: React.FC = () => {
             color="error"
           />
           <EnhancedStatusChip
-            icon={<TrophyIcon sx={{ fontSize: 12 }} />}
-            label="Ranking"
-            value={`#${enhancedUserStats.ranking}`}
-            color="warning"
+            icon={<OndemandVideoIcon sx={{ fontSize: 12 }} />}
+            label="Videos"
+            value={processedVideos.length}
+            color="info"
           />
         </Stack>
 
-        {/* Enhanced Welcome Section */}
-        <Box sx={{ mb: 3 }}>
+        {/* Desktop vs Mobile Layout */}
+        {isDesktop ? (
+          // Desktop Layout - Grid-based with improved organization
+          <Grid container spacing={4}>
+            {/* Left Column - Continue Watching & Featured */}
+            <Grid item xs={12} md={8}>
+              {/* Continuar viendo - Solo si hay videos del backend */}
+              {processedVideos.length > 0 && (
+                <Box sx={{ mb: 4 }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      color: '#1e293b',
+                      fontFamily: 'Roboto',
+                      fontWeight: 700,
+                      mb: 3,
+                    }}
+                  >
+                    📺 Continuar viendo
+                  </Typography>
+
+                  <Card
+                    sx={{
+                      borderRadius: 3,
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+                      },
+                      mb: 4,
+                    }}
+                    onClick={handleContinueWatching}
+                  >
+                    <Grid container>
+                      <Grid item xs={5}>
+                        <VideoThumbnail 
+                          width="100%" 
+                          height={200} 
+                          progress={35}
+                          thumbnailUrl={processedVideos[0]?.thumbnailUrl}
+                        />
+                      </Grid>
+                      <Grid item xs={7}>
+                        <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
+                            {processedVideos[0]?.title || 'Video Destacado'}
+                          </Typography>
+                          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                            {processedVideos[0]?.description || 'Continúa donde lo dejaste'}
+                          </Typography>
+                          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                            <Chip 
+                              label={`${Math.floor(processedVideos[0]?.duration / 60)}:${(processedVideos[0]?.duration % 60).toString().padStart(2, '0')}`}
+                              size="small"
+                              color="primary"
+                            />
+                            <Chip 
+                              label={processedVideos[0]?.platform.toUpperCase()}
+                              size="small"
+                              color="secondary"
+                            />
+                          </Box>
+                        </CardContent>
+                      </Grid>
+                    </Grid>
+                  </Card>
+                </Box>
+              )}
+            </Grid>
+
+            {/* Right Column - Stats & Progress */}
+            <Grid item xs={12} md={4}>
+              {/* User Stats Card - Enhanced for Desktop */}
+              <Card sx={{ borderRadius: 3, mb: 3 }}>
+                <Box
+                  sx={{
+                    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                    color: 'white',
+                    p: 3,
+                  }}
+                >
+                  <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
+                    📊 Tu Progreso
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Box textAlign="center">
+                        <Typography variant="h3" sx={{ fontWeight: 800 }}>
+                          {enhancedUserStats.completedVideos}
+                        </Typography>
+                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                          Videos Completados
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Box textAlign="center">
+                        <Typography variant="h3" sx={{ fontWeight: 800 }}>
+                          {Math.floor(enhancedUserStats.totalWatchTime / 3600)}h
+                        </Typography>
+                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                          Tiempo Total
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+                
+                <CardContent sx={{ p: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>
+                    🎯 Meta Semanal
+                  </Typography>
+                  <Box sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                      <Typography variant="body2">
+                        {enhancedUserStats.weeklyGoal} videos
+                      </Typography>
+                      <Typography variant="body2" color="primary">
+                        {currentStreak}/{enhancedUserStats.weeklyGoal}
+                      </Typography>
+                    </Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={(currentStreak / enhancedUserStats.weeklyGoal) * 100}
+                      sx={{
+                        height: 8,
+                        borderRadius: 4,
+                        backgroundColor: '#e3f2fd',
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 4,
+                          background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
+                        },
+                      }}
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        ) : (
+          // Mobile Layout - Original vertical layout
+          <>
+            {/* Continuar viendo - Solo si hay videos del backend */}
+            {processedVideos.length > 0 && (
+              <Box sx={{ mb: 4 }}>
+                <Typography
+                  sx={{
+                    color: '#1e293b',
+                    fontFamily: 'Roboto',
+                    fontSize: '18px',
+                    fontWeight: 700,
+                    lineHeight: '22px',
+                    mb: 2,
+                  }}
+                >
+                  📺 Continuar viendo
+                </Typography>
+
+                <Card
+                  sx={{
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+                    },
+                    mb: 2,
+                  }}
+                  onClick={handleContinueWatching}
+                >
+                  <Box sx={{ position: 'relative' }}>
+                    <VideoThumbnail 
+                      width="100%" 
+                      height={220} 
+                      progress={35}
+                      thumbnailUrl={processedVideos[0]?.thumbnailUrl}
+                    />
+
+                    {/* Enhanced play overlay */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        background:
+                          'linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%)',
+                        borderRadius: '50%',
+                        width: 72,
+                        height: 72,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)',
+                      }}
+                    >
+                      <PlayIcon sx={{ color: 'white', fontSize: 36 }} />
+                    </Box>
+
+                    {/* Video info overlay */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        display: 'flex',
+                        gap: 1,
+                      }}
+                    >
+                      <Chip
+                        label={Math.floor(processedVideos[0]?.duration / 60) + ':' + (processedVideos[0]?.duration % 60).toString().padStart(2, '0')}
+                        size="small"
+                        sx={{
+                          backgroundColor: 'rgba(0,0,0,0.8)',
+                          color: 'white',
+                          fontWeight: 600,
+                        }}
+                      />
+                    </Box>
+                  </Box>
+
+                  <CardContent sx={{ p: 2 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                      {processedVideos[0]?.title || 'Video Destacado'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {processedVideos[0]?.description || 'Continúa donde lo dejaste'}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+            )}
+          </>
+        )}
+
+        {/* Videos disponibles por playlist */}
+        {Object.entries(videosByPlaylist).map(([playlistName, videos]) => (
+          <Box key={playlistName} sx={{ mb: 4 }}>
+            <Typography
+              sx={{
+                color: '#1e293b',
+                fontFamily: 'Roboto',
+                fontSize: '16px',
+                fontWeight: 700,
+                lineHeight: '22px',
+                mb: 2,
+              }}
+            >
+              🌟 {playlistName}
+            </Typography>
+
+            <Stack direction="row" spacing={2} sx={{ overflowX: 'auto', pb: 2 }}>
+              {videos.slice(0, showAllVideos ? videos.length : 5).map((video) => (
+                <BackendVideoCard
+                  key={video.id}
+                  video={video}
+                  onClick={() => handleVideoClick(video)}
+                />
+              ))}
+            </Stack>
+
+            {videos.length > 5 && (
+              <Button
+                onClick={handleToggleAllVideos}
+                sx={{ mt: 1 }}
+                endIcon={showAllVideos ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              >
+                {showAllVideos ? 'Mostrar menos' : `Ver todos (${videos.length})`}
+              </Button>
+            )}
+          </Box>
+        ))}
+
+        {/* Lista completa de videos */}
+        <Box sx={{ mb: 4 }}>
           <Typography
             sx={{
               color: '#1e293b',
-              fontFamily: 'Montserrat',
+              fontFamily: 'Roboto',
               fontSize: '18px',
               fontWeight: 700,
-              lineHeight: 'normal',
-              mb: 1,
+              lineHeight: '22px',
+              mb: 2,
             }}
           >
-            Bienvenida,
-            <br />
-            {enhancedUserStats.name}
+            📋 Todos los Videos Disponibles ({processedVideos.length})
           </Typography>
 
-          {/* Player metrics summary */}
-          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-            <Chip
-              icon={<StarIcon />}
-              label={`Nivel ${enhancedUserStats.level}`}
-              size="medium"
-              color="secondary"
-              sx={{ fontWeight: 600 }}
-            />
-            <Chip
-              icon={<DiamondIcon />}
-              label={`${enhancedUserStats.merits.toLocaleString()} M`}
-              size="medium"
-              color="warning"
-              sx={{ fontWeight: 600 }}
-            />
-            <Chip
-              icon={<BoltIcon />}
-              label={`${enhancedUserStats.ondas} Ö`}
-              size="medium"
-              color="primary"
-              sx={{ fontWeight: 600 }}
-            />
-          </Stack>
-
-          {/* XP Progress */}
-          <Box sx={{ mb: 2 }}>
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-            >
-              <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                Progreso al Nivel {enhancedUserStats.level + 1}
-              </Typography>
-              <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                {enhancedUserStats.experience}/
-                {enhancedUserStats.experience +
-                  enhancedUserStats.experienceToNext}
-              </Typography>
+          {processedVideos.length > 0 ? (
+            <Box>
+              {processedVideos.map((video) => (
+                <BackendVideoCard
+                  key={video.id}
+                  video={video}
+                  onClick={() => handleVideoClick(video)}
+                  showFullInfo={true}
+                />
+              ))}
             </Box>
-            <LinearProgress
-              variant="determinate"
-              value={
-                (enhancedUserStats.experience /
-                  (enhancedUserStats.experience +
-                    enhancedUserStats.experienceToNext)) *
-                100
-              }
-              sx={{
-                height: 8,
-                borderRadius: 4,
-                bgcolor: '#e2e8f0',
-                '& .MuiLinearProgress-bar': {
-                  borderRadius: 4,
-                  background:
-                    'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
-                },
-              }}
-            />
-          </Box>
+          ) : (
+            <Paper sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
+              <OndemandVideoIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                No hay videos disponibles
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {isBackendError 
+                  ? 'Error conectando al backend. Verifica que el servicio esté ejecutándose.'
+                  : 'No se encontraron videos en el backend.'
+                }
+              </Typography>
+            </Paper>
+          )}
         </Box>
 
-        {/* Stats Toggle Button */}
-        <Button
-          variant="outlined"
-          onClick={handleShowStats}
-          startIcon={<TrendingUpIcon />}
-          endIcon={showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          fullWidth
-          sx={{
-            mb: 2,
-            borderColor: '#6366f1',
-            color: '#6366f1',
-            fontWeight: 600,
-            borderRadius: 2,
-          }}
-        >
-          {showStats ? 'Ocultar Estadísticas' : 'Ver Estadísticas Detalladas'}
-        </Button>
-
-        {/* Detailed Stats Section */}
-        <Collapse in={showStats}>
-          <Card sx={{ mb: 3, borderRadius: 3, overflow: 'hidden' }}>
-            <Box
-              sx={{
-                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                color: 'white',
-                p: 2,
+        {/* Enhanced User Stats Section (Collapsible) */}
+        <Card sx={{ mb: 3, borderRadius: 3, overflow: 'hidden' }}>
+          <Box
+            sx={{
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+              color: 'white',
+              p: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+            }}
+            onClick={handleShowStats}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+              📊 Panel de Estadísticas
+            </Typography>
+            <IconButton
+              sx={{ color: 'white' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShowStats();
               }}
             >
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 700, textAlign: 'center' }}
-              >
-                📊 Panel de Estadísticas
-              </Typography>
-            </Box>
+              {showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
+          </Box>
+
+          <Collapse in={showStats}>
             <CardContent sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={6}>
@@ -793,10 +1287,10 @@ const UPlayMobileHome: React.FC = () => {
                       color="warning.main"
                       sx={{ fontWeight: 800 }}
                     >
-                      {enhancedUserStats.achievements}
+                      {enhancedUserStats.merits}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                      Logros
+                      Mëritos
                     </Typography>
                   </Box>
                 </Grid>
@@ -804,529 +1298,57 @@ const UPlayMobileHome: React.FC = () => {
                   <Box textAlign="center">
                     <Typography
                       variant="h4"
-                      color="error.main"
+                      color="secondary.main"
                       sx={{ fontWeight: 800 }}
                     >
-                      {enhancedUserStats.currentStreak}
+                      {enhancedUserStats.ondas}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                      Racha Actual
+                      Öndas
                     </Typography>
                   </Box>
                 </Grid>
               </Grid>
 
-              <Divider sx={{ my: 2 }} />
+              <Divider sx={{ my: 3 }} />
 
-              {/* Weekly progress */}
-              <Box>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                  Meta Semanal de Aprendizaje
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <Box sx={{ flexGrow: 1, mr: 2 }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={(4 / enhancedUserStats.weeklyGoal) * 100}
-                      sx={{ height: 6, borderRadius: 3 }}
-                      color="success"
-                    />
-                  </Box>
-                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                    4/{enhancedUserStats.weeklyGoal}
-                  </Typography>
-                </Box>
-                <Typography variant="caption" color="text.secondary">
-                  ��Vas genial! Solo 3 sesiones más para completar tu meta
-                  semanal
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Collapse>
-
-        {/* Enhanced Interactive Demo Button */}
-        <Box sx={{ mb: 3 }}>
-          <Button
-            variant="contained"
-            fullWidth
-            startIcon={<QuizIcon />}
-            onClick={handleInteractiveDemo}
-            sx={{
-              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-              color: 'white',
-              borderRadius: 3,
-              py: 2,
-              fontSize: '16px',
-              fontWeight: 700,
-              boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
-                boxShadow: '0 12px 40px rgba(99, 102, 241, 0.5)',
-                transform: 'translateY(-2px)',
-              },
-              transition: 'all 0.3s ease',
-            }}
-          >
-            🎮 Probar Reproductor Interactivo
-          </Button>
-        </Box>
-
-        {/* Enhanced Continue Watching Section */}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            sx={{
-              color: '#1e293b',
-              fontFamily: 'Roboto',
-              fontSize: '16px',
-              fontWeight: 700,
-              lineHeight: '22px',
-              mb: 2,
-            }}
-          >
-            📺 Continuar viendo
-          </Typography>
-
-          {/* Enhanced Main Video Thumbnail */}
-          <Card
-            sx={{
-              borderRadius: 3,
-              overflow: 'hidden',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
-              },
-              mb: 2,
-            }}
-            onClick={handleContinueWatching}
-          >
-            <Box sx={{ position: 'relative' }}>
-              <VideoThumbnail width="100%" height={220} progress={35} />
-
-              {/* Enhanced play overlay */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  background:
-                    'linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%)',
-                  borderRadius: '50%',
-                  width: 72,
-                  height: 72,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)',
-                }}
-              >
-                <PlayIcon sx={{ color: 'white', fontSize: 36 }} />
-              </Box>
-
-              {/* Video duration and progress indicator */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 16,
-                  right: 16,
-                  display: 'flex',
-                  gap: 1,
-                }}
-              >
-                <Chip
-                  label={formatDuration(continueWatching.duration)}
-                  size="small"
-                  sx={{
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    color: 'white',
-                    fontWeight: 600,
-                  }}
-                />
-                <Chip
-                  label="35%"
-                  size="small"
-                  sx={{
-                    backgroundColor: 'rgba(99, 102, 241, 0.9)',
-                    color: 'white',
-                    fontWeight: 600,
-                  }}
-                />
-              </Box>
-
-              {/* Questions indicator */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 16,
-                  left: 16,
-                }}
-              >
-                <Badge badgeContent={7} color="warning">
-                  <Chip
-                    icon={<QuizIcon />}
-                    label="Preguntas"
-                    size="small"
-                    sx={{
-                      backgroundColor: 'rgba(0,0,0,0.8)',
-                      color: 'white',
-                      fontWeight: 600,
-                      '& .MuiChip-icon': { color: 'white' },
-                    }}
-                  />
-                </Badge>
-              </Box>
-            </Box>
-          </Card>
-
-          {/* Enhanced Video Info with Progress */}
-          <Card sx={{ borderRadius: 3, p: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              {/* Enhanced Progress Circle */}
-              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-                <CircularProgress
-                  variant="determinate"
-                  value={35}
-                  size={56}
-                  thickness={4}
-                  sx={{
-                    color: '#6366f1',
-                    filter: 'drop-shadow(0 2px 8px rgba(99, 102, 241, 0.3))',
-                  }}
-                />
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>
+                🎯 Progreso Semanal
+              </Typography>
+              <Box sx={{ mb: 2 }}>
                 <Box
                   sx={{
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: 'absolute',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    component="div"
-                    sx={{ fontSize: '12px', fontWeight: 700, color: '#6366f1' }}
-                  >
-                    35%
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Enhanced Video Details */}
-              <Box sx={{ flex: 1 }}>
-                <Typography
-                  sx={{
-                    color: '#1e293b',
-                    fontFamily: 'Roboto',
-                    fontSize: '15px',
-                    fontWeight: 700,
-                    lineHeight: '20px',
-                    mb: 0.5,
-                  }}
-                >
-                  {continueWatching.title}
-                </Typography>
-                <Typography
-                  sx={{
-                    color: '#64748b',
-                    fontFamily: 'Roboto',
-                    fontSize: '13px',
-                    fontWeight: 400,
-                    lineHeight: '18px',
+                    justifyContent: 'space-between',
                     mb: 1,
                   }}
                 >
-                  {continueWatching.description}
-                </Typography>
-
-                <Stack direction="row" spacing={1} flexWrap="wrap">
-                  <Chip
-                    icon={<DiamondIcon />}
-                    label="+45 Mëritos"
-                    size="small"
-                    sx={{
-                      backgroundColor: '#fef3c7',
-                      color: '#92400e',
-                      fontWeight: 600,
-                      '& .MuiChip-icon': { color: '#f59e0b' },
-                    }}
-                  />
-                  <Chip
-                    icon={<BoltIcon />}
-                    label="+21 Öndas"
-                    size="small"
-                    sx={{
-                      backgroundColor: '#dcfce7',
-                      color: '#166534',
-                      fontWeight: 600,
-                      '& .MuiChip-icon': { color: '#10b981' },
-                    }}
-                  />
-                  <Chip
-                    label="3/7 preguntas"
-                    size="small"
-                    sx={{
-                      backgroundColor: '#e0e7ff',
-                      color: '#3730a3',
-                      fontWeight: 600,
-                    }}
-                  />
-                </Stack>
-              </Box>
-
-              {/* Action buttons */}
-              <Stack direction="column" spacing={1}>
-                <IconButton
-                  size="small"
-                  sx={{
-                    bgcolor: '#fef3c7',
-                    color: '#92400e',
-                    '&:hover': { bgcolor: '#fed7aa' },
-                  }}
-                >
-                  <BookmarkIcon fontSize="small" />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  sx={{
-                    bgcolor: '#ddd6fe',
-                    color: '#5b21b6',
-                    '&:hover': { bgcolor: '#c4b5fd' },
-                  }}
-                >
-                  <ShareIcon fontSize="small" />
-                </IconButton>
-              </Stack>
-            </Box>
-          </Card>
-        </Box>
-
-        {/* Enhanced Staff Playlists Section */}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            sx={{
-              color: '#1e293b',
-              fontFamily: 'Roboto',
-              fontSize: '16px',
-              fontWeight: 700,
-              lineHeight: '22px',
-              mb: 2,
-            }}
-          >
-            🌟 Playlists del Staff
-          </Typography>
-
-          <Stack direction="row" spacing={2} sx={{ overflowX: 'auto', pb: 2 }}>
-            {staffPlaylists.map((video) => (
-              <EnhancedVideoCard
-                key={video.id}
-                video={video}
-                onClick={() => handleVideoClick(video)}
-                progress={mockVideoProgress.find((p) => p.videoId === video.id)}
-              />
-            ))}
-          </Stack>
-        </Box>
-
-        {/* Enhanced My Playlists Section */}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            sx={{
-              color: '#1e293b',
-              fontFamily: 'Roboto',
-              fontSize: '16px',
-              fontWeight: 700,
-              lineHeight: '22px',
-              mb: 2,
-            }}
-          >
-            📚 Mis playlists
-          </Typography>
-
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{ overflowX: 'auto', pb: 2, mb: 3 }}
-          >
-            {myPlaylists.map((video) => (
-              <EnhancedVideoCard
-                key={video.id}
-                video={video}
-                onClick={() => handleVideoClick(video)}
-                progress={mockVideoProgress.find((p) => p.videoId === video.id)}
-              />
-            ))}
-          </Stack>
-
-          {/* Enhanced Playlist Card */}
-          <Card
-            sx={{
-              borderRadius: 3,
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-              },
-              border: '1px solid #e2e8f0',
-            }}
-            onClick={() =>
-              console.log('Opening playlist:', createdPlaylist.name)
-            }
-          >
-            <CardContent sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                {/* Enhanced Playlist Icon */}
-                <Box
-                  sx={{
-                    width: 60,
-                    height: 60,
-                    position: 'relative',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: 30,
-                      height: 30,
-                      background:
-                        'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      width: 30,
-                      height: 30,
-                      background:
-                        'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      width: 30,
-                      height: 30,
-                      background:
-                        'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: 0,
-                      right: 0,
-                      width: 30,
-                      height: 30,
-                      background:
-                        'linear-gradient(135deg, #ef4444 0%, #f87171 100%)',
-                    }}
-                  />
-                </Box>
-
-                {/* Enhanced Playlist Info */}
-                <Box sx={{ flex: 1 }}>
-                  <Typography
-                    sx={{
-                      color: '#1e293b',
-                      fontFamily: 'Montserrat',
-                      fontSize: '14px',
-                      fontWeight: 700,
-                      lineHeight: 'normal',
-                      mb: 0.5,
-                    }}
-                  >
-                    {createdPlaylist.name}
+                  <Typography variant="body2">
+                    Meta semanal: {enhancedUserStats.weeklyGoal} videos
                   </Typography>
-                  <Typography
-                    sx={{
-                      color: '#64748b',
-                      fontFamily: 'Montserrat',
-                      fontSize: '12px',
-                      fontWeight: 400,
-                      lineHeight: 'normal',
-                      mb: 1,
-                    }}
-                  >
-                    {createdPlaylist.videoCount} Videos • Personal
+                  <Typography variant="body2" color="primary">
+                    {currentStreak}/{enhancedUserStats.weeklyGoal}
                   </Typography>
-                  <Stack direction="row" spacing={1}>
-                    <Chip
-                      icon={<DiamondIcon />}
-                      label={createdPlaylist.merits}
-                      size="small"
-                      sx={{
-                        backgroundColor: '#fef3c7',
-                        color: '#92400e',
-                        fontWeight: 600,
-                        '& .MuiChip-icon': { color: '#f59e0b' },
-                      }}
-                    />
-                    <Chip
-                      icon={<SchoolIcon />}
-                      label="Aprendizaje"
-                      size="small"
-                      sx={{
-                        backgroundColor: '#e0e7ff',
-                        color: '#3730a3',
-                        fontWeight: 600,
-                        '& .MuiChip-icon': { color: '#6366f1' },
-                      }}
-                    />
-                  </Stack>
                 </Box>
-
-                {/* Playlist actions */}
-                <IconButton
+                <LinearProgress
+                  variant="determinate"
+                  value={(currentStreak / enhancedUserStats.weeklyGoal) * 100}
                   sx={{
-                    bgcolor: '#f1f5f9',
-                    color: '#6366f1',
-                    '&:hover': { bgcolor: '#e2e8f0' },
+                    height: 8,
+                    borderRadius: 4,
+                    backgroundColor: '#e3f2fd',
+                    '& .MuiLinearProgress-bar': {
+                      borderRadius: 4,
+                      background:
+                        'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
+                    },
                   }}
-                >
-                  <PlayIcon />
-                </IconButton>
+                />
               </Box>
             </CardContent>
-          </Card>
-        </Box>
+          </Collapse>
+        </Card>
       </Container>
-
-      {/* Enhanced Floating Action Button */}
-      <Zoom in={true}>
-        <Fab
-          color="primary"
-          onClick={handleInteractiveDemo}
-          sx={{
-            position: 'fixed',
-            bottom: 80,
-            right: 16,
-            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-            boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)',
-            '&:hover': {
-              background: 'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
-              transform: 'scale(1.1)',
-            },
-            transition: 'all 0.3s ease',
-          }}
-        >
-          <QuizIcon />
-        </Fab>
-      </Zoom>
     </Box>
   );
 };

@@ -6,138 +6,40 @@ import {
   Card,
   CardContent,
   Typography,
-  Avatar,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Divider,
-  Chip,
-  Button,
   Tab,
   Tabs,
   Stack,
   Alert,
   LinearProgress,
+  Fab,
+  Zoom,
+  Button,
+  Chip,
 } from '@mui/material';
-import {
-  AccountBalanceWallet,
-  Visibility,
-  VisibilityOff,
-  TrendingUp,
-  TrendingDown,
-  Add,
-  Send,
-  History,
+import { 
+  Refresh, 
+  Add, 
+  Send, 
+  Settings, 
+  Analytics,
   CreditCard,
-  AttachMoney,
-  Euro,
-  Refresh,
-  CheckCircle,
-  Error,
-  Warning,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
-import { useWalletData, useWalletTransactions, useBackendAvailability } from '../hooks/useRealBackendData';
+import { useBackendAvailability } from '../hooks/useRealBackendData';
+import {
+  useWalletData,
+  useWalletTransactions,
+  useCreateTransaction,
+  useExchangeCurrency,
+  usePaymentMethods,
+} from '../hooks/useWalletIntegration';
 import { CreateTransactionModal } from '../components/modules/wallet/CreateTransactionModal';
+import { WalletOverview } from '../components/modules/wallet/WalletOverview';
+import { WalletActions } from '../components/modules/wallet/WalletActions';
+import { TransactionHistory } from '../components/modules/wallet/TransactionHistory';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// 🎭 Mock data (fallback when backend is unavailable)
-const mockWalletData = {
-  balance: 1250.75,
-  currency: 'COP',
-  ucoins: 480,
-  pendingBalance: 150.00,
-  monthlyChange: 15.2,
-  
-  accounts: [
-    {
-      id: '1',
-      name: 'Cuenta Principal CoomÜnity',
-      type: 'checking',
-      balance: 1250.75,
-      currency: 'COP',
-      primary: true,
-    },
-    {
-      id: '2',
-      name: 'ÜCoins Wallet',
-      type: 'crypto',
-      balance: 480,
-      currency: 'UC',
-      primary: false,
-    },
-    {
-      id: '3',
-      name: 'Ahorros Ayni',
-      type: 'savings',
-      balance: 850.30,
-      currency: 'COP',
-      primary: false,
-    },
-  ],
-  
-  recentTransactions: [
-    {
-      id: '1',
-      type: 'income',
-      amount: 50000,
-      currency: 'COP',
-      description: 'Gig completado: Diseño Web',
-      date: '2025-01-19',
-      from: 'María González',
-      status: 'completed',
-    },
-    {
-      id: '2',
-      type: 'expense',
-      amount: -25000,
-      currency: 'COP',
-      description: 'Compra en Marketplace',
-      date: '2025-01-18',
-      to: 'CoomÜnity Store',
-      status: 'completed',
-    },
-    {
-      id: '3',
-      type: 'reward',
-      amount: 25,
-      currency: 'UC',
-      description: 'Recompensa por Ayni',
-      date: '2025-01-18',
-      from: 'Sistema CoomÜnity',
-      status: 'completed',
-    },
-    {
-      id: '4',
-      type: 'transfer',
-      amount: 75000,
-      currency: 'COP',
-      description: 'Transferencia recibida',
-      date: '2025-01-17',
-      from: 'Carlos Ruiz',
-      status: 'pending',
-    },
-  ],
-
-  paymentMethods: [
-    {
-      id: '1',
-      name: 'CoomÜnity Card',
-      type: 'credit',
-      lastFour: '4721',
-      primary: true,
-    },
-    {
-      id: '2', 
-      name: 'Nequi',
-      type: 'digital',
-      lastFour: '8923',
-      primary: false,
-    }
-  ]
-};
-
+// 🎯 Interfaces para TabPanel
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -156,9 +58,14 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ pt: 3 }}>
-          {children}
-        </Box>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Box sx={{ pt: 3 }}>{children}</Box>
+        </motion.div>
       )}
     </div>
   );
@@ -168,86 +75,83 @@ export const Wallet: React.FC = () => {
   const { user } = useAuth();
   const [tabValue, setTabValue] = useState(0);
   const [balanceVisible, setBalanceVisible] = useState(true);
-  const [createTransactionModalOpen, setCreateTransactionModalOpen] = useState(false);
+  const [createTransactionModalOpen, setCreateTransactionModalOpen] =
+    useState(false);
 
-  // 🔗 Conectar al backend real con fallback a mock data
+  // 🔗 Hooks mejorados para datos del wallet
   const backendAvailability = useBackendAvailability();
-  const walletDataQuery = useWalletData(user?.id || 'mock-user-id');
-  const transactionsQuery = useWalletTransactions(user?.id || 'mock-user-id');
-
-  // 🎯 Decidir qué datos usar basado en disponibilidad del backend
-  const walletData = walletDataQuery.data || mockWalletData;
-  const transactions = transactionsQuery.data || mockWalletData.recentTransactions;
+  const walletDataQuery = useWalletData();
+  const transactionsQuery = useWalletTransactions();
+  const paymentMethodsQuery = usePaymentMethods();
+  const createTransactionMutation = useCreateTransaction();
 
   // 🔄 Función para refrescar datos
   const handleRefresh = () => {
-    if (walletDataQuery.refetch) {
-      walletDataQuery.refetch();
-    }
-    if (transactionsQuery.refetch) {
-      transactionsQuery.refetch();
-    }
+    walletDataQuery.refetch();
+    transactionsQuery.refetch();
+    paymentMethodsQuery.refetch();
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
-  const formatCurrency = (amount: number, currency: string = 'COP') => {
-    if (currency === 'UC') {
-      return `${amount} ÜCoins`;
-    }
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 0,
-    }).format(amount);
+  // 🎯 Handlers para acciones del wallet
+  const handleSendMoney = () => {
+    setCreateTransactionModalOpen(true);
   };
 
-  const getTransactionIcon = (type: string) => {
-    switch (type) {
-      case 'income':
-        return <TrendingUp sx={{ color: 'success.main' }} />;
-      case 'expense':
-        return <TrendingDown sx={{ color: 'error.main' }} />;
-      case 'reward':
-        return <CheckCircle sx={{ color: 'warning.main' }} />;
-      case 'transfer':
-        return <Send sx={{ color: 'info.main' }} />;
-      default:
-        return <AttachMoney />;
-    }
+  const handleReceiveMoney = () => {
+    // TODO: Implementar modal para recibir dinero/generar QR
+    console.log('🔗 Abriendo modal para recibir dinero');
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'success';
-      case 'pending':
-        return 'warning';
-      case 'failed':
-        return 'error';
-      default:
-        return 'default';
-    }
+  const handleViewHistory = () => {
+    setTabValue(1); // Cambiar a la pestaña de transacciones
   };
 
-  // 🎨 Normalizar datos del backend
-  const normalizedWalletData = {
-    balance: walletData.balance || mockWalletData.balance,
-    ucoins: walletData.ucoins || mockWalletData.ucoins,
-    pendingBalance: walletData.pendingBalance || mockWalletData.pendingBalance,
-    monthlyChange: walletData.monthlyChange || mockWalletData.monthlyChange,
-    accounts: walletData.accounts || mockWalletData.accounts,
-    paymentMethods: walletData.paymentMethods || mockWalletData.paymentMethods,
+  const handleExchangeCoins = () => {
+    // Se maneja desde WalletActions component
+    console.log('💱 Intercambio de monedas iniciado');
   };
+
+  const handleRequestPayment = () => {
+    // TODO: Implementar solicitud de pago
+    console.log('💰 Solicitando pago');
+  };
+
+  const handleTransactionClick = (transaction: any) => {
+    // TODO: Implementar vista detallada de transacción
+    console.log('📋 Ver detalles de transacción:', transaction.id);
+  };
+
+  const handleExportHistory = () => {
+    // TODO: Implementar exportación de historial
+    console.log('📥 Exportando historial de transacciones');
+  };
+
+  // 🎨 Preparar datos para componentes
+  const walletBalance = {
+    balance: walletDataQuery.data?.balance || 0,
+    ucoins: walletDataQuery.data?.ucoins || 0,
+    meritos: walletDataQuery.data?.meritos || 0,
+    ondas: walletDataQuery.data?.ondas || 0,
+  };
+
+  const isLoading = walletDataQuery.isLoading || transactionsQuery.isLoading;
+  const isRealTime = backendAvailability.isAvailable;
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
-      {/* 🔗 Backend Connection Status */}
-      {!backendAvailability.isAvailable && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
+      {/* 🔗 Estado de conexión del backend */}
+      {!isRealTime && (
+        <Alert severity="warning" sx={{ mb: 3 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ width: '100%' }}
+          >
             <Typography variant="body2">
               🔌 Modo Offline - Mostrando datos simulados del wallet
             </Typography>
@@ -263,8 +167,9 @@ export const Wallet: React.FC = () => {
         </Alert>
       )}
 
-      {(walletDataQuery.isLoading || transactionsQuery.isLoading) && (
-        <Card sx={{ mb: 2 }}>
+      {/* 🔄 Indicador de carga global */}
+      {isLoading && (
+        <Card sx={{ mb: 3 }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
               🔄 Sincronizando datos del wallet...
@@ -274,253 +179,165 @@ export const Wallet: React.FC = () => {
         </Card>
       )}
 
-      {/* Header del Wallet */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h4" fontWeight="bold" gutterBottom>
-            Mi Wallet CoomÜnity
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {backendAvailability.isAvailable ? 
-              '🌐 Datos en tiempo real' : 
-              '📱 Datos offline'}
-          </Typography>
-        </Box>
-        <Stack direction="row" spacing={1}>
-          <IconButton onClick={handleRefresh} disabled={walletDataQuery.isLoading}>
-            <Refresh />
-          </IconButton>
-          <IconButton onClick={() => setBalanceVisible(!balanceVisible)}>
-            {balanceVisible ? <VisibilityOff /> : <Visibility />}
-          </IconButton>
-        </Stack>
+      {/* 📊 Overview principal del wallet */}
+      <Box sx={{ mb: 4 }}>
+        <WalletOverview
+          walletData={
+            walletDataQuery.data || {
+              balance: 0,
+              currency: 'COP',
+              ucoins: 0,
+              meritos: 0,
+              ondas: 0,
+              pendingBalance: 0,
+              monthlyChange: 0,
+              ayniLevel: 25,
+              collaborationScore: 5.0,
+              communityRank: '#1,247',
+            }
+          }
+          balanceVisible={balanceVisible}
+          onToggleVisibility={() => setBalanceVisible(!balanceVisible)}
+          isLoading={isLoading}
+          isRealTime={isRealTime}
+        />
       </Box>
 
-      <Grid container spacing={3}>
-        {/* Balance Principal */}
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <Avatar sx={{ bgcolor: 'primary.main', mr: 2, width: 56, height: 56 }}>
-                  <AccountBalanceWallet sx={{ fontSize: 30 }} />
-                </Avatar>
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="h6" gutterBottom>
-                    Balance Principal
-                  </Typography>
-                  <Typography variant="h3" fontWeight="bold" color="primary.main">
-                    {balanceVisible ? formatCurrency(normalizedWalletData.balance) : '••••••'}
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                    <TrendingUp sx={{ color: 'success.main', fontSize: 20, mr: 0.5 }} />
-                    <Typography variant="body2" color="success.main">
-                      +{normalizedWalletData.monthlyChange}% este mes
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
+      {/* 🚀 Acciones rápidas del wallet */}
+      <Box sx={{ mb: 4 }}>
+        <WalletActions
+          walletBalance={walletBalance}
+          onSendMoney={handleSendMoney}
+          onReceiveMoney={handleReceiveMoney}
+          onViewHistory={handleViewHistory}
+          onExchangeCoins={handleExchangeCoins}
+          onRequestPayment={handleRequestPayment}
+          isLoading={isLoading}
+        />
+      </Box>
 
-              {/* ÜCoins */}
-              <Box sx={{ 
-                p: 2, 
-                bgcolor: 'warning.50', 
-                borderRadius: 2, 
-                border: 1,
-                borderColor: 'warning.200',
-                mb: 2
-              }}>
-                <Typography variant="h6" gutterBottom>
-                  ÜCoins CoomÜnity
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="warning.main">
-                  {balanceVisible ? `${normalizedWalletData.ucoins} UC` : '••• UC'}
-                </Typography>
-              </Box>
+      {/* 📋 Contenido con pestañas */}
+      <Card>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tabValue} onChange={handleTabChange}>
+            <Tab label="📊 Resumen" />
+            <Tab label="📝 Transacciones" />
+            <Tab label="💳 Métodos de Pago" />
+            <Tab label="⚙️ Configuración" />
+          </Tabs>
+        </Box>
 
-              {/* Balance Pendiente */}
-              <Box sx={{ 
-                p: 2, 
-                bgcolor: 'info.50', 
-                borderRadius: 2,
-                border: 1,
-                borderColor: 'info.200',
-              }}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Balance Pendiente
-                </Typography>
-                <Typography variant="h6" color="info.main">
-                  {balanceVisible ? formatCurrency(normalizedWalletData.pendingBalance) : '••••••'}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+        <AnimatePresence mode="wait">
+          {/* Panel de Resumen */}
+          <TabPanel value={tabValue} index={0}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              📊 Resumen de Cuentas CoomÜnity
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Gestiona tus diferentes cuentas y balances en el ecosistema
+              CoomÜnity.
+            </Typography>
 
-        {/* Acciones Rápidas */}
-        <Grid item xs={12} md={4}>
-          <Stack spacing={2}>
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<Add />}
-              fullWidth
-              sx={{ py: 2 }}
-            >
-              Recargar Wallet
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<Send />}
-              fullWidth
-              sx={{ py: 2 }}
-              onClick={() => setCreateTransactionModalOpen(true)}
-            >
-              Enviar Dinero
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<History />}
-              fullWidth
-              sx={{ py: 2 }}
-            >
-              Ver Historial
-            </Button>
-          </Stack>
-        </Grid>
-
-        {/* Pestañas de Contenido */}
-        <Grid item xs={12}>
-          <Card>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs value={tabValue} onChange={handleTabChange}>
-                <Tab label="Cuentas" />
-                <Tab label="Transacciones" />
-                <Tab label="Métodos de Pago" />
-                <Tab label="Configuración" />
-              </Tabs>
-            </Box>
-
-            {/* Panel de Cuentas */}
-            <TabPanel value={tabValue} index={0}>
-              <Typography variant="h6" gutterBottom>
-                Mis Cuentas CoomÜnity
-              </Typography>
-              <Typography variant="body2" color="text.secondary" paragraph>
-                Gestiona tus diferentes cuentas y balances en el ecosistema CoomÜnity.
-              </Typography>
-              
-              <Grid container spacing={2}>
-                {normalizedWalletData.accounts.map((account) => (
-                  <Grid item xs={12} sm={6} md={4} key={account.id}>
-                    <Card variant="outlined" sx={{ 
-                      border: account.primary ? 2 : 1, 
-                      borderColor: account.primary ? 'primary.main' : 'divider' 
-                    }}>
+            <Grid container spacing={3}>
+              {walletDataQuery.data?.accounts?.map((account, index) => (
+                <Grid item xs={12} sm={6} md={4} key={account.id}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Card
+                      variant="outlined"
+                      sx={{
+                        border: account.primary ? 2 : 1,
+                        borderColor: account.primary
+                          ? 'primary.main'
+                          : 'divider',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          transform: 'translateY(-2px)',
+                          boxShadow: 3,
+                        },
+                      }}
+                    >
                       <CardContent>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                          <Avatar sx={{ 
-                            bgcolor: account.primary ? 'primary.main' : 'grey.400',
-                            mr: 2 
-                          }}>
-                            <AccountBalanceWallet />
-                          </Avatar>
-                          <Box>
-                            <Typography variant="subtitle1" fontWeight="bold">
-                              {account.name}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              {account.type}
-                            </Typography>
-                          </Box>
-                        </Box>
-                        <Typography variant="h6" fontWeight="bold">
-                          {formatCurrency(account.balance, account.currency)}
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          gutterBottom
+                        >
+                          {account.name}
+                        </Typography>
+                        <Typography
+                          variant="h6"
+                          fontWeight="bold"
+                          color="primary.main"
+                        >
+                          {account.currency === 'UC'
+                            ? `${account.balance} ÜCoins`
+                            : new Intl.NumberFormat('es-CO', {
+                                style: 'currency',
+                                currency: 'COP',
+                                minimumFractionDigits: 0,
+                              }).format(account.balance)}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {account.type === 'checking'
+                            ? 'Cuenta corriente'
+                            : account.type === 'savings'
+                              ? 'Cuenta de ahorros'
+                              : 'Moneda digital'}
                         </Typography>
                         {account.primary && (
-                          <Chip label="Principal" size="small" color="primary" sx={{ mt: 1 }} />
+                          <Chip
+                            label="Principal"
+                            size="small"
+                            color="primary"
+                            sx={{ mt: 1 }}
+                          />
                         )}
                       </CardContent>
                     </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </TabPanel>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </TabPanel>
 
-            {/* Panel de Transacciones */}
-            <TabPanel value={tabValue} index={1}>
-              <Typography variant="h6" gutterBottom>
-                Transacciones Recientes
-              </Typography>
-              <Typography variant="body2" color="text.secondary" paragraph>
-                {backendAvailability.isAvailable ? 
-                  'Historial actualizado en tiempo real desde el servidor.' :
-                  'Mostrando transacciones simuladas - modo offline.'
-                }
-              </Typography>
+          {/* Panel de Transacciones */}
+          <TabPanel value={tabValue} index={1}>
+            <TransactionHistory
+              transactions={transactionsQuery.data || []}
+              isLoading={transactionsQuery.isLoading}
+              onTransactionClick={handleTransactionClick}
+              onExportHistory={handleExportHistory}
+            />
+          </TabPanel>
 
-              <List>
-                {transactions.map((transaction, index) => (
-                  <React.Fragment key={transaction.id}>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar>
-                          {getTransactionIcon(transaction.type)}
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={transaction.description}
-                        secondary={
-                          <Box>
-                            <Typography variant="body2" color="text.secondary">
-                              {transaction.from ? `De: ${transaction.from}` : ''}
-                              {transaction.to ? `Para: ${transaction.to}` : ''}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              {transaction.date}
-                            </Typography>
-                          </Box>
-                        }
-                      />
-                      <Box sx={{ textAlign: 'right' }}>
-                        <Typography 
-                          variant="subtitle1" 
-                          fontWeight="bold"
-                          color={transaction.amount > 0 ? 'success.main' : 'error.main'}
-                        >
-                          {transaction.amount > 0 ? '+' : ''}{formatCurrency(Math.abs(transaction.amount), transaction.currency)}
-                        </Typography>
-                        <Chip 
-                          label={transaction.status} 
-                          size="small" 
-                          color={getStatusColor(transaction.status) as any}
-                        />
-                      </Box>
-                    </ListItem>
-                    {index < transactions.length - 1 && <Divider />}
-                  </React.Fragment>
-                ))}
-              </List>
-            </TabPanel>
+          {/* Panel de Métodos de Pago */}
+          <TabPanel value={tabValue} index={2}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              💳 Métodos de Pago
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Gestiona tus métodos de pago y tarjetas vinculadas a tu wallet
+              CoomÜnity.
+            </Typography>
 
-            {/* Panel de Métodos de Pago */}
-            <TabPanel value={tabValue} index={2}>
-              <Typography variant="h6" gutterBottom>
-                Métodos de Pago
-              </Typography>
-              <Typography variant="body2" color="text.secondary" paragraph>
-                Gestiona tus métodos de pago y tarjetas vinculadas.
-              </Typography>
-
-              <Grid container spacing={2}>
-                {normalizedWalletData.paymentMethods.map((method) => (
-                  <Grid item xs={12} sm={6} key={method.id}>
+            <Grid container spacing={2}>
+              {paymentMethodsQuery.data?.map((method, index) => (
+                <Grid item xs={12} sm={6} key={method.id}>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
                     <Card variant="outlined">
                       <CardContent>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <CreditCard sx={{ mr: 2 }} />
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                        >
+                          <CreditCard sx={{ mr: 2, color: 'primary.main' }} />
                           <Box>
                             <Typography variant="subtitle1" fontWeight="bold">
                               {method.name}
@@ -531,61 +348,105 @@ export const Wallet: React.FC = () => {
                           </Box>
                         </Box>
                         {method.primary && (
-                          <Chip label="Principal" size="small" color="primary" />
+                          <Chip
+                            label="Principal"
+                            size="small"
+                            color="primary"
+                          />
                         )}
                       </CardContent>
                     </Card>
-                  </Grid>
-                ))}
-              </Grid>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
 
-              <Button variant="outlined" startIcon={<Add />} sx={{ mt: 2 }}>
-                Agregar Método de Pago
-              </Button>
-            </TabPanel>
+            <Button variant="outlined" startIcon={<Add />} sx={{ mt: 3 }}>
+              Agregar Método de Pago
+            </Button>
+          </TabPanel>
 
-            {/* Panel de Configuración */}
-            <TabPanel value={tabValue} index={3}>
-              <Typography variant="h6" gutterBottom>
-                Configuración del Wallet
-              </Typography>
-              <Typography variant="body2" color="text.secondary" paragraph>
-                Personaliza la configuración y seguridad de tu wallet.
-              </Typography>
+          {/* Panel de Configuración */}
+          <TabPanel value={tabValue} index={3}>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              ⚙️ Configuración del Wallet CoomÜnity
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Personaliza la configuración y seguridad de tu wallet siguiendo
+              los principios Ayni.
+            </Typography>
 
-              <Stack spacing={2}>
-                <Alert severity="info">
-                  <Typography variant="body2">
-                    🔐 Tu wallet está protegido con encriptación de extremo a extremo.
-                  </Typography>
-                </Alert>
+            <Stack spacing={3}>
+              <Alert severity="info" icon={<Settings />}>
+                <Typography variant="body2" fontWeight="bold">
+                  🔐 Seguridad del Wallet
+                </Typography>
+                <Typography variant="body2">
+                  Tu wallet está protegido con encriptación de extremo a extremo
+                  y autenticación multifactor.
+                </Typography>
+              </Alert>
 
-                <Alert severity="success">
-                  <Typography variant="body2">
-                    ✅ Sincronización automática con el backend {backendAvailability.isAvailable ? 'activa' : 'desactivada (modo offline)'}.
-                  </Typography>
-                </Alert>
+              <Alert severity="success" icon={<Analytics />}>
+                <Typography variant="body2" fontWeight="bold">
+                  ✅ Sincronización en Tiempo Real
+                </Typography>
+                <Typography variant="body2">
+                  Estado:{' '}
+                  {isRealTime
+                    ? 'Activa - Conectado al backend CoomÜnity'
+                    : 'Modo offline - Datos locales simulados'}
+                </Typography>
+              </Alert>
 
-                <Alert severity="warning">
-                  <Typography variant="body2">
-                    ⚠️ Las transacciones en ÜCoins utilizan tecnología blockchain para máxima seguridad.
-                  </Typography>
-                </Alert>
-              </Stack>
-            </TabPanel>
-          </Card>
-        </Grid>
-      </Grid>
+              <Alert severity="warning">
+                <Typography variant="body2" fontWeight="bold">
+                  🌟 Filosofía Ayni
+                </Typography>
+                <Typography variant="body2">
+                  Las transacciones en ÜCoins y Mëritos fortalecen el ecosistema
+                  de reciprocidad. Cada intercambio contribuye al Bien Común de
+                  la comunidad CoomÜnity.
+                </Typography>
+              </Alert>
+
+              <Alert severity="info">
+                <Typography variant="body2" fontWeight="bold">
+                  🔗 Tecnología Blockchain
+                </Typography>
+                <Typography variant="body2">
+                  Las transacciones en ÜCoins utilizan tecnología blockchain
+                  para máxima seguridad y transparencia.
+                </Typography>
+              </Alert>
+            </Stack>
+          </TabPanel>
+        </AnimatePresence>
+      </Card>
 
       {/* 💳 Modal para crear nueva transacción */}
       <CreateTransactionModal
         open={createTransactionModalOpen}
         onClose={() => setCreateTransactionModalOpen(false)}
-        walletBalance={{
-          balance: normalizedWalletData.balance,
-          ucoins: normalizedWalletData.ucoins,
-        }}
+        walletBalance={walletBalance}
       />
+
+      {/* 🚀 Botón flotante para acciones rápidas */}
+      <Zoom in={!isLoading}>
+        <Fab
+          color="primary"
+          aria-label="Nueva transacción"
+          sx={{
+            position: 'fixed',
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+          onClick={handleSendMoney}
+        >
+          <Send />
+        </Fab>
+      </Zoom>
     </Container>
   );
-}; 
+};

@@ -28,7 +28,7 @@ import {
   FormControlLabel,
   FormControl,
   Collapse,
-  Grid
+  Grid,
 } from '@mui/material';
 import {
   PlayArrow as PlayIcon,
@@ -134,6 +134,70 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
 }) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  
+  // ✅ Fetch video content from real Backend NestJS endpoint - MOVED BEFORE OTHER HOOKS
+  const { data: video, isLoading: videoLoading } = useQuery({
+    queryKey: ['video-item', videoItemId],
+    queryFn: async () => {
+      return await apiService.get(`/video-items/${videoItemId}`);
+    },
+    enabled: !!videoItemId,
+  });
+
+  // ✅ Fetch questions for the video from real Backend NestJS endpoint - MOVED BEFORE OTHER HOOKS
+  const { data: questions, isLoading: questionsLoading } = useQuery({
+    queryKey: ['video-questions', videoItemId],
+    queryFn: async () => {
+      return await apiService.get(`/questions/search?videoItemId=${videoItemId}`);
+    },
+    enabled: !!videoItemId,
+  });
+
+  // ✅ Fetch user progress (mock for now, to be implemented in backend) - MOVED BEFORE OTHER HOOKS
+  const { data: progress, isLoading: progressLoading } = useQuery({
+    queryKey: ['video-progress', videoItemId, user?.id],
+    queryFn: () => {
+      // Mock progress data until backend implements this endpoint
+      return Promise.resolve({
+        videoItemId,
+        currentTime: 0,
+        completed: false,
+        completedQuestions: [],
+        xpEarned: 0,
+        achievements: [],
+        notes: '',
+        bookmarked: false,
+        liked: false,
+      } as UserProgress);
+    },
+    enabled: !!videoItemId && !!user,
+  });
+
+  // ✅ EARLY RETURNS MOVED HERE - BEFORE OTHER HOOKS TO FOLLOW RULES OF HOOKS
+  if (videoLoading || progressLoading || questionsLoading) {
+    return (
+      <Box sx={{ p: 2 }}>
+        <LinearProgress />
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          {videoLoading ? 'Cargando video...' : 
+           questionsLoading ? 'Cargando preguntas...' : 
+           'Cargando progreso...'}
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!video) {
+    return (
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Typography variant="h6" color="text.secondary">
+          Video no encontrado
+        </Typography>
+      </Box>
+    );
+  }
+
+  // ✅ Now we can safely use hooks knowing the component will NOT early return
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -169,44 +233,6 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
   // 🎯 State for video info overlay visibility
   const [showVideoInfo, setShowVideoInfo] = useState(true);
   const videoInfoTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // ✅ Fetch video content from real Backend NestJS endpoint
-  const { data: video, isLoading: videoLoading } = useQuery({
-    queryKey: ['video-item', videoItemId],
-    queryFn: async () => {
-      return await apiService.get(`/video-items/${videoItemId}`);
-    },
-    enabled: !!videoItemId,
-  });
-
-  // ✅ Fetch questions for the video from real Backend NestJS endpoint
-  const { data: questions, isLoading: questionsLoading } = useQuery({
-    queryKey: ['video-questions', videoItemId],
-    queryFn: async () => {
-      return await apiService.get(`/questions/search?videoItemId=${videoItemId}`);
-    },
-    enabled: !!videoItemId,
-  });
-
-  // ✅ Fetch user progress (mock for now, to be implemented in backend)
-  const { data: progress, isLoading: progressLoading } = useQuery({
-    queryKey: ['video-progress', videoItemId, user?.id],
-    queryFn: () => {
-      // Mock progress data until backend implements this endpoint
-      return Promise.resolve({
-        videoItemId,
-        currentTime: 0,
-        completed: false,
-        completedQuestions: [],
-        xpEarned: 0,
-        achievements: [],
-        notes: '',
-        bookmarked: false,
-        liked: false,
-      } as UserProgress);
-    },
-    enabled: !!videoItemId && !!user,
-  });
 
   // ✅ Update progress mutation (mock for now, to be implemented in backend)
   const updateProgressMutation = useMutation({
@@ -567,29 +593,6 @@ const InteractiveVideoPlayer: React.FC<InteractiveVideoPlayerProps> = ({
       }
     }
   }, [video?.url, video?.duration]);
-
-  if (videoLoading || progressLoading || questionsLoading) {
-    return (
-      <Box sx={{ p: 2 }}>
-        <LinearProgress />
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          {videoLoading ? 'Cargando video...' : 
-           questionsLoading ? 'Cargando preguntas...' : 
-           'Cargando progreso...'}
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (!video) {
-    return (
-      <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography variant="h6" color="text.secondary">
-          Video no encontrado
-        </Typography>
-      </Box>
-    );
-  }
 
   return (
     <Box ref={containerRef} sx={{ position: 'relative', bgcolor: 'black', borderRadius: 2, overflow: 'hidden' }}>

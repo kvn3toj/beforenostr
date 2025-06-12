@@ -281,7 +281,7 @@ const VideoLibrary: React.FC<VideoLibraryProps> = ({
         <CardContent sx={{ p: 3 }}>
           <Grid container spacing={3} alignItems="center">
             {/* Video Thumbnail/Avatar */}
-            <Grid item xs={12} sm={2}>
+            <Grid size={{ xs: 12, sm: 2 }}>
               <Box
                 sx={{
                   position: 'relative',
@@ -322,7 +322,7 @@ const VideoLibrary: React.FC<VideoLibraryProps> = ({
             </Grid>
 
             {/* Video Information */}
-            <Grid item xs={12} sm={7}>
+            <Grid size={{ xs: 12, sm: 7 }}>
               <Typography
                 variant="h6"
                 sx={{
@@ -402,7 +402,7 @@ const VideoLibrary: React.FC<VideoLibraryProps> = ({
             </Grid>
 
             {/* Metrics and Actions */}
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <Box sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
                 {/* Duration and Questions */}
                 <Typography
@@ -551,7 +551,7 @@ const VideoLibrary: React.FC<VideoLibraryProps> = ({
           <Collapse in={showFilters}>
             <Divider sx={{ my: 2 }} />
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <FormControl fullWidth size="small">
                   <InputLabel>Categoría</InputLabel>
                   <Select
@@ -571,7 +571,7 @@ const VideoLibrary: React.FC<VideoLibraryProps> = ({
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <FormControl fullWidth size="small">
                   <InputLabel>Plataforma</InputLabel>
                   <Select
@@ -591,7 +591,7 @@ const VideoLibrary: React.FC<VideoLibraryProps> = ({
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <FormControl fullWidth size="small">
                   <InputLabel>Duración</InputLabel>
                   <Select
@@ -609,7 +609,7 @@ const VideoLibrary: React.FC<VideoLibraryProps> = ({
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <FormControlLabel
                   control={
                     <Checkbox

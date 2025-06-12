@@ -122,7 +122,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
     try {
       await createPostMutation.mutateAsync({
         content: content.trim(),
-        type: selectedMedia ? mediaType! : 'text',
+        type: selectedMedia ? (mediaType! === 'image' ? 'IMAGE' : 'VIDEO') : 'TEXT',
         media: selectedMedia || undefined
       });
 
@@ -186,6 +186,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
               maxRows={8}
               fullWidth
               variant="outlined"
+              data-testid="create-post-input"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
@@ -360,6 +361,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
               (!content.trim() && !selectedMedia)
             }
             startIcon={<SendIcon />}
+                          data-testid="create-post-button"
             sx={{
               borderRadius: 2,
               backgroundColor: '#E91E63',

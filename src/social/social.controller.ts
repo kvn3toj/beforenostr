@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Req, UseGuards, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Req, UseGuards, Inject, Delete } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SocialService } from './social.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Controller('social')
 export class SocialController {
@@ -39,5 +40,19 @@ export class SocialController {
   async toggleLike(@Param('id') publicationId: string, @Req() req: any) {
     console.log('>>> SocialController.toggleLike: Starting...', { publicationId, userId: req.user?.id });
     return this.socialService.toggleLike(publicationId, req.user.id);
+  }
+
+  @Post('publications/:id/comments')
+  @UseGuards(JwtAuthGuard)
+  async createComment(@Param('id') publicationId: string, @Body() dto: CreateCommentDto, @Req() req: any) {
+    console.log('>>> SocialController.createComment: Starting...', { publicationId, dto, userId: req.user?.id });
+    return this.socialService.createComment(publicationId, dto, req.user.id);
+  }
+
+  @Delete('comments/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteComment(@Param('id') commentId: string, @Req() req: any) {
+    console.log('>>> SocialController.deleteComment: Starting...', { commentId, userId: req.user?.id });
+    return this.socialService.deleteComment(commentId, req.user.id);
   }
 } 

@@ -15,5 +15,21 @@
   "outputDir": "src/components/builder",
   "componentsDir": "src/components",
   "pagesDir": "src/pages",
-  "modelsDir": "src/models/builder"
+  "modelsDir": "src/models/builder",
+  "iframe": {
+    "sandbox": "allow-scripts allow-same-origin allow-forms allow-popups allow-pointer-lock allow-popups-to-escape-sandbox",
+    "allowFullscreen": true,
+    "loading": "lazy"
+  },
+  "security": {
+    "allowCookies": true,
+    "allowLocalStorage": true,
+    "allowSessionStorage": true,
+    "corsPolicy": "permissive"
+  },
+  "development": {
+    "disableCookieWarnings": true,
+    "enableConsoleLogs": false,
+    "suppressSecurityWarnings": true
+  }
 } 

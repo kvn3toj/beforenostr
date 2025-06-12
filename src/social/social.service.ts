@@ -1,6 +1,7 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Injectable()
 export class SocialService {
@@ -228,6 +229,77 @@ export class SocialService {
       return result;
     } catch (error) {
       console.error('>>> SocialService.toggleLike: Error toggling like:', error);
+      throw error;
+    }
+  }
+
+  async createComment(publicationId: string, dto: CreateCommentDto, userId: string) {
+    console.log('>>> SocialService.createComment: Starting...', { publicationId, dto, userId });
+    try {
+      // Verificar que la publicación existe
+      const publication = await this.prisma.publication.findUnique({
+        where: { id: publicationId }
+      });
+
+      if (!publication) {
+        throw new NotFoundException('Publicación no encontrada');
+      }
+
+      // Crear el comentario
+      const comment = await this.prisma.comment.create({
+        data: {
+          text: dto.content,
+          publicationId: publicationId,
+          userId: userId,
+        },
+        include: {
+          user: { 
+            select: { 
+              id: true, 
+              name: true, 
+              username: true,
+              avatarUrl: true,
+              email: true
+            } 
+          }
+        }
+      });
+
+      console.log('>>> SocialService.createComment: Created comment with ID:', comment.id);
+      return comment;
+    } catch (error) {
+      console.error('>>> SocialService.createComment: Error creating comment:', error);
+      throw error;
+    }
+  }
+
+  async deleteComment(commentId: string, userId: string) {
+    console.log('>>> SocialService.deleteComment: Starting...', { commentId, userId });
+    try {
+      // Buscar el comentario
+      const comment = await this.prisma.comment.findUnique({
+        where: { id: commentId }
+      });
+
+      if (!comment) {
+        throw new NotFoundException('Comentario no encontrado');
+      }
+
+      // Verificar que el usuario es el autor del comentario
+      if (comment.userId !== userId) {
+        console.log('>>> SocialService.deleteComment: Access denied - user is not the author');
+        throw new ForbiddenException('Solo puedes eliminar tus propios comentarios');
+      }
+
+      // Eliminar el comentario
+      await this.prisma.comment.delete({
+        where: { id: commentId }
+      });
+
+      console.log('>>> SocialService.deleteComment: Comment deleted successfully');
+      return { message: 'Comentario eliminado exitosamente' };
+    } catch (error) {
+      console.error('>>> SocialService.deleteComment: Error deleting comment:', error);
       throw error;
     }
   }

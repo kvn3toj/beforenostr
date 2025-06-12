@@ -96,6 +96,76 @@
   transition: all var(--transition-normal);
 }
 
+/* ===== MOBILE GRID IMPROVEMENTS ===== */
+.marketplace-mobile-grid {
+  padding: var(--space-sm) !important;
+  gap: var(--space-md) !important;
+}
+
+.marketplace-mobile-grid .MuiGrid-item {
+  padding: 0 !important;
+  margin-bottom: var(--space-sm) !important;
+}
+
+/* Mobile Cards Enhanced */
+.marketplace-card.card-micro-interactive {
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all var(--transition-normal) !important;
+  background: var(--surface-primary) !important;
+  overflow: hidden !important;
+  height: 100% !important;
+  min-height: 280px !important;
+}
+
+.marketplace-card.card-micro-interactive:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+@media (min-width: 600px) {
+  .marketplace-card.card-micro-interactive {
+    min-height: 300px !important;
+    border-radius: var(--radius-lg) !important;
+  }
+}
+
+/* Mobile Card Content */
+.marketplace-card .MuiCardContent-root {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+  padding: 14px !important;
+  justify-content: space-between !important;
+}
+
+@media (min-width: 600px) {
+  .marketplace-card .MuiCardContent-root {
+    padding: 16px !important;
+  }
+}
+
+/* Mobile Image Container */
+.marketplace-card-image-container {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.marketplace-card-image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 60%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
 .marketplace-mobile-header--elevated {
   box-shadow: var(--shadow-lg);
 }

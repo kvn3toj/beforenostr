@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useStandardQuery } from './useSmartQuery';
-import { authAPI, userAPI } from '../lib/api-service';
+import { authAPI, userAPI, gameAPI, apiService } from '../lib/api-service';
 import { useAuth } from '../contexts/AuthContext';
 
 // 🎯 Interfaces para el perfil de usuario completo
@@ -51,6 +51,31 @@ export interface UpdateProfileData {
   website?: string;
   skills?: string[];
   preferences?: UserProfile['preferences'];
+  avatar_url?: string;
+}
+
+// 🎯 Interface para actividades del usuario
+export interface UserActivity {
+  id: string;
+  type: 'challenge' | 'marketplace' | 'social' | 'uplay' | 'wallet';
+  title: string;
+  description: string;
+  timestamp: string;
+  points?: number;
+  category?: string;
+  metadata?: Record<string, any>;
+}
+
+// 🏆 Interface para logros
+export interface UserAchievement {
+  id: string;
+  name: string;
+  description: string;
+  unlockedAt?: string;
+  progress?: number;
+  maxProgress?: number;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  category: string;
 }
 
 // 🔍 Hook para obtener el perfil del usuario actual - CACHÉ ESTÁNDAR
@@ -63,14 +88,17 @@ export function useCurrentUserProfile() {
       try {
         // Intentar obtener perfil completo del endpoint específico
         const profileData = await authAPI.getCurrentUser();
-        
+
         return {
           id: profileData.id || user?.id,
           email: profileData.email || user?.email,
-          full_name: profileData.full_name || profileData.name || user?.full_name,
-          avatar_url: profileData.avatar_url || profileData.avatarUrl || user?.avatar_url,
+          full_name:
+            profileData.full_name || profileData.name || user?.full_name,
+          avatar_url:
+            profileData.avatar_url || profileData.avatarUrl || user?.avatar_url,
           role: profileData.role || user?.role || 'user',
-          created_at: profileData.created_at || profileData.createdAt || user?.created_at,
+          created_at:
+            profileData.created_at || profileData.createdAt || user?.created_at,
           bio: profileData.bio,
           location: profileData.location,
           phone: profileData.phone,
@@ -84,12 +112,16 @@ export function useCurrentUserProfile() {
               email: profileData.preferences?.notifications?.email ?? true,
               push: profileData.preferences?.notifications?.push ?? true,
               sms: profileData.preferences?.notifications?.sms ?? false,
-              marketing: profileData.preferences?.notifications?.marketing ?? false,
+              marketing:
+                profileData.preferences?.notifications?.marketing ?? false,
             },
             privacy: {
-              profileVisible: profileData.preferences?.privacy?.profileVisible ?? true,
-              showEarnings: profileData.preferences?.privacy?.showEarnings ?? false,
-              showLocation: profileData.preferences?.privacy?.showLocation ?? true,
+              profileVisible:
+                profileData.preferences?.privacy?.profileVisible ?? true,
+              showEarnings:
+                profileData.preferences?.privacy?.showEarnings ?? false,
+              showLocation:
+                profileData.preferences?.privacy?.showLocation ?? true,
               showEmail: profileData.preferences?.privacy?.showEmail ?? false,
             },
             theme: profileData.preferences?.theme || 'light',
@@ -98,12 +130,15 @@ export function useCurrentUserProfile() {
             level: profileData.stats?.level || 1,
             points: profileData.stats?.points || 0,
             completedTasks: profileData.stats?.completedTasks || 0,
-            memberSince: profileData.created_at || profileData.createdAt || user?.created_at,
+            memberSince:
+              profileData.created_at ||
+              profileData.createdAt ||
+              user?.created_at,
           },
         } as UserProfile;
       } catch (error) {
         console.warn('🔄 Fallback: Usando datos básicos del AuthContext');
-        
+
         // Fallback: usar datos del contexto de autenticación
         if (!user) {
           throw new Error('No hay usuario autenticado');
@@ -152,7 +187,10 @@ export function useCurrentUserProfile() {
       enabled: isAuthenticated && !!user,
       retry: (failureCount, error: any) => {
         // No reintentar si es error de autenticación
-        if (error?.message?.includes('401') || error?.message?.includes('Unauthorized')) {
+        if (
+          error?.message?.includes('401') ||
+          error?.message?.includes('Unauthorized')
+        ) {
           return false;
         }
         return failureCount < 2;
@@ -197,46 +235,51 @@ export function useUpdateUserProfile() {
       try {
         // Intentar actualizar con endpoint específico de perfil
         const updatedProfile = await authAPI.updateProfile(updates);
-        
+
         // También actualizar en el AuthContext
         await updateAuthProfile(updates);
-        
+
         return updatedProfile;
       } catch (error: any) {
         console.error('Error actualizando perfil:', error);
-        
+
         // Intentar con el contexto de autenticación como fallback
-        if (error?.message?.includes('404') || error?.message?.includes('Cannot')) {
+        if (
+          error?.message?.includes('404') ||
+          error?.message?.includes('Cannot')
+        ) {
           console.warn('🔄 Fallback: Usando updateProfile del AuthContext');
           await updateAuthProfile(updates);
           return updates;
         }
-        
+
         throw error;
       }
     },
     onSuccess: (updatedProfile) => {
       // Invalidar caché del perfil para forzar refetch
       queryClient.invalidateQueries({ queryKey: ['user-profile', 'current'] });
-      
+
       // Opcional: también invalidar otros datos relacionados
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      
+
       if (import.meta.env.DEV) {
         console.log('✅ Perfil actualizado exitosamente:', updatedProfile);
       }
     },
     onError: (error: any) => {
       console.error('❌ Error actualizando perfil:', error);
-      
+
       // Disparar evento para notificaciones
-      window.dispatchEvent(new CustomEvent('user-notification', {
-        detail: {
-          type: 'error',
-          message: error.message || 'Error al actualizar el perfil',
-          category: 'profile-update'
-        }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('user-notification', {
+          detail: {
+            type: 'error',
+            message: error.message || 'Error al actualizar el perfil',
+            category: 'profile-update',
+          },
+        })
+      );
     },
   });
 }
@@ -250,16 +293,18 @@ export function useProfileStats(userId?: string) {
     ['user-profile-stats', targetUserId],
     async () => {
       if (!targetUserId) throw new Error('No user ID provided');
-      
+
       try {
         // Intentar obtener estadísticas del backend
         const stats = await userAPI.getProfile(targetUserId);
-        return stats.stats || {
-          level: 1,
-          points: 0,
-          completedTasks: 0,
-          memberSince: user?.created_at || new Date().toISOString(),
-        };
+        return (
+          stats.stats || {
+            level: 1,
+            points: 0,
+            completedTasks: 0,
+            memberSince: user?.created_at || new Date().toISOString(),
+          }
+        );
       } catch (error) {
         console.warn('🔄 Fallback: Estadísticas básicas');
         return {
@@ -285,7 +330,7 @@ export function useUserPreferences() {
     ['user-preferences', user?.id],
     async () => {
       if (!user?.id) throw new Error('No user authenticated');
-      
+
       try {
         const profile = await authAPI.getCurrentUser();
         return profile.preferences || getDefaultPreferences();
@@ -340,21 +385,207 @@ export function useInvalidateProfile() {
   };
 }
 
+// 🎮 Hook para actividades del usuario
+export function useUserActivities(userId?: string, limit: number = 20) {
+  const { user } = useAuth();
+  const targetUserId = userId || user?.id;
+
+  return useStandardQuery(
+    ['user-activities', targetUserId, limit],
+    async () => {
+      if (!targetUserId) throw new Error('No user ID provided');
+
+      try {
+        // Intentar obtener actividades del backend
+        const response = await userAPI.getProfile(targetUserId);
+        return response.activities || [];
+      } catch (error) {
+        console.warn('🔄 Fallback: Actividades mock');
+        // Retornar datos mock si no hay backend disponible
+        return mockUserActivities;
+      }
+    },
+    {
+      enabled: !!targetUserId,
+      retry: false,
+    }
+  );
+}
+
+// 🏆 Hook para logros del usuario
+export function useUserAchievements(userId?: string) {
+  const { user } = useAuth();
+  const targetUserId = userId || user?.id;
+
+  return useStandardQuery(
+    ['user-achievements', targetUserId],
+    async () => {
+      if (!targetUserId) throw new Error('No user ID provided');
+
+      try {
+        // Intentar obtener logros del backend
+        const response = await userAPI.getProfile(targetUserId);
+        return response.achievements || [];
+      } catch (error) {
+        console.warn('🔄 Fallback: Logros mock');
+        // Retornar datos mock si no hay backend disponible
+        return mockUserAchievements;
+      }
+    },
+    {
+      enabled: !!targetUserId,
+      retry: false,
+    }
+  );
+}
+
+// 📸 Hook para actualizar avatar
+export function useUpdateAvatar() {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (imageFile: File) => {
+      try {
+        // Crear FormData para subir imagen
+        const formData = new FormData();
+        formData.append('avatar', imageFile);
+
+        // Intentar subir al endpoint específico de avatar
+        const response = await fetch('/api/auth/avatar', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('coomunity_token')}`,
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al subir avatar');
+        }
+
+        const result = await response.json();
+        return result.avatar_url;
+      } catch (error: any) {
+        console.error('Error uploading avatar:', error);
+
+        // Fallback: convertir a base64 y almacenar localmente (desarrollo)
+        if (import.meta.env.DEV) {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target?.result as string);
+            reader.readAsDataURL(imageFile);
+          });
+        }
+
+        throw error;
+      }
+    },
+    onSuccess: (avatarUrl) => {
+      // Invalidar caché del perfil para refrescar avatar
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+
+      if (import.meta.env.DEV) {
+        console.log('✅ Avatar actualizado exitosamente:', avatarUrl);
+      }
+    },
+    onError: (error: any) => {
+      console.error('❌ Error actualizando avatar:', error);
+
+      // Disparar evento para notificaciones
+      window.dispatchEvent(
+        new CustomEvent('user-notification', {
+          detail: {
+            type: 'error',
+            message: error.message || 'Error al actualizar avatar',
+            category: 'avatar-update',
+          },
+        })
+      );
+    },
+  });
+}
+
+// 📊 Hook para métricas de gamificación extendidas
+export function useGamificationMetrics(userId?: string) {
+  const { user } = useAuth();
+  const targetUserId = userId || user?.id;
+
+  return useStandardQuery(
+    ['gamification-metrics', targetUserId],
+    async () => {
+      if (!targetUserId) throw new Error('No user ID provided');
+
+      try {
+        // Intentar obtener métricas del backend
+        const response = await gameAPI.getUserStats(targetUserId);
+        return response;
+      } catch (error) {
+        console.warn('🔄 Fallback: Métricas mock');
+        // Retornar datos mock si no hay backend disponible
+        return {
+          level: 15,
+          meritos: 2450,
+          ondas: 1875,
+          ayniLevel: 78,
+          completedChallenges: 23,
+          socialConnections: 147,
+          marketplaceRating: 4.8,
+          pilgrimProgress: 65,
+        };
+      }
+    },
+    {
+      enabled: !!targetUserId,
+      retry: false,
+    }
+  );
+}
+
+// 🔗 Hook para conexiones sociales
+export function useSocialConnections(userId?: string) {
+  const { user } = useAuth();
+  const targetUserId = userId || user?.id;
+
+  return useStandardQuery(
+    ['social-connections', targetUserId],
+    async () => {
+      if (!targetUserId) throw new Error('No user ID provided');
+
+      try {
+        // Intentar obtener conexiones del backend social
+        const response = await apiService.get(
+          `/social/connections/${targetUserId}`
+        );
+        return response.data || [];
+      } catch (error) {
+        console.warn('🔄 Fallback: Conexiones mock');
+        // Retornar datos mock si no hay backend disponible
+        return [];
+      }
+    },
+    {
+      enabled: !!targetUserId,
+      retry: false,
+    }
+  );
+}
+
 // 📝 Utilidades de validación para actualización de perfil
 export const profileValidation = {
   validateName: (name: string): boolean => {
     return name.length >= 2 && name.length <= 50;
   },
-  
+
   validateBio: (bio: string): boolean => {
     return bio.length <= 500;
   },
-  
+
   validatePhone: (phone: string): boolean => {
     const phoneRegex = /^[+]?[\d\s\-\(\)]{10,15}$/;
     return !phone || phoneRegex.test(phone);
   },
-  
+
   validateWebsite: (website: string): boolean => {
     if (!website) return true;
     try {
@@ -364,29 +595,87 @@ export const profileValidation = {
       return false;
     }
   },
-  
-  validateProfileData: (data: UpdateProfileData): { isValid: boolean; errors: string[] } => {
+
+  validateProfileData: (
+    data: UpdateProfileData
+  ): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
-    
+
     if (data.full_name && !profileValidation.validateName(data.full_name)) {
       errors.push('El nombre debe tener entre 2 y 50 caracteres');
     }
-    
+
     if (data.bio && !profileValidation.validateBio(data.bio)) {
       errors.push('La biografía no puede exceder 500 caracteres');
     }
-    
+
     if (data.phone && !profileValidation.validatePhone(data.phone)) {
       errors.push('El formato del teléfono no es válido');
     }
-    
+
     if (data.website && !profileValidation.validateWebsite(data.website)) {
       errors.push('La URL del sitio web no es válida');
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors,
     };
   },
-}; 
+};
+
+// 📊 Datos mock para desarrollo (remover cuando el backend esté listo)
+const mockUserActivities: UserActivity[] = [
+  {
+    id: '1',
+    type: 'challenge',
+    title: 'Completaste "Desafío Ayni Diario"',
+    description: 'Ayudaste a 3 miembros de la CoomÜnidad',
+    timestamp: '2024-12-18T10:30:00Z',
+    points: 150,
+    category: 'Reciprocidad',
+  },
+  {
+    id: '2',
+    type: 'marketplace',
+    title: 'Nueva reseña recibida',
+    description: 'María valoró tu servicio con 5 estrellas',
+    timestamp: '2024-12-18T09:15:00Z',
+    category: 'Confianza',
+  },
+  {
+    id: '3',
+    type: 'social',
+    title: 'Te conectaste con Juan Carlos',
+    description: 'Nueva colaboración iniciada',
+    timestamp: '2024-12-17T16:45:00Z',
+    category: 'Red Social',
+  },
+];
+
+const mockUserAchievements: UserAchievement[] = [
+  {
+    id: '1',
+    name: 'Maestro del Ayni',
+    description: 'Mantuviste equilibrio perfecto por 30 días',
+    unlockedAt: '2024-12-15T12:00:00Z',
+    rarity: 'legendary',
+    category: 'Reciprocidad',
+  },
+  {
+    id: '2',
+    name: 'Colaborador Confiable',
+    description: 'Recibiste 50+ reseñas positivas',
+    unlockedAt: '2024-12-10T15:30:00Z',
+    rarity: 'epic',
+    category: 'Marketplace',
+  },
+  {
+    id: '3',
+    name: 'Explorador Social',
+    description: 'Conectaste con 100+ miembros',
+    unlockedAt: '2024-12-05T09:45:00Z',
+    rarity: 'rare',
+    category: 'Social',
+  },
+];

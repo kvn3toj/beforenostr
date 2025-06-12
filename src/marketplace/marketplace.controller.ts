@@ -16,7 +16,7 @@ export class MarketplaceController {
    */
   @Post('items')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'USER')
   async createItem(@Body() dto: CreateMarketplaceItemDto, @Req() req: any) {
     console.log('>>> MarketplaceController.createItem: Creating marketplace item', dto);
     
@@ -36,7 +36,7 @@ export class MarketplaceController {
    */
   @Get('items/search')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'USER')
   async searchItems(
     @Query('query') query?: string,
     @Query('type') type?: string,
@@ -64,19 +64,17 @@ export class MarketplaceController {
   }
 
   /**
-   * Obtener todos los items del marketplace (sin filtros)
+   * Obtener todos los items del marketplace (sin filtros) - ENDPOINT PÚBLICO
    */
   @Get('items')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'user')
   async getAllItems(
     @Query('limit') limit?: string,
     @Query('offset') offset?: string
   ) {
-    console.log('>>> MarketplaceController.getAllItems: Getting all marketplace items');
+    console.log('>>> MarketplaceController.getAllItems: Getting all marketplace items (PUBLIC)');
     
     const searchDto: MarketplaceSearchDto = { limit, offset };
-    return await this.marketplaceService.searchItems(searchDto);
+    return await this.marketplaceService.findAllActiveItems(searchDto);
   }
 
   /**
@@ -84,7 +82,7 @@ export class MarketplaceController {
    */
   @Get('items/:itemId')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'USER')
   async getItem(@Param('itemId') itemId: string) {
     console.log('>>> MarketplaceController.getItem: Getting marketplace item', itemId);
     return await this.marketplaceService.getItem(itemId);
@@ -95,7 +93,7 @@ export class MarketplaceController {
    */
   @Put('items/:itemId')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'USER')
   async updateItem(
     @Param('itemId') itemId: string,
     @Body() dto: UpdateMarketplaceItemDto,
@@ -117,7 +115,7 @@ export class MarketplaceController {
    */
   @Delete('items/:itemId')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'USER')
   async deleteItem(
     @Param('itemId') itemId: string,
     @Req() req: any
@@ -138,7 +136,7 @@ export class MarketplaceController {
    */
   @Get('sellers/:sellerId/items')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'USER')
   async getSellerItems(@Param('sellerId') sellerId: string) {
     console.log('>>> MarketplaceController.getSellerItems: Getting items for seller', sellerId);
     return await this.marketplaceService.getSellerItems(sellerId);
@@ -149,7 +147,7 @@ export class MarketplaceController {
    */
   @Get('my-items')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'USER')
   async getMyItems(@Req() req: any) {
     console.log('>>> MarketplaceController.getMyItems: Getting items for authenticated user');
     

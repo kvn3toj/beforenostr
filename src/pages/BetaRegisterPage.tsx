@@ -24,7 +24,9 @@ import { useAuthStore } from '../store/authStore';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SecurityIcon from '@mui/icons-material/Security';
 import GroupsIcon from '@mui/icons-material/Groups';
-import EcoIcon from '@mui/icons-material/Eco';
+import EnergySavingsLeafIcon from '@mui/icons-material/EnergySavingsLeaf';
+
+// Fixed: Replaced non-existent EcoIcon with EnergySavingsLeafIcon
 
 interface BetaRegistrationData {
   email: string;
@@ -300,7 +302,7 @@ export const BetaRegisterPage: React.FC = () => {
         return (
           <Box>
             <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <EcoIcon color="primary" />
+                              <EnergySavingsLeafIcon color="primary" />
               Experiencia y Motivación
             </Typography>
             <TextField

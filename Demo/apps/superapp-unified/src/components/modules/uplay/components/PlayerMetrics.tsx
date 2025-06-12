@@ -101,7 +101,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
       <CardContent sx={{ p: 3 }}>
         {/* Core Metrics Grid */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={6} md={3}>
+          <Grid size={{ xs: 6, md: 3 }}>
             <Box textAlign="center">
               <Typography
                 variant="h3"
@@ -115,7 +115,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
                   mb: 1,
                 }}
               >
-                {gameState.merits.toLocaleString()}
+                {(gameState.merits || 0).toLocaleString()}
               </Typography>
               <Typography
                 variant="body2"
@@ -137,7 +137,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
             </Box>
           </Grid>
 
-          <Grid item xs={6} md={3}>
+          <Grid size={{ xs: 6, md: 3 }}>
             <Box textAlign="center">
               <Typography
                 variant="h3"
@@ -173,7 +173,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
             </Box>
           </Grid>
 
-          <Grid item xs={6} md={3}>
+          <Grid size={{ xs: 6, md: 3 }}>
             <Box textAlign="center">
               <Typography
                 variant="h3"
@@ -216,7 +216,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
             </Box>
           </Grid>
 
-          <Grid item xs={6} md={3}>
+          <Grid size={{ xs: 6, md: 3 }}>
             <Box textAlign="center">
               <Typography
                 variant="h3"
@@ -259,7 +259,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
 
         {/* Engagement and Performance Metrics */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box>
               <Typography
                 variant="h6"
@@ -303,7 +303,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box>
               <Typography
                 variant="h6"
@@ -367,7 +367,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
           </Typography>
 
           <Grid container spacing={3}>
-            <Grid item xs={6} md={3}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Box textAlign="center">
                 <Typography
                   variant="h5"
@@ -382,7 +382,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
               </Box>
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Box textAlign="center">
                 <Typography
                   variant="h5"
@@ -397,7 +397,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
               </Box>
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Box textAlign="center">
                 <Typography
                   variant="h5"
@@ -412,7 +412,7 @@ const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
               </Box>
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Box textAlign="center">
                 <Typography
                   variant="h5"

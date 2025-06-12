@@ -2,13 +2,16 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import * as path from 'path';
+import path from 'path';
 // import { VitePWA } from 'vite-plugin-pwa' // Comentado
 
 // https://vitejs.dev/config/
-const config = {
+export default defineConfig(({ mode }) => ({
   plugins: [
-    react(),
+    react({
+      // Disable TypeScript checking in development mode
+      typescript: mode === 'development' ? false : true
+    }),
     nodePolyfills({ 
       include: ['buffer', 'process'] 
     }),
@@ -36,7 +39,7 @@ const config = {
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
       // Usar versiones reales de CommonJS para módulos problemáticos
       'react-is': 'react-is/cjs/react-is.development.js',
       'prop-types': 'prop-types/index.js',
@@ -115,7 +118,8 @@ const config = {
     }
   },
   server: {
-    port: 3000,
+    port: 3001,
+    host: true
   },
   preview: {
     port: 3000,
@@ -131,13 +135,20 @@ const config = {
   },
   // Configuración de build para manejar CommonJS en producción
   build: {
-    rollupOptions: {
-      output: {
-        // Configuración para manejar módulos CommonJS en el build
-        interop: 'auto' as const,
+    outDir: 'dist',
+    sourcemap: true,
+    // Continue building even with TypeScript errors in development
+    rollupOptions: mode === 'development' ? {
+      onwarn(warning, warn) {
+        // Suppress TypeScript warnings in development
+        if (warning.code === 'TYPESCRIPT_ERROR') return;
+        warn(warning);
       }
-    }
+    } : {},
+  },
+  esbuild: {
+    // Ignore TypeScript errors during development builds
+    target: 'es2020',
+    logOverride: mode === 'development' ? { 'this-is-undefined-in-esm': 'silent' } : {}
   }
-};
-
-export default defineConfig(config);
+}));

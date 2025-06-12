@@ -1,0 +1,363 @@
+/* 🎨 Estilos específicos para el perfil mejorado de CoomÜnity */
+
+/* Animaciones suaves para las métricas */
+.metric-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Gradientes específicos de CoomÜnity */
+.coomunity-gradient-ayni {
+  background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+}
+
+.coomunity-gradient-merito {
+  background: linear-gradient(135deg, #ffd700 0%, #ffa000 100%);
+}
+
+.coomunity-gradient-onda {
+  background: linear-gradient(135deg, #00ced1 0%, #20b2aa 100%);
+}
+
+.coomunity-gradient-social {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+}
+
+.coomunity-gradient-marketplace {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+}
+
+.coomunity-gradient-uplay {
+  background: linear-gradient(135deg, #ff5722 0%, #d84315 100%);
+}
+
+/* Efectos de cristal para el header */
+.glass-effect {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Animaciones para los logros */
+@keyframes achievement-unlock {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.achievement-unlocked {
+  animation: achievement-unlock 0.6s ease-in-out;
+}
+
+/* Efectos hover para las tarjetas de logros */
+.achievement-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.achievement-card:hover {
+  transform: scale(1.02);
+}
+
+.achievement-card.legendary {
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.achievement-card.epic {
+  box-shadow: 0 0 25px rgba(156, 39, 176, 0.3);
+}
+
+.achievement-card.rare {
+  box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+}
+
+.achievement-card.common {
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+/* Timeline de actividades */
+.activity-timeline {
+  position: relative;
+}
+
+.activity-timeline::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(156, 39, 176, 0.8) 0%,
+    rgba(33, 150, 243, 0.8) 50%,
+    rgba(0, 206, 209, 0.8) 100%
+  );
+}
+
+.activity-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+/* Efectos de micro-interacciones */
+.interactive-element {
+  transition: all 0.2s ease;
+}
+
+.interactive-element:hover {
+  transform: translateY(-1px);
+}
+
+.interactive-element:active {
+  transform: translateY(0);
+}
+
+/* Progreso de nivel con animación */
+@keyframes level-progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: var(--progress-width);
+  }
+}
+
+.level-progress-bar {
+  animation: level-progress 1.5s ease-out;
+}
+
+/* Efecto de pulsación para métricas importantes */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  }
+}
+
+.metric-highlighted {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Estilos para el avatar mejorado */
+.avatar-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.avatar-container:hover .avatar-overlay {
+  opacity: 1;
+}
+
+/* Efectos de conexión social */
+.social-connection-card {
+  transition: all 0.3s ease;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.social-connection-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Indicadores de Ayni */
+.ayni-indicator {
+  position: relative;
+  overflow: hidden;
+}
+
+.ayni-indicator::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 60%
+  );
+  animation: ayni-shine 3s infinite;
+}
+
+@keyframes ayni-shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Estilos responsivos específicos */
+@media (max-width: 768px) {
+  .metric-card {
+    margin-bottom: 12px;
+  }
+
+  .activity-timeline::before {
+    left: 16px;
+  }
+
+  .glass-effect {
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Modo oscuro específico para perfil */
+@media (prefers-color-scheme: dark) {
+  .glass-effect {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .achievement-card {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .activity-timeline::before {
+    opacity: 0.6;
+  }
+}
+
+/* Animaciones de entrada escalonadas */
+.staggered-entry {
+  animation: slideInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.staggered-entry:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.staggered-entry:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.staggered-entry:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.staggered-entry:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.staggered-entry:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.staggered-entry:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efectos de loading skeleton personalizados */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Indicadores de estado mejorados */
+.status-indicator {
+  position: relative;
+}
+
+.status-indicator.active::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background: #4caf50;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+}
+
+/* Efectos de transición suaves para cambios de tema */
+* {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Efectos especiales para elementos de gamificación */
+.gamification-element {
+  position: relative;
+  overflow: hidden;
+}
+
+.gamification-element::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.gamification-element:hover::before {
+  left: 100%;
+}

@@ -1,0 +1,1816 @@
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
+import {
+  Box,
+  Typography,
+  IconButton,
+  Button,
+  Card,
+  CardContent,
+  Slider,
+  Dialog,
+  DialogContent,
+  Fade,
+  Zoom,
+  useTheme,
+  useMediaQuery,
+  Chip,
+  CircularProgress,
+  LinearProgress,
+  Snackbar,
+  Alert,
+  Stack,
+  Tooltip,
+  Backdrop,
+  Paper,
+  Avatar,
+  ButtonGroup,
+  Collapse,
+  Divider,
+  Grid,
+} from '@mui/material';
+import {
+  PlayArrow as PlayIcon,
+  Pause as PauseIcon,
+  VolumeUp as VolumeIcon,
+  VolumeOff as VolumeOffIcon,
+  SkipNext as SkipNextIcon,
+  Settings as SettingsIcon,
+  ArrowBack as ArrowBackIcon,
+  Fullscreen as FullscreenIcon,
+  FullscreenExit as ExitFullscreenIcon,
+  Timer as TimerIcon,
+  CheckCircle as CheckCircleIcon,
+  Cancel as CancelIcon,
+  Star as StarIcon,
+  Bolt as BoltIcon,
+  Diamond as DiamondIcon,
+  Speed as SpeedIcon,
+  Close as CloseIcon,
+  Refresh as RefreshIcon,
+  Quiz as QuizIcon,
+  School as SchoolIcon,
+  TrendingUp as TrendingUpIcon,
+  EmojiEvents as TrophyIcon,
+  LocalFireDepartment as FireIcon,
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
+  Psychology as PsychologyIcon,
+  Lightbulb as LightbulbIcon,
+  VideoLibrary as VideoLibraryIcon,
+} from '@mui/icons-material';
+import ReactPlayer from 'react-player';
+
+// Import hooks and services
+import { useInteractiveVideo } from '../../../../hooks/useInteractiveVideo';
+import { apiService } from '../../../../lib/api-service';
+import { getVideoQuestions } from '../../../../lib/videoQuestions';
+import {
+  findWorkingVideoUrl,
+  checkVideoAvailability,
+} from '../../../../utils/videoUtils';
+
+// Enhanced types for better video player
+interface QuestionOverlay {
+  id: number;
+  timestamp: number;
+  endTimestamp: number;
+  type: 'multiple-choice' | 'true-false' | 'quick-response';
+  question: string;
+  options: {
+    id: string;
+    text: string;
+    label: string;
+    isCorrect?: boolean;
+  }[];
+  timeLimit?: number;
+  reward?: {
+    merits: number;
+    ondas: number;
+  };
+  difficulty?: 'easy' | 'medium' | 'hard';
+}
+
+interface VideoData {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  duration: number;
+  questions: QuestionOverlay[];
+  thumbnail?: string;
+}
+
+interface EnhancedInteractiveVideoPlayerProps {
+  videoData: VideoData;
+  onBack?: () => void;
+  onVideoComplete?: () => void;
+  onVideoChange?: (videoId: string) => void;
+  userId?: string;
+  autoplay?: boolean;
+  enableAnalytics?: boolean;
+  showBackButton?: boolean;
+}
+
+// Mock questions for when backend is not available
+const getMockQuestions = (videoId: string): QuestionOverlay[] => {
+  const questionSets: Record<string, QuestionOverlay[]> = {
+    default: [
+      {
+        id: 1,
+        timestamp: 15,
+        endTimestamp: 45,
+        type: 'multiple-choice',
+        question: '¿Cuál es el principio fundamental de Ayni en CoomÜnity?',
+        timeLimit: 25,
+        difficulty: 'medium',
+        reward: { merits: 20, ondas: 8 },
+        options: [
+          {
+            id: 'a',
+            label: 'A',
+            text: 'Reciprocidad y equilibrio energético',
+            isCorrect: true,
+          },
+          {
+            id: 'b',
+            label: 'B',
+            text: 'Competencia individual extrema',
+            isCorrect: false,
+          },
+          {
+            id: 'c',
+            label: 'C',
+            text: 'Acumulación ilimitada de recursos',
+            isCorrect: false,
+          },
+          {
+            id: 'd',
+            label: 'D',
+            text: 'Jerarquía social rígida',
+            isCorrect: false,
+          },
+        ],
+      },
+      {
+        id: 2,
+        timestamp: 60,
+        endTimestamp: 80,
+        type: 'true-false',
+        question:
+          '¿Las Öndas representan energía vibracional positiva que se genera al contribuir al Bien Común?',
+        timeLimit: 18,
+        difficulty: 'easy',
+        reward: { merits: 15, ondas: 12 },
+        options: [
+          { id: 'true', label: 'V', text: 'Verdadero', isCorrect: true },
+          { id: 'false', label: 'F', text: 'Falso', isCorrect: false },
+        ],
+      },
+      {
+        id: 3,
+        timestamp: 120,
+        endTimestamp: 140,
+        type: 'quick-response',
+        question: 'En CoomÜnity, ¿qué significa priorizar el "Bien Común"?',
+        timeLimit: 12,
+        difficulty: 'hard',
+        reward: { merits: 35, ondas: 15 },
+        options: [
+          {
+            id: 'a',
+            label: 'A',
+            text: 'Beneficio colectivo sobre individual',
+            isCorrect: true,
+          },
+          {
+            id: 'b',
+            label: 'B',
+            text: 'Ganancia personal máxima',
+            isCorrect: false,
+          },
+          {
+            id: 'c',
+            label: 'C',
+            text: 'Neutralidad en decisiones',
+            isCorrect: false,
+          },
+        ],
+      },
+      {
+        id: 4,
+        timestamp: 180,
+        endTimestamp: 200,
+        type: 'multiple-choice',
+        question:
+          '¿Qué representa la Metanöia en el desarrollo personal dentro de CoomÜnity?',
+        timeLimit: 20,
+        difficulty: 'medium',
+        reward: { merits: 25, ondas: 10 },
+        options: [
+          {
+            id: 'a',
+            label: 'A',
+            text: 'Transformación profunda de la consciencia',
+            isCorrect: true,
+          },
+          {
+            id: 'b',
+            label: 'B',
+            text: 'Acumulación de conocimiento técnico',
+            isCorrect: false,
+          },
+          {
+            id: 'c',
+            label: 'C',
+            text: 'Competencia con otros miembros',
+            isCorrect: false,
+          },
+          {
+            id: 'd',
+            label: 'D',
+            text: 'Obtención de privilegios especiales',
+            isCorrect: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  return questionSets[videoId] || questionSets.default;
+};
+
+const EnhancedInteractiveVideoPlayer: React.FC<
+  EnhancedInteractiveVideoPlayerProps
+> = ({
+  videoData,
+  onBack,
+  onVideoComplete,
+  onVideoChange,
+  userId = 'demo-user',
+  autoplay = false,
+  enableAnalytics = true,
+  showBackButton = true,
+}) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Validación inicial del videoData
+  if (!videoData || !videoData.id || !videoData.url) {
+    console.warn('❌ EnhancedInteractiveVideoPlayer: videoData is invalid:', videoData);
+    return (
+      <Box
+        sx={{
+          position: 'relative',
+          width: '100%',
+          height: isMobile ? '100vh' : '80vh',
+          backgroundColor: '#000',
+          borderRadius: isMobile ? 0 : 3,
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Stack alignItems="center" spacing={2}>
+          <Typography color="white" variant="h6">
+            Error: Datos de video inválidos
+          </Typography>
+          <Typography color="white" variant="body2">
+            No se pueden cargar los datos del video
+          </Typography>
+          {onBack && (
+            <Button
+              variant="contained"
+              onClick={onBack}
+              sx={{
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
+                },
+              }}
+            >
+              Volver
+            </Button>
+          )}
+        </Stack>
+      </Box>
+    );
+  }
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const questionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Enhanced video state
+  const [isPlaying, setIsPlaying] = useState(autoplay);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.8);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [videoError, setVideoError] = useState<string | null>(null);
+  const [actualVideoUrl, setActualVideoUrl] = useState<string>(videoData.url || '');
+
+  // Enhanced question state
+  const [activeQuestion, setActiveQuestion] = useState<QuestionOverlay | null>(
+    null
+  );
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(
+    new Set()
+  );
+  const [questionTimeRemaining, setQuestionTimeRemaining] = useState<number>(0);
+  const [isQuestionTimerActive, setIsQuestionTimerActive] = useState(false);
+  const [questionStartTime, setQuestionStartTime] = useState<number>(0);
+  const [questionsData, setQuestionsData] = useState<QuestionOverlay[]>([]);
+
+  // Enhanced feedback state
+  const [answerFeedback, setAnswerFeedback] = useState<{
+    isVisible: boolean;
+    isCorrect: boolean;
+    message: string;
+    reward?: { merits: number; ondas: number };
+  }>({
+    isVisible: false,
+    isCorrect: false,
+    message: '',
+  });
+
+  // UI state
+  const [showVideoInfo, setShowVideoInfo] = useState(false);
+  const [showQuestionsList, setShowQuestionsList] = useState(false);
+
+  // Use enhanced interactive video hook
+  const {
+    metrics,
+    analytics,
+    handleQuestionAnswer,
+    handleQuestionSkip,
+    handleVideoComplete: onVideoCompleteHook,
+    trackVideoInteraction,
+    updateWatchTime,
+    progressToNextLevel,
+    experienceForNextLevel,
+    accuracyRate,
+  } = useInteractiveVideo({
+    videoId: videoData.id,
+    userId,
+    enableAnalytics,
+    onRewardEarned: (reward) => {
+      setAnswerFeedback((prev) => ({
+        ...prev,
+        reward,
+      }));
+    },
+    onLevelUp: (newLevel) => {
+      console.log('Level up!', newLevel);
+    },
+    onAchievementUnlocked: (achievement) => {
+      console.log('Achievement unlocked!', achievement);
+    },
+  });
+
+  // Resolve working video URL on mount
+  useEffect(() => {
+    const resolveVideoUrl = async () => {
+      console.log('🎬 Resolving video URL for:', videoData.id);
+
+      // Check video availability first
+      await checkVideoAvailability();
+
+      // 🎯 PRIORIDAD MÁXIMA: Si VITE_FORCE_YOUTUBE_VIDEOS está habilitado Y la URL es de YouTube, usarla directamente
+      const forceYouTube = import.meta.env.VITE_FORCE_YOUTUBE_VIDEOS === 'true';
+      const isYouTubeUrl = videoData.url && (
+        videoData.url.includes('youtube.com') || 
+        videoData.url.includes('youtu.be')
+      );
+
+      if (forceYouTube && isYouTubeUrl) {
+        console.log('🎯 [FORZADO YOUTUBE] Using YouTube URL directly:', videoData.url);
+        setActualVideoUrl(videoData.url);
+        return;
+      }
+
+      // Try to find a working video URL solo si NO es YouTube forzado
+      const workingUrl = await findWorkingVideoUrl(videoData.id);
+
+      if (workingUrl) {
+        console.log('✅ Using working video URL:', workingUrl);
+        setActualVideoUrl(workingUrl);
+      } else {
+        console.error(
+          '🚫 No working video URL found, using original:',
+          videoData.url
+        );
+        setActualVideoUrl(videoData.url);
+      }
+    };
+
+    resolveVideoUrl();
+  }, [videoData.id, videoData.url]);
+
+  // Load video questions on mount
+  useEffect(() => {
+    const loadQuestions = async () => {
+      try {
+        // Temporalmente deshabilitado para desarrollo - ir directo a preguntas locales
+        // const backendQuestions = await apiService.get(
+        //   `/videos/${videoData.id}/questions`
+        // );
+        // if (
+        //   backendQuestions &&
+        //   Array.isArray(backendQuestions) &&
+        //   backendQuestions.length > 0
+        // ) {
+        //   setQuestionsData(backendQuestions);
+        //   console.log(
+        //     '📚 Using backend questions for video:',
+        //     videoData.id,
+        //     backendQuestions.length,
+        //     'questions'
+        //   );
+        // } else {
+        // Fallback to configured questions
+        const configuredQuestions = getVideoQuestions(videoData.id);
+        if (configuredQuestions.length > 0) {
+          setQuestionsData(configuredQuestions);
+          console.log(
+            '📚 Using configured questions for video:',
+            videoData.id,
+            configuredQuestions.length,
+            'questions'
+          );
+        } else {
+          // Last fallback to mock questions
+          setQuestionsData(getMockQuestions(videoData.id));
+          console.log(
+            '📚 Using fallback mock questions for video:',
+            videoData.id
+          );
+        }
+        // }
+      } catch (error) {
+        // Use configured questions if backend is not available
+        const configuredQuestions = getVideoQuestions(videoData.id);
+        if (configuredQuestions.length > 0) {
+          setQuestionsData(configuredQuestions);
+          console.log(
+            '📚 Backend not available, using configured questions for video:',
+            videoData.id,
+            configuredQuestions.length,
+            'questions'
+          );
+        } else {
+          setQuestionsData(getMockQuestions(videoData.id));
+          console.log(
+            '📚 Backend not available, using fallback mock questions for video:',
+            videoData.id
+          );
+        }
+      }
+    };
+
+    loadQuestions();
+  }, [videoData.id]);
+
+  // Format time helper
+  const formatTime = useCallback((seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }, []);
+
+  // Enhanced question timing logic
+  const startQuestionTimer = useCallback((timeLimit: number) => {
+    setQuestionTimeRemaining(timeLimit);
+    setIsQuestionTimerActive(true);
+    setQuestionStartTime(Date.now());
+
+    const interval = setInterval(() => {
+      setQuestionTimeRemaining((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsQuestionTimerActive(false);
+          handleSkipQuestion();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    questionTimeoutRef.current = interval;
+  }, []);
+
+  const stopQuestionTimer = useCallback(() => {
+    if (questionTimeoutRef.current) {
+      clearInterval(questionTimeoutRef.current);
+      questionTimeoutRef.current = null;
+    }
+    setIsQuestionTimerActive(false);
+  }, []);
+
+  // Enhanced question handling
+  const handleAnswerSelect = useCallback(
+    async (optionId: string) => {
+      if (!activeQuestion || selectedAnswer) return;
+
+      setSelectedAnswer(optionId);
+      stopQuestionTimer();
+
+      const timeTaken = (Date.now() - questionStartTime) / 1000;
+      const result = await handleQuestionAnswer(
+        activeQuestion.id,
+        optionId,
+        timeTaken
+      );
+
+      setAnswerFeedback({
+        isVisible: true,
+        isCorrect: result.isCorrect,
+        message: result.feedback,
+        reward: result.reward,
+      });
+
+      setAnsweredQuestions((prev) => new Set([...prev, activeQuestion.id]));
+
+      // Hide question after 3 seconds
+      setTimeout(() => {
+        setActiveQuestion(null);
+        setSelectedAnswer(null);
+        setAnswerFeedback({ isVisible: false, isCorrect: false, message: '' });
+        if (videoRef.current) {
+          videoRef.current.play();
+          setIsPlaying(true);
+        }
+      }, 3000);
+    },
+    [
+      activeQuestion,
+      selectedAnswer,
+      questionStartTime,
+      handleQuestionAnswer,
+      stopQuestionTimer,
+    ]
+  );
+
+  const handleSkipQuestion = useCallback(() => {
+    if (!activeQuestion) return;
+
+    stopQuestionTimer();
+    handleQuestionSkip(activeQuestion.id);
+    setAnsweredQuestions((prev) => new Set([...prev, activeQuestion.id]));
+    setActiveQuestion(null);
+    setSelectedAnswer(null);
+
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  }, [activeQuestion, handleQuestionSkip, stopQuestionTimer]);
+
+  // Video event handlers
+  const handleTimeUpdate = useCallback(() => {
+    if (!videoRef.current) return;
+
+    const time = videoRef.current.currentTime;
+    setCurrentTime(time);
+    updateWatchTime(time);
+
+    // Check for questions to trigger
+    const question = questionsData.find(
+      (q) =>
+        time >= q.timestamp &&
+        time <= q.endTimestamp &&
+        !answeredQuestions.has(q.id) &&
+        !activeQuestion
+    );
+
+    if (question) {
+      setActiveQuestion(question);
+      setSelectedAnswer(null);
+      videoRef.current.pause();
+      setIsPlaying(false);
+      startQuestionTimer(question.timeLimit || 20);
+    }
+  }, [
+    questionsData,
+    answeredQuestions,
+    activeQuestion,
+    updateWatchTime,
+    startQuestionTimer,
+  ]);
+
+  const handleLoadedMetadata = useCallback(() => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleVideoEnd = useCallback(() => {
+    setIsPlaying(false);
+    onVideoCompleteHook(duration);
+    onVideoComplete?.();
+  }, [duration, onVideoCompleteHook, onVideoComplete]);
+
+  const handleVideoError = useCallback(
+    (event: any) => {
+      console.error('Video loading error:', event);
+      console.error('Video src (original):', videoData.url);
+      console.error('Video src (actual):', actualVideoUrl);
+      console.error('Video element:', videoRef.current);
+
+      // Try to get more specific error information
+      const video = videoRef.current;
+      if (video) {
+        console.error('Video error code:', video.error?.code);
+        console.error('Video error message:', video.error?.message);
+        console.error('Video network state:', video.networkState);
+        console.error('Video ready state:', video.readyState);
+
+        // Map error codes to user-friendly messages
+        let errorMessage = 'Error loading video. ';
+        switch (video.error?.code) {
+          case 1: // MEDIA_ERR_ABORTED
+            errorMessage += 'Video loading was aborted.';
+            break;
+          case 2: // MEDIA_ERR_NETWORK
+            errorMessage += 'Network error occurred while loading video.';
+            break;
+          case 3: // MEDIA_ERR_DECODE
+            errorMessage += 'Video file is corrupted or in unsupported format.';
+            break;
+          case 4: // MEDIA_ERR_SRC_NOT_SUPPORTED
+            errorMessage += 'Video format not supported or file not found.';
+            break;
+          default:
+            errorMessage += 'Unknown error occurred.';
+        }
+
+        setVideoError(`${errorMessage} (URL: ${actualVideoUrl})`);
+      } else {
+        setVideoError(
+          `Error loading video: ${actualVideoUrl}. Please check that the video file exists.`
+        );
+      }
+
+      setIsLoading(false);
+    },
+    [videoData.url, actualVideoUrl]
+  );
+  // Enhanced playback controls
+  const togglePlayPause = useCallback(() => {
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+      trackVideoInteraction('pause');
+    } else {
+      videoRef.current.play();
+      trackVideoInteraction('play', { currentTime });
+    }
+    setIsPlaying(!isPlaying);
+  }, [isPlaying, currentTime, trackVideoInteraction]);
+
+  const handleSeek = useCallback(
+    (newTime: number) => {
+      if (!videoRef.current) return;
+
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+      trackVideoInteraction('seek', { from: currentTime, to: newTime });
+    },
+    [currentTime, trackVideoInteraction]
+  );
+
+  const handleVolumeChange = useCallback((newVolume: number) => {
+    if (!videoRef.current) return;
+
+    setVolume(newVolume);
+    videoRef.current.volume = newVolume;
+    setIsMuted(newVolume === 0);
+  }, []);
+
+  const toggleMute = useCallback(() => {
+    if (!videoRef.current) return;
+
+    if (isMuted) {
+      videoRef.current.volume = volume;
+      setIsMuted(false);
+    } else {
+      videoRef.current.volume = 0;
+      setIsMuted(true);
+    }
+  }, [isMuted, volume]);
+
+  const changePlaybackSpeed = useCallback(
+    (speed: number) => {
+      if (!videoRef.current) return;
+
+      setPlaybackSpeed(speed);
+      videoRef.current.playbackRate = speed;
+      trackVideoInteraction('speed_change', { speed });
+    },
+    [trackVideoInteraction]
+  );
+
+  // Enhanced controls visibility
+  const showControlsTemporarily = useCallback(() => {
+    setShowControls(true);
+    if (controlsTimeoutRef.current) {
+      clearTimeout(controlsTimeoutRef.current);
+    }
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (isPlaying) {
+        setShowControls(false);
+      }
+    }, 3000);
+  }, [isPlaying]);
+
+  // Mouse move handler for controls
+  const handleMouseMove = useCallback(() => {
+    showControlsTemporarily();
+  }, [showControlsTemporarily]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (activeQuestion) return; // Don't handle shortcuts during questions
+
+      switch (e.code) {
+        case 'Space':
+          e.preventDefault();
+          togglePlayPause();
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          handleSeek(Math.max(0, currentTime - 10));
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          handleSeek(Math.min(duration, currentTime + 10));
+          break;
+        case 'KeyM':
+          e.preventDefault();
+          toggleMute();
+          break;
+        case 'KeyF':
+          e.preventDefault();
+          // Toggle fullscreen would go here
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [
+    togglePlayPause,
+    handleSeek,
+    currentTime,
+    duration,
+    toggleMute,
+    activeQuestion,
+  ]);
+
+  // Cleanup timeouts
+  useEffect(() => {
+    return () => {
+      if (questionTimeoutRef.current) {
+        clearInterval(questionTimeoutRef.current);
+      }
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Difficulty color mapping
+  const getDifficultyColor = (difficulty?: string) => {
+    switch (difficulty) {
+      case 'easy':
+        return '#10b981';
+      case 'medium':
+        return '#f59e0b';
+      case 'hard':
+        return '#ef4444';
+      default:
+        return '#6366f1';
+    }
+  };
+
+  // Question progress
+  const totalQuestions = questionsData.length;
+  const answeredCount = answeredQuestions.size;
+  const questionProgress =
+    totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
+
+  return (
+    <Box
+      ref={containerRef}
+      sx={{
+        position: 'relative',
+        width: '100%',
+        height: isMobile ? '100vh' : '80vh',
+        backgroundColor: '#000',
+        borderRadius: isMobile ? 0 : 3,
+        overflow: 'hidden',
+        cursor: showControls ? 'default' : 'none',
+      }}
+      onMouseMove={handleMouseMove}
+      onClick={showControlsTemporarily}
+    >
+      {/* Enhanced Video Element */}
+      {actualVideoUrl?.includes('youtube.com') || actualVideoUrl?.includes('youtu.be') ? (
+        /* Usar ReactPlayer para YouTube */
+        <ReactPlayer
+          url={actualVideoUrl}
+          playing={isPlaying}
+          controls={false} // Usamos controles personalizados
+          volume={volume}
+          muted={isMuted}
+          playbackRate={playbackSpeed}
+          onPlay={() => {
+            setIsPlaying(true);
+            trackVideoInteraction('play');
+          }}
+          onPause={() => {
+            setIsPlaying(false);
+            trackVideoInteraction('pause');
+          }}
+          onProgress={(state) => {
+            setCurrentTime(state.playedSeconds);
+            updateWatchTime(state.playedSeconds);
+            
+            // Manejar preguntas
+            if (questionsData.length > 0) {
+              const activeQuestion = questionsData.find(
+                (q) => Math.abs(q.time - state.playedSeconds) < 1 && !answeredQuestions.includes(q.id)
+              );
+                             if (activeQuestion) {
+                 setCurrentQuestion(activeQuestion);
+                 setIsPlaying(false);
+               }
+            }
+          }}
+          onDuration={(duration) => {
+            setDuration(duration);
+            setIsLoading(false);
+          }}
+          onError={(error) => {
+            console.error('ReactPlayer error:', error);
+            setVideoError(`Error loading YouTube video: ${error}`);
+            setIsLoading(false);
+          }}
+          onEnded={handleVideoEnd}
+          width="100%"
+          height="100%"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+        />
+      ) : (
+        /* Usar video nativo para archivos locales */
+        <video
+          ref={videoRef}
+          src={actualVideoUrl}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+          }}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onEnded={handleVideoEnd}
+          onError={handleVideoError}
+          autoPlay={autoplay}
+          playsInline
+          preload="metadata"
+          crossOrigin="anonymous"
+        />
+      )}
+
+      {/* Loading State */}
+      {isLoading && (
+        <Backdrop
+          open={true}
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            zIndex: 10,
+          }}
+        >
+          <Stack alignItems="center" spacing={2}>
+            <CircularProgress size={60} sx={{ color: '#6366f1' }} />
+            <Typography color="white" variant="h6">
+              Cargando video...
+            </Typography>
+          </Stack>
+        </Backdrop>
+      )}
+
+      {/* Error State */}
+      {videoError && (
+        <Backdrop
+          open={true}
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            zIndex: 10,
+          }}
+        >
+          <Stack alignItems="center" spacing={3}>
+            <CancelIcon sx={{ fontSize: 80, color: '#ef4444' }} />
+            <Typography color="white" variant="h6" textAlign="center">
+              {videoError}
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={() => window.location.reload()}
+              startIcon={<RefreshIcon />}
+              sx={{
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                '&:hover': {
+                  background:
+                    'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
+                },
+              }}
+            >
+              Reintentar
+            </Button>
+          </Stack>
+        </Backdrop>
+      )}
+
+      {/* Enhanced Header with Navigation */}
+      <Fade in={showControls || activeQuestion}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            background:
+              'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)',
+            zIndex: 20,
+            p: 2,
+          }}
+        >
+          <Stack direction="row" alignItems="center" spacing={2}>
+            {showBackButton && (
+              <IconButton
+                onClick={onBack}
+                sx={{
+                  color: 'white',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' },
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+            )}
+
+            <Box sx={{ flex: 1 }}>
+              <Typography
+                variant={isMobile ? 'h6' : 'h5'}
+                sx={{
+                  color: 'white',
+                  fontWeight: 700,
+                  textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                  mb: 0.5,
+                }}
+              >
+                {videoData.title}
+              </Typography>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Chip
+                  icon={<QuizIcon />}
+                  label={`${answeredCount}/${totalQuestions} preguntas`}
+                  size="small"
+                  sx={{
+                    backgroundColor: 'rgba(99, 102, 241, 0.9)',
+                    color: 'white',
+                    fontWeight: 600,
+                  }}
+                />
+                <Chip
+                  icon={<SchoolIcon />}
+                  label={`${Math.round(accuracyRate)}% precisión`}
+                  size="small"
+                  sx={{
+                    backgroundColor: 'rgba(16, 185, 129, 0.9)',
+                    color: 'white',
+                    fontWeight: 600,
+                  }}
+                />
+              </Stack>
+            </Box>
+
+            <Stack direction="row" spacing={1}>
+              <IconButton
+                onClick={() => setShowQuestionsList(!showQuestionsList)}
+                sx={{
+                  color: 'white',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' },
+                }}
+              >
+                <VideoLibraryIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => setShowVideoInfo(!showVideoInfo)}
+                sx={{
+                  color: 'white',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' },
+                }}
+              >
+                <SettingsIcon />
+              </IconButton>
+            </Stack>
+          </Stack>
+        </Box>
+      </Fade>
+
+      {/* Enhanced Question Overlay */}
+      <Dialog
+        open={!!activeQuestion}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: 3,
+            border: `3px solid ${getDifficultyColor(activeQuestion?.difficulty)}`,
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            m: 2,
+          },
+        }}
+        BackdropProps={{
+          sx: {
+            backgroundColor: 'rgba(0,0,0,0.8)',
+          },
+        }}
+      >
+        <DialogContent sx={{ p: 4 }}>
+          {activeQuestion && (
+            <Stack spacing={3}>
+              {/* Question Header */}
+              <Box>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={2}
+                >
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Chip
+                      icon={<QuizIcon />}
+                      label={`Pregunta ${activeQuestion.id}`}
+                      sx={{
+                        backgroundColor: getDifficultyColor(
+                          activeQuestion.difficulty
+                        ),
+                        color: 'white',
+                        fontWeight: 700,
+                      }}
+                    />
+                    <Chip
+                      label={
+                        activeQuestion.difficulty?.toUpperCase() || 'MEDIUM'
+                      }
+                      size="small"
+                      variant="outlined"
+                      sx={{
+                        borderColor: getDifficultyColor(
+                          activeQuestion.difficulty
+                        ),
+                        color: getDifficultyColor(activeQuestion.difficulty),
+                        fontWeight: 600,
+                      }}
+                    />
+                  </Stack>
+
+                  {/* Enhanced Timer */}
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                      <CircularProgress
+                        variant="determinate"
+                        value={
+                          (((activeQuestion.timeLimit || 20) -
+                            questionTimeRemaining) /
+                            (activeQuestion.timeLimit || 20)) *
+                          100
+                        }
+                        size={40}
+                        thickness={4}
+                        sx={{
+                          color:
+                            questionTimeRemaining <= 5 ? '#ef4444' : '#6366f1',
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          top: 0,
+                          left: 0,
+                          bottom: 0,
+                          right: 0,
+                          position: 'absolute',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          component="div"
+                          sx={{
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            color:
+                              questionTimeRemaining <= 5
+                                ? '#ef4444'
+                                : '#6366f1',
+                          }}
+                        >
+                          {questionTimeRemaining}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color:
+                          questionTimeRemaining <= 5 ? '#ef4444' : '#64748b',
+                        fontWeight: 600,
+                      }}
+                    >
+                      segundos
+                    </Typography>
+                  </Stack>
+                </Stack>
+
+                {/* Question Text */}
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    color: '#1e293b',
+                    mb: 1,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {activeQuestion.question}
+                </Typography>
+
+                {/* Reward Info */}
+                {activeQuestion.reward && (
+                  <Stack direction="row" spacing={1} mb={2}>
+                    <Chip
+                      icon={<DiamondIcon />}
+                      label={`+${activeQuestion.reward.merits} Mëritos`}
+                      size="small"
+                      sx={{
+                        backgroundColor: '#fef3c7',
+                        color: '#92400e',
+                        fontWeight: 600,
+                      }}
+                    />
+                    <Chip
+                      icon={<BoltIcon />}
+                      label={`+${activeQuestion.reward.ondas} Öndas`}
+                      size="small"
+                      sx={{
+                        backgroundColor: '#dcfce7',
+                        color: '#166534',
+                        fontWeight: 600,
+                      }}
+                    />
+                  </Stack>
+                )}
+              </Box>
+
+              {/* Answer Options */}
+              <Stack spacing={2}>
+                {activeQuestion.options.map((option) => (
+                  <Button
+                    key={option.id}
+                    variant={
+                      selectedAnswer === option.id ? 'contained' : 'outlined'
+                    }
+                    onClick={() => handleAnswerSelect(option.id)}
+                    disabled={!!selectedAnswer}
+                    sx={{
+                      p: 2,
+                      justifyContent: 'flex-start',
+                      textAlign: 'left',
+                      borderRadius: 2,
+                      textTransform: 'none',
+                      fontSize: '16px',
+                      fontWeight: 600,
+                      minHeight: 60,
+                      border:
+                        selectedAnswer === option.id
+                          ? 'none'
+                          : '2px solid #e2e8f0',
+                      backgroundColor:
+                        selectedAnswer === option.id
+                          ? getDifficultyColor(activeQuestion.difficulty)
+                          : 'transparent',
+                      color: selectedAnswer === option.id ? 'white' : '#1e293b',
+                      '&:hover': {
+                        backgroundColor:
+                          selectedAnswer === option.id
+                            ? getDifficultyColor(activeQuestion.difficulty)
+                            : '#f1f5f9',
+                        borderColor: getDifficultyColor(
+                          activeQuestion.difficulty
+                        ),
+                      },
+                      '&:disabled': {
+                        backgroundColor:
+                          selectedAnswer === option.id
+                            ? getDifficultyColor(activeQuestion.difficulty)
+                            : 'transparent',
+                        color:
+                          selectedAnswer === option.id ? 'white' : '#64748b',
+                      },
+                    }}
+                  >
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      alignItems="center"
+                      width="100%"
+                    >
+                      <Avatar
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          backgroundColor:
+                            selectedAnswer === option.id
+                              ? 'rgba(255,255,255,0.2)'
+                              : getDifficultyColor(activeQuestion.difficulty),
+                          color:
+                            selectedAnswer === option.id ? 'white' : 'white',
+                          fontWeight: 700,
+                          fontSize: '14px',
+                        }}
+                      >
+                        {option.label}
+                      </Avatar>
+                      <Typography
+                        sx={{
+                          flex: 1,
+                          lineHeight: 1.4,
+                        }}
+                      >
+                        {option.text}
+                      </Typography>
+                    </Stack>
+                  </Button>
+                ))}
+              </Stack>
+
+              {/* Skip Button */}
+              <Box sx={{ textAlign: 'center', mt: 2 }}>
+                <Button
+                  variant="text"
+                  onClick={handleSkipQuestion}
+                  disabled={!!selectedAnswer}
+                  sx={{
+                    color: '#64748b',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                  }}
+                >
+                  Saltar pregunta (perderás la racha)
+                </Button>
+              </Box>
+            </Stack>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Enhanced Answer Feedback */}
+      <Snackbar
+        open={answerFeedback.isVisible}
+        autoHideDuration={3000}
+        onClose={() =>
+          setAnswerFeedback({ ...answerFeedback, isVisible: false })
+        }
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity={answerFeedback.isCorrect ? 'success' : 'error'}
+          sx={{
+            width: '100%',
+            maxWidth: 500,
+            backgroundColor: answerFeedback.isCorrect ? '#dcfce7' : '#fecaca',
+            color: answerFeedback.isCorrect ? '#166534' : '#dc2626',
+            fontWeight: 600,
+            '& .MuiAlert-icon': {
+              color: answerFeedback.isCorrect ? '#10b981' : '#ef4444',
+            },
+          }}
+          action={
+            answerFeedback.reward && (
+              <Stack direction="row" spacing={1}>
+                <Chip
+                  icon={<DiamondIcon />}
+                  label={`+${answerFeedback.reward.merits}`}
+                  size="small"
+                  sx={{
+                    backgroundColor: '#fef3c7',
+                    color: '#92400e',
+                    fontWeight: 600,
+                  }}
+                />
+                <Chip
+                  icon={<BoltIcon />}
+                  label={`+${answerFeedback.reward.ondas}`}
+                  size="small"
+                  sx={{
+                    backgroundColor: '#dcfce7',
+                    color: '#166534',
+                    fontWeight: 600,
+                  }}
+                />
+              </Stack>
+            )
+          }
+        >
+          {answerFeedback.message}
+        </Alert>
+      </Snackbar>
+
+      {/* Enhanced Video Controls */}
+      <Fade in={showControls && !activeQuestion}>
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background:
+              'linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 70%, transparent 100%)',
+            zIndex: 20,
+            p: 2,
+          }}
+        >
+          <Stack spacing={2}>
+            {/* Progress Bar */}
+            <Box sx={{ px: 1 }}>
+              <Slider
+                value={currentTime}
+                max={duration}
+                onChange={(_, value) => handleSeek(value as number)}
+                sx={{
+                  color: '#6366f1',
+                  height: 6,
+                  '& .MuiSlider-thumb': {
+                    width: 16,
+                    height: 16,
+                    backgroundColor: 'white',
+                    border: '2px solid #6366f1',
+                    '&:hover': {
+                      boxShadow: '0 0 0 8px rgba(99, 102, 241, 0.16)',
+                    },
+                  },
+                  '& .MuiSlider-track': {
+                    backgroundColor: '#6366f1',
+                    border: 'none',
+                  },
+                  '& .MuiSlider-rail': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                  },
+                }}
+              />
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'white', fontWeight: 600 }}
+                >
+                  {formatTime(currentTime)}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'white', fontWeight: 600 }}
+                >
+                  {formatTime(duration)}
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Control Buttons */}
+            <Stack direction="row" alignItems="center" spacing={2}>
+              {/* Play/Pause */}
+              <IconButton
+                onClick={togglePlayPause}
+                sx={{
+                  color: 'white',
+                  backgroundColor: 'rgba(99, 102, 241, 0.9)',
+                  '&:hover': { backgroundColor: 'rgba(99, 102, 241, 1)' },
+                  width: 48,
+                  height: 48,
+                }}
+              >
+                {isPlaying ? <PauseIcon /> : <PlayIcon />}
+              </IconButton>
+
+              {/* Volume Control */}
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <IconButton onClick={toggleMute} sx={{ color: 'white' }}>
+                  {isMuted || volume === 0 ? <VolumeOffIcon /> : <VolumeIcon />}
+                </IconButton>
+                <Slider
+                  value={isMuted ? 0 : volume}
+                  max={1}
+                  step={0.1}
+                  onChange={(_, value) => handleVolumeChange(value as number)}
+                  sx={{
+                    width: 80,
+                    color: 'white',
+                    '& .MuiSlider-thumb': {
+                      width: 12,
+                      height: 12,
+                    },
+                  }}
+                />
+              </Stack>
+
+              {/* Playback Speed */}
+              <ButtonGroup variant="outlined" size="small">
+                {[0.5, 1, 1.25, 1.5, 2].map((speed) => (
+                  <Button
+                    key={speed}
+                    onClick={() => changePlaybackSpeed(speed)}
+                    variant={playbackSpeed === speed ? 'contained' : 'outlined'}
+                    sx={{
+                      color: 'white',
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                      backgroundColor:
+                        playbackSpeed === speed
+                          ? 'rgba(99, 102, 241, 0.9)'
+                          : 'transparent',
+                      '&:hover': {
+                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                        borderColor: 'rgba(255, 255, 255, 0.5)',
+                      },
+                      minWidth: 40,
+                      fontSize: '12px',
+                    }}
+                  >
+                    {speed}x
+                  </Button>
+                ))}
+              </ButtonGroup>
+
+              <Box sx={{ flex: 1 }} />
+
+              {/* Metrics Display */}
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Chip
+                  icon={<DiamondIcon />}
+                  label={(metrics.merits || 0).toLocaleString()}
+                  size="small"
+                  sx={{
+                    backgroundColor: 'rgba(245, 158, 11, 0.9)',
+                    color: 'white',
+                    fontWeight: 600,
+                  }}
+                />
+                <Chip
+                  icon={<BoltIcon />}
+                  label={metrics.ondas}
+                  size="small"
+                  sx={{
+                    backgroundColor: 'rgba(16, 185, 129, 0.9)',
+                    color: 'white',
+                    fontWeight: 600,
+                  }}
+                />
+                <Chip
+                  icon={<StarIcon />}
+                  label={`Nv ${metrics.level}`}
+                  size="small"
+                  sx={{
+                    backgroundColor: 'rgba(139, 92, 246, 0.9)',
+                    color: 'white',
+                    fontWeight: 600,
+                  }}
+                />
+              </Stack>
+            </Stack>
+          </Stack>
+        </Box>
+      </Fade>
+
+      {/* Questions List Sidebar */}
+      <Collapse in={showQuestionsList} orientation="horizontal">
+        <Paper
+          sx={{
+            position: 'absolute',
+            top: 80,
+            right: 16,
+            width: 320,
+            maxHeight: 400,
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: 2,
+            overflow: 'auto',
+            zIndex: 30,
+          }}
+        >
+          <Box sx={{ p: 2 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                Preguntas ({totalQuestions})
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => setShowQuestionsList(false)}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Stack>
+
+            <LinearProgress
+              variant="determinate"
+              value={questionProgress}
+              sx={{
+                mb: 2,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: '#e2e8f0',
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: 4,
+                  background:
+                    'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
+                },
+              }}
+            />
+
+            <Stack spacing={1}>
+              {questionsData.map((question, index) => (
+                <Card
+                  key={question.id}
+                  sx={{
+                    cursor: 'pointer',
+                    border: answeredQuestions.has(question.id)
+                      ? '2px solid #10b981'
+                      : '2px solid #e2e8f0',
+                    backgroundColor: answeredQuestions.has(question.id)
+                      ? '#f0fdf4'
+                      : 'white',
+                    '&:hover': {
+                      borderColor: '#6366f1',
+                    },
+                  }}
+                  onClick={() => handleSeek(question.timestamp)}
+                >
+                  <CardContent sx={{ p: 2 }}>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Avatar
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          backgroundColor: answeredQuestions.has(question.id)
+                            ? '#10b981'
+                            : getDifficultyColor(question.difficulty),
+                          color: 'white',
+                          fontWeight: 700,
+                          fontSize: '12px',
+                        }}
+                      >
+                        {answeredQuestions.has(question.id) ? '✓' : index + 1}
+                      </Avatar>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontWeight: 600,
+                            mb: 0.5,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {question.question}
+                        </Typography>
+                        <Stack direction="row" spacing={1}>
+                          <Chip
+                            label={`${formatTime(question.timestamp)}`}
+                            size="small"
+                            variant="outlined"
+                            sx={{ fontSize: '10px' }}
+                          />
+                          <Chip
+                            label={
+                              question.difficulty?.toUpperCase() || 'MEDIUM'
+                            }
+                            size="small"
+                            sx={{
+                              backgroundColor: getDifficultyColor(
+                                question.difficulty
+                              ),
+                              color: 'white',
+                              fontSize: '10px',
+                            }}
+                          />
+                        </Stack>
+                      </Box>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              ))}
+            </Stack>
+          </Box>
+        </Paper>
+      </Collapse>
+
+      {/* Video Info Sidebar */}
+      <Collapse in={showVideoInfo} orientation="horizontal">
+        <Paper
+          sx={{
+            position: 'absolute',
+            top: 80,
+            right: 16,
+            width: 320,
+            maxHeight: 400,
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: 2,
+            overflow: 'auto',
+            zIndex: 30,
+          }}
+        >
+          <Box sx={{ p: 3 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                Información del Video
+              </Typography>
+              <IconButton size="small" onClick={() => setShowVideoInfo(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Stack>
+
+            <Stack spacing={3}>
+              {/* Video Details */}
+              <Box>
+                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
+                  Descripción
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: '#64748b', lineHeight: 1.6 }}
+                >
+                  {videoData.description}
+                </Typography>
+              </Box>
+
+              <Divider />
+
+              {/* Player Metrics */}
+              <Box>
+                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 2 }}>
+                  Estadísticas de Sesión
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid size={6}>
+                    <Stack alignItems="center">
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 700, color: '#6366f1' }}
+                      >
+                        {metrics.currentStreak}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ textAlign: 'center' }}
+                      >
+                        Racha Actual
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid size={6}>
+                    <Stack alignItems="center">
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 700, color: '#10b981' }}
+                      >
+                        {Math.round(accuracyRate)}%
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ textAlign: 'center' }}
+                      >
+                        Precisión
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid size={6}>
+                    <Stack alignItems="center">
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 700, color: '#f59e0b' }}
+                      >
+                        {metrics.merits}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ textAlign: 'center' }}
+                      >
+                        Mëritos
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid size={6}>
+                    <Stack alignItems="center">
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 700, color: '#8b5cf6' }}
+                      >
+                        {metrics.ondas}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ textAlign: 'center' }}
+                      >
+                        Öndas
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Divider />
+
+              {/* Level Progress */}
+              <Box>
+                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
+                  Progreso al Nivel {metrics.level + 1}
+                </Typography>
+                <LinearProgress
+                  variant="determinate"
+                  value={(progressToNextLevel / experienceForNextLevel) * 100}
+                  sx={{
+                    height: 8,
+                    borderRadius: 4,
+                    backgroundColor: '#e2e8f0',
+                    '& .MuiLinearProgress-bar': {
+                      borderRadius: 4,
+                      background:
+                        'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
+                    },
+                  }}
+                />
+                <Typography
+                  variant="caption"
+                  sx={{ color: '#64748b', mt: 1, display: 'block' }}
+                >
+                  {progressToNextLevel} / {experienceForNextLevel} XP
+                </Typography>
+              </Box>
+            </Stack>
+          </Box>
+        </Paper>
+      </Collapse>
+    </Box>
+  );
+};
+
+export default EnhancedInteractiveVideoPlayer;

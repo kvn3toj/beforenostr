@@ -25,7 +25,7 @@ import {
   Security,
   Palette,
   Language,
-  Privacy,
+  Lock,
   AccountCircle,
   Edit,
   Save,
@@ -293,7 +293,7 @@ export const Settings: React.FC = () => {
     },
     {
       title: 'Privacidad',
-      icon: <Privacy />,
+      icon: <Lock />,
       content: (
         <Card sx={{ mb: 2 }}>
           <CardContent>

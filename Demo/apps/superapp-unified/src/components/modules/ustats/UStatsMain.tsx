@@ -15,7 +15,11 @@ import {
   IconButton,
   Badge,
   Paper,
+  LinearProgress,
+  Divider,
+  Stack,
   useTheme,
+  alpha,
 } from '@mui/material';
 import {
   Assessment as AssessmentIcon,
@@ -29,34 +33,22 @@ import {
   Person as PersonIcon,
   Business as BusinessIcon,
   School as SchoolIcon,
+  Insights as InsightsIcon,
+  Analytics as AnalyticsIcon,
+  BarChart as BarChartIcon,
+  PieChart as PieChartIcon,
+  Map as MapIcon,
+  Thermostat as ThermostatIcon,
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  RadialBarChart,
-  RadialBar,
-} from 'recharts';
+import { motion } from 'framer-motion';
 
-// Gaming Dashboard Components
-import GamingStatsCard from './components/GamingStatsCard';
-import ProgressRing from './components/ProgressRing';
-import ActivityChart from './components/ActivityChart';
-import AchievementBar from './components/AchievementBar';
-import RealTimeMetrics from './components/RealTimeMetrics';
+// Import new chart components
+import MinimalMetricCard from './components/MinimalMetricCard';
+import RealTimeStatus from './components/RealTimeStatus';
+import BarChart from './components/BarChart';
+import PieChart from './components/PieChart';
+import HeatMap from './components/HeatMap';
+import UserLocationMap from './components/UserLocationMap';
 
 interface SearchStat {
   term: string;
@@ -66,19 +58,13 @@ interface SearchStat {
   avgTime: number;
 }
 
-interface ResourceMetric {
-  type: string;
-  count: number;
-  percentage: number;
-  growth: number;
-}
-
 interface PerformanceData {
   metric: string;
   value: number;
   unit: string;
   trend: 'up' | 'down' | 'stable';
   change: number;
+  description: string;
 }
 
 interface ActivityData {
@@ -91,29 +77,16 @@ interface ActivityData {
 interface CategoryData {
   name: string;
   value: number;
-  color: string;
   icon: React.ReactNode;
+  searches: number;
+  growth: number;
 }
 
 const UStatsMain: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme();
 
-  // Gaming colors palette
-  const GAMING_COLORS = {
-    primary: '#00ff88',
-    secondary: '#ff0088',
-    accent: '#ffaa00',
-    background: '#0a0a0a',
-    cardBg: '#1a1a1a',
-    success: '#00ff88',
-    warning: '#ffaa00',
-    error: '#ff4444',
-    neon: '#00ffff',
-  };
-
-  // Mock real-time data
+  // Datos en tiempo real con actualización muy sutil
   const [realTimeData, setRealTimeData] = useState({
     activeUsers: 1247,
     searchesPerMinute: 23,
@@ -121,7 +94,258 @@ const UStatsMain: React.FC = () => {
     serverLoad: 67,
   });
 
-  // Activity chart data with more dynamic points
+  // Datos para gráficos de barras
+  const barChartData = [
+    {
+      name: 'Trasciende',
+      value: 156,
+      color: theme.palette.primary.main,
+    },
+    {
+      name: 'Evoluciona',
+      value: 132,
+      color: theme.palette.secondary.main,
+    },
+    {
+      name: 'Crea',
+      value: 98,
+      color: theme.palette.success.main,
+    },
+    {
+      name: 'Vive',
+      value: 87,
+      color: theme.palette.warning.main,
+    },
+    {
+      name: 'Conecta',
+      value: 74,
+      color: theme.palette.info.main,
+    },
+  ];
+
+  // Datos para gráfico de torta
+  const pieChartData = [
+    {
+      name: 'Usuarios Activos',
+      value: 847,
+      color: theme.palette.primary.main,
+    },
+    {
+      name: 'Usuarios Inactivos',
+      value: 234,
+      color: theme.palette.grey[400],
+    },
+    {
+      name: 'Nuevos Usuarios',
+      value: 166,
+      color: theme.palette.success.main,
+    },
+  ];
+
+  // Datos para mapa de calor
+  const heatMapData = [
+    // Lunes
+    { day: 'Lun', hour: 6, value: 5 },
+    { day: 'Lun', hour: 7, value: 12 },
+    { day: 'Lun', hour: 8, value: 25 },
+    { day: 'Lun', hour: 9, value: 45 },
+    { day: 'Lun', hour: 10, value: 38 },
+    { day: 'Lun', hour: 11, value: 42 },
+    { day: 'Lun', hour: 12, value: 55 },
+    { day: 'Lun', hour: 13, value: 35 },
+    { day: 'Lun', hour: 14, value: 48 },
+    { day: 'Lun', hour: 15, value: 52 },
+    { day: 'Lun', hour: 16, value: 47 },
+    { day: 'Lun', hour: 17, value: 38 },
+    { day: 'Lun', hour: 18, value: 28 },
+    { day: 'Lun', hour: 19, value: 32 },
+    { day: 'Lun', hour: 20, value: 25 },
+    { day: 'Lun', hour: 21, value: 18 },
+    { day: 'Lun', hour: 22, value: 8 },
+    { day: 'Lun', hour: 23, value: 3 },
+    // Martes
+    { day: 'Mar', hour: 6, value: 7 },
+    { day: 'Mar', hour: 7, value: 15 },
+    { day: 'Mar', hour: 8, value: 28 },
+    { day: 'Mar', hour: 9, value: 48 },
+    { day: 'Mar', hour: 10, value: 41 },
+    { day: 'Mar', hour: 11, value: 45 },
+    { day: 'Mar', hour: 12, value: 58 },
+    { day: 'Mar', hour: 13, value: 38 },
+    { day: 'Mar', hour: 14, value: 51 },
+    { day: 'Mar', hour: 15, value: 55 },
+    { day: 'Mar', hour: 16, value: 49 },
+    { day: 'Mar', hour: 17, value: 41 },
+    { day: 'Mar', hour: 18, value: 31 },
+    { day: 'Mar', hour: 19, value: 35 },
+    { day: 'Mar', hour: 20, value: 28 },
+    { day: 'Mar', hour: 21, value: 21 },
+    { day: 'Mar', hour: 22, value: 11 },
+    { day: 'Mar', hour: 23, value: 5 },
+    // Miércoles
+    { day: 'Mié', hour: 8, value: 30 },
+    { day: 'Mié', hour: 9, value: 50 },
+    { day: 'Mié', hour: 10, value: 43 },
+    { day: 'Mié', hour: 11, value: 47 },
+    { day: 'Mié', hour: 12, value: 60 },
+    { day: 'Mié', hour: 13, value: 40 },
+    { day: 'Mié', hour: 14, value: 53 },
+    { day: 'Mié', hour: 15, value: 57 },
+    { day: 'Mié', hour: 16, value: 51 },
+    { day: 'Mié', hour: 17, value: 43 },
+    { day: 'Mié', hour: 18, value: 33 },
+    { day: 'Mié', hour: 19, value: 37 },
+    { day: 'Mié', hour: 20, value: 30 },
+    { day: 'Mié', hour: 21, value: 23 },
+    // Jueves
+    { day: 'Jue', hour: 8, value: 32 },
+    { day: 'Jue', hour: 9, value: 52 },
+    { day: 'Jue', hour: 10, value: 45 },
+    { day: 'Jue', hour: 11, value: 49 },
+    { day: 'Jue', hour: 12, value: 62 },
+    { day: 'Jue', hour: 13, value: 42 },
+    { day: 'Jue', hour: 14, value: 55 },
+    { day: 'Jue', hour: 15, value: 59 },
+    { day: 'Jue', hour: 16, value: 53 },
+    { day: 'Jue', hour: 17, value: 45 },
+    { day: 'Jue', hour: 18, value: 35 },
+    { day: 'Jue', hour: 19, value: 39 },
+    { day: 'Jue', hour: 20, value: 32 },
+    { day: 'Jue', hour: 21, value: 25 },
+    // Viernes
+    { day: 'Vie', hour: 8, value: 35 },
+    { day: 'Vie', hour: 9, value: 55 },
+    { day: 'Vie', hour: 10, value: 48 },
+    { day: 'Vie', hour: 11, value: 52 },
+    { day: 'Vie', hour: 12, value: 65 },
+    { day: 'Vie', hour: 13, value: 45 },
+    { day: 'Vie', hour: 14, value: 58 },
+    { day: 'Vie', hour: 15, value: 62 },
+    { day: 'Vie', hour: 16, value: 56 },
+    { day: 'Vie', hour: 17, value: 48 },
+    { day: 'Vie', hour: 18, value: 38 },
+    { day: 'Vie', hour: 19, value: 42 },
+    { day: 'Vie', hour: 20, value: 45 },
+    { day: 'Vie', hour: 21, value: 38 },
+    { day: 'Vie', hour: 22, value: 28 },
+    { day: 'Vie', hour: 23, value: 15 },
+    // Sábado
+    { day: 'Sáb', hour: 9, value: 25 },
+    { day: 'Sáb', hour: 10, value: 35 },
+    { day: 'Sáb', hour: 11, value: 45 },
+    { day: 'Sáb', hour: 12, value: 50 },
+    { day: 'Sáb', hour: 13, value: 55 },
+    { day: 'Sáb', hour: 14, value: 48 },
+    { day: 'Sáb', hour: 15, value: 52 },
+    { day: 'Sáb', hour: 16, value: 58 },
+    { day: 'Sáb', hour: 17, value: 60 },
+    { day: 'Sáb', hour: 18, value: 55 },
+    { day: 'Sáb', hour: 19, value: 52 },
+    { day: 'Sáb', hour: 20, value: 48 },
+    { day: 'Sáb', hour: 21, value: 43 },
+    { day: 'Sáb', hour: 22, value: 35 },
+    { day: 'Sáb', hour: 23, value: 22 },
+    // Domingo
+    { day: 'Dom', hour: 10, value: 20 },
+    { day: 'Dom', hour: 11, value: 30 },
+    { day: 'Dom', hour: 12, value: 40 },
+    { day: 'Dom', hour: 13, value: 45 },
+    { day: 'Dom', hour: 14, value: 38 },
+    { day: 'Dom', hour: 15, value: 42 },
+    { day: 'Dom', hour: 16, value: 48 },
+    { day: 'Dom', hour: 17, value: 50 },
+    { day: 'Dom', hour: 18, value: 45 },
+    { day: 'Dom', hour: 19, value: 42 },
+    { day: 'Dom', hour: 20, value: 38 },
+    { day: 'Dom', hour: 21, value: 33 },
+    { day: 'Dom', hour: 22, value: 25 },
+  ];
+
+  // Datos de ubicación de usuarios
+  const userLocationData = [
+    {
+      country: 'México',
+      city: 'Ciudad de México',
+      users: 245,
+      lat: 19.4326,
+      lng: -99.1332,
+      color: theme.palette.primary.main,
+    },
+    {
+      country: 'Colombia',
+      city: 'Bogotá',
+      users: 189,
+      lat: 4.711,
+      lng: -74.0721,
+      color: theme.palette.secondary.main,
+    },
+    {
+      country: 'Argentina',
+      city: 'Buenos Aires',
+      users: 167,
+      lat: -34.6037,
+      lng: -58.3816,
+      color: theme.palette.success.main,
+    },
+    {
+      country: 'Perú',
+      city: 'Lima',
+      users: 134,
+      lat: -12.0464,
+      lng: -77.0428,
+      color: theme.palette.warning.main,
+    },
+    {
+      country: 'Chile',
+      city: 'Santiago',
+      users: 98,
+      lat: -33.4489,
+      lng: -70.6693,
+      color: theme.palette.info.main,
+    },
+    {
+      country: 'Brasil',
+      city: 'São Paulo',
+      users: 156,
+      lat: -23.5505,
+      lng: -46.6333,
+      color: theme.palette.error.main,
+    },
+    {
+      country: 'Venezuela',
+      city: 'Caracas',
+      users: 87,
+      lat: 10.4806,
+      lng: -66.9036,
+      color: '#9c27b0',
+    },
+    {
+      country: 'Ecuador',
+      city: 'Quito',
+      users: 73,
+      lat: -0.1807,
+      lng: -78.4678,
+      color: '#795548',
+    },
+    {
+      country: 'Uruguay',
+      city: 'Montevideo',
+      users: 45,
+      lat: -34.9011,
+      lng: -56.1645,
+      color: '#607d8b',
+    },
+    {
+      country: 'Paraguay',
+      city: 'Asunción',
+      users: 32,
+      lat: -25.2637,
+      lng: -57.5759,
+      color: '#ff5722',
+    },
+  ];
+
+  // Activity data
   const activityData: ActivityData[] = [
     { time: '00:00', searches: 45, conversions: 8, users: 120 },
     { time: '04:00', searches: 28, conversions: 5, users: 89 },
@@ -131,80 +355,72 @@ const UStatsMain: React.FC = () => {
     { time: '20:00', searches: 112, conversions: 21, users: 298 },
   ];
 
-  // Category breakdown data
+  // Category data
   const categoryData: CategoryData[] = [
     {
       name: 'Trasciende',
       value: 35,
-      color: GAMING_COLORS.primary,
+      searches: 156,
+      growth: 24.3,
       icon: <PsychologyIcon />,
     },
     {
       name: 'Evoluciona',
       value: 28,
-      color: GAMING_COLORS.secondary,
+      searches: 132,
+      growth: 18.7,
       icon: <PersonIcon />,
     },
     {
       name: 'Crea',
       value: 22,
-      color: GAMING_COLORS.accent,
+      searches: 98,
+      growth: 31.2,
       icon: <BusinessIcon />,
     },
     {
       name: 'Vive',
       value: 15,
-      color: GAMING_COLORS.neon,
+      searches: 87,
+      growth: 12.5,
       icon: <SchoolIcon />,
     },
   ];
 
-  // Performance metrics with gaming-style presentation
+  // Performance metrics
   const performanceData: PerformanceData[] = [
     {
-      metric: 'Speed Score',
-      value: 94,
-      unit: '/100',
-      trend: 'up',
-      change: 8.5,
-    },
-    {
-      metric: 'Active Users',
+      metric: 'Usuarios Activos',
       value: 1247,
       unit: '',
       trend: 'up',
       change: 23.7,
+      description: 'Total de usuarios conectados',
     },
     {
-      metric: 'Success Rate',
+      metric: 'Tasa de Éxito',
       value: 94.2,
       unit: '%',
       trend: 'up',
       change: 2.1,
+      description: 'Búsquedas exitosas',
     },
     {
-      metric: 'Load Time',
+      metric: 'Tiempo de Carga',
       value: 2.1,
       unit: 's',
       trend: 'down',
       change: -15.3,
+      description: 'Promedio de respuesta',
     },
-    { metric: 'Conversions', value: 18.5, unit: '%', trend: 'up', change: 5.8 },
     {
-      metric: 'Bounce Rate',
-      value: 32.1,
+      metric: 'Conversiones',
+      value: 18.5,
       unit: '%',
-      trend: 'down',
-      change: -7.2,
+      trend: 'up',
+      change: 5.8,
+      description: 'Tasa de conversión',
     },
-  ];
-
-  // Server performance data
-  const serverData = [
-    { name: 'CPU', value: 67, color: GAMING_COLORS.primary },
-    { name: 'RAM', value: 78, color: GAMING_COLORS.secondary },
-    { name: 'Disk', value: 45, color: GAMING_COLORS.accent },
-    { name: 'Network', value: 89, color: GAMING_COLORS.neon },
   ];
 
   // Search analytics
@@ -239,756 +455,645 @@ const UStatsMain: React.FC = () => {
     },
   ];
 
-  // Simulate real-time updates
+  // Actualización muy sutil cada 2 minutos
   useEffect(() => {
     const interval = setInterval(() => {
       setRealTimeData((prev) => ({
-        activeUsers: prev.activeUsers + Math.floor(Math.random() * 10 - 5),
+        activeUsers: prev.activeUsers + Math.floor(Math.random() * 4 - 2),
         searchesPerMinute: Math.max(
-          10,
-          prev.searchesPerMinute + Math.floor(Math.random() * 6 - 3)
+          15,
+          prev.searchesPerMinute + Math.floor(Math.random() * 3 - 1)
         ),
         conversionRate: Math.max(
-          10,
-          Math.min(30, prev.conversionRate + (Math.random() - 0.5))
+          15,
+          Math.min(25, prev.conversionRate + (Math.random() - 0.5) * 0.2)
         ),
         serverLoad: Math.max(
-          30,
-          Math.min(90, prev.serverLoad + Math.floor(Math.random() * 10 - 5))
+          50,
+          Math.min(80, prev.serverLoad + Math.floor(Math.random() * 4 - 2))
         ),
       }));
-    }, 3000);
-
-    // Initial loading simulation
-    setTimeout(() => setIsLoading(false), 1000);
+    }, 120000); // 2 minutos para actualizaciones muy sutiles
 
     return () => clearInterval(interval);
   }, []);
 
-  const GamingHeader = () => (
+  const AppHeader = () => (
     <AppBar
       position="sticky"
+      elevation={0}
       sx={{
-        background: `linear-gradient(45deg, ${GAMING_COLORS.background} 0%, #1a1a1a 100%)`,
-        boxShadow: `0 0 20px ${GAMING_COLORS.primary}40`,
-        borderBottom: `2px solid ${GAMING_COLORS.primary}`,
+        backgroundColor: theme.palette.primary.main,
+        borderBottom: 1,
+        borderColor: 'divider',
       }}
     >
       <Toolbar>
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
+        <AnalyticsIcon sx={{ mr: 2, color: 'white' }} />
+        <Typography
+          variant="h6"
+          component="h2"
+          sx={{
+            flexGrow: 1,
+            color: 'white',
+            fontWeight: 500,
+          }}
         >
-          <AssessmentIcon sx={{ mr: 2, color: GAMING_COLORS.primary }} />
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{
-              color: GAMING_COLORS.primary,
-              fontWeight: 'bold',
-              textShadow: `0 0 10px ${GAMING_COLORS.primary}80`,
-            }}
-          >
-            ÜStats - Gaming Analytics Dashboard
-          </Typography>
-        </motion.div>
-
-        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-          <IconButton sx={{ color: GAMING_COLORS.accent }}>
-            <DownloadIcon />
-          </IconButton>
-        </motion.div>
-
-        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-          <IconButton sx={{ color: GAMING_COLORS.secondary }}>
-            <Badge badgeContent={3} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-        </motion.div>
+          ÜStats Analytics Dashboard
+        </Typography>
+        <IconButton sx={{ color: 'white' }}>
+          <DownloadIcon />
+        </IconButton>
+        <IconButton sx={{ color: 'white' }}>
+          <Badge badgeContent={3} color="error">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
 
   const OverviewTab = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Grid container spacing={3}>
-        {/* Real-time Metrics Cards */}
-        <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            component="h3"
-            gutterBottom
-            sx={{
-              color: GAMING_COLORS.primary,
-              fontWeight: 'bold',
-              textShadow: `0 0 10px ${GAMING_COLORS.primary}60`,
-              mb: 3,
-            }}
-          >
-            🎮 Real-Time Gaming Metrics
-          </Typography>
-        </Grid>
+    <Box sx={{ mb: 4 }}>
+      {/* Estado en tiempo real */}
+      <Box sx={{ mb: 4 }}>
+        <RealTimeStatus {...realTimeData} />
+      </Box>
 
-        {/* Performance Cards Grid */}
+      {/* Métricas principales */}
+      <Typography
+        variant="h5"
+        component="h3"
+        sx={{ mb: 3, fontWeight: 600, color: 'text.primary' }}
+      >
+        Métricas Principales
+      </Typography>
+
+      <Grid container spacing={3} sx={{ mb: 5 }}>
         {performanceData.map((metric, index) => (
-          <Grid item xs={12} sm={6} md={4} key={metric.metric}>
+          <Grid item xs={12} sm={6} md={3} key={metric.metric}>
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.08 }}
             >
-              <GamingStatsCard
-                title={metric.metric}
-                value={metric.value}
-                unit={metric.unit}
-                trend={metric.trend}
-                change={metric.change}
-                color={
-                  metric.trend === 'up'
-                    ? GAMING_COLORS.success
-                    : metric.trend === 'down'
-                      ? GAMING_COLORS.error
-                      : GAMING_COLORS.accent
-                }
-              />
+              <MinimalMetricCard {...metric} />
             </motion.div>
           </Grid>
         ))}
+      </Grid>
 
-        {/* Activity Chart */}
-        <Grid item xs={12} md={8}>
+      {/* Gráficos diversos */}
+      <Grid container spacing={4}>
+        {/* Gráfico de barras */}
+        <Grid item xs={12} lg={6}>
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.5 }}
           >
-            <Paper
-              sx={{
-                p: 3,
-                background: `linear-gradient(135deg, ${GAMING_COLORS.cardBg} 0%, #2a2a2a 100%)`,
-                border: `1px solid ${GAMING_COLORS.primary}40`,
-                borderRadius: 2,
-                boxShadow: `0 0 20px ${GAMING_COLORS.primary}20`,
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h3"
-                gutterBottom
-                sx={{ color: GAMING_COLORS.primary, fontWeight: 'bold' }}
-              >
-                📈 Activity Timeline
-              </Typography>
-              <Box height={300}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={activityData}>
-                    <defs>
-                      <linearGradient
-                        id="searchesGradient"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor={GAMING_COLORS.primary}
-                          stopOpacity={0.8}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor={GAMING_COLORS.primary}
-                          stopOpacity={0.1}
-                        />
-                      </linearGradient>
-                      <linearGradient
-                        id="conversionsGradient"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor={GAMING_COLORS.secondary}
-                          stopOpacity={0.8}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor={GAMING_COLORS.secondary}
-                          stopOpacity={0.1}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                    <XAxis dataKey="time" stroke="#666" />
-                    <YAxis stroke="#666" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: GAMING_COLORS.cardBg,
-                        border: `1px solid ${GAMING_COLORS.primary}`,
-                        borderRadius: '8px',
-                        color: '#fff',
-                      }}
-                    />
-                    <Legend />
-                    <Area
-                      type="monotone"
-                      dataKey="searches"
-                      stroke={GAMING_COLORS.primary}
-                      strokeWidth={2}
-                      fill="url(#searchesGradient)"
-                      name="Searches"
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="conversions"
-                      stroke={GAMING_COLORS.secondary}
-                      strokeWidth={2}
-                      fill="url(#conversionsGradient)"
-                      name="Conversions"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </Box>
-            </Paper>
+            <BarChart
+              data={barChartData}
+              title="📊 Búsquedas por Categoría"
+              height={300}
+            />
           </motion.div>
         </Grid>
 
-        {/* Category Pie Chart */}
-        <Grid item xs={12} md={4}>
+        {/* Gráfico de torta */}
+        <Grid item xs={12} lg={6}>
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Paper
-              sx={{
-                p: 3,
-                background: `linear-gradient(135deg, ${GAMING_COLORS.cardBg} 0%, #2a2a2a 100%)`,
-                border: `1px solid ${GAMING_COLORS.secondary}40`,
-                borderRadius: 2,
-                boxShadow: `0 0 20px ${GAMING_COLORS.secondary}20`,
-                height: 350,
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h3"
-                gutterBottom
-                sx={{ color: GAMING_COLORS.secondary, fontWeight: 'bold' }}
-              >
-                🎯 Category Distribution
-              </Typography>
-              <Box height={250}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={categoryData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      innerRadius={30}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {categoryData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: GAMING_COLORS.cardBg,
-                        border: `1px solid ${GAMING_COLORS.secondary}`,
-                        borderRadius: '8px',
-                        color: '#fff',
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </Box>
-              <Box mt={2}>
-                {categoryData.map((category, index) => (
-                  <Box
-                    key={category.name}
-                    display="flex"
-                    alignItems="center"
-                    mb={1}
-                  >
-                    <Box
-                      width={12}
-                      height={12}
-                      bgcolor={category.color}
-                      borderRadius="50%"
-                      mr={1}
-                    />
-                    <Typography
-                      variant="body2"
-                      sx={{ color: '#fff', fontSize: '0.8rem' }}
-                    >
-                      {category.name}: {category.value}%
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
-            </Paper>
+            <PieChart
+              data={pieChartData}
+              title="🔄 Distribución de Usuarios"
+              size={220}
+            />
           </motion.div>
         </Grid>
 
-        {/* Progress Rings for Server Performance */}
-        <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            component="h3"
-            gutterBottom
-            sx={{
-              color: GAMING_COLORS.accent,
-              fontWeight: 'bold',
-              textShadow: `0 0 10px ${GAMING_COLORS.accent}60`,
-              mt: 2,
-              mb: 3,
-            }}
-          >
-            ⚡ Server Performance
-          </Typography>
-        </Grid>
-
-        {serverData.map((server, index) => (
-          <Grid item xs={12} sm={6} md={3} key={server.name}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <ProgressRing
-                title={server.name}
-                value={server.value}
-                color={server.color}
-                maxValue={100}
-              />
-            </motion.div>
-          </Grid>
-        ))}
-
-        {/* Real-time Metrics */}
+        {/* Mapa de calor */}
         <Grid item xs={12}>
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <RealTimeMetrics data={realTimeData} />
+            <HeatMap
+              data={heatMapData}
+              title="🔥 Mapa de Calor - Actividad por Hora"
+            />
           </motion.div>
         </Grid>
       </Grid>
-    </motion.div>
+    </Box>
   );
 
   const SearchAnalyticsTab = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            component="h3"
-            gutterBottom
-            sx={{
-              color: GAMING_COLORS.neon,
-              fontWeight: 'bold',
-              textShadow: `0 0 10px ${GAMING_COLORS.neon}60`,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <SearchIcon sx={{ mr: 1 }} />
-            🔍 Search Analytics Gaming Console
-          </Typography>
-        </Grid>
+    <Box sx={{ mb: 4 }}>
+      <Typography
+        variant="h5"
+        component="h3"
+        sx={{ mb: 4, fontWeight: 600, color: 'text.primary' }}
+      >
+        Análisis de Búsquedas
+      </Typography>
 
-        {/* Search Performance Bar Chart */}
-        <Grid item xs={12} md={8}>
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-          >
-            <Paper
-              sx={{
-                p: 3,
-                background: `linear-gradient(135deg, ${GAMING_COLORS.cardBg} 0%, #2a2a2a 100%)`,
-                border: `1px solid ${GAMING_COLORS.neon}40`,
-                borderRadius: 2,
-                boxShadow: `0 0 20px ${GAMING_COLORS.neon}20`,
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h3"
-                gutterBottom
-                sx={{ color: GAMING_COLORS.neon, fontWeight: 'bold' }}
-              >
-                📊 Search Performance Analysis
-              </Typography>
-              <Box height={300}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={searchStats}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                    <XAxis dataKey="term" stroke="#666" />
-                    <YAxis stroke="#666" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: GAMING_COLORS.cardBg,
-                        border: `1px solid ${GAMING_COLORS.neon}`,
-                        borderRadius: '8px',
-                        color: '#fff',
-                      }}
-                    />
-                    <Legend />
-                    <Bar
-                      dataKey="requests"
-                      fill={GAMING_COLORS.primary}
-                      name="Total Requests"
-                      radius={[4, 4, 0, 0]}
-                    />
-                    <Bar
-                      dataKey="success"
-                      fill={GAMING_COLORS.success}
-                      name="Successful"
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+      <Grid container spacing={4}>
+        {/* Búsquedas por término */}
+        <Grid item xs={12} lg={8}>
+          <Card>
+            <CardContent sx={{ p: 4 }}>
+              <Box display="flex" alignItems="center" mb={3}>
+                <SearchIcon sx={{ mr: 1.5, color: 'primary.main' }} />
+                <Typography variant="h6" component="h3" fontWeight={600}>
+                  Rendimiento por Término
+                </Typography>
               </Box>
-            </Paper>
-          </motion.div>
-        </Grid>
 
-        {/* Search Categories */}
-        <Grid item xs={12} md={4}>
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-          >
-            <Paper
-              sx={{
-                p: 3,
-                background: `linear-gradient(135deg, ${GAMING_COLORS.cardBg} 0%, #2a2a2a 100%)`,
-                border: `1px solid ${GAMING_COLORS.accent}40`,
-                borderRadius: 2,
-                boxShadow: `0 0 20px ${GAMING_COLORS.accent}20`,
-                height: 350,
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h3"
-                gutterBottom
-                sx={{ color: GAMING_COLORS.accent, fontWeight: 'bold' }}
-              >
-                🏆 Top Categories
-              </Typography>
-              {categoryData.map((category, index) => (
-                <motion.div
-                  key={category.name}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    mb={2}
-                    p={2}
+              <Stack spacing={3}>
+                {searchStats.map((stat) => (
+                  <Paper
+                    key={stat.term}
                     sx={{
-                      background: `linear-gradient(90deg, ${category.color}20 0%, transparent 100%)`,
-                      borderLeft: `3px solid ${category.color}`,
-                      borderRadius: 1,
+                      p: 3,
+                      backgroundColor: alpha(theme.palette.grey[50], 0.8),
+                      border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                      borderRadius: 2,
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        backgroundColor: alpha(theme.palette.grey[100], 0.6),
+                        borderColor: alpha(theme.palette.primary.main, 0.3),
+                      },
                     }}
                   >
-                    <Box display="flex" alignItems="center">
-                      <Avatar
-                        sx={{
-                          bgcolor: category.color,
-                          mr: 2,
-                          boxShadow: `0 0 10px ${category.color}60`,
-                        }}
-                      >
-                        {category.icon}
-                      </Avatar>
-                      <Typography variant="subtitle2" sx={{ color: '#fff' }}>
-                        {category.name}
-                      </Typography>
-                    </Box>
-                    <Chip
-                      label={`${category.value}%`}
-                      sx={{
-                        bgcolor: category.color,
-                        color: '#000',
-                        fontWeight: 'bold',
-                        boxShadow: `0 0 8px ${category.color}60`,
-                      }}
-                    />
-                  </Box>
-                </motion.div>
-              ))}
-            </Paper>
-          </motion.div>
-        </Grid>
-
-        {/* Achievement Progress Bars */}
-        <Grid item xs={12}>
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-          >
-            <Typography
-              variant="h5"
-              component="h3"
-              gutterBottom
-              sx={{
-                color: GAMING_COLORS.primary,
-                fontWeight: 'bold',
-                textShadow: `0 0 10px ${GAMING_COLORS.primary}60`,
-                mt: 2,
-                mb: 3,
-              }}
-            >
-              🎯 Achievement Progress
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <AchievementBar
-                  title="Search Master"
-                  description="Complete 1000 searches"
-                  current={856}
-                  target={1000}
-                  color={GAMING_COLORS.primary}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <AchievementBar
-                  title="Conversion Hero"
-                  description="Achieve 25% conversion rate"
-                  current={18.5}
-                  target={25}
-                  color={GAMING_COLORS.secondary}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <AchievementBar
-                  title="Speed Demon"
-                  description="Load time under 2 seconds"
-                  current={2.1}
-                  target={2.0}
-                  color={GAMING_COLORS.accent}
-                  inverted={true}
-                />
-              </Grid>
-            </Grid>
-          </motion.div>
-        </Grid>
-      </Grid>
-    </motion.div>
-  );
-
-  const PerformanceTab = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            component="h3"
-            gutterBottom
-            sx={{
-              color: GAMING_COLORS.secondary,
-              fontWeight: 'bold',
-              textShadow: `0 0 10px ${GAMING_COLORS.secondary}60`,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <TimelineIcon sx={{ mr: 1 }} />⚡ Performance Gaming Console
-          </Typography>
-        </Grid>
-
-        {/* Radial Performance Chart */}
-        <Grid item xs={12} md={6}>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7 }}
-          >
-            <Paper
-              sx={{
-                p: 3,
-                background: `linear-gradient(135deg, ${GAMING_COLORS.cardBg} 0%, #2a2a2a 100%)`,
-                border: `1px solid ${GAMING_COLORS.secondary}40`,
-                borderRadius: 2,
-                boxShadow: `0 0 20px ${GAMING_COLORS.secondary}20`,
-                height: 400,
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h3"
-                gutterBottom
-                sx={{ color: GAMING_COLORS.secondary, fontWeight: 'bold' }}
-              >
-                🎮 Performance Radar
-              </Typography>
-              <Box height={320}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadialBarChart
-                    cx="50%"
-                    cy="50%"
-                    innerRadius="20%"
-                    outerRadius="90%"
-                    data={performanceData.map((metric) => ({
-                      name: metric.metric,
-                      value: metric.value,
-                      fill:
-                        metric.trend === 'up'
-                          ? GAMING_COLORS.success
-                          : metric.trend === 'down'
-                            ? GAMING_COLORS.error
-                            : GAMING_COLORS.accent,
-                    }))}
-                  >
-                    <RadialBar
-                      minAngle={15}
-                      label={{ position: 'insideStart', fill: '#fff' }}
-                      background
-                      clockWise
-                      dataKey="value"
-                    />
-                    <Legend />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: GAMING_COLORS.cardBg,
-                        border: `1px solid ${GAMING_COLORS.secondary}`,
-                        borderRadius: '8px',
-                        color: '#fff',
-                      }}
-                    />
-                  </RadialBarChart>
-                </ResponsiveContainer>
-              </Box>
-            </Paper>
-          </motion.div>
-        </Grid>
-
-        {/* Live Activity Feed */}
-        <Grid item xs={12} md={6}>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-          >
-            <ActivityChart data={activityData} />
-          </motion.div>
-        </Grid>
-
-        {/* System Health Status */}
-        <Grid item xs={12}>
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-          >
-            <Paper
-              sx={{
-                p: 3,
-                background: `linear-gradient(135deg, ${GAMING_COLORS.cardBg} 0%, #2a2a2a 100%)`,
-                border: `1px solid ${GAMING_COLORS.primary}40`,
-                borderRadius: 2,
-                boxShadow: `0 0 20px ${GAMING_COLORS.primary}20`,
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h3"
-                gutterBottom
-                sx={{ color: GAMING_COLORS.primary, fontWeight: 'bold', mb: 3 }}
-              >
-                🖥️ System Health Status
-              </Typography>
-              <Grid container spacing={3}>
-                {serverData.map((metric, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={metric.name}>
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="flex-start"
+                      mb={2}
                     >
-                      <Box
-                        textAlign="center"
-                        p={2}
-                        sx={{
-                          background: `linear-gradient(135deg, ${metric.color}20 0%, transparent 100%)`,
-                          border: `1px solid ${metric.color}40`,
-                          borderRadius: 2,
-                          position: 'relative',
-                          overflow: 'hidden',
-                        }}
-                      >
+                      <Box>
                         <Typography
-                          variant="h4"
-                          component="div"
-                          sx={{
-                            color: metric.color,
-                            fontWeight: 'bold',
-                            textShadow: `0 0 10px ${metric.color}60`,
-                            mb: 1,
-                          }}
+                          variant="h6"
+                          fontWeight={600}
+                          sx={{ mb: 1 }}
                         >
-                          {metric.value}%
+                          {stat.term}
                         </Typography>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ color: '#fff', textTransform: 'uppercase' }}
-                        >
-                          {metric.name}
-                        </Typography>
-                        <Box
-                          position="absolute"
-                          bottom={0}
-                          left={0}
-                          width={`${metric.value}%`}
-                          height={4}
+                        <Chip
+                          label={stat.category}
+                          size="small"
                           sx={{
-                            background: `linear-gradient(90deg, ${metric.color} 0%, ${metric.color}80 100%)`,
-                            boxShadow: `0 0 10px ${metric.color}60`,
-                            transition: 'width 0.5s ease-out',
+                            backgroundColor: alpha(
+                              theme.palette.primary.main,
+                              0.1
+                            ),
+                            color: 'primary.main',
+                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                            fontWeight: 500,
                           }}
                         />
                       </Box>
-                    </motion.div>
-                  </Grid>
+                      <Box textAlign="right">
+                        <Typography
+                          variant="h4"
+                          color="primary.main"
+                          fontWeight={600}
+                          sx={{ mb: 0.5 }}
+                        >
+                          {((stat.success / stat.requests) * 100).toFixed(1)}%
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Tasa de éxito
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="body2" color="text.secondary">
+                          Solicitudes
+                        </Typography>
+                        <Typography variant="h6" fontWeight={600}>
+                          {stat.requests}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="body2" color="text.secondary">
+                          Exitosas
+                        </Typography>
+                        <Typography
+                          variant="h6"
+                          fontWeight={600}
+                          color="success.main"
+                        >
+                          {stat.success}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Typography variant="body2" color="text.secondary">
+                          Tiempo promedio
+                        </Typography>
+                        <Typography variant="h6" fontWeight={600}>
+                          {stat.avgTime}s
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Paper>
                 ))}
-              </Grid>
-            </Paper>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} lg={4}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent sx={{ p: 4 }}>
+              <Typography
+                variant="h6"
+                component="h3"
+                sx={{ mb: 3, fontWeight: 600 }}
+              >
+                Insights y Tendencias
+              </Typography>
+
+              <Stack spacing={4}>
+                <Box
+                  sx={{
+                    p: 3,
+                    backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                    borderRadius: 2,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                  }}
+                >
+                  <Typography variant="subtitle1" gutterBottom fontWeight={600}>
+                    Parámetros Más Usados
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ lineHeight: 1.6 }}
+                  >
+                    • param=coaching (65%)
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ lineHeight: 1.6 }}
+                  >
+                    ��� category=trasciende (45%)
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    p: 3,
+                    backgroundColor: alpha(theme.palette.success.main, 0.05),
+                    borderRadius: 2,
+                    border: `1px solid ${alpha(theme.palette.success.main, 0.1)}`,
+                  }}
+                >
+                  <Typography variant="subtitle1" gutterBottom fontWeight={600}>
+                    Rendimiento
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ lineHeight: 1.6 }}
+                  >
+                    Los parámetros específicos mantienen la velocidad del
+                    sistema sin impacto negativo
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    p: 3,
+                    backgroundColor: alpha(theme.palette.info.main, 0.05),
+                    borderRadius: 2,
+                    border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
+                  }}
+                >
+                  <Typography variant="subtitle1" gutterBottom fontWeight={600}>
+                    Comportamiento de Red
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ lineHeight: 1.6 }}
+                  >
+                    Cada parámetro genera 1 request adicional optimizado
+                  </Typography>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+
+  const GeographicTab = () => (
+    <Box sx={{ mb: 4 }}>
+      <Typography
+        variant="h5"
+        component="h3"
+        sx={{ mb: 4, fontWeight: 600, color: 'text.primary' }}
+      >
+        Distribución Geográfica
+      </Typography>
+
+      <Grid container spacing={4}>
+        {/* Mapa de ubicación */}
+        <Grid item xs={12}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <UserLocationMap
+              data={userLocationData}
+              title="🌎 Ubicación de Usuarios por País"
+            />
+          </motion.div>
+        </Grid>
+
+        {/* Estadísticas por país */}
+        <Grid item xs={12} md={6}>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <BarChart
+              data={userLocationData.slice(0, 6).map((location) => ({
+                name: location.city,
+                value: location.users,
+                color: location.color,
+              }))}
+              title="🏙️ Top Ciudades por Usuarios"
+              height={300}
+            />
+          </motion.div>
+        </Grid>
+
+        {/* Distribución regional */}
+        <Grid item xs={12} md={6}>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <PieChart
+              data={[
+                {
+                  name: 'México',
+                  value: 245,
+                  color: theme.palette.primary.main,
+                },
+                {
+                  name: 'Colombia',
+                  value: 189,
+                  color: theme.palette.secondary.main,
+                },
+                {
+                  name: 'Argentina',
+                  value: 167,
+                  color: theme.palette.success.main,
+                },
+                {
+                  name: 'Brasil',
+                  value: 156,
+                  color: theme.palette.error.main,
+                },
+                {
+                  name: 'Otros',
+                  value: 490,
+                  color: theme.palette.grey[400],
+                },
+              ]}
+              title="🌍 Distribución Regional"
+              size={240}
+            />
           </motion.div>
         </Grid>
       </Grid>
-    </motion.div>
+    </Box>
+  );
+
+  const PerformanceTab = () => (
+    <Box sx={{ mb: 4 }}>
+      <Typography
+        variant="h5"
+        component="h3"
+        sx={{ mb: 4, fontWeight: 600, color: 'text.primary' }}
+      >
+        Rendimiento del Sistema
+      </Typography>
+
+      <Grid container spacing={4}>
+        <Grid item xs={12} lg={8}>
+          <Card>
+            <CardContent sx={{ p: 4 }}>
+              <Box display="flex" alignItems="center" mb={4}>
+                <SpeedIcon sx={{ mr: 1.5, color: 'primary.main' }} />
+                <Typography variant="h6" component="h3" fontWeight={600}>
+                  Métricas Detalladas
+                </Typography>
+              </Box>
+
+              <Stack spacing={4}>
+                {performanceData.map((metric) => (
+                  <Box key={metric.metric}>
+                    <Box display="flex" justifyContent="space-between" mb={1.5}>
+                      <Typography variant="subtitle1" fontWeight={600}>
+                        {metric.metric}
+                      </Typography>
+                      <Box display="flex" alignItems="center" gap={2}>
+                        <Typography
+                          variant="h5"
+                          color="primary.main"
+                          fontWeight={600}
+                        >
+                          {metric.value}
+                          {metric.unit}
+                        </Typography>
+                        <Chip
+                          label={`${metric.change > 0 ? '+' : ''}${metric.change}%`}
+                          size="small"
+                          sx={{
+                            backgroundColor: alpha(
+                              metric.trend === 'up'
+                                ? theme.palette.success.main
+                                : metric.trend === 'down'
+                                  ? theme.palette.error.main
+                                  : theme.palette.warning.main,
+                              0.1
+                            ),
+                            color:
+                              metric.trend === 'up'
+                                ? 'success.main'
+                                : metric.trend === 'down'
+                                  ? 'error.main'
+                                  : 'warning.main',
+                            border: `1px solid ${alpha(
+                              metric.trend === 'up'
+                                ? theme.palette.success.main
+                                : metric.trend === 'down'
+                                  ? theme.palette.error.main
+                                  : theme.palette.warning.main,
+                              0.2
+                            )}`,
+                            fontWeight: 600,
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={
+                        metric.metric === 'Tiempo de Carga'
+                          ? Math.max(0, 100 - (metric.value / 5) * 100)
+                          : metric.value > 100
+                            ? 100
+                            : metric.value
+                      }
+                      sx={{
+                        height: 10,
+                        borderRadius: 5,
+                        backgroundColor: alpha(theme.palette.grey[300], 0.3),
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 5,
+                          backgroundColor:
+                            metric.trend === 'up'
+                              ? theme.palette.success.main
+                              : metric.trend === 'down'
+                                ? theme.palette.error.main
+                                : theme.palette.warning.main,
+                        },
+                      }}
+                    />
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mt: 1, lineHeight: 1.4 }}
+                    >
+                      {metric.description}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} lg={4}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent sx={{ p: 4 }}>
+              <Typography
+                variant="h6"
+                component="h3"
+                sx={{ mb: 4, fontWeight: 600 }}
+              >
+                Estado del Sistema
+              </Typography>
+
+              <Box sx={{ textAlign: 'center', mb: 4 }}>
+                <Box
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: '50%',
+                    backgroundColor: alpha(theme.palette.success.main, 0.1),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mx: 'auto',
+                    mb: 3,
+                    border: `2px solid ${theme.palette.success.main}`,
+                  }}
+                >
+                  <Typography
+                    variant="h3"
+                    color="success.main"
+                    fontWeight={600}
+                  >
+                    ✓
+                  </Typography>
+                </Box>
+
+                <Typography variant="h6" gutterBottom fontWeight={600}>
+                  Sistema Operativo
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Todos los servicios funcionan correctamente
+                </Typography>
+              </Box>
+
+              <Stack spacing={3}>
+                <Box
+                  sx={{
+                    p: 2,
+                    backgroundColor: alpha(theme.palette.grey[50], 0.8),
+                    borderRadius: 2,
+                    border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                  }}
+                >
+                  <Box display="flex" justifyContent="space-between" mb={1}>
+                    <Typography variant="body2" color="text.secondary">
+                      Carga del Servidor
+                    </Typography>
+                    <Typography variant="h6" fontWeight={600}>
+                      {realTimeData.serverLoad}%
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    p: 2,
+                    backgroundColor: alpha(theme.palette.grey[50], 0.8),
+                    borderRadius: 2,
+                    border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                  }}
+                >
+                  <Box display="flex" justifyContent="space-between" mb={1}>
+                    <Typography variant="body2" color="text.secondary">
+                      Usuarios Activos
+                    </Typography>
+                    <Typography variant="h6" fontWeight={600}>
+                      {realTimeData.activeUsers.toLocaleString()}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    p: 2,
+                    backgroundColor: alpha(theme.palette.grey[50], 0.8),
+                    borderRadius: 2,
+                    border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                  }}
+                >
+                  <Box display="flex" justifyContent="space-between" mb={1}>
+                    <Typography variant="body2" color="text.secondary">
+                      Búsquedas por Minuto
+                    </Typography>
+                    <Typography variant="h6" fontWeight={600}>
+                      {realTimeData.searchesPerMinute}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
   );
 
   const TabContent = () => {
@@ -998,144 +1103,67 @@ const UStatsMain: React.FC = () => {
       case 1:
         return <SearchAnalyticsTab />;
       case 2:
+        return <GeographicTab />;
+      case 3:
         return <PerformanceTab />;
       default:
         return <OverviewTab />;
     }
   };
 
-  if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-        sx={{
-          background: `linear-gradient(135deg, ${GAMING_COLORS.background} 0%, #1a1a1a 100%)`,
-        }}
-      >
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        >
-          <AssessmentIcon
-            sx={{
-              fontSize: 64,
-              color: GAMING_COLORS.primary,
-              filter: `drop-shadow(0 0 20px ${GAMING_COLORS.primary}60)`,
-            }}
-          />
-        </motion.div>
-      </Box>
-    );
-  }
-
   return (
-    <Box
-      sx={{
-        background: `linear-gradient(135deg, ${GAMING_COLORS.background} 0%, #1a1a1a 100%)`,
-        minHeight: '100vh',
-        color: '#fff',
-      }}
-    >
-      <GamingHeader />
+    <Box sx={{ backgroundColor: 'background.default', minHeight: '100vh' }}>
+      <AppHeader />
 
-      <Box
-        sx={{
-          background: `linear-gradient(135deg, ${GAMING_COLORS.cardBg} 0%, #2a2a2a 100%)`,
-          py: 4,
-          borderBottom: `2px solid ${GAMING_COLORS.primary}40`,
-          boxShadow: `0 0 30px ${GAMING_COLORS.primary}20`,
-        }}
-      >
-        <Container>
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-          >
-            <Typography
-              variant="h3"
-              component="h2"
-              align="center"
-              sx={{
-                background: `linear-gradient(45deg, ${GAMING_COLORS.primary}, ${GAMING_COLORS.secondary})`,
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                color: 'transparent',
-                fontWeight: 'bold',
-                mb: 2,
-                textShadow: '0 0 20px rgba(0, 255, 136, 0.3)',
-              }}
-            >
-              🎮 ÜStats Gaming Dashboard
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              sx={{
-                color: GAMING_COLORS.accent,
-                textShadow: `0 0 10px ${GAMING_COLORS.accent}40`,
-              }}
-            >
-              Advanced Analytics & Real-Time Performance Monitoring
-            </Typography>
-          </motion.div>
-        </Container>
-      </Box>
-
-      <Container sx={{ py: 4 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Box sx={{ mb: 4 }}>
           <Tabs
             value={activeTab}
             onChange={(_, newValue) => setActiveTab(newValue)}
-            centered
             sx={{
-              mb: 4,
+              borderBottom: 1,
+              borderColor: 'divider',
               '& .MuiTab-root': {
-                color: '#666',
-                fontWeight: 'bold',
                 textTransform: 'none',
-                fontSize: '1.1rem',
-                transition: 'all 0.3s ease',
+                fontWeight: 500,
+                fontSize: '1rem',
+                minWidth: 140,
+                py: 2,
+                color: 'text.secondary',
                 '&.Mui-selected': {
-                  color: GAMING_COLORS.primary,
-                  textShadow: `0 0 10px ${GAMING_COLORS.primary}60`,
+                  color: 'primary.main',
+                  fontWeight: 600,
                 },
                 '&:hover': {
-                  color: GAMING_COLORS.accent,
-                  transform: 'translateY(-2px)',
+                  color: 'primary.main',
+                  opacity: 0.8,
                 },
               },
               '& .MuiTabs-indicator': {
-                backgroundColor: GAMING_COLORS.primary,
                 height: 3,
                 borderRadius: '3px 3px 0 0',
-                boxShadow: `0 0 10px ${GAMING_COLORS.primary}60`,
+                backgroundColor: 'primary.main',
               },
             }}
           >
-            <Tab label="🎮 Gaming Overview" />
-            <Tab label="🔍 Search Console" />
-            <Tab label="⚡ Performance Hub" />
+            <Tab
+              label="Vista General"
+              icon={<BarChartIcon />}
+              iconPosition="start"
+            />
+            <Tab label="Búsquedas" icon={<SearchIcon />} iconPosition="start" />
+            <Tab label="Geografía" icon={<MapIcon />} iconPosition="start" />
+            <Tab
+              label="Rendimiento"
+              icon={<SpeedIcon />}
+              iconPosition="start"
+            />
           </Tabs>
-        </motion.div>
+        </Box>
 
-        <AnimatePresence mode="wait">
+        <Box sx={{ mt: 4 }}>
           <TabContent />
-        </AnimatePresence>
+        </Box>
       </Container>
     </Box>
   );

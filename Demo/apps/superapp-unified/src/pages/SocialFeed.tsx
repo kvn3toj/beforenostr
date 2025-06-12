@@ -1,13 +1,8 @@
 import React from 'react';
-import { Box } from '@mui/material';
-import SocialFeedComponent from '../components/modules/social/components/SocialFeed';
+import SocialMain from '../components/modules/social/SocialMain';
 
 export const SocialFeed: React.FC = () => {
-  return (
-    <Box sx={{ padding: 2 }}>
-      <SocialFeedComponent />
-    </Box>
-  );
+  return <SocialMain />;
 };
 
-export default SocialFeed; 
+export default SocialFeed;

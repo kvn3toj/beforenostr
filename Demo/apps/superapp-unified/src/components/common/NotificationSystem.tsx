@@ -295,18 +295,28 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   const isMockEnabled =
     (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
 
-  // Fetch notifications from backend using graceful query
-  const { data: backendNotifications = [] } = useOptionalQuery({
+  // Fetch notifications from backend
+  const {
+    data: backendNotifications,
+    isLoading: isLoadingNotifications,
+    error: notificationsError,
+    refetch: refetchNotifications,
+  } = useQuery({
     queryKey: ['notifications', user?.id],
     queryFn: async () => {
-      // En modo mock, retornar notificaciones de ejemplo
+      if (!user?.id) {
+        return [];
+      }
+
+      // En modo mock, usar datos simulados
       if (isMockEnabled) {
         const mockData = [
           {
-            id: 'mock-1',
+            id: 'mock-welcome-notification',
+            type: 'achievement',
             title: '¡Bienvenido a CoomÜnity!',
-            message: 'Tu cuenta ha sido configurada exitosamente',
-            type: 'info',
+            message: 'Has comenzado tu viaje en el ecosistema colaborativo.',
+            timestamp: new Date().toISOString(),
             read: false,
             created_at: new Date().toISOString(),
           },
@@ -315,20 +325,40 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
         return mockData;
       }
 
-      const result = await apiService.get(`/notifications/user/${user.id}`);
-      console.log('📊 Backend notifications data type:', typeof result, 'data:', result);
-      return result;
+      try {
+        const result = await apiService.get(`/notifications/user/${user.id}`);
+        console.log('📊 Backend notifications data type:', typeof result, 'data:', result);
+        return result;
+      } catch (error: any) {
+        // Handle specific error cases gracefully
+        if (error?.statusCode === 403) {
+          // Only log once every 5 minutes to reduce spam
+          const lastLogKey = `notifications-403-${user.id}`;
+          const lastLog = sessionStorage.getItem(lastLogKey);
+          const now = Date.now();
+          
+          if (!lastLog || now - parseInt(lastLog) > 300000) { // 5 minutes
+            console.info('📊 Notifications require additional permissions - this is expected during development');
+            sessionStorage.setItem(lastLogKey, now.toString());
+          }
+          return []; // Return empty array instead of throwing
+        }
+        if (error?.statusCode === 404) {
+          console.info('📊 Notifications endpoint not yet implemented - this is expected during development');
+          return [];
+        }
+        throw error; // Re-throw other errors
+      }
     },
     enabled: !!user && !isMockEnabled, // Only enable for real backend
-    refetchInterval: isMockEnabled ? false : 30000,
+    refetchInterval: isMockEnabled ? false : 60000, // Increased from 30s to 60s to reduce calls
     fallbackData: [], // Always return empty array on errors
-    silentFail: true, // Don't log errors for notifications
     retry: (failureCount, error: any) => {
       // No retry en modo mock
       if (isMockEnabled) return false;
 
-      // Don't retry 404 errors (endpoint not implemented)
-      if (error?.statusCode === 404) {
+      // Don't retry 403/404 errors (endpoint not implemented or no permissions)
+      if (error?.statusCode === 403 || error?.statusCode === 404) {
         return false;
       }
       // Retry other errors up to 3 times

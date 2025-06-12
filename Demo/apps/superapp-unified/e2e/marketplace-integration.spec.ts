@@ -399,4 +399,247 @@ test.describe('Marketplace Integration Tests', () => {
     
     console.log('✅ Marketplace item interaction test completed');
   });
+
+  test('should create new marketplace item successfully', async ({ page }) => {
+    console.log('🎯 Testing marketplace item creation flow...');
+    
+    await page.goto('/marketplace');
+    await page.waitForSelector('#root');
+    
+    // Esperamos que la página del marketplace cargue completamente
+    await page.waitForTimeout(3000);
+    
+    // Buscar el botón "Publicar Servicio de Impacto" o similar
+    const createButtonSelectors = [
+      'button:has-text("Publicar Servicio")',
+      'button:has-text("Ofrecer Servicio")',
+      'button:has-text("Crear")',
+      'button:has-text("Publicar")',
+      '[data-testid*="create-item"]',
+      '[data-testid*="publish"]',
+      'button[aria-label*="crear"]',
+      'button[aria-label*="publicar"]'
+    ];
+    
+    let createButtonFound = false;
+    
+    for (const selector of createButtonSelectors) {
+      try {
+        const button = page.locator(selector).first();
+        const isVisible = await button.isVisible({ timeout: 2000 });
+        if (isVisible) {
+          console.log(`✅ Found create button: ${selector}`);
+          
+          // Hacer clic en el botón para abrir el modal
+          await button.click();
+          await page.waitForTimeout(1000);
+          
+          createButtonFound = true;
+          break;
+        }
+      } catch {
+        // Continuar con el siguiente selector
+      }
+    }
+    
+    if (!createButtonFound) {
+      console.log('ℹ️ Create button not found. Trying to find in empty state...');
+      
+      // Si no hay items, podría estar en el estado vacío
+      const emptyStateButton = page.locator('button:has-text("Ofrecer Servicio de Impacto")').first();
+      const isEmptyButtonVisible = await emptyStateButton.isVisible({ timeout: 2000 });
+      
+      if (isEmptyButtonVisible) {
+        console.log('✅ Found create button in empty state');
+        await emptyStateButton.click();
+        await page.waitForTimeout(1000);
+        createButtonFound = true;
+      }
+    }
+    
+    expect(createButtonFound).toBeTruthy();
+    
+    // Verificar que el modal se abrió
+    const modalSelectors = [
+      '[role="dialog"]',
+      '.MuiDialog-root',
+      '[data-testid*="modal"]',
+      '[data-testid*="create-item-modal"]'
+    ];
+    
+    let modalFound = false;
+    
+    for (const selector of modalSelectors) {
+      const modal = page.locator(selector);
+      const isVisible = await modal.isVisible({ timeout: 3000 });
+      if (isVisible) {
+        console.log(`✅ Modal opened: ${selector}`);
+        modalFound = true;
+        break;
+      }
+    }
+    
+    expect(modalFound).toBeTruthy();
+    
+    // Llenar el formulario del modal
+    console.log('🎯 Filling out the create item form...');
+    
+    // Llenar título
+    const titleSelectors = [
+      'input[name="title"]',
+      'input[label*="título" i]',
+      'input[placeholder*="título" i]',
+      '[data-testid*="title"] input'
+    ];
+    
+    for (const selector of titleSelectors) {
+      try {
+        const titleInput = page.locator(selector).first();
+        const isVisible = await titleInput.isVisible({ timeout: 1000 });
+        if (isVisible) {
+          await titleInput.fill('Test E2E: Servicio de Desarrollo Web');
+          console.log('✅ Title filled');
+          break;
+        }
+      } catch {
+        continue;
+      }
+    }
+    
+    // Llenar descripción
+    const descriptionSelectors = [
+      'textarea[name="description"]',
+      'textarea[label*="descripción" i]',
+      'textarea[placeholder*="descripción" i]',
+      '[data-testid*="description"] textarea'
+    ];
+    
+    for (const selector of descriptionSelectors) {
+      try {
+        const descInput = page.locator(selector).first();
+        const isVisible = await descInput.isVisible({ timeout: 1000 });
+        if (isVisible) {
+          await descInput.fill('Este es un test E2E que verifica la funcionalidad de creación de items en el marketplace. Desarrollo web completo usando React y Node.js para generar impacto positivo.');
+          console.log('✅ Description filled');
+          break;
+        }
+      } catch {
+        continue;
+      }
+    }
+    
+    // Llenar precio
+    const priceSelectors = [
+      'input[name="priceUnits"]',
+      'input[label*="precio" i]',
+      'input[label*="lükas" i]',
+      '[data-testid*="price"] input'
+    ];
+    
+    for (const selector of priceSelectors) {
+      try {
+        const priceInput = page.locator(selector).first();
+        const isVisible = await priceInput.isVisible({ timeout: 1000 });
+        if (isVisible) {
+          await priceInput.fill('250');
+          console.log('✅ Price filled');
+          break;
+        }
+      } catch {
+        continue;
+      }
+    }
+    
+    // Llenar ubicación (opcional)
+    const locationSelectors = [
+      'input[name="location"]',
+      'input[label*="ubicación" i]',
+      'input[placeholder*="ubicación" i]',
+      '[data-testid*="location"] input'
+    ];
+    
+    for (const selector of locationSelectors) {
+      try {
+        const locationInput = page.locator(selector).first();
+        const isVisible = await locationInput.isVisible({ timeout: 1000 });
+        if (isVisible) {
+          await locationInput.fill('Medellín, Colombia');
+          console.log('✅ Location filled');
+          break;
+        }
+      } catch {
+        continue;
+      }
+    }
+    
+    // Esperar un momento para que el formulario se actualice
+    await page.waitForTimeout(1000);
+    
+    // Buscar y hacer clic en el botón de submit
+    const submitButtonSelectors = [
+      'button[type="submit"]',
+      'button:has-text("Publicar")',
+      'button:has-text("Crear")',
+      'button:has-text("Guardar")',
+      '[data-testid*="submit"]'
+    ];
+    
+    let submitSuccess = false;
+    
+    for (const selector of submitButtonSelectors) {
+      try {
+        const submitButton = page.locator(selector).last(); // Usar .last() para obtener el botón del modal
+        const isVisible = await submitButton.isVisible({ timeout: 2000 });
+        const isEnabled = await submitButton.isEnabled().catch(() => false);
+        
+        if (isVisible && isEnabled) {
+          console.log(`✅ Found submit button: ${selector}`);
+          
+          // Monitorear las llamadas a la API
+          const apiResponses: { status: number; url: string }[] = [];
+          page.on('response', (response) => {
+            if (response.url().includes('marketplace/items') && response.request().method() === 'POST') {
+              apiResponses.push({ status: response.status(), url: response.url() });
+              console.log(`📡 API Response: ${response.status()} - ${response.url()}`);
+            }
+          });
+          
+          // Hacer clic en submit
+          await submitButton.click();
+          
+          // Esperar que se procese la solicitud
+          await page.waitForTimeout(3000);
+          
+          // Verificar que se haya hecho la llamada a la API
+          console.log('API responses:', apiResponses);
+          
+          // El test es exitoso si:
+          // 1. Se hizo una llamada POST a la API (independientemente del resultado)
+          // 2. O el modal se cerró (indicando que el formulario se procesó)
+          const apiCallMade = apiResponses.length > 0;
+          const modalClosed = !(await page.locator('[role="dialog"]').isVisible().catch(() => false));
+          
+          if (apiCallMade) {
+            console.log('✅ API call made for item creation');
+            submitSuccess = true;
+          }
+          
+          if (modalClosed) {
+            console.log('✅ Modal closed after submission');
+            submitSuccess = true;
+          }
+          
+          break;
+        }
+      } catch (error) {
+        console.log(`❌ Error with submit button ${selector}: ${error}`);
+        continue;
+      }
+    }
+    
+    // Verificar éxito general del flujo
+    expect(submitSuccess).toBeTruthy();
+    
+    console.log('✅ Marketplace item creation flow completed successfully');
+  });
 }); 

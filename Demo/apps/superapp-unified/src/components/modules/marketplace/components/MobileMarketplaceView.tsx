@@ -66,7 +66,7 @@ import {
   TuneOutlined as TuneIcon,
   Category as CategoryIcon,
   LocationOn as LocationIcon,
-  Star as StarIcon,
+  StarBorder as StarIcon,
   AttachMoney as PriceIcon,
   VerifiedUser as VerifiedIcon,
   Close as CloseIcon,
@@ -101,6 +101,8 @@ import { MobileHeader } from './MobileHeader';
 import { MobileSearchBar } from './MobileSearchBar';
 import { CategoryCarousel } from './CategoryCarousel';
 import { RoleToggle } from './RoleToggle';
+import { useMarketplaceData } from '../../../../hooks/useRealBackendData';
+import '../../../../styles/marketplace-enhanced.css';
 
 // Types
 interface MarketplaceItem {
@@ -177,6 +179,14 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
   const theme = useTheme();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // 🔗 Hook para datos reales del marketplace
+  const {
+    data: marketplaceItemsResponse,
+    isLoading: isLoadingItems,
+    error: itemsError,
+    refetch: refetchMarketplaceData,
+  } = useMarketplaceData();
+
   // Estados mejorados
   const [selectedRole, setSelectedRole] = useState<'consumer' | 'provider'>(
     'consumer'
@@ -213,20 +223,64 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     availability: '',
   });
 
-  // Datos mejorados para móvil
-  const enhancedMobileCategories: Category[] = [
+  // 🌍 Categorías enfocadas en el bien común (SINCRONIZADAS CON DESKTOP)
+  const impactCategories: Category[] = [
     {
-      id: 'popular',
-      name: 'Popular',
-      icon: '🔥',
-      color: '#FF6B6B',
-      count: 124,
+      id: 'sostenibilidad',
+      name: 'Sostenibilidad',
+      icon: '🌱',
+      color: '#4CAF50',
+      count: 32,
     },
-    { id: 'nuevos', name: 'Nuevos', icon: '✨', color: '#4ECDC4', count: 89 },
-    { id: 'ofertas', name: 'Ofertas', icon: '💰', color: '#45B7D1', count: 45 },
-    { id: 'premium', name: 'Premium', icon: '👑', color: '#F9CA24', count: 67 },
-    { id: 'express', name: 'Express', icon: '⚡', color: '#6C5CE7', count: 34 },
-    { id: 'local', name: 'Local', icon: '📍', color: '#A29BFE', count: 78 },
+    {
+      id: 'educacion',
+      name: 'Educación',
+      icon: '📚',
+      color: '#2196F3',
+      count: 28,
+    },
+    {
+      id: 'salud',
+      name: 'Salud & Bienestar',
+      icon: '🏥',
+      color: '#FF5722',
+      count: 24,
+    },
+    {
+      id: 'comunidad',
+      name: 'Desarrollo Comunitario',
+      icon: '🤝',
+      color: '#9C27B0',
+      count: 19,
+    },
+    {
+      id: 'tecnologia-social',
+      name: 'Tecnología Social',
+      icon: '💻',
+      color: '#607D8B',
+      count: 22,
+    },
+    {
+      id: 'agricultura',
+      name: 'Agricultura Consciente',
+      icon: '🌾',
+      color: '#8BC34A',
+      count: 15,
+    },
+    {
+      id: 'economia-circular',
+      name: 'Economía Circular',
+      icon: '♻️',
+      color: '#00BCD4',
+      count: 18,
+    },
+    {
+      id: 'inclusion',
+      name: 'Inclusión Social',
+      icon: '🌈',
+      color: '#E91E63',
+      count: 14,
+    },
   ];
 
   const quickFilters = [
@@ -249,6 +303,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     { value: 'nearby', label: 'Más Cercanos', icon: '📍' },
   ];
 
+  /* DATOS MOCK ANTIGUOS - AHORA USANDO DATOS REALES
   const enhancedMockProducts: MarketplaceItem[] = [
     {
       id: '1',
@@ -459,15 +514,115 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
       is24Hours: true,
     },
   ];
+  */
 
-  // 🔍 Queries mejoradas
-  const { data: featuredItems = [], isLoading: featuredLoading } = useQuery({
-    queryKey: ['marketplace-featured-mobile', selectedRole],
-    queryFn: () =>
-      apiService.get(`/marketplace/featured?role=${selectedRole}&mobile=true`),
-    enabled: !isSearchActive,
-    staleTime: 5 * 60 * 1000,
-  });
+  // 🔄 Función para mapear datos del backend/mock a la estructura de la UI (SINCRONIZADA CON DESKTOP)
+  const mapItemToUIItem = useCallback((item: any): MarketplaceItem => {
+    // Si es un item mock (tiene la estructura completa)
+    if (item.seller?.firstName && item.seller?.lastName) {
+      return {
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        price: item.price,
+        originalPrice: item.originalPrice,
+        currency: item.currency === 'LUKAS' ? 'ü' : item.currency,
+        category: item.category,
+        images: item.images || [],
+        seller: {
+          id: item.seller?.id || 'unknown',
+          name:
+            `${item.seller?.firstName || ''} ${item.seller?.lastName || ''}`.trim() ||
+            'Usuario',
+          username: item.seller?.username || '@usuario',
+          avatar:
+            item.seller?.avatarUrl ||
+            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+          verified: item.seller?.verified || true,
+          rating: item.seller?.rating || item.rating || 4.5,
+          reviewCount: item.seller?.reviewCount || item.reviewCount || 0,
+          responseTime: item.seller?.responseTime || '< 1 hora',
+          isOnline: item.seller?.isOnline || true,
+        },
+        location: item.location || 'Online',
+        rating: item.rating || 4.5,
+        reviewCount: item.reviewCount || 0,
+        tags: item.tags || [],
+        featured: item.featured || false,
+        trending: item.trending || false,
+        createdAt: item.createdAt || new Date().toISOString(),
+        viewCount: item.viewCount || 0,
+        favoriteCount: item.favoriteCount || 0,
+        isFavorited: false,
+        discount: item.originalPrice
+          ? Math.round(
+              ((item.originalPrice - item.price) / item.originalPrice) * 100
+            )
+          : undefined,
+        deliveryTime: item.deliveryTime || '3-7 días',
+        hasVideo: item.hasVideo || false,
+        is24Hours: item.is24Hours || false,
+      };
+    }
+
+    // Si es un item del backend (estructura diferente)
+    return {
+      id: item.id || 'unknown',
+      title: item.title || 'Producto sin título',
+      description: item.description || 'Sin descripción disponible',
+      price: item.priceUnits || 0,
+      currency: item.currency === 'LUKAS' ? 'ü' : item.currency || 'ü',
+      category:
+        item.type === 'SERVICE'
+          ? 'tecnologia-social'
+          : item.type === 'PRODUCT'
+            ? 'sostenibilidad'
+            : item.type === 'DIGITAL_CONTENT'
+              ? 'educacion'
+              : item.type === 'EXPERIENCE'
+                ? 'comunidad'
+                : item.type === 'SKILL_EXCHANGE'
+                  ? 'economia-circular'
+                  : 'sostenibilidad',
+      images: item.images || (item.imageUrl ? [item.imageUrl] : []),
+      seller: {
+        id: item.seller?.id || 'unknown',
+        name:
+          `${item.seller?.firstName || ''} ${item.seller?.lastName || ''}`.trim() ||
+          'Usuario',
+        username: item.seller?.username || '@usuario',
+        avatar:
+          item.seller?.avatarUrl ||
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+        verified: true,
+        rating: 4.8,
+        reviewCount: Math.floor(Math.random() * 100) + 20,
+        responseTime: '< 1 hora',
+        isOnline: true,
+      },
+      location: item.location || 'Online',
+      rating: 4.8,
+      reviewCount: Math.floor(Math.random() * 100) + 20,
+      tags: item.tags || [],
+      featured: Math.random() > 0.7,
+      trending: item.viewCount > 40,
+      createdAt: item.createdAt,
+      viewCount: item.viewCount || 0,
+      favoriteCount: item.favoriteCount || 0,
+      isFavorited: false,
+      deliveryTime: '3-7 días',
+      hasVideo: Math.random() > 0.7,
+      is24Hours: Math.random() > 0.8,
+    };
+  }, []);
+
+  // 🎯 Mapear datos del backend/mock a la estructura de la UI (SINCRONIZADO CON DESKTOP)
+  const impactProducts = useMemo(() => {
+    if (!marketplaceItemsResponse?.items) {
+      return [];
+    }
+    return marketplaceItemsResponse.items.map(mapItemToUIItem);
+  }, [marketplaceItemsResponse, mapItemToUIItem]);
 
   const { data: userFavorites = [] } = useQuery({
     queryKey: ['user-favorites', user?.id],
@@ -515,13 +670,75 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     [user]
   );
 
-  const handleProductClick = useCallback((productId: string) => {
-    const product = itemsToDisplay.find((p) => p.id === productId);
-    if (product) {
-      setSelectedProduct(product);
-      setShowProductDetail(true);
+  // Items a mostrar - SINCRONIZADO CON DESKTOP
+  const itemsToDisplay = useMemo(() => {
+    let items = isSearchActive ? searchResults : impactProducts;
+
+    // Filtrar por categoría seleccionada
+    if (selectedCategory && selectedCategory !== '') {
+      items = items.filter((item) => item.category === selectedCategory);
     }
-  }, []);
+
+    // Aplicar ordenamiento
+    switch (filters.sortBy) {
+      case 'price_asc':
+        items = [...items].sort((a, b) => a.price - b.price);
+        break;
+      case 'price_desc':
+        items = [...items].sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        items = [...items].sort((a, b) => b.rating - a.rating);
+        break;
+      case 'newest':
+        items = [...items].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        break;
+      case 'trending':
+        items = [...items].sort((a, b) => {
+          if (a.trending && !b.trending) return -1;
+          if (!a.trending && b.trending) return 1;
+          return b.viewCount - a.viewCount;
+        });
+        break;
+      case 'popular':
+        items = [...items].sort((a, b) => b.viewCount - a.viewCount);
+        break;
+      case 'nearby':
+        items = [...items].sort((a, b) => {
+          // Priorizar items locales
+          if (a.location.includes('Online') && !b.location.includes('Online'))
+            return 1;
+          if (!a.location.includes('Online') && b.location.includes('Online'))
+            return -1;
+          return 0;
+        });
+        break;
+      default:
+        break;
+    }
+
+    return items;
+  }, [
+    isSearchActive,
+    searchResults,
+    impactProducts,
+    selectedCategory,
+    filters.sortBy,
+  ]);
+
+  const handleProductClick = useCallback(
+    (productId: string) => {
+      const product = itemsToDisplay.find((p) => p.id === productId);
+      if (product) {
+        setSelectedProduct(product);
+        setShowProductDetail(true);
+      }
+    },
+    [itemsToDisplay]
+  );
 
   const handleQuickFilter = useCallback((filterId: string) => {
     setFilters((prev) => ({ ...prev, sortBy: filterId }));
@@ -548,55 +765,73 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  // 📊 Items a mostrar
-  const itemsToDisplay = useMemo(() => {
-    let items = isSearchActive
-      ? searchResults
-      : featuredItems.length > 0
-        ? featuredItems
-        : enhancedMockProducts;
+  // Estadísticas del marketplace sincronizadas con desktop
+  const marketplaceStats = {
+    totalProducts: impactProducts.length,
+    activeProviders: 8,
+    totalImpact: '2.4K',
+    communitiesServed: 47,
+  };
 
-    // Filtros
-    if (selectedCategory) {
-      items = items.filter((item) => item.category === selectedCategory);
-    }
-
-    if (filters.sortBy) {
-      switch (filters.sortBy) {
-        case 'trending':
-          items = [...items].sort((a, b) => {
-            if (a.trending && !b.trending) return -1;
-            if (!a.trending && b.trending) return 1;
-            return b.viewCount - a.viewCount;
-          });
-          break;
-        case 'rating':
-          items = [...items].sort((a, b) => b.rating - a.rating);
-          break;
-        case 'price_asc':
-          items = [...items].sort((a, b) => a.price - b.price);
-          break;
-        case 'popular':
-          items = [...items].sort((a, b) => b.favoriteCount - a.favoriteCount);
-          break;
-        default:
-          break;
-      }
-    }
-
-    return items.map((item) => ({
-      ...item,
-      isFavorited: userFavorites.some((fav: any) => fav.itemId === item.id),
-    }));
-  }, [
-    isSearchActive,
-    searchResults,
-    featuredItems,
-    enhancedMockProducts,
-    selectedCategory,
-    filters.sortBy,
-    userFavorites,
-  ]);
+  // 🚨 Manejo de errores mejorado
+  if (itemsError) {
+    return (
+      <Box
+        sx={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: '#fafafa',
+        }}
+      >
+        <MobileHeader
+          title="🌱 ÜMarket"
+          onMenuClick={onMenuClick}
+          onChatClick={onChatClick}
+          onNotificationsClick={onNotificationsClick}
+        />
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: 3,
+          }}
+        >
+          <Box sx={{ textAlign: 'center', maxWidth: 300 }}>
+            <Typography variant="h6" color="error" gutterBottom>
+              Error al cargar marketplace
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              No se pudo conectar con el servidor. Verifica tu conexión e
+              inténtalo de nuevo.
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={() => {
+                queryClient.invalidateQueries({
+                  queryKey: ['marketplace-items'],
+                });
+                refetchMarketplaceData();
+              }}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              Reintentar
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => window.location.reload()}
+              fullWidth
+            >
+              Recargar App
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -639,6 +874,42 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
             }}
           />
         )}
+
+        {/* Estadísticas de impacto móvil */}
+        <Box sx={{ px: 2, mb: 2 }}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2,
+              background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)',
+              color: 'white',
+              borderRadius: 2,
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Box textAlign="center">
+                  <Typography variant="h6" fontWeight="bold">
+                    {impactProducts.length}
+                  </Typography>
+                  <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                    Servicios de Impacto
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box textAlign="center">
+                  <Typography variant="h6" fontWeight="bold">
+                    8
+                  </Typography>
+                  <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                    Agentes de Cambio
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Box>
 
         {/* Role Toggle */}
         <Box sx={{ px: 2, py: 1, display: 'flex', justifyContent: 'center' }}>
@@ -701,7 +972,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           <Fade in timeout={800}>
             <Box>
               <CategoryCarousel
-                categories={enhancedMobileCategories}
+                categories={impactCategories}
                 onCategoryClick={handleCategoryClick}
                 onViewAll={handleViewAllCategories}
               />
@@ -721,7 +992,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
         >
           <Typography variant="h6" fontWeight="bold">
             {selectedCategory
-              ? `${enhancedMobileCategories.find((c) => c.id === selectedCategory)?.name} (${itemsToDisplay.length})`
+              ? `${impactCategories.find((c) => c.id === selectedCategory)?.name} (${itemsToDisplay.length})`
               : `Recomendados (${itemsToDisplay.length})`}
           </Typography>
 
@@ -743,9 +1014,39 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           </Box>
         </Box>
 
+        {/* Mensaje de confirmación de datos del marketplace */}
+        {impactProducts.length > 0 && (
+          <Box sx={{ px: 2, mb: 2 }}>
+            <Alert
+              severity="success"
+              sx={{
+                borderRadius: 2,
+                '& .MuiAlert-message': {
+                  fontSize: '0.875rem',
+                },
+              }}
+            >
+              ✅ Mostrando {impactProducts.length} productos y servicios
+              diversos de CoomÜnity
+              {marketplaceItemsResponse?.source && (
+                <Typography
+                  variant="caption"
+                  display="block"
+                  sx={{ mt: 0.5, opacity: 0.8 }}
+                >
+                  Fuente:{' '}
+                  {marketplaceItemsResponse.source === 'mock-rich-data'
+                    ? 'Datos demo ricos'
+                    : 'Backend NestJS'}
+                </Typography>
+              )}
+            </Alert>
+          </Box>
+        )}
+
         {/* Products Grid/List */}
         <Box sx={{ px: 2 }}>
-          {featuredLoading ? (
+          {isLoadingItems ? (
             <Grid container spacing={2}>
               {Array.from({ length: 6 }).map((_, index) => (
                 <Grid item xs={6} key={index}>
@@ -782,11 +1083,29 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
               </Button>
             </Box>
           ) : (
-            <Grid container spacing={2}>
+            <Grid
+              container
+              spacing={{ xs: 2, sm: 2.5 }}
+              sx={{
+                '& .MuiGrid-item': {
+                  minHeight:
+                    viewMode === 'grid' ? { xs: 280, sm: 300 } : 'auto',
+                },
+              }}
+            >
               {itemsToDisplay.map((item, index) => (
-                <Grid item xs={viewMode === 'grid' ? 6 : 12} key={item.id}>
+                <Grid
+                  item
+                  xs={viewMode === 'grid' ? 6 : 12}
+                  sm={viewMode === 'grid' ? 4 : 12}
+                  key={item.id}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
                   <Zoom in timeout={300 + index * 50}>
-                    <Box>
+                    <Box sx={{ height: '100%' }}>
                       <EnhancedMobileProductCard
                         {...item}
                         viewMode={viewMode}
@@ -799,6 +1118,43 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
               ))}
             </Grid>
           )}
+        </Box>
+
+        {/* Call to Action para el bien común (mobile) */}
+        <Box sx={{ px: 2, py: 4 }}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 3,
+              background: 'linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%)',
+              borderRadius: 3,
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
+              🌱 ¿Tienes un servicio de impacto?
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Únete a nuestra comunidad de agentes de cambio
+            </Typography>
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<AddIcon />}
+              onClick={() => console.log('Crear servicio')}
+              sx={{
+                background: 'linear-gradient(45deg, #4CAF50, #66BB6A)',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #388E3C, #4CAF50)',
+                },
+                borderRadius: 2,
+                px: 3,
+                py: 1,
+              }}
+            >
+              Publicar Servicio
+            </Button>
+          </Paper>
         </Box>
       </Box>
 
@@ -863,7 +1219,11 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
         <SpeedDialAction
           icon={<AddIcon />}
           tooltipTitle="Publicar Servicio"
-          onClick={() => console.log('Publicar')}
+          onClick={() => {
+            setShowQuickActions(false);
+            // TODO: Abrir modal de creación cuando se implemente
+            console.log('Publicar servicio');
+          }}
         />
         <SpeedDialAction
           icon={<Search />}
@@ -900,7 +1260,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           filters={filters}
           onFiltersChange={setFilters}
           onClose={() => setShowFilters(false)}
-          categories={enhancedMobileCategories}
+          categories={impactCategories}
           sortOptions={sortOptions}
         />
       </SwipeableDrawer>
@@ -969,10 +1329,11 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
   is24Hours,
 }) => {
   const formatPrice = (price: number, currency: string) => {
+    const safePrice = price || 0;
     if (currency === 'ü' || currency === 'Lükas' || currency === 'LUKAS') {
-      return `ü ${price}`;
+      return `ü ${safePrice}`;
     }
-    return `$${price.toLocaleString()}`;
+    return `$${safePrice.toLocaleString()}`;
   };
 
   if (viewMode === 'list') {
@@ -1088,7 +1449,7 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
             <Box
               sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}
             >
-              <Star sx={{ fontSize: 12, color: '#FFD700' }} />
+              <StarIcon sx={{ fontSize: 12, color: '#FFD700' }} />
               <Typography variant="caption" fontWeight="bold">
                 {rating}
               </Typography>
@@ -1148,14 +1509,14 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <Avatar src={seller.avatar} sx={{ width: 16, height: 16 }} />
                 <Typography variant="caption" fontWeight="bold">
-                  {seller.name.split(' ')[0]}
+                  {(seller.name || 'Usuario').split(' ')[0]}
                 </Typography>
                 {seller.verified && (
                   <VerifiedIcon sx={{ fontSize: 12, color: '#1976d2' }} />
                 )}
               </Box>
               <Typography variant="caption" color="text.secondary">
-                {location.split(',')[0]}
+                {(location || 'Online').split(',')[0]}
               </Typography>
             </Box>
           </Box>
@@ -1164,35 +1525,44 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
     );
   }
 
-  // Vista de grilla
+  // Vista de grilla mejorada
   return (
     <Card
       onClick={() => onClick(id)}
       sx={{
         cursor: 'pointer',
-        height: 280,
+        height: '100%',
+        minHeight: { xs: 280, sm: 300 },
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
         overflow: 'hidden',
-        transition: 'all 0.3s ease',
+        borderRadius: { xs: '14px', sm: '16px' },
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: '0 3px 12px rgba(0, 0, 0, 0.08)',
+        border: featured
+          ? '2px solid #FFD700'
+          : '1px solid rgba(0, 0, 0, 0.04)',
+        background: '#ffffff',
         '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+          transform: 'translateY(-6px)',
+          boxShadow: '0 12px 28px rgba(0,0,0,0.15)',
+          borderColor: featured ? '#FFD700' : 'rgba(116, 0, 86, 0.1)',
         },
-        border: featured ? '2px solid #FFD700' : 'none',
       }}
-      className="card-micro-interactive"
+      className="card-micro-interactive marketplace-card"
     >
-      {/* Imagen del producto */}
+      {/* Imagen del producto mejorada */}
       <Box
+        className="marketplace-card-image-container"
         sx={{
-          height: 140,
+          height: { xs: 140, sm: 150 },
           position: 'relative',
-          backgroundColor: '#f5f5f5',
-          backgroundImage: `url(${images[0]})`,
+          overflow: 'hidden',
+          backgroundImage: `url(${images[0] || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=240&fit=crop&crop=center'})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          backgroundColor: '#f8f9fa',
         }}
       >
         {/* Badges superiores */}
@@ -1302,7 +1672,7 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
               mb: hasVideo ? 0.5 : 0,
             }}
           >
-            <Star sx={{ fontSize: 12, color: '#FFD700' }} />
+            <StarIcon sx={{ fontSize: 12, color: '#FFD700' }} />
             <Typography variant="caption" fontWeight="bold">
               {rating}
             </Typography>
@@ -1341,20 +1711,28 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
         )}
       </Box>
 
-      {/* Contenido de la tarjeta */}
+      {/* Contenido de la tarjeta mejorado */}
       <CardContent
-        sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 1.5 }}
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          p: { xs: '14px', sm: '16px' },
+          '&:last-child': { pb: { xs: '14px', sm: '16px' } },
+        }}
       >
         <Typography
           variant="subtitle2"
-          fontWeight="bold"
+          fontWeight="600"
           sx={{
             mb: 0.5,
-            lineHeight: 1.2,
+            lineHeight: 1.3,
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
+            fontSize: { xs: '0.9rem', sm: '1rem' },
+            color: '#1a1a1a',
           }}
         >
           {title}
@@ -1407,7 +1785,7 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
                 display="block"
                 lineHeight={1}
               >
-                {seller.name.split(' ')[0]}
+                {(seller.name || 'Usuario').split(' ')[0]}
               </Typography>
               <Typography
                 variant="caption"
@@ -1429,7 +1807,7 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
               display="block"
               lineHeight={1}
             >
-              📍 {location.split(',')[0]}
+              📍 {(location || 'Online').split(',')[0]}
             </Typography>
             {deliveryTime && (
               <Typography
@@ -1765,7 +2143,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 <Box sx={{ flex: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Typography variant="h6" fontWeight="bold">
-                      {product.seller.name}
+                      {product.seller?.name || 'Usuario'}
                     </Typography>
                     {product.seller.verified && (
                       <VerifiedIcon sx={{ color: '#1976d2' }} />

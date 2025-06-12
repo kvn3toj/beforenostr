@@ -7,6 +7,12 @@
 /* Import micro-interactions and animations */
 @import './styles/micro-interactions.css';
 
+/* Import minimal dashboard styles for ÜStats */
+@import './styles/ustats-minimal.css';
+
+/* Import enhanced challenges module styles */
+@import './styles/challenges-enhanced.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,11 +33,22 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -76,11 +93,19 @@ html, body {
 
 /* CoomÜnity specific classes */
 .coomunity-gradient {
-  background: linear-gradient(135deg, var(--coomunity-purple) 0%, var(--coomunity-violet) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--coomunity-purple) 0%,
+    var(--coomunity-violet) 100%
+  );
 }
 
 .coomunity-text-gradient {
-  background: linear-gradient(45deg, var(--coomunity-purple) 30%, var(--coomunity-violet) 90%);
+  background: linear-gradient(
+    45deg,
+    var(--coomunity-purple) 30%,
+    var(--coomunity-violet) 90%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -120,4 +145,4 @@ html, body {
   to {
     transform: translateY(0);
   }
-} 
+}

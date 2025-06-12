@@ -78,6 +78,73 @@ export class MarketplaceService {
   }
 
   /**
+   * Obtener todos los items activos del marketplace (endpoint público)
+   */
+  async findAllActiveItems(dto?: MarketplaceSearchDto) {
+    console.log('>>> MarketplaceService.findAllActiveItems: Getting all active marketplace items (PUBLIC)');
+
+    const limit = dto?.limit ? parseInt(dto.limit, 10) : 20;
+    const offset = dto?.offset ? parseInt(dto.offset, 10) : 0;
+
+    // Solo items activos para el endpoint público
+    const where = {
+      isActive: true,
+      isDeleted: false,
+      status: 'ACTIVE'
+    };
+
+    const [items, total] = await Promise.all([
+      this.prisma.marketplaceItem.findMany({
+        where,
+        include: {
+          seller: { 
+            select: { 
+              id: true, 
+              firstName: true, 
+              lastName: true,
+              username: true,
+              avatarUrl: true
+            } 
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: offset
+      }),
+      this.prisma.marketplaceItem.count({ where })
+    ]);
+
+    const processedItems = items.map(item => ({
+      id: item.id,
+      title: item.name,
+      description: item.description,
+      type: item.itemType,
+      priceUnits: item.price,
+      priceToins: item.priceToins,
+      currency: item.currency,
+      tags: item.tags,
+      images: item.images,
+      imageUrl: item.images[0] || null,
+      location: item.location,
+      status: item.status,
+      metadata: item.metadata ? JSON.parse(item.metadata) : null,
+      seller: item.seller,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      viewCount: item.viewCount,
+      favoriteCount: item.favoriteCount
+    }));
+
+    return {
+      items: processedItems,
+      total,
+      limit,
+      offset,
+      hasMore: offset + limit < total
+    };
+  }
+
+  /**
    * Buscar items en el marketplace
    */
   async searchItems(dto: MarketplaceSearchDto) {

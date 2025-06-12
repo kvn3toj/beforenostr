@@ -25,8 +25,8 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, loading } = useAuth();
-  const [email, setEmail] = useState('test@coomunity.com');
-  const [password, setPassword] = useState('test123');
+  const [email, setEmail] = useState('admin@gamifier.com');
+  const [password, setPassword] = useState('admin123');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [networkError, setNetworkError] = useState<any>(null);

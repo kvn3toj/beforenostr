@@ -83,6 +83,17 @@ const ProductDetails = lazy(() =>
     default: module.ProductDetails,
   }))
 );
+const ProductDetail = lazy(() =>
+  import('./pages/ProductDetail').then((module) => ({
+    default: module.ProductDetail,
+  }))
+);
+
+const MarketplaceTest = lazy(() =>
+  import('./pages/MarketplaceTest').then((module) => ({
+    default: module.MarketplaceTest,
+  }))
+);
 const UPlay = lazy(() =>
   import('./pages/UPlay').then((module) => ({ default: module.UPlay }))
 );
@@ -156,6 +167,11 @@ const InteractiveVideoDemo = lazy(() =>
     default: module.default,
   }))
 );
+const UPlayVideoPlayer = lazy(() =>
+  import('./pages/UPlayVideoPlayer').then((module) => ({
+    default: module.default,
+  }))
+);
 
 // 🎯 Componente para inicializar lazy loading inteligente
 const LazyLoadingInitializer: React.FC = () => {
@@ -195,7 +211,7 @@ const CACHE_TIMES = {
   },
 } as const;
 
-// 🎯 Cache strategies por tipo de dato específico de CoomÜnity
+// ��� Cache strategies por tipo de dato específico de CoomÜnity
 const getCacheConfigForQueryType = (
   queryKey: readonly unknown[]
 ): Partial<any> => {
@@ -745,12 +761,37 @@ const AppWithTracking: React.FC = () => {
             path="marketplace/product/:id"
             element={
               <Suspense fallback={<DashboardSkeleton />}>
-                <ProductDetails />
+                <ProductDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="marketplace/test"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <MarketplaceTest />
               </Suspense>
             }
           />
 
           {/* 🎵 ÜPlay Module - Lazy Loaded */}
+          <Route
+            path="uplay"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <UPlay />
+              </Suspense>
+            }
+          />
+          <Route
+            path="uplay/video/:videoId"
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <UPlayVideoPlayer />
+              </Suspense>
+            }
+          />
+          {/* Legacy ÜPlay routes for backward compatibility */}
           <Route
             path="play"
             element={

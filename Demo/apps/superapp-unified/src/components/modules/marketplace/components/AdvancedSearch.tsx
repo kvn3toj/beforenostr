@@ -42,7 +42,7 @@ import {
   Clear,
   TuneOutlined,
   LocationOn,
-  Star,
+  StarBorder as Star,
   Category,
   PriceChange,
   VerifiedUser,

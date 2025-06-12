@@ -1,109 +1,101 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Container,
   Grid,
-  Card,
-  CardContent,
-  Typography,
-  Avatar,
-  LinearProgress,
-  IconButton,
-  Badge,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Divider,
+  Alert,
   Button,
-  Stack,
+  Fade,
+  Box,
+  useTheme,
+  alpha,
 } from '@mui/material';
-import {
-  Notifications,
-  Settings,
-  EmojiEvents,
-  LocalFireDepartment,
-  Park,
-  Waves,
-  Air,
-  Star,
-  Store,
-  PlayArrow,
-  People,
-  Refresh,
-} from '@mui/icons-material';
+import { Refresh } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useHybridData, useDashboardData, useBackendAvailability } from '../hooks/useRealBackendData';
+import {
+  useDashboardData,
+  useBackendAvailability,
+} from '../hooks/useRealBackendData';
 
-// 🎭 Mock data (fallback when backend is unavailable)
+// 🎯 Componentes modulares del Home
+import {
+  WelcomeHeader,
+  AyniMetricsCard,
+  WalletOverview,
+  QuickActionsGrid,
+  ModuleCards,
+  NotificationCenter,
+} from '../components/home';
+
+// 🎭 Datos mock con terminología CoomÜnity actualizada
 const mockDashboardData = {
   gamification: {
-    points: 480,
-    happiness: 90,
-    level: 'Explorador',
-    nextLevel: 'Navegante',
-    progress: 75,
-    badges: ['Ayni Inicial', 'Colaborador', 'Ecológico'],
-    streak: 7,
+    ondas: 1250, // Öndas (energía vibracional)
+    meritos: 485, // Mëritos (logros por Bien Común)
+    ayniLevel: 'Colaborador Equilibrado',
+    nextLevel: 'Guardián del Bien Común',
+    ayniProgress: 78,
+    bienComunContributions: 23,
+    balanceAyni: 0.85, // Proporción de dar/recibir
+    streak: 12,
+    elementos: {
+      fuego: 85, // Pasión y acción
+      agua: 92, // Fluir y adaptabilidad
+      tierra: 78, // Estabilidad y confianza
+      aire: 88, // Comunicación e ideas
+    },
   },
   wallet: {
-    balance: 125075,
-    ucoins: 480,
+    lukas: 125075, // Lükas (moneda interna)
+    ayniCredits: 480, // Créditos de reciprocidad
     monthlyChange: 15.2,
+    pendingTransactions: 3,
+    ayniBalance: 0.85, // Balance de dar/recibir
   },
   notifications: [
     {
       id: '1',
-      type: 'achievement',
-      title: 'Nuevo badge conseguido',
-      message: 'Has desbloqueado el badge "Colaborador"',
+      type: 'ayni' as const,
+      title: 'Ayni completado',
+      message:
+        'Has completado un intercambio equilibrado con María. Tu balance Ayni ha mejorado.',
       time: '2h',
+      icon: '✨',
+      color: 'success' as const,
+      priority: 'high' as const,
     },
     {
       id: '2',
-      type: 'marketplace',
-      title: 'Producto vendido',
-      message: 'Tu servicio de diseño ha sido comprado',
+      type: 'meritos' as const,
+      title: 'Nuevos Mëritos ganados',
+      message:
+        'Has ganado 50 Mëritos por tu contribución al proyecto "Huerta Comunitaria"',
       time: '4h',
+      icon: '🏆',
+      color: 'warning' as const,
+      priority: 'high' as const,
     },
     {
       id: '3',
-      type: 'social',
-      title: 'Nueva conexión',
-      message: 'María González quiere conectar contigo',
+      type: 'social' as const,
+      title: 'Invitación a Comunidad',
+      message:
+        'Te han invitado a unirte al círculo "Emprendedores Confiables de Medellín"',
       time: '1d',
+      icon: '👥',
+      color: 'primary' as const,
+      priority: 'medium' as const,
     },
   ],
-  quickActions: [
-    { icon: <Store />, label: 'Explorar Market', path: '/marketplace', color: 'primary' },
-    { icon: <PlayArrow />, label: 'Ver Videos', path: '/play', color: 'secondary' },
-    { icon: <People />, label: 'Conectar', path: '/social', color: 'success' },
-    { icon: <EmojiEvents />, label: 'Misiones', path: '/pilgrim', color: 'warning' },
-  ],
 };
 
-const ElementIcon = ({ element }: { element: string }) => {
-  const iconProps = { sx: { fontSize: 20 } };
-  switch (element) {
-    case 'fire':
-      return <LocalFireDepartment {...iconProps} sx={{ ...iconProps.sx, color: '#ef4444' }} />;
-    case 'earth':
-      return <Park {...iconProps} sx={{ ...iconProps.sx, color: '#78716c' }} />;
-    case 'water':
-      return <Waves {...iconProps} sx={{ ...iconProps.sx, color: '#06b6d4' }} />;
-    case 'air':
-      return <Air {...iconProps} sx={{ ...iconProps.sx, color: '#8b5cf6' }} />;
-    default:
-      return <Star {...iconProps} />;
-  }
-};
-
+// 🎯 Componente principal del Home
 export const Home: React.FC = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [animate, setAnimate] = useState(false);
 
   // 🔗 Conectar al backend real con fallback a mock data
   const backendAvailability = useBackendAvailability();
@@ -114,6 +106,12 @@ export const Home: React.FC = () => {
   const walletData = dashboardData.walletData || mockDashboardData.wallet;
   const userData = dashboardData.userProfile || user;
 
+  // 🎨 Animación de entrada
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimate(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   // 🔄 Función para refrescar datos
   const handleRefresh = () => {
     if (dashboardData.refetch) {
@@ -121,45 +119,57 @@ export const Home: React.FC = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0,
-    }).format(amount);
+  // 🎯 Handlers para las acciones
+  const handleNotificationClick = () => {
+    setNotificationsOpen(!notificationsOpen);
   };
 
-  const handleQuickAction = (path: string) => {
+  const handleSettingsClick = () => {
+    navigate('/profile');
+  };
+
+  const handleModuleClick = (moduleId: string, path: string) => {
+    // Analytics tracking aquí si es necesario
+    navigate(path);
+  };
+
+  const handleQuickActionClick = (path: string) => {
     navigate(path);
   };
 
   // 🎨 Mapear datos del backend al formato esperado por la UI
   const normalizedGameData = {
-    points: gameData.experience || gameData.points || 480,
-    happiness: gameData.stats?.wisdom || gameData.happiness || 90,
-    level: gameData.title || gameData.level || 'Explorador',
-    nextLevel: gameData.nextLevel || 'Navegante',
-    progress: Math.floor(((gameData.experience || 480) / (gameData.nextLevelExp || 1500)) * 100) || 75,
-    badges: gameData.badges || ['Ayni Inicial', 'Colaborador'],
-    streak: gameData.streak || 7,
+    ondas: gameData.experience || gameData.ondas || 1250,
+    meritos: (gameData.stats?.wisdom ?? 0) * 10 || gameData.meritos || 485,
+    ayniLevel:
+      gameData.title || gameData.ayniLevel || 'Colaborador Equilibrado',
+    nextLevel: gameData.nextLevel || 'Guardián del Bien Común',
+    ayniProgress:
+      Math.floor(
+        ((gameData.experience || 1250) / (gameData.nextLevelExp || 2000)) * 100
+      ) || 78,
+    bienComunContributions: gameData.bienComunContributions || 23,
+    balanceAyni: gameData.balanceAyni || 0.85,
+    streak: gameData.streak || 12,
+    elementos: gameData.elementos || mockDashboardData.gamification.elementos,
   };
 
   const normalizedWalletData = {
-    balance: walletData.balance || 125075,
-    ucoins: walletData.ucoins || 480,
+    lukas: walletData.balance || walletData.lukas || 125075,
+    ayniCredits: walletData.ucoins || walletData.ayniCredits || 480,
     monthlyChange: walletData.monthlyChange || 15.2,
+    pendingTransactions: walletData.pendingTransactions || 3,
+    ayniBalance: walletData.ayniBalance || 0.85,
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
-      {/* 🔗 Backend Connection Status */}
+    <Container maxWidth="xl" sx={{ py: 3 }}>
+      {/* 🔗 Estado de conexión al backend */}
       {!backendAvailability.isAvailable && (
-        <Card sx={{ mb: 2, bgcolor: 'warning.light', color: 'warning.contrastText' }}>
-          <CardContent sx={{ py: 1.5 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="body2">
-                🔌 Modo Offline - Usando datos simulados
-              </Typography>
+        <Fade in={true}>
+          <Alert
+            severity="warning"
+            action={
               <Button
                 size="small"
                 startIcon={<Refresh />}
@@ -168,248 +178,150 @@ export const Home: React.FC = () => {
               >
                 Reintentar
               </Button>
-            </Stack>
-          </CardContent>
-        </Card>
-      )}
-
-      {backendAvailability.isAvailable && dashboardData.isLoading && (
-        <Card sx={{ mb: 2 }}>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              🔄 Cargando datos del servidor...
-            </Typography>
-            <LinearProgress />
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Header con saludo y notificaciones */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h4" fontWeight="bold" gutterBottom>
-            ¡Hola, {userData?.full_name?.split(' ')[0] || user?.full_name?.split(' ')[0] || 'CoomÜnity'}! 👋
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {backendAvailability.isAvailable ? 
-              '🌐 Conectado al servidor • Datos en tiempo real' :
-              '📱 Modo offline • Datos simulados'
             }
-          </Typography>
-        </Box>
-        <Box>
-          <IconButton
-            onClick={() => setNotificationsOpen(!notificationsOpen)}
-            sx={{ mr: 1 }}
+            sx={{
+              mb: 3,
+              borderRadius: 2,
+              bgcolor: alpha(theme.palette.warning.main, 0.1),
+              border: `1px solid ${alpha(theme.palette.warning.main, 0.3)}`,
+            }}
           >
-            <Badge badgeContent={mockDashboardData.notifications.length} color="primary">
-              <Notifications />
-            </Badge>
-          </IconButton>
-          <IconButton onClick={() => navigate('/profile')}>
-            <Settings />
-          </IconButton>
+            🔌 Modo Offline - Experimentando con datos simulados de CoomÜnity
+          </Alert>
+        </Fade>
+      )}
+
+      {/* 🎯 Header principal con saludo personalizado */}
+      <Fade in={animate} timeout={600}>
+        <Box sx={{ mb: 4 }}>
+          <WelcomeHeader
+            userName={
+              (userData?.full_name || '').split(' ')[0] ||
+              (user?.full_name || '').split(' ')[0] ||
+              'CoomÜnity'
+            }
+            isBackendConnected={backendAvailability.isAvailable}
+            notificationCount={mockDashboardData.notifications.length}
+            onNotificationClick={handleNotificationClick}
+            onSettingsClick={handleSettingsClick}
+          />
         </Box>
-      </Box>
+      </Fade>
 
       <Grid container spacing={3}>
-        {/* Gamificación */}
-        <Grid item xs={12} md={8}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <EmojiEvents sx={{ fontSize: 30, color: 'primary.main', mr: 2 }} />
-                <Box>
-                  <Typography variant="h6" fontWeight="bold">
-                    Tu Progreso CoomÜnity
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {backendAvailability.isAvailable ? 'Datos del servidor' : 'Datos simulados'}
-                  </Typography>
-                </Box>
-              </Box>
+        {/* 🎯 Panel principal - Métricas Ayni */}
+        <Grid item xs={12} lg={8}>
+          <Fade in={animate} timeout={800}>
+            <Box>
+              <AyniMetricsCard
+                ondas={normalizedGameData.ondas}
+                meritos={normalizedGameData.meritos}
+                ayniLevel={normalizedGameData.ayniLevel}
+                nextLevel={normalizedGameData.nextLevel}
+                ayniProgress={normalizedGameData.ayniProgress}
+                bienComunContributions={
+                  normalizedGameData.bienComunContributions
+                }
+                balanceAyni={normalizedGameData.balanceAyni}
+                elementos={normalizedGameData.elementos}
+                isLoading={dashboardData.isLoading}
+                isConnected={backendAvailability.isAvailable}
+              />
+            </Box>
+          </Fade>
+        </Grid>
 
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={4}>
-                  <Box textAlign="center">
-                    <Typography variant="h3" fontWeight="bold" color="primary.main">
-                      {normalizedGameData.points}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Öndas Acumuladas
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Box textAlign="center">
-                    <Typography variant="h3" fontWeight="bold" color="secondary.main">
-                      {normalizedGameData.happiness}%
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Felicidad
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Box textAlign="center">
-                    <Chip
-                      label={`Nivel: ${normalizedGameData.level}`}
-                      color="primary"
-                      variant="outlined"
-                      sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}
-                    />
-                  </Box>
-                </Grid>
+        {/* 🎯 Panel lateral - Wallet y acciones */}
+        <Grid item xs={12} lg={4}>
+          <Fade in={animate} timeout={1000}>
+            <Grid container spacing={3}>
+              {/* 💰 Wallet Overview */}
+              <Grid item xs={12}>
+                <WalletOverview
+                  lukas={normalizedWalletData.lukas}
+                  ayniCredits={normalizedWalletData.ayniCredits}
+                  monthlyChange={normalizedWalletData.monthlyChange}
+                  pendingTransactions={normalizedWalletData.pendingTransactions}
+                  ayniBalance={normalizedWalletData.ayniBalance}
+                  isLoading={dashboardData.isLoading}
+                  isConnected={backendAvailability.isAvailable}
+                />
               </Grid>
 
-              <Box sx={{ mt: 3 }}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Progreso a {normalizedGameData.nextLevel}
-                </Typography>
-                <LinearProgress
-                  variant="determinate"
-                  value={normalizedGameData.progress}
-                  sx={{ height: 8, borderRadius: 4 }}
-                />
-              </Box>
-
-              <Box sx={{ mt: 3 }}>
-                <Typography variant="body2" fontWeight="bold" gutterBottom>
-                  Badges Conseguidos
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  {normalizedGameData.badges.slice(0, 2).map((badge, index) => (
-                    <Chip
-                      key={index}
-                      label={badge}
-                      size="small"
-                      color="success"
-                      icon={<ElementIcon element={index % 2 === 0 ? 'fire' : 'earth'} />}
-                    />
-                  ))}
-                  {normalizedGameData.badges.length > 2 && (
-                    <Chip
-                      label={`+${normalizedGameData.badges.length - 2}`}
-                      size="small"
-                      variant="outlined"
-                    />
-                  )}
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
+              {/* 🎯 Acciones Ayni */}
+              <Grid item xs={12}>
+                <QuickActionsGrid onActionClick={handleQuickActionClick} />
+              </Grid>
+            </Grid>
+          </Fade>
         </Grid>
 
-        {/* Wallet y Acciones Rápidas */}
-        <Grid item xs={12} md={4}>
-          <Stack spacing={2}>
-            {/* Wallet */}
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="h6" fontWeight="bold">
-                    Mi Wallet
-                  </Typography>
-                  <Avatar sx={{ bgcolor: 'success.main', width: 32, height: 32 }}>
-                    $
-                  </Avatar>
-                </Box>
-                <Typography variant="h4" fontWeight="bold" gutterBottom>
-                  {formatCurrency(normalizedWalletData.balance)}
-                </Typography>
-                <Typography variant="body2" color="success.main">
-                  +{normalizedWalletData.monthlyChange}% este mes
-                </Typography>
-              </CardContent>
-            </Card>
-
-            {/* ÜCoins */}
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    ÜCoins
-                  </Typography>
-                  <Avatar sx={{ bgcolor: 'warning.main', width: 28, height: 28, fontSize: '0.8rem' }}>
-                    Ü
-                  </Avatar>
-                </Box>
-                <Typography variant="h5" fontWeight="bold" color="warning.main">
-                  {normalizedWalletData.ucoins} ÜCoins
-                </Typography>
-              </CardContent>
-            </Card>
-
-            {/* Acciones Rápidas */}
-            <Card>
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
-                  Acciones Rápidas
-                </Typography>
-                <Grid container spacing={1}>
-                  {mockDashboardData.quickActions.map((action, index) => (
-                    <Grid item xs={6} key={index}>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        color={action.color as any}
-                        onClick={() => handleQuickAction(action.path)}
-                        startIcon={action.icon}
-                        sx={{ flexDirection: 'column', py: 1.5, minHeight: 60 }}
-                      >
-                        <Typography variant="caption" sx={{ mt: 0.5 }}>
-                          {action.label}
-                        </Typography>
-                      </Button>
-                    </Grid>
-                  ))}
-                </Grid>
-              </CardContent>
-            </Card>
-          </Stack>
+        {/* 🎯 Módulos principales */}
+        <Grid item xs={12}>
+          <Fade in={animate} timeout={1400}>
+            <Box>
+              <ModuleCards onModuleClick={handleModuleClick} />
+            </Box>
+          </Fade>
         </Grid>
 
-        {/* Notificaciones */}
+        {/* 🔔 Centro de notificaciones */}
         {notificationsOpen && (
           <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="h6" fontWeight="bold">
-                    Notificaciones Recientes
-                  </Typography>
-                  <Badge badgeContent={mockDashboardData.notifications.length} color="primary">
-                    <Notifications />
-                  </Badge>
-                </Box>
-                <List>
-                  {mockDashboardData.notifications.map((notification, index) => (
-                    <React.Fragment key={notification.id}>
-                      <ListItem>
-                        <ListItemAvatar>
-                          <Avatar sx={{ bgcolor: 'primary.main' }}>
-                            {notification.type === 'achievement' && <EmojiEvents />}
-                            {notification.type === 'marketplace' && <Store />}
-                            {notification.type === 'social' && <People />}
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={notification.title}
-                          secondary={notification.message}
-                        />
-                        <Typography variant="caption" color="text.secondary">
-                          {notification.time}
-                        </Typography>
-                      </ListItem>
-                      {index < mockDashboardData.notifications.length - 1 && <Divider />}
-                    </React.Fragment>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
+            <NotificationCenter
+              notifications={mockDashboardData.notifications}
+              isOpen={notificationsOpen}
+              onNotificationClick={(notification) => {
+                console.log('Notification clicked:', notification);
+                // Aquí puedes manejar la navegación específica para cada tipo de notificación
+              }}
+              onMarkAsRead={(notificationId) => {
+                console.log('Mark as read:', notificationId);
+                // Aquí puedes actualizar el estado de la notificación
+              }}
+              onClearAll={() => {
+                console.log('Clear all notifications');
+                setNotificationsOpen(false);
+              }}
+            />
           </Grid>
         )}
       </Grid>
+
+      {/* 🌟 Mensaje inspiracional flotante */}
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          maxWidth: 300,
+          p: 2,
+          borderRadius: 3,
+          background: `linear-gradient(135deg, ${alpha(
+            theme.palette.primary.main,
+            0.9
+          )} 0%, ${alpha(theme.palette.secondary.main, 0.9)} 100%)`,
+          color: 'white',
+          boxShadow: theme.shadows[8],
+          backdropFilter: 'blur(10px)',
+          border: `1px solid ${alpha('#fff', 0.2)}`,
+          opacity: animate ? 1 : 0,
+          transform: animate ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'all 0.6s ease-in-out 2s',
+          zIndex: 1000,
+        }}
+      >
+        <Box sx={{ fontSize: '1.2rem', mb: 1 }}>🌟</Box>
+        <Box sx={{ fontSize: '0.85rem', fontWeight: 'bold', mb: 0.5 }}>
+          Reflexión del día
+        </Box>
+        <Box sx={{ fontSize: '0.75rem', opacity: 0.9, fontStyle: 'italic' }}>
+          "En cada acción de Ayni que realizas, no solo equilibras tu propio
+          camino, sino que contribuyes al tejido sagrado del Bien Común"
+        </Box>
+      </Box>
     </Container>
   );
-}; 
+};
+
+export default Home;

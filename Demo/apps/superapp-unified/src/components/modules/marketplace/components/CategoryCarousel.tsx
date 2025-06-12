@@ -19,7 +19,7 @@ import {
   ArrowForwardIos,
   Category,
   TrendingUp,
-  Star,
+  StarBorder as Star,
   LocalOffer,
   AutoAwesome,
   Explore,

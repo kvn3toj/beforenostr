@@ -577,7 +577,7 @@ class ApiService {
   }
 
   /**
-   * �� POST Request
+   * 🟠 POST Request
    */
   async post<T>(
     endpoint: string,
@@ -982,10 +982,16 @@ export const marketplaceAPI = {
     apiService.get(`/marketplace/items/${itemId}`),
   createItem: (item: any) =>
     apiService.post('/marketplace/items', item),
+  updateItem: (itemId: string, updateData: any) =>
+    apiService.put(`/marketplace/items/${itemId}`, updateData),
+  deleteItem: (itemId: string) =>
+    apiService.delete(`/marketplace/items/${itemId}`),
   // Mantener métodos legacy para compatibilidad durante la transición
   getProducts: (filters?: any) => marketplaceAPI.getItems(filters),
   getProduct: (productId: string) => marketplaceAPI.getItem(productId),
   createProduct: (product: any) => marketplaceAPI.createItem(product),
+  updateProduct: (productId: string, updateData: any) => marketplaceAPI.updateItem(productId, updateData),
+  deleteProduct: (productId: string) => marketplaceAPI.deleteItem(productId),
 };
 
 /**
@@ -1074,66 +1080,78 @@ export const socialAPI = {
   },
 
   getPost: (postId: string) => {
-    return apiService.get(`/social/posts/${postId}`);
+    return apiService.get(`/social/publications/${postId}`);
   },
 
   createPost: (
     content: string,
-    type: 'text' | 'image' | 'video' = 'text',
+    type: 'TEXT' | 'IMAGE' | 'VIDEO' = 'TEXT',
     media?: File
   ) => {
-    const formData = new FormData();
-    formData.append('content', content);
-    formData.append('type', type);
+    // Para el nuevo endpoint del backend, usar JSON en lugar de FormData
+    const payload: any = {
+      content,
+      type,
+    };
+
+    // Si hay media, por ahora solo enviamos la referencia
+    // TODO: Implementar upload de media cuando el backend lo soporte
     if (media) {
-      formData.append('media', media);
+      payload.mediaUrl = 'placeholder-for-media-upload';
     }
 
-    return apiService.post('/social/posts', formData, {
-      headers: {
-        // No establecer Content-Type para permitir multipart/form-data automático
-      },
-    });
+    return apiService.post('/social/publications', payload);
   },
 
   deletePost: (postId: string) => {
-    return apiService.delete(`/social/posts/${postId}`);
+    return apiService.delete(`/social/publications/${postId}`);
   },
 
-  // 👍 Likes en publicaciones
+  // 👍 Likes en publicaciones - NUEVO: endpoint unificado para toggle
+  toggleLike: (postId: string) => {
+    return apiService.post(`/social/publications/${postId}/like`);
+  },
+
+  // Mantenemos estos métodos para compatibilidad, pero ahora usan el mismo endpoint
   likePost: (postId: string) => {
-    return apiService.post(`/social/posts/${postId}/like`);
+    return apiService.post(`/social/publications/${postId}/like`);
   },
 
   unlikePost: (postId: string) => {
-    return apiService.delete(`/social/posts/${postId}/like`);
+    return apiService.post(`/social/publications/${postId}/like`);
   },
 
   getPostLikes: (postId: string) => {
-    return apiService.get(`/social/posts/${postId}/likes`);
+    return apiService.get(`/social/publications/${postId}/likes`);
   },
 
   // 💬 Comentarios en publicaciones
   getPostComments: (postId: string, page = 0, limit = 10) => {
     return apiService.get(
-      `/social/posts/${postId}/comments?page=${page}&limit=${limit}`
+      `/social/publications/${postId}/comments?page=${page}&limit=${limit}`
     );
   },
 
   createComment: (postId: string, content: string) => {
-    return apiService.post(`/social/posts/${postId}/comments`, {
-      content,
-      timestamp: new Date().toISOString(),
+    // Validar inputs
+    if (!postId || !content?.trim()) {
+      return Promise.reject(new Error('PostId y contenido son requeridos'));
+    }
+    
+    // Payload simplificado - solo enviar el texto requerido
+    return apiService.post(`/social/publications/${postId}/comments`, {
+      text: content.trim(), // El backend espera 'text' no 'content'
     });
   },
 
-  deleteComment: (postId: string, commentId: string) => {
-    return apiService.delete(`/social/posts/${postId}/comments/${commentId}`);
+  deleteComment: (commentId: string) => {
+    // NUEVO: Endpoint directo para eliminar comentario sin necesidad de postId
+    return apiService.delete(`/social/comments/${commentId}`);
   },
 
   likeComment: (postId: string, commentId: string) => {
     return apiService.post(
-      `/social/posts/${postId}/comments/${commentId}/like`
+      `/social/publications/${postId}/comments/${commentId}/like`
     );
   },
 };

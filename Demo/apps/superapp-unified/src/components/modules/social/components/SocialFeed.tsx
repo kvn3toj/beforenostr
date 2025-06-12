@@ -250,14 +250,20 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
     
     handleSocialInteraction(interaction);
     
-    // Actualizar estado local del post
+    // Actualizar estado local del post usando las propiedades correctas
     setAllPosts(prev => prev.map(post => 
       post.id === postId 
         ? { 
             ...post, 
-            likes: action === 'like' ? (post.likes || 0) + 1 : post.likes,
-            comments: action === 'comment' ? (post.comments || 0) + 1 : post.comments,
-            shares: action === 'share' ? (post.shares || 0) + 1 : post.shares,
+            // Actualizar contadores usando la estructura correcta
+            _count: {
+              ...post._count,
+              likes: action === 'like' ? (post._count?.likes || 0) + 1 : (post._count?.likes || 0),
+              comments: action === 'comment' ? (post._count?.comments || 0) + 1 : (post._count?.comments || 0),
+            },
+            // También actualizar las propiedades derivadas si existen
+            likesCount: action === 'like' ? (post.likesCount || post._count?.likes || 0) + 1 : (post.likesCount || post._count?.likes || 0),
+            commentsCount: action === 'comment' ? (post.commentsCount || post._count?.comments || 0) + 1 : (post.commentsCount || post._count?.comments || 0),
           }
         : post
     ));
@@ -514,23 +520,26 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
 
   // 📱 Post Card mejorado con interacciones
   const EnhancedPostCard = ({ post }: { post: SocialPost }) => (
-    <Card sx={{ 
-      mb: 2,
-      transition: 'transform 0.2s, box-shadow 0.2s',
-      '&:hover': { 
-        transform: 'translateY(-2px)',
-        boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
-      }
-    }}>
+    <Card 
+      data-testid="post-card"
+      sx={{ 
+        mb: 2,
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        '&:hover': { 
+          transform: 'translateY(-2px)',
+          boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+        }
+      }}
+    >
       <CardContent>
         {/* Header del post */}
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Avatar sx={{ bgcolor: '#E91E63', mr: 2 }}>
-            {post.authorName?.charAt(0) || 'U'}
+            {post.authorName?.charAt(0) || post.user?.name?.charAt(0) || 'U'}
           </Avatar>
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              {post.authorName || 'Usuario Anónimo'}
+              {post.authorName || post.user?.name || 'Usuario Anónimo'}
             </Typography>
             <Typography variant="caption" color="text.secondary">
               {formatTime(post.createdAt || post.timestamp || '')}
@@ -558,6 +567,7 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Stack direction="row" spacing={2}>
             <Button
+              data-testid="like-button"
               size="small"
               startIcon={<LikeIcon />}
               onClick={() => handlePostInteraction(post.id, 'like')}
@@ -566,9 +576,12 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
                 '&:hover': { color: '#E91E63' }
               }}
             >
-              {post.likes || 0}
+              <span data-testid="like-count">
+                {post.likesCount || post._count?.likes || 0}
+              </span>
             </Button>
             <Button
+              data-testid="comment-button"
               size="small"
               startIcon={<CommentIcon />}
               onClick={() => handlePostInteraction(post.id, 'comment')}
@@ -577,9 +590,12 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
                 '&:hover': { color: '#1976d2' }
               }}
             >
-              {post.comments || 0}
+              <span data-testid="comment-count">
+                {post.commentsCount || post._count?.comments || 0}
+              </span>
             </Button>
             <Button
+              data-testid="share-button"
               size="small"
               startIcon={<ShareIcon />}
               onClick={() => handlePostInteraction(post.id, 'share')}
@@ -588,7 +604,9 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
                 '&:hover': { color: '#388e3c' }
               }}
             >
-              {post.shares || 0}
+              <span data-testid="share-count">
+                {0}
+              </span>
             </Button>
           </Stack>
           
