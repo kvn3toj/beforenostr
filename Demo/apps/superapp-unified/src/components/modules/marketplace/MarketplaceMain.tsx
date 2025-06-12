@@ -24,12 +24,14 @@ import {
   Badge,
   Fade,
   Grow,
+  Zoom,
   CircularProgress,
 } from '@mui/material';
 import '../../../styles/marketplace-mobile.css';
 import '../../../styles/marketplace-enhanced.css';
+import '../../../styles/marketplace-enhanced-v2.css';
 import '../../../styles/micro-interactions.css';
-import '../../../styles/performance-optimizations.css';
+import '../../../styles/marketplace-performance.css';
 import {
   FilterList,
   Add as AddIcon,
@@ -58,7 +60,8 @@ import {
   VolunteerActivism,
 } from '@mui/icons-material';
 import { useAuth } from '../../../contexts/AuthContext';
-import { ProductCard } from './components/ProductCard';
+import { ProductCard } from './components';
+import ProductCardEnhanced from './components/ProductCardEnhanced';
 import { MobileMarketplaceView } from './components';
 import {
   useMarketplaceData,
@@ -646,61 +649,258 @@ const MarketplaceMain: React.FC = () => {
                 </Box>
               </Box>
 
-              {/* Estadísticas de impacto */}
+              {/* Estadísticas de impacto mejoradas */}
               <Paper
                 elevation={0}
                 sx={{
-                  p: 3,
+                  p: { xs: 2, sm: 3, md: 4 },
                   background:
-                    'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)',
+                    'linear-gradient(135deg, #4CAF50 0%, #2E7D32 85%, #1B5E20 100%)',
                   color: 'white',
-                  borderRadius: 3,
+                  borderRadius: 4,
                   mb: 3,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background:
+                      'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                    opacity: 0.6,
+                  },
                 }}
                 className="animate-scale-in"
               >
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={3}>
-                    <Box textAlign="center">
-                      <Typography variant="h4" fontWeight="bold">
-                        {marketplaceStats.totalProducts}
+                  <Grid item xs={6} sm={3}>
+                    <Box
+                      textAlign="center"
+                      sx={{ position: 'relative', zIndex: 1 }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 60,
+                          height: 60,
+                          borderRadius: '50%',
+                          background: 'rgba(255,255,255,0.15)',
+                          mb: 2,
+                          backdropFilter: 'blur(10px)',
+                        }}
+                      >
+                        <Store sx={{ fontSize: 28, color: '#E8F5E8' }} />
+                      </Box>
+                      <Typography
+                        variant="h3"
+                        fontWeight="bold"
+                        sx={{
+                          mb: 0.5,
+                          background:
+                            'linear-gradient(45deg, #E8F5E8, #FFFFFF)',
+                          backgroundClip: 'text',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        }}
+                        className="animate-slide-up animate-stagger-1"
+                      >
+                        {marketplaceStats.totalProducts}+
                       </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          opacity: 0.9,
+                          fontWeight: 500,
+                          letterSpacing: '0.5px',
+                        }}
+                        className="animate-slide-up animate-stagger-2"
+                      >
                         Servicios de Impacto
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <Box textAlign="center">
-                      <Typography variant="h4" fontWeight="bold">
+                  <Grid item xs={6} sm={3}>
+                    <Box
+                      textAlign="center"
+                      sx={{ position: 'relative', zIndex: 1 }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 60,
+                          height: 60,
+                          borderRadius: '50%',
+                          background: 'rgba(255,255,255,0.15)',
+                          mb: 2,
+                          backdropFilter: 'blur(10px)',
+                        }}
+                      >
+                        <VolunteerActivism
+                          sx={{ fontSize: 28, color: '#E8F5E8' }}
+                        />
+                      </Box>
+                      <Typography
+                        variant="h3"
+                        fontWeight="bold"
+                        sx={{
+                          mb: 0.5,
+                          background:
+                            'linear-gradient(45deg, #E8F5E8, #FFFFFF)',
+                          backgroundClip: 'text',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        }}
+                        className="animate-slide-up animate-stagger-2"
+                      >
                         {marketplaceStats.activeProviders}
                       </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          opacity: 0.9,
+                          fontWeight: 500,
+                          letterSpacing: '0.5px',
+                        }}
+                        className="animate-slide-up animate-stagger-3"
+                      >
                         Agentes de Cambio
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <Box textAlign="center">
-                      <Typography variant="h4" fontWeight="bold">
+                  <Grid item xs={6} sm={3}>
+                    <Box
+                      textAlign="center"
+                      sx={{ position: 'relative', zIndex: 1 }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 60,
+                          height: 60,
+                          borderRadius: '50%',
+                          background: 'rgba(255,255,255,0.15)',
+                          mb: 2,
+                          backdropFilter: 'blur(10px)',
+                        }}
+                      >
+                        <TrendingUp sx={{ fontSize: 28, color: '#E8F5E8' }} />
+                      </Box>
+                      <Typography
+                        variant="h3"
+                        fontWeight="bold"
+                        sx={{
+                          mb: 0.5,
+                          background:
+                            'linear-gradient(45deg, #E8F5E8, #FFFFFF)',
+                          backgroundClip: 'text',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        }}
+                        className="animate-slide-up animate-stagger-3"
+                      >
                         {marketplaceStats.totalImpact}
                       </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          opacity: 0.9,
+                          fontWeight: 500,
+                          letterSpacing: '0.5px',
+                        }}
+                        className="animate-slide-up animate-stagger-4"
+                      >
                         Personas Impactadas
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <Box textAlign="center">
-                      <Typography variant="h4" fontWeight="bold">
+                  <Grid item xs={6} sm={3}>
+                    <Box
+                      textAlign="center"
+                      sx={{ position: 'relative', zIndex: 1 }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 60,
+                          height: 60,
+                          borderRadius: '50%',
+                          background: 'rgba(255,255,255,0.15)',
+                          mb: 2,
+                          backdropFilter: 'blur(10px)',
+                        }}
+                      >
+                        <EmojiNature sx={{ fontSize: 28, color: '#E8F5E8' }} />
+                      </Box>
+                      <Typography
+                        variant="h3"
+                        fontWeight="bold"
+                        sx={{
+                          mb: 0.5,
+                          background:
+                            'linear-gradient(45deg, #E8F5E8, #FFFFFF)',
+                          backgroundClip: 'text',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        }}
+                        className="animate-slide-up animate-stagger-4"
+                      >
                         {marketplaceStats.communitiesServed}
                       </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          opacity: 0.9,
+                          fontWeight: 500,
+                          letterSpacing: '0.5px',
+                        }}
+                        className="animate-slide-up animate-stagger-5"
+                      >
                         Comunidades Atendidas
                       </Typography>
                     </Box>
                   </Grid>
                 </Grid>
+
+                {/* Decorative elements */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: -20,
+                    right: -20,
+                    width: 100,
+                    height: 100,
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.1)',
+                    filter: 'blur(20px)',
+                  }}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: -30,
+                    left: -30,
+                    width: 120,
+                    height: 120,
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.08)',
+                    filter: 'blur(25px)',
+                  }}
+                />
               </Paper>
             </Box>
           </Fade>
@@ -908,6 +1108,20 @@ const MarketplaceMain: React.FC = () => {
               onClick={() =>
                 setCurrentFilters((prev) => ({ ...prev, sortBy: 'relevance' }))
               }
+              sx={{
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+                  backgroundColor:
+                    currentFilters.sortBy === 'relevance'
+                      ? 'primary.main'
+                      : 'rgba(25, 118, 210, 0.08)',
+                },
+                '&:active': {
+                  transform: 'translateY(0) scale(0.98)',
+                },
+              }}
               className="chip-micro-interactive"
             />
             <Chip
@@ -919,6 +1133,26 @@ const MarketplaceMain: React.FC = () => {
                 setCurrentFilters((prev) => ({ ...prev, sortBy: 'impact' }))
               }
               icon={<EmojiNature />}
+              sx={{
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 20px rgba(76, 175, 80, 0.25)',
+                  backgroundColor:
+                    currentFilters.sortBy === 'impact'
+                      ? '#4CAF50'
+                      : 'rgba(76, 175, 80, 0.08)',
+                  '& .MuiChip-icon': {
+                    transform: 'scale(1.2)',
+                  },
+                },
+                '&:active': {
+                  transform: 'translateY(0) scale(0.98)',
+                },
+                '& .MuiChip-icon': {
+                  transition: 'transform 0.3s ease',
+                },
+              }}
               className="chip-micro-interactive"
             />
             <Chip
@@ -930,6 +1164,29 @@ const MarketplaceMain: React.FC = () => {
                 setCurrentFilters((prev) => ({ ...prev, sortBy: 'rating' }))
               }
               icon={<Star />}
+              sx={{
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 20px rgba(255, 193, 7, 0.3)',
+                  backgroundColor:
+                    currentFilters.sortBy === 'rating'
+                      ? '#FFC107'
+                      : 'rgba(255, 193, 7, 0.08)',
+                  color:
+                    currentFilters.sortBy === 'rating' ? 'black' : 'inherit',
+                  '& .MuiChip-icon': {
+                    transform: 'rotate(360deg) scale(1.2)',
+                    color: '#FFD700',
+                  },
+                },
+                '&:active': {
+                  transform: 'translateY(0) scale(0.98)',
+                },
+                '& .MuiChip-icon': {
+                  transition: 'all 0.5s ease',
+                },
+              }}
               className="chip-micro-interactive"
             />
             <Chip
@@ -941,6 +1198,26 @@ const MarketplaceMain: React.FC = () => {
                 setCurrentFilters((prev) => ({ ...prev, sortBy: 'trending' }))
               }
               icon={<TrendingUp />}
+              sx={{
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 20px rgba(255, 107, 107, 0.25)',
+                  backgroundColor:
+                    currentFilters.sortBy === 'trending'
+                      ? '#FF6B6B'
+                      : 'rgba(255, 107, 107, 0.08)',
+                  '& .MuiChip-icon': {
+                    transform: 'translateY(-2px) scale(1.2)',
+                  },
+                },
+                '&:active': {
+                  transform: 'translateY(0) scale(0.98)',
+                },
+                '& .MuiChip-icon': {
+                  transition: 'transform 0.3s ease',
+                },
+              }}
               className="chip-micro-interactive"
             />
 
@@ -1069,16 +1346,16 @@ const MarketplaceMain: React.FC = () => {
                 minHeight: { xs: 320, sm: 340, md: 360, lg: 380 },
               },
             }}
-            className="marketplace-grid-container"
+            className="marketplace-grid-container marketplace-grid-enhanced"
           >
             {itemsToDisplay.map((item, index) => (
               <Grid
                 item
-                xs={12}
-                sm={viewMode === 'grid' ? 6 : 12}
-                md={viewMode === 'grid' ? 4 : 12}
-                lg={viewMode === 'grid' ? 3 : 12}
-                xl={viewMode === 'grid' ? 3 : 12}
+                xs={6}
+                sm={6}
+                md={6}
+                lg={6}
+                xl={6}
                 key={item.id}
                 sx={{
                   display: 'flex',
@@ -1093,7 +1370,7 @@ const MarketplaceMain: React.FC = () => {
               >
                 <Fade in timeout={200 + index * 50}>
                   <Box sx={{ height: '100%' }}>
-                    <ProductCard
+                    <ProductCardEnhanced
                       id={item.id}
                       title={item.title}
                       description={item.description}
@@ -1171,24 +1448,72 @@ const MarketplaceMain: React.FC = () => {
         </Box>
       </Container>
 
-      {/* 🎯 FAB para crear item - siempre visible para facilitar tests */}
-      <Fab
-        color="primary"
-        aria-label="crear item"
-        onClick={handleOpenCreateModal}
-        data-testid="create-item-fab"
-        sx={{
-          position: 'fixed',
-          bottom: 16,
-          right: 16,
-          background: 'linear-gradient(45deg, #4CAF50, #66BB6A)',
-          '&:hover': {
-            background: 'linear-gradient(45deg, #388E3C, #4CAF50)',
-          },
-        }}
-      >
-        <AddIcon />
-      </Fab>
+      {/* 🎯 FAB para crear item - mejorado con animaciones avanzadas */}
+      <Zoom in timeout={500} style={{ transitionDelay: '300ms' }}>
+        <Fab
+          color="primary"
+          aria-label="crear item"
+          onClick={handleOpenCreateModal}
+          data-testid="create-item-fab"
+          sx={{
+            position: 'fixed',
+            bottom: 20,
+            right: 20,
+            background: 'linear-gradient(45deg, #4CAF50, #66BB6A)',
+            boxShadow: '0 6px 20px rgba(76, 175, 80, 0.4)',
+            transition: 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+            '&:hover': {
+              background: 'linear-gradient(45deg, #388E3C, #4CAF50)',
+              transform: 'scale(1.1) translateY(-4px)',
+              boxShadow: '0 12px 35px rgba(76, 175, 80, 0.5)',
+              '& .MuiSvgIcon-root': {
+                transform: 'rotate(180deg) scale(1.2)',
+              },
+            },
+            '&:active': {
+              transform: 'scale(1.05) translateY(-2px)',
+              transition: 'all 0.1s ease',
+            },
+            '& .MuiSvgIcon-root': {
+              transition: 'transform 0.3s ease',
+              fontSize: '1.8rem',
+            },
+            // Pulse animation para llamar la atención
+            animation: 'fabPulse 3s infinite',
+            '@keyframes fabPulse': {
+              '0%': {
+                boxShadow: '0 6px 20px rgba(76, 175, 80, 0.4)',
+              },
+              '50%': {
+                boxShadow: '0 8px 25px rgba(76, 175, 80, 0.6)',
+              },
+              '100%': {
+                boxShadow: '0 6px 20px rgba(76, 175, 80, 0.4)',
+              },
+            },
+            // Resplandor sutil
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: -2,
+              left: -2,
+              right: -2,
+              bottom: -2,
+              background: 'linear-gradient(45deg, #4CAF50, #66BB6A)',
+              borderRadius: '50%',
+              opacity: 0,
+              transition: 'opacity 0.3s ease',
+              zIndex: -1,
+            },
+            '&:hover::before': {
+              opacity: 0.3,
+            },
+          }}
+          className="btn-micro-interactive"
+        >
+          <AddIcon />
+        </Fab>
+      </Zoom>
 
       {/* 🆕 Modal de Creación de Items */}
       <CreateItemModal

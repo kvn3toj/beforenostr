@@ -1,5 +1,8 @@
 export { ProductCard } from './ProductCard';
+export { default as ProductCardEnhanced } from './ProductCardEnhanced';
 export { default as AdvancedSearch } from './AdvancedSearch';
+export { default as AdvancedFilters } from './AdvancedFilters';
+export { default as FilterStats } from './FilterStats';
 export { BottomNavigation } from './BottomNavigation';
 export { CategoryCarousel } from './CategoryCarousel';
 export { CategoryChips } from './CategoryChips';

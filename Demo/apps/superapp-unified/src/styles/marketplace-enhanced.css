@@ -68,14 +68,14 @@
   border-radius: 18px !important;
   overflow: hidden !important;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08) !important;
-  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid #e0e0e0 !important;
   background: #ffffff !important;
 }
 
 .marketplace-card:hover {
   transform: translateY(-6px) !important;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15) !important;
-  border-color: rgba(116, 0, 86, 0.1) !important;
+  border-color: #c0c0c0 !important;
 }
 
 .marketplace-card .MuiCardContent-root {
@@ -137,16 +137,45 @@
   color: #666666 !important;
 }
 
+/* Asegurar fondos blancos y texto legible */
+.marketplace-card,
+.marketplace-card.card-micro-interactive {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+}
+
+.marketplace-card .MuiCardContent-root {
+  background-color: transparent !important;
+  color: inherit !important;
+  z-index: 2 !important;
+  position: relative !important;
+}
+
+/* Asegurar que el texto sea legible */
+.marketplace-card .MuiTypography-root {
+  color: #1a1a1a !important;
+}
+
+.marketplace-card .MuiTypography-body2 {
+  color: #666666 !important;
+}
+
+.marketplace-card .MuiTypography-caption {
+  color: #999999 !important;
+}
+
 /* Mobile específico mejorado */
 @media (max-width: 600px) {
   .marketplace-card {
     border-radius: 14px !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    border: 1px solid #e0e0e0 !important;
   }
 
   .marketplace-card:hover {
     transform: translateY(-3px) !important;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+    border-color: #c0c0c0 !important;
   }
 
   .marketplace-card-image {
@@ -432,4 +461,16 @@
 .marketplace-card-image {
   contain: layout style paint;
   will-change: transform;
+}
+
+/* Compatibilidad con Builder.io */
+.marketplace-card,
+.marketplace-card.card-micro-interactive {
+  position: relative !important;
+  pointer-events: auto !important;
+}
+
+.marketplace-card .MuiCardContent-root {
+  position: relative !important;
+  pointer-events: auto !important;
 }

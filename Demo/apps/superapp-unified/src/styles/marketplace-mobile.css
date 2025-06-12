@@ -422,7 +422,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: all var(--transition-normal);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
   box-shadow: var(--shadow-sm);
   position: relative;
 }
@@ -444,7 +444,7 @@
 .product-card:hover {
   transform: translateY(-6px) scale(1.02);
   box-shadow: var(--shadow-xl);
-  border-color: var(--marketplace-primary);
+  border-color: #c0c0c0;
 }
 
 .product-card:hover::before {

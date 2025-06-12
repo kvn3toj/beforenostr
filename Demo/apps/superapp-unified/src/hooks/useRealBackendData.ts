@@ -733,6 +733,43 @@ export function useMarketplaceData(filters?: any) {
     // Configuración mejorada para UX
     keepPreviousData: true, // Mantener datos anteriores mientras carga nuevos
     notifyOnChangeProps: ['data', 'error', 'isLoading'], // Solo notificar cambios importantes
+    // Optimización de performance
+    select: (data) => {
+      // Pre-procesar datos para optimizar renders
+      if (!data?.items) return data;
+
+      return {
+        ...data,
+        items: data.items.map((item: any) => ({
+          ...item,
+          // Pre-calcular campos computados
+          discountPercentage: item.originalPrice
+            ? Math.round(
+                ((item.originalPrice - item.price) / item.originalPrice) * 100
+              )
+            : 0,
+          // Optimizar formato de precio
+          formattedPrice:
+            item.currency === 'LUKAS'
+              ? `ü ${(item.price || 0).toLocaleString()}`
+              : `$${(item.price || 0).toLocaleString()}`,
+          // Pre-calcular estado de tendencia
+          isTrendingCalculated: (item.viewCount || 0) > 50 || item.trending,
+        })),
+        // Agregar metadatos útiles
+        metadata: {
+          lastUpdated: new Date().toISOString(),
+          totalCategories: new Set(
+            data.items.map((item: any) => item.category || item.type)
+          ).size,
+          avgPrice:
+            data.items.reduce(
+              (sum: number, item: any) => sum + (item.price || 0),
+              0
+            ) / data.items.length,
+        },
+      };
+    },
   });
 }
 /**
@@ -832,6 +869,176 @@ export function useDeleteMarketplaceItem() {
       });
     },
   });
+}
+
+/**
+ * 🔍 Hook para búsqueda inteligente en el marketplace
+ * Implementa búsqueda con debounce y filtros avanzados
+ */
+export function useMarketplaceSearch(searchTerm: string, filters: any = {}) {
+  const { data: allItems } = useMarketplaceData();
+
+  return useQuery({
+    queryKey: ['marketplace-search', searchTerm, filters],
+    queryFn: async () => {
+      if (!allItems?.items || searchTerm.length < 2) {
+        return { results: [], totalCount: 0, suggestions: [] };
+      }
+
+      // Búsqueda inteligente con scoring
+      const searchResults = allItems.items
+        .filter((item: any) => {
+          const titleMatch = item.title
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase());
+          const descriptionMatch = item.description
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase());
+          const tagMatch = item.tags?.some((tag: string) =>
+            tag.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+          const categoryMatch = item.category
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase());
+
+          return titleMatch || descriptionMatch || tagMatch || categoryMatch;
+        })
+        .map((item: any) => {
+          // Calcular score de relevancia
+          let score = 0;
+          const term = searchTerm.toLowerCase();
+
+          if (item.title?.toLowerCase().includes(term)) score += 10;
+          if (item.title?.toLowerCase().startsWith(term)) score += 5;
+          if (item.description?.toLowerCase().includes(term)) score += 3;
+          if (
+            item.tags?.some((tag: string) => tag.toLowerCase().includes(term))
+          )
+            score += 2;
+          if (item.featured) score += 2;
+          if (item.trending) score += 1;
+
+          return { ...item, relevanceScore: score };
+        })
+        .sort((a, b) => b.relevanceScore - a.relevanceScore);
+
+      // Generar sugerencias
+      const suggestions = allItems.items
+        .filter(
+          (item: any) =>
+            item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.tags?.some((tag: string) =>
+              tag.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        )
+        .slice(0, 5)
+        .map((item: any) => item.title);
+
+      return {
+        results: searchResults,
+        totalCount: searchResults.length,
+        suggestions: [...new Set(suggestions)], // Remove duplicates
+        searchTerm,
+        executedAt: new Date().toISOString(),
+      };
+    },
+    enabled: searchTerm.length >= 2,
+    staleTime: 1000 * 30, // 30 segundos para búsquedas
+    cacheTime: 1000 * 60 * 5, // 5 minutos en caché
+  });
+}
+
+/**
+ * 🏷️ Hook para obtener categorías populares del marketplace
+ */
+export function useMarketplaceCategories() {
+  const { data: allItems } = useMarketplaceData();
+
+  return useQuery({
+    queryKey: ['marketplace-categories'],
+    queryFn: async () => {
+      if (!allItems?.items) return [];
+
+      // Contar items por categoría
+      const categoryCount = allItems.items.reduce((acc: any, item: any) => {
+        const category = item.category || item.type || 'other';
+        acc[category] = (acc[category] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Convertir a array y ordenar por popularidad
+      const categories = Object.entries(categoryCount)
+        .map(([id, count]) => ({
+          id,
+          count: count as number,
+          name: getCategoryDisplayName(id),
+          items: allItems.items.filter(
+            (item: any) => (item.category || item.type) === id
+          ),
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      return categories;
+    },
+    enabled: !!allItems?.items,
+    staleTime: 1000 * 60 * 10, // 10 minutos
+  });
+}
+
+/**
+ * 🏆 Hook para obtener items trending del marketplace
+ */
+export function useMarketplaceTrending(limit = 6) {
+  const { data: allItems } = useMarketplaceData();
+
+  return useQuery({
+    queryKey: ['marketplace-trending', limit],
+    queryFn: async () => {
+      if (!allItems?.items) return [];
+
+      return allItems.items
+        .filter((item: any) => item.trending || (item.viewCount || 0) > 40)
+        .sort((a: any, b: any) => {
+          // Ordenar por score de trending
+          const scoreA =
+            (a.viewCount || 0) +
+            (a.favoriteCount || 0) * 2 +
+            (a.featured ? 10 : 0);
+          const scoreB =
+            (b.viewCount || 0) +
+            (b.favoriteCount || 0) * 2 +
+            (b.featured ? 10 : 0);
+          return scoreB - scoreA;
+        })
+        .slice(0, limit);
+    },
+    enabled: !!allItems?.items,
+    staleTime: 1000 * 60 * 5, // 5 minutos
+  });
+}
+
+// Función helper para nombres de categorías
+function getCategoryDisplayName(categoryId: string): string {
+  const categoryMap: Record<string, string> = {
+    sostenibilidad: 'Sostenibilidad',
+    educacion: 'Educación',
+    salud: 'Salud & Bienestar',
+    comunidad: 'Desarrollo Comunitario',
+    'tecnologia-social': 'Tecnología Social',
+    agricultura: 'Agricultura Consciente',
+    'economia-circular': 'Economía Circular',
+    inclusion: 'Inclusión Social',
+    SERVICE: 'Servicios',
+    PRODUCT: 'Productos',
+    DIGITAL_CONTENT: 'Contenido Digital',
+    EXPERIENCE: 'Experiencias',
+    SKILL_EXCHANGE: 'Intercambio de Habilidades',
+  };
+
+  return (
+    categoryMap[categoryId] ||
+    categoryId.charAt(0).toUpperCase() + categoryId.slice(1)
+  );
 }
 
 // 🏬 Hook para perfil del merchant

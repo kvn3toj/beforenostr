@@ -1096,8 +1096,8 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
               {itemsToDisplay.map((item, index) => (
                 <Grid
                   item
-                  xs={viewMode === 'grid' ? 6 : 12}
-                  sm={viewMode === 'grid' ? 4 : 12}
+                  xs={6}
+                  sm={6}
                   key={item.id}
                   sx={{
                     display: 'flex',
@@ -1349,8 +1349,9 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
           '&:hover': {
             transform: 'translateY(-2px)',
             boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+            borderColor: featured ? '#FFD700' : '#c0c0c0',
           },
-          border: featured ? '2px solid #FFD700' : 'none',
+          border: featured ? '2px solid #FFD700' : '1px solid #e0e0e0',
         }}
         className="card-micro-interactive"
       >
@@ -1540,14 +1541,12 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
         borderRadius: { xs: '14px', sm: '16px' },
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: '0 3px 12px rgba(0, 0, 0, 0.08)',
-        border: featured
-          ? '2px solid #FFD700'
-          : '1px solid rgba(0, 0, 0, 0.04)',
+        border: featured ? '2px solid #FFD700' : '1px solid #e0e0e0',
         background: '#ffffff',
         '&:hover': {
           transform: 'translateY(-6px)',
           boxShadow: '0 12px 28px rgba(0,0,0,0.15)',
-          borderColor: featured ? '#FFD700' : 'rgba(116, 0, 86, 0.1)',
+          borderColor: featured ? '#FFD700' : '#c0c0c0',
         },
       }}
       className="card-micro-interactive marketplace-card"

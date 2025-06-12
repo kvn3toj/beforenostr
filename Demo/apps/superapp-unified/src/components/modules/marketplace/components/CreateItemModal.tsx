@@ -17,6 +17,9 @@ import {
   Alert,
   CircularProgress,
   InputAdornment,
+  Grid,
+  Card,
+  CardContent,
 } from '@mui/material';
 import {
   Close,
@@ -27,6 +30,7 @@ import {
   SwapHoriz,
   LocationOn,
   MonetizationOn,
+  CheckCircle,
 } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -98,55 +102,101 @@ const ITEM_TYPES = [
   },
   {
     value: 'SKILL_EXCHANGE',
-    label: 'Intercambio de Habilidades',
-    description: 'Intercambia conocimientos sin dinero',
+    label: 'Intercambio',
+    description: 'Intercambia habilidades con otros',
     icon: <SwapHoriz />,
     color: '#9C27B0',
   },
 ];
+
+// 🏷️ Tags predefinidos por categoría
+const PREDEFINED_TAGS = {
+  SERVICE: [
+    'consultoria',
+    'desarrollo',
+    'diseño',
+    'marketing',
+    'educacion',
+    'salud',
+    'bienestar',
+  ],
+  PRODUCT: [
+    'organico',
+    'sostenible',
+    'artesanal',
+    'local',
+    'reciclado',
+    'natural',
+    'ecoamigable',
+  ],
+  EXPERIENCE: [
+    'talleres',
+    'experiencias',
+    'aprendizaje',
+    'cultural',
+    'aventura',
+    'gastronomia',
+    'arte',
+  ],
+  SKILL_EXCHANGE: [
+    'idiomas',
+    'musica',
+    'cocina',
+    'tecnologia',
+    'deportes',
+    'arte',
+    'jardineria',
+  ],
+};
 
 const CreateItemModal: React.FC<CreateItemModalProps> = ({
   open,
   onClose,
   onSuccess,
 }) => {
-  const createItemMutation = useCreateMarketplaceItem();
+  // 🔄 Estado del componente
   const [newTag, setNewTag] = React.useState('');
-  const [step, setStep] = React.useState(1); // Multi-step form
   const [submitSuccess, setSubmitSuccess] = React.useState(false);
 
+  // 🔧 Hook de mutación para crear items
+  const createItemMutation = useCreateMarketplaceItem();
+
+  // 📝 Configuración del formulario con React Hook Form
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
     reset,
     setValue,
     watch,
-    trigger,
+    formState: { errors, isValid },
   } = useForm<CreateItemFormData>({
     resolver: zodResolver(createItemSchema),
     defaultValues: {
       title: '',
       description: '',
-      type: undefined,
-      priceUnits: 1,
+      type: 'SERVICE' as const,
+      priceUnits: 0,
       priceToins: 0,
       tags: [],
       imageUrl: '',
-      location: 'Online',
+      location: '',
     },
     mode: 'onChange',
   });
 
+  // 👀 Watch values para reactividad
   const watchedType = watch('type');
-  const watchedTitle = watch('title');
-  const watchedDescription = watch('description');
   const watchedTags = watch('tags') || [];
 
   // 🏷️ Gestión de tags
   const handleAddTag = () => {
-    if (newTag.trim() && !watchedTags.includes(newTag.trim()) && watchedTags.length < 10) {
-      const updatedTags = [...watchedTags, newTag.trim()];
+    const trimmedTag = newTag.trim();
+    if (
+      trimmedTag &&
+      !watchedTags.includes(trimmedTag) &&
+      watchedTags.length < 10
+    ) {
+      const updatedTags = [...watchedTags, trimmedTag];
       setValue('tags', updatedTags);
       setNewTag('');
     }
@@ -155,6 +205,13 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
   const handleRemoveTag = (tagToRemove: string) => {
     const updatedTags = watchedTags.filter((tag) => tag !== tagToRemove);
     setValue('tags', updatedTags);
+  };
+
+  const handleAddPredefinedTag = (tag: string) => {
+    if (!watchedTags.includes(tag) && watchedTags.length < 10) {
+      const updatedTags = [...watchedTags, tag];
+      setValue('tags', updatedTags);
+    }
   };
 
   // 📝 Manejo del formulario
@@ -176,9 +233,16 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
       await createItemMutation.mutateAsync(itemData);
 
       // ✅ Éxito
-      reset();
-      onSuccess?.();
-      onClose();
+      setSubmitSuccess(true);
+
+      // Delay para mostrar el mensaje de éxito
+      setTimeout(() => {
+        reset();
+        setNewTag('');
+        setSubmitSuccess(false);
+        onSuccess?.();
+        onClose();
+      }, 1500);
     } catch (error) {
       console.error('Error creando item:', error);
       // El error se muestra automáticamente a través del estado de la mutación
@@ -187,67 +251,27 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
 
   const handleClose = () => {
     reset();
-    setCurrentTags([]);
     setNewTag('');
-    setStep(1);
     setSubmitSuccess(false);
     onClose();
   };
 
-  const handleNextStep = async () => {
-    const fieldsToValidate =
-      step === 1
-        ? ['title', 'description', 'type']
-        : ['priceUnits', 'location'];
-
-    const isStepValid = await trigger(fieldsToValidate as any);
-    if (isStepValid) {
-      setStep(step + 1);
-    }
-  };
-
-  const handlePrevStep = () => {
-    setStep(step - 1);
-  };
-
-  const onSubmit = async (data: CreateItemFormData) => {
-    try {
-      // Preparar datos para el backend
-      const itemData = {
-        title: data.title,
-        description: data.description,
-        type: data.type,
-        priceUnits: data.priceUnits,
-        priceToins: data.priceToins || 0,
-        currency: 'LUKAS',
-        tags: currentTags,
-        imageUrl: data.imageUrl || undefined,
-        location: data.location || 'Online',
-      };
-
-      console.log('📤 Enviando datos del item:', itemData);
-      await createItemMutation.mutateAsync(itemData);
-
-      // Success animation
-      setSubmitSuccess(true);
-
-      // Wait for animation then close
-      setTimeout(() => {
-        handleClose();
-        if (onSuccess) {
-          onSuccess();
-        }
-      }, 2000);
-    } catch (error) {
-      console.error('Error creating item:', error);
-      // Error ya es manejado por el hook mutation
-    }
-  };
-
-  // Obtener información del tipo seleccionado
-  const selectedTypeInfo = ITEM_TYPES.find(
-    (type) => type.value === watchedType
-  );
+  // ✅ Vista de éxito
+  if (submitSuccess) {
+    return (
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <DialogContent sx={{ textAlign: 'center', py: 6 }}>
+          <CheckCircle sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
+          <Typography variant="h5" gutterBottom>
+            ¡Item creado exitosamente!
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Tu item ha sido publicado en CoomÜnity Marketplace
+          </Typography>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog
@@ -255,299 +279,241 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
       onClose={handleClose}
       maxWidth="md"
       fullWidth
-      data-testid="create-item-modal"
       PaperProps={{
         sx: {
           borderRadius: 3,
-          minHeight: '60vh',
+          maxHeight: '90vh',
         },
       }}
     >
-      <DialogTitle>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {selectedTypeInfo?.icon}
-            <Typography variant="h6" component="div">
-              Publicar {selectedTypeInfo?.label}
+      <DialogTitle sx={{ pb: 1 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box>
+            <Typography variant="h5" fontWeight="bold">
+              🌱 Crear Nuevo Item
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Comparte tu oferta con la comunidad CoomÜnity
             </Typography>
           </Box>
-          <IconButton onClick={handleClose} size="small">
+          <IconButton onClick={handleClose} edge="end">
             <Close />
           </IconButton>
         </Box>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          Comparte tu {selectedTypeInfo?.label.toLowerCase()} para generar
-          impacto positivo en la comunidad
-        </Typography>
       </DialogTitle>
 
-      <DialogContent sx={{ pt: 2 }}>
-        {submitSuccess ? (
-          // Vista de éxito
-          <Box sx={{ textAlign: 'center', py: 4 }}>
-            <Box
-              sx={{
-                width: 80,
-                height: 80,
-                borderRadius: '50%',
-                backgroundColor: '#4CAF50',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 24px',
-                animation: 'pulse 1.5s ease-in-out infinite',
-              }}
-            >
-              <Typography variant="h3" sx={{ color: 'white' }}>
-                ✅
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent sx={{ pt: 2 }}>
+          {/* 🚨 Alert de error global */}
+          {createItemMutation.isError && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              Error al crear el item. Por favor intenta nuevamente.
+              <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+                {createItemMutation.error?.message ||
+                  'Error de conexión con el servidor'}
               </Typography>
-            </Box>
-            <Typography variant="h5" fontWeight="bold" gutterBottom>
-              ¡{selectedTypeInfo?.label} Publicado!
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Tu {selectedTypeInfo?.label.toLowerCase()} ha sido publicado
-              exitosamente en CoomÜnity Marketplace
-            </Typography>
-          </Box>
-        ) : (
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
-          >
-            {/* Mostrar errores de la mutación */}
-            {createItemMutation.isError && (
-              <Alert severity="error">
-                Error al crear el item. Por favor, verifica que el backend esté
-                disponible e intenta nuevamente.
-                <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                  {createItemMutation.error?.message || 'Error desconocido'}
-                </Typography>
-              </Alert>
-            )}
+            </Alert>
+          )}
 
-            {/* Tipo de Item */}
-            <FormControl fullWidth error={!!errors.type}>
-              <InputLabel>Tipo de Item</InputLabel>
+          <Grid container spacing={3}>
+            {/* 📝 Información básica */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                📝 Información Básica
+              </Typography>
+            </Grid>
+
+            {/* Título */}
+            <Grid item xs={12}>
               <Controller
-                name="type"
+                name="title"
                 control={control}
                 render={({ field }) => (
-                  <Select
+                  <TextField
                     {...field}
-                    label="Tipo de Item"
-                    data-testid="item-type-select"
-                    startAdornment={
-                      selectedTypeInfo && (
-                        <InputAdornment position="start">
-                          {React.cloneElement(selectedTypeInfo.icon, {
-                            sx: { color: selectedTypeInfo.color },
-                          })}
-                        </InputAdornment>
-                      )
-                    }
-                  >
-                    {ITEM_TYPES.map((type) => (
-                      <MenuItem
-                        key={type.value}
-                        value={type.value}
-                        data-testid="item-type-option"
-                      >
-                        <Box
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        >
-                          {React.cloneElement(type.icon, {
-                            sx: { color: type.color },
-                          })}
-                          <Box>
-                            <Typography variant="body1">
-                              {type.label}
-                            </Typography>
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                            >
-                              {type.description}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    label="Título del item *"
+                    placeholder="Ej: Consultoría en Marketing Digital"
+                    fullWidth
+                    error={!!errors.title}
+                    helperText={errors.title?.message}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">📝</InputAdornment>
+                      ),
+                    }}
+                  />
                 )}
               />
+            </Grid>
+
+            {/* Descripción */}
+            <Grid item xs={12}>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Descripción *"
+                    placeholder="Describe detalladamente qué ofreces..."
+                    fullWidth
+                    multiline
+                    rows={4}
+                    error={!!errors.description}
+                    helperText={errors.description?.message}
+                  />
+                )}
+              />
+            </Grid>
+
+            {/* Tipo de item */}
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom>
+                Tipo de item *
+              </Typography>
+              <Grid container spacing={2}>
+                {ITEM_TYPES.map((type) => (
+                  <Grid item xs={12} sm={6} md={3} key={type.value}>
+                    <Card
+                      sx={{
+                        cursor: 'pointer',
+                        border: `2px solid ${
+                          watchedType === type.value
+                            ? type.color
+                            : 'transparent'
+                        }`,
+                        background:
+                          watchedType === type.value
+                            ? `${type.color}10`
+                            : 'transparent',
+                        '&:hover': {
+                          borderColor: type.color,
+                          background: `${type.color}05`,
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                      onClick={() => setValue('type', type.value as any)}
+                    >
+                      <CardContent sx={{ textAlign: 'center', py: 2 }}>
+                        <Box
+                          sx={{
+                            color: type.color,
+                            mb: 1,
+                            '& svg': { fontSize: 32 },
+                          }}
+                        >
+                          {type.icon}
+                        </Box>
+                        <Typography variant="subtitle2" fontWeight="bold">
+                          {type.label}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {type.description}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
               {errors.type && (
-                <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
+                <Typography variant="caption" color="error" sx={{ mt: 1 }}>
                   {errors.type.message}
                 </Typography>
               )}
-            </FormControl>
+            </Grid>
 
-            {/* Título */}
-            <Controller
-              name="title"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Título"
-                  placeholder="Ej: Desarrollo Web con React y Node.js"
-                  fullWidth
-                  error={!!errors.title}
-                  helperText={errors.title?.message}
-                  inputProps={{ maxLength: 100 }}
-                  data-testid="item-title-input"
-                />
-              )}
-            />
-
-            {/* Descripción */}
-            <Controller
-              name="description"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Descripción"
-                  placeholder="Describe detalladamente lo que ofreces, los beneficios y el impacto positivo que generas..."
-                  multiline
-                  rows={4}
-                  fullWidth
-                  error={!!errors.description}
-                  helperText={
-                    errors.description?.message ||
-                    `${field.value?.length || 0}/1000 caracteres`
-                  }
-                  inputProps={{ maxLength: 1000 }}
-                  data-testid="item-description-input"
-                />
-              )}
-            />
-
-            {/* Precio en Lükas */}
-            <Controller
-              name="priceUnits"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Precio en Lükas (ü)"
-                  type="number"
-                  fullWidth
-                  error={!!errors.priceUnits}
-                  helperText={errors.priceUnits?.message}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <MonetizationOn />ü
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  data-testid="item-price-input"
-                />
-              )}
-            />
-
-            {/* Precio opcional en Toins */}
-            <Controller
-              name="priceToins"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Precio alternativo en Töins (opcional)"
-                  type="number"
-                  fullWidth
-                  error={!!errors.priceToins}
-                  helperText={
-                    errors.priceToins?.message ||
-                    'Los Töins son una moneda adicional para intercambios especiales'
-                  }
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <MonetizationOn />₸
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
-              )}
-            />
-
-            {/* Ubicación */}
-            <Controller
-              name="location"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Ubicación (opcional)"
-                  placeholder="Ej: Medellín, Colombia"
-                  fullWidth
-                  error={!!errors.location}
-                  helperText={errors.location?.message}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LocationOn />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              )}
-            />
-
-            {/* URL de Imagen */}
-            <Controller
-              name="imageUrl"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="URL de Imagen (opcional)"
-                  placeholder="https://ejemplo.com/imagen.jpg"
-                  fullWidth
-                  error={!!errors.imageUrl}
-                  helperText={
-                    errors.imageUrl?.message ||
-                    'Agrega una imagen representativa de tu oferta'
-                  }
-                />
-              )}
-            />
-
-            {/* Gestión de Tags */}
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Etiquetas (opcional)
+            {/* 💰 Precio */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                💰 Precio
               </Typography>
-              <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-                {currentTags.map((tag, index) => (
-                  <Chip
-                    key={index}
-                    label={tag}
-                    onDelete={() => handleRemoveTag(tag)}
-                    size="small"
-                    color="primary"
-                    variant="outlined"
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="priceUnits"
+                control={control}
+                render={({ field: { onChange, value, ...field } }) => (
+                  <TextField
+                    {...field}
+                    value={value || ''}
+                    onChange={(e) => onChange(Number(e.target.value) || 0)}
+                    label="Precio en Lükas *"
+                    type="number"
+                    fullWidth
+                    error={!!errors.priceUnits}
+                    helperText={errors.priceUnits?.message}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">ü</InputAdornment>
+                      ),
+                    }}
                   />
-                ))}
-              </Box>
-              <Box sx={{ display: 'flex', gap: 1 }}>
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="priceToins"
+                control={control}
+                render={({ field: { onChange, value, ...field } }) => (
+                  <TextField
+                    {...field}
+                    value={value || ''}
+                    onChange={(e) => onChange(Number(e.target.value) || 0)}
+                    label="Precio en Töins (opcional)"
+                    type="number"
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">🪙</InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+
+            {/* 🏷️ Tags */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                🏷️ Etiquetas
+              </Typography>
+
+              {/* Tags sugeridos */}
+              {watchedType &&
+                PREDEFINED_TAGS[
+                  watchedType as keyof typeof PREDEFINED_TAGS
+                ] && (
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Etiquetas sugeridas:
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {PREDEFINED_TAGS[
+                        watchedType as keyof typeof PREDEFINED_TAGS
+                      ].map((tag) => (
+                        <Chip
+                          key={tag}
+                          label={tag}
+                          variant={
+                            watchedTags.includes(tag) ? 'filled' : 'outlined'
+                          }
+                          onClick={() => handleAddPredefinedTag(tag)}
+                          color="primary"
+                          size="small"
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                )}
+
+              <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                 <TextField
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
-                  label="Agregar etiqueta"
-                  placeholder="react, diseño, consultoría..."
+                  placeholder="Agregar etiqueta..."
                   size="small"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
@@ -555,73 +521,110 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
                       handleAddTag();
                     }
                   }}
-                  sx={{ flexGrow: 1 }}
                 />
                 <Button
                   onClick={handleAddTag}
                   variant="outlined"
-                  size="small"
                   startIcon={<Add />}
-                  disabled={
-                    !newTag.trim() ||
-                    currentTags.includes(newTag.trim().toLowerCase()) ||
-                    currentTags.length >= 10
-                  }
+                  disabled={!newTag.trim() || watchedTags.length >= 10}
                 >
                   Agregar
                 </Button>
               </Box>
-            </Box>
-          </Box>
-        )}
-      </DialogContent>
 
-      <DialogActions sx={{ p: 3, pt: 1 }}>
-        {submitSuccess ? (
-          <Button onClick={handleClose} variant="contained" fullWidth>
-            Continuar
+              {/* Tags actuales */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {watchedTags.map((tag) => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    onDelete={() => handleRemoveTag(tag)}
+                    color="primary"
+                    variant="filled"
+                  />
+                ))}
+              </Box>
+              <Typography variant="caption" color="text.secondary">
+                {watchedTags.length}/10 etiquetas
+              </Typography>
+            </Grid>
+
+            {/* 📍 Ubicación e imagen */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                📍 Detalles Adicionales
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="location"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Ubicación"
+                    placeholder="Ej: Bogotá, Colombia o Online"
+                    fullWidth
+                    error={!!errors.location}
+                    helperText={errors.location?.message}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LocationOn />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="imageUrl"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="URL de imagen (opcional)"
+                    placeholder="https://ejemplo.com/imagen.jpg"
+                    fullWidth
+                    error={!!errors.imageUrl}
+                    helperText={errors.imageUrl?.message}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
+          <Button onClick={handleClose} variant="outlined">
+            Cancelar
           </Button>
-        ) : (
-          <>
-            <Button
-              onClick={handleClose}
-              disabled={createItemMutation.isLoading}
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              variant="contained"
-              disabled={createItemMutation.isLoading || !isValid}
-              startIcon={
-                createItemMutation.isLoading ? (
-                  <CircularProgress size={16} />
-                ) : (
-                  selectedTypeInfo?.icon
-                )
-              }
-              sx={{
-                background: selectedTypeInfo
-                  ? `linear-gradient(45deg, ${selectedTypeInfo.color}, ${selectedTypeInfo.color}AA)`
-                  : 'linear-gradient(45deg, #4CAF50, #66BB6A)',
-                '&:hover': {
-                  background: selectedTypeInfo
-                    ? `linear-gradient(45deg, ${selectedTypeInfo.color}CC, ${selectedTypeInfo.color})`
-                    : 'linear-gradient(45deg, #388E3C, #4CAF50)',
-                },
-                '&:disabled': {
-                  background: '#e0e0e0',
-                },
-              }}
-              data-testid="create-item-submit"
-            >
-              {createItemMutation.isLoading
-                ? 'Publicando...'
-                : `Publicar ${selectedTypeInfo?.label || 'Item'}`}
-            </Button>
-          </>
-        )}
-      </DialogActions>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={!isValid || createItemMutation.isPending}
+            startIcon={
+              createItemMutation.isPending ? (
+                <CircularProgress size={16} />
+              ) : (
+                <Add />
+              )
+            }
+            sx={{
+              background: 'linear-gradient(45deg, #4CAF50, #66BB6A)',
+              '&:hover': {
+                background: 'linear-gradient(45deg, #388E3C, #4CAF50)',
+              },
+            }}
+          >
+            {createItemMutation.isPending ? 'Creando...' : 'Crear Item'}
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };

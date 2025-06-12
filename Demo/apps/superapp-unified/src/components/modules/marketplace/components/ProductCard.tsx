@@ -56,6 +56,10 @@ import {
   Edit,
   Delete,
   Warning,
+  ChevronLeft,
+  ChevronRight,
+  AddShoppingCart,
+  QuickReplyOutlined,
 } from '@mui/icons-material';
 import { useAuth } from '../../../../contexts/AuthContext';
 import {
@@ -145,11 +149,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { user } = useAuth();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [showQuickPreview, setShowQuickPreview] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [showShareOptions, setShowShareOptions] = useState(false);
+  const [showQuickView, setShowQuickView] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Hooks for edit/delete functionality
@@ -179,9 +184,45 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     setIsMenuOpen(false);
   };
 
-  const handleEditClick = () => {
-    handleMenuClose();
-    setEditModalOpen(true);
+  const handleProductClick = () => {
+    navigate(`/marketplace/product/${id}`);
+  };
+
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowQuickView(true);
+  };
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAddingToCart(true);
+
+    // Simular agregado al carrito
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    setIsAddingToCart(false);
+
+    // Mostrar feedback visual
+    if (cardRef.current) {
+      cardRef.current.style.transform = 'scale(1.05)';
+      setTimeout(() => {
+        if (cardRef.current) {
+          cardRef.current.style.transform = '';
+        }
+      }, 150);
+    }
+  };
+
+  const handleImageNavigation = (direction: 'next' | 'prev') => {
+    if (direction === 'next') {
+      setCurrentImageIndex((prev) =>
+        prev === images.length - 1 ? 0 : prev + 1
+      );
+    } else {
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? images.length - 1 : prev - 1
+      );
+    }
   };
 
   const handleDeleteClick = () => {
@@ -258,6 +299,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       overflow: 'hidden' as const,
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       borderRadius: 3,
+      backgroundColor: '#ffffff', // Fondo blanco base para todas las variantes
     };
 
     const variantStyles = {
@@ -265,11 +307,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         ...baseStyles,
         border: '1px solid #e0e0e0',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        backgroundColor: '#ffffff', // Asegurar fondo blanco
         '&:hover': enableHover
           ? {
               transform: 'translateY(-6px)',
               boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
               borderColor: '#1976d2',
+              backgroundColor: '#ffffff', // Mantener fondo blanco en hover
             }
           : {},
       },
@@ -294,6 +338,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ? {
               transform: 'translateY(-8px) scale(1.02)',
               boxShadow: '0 12px 30px rgba(255, 215, 0, 0.4)',
+              background: 'linear-gradient(135deg, #FFF9C4 0%, #FFFFFF 100%)',
             }
           : {},
       },
@@ -306,6 +351,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ? {
               transform: 'translateY(-8px) scale(1.02)',
               boxShadow: '0 12px 30px rgba(255, 107, 107, 0.4)',
+              background: 'linear-gradient(135deg, #FFE3E3 0%, #FFFFFF 100%)',
             }
           : {},
       },
@@ -313,10 +359,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         ...baseStyles,
         height: 180,
         border: '1px solid #e8e8e8',
+        backgroundColor: '#ffffff', // Asegurar fondo blanco
         '&:hover': enableHover
           ? {
               transform: 'translateY(-2px)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              backgroundColor: '#ffffff', // Mantener fondo blanco en hover
             }
           : {},
       },
@@ -342,11 +390,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             transition: 'all 0.3s ease',
             borderRadius: 2,
             border: featured ? '2px solid #FFD700' : '1px solid #e0e0e0',
+            backgroundColor: '#ffffff !important',
             background: featured
-              ? 'linear-gradient(135deg, #FFF9C4 0%, #FFFFFF 100%)'
+              ? 'linear-gradient(135deg, #FFF9C4 0%, #FFFFFF 100%) !important'
               : trending
-                ? 'linear-gradient(135deg, #FFE3E3 0%, #FFFFFF 100%)'
-                : 'white',
+                ? 'linear-gradient(135deg, #FFE3E3 0%, #FFFFFF 100%) !important'
+                : '#ffffff !important',
+            color: '#1a1a1a !important',
             '&:hover': enableHover
               ? {
                   transform: 'translateY(-2px)',
@@ -667,11 +717,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             : trending
               ? '2px solid #FF6B6B'
               : '1px solid rgba(0, 0, 0, 0.04)',
+          backgroundColor: '#ffffff !important',
           background: featured
-            ? 'linear-gradient(135deg, #FFF9C4 0%, #FFFFFF 100%)'
+            ? 'linear-gradient(135deg, #FFF9C4 0%, #FFFFFF 100%) !important'
             : trending
-              ? 'linear-gradient(135deg, #FFE3E3 0%, #FFFFFF 100%)'
-              : '#ffffff',
+              ? 'linear-gradient(135deg, #FFE3E3 0%, #FFFFFF 100%) !important'
+              : '#ffffff !important',
+          color: '#1a1a1a !important',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': enableHover
             ? {
@@ -702,10 +754,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             backgroundColor: '#f8f9fa',
           }}
         >
-          {/* Imagen principal con lazy loading */}
+          {/* Imagen principal con navegación mejorada */}
           <Box
             component="img"
             src={
+              images[currentImageIndex] ||
               image ||
               'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop'
             }
@@ -722,11 +775,97 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              transition: 'transform 0.3s ease',
+              transition: 'all 0.3s ease',
               transform: isHovered ? 'scale(1.05)' : 'scale(1)',
               opacity: imageLoaded ? 1 : 0,
+              filter: isHovered ? 'brightness(1.1)' : 'brightness(1)',
             }}
           />
+
+          {/* Navegación de imágenes */}
+          {images.length > 1 && isHovered && (
+            <>
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleImageNavigation('prev');
+                }}
+                sx={{
+                  position: 'absolute',
+                  left: 8,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  width: 28,
+                  height: 28,
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                    transform: 'translateY(-50%) scale(1.1)',
+                  },
+                }}
+              >
+                <ChevronLeft fontSize="small" />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleImageNavigation('next');
+                }}
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  width: 28,
+                  height: 28,
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                    transform: 'translateY(-50%) scale(1.1)',
+                  },
+                }}
+              >
+                <ChevronRight fontSize="small" />
+              </IconButton>
+
+              {/* Indicadores de imagen */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: 8,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  display: 'flex',
+                  gap: 0.5,
+                }}
+              >
+                {images.map((_, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      backgroundColor:
+                        index === currentImageIndex
+                          ? 'white'
+                          : 'rgba(255, 255, 255, 0.5)',
+                      transition: 'all 0.2s ease',
+                      cursor: 'pointer',
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentImageIndex(index);
+                    }}
+                  />
+                ))}
+              </Box>
+            </>
+          )}
 
           {/* Skeleton mientras carga */}
           {!imageLoaded && (
@@ -783,10 +922,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                         },
                         transition: 'all 0.2s ease',
                       }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowQuickPreview(true);
-                      }}
+                      onClick={handleQuickView}
                       className="icon-micro-interactive"
                     >
                       <ZoomIn />
@@ -827,6 +963,39 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   in={isHovered}
                   timeout={300}
                   style={{ transitionDelay: '150ms' }}
+                >
+                  <Tooltip title="Agregar al carrito" arrow>
+                    <IconButton
+                      size="small"
+                      disabled={isAddingToCart}
+                      sx={{
+                        backgroundColor: isAddingToCart
+                          ? 'rgba(76, 175, 80, 0.9)'
+                          : 'rgba(255,255,255,0.95)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        color: isAddingToCart ? 'white' : 'inherit',
+                        '&:hover': {
+                          backgroundColor: isAddingToCart
+                            ? 'rgba(76, 175, 80, 1)'
+                            : '#4CAF50',
+                          color: 'white',
+                          transform: 'scale(1.1)',
+                          boxShadow: '0 4px 20px rgba(76, 175, 80, 0.4)',
+                        },
+                        transition: 'all 0.2s ease',
+                      }}
+                      onClick={handleAddToCart}
+                      className="icon-micro-interactive"
+                    >
+                      {isAddingToCart ? <CheckCircle /> : <AddShoppingCart />}
+                    </IconButton>
+                  </Tooltip>
+                </Zoom>
+                <Zoom
+                  in={isHovered}
+                  timeout={300}
+                  style={{ transitionDelay: '200ms' }}
                 >
                   <Tooltip title="Contactar vendedor" arrow>
                     <IconButton
