@@ -40,17 +40,16 @@ export const useAuth = () => {
   return context;
 };
 
-// 🧪 **MOCK USER PARA DESARROLLO/TESTING** (DESACTIVADO - USAR BACKEND REAL)
+// 🧪 **MOCK USER PARA DESARROLLO/TESTING - JUGADOR DE COOMUNITY**
 const MOCK_AUTHENTICATED_USER: User = {
-  id: '04e3b127-3478-4337-b5a2-42af1916df6f', // ID real del backend para test@coomunity.com
-  email: 'test@coomunity.com',
-  full_name: 'Test User',
-  avatar_url:
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-  role: 'user', // Rol real del backend
+  id: 'mock-player-id-456',
+  email: 'mock-player@coomunity.com',
+  full_name: 'Jugador CoomÜnity',
+  avatar_url: 'https://i.pravatar.cc/150?u=mock-player',
+  role: 'user', // Rol de Jugador (PLAYER en el backend)
   created_at: new Date().toISOString(),
-  access_token: 'mock-jwt-token-for-testing-do-not-use-in-production',
-  refresh_token: 'mock-refresh-token-for-testing',
+  access_token: 'mock-jwt-token-for-coomunity-player-testing',
+  refresh_token: 'mock-refresh-token-for-coomunity-player',
 };
 
 // 🔧 **FUNCIÓN PARA VERIFICAR SI EL MOCK ESTÁ HABILITADO**

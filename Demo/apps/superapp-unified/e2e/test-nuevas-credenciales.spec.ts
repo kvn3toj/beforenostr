@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('🔐 Test con Nuevas Credenciales SuperApp', () => {
   
-  test('debe verificar errores con usuario superapp@coomunity.com', async ({ page }) => {
+  test('debe verificar errores con usuario test@coomunity.com', async ({ page }) => {
     const networkErrors: Array<{url: string, status: number, statusText: string}> = [];
     
     // Capturar errores de red
@@ -27,9 +27,9 @@ test.describe('🔐 Test con Nuevas Credenciales SuperApp', () => {
     // Hacer login con nuevas credenciales
     const isLoginPage = await page.locator('#email').isVisible();
     if (isLoginPage) {
-      console.log('🔐 Login con superapp@coomunity.com...');
-      await page.fill('#email', 'superapp@coomunity.com');
-      await page.fill('#password', 'superapp123');
+          console.log('🔐 Login con test@coomunity.com...');
+    await page.fill('#email', 'test@coomunity.com');
+    await page.fill('#password', 'test123');
       
       const loginPromise = page.waitForResponse(
         response => response.url().includes('/auth/login'),

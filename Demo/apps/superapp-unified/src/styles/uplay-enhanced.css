@@ -1,0 +1,587 @@
+/* ÜPlay Enhanced Styles - Desktop and Mobile Optimizations */
+
+/* Global UPlay Enhancements */
+.uplay-container {
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --secondary-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  --success-gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  --error-gradient: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --card-shadow-hover: 0 12px 40px rgba(99, 102, 241, 0.2);
+  --border-radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced Video Player Styles */
+.uplay-video-player {
+  position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+}
+
+.uplay-video-player:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.uplay-video-player video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Interactive Controls */
+.uplay-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 20px;
+  transition: opacity 0.3s ease;
+}
+
+.uplay-controls.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Progress Bar Enhancements */
+.uplay-progress-bar {
+  position: relative;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.uplay-progress-fill {
+  height: 100%;
+  background: var(--primary-gradient);
+  border-radius: 3px;
+  transition: width 0.1s ease;
+}
+
+.uplay-progress-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.uplay-progress-bar:hover .uplay-progress-thumb {
+  opacity: 1;
+}
+
+/* Question Markers */
+.uplay-question-marker {
+  position: absolute;
+  top: -8px;
+  width: 12px;
+  height: 12px;
+  background: #f59e0b;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: var(--transition);
+  animation: pulse 2s infinite;
+}
+
+.uplay-question-marker:hover {
+  transform: translateX(-50%) scale(1.2);
+}
+
+.uplay-question-marker.completed {
+  background: #10b981;
+  animation: none;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+/* Enhanced Card Styles */
+.uplay-video-card {
+  background: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  border: 2px solid transparent;
+  overflow: hidden;
+}
+
+.uplay-video-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--card-shadow-hover);
+  border-color: #6366f1;
+}
+
+.uplay-video-card.active {
+  border-color: #6366f1;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.05) 0%,
+    rgba(139, 92, 246, 0.05) 100%
+  );
+}
+
+/* Gamification Elements */
+.uplay-merit-chip {
+  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+  color: #92400e;
+  border: 1px solid #fbbf24;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 4px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  animation: shimmer 3s infinite;
+}
+
+.uplay-ondas-chip {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #166534;
+  border: 1px solid #10b981;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 4px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Achievement Notifications */
+.uplay-achievement-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--secondary-gradient);
+  color: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4);
+  z-index: 1300;
+  min-width: 300px;
+  animation: slideInRight 0.5s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Streak Indicator */
+.uplay-streak-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  animation: fireGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes fireGlow {
+  from {
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.3);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+  }
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 768px) {
+  .uplay-container {
+    --border-radius: 12px;
+  }
+
+  .uplay-video-card {
+    margin-bottom: 12px;
+  }
+
+  .uplay-video-card:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  .uplay-controls {
+    padding: 16px;
+  }
+
+  .uplay-merit-chip,
+  .uplay-ondas-chip {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .uplay-achievement-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+  }
+}
+
+/* Question Dialog Enhancements */
+.uplay-question-dialog {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: var(--primary-gradient);
+  color: white;
+}
+
+.uplay-question-option {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 8px 0;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+}
+
+.uplay-question-option:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.uplay-question-option.selected {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.02);
+}
+
+.uplay-question-option.correct {
+  background: rgba(16, 185, 129, 0.3);
+  border-color: #10b981;
+  animation: correctAnswer 0.6s ease;
+}
+
+.uplay-question-option.incorrect {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+  animation: incorrectAnswer 0.6s ease;
+}
+
+@keyframes correctAnswer {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes incorrectAnswer {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Level Progress Bar */
+.uplay-level-progress {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.uplay-level-progress-fill {
+  height: 100%;
+  background: var(--secondary-gradient);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.uplay-level-progress-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Loading States */
+.uplay-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Focus States for Accessibility */
+.uplay-video-card:focus,
+.uplay-question-option:focus,
+.uplay-controls button:focus {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .uplay-video-card {
+    border: 2px solid #000;
+  }
+
+  .uplay-merit-chip,
+  .uplay-ondas-chip {
+    border: 2px solid #000;
+  }
+
+  .uplay-question-option {
+    border: 2px solid #fff;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .uplay-video-card,
+  .uplay-question-option,
+  .uplay-controls,
+  .uplay-question-marker {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .uplay-video-player,
+  .uplay-controls,
+  .uplay-achievement-notification {
+    display: none;
+  }
+
+  .uplay-video-card {
+    box-shadow: none;
+    border: 1px solid #000;
+    page-break-inside: avoid;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .uplay-video-card {
+    background: #1f2937;
+    color: #fff;
+  }
+
+  .uplay-skeleton {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+  }
+}
+
+/* Custom Scrollbar for Video Lists */
+.uplay-video-list {
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 #f1f5f9;
+}
+
+.uplay-video-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.uplay-video-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.uplay-video-list::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 3px;
+}
+
+.uplay-video-list::-webkit-scrollbar-thumb:hover {
+  background: #5a56eb;
+}
+
+/* Performance Optimizations */
+.uplay-video-card,
+.uplay-question-option {
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.uplay-video-player video {
+  will-change: auto;
+}
+
+/* Typography Enhancements */
+.uplay-title {
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.uplay-subtitle {
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 500;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+.uplay-body {
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Interactive Elements */
+.uplay-button {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  user-select: none;
+}
+
+.uplay-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.uplay-button:active {
+  transform: translateY(0);
+}
+
+.uplay-button.secondary {
+  background: var(--secondary-gradient);
+}
+
+.uplay-button.success {
+  background: var(--success-gradient);
+}
+
+.uplay-button.danger {
+  background: var(--error-gradient);
+}
+
+/* Floating Action Button */
+.uplay-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  transition: var(--transition);
+  z-index: 1000;
+}
+
+.uplay-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.5);
+}
+
+@media (max-width: 768px) {
+  .uplay-fab {
+    bottom: 80px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+}

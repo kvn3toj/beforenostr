@@ -57,6 +57,9 @@ async function main() {
     await prisma.invitationTemplate.deleteMany();
     console.log('  ✓ Deleted all invitation templates');
     
+    await prisma.like.deleteMany();
+    console.log('  ✓ Deleted all likes');
+    
     await prisma.comment.deleteMany();
     console.log('  ✓ Deleted all comments');
     
@@ -89,6 +92,20 @@ async function main() {
     
     await prisma.uIComponentTemplate.deleteMany();
     console.log('  ✓ Deleted all UI component templates');
+    
+    // Clean marketplace entities
+    await prisma.marketplaceItem.deleteMany();
+    console.log('  ✓ Deleted all marketplace items');
+    
+    // Clean challenge entities
+    await prisma.userChallenge.deleteMany();
+    console.log('  ✓ Deleted all user challenges');
+    
+    await prisma.challengeReward.deleteMany();
+    console.log('  ✓ Deleted all challenge rewards');
+    
+    await prisma.challenge.deleteMany();
+    console.log('  ✓ Deleted all challenges');
     
     // Clean content entities
     await prisma.contentItem.deleteMany();
@@ -144,6 +161,7 @@ async function main() {
   const testUserId1 = '00000000-0000-0000-0000-000000000006';
   const testUserId2 = '00000000-0000-0000-0000-000000000007';
   const testUserId3 = '00000000-0000-0000-0000-000000000008';
+  const e2eTestUserId = '00000000-0000-0000-0000-000000000009';
   
   const mundo1Id = '11111111-1111-1111-1111-111111111111';
   const mundo2Id = '22222222-2222-2222-2222-222222222222';
@@ -419,6 +437,7 @@ async function main() {
   // Hash default passwords
   const defaultPassword = await bcrypt.hash('123456', 12);
   const adminPassword = await bcrypt.hash('admin123', 12);
+  const e2eTestPassword = await bcrypt.hash('test123', 12);
   
   const users = await Promise.all([
     prisma.user.create({
@@ -573,9 +592,32 @@ async function main() {
         personalityId: personalities[0].id
       },
     }),
+    
+    // E2E Testing User - Utilizado por tests de Playwright
+    prisma.user.create({
+      data: {
+        id: e2eTestUserId,
+        email: 'test@coomunity.com',
+        username: 'e2e_tester',
+        name: 'E2E Test User',
+        firstName: 'E2E',
+        lastName: 'Tester',
+        password: e2eTestPassword,
+        avatarUrl: 'https://example.com/avatars/e2e-tester.jpg',
+        isActive: true,
+        status: 'ACTIVE',
+        personalityId: personalities[1].id,
+        documentType: 'cedula',
+        documentNumber: '9999999999',
+        phone: '+1234567899',
+        country: 'Colombia',
+        address: 'Test Address 123'
+      },
+    }),
   ]);
   
   console.log(`  ✓ Created ${users.length} users with hashed passwords`);
+  console.log('  🧪 E2E Test user created: test@coomunity.com / test123');
 
   // ========================================
   // STEP 2.3: Create Roles
@@ -906,6 +948,14 @@ async function main() {
       data: {
         userId: contentCreatorUserId,
         roleId: roles.find(r => r.name === 'PROMOTER')!.id,
+        assignedById: adminUserId,
+      },
+    }),
+    // E2E Test user gets USER role
+    prisma.userRole.create({
+      data: {
+        userId: e2eTestUserId,
+        roleId: userRole.id,
         assignedById: adminUserId,
       },
     }),
@@ -1851,128 +1901,244 @@ async function main() {
   console.log(`  ✓ Created ${analyticsData.length} analytics events`);
 
   // ========================================
-  // STEP 17: Create Subtitles and Questions (from original seed)
+  // STEP 17: Create Marketplace Items (CoomÜnity GMP - Gamified Match Place)
   // ========================================
-  console.log('📝 Creating subtitles...');
+  console.log('🛒 Creating marketplace items...');
   
-  const subtitles = await Promise.all([
-    // Subtitles for first video - Spanish
-    prisma.subtitle.create({
+  const marketplaceItems = await Promise.all([
+    // Service items from different users
+    prisma.marketplaceItem.create({
       data: {
-        videoItemId: videoItems[0].id,
-        languageCode: 'es-ES',
-        format: 'srt',
-        content: `1
-00:00:00,000 --> 00:00:05,000
-Bienvenidos al curso de Gamificación en Educación
-
-2
-00:00:05,000 --> 00:00:10,000
-En este video aprenderemos los conceptos básicos
-
-3
-00:00:10,000 --> 00:00:15,000
-de cómo aplicar elementos de juego en el aprendizaje`,
+        name: 'Clases de Programación en JavaScript',
+        description: 'Enseño JavaScript desde cero hasta nivel avanzado. Incluye proyectos prácticos y soporte personalizado.',
+        itemType: 'SERVICE',
+        price: 50,
+        priceToins: 25,
+        currency: 'LUKAS',
+        status: 'ACTIVE',
+        images: ['https://example.com/images/javascript-course.jpg'],
+        tags: ['javascript', 'programación', 'educación', 'desarrollo web'],
+        location: 'Online',
+        sellerId: contentCreatorUserId,
+        metadata: JSON.stringify({
+          duration: '8 weeks',
+          level: 'Beginner to Advanced',
+          includes: ['Video lessons', 'Projects', '1-on-1 support'],
+          languages: ['Español']
+        }),
         isActive: true,
+        isDeleted: false,
+        viewCount: 45,
+        favoriteCount: 12
       },
     }),
     
-    // Subtitles for first video - English
-    prisma.subtitle.create({
+    prisma.marketplaceItem.create({
       data: {
-        videoItemId: videoItems[0].id,
-        languageCode: 'en-US',
-        format: 'srt',
-        content: `1
-00:00:00,000 --> 00:00:05,000
-Welcome to the Gamification in Education course
-
-2
-00:00:05,000 --> 00:00:10,000
-In this video we will learn the basic concepts
-
-3
-00:00:10,000 --> 00:00:15,000
-of how to apply game elements in learning`,
+        name: 'Diseño Gráfico Personalizado',
+        description: 'Creo logos, identidad visual y material gráfico para tu marca o proyecto. Trabajo colaborativo basado en Ayni.',
+        itemType: 'SERVICE',
+        price: 75,
+        priceToins: 30,
+        currency: 'LUKAS',
+        status: 'ACTIVE',
+        images: ['https://example.com/images/graphic-design.jpg', 'https://example.com/images/portfolio1.jpg'],
+        tags: ['diseño gráfico', 'logos', 'identidad visual', 'branding', 'ayni'],
+        location: 'Medellín, Colombia',
+        sellerId: premiumUserId,
+        metadata: JSON.stringify({
+          turnaround: '5-7 days',
+          revisions: 3,
+          deliverables: ['Logo files', 'Brand guidelines', 'Social media templates'],
+          specialties: ['Sustainable design', 'Community-focused branding']
+        }),
         isActive: true,
+        isDeleted: false,
+        viewCount: 32,
+        favoriteCount: 8
       },
     }),
     
-    // Subtitles for second video - Spanish
-    prisma.subtitle.create({
+    // Product items
+    prisma.marketplaceItem.create({
       data: {
-        videoItemId: videoItems[1].id,
-        languageCode: 'es-ES',
-        format: 'srt',
-        content: `1
-00:00:00,000 --> 00:00:05,000
-Los elementos de juego incluyen puntos, insignias
-
-2
-00:00:05,000 --> 00:00:10,000
-tablas de clasificación y desafíos
-
-3
-00:00:10,000 --> 00:00:15,000
-Cada elemento tiene un propósito específico`,
+        name: 'Curso Digital: Gamificación para Educadores',
+        description: 'Curso completo sobre implementación de gamificación en entornos educativos. Basado en principios de CoomÜnity.',
+        itemType: 'DIGITAL_CONTENT',
+        price: 120,
+        priceToins: 60,
+        currency: 'LUKAS',
+        status: 'ACTIVE',
+        images: ['https://example.com/images/gamification-course.jpg'],
+        tags: ['gamificación', 'educación', 'curso digital', 'pedagogía', 'innovación'],
+        location: 'Digital',
+        sellerId: moderatorUserId,
+        metadata: JSON.stringify({
+          format: 'Video + PDF + Interactive exercises',
+          duration: '12 hours',
+          modules: 8,
+          certificate: true,
+          access: 'Lifetime',
+          language: 'Español'
+        }),
         isActive: true,
+        isDeleted: false,
+        viewCount: 67,
+        favoriteCount: 18
+      },
+    }),
+    
+    prisma.marketplaceItem.create({
+      data: {
+        name: 'Plantas Medicinales Orgánicas',
+        description: 'Vendo plantas medicinales cultivadas orgánicamente según principios de agricultura regenerativa.',
+        itemType: 'PRODUCT',
+        price: 25,
+        priceToins: 10,
+        currency: 'LUKAS',
+        status: 'ACTIVE',
+        images: ['https://example.com/images/medicinal-plants.jpg'],
+        tags: ['plantas medicinales', 'orgánico', 'salud natural', 'agricultura regenerativa'],
+        location: 'Bogotá, Colombia',
+        sellerId: testUserId1,
+        metadata: JSON.stringify({
+          varieties: ['Hierbabuena', 'Manzanilla', 'Caléndula', 'Romero'],
+          cultivation: 'Organic certified',
+          shipping: 'Local delivery available',
+          care_instructions: 'Included'
+        }),
+        isActive: true,
+        isDeleted: false,
+        viewCount: 23,
+        favoriteCount: 5
+      },
+    }),
+    
+    // Experience items
+    prisma.marketplaceItem.create({
+      data: {
+        name: 'Retiro de Mindfulness y Tecnología Consciente',
+        description: 'Experiencia de 3 días combinando mindfulness con el uso consciente de la tecnología. Perfecta para desarrolladores y creadores.',
+        itemType: 'EXPERIENCE',
+        price: 200,
+        priceToins: 100,
+        currency: 'LUKAS',
+        status: 'ACTIVE',
+        images: ['https://example.com/images/mindfulness-retreat.jpg'],
+        tags: ['mindfulness', 'tecnología consciente', 'retiro', 'bienestar', 'desarrolladores'],
+        location: 'Villa de Leyva, Colombia',
+        sellerId: regularUserId,
+        metadata: JSON.stringify({
+          duration: '3 days, 2 nights',
+          includes: ['Accommodation', 'All meals', 'Guided sessions', 'Digital detox kit'],
+          max_participants: 12,
+          next_dates: ['2025-02-15', '2025-03-15', '2025-04-15'],
+          prerequisites: 'Open mind and willingness to disconnect'
+        }),
+        isActive: true,
+        isDeleted: false,
+        viewCount: 41,
+        favoriteCount: 15
+      },
+    }),
+    
+    // Skill exchange
+    prisma.marketplaceItem.create({
+      data: {
+        name: 'Intercambio: Programación por Marketing Digital',
+        description: 'Ofrezco enseñar programación en Python a cambio de aprender estrategias de marketing digital. Intercambio basado en Ayni.',
+        itemType: 'SKILL_EXCHANGE',
+        price: 0, // Skill exchange, no monetary cost
+        priceToins: 0,
+        currency: 'LUKAS',
+        status: 'ACTIVE',
+        images: ['https://example.com/images/skill-exchange.jpg'],
+        tags: ['intercambio de habilidades', 'python', 'marketing digital', 'ayni', 'colaboración'],
+        location: 'Online',
+        sellerId: testUserId2,
+        metadata: JSON.stringify({
+          offering: {
+            skill: 'Python Programming',
+            level: 'Intermediate to Advanced',
+            time_commitment: '2 hours per week'
+          },
+          seeking: {
+            skill: 'Digital Marketing',
+            level: 'Beginner to Intermediate',
+            focus: ['Social media', 'Content strategy', 'SEO basics']
+          },
+          duration: '8 weeks',
+          format: 'Video calls + shared projects'
+        }),
+        isActive: true,
+        isDeleted: false,
+        viewCount: 19,
+        favoriteCount: 7
+      },
+    }),
+    
+    // Draft item (not visible in public listings)
+    prisma.marketplaceItem.create({
+      data: {
+        name: 'Consultoría en Sostenibilidad Empresarial',
+        description: 'Servicio de consultoría para implementar prácticas sostenibles en empresas medianas.',
+        itemType: 'SERVICE',
+        price: 300,
+        priceToins: 150,
+        currency: 'LUKAS',
+        status: 'DRAFT', // Not yet published
+        images: [],
+        tags: ['consultoría', 'sostenibilidad', 'empresas', 'responsabilidad social'],
+        location: 'Colombia',
+        sellerId: premiumUserId,
+        metadata: JSON.stringify({
+          status: 'in_development',
+          launch_date: '2025-02-01'
+        }),
+        isActive: true,
+        isDeleted: false,
+        viewCount: 0,
+        favoriteCount: 0
+      },
+    }),
+    
+    // Sold item (for historical data)
+    prisma.marketplaceItem.create({
+      data: {
+        name: 'Workshop: Introducción a la Economía Colaborativa',
+        description: 'Workshop presencial sobre los principios y práctica de la economía colaborativa.',
+        itemType: 'EXPERIENCE',
+        price: 80,
+        priceToins: 40,
+        currency: 'LUKAS',
+        status: 'SOLD',
+        images: ['https://example.com/images/collaborative-economy.jpg'],
+        tags: ['economía colaborativa', 'workshop', 'presencial', 'educación'],
+        location: 'Medellín, Colombia',
+        sellerId: contentCreatorUserId,
+        metadata: JSON.stringify({
+          sold_date: '2024-12-20',
+          buyer_feedback: 'Excellent workshop, very practical insights',
+          completion_date: '2024-12-22'
+        }),
+        isActive: false,
+        isDeleted: false,
+        viewCount: 89,
+        favoriteCount: 22
       },
     }),
   ]);
   
-  console.log(`  ✓ Created ${subtitles.length} subtitles`);
+  console.log(`  ✓ Created ${marketplaceItems.length} marketplace items`);
+  console.log('    - Services: 2');
+  console.log('    - Digital Content: 1');
+  console.log('    - Products: 1');
+  console.log('    - Experiences: 2');
+  console.log('    - Skill Exchanges: 1');
+  console.log('    - Draft items: 1');
+  console.log('    - Sold items: 1');
 
-  console.log('❓ Creating interactive questions...');
-  
-  // Create questions for videos
-  const questions: any[] = [];
-  for (let i = 0; i < Math.min(5, videoItems.length); i++) {
-    const question = await prisma.question.create({
-      data: {
-        videoItemId: videoItems[i].id,
-        timestamp: 60 + (i * 30), // Stagger questions
-        endTimestamp: 75 + (i * 30),
-        type: i % 2 === 0 ? 'multiple-choice' : 'true-false',
-        text: `Pregunta de prueba ${i + 1} para el video`,
-        languageCode: 'es-ES',
-        isActive: true,
-      },
-    });
-    
-    questions.push(question);
-    
-    // Add answer options for multiple choice questions
-    if (i % 2 === 0) {
-      await Promise.all([
-        prisma.answerOption.create({
-          data: {
-            questionId: question.id,
-            text: 'Opción correcta',
-            isCorrect: true,
-            order: 0,
-          },
-        }),
-        prisma.answerOption.create({
-          data: {
-            questionId: question.id,
-            text: 'Opción incorrecta 1',
-            isCorrect: false,
-            order: 1,
-          },
-        }),
-        prisma.answerOption.create({
-          data: {
-            questionId: question.id,
-            text: 'Opción incorrecta 2',
-            isCorrect: false,
-            order: 2,
-          },
-        }),
-      ]);
-    }
-  }
-  
-  console.log(`  ✓ Created ${questions.length} interactive questions`);
+  // ========================================
 
   // ========================================
   // STEP 18: Create CoomÜnity Entities (Worlds, Stages, Experiences, Activities)
@@ -2205,6 +2371,47 @@ Cada elemento tiene un propósito específico`,
   
   console.log(`  ✓ Created ${comments.length} comments`);
 
+  // Create likes for publications
+  console.log('❤️ Creating likes...');
+  
+  const likes = await Promise.all([
+    // Likes on first publication (content creator's gamification course)
+    prisma.like.create({
+      data: {
+        userId: adminUserId,
+        publicationId: publications[0].id,
+      },
+    }),
+    prisma.like.create({
+      data: {
+        userId: regularUserId,
+        publicationId: publications[0].id,
+      },
+    }),
+    prisma.like.create({
+      data: {
+        userId: premiumUserId,
+        publicationId: publications[0].id,
+      },
+    }),
+    
+    // Likes on second publication (premium user's experience)
+    prisma.like.create({
+      data: {
+        userId: adminUserId,
+        publicationId: publications[1].id,
+      },
+    }),
+    prisma.like.create({
+      data: {
+        userId: contentCreatorUserId,
+        publicationId: publications[1].id,
+      },
+    }),
+  ]);
+  
+  console.log(`  ✓ Created ${likes.length} likes`);
+
   // Create notifications
   console.log('🔔 Creating notifications...');
   
@@ -2299,6 +2506,316 @@ Cada elemento tiene un propósito específico`,
   console.log(`  ✓ Created ${configurations.length} configurations`);
 
   // ========================================
+  // STEP 3: Create Challenges (Desafíos) with CoomÜnity Philosophy
+  // ========================================
+  console.log('🏆 Creating challenges aligned with CoomÜnity philosophy...');
+  
+  // Define challenge data with CoomÜnity concepts
+  const challengesToCreate = [
+    {
+      title: 'Iniciación al Ayni',
+      description: 'Completa 3 actos de reciprocidad en la comunidad esta semana. El Ayni es el principio fundamental de dar y recibir en equilibrio, creando un flujo de valor que beneficia a toda la CoomÜnity.',
+      type: 'AUTOMATED',
+      status: 'ACTIVE',
+      startDate: new Date('2024-12-01'),
+      endDate: new Date('2025-03-01'),
+      config: JSON.stringify({
+        target: 3,
+        actions: ['help_member', 'share_knowledge', 'mentor_newcomer'],
+        difficulty: 'BEGINNER'
+      }),
+    },
+    {
+      title: 'Maestría en Colaboración',
+      description: 'Participa y contribuye activamente en 2 proyectos de grupo diferentes. La colaboración consciente es clave para construir el Bien Común a través de la sinergia colectiva.',
+      type: 'AUTOMATED',
+      status: 'ACTIVE',
+      startDate: new Date('2024-12-01'),
+      endDate: new Date('2025-06-01'),
+      config: JSON.stringify({
+        target: 2,
+        actions: ['join_group_project', 'contribute_ideas', 'complete_tasks'],
+        difficulty: 'INTERMEDIATE'
+      }),
+    },
+    {
+      title: 'Innovación para el Bien Común',
+      description: 'Propón una nueva idea o mejora para la plataforma que beneficie a toda la comunidad. Tu vocación creativa puede generar valor para todos.',
+      type: 'CUSTOM',
+      status: 'ACTIVE',
+      startDate: new Date('2024-12-01'),
+      endDate: new Date('2025-12-01'),
+      config: JSON.stringify({
+        target: 1,
+        submission_type: 'proposal',
+        evaluation_criteria: ['innovation', 'impact', 'feasibility'],
+        difficulty: 'ADVANCED'
+      }),
+    },
+    {
+      title: 'Guía de Metanöia',
+      description: 'Ayuda a 5 nuevos miembros en su proceso de transformación y despertar en CoomÜnity. La Metanöia es el cambio consciente que lleva a una nueva perspectiva de vida.',
+      type: 'AUTOMATED',
+      status: 'ACTIVE',
+      startDate: new Date('2024-12-01'),
+      endDate: new Date('2025-09-01'),
+      config: JSON.stringify({
+        target: 5,
+        actions: ['guide_onboarding', 'answer_questions', 'share_experience'],
+        difficulty: 'INTERMEDIATE'
+      }),
+    },
+    {
+      title: 'Emprendedor Confiable',
+      description: 'Acumula 1000 Mëritos demostrando consistencia en tus contribuciones al ecosistema. Los Emprendedores Confiables son pilares de la comunidad.',
+      type: 'AUTOMATED',
+      status: 'ACTIVE',
+      startDate: new Date('2024-12-01'),
+      endDate: new Date('2026-01-01'),
+      config: JSON.stringify({
+        target: 1000,
+        metric: 'merits',
+        tracking: 'cumulative',
+        difficulty: 'ADVANCED'
+      }),
+    },
+    {
+      title: 'Ritual de Neguentropía',
+      description: 'Participa en actividades que generen orden y armonía en lugar de caos. Contribuye a crear una experiencia más organizada y positiva.',
+      type: 'CUSTOM',
+      status: 'INACTIVE', // Un desafío inactivo para testing
+      startDate: new Date('2025-01-01'),
+      endDate: new Date('2025-12-31'),
+      config: JSON.stringify({
+        focus: 'organization',
+        activities: ['cleanup_spaces', 'organize_content', 'moderate_discussions'],
+        difficulty: 'INTERMEDIATE'
+      }),
+    },
+  ];
+
+  // Create challenges using simple create (seed script cleans data first, so no duplicates)
+  const challenges = await Promise.all(
+    challengesToCreate.map(challengeData => 
+      prisma.challenge.create({ data: challengeData })
+    )
+  );
+  
+  console.log(`  ✓ Created ${challenges.length} challenges`);
+
+  // ========================================
+  // STEP 3.1: Create Challenge Rewards
+  // ========================================
+  console.log('🎁 Creating challenge rewards...');
+  
+  const challengeRewards = [];
+  
+  // Rewards for "Iniciación al Ayni"
+  const ayniRewards = await Promise.all([
+    prisma.challengeReward.create({
+      data: {
+        challengeId: challenges[0].id,
+        type: 'MERITS',
+        amount: 150,
+        description: '150 Mëritos por completar tu iniciación al Ayni',
+        metadata: JSON.stringify({ category: 'BEGINNER_ACHIEVEMENT' }),
+      },
+    }),
+    prisma.challengeReward.create({
+      data: {
+        challengeId: challenges[0].id,
+        type: 'BADGE',
+        description: 'Insignia de Iniciado en Ayni',
+        metadata: JSON.stringify({ 
+          badge_name: 'Ayni Novice',
+          icon: 'ayni-symbol',
+          rarity: 'COMMON'
+        }),
+      },
+    }),
+  ]);
+  challengeRewards.push(...ayniRewards);
+
+  // Rewards for "Maestría en Colaboración"
+  const collaborationRewards = await Promise.all([
+    prisma.challengeReward.create({
+      data: {
+        challengeId: challenges[1].id,
+        type: 'MERITS',
+        amount: 250,
+        description: '250 Mëritos por demostrar maestría colaborativa',
+      },
+    }),
+    prisma.challengeReward.create({
+      data: {
+        challengeId: challenges[1].id,
+        type: 'UNITS',
+        amount: 50,
+        description: '50 Ünits de colaboración',
+        metadata: JSON.stringify({ unit_type: 'COLLABORATION_UNITS' }),
+      },
+    }),
+  ]);
+  challengeRewards.push(...collaborationRewards);
+
+  // Rewards for "Innovación para el Bien Común"
+  const innovationReward = await prisma.challengeReward.create({
+    data: {
+      challengeId: challenges[2].id,
+      type: 'MERITS',
+      amount: 500,
+      description: '500 Mëritos por innovar para el Bien Común',
+      metadata: JSON.stringify({ 
+        category: 'INNOVATION_REWARD',
+        recognition: 'COMMUNITY_IMPACT'
+      }),
+    },
+  });
+  challengeRewards.push(innovationReward);
+
+  // Rewards for "Guía de Metanöia"
+  const metanoiaReward = await prisma.challengeReward.create({
+    data: {
+      challengeId: challenges[3].id,
+      type: 'MERITS',
+      amount: 300,
+      description: '300 Mëritos por guiar procesos de Metanöia',
+      metadata: JSON.stringify({ 
+        category: 'MENTORSHIP_REWARD',
+        impact: 'TRANSFORMATION_GUIDE'
+      }),
+    },
+  });
+  challengeRewards.push(metanoiaReward);
+
+  // Rewards for "Emprendedor Confiable"
+  const entrepreneurRewards = await Promise.all([
+    prisma.challengeReward.create({
+      data: {
+        challengeId: challenges[4].id,
+        type: 'BADGE',
+        description: 'Título de Emprendedor Confiable',
+        metadata: JSON.stringify({
+          badge_name: 'Trusted Entrepreneur',
+          icon: 'trust-seal',
+          rarity: 'EPIC',
+          special_privileges: ['priority_support', 'advanced_features']
+        }),
+      },
+    }),
+    prisma.challengeReward.create({
+      data: {
+        challengeId: challenges[4].id,
+        type: 'TOKENS',
+        amount: 100,
+        description: '100 Lükas como reconocimiento de confiabilidad',
+        metadata: JSON.stringify({ token_type: 'LUKAS' }),
+      },
+    }),
+  ]);
+  challengeRewards.push(...entrepreneurRewards);
+
+  // Rewards for "Ritual de Neguentropía" (inactive challenge)
+  const neguentropyReward = await prisma.challengeReward.create({
+    data: {
+      challengeId: challenges[5].id,
+      type: 'MERITS',
+      amount: 200,
+      description: '200 Mëritos por contribuir al orden y armonía',
+      metadata: JSON.stringify({ 
+        category: 'ORGANIZATION_REWARD',
+        impact: 'HARMONY_BUILDER'
+      }),
+    },
+  });
+  challengeRewards.push(neguentropyReward);
+  
+  console.log(`  ✓ Created ${challengeRewards.length} challenge rewards`);
+
+  // ========================================
+  // STEP 3.2: Create User Challenges (Sample participations)
+  // ========================================
+  console.log('👥 Creating user challenge participations...');
+  
+  const userChallenges = await Promise.all([
+    // Regular user participates in Ayni challenge (in progress)
+    prisma.userChallenge.create({
+      data: {
+        userId: regularUserId,
+        challengeId: challenges[0].id, // Iniciación al Ayni
+        status: 'ACTIVE',
+        progress: 66.67, // 2 out of 3 acts completed
+        metadata: JSON.stringify({
+          completed_acts: 2,
+          target_acts: 3,
+          acts_completed: ['help_member', 'share_knowledge']
+        }),
+      },
+    }),
+    
+    // Premium user completed Ayni and is working on Collaboration
+    prisma.userChallenge.create({
+      data: {
+        userId: premiumUserId,
+        challengeId: challenges[0].id, // Iniciación al Ayni
+        status: 'COMPLETED',
+        progress: 100,
+        completedAt: new Date('2024-12-15'),
+        metadata: JSON.stringify({
+          completed_acts: 3,
+          target_acts: 3,
+          completion_date: '2024-12-15'
+        }),
+      },
+    }),
+    prisma.userChallenge.create({
+      data: {
+        userId: premiumUserId,
+        challengeId: challenges[1].id, // Maestría en Colaboración
+        status: 'ACTIVE',
+        progress: 50, // 1 out of 2 projects
+        metadata: JSON.stringify({
+          completed_projects: 1,
+          target_projects: 2,
+          current_project: 'community-website-redesign'
+        }),
+      },
+    }),
+    
+    // Content creator working on Innovation challenge
+    prisma.userChallenge.create({
+      data: {
+        userId: contentCreatorUserId,
+        challengeId: challenges[2].id, // Innovación para el Bien Común
+        status: 'ACTIVE',
+        progress: 25, // Proposal in development
+        metadata: JSON.stringify({
+          proposal_status: 'DRAFT',
+          proposal_topic: 'Enhanced Learning Gamification',
+          submission_deadline: '2025-03-01'
+        }),
+      },
+    }),
+    
+    // Test user working towards Emprendedor Confiable
+    prisma.userChallenge.create({
+      data: {
+        userId: testUserId1,
+        challengeId: challenges[4].id, // Emprendedor Confiable
+        status: 'ACTIVE',
+        progress: 35, // 350 out of 1000 merits
+        metadata: JSON.stringify({
+          current_merits: 350,
+          target_merits: 1000,
+          merits_sources: ['content_creation', 'community_help', 'quality_contributions']
+        }),
+      },
+    }),
+  ]);
+  
+  console.log(`  ✓ Created ${userChallenges.length} user challenge participations`);
+
+  // ========================================
   // FINAL SUMMARY
   // ========================================
   console.log('\n🎉 Database seeding completed successfully!');
@@ -2328,6 +2845,13 @@ Cada elemento tiene un propósito específico`,
     prisma.stage.count(),
     prisma.experience.count(),
     prisma.activity.count(),
+    prisma.challenge.count(),
+    prisma.challengeReward.count(),
+    prisma.userChallenge.count(),
+    prisma.publication.count(),
+    prisma.comment.count(),
+    prisma.like.count(),
+    prisma.marketplaceItem.count(),
   ]);
   
   const [
@@ -2335,7 +2859,8 @@ Cada elemento tiene un propósito específico`,
     mundoCount, playlistCount, videoItemCount, subtitleCount, questionCount,
     answerOptionCount, walletCount, tokenCount, meritCount, transactionCount,
     groupCount, userGroupCount, giftCardCount, analyticsCount, worldCount,
-    stageCount, experienceCount, activityCount
+    stageCount, experienceCount, activityCount, challengeCount, challengeRewardCount,
+    userChallengeCount, publicationCount, commentCount, likeCount, marketplaceItemCount
   ] = counts;
   
   console.log(`  👥 Users: ${userCount}`);
@@ -2361,6 +2886,13 @@ Cada elemento tiene un propósito específico`,
   console.log(`  📍 Stages: ${stageCount}`);
   console.log(`  🎯 Experiences: ${experienceCount}`);
   console.log(`  🎮 Activities: ${activityCount}`);
+  console.log(`  🏆 Challenges: ${challengeCount}`);
+  console.log(`  🎁 Challenge Rewards: ${challengeRewardCount}`);
+  console.log(`  👥 User Challenge Participations: ${userChallengeCount}`);
+  console.log(`  📱 Publications: ${publicationCount}`);
+  console.log(`  💬 Comments: ${commentCount}`);
+  console.log(`  ❤️ Likes: ${likeCount}`);
+  console.log(`  🛒 Marketplace Items: ${marketplaceItemCount}`);
   
   console.log('\n🔗 Login Credentials:');
   console.log('  Admin: admin@gamifier.com / admin123');

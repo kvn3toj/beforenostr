@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from 'react';
 import {
   Box,
   Typography,
@@ -21,6 +27,32 @@ import {
   Divider,
   Badge,
   Stack,
+  Card,
+  CardContent,
+  Avatar,
+  Fab,
+  SwipeableDrawer,
+  BottomNavigation,
+  BottomNavigationAction,
+  AppBar,
+  Toolbar,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Collapse,
+  LinearProgress,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogContent,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  Grow,
+  Fade,
+  Slide,
+  Zoom,
 } from '@mui/material';
 import {
   Menu,
@@ -38,11 +70,37 @@ import {
   AttachMoney as PriceIcon,
   VerifiedUser as VerifiedIcon,
   Close as CloseIcon,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  Refresh,
+  Sort,
+  ViewModule,
+  ViewList,
+  LocalOffer,
+  TrendingUp,
+  Favorite,
+  Share,
+  ShoppingCart,
+  Store,
+  AutoAwesome,
+  FlashOn,
+  WhatsApp,
+  Instagram,
+  Facebook,
+  ExpandLess,
+  ExpandMore,
+  FilterAlt,
+  SwipeUp,
+  TouchApp,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '../../../../lib/api-service';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { ProductCard } from './ProductCard';
+import { MobileHeader } from './MobileHeader';
+import { MobileSearchBar } from './MobileSearchBar';
+import { CategoryCarousel } from './CategoryCarousel';
+import { RoleToggle } from './RoleToggle';
 
 // Types
 interface MarketplaceItem {
@@ -50,6 +108,7 @@ interface MarketplaceItem {
   title: string;
   description: string;
   price: number;
+  originalPrice?: number;
   currency: string;
   category: string;
   images: string[];
@@ -61,16 +120,23 @@ interface MarketplaceItem {
     verified: boolean;
     rating: number;
     reviewCount: number;
+    responseTime?: string;
+    isOnline?: boolean;
   };
   location: string;
   rating: number;
   reviewCount: number;
   tags: string[];
   featured: boolean;
+  trending: boolean;
   createdAt: string;
   viewCount: number;
   favoriteCount: number;
   isFavorited?: boolean;
+  discount?: number;
+  deliveryTime?: string;
+  hasVideo?: boolean;
+  is24Hours?: boolean;
 }
 
 interface Category {
@@ -78,6 +144,7 @@ interface Category {
   name: string;
   icon: string;
   color?: string;
+  count?: number;
 }
 
 interface SearchFilters {
@@ -89,6 +156,9 @@ interface SearchFilters {
   verified: boolean;
   sortBy: string;
   tags: string[];
+  hasDiscount: boolean;
+  deliveryType: string;
+  availability: string;
 }
 
 interface MobileMarketplaceViewProps {
@@ -105,8 +175,9 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const theme = useTheme();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // States
+  // Estados mejorados
   const [selectedRole, setSelectedRole] = useState<'consumer' | 'provider'>(
     'consumer'
   );
@@ -116,191 +187,288 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
   const [showFilters, setShowFilters] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [showQuickActions, setShowQuickActions] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [showTopBar, setShowTopBar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [selectedProduct, setSelectedProduct] =
+    useState<MarketplaceItem | null>(null);
+  const [showProductDetail, setShowProductDetail] = useState(false);
+
   const [filters, setFilters] = useState<SearchFilters>({
     query: '',
     category: '',
-    priceRange: [0, 100],
+    priceRange: [0, 1000],
     location: '',
     rating: 0,
     verified: false,
     sortBy: 'relevance',
     tags: [],
+    hasDiscount: false,
+    deliveryType: '',
+    availability: '',
   });
 
-  // Mock data for development
-  const mockCategories: Category[] = [
-    { id: 'categoria1', name: 'Categoría', icon: '🏪' },
-    { id: 'categoria2', name: 'Categoría', icon: '🛍️' },
-    { id: 'categoria3', name: 'Categoría', icon: '🎯' },
-    { id: 'categoria4', name: 'Categoría', icon: '⚡' },
+  // Datos mejorados para móvil
+  const enhancedMobileCategories: Category[] = [
+    {
+      id: 'popular',
+      name: 'Popular',
+      icon: '🔥',
+      color: '#FF6B6B',
+      count: 124,
+    },
+    { id: 'nuevos', name: 'Nuevos', icon: '✨', color: '#4ECDC4', count: 89 },
+    { id: 'ofertas', name: 'Ofertas', icon: '💰', color: '#45B7D1', count: 45 },
+    { id: 'premium', name: 'Premium', icon: '👑', color: '#F9CA24', count: 67 },
+    { id: 'express', name: 'Express', icon: '⚡', color: '#6C5CE7', count: 34 },
+    { id: 'local', name: 'Local', icon: '📍', color: '#A29BFE', count: 78 },
   ];
 
-  // Filter categories for advanced search
-  const filterCategories = [
-    { value: '', label: 'Todas las categorías', icon: '🏪' },
-    { value: 'tecnologia', label: 'Tecnología', icon: '💻' },
-    { value: 'diseno', label: 'Diseño', icon: '🎨' },
-    { value: 'marketing', label: 'Marketing', icon: '📢' },
-    { value: 'educacion', label: 'Educación', icon: '📚' },
-    { value: 'salud', label: 'Salud y Bienestar', icon: '🏥' },
-    { value: 'arte', label: 'Arte y Creatividad', icon: '🎭' },
-    { value: 'consultoria', label: 'Consultoría', icon: '💼' },
-    { value: 'servicios', label: 'Servicios Generales', icon: '🔧' },
+  const quickFilters = [
+    { id: 'all', label: 'Todos', icon: '🏪' },
+    { id: 'trending', label: 'Tendencia', icon: '📈' },
+    { id: 'offers', label: 'Ofertas', icon: '🏷️' },
+    { id: 'nearby', label: 'Cerca', icon: '📍' },
+    { id: 'new', label: 'Nuevos', icon: '✨' },
+    { id: 'top', label: 'Top Rated', icon: '⭐' },
   ];
 
-  // Popular tags for filtering
-  const popularTags = [
-    'Digital',
-    'Presencial',
-    'Remoto',
-    'Urgente',
-    'Personalizado',
-    'Emprendimiento',
-    'Sostenible',
-    'Innovador',
-    'Colaborativo',
-    'Ayni',
+  const sortOptions = [
+    { value: 'relevance', label: 'Más Relevantes', icon: '🎯' },
+    { value: 'rating', label: 'Mejor Calificados', icon: '⭐' },
+    { value: 'price_asc', label: 'Menor Precio', icon: '💰' },
+    { value: 'price_desc', label: 'Mayor Precio', icon: '💎' },
+    { value: 'newest', label: 'Más Recientes', icon: '🆕' },
+    { value: 'trending', label: 'Tendencia', icon: '🔥' },
+    { value: 'popular', label: 'Más Populares', icon: '👥' },
+    { value: 'nearby', label: 'Más Cercanos', icon: '📍' },
   ];
 
-  // Search suggestions for mobile search
-  const suggestedProducts = [
-    'Alimentos orgánicos',
-    'Clases de baile',
-    'Alimentación saludable',
-    'Categoría',
-    'Diseño gráfico',
-    'Tutoría matemáticas',
-    'Repostería casera',
-    'Yoga presencial',
-  ];
-
-  const suggestedCategories = [
-    { name: 'Alimentos orgánicos', type: 'category' },
-    { name: 'Clases de baile', type: 'category' },
-    { name: 'Alimentación saludable', type: 'category' },
-    { name: 'Categoría', type: 'category' },
-  ];
-
-  const mockProducts: MarketplaceItem[] = [
+  const enhancedMockProducts: MarketplaceItem[] = [
     {
       id: '1',
-      title: 'Nombre del producto',
-      description: 'Descripción del producto',
-      price: 7,
+      title: 'Desarrollo Web Premium',
+      description:
+        'Aplicación web completa con React, Node.js, base de datos y deployment. Incluye SEO, optimización y soporte.',
+      price: 450,
+      originalPrice: 650,
       currency: 'ü',
-      category: 'categoria1',
-      images: ['/images/product-placeholder.jpg'],
+      category: 'tecnologia',
+      images: ['/images/service-web-dev.jpg'],
       seller: {
         id: '1',
-        name: 'Proveedor',
-        username: '@Nickname',
-        avatar: '/images/user-default.jpg',
+        name: 'Alex Rodriguez',
+        username: '@alexdev',
+        avatar: '/images/avatar-alex.jpg',
         verified: true,
-        rating: 4.5,
-        reviewCount: 23,
+        rating: 4.9,
+        reviewCount: 47,
+        responseTime: '< 1 hora',
+        isOnline: true,
       },
       location: 'Cali, Valle del Cauca',
-      rating: 4.5,
-      reviewCount: 23,
-      tags: ['producto'],
+      rating: 4.9,
+      reviewCount: 47,
+      tags: ['react', 'nodejs', 'premium', 'seo'],
       featured: true,
+      trending: true,
       createdAt: '2024-01-01',
-      viewCount: 44,
-      favoriteCount: 33,
+      viewCount: 156,
+      favoriteCount: 89,
       isFavorited: false,
+      discount: 31,
+      deliveryTime: '15-30 días',
+      hasVideo: true,
+      is24Hours: false,
     },
     {
       id: '2',
-      title: 'Nombre del producto',
-      description: 'Descripción del segundo producto',
-      price: 7,
+      title: 'Diseño UX/UI Completo',
+      description:
+        'Diseño de experiencia de usuario e interfaz completa para apps móviles y web. Wireframes, prototipos y guías de estilo.',
+      price: 320,
       currency: 'ü',
-      category: 'categoria2',
-      images: ['/images/product-placeholder-2.jpg'],
+      category: 'diseno',
+      images: ['/images/service-design.jpg'],
       seller: {
         id: '2',
-        name: 'Proveedor',
-        username: '@Nickname',
-        avatar: '/images/user-default.jpg',
+        name: 'María García',
+        username: '@maria_design',
+        avatar: '/images/avatar-maria.jpg',
         verified: true,
-        rating: 4.5,
-        reviewCount: 18,
+        rating: 4.8,
+        reviewCount: 38,
+        responseTime: '< 2 horas',
+        isOnline: true,
       },
-      location: 'Cali, Valle del Cauca',
-      rating: 4.5,
-      reviewCount: 18,
-      tags: ['producto'],
+      location: 'Medellín, Antioquia',
+      rating: 4.8,
+      reviewCount: 38,
+      tags: ['ux', 'ui', 'prototyping', 'figma'],
       featured: true,
+      trending: false,
       createdAt: '2024-01-02',
-      viewCount: 32,
-      favoriteCount: 28,
-      isFavorited: false,
+      viewCount: 124,
+      favoriteCount: 67,
+      isFavorited: true,
+      deliveryTime: '7-14 días',
+      hasVideo: false,
+      is24Hours: false,
     },
     {
       id: '3',
-      title: 'Nombre del producto',
-      description: 'Descripción del tercer producto',
-      price: 7,
+      title: 'Marketing Digital 360°',
+      description:
+        'Estrategia completa de marketing digital: redes sociales, content marketing, SEO, SEM y analytics.',
+      price: 275,
       currency: 'ü',
-      category: 'categoria3',
-      images: ['/images/product-placeholder-3.jpg'],
+      category: 'marketing',
+      images: ['/images/service-marketing.jpg'],
       seller: {
         id: '3',
-        name: 'Proveedor',
-        username: '@Nickname',
-        avatar: '/images/user-default.jpg',
+        name: 'Carlos Mendoza',
+        username: '@carlos_mkt',
+        avatar: '/images/avatar-carlos.jpg',
         verified: true,
-        rating: 4.5,
-        reviewCount: 31,
+        rating: 4.7,
+        reviewCount: 52,
+        responseTime: '< 30 min',
+        isOnline: false,
       },
-      location: 'Cali, Valle del Cauca',
-      rating: 4.5,
-      reviewCount: 31,
-      tags: ['producto'],
+      location: 'Bogotá, Cundinamarca',
+      rating: 4.7,
+      reviewCount: 52,
+      tags: ['marketing', 'social media', 'seo', 'analytics'],
       featured: true,
+      trending: true,
       createdAt: '2024-01-03',
-      viewCount: 67,
-      favoriteCount: 45,
+      viewCount: 198,
+      favoriteCount: 134,
       isFavorited: false,
+      deliveryTime: '5-10 días',
+      hasVideo: true,
+      is24Hours: true,
     },
     {
       id: '4',
-      title: 'Nombre del producto',
-      description: 'Descripción del cuarto producto',
-      price: 7,
+      title: 'Bootcamp Programación',
+      description:
+        'Curso intensivo de 12 semanas para convertirte en desarrollador full-stack. Proyectos reales y mentorías.',
+      price: 850,
+      originalPrice: 1200,
       currency: 'ü',
-      category: 'categoria4',
-      images: ['/images/product-placeholder-4.jpg'],
+      category: 'educacion',
+      images: ['/images/service-course.jpg'],
       seller: {
         id: '4',
-        name: 'Proveedor',
-        username: '@Nickname',
-        avatar: '/images/user-default.jpg',
+        name: 'Tech Academy',
+        username: '@tech_academy',
+        avatar: '/images/avatar-academy.jpg',
         verified: true,
-        rating: 4.5,
-        reviewCount: 18,
+        rating: 4.9,
+        reviewCount: 156,
+        responseTime: '< 4 horas',
+        isOnline: true,
       },
-      location: 'Cali, Valle del Cauca',
-      rating: 4.5,
-      reviewCount: 18,
-      tags: ['producto'],
+      location: 'Online - Virtual',
+      rating: 4.9,
+      reviewCount: 156,
+      tags: ['bootcamp', 'fullstack', 'certificación', 'mentoría'],
       featured: true,
+      trending: true,
       createdAt: '2024-01-04',
-      viewCount: 89,
-      favoriteCount: 52,
+      viewCount: 298,
+      favoriteCount: 201,
       isFavorited: false,
+      discount: 29,
+      deliveryTime: '12 semanas',
+      hasVideo: true,
+      is24Hours: false,
+    },
+    {
+      id: '5',
+      title: 'Consultoría Empresarial',
+      description:
+        'Optimización de procesos empresariales, análisis financiero y plan estratégico personalizado.',
+      price: 650,
+      currency: 'ü',
+      category: 'consultoria',
+      images: ['/images/service-consulting.jpg'],
+      seller: {
+        id: '5',
+        name: 'Patricia Luna',
+        username: '@dra_luna',
+        avatar: '/images/avatar-patricia.jpg',
+        verified: true,
+        rating: 5.0,
+        reviewCount: 29,
+        responseTime: '< 6 horas',
+        isOnline: false,
+      },
+      location: 'Barranquilla, Atlántico',
+      rating: 5.0,
+      reviewCount: 29,
+      tags: ['consultoría', 'estrategia', 'finanzas', 'procesos'],
+      featured: false,
+      trending: false,
+      createdAt: '2024-01-05',
+      viewCount: 87,
+      favoriteCount: 45,
+      isFavorited: false,
+      deliveryTime: '2-4 semanas',
+      hasVideo: false,
+      is24Hours: false,
+    },
+    {
+      id: '6',
+      title: 'Terapia Holística',
+      description:
+        'Sesiones de reiki, aromaterapia, meditación guiada y plan de bienestar integral personalizado.',
+      price: 120,
+      currency: 'ü',
+      category: 'salud',
+      images: ['/images/service-therapy.jpg'],
+      seller: {
+        id: '6',
+        name: 'Luz Elena',
+        username: '@luz_bienestar',
+        avatar: '/images/avatar-luz.jpg',
+        verified: true,
+        rating: 4.8,
+        reviewCount: 94,
+        responseTime: '< 1 hora',
+        isOnline: true,
+      },
+      location: 'Manizales, Caldas',
+      rating: 4.8,
+      reviewCount: 94,
+      tags: ['reiki', 'bienestar', 'meditación', 'holístico'],
+      featured: false,
+      trending: true,
+      createdAt: '2024-01-06',
+      viewCount: 167,
+      favoriteCount: 112,
+      isFavorited: true,
+      deliveryTime: '1-3 días',
+      hasVideo: false,
+      is24Hours: true,
     },
   ];
 
-  // Fetch featured items when no search is active
+  // 🔍 Queries mejoradas
   const { data: featuredItems = [], isLoading: featuredLoading } = useQuery({
-    queryKey: ['marketplace-featured'],
-    queryFn: () => apiService.get('/marketplace/featured'),
+    queryKey: ['marketplace-featured-mobile', selectedRole],
+    queryFn: () =>
+      apiService.get(`/marketplace/featured?role=${selectedRole}&mobile=true`),
     enabled: !isSearchActive,
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch user's favorites
   const { data: userFavorites = [] } = useQuery({
     queryKey: ['user-favorites', user?.id],
     queryFn: () => apiService.get('/marketplace/favorites'),
@@ -308,128 +476,113 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     staleTime: 2 * 60 * 1000,
   });
 
-  // Toggle favorite mutation
-  const toggleFavoriteMutation = useMutation({
-    mutationFn: async ({
-      itemId,
-      isFavorited,
-    }: {
-      itemId: string;
-      isFavorited: boolean;
-    }) => {
-      if (isFavorited) {
-        return apiService.delete(`/marketplace/favorites/${itemId}`);
-      } else {
-        return apiService.post(`/marketplace/favorites/${itemId}`);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user-favorites'] });
-      queryClient.invalidateQueries({ queryKey: ['marketplace-featured'] });
-    },
-  });
-
-  // Event handlers
+  // 🎯 Handlers mejorados
   const handleRoleChange = useCallback((role: 'consumer' | 'provider') => {
     setSelectedRole(role);
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 1000);
   }, []);
 
   const handleSearch = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
+      setFilters((prev) => ({ ...prev, query: searchQuery }));
       setIsSearchActive(searchQuery.length > 0);
+      setSearchFocused(false);
     },
     [searchQuery]
   );
 
   const handleCategoryClick = useCallback((categoryId: string) => {
-    console.log('Category clicked:', categoryId);
+    setSelectedCategory(categoryId);
+    setFilters((prev) => ({ ...prev, category: categoryId }));
+    setIsSearchActive(true);
+    setShowFeedback(true);
+    setFeedbackMessage(`Explorando ${categoryId}`);
   }, []);
 
-  const handleProductClick = useCallback((productId: string) => {
-    console.log('Producto clickeado:', productId);
+  const handleViewAllCategories = useCallback(() => {
+    setShowFilters(true);
   }, []);
 
   const handleToggleFavorite = useCallback(
     (itemId: string) => {
       if (!user) return;
-
-      const currentlyFavorited = userFavorites.some(
-        (fav: any) => fav.itemId === itemId
-      );
-      toggleFavoriteMutation.mutate({
-        itemId,
-        isFavorited: currentlyFavorited,
-      });
+      // TODO: Implementar toggle de favorito
+      setShowFeedback(true);
+      setFeedbackMessage('¡Agregado a favoritos!');
     },
-    [user, userFavorites, toggleFavoriteMutation]
+    [user]
   );
 
-  // Filter handlers
-  const handleFilterChange = useCallback(
-    (key: keyof SearchFilters, value: any) => {
-      setFilters((prev) => ({ ...prev, [key]: value }));
-      // TODO: Apply filters to search results
-    },
-    []
-  );
-
-  const handleClearFilters = useCallback(() => {
-    setFilters({
-      query: '',
-      category: '',
-      priceRange: [0, 100],
-      location: '',
-      rating: 0,
-      verified: false,
-      sortBy: 'relevance',
-      tags: [],
-    });
+  const handleProductClick = useCallback((productId: string) => {
+    const product = itemsToDisplay.find((p) => p.id === productId);
+    if (product) {
+      setSelectedProduct(product);
+      setShowProductDetail(true);
+    }
   }, []);
 
-  const getActiveFiltersCount = useCallback(() => {
-    let count = 0;
-    if (filters.category) count++;
-    if (filters.location) count++;
-    if (filters.rating > 0) count++;
-    if (filters.verified) count++;
-    if (filters.tags.length > 0) count += filters.tags.length;
-    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 100) count++;
-    return count;
-  }, [filters]);
-
-  const activeFiltersCount = getActiveFiltersCount();
-
-  // Search handlers
-  const handleSearchFocus = () => {
-    setSearchFocused(true);
-  };
-
-  const handleSearchBlur = () => {
-    // Delay hiding to allow for suggestion clicks
-    setTimeout(() => setSearchFocused(false), 200);
-  };
-
-  const handleSuggestionClick = (suggestion: string) => {
-    setSearchQuery(suggestion);
-    setSearchFocused(false);
-    // Trigger search with the suggestion
+  const handleQuickFilter = useCallback((filterId: string) => {
+    setFilters((prev) => ({ ...prev, sortBy: filterId }));
     setIsSearchActive(true);
-  };
+  }, []);
 
-  const handleCreateRequest = () => {
-    console.log('Creating request...');
-    // TODO: Navigate to request creation page
-    setSearchFocused(false);
-  };
+  const handlePullToRefresh = useCallback(() => {
+    setRefreshing(true);
+    queryClient.invalidateQueries({
+      queryKey: ['marketplace-featured-mobile'],
+    });
+    setTimeout(() => setRefreshing(false), 1500);
+  }, [queryClient]);
 
-  // Get items to display
+  // 📱 Scroll handling para esconder/mostrar header
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setShowTopBar(currentScrollY < lastScrollY || currentScrollY < 100);
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
+  // 📊 Items a mostrar
   const itemsToDisplay = useMemo(() => {
-    const items = isSearchActive
+    let items = isSearchActive
       ? searchResults
       : featuredItems.length > 0
         ? featuredItems
-        : mockProducts;
+        : enhancedMockProducts;
+
+    // Filtros
+    if (selectedCategory) {
+      items = items.filter((item) => item.category === selectedCategory);
+    }
+
+    if (filters.sortBy) {
+      switch (filters.sortBy) {
+        case 'trending':
+          items = [...items].sort((a, b) => {
+            if (a.trending && !b.trending) return -1;
+            if (!a.trending && b.trending) return 1;
+            return b.viewCount - a.viewCount;
+          });
+          break;
+        case 'rating':
+          items = [...items].sort((a, b) => b.rating - a.rating);
+          break;
+        case 'price_asc':
+          items = [...items].sort((a, b) => a.price - b.price);
+          break;
+        case 'popular':
+          items = [...items].sort((a, b) => b.favoriteCount - a.favoriteCount);
+          break;
+        default:
+          break;
+      }
+    }
 
     return items.map((item) => ({
       ...item,
@@ -439,3201 +592,1271 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     isSearchActive,
     searchResults,
     featuredItems,
+    enhancedMockProducts,
+    selectedCategory,
+    filters.sortBy,
     userFavorites,
-    mockProducts,
   ]);
 
   return (
     <Box
-      data-testid="mobile-marketplace"
       sx={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(255, 255, 255, 1)',
-        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-        display: 'flex',
-        maxWidth: '360px',
-        margin: '0 auto',
-        flexDirection: 'column',
-        overflow: 'auto',
-        alignItems: 'stretch',
-        zIndex: 1000,
+        minHeight: '100vh',
+        backgroundColor: '#f8f9fa',
+        position: 'relative',
       }}
     >
-      {/* Device Status Bar */}
-      <Box
-        sx={{
-          backgroundColor: 'rgba(254, 247, 255, 1)',
-          display: 'flex',
-          minHeight: '44px',
-          width: '100%',
-          paddingLeft: '20px',
-          paddingRight: '20px',
-          paddingTop: '19px',
-          paddingBottom: '8px',
-          alignItems: 'end',
-          gap: '40px 100px',
-          fontFamily: 'Inter, -apple-system, Roboto, Helvetica, sans-serif',
-          fontSize: '12px',
-          color: 'var(--M3-ref-neutral-neutral10, #1D1B20)',
-          fontWeight: 400,
-          whiteSpace: 'nowrap',
-          letterSpacing: '0.12px',
-          lineHeight: 1.43,
-          justifyContent: 'space-between',
-        }}
-      >
-        <Typography
+      {/* Header mejorado con animación */}
+      <Slide direction="down" in={showTopBar} mountOnEnter unmountOnExit>
+        <AppBar
+          position="fixed"
+          elevation={0}
           sx={{
-            color: 'var(--M3-ref-neutral-neutral10, #1D1B20)',
-            fontVariantNumeric: 'lining-nums proportional-nums',
-            fontFeatureSettings: "'dlig' on, 'ss02' on",
+            backgroundColor: '#fff8f8',
+            borderBottom: '1px solid #f0f0f0',
+            zIndex: 1100,
           }}
         >
-          9:30
-        </Typography>
-        <Box
-          component="img"
-          src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/48990f66438cd47749f63d78b69a322944b49623?placeholderIfAbsent=true"
-          alt="right icons"
-          sx={{
-            position: 'relative',
-            display: 'flex',
-            width: '39px',
-            aspectRatio: 0.385,
-            flexShrink: 0,
-          }}
-          onError={(e) => {
-            // Fallback if image doesn't exist
-            e.currentTarget.style.display = 'none';
-          }}
-        />
-      </Box>
+          <MobileHeader
+            onMenuClick={onMenuClick}
+            onChatClick={onChatClick}
+            onNotificationsClick={onNotificationsClick}
+          />
+        </AppBar>
+      </Slide>
 
-      {/* Top App Bar */}
-      <Box
-        sx={{
-          alignItems: 'center',
-          zIndex: 10,
-          display: 'flex',
-          minHeight: '40px',
-          width: '100%',
-          paddingLeft: '8px',
-          paddingRight: '8px',
-          paddingTop: '2px',
-          paddingBottom: '2px',
-          gap: '8px',
-          justifyContent: 'start',
-          background: 'var(--M3-sys-light-surface, #FFF8F8)',
-        }}
-      >
-        {/* Leading Icon (Menu) */}
-        <Box
-          sx={{
-            alignSelf: 'stretch',
-            display: 'flex',
-            marginTop: 'auto',
-            marginBottom: 'auto',
-            minHeight: '36px',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '36px',
-          }}
-        >
-          <Box
+      {/* Contenido principal */}
+      <Box sx={{ pt: showTopBar ? '68px' : '8px', pb: '80px' }}>
+        {/* Progress bar para refresh */}
+        {refreshing && (
+          <LinearProgress
             sx={{
-              borderRadius: '100px',
-              display: 'flex',
-              width: '100%',
-              maxWidth: '32px',
-              alignItems: 'center',
-              gap: '4px',
-              overflow: 'hidden',
-              justifyContent: 'center',
+              position: 'fixed',
+              top: showTopBar ? '68px' : '0px',
+              left: 0,
+              right: 0,
+              zIndex: 1200,
             }}
-          >
-            <IconButton
-              onClick={onMenuClick}
-              sx={{
-                alignSelf: 'stretch',
-                display: 'flex',
-                marginTop: 'auto',
-                marginBottom: 'auto',
-                width: '32px',
-                height: '32px',
-                padding: '4px',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Box
-                component="img"
-                src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/5f1dd79827c224f42052f2dfcb5ce45c2f5fa303?placeholderIfAbsent=true"
-                alt="menu"
-                sx={{
-                  position: 'relative',
-                  display: 'flex',
-                  width: '20px',
-                  height: '20px',
-                  aspectRatio: 1,
-                }}
-                onError={(e) => {
-                  // Fallback to Menu icon if image doesn't exist
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </IconButton>
-          </Box>
-        </Box>
-
-        {/* Headline */}
-        <Typography
-          sx={{
-            color: 'var(--Schemes-Secondary, #625B71)',
-            fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-            fontSize: '18px',
-            fontWeight: 400,
-            lineHeight: 1.2,
-            alignSelf: 'stretch',
-            marginTop: 'auto',
-            marginBottom: 'auto',
-            flex: 1,
-            flexShrink: 1,
-            flexBasis: '0%',
-          }}
-        >
-          ÜMarket
-        </Typography>
-
-        {/* Trailing Icons */}
-        <Box
-          component="img"
-          src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/39207d834a47541f58c45c111c09d20a3bc6d486?placeholderIfAbsent=true"
-          alt="trailing-icon"
-          sx={{
-            position: 'relative',
-            display: 'flex',
-            height: '32px',
-            width: '64px',
-            aspectRatio: 2,
-            flexShrink: 0,
-          }}
-          onError={(e) => {
-            // Fallback to individual icons if image doesn't exist
-            e.currentTarget.style.display = 'none';
-          }}
-        />
-      </Box>
-
-      {/* Main Content */}
-      <Box
-        sx={{
-          display: 'flex',
-          marginTop: '12px',
-          width: '100%',
-          paddingLeft: '7px',
-          paddingRight: '7px',
-          flexDirection: 'column',
-        }}
-      >
-        {/* Consumer/Provider Toggle */}
-        <Box
-          sx={{
-            borderRadius: '42px',
-            backgroundColor: 'rgba(236, 239, 243, 1)',
-            alignSelf: 'center',
-            display: 'flex',
-            width: '237px',
-            maxWidth: '100%',
-            paddingLeft: '5px',
-            paddingRight: '16px',
-            paddingTop: '6px',
-            paddingBottom: '6px',
-            alignItems: 'stretch',
-            gap: '2px',
-            fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-            fontSize: '14px',
-            fontWeight: 500,
-            whiteSpace: 'nowrap',
-            textAlign: 'center',
-            letterSpacing: '0.08px',
-            lineHeight: 1.18,
-          }}
-        >
-          {/* Consumidor Button */}
-          <Box
-            onClick={() => handleRoleChange('consumer')}
-            sx={{
-              borderRadius: '83px',
-              backgroundColor:
-                selectedRole === 'consumer'
-                  ? 'rgba(116, 0, 86, 1)'
-                  : 'transparent',
-              alignSelf: 'start',
-              display: 'flex',
-              minHeight: '33px',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              alignItems: 'stretch',
-              color:
-                selectedRole === 'consumer'
-                  ? 'var(--Schemes-On-Secondary, #FFF)'
-                  : 'rgba(116, 0, 86, 1)',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              sx={{
-                color:
-                  selectedRole === 'consumer'
-                    ? 'var(--Schemes-On-Secondary, #FFF)'
-                    : 'rgba(116, 0, 86, 1)',
-                alignSelf: 'stretch',
-                display: 'flex',
-                width: '100%',
-                paddingLeft: '20px',
-                paddingRight: '20px',
-                paddingTop: '8px',
-                paddingBottom: '8px',
-                alignItems: 'center',
-                gap: '7px',
-                justifyContent: 'center',
-                flex: 1,
-                height: '100%',
-              }}
-            >
-              Consumidor
-            </Box>
-          </Box>
-
-          {/* Proveedor Button */}
-          <Box
-            onClick={() => handleRoleChange('provider')}
-            sx={{
-              borderRadius: '83px',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              alignItems: 'stretch',
-              color:
-                selectedRole === 'provider'
-                  ? 'var(--Schemes-On-Secondary, #FFF)'
-                  : 'rgba(116, 0, 86, 1)',
-              backgroundColor:
-                selectedRole === 'provider'
-                  ? 'rgba(116, 0, 86, 1)'
-                  : 'transparent',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              sx={{
-                alignSelf: 'stretch',
-                display: 'flex',
-                width: '100%',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-                paddingTop: '8px',
-                paddingBottom: '8px',
-                alignItems: 'center',
-                gap: '7px',
-                justifyContent: 'center',
-              }}
-            >
-              Proveedor
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Search Bar */}
-        <Box
-          component="form"
-          onSubmit={handleSearch}
-          sx={{
-            minWidth: '315px',
-            maxWidth: '315px',
-            alignItems: 'stretch',
-            borderRadius: '24.466px',
-            alignSelf: 'center',
-            display: 'flex',
-            marginTop: '16px',
-            minHeight: '34px',
-            width: '100%',
-            gap: '3px',
-            overflow: 'hidden',
-            justifyContent: 'start',
-            background: 'var(--material-theme-sys-light-on-primary, #FFF)',
-          }}
-        >
-          <Box
-            sx={{
-              alignItems: 'center',
-              display: 'flex',
-              minWidth: '240px',
-              width: '100%',
-              paddingLeft: '3px',
-              paddingRight: '3px',
-              paddingTop: '3px',
-              paddingBottom: '3px',
-              gap: '3px',
-              justifyContent: 'start',
-              height: '100%',
-              flex: 1,
-              flexShrink: 1,
-              flexBasis: '0%',
-              background:
-                'var(--m-3-state-layers-light-on-surface-opacity-008, rgba(29, 27, 32, 0.08))',
-            }}
-          >
-            {/* Leading Icon */}
-            <Box
-              sx={{
-                alignSelf: 'stretch',
-                display: 'flex',
-                marginTop: 'auto',
-                marginBottom: 'auto',
-                minHeight: '42px',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '42px',
-              }}
-            >
-              <Box
-                sx={{
-                  borderRadius: '87px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '9px',
-                  overflow: 'hidden',
-                  justifyContent: 'center',
-                }}
-              >
-                <Box
-                  sx={{
-                    alignSelf: 'stretch',
-                    display: 'flex',
-                    marginTop: 'auto',
-                    marginBottom: 'auto',
-                    paddingLeft: '7px',
-                    paddingRight: '7px',
-                    paddingTop: '7px',
-                    paddingBottom: '7px',
-                    alignItems: 'center',
-                    gap: '9px',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/c5ee4a16501d18c667d5b01c1c84203c4e28c2fa?placeholderIfAbsent=true"
-                    alt="Icon"
-                    sx={{
-                      alignSelf: 'stretch',
-                      position: 'relative',
-                      display: 'flex',
-                      marginTop: 'auto',
-                      marginBottom: 'auto',
-                      width: '21px',
-                      aspectRatio: 0.952,
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                </Box>
-              </Box>
-            </Box>
-
-            {/* Search Input */}
-            <Box
-              component="input"
-              placeholder="¿Qué quieres encontrar?"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={handleSearchFocus}
-              onBlur={handleSearchBlur}
-              sx={{
-                color: 'var(--M3-sys-light-on-surface-variant, #55414B)',
-                alignSelf: 'stretch',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '9px',
-                fontFamily:
-                  'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-                fontSize: '12px',
-                fontWeight: 400,
-                letterSpacing: '0.44px',
-                lineHeight: '21px',
-                justifyContent: 'start',
-                height: '100%',
-                flex: 1,
-                flexShrink: 1,
-                flexBasis: '0%',
-                border: 'none',
-                outline: 'none',
-                background: 'transparent',
-              }}
-            />
-
-            {/* Trailing Icon */}
-            <Box
-              sx={{
-                alignSelf: 'stretch',
-                display: 'flex',
-                marginTop: 'auto',
-                marginBottom: 'auto',
-                alignItems: 'center',
-                justifyContent: 'end',
-                width: '42px',
-              }}
-            >
-              <Box
-                sx={{
-                  alignSelf: 'stretch',
-                  display: 'flex',
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                  minHeight: '42px',
-                  width: '42px',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Box
-                  sx={{
-                    borderRadius: '87px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '9px',
-                    overflow: 'hidden',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      alignSelf: 'stretch',
-                      display: 'flex',
-                      marginTop: 'auto',
-                      marginBottom: 'auto',
-                      paddingLeft: '7px',
-                      paddingRight: '7px',
-                      paddingTop: '7px',
-                      paddingBottom: '7px',
-                      alignItems: 'center',
-                      gap: '9px',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/1334d62b5db4ddb227417f4965f30f715ef3004c?placeholderIfAbsent=true"
-                      alt="Icon"
-                      sx={{
-                        alignSelf: 'stretch',
-                        position: 'relative',
-                        display: 'flex',
-                        marginTop: 'auto',
-                        marginBottom: 'auto',
-                        width: '21px',
-                        aspectRatio: 0.952,
-                      }}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Search Suggestions Dropdown */}
-        {searchFocused && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '160px',
-              left: '16px',
-              right: '16px',
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-              zIndex: 1000,
-              maxHeight: '400px',
-              overflow: 'hidden',
-            }}
-          >
-            {/* Suggested Categories */}
-            <Box sx={{ p: 2, pb: 1 }}>
-              <Typography
-                sx={{
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  color: '#888',
-                  mb: 1,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                Categorías populares
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                {suggestedCategories.map((category, index) => (
-                  <Box
-                    key={index}
-                    onClick={() => handleSuggestionClick(category.name)}
-                    sx={{
-                      backgroundColor: '#F3E5F5',
-                      borderRadius: '16px',
-                      padding: '6px 12px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        backgroundColor: '#E1BEE7',
-                        transform: 'scale(1.02)',
-                      },
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: '11px',
-                        fontWeight: 500,
-                        color: '#740056',
-                      }}
-                    >
-                      {category.name}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-
-            {/* Suggested Products/Services */}
-            <Box sx={{ px: 2, pb: 1 }}>
-              <Typography
-                sx={{
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  color: '#888',
-                  mb: 1,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                Sugerencias
-              </Typography>
-              {suggestedProducts.slice(0, 4).map((product, index) => (
-                <Box
-                  key={index}
-                  onClick={() => handleSuggestionClick(product)}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '8px 0',
-                    cursor: 'pointer',
-                    borderBottom: index < 3 ? '1px solid #F0F0F0' : 'none',
-                    '&:hover': {
-                      backgroundColor: '#F9F9F9',
-                    },
-                  }}
-                >
-                  <Search sx={{ fontSize: '16px', color: '#888', mr: 2 }} />
-                  <Typography
-                    sx={{
-                      fontSize: '12px',
-                      color: '#333',
-                      flex: 1,
-                    }}
-                  >
-                    {product}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-
-            {/* Create Request Section */}
-            <Box
-              sx={{
-                borderTop: '1px solid #F0F0F0',
-                padding: '16px',
-                textAlign: 'center',
-                backgroundColor: '#FAFAFA',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: '12px',
-                  color: '#666',
-                  mb: 1.5,
-                  fontFamily:
-                    'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-                }}
-              >
-                ¿No encuentras lo que quieres?
-              </Typography>
-              <Button
-                onClick={handleCreateRequest}
-                sx={{
-                  borderRadius: '20px',
-                  backgroundColor: '#740056',
-                  color: 'white',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  textTransform: 'none',
-                  px: 3,
-                  py: 1,
-                  '&:hover': {
-                    backgroundColor: '#8B1658',
-                  },
-                }}
-              >
-                Crear solicitud
-              </Button>
-            </Box>
-          </Box>
+          />
         )}
 
-        {/* Categories Section */}
-        <Box
-          sx={{
-            display: 'flex',
-            marginTop: '12px',
-            width: '100%',
-            paddingLeft: '16px',
-            paddingRight: '16px',
-            alignItems: 'stretch',
-            gap: '8px',
-          }}
-        >
-          {/* Category 1 */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flex: 1,
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '38px',
-                height: '39px',
-                cursor: 'pointer',
-              }}
-              onClick={() => handleCategoryClick('categoria1')}
-            >
-              <Box
-                component="img"
-                src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/fc4bfdea31ffd6f925e70387b5594c86e308bd9e?placeholderIfAbsent=true"
-                alt="Categoría 1"
-                sx={{
-                  width: '38px',
-                  height: '39px',
-                  borderRadius: '28px',
-                  backgroundColor: '#E5E5E5',
-                }}
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
+        {/* Role Toggle */}
+        <Box sx={{ px: 2, py: 1, display: 'flex', justifyContent: 'center' }}>
+          <Grow in timeout={500}>
+            <Box>
+              <RoleToggle
+                selectedRole={selectedRole}
+                onRoleChange={handleRoleChange}
               />
             </Box>
-            <Typography
-              sx={{
-                color: 'rgba(34, 34, 34, 1)',
-                fontSize: '11px',
-                fontFamily:
-                  'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-                fontWeight: 400,
-                lineHeight: '20px',
-                letterSpacing: '0.25px',
-                textAlign: 'center',
-                marginTop: '4px',
-              }}
-            >
-              Categoría
-            </Typography>
-          </Box>
+          </Grow>
+        </Box>
 
-          {/* Category 2 */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flex: 1,
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '38px',
-                height: '39px',
-                cursor: 'pointer',
-              }}
-              onClick={() => handleCategoryClick('categoria2')}
-            >
-              <Box
-                component="img"
-                src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/fc4bfdea31ffd6f925e70387b5594c86e308bd9e?placeholderIfAbsent=true"
-                alt="Categoría 2"
-                sx={{
-                  width: '38px',
-                  height: '39px',
-                  borderRadius: '28px',
-                  backgroundColor: '#E5E5E5',
-                }}
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
+        {/* Search Bar mejorada */}
+        <Box sx={{ px: 2, mb: 2 }}>
+          <Fade in timeout={700}>
+            <Box>
+              <MobileSearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                onSubmit={handleSearch}
+                placeholder="¿Qué necesitas hoy?"
               />
             </Box>
-            <Typography
-              sx={{
-                color: 'rgba(34, 34, 34, 1)',
-                fontSize: '11px',
-                fontFamily:
-                  'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-                fontWeight: 400,
-                lineHeight: '20px',
-                letterSpacing: '0.25px',
-                textAlign: 'center',
-                marginTop: '4px',
-              }}
-            >
-              Categoría
-            </Typography>
-          </Box>
+          </Fade>
+        </Box>
 
-          {/* Category 3 */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flex: 1,
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '38px',
-                height: '39px',
-                cursor: 'pointer',
-              }}
-              onClick={() => handleCategoryClick('categoria3')}
-            >
-              <Box
-                component="img"
-                src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/fc4bfdea31ffd6f925e70387b5594c86e308bd9e?placeholderIfAbsent=true"
-                alt="Categoría 3"
-                sx={{
-                  width: '38px',
-                  height: '39px',
-                  borderRadius: '28px',
-                  backgroundColor: '#E5E5E5',
-                }}
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </Box>
-            <Typography
-              sx={{
-                color: 'rgba(34, 34, 34, 1)',
-                fontSize: '11px',
-                fontFamily:
-                  'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-                fontWeight: 400,
-                lineHeight: '20px',
-                letterSpacing: '0.25px',
-                textAlign: 'center',
-                marginTop: '4px',
-              }}
-            >
-              Categoría
-            </Typography>
-          </Box>
-
-          {/* Category 4 */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flex: 1,
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '38px',
-                height: '39px',
-                cursor: 'pointer',
-              }}
-              onClick={() => handleCategoryClick('categoria4')}
-            >
-              <Box
-                component="img"
-                src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/fc4bfdea31ffd6f925e70387b5594c86e308bd9e?placeholderIfAbsent=true"
-                alt="Categoría 4"
-                sx={{
-                  width: '38px',
-                  height: '39px',
-                  borderRadius: '28px',
-                  backgroundColor: '#E5E5E5',
-                }}
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </Box>
-            <Typography
-              sx={{
-                color: 'rgba(34, 34, 34, 1)',
-                fontSize: '11px',
-                fontFamily:
-                  'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-                fontWeight: 400,
-                lineHeight: '20px',
-                letterSpacing: '0.25px',
-                textAlign: 'center',
-                marginTop: '4px',
-              }}
-            >
-              Categoría
-            </Typography>
-          </Box>
-
-          {/* View All Button */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flex: 1,
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '38px',
-                height: '39px',
-                cursor: 'pointer',
-                border: '0.759px solid #79747E',
-                borderRadius: '50%',
-                backgroundColor: 'transparent',
-              }}
-              onClick={() => console.log('Ver todo clicked')}
-            >
-              <Box
-                component="img"
-                src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/1711994ab6d8b280218d3bbc8dbe14968cec8948?placeholderIfAbsent=true"
-                alt="Ver todo"
-                sx={{
-                  width: '18px',
-                  height: '18px',
-                }}
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const parent = e.currentTarget.parentElement;
-                  if (parent) {
-                    parent.innerHTML = '+';
-                    parent.style.fontSize = '18px';
-                    parent.style.fontWeight = 'bold';
-                    parent.style.color = '#79747E';
-                  }
-                }}
-              />
-            </Box>
-            <Typography
-              sx={{
-                color: 'rgba(34, 34, 34, 1)',
-                fontSize: '11px',
-                fontFamily:
-                  'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-                fontWeight: 400,
-                lineHeight: '20px',
-                letterSpacing: '0.25px',
-                textAlign: 'center',
-                marginTop: '4px',
-              }}
-            >
-              Ver todo
-            </Typography>
+        {/* Quick Filters */}
+        <Box sx={{ px: 2, mb: 3 }}>
+          <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 1 }}>
+            {quickFilters.map((filter, index) => (
+              <Grow in timeout={500 + index * 100} key={filter.id}>
+                <Chip
+                  icon={<span>{filter.icon}</span>}
+                  label={filter.label}
+                  variant={filters.sortBy === filter.id ? 'filled' : 'outlined'}
+                  onClick={() => handleQuickFilter(filter.id)}
+                  sx={{
+                    minWidth: 'auto',
+                    fontWeight: 500,
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                    },
+                  }}
+                  className="chip-micro-interactive"
+                />
+              </Grow>
+            ))}
           </Box>
         </Box>
-        {/* Recomendados Section Header */}
+
+        {/* Categories Carousel */}
+        <Box sx={{ mb: 3 }}>
+          <Box sx={{ px: 2, mb: 2 }}>
+            <Typography variant="h6" fontWeight="bold">
+              Explora por Categorías
+            </Typography>
+          </Box>
+          <Fade in timeout={800}>
+            <Box>
+              <CategoryCarousel
+                categories={enhancedMobileCategories}
+                onCategoryClick={handleCategoryClick}
+                onViewAll={handleViewAllCategories}
+              />
+            </Box>
+          </Fade>
+        </Box>
+
+        {/* Content Header */}
         <Box
           sx={{
-            alignSelf: 'start',
+            px: 2,
+            mb: 2,
             display: 'flex',
-            marginTop: '11px',
-            marginLeft: '13px',
-            alignItems: 'stretch',
-            gap: '40px 100px',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          <Typography
-            sx={{
-              color: 'rgba(43, 42, 42, 1)',
-              fontSize: '16px',
-              fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-              fontWeight: 600,
-              lineHeight: '36px',
-            }}
-          >
-            Recomendados
+          <Typography variant="h6" fontWeight="bold">
+            {selectedCategory
+              ? `${enhancedMobileCategories.find((c) => c.id === selectedCategory)?.name} (${itemsToDisplay.length})`
+              : `Recomendados (${itemsToDisplay.length})`}
           </Typography>
-          <Box
-            sx={{
-              alignSelf: 'start',
-              display: 'flex',
-              minHeight: '36px',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-            }}
-          >
+
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <IconButton
+              size="small"
+              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+              className="icon-micro-interactive"
+            >
+              {viewMode === 'grid' ? <ViewList /> : <ViewModule />}
+            </IconButton>
             <IconButton
               size="small"
               onClick={() => setShowFilters(true)}
-              sx={{
-                borderRadius: '76px',
-                padding: '6px',
-                backgroundColor:
-                  activeFiltersCount > 0 ? '#740056' : 'transparent',
-                color: activeFiltersCount > 0 ? 'white' : '#740056',
-                '&:hover': {
-                  backgroundColor:
-                    activeFiltersCount > 0
-                      ? '#8B1658'
-                      : 'rgba(116, 0, 86, 0.1)',
-                },
-              }}
+              className="icon-micro-interactive"
             >
-              <TuneIcon sx={{ fontSize: '18px' }} />
+              <FilterAlt />
             </IconButton>
-
-            {/* Active filters count badge */}
-            {activeFiltersCount > 0 && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: -2,
-                  right: -2,
-                  backgroundColor: '#FF6B35',
-                  color: 'white',
-                  borderRadius: '50%',
-                  width: 16,
-                  height: 16,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '10px',
-                  fontWeight: 'bold',
-                  minWidth: 16,
-                }}
-              >
-                {activeFiltersCount}
-              </Box>
-            )}
           </Box>
         </Box>
-      </Box>
 
-      {/* Recommended Products Section */}
-      <Box
-        sx={{
-          display: 'flex',
-          marginTop: '8px',
-          width: '100%',
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          gap: '8px',
-        }}
-      >
-        {/* Product Card 1 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '180px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleProductClick('1')}
-        >
-          {/* Product Image */}
-          <Box
-            sx={{
-              position: 'relative',
-              height: '80px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {/* Gray Triangle */}
-            <Box
-              sx={{
-                width: 0,
-                height: 0,
-                borderLeft: '15px solid transparent',
-                borderRight: '15px solid transparent',
-                borderBottom: '20px solid #A0A0A0',
-              }}
-            />
-
-            {/* Price Badge */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü
-              </Typography>
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}
-              >
-                7
-              </Typography>
-            </Box>
-
-            {/* Bookmark */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                right: '6px',
-                width: '20px',
-                height: '20px',
-                cursor: 'pointer',
-              }}
-            >
-              <Box
-                component="img"
-                src="https://cdn.builder.io/api/v1/image/assets/1878308fcbf04f29b5059022aa7f4447/bookmark-icon.svg"
-                alt="bookmark"
-                sx={{ width: '100%', height: '100%' }}
-                onError={(e) => {
-                  e.currentTarget.innerHTML = '♡';
-                  e.currentTarget.style.fontSize = '16px';
-                  e.currentTarget.style.textAlign = 'center';
-                  e.currentTarget.style.lineHeight = '20px';
-                }}
+        {/* Products Grid/List */}
+        <Box sx={{ px: 2 }}>
+          {featuredLoading ? (
+            <Grid container spacing={2}>
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Grid item xs={6} key={index}>
+                  <Skeleton
+                    variant="rectangular"
+                    height={220}
+                    sx={{ borderRadius: 2 }}
+                    className="loading-skeleton"
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : itemsToDisplay.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 8 }}>
+              <AutoAwesome
+                sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }}
               />
-            </Box>
-
-            {/* Rating */}
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography sx={{ fontSize: '12px', color: '#000' }}>
-                ★
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                No encontramos resultados
               </Typography>
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#000' }}
-              >
-                4.5
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Intenta ajustar tus filtros o explora otras categorías
               </Typography>
-            </Box>
-
-            {/* Position Badge */}
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '6px',
-                right: '6px',
-                backgroundColor: 'rgba(108, 108, 108, 0.9)',
-                color: '#FFF',
-                borderRadius: '50%',
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '10px',
-                fontWeight: 'bold',
-              }}
-            >
-              1st
-            </Box>
-          </Box>
-
-          {/* Product Info */}
-          <Box
-            sx={{
-              padding: '6px 8px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-                lineHeight: 1.2,
-              }}
-            >
-              Nombre del producto
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '10px',
-                color: '#888',
-                mb: 0.5,
-              }}
-            >
-              Cali, Valle del Cauca
-            </Typography>
-
-            {/* Seller Info */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                mb: 0.5,
-              }}
-            >
-              <Box
-                sx={{
-                  width: '16px',
-                  height: '16px',
-                  borderRadius: '50%',
-                  backgroundColor: '#DDD',
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setSelectedCategory('');
+                  setIsSearchActive(false);
+                  setSearchQuery('');
                 }}
-              />
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    color: '#000',
-                    lineHeight: 1,
-                  }}
-                >
-                  Proveedor
-                </Typography>
-                <Typography
-                  sx={{ fontSize: '9px', color: '#666', lineHeight: 1 }}
-                >
-                  @Nickname
-                </Typography>
-              </Box>
-            </Box>
-
-            <Typography
-              sx={{
-                fontSize: '10px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-              }}
-            >
-              Nombre del emprendimiento
-            </Typography>
-
-            {/* Bottom Stats */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mt: 'auto',
-              }}
-            >
-              <Box sx={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: '9px', color: '#888' }}>
-                  44
-                </Typography>
-                <Typography sx={{ fontSize: '9px', color: '#888' }}>
-                  33
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  border: '1px dashed #888',
-                  borderRadius: '2px',
-                  padding: '1px 4px',
-                }}
+                className="btn-micro-interactive"
               >
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  Producto
-                </Typography>
-              </Box>
+                Ver todos los productos
+              </Button>
             </Box>
-          </Box>
-        </Box>
-
-        {/* Product Card 2 - Similar structure */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '180px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleProductClick('2')}
-        >
-          {/* Product Image */}
-          <Box
-            sx={{
-              position: 'relative',
-              height: '80px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {/* Gray Triangle */}
-            <Box
-              sx={{
-                width: 0,
-                height: 0,
-                borderLeft: '15px solid transparent',
-                borderRight: '15px solid transparent',
-                borderBottom: '20px solid #A0A0A0',
-              }}
-            />
-
-            {/* Price Badge */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü
-              </Typography>
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}
-              >
-                7
-              </Typography>
-            </Box>
-
-            {/* Rating */}
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography sx={{ fontSize: '12px', color: '#000' }}>
-                ★
-              </Typography>
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#000' }}
-              >
-                4.5
-              </Typography>
-            </Box>
-
-            {/* Position Badge */}
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '6px',
-                right: '6px',
-                backgroundColor: 'rgba(108, 108, 108, 0.9)',
-                color: '#FFF',
-                borderRadius: '50%',
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '10px',
-                fontWeight: 'bold',
-              }}
-            >
-              1st
-            </Box>
-          </Box>
-
-          {/* Product Info */}
-          <Box
-            sx={{
-              padding: '6px 8px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-                lineHeight: 1.2,
-              }}
-            >
-              Nombre del producto
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '10px',
-                color: '#888',
-                mb: 0.5,
-              }}
-            >
-              Cali, Valle del Cauca
-            </Typography>
-
-            {/* Seller Info */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                mb: 0.5,
-              }}
-            >
-              <Box
-                sx={{
-                  width: '16px',
-                  height: '16px',
-                  borderRadius: '50%',
-                  backgroundColor: '#DDD',
-                }}
-              />
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    color: '#000',
-                    lineHeight: 1,
-                  }}
-                >
-                  Proveedor
-                </Typography>
-                <Typography
-                  sx={{ fontSize: '9px', color: '#666', lineHeight: 1 }}
-                >
-                  @Nickname
-                </Typography>
-              </Box>
-            </Box>
-
-            <Typography
-              sx={{
-                fontSize: '10px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-              }}
-            >
-              Nombre del emprendimiento
-            </Typography>
-
-            {/* Bottom Stats */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mt: 'auto',
-              }}
-            >
-              <Box sx={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: '9px', color: '#888' }}>
-                  44
-                </Typography>
-                <Typography sx={{ fontSize: '9px', color: '#888' }}>
-                  33
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  border: '1px dashed #888',
-                  borderRadius: '2px',
-                  padding: '1px 4px',
-                }}
-              >
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  Producto
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
+          ) : (
+            <Grid container spacing={2}>
+              {itemsToDisplay.map((item, index) => (
+                <Grid item xs={viewMode === 'grid' ? 6 : 12} key={item.id}>
+                  <Zoom in timeout={300 + index * 50}>
+                    <Box>
+                      <EnhancedMobileProductCard
+                        {...item}
+                        viewMode={viewMode}
+                        onToggleFavorite={handleToggleFavorite}
+                        onClick={handleProductClick}
+                      />
+                    </Box>
+                  </Zoom>
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Box>
       </Box>
 
-      {/* Categories Section */}
-      <Typography
+      {/* Bottom Navigation */}
+      <Paper
         sx={{
-          color: 'rgba(43, 42, 42, 1)',
-          fontSize: '16px',
-          fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-          fontWeight: 600,
-          lineHeight: '36px',
-          alignSelf: 'start',
-          marginTop: '16px',
-          marginLeft: '20px',
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          borderTop: '1px solid #e0e0e0',
         }}
+        elevation={3}
       >
-        Categorías
-      </Typography>
+        <BottomNavigation showLabels>
+          <BottomNavigationAction
+            label="Inicio"
+            icon={<Store />}
+            onClick={() => {
+              setSelectedCategory('');
+              setIsSearchActive(false);
+            }}
+          />
+          <BottomNavigationAction
+            label="Categorías"
+            icon={<CategoryIcon />}
+            onClick={() => setShowFilters(true)}
+          />
+          <BottomNavigationAction
+            label="Favoritos"
+            icon={
+              <Badge badgeContent={userFavorites.length} color="primary">
+                <Favorite />
+              </Badge>
+            }
+          />
+          <BottomNavigationAction
+            label="Perfil"
+            icon={<Avatar sx={{ width: 24, height: 24 }} src={user?.avatar} />}
+          />
+        </BottomNavigation>
+      </Paper>
 
-      {/* Categories Section */}
-      <Box
+      {/* Floating Action Button */}
+      <SpeedDial
+        ariaLabel="Quick Actions"
         sx={{
-          display: 'flex',
-          marginTop: '8px',
-          width: '100%',
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          gap: '8px',
-          marginBottom: '80px', // Space for bottom navigation
+          position: 'fixed',
+          bottom: 90,
+          right: 16,
+          '& .MuiFab-primary': {
+            background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
+          },
         }}
+        icon={<SpeedDialIcon />}
+        open={showQuickActions}
+        onOpen={() => setShowQuickActions(true)}
+        onClose={() => setShowQuickActions(false)}
+        className="btn-micro-interactive"
       >
-        {/* Category Card 1 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '120px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleCategoryClick('cat1')}
-        >
-          {/* Category Image */}
-          <Box
-            sx={{
-              position: 'relative',
-              height: '80px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {/* Price Badge */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü
-              </Typography>
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}
-              >
-                7
-              </Typography>
-            </Box>
+        <SpeedDialAction
+          icon={<AddIcon />}
+          tooltipTitle="Publicar Servicio"
+          onClick={() => console.log('Publicar')}
+        />
+        <SpeedDialAction
+          icon={<Search />}
+          tooltipTitle="Búsqueda Avanzada"
+          onClick={() => setShowFilters(true)}
+        />
+        <SpeedDialAction
+          icon={<WhatsApp />}
+          tooltipTitle="Soporte WhatsApp"
+          onClick={() => console.log('WhatsApp')}
+        />
+        <SpeedDialAction
+          icon={<Refresh />}
+          tooltipTitle="Actualizar"
+          onClick={handlePullToRefresh}
+        />
+      </SpeedDial>
 
-            {/* Bookmark */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                right: '6px',
-                width: '20px',
-                height: '20px',
-                cursor: 'pointer',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography sx={{ fontSize: '16px', color: '#000' }}>
-                ♡
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Category Info */}
-          <Box
-            sx={{
-              padding: '6px 8px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#000',
-                textAlign: 'center',
-                lineHeight: 1.2,
-              }}
-            >
-              Categoría
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Category Card 2 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '120px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleCategoryClick('cat2')}
-        >
-          {/* Category Image */}
-          <Box
-            sx={{
-              position: 'relative',
-              height: '80px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {/* Price Badge */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü
-              </Typography>
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}
-              >
-                7
-              </Typography>
-            </Box>
-
-            {/* Bookmark */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                right: '6px',
-                width: '20px',
-                height: '20px',
-                cursor: 'pointer',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography sx={{ fontSize: '16px', color: '#000' }}>
-                ♡
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Category Info */}
-          <Box
-            sx={{
-              padding: '6px 8px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#000',
-                textAlign: 'center',
-                lineHeight: 1.2,
-              }}
-            >
-              Categoría
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Additional Categories Grid */}
-      <Box
-        sx={{
-          display: 'flex',
-          marginTop: '16px',
-          width: '100%',
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          gap: '8px',
-        }}
-      >
-        {/* Category Card 3 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '120px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleCategoryClick('cat3')}
-        >
-          <Box
-            sx={{
-              position: 'relative',
-              height: '80px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü
-              </Typography>
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}
-              >
-                7
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                right: '6px',
-                width: '20px',
-                height: '20px',
-                cursor: 'pointer',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography sx={{ fontSize: '16px', color: '#000' }}>
-                ♡
-              </Typography>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              padding: '6px 8px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#000',
-                textAlign: 'center',
-                lineHeight: 1.2,
-              }}
-            >
-              Categoría
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Category Card 4 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '120px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleCategoryClick('cat4')}
-        >
-          <Box
-            sx={{
-              position: 'relative',
-              height: '80px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü
-              </Typography>
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}
-              >
-                7
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                right: '6px',
-                width: '20px',
-                height: '20px',
-                cursor: 'pointer',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography sx={{ fontSize: '16px', color: '#000' }}>
-                ♡
-              </Typography>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              padding: '6px 8px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#000',
-                textAlign: 'center',
-                lineHeight: 1.2,
-              }}
-            >
-              Categoría
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* New Featured Section */}
-      <Typography
-        sx={{
-          color: 'rgba(43, 42, 42, 1)',
-          fontSize: '16px',
-          fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-          fontWeight: 600,
-          lineHeight: '36px',
-          alignSelf: 'start',
-          marginTop: '24px',
-          marginLeft: '20px',
-        }}
-      >
-        Destacados
-      </Typography>
-
-      {/* Featured Products Section */}
-      <Box
-        sx={{
-          display: 'flex',
-          marginTop: '8px',
-          width: '100%',
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          gap: '8px',
-        }}
-      >
-        {/* Featured Product 1 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '180px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleProductClick('featured1')}
-        >
-          <Box
-            sx={{
-              position: 'relative',
-              height: '80px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                width: 0,
-                height: 0,
-                borderLeft: '15px solid transparent',
-                borderRight: '15px solid transparent',
-                borderBottom: '20px solid #A0A0A0',
-              }}
-            />
-
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü
-              </Typography>
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}
-              >
-                12
-              </Typography>
-            </Box>
-
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography sx={{ fontSize: '12px', color: '#000' }}>
-                ★
-              </Typography>
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#000' }}
-              >
-                4.8
-              </Typography>
-            </Box>
-
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '6px',
-                right: '6px',
-                backgroundColor: 'rgba(108, 108, 108, 0.9)',
-                color: '#FFF',
-                borderRadius: '50%',
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '10px',
-                fontWeight: 'bold',
-              }}
-            >
-              1st
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              padding: '6px 8px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-                lineHeight: 1.2,
-              }}
-            >
-              Servicio Premium
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '10px',
-                color: '#888',
-                mb: 0.5,
-              }}
-            >
-              Medellín, Antioquia
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                mb: 0.5,
-              }}
-            >
-              <Box
-                sx={{
-                  width: '16px',
-                  height: '16px',
-                  borderRadius: '50%',
-                  backgroundColor: '#DDD',
-                }}
-              />
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    color: '#000',
-                    lineHeight: 1,
-                  }}
-                >
-                  Experto
-                </Typography>
-                <Typography
-                  sx={{ fontSize: '9px', color: '#666', lineHeight: 1 }}
-                >
-                  @expert
-                </Typography>
-              </Box>
-            </Box>
-
-            <Typography
-              sx={{
-                fontSize: '10px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-              }}
-            >
-              Empresa Innovadora
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mt: 'auto',
-              }}
-            >
-              <Box sx={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: '9px', color: '#888' }}>
-                  89
-                </Typography>
-                <Typography sx={{ fontSize: '9px', color: '#888' }}>
-                  67
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  border: '1px dashed #888',
-                  borderRadius: '2px',
-                  padding: '1px 4px',
-                }}
-              >
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  Servicio
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Featured Product 2 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '180px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleProductClick('featured2')}
-        >
-          <Box
-            sx={{
-              position: 'relative',
-              height: '80px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                width: 0,
-                height: 0,
-                borderLeft: '15px solid transparent',
-                borderRight: '15px solid transparent',
-                borderBottom: '20px solid #A0A0A0',
-              }}
-            />
-
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü
-              </Typography>
-              <Typography
-                sx={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}
-              >
-                15
-              </Typography>
-            </Box>
-
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '6px',
-                left: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '8px',
-                padding: '2px 6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography sx={{ fontSize: '12px', color: '#000' }}>
-                ★
-              </Typography>
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#000' }}
-              >
-                4.9
-              </Typography>
-            </Box>
-
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '6px',
-                right: '6px',
-                backgroundColor: 'rgba(108, 108, 108, 0.9)',
-                color: '#FFF',
-                borderRadius: '50%',
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '10px',
-                fontWeight: 'bold',
-              }}
-            >
-              2nd
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              padding: '6px 8px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-                lineHeight: 1.2,
-              }}
-            >
-              Producto Artesanal
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '10px',
-                color: '#888',
-                mb: 0.5,
-              }}
-            >
-              Bogotá, Cundinamarca
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                mb: 0.5,
-              }}
-            >
-              <Box
-                sx={{
-                  width: '16px',
-                  height: '16px',
-                  borderRadius: '50%',
-                  backgroundColor: '#DDD',
-                }}
-              />
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    color: '#000',
-                    lineHeight: 1,
-                  }}
-                >
-                  Artesano
-                </Typography>
-                <Typography
-                  sx={{ fontSize: '9px', color: '#666', lineHeight: 1 }}
-                >
-                  @craft
-                </Typography>
-              </Box>
-            </Box>
-
-            <Typography
-              sx={{
-                fontSize: '10px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-              }}
-            >
-              Taller Creativo
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mt: 'auto',
-              }}
-            >
-              <Box sx={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: '9px', color: '#888' }}>
-                  72
-                </Typography>
-                <Typography sx={{ fontSize: '9px', color: '#888' }}>
-                  54
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  border: '1px dashed #888',
-                  borderRadius: '2px',
-                  padding: '1px 4px',
-                }}
-              >
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  Producto
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Trending Section */}
-      <Typography
-        sx={{
-          color: 'rgba(43, 42, 42, 1)',
-          fontSize: '16px',
-          fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-          fontWeight: 600,
-          lineHeight: '36px',
-          alignSelf: 'start',
-          marginTop: '24px',
-          marginLeft: '20px',
-        }}
-      >
-        Tendencias
-      </Typography>
-
-      {/* Trending Items */}
-      <Box
-        sx={{
-          display: 'flex',
-          marginTop: '8px',
-          width: '100%',
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          gap: '8px',
-        }}
-      >
-        {/* Trending Item 1 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '140px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleProductClick('trending1')}
-        >
-          <Box
-            sx={{
-              position: 'relative',
-              height: '70px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                width: 0,
-                height: 0,
-                borderLeft: '12px solid transparent',
-                borderRight: '12px solid transparent',
-                borderBottom: '16px solid #A0A0A0',
-              }}
-            />
-
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '4px',
-                left: '4px',
-                backgroundColor: 'rgba(255, 215, 0, 0.95)',
-                borderRadius: '6px',
-                padding: '2px 4px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#000' }}
-              >
-                🔥 HOT
-              </Typography>
-            </Box>
-
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '4px',
-                right: '4px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '6px',
-                padding: '2px 4px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü 8
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              padding: '4px 6px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '11px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-                lineHeight: 1.2,
-              }}
-            >
-              Curso Online
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '9px',
-                color: '#888',
-                mb: 0.5,
-              }}
-            >
-              Bucaramanga, Santander
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mt: 'auto',
-              }}
-            >
-              <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  156
-                </Typography>
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  92
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  border: '1px dashed #888',
-                  borderRadius: '2px',
-                  padding: '1px 3px',
-                }}
-              >
-                <Typography sx={{ fontSize: '7px', color: '#888' }}>
-                  Curso
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Trending Item 2 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '140px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleProductClick('trending2')}
-        >
-          <Box
-            sx={{
-              position: 'relative',
-              height: '70px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                width: 0,
-                height: 0,
-                borderLeft: '12px solid transparent',
-                borderRight: '12px solid transparent',
-                borderBottom: '16px solid #A0A0A0',
-              }}
-            />
-
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '4px',
-                left: '4px',
-                backgroundColor: 'rgba(76, 175, 80, 0.95)',
-                borderRadius: '6px',
-                padding: '2px 4px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#FFF' }}
-              >
-                ⭐ NEW
-              </Typography>
-            </Box>
-
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '4px',
-                right: '4px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '6px',
-                padding: '2px 4px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü 5
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              padding: '4px 6px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '11px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-                lineHeight: 1.2,
-              }}
-            >
-              Consultoría Digital
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '9px',
-                color: '#888',
-                mb: 0.5,
-              }}
-            >
-              Pereira, Risaralda
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mt: 'auto',
-              }}
-            >
-              <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  23
-                </Typography>
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  18
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  border: '1px dashed #888',
-                  borderRadius: '2px',
-                  padding: '1px 3px',
-                }}
-              >
-                <Typography sx={{ fontSize: '7px', color: '#888' }}>
-                  Servicio
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Trending Item 3 */}
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: '#E8E8E8',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            height: '140px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          onClick={() => handleProductClick('trending3')}
-        >
-          <Box
-            sx={{
-              position: 'relative',
-              height: '70px',
-              backgroundColor: '#D0D0D0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                width: 0,
-                height: 0,
-                borderLeft: '12px solid transparent',
-                borderRight: '12px solid transparent',
-                borderBottom: '16px solid #A0A0A0',
-              }}
-            />
-
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '4px',
-                right: '4px',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '6px',
-                padding: '2px 4px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px',
-              }}
-            >
-              <Typography
-                sx={{ fontSize: '10px', fontWeight: 'bold', color: '#740056' }}
-              >
-                ü 10
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              padding: '4px 6px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '11px',
-                fontWeight: 'bold',
-                color: '#000',
-                mb: 0.5,
-                lineHeight: 1.2,
-              }}
-            >
-              Evento Especial
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '9px',
-                color: '#888',
-                mb: 0.5,
-              }}
-            >
-              Cartagena, Bolívar
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mt: 'auto',
-              }}
-            >
-              <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  95
-                </Typography>
-                <Typography sx={{ fontSize: '8px', color: '#888' }}>
-                  76
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  border: '1px dashed #888',
-                  borderRadius: '2px',
-                  padding: '1px 3px',
-                }}
-              >
-                <Typography sx={{ fontSize: '7px', color: '#888' }}>
-                  Evento
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Bottom spacing for navigation */}
-      <Box sx={{ height: '100px' }} />
-
-      {/* Advanced Filters Drawer */}
-      <Drawer
+      {/* Filters Drawer */}
+      <SwipeableDrawer
         anchor="bottom"
         open={showFilters}
         onClose={() => setShowFilters(false)}
+        onOpen={() => setShowFilters(true)}
         PaperProps={{
           sx: {
-            borderTopLeftRadius: '20px',
-            borderTopRightRadius: '20px',
-            maxHeight: '85vh',
-            backgroundColor: '#FEF7FF',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            maxHeight: '80vh',
           },
         }}
       >
-        <Box sx={{ p: 3, pb: 4 }}>
-          {/* Header */}
+        <AdvancedFiltersContent
+          filters={filters}
+          onFiltersChange={setFilters}
+          onClose={() => setShowFilters(false)}
+          categories={enhancedMobileCategories}
+          sortOptions={sortOptions}
+        />
+      </SwipeableDrawer>
+
+      {/* Product Detail Dialog */}
+      <Dialog
+        fullScreen
+        open={showProductDetail}
+        onClose={() => setShowProductDetail(false)}
+        TransitionComponent={Slide}
+      >
+        <DialogContent sx={{ p: 0 }}>
+          {selectedProduct && (
+            <ProductDetailView
+              product={selectedProduct}
+              onClose={() => setShowProductDetail(false)}
+              onToggleFavorite={handleToggleFavorite}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Feedback Snackbar */}
+      <Snackbar
+        open={showFeedback}
+        autoHideDuration={2000}
+        onClose={() => setShowFeedback(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" variant="filled">
+          {feedbackMessage}
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+};
+
+// 🎨 Componente de tarjeta móvil mejorada
+interface EnhancedMobileProductCardProps extends MarketplaceItem {
+  viewMode: 'grid' | 'list';
+  onToggleFavorite: (id: string) => void;
+  onClick: (id: string) => void;
+}
+
+const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
+  id,
+  title,
+  description,
+  price,
+  originalPrice,
+  currency,
+  location,
+  rating,
+  seller,
+  images,
+  isFavorited,
+  onToggleFavorite,
+  onClick,
+  viewMode,
+  tags,
+  featured,
+  trending,
+  discount,
+  deliveryTime,
+  hasVideo,
+  is24Hours,
+}) => {
+  const formatPrice = (price: number, currency: string) => {
+    if (currency === 'ü' || currency === 'Lükas' || currency === 'LUKAS') {
+      return `ü ${price}`;
+    }
+    return `$${price.toLocaleString()}`;
+  };
+
+  if (viewMode === 'list') {
+    return (
+      <Card
+        onClick={() => onClick(id)}
+        sx={{
+          cursor: 'pointer',
+          display: 'flex',
+          p: 1.5,
+          height: 140,
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+          },
+          border: featured ? '2px solid #FFD700' : 'none',
+        }}
+        className="card-micro-interactive"
+      >
+        {/* Imagen */}
+        <Box
+          sx={{
+            width: 100,
+            height: '100%',
+            borderRadius: 2,
+            backgroundColor: '#f5f5f5',
+            backgroundImage: `url(${images[0]})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative',
+            flexShrink: 0,
+          }}
+        >
+          {trending && (
+            <Chip
+              label="🔥"
+              size="small"
+              sx={{
+                position: 'absolute',
+                top: 4,
+                left: 4,
+                minWidth: 'auto',
+                height: 20,
+                backgroundColor: '#FF6B6B',
+                color: 'white',
+              }}
+            />
+          )}
+          {hasVideo && (
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 4,
+                right: 4,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                borderRadius: 1,
+                px: 0.5,
+                py: 0.25,
+              }}
+            >
+              <Typography variant="caption" color="white" fontSize="10px">
+                📹
+              </Typography>
+            </Box>
+          )}
+        </Box>
+
+        {/* Contenido */}
+        <Box
+          sx={{ flex: 1, ml: 1.5, display: 'flex', flexDirection: 'column' }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                mb: 0.5,
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                fontWeight="bold"
+                sx={{ lineHeight: 1.2, flex: 1 }}
+              >
+                {title}
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite(id);
+                }}
+                sx={{ ml: 0.5 }}
+              >
+                {isFavorited ? (
+                  <Favorite sx={{ fontSize: 16, color: '#FF4444' }} />
+                ) : (
+                  <Favorite sx={{ fontSize: 16, color: '#ccc' }} />
+                )}
+              </IconButton>
+            </Box>
+
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ display: 'block', mb: 0.5 }}
+            >
+              {description.substring(0, 60)}...
+            </Typography>
+
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}
+            >
+              <Star sx={{ fontSize: 12, color: '#FFD700' }} />
+              <Typography variant="caption" fontWeight="bold">
+                {rating}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                ({seller.reviewCount})
+              </Typography>
+              {seller.isOnline && (
+                <Box
+                  sx={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: '50%',
+                    backgroundColor: '#4CAF50',
+                    ml: 0.5,
+                  }}
+                />
+              )}
+            </Box>
+          </Box>
+
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              mb: 2,
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#740056' }}>
-              Filtros avanzados
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              {activeFiltersCount > 0 && (
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={handleClearFilters}
-                  sx={{
-                    color: '#740056',
-                    borderColor: '#740056',
-                    '&:hover': {
-                      backgroundColor: 'rgba(116, 0, 86, 0.1)',
-                    },
-                  }}
-                >
-                  Limpiar
-                </Button>
-              )}
-              <IconButton onClick={() => setShowFilters(false)} size="small">
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </Box>
-
-          {/* Search Query */}
-          <Box sx={{ mb: 3 }}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Buscar"
-              placeholder="¿Qué quieres encontrar?"
-              value={filters.query}
-              onChange={(e) => handleFilterChange('query', e.target.value)}
-              InputProps={{
-                startAdornment: <Search sx={{ color: '#740056', mr: 1 }} />,
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '12px',
-                  '& fieldset': { borderColor: '#740056' },
-                  '&:hover fieldset': { borderColor: '#740056' },
-                  '&.Mui-focused fieldset': { borderColor: '#740056' },
-                },
-                '& .MuiInputLabel-root': { color: '#740056' },
-                '& .MuiInputLabel-root.Mui-focused': { color: '#740056' },
-              }}
-            />
-          </Box>
-
-          {/* Category Filter */}
-          <Box sx={{ mb: 3 }}>
-            <FormControl fullWidth size="small">
-              <InputLabel sx={{ color: '#740056' }}>Categoría</InputLabel>
-              <Select
-                value={filters.category}
-                label="Categoría"
-                onChange={(e) => handleFilterChange('category', e.target.value)}
-                sx={{
-                  borderRadius: '12px',
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#740056',
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#740056',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#740056',
-                  },
-                }}
-                startAdornment={
-                  <CategoryIcon sx={{ color: '#740056', mr: 1 }} />
-                }
-              >
-                <MenuItem value="">
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography>🏪</Typography>
-                    <Typography>Todas las categorías</Typography>
-                  </Box>
-                </MenuItem>
-                {filterCategories.slice(1).map((category) => (
-                  <MenuItem key={category.value} value={category.value}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography>{category.icon}</Typography>
-                      <Typography>{category.label}</Typography>
-                    </Box>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-
-          {/* Location Filter */}
-          <Box sx={{ mb: 3 }}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Ubicación"
-              placeholder="Ciudad, región..."
-              value={filters.location}
-              onChange={(e) => handleFilterChange('location', e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <LocationIcon sx={{ color: '#740056', mr: 1 }} />
-                ),
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '12px',
-                  '& fieldset': { borderColor: '#740056' },
-                  '&:hover fieldset': { borderColor: '#740056' },
-                  '&.Mui-focused fieldset': { borderColor: '#740056' },
-                },
-                '& .MuiInputLabel-root': { color: '#740056' },
-                '& .MuiInputLabel-root.Mui-focused': { color: '#740056' },
-              }}
-            />
-          </Box>
-
-          {/* Price Range */}
-          <Box sx={{ mb: 3 }}>
-            <Typography
-              variant="body2"
-              sx={{
-                mb: 1,
-                fontWeight: 600,
-                color: '#740056',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 0.5,
-              }}
-            >
-              <PriceIcon fontSize="small" />
-              Rango de precio: ü{filters.priceRange[0]} - ü
-              {filters.priceRange[1]}
-            </Typography>
-            <Slider
-              value={filters.priceRange}
-              onChange={(_, value) => handleFilterChange('priceRange', value)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={100}
-              step={5}
-              sx={{
-                color: '#740056',
-                '& .MuiSlider-thumb': {
-                  backgroundColor: '#740056',
-                },
-                '& .MuiSlider-track': {
-                  backgroundColor: '#740056',
-                },
-                '& .MuiSlider-rail': {
-                  backgroundColor: 'rgba(116, 0, 86, 0.3)',
-                },
-              }}
-              marks={[
-                { value: 0, label: 'ü0' },
-                { value: 25, label: 'ü25' },
-                { value: 50, label: 'ü50' },
-                { value: 75, label: 'ü75' },
-                { value: 100, label: 'ü100+' },
-              ]}
-            />
-          </Box>
-
-          {/* Rating Filter */}
-          <Box sx={{ mb: 3 }}>
-            <Typography
-              variant="body2"
-              sx={{
-                mb: 1,
-                fontWeight: 600,
-                color: '#740056',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 0.5,
-              }}
-            >
-              <StarIcon fontSize="small" />
-              Calificación mínima
-            </Typography>
-            <Rating
-              value={filters.rating}
-              onChange={(_, value) => handleFilterChange('rating', value || 0)}
-              precision={0.5}
-              size="large"
-              sx={{
-                '& .MuiRating-iconFilled': {
-                  color: '#740056',
-                },
-                '& .MuiRating-iconHover': {
-                  color: '#740056',
-                },
-              }}
-            />
-          </Box>
-
-          {/* Verified Only Switch */}
-          <Box sx={{ mb: 3 }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={filters.verified}
-                  onChange={(e) =>
-                    handleFilterChange('verified', e.target.checked)
-                  }
-                  sx={{
-                    '& .MuiSwitch-switchBase.Mui-checked': {
-                      color: '#740056',
-                    },
-                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                      backgroundColor: '#740056',
-                    },
-                  }}
-                />
-              }
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <VerifiedIcon sx={{ color: '#740056', fontSize: '18px' }} />
-                  <Typography sx={{ fontWeight: 600, color: '#740056' }}>
-                    Solo emprendedores verificados
+            <Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                {originalPrice && (
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      textDecoration: 'line-through',
+                      color: 'text.secondary',
+                    }}
+                  >
+                    ü{originalPrice}
                   </Typography>
-                </Box>
-              }
-            />
-          </Box>
+                )}
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="bold"
+                  color="primary"
+                >
+                  {formatPrice(price, currency)}
+                </Typography>
+              </Box>
+              {deliveryTime && (
+                <Typography variant="caption" color="text.secondary">
+                  📦 {deliveryTime}
+                </Typography>
+              )}
+            </Box>
 
-          {/* Sort By */}
-          <Box sx={{ mb: 3 }}>
-            <FormControl fullWidth size="small">
-              <InputLabel sx={{ color: '#740056' }}>Ordenar por</InputLabel>
-              <Select
-                value={filters.sortBy}
-                label="Ordenar por"
-                onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                sx={{
-                  borderRadius: '12px',
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#740056',
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#740056',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#740056',
-                  },
-                }}
-              >
-                <MenuItem value="relevance">Relevancia</MenuItem>
-                <MenuItem value="newest">Más recientes</MenuItem>
-                <MenuItem value="price_asc">Precio: menor a mayor</MenuItem>
-                <MenuItem value="price_desc">Precio: mayor a menor</MenuItem>
-                <MenuItem value="rating">Mejor valorados</MenuItem>
-                <MenuItem value="ayni_score">Puntuación Ayni</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-
-          {/* Popular Tags */}
-          <Box sx={{ mb: 3 }}>
-            <Typography
-              variant="body2"
-              sx={{ mb: 2, fontWeight: 600, color: '#740056' }}
-            >
-              Etiquetas populares:
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {popularTags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  variant={filters.tags.includes(tag) ? 'filled' : 'outlined'}
-                  color={filters.tags.includes(tag) ? 'primary' : 'default'}
-                  size="small"
-                  onClick={() => {
-                    const newTags = filters.tags.includes(tag)
-                      ? filters.tags.filter((t) => t !== tag)
-                      : [...filters.tags, tag];
-                    handleFilterChange('tags', newTags);
-                  }}
-                  sx={{
-                    borderColor: '#740056',
-                    color: filters.tags.includes(tag) ? 'white' : '#740056',
-                    backgroundColor: filters.tags.includes(tag)
-                      ? '#740056'
-                      : 'transparent',
-                    '&:hover': {
-                      backgroundColor: filters.tags.includes(tag)
-                        ? '#8B1658'
-                        : 'rgba(116, 0, 86, 0.1)',
-                    },
-                  }}
-                />
-              ))}
+            <Box sx={{ textAlign: 'right' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Avatar src={seller.avatar} sx={{ width: 16, height: 16 }} />
+                <Typography variant="caption" fontWeight="bold">
+                  {seller.name.split(' ')[0]}
+                </Typography>
+                {seller.verified && (
+                  <VerifiedIcon sx={{ fontSize: 12, color: '#1976d2' }} />
+                )}
+              </Box>
+              <Typography variant="caption" color="text.secondary">
+                {location.split(',')[0]}
+              </Typography>
             </Box>
           </Box>
+        </Box>
+      </Card>
+    );
+  }
 
-          {/* Active Filters Display */}
-          {activeFiltersCount > 0 && (
-            <Box sx={{ mb: 3 }}>
-              <Divider sx={{ mb: 2 }} />
-              <Typography
-                variant="body2"
-                sx={{ mb: 1, fontWeight: 600, color: '#740056' }}
-              >
-                Filtros activos ({activeFiltersCount}):
+  // Vista de grilla
+  return (
+    <Card
+      onClick={() => onClick(id)}
+      sx={{
+        cursor: 'pointer',
+        height: 280,
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+        },
+        border: featured ? '2px solid #FFD700' : 'none',
+      }}
+      className="card-micro-interactive"
+    >
+      {/* Imagen del producto */}
+      <Box
+        sx={{
+          height: 140,
+          position: 'relative',
+          backgroundColor: '#f5f5f5',
+          backgroundImage: `url(${images[0]})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Badges superiores */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 6,
+            left: 6,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 0.5,
+          }}
+        >
+          {featured && (
+            <Chip
+              label="⭐"
+              size="small"
+              sx={{
+                minWidth: 'auto',
+                height: 20,
+                backgroundColor: '#FFD700',
+                color: 'white',
+                fontSize: '10px',
+              }}
+            />
+          )}
+          {trending && (
+            <Chip
+              label="🔥"
+              size="small"
+              sx={{
+                minWidth: 'auto',
+                height: 20,
+                backgroundColor: '#FF6B6B',
+                color: 'white',
+                fontSize: '10px',
+              }}
+            />
+          )}
+          {is24Hours && (
+            <Chip
+              label="24h"
+              size="small"
+              sx={{
+                minWidth: 'auto',
+                height: 20,
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                fontSize: '10px',
+              }}
+            />
+          )}
+        </Box>
+
+        {/* Descuento */}
+        {discount && (
+          <Chip
+            label={`-${discount}%`}
+            size="small"
+            sx={{
+              position: 'absolute',
+              top: 6,
+              right: 6,
+              backgroundColor: '#FF4444',
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '10px',
+            }}
+          />
+        )}
+
+        {/* Botón de favorito */}
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite(id);
+          }}
+          sx={{
+            position: 'absolute',
+            bottom: 6,
+            right: 6,
+            backgroundColor: 'rgba(255,255,255,0.9)',
+            '&:hover': { backgroundColor: 'white' },
+            width: 32,
+            height: 32,
+          }}
+          className="icon-micro-interactive"
+        >
+          {isFavorited ? (
+            <Favorite sx={{ fontSize: 16, color: '#FF4444' }} />
+          ) : (
+            <Favorite sx={{ fontSize: 16, color: '#ccc' }} />
+          )}
+        </IconButton>
+
+        {/* Rating y características */}
+        <Box sx={{ position: 'absolute', bottom: 6, left: 6 }}>
+          <Box
+            sx={{
+              backgroundColor: 'rgba(255,255,255,0.9)',
+              borderRadius: 1,
+              px: 0.5,
+              py: 0.25,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.25,
+              mb: hasVideo ? 0.5 : 0,
+            }}
+          >
+            <Star sx={{ fontSize: 12, color: '#FFD700' }} />
+            <Typography variant="caption" fontWeight="bold">
+              {rating}
+            </Typography>
+          </Box>
+
+          {hasVideo && (
+            <Box
+              sx={{
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                borderRadius: 1,
+                px: 0.5,
+                py: 0.25,
+              }}
+            >
+              <Typography variant="caption" color="white" fontSize="10px">
+                📹 Video
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {filters.query && (
-                  <Chip
-                    label={`"${filters.query}"`}
-                    onDelete={() => handleFilterChange('query', '')}
-                    size="small"
-                    sx={{ backgroundColor: '#740056', color: 'white' }}
-                  />
-                )}
-                {filters.category && (
-                  <Chip
-                    label={
-                      filterCategories.find((c) => c.value === filters.category)
-                        ?.label || filters.category
-                    }
-                    onDelete={() => handleFilterChange('category', '')}
-                    size="small"
-                    sx={{ backgroundColor: '#740056', color: 'white' }}
-                  />
-                )}
-                {filters.location && (
-                  <Chip
-                    label={`📍 ${filters.location}`}
-                    onDelete={() => handleFilterChange('location', '')}
-                    size="small"
-                    sx={{ backgroundColor: '#740056', color: 'white' }}
-                  />
-                )}
-                {filters.rating > 0 && (
-                  <Chip
-                    label={`⭐ ${filters.rating}+ estrellas`}
-                    onDelete={() => handleFilterChange('rating', 0)}
-                    size="small"
-                    sx={{ backgroundColor: '#740056', color: 'white' }}
-                  />
-                )}
-                {filters.verified && (
-                  <Chip
-                    label="✅ Verificados"
-                    onDelete={() => handleFilterChange('verified', false)}
-                    size="small"
-                    sx={{ backgroundColor: '#740056', color: 'white' }}
-                  />
-                )}
-                {(filters.priceRange[0] > 0 || filters.priceRange[1] < 100) && (
-                  <Chip
-                    label={`💰 ü${filters.priceRange[0]} - ü${filters.priceRange[1]}`}
-                    onDelete={() => handleFilterChange('priceRange', [0, 100])}
-                    size="small"
-                    sx={{ backgroundColor: '#740056', color: 'white' }}
-                  />
-                )}
-                {filters.tags.map((tag) => (
-                  <Chip
-                    key={tag}
-                    label={tag}
-                    onDelete={() =>
-                      handleFilterChange(
-                        'tags',
-                        filters.tags.filter((t) => t !== tag)
-                      )
-                    }
-                    size="small"
-                    sx={{ backgroundColor: '#740056', color: 'white' }}
-                  />
-                ))}
-              </Box>
             </Box>
           )}
-
-          {/* Apply Button */}
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={() => setShowFilters(false)}
-            sx={{
-              backgroundColor: '#740056',
-              color: 'white',
-              borderRadius: '12px',
-              py: 1.5,
-              fontSize: '16px',
-              fontWeight: 600,
-              '&:hover': {
-                backgroundColor: '#8B1658',
-              },
-            }}
-          >
-            Aplicar filtros{' '}
-            {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-          </Button>
         </Box>
-      </Drawer>
+
+        {/* Indicador online del vendedor */}
+        {seller.isOnline && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 6,
+              right: discount ? 80 : 6,
+              width: 10,
+              height: 10,
+              borderRadius: '50%',
+              backgroundColor: '#4CAF50',
+              border: '2px solid white',
+            }}
+          />
+        )}
+      </Box>
+
+      {/* Contenido de la tarjeta */}
+      <CardContent
+        sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 1.5 }}
+      >
+        <Typography
+          variant="subtitle2"
+          fontWeight="bold"
+          sx={{
+            mb: 0.5,
+            lineHeight: 1.2,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
+          {title}
+        </Typography>
+
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{
+            mb: 1,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            flex: 1,
+          }}
+        >
+          {description}
+        </Typography>
+
+        {/* Precio */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
+          {originalPrice && (
+            <Typography
+              variant="caption"
+              sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
+            >
+              ü{originalPrice}
+            </Typography>
+          )}
+          <Typography variant="subtitle1" fontWeight="bold" color="primary">
+            {formatPrice(price, currency)}
+          </Typography>
+        </Box>
+
+        {/* Información del vendedor y entrega */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Avatar src={seller.avatar} sx={{ width: 20, height: 20 }} />
+            <Box>
+              <Typography
+                variant="caption"
+                fontWeight="bold"
+                display="block"
+                lineHeight={1}
+              >
+                {seller.name.split(' ')[0]}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                lineHeight={1}
+              >
+                {seller.responseTime}
+              </Typography>
+            </Box>
+            {seller.verified && (
+              <VerifiedIcon sx={{ fontSize: 12, color: '#1976d2' }} />
+            )}
+          </Box>
+
+          <Box sx={{ textAlign: 'right' }}>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              display="block"
+              lineHeight={1}
+            >
+              📍 {location.split(',')[0]}
+            </Typography>
+            {deliveryTime && (
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                lineHeight={1}
+              >
+                📦 {deliveryTime}
+              </Typography>
+            )}
+          </Box>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
+
+// 🛠️ Componente de filtros avanzados
+interface AdvancedFiltersContentProps {
+  filters: SearchFilters;
+  onFiltersChange: (filters: SearchFilters) => void;
+  onClose: () => void;
+  categories: Category[];
+  sortOptions: any[];
+}
+
+const AdvancedFiltersContent: React.FC<AdvancedFiltersContentProps> = ({
+  filters,
+  onFiltersChange,
+  onClose,
+  categories,
+  sortOptions,
+}) => {
+  const [localFilters, setLocalFilters] = useState(filters);
+
+  const handleApplyFilters = () => {
+    onFiltersChange(localFilters);
+    onClose();
+  };
+
+  const handleResetFilters = () => {
+    const resetFilters: SearchFilters = {
+      query: '',
+      category: '',
+      priceRange: [0, 1000],
+      location: '',
+      rating: 0,
+      verified: false,
+      sortBy: 'relevance',
+      tags: [],
+      hasDiscount: false,
+      deliveryType: '',
+      availability: '',
+    };
+    setLocalFilters(resetFilters);
+  };
+
+  return (
+    <Box sx={{ p: 3, maxHeight: '80vh', overflow: 'auto' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 3,
+        }}
+      >
+        <Typography variant="h6" fontWeight="bold">
+          Filtros Avanzados
+        </Typography>
+        <IconButton onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
+      {/* Categorías */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+          Categorías
+        </Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+          {categories.map((category) => (
+            <Chip
+              key={category.id}
+              label={`${category.icon} ${category.name}`}
+              variant={
+                localFilters.category === category.id ? 'filled' : 'outlined'
+              }
+              onClick={() =>
+                setLocalFilters((prev) => ({
+                  ...prev,
+                  category: prev.category === category.id ? '' : category.id,
+                }))
+              }
+              className="chip-micro-interactive"
+            />
+          ))}
+        </Box>
+      </Box>
+
+      {/* Rango de precios */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+          Rango de Precios (ü)
+        </Typography>
+        <Slider
+          value={localFilters.priceRange}
+          onChange={(_, value) =>
+            setLocalFilters((prev) => ({
+              ...prev,
+              priceRange: value as [number, number],
+            }))
+          }
+          valueLabelDisplay="auto"
+          min={0}
+          max={1000}
+          step={10}
+          marks={[
+            { value: 0, label: 'ü0' },
+            { value: 250, label: 'ü250' },
+            { value: 500, label: 'ü500' },
+            { value: 750, label: 'ü750' },
+            { value: 1000, label: 'ü1000+' },
+          ]}
+        />
+      </Box>
+
+      {/* Calificación mínima */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+          Calificación Mínima
+        </Typography>
+        <Rating
+          value={localFilters.rating}
+          onChange={(_, value) =>
+            setLocalFilters((prev) => ({ ...prev, rating: value || 0 }))
+          }
+          precision={0.5}
+        />
+      </Box>
+
+      {/* Ordenar por */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+          Ordenar por
+        </Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+          {sortOptions.map((option) => (
+            <Chip
+              key={option.value}
+              label={`${option.icon} ${option.label}`}
+              variant={
+                localFilters.sortBy === option.value ? 'filled' : 'outlined'
+              }
+              onClick={() =>
+                setLocalFilters((prev) => ({ ...prev, sortBy: option.value }))
+              }
+              className="chip-micro-interactive"
+            />
+          ))}
+        </Box>
+      </Box>
+
+      {/* Switches */}
+      <Box sx={{ mb: 3 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={localFilters.verified}
+              onChange={(e) =>
+                setLocalFilters((prev) => ({
+                  ...prev,
+                  verified: e.target.checked,
+                }))
+              }
+            />
+          }
+          label="Solo proveedores verificados"
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={localFilters.hasDiscount}
+              onChange={(e) =>
+                setLocalFilters((prev) => ({
+                  ...prev,
+                  hasDiscount: e.target.checked,
+                }))
+              }
+            />
+          }
+          label="Solo ofertas con descuento"
+        />
+      </Box>
+
+      {/* Botones de acción */}
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <Button
+          variant="outlined"
+          fullWidth
+          onClick={handleResetFilters}
+          className="btn-micro-interactive"
+        >
+          Limpiar Filtros
+        </Button>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={handleApplyFilters}
+          className="btn-micro-interactive"
+        >
+          Aplicar Filtros
+        </Button>
+      </Box>
     </Box>
   );
 };
 
-export default MobileMarketplaceView;
+// 📱 Componente de detalle de producto
+interface ProductDetailViewProps {
+  product: MarketplaceItem;
+  onClose: () => void;
+  onToggleFavorite: (id: string) => void;
+}
+
+const ProductDetailView: React.FC<ProductDetailViewProps> = ({
+  product,
+  onClose,
+  onToggleFavorite,
+}) => {
+  return (
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Header */}
+      <AppBar position="static" elevation={0} sx={{ backgroundColor: 'white' }}>
+        <Toolbar>
+          <IconButton edge="start" onClick={onClose} sx={{ color: 'black' }}>
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" sx={{ flex: 1, color: 'black' }}>
+            Detalle del Producto
+          </Typography>
+          <IconButton
+            onClick={() => onToggleFavorite(product.id)}
+            sx={{ color: 'black' }}
+          >
+            {product.isFavorited ? (
+              <Favorite sx={{ color: '#FF4444' }} />
+            ) : (
+              <Favorite />
+            )}
+          </IconButton>
+          <IconButton sx={{ color: 'black' }}>
+            <Share />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* Contenido */}
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
+        {/* Imagen principal */}
+        <Box
+          sx={{
+            height: 250,
+            backgroundColor: '#f5f5f5',
+            backgroundImage: `url(${product.images[0]})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative',
+          }}
+        >
+          {product.discount && (
+            <Chip
+              label={`-${product.discount}%`}
+              sx={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                backgroundColor: '#FF4444',
+                color: 'white',
+                fontWeight: 'bold',
+              }}
+            />
+          )}
+        </Box>
+
+        {/* Información del producto */}
+        <Box sx={{ p: 3 }}>
+          <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
+            {product.title}
+          </Typography>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            <Rating value={product.rating} precision={0.1} readOnly />
+            <Typography variant="body2" color="text.secondary">
+              ({product.reviewCount} reseñas)
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            {product.originalPrice && (
+              <Typography
+                variant="h6"
+                sx={{ textDecoration: 'line-through', color: 'text.secondary' }}
+              >
+                ü{product.originalPrice}
+              </Typography>
+            )}
+            <Typography variant="h4" fontWeight="bold" color="primary">
+              ü{product.price}
+            </Typography>
+          </Box>
+
+          <Typography variant="body1" sx={{ mb: 3 }}>
+            {product.description}
+          </Typography>
+
+          {/* Tags */}
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
+            {product.tags.map((tag) => (
+              <Chip key={tag} label={tag} variant="outlined" />
+            ))}
+          </Box>
+
+          {/* Información del vendedor */}
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Avatar
+                  src={product.seller.avatar}
+                  sx={{ width: 60, height: 60 }}
+                />
+                <Box sx={{ flex: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography variant="h6" fontWeight="bold">
+                      {product.seller.name}
+                    </Typography>
+                    {product.seller.verified && (
+                      <VerifiedIcon sx={{ color: '#1976d2' }} />
+                    )}
+                    {product.seller.isOnline && (
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      >
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            backgroundColor: '#4CAF50',
+                          }}
+                        />
+                        <Typography variant="caption" color="success.main">
+                          En línea
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {product.seller.username}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Responde en {product.seller.responseTime}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      mt: 1,
+                    }}
+                  >
+                    <Rating
+                      value={product.seller.rating}
+                      precision={0.1}
+                      size="small"
+                      readOnly
+                    />
+                    <Typography variant="caption">
+                      ({product.seller.reviewCount} reseñas)
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+
+          {/* Información de entrega */}
+          {product.deliveryTime && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <LocalOffer />
+              <Typography variant="body2">
+                Tiempo de entrega: {product.deliveryTime}
+              </Typography>
+            </Box>
+          )}
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            <LocationIcon />
+            <Typography variant="body2">{product.location}</Typography>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Botones de acción */}
+      <Box sx={{ p: 2, borderTop: '1px solid #e0e0e0' }}>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<Chat />}
+            className="btn-micro-interactive"
+          >
+            Chatear
+          </Button>
+          <Button
+            variant="contained"
+            fullWidth
+            startIcon={<ShoppingCart />}
+            className="btn-micro-interactive"
+          >
+            Contratar
+          </Button>
+        </Stack>
+      </Box>
+    </Box>
+  );
+};
+
+export { MobileMarketplaceView };

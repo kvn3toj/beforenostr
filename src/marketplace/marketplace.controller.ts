@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Inject, Req } from '@nestjs/common';
 import { MarketplaceService } from './marketplace.service';
 import { CreateMarketplaceItemDto, UpdateMarketplaceItemDto, MarketplaceSearchDto } from './dto/marketplace.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -6,7 +6,6 @@ import { RolesGuard } from '../rbac/guards/roles.guard';
 import { Roles } from '../rbac/decorators/roles.decorator';
 
 @Controller('marketplace')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class MarketplaceController {
   constructor(@Inject(MarketplaceService) private readonly marketplaceService: MarketplaceService) {
     console.log('>>> MarketplaceController CONSTRUCTOR: this.marketplaceService IS', this.marketplaceService ? 'DEFINED' : 'UNDEFINED');
@@ -16,16 +15,27 @@ export class MarketplaceController {
    * Crear un nuevo item en el marketplace
    */
   @Post('items')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'user')
-  async createItem(@Body() dto: CreateMarketplaceItemDto) {
+  async createItem(@Body() dto: CreateMarketplaceItemDto, @Req() req: any) {
     console.log('>>> MarketplaceController.createItem: Creating marketplace item', dto);
-    return await this.marketplaceService.createItem(dto);
+    
+    // Obtener el userId del token JWT
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    // Usar el userId del token en lugar del DTO
+    const createDto = { ...dto, sellerId: userId };
+    return await this.marketplaceService.createItem(createDto);
   }
 
   /**
    * Buscar items en el marketplace
    */
   @Get('items/search')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'user')
   async searchItems(
     @Query('query') query?: string,
@@ -57,6 +67,7 @@ export class MarketplaceController {
    * Obtener todos los items del marketplace (sin filtros)
    */
   @Get('items')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'user')
   async getAllItems(
     @Query('limit') limit?: string,
@@ -72,6 +83,7 @@ export class MarketplaceController {
    * Obtener un item específico del marketplace
    */
   @Get('items/:itemId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'user')
   async getItem(@Param('itemId') itemId: string) {
     console.log('>>> MarketplaceController.getItem: Getting marketplace item', itemId);
@@ -82,13 +94,21 @@ export class MarketplaceController {
    * Actualizar un item del marketplace
    */
   @Put('items/:itemId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'user')
   async updateItem(
     @Param('itemId') itemId: string,
     @Body() dto: UpdateMarketplaceItemDto,
-    @Query('userId') userId: string
+    @Req() req: any
   ) {
     console.log('>>> MarketplaceController.updateItem: Updating marketplace item', itemId);
+    
+    // Obtener el userId del token JWT
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new Error('Usuario no autenticado');
+    }
+
     return await this.marketplaceService.updateItem(itemId, dto, userId);
   }
 
@@ -96,12 +116,20 @@ export class MarketplaceController {
    * Eliminar un item del marketplace
    */
   @Delete('items/:itemId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'user')
   async deleteItem(
     @Param('itemId') itemId: string,
-    @Query('userId') userId: string
+    @Req() req: any
   ) {
     console.log('>>> MarketplaceController.deleteItem: Deleting marketplace item', itemId);
+    
+    // Obtener el userId del token JWT
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new Error('Usuario no autenticado');
+    }
+
     return await this.marketplaceService.deleteItem(itemId, userId);
   }
 
@@ -109,6 +137,7 @@ export class MarketplaceController {
    * Obtener items de un vendedor específico
    */
   @Get('sellers/:sellerId/items')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'user')
   async getSellerItems(@Param('sellerId') sellerId: string) {
     console.log('>>> MarketplaceController.getSellerItems: Getting items for seller', sellerId);
@@ -116,9 +145,28 @@ export class MarketplaceController {
   }
 
   /**
+   * Obtener items del usuario autenticado (mis items)
+   */
+  @Get('my-items')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'user')
+  async getMyItems(@Req() req: any) {
+    console.log('>>> MarketplaceController.getMyItems: Getting items for authenticated user');
+    
+    // Obtener el userId del token JWT
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    return await this.marketplaceService.getSellerItems(userId);
+  }
+
+  /**
    * Obtener estadísticas del marketplace
    */
   @Get('stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   async getMarketplaceStats() {
     console.log('>>> MarketplaceController.getMarketplaceStats: Getting marketplace statistics');
@@ -134,7 +182,9 @@ export class MarketplaceController {
     return { 
       message: 'Marketplace module is working', 
       timestamp: new Date().toISOString(),
-      module: 'Marketplace System'
+      module: 'Marketplace System',
+      version: '2.0.0',
+      features: ['Authentication', 'RBAC', 'MarketplaceItem Model']
     };
   }
 } 

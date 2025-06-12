@@ -4,16 +4,16 @@
  * Hooks personalizados que utilizan Smart Query para conectarse al backend real
  * con estrategias de caché optimizadas por tipo de dato.
  *
- * 📊 ESTADO POST-AUDITORÍA (FASE C):
+ * 📊 ESTADO POST-AUDITORÍA (FASE E.3):
  * ✅ Videos y Mundos: COMPLETAMENTE MIGRADOS al Backend NestJS (sin fallbacks)
  * ✅ Grupos: COMPLETAMENTE MIGRADO al Backend NestJS (sin fallbacks)
  * ✅ Autenticación: COMPLETAMENTE MIGRADO (Fase 2.2)
+ * ✅ Challenges: COMPLETAMENTE MIGRADO al Backend NestJS (Fase E.1) 
+ * ✅ Social Posts: COMPLETAMENTE MIGRADO al Backend NestJS (Fase E.2)
+ * ✅ Marketplace: COMPLETAMENTE MIGRADO al Backend NestJS (Fase E.3) - Endpoint: /marketplace/items
  * 🔄 Wallet y Méritos: Implementados con fallbacks optimizados
  * 🔄 Social/Chat: Implementados con fallbacks inteligentes
  * 🔄 Usuarios/Perfiles: Implementados con fallback a datos de auth
- * ⚠️  Challenges: Mock temporal (endpoint devuelve 500)
- * ⚠️  Social Posts: Mock temporal (endpoint no implementado - 404)
- * ⚠️  Marketplace: Mock temporal (endpoint no implementado - 404)
  *
  * 🎯 ARQUITECTURA: Real-Data-First Principle - Priorizar datos reales, usar mocks
  * solo cuando el endpoint no funciona o no está implementado.
@@ -50,7 +50,6 @@ import {
   formsAPI,
   mundosAPI,
 } from '../lib/api-service';
-import { mockMatches, mockPosts } from '../lib/mockData/socialData';
 
 // 🏷️ Tipos de datos del backend
 export interface BackendUser {
@@ -623,12 +622,16 @@ export function useAwardMerit() {
 }
 
 // 🏪 Hook para datos del marketplace
-export function useMarketplaceData() {
-  // TODO: Eliminar mock cuando el endpoint GET /marketplace/items sea implementado en el backend (actualmente devuelve 404)
+// 🏪 Hook para datos del marketplace - MIGRADO AL BACKEND NESTJS REAL
+export function useMarketplaceData(filters?: any) {
+  const queryKey = ['marketplace-items', filters];
+  
   return useQuery({
-    queryKey: queryKeys.marketplaceData,
-    queryFn: () => marketplaceAPI.getProducts(),
+    queryKey,
+    queryFn: () => marketplaceAPI.getItems(filters),
     staleTime: 1000 * 60 * 10, // 10 minutos
+    retry: 2, // Reintentar hasta 2 veces en caso de errores transitorios
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -641,12 +644,14 @@ export function useMerchantProfile() {
   });
 }
 
-// 📦 Hook para productos del marketplace
-export function useProducts() {
+// 📦 Hook para productos del marketplace - MIGRADO AL BACKEND NESTJS REAL
+export function useProducts(filters?: any) {
   return useQuery({
-    queryKey: queryKeys.products,
-    queryFn: () => marketplaceAPI.getProducts(),
+    queryKey: ['marketplace-products', filters],
+    queryFn: () => marketplaceAPI.getItems(filters),
     staleTime: 1000 * 60 * 5, // 5 minutos
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -863,18 +868,11 @@ export function useSocialMatches() {
   return useQuery({
     queryKey: queryKeys.socialMatches,
     queryFn: async () => {
-      try {
-        return await socialAPI.getMatches();
-      } catch (error) {
-        // Fallback: crear matches básicos
-        console.warn('🔄 Fallback: Endpoint /social/matches no disponible');
-        return {
-          data: mockMatches,
-        };
-      }
+      // ✅ FASE E.2: Usar datos reales del backend exclusivamente
+      return await socialAPI.getMatches();
     },
     staleTime: 1000 * 60 * 5, // 5 minutos
-    retry: false, // No reintentar para fallback inmediato
+    retry: 2, // Reintentar hasta 2 veces en caso de error
   });
 }
 
@@ -976,30 +974,37 @@ export function useMarkNotificationAsRead() {
 
 // Hook para obtener posts del feed
 export function useSocialPosts(page = 0, limit = 20) {
-  // TODO: Eliminar mock cuando el endpoint GET /social/publications sea implementado en el backend (actualmente devuelve 404)
+  // ✅ FASE E.2: Conectado al endpoint real GET /social/publications del Backend NestJS
   return useQuery({
     queryKey: queryKeys.socialPosts(page),
     queryFn: async () => {
-      try {
-        return await socialAPI.getPosts(page, limit);
-      } catch (error) {
-        // Fallback: usar datos mock del feed social
-        console.warn('🔄 Fallback: Endpoint /social/posts no disponible');
-        const startIndex = page * limit;
-        const endIndex = startIndex + limit;
-        return {
-          posts: mockPosts.slice(startIndex, endIndex),
-          totalCount: mockPosts.length,
-          currentPage: page,
-          totalPages: Math.ceil(mockPosts.length / limit),
-          hasNextPage: endIndex < mockPosts.length,
-        };
-      }
+      const backendData = await socialAPI.getPosts(page, limit);
+      
+      // Transformar datos del backend al formato esperado por el frontend
+      return backendData.map((publication: any) => ({
+        id: publication.id,
+        authorId: publication.userId,
+        authorName: publication.user?.name || 'Usuario Anónimo',
+        authorAvatar: publication.user?.avatarUrl || '/default-avatar.png',
+        content: publication.content,
+        type: publication.type?.toLowerCase() || 'text',
+        timestamp: publication.createdAt,
+        createdAt: publication.createdAt, // Mantener también el campo original
+        likes: [], // TODO: Implementar cuando el backend devuelva la lista de likes
+        likesCount: publication._count?.likes || 0,
+        commentsCount: publication._count?.comments || 0,
+        isLikedByCurrentUser: false, // TODO: Implementar cuando el backend indique si el usuario actual dio like
+        media: null, // TODO: Implementar cuando el backend soporte media
+        // Campos adicionales del backend para compatibilidad
+        user: publication.user,
+        _count: publication._count,
+        comments: (publication.comments || []).length // Solo el número de comentarios para evitar problemas de renderizado
+      }));
     },
     staleTime: 1000 * 60 * 5, // 5 minutos
     refetchOnWindowFocus: false,
     placeholderData: (previousData) => previousData, // Mantener datos previos mientras carga
-    retry: false, // No reintentar para fallback inmediato
+    retry: 2, // Reintentar hasta 2 veces en caso de error de red
   });
 }
 
@@ -1430,210 +1435,45 @@ export function useCreateGroup() {
 
 // 🏆 Hooks para Challenges (Desafíos)
 export function useChallenges(filters?: any) {
-  // TODO: Eliminar mock cuando el endpoint GET /challenges del backend sea corregido (actualmente devuelve 500)
+  // ✅ FASE E.1 COMPLETADA: Conectado directamente al Backend NestJS (sin fallbacks)
   return useStandardQuery(
     queryKeys.challenges(filters),
     async () => {
-      try {
-        // 🔗 INTENTAR BACKEND REAL PRIMERO
-        console.log('🔍 [Challenges] Intentando conectar al Backend NestJS...');
-        const response = await apiService.get('/challenges');
-        console.log('✅ [Challenges] Backend NestJS respondió exitosamente:', response);
+      console.log('🔍 [Challenges] Obteniendo desafíos del Backend NestJS...');
+      
+      // Construir query params si existen filtros
+      let endpoint = '/challenges';
+      if (filters) {
+        const params = new URLSearchParams();
+        if (filters.status) params.append('status', filters.status);
+        if (filters.type) params.append('type', filters.type);
+        if (filters.difficulty) params.append('difficulty', filters.difficulty);
+        if (filters.category) params.append('category', filters.category);
         
-        // Si el backend responde, adaptar el formato si es necesario
-        return {
-          challenges: Array.isArray(response) ? response : response.data || [],
-          pagination: {
-            page: 0,
-            limit: 20,
-            total: Array.isArray(response) ? response.length : response.data?.length || 0,
-            totalPages: 1,
-          },
-        };
-      } catch (error) {
-        console.warn('⚠️ [Challenges] Backend NestJS no disponible, usando datos mock:', error);
-        
-        // 📦 FALLBACK A MOCK DATA - Mock data temporal para desarrollo
-        return {
-          challenges: [
-            {
-              id: 'challenge-1',
-              title: 'Desafío de Ayni Diario',
-              description:
-                'Practica el principio de Ayni (reciprocidad) realizando una acción de bien común cada día durante una semana.',
-              shortDescription: 'Practica Ayni durante 7 días consecutivos',
-              type: 'DAILY',
-              status: 'ACTIVE',
-              difficulty: 'BEGINNER',
-              category: 'COMMUNITY',
-              points: 150,
-              maxParticipants: 100,
-              startDate: '2025-01-01T00:00:00Z',
-              endDate: '2025-01-31T23:59:59Z',
-              duration: 7,
-              imageUrl: '/assets/images/challenges/ayni-daily.jpg',
-              tags: ['ayni', 'reciprocidad', 'bien común', 'comunidad'],
-              requirements: [
-                'Ser miembro activo de CoomÜnity',
-                'Completar perfil básico',
-              ],
-              rewards: [
-                {
-                  id: 'reward-1',
-                  type: 'MERITS',
-                  amount: 150,
-                  description: '150 Méritos por completar el desafío',
-                },
-                {
-                  id: 'reward-2',
-                  type: 'BADGE',
-                  description: 'Insignia "Practicante de Ayni"',
-                },
-              ],
-              createdAt: '2024-12-15T10:00:00Z',
-              updatedAt: '2025-01-20T15:30:00Z',
-              _count: {
-                participants: 67,
-                completions: 23,
-              },
-              isParticipating: true,
-              isCompleted: false,
-              userProgress: {
-                id: 'progress-1',
-                userId: 'user-1',
-                challengeId: 'challenge-1',
-                status: 'ACTIVE',
-                progress: 57, // 4 de 7 días completados
-                startedAt: '2025-01-18T09:00:00Z',
-                tasksCompleted: 4,
-                totalTasks: 7,
-                currentStep: 'Día 5: Compartir conocimiento',
-              },
-            },
-            {
-              id: 'challenge-2',
-              title: 'Innovación Sostenible',
-              description:
-                'Desarrolla una idea innovadora que contribuya a la sostenibilidad ambiental y social. Presenta tu propuesta y recibe feedback de la comunidad.',
-              shortDescription: 'Crea una propuesta de innovación sostenible',
-              type: 'CUSTOM',
-              status: 'ACTIVE',
-              difficulty: 'INTERMEDIATE',
-              category: 'SUSTAINABILITY',
-              points: 300,
-              maxParticipants: 50,
-              startDate: '2025-01-15T00:00:00Z',
-              endDate: '2025-02-15T23:59:59Z',
-              duration: 30,
-              imageUrl: '/assets/images/challenges/innovation.jpg',
-              tags: [
-                'innovación',
-                'sostenibilidad',
-                'medio ambiente',
-                'creatividad',
-              ],
-              requirements: [
-                'Experiencia en emprendimiento o innovación',
-                'Compromiso de 2-3 horas semanales',
-              ],
-              rewards: [
-                {
-                  id: 'reward-3',
-                  type: 'MERITS',
-                  amount: 300,
-                  description: '300 Méritos por completar el desafío',
-                },
-                {
-                  id: 'reward-4',
-                  type: 'LUKAS',
-                  amount: 50,
-                  description: '50 Lükas como premio',
-                },
-                {
-                  id: 'reward-5',
-                  type: 'BADGE',
-                  description: 'Insignia "Innovador Sostenible"',
-                },
-              ],
-              createdAt: '2025-01-10T08:00:00Z',
-              updatedAt: '2025-01-20T12:15:00Z',
-              _count: {
-                participants: 34,
-                completions: 8,
-              },
-              isParticipating: false,
-              isCompleted: false,
-            },
-            {
-              id: 'challenge-3',
-              title: 'Maestría en Colaboración',
-              description:
-                'Participa activamente en 3 grupos diferentes, contribuye con contenido valioso y facilita al menos una sesión de colaboración.',
-              shortDescription:
-                'Demuestra habilidades de colaboración en grupos',
-              type: 'WEEKLY',
-              status: 'ACTIVE',
-              difficulty: 'ADVANCED',
-              category: 'SOCIAL',
-              points: 500,
-              maxParticipants: 25,
-              startDate: '2025-01-20T00:00:00Z',
-              endDate: '2025-03-20T23:59:59Z',
-              duration: 60,
-              imageUrl: '/assets/images/challenges/collaboration.jpg',
-              tags: ['colaboración', 'liderazgo', 'facilitación', 'grupos'],
-              requirements: [
-                'Ser miembro de al menos 1 grupo',
-                'Experiencia en facilitación (recomendado)',
-              ],
-              rewards: [
-                {
-                  id: 'reward-6',
-                  type: 'MERITS',
-                  amount: 500,
-                  description: '500 Méritos por completar el desafío',
-                },
-                {
-                  id: 'reward-7',
-                  type: 'ONDAS',
-                  amount: 100,
-                  description: '100 Öndas de energía positiva',
-                },
-                {
-                  id: 'reward-8',
-                  type: 'BADGE',
-                  description: 'Insignia "Maestro Colaborador"',
-                },
-              ],
-              createdAt: '2025-01-18T14:00:00Z',
-              updatedAt: '2025-01-20T16:45:00Z',
-              _count: {
-                participants: 12,
-                completions: 2,
-              },
-              isParticipating: false,
-              isCompleted: false,
-            },
-          ],
-          pagination: {
-            page: 0,
-            limit: 20,
-            total: 3,
-            totalPages: 1,
-          },
-        };
+        const queryString = params.toString();
+        if (queryString) {
+          endpoint += `?${queryString}`;
+        }
       }
+      
+      const response = await apiService.get(endpoint);
+      console.log('✅ [Challenges] Backend NestJS respondió exitosamente:', response);
+      
+      // Adaptar el formato de respuesta del backend a la estructura esperada por la UI
+      // El backend devuelve un array directo de challenges con rewards incluidos
+      return {
+        challenges: Array.isArray(response) ? response : response.data || [],
+        pagination: {
+          page: 0,
+          limit: 20,
+          total: Array.isArray(response) ? response.length : response.data?.length || 0,
+          totalPages: 1,
+        },
+      };
     },
     {
-      retry: (failureCount, error: any) => {
-        if (
-          error?.message?.includes('404') ||
-          error?.message?.includes('Cannot GET')
-        ) {
-          return false;
-        }
-        return failureCount < 2;
-      },
+      staleTime: 5 * 60 * 1000, // 5 minutos
+      refetchOnWindowFocus: false,
     }
   );
 }

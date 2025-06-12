@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateMarketplaceItemDto, UpdateMarketplaceItemDto, MarketplaceSearchDto, CreateMarketplaceOfferDto, MarketplaceItemStatus } from './dto/marketplace.dto';
+import { CreateMarketplaceItemDto, UpdateMarketplaceItemDto, MarketplaceSearchDto, CreateMarketplaceOfferDto, MarketplaceItemStatus, MarketplaceItemType } from './dto/marketplace.dto';
 
 @Injectable()
 export class MarketplaceService {
@@ -23,36 +23,57 @@ export class MarketplaceService {
       throw new NotFoundException('Vendedor no encontrado');
     }
 
-    // Por ahora, simulamos la creación del item usando el modelo Publication
-    // En una implementación completa, se crearía un modelo MarketplaceItem específico
-    const item = await this.prisma.publication.create({
+    // Crear el item usando el modelo MarketplaceItem correcto
+    const item = await this.prisma.marketplaceItem.create({
       data: {
-        userId: dto.sellerId,
-        content: JSON.stringify({
-          title: dto.title,
-          description: dto.description,
-          type: dto.type,
-          priceUnits: dto.priceUnits,
-          priceToins: dto.priceToins,
-          tags: dto.tags,
-          imageUrl: dto.imageUrl,
-          location: dto.location,
-          status: MarketplaceItemStatus.PUBLISHED,
-          metadata: dto.metadata
-        }),
-        type: 'MARKETPLACE_ITEM'
+        name: dto.title,
+        description: dto.description,
+        itemType: dto.type as any, // Convert from DTO enum to Prisma enum
+        price: dto.priceUnits,
+        priceToins: dto.priceToins || 0,
+        currency: 'LUKAS', // Default currency
+        tags: dto.tags || [],
+        images: dto.imageUrl ? [dto.imageUrl] : [],
+        location: dto.location,
+        sellerId: dto.sellerId,
+        status: 'ACTIVE', // Default status for new items
+        metadata: dto.metadata ? JSON.stringify(dto.metadata) : null,
+        isActive: true,
+        isDeleted: false
       },
       include: {
-        user: { select: { id: true, email: true, firstName: true, lastName: true } }
+        seller: { 
+          select: { 
+            id: true, 
+            email: true, 
+            firstName: true, 
+            lastName: true,
+            username: true,
+            avatarUrl: true
+          } 
+        }
       }
     });
 
     return {
       id: item.id,
-      ...JSON.parse(item.content),
-      seller: item.user,
+      title: item.name,
+      description: item.description,
+      type: item.itemType,
+      priceUnits: item.price,
+      priceToins: item.priceToins,
+      currency: item.currency,
+      tags: item.tags,
+      images: item.images,
+      imageUrl: item.images[0] || null,
+      location: item.location,
+      status: item.status,
+      metadata: item.metadata ? JSON.parse(item.metadata) : null,
+      seller: item.seller,
       createdAt: item.createdAt,
-      updatedAt: item.updatedAt
+      updatedAt: item.updatedAt,
+      viewCount: item.viewCount,
+      favoriteCount: item.favoriteCount
     };
   }
 
@@ -66,46 +87,103 @@ export class MarketplaceService {
     const offset = dto.offset ? parseInt(dto.offset, 10) : 0;
 
     const where: any = {
-      type: 'MARKETPLACE_ITEM'
+      isActive: true,
+      isDeleted: false,
+      status: 'ACTIVE'
     };
 
-    // Filtros básicos usando el contenido JSON
-    // En una implementación real, se usarían campos específicos de la tabla
-    const items = await this.prisma.publication.findMany({
-      where,
-      include: {
-        user: { select: { id: true, email: true, firstName: true, lastName: true } }
-      },
-      orderBy: { createdAt: 'desc' },
-      take: limit,
-      skip: offset
-    });
+    // Aplicar filtros
+    if (dto.type) {
+      where.itemType = dto.type;
+    }
 
-    const total = await this.prisma.publication.count({ where });
+    if (dto.minPrice || dto.maxPrice) {
+      where.price = {};
+      if (dto.minPrice) where.price.gte = dto.minPrice;
+      if (dto.maxPrice) where.price.lte = dto.maxPrice;
+    }
 
-    const processedItems = items.map(item => {
-      const content = JSON.parse(item.content);
-      
-      // Aplicar filtros en memoria (en producción se haría en la query)
-      if (dto.type && content.type !== dto.type) return null;
-      if (dto.minPrice && content.priceUnits < dto.minPrice) return null;
-      if (dto.maxPrice && content.priceUnits > dto.maxPrice) return null;
-      if (dto.query && !content.title.toLowerCase().includes(dto.query.toLowerCase()) && 
-          !content.description.toLowerCase().includes(dto.query.toLowerCase())) return null;
-      if (dto.location && content.location !== dto.location) return null;
-
-      return {
-        id: item.id,
-        ...content,
-        seller: item.user,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt
+    if (dto.location) {
+      where.location = {
+        contains: dto.location,
+        mode: 'insensitive'
       };
-    }).filter(item => item !== null);
+    }
+
+    if (dto.query) {
+      where.OR = [
+        {
+          name: {
+            contains: dto.query,
+            mode: 'insensitive'
+          }
+        },
+        {
+          description: {
+            contains: dto.query,
+            mode: 'insensitive'
+          }
+        },
+        {
+          tags: {
+            has: dto.query
+          }
+        }
+      ];
+    }
+
+    if (dto.tags && dto.tags.length > 0) {
+      where.tags = {
+        hasEvery: dto.tags
+      };
+    }
+
+    const [items, total] = await Promise.all([
+      this.prisma.marketplaceItem.findMany({
+        where,
+        include: {
+          seller: { 
+            select: { 
+              id: true, 
+              email: true, 
+              firstName: true, 
+              lastName: true,
+              username: true,
+              avatarUrl: true
+            } 
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: offset
+      }),
+      this.prisma.marketplaceItem.count({ where })
+    ]);
+
+    const processedItems = items.map(item => ({
+      id: item.id,
+      title: item.name,
+      description: item.description,
+      type: item.itemType,
+      priceUnits: item.price,
+      priceToins: item.priceToins,
+      currency: item.currency,
+      tags: item.tags,
+      images: item.images,
+      imageUrl: item.images[0] || null,
+      location: item.location,
+      status: item.status,
+      metadata: item.metadata ? JSON.parse(item.metadata) : null,
+      seller: item.seller,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      viewCount: item.viewCount,
+      favoriteCount: item.favoriteCount
+    }));
 
     return {
       items: processedItems,
-      total: processedItems.length,
+      total,
       limit,
       offset,
       hasMore: offset + limit < total
@@ -118,13 +196,23 @@ export class MarketplaceService {
   async getItem(itemId: string) {
     console.log('>>> MarketplaceService.getItem: Getting marketplace item', itemId);
 
-    const item = await this.prisma.publication.findFirst({
+    const item = await this.prisma.marketplaceItem.findFirst({
       where: { 
         id: itemId,
-        type: 'MARKETPLACE_ITEM'
+        isActive: true,
+        isDeleted: false
       },
       include: {
-        user: { select: { id: true, email: true, firstName: true, lastName: true } }
+        seller: { 
+          select: { 
+            id: true, 
+            email: true, 
+            firstName: true, 
+            lastName: true,
+            username: true,
+            avatarUrl: true
+          } 
+        }
       }
     });
 
@@ -132,14 +220,31 @@ export class MarketplaceService {
       throw new NotFoundException('Item no encontrado');
     }
 
-    const content = JSON.parse(item.content);
-    
+    // Incrementar contador de visualizaciones
+    await this.prisma.marketplaceItem.update({
+      where: { id: itemId },
+      data: { viewCount: { increment: 1 } }
+    });
+
     return {
       id: item.id,
-      ...content,
-      seller: item.user,
+      title: item.name,
+      description: item.description,
+      type: item.itemType,
+      priceUnits: item.price,
+      priceToins: item.priceToins,
+      currency: item.currency,
+      tags: item.tags,
+      images: item.images,
+      imageUrl: item.images[0] || null,
+      location: item.location,
+      status: item.status,
+      metadata: item.metadata ? JSON.parse(item.metadata) : null,
+      seller: item.seller,
       createdAt: item.createdAt,
-      updatedAt: item.updatedAt
+      updatedAt: item.updatedAt,
+      viewCount: item.viewCount + 1, // Reflejar el incremento
+      favoriteCount: item.favoriteCount
     };
   }
 
@@ -149,11 +254,11 @@ export class MarketplaceService {
   async updateItem(itemId: string, dto: UpdateMarketplaceItemDto, userId: string) {
     console.log('>>> MarketplaceService.updateItem: Updating marketplace item', itemId);
 
-    const item = await this.prisma.publication.findFirst({
+    const item = await this.prisma.marketplaceItem.findFirst({
       where: { 
         id: itemId,
-        type: 'MARKETPLACE_ITEM',
-        userId // Solo el propietario puede actualizar
+        sellerId: userId, // Solo el propietario puede actualizar
+        isDeleted: false
       }
     });
 
@@ -161,25 +266,54 @@ export class MarketplaceService {
       throw new NotFoundException('Item no encontrado o no tienes permisos para actualizarlo');
     }
 
-    const currentContent = JSON.parse(item.content);
-    const updatedContent = { ...currentContent, ...dto };
+    const updateData: any = {};
 
-    const updatedItem = await this.prisma.publication.update({
+    if (dto.title) updateData.name = dto.title;
+    if (dto.description) updateData.description = dto.description;
+    if (dto.priceUnits !== undefined) updateData.price = dto.priceUnits;
+    if (dto.priceToins !== undefined) updateData.priceToins = dto.priceToins;
+    if (dto.tags) updateData.tags = dto.tags;
+    if (dto.imageUrl) updateData.images = [dto.imageUrl];
+    if (dto.location) updateData.location = dto.location;
+    if (dto.status) updateData.status = dto.status;
+    if (dto.metadata) updateData.metadata = JSON.stringify(dto.metadata);
+
+    const updatedItem = await this.prisma.marketplaceItem.update({
       where: { id: itemId },
-      data: {
-        content: JSON.stringify(updatedContent)
-      },
+      data: updateData,
       include: {
-        user: { select: { id: true, email: true, firstName: true, lastName: true } }
+        seller: { 
+          select: { 
+            id: true, 
+            email: true, 
+            firstName: true, 
+            lastName: true,
+            username: true,
+            avatarUrl: true
+          } 
+        }
       }
     });
 
     return {
       id: updatedItem.id,
-      ...JSON.parse(updatedItem.content),
-      seller: updatedItem.user,
+      title: updatedItem.name,
+      description: updatedItem.description,
+      type: updatedItem.itemType,
+      priceUnits: updatedItem.price,
+      priceToins: updatedItem.priceToins,
+      currency: updatedItem.currency,
+      tags: updatedItem.tags,
+      images: updatedItem.images,
+      imageUrl: updatedItem.images[0] || null,
+      location: updatedItem.location,
+      status: updatedItem.status,
+      metadata: updatedItem.metadata ? JSON.parse(updatedItem.metadata) : null,
+      seller: updatedItem.seller,
       createdAt: updatedItem.createdAt,
-      updatedAt: updatedItem.updatedAt
+      updatedAt: updatedItem.updatedAt,
+      viewCount: updatedItem.viewCount,
+      favoriteCount: updatedItem.favoriteCount
     };
   }
 
@@ -189,11 +323,11 @@ export class MarketplaceService {
   async deleteItem(itemId: string, userId: string) {
     console.log('>>> MarketplaceService.deleteItem: Deleting marketplace item', itemId);
 
-    const item = await this.prisma.publication.findFirst({
+    const item = await this.prisma.marketplaceItem.findFirst({
       where: { 
         id: itemId,
-        type: 'MARKETPLACE_ITEM',
-        userId // Solo el propietario puede eliminar
+        sellerId: userId, // Solo el propietario puede eliminar
+        isDeleted: false
       }
     });
 
@@ -201,11 +335,17 @@ export class MarketplaceService {
       throw new NotFoundException('Item no encontrado o no tienes permisos para eliminarlo');
     }
 
-    await this.prisma.publication.delete({
-      where: { id: itemId }
+    // Soft delete
+    await this.prisma.marketplaceItem.update({
+      where: { id: itemId },
+      data: { 
+        isDeleted: true,
+        deletedAt: new Date(),
+        status: 'INACTIVE'
+      }
     });
 
-    return { message: 'Item eliminado exitosamente' };
+    return { message: 'Item eliminado correctamente' };
   }
 
   /**
@@ -214,24 +354,53 @@ export class MarketplaceService {
   async getSellerItems(sellerId: string) {
     console.log('>>> MarketplaceService.getSellerItems: Getting items for seller', sellerId);
 
-    const items = await this.prisma.publication.findMany({
-      where: {
-        userId: sellerId,
-        type: 'MARKETPLACE_ITEM'
+    const items = await this.prisma.marketplaceItem.findMany({
+      where: { 
+        sellerId,
+        isActive: true,
+        isDeleted: false
       },
       include: {
-        user: { select: { id: true, email: true, firstName: true, lastName: true } }
+        seller: { 
+          select: { 
+            id: true, 
+            email: true, 
+            firstName: true, 
+            lastName: true,
+            username: true,
+            avatarUrl: true
+          } 
+        }
       },
       orderBy: { createdAt: 'desc' }
     });
 
-    return items.map(item => ({
+    const processedItems = items.map(item => ({
       id: item.id,
-      ...JSON.parse(item.content),
-      seller: item.user,
+      title: item.name,
+      description: item.description,
+      type: item.itemType,
+      priceUnits: item.price,
+      priceToins: item.priceToins,
+      currency: item.currency,
+      tags: item.tags,
+      images: item.images,
+      imageUrl: item.images[0] || null,
+      location: item.location,
+      status: item.status,
+      metadata: item.metadata ? JSON.parse(item.metadata) : null,
+      seller: item.seller,
       createdAt: item.createdAt,
-      updatedAt: item.updatedAt
+      updatedAt: item.updatedAt,
+      viewCount: item.viewCount,
+      favoriteCount: item.favoriteCount
     }));
+
+    return {
+      items: processedItems,
+      total: processedItems.length,
+      sellerId
+    };
   }
 
   /**
@@ -240,21 +409,53 @@ export class MarketplaceService {
   async getMarketplaceStats() {
     console.log('>>> MarketplaceService.getMarketplaceStats: Getting marketplace statistics');
 
-    const totalItems = await this.prisma.publication.count({
-      where: { type: 'MARKETPLACE_ITEM' }
-    });
+    const [
+      totalItems,
+      activeItems,
+      totalSellers,
+      itemsByType,
+      itemsByStatus
+    ] = await Promise.all([
+      this.prisma.marketplaceItem.count({ 
+        where: { isDeleted: false } 
+      }),
+      this.prisma.marketplaceItem.count({ 
+        where: { 
+          isDeleted: false, 
+          isActive: true, 
+          status: 'ACTIVE' 
+        } 
+      }),
+      this.prisma.marketplaceItem.groupBy({
+        by: ['sellerId'],
+        where: { isDeleted: false },
+        _count: { sellerId: true }
+      }).then(result => result.length),
+      this.prisma.marketplaceItem.groupBy({
+        by: ['itemType'],
+        where: { isDeleted: false },
+        _count: { itemType: true }
+      }),
+      this.prisma.marketplaceItem.groupBy({
+        by: ['status'],
+        where: { isDeleted: false },
+        _count: { status: true }
+      })
+    ]);
 
-    const totalSellers = await this.prisma.publication.groupBy({
-      by: ['userId'],
-      where: { type: 'MARKETPLACE_ITEM' }
-    });
-
-    // Estadísticas básicas
     return {
       totalItems,
-      totalSellers: totalSellers.length,
-      averageItemsPerSeller: totalSellers.length > 0 ? totalItems / totalSellers.length : 0,
-      lastUpdated: new Date().toISOString()
+      activeItems,
+      totalSellers,
+      itemsByType: itemsByType.reduce((acc, item) => {
+        acc[item.itemType] = item._count.itemType;
+        return acc;
+      }, {}),
+      itemsByStatus: itemsByStatus.reduce((acc, item) => {
+        acc[item.status] = item._count.status;
+        return acc;
+      }, {}),
+      generatedAt: new Date().toISOString()
     };
   }
 } 

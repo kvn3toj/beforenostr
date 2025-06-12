@@ -1,0 +1,19 @@
+{
+  "apiKey": "YOUR_BUILDER_PUBLIC_KEY",
+  "organizationId": "Marketplace",
+  "devServer": {
+    "url": "http://localhost:3001",
+    "command": "npm run dev",
+    "port": 3001
+  },
+  "builderServer": {
+    "url": "http://localhost:54618",
+    "port": 54618
+  },
+  "framework": "react",
+  "typescript": true,
+  "outputDir": "src/components/builder",
+  "componentsDir": "src/components",
+  "pagesDir": "src/pages",
+  "modelsDir": "src/models/builder"
+} 

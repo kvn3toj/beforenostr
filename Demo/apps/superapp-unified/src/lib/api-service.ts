@@ -970,13 +970,22 @@ export const userAPI = {
 
 /**
  * 🏪 Servicios de Marketplace
+ * Migrado para conectar con el backend NestJS real - Endpoint: /marketplace/items
  */
 export const marketplaceAPI = {
-  getProducts: () => apiService.get('/marketplace/products'),
-  getProduct: (productId: string) =>
-    apiService.get(`/marketplace/products/${productId}`),
-  createProduct: (product: any) =>
-    apiService.post('/marketplace/products', product),
+  getItems: (filters?: any) => {
+    const params = filters ? new URLSearchParams(filters).toString() : '';
+    const endpoint = params ? `/marketplace/items?${params}` : '/marketplace/items';
+    return apiService.get(endpoint);
+  },
+  getItem: (itemId: string) =>
+    apiService.get(`/marketplace/items/${itemId}`),
+  createItem: (item: any) =>
+    apiService.post('/marketplace/items', item),
+  // Mantener métodos legacy para compatibilidad durante la transición
+  getProducts: (filters?: any) => marketplaceAPI.getItems(filters),
+  getProduct: (productId: string) => marketplaceAPI.getItem(productId),
+  createProduct: (product: any) => marketplaceAPI.createItem(product),
 };
 
 /**
@@ -1061,7 +1070,7 @@ export const socialAPI = {
 
   // 📝 Feed Social - Gestión de publicaciones
   getPosts: (page = 0, limit = 20) => {
-    return apiService.get(`/social/posts?page=${page}&limit=${limit}`);
+    return apiService.get(`/social/publications?page=${page}&limit=${limit}`);
   },
 
   getPost: (postId: string) => {

@@ -27,6 +27,13 @@ Como Agente IA experto en desarrollo Full-Stack y colaborador en el proyecto Coo
   * **❌ NO EXISTE:** Backend Auxiliar Express (era mock temporal).
   * **❌ NO EXISTE:** Nostr Protocol (a menos que se defina explícitamente su integración con el Backend NestJS en una fase futura).
 
+#### **Distinción de Usuarios (Admin vs. Jugador) - CRÍTICO**
+  * El Backend NestJS es **compartido** y aloja a **ambos tipos de usuarios** en la misma base de datos.
+  * **Usuarios Administradores:** Tienen emails como `admin@gamifier.com`, `user@gamifier.com` y gestionan el sistema desde el **Gamifier Admin Frontend** (puerto 3000). Su rol principal es configurar y administrar la experiencia gamificada.
+  * **Usuarios Jugadores:** Tienen emails como `test@coomunity.com`, `jugador@coomunity.com` y utilizan la **SuperApp Frontend** (puerto 3001). Son los usuarios finales que experimentan la plataforma CoomÜnity.
+  * **Regla de Desarrollo:** El desarrollo y los tests para la SuperApp deben usar **credenciales de Jugador** (ej. `test@coomunity.com` / `test123`). El desarrollo y los tests para el Gamifier Admin deben usar **credenciales de Administrador**.
+  * **Separación de Contextos:** Aunque comparten backend, cada frontend debe mantener su identidad y audiencia específica para evitar confusión de roles y experiencia de usuario.
+
 * **Stacks Tecnológicos FINALES y DEFINITIVOS:**
   * **Backend Compartido:** NestJS, TypeScript, PostgreSQL, Prisma, Redis, Docker, JWT, RBAC, Prometheus, Grafana, Winston.
   * **Frontend Gamifier Admin:** React, TypeScript, Material UI, React Query, React Hook Form, Zod, React Router, Playwright, Vite. (Se conecta al Backend Compartido).
@@ -76,6 +83,75 @@ Como Agente IA experto en desarrollo Full-Stack y colaborador en el proyecto Coo
   * **Material UI**: v7.x con React 18+ usando `--legacy-peer-deps`
   * **React**: 18+ (compatible con todo el stack)
 
+### 2.7. Credenciales de Desarrollo del Backend NestJS ✅ OBLIGATORIO
+
+Esta regla define las credenciales de desarrollo disponibles en el Backend NestJS para testing y desarrollo. Estas credenciales están definidas en `prisma/seed.ts`.
+
+**Credenciales Disponibles:**
+
+1.  **Administrador:**
+    -   Email: `admin@gamifier.com`
+    -   Password: `admin123`
+    -   Roles: `['admin']`
+
+2.  **Usuario Regular:**
+    -   Email: `user@gamifier.com`
+    -   Password: `123456`
+    -   Roles: `['user']`
+
+3.  **Usuario Premium:**
+    -   Email: `premium@gamifier.com`
+    -   Password: `123456`
+    -   Roles: `['user', 'premium']`
+
+4.  **Content Creator:**
+    -   Email: `creator@gamifier.com`
+    -   Password: `123456`
+    -   Roles: `['user', 'creator']`
+
+5.  **Moderador:**
+    -   Email: `moderator@gamifier.com`
+    -   Password: `123456`
+    -   Roles: `['user', 'moderator']`
+
+**Instrucciones:**
+- Usar estas credenciales para tests E2E y desarrollo manual.
+- El endpoint de login del backend es `POST /auth/login`.
+- La ruta de login del frontend de la SuperApp es `/login`.
+
+### 2.6. Orquestación del Monorepo con Turborepo ✅ OBLIGATORIO - FASE E
+
+A partir de la Fase E, el proyecto adopta `turbo` como el orquestador principal para todos los scripts del monorepo. Esto asegura consistencia, paralelismo y aprovechamiento de caché.
+
+* **Principio General:** **SIEMPRE** utilizar `turbo run <script>` (o el atajo `npm run <script>` del `package.json` raíz que lo invoca) desde el **directorio raíz del monorepo** para iniciar servicios o ejecutar tareas. Evitar iniciar servicios manualmente desde sus workspaces individuales a menos que sea para una depuración muy específica y aislada.
+
+* **Diferencia Clave:**
+  * **`turbo run dev` (Desde la Raíz):** Es el "director de orquesta". Inicia el script `dev` en **TODOS** los workspaces del monorepo de forma paralela e inteligente. **Este es el método preferido.**
+  * **`npm run dev` (Desde un Workspace):** Inicia **SOLO** ese servicio de forma aislada, sin conocimiento del resto del ecosistema. **Usar solo para depuración aislada.**
+
+* **Comandos de Desarrollo Principales (a ejecutar desde la raíz):**
+  ```bash
+  # Iniciar TODO el ecosistema (Backend, SuperApp, Admin)
+  # El comando más común para el desarrollo diario.
+  npm run dev 
+  # o explícitamente:
+  turbo run dev
+
+  # Iniciar solo el backend
+  turbo run dev --filter=...backend*
+
+  # Iniciar solo los frontends (SuperApp y Admin)
+  turbo run dev --filter=...superapp* --filter=...admin*
+  ```
+
+* **Regla para el Agente:** Al guiar al usuario para iniciar el entorno de desarrollo, el Agente IA debe priorizar y recomendar el uso de los scripts orquestados por `turbo` desde la raíz del monorepo.
+
+* **Ventajas de Turborepo:**
+  * **Paralelismo**: Ejecuta tareas de múltiples workspaces simultáneamente
+  * **Caché Inteligente**: Reutiliza resultados de builds y tests previos
+  * **Dependencias**: Entiende y respeta las dependencias entre workspaces
+  * **Consistencia**: Garantiza que todos los desarrolladores usen el mismo flujo
+
 ### 3. Testing y Calidad ✅ ACTUALIZADOS Y DEFINITIVOS
 
 * **Tests Automatizados:**
@@ -96,6 +172,31 @@ Como Agente IA experto en desarrollo Full-Stack y colaborador en el proyecto Coo
 
 * **Reporte de Cobertura:** Considera la cobertura de código como una métrica de calidad.
 
+### 3.5. Configuración de Autenticación en Tests E2E (Playwright) ✅ OBLIGATORIO
+
+Esta regla define cómo configurar correctamente la autenticación en tests E2E de Playwright para la SuperApp.
+
+**Configuración Requerida:**
+
+1.  **Variable de Entorno:** En `.env`, asegurar:
+    `VITE_ENABLE_MOCK_AUTH=false`
+
+2.  **Credenciales de Test:** Usar las credenciales definidas en la Regla 2.7. Para la mayoría de los tests, `user@gamifier.com` es suficiente. Para tests que requieren permisos elevados, usar `admin@gamifier.com`.
+
+3.  **Selectores de Login Robustos:** Utilizar `data-testid` para los campos del formulario.
+    ```typescript
+    // Selectores correctos para el formulario de login
+    await page.fill('[data-testid="login-email-input"] input', 'user@gamifier.com');
+    await page.fill('[data-testid="login-password-input"] input', '123456');
+    await page.click('[data-testid="login-submit-button"]');
+    ```
+
+4.  **Verificación de Redirección Post-Login:** La SuperApp redirecciona a la ruta raíz (`/`) después de un login exitoso.
+    ```typescript
+    // Esperar a que la URL cambie a la raíz
+    await page.waitForURL('**/', { timeout: 15000 });
+    ```
+
 ### 4. PRE-FLIGHT CHECK OBLIGATORIO PARA DESARROLLO
 
 Antes de cualquier tarea de desarrollo, SIEMPRE ejecutar:
@@ -109,14 +210,24 @@ cat Demo/apps/superapp-unified/.env
 # Verificar instalaciones de Playwright (debe ser solo UNA)
 find . -name "@playwright" -type d 2>/dev/null
 
+# Verificar que Turborepo está instalado localmente
+npm ls turbo
+
 # Verificar servicios
 curl http://localhost:3002/health -v  # Backend
 curl http://localhost:3001 -I         # SuperApp
 
-# Iniciar backend si no está corriendo
+# ✅ INICIAR ECOSISTEMA COMPLETO (Método Recomendado - Fase E)
+# Desde la raíz del monorepo:
+npm run dev
+# o explícitamente:
+turbo run dev
+
+# ⚠️ SOLO SI NECESITAS DEPURACIÓN AISLADA:
+# Iniciar backend individual
 cd backend/ && npm run dev
 
-# Iniciar SuperApp
+# Iniciar SuperApp individual
 cd Demo/apps/superapp-unified/ && npm run dev
 ```
 
@@ -166,6 +277,34 @@ cd Demo/apps/superapp-unified/ && npm run dev
 * **Resolución de Conflictos Playwright:** Usar `find . -name "@playwright" -type d` para detectar instalaciones múltiples
 * **❌ NO DEPURAR problemas relacionados con Supabase, Nostr o Backend Auxiliar Express.**
 
+### 10.1. Guía de Debugging de Autenticación ✅ OBLIGATORIO
+
+Checklist para diagnosticar problemas de autenticación.
+
+**Verificaciones de Backend:**
+
+1.  **Health Check:** `curl http://localhost:3002/health`
+2.  **Test de Login:**
+    ```bash
+    curl -X POST "http://localhost:3002/auth/login" \
+      -H "Content-Type: application/json" \
+      -d '{"email": "admin@gamifier.com", "password": "admin123"}'
+    ```
+3.  **Verificar Token JWT:**
+    ```bash
+    # Reemplazar [JWT_TOKEN] con el token obtenido del login
+    curl -H "Authorization: Bearer [JWT_TOKEN]" http://localhost:3002/auth/me
+    ```
+
+**Logs Clave a Monitorear en la Consola del Backend:**
+- `JwtStrategy VALIDATE: Authenticated user` - Confirma que el token es válido.
+- `RolesGuard canActivate: hasRequiredRole: true` - Confirma que el usuario tiene los permisos.
+
+**Errores Comunes y Causas Probables:**
+- **401 Unauthorized:** Credenciales incorrectas, token JWT inválido/expirado, o header `Authorization` faltante.
+- **403 Forbidden:** El usuario está autenticado pero no tiene los roles/permisos necesarios para el recurso.
+- **Error de CORS:** El backend no está configurado para permitir solicitudes desde el origen del frontend (ej. `http://localhost:3001`).
+
 ### 11. Alineación Filosófica Activa ✅ SIN CAMBIOS
 
 * Al proponer o implementar funcionalidades, **evalúa y articula brevemente cómo se alinean con la filosofía CoomÜnity** (Bien Común, Ayni, etc.).
@@ -193,14 +332,27 @@ cd Demo/apps/superapp-unified/ && npm run dev
 
 ### **Comandos de Desarrollo REALES Y DEFINITIVOS:**
 ```bash
-# Backend NestJS Compartido
-cd backend/ && npm run dev # O el comando para iniciar el backend
+# ✅ RECOMENDADO: Orquestación con Turborepo (desde la raíz del monorepo)
+# Iniciar TODO el ecosistema (Backend, SuperApp, Admin) - Comando principal
+npm run dev
+# o explícitamente:
+turbo run dev
 
-# Frontend Gamifier Admin
-cd admin-frontend/ && npm run dev # O el comando para iniciar el frontend Admin (Puerto 3000)
+# Iniciar solo el backend
+turbo run dev --filter=...backend*
 
-# SuperApp (Aplicación Principal en desarrollo)
-cd Demo/apps/superapp-unified/ && npm run dev # O el comando para iniciar la SuperApp (Puerto 3001)
+# Iniciar solo los frontends (SuperApp y Admin)
+turbo run dev --filter=...superapp* --filter=...admin*
+
+# ⚠️ SOLO PARA DEPURACIÓN AISLADA (no recomendado para desarrollo diario):
+# Backend NestJS Compartido (individual)
+cd backend/ && npm run dev
+
+# Frontend Gamifier Admin (individual)
+cd admin-frontend/ && npm run dev
+
+# SuperApp (individual)
+cd Demo/apps/superapp-unified/ && npm run dev
 
 # ❌ NO EJECUTAR: comandos relacionados con Express, Supabase
 ```
@@ -259,6 +411,8 @@ Demo/apps/superapp-unified/src/hooks/**/*.ts # Hooks de la SuperApp
 14. Inyección de dependencias implícita en NestJS
 15. **Asumir puertos sin verificar .env primero**
 16. **Leer archivos .env directamente con herramientas de archivo**
+17. **Iniciar servicios individualmente para desarrollo diario (usar turbo desde raíz)**
+18. **Ignorar las advertencias de turbo sobre instalación local**
 
 ### **✅ SÍ Haz:**
 1. Conectar con Backend NestJS en puerto 3002
@@ -270,6 +424,9 @@ Demo/apps/superapp-unified/src/hooks/**/*.ts # Hooks de la SuperApp
 7. **Mantener Playwright solo en directorio SuperApp (evitar conflictos)**
 8. **Usar comandos de terminal para verificar .env: `cat .env`**
 9. **Resolver conflictos de MUI con `npm install --legacy-peer-deps`**
+10. **Usar turbo desde la raíz del monorepo para desarrollo diario**
+11. **Verificar que turbo esté instalado localmente con `npm ls turbo`**
+12. **Aprovechar el paralelismo y caché de Turborepo para mayor eficiencia**
 
 ---
 
@@ -311,8 +468,9 @@ Demo/apps/superapp-unified/src/hooks/**/*.ts # Hooks de la SuperApp
    - `Demo/apps/superapp-unified/` (dentro del workspace actual)
 
 3. **¿CÓMO?** - Directorio + comando específico:
-   - `cd backend/ && npm run dev`
-   - `cd Demo/apps/superapp-unified/ && npm run dev`
+   - `npm run dev` (desde raíz - método preferido Fase E)
+   - `turbo run dev` (orquestación completa)
+   - `cd backend/ && npm run dev` (solo para depuración aislada)
 
 4. **¿CUÁNDO?** - Estado requerido del Backend externo:
    - "Asegúrate de que el Backend NestJS esté ejecutándose en puerto 3002"
@@ -407,16 +565,27 @@ Demo/apps/superapp-unified/src/hooks/**/*.ts # Hooks de la SuperApp
 
 ### **🆕 NUEVAS SECCIONES:**
 - **2.5. Gestión de Dependencias**: Resolución de conflictos MUI y Playwright
+- **2.6. Orquestación del Monorepo con Turborepo**: Directrices obligatorias para Fase E
+- **2.7. Credenciales de Desarrollo del Backend NestJS**: Credenciales oficiales para testing y desarrollo
+- **3.5. Configuración de Autenticación en Tests E2E**: Directrices específicas para Playwright con autenticación real
+- **10.1. Guía de Debugging de Autenticación**: Checklist completo para diagnosticar problemas de autenticación
 - **Comando Pre-flight Check Extendido**: Verificaciones completas de estado
 
 ### **🔧 SECCIONES ACTUALIZADAS:**
 - **3. Testing y Calidad**: Información específica de Playwright 1.52.0
+- **4. PRE-FLIGHT CHECK**: Incluye verificación de turbo y comandos de orquestación
 - **10. Depuración**: Comandos de resolución de conflictos
-- **Errores Comunes**: 16 errores específicos + resoluciones
+- **Comandos de Desarrollo**: Prioriza turbo sobre comandos individuales
+- **Errores Comunes**: 18 errores específicos + resoluciones (agregados 2 relacionados con turbo)
 - **Herramientas Específicas**: Comandos de diagnóstico validados
+- **Protocolo de Comunicación**: Actualizado para reflejar comandos turbo preferidos
 
 ### **✅ VALIDACIONES APLICADAS:**
 - Puertos verificados contra `.env` real
 - Comandos probados en entorno real
 - Versiones confirmadas con `npm ls`
-- Conflictos resueltos y documentados 
+- Conflictos resueltos y documentados
+- **Turborepo instalado y funcionando sin advertencias**
+- **Credenciales de autenticación verificadas contra `prisma/seed.ts`**
+- **Flujo de login E2E validado con selectores robustos**
+- **Comandos de debugging de autenticación probados** 

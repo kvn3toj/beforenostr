@@ -46,8 +46,9 @@ export class CreateMarketplaceItemDto {
   @IsString()
   imageUrl?: string;
 
+  @IsOptional()
   @IsUUID()
-  sellerId: string;
+  sellerId?: string;
 
   @IsOptional()
   @IsString()

@@ -1,5 +1,6 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreatePublicationDto } from './dto/create-publication.dto';
 
 @Injectable()
 export class SocialService {
@@ -89,6 +90,145 @@ export class SocialService {
     } catch (error) {
       console.error('Error getting recent activity:', error);
       return [];
+    }
+  }
+
+  async findAllPublications() {
+    console.log('>>> SocialService.findAllPublications: Starting...');
+    try {
+      console.log('>>> SocialService.findAllPublications: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+      
+      const publications = await this.prisma.publication.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: {
+          user: { 
+            select: { 
+              id: true, 
+              name: true, 
+              username: true,
+              avatarUrl: true,
+              email: true
+            } 
+          },
+          _count: { 
+            select: { 
+              likes: true, 
+              comments: true 
+            } 
+          },
+          comments: {
+            take: 3, // Mostrar solo los primeros 3 comentarios
+            orderBy: { createdAt: 'desc' },
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  username: true,
+                  avatarUrl: true
+                }
+              }
+            }
+          }
+        },
+      });
+
+      console.log('>>> SocialService.findAllPublications: Found', publications.length, 'publications');
+      return publications;
+    } catch (error) {
+      console.error('>>> SocialService.findAllPublications: Error getting publications:', error);
+      throw error;
+    }
+  }
+
+  async createPublication(dto: CreatePublicationDto, authorId: string) {
+    console.log('>>> SocialService.createPublication: Starting...', { dto, authorId });
+    try {
+      const publication = await this.prisma.publication.create({
+        data: {
+          content: dto.content,
+          type: dto.type || 'TEXT',
+          userId: authorId,
+        },
+        include: {
+          user: { 
+            select: { 
+              id: true, 
+              name: true, 
+              username: true,
+              avatarUrl: true,
+              email: true
+            } 
+          },
+          _count: { 
+            select: { 
+              likes: true, 
+              comments: true 
+            } 
+          }
+        }
+      });
+
+      console.log('>>> SocialService.createPublication: Created publication with ID:', publication.id);
+      return publication;
+    } catch (error) {
+      console.error('>>> SocialService.createPublication: Error creating publication:', error);
+      throw error;
+    }
+  }
+
+  async toggleLike(publicationId: string, userId: string) {
+    console.log('>>> SocialService.toggleLike: Starting...', { publicationId, userId });
+    try {
+      // Verificar que la publicación existe
+      const publication = await this.prisma.publication.findUnique({
+        where: { id: publicationId }
+      });
+
+      if (!publication) {
+        throw new NotFoundException('Publicación no encontrada');
+      }
+
+      // Buscar si ya existe un like para esta publicación y usuario
+      const existingLike = await this.prisma.like.findFirst({
+        where: {
+          publicationId: publicationId,
+          userId: userId
+        }
+      });
+
+      let liked: boolean;
+      
+      if (existingLike) {
+        // Si ya existe el like, eliminarlo
+        await this.prisma.like.delete({
+          where: { id: existingLike.id }
+        });
+        liked = false;
+        console.log('>>> SocialService.toggleLike: Like removed');
+      } else {
+        // Si no existe el like, crearlo
+        await this.prisma.like.create({
+          data: {
+            publicationId: publicationId,
+            userId: userId
+          }
+        });
+        liked = true;
+        console.log('>>> SocialService.toggleLike: Like added');
+      }
+
+      // Obtener el conteo actualizado de likes
+      const likesCount = await this.prisma.like.count({
+        where: { publicationId: publicationId }
+      });
+
+      const result = { liked, likesCount };
+      console.log('>>> SocialService.toggleLike: Result:', result);
+      return result;
+    } catch (error) {
+      console.error('>>> SocialService.toggleLike: Error toggling like:', error);
+      throw error;
     }
   }
 } 

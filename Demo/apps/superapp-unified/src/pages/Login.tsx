@@ -25,8 +25,8 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, loading } = useAuth();
-  const [email, setEmail] = useState('superapp@coomunity.com');
-  const [password, setPassword] = useState('superapp123');
+  const [email, setEmail] = useState('test@coomunity.com');
+  const [password, setPassword] = useState('test123');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [networkError, setNetworkError] = useState<any>(null);
@@ -295,8 +295,8 @@ export const Login: React.FC = () => {
             Origin: window.location.origin,
           },
                   body: JSON.stringify({
-          email: 'superapp@coomunity.com',
-          password: 'superapp123',
+          email: 'admin@gamifier.com',
+          password: 'admin123',
         }),
         });
 
@@ -485,10 +485,10 @@ export const Login: React.FC = () => {
                   <br />
                   <strong>📋 Credenciales válidas:</strong>
                   <br />
-                  • superapp@coomunity.com / superapp123
+                  • admin@gamifier.com / admin123
                   <br />
-                  • Usuario específico para SuperApp CoomÜnity
-                  <br />• (Diferentes del Gamifier Admin)
+                  • Usuario administrador del Backend NestJS
+                  <br />• (Usuario real del sistema gamificación)
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
                   <Button

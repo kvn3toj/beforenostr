@@ -8,9 +8,9 @@ test.describe('Marketplace Integration Tests', () => {
     // Esperamos que el formulario de login cargue
     await page.waitForSelector('form');
     
-    // Ingresamos las credenciales reales
-    await page.fill('input[name="email"]', 'superapp@coomunity.com');
-    await page.fill('input[name="password"]', 'superapp123');
+    // Ingresamos credenciales de admin (necesario para permisos de marketplace)
+    await page.fill('input[name="email"]', 'admin@gamifier.com');
+    await page.fill('input[name="password"]', 'admin123');
     
     // Hacemos click en el botón de login
     await page.click('button[type="submit"]');
@@ -96,6 +96,113 @@ test.describe('Marketplace Integration Tests', () => {
     expect(foundIndicators).toBeGreaterThan(0);
     
     console.log(`✅ Found ${foundIndicators} marketplace UI indicators`);
+  });
+
+  test('should display real marketplace items from backend', async ({ page }) => {
+    console.log('🎯 Testing real marketplace data from backend...');
+    
+    await page.goto('/marketplace');
+    await page.waitForSelector('#root');
+    
+    // Monitoreamos la llamada exitosa a la API del marketplace
+    const apiResponses: { status: number; url: string }[] = [];
+    page.on('response', (response) => {
+      if (response.url().includes('marketplace/items')) {
+        apiResponses.push({ status: response.status(), url: response.url() });
+      }
+    });
+    
+    // Esperamos que la aplicación cargue los datos del marketplace
+    await page.waitForTimeout(5000);
+    
+    // Verificamos que se haya hecho una llamada exitosa a la API
+    console.log('API responses:', apiResponses);
+    const successfulCall = apiResponses.find(response => response.status === 200);
+    expect(successfulCall).toBeTruthy();
+    
+    // Verificamos primero el mensaje de confirmación de datos reales que agregamos
+    const confirmationMessage = page.locator('text=✅ Mostrando').first();
+    const hasConfirmation = await confirmationMessage.isVisible({ timeout: 10000 }).catch(() => false);
+    
+    if (hasConfirmation) {
+      console.log('✅ Found confirmation message for real data');
+    }
+    
+    // Verificamos la presencia de items específicos del backend que sabemos que existen
+    const realMarketplaceItems = [
+      'Consultoría en Blockchain',
+      'Clases de Programación en JavaScript', 
+      'Plantas Medicinales Orgánicas',
+      'Retiro de Mindfulness',
+      'Diseño Gráfico Personalizado',
+      'Intercambio: Programación por Marketing Digital',
+      'Curso Digital: Gamificación para Educadores'
+    ];
+    
+    let foundItems = 0;
+    
+    // Buscar items con selectores más flexibles
+    for (const itemTitle of realMarketplaceItems) {
+      try {
+        // Probar múltiples estrategias de búsqueda
+        const strategies = [
+          `text=${itemTitle}`,
+          `[data-testid*="item"]:has-text("${itemTitle}")`,
+          `[data-testid*="product"]:has-text("${itemTitle}")`,
+          `.MuiCard-root:has-text("${itemTitle}")`,
+          `h1:has-text("${itemTitle}")`,
+          `h2:has-text("${itemTitle}")`,
+          `h3:has-text("${itemTitle}")`,
+          `h4:has-text("${itemTitle}")`,
+          `h5:has-text("${itemTitle}")`,
+          `h6:has-text("${itemTitle}")`,
+        ];
+        
+        let found = false;
+        for (const strategy of strategies) {
+          const element = page.locator(strategy).first();
+          const isVisible = await element.isVisible({ timeout: 500 }).catch(() => false);
+          if (isVisible) {
+            foundItems++;
+            console.log(`✅ Found real marketplace item: ${itemTitle} (using strategy: ${strategy})`);
+            found = true;
+            break;
+          }
+        }
+        
+        if (!found) {
+          console.log(`❌ Could not find marketplace item: ${itemTitle}`);
+        }
+      } catch (error) {
+        console.log(`❌ Error searching for item ${itemTitle}: ${error}`);
+      }
+    }
+    
+    // Verificar que al menos tengamos el mensaje de confirmación O items visibles
+    const hasDataFromBackend = hasConfirmation || foundItems > 0;
+    expect(hasDataFromBackend).toBeTruthy();
+    
+    if (foundItems > 0) {
+      console.log(`✅ Successfully found ${foundItems} real marketplace items`);
+    } else if (hasConfirmation) {
+      console.log(`✅ Backend data confirmed via confirmation message, but items may not be visible yet`);
+    }
+    
+    // Verificamos la presencia de términos CoomÜnity en los items reales
+    const coomunityTerms = ['LUKAS', 'SERVICE', 'PRODUCT', 'EXPERIENCE', 'SKILL_EXCHANGE'];
+    let foundTerms = 0;
+    
+    for (const term of coomunityTerms) {
+      const termExists = await page.locator(`text=${term}`).first().isVisible().catch(() => false);
+      if (termExists) {
+        foundTerms++;
+        console.log(`✅ Found CoomÜnity term in marketplace: ${term}`);
+      }
+    }
+    
+    expect(foundTerms).toBeGreaterThan(0);
+    
+    console.log(`✅ Successfully verified ${foundItems} real marketplace items and ${foundTerms} CoomÜnity terms`);
   });
 
   test('should handle marketplace data loading gracefully', async ({ page }) => {

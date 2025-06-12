@@ -14,7 +14,7 @@ const ThemeContext = createContext<ThemeContextProps>({
   theme: createAppTheme('light'),
 });
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
   const [mode, setMode] = useState<PaletteMode>('light');
 
   const theme = createAppTheme(mode);
@@ -35,5 +35,8 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     </ThemeContext.Provider>
   );
 };
+
+// Exportar también con el nombre original para compatibilidad
+export const ThemeProvider = CustomThemeProvider;
 
 export const useThemeContext = () => useContext(ThemeContext);

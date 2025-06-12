@@ -27,6 +27,8 @@ import './styles/loading-indicators.css';
 // Importar CSS para consistencia de border-radius en botones
 import './styles/button-consistency.css';
 // Importar CSS para optimizaciones de performance
+// Importar CSS mejorado para ÜPlay
+import './styles/uplay-enhanced.css';
 import './styles/performance-optimizations.css';
 
 // Layout Components

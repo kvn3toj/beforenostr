@@ -178,7 +178,7 @@ export const EnvironmentHelpers = {
   /**
    * Check if mock auth should be enabled
    */
-  shouldUseMockAuth: () => ENV.enableMockAuth || ENV.isTesting,
+  shouldUseMockAuth: () => ENV.enableMockAuth,
 
   /**
    * Get appropriate timeout for API requests based on environment

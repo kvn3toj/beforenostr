@@ -1,549 +1,904 @@
-/**
- * 🔍 AdvancedSearch Component - Búsqueda Inteligente para Marketplace
- * 
- * Componente de búsqueda avanzada con filtros inteligentes, búsqueda semántica,
- * y integración completa con el Backend NestJS para el Marketplace CoomÜnity.
- */
-
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from 'react';
 import {
   Box,
-  Card,
-  CardContent,
   TextField,
-  InputAdornment,
   IconButton,
   Chip,
-  Stack,
-  Typography,
-  Drawer,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Slider,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  RadioGroup,
-  Radio,
-  Divider,
-  Collapse,
-  Alert,
   Autocomplete,
-  Badge,
-  Tooltip,
   Paper,
-  Grid,
+  Typography,
+  Slider,
+  FormControlLabel,
   Switch,
-  LinearProgress,
-  Rating,
+  Button,
+  Collapse,
+  Card,
+  CardContent,
+  Grid,
+  Tooltip,
+  Badge,
+  Stack,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Fade,
+  Zoom,
+  ClickAwayListener,
+  Popper,
+  InputAdornment,
+  CircularProgress,
 } from '@mui/material';
 import {
-  Search as SearchIcon,
-  FilterList as FilterIcon,
-  Clear as ClearIcon,
-  TuneOutlined as TuneIcon,
-  Sort as SortIcon,
-  TrendingUp as TrendingIcon,
-  LocalOffer as OfferIcon,
-  Star as StarIcon,
-  LocationOn as LocationIcon,
-  Schedule as ScheduleIcon,
-  AttachMoney as PriceIcon,
-  Category as CategoryIcon,
-  Refresh as RefreshIcon,
-  ExpandMore as ExpandIcon,
-  ExpandLess as CollapseIcon,
-  Verified as VerifiedIcon,
+  Search,
+  FilterList,
+  Clear,
+  TuneOutlined,
+  LocationOn,
+  Star,
+  Category,
+  PriceChange,
+  VerifiedUser,
+  Schedule,
+  LocalOffer,
+  TrendingUp,
+  Favorite,
+  KeyboardVoiceOutlined,
+  HistoryOutlined,
+  BookmarkBorderOutlined,
+  RefreshOutlined,
+  SwapVertOutlined,
+  ExpandMore,
+  ExpandLess,
+  SearchOutlined,
+  FilterAltOutlined,
+  ClearAllOutlined,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { apiService } from '../../../../lib/api-service';
-import { debounce } from 'lodash';
 
-// Hooks personalizados
-import { useProducts, useBackendAvailability } from '../../../../hooks/useRealBackendData';
-
-// 🏷️ Tipos para filtros avanzados
 interface SearchFilters {
   query: string;
   category: string;
-  subcategory: string;
   priceRange: [number, number];
-  deliveryTypes: string[];
-  rating: number;
   location: string;
-  availability: string;
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
-  tags: string[];
+  rating: number;
   verified: boolean;
-  featured: boolean;
-}
-
-interface SearchSuggestion {
-  id: string;
-  text: string;
-  type: 'category' | 'tag' | 'product' | 'service';
-  count?: number;
+  sortBy: string;
+  tags: string[];
+  hasDiscount: boolean;
+  deliveryType: string;
+  availability: string;
+  dateRange: string;
+  businessType: string;
 }
 
 interface AdvancedSearchProps {
   onSearchResults: (results: any[]) => void;
   onFiltersChange: (filters: SearchFilters) => void;
-  initialFilters?: Partial<SearchFilters>;
+  initialFilters: SearchFilters;
+  placeholder?: string;
+  showQuickFilters?: boolean;
+  enableVoiceSearch?: boolean;
+  enableSearchHistory?: boolean;
+  compact?: boolean;
 }
 
-// 📊 Configuración de categorías y opciones
-const CATEGORIES = [
-  { value: 'all', label: 'Todas las categorías', icon: '🏪' },
-  { value: 'tecnologia', label: 'Tecnología', icon: '💻' },
-  { value: 'diseno', label: 'Diseño', icon: '🎨' },
-  { value: 'marketing', label: 'Marketing', icon: '📢' },
-  { value: 'educacion', label: 'Educación', icon: '📚' },
-  { value: 'salud', label: 'Salud y Bienestar', icon: '🏥' },
-  { value: 'arte', label: 'Arte y Creatividad', icon: '🎭' },
-  { value: 'consultoria', label: 'Consultoría', icon: '💼' },
-  { value: 'servicios', label: 'Servicios Generales', icon: '🔧' },
-];
+interface SearchSuggestion {
+  id: string;
+  text: string;
+  type: 'category' | 'product' | 'location' | 'tag';
+  count?: number;
+  icon?: string;
+}
 
-const DELIVERY_TYPES = [
-  { value: 'virtual', label: 'Virtual/Online', icon: '🌐' },
-  { value: 'presencial', label: 'Presencial', icon: '🏢' },
-  { value: 'hibrido', label: 'Híbrido', icon: '🔄' },
-  { value: 'entrega', label: 'Con entrega', icon: '📦' },
-];
-
-const SORT_OPTIONS = [
-  { value: 'relevance', label: 'Relevancia' },
-  { value: 'price_asc', label: 'Precio: Menor a Mayor' },
-  { value: 'price_desc', label: 'Precio: Mayor a Menor' },
-  { value: 'rating', label: 'Mejor Calificación' },
-  { value: 'newest', label: 'Más Recientes' },
-  { value: 'popular', label: 'Más Populares' },
-  { value: 'ayni_score', label: 'Puntuación Ayni' },
-];
+interface SearchHistory {
+  id: string;
+  query: string;
+  timestamp: Date;
+  results: number;
+}
 
 const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   onSearchResults,
   onFiltersChange,
-  initialFilters = {}
+  initialFilters,
+  placeholder = 'Buscar productos y servicios...',
+  showQuickFilters = true,
+  enableVoiceSearch = true,
+  enableSearchHistory = true,
+  compact = false,
 }) => {
-  const [filters, setFilters] = useState<SearchFilters>({
-    query: '',
-    category: 'all',
-    subcategory: '',
-    priceRange: [0, 1000],
-    deliveryTypes: [],
-    rating: 0,
-    location: '',
-    availability: 'all',
-    sortBy: 'relevance',
-    sortOrder: 'desc',
-    tags: [],
-    verified: false,
-    featured: false,
-    ...initialFilters
-  });
+  const [filters, setFilters] = useState<SearchFilters>(initialFilters);
+  const [searchQuery, setSearchQuery] = useState(initialFilters.query);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [searchSuggestions, setSearchSuggestions] = useState<
+    SearchSuggestion[]
+  >([]);
+  const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [voiceSearching, setVoiceSearching] = useState(false);
+  const [filterCount, setFilterCount] = useState(0);
 
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-  const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch categories from backend
-  const { data: categories = [] } = useQuery({
-    queryKey: ['marketplace-categories'],
-    queryFn: () => apiService.get('/marketplace/categories'),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  // Datos de ejemplo para filtros
+  const categories = [
+    { value: 'tecnologia', label: 'Tecnología', icon: '💻', count: 45 },
+    { value: 'diseno', label: 'Diseño', icon: '🎨', count: 32 },
+    { value: 'marketing', label: 'Marketing', icon: '📢', count: 28 },
+    { value: 'educacion', label: 'Educación', icon: '📚', count: 38 },
+    { value: 'consultoria', label: 'Consultoría', icon: '💼', count: 22 },
+    { value: 'salud', label: 'Salud y Bienestar', icon: '🏥', count: 19 },
+    { value: 'arte', label: 'Arte y Creatividad', icon: '🎭', count: 15 },
+    { value: 'servicios', label: 'Servicios Generales', icon: '🔧', count: 41 },
+  ];
 
-  // Fetch popular tags from backend
-  const { data: popularTags = [] } = useQuery({
-    queryKey: ['marketplace-tags'],
-    queryFn: () => apiService.get('/marketplace/tags/popular'),
-    staleTime: 10 * 60 * 1000, // 10 minutes
-  });
+  const locations = [
+    'Bogotá, Cundinamarca',
+    'Medellín, Antioquia',
+    'Cali, Valle del Cauca',
+    'Barranquilla, Atlántico',
+    'Cartagena, Bolívar',
+    'Bucaramanga, Santander',
+    'Pereira, Risaralda',
+    'Manizales, Caldas',
+  ];
 
-  // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce(async (searchFilters: SearchFilters) => {
+  const popularTags = [
+    'Digital',
+    'Presencial',
+    'Remoto',
+    'Urgente',
+    'Personalizado',
+    'Emprendimiento',
+    'Sostenible',
+    'Innovador',
+    'Colaborativo',
+    'Premium',
+    'Express',
+    'Certificado',
+  ];
+
+  const sortOptions = [
+    { value: 'relevance', label: 'Más Relevantes', icon: '🎯' },
+    { value: 'rating', label: 'Mejor Calificados', icon: '⭐' },
+    { value: 'price_asc', label: 'Menor Precio', icon: '💰' },
+    { value: 'price_desc', label: 'Mayor Precio', icon: '💎' },
+    { value: 'newest', label: 'Más Recientes', icon: '🆕' },
+    { value: 'trending', label: 'Tendencia', icon: '🔥' },
+    { value: 'popular', label: 'Más Populares', icon: '👥' },
+    { value: 'nearby', label: 'Más Cercanos', icon: '📍' },
+  ];
+
+  const quickFilters = [
+    { id: 'featured', label: 'Destacados', icon: '⭐' },
+    { id: 'discounts', label: 'Ofertas', icon: '🏷️' },
+    { id: 'verified', label: 'Verificados', icon: '✅' },
+    { id: 'new', label: 'Nuevos', icon: '🆕' },
+    { id: 'trending', label: 'Tendencia', icon: '🔥' },
+    { id: 'premium', label: 'Premium', icon: '👑' },
+  ];
+
+  // Búsqueda con debounce
+  const { data: searchResults, refetch: performSearch } = useQuery({
+    queryKey: ['marketplace-search', searchQuery, filters],
+    queryFn: async () => {
+      if (!searchQuery.trim() && !hasActiveFilters()) {
+        return [];
+      }
+
+      setLoading(true);
       try {
-        const searchParams = new URLSearchParams();
-        
-        if (searchFilters.query) searchParams.append('q', searchFilters.query);
-        if (searchFilters.category) searchParams.append('category', searchFilters.category);
-        if (searchFilters.location) searchParams.append('location', searchFilters.location);
-        if (searchFilters.rating > 0) searchParams.append('minRating', searchFilters.rating.toString());
-        if (searchFilters.verified) searchParams.append('verified', 'true');
-        if (searchFilters.priceRange[0] > 0) searchParams.append('minPrice', searchFilters.priceRange[0].toString());
-        if (searchFilters.priceRange[1] < 1000) searchParams.append('maxPrice', searchFilters.priceRange[1].toString());
-        if (searchFilters.tags.length > 0) searchParams.append('tags', searchFilters.tags.join(','));
-        searchParams.append('sortBy', searchFilters.sortBy);
+        const response = await apiService.get('/marketplace/search', {
+          params: {
+            q: searchQuery,
+            ...filters,
+            // Convertir arrays a strings para la URL
+            tags: filters.tags.join(','),
+            priceMin: filters.priceRange[0],
+            priceMax: filters.priceRange[1],
+          },
+        });
 
-        const results = await apiService.get(`/marketplace/search?${searchParams.toString()}`);
-        onSearchResults(results);
+        // Guardar en historial
+        if (searchQuery.trim()) {
+          saveToHistory(searchQuery, response.length);
+        }
+
+        return response;
       } catch (error) {
-        console.error('Search error:', error);
-        onSearchResults([]);
+        console.error('Error en búsqueda:', error);
+        return [];
+      } finally {
+        setLoading(false);
       }
-    }, 300),
-    [onSearchResults]
-  );
+    },
+    enabled: false,
+    staleTime: 2 * 60 * 1000, // 2 minutos
+  });
 
-  // Handle filter changes
-  const handleFilterChange = useCallback((key: keyof SearchFilters, value: any) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
-    onFiltersChange(newFilters);
-    debouncedSearch(newFilters);
-  }, [filters, onFiltersChange, debouncedSearch]);
+  // Sugerencias automáticas
+  const { data: suggestions } = useQuery({
+    queryKey: ['search-suggestions', searchQuery],
+    queryFn: async () => {
+      if (searchQuery.length < 2) return [];
 
-  // Get search suggestions
-  const getSuggestions = useCallback(
-    debounce(async (query: string) => {
-      if (query.length < 2) {
-        setSearchSuggestions([]);
-        return;
-      }
-      
       try {
-        const suggestions = await apiService.get(`/marketplace/suggestions?q=${encodeURIComponent(query)}`);
-        setSearchSuggestions(suggestions.slice(0, 5));
+        const response = await apiService.get('/marketplace/suggestions', {
+          params: { q: searchQuery },
+        });
+        return response;
       } catch (error) {
-        console.error('Suggestions error:', error);
-        setSearchSuggestions([]);
+        // Fallback a sugerencias mock
+        return generateMockSuggestions(searchQuery);
       }
-    }, 200),
-    []
-  );
+    },
+    enabled: searchQuery.length >= 2,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  });
 
-  // Clear all filters
-  const clearFilters = () => {
-    const clearedFilters: SearchFilters = {
-      query: '',
-      category: 'all',
-      subcategory: '',
-      priceRange: [0, 1000],
-      deliveryTypes: [],
-      rating: 0,
-      location: '',
-      availability: 'all',
-      sortBy: 'relevance',
-      sortOrder: 'desc',
-      tags: [],
-      verified: false,
-      featured: false,
-    };
-    setFilters(clearedFilters);
-    onFiltersChange(clearedFilters);
-    debouncedSearch(clearedFilters);
+  // Generar sugerencias mock
+  const generateMockSuggestions = (query: string): SearchSuggestion[] => {
+    const mockSuggestions: SearchSuggestion[] = [
+      {
+        id: '1',
+        text: `${query} desarrollo web`,
+        type: 'product',
+        count: 24,
+        icon: '💻',
+      },
+      {
+        id: '2',
+        text: `${query} diseño gráfico`,
+        type: 'product',
+        count: 18,
+        icon: '🎨',
+      },
+      {
+        id: '3',
+        text: `${query} en Bogotá`,
+        type: 'location',
+        count: 35,
+        icon: '📍',
+      },
+      {
+        id: '4',
+        text: `${query} marketing digital`,
+        type: 'product',
+        count: 12,
+        icon: '📢',
+      },
+    ];
+
+    return mockSuggestions.filter((s) =>
+      s.text.toLowerCase().includes(query.toLowerCase())
+    );
   };
 
-  // Active filters count
-  const activeFiltersCount = useMemo(() => {
+  // Calcular filtros activos
+  const hasActiveFilters = useCallback(() => {
+    return (
+      filters.category !== '' ||
+      filters.location !== '' ||
+      filters.rating > 0 ||
+      filters.verified ||
+      filters.hasDiscount ||
+      filters.tags.length > 0 ||
+      filters.priceRange[0] > 0 ||
+      filters.priceRange[1] < 1000 ||
+      filters.deliveryType !== '' ||
+      filters.availability !== ''
+    );
+  }, [filters]);
+
+  // Contar filtros activos
+  useEffect(() => {
     let count = 0;
-    if (filters.query) count++;
     if (filters.category) count++;
     if (filters.location) count++;
     if (filters.rating > 0) count++;
     if (filters.verified) count++;
-    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) count++;
+    if (filters.hasDiscount) count++;
     if (filters.tags.length > 0) count++;
-    return count;
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) count++;
+    if (filters.deliveryType) count++;
+    if (filters.availability) count++;
+
+    setFilterCount(count);
   }, [filters]);
 
+  // Manejar búsqueda
+  const handleSearch = useCallback(
+    (query?: string) => {
+      const searchTerm = query !== undefined ? query : searchQuery;
+      setFilters((prev) => ({ ...prev, query: searchTerm }));
+      performSearch();
+    },
+    [searchQuery, performSearch]
+  );
+
+  // Manejar cambio de filtros
+  const handleFilterChange = useCallback(
+    (newFilters: Partial<SearchFilters>) => {
+      const updatedFilters = { ...filters, ...newFilters };
+      setFilters(updatedFilters);
+      onFiltersChange(updatedFilters);
+    },
+    [filters, onFiltersChange]
+  );
+
+  // Limpiar filtros
+  const clearFilters = useCallback(() => {
+    const clearedFilters: SearchFilters = {
+      query: '',
+      category: '',
+      priceRange: [0, 1000],
+      location: '',
+      rating: 0,
+      verified: false,
+      sortBy: 'relevance',
+      tags: [],
+      hasDiscount: false,
+      deliveryType: '',
+      availability: '',
+      dateRange: '',
+      businessType: '',
+    };
+    setFilters(clearedFilters);
+    setSearchQuery('');
+    onFiltersChange(clearedFilters);
+  }, [onFiltersChange]);
+
+  // Búsqueda por voz
+  const handleVoiceSearch = useCallback(() => {
+    if (!('webkitSpeechRecognition' in window)) {
+      alert('Tu navegador no soporta búsqueda por voz');
+      return;
+    }
+
+    setVoiceSearching(true);
+    const recognition = new (window as any).webkitSpeechRecognition();
+    recognition.lang = 'es-ES';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setSearchQuery(transcript);
+      handleSearch(transcript);
+      setVoiceSearching(false);
+    };
+
+    recognition.onerror = () => {
+      setVoiceSearching(false);
+    };
+
+    recognition.onend = () => {
+      setVoiceSearching(false);
+    };
+
+    recognition.start();
+  }, [handleSearch]);
+
+  // Guardar en historial
+  const saveToHistory = useCallback(
+    (query: string, resultsCount: number) => {
+      if (!enableSearchHistory) return;
+
+      const newEntry: SearchHistory = {
+        id: Date.now().toString(),
+        query,
+        timestamp: new Date(),
+        results: resultsCount,
+      };
+
+      setSearchHistory((prev) => {
+        const filtered = prev.filter((item) => item.query !== query);
+        return [newEntry, ...filtered].slice(0, 10); // Mantener solo 10 entradas
+      });
+    },
+    [enableSearchHistory]
+  );
+
+  // Manejar clic en sugerencia
+  const handleSuggestionClick = useCallback(
+    (suggestion: SearchSuggestion) => {
+      setSearchQuery(suggestion.text);
+      setShowSuggestions(false);
+      handleSearch(suggestion.text);
+    },
+    [handleSearch]
+  );
+
+  // Efectos
+  useEffect(() => {
+    if (suggestions) {
+      setSearchSuggestions(suggestions);
+    }
+  }, [suggestions]);
+
+  useEffect(() => {
+    if (searchResults) {
+      onSearchResults(searchResults);
+    }
+  }, [searchResults, onSearchResults]);
+
   return (
-    <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
-      {/* Main Search Bar */}
-      <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-        <Autocomplete
-          freeSolo
+    <Box sx={{ width: '100%', mb: 2 }}>
+      {/* Barra de búsqueda principal */}
+      <Paper
+        elevation={2}
+        sx={{
+          p: 1,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          borderRadius: 3,
+          border: '1px solid #e0e0e0',
+          transition: 'all 0.3s ease',
+          '&:focus-within': {
+            borderColor: 'primary.main',
+            boxShadow: '0 0 0 3px rgba(25, 118, 210, 0.1)',
+          },
+        }}
+        ref={searchRef}
+      >
+        <SearchOutlined sx={{ color: 'text.secondary' }} />
+
+        <TextField
+          ref={inputRef}
           fullWidth
-          options={searchSuggestions}
-          value={filters.query}
-          onInputChange={(_, value) => {
-            handleFilterChange('query', value);
-            getSuggestions(value);
+          variant="standard"
+          placeholder={placeholder}
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setShowSuggestions(true);
           }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder="Buscar productos, servicios, emprendedores..."
-              InputProps={{
-                ...params.InputProps,
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color="primary" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          )}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch();
+              setShowSuggestions(false);
+            }
+          }}
+          onFocus={() => setShowSuggestions(true)}
+          InputProps={{
+            disableUnderline: true,
+            endAdornment: (
+              <InputAdornment position="end">
+                <Stack direction="row" spacing={0.5}>
+                  {loading && <CircularProgress size={20} />}
+
+                  {enableVoiceSearch && (
+                    <Tooltip title="Búsqueda por voz">
+                      <IconButton
+                        size="small"
+                        onClick={handleVoiceSearch}
+                        disabled={voiceSearching}
+                        sx={{
+                          color: voiceSearching
+                            ? 'primary.main'
+                            : 'text.secondary',
+                        }}
+                      >
+                        <KeyboardVoiceOutlined />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+
+                  {searchQuery && (
+                    <Tooltip title="Limpiar búsqueda">
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          setSearchQuery('');
+                          setShowSuggestions(false);
+                        }}
+                      >
+                        <Clear />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </Stack>
+              </InputAdornment>
+            ),
+          }}
         />
-        
-        <Tooltip title={`Filtros avanzados ${activeFiltersCount > 0 ? `(${activeFiltersCount})` : ''}`}>
-          <IconButton
-            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-            color={showAdvancedFilters || activeFiltersCount > 0 ? 'primary' : 'default'}
-            sx={{ 
-              border: 1, 
-              borderColor: showAdvancedFilters || activeFiltersCount > 0 ? 'primary.main' : 'grey.300',
-              position: 'relative'
-            }}
-          >
-            <TuneIcon />
-            {activeFiltersCount > 0 && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: -8,
-                  right: -8,
-                  bgcolor: 'primary.main',
-                  color: 'white',
-                  borderRadius: '50%',
-                  width: 20,
-                  height: 20,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.75rem',
-                  fontWeight: 'bold'
-                }}
-              >
-                {activeFiltersCount}
-              </Box>
-            )}
-          </IconButton>
+
+        <Tooltip
+          title={`Filtros avanzados ${filterCount > 0 ? `(${filterCount})` : ''}`}
+        >
+          <Badge badgeContent={filterCount} color="primary">
+            <IconButton
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              color={showAdvanced ? 'primary' : 'default'}
+            >
+              <TuneOutlined />
+            </IconButton>
+          </Badge>
         </Tooltip>
 
-        {activeFiltersCount > 0 && (
-          <Tooltip title="Limpiar filtros">
-            <IconButton onClick={clearFilters} color="error">
-              <ClearIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-      </Box>
+        <Button
+          variant="contained"
+          onClick={() => handleSearch()}
+          sx={{ borderRadius: 2, minWidth: 'auto', px: 2 }}
+          disabled={loading}
+        >
+          <Search />
+        </Button>
+      </Paper>
 
-      {/* Advanced Filters */}
-      <Collapse in={showAdvancedFilters}>
-        <Box sx={{ pt: 2 }}>
-          <Grid container spacing={3}>
-            {/* Category Filter */}
-            <Grid item xs={12} sm={6} md={3}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Categoría</InputLabel>
-                <Select
-                  value={filters.category}
-                  label="Categoría"
-                  onChange={(e) => handleFilterChange('category', e.target.value)}
-                  startAdornment={<CategoryIcon sx={{ mr: 1, color: 'text.secondary' }} />}
-                >
-                  <MenuItem value="">Todas las categorías</MenuItem>
-                  {categories.map((category: any) => (
-                    <MenuItem key={category.id} value={category.id}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+      {/* Sugerencias y historial */}
+      <ClickAwayListener onClickAway={() => setShowSuggestions(false)}>
+        <Box sx={{ position: 'relative' }}>
+          <Popper
+            open={
+              showSuggestions &&
+              (searchSuggestions.length > 0 || searchHistory.length > 0)
+            }
+            anchorEl={searchRef.current}
+            placement="bottom-start"
+            style={{ width: searchRef.current?.offsetWidth, zIndex: 1300 }}
+          >
+            <Paper
+              elevation={8}
+              sx={{ mt: 1, maxHeight: 300, overflow: 'auto' }}
+            >
+              {/* Sugerencias */}
+              {searchSuggestions.length > 0 && (
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ p: 1, fontWeight: 'bold' }}
+                  >
+                    Sugerencias
+                  </Typography>
+                  <List dense>
+                    {searchSuggestions.map((suggestion) => (
+                      <ListItem
+                        key={suggestion.id}
+                        button
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        <ListItemIcon sx={{ minWidth: 32 }}>
+                          <span>{suggestion.icon}</span>
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={suggestion.text}
+                          secondary={
+                            suggestion.count && `${suggestion.count} resultados`
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
+              )}
 
-            {/* Location Filter */}
-            <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                fullWidth
-                size="small"
-                label="Ubicación"
-                value={filters.location}
-                onChange={(e) => handleFilterChange('location', e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationIcon color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-                placeholder="Ciudad, región..."
-              />
-            </Grid>
-
-            {/* Sort By */}
-            <Grid item xs={12} sm={6} md={3}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Ordenar por</InputLabel>
-                <Select
-                  value={filters.sortBy}
-                  label="Ordenar por"
-                  onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                >
-                  <MenuItem value="relevance">Relevancia</MenuItem>
-                  <MenuItem value="newest">Más recientes</MenuItem>
-                  <MenuItem value="price_asc">Precio: menor a mayor</MenuItem>
-                  <MenuItem value="price_desc">Precio: mayor a menor</MenuItem>
-                  <MenuItem value="rating">Mejor valorados</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Verified Only */}
-            <Grid item xs={12} sm={6} md={3}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={filters.verified}
-                    onChange={(e) => handleFilterChange('verified', e.target.checked)}
-                    color="primary"
-                  />
-                }
-                label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    <VerifiedIcon color="primary" fontSize="small" />
-                    Solo verificados
+              {/* Historial */}
+              {enableSearchHistory &&
+                searchHistory.length > 0 &&
+                searchSuggestions.length === 0 && (
+                  <Box>
+                    <Typography
+                      variant="caption"
+                      sx={{ p: 1, fontWeight: 'bold' }}
+                    >
+                      Búsquedas recientes
+                    </Typography>
+                    <List dense>
+                      {searchHistory.slice(0, 5).map((item) => (
+                        <ListItem
+                          key={item.id}
+                          button
+                          onClick={() => {
+                            setSearchQuery(item.query);
+                            handleSearch(item.query);
+                            setShowSuggestions(false);
+                          }}
+                        >
+                          <ListItemIcon sx={{ minWidth: 32 }}>
+                            <HistoryOutlined />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={item.query}
+                            secondary={`${item.results} resultados`}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
                   </Box>
-                }
-              />
-            </Grid>
+                )}
+            </Paper>
+          </Popper>
+        </Box>
+      </ClickAwayListener>
 
-            {/* Price Range */}
-            <Grid item xs={12} sm={6}>
-              <Box sx={{ px: 1 }}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  <PriceIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-                  Rango de precio: ${filters.priceRange[0]} - ${filters.priceRange[1]}
-                </Typography>
+      {/* Filtros rápidos */}
+      {showQuickFilters && (
+        <Fade in timeout={300}>
+          <Box sx={{ mt: 2 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ overflowX: 'auto', pb: 1 }}
+            >
+              {quickFilters.map((filter) => (
+                <Chip
+                  key={filter.id}
+                  label={`${filter.icon} ${filter.label}`}
+                  variant="outlined"
+                  clickable
+                  onClick={() => {
+                    // Implementar lógica de filtros rápidos
+                    console.log('Filtro rápido:', filter.id);
+                  }}
+                  sx={{ whiteSpace: 'nowrap', flexShrink: 0 }}
+                />
+              ))}
+            </Stack>
+          </Box>
+        </Fade>
+      )}
+
+      {/* Panel de filtros avanzados */}
+      <Collapse in={showAdvanced}>
+        <Card sx={{ mt: 2 }} elevation={1}>
+          <CardContent>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 2,
+              }}
+            >
+              <Typography variant="h6" fontWeight="bold">
+                Filtros Avanzados
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                <Button
+                  size="small"
+                  onClick={clearFilters}
+                  startIcon={<ClearAllOutlined />}
+                  disabled={!hasActiveFilters()}
+                >
+                  Limpiar
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => setShowAdvanced(false)}
+                  startIcon={<ExpandLess />}
+                >
+                  Ocultar
+                </Button>
+              </Stack>
+            </Box>
+
+            <Grid container spacing={3}>
+              {/* Categoría */}
+              <Grid item xs={12} md={6}>
+                <Autocomplete
+                  value={
+                    filters.category
+                      ? categories.find((c) => c.value === filters.category)
+                      : null
+                  }
+                  onChange={(_, value) =>
+                    handleFilterChange({ category: value?.value || '' })
+                  }
+                  options={categories}
+                  getOptionLabel={(option) => option.label}
+                  renderOption={(props, option) => (
+                    <Box component="li" {...props}>
+                      <Box sx={{ mr: 1 }}>{option.icon}</Box>
+                      <Box sx={{ flexGrow: 1 }}>
+                        {option.label}
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ ml: 1 }}
+                        >
+                          ({option.count})
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Categoría"
+                      placeholder="Selecciona una categoría"
+                      InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                          <Category sx={{ mr: 1, color: 'text.secondary' }} />
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              {/* Ubicación */}
+              <Grid item xs={12} md={6}>
+                <Autocomplete
+                  value={filters.location}
+                  onChange={(_, value) =>
+                    handleFilterChange({ location: value || '' })
+                  }
+                  options={locations}
+                  freeSolo
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Ubicación"
+                      placeholder="Ciudad, región..."
+                      InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                          <LocationOn sx={{ mr: 1, color: 'text.secondary' }} />
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              {/* Rango de precios */}
+              <Grid item xs={12} md={6}>
+                <Typography gutterBottom>Rango de precios (ü)</Typography>
                 <Slider
                   value={filters.priceRange}
-                  onChange={(_, value) => handleFilterChange('priceRange', value)}
+                  onChange={(_, value) =>
+                    handleFilterChange({
+                      priceRange: value as [number, number],
+                    })
+                  }
                   valueLabelDisplay="auto"
                   min={0}
                   max={1000}
                   step={10}
                   marks={[
-                    { value: 0, label: '$0' },
-                    { value: 250, label: '$250' },
-                    { value: 500, label: '$500' },
-                    { value: 750, label: '$750' },
-                    { value: 1000, label: '$1000+' }
+                    { value: 0, label: 'ü0' },
+                    { value: 250, label: 'ü250' },
+                    { value: 500, label: 'ü500' },
+                    { value: 750, label: 'ü750' },
+                    { value: 1000, label: 'ü1000+' },
                   ]}
                 />
-              </Box>
-            </Grid>
+              </Grid>
 
-            {/* Rating Filter */}
-            <Grid item xs={12} sm={6}>
-              <Box sx={{ px: 1 }}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  <StarIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-                  Calificación mínima
-                </Typography>
-                <Rating
-                  value={filters.rating}
-                  onChange={(_, value) => handleFilterChange('rating', value || 0)}
-                  precision={0.5}
-                  size="large"
+              {/* Calificación mínima */}
+              <Grid item xs={12} md={6}>
+                <Typography gutterBottom>Calificación mínima</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <IconButton
+                      key={rating}
+                      onClick={() => handleFilterChange({ rating })}
+                      color={filters.rating >= rating ? 'primary' : 'default'}
+                    >
+                      <Star />
+                    </IconButton>
+                  ))}
+                  {filters.rating > 0 && (
+                    <Chip
+                      label={`${filters.rating}+ estrellas`}
+                      size="small"
+                      onDelete={() => handleFilterChange({ rating: 0 })}
+                    />
+                  )}
+                </Box>
+              </Grid>
+
+              {/* Tags */}
+              <Grid item xs={12}>
+                <Autocomplete
+                  multiple
+                  value={filters.tags}
+                  onChange={(_, value) => handleFilterChange({ tags: value })}
+                  options={popularTags}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip
+                        variant="outlined"
+                        label={option}
+                        {...getTagProps({ index })}
+                        key={option}
+                      />
+                    ))
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Etiquetas"
+                      placeholder="Añadir etiquetas..."
+                    />
+                  )}
                 />
-              </Box>
+              </Grid>
+
+              {/* Switches */}
+              <Grid item xs={12}>
+                <Stack direction="row" spacing={3} flexWrap="wrap">
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={filters.verified}
+                        onChange={(e) =>
+                          handleFilterChange({ verified: e.target.checked })
+                        }
+                      />
+                    }
+                    label="Solo proveedores verificados"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={filters.hasDiscount}
+                        onChange={(e) =>
+                          handleFilterChange({ hasDiscount: e.target.checked })
+                        }
+                      />
+                    }
+                    label="Solo ofertas con descuento"
+                  />
+                </Stack>
+              </Grid>
+
+              {/* Ordenar por */}
+              <Grid item xs={12}>
+                <Typography gutterBottom fontWeight="bold">
+                  Ordenar por
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {sortOptions.map((option) => (
+                    <Chip
+                      key={option.value}
+                      label={`${option.icon} ${option.label}`}
+                      variant={
+                        filters.sortBy === option.value ? 'filled' : 'outlined'
+                      }
+                      onClick={() =>
+                        handleFilterChange({ sortBy: option.value })
+                      }
+                      clickable
+                    />
+                  ))}
+                </Box>
+              </Grid>
             </Grid>
-
-            {/* Tags */}
-            <Grid item xs={12}>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                Etiquetas populares:
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {popularTags.map((tag: any) => (
-                  <Chip
-                    key={tag.name}
-                    label={tag.name}
-                    variant={filters.tags.includes(tag.name) ? 'filled' : 'outlined'}
-                    color={filters.tags.includes(tag.name) ? 'primary' : 'default'}
-                    size="small"
-                    onClick={() => {
-                      const newTags = filters.tags.includes(tag.name)
-                        ? filters.tags.filter(t => t !== tag.name)
-                        : [...filters.tags, tag.name];
-                      handleFilterChange('tags', newTags);
-                    }}
-                  />
-                ))}
-              </Box>
-            </Grid>
-          </Grid>
-
-          <Divider sx={{ my: 2 }} />
-
-          {/* Active Filters Display */}
-          {activeFiltersCount > 0 && (
-            <Box>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                Filtros activos:
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {filters.query && (
-                  <Chip
-                    label={`Búsqueda: "${filters.query}"`}
-                    onDelete={() => handleFilterChange('query', '')}
-                    size="small"
-                    color="primary"
-                  />
-                )}
-                {filters.category && (
-                  <Chip
-                    label={`Categoría: ${categories.find((c: any) => c.id === filters.category)?.name || filters.category}`}
-                    onDelete={() => handleFilterChange('category', '')}
-                    size="small"
-                    color="primary"
-                  />
-                )}
-                {filters.location && (
-                  <Chip
-                    label={`Ubicación: ${filters.location}`}
-                    onDelete={() => handleFilterChange('location', '')}
-                    size="small"
-                    color="primary"
-                  />
-                )}
-                {filters.rating > 0 && (
-                  <Chip
-                    label={`Rating: ${filters.rating}+ estrellas`}
-                    onDelete={() => handleFilterChange('rating', 0)}
-                    size="small"
-                    color="primary"
-                  />
-                )}
-                {filters.verified && (
-                  <Chip
-                    label="Solo verificados"
-                    onDelete={() => handleFilterChange('verified', false)}
-                    size="small"
-                    color="primary"
-                  />
-                )}
-                {(filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) && (
-                  <Chip
-                    label={`Precio: $${filters.priceRange[0]} - $${filters.priceRange[1]}`}
-                    onDelete={() => handleFilterChange('priceRange', [0, 1000])}
-                    size="small"
-                    color="primary"
-                  />
-                )}
-                {filters.tags.map(tag => (
-                  <Chip
-                    key={tag}
-                    label={tag}
-                    onDelete={() => handleFilterChange('tags', filters.tags.filter(t => t !== tag))}
-                    size="small"
-                    color="primary"
-                  />
-                ))}
-              </Box>
-            </Box>
-          )}
-        </Box>
+          </CardContent>
+        </Card>
       </Collapse>
-    </Paper>
+
+      {/* Resultados y estado */}
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {voiceSearching && (
+        <Box sx={{ textAlign: 'center', mt: 2 }}>
+          <Typography variant="body2" color="primary">
+            🎤 Escuchando... Habla ahora
+          </Typography>
+        </Box>
+      )}
+    </Box>
   );
 };
 
-export default AdvancedSearch; 
+export default AdvancedSearch;

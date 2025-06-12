@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 import { ThemeProvider } from './contexts/ThemeContext'
-import { NostrProvider } from './contexts/NostrProvider'
 import './config/i18n'
 import { analyticsService } from './services/analytics'
 
@@ -14,10 +13,8 @@ if (import.meta.env.VITE_ENABLE_ANALYTICS === 'true') {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <NostrProvider>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </NostrProvider>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
 )

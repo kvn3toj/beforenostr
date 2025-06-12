@@ -38,15 +38,11 @@ export class ChallengesController {
   findAllActive() {
     console.log('[ChallengesController] findAllActive called, service:', !!this.challengesService);
     
-    // TEMPORARY FIX: Return empty array to resolve the 500 error
-    console.log('[ChallengesController] Returning empty array temporarily to fix the endpoint');
-    return [];
-    
-    // if (!this.challengesService) {
-    //   console.error('[ChallengesController] ERROR: challengesService is undefined!');
-    //   throw new Error('ChallengesService is not properly injected');
-    // }
-    // return this.challengesService.findAllActive();
+    if (!this.challengesService) {
+      console.error('[ChallengesController] ERROR: challengesService is undefined!');
+      throw new Error('ChallengesService is not properly injected');
+    }
+    return this.challengesService.findAllActive();
   }
 
   @Get(':id')

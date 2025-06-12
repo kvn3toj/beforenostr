@@ -157,6 +157,50 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
     isFetching
   } = useSocialPosts(currentPage, 10);
 
+  // Filtrar y ordenar posts según filtros seleccionados
+  const filteredPosts = React.useMemo(() => {
+    return allPosts
+      .filter(post => {
+        if (filters.contentType !== 'all') {
+          // Filtrar por tipo de contenido (simulado)
+          return true; // En producción se filtraría por post.type
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        switch (filters.sortBy) {
+          case 'trending':
+            return ((b.likes || 0) + (b.comments || 0) + (b.shares || 0)) - 
+                   ((a.likes || 0) + (a.comments || 0) + (a.shares || 0));
+          case 'merits':
+            return (b.merits || 0) - (a.merits || 0);
+          case 'recent':
+          default:
+            return new Date(b.createdAt || b.timestamp || 0).getTime() - 
+                   new Date(a.createdAt || a.timestamp || 0).getTime();
+        }
+      });
+  }, [allPosts, filters]);
+
+  // 🧪 Debug: Log para verificar datos del backend
+  useEffect(() => {
+    console.log('🤝 [SocialFeed Debug] Estado actual:', {
+      postsDataReceived: postsData,
+      postsDataType: typeof postsData,
+      postsDataIsArray: Array.isArray(postsData),
+      postsDataLength: postsData?.length || 0,
+      isLoading,
+      isError,
+      allPostsLength: allPosts.length,
+      filteredPostsLength: filteredPosts.length,
+      currentPage
+    });
+    
+    if (postsData && Array.isArray(postsData) && postsData.length > 0) {
+      console.log('🤝 [SocialFeed Debug] Primer post del backend:', postsData[0]);
+    }
+  }, [postsData, isLoading, isError, allPosts.length, filteredPosts.length, currentPage]);
+
   // 🎮 Funciones de gamificación social
   const handleSocialInteraction = useCallback((interaction: SocialInteraction) => {
     setRecentInteractions(prev => [interaction, ...prev.slice(0, 4)]);
@@ -238,39 +282,44 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
     });
   }, []);
 
-  // Filtrar y ordenar posts según filtros seleccionados
-  const filteredPosts = allPosts
-    .filter(post => {
-      if (filters.contentType !== 'all') {
-        // Filtrar por tipo de contenido (simulado)
-        return true; // En producción se filtraría por post.type
-      }
-      return true;
-    })
-    .sort((a, b) => {
-      switch (filters.sortBy) {
-        case 'trending':
-          return ((b.likes || 0) + (b.comments || 0) + (b.shares || 0)) - 
-                 ((a.likes || 0) + (a.comments || 0) + (a.shares || 0));
-        case 'merits':
-          return (b.merits || 0) - (a.merits || 0);
-        case 'recent':
-        default:
-          return new Date(b.createdAt || b.timestamp || 0).getTime() - 
-                 new Date(a.createdAt || a.timestamp || 0).getTime();
-      }
-    });
+
 
   // Actualizar posts cuando lleguen nuevos datos
   useEffect(() => {
-    if (postsData?.data) {
+    console.log('🤝 [SocialFeed Debug] useEffect disparado:', {
+      postsData,
+      postsDataType: typeof postsData,
+      isArray: Array.isArray(postsData),
+      currentPage,
+      hasData: !!postsData
+    });
+    
+    if (postsData && Array.isArray(postsData)) {
+      console.log('🤝 [SocialFeed Debug] Actualizando allPosts:', {
+        newDataLength: postsData.length,
+        currentPage,
+        willReplace: currentPage === 0,
+        currentAllPostsLength: allPosts.length
+      });
+      
       if (currentPage === 0) {
-        setAllPosts(postsData.data);
+        setAllPosts(postsData);
+        console.log('🤝 [SocialFeed Debug] Posts reemplazados para página 0');
       } else {
-        setAllPosts(prev => [...prev, ...postsData.data]);
+        setAllPosts(prev => {
+          const newPosts = [...prev, ...postsData];
+          console.log('🤝 [SocialFeed Debug] Posts agregados:', {
+            previousLength: prev.length,
+            newLength: newPosts.length,
+            addedCount: postsData.length
+          });
+          return newPosts;
+        });
       }
+    } else if (postsData) {
+      console.warn('🤝 [SocialFeed Debug] Datos recibidos no son un array:', postsData);
     }
-  }, [postsData?.data, currentPage]);
+  }, [postsData, currentPage]);
 
   // Manejar scroll para mostrar botón "scroll to top"
   useEffect(() => {
@@ -302,7 +351,9 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
 
   // Manejar carga de más posts
   const handleLoadMore = () => {
-    if (postsData?.pagination?.hasNextPage && !isFetching) {
+    // Por ahora, permitir cargar más si hay datos y no está cargando
+    // TODO: Implementar paginación real cuando el backend la soporte
+    if (postsData && postsData.length > 0 && !isFetching) {
       setCurrentPage(prev => prev + 1);
     }
   };
@@ -665,7 +716,7 @@ const SocialFeed: React.FC<SocialFeedProps> = ({
       </Collapse>
 
       {/* Lista de posts */}
-      <Box ref={feedRef}>
+      <Box ref={feedRef} data-testid="social-posts-container">
         {filteredPosts.length === 0 && !isLoading ? (
           <Card sx={{ textAlign: 'center', py: 4 }}>
             <CardContent>

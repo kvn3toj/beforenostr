@@ -9,7 +9,7 @@ export { BottomNavigation } from './BottomNavigation';
 export { MobileKeyboard } from './MobileKeyboard';
 export { ProductCard } from './ProductCard';
 export { default as AdvancedSearch } from './AdvancedSearch';
-export { default as MobileMarketplaceView } from './MobileMarketplaceView';
+export { MobileMarketplaceView } from './MobileMarketplaceView';
 
 // Types
 export interface Category {

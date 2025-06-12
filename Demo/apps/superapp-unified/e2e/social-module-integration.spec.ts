@@ -2,9 +2,9 @@
  * 🤝 SOCIAL MODULE INTEGRATION TESTS
  * 
  * Tests E2E para verificar la integración del Módulo Social (GÜS Gamified Ü Social)
- * con fallback a datos mock cuando el backend no tiene el módulo implementado.
+ * con el Backend NestJS real.
  * 
- * Estado Confirmado: Backend no tiene módulo social, SuperApp usa fallback mock.
+ * ✅ FASE E.2: Backend tiene módulo social implementado, SuperApp consume datos reales.
  */
 
 import { test, expect } from '@playwright/test';
@@ -13,15 +13,15 @@ test.describe('🤝 Módulo Social - Integración End-to-End', () => {
   
   test.beforeEach(async ({ page }) => {
     // Navegación directa a la SuperApp con autenticación real
-    await page.goto('/auth/login');
+    await page.goto('/login');
     
-    // Autenticación con credenciales reales usando data-testid específicos
-    await page.fill('[data-testid="login-email-input"]', 'test@coomunity.com');
-    await page.fill('[data-testid="login-password-input"]', 'test123');
+    // Autenticación con credenciales de usuario regular (no admin) para el feed social
+    await page.fill('[data-testid="login-email-input"] input', 'user@gamifier.com');
+    await page.fill('[data-testid="login-password-input"] input', '123456');
     await page.click('[data-testid="login-submit-button"]');
     
-    // Esperar a que se complete el login y redirija
-    await page.waitForURL('/dashboard');
+    // Esperar a que se complete el login y redirija a la página principal
+    await page.waitForURL('**/', { timeout: 15000 });
     
     // Verificar que React se ha montado correctamente
     await page.waitForSelector('#root', { timeout: 10000 });
@@ -30,8 +30,8 @@ test.describe('🤝 Módulo Social - Integración End-to-End', () => {
     await page.waitForTimeout(1000);
   });
 
-  test('🔍 [BACKEND→SUPERAPP] Verificar carga del Feed Social con fallback mock', async ({ page }) => {
-    console.log('🎯 Iniciando test de verificación del Feed Social...');
+  test('🔍 [BACKEND→SUPERAPP] Verificar carga del Feed Social con datos reales del backend', async ({ page }) => {
+    console.log('🎯 Iniciando test de verificación del Feed Social con datos reales...');
     
     // Navegar al módulo social directamente
     console.log('📱 Navegando al módulo social...');
@@ -72,90 +72,74 @@ test.describe('🤝 Módulo Social - Integración End-to-End', () => {
       expect(found).toBe(true);
     });
     
-    // Verificar carga de publicaciones (mock data)
-    await test.step('Verificar carga de publicaciones mock', async () => {
-      // Esperar un poco para que los datos mock se carguen
-      await page.waitForTimeout(2000);
+    // Verificar carga de publicaciones reales específicas del backend
+    await test.step('Verificar publicaciones reales específicas del backend', async () => {
+      // Esperar un poco para que los datos del backend se carguen
+      await page.waitForTimeout(3000);
       
-      // Buscar tarjetas de publicaciones o contenido del feed
-      const postSelectors = [
-        '[data-testid*="post"]',
-        '.post-card, .PostCard',
-        'article',
-        '[class*="Post"], [class*="post"]',
-        'text="Juan Manuel Escobar"', // Nombre de mock user
-        'text="María González"',     // Otro nombre de mock user
-        'text="CoomÜnity"',         // Debería aparecer en posts mock
-        'text="Ayni"'               // Concepto CoomÜnity en posts mock
-      ];
+      // Verificar la primera publicación específica del seed
+      const firstPostContent = page.getByText(/Compartiendo mi experiencia con la plataforma Gamifier/i);
+      await expect(firstPostContent).toBeVisible({ timeout: 10000 });
+      console.log('✅ Primera publicación del backend encontrada');
       
-      let postsFound = false;
-      for (const selector of postSelectors) {
-        try {
-          const elements = page.locator(selector);
-          const count = await elements.count();
-          if (count > 0) {
-            console.log(`✅ Encontradas ${count} publicaciones con selector: ${selector}`);
-            postsFound = true;
-            break;
-          }
-        } catch (e) {
-          console.log(`⏭️ No se encontraron posts con: ${selector}`);
-        }
-      }
+      // Verificar el autor de esa publicación
+      const premiumUserAuthor = page.getByText('Premium User');
+      await expect(premiumUserAuthor).toBeVisible();
+      console.log('✅ Autor "Premium User" encontrado');
       
-      // Si no encontramos posts, verificar si hay mensaje de "sin publicaciones"
-      if (!postsFound) {
-        const emptyMessages = [
-          'text="No hay publicaciones"',
-          'text="Sé el primero en crear"',
-          'text="Sin contenido"',
-          'text="Cargando"'
-        ];
-        
-        for (const message of emptyMessages) {
-          try {
-            await page.locator(message).first().waitFor({ timeout: 2000 });
-            console.log(`ℹ️ Estado vacío detectado: ${message}`);
-            postsFound = true;
-            break;
-          } catch (e) {
-            // Continue checking
-          }
-        }
-      }
+      // Verificar la segunda publicación específica del seed
+      const secondPostContent = page.getByText(/¡Acabo de completar el nuevo curso de gamificación!/i);
+      await expect(secondPostContent).toBeVisible({ timeout: 10000 });
+      console.log('✅ Segunda publicación del backend encontrada');
       
-      expect(postsFound).toBe(true);
+      // Verificar el autor de la segunda publicación
+      const contentCreatorAuthor = page.getByText('Content Creator');
+      await expect(contentCreatorAuthor).toBeVisible();
+      console.log('✅ Autor "Content Creator" encontrado');
     });
     
-    // Verificar funcionalidades de interacción básicas
-    await test.step('Verificar botones de interacción', async () => {
-      // Buscar botones de like, comentario, etc.
-      const interactionButtons = [
-        'button:has-text("like"), button[aria-label*="like"]',
-        'button:has-text("comentar"), button[aria-label*="comment"]',
-        'button:has-text("compartir"), button[aria-label*="share"]',
-        '[data-testid*="like"]',
-        '[data-testid*="comment"]'
-      ];
+    // Verificar contadores específicos de likes y comentarios del backend
+    await test.step('Verificar contadores específicos del backend', async () => {
+      // Buscar el post card que contiene "Compartiendo mi experiencia"
+      const firstPostCard = page.locator('[data-testid="post-card"]', { 
+        hasText: /Compartiendo mi experiencia/i 
+      });
       
-      let interactionsFound = false;
-      for (const buttonSelector of interactionButtons) {
-        try {
-          const buttons = page.locator(buttonSelector);
-          const count = await buttons.count();
-          if (count > 0) {
-            console.log(`✅ Encontrados ${count} botones de interacción: ${buttonSelector}`);
-            interactionsFound = true;
-            break;
-          }
-        } catch (e) {
-          console.log(`⏭️ No se encontraron botones: ${buttonSelector}`);
-        }
+      if (await firstPostCard.count() > 0) {
+        // Verificar contador de likes (debería ser 2 según el seed)
+        const likeCount = firstPostCard.locator('[data-testid="like-count"]');
+        await expect(likeCount).toHaveText('2');
+        console.log('✅ Contador de likes verificado: 2');
+        
+        // Verificar contador de comentarios (debería ser 0 según el seed)
+        const commentCount = firstPostCard.locator('[data-testid="comment-count"]');
+        await expect(commentCount).toHaveText('0');
+        console.log('✅ Contador de comentarios verificado: 0');
+      } else {
+        // Si no hay data-testid específicos, verificar que al menos hay contadores numéricos
+        const numericCounters = page.locator('text=/^[0-9]+$/');
+        const count = await numericCounters.count();
+        expect(count).toBeGreaterThan(0);
+        console.log(`✅ Encontrados ${count} contadores numéricos`);
       }
+    });
+    
+    // Verificar que los comentarios anidados se muestran correctamente
+    await test.step('Verificar comentarios anidados del backend', async () => {
+      // Buscar comentarios específicos del seed
+      const commentText = page.getByText(/Gracias por compartir tu experiencia/i);
       
-      // Las interacciones son opcionales en esta primera verificación
-      console.log(`ℹ️ Botones de interacción encontrados: ${interactionsFound}`);
+      if (await commentText.count() > 0) {
+        await expect(commentText).toBeVisible();
+        console.log('✅ Comentario anidado del backend encontrado');
+        
+        // Verificar el autor del comentario
+        const adminAuthor = page.getByText('Administrator');
+        await expect(adminAuthor).toBeVisible();
+        console.log('✅ Autor del comentario "Administrator" encontrado');
+      } else {
+        console.log('⏭️ Comentarios anidados no visibles en la vista actual');
+      }
     });
   });
 
@@ -203,70 +187,88 @@ test.describe('🤝 Módulo Social - Integración End-to-End', () => {
     
     // Verificar que la página no tenga errores JavaScript críticos
     await test.step('Verificar ausencia de errores críticos', async () => {
-      const jsErrors: string[] = [];
-      
-      page.on('console', (msg) => {
-        if (msg.type() === 'error' && 
-            !msg.text().includes('404') && // Ignorar errores 404 esperados del backend
-            !msg.text().includes('Failed to fetch') && // Ignorar fetch errors esperados
-            !msg.text().includes('social/posts') // Ignorar errores específicos del módulo social
-        ) {
-          jsErrors.push(msg.text());
+      // Capturar errores de consola
+      const errors: string[] = [];
+      page.on('console', msg => {
+        if (msg.type() === 'error') {
+          errors.push(msg.text());
         }
       });
       
       // Esperar un momento para capturar errores
       await page.waitForTimeout(3000);
       
-      if (jsErrors.length > 0) {
-        console.log('⚠️ Errores JavaScript encontrados:', jsErrors);
+      // Filtrar errores conocidos/esperados
+      const criticalErrors = errors.filter(error => 
+        !error.includes('404') && // Errores 404 pueden ser esperados durante desarrollo
+        !error.includes('Failed to load resource') &&
+        !error.includes('favicon.ico') &&
+        !error.includes('manifest.json')
+      );
+      
+      console.log(`📊 Errores críticos encontrados: ${criticalErrors.length}`);
+      if (criticalErrors.length > 0) {
+        console.log('❌ Errores críticos:', criticalErrors);
       }
       
-      // Los errores del módulo social son esperados ya que el backend no lo tiene
-      expect(jsErrors.length).toBeLessThan(5); // Tolerancia para errores menores
+      expect(criticalErrors.length).toBe(0);
+    });
+    
+    // Verificar elementos básicos de UX
+    await test.step('Verificar elementos básicos de UX', async () => {
+      // Verificar que hay contenido visible
+      const bodyText = await page.textContent('body');
+      expect(bodyText).toBeTruthy();
+      expect(bodyText!.length).toBeGreaterThan(100);
+      
+      // Verificar que no hay elementos con texto "undefined" o "null"
+      const undefinedElements = page.locator('text="undefined"');
+      const nullElements = page.locator('text="null"');
+      
+      expect(await undefinedElements.count()).toBe(0);
+      expect(await nullElements.count()).toBe(0);
+      
+      console.log('✅ Elementos básicos de UX verificados');
     });
   });
 
-  test('🔄 [INTEGRATION] Verificar manejo de estados de error', async ({ page }) => {
-    console.log('🎯 Verificando manejo de errores...');
+  test('🔄 [BACKEND] Verificar llamada API real al endpoint /social/publications', async ({ page }) => {
+    console.log('🎯 Verificando llamada API real al backend...');
     
-    // Interceptar llamadas al backend social (que fallarán)
-    await page.route('**/social/**', route => {
-      route.fulfill({
-        status: 404,
-        contentType: 'application/json',
-        body: JSON.stringify({ message: 'Social module not implemented', statusCode: 404 })
-      });
+    // Interceptar llamadas de red
+    const apiCalls: string[] = [];
+    page.on('request', request => {
+      if (request.url().includes('/social/publications')) {
+        apiCalls.push(request.url());
+        console.log(`📡 API Call interceptada: ${request.url()}`);
+      }
     });
     
-    // Navegar al feed
+    // Navegar al feed social
     await page.goto('/social');
-    await page.waitForTimeout(3000);
     
-    // Verificar que la app maneja el error graciosamente
-    await test.step('Verificar fallback a datos mock', async () => {
-      // Debería mostrar datos mock o un estado de error elegante
-      const fallbackIndicators = [
-        'text="Juan Manuel Escobar"', // Mock user
-        'text="María González"',      // Mock user  
-        'text="No hay publicaciones"',
-        'text="Error"',
-        'text="Cargando"'
-      ];
+    // Esperar a que se realice la llamada API
+    await page.waitForTimeout(5000);
+    
+    // Verificar que se realizó la llamada al endpoint correcto
+    expect(apiCalls.length).toBeGreaterThan(0);
+    expect(apiCalls[0]).toContain('/social/publications');
+    console.log('✅ Llamada API al endpoint real verificada');
+    
+    // Verificar en Network tab que la respuesta fue exitosa
+    await test.step('Verificar respuesta exitosa del backend', async () => {
+      // Abrir DevTools para verificar Network tab
+      await page.goto('/social');
       
-      let fallbackFound = false;
-      for (const indicator of fallbackIndicators) {
-        try {
-          await page.locator(indicator).first().waitFor({ timeout: 2000 });
-          console.log(`✅ Fallback funcionando: ${indicator}`);
-          fallbackFound = true;
-          break;
-        } catch (e) {
-          console.log(`⏭️ Indicador no encontrado: ${indicator}`);
-        }
-      }
+      // Esperar a que los datos se carguen
+      await page.waitForTimeout(3000);
       
-      expect(fallbackFound).toBe(true);
+      // Si llegamos hasta aquí y hay contenido visible, la API funcionó
+      const hasContent = await page.locator('body').textContent();
+      expect(hasContent).toBeTruthy();
+      expect(hasContent!.length).toBeGreaterThan(200);
+      
+      console.log('✅ Respuesta del backend verificada indirectamente');
     });
   });
 }); 

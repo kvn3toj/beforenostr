@@ -31,8 +31,8 @@ test.describe('Challenges Integration E2E', () => {
     }
     
     // 🔐 PASO 3: AUTENTICACIÓN REAL con Backend NestJS (Usuario Admin)
-    await page.fill('#email', 'superapp@coomunity.com');
-    await page.fill('#password', 'superapp123');
+    await page.fill('#email', 'test@coomunity.com');
+    await page.fill('#password', 'test123');
     
     // Interceptar la respuesta de login para verificar éxito
     const loginResponsePromise = page.waitForResponse(
@@ -64,7 +64,7 @@ test.describe('Challenges Integration E2E', () => {
 
 
 
-  test('debe mostrar estado de lista vacía cuando el backend devuelve array vacío', async ({ page }) => {
+  test('debe mostrar los desafíos reales obtenidos del backend NestJS', async ({ page }) => {
     // 1. Navegar a la página de Challenges
     console.log('📍 Navegando a la página de Challenges...');
     
@@ -107,68 +107,83 @@ test.describe('Challenges Integration E2E', () => {
     await expect(challengesHeader).toBeVisible({ timeout: 10000 });
     console.log('✅ Header de Challenges encontrado');
 
-    // 5. Verificar el estado de "lista vacía"
-    console.log('🔍 Verificando estado de lista vacía...');
+    // 5. Verificar la presencia de los desafíos reales del backend
+    console.log('🔍 Verificando presencia de desafíos reales del Backend NestJS...');
     
-    // Verificar el mensaje principal de estado vacío
-    const emptyStateTitle = page.locator('text=No se encontraron desafíos');
-    await expect(emptyStateTitle).toBeVisible({ timeout: 10000 });
-    console.log('✅ Título de estado vacío encontrado');
+    // Verificar la presencia de los títulos de los desafíos reales
+    console.log('🔍 Buscando "Guía de Metanöia"...');
+    const metanoiaChallenge = page.locator('text=Guía de Metanöia');
+    await expect(metanoiaChallenge).toBeVisible({ timeout: 10000 });
+    console.log('✅ Desafío "Guía de Metanöia" encontrado');
 
-    // Verificar el mensaje descriptivo
-    const emptyStateDescription = page.locator('text=Aún no hay desafíos disponibles');
-    await expect(emptyStateDescription).toBeVisible({ timeout: 5000 });
-    console.log('✅ Descripción de estado vacío encontrada');
+    console.log('🔍 Buscando "Emprendedor Confiable"...');
+    const emprendedorChallenge = page.locator('text=Emprendedor Confiable');
+    await expect(emprendedorChallenge).toBeVisible({ timeout: 5000 });
+    console.log('✅ Desafío "Emprendedor Confiable" encontrado');
 
-    // Verificar que se muestra el icono de trofeo en el área de contenido principal
-    const trophyIcon = page.locator('main [data-testid="EmojiEventsIcon"], [role="main"] [data-testid="EmojiEventsIcon"]').first();
-    await expect(trophyIcon).toBeVisible({ timeout: 5000 });
-    console.log('✅ Icono de trofeo del estado vacío encontrado');
+    console.log('🔍 Buscando "Innovación para el Bien Común"...');
+    const innovacionChallenge = page.locator('text=Innovación para el Bien Común');
+    await expect(innovacionChallenge).toBeVisible({ timeout: 5000 });
+    console.log('✅ Desafío "Innovación para el Bien Común" encontrado');
 
-    // 6. Verificar que NO hay tarjetas de desafío
-    console.log('🔍 Verificando ausencia de tarjetas de desafío...');
+    // 6. Verificar que SÍ hay tarjetas de desafío
+    console.log('🔍 Verificando presencia de tarjetas de desafío...');
     
     const challengeCards = page.locator('[data-testid="challenge-card"], .challenge-card, [class*="challenge"]').filter({
       hasNot: page.locator('h1, h2, h3, h4, h5, h6') // Excluir headers
     });
     
-    await expect(challengeCards).toHaveCount(0);
-    console.log('✅ Confirmado: No hay tarjetas de desafío renderizadas');
+    // Esperar a que aparezcan las tarjetas y verificar que hay al menos 3
+    await expect(challengeCards).toHaveCount(3, { timeout: 10000 });
+    console.log('✅ Confirmado: 3 tarjetas de desafío renderizadas');
 
-    // 7. Verificar que las estadísticas muestran ceros
-    console.log('🔍 Verificando estadísticas en cero...');
+    // 7. Verificar que las estadísticas muestran datos reales
+    console.log('🔍 Verificando estadísticas con datos reales...');
     
-    // Las estadísticas deberían mostrar 0 para total, activos, etc.
+    // Las estadísticas deberían mostrar números > 0 para total, activos, etc.
     const statsCards = page.locator('[class*="MuiCard"]:has([color="text.secondary"]:has-text("Total Desafíos"))');
     if (await statsCards.count() > 0) {
-      console.log('✅ Estadísticas encontradas (opcional)');
+      console.log('✅ Estadísticas encontradas');
     }
 
-    // 8. Verificar que no hay errores JavaScript críticos en la consola
+    // 8. Verificar descripciones específicas de los desafíos reales
+    console.log('🔍 Verificando contenido específico de desafíos...');
+    
+    // Verificar contenido específico de Metanöia
+    const metanoiaDescription = page.locator('text=Ayuda a 5 nuevos miembros');
+    await expect(metanoiaDescription).toBeVisible({ timeout: 5000 });
+    console.log('✅ Descripción de Metanöia encontrada');
+
+    // Verificar contenido específico de Emprendedor Confiable
+    const emprendedorDescription = page.locator('text=Acumula 1000 Mëritos');
+    await expect(emprendedorDescription).toBeVisible({ timeout: 5000 });
+    console.log('✅ Descripción de Emprendedor Confiable encontrada');
+
+    // 9. Verificar que no hay errores JavaScript críticos en la consola
     console.log('🔍 Verificando ausencia de errores JavaScript críticos...');
     
     // La página debe ser responsiva y sin errores críticos
     const isPageResponsive = await page.locator('body').isVisible();
     expect(isPageResponsive).toBe(true);
 
-    // 9. Tomar screenshot para evidencia visual
+    // 10. Tomar screenshot para evidencia visual
     await page.screenshot({ 
-      path: `e2e/screenshots/challenges-empty-state-${Date.now()}.png`,
+      path: `e2e/screenshots/challenges-real-data-${Date.now()}.png`,
       fullPage: true 
     });
 
-    // 10. Reportar resultados
+    // 11. Reportar resultados
     console.log('\n📋 RESUMEN DE VERIFICACIÓN:');
     console.log(`✅ Página de Challenges accesible: ${currentUrl.includes('challenge')}`);
-    console.log(`✅ Estado vacío correctamente mostrado: SÍ`);
-    console.log(`✅ Sin tarjetas de desafío: SÍ`);
+    console.log(`✅ Desafíos reales del backend mostrados: SÍ`);
+    console.log(`✅ 3 tarjetas de desafío renderizadas: SÍ`);
     console.log(`✅ Página responsiva: ${isPageResponsive}`);
-    console.log(`✅ Backend NestJS respondió con array vacío: SÍ`);
+    console.log(`✅ Backend NestJS respondió con datos reales: SÍ`);
 
-    console.log('🎉 TEST EXITOSO: La SuperApp maneja correctamente la respuesta vacía del Backend NestJS');
+    console.log('🎉 TEST EXITOSO: La SuperApp muestra correctamente los datos reales del Backend NestJS');
   });
 
-  test('debe manejar correctamente la navegación y estructura de la página vacía', async ({ page }) => {
+  test('debe manejar correctamente la navegación y estructura de la página con datos reales', async ({ page }) => {
     // Navegar directamente a challenges
     await page.goto('/challenges');
     await page.waitForLoadState('networkidle');

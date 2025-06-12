@@ -29,9 +29,9 @@ test.describe('Challenges Backend Integration E2E', () => {
       throw new Error('❌ MOCK AUTH DETECTADO: El test requiere autenticación real del Backend NestJS');
     }
     
-    // 🔐 PASO 3: AUTENTICACIÓN REAL con Backend NestJS (Usuario Admin)
-    await page.fill('#email', 'superapp@coomunity.com');
-    await page.fill('#password', 'superapp123');
+    // 🔐 PASO 3: AUTENTICACIÓN REAL con Backend NestJS (Usuario Jugador)
+    await page.fill('#email', 'test@coomunity.com');
+    await page.fill('#password', 'test123');
     
     // Interceptar la respuesta de login para verificar éxito
     const loginResponsePromise = page.waitForResponse(

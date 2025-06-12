@@ -19,6 +19,13 @@ import {
   Button,
   useTheme,
   useMediaQuery,
+  Badge,
+  Fab,
+  Zoom,
+  Collapse,
+  LinearProgress,
+  Tooltip,
+  Divider,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -28,21 +35,66 @@ import {
   PlayArrow as PlayIcon,
   Person as PersonIcon,
   Quiz as QuizIcon,
+  EmojiEvents as TrophyIcon,
+  Star as StarIcon,
+  Bolt as BoltIcon,
+  Diamond as DiamondIcon,
+  LocalFireDepartment as FireIcon,
+  TrendingUp as TrendingUpIcon,
+  School as SchoolIcon,
+  Speed as SpeedIcon,
+  Bookmark as BookmarkIcon,
+  Share as ShareIcon,
+  Favorite as FavoriteIcon,
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
+  Psychology as PsychologyIcon,
+  Lightbulb as LightbulbIcon,
 } from '@mui/icons-material';
 
-// Import mock data hook
+// Import enhanced mock data hook
 import {
   useUPlayMockData,
   MockVideo,
   MockPlaylist,
 } from '../../../hooks/useUPlayMockData';
 
-// Placeholder Component for Video Thumbnail
+// Enhanced types for mobile experience
+interface EnhancedMockUserStats {
+  name: string;
+  activePlayers: number;
+  burnedPlayers: number;
+  level: number;
+  merits: number;
+  ondas: number;
+  experience: number;
+  experienceToNext: number;
+  weeklyGoal: number;
+  currentStreak: number;
+  completedVideos: number;
+  totalWatchTime: number;
+  achievements: number;
+  ranking: number;
+}
+
+interface VideoProgress {
+  videoId: number;
+  progress: number;
+  completed: boolean;
+  questionsAnswered: number;
+  totalQuestions: number;
+  meritsEarned: number;
+  lastWatched: Date;
+}
+
+// Enhanced placeholder component with better design
 const VideoThumbnail: React.FC<{
   width: number | string;
   height: number | string;
   className?: string;
-}> = ({ width, height, className }) => (
+  isPlaying?: boolean;
+  progress?: number;
+}> = ({ width, height, className, isPlaying = false, progress = 0 }) => (
   <Box
     className={className}
     sx={{
@@ -52,80 +104,146 @@ const VideoThumbnail: React.FC<{
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 1,
+      borderRadius: 2,
       position: 'relative',
       overflow: 'hidden',
+      background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
     }}
   >
-    {/* Triangle shape */}
+    {/* Enhanced geometric shapes */}
     <Box
       sx={{
         position: 'absolute',
-        top: '20%',
+        top: '25%',
         left: '50%',
         transform: 'translateX(-50%)',
         width: 0,
         height: 0,
-        borderLeft: '20px solid transparent',
-        borderRight: '20px solid transparent',
-        borderBottom: '35px solid #9E9E9E',
+        borderLeft: '16px solid transparent',
+        borderRight: '16px solid transparent',
+        borderBottom: '28px solid #94a3b8',
+        opacity: 0.7,
       }}
     />
-    {/* Rectangle shape */}
     <Box
       sx={{
         position: 'absolute',
-        bottom: '20%',
-        left: '25%',
-        width: '20px',
-        height: '20px',
-        backgroundColor: '#9E9E9E',
+        bottom: '25%',
+        left: '30%',
+        width: '12px',
+        height: '16px',
+        backgroundColor: '#64748b',
         borderRadius: 1,
+        opacity: 0.6,
       }}
     />
-    {/* Circle shape */}
     <Box
       sx={{
         position: 'absolute',
-        bottom: '20%',
-        right: '25%',
-        width: '25px',
-        height: '25px',
-        backgroundColor: '#9E9E9E',
+        bottom: '25%',
+        right: '30%',
+        width: '18px',
+        height: '18px',
+        backgroundColor: '#475569',
         borderRadius: '50%',
+        opacity: 0.6,
       }}
     />
+
+    {/* Play overlay */}
+    {isPlaying && (
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(99, 102, 241, 0.9)',
+          borderRadius: '50%',
+          width: 32,
+          height: 32,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <PlayIcon sx={{ color: 'white', fontSize: 18 }} />
+      </Box>
+    )}
+
+    {/* Progress bar */}
+    {progress > 0 && (
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 3,
+          backgroundColor: 'rgba(0,0,0,0.1)',
+        }}
+      >
+        <Box
+          sx={{
+            height: '100%',
+            width: `${progress}%`,
+            backgroundColor: '#6366f1',
+            transition: 'width 0.3s ease',
+          }}
+        />
+      </Box>
+    )}
   </Box>
 );
 
-// Status Chip Component
-const StatusChip: React.FC<{
+// Enhanced status chip with better styling
+const EnhancedStatusChip: React.FC<{
   icon: React.ReactNode;
   label: string;
-}> = ({ icon, label }) => (
+  value?: string | number;
+  color?: 'primary' | 'secondary' | 'warning' | 'error' | 'success';
+}> = ({ icon, label, value, color = 'primary' }) => (
   <Chip
     icon={
       <Avatar
         sx={{
-          width: 18,
-          height: 18,
-          backgroundColor: '#49454F',
+          width: 20,
+          height: 20,
+          backgroundColor:
+            color === 'primary'
+              ? '#6366f1'
+              : color === 'warning'
+                ? '#f59e0b'
+                : color === 'success'
+                  ? '#10b981'
+                  : color === 'error'
+                    ? '#ef4444'
+                    : '#8b5cf6',
           '& .MuiAvatar-img': { width: '70%', height: '70%' },
         }}
       >
         {icon}
       </Avatar>
     }
-    label={label}
+    label={value ? `${label}: ${value}` : label}
     variant="outlined"
     size="small"
     sx={{
-      borderColor: '#79747E',
-      color: '#49454F',
+      borderColor:
+        color === 'primary'
+          ? '#6366f1'
+          : color === 'warning'
+            ? '#f59e0b'
+            : color === 'success'
+              ? '#10b981'
+              : color === 'error'
+                ? '#ef4444'
+                : '#8b5cf6',
+      color: '#1e293b',
       fontFamily: 'Roboto',
-      fontSize: '14px',
-      fontWeight: 500,
-      height: 24,
+      fontSize: '12px',
+      fontWeight: 600,
+      height: 28,
       '& .MuiChip-label': {
         paddingLeft: 1,
       },
@@ -133,53 +251,139 @@ const StatusChip: React.FC<{
   />
 );
 
-// Video Card Component for horizontal lists
-const VideoCard: React.FC<{
+// Enhanced video card for horizontal lists
+const EnhancedVideoCard: React.FC<{
   video: MockVideo;
   onClick?: () => void;
-}> = ({ video, onClick }) => (
+  progress?: VideoProgress;
+}> = ({ video, onClick, progress }) => (
   <Box
     sx={{
-      width: 118,
+      width: 140,
       flexShrink: 0,
       cursor: onClick ? 'pointer' : 'default',
+      transition: 'transform 0.2s ease-in-out',
       '&:hover': onClick
         ? {
-            transform: 'translateY(-2px)',
-            transition: 'transform 0.2s ease-in-out',
+            transform: 'translateY(-4px) scale(1.02)',
           }
         : {},
     }}
     onClick={onClick}
   >
-    <VideoThumbnail width={118} height={66} />
-    <Box sx={{ mt: 1 }}>
+    <Box sx={{ position: 'relative' }}>
+      <VideoThumbnail
+        width={140}
+        height={78}
+        progress={progress?.progress || 0}
+        isPlaying={false}
+      />
+
+      {/* Video duration */}
+      <Chip
+        label={`${Math.floor(video.duration / 60)}:${(video.duration % 60).toString().padStart(2, '0')}`}
+        size="small"
+        sx={{
+          position: 'absolute',
+          bottom: 8,
+          right: 8,
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          fontSize: '10px',
+          height: 20,
+        }}
+      />
+
+      {/* Questions indicator */}
+      {progress?.totalQuestions && (
+        <Badge
+          badgeContent={progress.totalQuestions}
+          color="secondary"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            '& .MuiBadge-badge': {
+              fontSize: '9px',
+              height: 16,
+              minWidth: 16,
+            },
+          }}
+        >
+          <QuizIcon sx={{ color: 'white', fontSize: 16 }} />
+        </Badge>
+      )}
+    </Box>
+
+    <Box sx={{ mt: 1.5, px: 0.5 }}>
       <Typography
         variant="body2"
         sx={{
-          color: '#2B2A2A',
+          color: '#1e293b',
           fontFamily: 'Roboto',
-          fontSize: '14px',
-          fontWeight: 500,
-          lineHeight: '22px',
+          fontSize: '13px',
+          fontWeight: 600,
+          lineHeight: 1.3,
           mb: 0.5,
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
         }}
       >
         {video.title}
       </Typography>
+
       <Typography
         variant="caption"
         sx={{
-          color: '#2B2A2A',
+          color: '#64748b',
           fontFamily: 'Roboto',
-          fontSize: '12px',
+          fontSize: '11px',
           fontWeight: 400,
-          lineHeight: '22px',
+          lineHeight: 1.2,
           display: 'block',
+          mb: 1,
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
         }}
       >
         {video.description}
       </Typography>
+
+      {/* Progress and rewards */}
+      {progress && (
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Chip
+            icon={<DiamondIcon />}
+            label={`+${progress.meritsEarned}`}
+            size="small"
+            sx={{
+              height: 18,
+              fontSize: '9px',
+              backgroundColor: '#fef3c7',
+              color: '#92400e',
+              '& .MuiChip-icon': { fontSize: 10 },
+            }}
+          />
+          {progress.completed && (
+            <Chip
+              icon={<TrophyIcon />}
+              label="✓"
+              size="small"
+              sx={{
+                height: 18,
+                fontSize: '9px',
+                backgroundColor: '#d1fae5',
+                color: '#065f46',
+                '& .MuiChip-icon': { fontSize: 10 },
+              }}
+            />
+          )}
+        </Stack>
+      )}
     </Box>
   </Box>
 );
@@ -189,10 +393,54 @@ const UPlayMobileHome: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
 
-  // Use mock data hook
+  // Enhanced state management
+  const [showStats, setShowStats] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [currentStreak, setCurrentStreak] = useState(3);
+
+  // Enhanced mock user stats
+  const enhancedUserStats: EnhancedMockUserStats = {
+    name: 'Lucía',
+    activePlayers: 150,
+    burnedPlayers: 50,
+    level: 12,
+    merits: 2350,
+    ondas: 1680,
+    experience: 3750,
+    experienceToNext: 1250,
+    weeklyGoal: 7,
+    currentStreak: 3,
+    completedVideos: 28,
+    totalWatchTime: 45600, // seconds
+    achievements: 15,
+    ranking: 47,
+  };
+
+  // Enhanced mock data with progress
+  const mockVideoProgress: VideoProgress[] = [
+    {
+      videoId: 1,
+      progress: 35,
+      completed: false,
+      questionsAnswered: 3,
+      totalQuestions: 7,
+      meritsEarned: 45,
+      lastWatched: new Date(),
+    },
+    {
+      videoId: 2,
+      progress: 100,
+      completed: true,
+      questionsAnswered: 5,
+      totalQuestions: 5,
+      meritsEarned: 75,
+      lastWatched: new Date(Date.now() - 86400000),
+    },
+  ];
+
+  // Use enhanced mock data hook
   const {
     isLoading,
-    userStats,
     continueWatching,
     staffPlaylists,
     myPlaylists,
@@ -203,18 +451,20 @@ const UPlayMobileHome: React.FC = () => {
 
   const handleVideoClick = (video: MockVideo) => {
     console.log('Playing video:', video.title);
-    // Navigate to interactive video demo
     navigate('/interactive-video');
   };
 
   const handleContinueWatching = () => {
     console.log('Continuing video:', continueWatching.title);
-    // Navigate to interactive video demo
     navigate('/interactive-video');
   };
 
   const handleInteractiveDemo = () => {
     navigate('/interactive-video');
+  };
+
+  const handleShowStats = () => {
+    setShowStats(!showStats);
   };
 
   if (isLoading) {
@@ -223,28 +473,43 @@ const UPlayMobileHome: React.FC = () => {
         sx={{
           width: '100vw',
           minHeight: '100vh',
-          backgroundColor: '#FFF',
+          backgroundColor: '#f8fafc',
           p: 2,
         }}
       >
         <Skeleton
           variant="rectangular"
           width="100%"
-          height={56}
-          sx={{ mb: 2 }}
+          height={64}
+          sx={{ mb: 2, borderRadius: 2 }}
         />
-        <Skeleton variant="text" width="60%" height={24} sx={{ mb: 1 }} />
-        <Skeleton variant="text" width="40%" height={20} sx={{ mb: 2 }} />
+        <Skeleton variant="text" width="60%" height={28} sx={{ mb: 1 }} />
+        <Skeleton variant="text" width="40%" height={24} sx={{ mb: 3 }} />
         <Skeleton
           variant="rectangular"
           width="100%"
-          height={202}
-          sx={{ mb: 2 }}
+          height={220}
+          sx={{ mb: 3, borderRadius: 3 }}
         />
         <Stack direction="row" spacing={2}>
-          <Skeleton variant="rectangular" width={118} height={66} />
-          <Skeleton variant="rectangular" width={118} height={66} />
-          <Skeleton variant="rectangular" width={118} height={66} />
+          <Skeleton
+            variant="rectangular"
+            width={140}
+            height={78}
+            sx={{ borderRadius: 2 }}
+          />
+          <Skeleton
+            variant="rectangular"
+            width={140}
+            height={78}
+            sx={{ borderRadius: 2 }}
+          />
+          <Skeleton
+            variant="rectangular"
+            width={140}
+            height={78}
+            sx={{ borderRadius: 2 }}
+          />
         </Stack>
       </Box>
     );
@@ -255,11 +520,11 @@ const UPlayMobileHome: React.FC = () => {
       sx={{
         width: '100vw',
         minHeight: '100vh',
-        backgroundColor: '#FFF',
+        backgroundColor: '#f8fafc',
         position: 'relative',
       }}
     >
-      {/* Status Bar */}
+      {/* Enhanced Status Bar */}
       <Box
         sx={{
           display: 'flex',
@@ -267,73 +532,83 @@ const UPlayMobileHome: React.FC = () => {
           alignItems: 'flex-end',
           width: '100%',
           height: 44,
-          px: 2.5,
+          px: 3,
           py: 1,
+          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+          color: 'white',
         }}
       >
         <Typography
           sx={{
-            color: '#1D1B20',
             fontFamily: 'Roboto',
-            fontSize: '12px',
-            fontWeight: 500,
+            fontSize: '14px',
+            fontWeight: 600,
             lineHeight: '16px',
           }}
         >
           9:30
         </Typography>
 
-        {/* Right Icons - Signal, WiFi, Battery */}
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
-          <Box sx={{ opacity: 0.1 }}>📶</Box>
-          <Box>📶</Box>
-          <Box sx={{ opacity: 0.3 }}>🔋</Box>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Badge badgeContent={currentStreak} color="error">
+            <FireIcon sx={{ fontSize: 16 }} />
+          </Badge>
+          <Typography sx={{ fontSize: '12px', fontWeight: 500 }}>
+            📶 🔋 85%
+          </Typography>
         </Box>
       </Box>
 
-      {/* Top App Bar */}
+      {/* Enhanced Top App Bar */}
       <AppBar
         position="sticky"
         elevation={0}
         sx={{
-          backgroundColor: '#FFF',
-          color: '#1D1B20',
-          borderBottom: '1px solid #CAC4D0',
+          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+          color: 'white',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
         }}
       >
-        <Toolbar
-          sx={{
-            minHeight: 56,
-            px: 1,
-          }}
-        >
-          <IconButton edge="start" sx={{ mr: 1 }} aria-label="menu">
+        <Toolbar sx={{ minHeight: 64, px: 2 }}>
+          <IconButton edge="start" sx={{ mr: 1, color: 'white' }}>
             <MenuIcon />
           </IconButton>
 
-          <Typography
-            variant="h6"
-            component="h1"
-            sx={{
-              flexGrow: 1,
-              textAlign: 'center',
-              fontFamily: 'Roboto',
-              fontSize: '22px',
-              fontWeight: 400,
-              lineHeight: '28px',
-            }}
-          >
-            ÜPlay
-          </Typography>
+          <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
+            <Typography
+              variant="h6"
+              component="h1"
+              sx={{
+                fontFamily: 'Roboto',
+                fontSize: '22px',
+                fontWeight: 700,
+                lineHeight: '28px',
+              }}
+            >
+              ÜPlay
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                fontSize: '11px',
+                opacity: 0.9,
+                fontWeight: 500,
+              }}
+            >
+              Reproductor Gamificado
+            </Typography>
+          </Box>
 
           <Box sx={{ display: 'flex', gap: 0.5 }}>
-            <IconButton size="small">
+            <IconButton size="small" sx={{ color: 'white' }}>
               <SearchIcon />
             </IconButton>
-            <IconButton size="small">
-              <NotificationsIcon />
-            </IconButton>
-            <IconButton size="small">
+            <Badge badgeContent={3} color="error">
+              <IconButton size="small" sx={{ color: 'white' }}>
+                <NotificationsIcon />
+              </IconButton>
+            </Badge>
+            <IconButton size="small" sx={{ color: 'white' }}>
               <MessageIcon />
             </IconButton>
           </Box>
@@ -341,35 +616,236 @@ const UPlayMobileHome: React.FC = () => {
       </AppBar>
 
       {/* Main Content */}
-      <Box sx={{ px: 2, py: 2, pb: 10 }}>
-        {/* Status Chips */}
-        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <StatusChip
+      <Container maxWidth="sm" sx={{ px: 2, py: 2, pb: 10 }}>
+        {/* Enhanced Status Chips */}
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ mb: 3, flexWrap: 'wrap', gap: 1 }}
+        >
+          <EnhancedStatusChip
             icon={<PersonIcon sx={{ fontSize: 12 }} />}
-            label={`${userStats.activePlayers} jugadores activos`}
+            label="Activos"
+            value={enhancedUserStats.activePlayers}
+            color="success"
           />
-          <StatusChip
-            icon={<PersonIcon sx={{ fontSize: 12 }} />}
-            label={`${userStats.burnedPlayers} jugadores quemados`}
+          <EnhancedStatusChip
+            icon={<FireIcon sx={{ fontSize: 12 }} />}
+            label="Quemados"
+            value={enhancedUserStats.burnedPlayers}
+            color="error"
+          />
+          <EnhancedStatusChip
+            icon={<TrophyIcon sx={{ fontSize: 12 }} />}
+            label="Ranking"
+            value={`#${enhancedUserStats.ranking}`}
+            color="warning"
           />
         </Stack>
 
-        {/* Welcome Message */}
-        <Typography
+        {/* Enhanced Welcome Section */}
+        <Box sx={{ mb: 3 }}>
+          <Typography
+            sx={{
+              color: '#1e293b',
+              fontFamily: 'Montserrat',
+              fontSize: '18px',
+              fontWeight: 700,
+              lineHeight: 'normal',
+              mb: 1,
+            }}
+          >
+            Bienvenida,
+            <br />
+            {enhancedUserStats.name}
+          </Typography>
+
+          {/* Player metrics summary */}
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <Chip
+              icon={<StarIcon />}
+              label={`Nivel ${enhancedUserStats.level}`}
+              size="medium"
+              color="secondary"
+              sx={{ fontWeight: 600 }}
+            />
+            <Chip
+              icon={<DiamondIcon />}
+              label={`${enhancedUserStats.merits.toLocaleString()} M`}
+              size="medium"
+              color="warning"
+              sx={{ fontWeight: 600 }}
+            />
+            <Chip
+              icon={<BoltIcon />}
+              label={`${enhancedUserStats.ondas} Ö`}
+              size="medium"
+              color="primary"
+              sx={{ fontWeight: 600 }}
+            />
+          </Stack>
+
+          {/* XP Progress */}
+          <Box sx={{ mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+            >
+              <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                Progreso al Nivel {enhancedUserStats.level + 1}
+              </Typography>
+              <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                {enhancedUserStats.experience}/
+                {enhancedUserStats.experience +
+                  enhancedUserStats.experienceToNext}
+              </Typography>
+            </Box>
+            <LinearProgress
+              variant="determinate"
+              value={
+                (enhancedUserStats.experience /
+                  (enhancedUserStats.experience +
+                    enhancedUserStats.experienceToNext)) *
+                100
+              }
+              sx={{
+                height: 8,
+                borderRadius: 4,
+                bgcolor: '#e2e8f0',
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: 4,
+                  background:
+                    'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
+                },
+              }}
+            />
+          </Box>
+        </Box>
+
+        {/* Stats Toggle Button */}
+        <Button
+          variant="outlined"
+          onClick={handleShowStats}
+          startIcon={<TrendingUpIcon />}
+          endIcon={showStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          fullWidth
           sx={{
-            color: '#1E1D1D',
-            fontFamily: 'Montserrat',
-            fontSize: '16px',
-            fontWeight: 700,
-            lineHeight: 'normal',
             mb: 2,
+            borderColor: '#6366f1',
+            color: '#6366f1',
+            fontWeight: 600,
+            borderRadius: 2,
           }}
         >
-          Bienvenida,
-          <br />
-          {userStats.name}
-        </Typography>
-        {/* Interactive Video Demo Button */}
+          {showStats ? 'Ocultar Estadísticas' : 'Ver Estadísticas Detalladas'}
+        </Button>
+
+        {/* Detailed Stats Section */}
+        <Collapse in={showStats}>
+          <Card sx={{ mb: 3, borderRadius: 3, overflow: 'hidden' }}>
+            <Box
+              sx={{
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                color: 'white',
+                p: 2,
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 700, textAlign: 'center' }}
+              >
+                📊 Panel de Estadísticas
+              </Typography>
+            </Box>
+            <CardContent sx={{ p: 3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={6}>
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h4"
+                      color="primary"
+                      sx={{ fontWeight: 800 }}
+                    >
+                      {enhancedUserStats.completedVideos}
+                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                      Videos Completados
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h4"
+                      color="success.main"
+                      sx={{ fontWeight: 800 }}
+                    >
+                      {Math.floor(enhancedUserStats.totalWatchTime / 3600)}h
+                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                      Tiempo Total
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h4"
+                      color="warning.main"
+                      sx={{ fontWeight: 800 }}
+                    >
+                      {enhancedUserStats.achievements}
+                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                      Logros
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h4"
+                      color="error.main"
+                      sx={{ fontWeight: 800 }}
+                    >
+                      {enhancedUserStats.currentStreak}
+                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                      Racha Actual
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+
+              <Divider sx={{ my: 2 }} />
+
+              {/* Weekly progress */}
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                  Meta Semanal de Aprendizaje
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Box sx={{ flexGrow: 1, mr: 2 }}>
+                    <LinearProgress
+                      variant="determinate"
+                      value={(4 / enhancedUserStats.weeklyGoal) * 100}
+                      sx={{ height: 6, borderRadius: 3 }}
+                      color="success"
+                    />
+                  </Box>
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                    4/{enhancedUserStats.weeklyGoal}
+                  </Typography>
+                </Box>
+                <Typography variant="caption" color="text.secondary">
+                  ��Vas genial! Solo 3 sesiones más para completar tu meta
+                  semanal
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Collapse>
+
+        {/* Enhanced Interactive Demo Button */}
         <Box sx={{ mb: 3 }}>
           <Button
             variant="contained"
@@ -377,300 +853,480 @@ const UPlayMobileHome: React.FC = () => {
             startIcon={<QuizIcon />}
             onClick={handleInteractiveDemo}
             sx={{
-              backgroundColor: '#6750A4',
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
               color: 'white',
-              borderRadius: 2,
-              py: 1.5,
-              mb: 2,
+              borderRadius: 3,
+              py: 2,
+              fontSize: '16px',
+              fontWeight: 700,
+              boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)',
               '&:hover': {
-                backgroundColor: '#5A47A0',
+                background: 'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
+                boxShadow: '0 12px 40px rgba(99, 102, 241, 0.5)',
+                transform: 'translateY(-2px)',
               },
+              transition: 'all 0.3s ease',
             }}
           >
             🎮 Probar Reproductor Interactivo
           </Button>
         </Box>
 
-        {/* Continue Watching Section */}
-        <Box sx={{ mb: 3 }}>
+        {/* Enhanced Continue Watching Section */}
+        <Box sx={{ mb: 4 }}>
           <Typography
             sx={{
-              color: '#2B2A2A',
+              color: '#1e293b',
               fontFamily: 'Roboto',
-              fontSize: '14px',
-              fontWeight: 500,
+              fontSize: '16px',
+              fontWeight: 700,
               lineHeight: '22px',
-              mb: 1,
+              mb: 2,
             }}
           >
-            Continuar viendo
+            📺 Continuar viendo
           </Typography>
 
-          {/* Main Video Thumbnail */}
-          <Box
+          {/* Enhanced Main Video Thumbnail */}
+          <Card
             sx={{
-              position: 'relative',
-              mb: 2,
+              borderRadius: 3,
+              overflow: 'hidden',
               cursor: 'pointer',
+              transition: 'all 0.3s ease',
               '&:hover': {
-                transform: 'scale(1.01)',
-                transition: 'transform 0.2s ease-in-out',
+                transform: 'translateY(-4px)',
+                boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
               },
+              mb: 2,
             }}
             onClick={handleContinueWatching}
           >
-            <VideoThumbnail width="100%" height={202} />
-            {/* Play overlay */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                borderRadius: '50%',
-                width: 64,
-                height: 64,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <PlayIcon sx={{ color: 'white', fontSize: 32 }} />
-            </Box>
-          </Box>
+            <Box sx={{ position: 'relative' }}>
+              <VideoThumbnail width="100%" height={220} progress={35} />
 
-          {/* Video Info with Progress */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {/* Progress Circle */}
-            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-              <CircularProgress
-                variant="determinate"
-                value={continueWatching.progress || 0}
-                size={48}
-                thickness={4}
-                sx={{
-                  color: '#6750A4',
-                }}
-              />
+              {/* Enhanced play overlay */}
               <Box
                 sx={{
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
                   position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  background:
+                    'linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%)',
+                  borderRadius: '50%',
+                  width: 72,
+                  height: 72,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)',
                 }}
               >
-                <Typography
-                  variant="caption"
-                  component="div"
-                  color="text.secondary"
-                  sx={{ fontSize: '10px', fontWeight: 600 }}
-                >
-                  {`${continueWatching.progress || 0}%`}
-                </Typography>
+                <PlayIcon sx={{ color: 'white', fontSize: 36 }} />
+              </Box>
+
+              {/* Video duration and progress indicator */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 16,
+                  right: 16,
+                  display: 'flex',
+                  gap: 1,
+                }}
+              >
+                <Chip
+                  label={formatDuration(continueWatching.duration)}
+                  size="small"
+                  sx={{
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    color: 'white',
+                    fontWeight: 600,
+                  }}
+                />
+                <Chip
+                  label="35%"
+                  size="small"
+                  sx={{
+                    backgroundColor: 'rgba(99, 102, 241, 0.9)',
+                    color: 'white',
+                    fontWeight: 600,
+                  }}
+                />
+              </Box>
+
+              {/* Questions indicator */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 16,
+                  left: 16,
+                }}
+              >
+                <Badge badgeContent={7} color="warning">
+                  <Chip
+                    icon={<QuizIcon />}
+                    label="Preguntas"
+                    size="small"
+                    sx={{
+                      backgroundColor: 'rgba(0,0,0,0.8)',
+                      color: 'white',
+                      fontWeight: 600,
+                      '& .MuiChip-icon': { color: 'white' },
+                    }}
+                  />
+                </Badge>
               </Box>
             </Box>
+          </Card>
 
-            {/* Video Details */}
-            <Box sx={{ flex: 1 }}>
-              <Typography
-                sx={{
-                  color: '#2B2A2A',
-                  fontFamily: 'Roboto',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  lineHeight: '22px',
-                  mb: 0.5,
-                }}
-              >
-                {continueWatching.title}
-              </Typography>
-              <Typography
-                sx={{
-                  color: '#2B2A2A',
-                  fontFamily: 'Roboto',
-                  fontSize: '12px',
-                  fontWeight: 400,
-                  lineHeight: '22px',
-                }}
-              >
-                {continueWatching.description}
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: '#6750A4',
-                  fontFamily: 'Roboto',
-                  fontSize: '11px',
-                  fontWeight: 500,
-                  display: 'block',
-                  mt: 0.5,
-                }}
-              >
-                {getProgressText(continueWatching.progress || 0)} •{' '}
-                {formatDuration(continueWatching.duration)}
-              </Typography>
+          {/* Enhanced Video Info with Progress */}
+          <Card sx={{ borderRadius: 3, p: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {/* Enhanced Progress Circle */}
+              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <CircularProgress
+                  variant="determinate"
+                  value={35}
+                  size={56}
+                  thickness={4}
+                  sx={{
+                    color: '#6366f1',
+                    filter: 'drop-shadow(0 2px 8px rgba(99, 102, 241, 0.3))',
+                  }}
+                />
+                <Box
+                  sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    component="div"
+                    sx={{ fontSize: '12px', fontWeight: 700, color: '#6366f1' }}
+                  >
+                    35%
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* Enhanced Video Details */}
+              <Box sx={{ flex: 1 }}>
+                <Typography
+                  sx={{
+                    color: '#1e293b',
+                    fontFamily: 'Roboto',
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    lineHeight: '20px',
+                    mb: 0.5,
+                  }}
+                >
+                  {continueWatching.title}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: '#64748b',
+                    fontFamily: 'Roboto',
+                    fontSize: '13px',
+                    fontWeight: 400,
+                    lineHeight: '18px',
+                    mb: 1,
+                  }}
+                >
+                  {continueWatching.description}
+                </Typography>
+
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                  <Chip
+                    icon={<DiamondIcon />}
+                    label="+45 Mëritos"
+                    size="small"
+                    sx={{
+                      backgroundColor: '#fef3c7',
+                      color: '#92400e',
+                      fontWeight: 600,
+                      '& .MuiChip-icon': { color: '#f59e0b' },
+                    }}
+                  />
+                  <Chip
+                    icon={<BoltIcon />}
+                    label="+21 Öndas"
+                    size="small"
+                    sx={{
+                      backgroundColor: '#dcfce7',
+                      color: '#166534',
+                      fontWeight: 600,
+                      '& .MuiChip-icon': { color: '#10b981' },
+                    }}
+                  />
+                  <Chip
+                    label="3/7 preguntas"
+                    size="small"
+                    sx={{
+                      backgroundColor: '#e0e7ff',
+                      color: '#3730a3',
+                      fontWeight: 600,
+                    }}
+                  />
+                </Stack>
+              </Box>
+
+              {/* Action buttons */}
+              <Stack direction="column" spacing={1}>
+                <IconButton
+                  size="small"
+                  sx={{
+                    bgcolor: '#fef3c7',
+                    color: '#92400e',
+                    '&:hover': { bgcolor: '#fed7aa' },
+                  }}
+                >
+                  <BookmarkIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  sx={{
+                    bgcolor: '#ddd6fe',
+                    color: '#5b21b6',
+                    '&:hover': { bgcolor: '#c4b5fd' },
+                  }}
+                >
+                  <ShareIcon fontSize="small" />
+                </IconButton>
+              </Stack>
             </Box>
-          </Box>
+          </Card>
         </Box>
 
-        {/* Staff Playlists Section */}
-        <Box sx={{ mb: 3 }}>
+        {/* Enhanced Staff Playlists Section */}
+        <Box sx={{ mb: 4 }}>
           <Typography
             sx={{
-              color: '#2B2A2A',
+              color: '#1e293b',
               fontFamily: 'Roboto',
-              fontSize: '14px',
-              fontWeight: 500,
+              fontSize: '16px',
+              fontWeight: 700,
               lineHeight: '22px',
               mb: 2,
             }}
           >
-            Playlists del Staff
+            🌟 Playlists del Staff
           </Typography>
 
-          <Stack direction="row" spacing={2} sx={{ overflowX: 'auto', pb: 1 }}>
+          <Stack direction="row" spacing={2} sx={{ overflowX: 'auto', pb: 2 }}>
             {staffPlaylists.map((video) => (
-              <VideoCard
+              <EnhancedVideoCard
                 key={video.id}
                 video={video}
                 onClick={() => handleVideoClick(video)}
+                progress={mockVideoProgress.find((p) => p.videoId === video.id)}
               />
             ))}
           </Stack>
         </Box>
 
-        {/* My Playlists Section */}
-        <Box>
+        {/* Enhanced My Playlists Section */}
+        <Box sx={{ mb: 4 }}>
           <Typography
             sx={{
-              color: '#2B2A2A',
+              color: '#1e293b',
               fontFamily: 'Roboto',
-              fontSize: '14px',
-              fontWeight: 500,
+              fontSize: '16px',
+              fontWeight: 700,
               lineHeight: '22px',
               mb: 2,
             }}
           >
-            Mis playlists
+            📚 Mis playlists
           </Typography>
 
           <Stack
             direction="row"
             spacing={2}
-            sx={{ overflowX: 'auto', pb: 1, mb: 2 }}
+            sx={{ overflowX: 'auto', pb: 2, mb: 3 }}
           >
             {myPlaylists.map((video) => (
-              <VideoCard
+              <EnhancedVideoCard
                 key={video.id}
                 video={video}
                 onClick={() => handleVideoClick(video)}
+                progress={mockVideoProgress.find((p) => p.videoId === video.id)}
               />
             ))}
           </Stack>
 
-          {/* Playlist Card */}
-          <Box
+          {/* Enhanced Playlist Card */}
+          <Card
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              p: 2,
-              gap: 2,
+              borderRadius: 3,
               cursor: 'pointer',
-              borderRadius: 1,
+              transition: 'all 0.3s ease',
               '&:hover': {
-                backgroundColor: '#F5F5F5',
-                transition: 'background-color 0.2s ease-in-out',
+                transform: 'translateY(-2px)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
               },
+              border: '1px solid #e2e8f0',
             }}
             onClick={() =>
               console.log('Opening playlist:', createdPlaylist.name)
             }
           >
-            {/* Playlist Icon - 2x2 grid */}
-            <Box
-              sx={{
-                width: 50,
-                height: 56,
-                position: 'relative',
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: 25,
-                  height: 28,
-                  backgroundColor: '#D9D9D9',
-                }}
-              />
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: 25,
-                  height: 28,
-                  backgroundColor: '#B9B8B8',
-                }}
-              />
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  width: 25,
-                  height: 28,
-                  backgroundColor: '#B9B8B8',
-                }}
-              />
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: 0,
-                  right: 0,
-                  width: 25,
-                  height: 28,
-                  backgroundColor: '#D9D9D9',
-                }}
-              />
-            </Box>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                {/* Enhanced Playlist Icon */}
+                <Box
+                  sx={{
+                    width: 60,
+                    height: 60,
+                    position: 'relative',
+                    borderRadius: 2,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: 30,
+                      height: 30,
+                      background:
+                        'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      width: 30,
+                      height: 30,
+                      background:
+                        'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      width: 30,
+                      height: 30,
+                      background:
+                        'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: 0,
+                      right: 0,
+                      width: 30,
+                      height: 30,
+                      background:
+                        'linear-gradient(135deg, #ef4444 0%, #f87171 100%)',
+                    }}
+                  />
+                </Box>
 
-            {/* Playlist Info */}
-            <Box sx={{ flex: 1 }}>
-              <Typography
-                sx={{
-                  color: '#2D2D2D',
-                  fontFamily: 'Montserrat',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  lineHeight: 'normal',
-                  mb: 0.5,
-                }}
-              >
-                {createdPlaylist.name}
-              </Typography>
-              <Typography
-                sx={{
-                  color: '#2D2D2D',
-                  fontFamily: 'Montserrat',
-                  fontSize: '10px',
-                  fontWeight: 400,
-                  lineHeight: 'normal',
-                }}
-              >
-                {createdPlaylist.videoCount} Videos {createdPlaylist.merits}
-              </Typography>
-            </Box>
-          </Box>
+                {/* Enhanced Playlist Info */}
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    sx={{
+                      color: '#1e293b',
+                      fontFamily: 'Montserrat',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      lineHeight: 'normal',
+                      mb: 0.5,
+                    }}
+                  >
+                    {createdPlaylist.name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: '#64748b',
+                      fontFamily: 'Montserrat',
+                      fontSize: '12px',
+                      fontWeight: 400,
+                      lineHeight: 'normal',
+                      mb: 1,
+                    }}
+                  >
+                    {createdPlaylist.videoCount} Videos • Personal
+                  </Typography>
+                  <Stack direction="row" spacing={1}>
+                    <Chip
+                      icon={<DiamondIcon />}
+                      label={createdPlaylist.merits}
+                      size="small"
+                      sx={{
+                        backgroundColor: '#fef3c7',
+                        color: '#92400e',
+                        fontWeight: 600,
+                        '& .MuiChip-icon': { color: '#f59e0b' },
+                      }}
+                    />
+                    <Chip
+                      icon={<SchoolIcon />}
+                      label="Aprendizaje"
+                      size="small"
+                      sx={{
+                        backgroundColor: '#e0e7ff',
+                        color: '#3730a3',
+                        fontWeight: 600,
+                        '& .MuiChip-icon': { color: '#6366f1' },
+                      }}
+                    />
+                  </Stack>
+                </Box>
+
+                {/* Playlist actions */}
+                <IconButton
+                  sx={{
+                    bgcolor: '#f1f5f9',
+                    color: '#6366f1',
+                    '&:hover': { bgcolor: '#e2e8f0' },
+                  }}
+                >
+                  <PlayIcon />
+                </IconButton>
+              </Box>
+            </CardContent>
+          </Card>
         </Box>
-      </Box>
+      </Container>
+
+      {/* Enhanced Floating Action Button */}
+      <Zoom in={true}>
+        <Fab
+          color="primary"
+          onClick={handleInteractiveDemo}
+          sx={{
+            position: 'fixed',
+            bottom: 80,
+            right: 16,
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            boxShadow: '0 8px 32px rgba(99, 102, 241, 0.4)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
+              transform: 'scale(1.1)',
+            },
+            transition: 'all 0.3s ease',
+          }}
+        >
+          <QuizIcon />
+        </Fab>
+      </Zoom>
     </Box>
   );
 };
