@@ -55,7 +55,6 @@ tmp-*.png
 /*.md
 /*.txt
 /*.js
-/*.json
 /*.png
 /*.jpg
 /*.jpeg
@@ -63,12 +62,18 @@ tmp-*.png
 /*.csv
 /*.sql
 
+# Ignore JSON files in root but allow specific ones
+/*.json
+
 # Exceptions for essential root files
 !README.md
 !package.json
 !turbo.json
 !tsconfig.json
 !PROJECT_STRUCTURE.md
+
+# Allow Cursor configuration
+!.cursor/environment.json
 
 # Allow organized files in their proper directories
 !logs/**/*.log
