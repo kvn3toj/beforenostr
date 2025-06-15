@@ -1,0 +1,180 @@
+/* ===== COOMUNITY DESIGN TOKENS - COLORS ===== */
+
+:root {
+  /* === COLORES PRIMARIOS COOMUNITY === */
+  --coomunity-primary-50: #faf5ff;
+  --coomunity-primary-100: #f3e8ff;
+  --coomunity-primary-200: #e9d5ff;
+  --coomunity-primary-300: #d8b4fe;
+  --coomunity-primary-400: #c084fc;
+  --coomunity-primary-500: #7c3aed; /* Principal - menos saturado */
+  --coomunity-primary-600: #6d28d9;
+  --coomunity-primary-700: #5b21b6;
+  --coomunity-primary-800: #4c1d95;
+  --coomunity-primary-900: #3c1361;
+
+  /* === COLORES SECUNDARIOS === */
+  --coomunity-gold-50: #fffbeb;
+  --coomunity-gold-100: #fef3c7;
+  --coomunity-gold-200: #fde68a;
+  --coomunity-gold-300: #fcd34d;
+  --coomunity-gold-400: #fbbf24;
+  --coomunity-gold-500: #d97706; /* Más sutil que antes */
+  --coomunity-gold-600: #b45309;
+  --coomunity-gold-700: #92400e;
+  --coomunity-gold-800: #78350f;
+  --coomunity-gold-900: #451a03;
+
+  /* === ELEMENTOS NATURALES - ARMONIZADOS === */
+  --coomunity-earth-50: #fdf8f6;
+  --coomunity-earth-100: #f2e8e5;
+  --coomunity-earth-200: #eaddd7;
+  --coomunity-earth-300: #e0cfc7;
+  --coomunity-earth-400: #d2bab0;
+  --coomunity-earth-500: #92400e; /* Más cálido */
+  --coomunity-earth-600: #7c2d12;
+  --coomunity-earth-700: #6c2410;
+  --coomunity-earth-800: #581c0c;
+  --coomunity-earth-900: #451a03;
+
+  --coomunity-water-50: #ecfeff;
+  --coomunity-water-100: #cffafe;
+  --coomunity-water-200: #a5f3fc;
+  --coomunity-water-300: #67e8f9;
+  --coomunity-water-400: #22d3ee;
+  --coomunity-water-500: #0891b2; /* Más profundo */
+  --coomunity-water-600: #0e7490;
+  --coomunity-water-700: #155e75;
+  --coomunity-water-800: #164e63;
+  --coomunity-water-900: #083344;
+
+  --coomunity-fire-50: #fef2f2;
+  --coomunity-fire-100: #fee2e2;
+  --coomunity-fire-200: #fecaca;
+  --coomunity-fire-300: #fca5a5;
+  --coomunity-fire-400: #f87171;
+  --coomunity-fire-500: #dc2626; /* Menos agresivo */
+  --coomunity-fire-600: #b91c1c;
+  --coomunity-fire-700: #991b1b;
+  --coomunity-fire-800: #7f1d1d;
+  --coomunity-fire-900: #450a0a;
+
+  --coomunity-air-50: #faf5ff;
+  --coomunity-air-100: #f3e8ff;
+  --coomunity-air-200: #e9d5ff;
+  --coomunity-air-300: #d8b4fe;
+  --coomunity-air-400: #c084fc;
+  --coomunity-air-500: #7c3aed; /* Consistente con primary */
+  --coomunity-air-600: #6d28d9;
+  --coomunity-air-700: #5b21b6;
+  --coomunity-air-800: #4c1d95;
+  --coomunity-air-900: #3c1361;
+
+  /* === COLORES SEMÁNTICOS === */
+  --color-success-50: #ecfdf5;
+  --color-success-100: #d1fae5;
+  --color-success-200: #a7f3d0;
+  --color-success-300: #6ee7b7;
+  --color-success-400: #34d399;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+  --color-success-800: #065f46;
+  --color-success-900: #064e3b;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-300: #fca5a5;
+  --color-error-400: #f87171;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
+  --color-error-900: #7f1d1d;
+
+  --color-info-50: #eff6ff;
+  --color-info-100: #dbeafe;
+  --color-info-200: #bfdbfe;
+  --color-info-300: #93c5fd;
+  --color-info-400: #60a5fa;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
+  --color-info-700: #1d4ed8;
+  --color-info-800: #1e40af;
+  --color-info-900: #1e3a8a;
+
+  /* === COLORES NEUTROS === */
+  --color-white: #ffffff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-black: #000000;
+
+  /* === COLORES DE TEXTO === */
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-inverse: var(--color-white);
+  --color-text-disabled: var(--color-gray-400);
+
+  /* === COLORES DE FONDO === */
+  --color-background-primary: var(--color-white);
+  --color-background-secondary: var(--color-gray-50);
+  --color-background-tertiary: var(--color-gray-100);
+  --color-background-inverse: var(--color-gray-900);
+
+  /* === COLORES DE BORDE === */
+  --color-border-primary: var(--color-gray-200);
+  --color-border-secondary: var(--color-gray-300);
+  --color-border-focus: var(--coomunity-primary-500);
+  --color-border-error: var(--color-error-500);
+  --color-border-success: var(--color-success-500);
+}
+
+/* === MODO OSCURO (FUTURO) === */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: var(--color-gray-100);
+    --color-text-secondary: var(--color-gray-300);
+    --color-text-tertiary: var(--color-gray-400);
+    --color-text-inverse: var(--color-gray-900);
+    
+    --color-background-primary: var(--color-gray-900);
+    --color-background-secondary: var(--color-gray-800);
+    --color-background-tertiary: var(--color-gray-700);
+    --color-background-inverse: var(--color-white);
+    
+    --color-border-primary: var(--color-gray-700);
+    --color-border-secondary: var(--color-gray-600);
+  }
+}
+
+/* === ALTO CONTRASTE === */
+@media (prefers-contrast: high) {
+  :root {
+    --coomunity-primary-500: #000000;
+    --color-text-primary: #000000;
+    --color-text-secondary: #000000;
+    --color-background-primary: #ffffff;
+    --color-border-primary: #000000;
+  }
+} 

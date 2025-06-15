@@ -1,0 +1,21 @@
+{
+  "name": "CoomÜnity SuperApp",
+  "short_name": "CoomUnity",
+  "description": "SuperApp de CoomÜnity - Economía colaborativa, gamificación y desarrollo personal integrados",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "education", "social"],
+  "lang": "es",
+  "dir": "ltr"
+} 

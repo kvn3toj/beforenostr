@@ -119,6 +119,7 @@ export default defineConfig(({ mode }) => ({
   },
   server: {
     port: 3001,
+    strictPort: true, // No cambiar puerto automáticamente
     host: true
   },
   preview: {

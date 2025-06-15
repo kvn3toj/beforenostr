@@ -90,7 +90,12 @@ export default defineConfig(({ mode }) => ({
   },
   server: {
     port: 3001,
-    host: true
+    host: true,
+    // Configuración para permitir iframe embedding desde Builder.io
+    headers: {
+      'X-Frame-Options': 'ALLOWALL',
+      'Content-Security-Policy': "frame-ancestors 'self' https://builder.io https://*.builder.io"
+    }
   },
   esbuild: {
     // Ignore TypeScript errors during development builds

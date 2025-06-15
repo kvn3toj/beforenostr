@@ -77,7 +77,11 @@ import {
   Diversity3,
   Sync,
   CampaignOutlined,
+  CurrencyExchange,
 } from '@mui/icons-material';
+
+// Importar el Hub de Intercambio de Conocimiento LETS
+import { KnowledgeExchangeHub } from '../KnowledgeExchangeHub';
 
 interface CollaborationProject {
   id: string;
@@ -751,6 +755,8 @@ export const GroupsCollaborationTools: React.FC<
             onChange={(_, newValue) => setActiveTab(newValue)}
             textColor="primary"
             indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
           >
             <Tab
               label="Proyectos Colaborativos"
@@ -766,6 +772,15 @@ export const GroupsCollaborationTools: React.FC<
               icon={
                 <Badge badgeContent={mockExchanges.length} color="secondary">
                   <Psychology />
+                </Badge>
+              }
+              iconPosition="start"
+            />
+            <Tab
+              label="LETS - Sistema de Intercambio"
+              icon={
+                <Badge badgeContent="NEW" color="warning">
+                  <CurrencyExchange />
                 </Badge>
               }
               iconPosition="start"
@@ -879,6 +894,15 @@ export const GroupsCollaborationTools: React.FC<
               </CollaborationTabPanel>
 
         <CollaborationTabPanel value={activeTab} index={2}>
+        {/* LETS - Sistema de Intercambio */}
+        <KnowledgeExchangeHub
+          copId={groupId}
+          userId="current-user-id" // TODO: Obtener del contexto de autenticación
+          groupName={groupName}
+        />
+        </CollaborationTabPanel>
+
+        <CollaborationTabPanel value={activeTab} index={3}>
         {/* Eventos y Círculos */}
         <Grid container spacing={3}>
           {mockEvents.map((event) => (

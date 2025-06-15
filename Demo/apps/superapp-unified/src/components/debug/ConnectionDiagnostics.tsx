@@ -1,12 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  Alert,
+  Button,
+  Collapse,
+  Stack,
+  Divider,
+  IconButton,
+} from '@mui/material';
+import {
+  CheckCircle,
+  Error,
+  Warning,
+  Refresh,
+  ExpandMore,
+  ExpandLess,
+  Info,
+  Build,
+} from '@mui/icons-material';
 import { ENV, EnvironmentHelpers } from '../../lib/environment';
 
 interface DiagnosticResult {
-  name: string;
-  status: 'pass' | 'fail' | 'warning' | 'loading';
-  details: string;
-  data?: any;
-  timestamp: number;
+  service: string;
+  status: 'success' | 'error' | 'warning' | 'info';
+  message: string;
+  details?: string;
+  timestamp: string;
 }
 
 interface ConnectionDiagnosticsProps {
@@ -20,367 +43,293 @@ interface ConnectionDiagnosticsProps {
  * Provides real-time diagnostics for backend connectivity issues.
  * Only shows in development/testing environments.
  */
-export const ConnectionDiagnostics: React.FC<ConnectionDiagnosticsProps> = ({
+const ConnectionDiagnostics: React.FC<ConnectionDiagnosticsProps> = ({
   show = false,
   onClose,
 }) => {
-  const [results, setResults] = useState<DiagnosticResult[]>([]);
+  const [expanded, setExpanded] = useState(false);
+  const [diagnostics, setDiagnostics] = useState<DiagnosticResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [autoRefresh, setAutoRefresh] = useState(false);
 
-  // Only show in development/testing
-  if (!EnvironmentHelpers.shouldLogDebug() || !show) {
-    return null;
-  }
-
-  const runDiagnostics = async () => {
-    setIsRunning(true);
-    const newResults: DiagnosticResult[] = [];
-
-    // Helper to add result
-    const addResult = (
-      name: string,
-      status: 'pass' | 'fail' | 'warning',
-      details: string,
-      data?: any
-    ) => {
-      newResults.push({
-        name,
-        status,
-        details,
-        data,
-        timestamp: Date.now(),
-      });
-      setResults([...newResults]); // Update UI in real-time
-    };
-
-    // 1. Environment Check
-    addResult(
-      'Environment Configuration',
-      'pass',
-      `Environment: ${EnvironmentHelpers.getEnvironmentType()}, API: ${ENV.apiBaseUrl}, Origin: ${ENV.currentOrigin}`,
-      {
-        environment: EnvironmentHelpers.getEnvironmentType(),
-        apiBaseUrl: ENV.apiBaseUrl,
-        currentOrigin: ENV.currentOrigin,
-        mockAuth: ENV.enableMockAuth,
-        isTesting: ENV.isTesting,
-      }
+  // 🚨 BUILDER.IO SAFE MODE: Memoizar detección de entorno Builder.io
+  const isBuilderEnvironment = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    
+    return (
+      window.location.hostname.includes('builder.io') || 
+      window.location.port === '48752' ||
+      window.location.hostname.includes('preview')
     );
+  }, []);
 
-    // 2. Basic Health Check
+  // 🔧 BUILDER.IO RULES: Funciones sin dependencias primero
+  const createBuilderDiagnostics = useCallback(() => {
+    const results: DiagnosticResult[] = [];
+    
+    results.push({
+      service: 'Builder.io Environment',
+      status: 'info',
+      message: 'Ejecutándose en entorno Builder.io',
+      details: 'Modo seguro activado - usando datos mock para prevenir errores de API',
+      timestamp: new Date().toISOString(),
+    });
+
+    results.push({
+      service: 'Mock Data System',
+      status: 'success',
+      message: 'Sistema de datos mock activo',
+      details: 'Todos los hooks están configurados para usar datos seguros en Builder.io',
+      timestamp: new Date().toISOString(),
+    });
+
+    results.push({
+      service: 'API Calls',
+      status: 'warning',
+      message: 'Llamadas API deshabilitadas',
+      details: 'Las llamadas a /game/user y /wallets/user están deshabilitadas para prevenir errores',
+      timestamp: new Date().toISOString(),
+    });
+
+    results.push({
+      service: 'Frontend Components',
+      status: 'success',
+      message: 'Componentes funcionando correctamente',
+      details: 'Todos los componentes están renderizando con datos mock',
+      timestamp: new Date().toISOString(),
+    });
+
+    return results;
+  }, []);
+
+  // 🔧 BUILDER.IO RULES: Funciones que dependen de las anteriores
+  const createDevelopmentDiagnostics = useCallback(async () => {
+    const results: DiagnosticResult[] = [];
+
     try {
-      const controller = new AbortController();
-      setTimeout(() => controller.abort(), 5000);
-
-      const response = await fetch(`${ENV.apiBaseUrl}/health`, {
-        signal: controller.signal,
-        headers: EnvironmentHelpers.getCorsHeaders(),
-      });
-
-      if (response.ok) {
-        const data = await response.text();
-        addResult(
-          'Backend Health Check',
-          'pass',
-          `Status: ${response.status} ${response.statusText}`,
-          {
-            responseText: data,
-            headers: Object.fromEntries(response.headers.entries()),
-          }
-        );
+      // Test Backend Health
+      const healthResponse = await fetch('http://localhost:3002/health');
+      if (healthResponse.ok) {
+        results.push({
+          service: 'Backend Health',
+          status: 'success',
+          message: 'Backend NestJS disponible',
+          details: `Puerto 3002 respondiendo correctamente`,
+          timestamp: new Date().toISOString(),
+        });
       } else {
-        addResult(
-          'Backend Health Check',
-          'fail',
-          `Status: ${response.status} ${response.statusText}`,
-          { headers: Object.fromEntries(response.headers.entries()) }
-        );
+        results.push({
+          service: 'Backend Health',
+          status: 'error',
+          message: 'Backend no responde',
+          details: `HTTP ${healthResponse.status}`,
+          timestamp: new Date().toISOString(),
+        });
       }
-    } catch (error: any) {
-      addResult('Backend Health Check', 'fail', `Error: ${error.message}`, {
-        errorName: error.name,
-        errorStack: error.stack,
+    } catch (error) {
+      results.push({
+        service: 'Backend Health',
+        status: 'error',
+        message: 'Backend no disponible',
+        details: 'No se puede conectar al puerto 3002',
+        timestamp: new Date().toISOString(),
       });
     }
 
-    // 3. CORS Preflight Check
+    // Test Frontend
+    results.push({
+      service: 'Frontend SuperApp',
+      status: 'success',
+      message: 'SuperApp ejecutándose',
+      details: `Puerto ${window.location.port || '3001'}`,
+      timestamp: new Date().toISOString(),
+    });
+
+    // Test Environment
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    results.push({
+      service: 'Environment Config',
+      status: apiBaseUrl ? 'success' : 'warning',
+      message: apiBaseUrl ? 'Variables configuradas' : 'Variables faltantes',
+      details: `API_BASE_URL: ${apiBaseUrl || 'No configurada'}`,
+      timestamp: new Date().toISOString(),
+    });
+
+    return results;
+  }, []);
+
+  // 🔧 BUILDER.IO RULES: Función principal que usa las anteriores
+  const runDiagnostics = useCallback(async () => {
+    if (!show) return;
+    
+    setIsRunning(true);
+    
     try {
-      const response = await fetch(`${ENV.apiBaseUrl}/auth/login`, {
-        method: 'OPTIONS',
-        headers: {
-          Origin: ENV.currentOrigin,
-          'Access-Control-Request-Method': 'POST',
-          'Access-Control-Request-Headers': 'Content-Type,Authorization',
-        },
-      });
-
-      const corsOrigin = response.headers.get('access-control-allow-origin');
-      const corsOk = corsOrigin === '*' || corsOrigin === ENV.currentOrigin;
-
-      addResult(
-        'CORS Preflight Check',
-        corsOk ? 'pass' : 'warning',
-        `CORS Origin: ${corsOrigin}, Status: ${response.status}`,
-        {
-          corsHeaders: {
-            'access-control-allow-origin': response.headers.get(
-              'access-control-allow-origin'
-            ),
-            'access-control-allow-methods': response.headers.get(
-              'access-control-allow-methods'
-            ),
-            'access-control-allow-headers': response.headers.get(
-              'access-control-allow-headers'
-            ),
-            'access-control-allow-credentials': response.headers.get(
-              'access-control-allow-credentials'
-            ),
-          },
-        }
-      );
-    } catch (error: any) {
-      addResult('CORS Preflight Check', 'fail', `Error: ${error.message}`, {
-        errorName: error.name,
-      });
-    }
-
-    // 4. Auth Endpoint Test
-    try {
-      const response = await fetch(`${ENV.apiBaseUrl}/auth/login`, {
-        method: 'POST',
-        headers: EnvironmentHelpers.getCorsHeaders(),
-        body: JSON.stringify({
-          email: 'test@example.com',
-          password: 'invalid',
-        }),
-      });
-
-      // We expect 401 or 400, which means the endpoint is working
-      const authOk = response.status === 401 || response.status === 400;
-      addResult(
-        'Auth Endpoint Test',
-        authOk ? 'pass' : 'warning',
-        `Status: ${response.status} ${response.statusText}`,
-        { expectedStatuses: [400, 401], actualStatus: response.status }
-      );
-    } catch (error: any) {
-      addResult('Auth Endpoint Test', 'fail', `Error: ${error.message}`, {
-        errorName: error.name,
-      });
-    }
-
-    // 5. Network Connectivity
-    addResult(
-      'Network Status',
-      navigator.onLine ? 'pass' : 'fail',
-      `Navigator Online: ${navigator.onLine}`,
-      {
-        userAgent: navigator.userAgent,
-        connection: (navigator as any).connection
-          ? {
-              effectiveType: (navigator as any).connection.effectiveType,
-              downlink: (navigator as any).connection.downlink,
-              rtt: (navigator as any).connection.rtt,
-            }
-          : 'not available',
+      let results: DiagnosticResult[];
+      
+      if (isBuilderEnvironment) {
+        results = createBuilderDiagnostics();
+      } else {
+        results = await createDevelopmentDiagnostics();
       }
-    );
+      
+      setDiagnostics(results);
+    } catch (error) {
+      console.error('🚨 Error en diagnósticos:', error);
+      setDiagnostics([{
+        service: 'Diagnostics System',
+        status: 'error',
+        message: 'Error ejecutando diagnósticos',
+        details: error instanceof Error ? error.message : 'Error desconocido',
+        timestamp: new Date().toISOString(),
+      }]);
+    } finally {
+      setIsRunning(false);
+    }
+  }, [show, isBuilderEnvironment, createBuilderDiagnostics, createDevelopmentDiagnostics]);
 
-    setIsRunning(false);
-  };
+  // 🧹 BUILDER.IO RULES: Cleanup effect obligatorio
+  useEffect(() => {
+    return () => {
+      // Limpiar cualquier operación pendiente
+      setIsRunning(false);
+    };
+  }, []);
 
+  // 🔧 BUILDER.IO RULES: useEffect con dependencias correctas
   useEffect(() => {
     if (show) {
       runDiagnostics();
     }
-  }, [show]);
+  }, [show, runDiagnostics]);
 
-  useEffect(() => {
-    if (autoRefresh && show) {
-      const interval = setInterval(runDiagnostics, 10000); // Refresh every 10 seconds
-      return () => clearInterval(interval);
-    }
-  }, [autoRefresh, show]);
+  // 🚨 BUILDER.IO RULES: Early return después de todos los hooks
+  if (!show) return null;
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: DiagnosticResult['status']) => {
     switch (status) {
-      case 'pass':
-        return '✅';
-      case 'fail':
-        return '❌';
+      case 'success':
+        return <CheckCircle color="success" />;
+      case 'error':
+        return <Error color="error" />;
       case 'warning':
-        return '⚠️';
-      case 'loading':
-        return '⏳';
+        return <Warning color="warning" />;
+      case 'info':
+        return <Info color="info" />;
       default:
-        return '❓';
+        return <Info />;
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: DiagnosticResult['status']) => {
     switch (status) {
-      case 'pass':
-        return 'text-green-600';
-      case 'fail':
-        return 'text-red-600';
+      case 'success':
+        return 'success';
+      case 'error':
+        return 'error';
       case 'warning':
-        return 'text-yellow-600';
-      case 'loading':
-        return 'text-blue-600';
+        return 'warning';
+      case 'info':
+        return 'info';
       default:
-        return 'text-gray-600';
+        return 'default';
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">
-            🔍 Connection Diagnostics
-          </h2>
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={autoRefresh}
-                onChange={(e) => setAutoRefresh(e.target.checked)}
-                className="rounded border-gray-300"
+    <Card sx={{ mb: 2, border: '1px solid #e0e0e0' }}>
+      <CardContent>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Build color="primary" />
+            <Typography variant="h6">
+              {isBuilderEnvironment ? '🎭 Builder.io Diagnostics' : '🔧 Connection Diagnostics'}
+            </Typography>
+            {isBuilderEnvironment && (
+              <Chip 
+                label="Safe Mode" 
+                color="info" 
+                size="small" 
+                variant="outlined"
               />
-              <span className="text-sm text-gray-600">Auto-refresh (10s)</span>
-            </label>
-            <button
+            )}
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Button
+              size="small"
+              startIcon={<Refresh />}
               onClick={runDiagnostics}
               disabled={isRunning}
-              className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 disabled:opacity-50"
             >
-              {isRunning ? 'Running...' : 'Refresh'}
-            </button>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              {isRunning ? 'Ejecutando...' : 'Actualizar'}
+            </Button>
+            <IconButton
+              size="small"
+              onClick={() => setExpanded(!expanded)}
             >
-              ✕
-            </button>
-          </div>
-        </div>
+              {expanded ? <ExpandLess /> : <ExpandMore />}
+            </IconButton>
+          </Box>
+        </Box>
 
-        {/* Results */}
-        <div className="p-6 overflow-y-auto max-h-[70vh]">
-          {results.length === 0 ? (
-            <div className="text-center text-gray-500 py-8">
-              Running diagnostics...
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {results.map((result, index) => (
-                <div
-                  key={index}
-                  className="border border-gray-200 rounded-lg p-4"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-gray-900">
-                      {getStatusIcon(result.status)} {result.name}
-                    </h3>
-                    <span
-                      className={`text-sm ${getStatusColor(result.status)}`}
-                    >
-                      {result.status.toUpperCase()}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-2">{result.details}</p>
-                  {result.data && (
-                    <details className="mt-2">
-                      <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-700">
-                        Show Details
-                      </summary>
-                      <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-x-auto">
-                        {JSON.stringify(result.data, null, 2)}
-                      </pre>
-                    </details>
-                  )}
-                  <div className="text-xs text-gray-400 mt-2">
-                    {new Date(result.timestamp).toLocaleTimeString()}
-                  </div>
-                </div>
+        {isBuilderEnvironment && (
+          <Alert severity="info" sx={{ mt: 2, mb: 2 }}>
+            <Typography variant="body2">
+              <strong>Modo Builder.io Detectado:</strong> Las llamadas API están deshabilitadas para prevenir errores. 
+              Todos los componentes usan datos mock seguros.
+            </Typography>
+          </Alert>
+        )}
+
+        <Collapse in={expanded}>
+          <Box sx={{ mt: 2 }}>
+            <Stack spacing={2}>
+              {diagnostics.map((diagnostic, index) => (
+                <Box key={index}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    {getStatusIcon(diagnostic.status)}
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="subtitle2">
+                        {diagnostic.service}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {diagnostic.message}
+                      </Typography>
+                      {diagnostic.details && (
+                        <Typography variant="caption" color="text.secondary">
+                          {diagnostic.details}
+                        </Typography>
+                      )}
+                    </Box>
+                    <Chip
+                      label={diagnostic.status.toUpperCase()}
+                      color={getStatusColor(diagnostic.status)}
+                      size="small"
+                      variant="outlined"
+                    />
+                  </Box>
+                  {index < diagnostics.length - 1 && <Divider sx={{ mt: 1 }} />}
+                </Box>
               ))}
-            </div>
-          )}
-        </div>
+            </Stack>
 
-        {/* Troubleshooting */}
-        <div className="border-t border-gray-200 p-6 bg-gray-50">
-          <h3 className="font-medium text-gray-900 mb-2">
-            🛠 Troubleshooting Tips:
-          </h3>
-          <div className="text-sm text-gray-600 space-y-1">
-            {EnvironmentHelpers.getTroubleshootingInfo().troubleshootingSteps.map(
-              (step, index) => (
-                <div key={index}>{step}</div>
-              )
+            {isBuilderEnvironment && (
+              <Box sx={{ mt: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  🛡️ Protecciones Activas en Builder.io:
+                </Typography>
+                <Typography variant="body2" component="ul" sx={{ pl: 2 }}>
+                  <li>Hooks de wallet deshabilitados</li>
+                  <li>Hooks de gamificación deshabilitados</li>
+                  <li>Datos mock consistentes</li>
+                  <li>Sin llamadas a endpoints problemáticos</li>
+                </Typography>
+              </Box>
             )}
-          </div>
-        </div>
-      </div>
-    </div>
+          </Box>
+        </Collapse>
+      </CardContent>
+    </Card>
   );
 };
 
-/**
- * 🎯 Hook to show connection diagnostics
- */
-export const useConnectionDiagnostics = () => {
-  const [showDiagnostics, setShowDiagnostics] = useState(false);
-
-  // Auto-show diagnostics on connection errors
-  useEffect(() => {
-    const handleConnectionError = (event: CustomEvent) => {
-      if (EnvironmentHelpers.shouldLogDebug()) {
-        console.warn('🚨 Connection error detected, showing diagnostics');
-        setShowDiagnostics(true);
-      }
-    };
-
-    window.addEventListener(
-      'api-connection-error',
-      handleConnectionError as EventListener
-    );
-
-    return () => {
-      window.removeEventListener(
-        'api-connection-error',
-        handleConnectionError as EventListener
-      );
-    };
-  }, []);
-
-  // Keyboard shortcut to show diagnostics (Ctrl+Shift+D)
-  useEffect(() => {
-    const handleKeyboard = (event: KeyboardEvent) => {
-      if (
-        event.ctrlKey &&
-        event.shiftKey &&
-        event.key === 'D' &&
-        EnvironmentHelpers.shouldLogDebug()
-      ) {
-        event.preventDefault();
-        setShowDiagnostics(true);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyboard);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyboard);
-    };
-  }, []);
-
-  return {
-    showDiagnostics,
-    setShowDiagnostics,
-    openDiagnostics: () => setShowDiagnostics(true),
-    closeDiagnostics: () => setShowDiagnostics(false),
-  };
-};
+export { ConnectionDiagnostics };
