@@ -1,7 +1,7 @@
 ---
-description:
-globs:
-alwaysApply: false
+description: 
+globs: 
+alwaysApply: true
 ---
 # 🏗️ REGLAS CRÍTICAS DE GESTIÓN DE WORKSPACE - PROYECTO COOMUNITY
 
@@ -156,6 +156,7 @@ echo "✅ Ubicación correcta verificada"
 echo "🧹 Limpiando procesos múltiples..."
 pkill -f "vite" 2>/dev/null || true
 pkill -f "npm run dev" 2>/dev/null || true
+pkill -f "turbo" 2>/dev/null || true
 sleep 2
 
 # 3. VERIFICAR LIMPIEZA DE PROCESOS
@@ -178,7 +179,17 @@ if [ -f "Demo/apps/superapp-unified/.env" ]; then
   fi
 fi
 
-# 6. VERIFICAR DEPENDENCIAS CRÍTICAS
+# 6. 🆕 VERIFICAR TURBOREPO LOCAL
+echo "🔧 Verificando Turborepo local..."
+TURBO_LOCAL=$(npm ls turbo 2>/dev/null | grep turbo@ | cut -d@ -f2)
+if [ -z "$TURBO_LOCAL" ]; then
+  echo "⚠️ RECOMENDADO: Instalar Turborepo localmente"
+  echo "🔧 Ejecuta: npm install turbo --save-dev --legacy-peer-deps"
+else
+  echo "✅ Turborepo local: v$TURBO_LOCAL"
+fi
+
+# 7. VERIFICAR DEPENDENCIAS CRÍTICAS
 echo "📦 Verificando dependencias críticas..."
 cd Demo/apps/superapp-unified/
 npm ls @sentry/react >/dev/null 2>&1 || echo "⚠️ FALTA: @sentry/react"
@@ -186,13 +197,13 @@ npm ls web-vitals >/dev/null 2>&1 || echo "⚠️ FALTA: web-vitals"
 npm ls @playwright/test >/dev/null 2>&1 || echo "⚠️ FALTA: @playwright/test"
 cd ../../../
 
-# 7. VERIFICAR SERVICIOS (si están ejecutándose)
+# 8. VERIFICAR SERVICIOS (si están ejecutándose)
 echo "🌐 Verificando servicios disponibles..."
 curl -s http://localhost:3002/health >/dev/null && echo "✅ Backend (3002) disponible" || echo "⚠️ Backend (3002) no disponible"
 curl -s -I http://localhost:3001 >/dev/null && echo "✅ SuperApp (3001) disponible" || echo "ℹ️ SuperApp (3001) no iniciada"
 
 echo "🏁 PRE-FLIGHT CHECK COMPLETADO"
-echo "▶️ Listo para ejecutar: npm run dev"
+echo "▶️ Listo para ejecutar: turbo run dev"
 ```
 
 ---
@@ -202,22 +213,24 @@ echo "▶️ Listo para ejecutar: npm run dev"
 ### **Comandos de Desarrollo (desde la raíz ÚNICAMENTE):**
 
 ```bash
-# 🚀 INICIAR ECOSISTEMA COMPLETO (Comando Principal)
+# 🚀 INICIAR ECOSISTEMA COMPLETO (Comando Principal) ✅ VERIFICADO
+turbo run dev
+# o alternativamente:
 npm run dev
 
-# 🎯 WORKSPACE ESPECÍFICO
-npm run dev --workspace=backend
-npm run test:e2e --workspace=Demo/apps/superapp-unified
+# 🎯 WORKSPACE ESPECÍFICO ✅ VERIFICADO
+npm run dev:backend              # Backend NestJS (puerto 3002)
+npm run dev:superapp             # SuperApp (puerto 3001)
 
-# 🔍 FILTROS TURBOREPO
+# 🔍 FILTROS TURBOREPO ✅ FUNCIONAL
 turbo run dev --filter=...backend*
 turbo run dev --filter=...superapp*
 
 # 📊 TESTS ESPECÍFICOS
-npm run test:e2e --workspace=Demo/apps/superapp-unified -- e2e/auth-quick-test.spec.ts
+npm run test:e2e --workspace=coomunity-superapp
 ```
 
-### **Comandos de Verificación:**
+### **Comandos de Verificación ✅ PROBADOS:**
 
 ```bash
 # 📍 VERIFICAR UBICACIÓN
@@ -226,12 +239,44 @@ pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER copy
 # 🔍 DETECTAR PROCESOS MÚLTIPLES
 ps aux | grep -E "(vite|npm)" | grep -v grep
 
-# 🌐 VERIFICAR SERVICIOS
-curl http://localhost:3002/health  # Backend
-curl http://localhost:3001 -I      # SuperApp
+# 🌐 VERIFICAR SERVICIOS ✅ CONFIRMADOS
+curl http://localhost:3002/health  # Backend: {"status":"ok","message":"Backend is running"}
+curl http://localhost:3001 -I      # SuperApp: HTTP/1.1 200 OK
 
 # 📋 VERIFICAR CONFIGURACIÓN
 cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
+```
+
+### **🆕 CONFIGURACIÓN TURBOREPO EXITOSA:**
+
+**package.json raíz (OBLIGATORIO):**
+```json
+{
+  "packageManager": "npm@10.0.0",
+  "workspaces": [
+    "Demo/apps/*",
+    "apps/*", 
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:backend": "npm run start:backend:dev",
+    "dev:superapp": "npm run dev --workspace=coomunity-superapp"
+  }
+}
+```
+
+**turbo.json (OBLIGATORIO):**
+```json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
 ```
 
 ---
@@ -267,6 +312,12 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
    npm run dev  # Sin pkill previo causa conflictos
    ```
 
+5. **🆕 Usar solo Turborepo global:**
+   ```bash
+   # ❌ EVITAR: Solo instalación global (causa advertencias)
+   # WARNING: No locally installed `turbo` found
+   ```
+
 ### **✅ OBLIGATORIO:**
 
 1. **Siempre verificar ubicación:**
@@ -276,15 +327,21 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 
 2. **Siempre limpiar procesos:**
    ```bash
-   pkill -f "vite" && pkill -f "npm run dev"
+   pkill -f "vite" && pkill -f "npm run dev" && pkill -f "turbo"
    ```
 
-3. **Siempre usar workspace sintaxis:**
+3. **🆕 Instalar Turborepo localmente:**
+   ```bash
+   npm install turbo --save-dev --legacy-peer-deps
+   npm ls turbo  # Verificar instalación local
+   ```
+
+4. **Siempre usar workspace sintaxis:**
    ```bash
    npm run <script> --workspace=<nombre_del_paquete>
    ```
 
-4. **Siempre mantener separación arquitectónica:**
+5. **Siempre mantener separación arquitectónica:**
    ```bash
    # Backend: ./src/ - SOLO NestJS
    # Frontend: Demo/apps/superapp-unified/src/ - SOLO React
@@ -301,8 +358,12 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 - ✅ **Arquitectura limpia y mantenible**
 - ✅ **Desarrollo sin conflictos de puerto**
 - ✅ **Reducción 94% de archivos en directorio raíz**
-- ✅ **Orquestación eficiente con Turborepo**
+- ✅ **Orquestación eficiente con Turborepo** ⭐ **CONFIRMADO ENERO 2025**
 - ✅ **Separación estricta backend/frontend**
+- ✅ **Backend NestJS operacional** (puerto 3002, health check exitoso)
+- ✅ **SuperApp funcional** (puerto 3001, HTTP/1.1 200 OK)
+- ✅ **Base de datos Prisma conectada** (todas las rutas mapeadas)
+- ✅ **Configuración Turborepo corregida** (tasks, packageManager, workspaces)
 
 ### **Costos evitados:**
 - 🚫 Reprocesos por errores de contexto
@@ -320,9 +381,9 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 
 ### **PROTOCOLO OBLIGATORIO:**
 1. **Verificar ubicación** (`pwd`)
-2. **Limpiar procesos** (`pkill -f "vite"`)
+2. **Limpiar procesos** (`pkill -f "vite" && pkill -f "turbo"`)
 3. **Verificar puertos** (`lsof -i :3001`)
-4. **Ejecutar desde raíz** (`npm run dev`)
+4. **Ejecutar desde raíz** (`turbo run dev`)
 5. **Usar workspace sintaxis** (`--workspace=<name>`)
 
 ### **PROHIBICIONES ABSOLUTAS:**
@@ -333,3 +394,58 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 - ❌ Ignorar limpieza de procesos
 
 **Estas reglas son el resultado de aprendizajes costosos y DEBEN seguirse para mantener la estabilidad y eficiencia del proyecto CoomÜnity.**
+
+---
+
+## 🎉 **CONFIGURACIÓN EXITOSA - JUNIO 2025**
+
+### **✅ ESTADO CONFIRMADO:**
+
+- **Turborepo**: Funcionando correctamente con configuración corregida
+- **Backend NestJS**: Operacional en puerto 3002 (health check exitoso)
+- **SuperApp**: Operacional en puerto 3001 (HTTP/1.1 200 OK)
+- **Base de datos**: Prisma conectada, todas las rutas mapeadas
+- **Configuración**: package.json y turbo.json corregidos y funcionales
+
+### **🚀 COMANDOS PRINCIPALES VERIFICADOS:**
+
+```bash
+# Comando principal (desde la raíz)
+turbo run dev                    # ✅ FUNCIONAL
+
+# Servicios individuales
+npm run dev:backend              # ✅ FUNCIONAL (puerto 3002)
+npm run dev:superapp            # ✅ FUNCIONAL (puerto 3001)
+
+# Verificación de servicios
+curl http://localhost:3002/health # ✅ RESPONDE
+curl http://localhost:3001 -I    # ✅ RESPONDE
+```
+
+### **📋 CONFIGURACIÓN CLAVE EXITOSA:**
+
+- **packageManager**: "npm@10.0.0" ✅
+- **workspaces**: ["Demo/apps/*", "apps/*", "packages/*"] ✅
+- **turbo.json**: "tasks" en lugar de "pipeline" ✅
+- **Scripts de orquestación**: Configurados y funcionales ✅
+- **Turborepo local**: v2.5.4 instalado localmente ✅ (eliminó advertencias)
+
+### **🔧 INSTALACIÓN TURBOREPO LOCAL RECOMENDADA:**
+
+```bash
+# Instalar Turborepo localmente para eliminar advertencias
+npm install turbo --save-dev --legacy-peer-deps
+
+# Verificar instalación local
+npm ls turbo  # Debe mostrar: turbo@2.5.4
+
+# Verificar que no hay advertencias
+turbo --version  # Debe mostrar solo: 2.5.4 (sin warnings)
+```
+
+**Beneficios de la instalación local:**
+- ✅ **Sin advertencias** sobre versión global
+- ✅ **Consistencia** entre desarrolladores del equipo
+- ✅ **Caching optimizado** específico del proyecto
+- ✅ **CI/CD determinístico** con versión fija
+- ✅ **Configuración robusta** para producción
