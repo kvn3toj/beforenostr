@@ -1,1 +1,14 @@
-{"agentCanUpdateSnapshot": true}
+{
+  "agentCanUpdateSnapshot": true,
+  "install": "npm install",
+  "terminals": [
+    {
+      "name": "Backend NestJS",
+      "command": "npm run start:backend:dev"
+    },
+    {
+      "name": "SuperApp Frontend", 
+      "command": "cd Demo/apps/superapp-unified && npm run dev"
+    }
+  ]
+}
