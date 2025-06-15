@@ -11,6 +11,7 @@ import {
   Avatar,
   Tooltip,
   Divider,
+  Fade,
 } from '@mui/material';
 import {
   EmojiEvents as TrophyIcon,
@@ -24,442 +25,331 @@ import {
   Psychology as PsychologyIcon,
   CheckCircle as CheckIcon,
 } from '@mui/icons-material';
+import type { PlayerMetrics as PlayerMetricsType } from '../../../../hooks/interactive-video/useGamificationMetrics';
 
 interface PlayerMetricsProps {
-  gameState: {
-    score: number;
-    merits: number;
-    ondas: number;
-    questionsAnswered: number;
-    correctAnswers: number;
-    currentStreak: number;
-    maxStreak: number;
-    level: number;
-    experience: number;
-    experienceToNext: number;
-    totalWatchTime: number;
-    videosCompleted: number;
-    averageEngagement: number;
-    achievements: any[];
-    badges: any[];
-    sessionStartTime: Date;
-    sessionWatchTime: number;
-    sessionsThisWeek: number;
-    weeklyGoal: number;
+  metrics: PlayerMetricsType;
+  progressToNextLevel: {
+    current: number;
+    required: number;
+    percentage: number;
   };
+  accuracyRate: number;
+  showDetailed?: boolean;
+  compact?: boolean;
 }
 
-const PlayerMetrics: React.FC<PlayerMetricsProps> = ({ gameState }) => {
+const PlayerMetrics: React.FC<PlayerMetricsProps> = ({
+  metrics,
+  progressToNextLevel,
+  accuracyRate,
+  showDetailed = false,
+  compact = false,
+}) => {
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return num.toString();
+  };
+
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    return `${hours}h ${minutes}m`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
   };
 
-  const getEngagementColor = (engagement: number) => {
-    if (engagement >= 0.9) return '#10b981'; // green
-    if (engagement >= 0.7) return '#f59e0b'; // yellow
-    if (engagement >= 0.5) return '#f97316'; // orange
-    return '#ef4444'; // red
+  const getStreakColor = (streak: number) => {
+    if (streak >= 10) return '#7c3aed'; // Epic purple
+    if (streak >= 5) return '#f59e0b';  // Gold
+    if (streak >= 3) return '#10b981';  // Green
+    return '#6b7280'; // Gray
   };
 
-  const getStreakEmoji = (streak: number) => {
-    if (streak >= 10) return '🔥';
-    if (streak >= 5) return '⚡';
-    if (streak >= 3) return '✨';
-    return '💫';
+  const getAccuracyColor = (accuracy: number) => {
+    if (accuracy >= 90) return '#10b981'; // Excellent
+    if (accuracy >= 75) return '#f59e0b'; // Good
+    if (accuracy >= 60) return '#ef4444'; // Needs improvement
+    return '#6b7280'; // Starting
   };
 
-  return (
-    <Card sx={{ borderRadius: 3, overflow: 'hidden' }}>
-      {/* Header with gradient */}
+  if (compact) {
+    return (
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-          color: 'white',
-          p: 3,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          p: 1,
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          borderRadius: '12px',
+          backdropFilter: 'blur(10px)',
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            mb: 1,
-          }}
-        >
-          <TrophyIcon sx={{ mr: 1 }} />
-          Panel de Métricas del Jugador
-        </Typography>
-        <Typography variant="body2" sx={{ opacity: 0.9 }}>
-          Nivel {gameState.level} • {gameState.achievements.length} Logros •{' '}
-          {formatTime(gameState.totalWatchTime)} total
-        </Typography>
+        {/* Level */}
+        <Tooltip title={`Nivel ${metrics.level} - ${progressToNextLevel.percentage.toFixed(0)}% al siguiente nivel`}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <StarIcon sx={{ fontSize: 16, color: '#f59e0b' }} />
+            <Typography variant="caption" sx={{ fontWeight: 600, color: 'white' }}>
+              {metrics.level}
+            </Typography>
+          </Box>
+        </Tooltip>
+
+        {/* Mëritos */}
+        <Tooltip title="Mëritos - Recompensas por contribuir al Bien Común">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <DiamondIcon sx={{ fontSize: 16, color: '#7c3aed' }} />
+            <Typography variant="caption" sx={{ fontWeight: 600, color: 'white' }}>
+              {formatNumber(metrics.meritos)}
+            </Typography>
+          </Box>
+        </Tooltip>
+
+        {/* Öndas */}
+        <Tooltip title="Öndas - Energía vibracional positiva">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <BoltIcon sx={{ fontSize: 16, color: '#f59e0b' }} />
+            <Typography variant="caption" sx={{ fontWeight: 600, color: 'white' }}>
+              {formatNumber(metrics.ondas)}
+            </Typography>
+          </Box>
+        </Tooltip>
+
+        {/* Streak */}
+        {metrics.currentStreak > 0 && (
+          <Tooltip title={`Racha actual: ${metrics.currentStreak} respuestas correctas consecutivas`}>
+            <Chip
+              label={`${metrics.currentStreak}🔥`}
+              size="small"
+              sx={{
+                backgroundColor: getStreakColor(metrics.currentStreak),
+                color: 'white',
+                fontWeight: 600,
+                fontSize: '10px',
+                height: 20,
+              }}
+            />
+          </Tooltip>
+        )}
       </Box>
+    );
+  }
 
-      <CardContent sx={{ p: 3 }}>
-        {/* Core Metrics Grid */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Box textAlign="center">
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 800,
-                  background:
-                    'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  mb: 1,
-                }}
-              >
-                {(gameState.merits || 0).toLocaleString()}
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontWeight: 600, mb: 1 }}
-              >
-                Mëritos
-              </Typography>
-              <Chip
-                icon={<DiamondIcon />}
-                label="Moneda del ecosistema"
-                size="small"
-                sx={{
-                  bgcolor: '#fef3c7',
-                  color: '#92400e',
-                  '& .MuiChip-icon': { color: '#f59e0b' },
-                }}
-              />
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Box textAlign="center">
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 800,
-                  background:
-                    'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  mb: 1,
-                }}
-              >
-                {gameState.ondas}
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontWeight: 600, mb: 1 }}
-              >
-                Öndas
-              </Typography>
-              <Chip
-                icon={<BoltIcon />}
-                label="Energía vibracional"
-                size="small"
-                sx={{
-                  bgcolor: '#dcfce7',
-                  color: '#166534',
-                  '& .MuiChip-icon': { color: '#10b981' },
-                }}
-              />
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Box textAlign="center">
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 800,
-                  background:
-                    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  mb: 1,
-                }}
-              >
-                {gameState.level}
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontWeight: 600, mb: 1 }}
-              >
-                Nivel
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={(gameState.experience % 500) / 5}
-                sx={{
-                  height: 6,
-                  borderRadius: 3,
-                  bgcolor: '#e5e7eb',
-                  '& .MuiLinearProgress-bar': {
-                    borderRadius: 3,
-                    background:
-                      'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
-                  },
-                }}
-              />
-              <Typography variant="caption" color="text.secondary">
-                {gameState.experience % 500}/500 XP
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Box textAlign="center">
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 800,
-                  background:
-                    'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  mb: 1,
-                }}
-              >
-                {gameState.maxStreak}
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontWeight: 600, mb: 1 }}
-              >
-                Mejor Racha
-              </Typography>
-              {gameState.currentStreak > 0 && (
-                <Chip
-                  icon={<span>{getStreakEmoji(gameState.currentStreak)}</span>}
-                  label={`Actual: ${gameState.currentStreak}`}
-                  size="small"
-                  sx={{
-                    bgcolor: '#fee2e2',
-                    color: '#991b1b',
-                    fontWeight: 600,
-                  }}
-                />
-              )}
-            </Box>
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 3 }} />
-
-        {/* Engagement and Performance Metrics */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box>
-              <Typography
-                variant="h6"
-                sx={{
-                  mb: 2,
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <PsychologyIcon sx={{ mr: 1, color: '#6366f1' }} />
-                Nivel de Compromiso
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <Box sx={{ flexGrow: 1, mr: 2 }}>
-                  <LinearProgress
-                    variant="determinate"
-                    value={gameState.averageEngagement * 100}
-                    sx={{
-                      height: 12,
-                      borderRadius: 6,
-                      bgcolor: '#f3f4f6',
-                      '& .MuiLinearProgress-bar': {
-                        borderRadius: 6,
-                        backgroundColor: getEngagementColor(
-                          gameState.averageEngagement
-                        ),
-                      },
-                    }}
-                  />
-                </Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, minWidth: 60 }}>
-                  {Math.round(gameState.averageEngagement * 100)}%
-                </Typography>
-              </Box>
-              <Typography variant="body2" color="text.secondary">
-                {gameState.questionsAnswered > 0
-                  ? `${gameState.correctAnswers}/${gameState.questionsAnswered} respuestas correctas`
-                  : 'Sin preguntas respondidas aún'}
-              </Typography>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box>
-              <Typography
-                variant="h6"
-                sx={{
-                  mb: 2,
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <TimerIcon sx={{ mr: 1, color: '#10b981' }} />
-                Progreso Semanal
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <Box sx={{ flexGrow: 1, mr: 2 }}>
-                  <LinearProgress
-                    variant="determinate"
-                    value={
-                      (gameState.sessionsThisWeek / gameState.weeklyGoal) * 100
-                    }
-                    sx={{
-                      height: 12,
-                      borderRadius: 6,
-                      bgcolor: '#f3f4f6',
-                      '& .MuiLinearProgress-bar': {
-                        borderRadius: 6,
-                        background:
-                          'linear-gradient(90deg, #10b981 0%, #34d399 100%)',
-                      },
-                    }}
-                  />
-                </Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, minWidth: 60 }}>
-                  {gameState.sessionsThisWeek}/{gameState.weeklyGoal}
-                </Typography>
-              </Box>
-              <Typography variant="body2" color="text.secondary">
-                {gameState.weeklyGoal - gameState.sessionsThisWeek > 0
-                  ? `Faltan ${gameState.weeklyGoal - gameState.sessionsThisWeek} sesiones para completar tu meta`
-                  : '¡Meta semanal completada! 🎉'}
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 3 }} />
-
-        {/* Learning Stats */}
-        <Box>
+  return (
+    <Fade in={true} timeout={500}>
+      <Box
+        sx={{
+          p: 3,
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '16px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+          backdropFilter: 'blur(10px)',
+        }}
+      >
+        {/* Header */}
+        <Box sx={{ mb: 3 }}>
           <Typography
             variant="h6"
             sx={{
-              mb: 2,
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
+              fontWeight: 700,
+              color: '#1f2937',
+              mb: 1,
             }}
           >
-            <SchoolIcon sx={{ mr: 1, color: '#8b5cf6' }} />
-            Estadísticas de Aprendizaje
+            Progreso Ayni
           </Typography>
-
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 6, md: 3 }}>
-              <Box textAlign="center">
-                <Typography
-                  variant="h5"
-                  color="primary"
-                  sx={{ fontWeight: 700, mb: 0.5 }}
-                >
-                  {gameState.videosCompleted}
-                </Typography>
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                  Videos Completados
-                </Typography>
-              </Box>
-            </Grid>
-
-            <Grid size={{ xs: 6, md: 3 }}>
-              <Box textAlign="center">
-                <Typography
-                  variant="h5"
-                  color="success.main"
-                  sx={{ fontWeight: 700, mb: 0.5 }}
-                >
-                  {formatTime(gameState.totalWatchTime)}
-                </Typography>
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                  Tiempo Total
-                </Typography>
-              </Box>
-            </Grid>
-
-            <Grid size={{ xs: 6, md: 3 }}>
-              <Box textAlign="center">
-                <Typography
-                  variant="h5"
-                  color="warning.main"
-                  sx={{ fontWeight: 700, mb: 0.5 }}
-                >
-                  {gameState.achievements.length}
-                </Typography>
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                  Logros Desbloqueados
-                </Typography>
-              </Box>
-            </Grid>
-
-            <Grid size={{ xs: 6, md: 3 }}>
-              <Box textAlign="center">
-                <Typography
-                  variant="h5"
-                  color="error.main"
-                  sx={{ fontWeight: 700, mb: 0.5 }}
-                >
-                  {gameState.badges.length}
-                </Typography>
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                  Insignias Activas
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
-
-        {/* Session Info */}
-        <Box sx={{ mt: 3, p: 2, bgcolor: '#f8fafc', borderRadius: 2 }}>
           <Typography
-            variant="subtitle2"
-            sx={{ mb: 1, fontWeight: 600, color: '#1e293b' }}
+            variant="body2"
+            sx={{
+              color: '#6b7280',
+              fontWeight: 500,
+            }}
           >
-            📊 Sesión Actual
+            Tu viaje de aprendizaje consciente
           </Typography>
-          <Stack direction="row" spacing={2} flexWrap="wrap">
-            <Chip
-              icon={<TimerIcon />}
-              label={`Iniciada: ${gameState.sessionStartTime.toLocaleTimeString()}`}
-              size="small"
-              variant="outlined"
-            />
-            <Chip
-              icon={<TrendingIcon />}
-              label={`Tiempo: ${Math.floor(gameState.sessionWatchTime / 60)}m`}
-              size="small"
-              variant="outlined"
-            />
-            <Chip
-              icon={<CheckIcon />}
-              label={`Precisión: ${gameState.questionsAnswered > 0 ? Math.round((gameState.correctAnswers / gameState.questionsAnswered) * 100) : 0}%`}
-              size="small"
-              variant="outlined"
-            />
-          </Stack>
         </Box>
-      </CardContent>
-    </Card>
+
+        {/* Level and Progress */}
+        <Box sx={{ mb: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <StarIcon sx={{ fontSize: 20, color: '#f59e0b' }} />
+              <Typography variant="h6" sx={{ fontWeight: 700, color: '#1f2937' }}>
+                Nivel {metrics.level}
+              </Typography>
+            </Box>
+            <Typography variant="body2" sx={{ color: '#6b7280', fontWeight: 500 }}>
+              {progressToNextLevel.current} / {progressToNextLevel.required} EXP
+            </Typography>
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={progressToNextLevel.percentage}
+            sx={{
+              height: 8,
+              borderRadius: 4,
+              backgroundColor: '#f3f4f6',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: '#7c3aed',
+                borderRadius: 4,
+              },
+            }}
+          />
+        </Box>
+
+        {/* Main Metrics */}
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 3 }}>
+          {/* Mëritos */}
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: '#f8fafc',
+              borderRadius: '12px',
+              textAlign: 'center',
+              border: '1px solid #e2e8f0',
+            }}
+          >
+            <DiamondIcon sx={{ fontSize: 24, color: '#7c3aed', mb: 1 }} />
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#1f2937' }}>
+              {formatNumber(metrics.meritos)}
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#6b7280', fontWeight: 500 }}>
+              Mëritos
+            </Typography>
+          </Box>
+
+          {/* Öndas */}
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: '#f8fafc',
+              borderRadius: '12px',
+              textAlign: 'center',
+              border: '1px solid #e2e8f0',
+            }}
+          >
+            <BoltIcon sx={{ fontSize: 24, color: '#f59e0b', mb: 1 }} />
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#1f2937' }}>
+              {formatNumber(metrics.ondas)}
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#6b7280', fontWeight: 500 }}>
+              Öndas
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Performance Metrics */}
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: showDetailed ? 3 : 0 }}>
+          {/* Accuracy */}
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                color: getAccuracyColor(accuracyRate),
+                mb: 0.5,
+              }}
+            >
+              {accuracyRate.toFixed(0)}%
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#6b7280', fontWeight: 500 }}>
+              Precisión
+            </Typography>
+          </Box>
+
+          {/* Current Streak */}
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                color: getStreakColor(metrics.currentStreak),
+                mb: 0.5,
+              }}
+            >
+              {metrics.currentStreak}
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#6b7280', fontWeight: 500 }}>
+              Racha Actual
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Detailed Stats */}
+        {showDetailed && (
+          <Box
+            sx={{
+              pt: 3,
+              borderTop: '1px solid #e2e8f0',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 2,
+            }}
+          >
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                {metrics.questionsAnswered}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#6b7280' }}>
+                Preguntas Respondidas
+              </Typography>
+            </Box>
+
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                {metrics.correctAnswers}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#6b7280' }}>
+                Respuestas Correctas
+              </Typography>
+            </Box>
+
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                {formatTime(metrics.totalWatchTime)}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#6b7280' }}>
+                Tiempo de Estudio
+              </Typography>
+            </Box>
+
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                {formatNumber(metrics.experiencePoints)}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#6b7280' }}>
+                Experiencia Total
+              </Typography>
+            </Box>
+          </Box>
+        )}
+
+        {/* Ayni Philosophy Note */}
+        <Box
+          sx={{
+            mt: 3,
+            p: 2,
+            backgroundColor: '#f0f9ff',
+            borderRadius: '8px',
+            border: '1px solid #bae6fd',
+          }}
+        >
+          <Typography
+            variant="caption"
+            sx={{
+              color: '#0369a1',
+              fontWeight: 500,
+              fontStyle: 'italic',
+              textAlign: 'center',
+              display: 'block',
+            }}
+          >
+            "En el equilibrio del Ayni, cada respuesta correcta fortalece el Bien Común"
+          </Typography>
+        </Box>
+      </Box>
+    </Fade>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { validateInvitationCode, checkEmailAvailability, InvitationValidationResult } from '../features/beta/InvitationValidator';
@@ -43,6 +43,54 @@ export const useInvitationFlow = (): UseInvitationFlowReturn => {
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [validationResult, setValidationResult] = useState<InvitationValidationResult | null>(null);
+
+  // ✅ NIVEL 1: FUNCIONES BÁSICAS SIN DEPENDENCIAS
+  /**
+   * 🔄 Reiniciar flujo completo
+   */
+  const resetFlow = useCallback(() => {
+    setCurrentStep(0);
+    setValidationResult(null);
+    setLoading(false);
+  }, []);
+
+  /**
+   * ➡️ Avanzar al siguiente paso
+   */
+  const nextStep = useCallback(() => {
+    setCurrentStep(prev => prev + 1);
+  }, []);
+
+  /**
+   * ⬅️ Retroceder al paso anterior
+   */
+  const previousStep = useCallback(() => {
+    setCurrentStep(prev => Math.max(0, prev - 1));
+  }, []);
+
+  // ✅ NIVEL 2: FUNCIONES DE VALIDACIÓN (DEPENDEN SOLO DE HOOKS EXTERNOS)
+  /**
+   * 📧 Verificar disponibilidad de email
+   */
+  const checkEmail = useCallback(async (email: string): Promise<boolean> => {
+    if (!email.trim()) {
+      return true; // No validar email vacío aquí
+    }
+
+    try {
+      const result = await checkEmailAvailability(email);
+      
+      if (!result.available) {
+        toast.error(result.message || 'Este email ya está registrado');
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.warn('[useInvitationFlow] Email check failed:', error);
+      return true; // Permitir continuar si la verificación falla
+    }
+  }, []);
 
   /**
    * 🎫 Validar código de invitación
@@ -97,29 +145,7 @@ export const useInvitationFlow = (): UseInvitationFlowReturn => {
     }
   }, [trackEvent]);
 
-  /**
-   * 📧 Verificar disponibilidad de email
-   */
-  const checkEmail = useCallback(async (email: string): Promise<boolean> => {
-    if (!email.trim()) {
-      return true; // No validar email vacío aquí
-    }
-
-    try {
-      const result = await checkEmailAvailability(email);
-      
-      if (!result.available) {
-        toast.error(result.message || 'Este email ya está registrado');
-        return false;
-      }
-      
-      return true;
-    } catch (error) {
-      console.warn('[useInvitationFlow] Email check failed:', error);
-      return true; // Permitir continuar si la verificación falla
-    }
-  }, []);
-
+  // ✅ NIVEL 3: FUNCIONES COMPLEJAS (DEPENDEN DE HOOKS EXTERNOS)
   /**
    * 📝 Enviar registro completo
    */
@@ -192,27 +218,11 @@ export const useInvitationFlow = (): UseInvitationFlowReturn => {
     }
   }, [navigate, trackEvent]);
 
-  /**
-   * ➡️ Avanzar al siguiente paso
-   */
-  const nextStep = useCallback(() => {
-    setCurrentStep(prev => prev + 1);
-  }, []);
-
-  /**
-   * ⬅️ Retroceder al paso anterior
-   */
-  const previousStep = useCallback(() => {
-    setCurrentStep(prev => Math.max(0, prev - 1));
-  }, []);
-
-  /**
-   * 🔄 Reiniciar flujo completo
-   */
-  const resetFlow = useCallback(() => {
-    setCurrentStep(0);
-    setValidationResult(null);
-    setLoading(false);
+  // ✅ CLEANUP EFFECT OBLIGATORIO
+  useEffect(() => {
+    return () => {
+      console.log('🧹 Invitation flow cleanup');
+    };
   }, []);
 
   return {

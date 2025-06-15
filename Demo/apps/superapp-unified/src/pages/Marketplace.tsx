@@ -1,6 +1,8 @@
 import React from 'react';
 import MarketplaceMain from '../components/modules/marketplace/MarketplaceMain';
 
-export const Marketplace: React.FC = () => {
+const Marketplace: React.FC = () => {
   return <MarketplaceMain />;
-}; 
+};
+
+export default Marketplace; 

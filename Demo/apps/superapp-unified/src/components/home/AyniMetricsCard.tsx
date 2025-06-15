@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  Card,
-  CardContent,
   Typography,
   Grid,
   Box,
@@ -9,8 +7,6 @@ import {
   Chip,
   Stack,
   Avatar,
-  alpha,
-  useTheme,
 } from '@mui/material';
 import {
   AutoAwesome,
@@ -23,6 +19,10 @@ import {
   Air,
   Star,
 } from '@mui/icons-material';
+
+// Import our new design system components
+import { AyniCard } from '../ui';
+import { cn, getElementColor, elementColors } from '../../utils/styles';
 
 interface ElementStats {
   fuego: number;
@@ -44,104 +44,71 @@ interface AyniMetricsProps {
   isConnected?: boolean;
 }
 
-// 🎨 Componente para iconos de elementos
+// Element configuration with CoomÜnity philosophy
+const elementConfig = {
+  fuego: {
+    name: 'Fuego',
+    icon: <LocalFireDepartment />,
+    color: elementColors.fuego.primary,
+    description: 'Pasión y acción',
+  },
+  agua: {
+    name: 'Agua',
+    icon: <Waves />,
+    color: elementColors.agua.primary,
+    description: 'Fluir y adaptabilidad',
+  },
+  tierra: {
+    name: 'Tierra',
+    icon: <Park />,
+    color: elementColors.tierra.primary,
+    description: 'Estabilidad y confianza',
+  },
+  aire: {
+    name: 'Aire',
+    icon: <Air />,
+    color: elementColors.aire.primary,
+    description: 'Comunicación e ideas',
+  },
+};
+
 const ElementIcon: React.FC<{
-  element: string;
+  element: keyof typeof elementConfig;
   value: number;
 }> = ({ element, value }) => {
-  const theme = useTheme();
-
-  const getElementData = (element: string) => {
-    switch (element) {
-      case 'fuego':
-        return {
-          color: '#ef4444',
-          icon: <LocalFireDepartment />,
-          name: 'Fuego',
-          description: 'Pasión y acción',
-        };
-      case 'agua':
-        return {
-          color: '#06b6d4',
-          icon: <Waves />,
-          name: 'Agua',
-          description: 'Fluir y adaptabilidad',
-        };
-      case 'tierra':
-        return {
-          color: '#78716c',
-          icon: <Park />,
-          name: 'Tierra',
-          description: 'Estabilidad y confianza',
-        };
-      case 'aire':
-        return {
-          color: '#8b5cf6',
-          icon: <Air />,
-          name: 'Aire',
-          description: 'Comunicación e ideas',
-        };
-      default:
-        return {
-          color: theme.palette.primary.main,
-          icon: <Star />,
-          name: 'Elemento',
-          description: 'Equilibrio',
-        };
-    }
-  };
-
-  const elementData = getElementData(element);
+  const elementData = elementConfig[element];
 
   return (
-    <Box sx={{ textAlign: 'center', position: 'relative' }}>
+    <Box className="text-center relative">
       <Box
-        sx={{
-          width: 64,
-          height: 64,
-          borderRadius: '50%',
-          background: `conic-gradient(${elementData.color} ${
-            value * 3.6
-          }deg, ${alpha(elementData.color, 0.1)} 0deg)`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          mb: 1,
-          cursor: 'pointer',
-          transition: 'transform 0.2s ease-in-out',
-          '&:hover': {
-            transform: 'scale(1.05)',
-          },
+        className={cn(
+          "w-16 h-16 rounded-full flex items-center justify-center relative mb-2",
+          "cursor-pointer transition-transform duration-200 hover:scale-105"
+        )}
+        style={{
+          background: `conic-gradient(${elementData.color} ${value * 3.6}deg, ${elementData.color}20 0deg)`,
         }}
       >
         <Box
-          sx={{
-            width: 52,
-            height: 52,
-            borderRadius: '50%',
-            bgcolor: 'background.paper',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: elementData.color,
-            fontSize: 24,
-          }}
+          className={cn(
+            "w-13 h-13 rounded-full bg-white flex items-center justify-center",
+            "text-2xl"
+          )}
+          style={{ color: elementData.color }}
         >
           {elementData.icon}
         </Box>
       </Box>
       <Typography
         variant="caption"
-        sx={{
-          textTransform: 'capitalize',
-          fontWeight: 'bold',
-          display: 'block',
-        }}
+        className="coomunity-caption font-bold capitalize block mb-1"
       >
         {elementData.name}
       </Typography>
-      <Typography variant="caption" display="block" color="text.secondary">
+      <Typography 
+        variant="caption" 
+        className="coomunity-caption text-coomunity-500"
+      >
         {value}%
       </Typography>
     </Box>
@@ -160,54 +127,42 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
   isLoading = false,
   isConnected = true,
 }) => {
-  const theme = useTheme();
-
   return (
-    <Card
-      sx={{
-        height: '100%',
-        background: `linear-gradient(135deg, ${alpha(
-          theme.palette.primary.main,
-          0.02
-        )} 0%, ${alpha(theme.palette.secondary.main, 0.02)} 100%)`,
-        border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+    <AyniCard
+      className={cn(
+        "h-full relative overflow-hidden",
+        "bg-gradient-to-br from-coomunity-50 via-white to-purple-50"
+      )}
     >
-      {/* Elementos decorativos de fondo */}
+      {/* Decorative background elements using design tokens */}
       <Box
-        sx={{
-          position: 'absolute',
-          top: -100,
-          right: -100,
-          width: 200,
-          height: 200,
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${alpha(
-            theme.palette.primary.main,
-            0.05
-          )} 0%, transparent 70%)`,
-        }}
+        className={cn(
+          "absolute -top-24 -right-24 w-48 h-48 rounded-full",
+          "bg-gradient-radial from-coomunity-100/20 to-transparent"
+        )}
       />
 
-      <CardContent sx={{ p: 3, position: 'relative', zIndex: 1 }}>
-        <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
+      <Box className="p-6 relative z-10 space-y-6">
+        {/* Header section with design tokens */}
+        <Stack direction="row" alignItems="center" spacing={2}>
           <Avatar
-            sx={{
-              bgcolor: theme.palette.primary.main,
-              background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              width: 48,
-              height: 48,
-            }}
+            className={cn(
+              "w-12 h-12 bg-gradient-coomunity"
+            )}
           >
             <AutoAwesome />
           </Avatar>
-          <Box>
-            <Typography variant="h5" fontWeight="bold">
+          <Box className="flex-1">
+            <Typography 
+              variant="h5" 
+              className="coomunity-h5 font-bold text-coomunity-900"
+            >
               Tu Progreso CoomÜnity
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography 
+              variant="body2" 
+              className="coomunity-body-sm text-coomunity-600"
+            >
               Balance Ayni y Contribución al Bien Común
             </Typography>
           </Box>
@@ -217,194 +172,198 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
               color="warning"
               size="small"
               variant="outlined"
+              className="font-medium"
             />
           )}
         </Stack>
 
-        {/* 🎯 Métricas principales */}
-        <Grid container spacing={3} sx={{ mb: 3 }}>
+        {/* Main metrics using design tokens */}
+        <Grid container spacing={3}>
           <Grid item xs={6} sm={3}>
-            <Box textAlign="center">
+            <Box className="text-center">
               <Typography
                 variant="h3"
-                fontWeight="bold"
-                sx={{
-                  background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
+                className={cn(
+                  "coomunity-h3 font-bold text-gradient-coomunity",
+                  "flex items-center justify-center"
+                )}
               >
                 {ondas.toLocaleString()}
               </Typography>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                fontWeight="bold"
+                className="coomunity-body-sm text-coomunity-700 font-bold"
               >
                 Öndas Acumuladas
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-500"
+              >
                 Energía vibracional
               </Typography>
             </Box>
           </Grid>
+          
           <Grid item xs={6} sm={3}>
-            <Box textAlign="center">
+            <Box className="text-center">
               <Typography
                 variant="h3"
-                fontWeight="bold"
-                color="warning.main"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className={cn(
+                  "coomunity-h3 font-bold text-gold-600",
+                  "flex items-center justify-center gap-2"
+                )}
               >
-                <EmojiEvents sx={{ fontSize: '0.8em', mr: 0.5 }} />
+                <EmojiEvents className="text-3xl" />
                 {meritos}
               </Typography>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                fontWeight="bold"
+                className="coomunity-body-sm text-coomunity-700 font-bold"
               >
                 Mëritos
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-500"
+              >
                 Logros por Bien Común
               </Typography>
             </Box>
           </Grid>
+          
           <Grid item xs={6} sm={3}>
-            <Box textAlign="center">
+            <Box className="text-center">
               <Typography
                 variant="h3"
-                fontWeight="bold"
-                color="success.main"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className={cn(
+                  "coomunity-h3 font-bold text-green-600",
+                  "flex items-center justify-center gap-2"
+                )}
               >
-                <Favorite sx={{ fontSize: '0.8em', mr: 0.5 }} />
+                <Favorite className="text-3xl" />
                 {Math.round(balanceAyni * 100)}%
               </Typography>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                fontWeight="bold"
+                className="coomunity-body-sm text-coomunity-700 font-bold"
               >
                 Balance Ayni
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-500"
+              >
                 Dar y recibir
               </Typography>
             </Box>
           </Grid>
+          
           <Grid item xs={6} sm={3}>
-            <Box textAlign="center">
+            <Box className="text-center">
               <Typography
                 variant="h3"
-                fontWeight="bold"
-                color="error.main"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className={cn(
+                  "coomunity-h3 font-bold text-red-600",
+                  "flex items-center justify-center gap-2"
+                )}
               >
-                <Psychology sx={{ fontSize: '0.8em', mr: 0.5 }} />
+                <Psychology className="text-3xl" />
                 {bienComunContributions}
               </Typography>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                fontWeight="bold"
+                className="coomunity-body-sm text-coomunity-700 font-bold"
               >
                 Bien Común
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-500"
+              >
                 Contribuciones
               </Typography>
             </Box>
           </Grid>
         </Grid>
 
-        {/* 🎯 Progreso de nivel */}
-        <Box sx={{ mb: 3 }}>
+        {/* Level progress using design tokens */}
+        <Box className="space-y-3">
           <Stack
             direction="row"
             justifyContent="space-between"
             alignItems="center"
-            sx={{ mb: 1 }}
           >
             <Chip
               label={ayniLevel}
               color="primary"
               variant="outlined"
-              sx={{
-                fontWeight: 'bold',
-                background: `linear-gradient(45deg, ${alpha(
-                  theme.palette.primary.main,
-                  0.1
-                )}, ${alpha(theme.palette.secondary.main, 0.1)})`,
-              }}
+              className={cn(
+                "font-bold bg-gradient-to-r from-coomunity-50 to-purple-50",
+                "border-coomunity-300"
+              )}
             />
-            <Typography variant="body2" color="text.secondary">
-              Progreso a <strong>{nextLevel}</strong>
+            <Typography 
+              variant="body2" 
+              className="coomunity-body-sm text-coomunity-600"
+            >
+              Progreso a <strong className="text-coomunity-800">{nextLevel}</strong>
             </Typography>
           </Stack>
+          
           <LinearProgress
             variant="determinate"
             value={ayniProgress}
+            className="h-3 rounded-full"
             sx={{
-              height: 12,
-              borderRadius: 6,
-              bgcolor: alpha(theme.palette.primary.main, 0.1),
+              backgroundColor: 'var(--color-coomunity-100)',
               '& .MuiLinearProgress-bar': {
-                background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                borderRadius: 6,
+                background: 'linear-gradient(90deg, var(--color-coomunity-500), var(--color-coomunity-600))',
+                borderRadius: '6px',
               },
             }}
           />
+          
           <Typography
             variant="caption"
-            color="text.secondary"
-            sx={{ mt: 0.5, display: 'block' }}
+            className="coomunity-caption text-coomunity-500 block"
           >
             {ayniProgress}% completado • Continúa contribuyendo al Bien Común
           </Typography>
         </Box>
 
-        {/* 🎯 Elementos de equilibrio */}
-        <Box>
+        {/* Elemental balance using design tokens */}
+        <Box className="space-y-4">
           <Typography
             variant="subtitle1"
-            fontWeight="bold"
-            gutterBottom
-            sx={{ mb: 2 }}
+            className="coomunity-h6 font-bold text-coomunity-900"
           >
             Equilibrio Elemental
           </Typography>
+          
           <Grid container spacing={2} justifyContent="center">
             {Object.entries(elementos).map(([elemento, valor]) => (
               <Grid item key={elemento}>
-                <ElementIcon element={elemento} value={valor} />
+                <ElementIcon 
+                  element={elemento as keyof typeof elementConfig} 
+                  value={valor} 
+                />
               </Grid>
             ))}
           </Grid>
+          
           <Typography
             variant="caption"
-            color="text.secondary"
-            sx={{ mt: 2, display: 'block', textAlign: 'center' }}
+            className={cn(
+              "coomunity-caption text-coomunity-500 block text-center",
+              "leading-relaxed"
+            )}
           >
             Los cuatro elementos representan diferentes aspectos de tu
             desarrollo personal y contribución a la comunidad
           </Typography>
         </Box>
-      </CardContent>
-    </Card>
+      </Box>
+    </AyniCard>
   );
 };

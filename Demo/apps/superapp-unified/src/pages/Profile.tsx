@@ -629,7 +629,7 @@ const ActivityTimeline: React.FC<{ activities: ActivityItem[] }> = ({
   </List>
 );
 
-export const Profile: React.FC = () => {
+const Profile: React.FC = () => {
   const theme = useTheme();
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -2283,3 +2283,5 @@ export const Profile: React.FC = () => {
     </Container>
   );
 };
+
+export default Profile;

@@ -270,6 +270,7 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   return (
     <>
       <Card
+        data-testid="challenge-card"
         sx={{
           height: getCardHeight(),
           display: 'flex',
@@ -430,6 +431,7 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
           {/* Title and description */}
           <Box sx={{ mb: 2 }}>
             <Typography
+              data-testid="challenge-title"
               variant={isMinimal ? 'subtitle1' : isFeatured ? 'h5' : 'h6'}
               component="h3"
               gutterBottom
@@ -447,6 +449,7 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
             </Typography>
 
             <Typography
+              data-testid="challenge-description"
               variant="body2"
               color="text.secondary"
               sx={{

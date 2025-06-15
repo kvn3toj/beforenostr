@@ -40,7 +40,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 
-export const Settings: React.FC = () => {
+const Settings: React.FC = () => {
   const theme = useTheme();
   const { user, updateProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);

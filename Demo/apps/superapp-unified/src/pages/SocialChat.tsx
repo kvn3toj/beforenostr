@@ -5,7 +5,7 @@ import ChatArea from '../components/modules/social/components/ChatArea';
 export const SocialChat: React.FC = () => {
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <ChatArea />
+      <ChatArea matchId="" currentUserId="" />
     </Box>
   );
 };

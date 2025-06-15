@@ -8,13 +8,18 @@ import {
   Box,
   useTheme,
 } from '@mui/material';
-import { PlayArrow, BarChart, Groups, ShoppingCart } from '@mui/icons-material';
+import { PlayArrow, BarChart, Groups, ShoppingCart, SwapHoriz } from '@mui/icons-material';
 
 const MOBILE_NAV_ITEMS = [
   {
     label: 'ÜPlay',
     value: '/play',
     icon: <PlayArrow />,
+  },
+  {
+    label: 'LETS',
+    value: '/lets',
+    icon: <SwapHoriz />,
   },
   {
     label: 'ÜStats',

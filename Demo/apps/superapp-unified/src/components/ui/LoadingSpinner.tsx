@@ -194,4 +194,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       </Typography>
     </Box>
   );
-}; 
+};
+
+// ✅ SOLUCIÓN: Añadir exportación por defecto para React.lazy()
+export default LoadingSpinner; 

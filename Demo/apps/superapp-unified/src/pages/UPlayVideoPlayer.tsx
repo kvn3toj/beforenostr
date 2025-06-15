@@ -375,7 +375,7 @@ const UPlayVideoPlayer: React.FC = () => {
         
         // Crear video fallback basado en el videoId
         const fallbackVideo = {
-          id: videoId,
+          id: videoId || 'fallback-video',
           title: 'Video de Demostración',
           description: 'Este es un video de demostración mientras se carga el contenido real.',
           url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',

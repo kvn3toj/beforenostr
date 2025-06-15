@@ -89,9 +89,104 @@ const queryKeys = {
 export const useWalletData = (enabled: boolean = true) => {
   const { user } = useAuth();
 
+  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
+  const isBuilderEnvironment = typeof window !== 'undefined' && 
+    (window.location.hostname.includes('builder.io') || 
+     window.location.port === '48752' ||
+     window.location.hostname.includes('preview'));
+
   return useQuery({
     queryKey: queryKeys.walletData(user?.id || 'anonymous'),
     queryFn: async (): Promise<WalletData> => {
+      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
+      if (isBuilderEnvironment) {
+        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para WalletIntegration');
+        const mockBalance = 185000;
+        const mockUcoins = 650;
+        
+        return {
+          balance: mockBalance,
+          currency: 'COP',
+          ucoins: mockUcoins,
+          meritos: 485,
+          ondas: 1250,
+          pendingBalance: 25000,
+          monthlyChange: 12.5,
+          ayniLevel: 68,
+          collaborationScore: 8.7,
+          communityRank: '#1,247',
+          accounts: [
+            {
+              id: 'principal',
+              name: 'Cuenta Principal CoomÜnity',
+              type: 'checking',
+              balance: mockBalance,
+              currency: 'COP',
+              primary: true,
+            },
+            {
+              id: 'ucoins',
+              name: 'ÜCoins Wallet',
+              type: 'crypto',
+              balance: mockUcoins,
+              currency: 'UC',
+              primary: false,
+            },
+            {
+              id: 'ahorros',
+              name: 'Ahorros Ayni',
+              type: 'savings',
+              balance: Math.floor(mockBalance * 0.3),
+              currency: 'COP',
+              primary: false,
+            },
+          ],
+          recentTransactions: [
+            {
+              id: '1',
+              type: 'income',
+              amount: 18500,
+              currency: 'COP',
+              description: 'Recompensa por colaboración CoomÜnity',
+              date: new Date(Date.now() - 86400000).toISOString(),
+              status: 'completed',
+              ayniScore: 9,
+              bienComunContribution: true,
+              category: 'reward',
+            },
+            {
+              id: '2',
+              type: 'expense',
+              amount: 9250,
+              currency: 'COP',
+              description: 'Intercambio de servicios',
+              date: new Date(Date.now() - 172800000).toISOString(),
+              status: 'completed',
+              ayniScore: 8,
+              bienComunContribution: true,
+              category: 'exchange',
+            },
+          ],
+          paymentMethods: [
+            {
+              id: '1',
+              name: 'CoomÜnity Card',
+              type: 'credit',
+              lastFour: '4721',
+              primary: true,
+            },
+            {
+              id: '2',
+              name: 'Nequi',
+              type: 'digital',
+              lastFour: '8923',
+              primary: false,
+            },
+          ],
+        };
+      }
+
+      // 🔗 En desarrollo normal, intentar llamada API con fallback
       try {
         // 🔗 Intentar conectar con el backend real
         const response = await apiService.get(`/wallets/user/${user?.id}`);
@@ -218,9 +313,9 @@ export const useWalletData = (enabled: boolean = true) => {
         };
       }
     },
-    enabled: enabled && !!user?.id,
+    enabled: enabled && !!user?.id && !isBuilderEnvironment, // Deshabilitar en Builder.io
     staleTime: 30000, // 30 segundos
-    refetchInterval: 60000, // Refrescar cada minuto
+    refetchInterval: isBuilderEnvironment ? false : 60000, // No refrescar en Builder.io
   });
 };
 

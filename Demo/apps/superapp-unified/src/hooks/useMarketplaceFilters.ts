@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { MarketplaceFilters } from '../components/modules/marketplace/components/AdvancedFilters';
 
 interface MarketplaceItem {
@@ -39,6 +39,7 @@ export const useMarketplaceFilters = (items: MarketplaceItem[]) => {
     tags: [],
   });
 
+  // ✅ NIVEL 1: FUNCIONES BÁSICAS SIN DEPENDENCIAS
   const updateFilters = useCallback((newFilters: MarketplaceFilters) => {
     setActiveFilters(newFilters);
   }, []);
@@ -59,6 +60,24 @@ export const useMarketplaceFilters = (items: MarketplaceItem[]) => {
     });
   }, []);
 
+  // ✅ NIVEL 2: MEMOS BÁSICOS (DEPENDEN SOLO DE ESTADO)
+  const hasActiveFilters = useMemo(() => {
+    return (
+      activeFilters.category ||
+      activeFilters.location ||
+      activeFilters.rating > 0 ||
+      activeFilters.deliveryTime ||
+      activeFilters.isVerifiedSeller ||
+      activeFilters.isFeatured ||
+      activeFilters.isTrending ||
+      activeFilters.hasDiscount ||
+      activeFilters.tags.length > 0 ||
+      activeFilters.priceRange[0] > 0 ||
+      activeFilters.priceRange[1] < 1000
+    );
+  }, [activeFilters]);
+
+  // ✅ NIVEL 3: MEMOS COMPLEJOS (DEPENDEN DE ITEMS Y FILTROS)
   const filteredItems = useMemo(() => {
     let filtered = [...items];
 
@@ -203,22 +222,7 @@ export const useMarketplaceFilters = (items: MarketplaceItem[]) => {
     return filtered;
   }, [items, activeFilters]);
 
-  const hasActiveFilters = useMemo(() => {
-    return (
-      activeFilters.category ||
-      activeFilters.location ||
-      activeFilters.rating > 0 ||
-      activeFilters.deliveryTime ||
-      activeFilters.isVerifiedSeller ||
-      activeFilters.isFeatured ||
-      activeFilters.isTrending ||
-      activeFilters.hasDiscount ||
-      activeFilters.tags.length > 0 ||
-      activeFilters.priceRange[0] > 0 ||
-      activeFilters.priceRange[1] < 1000
-    );
-  }, [activeFilters]);
-
+  // ✅ NIVEL 4: MEMOS QUE DEPENDEN DE FILTERED ITEMS
   const filterStats = useMemo(() => {
     const totalItems = items.length;
     const filteredCount = filteredItems.length;
@@ -233,6 +237,7 @@ export const useMarketplaceFilters = (items: MarketplaceItem[]) => {
     };
   }, [items.length, filteredItems.length]);
 
+  // ✅ NIVEL 5: CALLBACKS QUE DEPENDEN DE FILTERED ITEMS
   const getFilterSuggestions = useCallback(() => {
     if (filteredItems.length > 0) return [];
 
@@ -260,6 +265,13 @@ export const useMarketplaceFilters = (items: MarketplaceItem[]) => {
 
     return suggestions;
   }, [activeFilters, filteredItems.length]);
+
+  // ✅ CLEANUP EFFECT OBLIGATORIO
+  useEffect(() => {
+    return () => {
+      console.log('🧹 Marketplace filters cleanup');
+    };
+  }, []);
 
   return {
     activeFilters,

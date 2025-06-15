@@ -247,4 +247,7 @@ export const OptimizedThumbnail: React.FC<OptimizedImageProps> = (props) => {
       lazy={true} // Thumbnails can be lazy loaded
     />
   );
-}; 
+};
+
+// Exportación por defecto para compatibilidad con React.lazy()
+export default OptimizedImage; 

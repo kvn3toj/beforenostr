@@ -71,7 +71,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-export const Wallet: React.FC = () => {
+const Wallet: React.FC = () => {
   const { user } = useAuth();
   const [tabValue, setTabValue] = useState(0);
   const [balanceVisible, setBalanceVisible] = useState(true);
@@ -450,3 +450,5 @@ export const Wallet: React.FC = () => {
     </Container>
   );
 };
+
+export default Wallet;

@@ -60,7 +60,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   {
     label: 'ÜPlay',
     icon: <PlayArrow />,
-    path: '/play',
+    path: '/uplay',
     section: 'modules',
   },
   {

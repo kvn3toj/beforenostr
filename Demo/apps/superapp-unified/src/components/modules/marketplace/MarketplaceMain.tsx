@@ -69,6 +69,9 @@ import {
 } from '../../../hooks/useRealBackendData';
 import { useQueryClient } from '@tanstack/react-query';
 import CreateItemModal from './components/CreateItemModal';
+// 🔄 LETS Integration
+import UnitsWallet from './components/UnitsWallet';
+import LetsListings from './components/LetsListings';
 
 // 🌱 Tipos de datos optimizados para el bien común
 interface MarketplaceItem {
@@ -1062,6 +1065,74 @@ const MarketplaceMain: React.FC = () => {
                 </Fade>
               </Grid>
             ))}
+          </Grid>
+        </Box>
+
+        {/* 🔄 Sección LETS - Sistema de Intercambio Local */}
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            sx={{ mb: 3 }}
+            className="animate-slide-up"
+          >
+            🔄 Sistema LETS - Intercambio Colaborativo
+          </Typography>
+          
+          <Grid container spacing={3}>
+            {/* UnitsWallet */}
+            <Grid item xs={12} md={4}>
+              <UnitsWallet userId={user?.id || ''} />
+            </Grid>
+            
+            {/* LETS Quick Actions */}
+            <Grid item xs={12} md={8}>
+              <Card sx={{ p: 3, height: '100%' }}>
+                <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+                  💫 Intercambios Locales con Ünits
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  Participa en la economía colaborativa usando Ünits, nuestra moneda local basada en reciprocidad (Ayni)
+                </Typography>
+                
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                                         <Button
+                       fullWidth
+                       variant="outlined"
+                       startIcon={<LocalOffer />}
+                       onClick={() => navigate('/lets')}
+                       sx={{
+                         borderColor: '#4ECDC4',
+                         color: '#4ECDC4',
+                         '&:hover': {
+                           borderColor: '#45B7B8',
+                           backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                         }
+                       }}
+                     >
+                       Ver Ofertas LETS
+                     </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                                         <Button
+                       fullWidth
+                       variant="contained"
+                       startIcon={<AddIcon />}
+                       onClick={() => navigate('/lets')}
+                       sx={{
+                         background: 'linear-gradient(45deg, #FF6B6B, #4ECDC4)',
+                         '&:hover': {
+                           background: 'linear-gradient(45deg, #FF5252, #45B7B8)',
+                         }
+                       }}
+                     >
+                       Crear Intercambio
+                     </Button>
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
           </Grid>
         </Box>
 

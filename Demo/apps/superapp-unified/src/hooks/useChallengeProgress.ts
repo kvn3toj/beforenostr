@@ -98,7 +98,128 @@ export const useChallengeProgress = ({
     },
   });
 
-  // Función para marcar/desmarcar una tarea como completada
+  // ✅ FUNCIONES BÁSICAS SIN DEPENDENCIAS (PRIMER NIVEL)
+  const getProgressStats = useCallback(() => {
+    const isCompleted = localProgress.status === 'COMPLETED';
+    const isActive = localProgress.status === 'ACTIVE';
+    const progressPercentage = localProgress.progress || 0;
+    const tasksRemaining =
+      (localProgress.totalTasks || 0) - (localProgress.tasksCompleted || 0);
+
+    return {
+      isCompleted,
+      isActive,
+      progressPercentage,
+      tasksCompleted: localProgress.tasksCompleted || 0,
+      totalTasks: localProgress.totalTasks || 0,
+      tasksRemaining,
+      currentStep: localProgress.currentStep || 'Sin paso actual',
+      startedAt: localProgress.startedAt,
+      completedAt: localProgress.completedAt,
+      timeSpent: localProgress.completedAt
+        ? new Date(localProgress.completedAt).getTime() -
+          new Date(localProgress.startedAt).getTime()
+        : Date.now() - new Date(localProgress.startedAt).getTime(),
+    };
+  }, [localProgress]);
+
+  // ✅ FUNCIONES QUE DEPENDEN DE updateProgressMutation (SEGUNDO NIVEL)
+  const abandonChallenge = useCallback(() => {
+    const abandonedProgress: UserChallengeProgress = {
+      ...localProgress,
+      status: 'ABANDONED',
+      currentStep: 'Desafío abandonado',
+      metadata: {
+        ...localProgress.metadata,
+        abandonedAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      },
+    };
+
+    setLocalProgress(abandonedProgress);
+    updateProgressMutation.mutate(abandonedProgress);
+    toast.info('Has abandonado el desafío');
+  }, [localProgress, updateProgressMutation]);
+
+  const resetProgress = useCallback(() => {
+    const resetProgress: UserChallengeProgress = {
+      ...localProgress,
+      progress: 0,
+      tasksCompleted: 0,
+      currentStep: 'Desafío reiniciado',
+      status: 'ACTIVE',
+      completedAt: undefined,
+      metadata: {
+        completedTasks: [],
+        lastUpdated: new Date().toISOString(),
+        resetAt: new Date().toISOString(),
+      },
+    };
+
+    setLocalProgress(resetProgress);
+    setCompletedTasks(new Set());
+    setCurrentStep('Desafío reiniciado');
+
+    updateProgressMutation.mutate(resetProgress);
+    toast.info('Progreso del desafío reiniciado');
+  }, [localProgress, updateProgressMutation]);
+
+  const updateCurrentStep = useCallback(
+    (step: string) => {
+      setCurrentStep(step);
+      const updatedProgress = {
+        ...localProgress,
+        currentStep: step,
+        metadata: {
+          ...localProgress.metadata,
+          lastUpdated: new Date().toISOString(),
+        },
+      };
+      setLocalProgress(updatedProgress);
+      updateProgressMutation.mutate(updatedProgress);
+    },
+    [localProgress, updateProgressMutation]
+  );
+
+  // ✅ FUNCIONES QUE DEPENDEN DE updateProgressMutation (TERCER NIVEL)
+  const updateProgress = useCallback(
+    (progressData: Partial<ProgressUpdate>) => {
+      const updatedProgress: UserChallengeProgress = {
+        ...localProgress,
+        progress: progressData.progress ?? localProgress.progress,
+        currentStep: progressData.currentStep ?? localProgress.currentStep,
+        tasksCompleted:
+          progressData.tasksCompleted ?? localProgress.tasksCompleted,
+        totalTasks: progressData.totalTasks ?? localProgress.totalTasks,
+        metadata: {
+          ...localProgress.metadata,
+          ...progressData.metadata,
+          lastUpdated: new Date().toISOString(),
+        },
+      };
+
+      // Actualizar tareas completadas si se proporciona
+      if (progressData.completedTasks) {
+        const completedTaskIds = progressData.completedTasks
+          .filter((task) => task.completed)
+          .map((task) => task.taskId);
+        setCompletedTasks(new Set(completedTaskIds));
+
+        updatedProgress.metadata.completedTasks = progressData.completedTasks;
+      }
+
+      setLocalProgress(updatedProgress);
+      if (progressData.currentStep) {
+        setCurrentStep(progressData.currentStep);
+      }
+
+      // Sincronizar con el backend
+      updateProgressMutation.mutate(updatedProgress);
+    },
+    [localProgress, updateProgressMutation]
+  );
+
+  // ✅ FUNCIÓN PRINCIPAL QUE DEPENDE DE updateProgressMutation (CUARTO NIVEL)
   const toggleTask = useCallback(
     (taskId: string, taskTitle?: string) => {
       const isCurrentlyCompleted = completedTasks.has(taskId);
@@ -169,129 +290,6 @@ export const useChallengeProgress = ({
     },
     [completedTasks, localProgress, currentStep, updateProgressMutation]
   );
-
-  // Función para actualizar el step actual
-  const updateCurrentStep = useCallback(
-    (step: string) => {
-      setCurrentStep(step);
-      const updatedProgress = {
-        ...localProgress,
-        currentStep: step,
-        metadata: {
-          ...localProgress.metadata,
-          lastUpdated: new Date().toISOString(),
-        },
-      };
-      setLocalProgress(updatedProgress);
-      updateProgressMutation.mutate(updatedProgress);
-    },
-    [localProgress, updateProgressMutation]
-  );
-
-  // Función para actualizar el progreso manualmente
-  const updateProgress = useCallback(
-    (progressData: Partial<ProgressUpdate>) => {
-      const updatedProgress: UserChallengeProgress = {
-        ...localProgress,
-        progress: progressData.progress ?? localProgress.progress,
-        currentStep: progressData.currentStep ?? localProgress.currentStep,
-        tasksCompleted:
-          progressData.tasksCompleted ?? localProgress.tasksCompleted,
-        totalTasks: progressData.totalTasks ?? localProgress.totalTasks,
-        metadata: {
-          ...localProgress.metadata,
-          ...progressData.metadata,
-          lastUpdated: new Date().toISOString(),
-        },
-      };
-
-      // Actualizar tareas completadas si se proporciona
-      if (progressData.completedTasks) {
-        const completedTaskIds = progressData.completedTasks
-          .filter((task) => task.completed)
-          .map((task) => task.taskId);
-        setCompletedTasks(new Set(completedTaskIds));
-
-        updatedProgress.metadata.completedTasks = progressData.completedTasks;
-      }
-
-      setLocalProgress(updatedProgress);
-      if (progressData.currentStep) {
-        setCurrentStep(progressData.currentStep);
-      }
-
-      // Sincronizar con el backend
-      updateProgressMutation.mutate(updatedProgress);
-    },
-    [localProgress, updateProgressMutation]
-  );
-
-  // Función para reiniciar el progreso
-  const resetProgress = useCallback(() => {
-    const resetProgress: UserChallengeProgress = {
-      ...localProgress,
-      progress: 0,
-      tasksCompleted: 0,
-      currentStep: 'Desafío reiniciado',
-      status: 'ACTIVE',
-      completedAt: undefined,
-      metadata: {
-        completedTasks: [],
-        lastUpdated: new Date().toISOString(),
-        resetAt: new Date().toISOString(),
-      },
-    };
-
-    setLocalProgress(resetProgress);
-    setCompletedTasks(new Set());
-    setCurrentStep('Desafío reiniciado');
-
-    updateProgressMutation.mutate(resetProgress);
-    toast.info('Progreso del desafío reiniciado');
-  }, [localProgress, updateProgressMutation]);
-
-  // Función para abandonar el desafío
-  const abandonChallenge = useCallback(() => {
-    const abandonedProgress: UserChallengeProgress = {
-      ...localProgress,
-      status: 'ABANDONED',
-      currentStep: 'Desafío abandonado',
-      metadata: {
-        ...localProgress.metadata,
-        abandonedAt: new Date().toISOString(),
-        lastUpdated: new Date().toISOString(),
-      },
-    };
-
-    setLocalProgress(abandonedProgress);
-    updateProgressMutation.mutate(abandonedProgress);
-    toast.info('Has abandonado el desafío');
-  }, [localProgress, updateProgressMutation]);
-
-  // Función para calcular estadísticas del progreso
-  const getProgressStats = useCallback(() => {
-    const isCompleted = localProgress.status === 'COMPLETED';
-    const isActive = localProgress.status === 'ACTIVE';
-    const progressPercentage = localProgress.progress || 0;
-    const tasksRemaining =
-      (localProgress.totalTasks || 0) - (localProgress.tasksCompleted || 0);
-
-    return {
-      isCompleted,
-      isActive,
-      progressPercentage,
-      tasksCompleted: localProgress.tasksCompleted || 0,
-      totalTasks: localProgress.totalTasks || 0,
-      tasksRemaining,
-      currentStep: localProgress.currentStep || 'Sin paso actual',
-      startedAt: localProgress.startedAt,
-      completedAt: localProgress.completedAt,
-      timeSpent: localProgress.completedAt
-        ? new Date(localProgress.completedAt).getTime() -
-          new Date(localProgress.startedAt).getTime()
-        : Date.now() - new Date(localProgress.startedAt).getTime(),
-    };
-  }, [localProgress]);
 
   return {
     // Estado

@@ -47,7 +47,6 @@ export interface Product {
 
   // Precios y descuentos
   discount?: number;
-  originalPrice?: number;
 
   // Fechas
   createdAt: Date;

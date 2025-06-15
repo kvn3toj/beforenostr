@@ -395,4 +395,18 @@ export const ContextualProgress: React.FC<{
       )}
     </Box>
   </Box>
-); 
+);
+
+// ✅ SOLUCIÓN: Exportación por defecto para React.lazy() compatibility
+const SkeletonLoaders = {
+  Dashboard: DashboardSkeleton,
+  Marketplace: MarketplaceSkeleton,
+  AuthForm: AuthFormSkeleton,
+  AppLayout: AppLayoutSkeleton,
+  ListItem: ListItemSkeleton,
+  StatCard: StatCardSkeleton,
+  SearchLoading: SearchLoadingSkeleton,
+  ContextualProgress: ContextualProgress,
+};
+
+export default SkeletonLoaders; 

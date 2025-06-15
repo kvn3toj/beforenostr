@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
-export const Register: React.FC = () => {
+const Register: React.FC = () => {
   const navigate = useNavigate();
   const { signUp, loading } = useAuth();
   const [formData, setFormData] = useState({
@@ -274,4 +274,6 @@ export const Register: React.FC = () => {
       </Box>
     </Container>
   );
-}; 
+};
+
+export default Register; 

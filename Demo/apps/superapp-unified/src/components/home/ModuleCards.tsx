@@ -1,15 +1,11 @@
 import React from 'react';
 import {
   Grid,
-  Card,
-  CardContent,
   Typography,
   Avatar,
   Chip,
   Box,
   Stack,
-  alpha,
-  useTheme,
   IconButton,
   Tooltip,
   Badge,
@@ -25,6 +21,10 @@ import {
   Launch,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+
+// Import our new design system components
+import { ModuleCard, Button } from '../ui';
+import { cn, getElementColor } from '../../utils/styles';
 
 interface ModuleData {
   id: string;
@@ -43,6 +43,7 @@ interface ModuleData {
   isNew?: boolean;
   lastActivity?: string;
   userLevel?: string;
+  element?: 'tierra' | 'agua' | 'fuego' | 'aire';
 }
 
 interface ModuleCardsProps {
@@ -64,6 +65,7 @@ const modules: ModuleData[] = [
     isActive: true,
     userLevel: 'Explorador Visual',
     lastActivity: 'Hace 2 horas',
+    element: 'fuego', // Passion and action
   },
   {
     id: 'marketplace',
@@ -79,6 +81,7 @@ const modules: ModuleData[] = [
     isActive: true,
     userLevel: 'Comerciante Confiable',
     lastActivity: 'Hace 1 día',
+    element: 'tierra', // Stability and trust
   },
   {
     id: 'social',
@@ -95,6 +98,7 @@ const modules: ModuleData[] = [
     isNew: true,
     userLevel: 'Tejedor Social',
     lastActivity: 'Hace 30 min',
+    element: 'agua', // Flow and adaptability
   },
   {
     id: 'ustats',
@@ -110,145 +114,93 @@ const modules: ModuleData[] = [
     isActive: true,
     userLevel: 'Analista de Progreso',
     lastActivity: 'Hace 3 horas',
+    element: 'aire', // Vision and structure
   },
 ];
 
-const ModuleCard: React.FC<{
+const ModuleCardComponent: React.FC<{
   module: ModuleData;
   onClick: (moduleId: string, path: string) => void;
 }> = ({ module, onClick }) => {
-  const theme = useTheme();
-
   return (
-    <Card
-      sx={{
-        height: '100%',
-        cursor: 'pointer',
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        border: `2px solid transparent`,
-        position: 'relative',
-        overflow: 'hidden',
-        '&:hover': {
-          transform: 'translateY(-12px) scale(1.02)',
-          boxShadow: `0 20px 40px ${alpha(module.color, 0.3)}`,
-          border: `2px solid ${alpha(module.color, 0.4)}`,
-          '& .module-header': {
-            transform: 'scale(1.05)',
-          },
-          '& .launch-icon': {
-            opacity: 1,
-            transform: 'translate(-50%, -50%) scale(1)',
-          },
-        },
-      }}
+    <ModuleCard
       onClick={() => onClick(module.id, module.path)}
+      className={cn(
+        "group relative overflow-hidden cursor-pointer",
+        "transition-all duration-300 ease-out",
+        "hover:scale-105 hover:-translate-y-2",
+        "hover:shadow-coomunity-lg",
+        "border-2 border-transparent hover:border-coomunity-300"
+      )}
+      style={{
+        '--module-color': module.color,
+        '--module-gradient': module.gradient,
+      } as React.CSSProperties}
     >
-      {/* Header con gradiente y animación */}
+      {/* Header with gradient and animation */}
       <Box
-        className="module-header"
+        className={cn(
+          "relative h-36 flex items-center justify-center overflow-hidden",
+          "transition-transform duration-300 group-hover:scale-105"
+        )}
         sx={{
-          height: 140,
           background: module.gradient,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-          transition: 'transform 0.3s ease-in-out',
         }}
       >
-        {/* Elementos decorativos de fondo */}
+        {/* Decorative background elements */}
         <Box
-          sx={{
-            position: 'absolute',
-            top: -30,
-            right: -30,
-            width: 120,
-            height: 120,
-            borderRadius: '50%',
-            bgcolor: alpha('#fff', 0.1),
-            animation: 'pulse 3s infinite',
-          }}
+          className={cn(
+            "absolute -top-8 -right-8 w-32 h-32 rounded-full",
+            "bg-white/10 animate-pulse-slow"
+          )}
         />
         <Box
-          sx={{
-            position: 'absolute',
-            bottom: -20,
-            left: -20,
-            width: 80,
-            height: 80,
-            borderRadius: '50%',
-            bgcolor: alpha('#fff', 0.05),
-            animation: 'pulse 3s infinite 1.5s',
-          }}
+          className={cn(
+            "absolute -bottom-5 -left-5 w-20 h-20 rounded-full",
+            "bg-white/5 animate-pulse-slow"
+          )}
+          style={{ animationDelay: '1.5s' }}
         />
 
-        {/* Icono principal */}
+        {/* Main icon */}
         <Avatar
-          sx={{
-            bgcolor: alpha('#fff', 0.25),
-            color: '#fff',
-            width: 72,
-            height: 72,
-            zIndex: 2,
-            backdropFilter: 'blur(10px)',
-            border: `2px solid ${alpha('#fff', 0.3)}`,
-          }}
+          className={cn(
+            "w-18 h-18 bg-white/25 backdrop-blur-sm border-2 border-white/30",
+            "transition-all duration-300 group-hover:scale-110"
+          )}
+          sx={{ color: '#fff' }}
         >
           <Box sx={{ fontSize: 32 }}>{module.icon}</Box>
         </Avatar>
 
-        {/* Icono de lanzamiento en hover */}
+        {/* Launch icon on hover */}
         <IconButton
-          className="launch-icon"
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%) scale(0)',
-            opacity: 0,
-            transition: 'all 0.3s ease-in-out',
-            bgcolor: alpha('#fff', 0.9),
-            color: module.color,
-            zIndex: 3,
-            '&:hover': {
-              bgcolor: '#fff',
-              transform: 'translate(-50%, -50%) scale(1.1)',
-            },
-          }}
+          className={cn(
+            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+            "opacity-0 scale-0 transition-all duration-300",
+            "group-hover:opacity-100 group-hover:scale-100",
+            "bg-white/90 hover:bg-white z-10"
+          )}
+          sx={{ color: module.color }}
         >
           <Launch />
         </IconButton>
 
-        {/* Badge de nuevo módulo */}
+        {/* New module badge */}
         {module.isNew && (
           <Chip
             label="NUEVO"
             size="small"
-            sx={{
-              position: 'absolute',
-              top: 12,
-              right: 12,
-              bgcolor: '#fff',
-              color: module.color,
-              fontWeight: 'bold',
-              fontSize: '0.7rem',
-              animation: 'bounce 2s infinite',
-            }}
+            className={cn(
+              "absolute top-3 right-3 bg-white font-bold text-xs",
+              "animate-bounce"
+            )}
+            sx={{ color: module.color }}
           />
         )}
 
-        {/* Indicador de estado */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 12,
-            left: 12,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-          }}
-        >
+        {/* Status indicator */}
+        <Box className="absolute top-3 left-3 flex items-center gap-1">
           <Circle
             sx={{
               fontSize: 8,
@@ -257,104 +209,93 @@ const ModuleCard: React.FC<{
           />
           <Typography
             variant="caption"
-            sx={{
-              color: alpha('#fff', 0.9),
-              fontWeight: 'bold',
-              fontSize: '0.7rem',
-            }}
+            className="text-white/90 font-bold text-xs"
           >
             {module.isActive ? 'ACTIVO' : 'INACTIVO'}
           </Typography>
         </Box>
       </Box>
 
-      {/* Contenido de la tarjeta */}
-      <CardContent sx={{ p: 2.5 }}>
-        <Stack spacing={1.5}>
-          {/* Título y subtítulo */}
-          <Box>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-              {module.name}
+      {/* Content using design tokens */}
+      <Box className="p-6 space-y-4">
+        {/* Title and subtitle */}
+        <Box className="space-y-2">
+          <Typography 
+            variant="h6" 
+            className="coomunity-h6 font-bold text-coomunity-900"
+          >
+            {module.name}
+          </Typography>
+          <Typography
+            variant="caption"
+            className={cn(
+              "block font-bold text-xs uppercase tracking-wider mb-2",
+              getElementColor(module.element || 'aire', 'text')
+            )}
+          >
+            {module.subtitle}
+          </Typography>
+          <Typography
+            variant="body2"
+            className="coomunity-body-sm text-coomunity-600 line-clamp-2"
+          >
+            {module.description}
+          </Typography>
+        </Box>
+
+        {/* Statistics and user level */}
+        <Stack spacing={2}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Chip
+              label={`${module.stats.value} ${module.stats.label}`}
+              size="small"
+              className={cn(
+                "font-bold border",
+                getElementColor(module.element || 'aire', 'chip')
+              )}
+              icon={<TrendingUp sx={{ fontSize: 16 }} />}
+            />
+            <Tooltip title={`Nivel actual en ${module.name}`}>
+              <Star 
+                sx={{ 
+                  color: module.color, 
+                  fontSize: 18,
+                  transition: 'all 0.2s ease',
+                  '&:hover': { transform: 'scale(1.2)' }
+                }} 
+              />
+            </Tooltip>
+          </Stack>
+
+          {/* User level and last activity */}
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography
+              variant="caption"
+              className={cn(
+                "font-bold text-xs",
+                getElementColor(module.element || 'aire', 'text')
+              )}
+            >
+              {module.userLevel}
             </Typography>
             <Typography
               variant="caption"
-              color="text.secondary"
-              display="block"
-              sx={{
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                letterSpacing: 0.5,
-                mb: 1,
-              }}
+              className="text-coomunity-500 text-xs"
             >
-              {module.subtitle}
+              {module.lastActivity}
             </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                lineHeight: 1.4,
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-              }}
-            >
-              {module.description}
-            </Typography>
-          </Box>
-
-          {/* Estadísticas y nivel de usuario */}
-          <Stack spacing={1}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Chip
-                label={`${module.stats.value} ${module.stats.label}`}
-                size="small"
-                sx={{
-                  bgcolor: alpha(module.color, 0.1),
-                  color: module.color,
-                  fontWeight: 'bold',
-                  border: `1px solid ${alpha(module.color, 0.2)}`,
-                }}
-                icon={<TrendingUp sx={{ fontSize: 16 }} />}
-              />
-              <Tooltip title={`Nivel actual en ${module.name}`}>
-                <Star sx={{ color: module.color, fontSize: 18 }} />
-              </Tooltip>
-            </Stack>
-
-            {/* Nivel de usuario y última actividad */}
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography
-                variant="caption"
-                sx={{
-                  fontWeight: 'bold',
-                  color: module.color,
-                  fontSize: '0.7rem',
-                }}
-              >
-                {module.userLevel}
-              </Typography>
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ fontSize: '0.7rem' }}
-              >
-                {module.lastActivity}
-              </Typography>
-            </Stack>
           </Stack>
         </Stack>
-      </CardContent>
-    </Card>
+      </Box>
+    </ModuleCard>
   );
 };
 
@@ -370,18 +311,25 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({ onModuleClick }) => {
   };
 
   return (
-    <Box>
+    <Box className="space-y-6">
+      {/* Header section with design tokens */}
       <Stack
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ mb: 3 }}
+        className="mb-6"
       >
         <Box>
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
+          <Typography 
+            variant="h5" 
+            className="coomunity-h5 font-bold text-coomunity-900 mb-2"
+          >
             Módulos CoomÜnity
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography 
+            variant="body2" 
+            className="coomunity-body-sm text-coomunity-600"
+          >
             Explora las diferentes dimensiones de tu crecimiento personal y
             comunitario
           </Typography>
@@ -395,38 +343,39 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({ onModuleClick }) => {
             color="success"
             variant="outlined"
             size="small"
+            className="font-medium"
           />
         </Badge>
       </Stack>
 
+      {/* Module grid */}
       <Grid container spacing={3}>
         {modules.map((module) => (
           <Grid item xs={12} sm={6} lg={3} key={module.id}>
-            <ModuleCard module={module} onClick={handleModuleClick} />
+            <ModuleCardComponent module={module} onClick={handleModuleClick} />
           </Grid>
         ))}
       </Grid>
 
-      {/* Mensaje inspiracional */}
+      {/* Inspirational message with design tokens */}
       <Box
-        sx={{
-          mt: 3,
-          p: 2,
-          borderRadius: 3,
-          background: `linear-gradient(135deg, ${alpha('#9c27b0', 0.05)} 0%, ${alpha('#2196f3', 0.05)} 50%, ${alpha('#4caf50', 0.05)} 100%)`,
-          border: `1px dashed ${alpha('#9c27b0', 0.2)}`,
-          textAlign: 'center',
-        }}
+        className={cn(
+          "mt-6 p-6 rounded-xl text-center",
+          "bg-gradient-to-r from-coomunity-50 via-blue-50 to-green-50",
+          "border border-dashed border-coomunity-300"
+        )}
       >
         <Typography
           variant="body2"
-          color="text.secondary"
-          sx={{ fontStyle: 'italic', mb: 1 }}
+          className="coomunity-body-sm text-coomunity-700 italic mb-2"
         >
           🌟 "Cada módulo es una puerta hacia una nueva dimensión de tu
           potencial"
         </Typography>
-        <Typography variant="caption" color="text.secondary">
+        <Typography 
+          variant="caption" 
+          className="coomunity-caption text-coomunity-600"
+        >
           Desarrolla equilibradamente todas las áreas de tu ser para contribuir
           plenamente al Bien Común
         </Typography>
