@@ -71,7 +71,7 @@ test.describe('Videos Backend Integration - UPlay Component', () => {
       console.log('⚠️ No se detectó llamada automática, intentando trigger manual...');
       
       // Navegar a una ruta que force la carga de datos
-      await page.goto('/play');
+      await page.goto('/uplay');
       await page.waitForLoadState('networkidle');
       
       // Ejecutar código que force la carga de videos del backend

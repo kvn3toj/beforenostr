@@ -7,9 +7,9 @@ import CoomunityButton from '../components/ui/CoomunityButton';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
 // Lazy loading de componentes pesados
-const ModuleCards = React.lazy(() => import('../components/modules/ModuleCards'));
-const AyniMetrics = React.lazy(() => import('../components/modules/AyniMetrics'));
-const RecentActivity = React.lazy(() => import('../components/modules/RecentActivity'));
+const ModuleCards = React.lazy(() => import('../components/home/ModuleCards'));
+const AyniMetricsCard = React.lazy(() => import('../components/home/AyniMetricsCard'));
+const NotificationCenter = React.lazy(() => import('../components/home/NotificationCenter'));
 
 const HomePage: React.FC = () => {
   const theme = useTheme();
@@ -116,14 +116,14 @@ const HomePage: React.FC = () => {
               {/* Ayni Metrics */}
               <motion.div variants={itemVariants}>
                 <Suspense fallback={<LoadingSpinner />}>
-                  <AyniMetrics />
+                  <AyniMetricsCard />
                 </Suspense>
               </motion.div>
 
-              {/* Recent Activity */}
+              {/* Notification Center */}
               <motion.div variants={itemVariants}>
                 <Suspense fallback={<LoadingSpinner />}>
-                  <RecentActivity />
+                  <NotificationCenter />
                 </Suspense>
               </motion.div>
             </Box>

@@ -1,6 +1,0 @@
-{
-  "requiresLogin": true,
-  "loginMethod": "phone_whatsapp",
-  "redirected": true,
-  "actualUrl": "https://coomunity.co/place/login"
-}

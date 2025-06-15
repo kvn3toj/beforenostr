@@ -17,7 +17,7 @@ test.describe('UX Heurística #2: Consistencia y Estándares - React App', () =>
     { path: '/', name: 'Home', needsAuth: true },
     { path: '/profile', name: 'Profile', needsAuth: true },
     { path: '/marketplace', name: 'Marketplace', needsAuth: true },
-    { path: '/play', name: 'ÜPlay', needsAuth: true },
+    { path: '/uplay', name: 'ÜPlay', needsAuth: true },
     { path: '/social', name: 'Social', needsAuth: true },
     { path: '/wallet', name: 'Wallet', needsAuth: true },
     { path: '/analytics', name: 'Analytics', needsAuth: true },

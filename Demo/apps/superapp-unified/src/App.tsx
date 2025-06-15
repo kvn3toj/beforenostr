@@ -9,13 +9,9 @@ import { Toaster } from 'sonner';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 
-// Layout Components
-import { AppHeader } from './components/layout/AppHeader';
-import { BottomNavigation } from './components/layout/BottomNavigation';
-import ErrorBoundary from './components/ui/ErrorBoundary';
-
 // Route Protection
 import { ProtectedRoute } from './components/ProtectedRoute';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 
 // Lazy Components
 import { 
@@ -27,10 +23,6 @@ import {
 // Styles
 // Importar CSS principal
 import './index.css';
-// import './styles/index.css';
-// import './styles/design-tokens.css';
-// import './styles/animations.css';
-// import './styles/typography-consistency.css';
 
 // Create QueryClient
 const queryClient = new QueryClient({
@@ -64,7 +56,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<LazyPages.LoginPage />} />
       <Route path="/register" element={<LazyPages.RegisterPage />} />
       
-      {/* 🔒 Rutas Protegidas - Requieren autenticación */}
+      {/* 🔒 Rutas Protegidas - Requieren autenticación y usan AppLayout */}
       <Route element={<ProtectedRoute />}>
         {/* Main Pages */}
         <Route path="/" element={<LazyPages.HomePage />} />
@@ -73,6 +65,42 @@ const AppRoutes: React.FC = () => {
         <Route path="/social" element={<LazyPages.SocialPage />} />
         <Route path="/profile" element={<LazyPages.ProfilePage />} />
         <Route path="/wallet" element={<LazyPages.WalletPage />} />
+        
+        {/* 📊 Analytics & Data Pages */}
+        <Route path="/analytics" element={<LazyPages.AnalyticsPage />} />
+        
+        {/* 🎯 Challenge & Group Pages */}
+        <Route path="/challenges" element={<LazyPages.ChallengesPage />} />
+        <Route path="/groups" element={<LazyPages.GroupsPage />} />
+        
+        {/* 🌍 Mundos Page */}
+        <Route path="/mundos" element={<LazyPages.MundosPage />} />
+        
+        {/* 🎥 Video/UPlay Routes */}
+        <Route path="/uplay/video/:videoId" element={<LazyPages.UPlayVideoPlayer />} />
+        <Route path="/uplay/unified" element={<LazyPages.UnifiedUPlay />} />
+        <Route path="/uplay/interactive" element={<LazyPages.InteractiveVideoEnhanced />} />
+        <Route path="/uplay/demo" element={<LazyPages.InteractiveVideoDemo />} />
+        <Route path="/videos" element={<LazyPages.VideoHome />} />
+        <Route path="/video/:videoId" element={<LazyPages.VideoPlayer />} />
+        
+        {/* 🛒 Marketplace Routes */}
+        <Route path="/marketplace/test" element={<LazyPages.MarketplaceTest />} />
+        <Route path="/marketplace/product/:productId" element={<LazyPages.ProductDetail />} />
+        <Route path="/product/:productId" element={<LazyPages.ProductDetails />} />
+        
+        {/* 👥 Social Routes */}
+        <Route path="/social/chat" element={<LazyPages.SocialChat />} />
+        <Route path="/social/feed" element={<LazyPages.SocialFeed />} />
+        
+        {/* 🎯 Challenge Routes */}
+        <Route path="/challenges/:challengeId" element={<LazyPages.ChallengeDetailPage />} />
+        
+        {/* 🔧 Admin/Special Routes */}
+        <Route path="/admin/audit-logs" element={<LazyPages.AuditLogsPage />} />
+        <Route path="/beta-register" element={<LazyPages.BetaRegister />} />
+        <Route path="/pwa-demo" element={<LazyPages.PWADemo />} />
+        <Route path="/home-alt" element={<LazyPages.HomePageAlternative />} />
         
         {/* 🔄 LETS Routes */}
         <Route path="/lets" element={<LazyPages.LetsPage />} />
@@ -113,8 +141,6 @@ const App: React.FC = () => {
                 <RoutePreloader />
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
                     minHeight: '100vh',
                     background: (theme) =>
                       theme.palette.mode === 'dark'
@@ -122,23 +148,7 @@ const App: React.FC = () => {
                         : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
                   }}
                 >
-                  {/* Header */}
-                  <AppHeader />
-                  
-                  {/* Main Content */}
-                  <Box
-                    component="main"
-                    sx={{
-                      flex: 1,
-                      pt: { xs: 8, sm: 9 }, // Account for header height
-                      pb: { xs: 8, sm: 2 }, // Account for bottom navigation on mobile
-                    }}
-                  >
-                    <AppRoutes />
-                  </Box>
-                  
-                  {/* Bottom Navigation (Mobile) */}
-                  <BottomNavigation />
+                  <AppRoutes />
                 </Box>
                 
                 {/* Toast Notifications */}

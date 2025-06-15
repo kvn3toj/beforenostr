@@ -26,8 +26,8 @@ async function globalSetup() {
     
   } catch (error) {
     console.log('❌ [Playwright Global Setup] Error:', error.message);
-    console.log('🔄 [Playwright Global Setup] Usando puerto por defecto: 3000');
-    process.env.PLAYWRIGHT_BASE_URL = 'http://localhost:3000';
+    console.log('🔄 [Playwright Global Setup] Usando puerto por defecto: 3001');
+    process.env.PLAYWRIGHT_BASE_URL = 'http://localhost:3001';
   }
 }
 

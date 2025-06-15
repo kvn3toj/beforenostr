@@ -1,62 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiService } from '../lib/api-service';
+import { apiService, walletAPI } from '../lib/api-service';
 import { useAuth } from '../contexts/AuthContext';
+import { 
+  BackendWalletResponse, 
+  WalletData, 
+  WalletAccount,
+  Transaction,
+  PaymentMethod,
+  mapBackendWalletToWalletData 
+} from '../types/wallet';
 
-// 🎯 Tipos específicos para el wallet CoomÜnity
-export interface WalletData {
-  balance: number;
-  currency: string;
-  ucoins: number;
-  meritos: number;
-  ondas: number;
-  pendingBalance: number;
-  monthlyChange: number;
-  ayniLevel: number;
-  collaborationScore: number;
-  communityRank: string;
-  accounts: WalletAccount[];
-  recentTransactions: Transaction[];
-  paymentMethods: PaymentMethod[];
-}
-
-export interface WalletAccount {
-  id: string;
-  name: string;
-  type: 'checking' | 'savings' | 'crypto';
-  balance: number;
-  currency: string;
-  primary: boolean;
-}
-
-export interface Transaction {
-  id: string;
-  type: 'income' | 'expense' | 'transfer' | 'exchange' | 'reward' | 'ayni';
-  amount: number;
-  currency: 'COP' | 'UC' | 'MERITOS' | 'ONDAS';
-  description: string;
-  date: string;
-  status: 'completed' | 'pending' | 'failed' | 'processing';
-  from?: string;
-  to?: string;
-  ayniScore?: number;
-  bienComunContribution?: boolean;
-  category?: string;
-  metadata?: {
-    exchangeRate?: number;
-    originalAmount?: number;
-    originalCurrency?: string;
-    fees?: number;
-  };
-}
-
-export interface PaymentMethod {
-  id: string;
-  name: string;
-  type: 'credit' | 'debit' | 'digital';
-  lastFour: string;
-  primary: boolean;
-}
-
+// 🎯 Tipos específicos para operaciones del wallet
 export interface CreateTransactionData {
   toUserId: string;
   amount: number;
@@ -186,140 +140,66 @@ export const useWalletData = (enabled: boolean = true) => {
         };
       }
 
-      // 🔗 En desarrollo normal, intentar llamada API con fallback
+      // 🔗 En desarrollo normal, usar el backend real
       try {
-        // 🔗 Intentar conectar con el backend real
-        const response = await apiService.get(`/wallets/user/${user?.id}`);
-
-        // 🎯 Mapear respuesta del backend a formato CoomÜnity
-        const backendData = response.data[0] || {};
-
-        return {
-          balance: backendData.balanceUnits || 0,
-          currency: 'COP',
-          ucoins: backendData.balanceToins || 0,
-          meritos: backendData.meritos || Math.floor(Math.random() * 500) + 100,
-          ondas: backendData.ondas || Math.floor(Math.random() * 300) + 50,
-          pendingBalance: Math.floor(Math.random() * 50000),
-          monthlyChange: Math.floor(Math.random() * 30) - 10,
-          ayniLevel: Math.floor(Math.random() * 60) + 25,
-          collaborationScore: Math.floor(Math.random() * 50) / 10 + 5,
-          communityRank: `#${Math.floor(Math.random() * 5000) + 500}`,
-          accounts: [
-            {
-              id: 'principal',
-              name: 'Cuenta Principal CoomÜnity',
-              type: 'checking',
-              balance: backendData.balanceUnits || 0,
-              currency: 'COP',
-              primary: true,
-            },
-            {
-              id: 'ucoins',
-              name: 'ÜCoins Wallet',
-              type: 'crypto',
-              balance: backendData.balanceToins || 0,
-              currency: 'UC',
-              primary: false,
-            },
-            {
-              id: 'ahorros',
-              name: 'Ahorros Ayni',
-              type: 'savings',
-              balance: Math.floor((backendData.balanceUnits || 0) * 0.3),
-              currency: 'COP',
-              primary: false,
-            },
-          ],
-          recentTransactions: [],
-          paymentMethods: [
-            {
-              id: '1',
-              name: 'CoomÜnity Card',
-              type: 'credit',
-              lastFour: '4721',
-              primary: true,
-            },
-            {
-              id: '2',
-              name: 'Nequi',
-              type: 'digital',
-              lastFour: '8923',
-              primary: false,
-            },
-          ],
-        };
+        console.log('🔗 [WalletIntegration] Conectando con backend real /wallets/me');
+        
+        // 🎯 Llamar al endpoint real del backend
+        const backendResponse = await walletAPI.getMyWallet();
+        const backendWallet = backendResponse as BackendWalletResponse;
+        
+        console.log('✅ [WalletIntegration] Datos recibidos del backend:', backendWallet);
+        
+        // 🔄 Mapear la respuesta del backend al formato de la SuperApp
+        const walletData = mapBackendWalletToWalletData(backendWallet);
+        
+        console.log('🎯 [WalletIntegration] Datos mapeados para la SuperApp:', walletData);
+        
+        return walletData;
       } catch (error) {
-        console.warn('🔄 Backend no disponible, usando datos simulados');
-
-        // 🎭 Datos simulados realistas con terminología CoomÜnity
-        const mockBalance = Math.floor(Math.random() * 500000) + 100000;
-        const mockUcoins = Math.floor(Math.random() * 1000) + 200;
-
+        console.error('❌ [WalletIntegration] Error conectando con backend:', error);
+        
+        // 🔄 Fallback a datos mock en caso de error
+        console.log('🔄 [WalletIntegration] Usando datos mock como fallback');
+        
+        const fallbackBalance = 0;
+        const fallbackUcoins = 0;
+        
         return {
-          balance: mockBalance,
-          currency: 'COP',
-          ucoins: mockUcoins,
-          meritos: Math.floor(Math.random() * 800) + 200,
-          ondas: Math.floor(Math.random() * 500) + 100,
-          pendingBalance: Math.floor(Math.random() * 75000),
-          monthlyChange: Math.floor(Math.random() * 40) - 15,
-          ayniLevel: Math.floor(Math.random() * 75) + 15,
-          collaborationScore: Math.floor(Math.random() * 60) / 10 + 4,
-          communityRank: `#${Math.floor(Math.random() * 8000) + 200}`,
+          balance: fallbackBalance,
+          currency: 'UC',
+          ucoins: fallbackUcoins,
+          meritos: 0,
+          ondas: 0,
+          pendingBalance: 0,
+          monthlyChange: 0,
+          ayniLevel: 0,
+          collaborationScore: 0,
+          communityRank: '#N/A',
           accounts: [
             {
               id: 'principal',
               name: 'Cuenta Principal CoomÜnity',
               type: 'checking',
-              balance: mockBalance,
-              currency: 'COP',
-              primary: true,
-            },
-            {
-              id: 'ucoins',
-              name: 'ÜCoins Wallet',
-              type: 'crypto',
-              balance: mockUcoins,
+              balance: fallbackBalance,
               currency: 'UC',
-              primary: false,
-            },
-            {
-              id: 'ahorros',
-              name: 'Ahorros Ayni',
-              type: 'savings',
-              balance: Math.floor(mockBalance * 0.4),
-              currency: 'COP',
-              primary: false,
+              primary: true,
             },
           ],
           recentTransactions: [],
-          paymentMethods: [
-            {
-              id: '1',
-              name: 'CoomÜnity Card',
-              type: 'credit',
-              lastFour: '4721',
-              primary: true,
-            },
-            {
-              id: '2',
-              name: 'Nequi',
-              type: 'digital',
-              lastFour: '8923',
-              primary: false,
-            },
-          ],
+          paymentMethods: [],
         };
       }
     },
-    enabled: enabled && !!user?.id && !isBuilderEnvironment, // Deshabilitar en Builder.io
-    staleTime: 30000, // 30 segundos
-    refetchInterval: isBuilderEnvironment ? false : 60000, // No refrescar en Builder.io
+    enabled: enabled && !!user?.id,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    cacheTime: 10 * 60 * 1000, // 10 minutos
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
 
-// 📋 Hook para transacciones del wallet
+// 📊 Hook para historial de transacciones con fallback inteligente
 export const useWalletTransactions = (
   filters: {
     type?: string;
@@ -334,39 +214,12 @@ export const useWalletTransactions = (
   return useQuery({
     queryKey: queryKeys.walletHistory(user?.id || 'anonymous', filters),
     queryFn: async (): Promise<Transaction[]> => {
-      try {
-        // 🔗 Intentar obtener transacciones del backend
-        const response = await apiService.get(`/transactions/user/${user?.id}`);
-
-        // 🎯 Mapear transacciones del backend a formato CoomÜnity
-        return response.data.map((tx: any) => ({
-          id: tx.id,
-          type: mapBackendTransactionType(tx.type),
-          amount: tx.amount,
-          currency: mapBackendCurrency(tx.tokenType),
-          description: tx.description || 'Transacción sin descripción',
-          date: tx.createdAt,
-          status: mapBackendStatus(tx.status),
-          from: tx.fromUser?.name,
-          to: tx.toUser?.name,
-          ayniScore: Math.floor(Math.random() * 10) + 1,
-          bienComunContribution: tx.type === 'AWARD' || Math.random() > 0.7,
-          category: 'general',
-          metadata:
-            tx.tokenType === 'EXCHANGE'
-              ? {
-                  exchangeRate: Math.random() * 0.01 + 0.001,
-                }
-              : undefined,
-        }));
-      } catch (error) {
-        console.warn(
-          '🔄 Backend no disponible, generando transacciones simuladas'
-        );
-
-        // 🎭 Generar transacciones simuladas realistas
-        return generateMockTransactions();
-      }
+      // 🚧 Endpoint de transacciones no implementado en el backend
+      // Devolver datos simulados directamente para evitar errores 404
+      console.warn('🚧 Transactions endpoint not yet implemented in backend. Using mock data.');
+      
+      // 🎭 Generar transacciones simuladas realistas
+      return generateMockTransactions();
     },
     enabled: !!user?.id,
     staleTime: 15000, // 15 segundos
@@ -380,27 +233,16 @@ export const useCreateTransaction = () => {
 
   return useMutation({
     mutationFn: async (data: CreateTransactionData) => {
-      try {
-        // 🔗 Enviar al backend real
-        const response = await apiService.post('/transactions', {
-          fromUserId: user?.id,
-          toUserId: data.toUserId,
-          amount: data.amount,
-          tokenType: mapCurrencyToBackend(data.currency),
-          type: mapTransactionTypeToBackend(data.type),
-          description: data.description,
-        });
-        return response.data;
-      } catch (error) {
-        // 🎭 Simular creación exitosa en modo offline
-        console.warn('🔄 Creando transacción en modo simulado');
-        return {
-          id: `mock-${Date.now()}`,
-          ...data,
-          status: 'pending',
-          date: new Date().toISOString(),
-        };
-      }
+      // 🚧 Endpoint de creación de transacciones no implementado
+      console.warn('🚧 Create transaction endpoint not yet implemented in backend');
+      
+      // 🎭 Simular creación exitosa
+      return {
+        id: `mock-${Date.now()}`,
+        ...data,
+        status: 'pending',
+        date: new Date().toISOString(),
+      };
     },
     onSuccess: () => {
       // 🔄 Invalidar caché para refrescar datos
@@ -421,33 +263,24 @@ export const useExchangeCurrency = () => {
 
   return useMutation({
     mutationFn: async (data: ExchangeData) => {
-      try {
-        // 🔗 Endpoint específico para intercambios (a implementar en backend)
-        const response = await apiService.post('/wallets/exchange', {
-          userId: user?.id,
-          fromCurrency: data.fromCurrency,
-          toCurrency: data.toCurrency,
-          amount: data.amount,
-        });
-        return response.data;
-      } catch (error) {
-        // 🎭 Simular intercambio exitoso
-        console.warn('🔄 Realizando intercambio en modo simulado');
-        const exchangeRate = getExchangeRate(
-          data.fromCurrency,
-          data.toCurrency
-        );
-        return {
-          id: `exchange-${Date.now()}`,
-          originalAmount: data.amount,
-          originalCurrency: data.fromCurrency,
-          convertedAmount: data.amount * exchangeRate,
-          convertedCurrency: data.toCurrency,
-          exchangeRate,
-          status: 'completed',
-          date: new Date().toISOString(),
-        };
-      }
+      // 🚧 Endpoint de intercambio no implementado
+      console.warn('🚧 Currency exchange endpoint not yet implemented in backend');
+      
+      // 🎭 Simular intercambio exitoso
+      const exchangeRate = getExchangeRate(
+        data.fromCurrency,
+        data.toCurrency
+      );
+      return {
+        id: `exchange-${Date.now()}`,
+        originalAmount: data.amount,
+        originalCurrency: data.fromCurrency,
+        convertedAmount: data.amount * exchangeRate,
+        convertedCurrency: data.toCurrency,
+        exchangeRate,
+        status: 'completed',
+        date: new Date().toISOString(),
+      };
     },
     onSuccess: () => {
       // 🔄 Refrescar datos del wallet
@@ -458,45 +291,40 @@ export const useExchangeCurrency = () => {
   });
 };
 
-// 💳 Hook para métodos de pago
+// 💳 Hook para métodos de pago con fallback
 export const usePaymentMethods = () => {
   const { user } = useAuth();
 
   return useQuery({
     queryKey: queryKeys.paymentMethods(user?.id || 'anonymous'),
     queryFn: async (): Promise<PaymentMethod[]> => {
-      try {
-        // 🔗 Obtener métodos de pago del backend
-        const response = await apiService.get(
-          `/users/${user?.id}/payment-methods`
-        );
-        return response.data;
-      } catch (error) {
-        // 🎭 Métodos de pago simulados
-        return [
-          {
-            id: '1',
-            name: 'CoomÜnity Card',
-            type: 'credit',
-            lastFour: '4721',
-            primary: true,
-          },
-          {
-            id: '2',
-            name: 'Nequi',
-            type: 'digital',
-            lastFour: '8923',
-            primary: false,
-          },
-          {
-            id: '3',
-            name: 'Bancolombia',
-            type: 'debit',
-            lastFour: '1234',
-            primary: false,
-          },
-        ];
-      }
+      // 🚧 Endpoint de métodos de pago no implementado en el backend
+      console.warn('🚧 Payment methods endpoint not yet implemented in backend. Using mock data.');
+      
+      // 🎭 Métodos de pago simulados
+      return [
+        {
+          id: '1',
+          name: 'CoomÜnity Card',
+          type: 'credit',
+          lastFour: '4721',
+          primary: true,
+        },
+        {
+          id: '2',
+          name: 'Nequi',
+          type: 'digital',
+          lastFour: '8923',
+          primary: false,
+        },
+        {
+          id: '3',
+          name: 'Bancolombia',
+          type: 'debit',
+          lastFour: '1234',
+          primary: false,
+        },
+      ];
     },
     enabled: !!user?.id,
     staleTime: 300000, // 5 minutos
@@ -508,21 +336,19 @@ export const useExchangeRates = () => {
   return useQuery({
     queryKey: queryKeys.exchangeRates(),
     queryFn: async () => {
-      try {
-        const response = await apiService.get('/exchange-rates');
-        return response.data;
-      } catch (error) {
-        // 🎭 Tasas de cambio simuladas para CoomÜnity
-        return {
-          COP_UC: 0.002, // 1 COP = 0.002 UC
-          UC_COP: 500, // 1 UC = 500 COP
-          COP_MERITOS: 0.001, // 1 COP = 0.001 MERITOS
-          MERITOS_COP: 1000, // 1 MÉRITO = 1000 COP
-          UC_MERITOS: 0.5, // 1 UC = 0.5 MERITOS
-          MERITOS_UC: 2, // 1 MÉRITO = 2 UC
-          lastUpdated: new Date().toISOString(),
-        };
-      }
+      // 🚧 Endpoint de tasas de cambio no implementado
+      console.warn('🚧 Exchange rates endpoint not yet implemented in backend. Using mock data.');
+      
+      // 🎭 Tasas de cambio simuladas para CoomÜnity
+      return {
+        COP_UC: 0.002, // 1 COP = 0.002 UC
+        UC_COP: 500, // 1 UC = 500 COP
+        COP_MERITOS: 0.001, // 1 COP = 0.001 MERITOS
+        MERITOS_COP: 1000, // 1 MÉRITO = 1000 COP
+        UC_MERITOS: 0.5, // 1 UC = 0.5 MERITOS
+        MERITOS_UC: 2, // 1 MÉRITO = 2 UC
+        lastUpdated: new Date().toISOString(),
+      };
     },
     staleTime: 300000, // 5 minutos
     refetchInterval: 600000, // Refrescar cada 10 minutos

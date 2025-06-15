@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 🎯 Builder.io Pre-commit Hook
+# Validates Builder.io rules before allowing commits
+
+echo "🎯 Running Builder.io pre-commit validation..."
+
+# Run Builder.io rules validation
+npm run validate:builder
+
+# Check if validation passed
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Builder.io validation failed!"
+  echo "🔧 Fix the issues above before committing."
+  echo "💡 Run 'npm run validate:builder:fix' to auto-fix some issues."
+  echo "📖 See .builderrules for detailed guidelines."
+  exit 1
+fi
+
+echo "✅ Builder.io validation passed!"
+
+# Run standard linting
+echo "🔍 Running ESLint..."
+npm run lint
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "⚠️ ESLint found issues. Consider fixing them."
+  echo "🔧 Run 'npm run lint:fix' to auto-fix some issues."
+  # Don't exit here, allow commit with warnings
+fi
+
+echo "✅ Pre-commit validation completed!" 

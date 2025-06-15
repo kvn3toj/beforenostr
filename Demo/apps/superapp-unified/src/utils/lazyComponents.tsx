@@ -108,16 +108,115 @@ export const LazyPages = {
     <SimpleLoader />
   ),
   
+  // AÑADIR LAS PÁGINAS FALTANTES
+  AnalyticsPage: createLazyComponent(
+    () => import('../pages/Analytics'),
+    <SimpleLoader />
+  ),
+  
+  MundosPage: createLazyComponent(
+    () => import('../pages/Mundos'),
+    <SimpleLoader />
+  ),
+  
   SettingsPage: createLazyComponent(
     () => import('../pages/Settings'),
     <SimpleLoader />
   ),
   
+  // PÁGINAS FALTANTES AÑADIDAS
+
+  // Video/UPlay Pages
+  UPlayVideoPlayer: createLazyComponent(
+    () => import('../pages/UPlayVideoPlayer'),
+    <SimpleLoader />
+  ),
+
+  UnifiedUPlay: createLazyComponent(
+    () => import('../pages/UnifiedUPlay'),
+    <SimpleLoader />
+  ),
+
+  InteractiveVideoEnhanced: createLazyComponent(
+    () => import('../pages/InteractiveVideoEnhanced'),
+    <SimpleLoader />
+  ),
+
+  InteractiveVideoDemo: createLazyComponent(
+    () => import('../pages/InteractiveVideoDemo'),
+    <SimpleLoader />
+  ),
+
+  VideoHome: createLazyComponent(
+    () => import('../pages/VideoHome'),
+    <SimpleLoader />
+  ),
+
+  VideoPlayer: createLazyComponent(
+    () => import('../pages/VideoPlayer'),
+    <SimpleLoader />
+  ),
+
+  // Marketplace Pages
+  MarketplaceTest: createLazyComponent(
+    () => import('../pages/MarketplaceTest'),
+    <SimpleLoader />
+  ),
+
+  ProductDetail: createLazyComponent(
+    () => import('../pages/ProductDetail'),
+    <SimpleLoader />
+  ),
+
+  ProductDetails: createLazyComponent(
+    () => import('../pages/ProductDetails'),
+    <SimpleLoader />
+  ),
+
+  // Social Pages
+  SocialChat: createLazyComponent(
+    () => import('../pages/SocialChat'),
+    <SimpleLoader />
+  ),
+
+  SocialFeed: createLazyComponent(
+    () => import('../pages/SocialFeed'),
+    <SimpleLoader />
+  ),
+
+  // Challenge Pages
+  ChallengeDetailPage: createLazyComponent(
+    () => import('../pages/ChallengeDetailPage'),
+    <SimpleLoader />
+  ),
+
+  // Special Pages
+  BetaRegister: createLazyComponent(
+    () => import('../pages/BetaRegister'),
+    <SimpleLoader />
+  ),
+
+  PWADemo: createLazyComponent(
+    () => import('../pages/PWADemo'),
+    <SimpleLoader />
+  ),
+
+  AuditLogsPage: createLazyComponent(
+    () => import('../pages/AuditLogsPage'),
+    <SimpleLoader />
+  ),
+
+  // Alternative Home Page
+  HomePageAlternative: createLazyComponent(
+    () => import('../pages/HomePage'),
+    <SimpleLoader />
+  ),
+
   HelpPage: createLazyComponent(
     () => import('../pages/Settings'), // Using Settings as placeholder for Help
     <SimpleLoader />
   ),
-  
+
   NotFoundPage: createLazyComponent(
     () => import('../pages/Home'), // Using Home as placeholder for 404
     <SimpleLoader />
@@ -221,10 +320,65 @@ export const preloadRouteComponents = (route: string) => {
     case '/groups':
       import('../pages/GroupsPageEnhanced');
       break;
+    case '/analytics':
+      import('../pages/Analytics');
+      break;
+    case '/mundos':
+      import('../pages/Mundos');
+      break;
     case '/settings':
       import('../pages/Settings');
       break;
+    // Video/UPlay Routes
+    case '/uplay/unified':
+      import('../pages/UnifiedUPlay');
+      break;
+    case '/uplay/interactive':
+      import('../pages/InteractiveVideoEnhanced');
+      break;
+    case '/uplay/demo':
+      import('../pages/InteractiveVideoDemo');
+      break;
+    case '/videos':
+      import('../pages/VideoHome');
+      break;
+    // Marketplace Routes
+    case '/marketplace/test':
+      import('../pages/MarketplaceTest');
+      break;
+    // Social Routes
+    case '/social/chat':
+      import('../pages/SocialChat');
+      break;
+    case '/social/feed':
+      import('../pages/SocialFeed');
+      break;
+    // Special Routes
+    case '/beta-register':
+      import('../pages/BetaRegister');
+      break;
+    case '/pwa-demo':
+      import('../pages/PWADemo');
+      break;
+    case '/admin/audit-logs':
+      import('../pages/AuditLogsPage');
+      break;
+    case '/home-alt':
+      import('../pages/HomePage');
+      break;
     default:
+      // Handle dynamic routes
+      if (route.startsWith('/uplay/video/')) {
+        import('../pages/UPlayVideoPlayer');
+      } else if (route.startsWith('/video/')) {
+        import('../pages/VideoPlayer');
+      } else if (route.startsWith('/marketplace/product/')) {
+        import('../pages/ProductDetail');
+      } else if (route.startsWith('/product/')) {
+        import('../pages/ProductDetails');
+      } else if (route.startsWith('/challenges/')) {
+        import('../pages/ChallengeDetailPage');
+      }
       break;
   }
 };

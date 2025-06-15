@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('ÜPlay Video Reproduction', () => {
   test.beforeEach(async ({ page }) => {
     // Navegar al módulo ÜPlay
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForSelector('#root');
     
     // Esperar a que carguen los videos

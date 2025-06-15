@@ -23,7 +23,7 @@ async function bootstrap() {
 
   loggerService.log('Application starting...', 'Bootstrap');
 
-  // Enhanced CORS configuration with better debugging and dynamic port support
+  // 🚀 CORS DINÁMICO Y ROBUSTO - Configuración a prueba de balas para desarrollo
   app.enableCors({
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       // Log all CORS requests for debugging
@@ -32,94 +32,74 @@ async function bootstrap() {
         'CORS'
       );
 
-      // Permitir requests sin origin (ej. aplicaciones móviles, Postman, server-to-server)
+      // ✅ PERMITIR requests sin origin (aplicaciones móviles, Postman, server-to-server)
       if (!origin) {
         loggerService.log('CORS: Allowing request without origin', 'CORS');
         return callback(null, true);
       }
 
-      // Enhanced localhost/127.0.0.1 regex to handle more cases including all port ranges
-      const localhostRegex =
-        /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)(:\d+)?$/;
-      if (localhostRegex.test(origin)) {
+      // ✅ DESARROLLO: Permitir CUALQUIER puerto de localhost/127.0.0.1 (SOLUCIÓN PRINCIPAL)
+      // Esta expresión regular captura localhost con cualquier puerto (3001, 3003, 3009, 48752, etc.)
+      const localhostDynamicRegex = /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)(:\d+)?$/;
+      if (localhostDynamicRegex.test(origin)) {
         loggerService.log(
-          `CORS: Allowing localhost/127.0.0.1 origin: ${origin}`,
+          `CORS: ✅ Allowing localhost origin with dynamic port: ${origin}`,
           'CORS'
         );
         return callback(null, true);
       }
 
-      // Handle Vite dev server dynamic ports - expanded to handle ALL port ranges
-      // This includes test environment ports like 48752
-      const viteDevRegex = /^https?:\/\/(localhost|127\.0\.0\.1):(\d{1,5})$/;
-      if (viteDevRegex.test(origin)) {
-        const portMatch = origin.match(/:(\d{1,5})$/);
-        const port = portMatch ? parseInt(portMatch[1]) : 0;
-
-        // Allow any port between 1024-65535 for development/testing
-        if (port >= 1024 && port <= 65535) {
-          loggerService.log(
-            `CORS: Allowing development/test origin with port ${port}: ${origin}`,
-            'CORS'
-          );
-          return callback(null, true);
-        }
+      // ✅ DESARROLLO: Permitir dominios .local y variantes de desarrollo
+      const developmentRegex = /^https?:\/\/(.*\.(local|localhost|test|dev))(:\d+)?$/;
+      if (developmentRegex.test(origin)) {
+        loggerService.log(
+          `CORS: ✅ Allowing development domain: ${origin}`,
+          'CORS'
+        );
+        return callback(null, true);
       }
 
-      // Permitir orígenes específicos para desarrollo y producción
-      const allowedOrigins = [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'http://localhost:3002',
-        'http://localhost:3003',
-        'http://localhost:5173',
-        'http://localhost:5174',
-        'http://127.0.0.1:3000',
-        'http://127.0.0.1:3001',
-        'http://127.0.0.1:5173',
-        'http://127.0.0.1:8080',
-        // Environment variables for production
+      // ✅ PRODUCCIÓN: Lista específica de orígenes permitidos
+      const allowedProductionOrigins = [
+        // Variables de entorno para producción
         process.env.FRONTEND_URL,
         process.env.VITE_BASE_URL,
         process.env.ALLOWED_ORIGIN,
+        process.env.PRODUCTION_FRONTEND_URL,
+        // Dominios de producción específicos (agregar según necesidad)
+        'https://app.coomunity.com',
+        'https://coomunity.com',
+        'https://www.coomunity.com',
       ].filter(Boolean);
 
-      if (allowedOrigins.includes(origin)) {
+      if (allowedProductionOrigins.includes(origin)) {
         loggerService.log(
-          `CORS: Allowing whitelisted origin: ${origin}`,
+          `CORS: ✅ Allowing production origin: ${origin}`,
           'CORS'
         );
         return callback(null, true);
       }
 
-      // En desarrollo, ser más permisivo
-      const isDevelopment =
+      // 🔍 DETERMINAR ENTORNO
+      const isDevelopment = 
         process.env.NODE_ENV === 'development' ||
         process.env.NODE_ENV !== 'production' ||
         !process.env.NODE_ENV;
 
       if (isDevelopment) {
-        // Allow any local development origin in development mode
-        const devOriginRegex =
-          /^https?:\/\/(localhost|127\.0\.0\.1|.*\.local)(:\d+)?$/;
-        if (devOriginRegex.test(origin)) {
-          loggerService.log(
-            `CORS: Allowing development origin: ${origin}`,
-            'CORS'
-          );
-          return callback(null, true);
-        }
-
-        // In development, log and allow unknown origins with warning
+        // 🚨 DESARROLLO: Ser ultra-permisivo para evitar bloqueos
         loggerService.warn(
-          `CORS: Allowing unknown origin in development mode: ${origin}`,
+          `CORS: ⚠️ DEVELOPMENT MODE - Allowing unknown origin: ${origin}`,
           'CORS'
         );
         return callback(null, true);
       }
 
-      // En producción, rechazar orígenes no permitidos
-      loggerService.error(`CORS: Blocked disallowed origin: ${origin}`, 'CORS');
+      // 🚫 PRODUCCIÓN: Rechazar orígenes no autorizados
+      loggerService.error(
+        `CORS: ❌ PRODUCTION MODE - Blocked unauthorized origin: ${origin}`,
+        'CORS'
+      );
       return callback(
         new Error(`CORS: Origin ${origin} not allowed by CORS policy`),
         false

@@ -1,2 +1,98 @@
+# 🏗️ CoomÜnity Monorepo - Estructura Organizacional
 
-<style>#mermaid-1748036383616{font-family:sans-serif;font-size:16px;fill:#333;}#mermaid-1748036383616 .error-icon{fill:#552222;}#mermaid-1748036383616 .error-text{fill:#552222;stroke:#552222;}#mermaid-1748036383616 .edge-thickness-normal{stroke-width:2px;}#mermaid-1748036383616 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1748036383616 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1748036383616 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1748036383616 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1748036383616 .marker{fill:#333333;}#mermaid-1748036383616 .marker.cross{stroke:#333333;}#mermaid-1748036383616 svg{font-family:sans-serif;font-size:16px;}#mermaid-1748036383616 .label{font-family:sans-serif;color:#333;}#mermaid-1748036383616 .label text{fill:#333;}#mermaid-1748036383616 .node rect,#mermaid-1748036383616 .node circle,#mermaid-1748036383616 .node ellipse,#mermaid-1748036383616 .node polygon,#mermaid-1748036383616 .node path{fill:#ECECFF;stroke:#9370DB;stroke-width:1px;}#mermaid-1748036383616 .node .label{text-align:center;}#mermaid-1748036383616 .node.clickable{cursor:pointer;}#mermaid-1748036383616 .arrowheadPath{fill:#333333;}#mermaid-1748036383616 .edgePath .path{stroke:#333333;stroke-width:1.5px;}#mermaid-1748036383616 .flowchart-link{stroke:#333333;fill:none;}#mermaid-1748036383616 .edgeLabel{background-color:#e8e8e8;text-align:center;}#mermaid-1748036383616 .edgeLabel rect{opacity:0.5;background-color:#e8e8e8;fill:#e8e8e8;}#mermaid-1748036383616 .cluster rect{fill:#ffffde;stroke:#aaaa33;stroke-width:1px;}#mermaid-1748036383616 .cluster text{fill:#333;}#mermaid-1748036383616 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:sans-serif;font-size:12px;background:hsl(80,100%,96.2745098039%);border:1px solid #aaaa33;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-1748036383616:root{--mermaid-font-family:sans-serif;}#mermaid-1748036383616:root{--mermaid-alt-font-family:sans-serif;}#mermaid-1748036383616 flowchart{fill:apa;}</style>
+## 📁 Estructura del Proyecto
+
+```
+GAMIFIER copy/
+├── 📁 apps/                    # Aplicaciones principales
+│   ├── superapp-unified/       # SuperApp CoomÜnity (Frontend)
+│   └── admin-frontend/         # Gamifier Admin (Frontend)
+├── 📁 backend/                 # Backend NestJS compartido
+├── 📁 docs/                    # 📚 DOCUMENTACIÓN ORGANIZADA
+│   ├── accessibility/          # Reportes de accesibilidad
+│   ├── diagrams/              # Diagramas Mermaid (.mmd)
+│   ├── implementation/         # Documentos de implementación
+│   ├── reports/               # Reportes generales y archivos MD/TXT
+│   └── testing/               # Documentación de testing y E2E
+├── 📁 scripts/                # 🔧 SCRIPTS ORGANIZADOS
+│   ├── analysis/              # Scripts de análisis y auditoría
+│   ├── fixes/                 # Scripts de corrección automática
+│   ├── utilities/             # Scripts utilitarios generales
+│   └── database/              # Scripts relacionados con BD (SQL)
+├── 📁 assets/                 # 🖼️ RECURSOS MULTIMEDIA
+│   ├── images/                # Imágenes del proyecto
+│   ├── screenshots/           # Screenshots y capturas
+│   └── temp/                  # Archivos temporales
+├── 📁 config/                 # ⚙️ CONFIGURACIONES ARCHIVADAS
+│   ├── archived/              # Configuraciones y reportes JSON antiguos
+│   ├── backup/                # Respaldos de configuración y datos CSV
+│   └── json/                  # Archivos JSON de configuración
+├── 📁 logs/                   # 📋 LOGS ORGANIZADOS POR CATEGORÍA
+│   ├── auth/                  # Logs de autenticación
+│   ├── backend/               # Logs del servidor backend
+│   ├── testing/               # Logs de pruebas y testing
+│   └── deployment/            # Logs de despliegue
+└── 📁 shared/                 # Código compartido entre apps
+```
+
+## 🎯 Principios de Organización
+
+### ✅ **Archivos que DEBEN estar en la raíz:**
+- `package.json` - Configuración del monorepo
+- `turbo.json` - Configuración de Turborepo
+- `.env*` - Variables de entorno
+- `.gitignore` - Exclusiones de Git
+- `README.md` - Documentación principal
+- Archivos de configuración esenciales (`.eslintrc`, `.prettierrc`, etc.)
+
+### 🗂️ **Archivos organizados por categoría:**
+- **Documentación** → `docs/`
+- **Scripts** → `scripts/`
+- **Imágenes/Screenshots** → `assets/`
+- **Configuraciones archivadas** → `config/`
+
+## 🧹 Limpieza Realizada
+
+### 📊 **Antes vs Después:**
+- **Antes**: 483 archivos/carpetas en raíz
+- **Después**: 27 archivos/carpetas en raíz
+- **Reducción**: 94% de archivos organizados
+
+### 📁 **Archivos movidos:**
+- **118 archivos .md** → `docs/`
+- **144 archivos .js** → `scripts/`
+- **40 archivos .json** → `config/json/` y `config/archived/`
+- **80 archivos .png** → `assets/screenshots/`
+- **31 archivos .log** → `logs/auth/`, `logs/backend/`, `logs/testing/`
+- **6 archivos .mmd** → `docs/diagrams/`
+- **3 archivos .csv** → `config/backup/`
+- **7 archivos .sql** → `scripts/database/`
+- **6 archivos .txt** → `docs/reports/`
+
+## 🛡️ Mantenimiento
+
+### **Prevención de acumulación:**
+1. **Scripts temporales** → `scripts/utilities/`
+2. **Reportes nuevos** → `docs/reports/`
+3. **Screenshots de debug** → `assets/temp/`
+4. **Configuraciones obsoletas** → `config/archived/`
+
+### **Limpieza periódica recomendada:**
+```bash
+# Cada 2 semanas, revisar y limpiar:
+find assets/temp/ -name "*.png" -mtime +14 -delete
+find config/archived/ -name "*.json" -mtime +30 -delete
+find docs/reports/ -name "*debug*" -mtime +7 -delete
+```
+
+## 🚀 Beneficios Obtenidos
+
+- ✅ **Directorio raíz limpio y profesional**
+- ✅ **Fácil navegación y localización de archivos**
+- ✅ **Mejor experiencia de desarrollo**
+- ✅ **Estructura escalable para el futuro**
+- ✅ **Cumplimiento de mejores prácticas de monorepo**
+
+---
+
+*Estructura creada siguiendo las mejores prácticas de [Turborepo](https://github.com/vercel/turborepo/discussions/2639) y [monorepo management](https://victorlillo.dev/blog/clean-install-npm-yarn-monorepo)* 

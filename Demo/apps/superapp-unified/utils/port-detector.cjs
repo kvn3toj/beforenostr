@@ -28,8 +28,8 @@ async function detectSuperAppPort() {
       }
     }
 
-    // Método 2: Verificar puertos comunes en orden
-    const commonPorts = [3003, 3001, 3000, 3005, 3006, 3007, 3008, 3009, 3010];
+    // Método 2: Verificar puertos comunes en orden (priorizando 3001)
+    const commonPorts = [3001, 3000, 3003, 3005, 3006, 3007, 3008, 3009, 3010];
     for (const port of commonPorts) {
       const isActive = await checkPortActive(port);
       if (isActive) {
@@ -43,12 +43,12 @@ async function detectSuperAppPort() {
     }
 
     // Puerto por defecto si no se encuentra nada
-    console.log('⚠️  No se pudo detectar puerto activo, usando 3000 por defecto');
-    return 3000;
+    console.log('⚠️  No se pudo detectar puerto activo, usando 3001 por defecto');
+    return 3001;
 
   } catch (error) {
     console.log('⚠️  Error detectando puerto:', error.message);
-    return 3000;
+    return 3001;
   }
 }
 

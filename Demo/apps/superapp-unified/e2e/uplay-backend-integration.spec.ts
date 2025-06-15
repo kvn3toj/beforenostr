@@ -20,7 +20,7 @@ test.describe('ÜPlay Backend Integration', () => {
     });
 
     // Navegar a la página de ÜPlay
-    await page.goto('/play');
+    await page.goto('/uplay');
     
     // Esperar a que React se monte
     await page.waitForSelector('#root');
@@ -127,7 +127,7 @@ test.describe('ÜPlay Backend Integration', () => {
     });
     
     // Navegar a la página
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForSelector('#root');
     
     // Esperar a que se realice la llamada API
@@ -142,7 +142,7 @@ test.describe('ÜPlay Backend Integration', () => {
 
   test('should handle loading states correctly', async ({ page }) => {
     // Navegar a la página
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForSelector('#root');
     
     // Verificar que la página no muestra errores de carga

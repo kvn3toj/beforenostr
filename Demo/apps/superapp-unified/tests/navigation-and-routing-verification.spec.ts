@@ -62,7 +62,7 @@ test.describe('Navigation and Routing Comprehensive Verification', () => {
     await page.click('text=ÜPlay');
     await page.waitForLoadState('networkidle');
     
-    expect(page.url()).toContain('/play');
+    expect(page.url()).toContain('/uplay');
     
     // Verificar contenido específico de ÜPlay
     await expect(page.locator('text=ÜPlay, text=GPL, text=Reproductor').first()).toBeVisible();
@@ -190,7 +190,7 @@ test.describe('Navigation and Routing Comprehensive Verification', () => {
   test('🧭 Should maintain URL consistency', async () => {
     const navigationTests = [
       { label: 'Inicio', expectedPath: '/', text: 'Inicio' },
-      { label: 'ÜPlay', expectedPath: '/play', text: 'ÜPlay' },
+      { label: 'ÜPlay', expectedPath: '/uplay', text: 'ÜPlay' },
       { label: 'Social', expectedPath: '/social', text: 'Social' },
       { label: 'Marketplace', expectedPath: '/marketplace', text: 'Marketplace' },
       { label: 'PWA Demo', expectedPath: '/pwa', text: 'PWA Demo' },
@@ -225,7 +225,7 @@ test.describe('Navigation and Routing Comprehensive Verification', () => {
   test('🔍 Should handle direct URL access', async () => {
     // Probar acceso directo a URLs específicas
     const directUrls = [
-      '/play',
+      '/uplay',
       '/social', 
       '/marketplace',
       '/pwa',

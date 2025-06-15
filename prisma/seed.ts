@@ -449,7 +449,7 @@ async function main() {
         firstName: 'Admin',
         lastName: 'System',
         password: adminPassword,
-        avatarUrl: 'https://example.com/avatars/admin.jpg',
+        avatarUrl: null,
         isActive: true,
         status: 'ACTIVE',
         personalityId: personalities[0].id,
@@ -470,7 +470,7 @@ async function main() {
         firstName: 'John',
         lastName: 'Doe',
         password: defaultPassword,
-        avatarUrl: 'https://example.com/avatars/user.jpg',
+        avatarUrl: null,
         isActive: true,
         status: 'ACTIVE',
         personalityId: personalities[1].id,
@@ -491,7 +491,7 @@ async function main() {
         firstName: 'Jane',
         lastName: 'Smith',
         password: defaultPassword,
-        avatarUrl: 'https://example.com/avatars/moderator.jpg',
+        avatarUrl: null,
         isActive: true,
         status: 'ACTIVE',
         personalityId: personalities[2].id,
@@ -512,7 +512,7 @@ async function main() {
         firstName: 'Alice',
         lastName: 'Johnson',
         password: defaultPassword,
-        avatarUrl: 'https://example.com/avatars/premium.jpg',
+        avatarUrl: null,
         isActive: true,
         status: 'ACTIVE',
         topUserCount: 5,
@@ -534,7 +534,7 @@ async function main() {
         firstName: 'Bob',
         lastName: 'Wilson',
         password: defaultPassword,
-        avatarUrl: 'https://example.com/avatars/creator.jpg',
+        avatarUrl: null,
         isActive: true,
         status: 'ACTIVE',
         topUserCount: 3,
@@ -603,7 +603,7 @@ async function main() {
         firstName: 'E2E',
         lastName: 'Tester',
         password: e2eTestPassword,
-        avatarUrl: 'https://example.com/avatars/e2e-tester.jpg',
+        avatarUrl: null,
         isActive: true,
         status: 'ACTIVE',
         personalityId: personalities[1].id,
@@ -1268,6 +1268,291 @@ async function main() {
   );
   
   console.log('  ✓ Created video permissions for all videos');
+
+  // ========================================
+  // STEP 7.5: Create Interactive Video Questions and Answer Options
+  // ========================================
+  console.log('❓ Creating interactive video questions...');
+  
+  const videoQuestions = [];
+  
+  // Questions for "Introducción a la Gamificación" (videoItems[0])
+  const introGamificationQuestions = await Promise.all([
+    prisma.question.create({
+      data: {
+        videoItemId: videoItems[0].id,
+        timestamp: 30, // 30 seconds into the video
+        type: 'MULTIPLE_CHOICE',
+        text: '¿Cuál es el principal objetivo de la gamificación en educación?',
+        languageCode: 'es',
+        isActive: true,
+      },
+    }),
+    prisma.question.create({
+      data: {
+        videoItemId: videoItems[0].id,
+        timestamp: 90, // 1:30 into the video
+        type: 'MULTIPLE_CHOICE',
+        text: '¿Qué elemento NO es típico de la gamificación?',
+        languageCode: 'es',
+        isActive: true,
+      },
+    }),
+    prisma.question.create({
+      data: {
+        videoItemId: videoItems[0].id,
+        timestamp: 150, // 2:30 into the video
+        type: 'TRUE_FALSE',
+        text: 'La gamificación solo funciona con estudiantes jóvenes.',
+        languageCode: 'es',
+        isActive: true,
+      },
+    }),
+  ]);
+  videoQuestions.push(...introGamificationQuestions);
+
+  // Answer options for "Introducción a la Gamificación" questions
+  await Promise.all([
+    // Question 1 options
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[0].id,
+        text: 'Motivar y comprometer a los estudiantes',
+        isCorrect: true,
+        order: 1,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[0].id,
+        text: 'Hacer que los estudiantes jueguen más',
+        isCorrect: false,
+        order: 2,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[0].id,
+        text: 'Reemplazar completamente la educación tradicional',
+        isCorrect: false,
+        order: 3,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[0].id,
+        text: 'Eliminar la necesidad de profesores',
+        isCorrect: false,
+        order: 4,
+      },
+    }),
+
+    // Question 2 options
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[1].id,
+        text: 'Puntos y badges',
+        isCorrect: false,
+        order: 1,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[1].id,
+        text: 'Leaderboards',
+        isCorrect: false,
+        order: 2,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[1].id,
+        text: 'Memorización pasiva',
+        isCorrect: true,
+        order: 3,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[1].id,
+        text: 'Desafíos progresivos',
+        isCorrect: false,
+        order: 4,
+      },
+    }),
+
+    // Question 3 options (True/False)
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[2].id,
+        text: 'Verdadero',
+        isCorrect: false,
+        order: 1,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: introGamificationQuestions[2].id,
+        text: 'Falso',
+        isCorrect: true,
+        order: 2,
+      },
+    }),
+  ]);
+
+  // Questions for "Mecánicas de Recompensa" (videoItems[2])
+  const rewardMechanicsQuestions = await Promise.all([
+    prisma.question.create({
+      data: {
+        videoItemId: videoItems[2].id,
+        timestamp: 45, // 45 seconds into the video
+        type: 'MULTIPLE_CHOICE',
+        text: '¿Cuál es el principio clave de las mecánicas de recompensa efectivas?',
+        languageCode: 'es',
+        isActive: true,
+      },
+    }),
+    prisma.question.create({
+      data: {
+        videoItemId: videoItems[2].id,
+        timestamp: 120, // 2:00 into the video
+        type: 'MULTIPLE_CHOICE',
+        text: '¿Qué tipo de recompensa es más sostenible a largo plazo?',
+        languageCode: 'es',
+        isActive: true,
+      },
+    }),
+  ]);
+  videoQuestions.push(...rewardMechanicsQuestions);
+
+  // Answer options for "Mecánicas de Recompensa" questions
+  await Promise.all([
+    // Question 1 options
+    prisma.answerOption.create({
+      data: {
+        questionId: rewardMechanicsQuestions[0].id,
+        text: 'Dar recompensas constantemente',
+        isCorrect: false,
+        order: 1,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: rewardMechanicsQuestions[0].id,
+        text: 'Equilibrar esfuerzo y recompensa (Ayni)',
+        isCorrect: true,
+        order: 2,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: rewardMechanicsQuestions[0].id,
+        text: 'Solo dar recompensas materiales',
+        isCorrect: false,
+        order: 3,
+      },
+    }),
+
+    // Question 2 options
+    prisma.answerOption.create({
+      data: {
+        questionId: rewardMechanicsQuestions[1].id,
+        text: 'Recompensas monetarias',
+        isCorrect: false,
+        order: 1,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: rewardMechanicsQuestions[1].id,
+        text: 'Reconocimiento y crecimiento personal',
+        isCorrect: true,
+        order: 2,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: rewardMechanicsQuestions[1].id,
+        text: 'Premios físicos',
+        isCorrect: false,
+        order: 3,
+      },
+    }),
+  ]);
+
+  // Questions for "Evaluación Gamificada" (videoItems[4])
+  const gamifiedEvaluationQuestions = await Promise.all([
+    prisma.question.create({
+      data: {
+        videoItemId: videoItems[4].id,
+        timestamp: 60, // 1:00 into the video
+        type: 'MULTIPLE_CHOICE',
+        text: '¿Cuál es la ventaja principal de la evaluación gamificada?',
+        languageCode: 'es',
+        isActive: true,
+      },
+    }),
+    prisma.question.create({
+      data: {
+        videoItemId: videoItems[4].id,
+        timestamp: 180, // 3:00 into the video
+        type: 'TRUE_FALSE',
+        text: 'La evaluación gamificada elimina completamente el estrés de los exámenes.',
+        languageCode: 'es',
+        isActive: true,
+      },
+    }),
+  ]);
+  videoQuestions.push(...gamifiedEvaluationQuestions);
+
+  // Answer options for "Evaluación Gamificada" questions
+  await Promise.all([
+    // Question 1 options
+    prisma.answerOption.create({
+      data: {
+        questionId: gamifiedEvaluationQuestions[0].id,
+        text: 'Hace que los exámenes sean más fáciles',
+        isCorrect: false,
+        order: 1,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: gamifiedEvaluationQuestions[0].id,
+        text: 'Proporciona feedback continuo y constructivo',
+        isCorrect: true,
+        order: 2,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: gamifiedEvaluationQuestions[0].id,
+        text: 'Elimina la necesidad de estudiar',
+        isCorrect: false,
+        order: 3,
+      },
+    }),
+
+    // Question 2 options (True/False)
+    prisma.answerOption.create({
+      data: {
+        questionId: gamifiedEvaluationQuestions[1].id,
+        text: 'Verdadero',
+        isCorrect: false,
+        order: 1,
+      },
+    }),
+    prisma.answerOption.create({
+      data: {
+        questionId: gamifiedEvaluationQuestions[1].id,
+        text: 'Falso',
+        isCorrect: true,
+        order: 2,
+      },
+    }),
+  ]);
+
+  console.log(`  ✓ Created ${videoQuestions.length} interactive video questions with their answer options`);
 
   // ========================================
   // STEP 8: Create Wallets

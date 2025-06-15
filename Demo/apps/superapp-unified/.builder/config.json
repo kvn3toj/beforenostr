@@ -1,5 +1,5 @@
 {
-  "apiKey": "YOUR_BUILDER_PUBLIC_KEY",
+  "apiKey": "3b71e07f1368425fa115a9cad4841d18",
   "organizationId": "Marketplace",
   "devServer": {
     "url": "http://localhost:3001",
@@ -17,19 +17,31 @@
   "pagesDir": "src/pages",
   "modelsDir": "src/models/builder",
   "iframe": {
-    "sandbox": "allow-scripts allow-same-origin allow-forms allow-popups allow-pointer-lock allow-popups-to-escape-sandbox",
+    "sandbox": "allow-scripts allow-same-origin allow-forms allow-popups allow-pointer-lock allow-popups-to-escape-sandbox allow-modals allow-orientation-lock allow-presentation allow-top-navigation-by-user-activation",
     "allowFullscreen": true,
-    "loading": "lazy"
+    "loading": "lazy",
+    "allow": "accelerometer; autoplay; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking",
+    "referrerPolicy": "no-referrer-when-downgrade"
   },
   "security": {
     "allowCookies": true,
     "allowLocalStorage": true,
     "allowSessionStorage": true,
-    "corsPolicy": "permissive"
+    "corsPolicy": "permissive",
+    "allowedOrigins": ["https://builder.io", "https://*.builder.io", "http://localhost:3001"],
+    "frameAncestors": ["'self'", "https://builder.io", "https://*.builder.io"]
   },
   "development": {
     "disableCookieWarnings": true,
-    "enableConsoleLogs": false,
-    "suppressSecurityWarnings": true
+    "enableConsoleLogs": true,
+    "suppressSecurityWarnings": false,
+    "allowUnsafeEval": true,
+    "allowUnsafeInline": true
+  },
+  "preview": {
+    "timeout": 30000,
+    "retries": 3,
+    "waitForSelector": "#root",
+    "enableJavaScript": true
   }
 } 

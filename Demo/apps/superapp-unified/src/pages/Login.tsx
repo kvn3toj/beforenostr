@@ -19,7 +19,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { NetworkErrorDebug } from '../components/debug/NetworkErrorDebug';
-import { authAPIDebug } from '../lib/api-service-debug';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -136,6 +135,8 @@ const Login: React.FC = () => {
   };
 
   // Función para probar login con debugging service
+  // COMENTADO: Requiere api-service-debug que no existe
+  /*
   const testEnhancedLogin = async () => {
     console.log('🧪 Testing enhanced login with diagnostics...');
     setError('');
@@ -183,6 +184,7 @@ const Login: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+  */
 
   // Función para probar login simple sin ApiService
   const testSimpleLogin = async () => {
@@ -509,6 +511,7 @@ const Login: React.FC = () => {
                   >
                     🧪 Test Simple
                   </Button>
+                  {/* COMENTADO: Requiere api-service-debug
                   <Button
                     size="small"
                     variant="contained"
@@ -518,6 +521,7 @@ const Login: React.FC = () => {
                   >
                     🔬 Test Enhanced
                   </Button>
+                  */}
                   <Button
                     size="small"
                     variant="outlined"

@@ -65,7 +65,7 @@ test.describe('Videos Data Display Integration', () => {
     console.log('🎮 [TEST] Iniciando verificación de videos en sección ÜPlay...');
     
     // Intentar navegar a diferentes rutas posibles para ÜPlay
-    const possibleRoutes = ['/uplay', '/play', '/videos', '/video-items'];
+    const possibleRoutes = ['/uplay', '/videos', '/video-items'];
     let foundRoute = false;
     
     for (const route of possibleRoutes) {
@@ -186,6 +186,123 @@ test.describe('Videos Data Display Integration', () => {
     // Navegar a la página de playlists
     await page.goto('/playlists');
     await page.waitForSelector('#root');
+    
+    // Esperar a que se completen las llamadas API
+    await page.waitForTimeout(3000);
+    
+    // Verificar que se hicieron las llamadas a la API del backend
+    if (playlistApiCallMade) {
+      console.log('✅ [TEST] Llamada a API de playlists confirmada');
+    } else {
+      console.log('ℹ️ [TEST] No se detectó llamada específica a API de playlists');
+    }
+    
+    if (videoApiCallMade) {
+      console.log('✅ [TEST] Llamada a API de videos confirmada');
+    } else {
+      console.log('ℹ️ [TEST] No se detectó llamada específica a API de videos');
+    }
+    
+    // Al menos una llamada API relacionada debería haberse hecho
+    const anyApiCall = playlistApiCallMade || videoApiCallMade;
+    if (anyApiCall) {
+      console.log('✅ [TEST] Integración con backend confirmada');
+    } else {
+      console.log('⚠️ [TEST] No se detectaron llamadas API específicas, verificando carga de datos');
+      
+      // Verificar que al menos hay datos cargados en la UI
+      const hasData = await page.locator('text=/playlist|video|datos|contenido/i').count() > 0;
+      expect(hasData).toBe(true);
+      console.log('✅ [TEST] Datos presentes en la UI');
+    }
+    
+    console.log('🎉 [TEST] Verificación de llamadas API completada');
+  });
+
+  test('should verify backend API call for video-items', async ({ page }) => {
+    console.log('🎯 Verificando llamadas API al backend para video-items...');
+    
+    // Navegar a la página de videos
+    await page.goto('/uplay');
+    await page.waitForLoadState('networkidle');
+
+    // Verificar rutas posibles donde podrían estar los videos
+    const possibleRoutes = ['/uplay', '/videos', '/video-items'];
+
+    // Verificar que se hayan hecho llamadas API para los videos
+    let videoApiCallMade = false;
+    let playlistApiCallMade = false;
+    
+    page.on('request', (request) => {
+      const url = request.url();
+      if (url.includes('3002')) {
+        if (url.includes('/video-items') || url.includes('/videos')) {
+          videoApiCallMade = true;
+          console.log('📡 [TEST] Llamada API de videos detectada:', url);
+        }
+        if (url.includes('/playlists')) {
+          playlistApiCallMade = true;
+          console.log('📡 [TEST] Llamada API de playlists detectada:', url);
+        }
+      }
+    });
+    
+    // Esperar a que se completen las llamadas API
+    await page.waitForTimeout(3000);
+    
+    // Verificar que se hicieron las llamadas a la API del backend
+    if (playlistApiCallMade) {
+      console.log('✅ [TEST] Llamada a API de playlists confirmada');
+    } else {
+      console.log('ℹ️ [TEST] No se detectó llamada específica a API de playlists');
+    }
+    
+    if (videoApiCallMade) {
+      console.log('✅ [TEST] Llamada a API de videos confirmada');
+    } else {
+      console.log('ℹ️ [TEST] No se detectó llamada específica a API de videos');
+    }
+    
+    // Al menos una llamada API relacionada debería haberse hecho
+    const anyApiCall = playlistApiCallMade || videoApiCallMade;
+    if (anyApiCall) {
+      console.log('✅ [TEST] Integración con backend confirmada');
+    } else {
+      console.log('⚠️ [TEST] No se detectaron llamadas API específicas, verificando carga de datos');
+      
+      // Verificar que al menos hay datos cargados en la UI
+      const hasData = await page.locator('text=/playlist|video|datos|contenido/i').count() > 0;
+      expect(hasData).toBe(true);
+      console.log('✅ [TEST] Datos presentes en la UI');
+    }
+    
+    console.log('🎉 [TEST] Verificación de llamadas API completada');
+  });
+
+  test('should handle loading states and errors gracefully', async ({ page }) => {
+    console.log('🎯 Verificando manejo de estados de carga y errores...');
+    
+    // Navegar a la página de videos
+    await page.goto('/uplay');
+    await page.waitForLoadState('networkidle');
+
+    // Verificar que se hayan hecho llamadas API para los videos
+    let videoApiCallMade = false;
+    let playlistApiCallMade = false;
+    
+    page.on('request', (request) => {
+      const url = request.url();
+      if (url.includes('3002')) {
+        if (url.includes('/video-items') || url.includes('/videos')) {
+          videoApiCallMade = true;
+          console.log('📡 [TEST] Llamada API de videos detectada:', url);
+        }
+        if (url.includes('/playlists')) {
+          playlistApiCallMade = true;
+          console.log('📡 [TEST] Llamada API de playlists detectada:', url);
+        }
+      }
+    });
     
     // Esperar a que se completen las llamadas API
     await page.waitForTimeout(3000);

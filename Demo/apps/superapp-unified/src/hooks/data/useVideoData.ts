@@ -92,7 +92,7 @@ const VideoApiService = {
     if (params.offset) queryParams.append('offset', params.offset.toString());
     if (params.search) queryParams.append('search', params.search);
 
-    const response = await apiService.get(`/videos?${queryParams.toString()}`);
+    const response = await apiService.get(`/video-items?${queryParams.toString()}`);
     
     // Validar cada video en la respuesta
     if (Array.isArray(response.data)) {
@@ -142,7 +142,7 @@ const VideoApiService = {
 
   // Obtener videos recomendados
   async getRecommendedVideos(limit: number = 10): Promise<VideoData[]> {
-    const response = await apiService.get(`/videos/recommended?limit=${limit}`);
+    const response = await apiService.get(`/video-items/recommended?limit=${limit}`);
     
     if (Array.isArray(response.data)) {
       return response.data.map((video: unknown) => validateVideoData(video));

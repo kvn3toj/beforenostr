@@ -16,7 +16,7 @@ test.describe('Videos Data Display - Backend Integration', () => {
     console.log('🎬 Iniciando test de visualización de videos del backend...');
     
     // Navegar directamente a la sección UPlay
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForLoadState('networkidle');
     
     // Verificar que estamos en la página UPlay/Videos
@@ -101,7 +101,7 @@ test.describe('Videos Data Display - Backend Integration', () => {
     });
     
     // Navegar a UPlay para triggear la llamada
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(5000); // Dar más tiempo para la carga
     
@@ -136,7 +136,7 @@ test.describe('Videos Data Display - Backend Integration', () => {
     console.log('🌍 Verificando información contextual de Mundos/Playlists...');
     
     // Navegar a UPlay
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
     
@@ -202,7 +202,7 @@ test.describe('Videos Data Display - Backend Integration', () => {
     console.log('🎯 Verificando interacción con videos...');
     
     // Navegar a UPlay
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
     
@@ -286,7 +286,7 @@ test.describe('Videos Data Display - Backend Integration', () => {
     });
     
     // Navegar a UPlay
-    await page.goto('/play');
+    await page.goto('/uplay');
     
     // Verificar que hay algún indicador de carga inicial o contenido
     const loadingOrContentIndicators = [

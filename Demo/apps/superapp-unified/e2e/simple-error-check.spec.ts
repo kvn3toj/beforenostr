@@ -44,8 +44,8 @@ test.describe('🔧 Test Simple de Errores - Post-Fix', () => {
     const isLoginPage = await page.locator('#email').isVisible();
     if (isLoginPage) {
       console.log('🔐 Realizando login con backend real...');
-      await page.fill('#email', 'test@coomunity.com');
-      await page.fill('#password', 'test123');
+      await page.fill('#email', 'user@gamifier.com');
+      await page.fill('#password', '123456');
       
       const loginPromise = page.waitForResponse(
         response => response.url().includes('/auth/login'),

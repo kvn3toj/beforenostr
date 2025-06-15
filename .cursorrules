@@ -54,7 +54,7 @@ Playwright tests in the CoomÜnity SuperApp project.
 1. **Environment Setup:**
    - Ensure both Backend (port 3002) and SuperApp Frontend (port 3001) are
      running
-   - Verify `VITE_ENABLE_MOCK_AUTH=true` is set in the environment
+   - Verify `VITE_ENABLE_MOCK_AUTH=false` is set in the environment
    - Navigate to the correct directory: `Demo/apps/superapp-unified/`
 
 2. **Port Detection:**
@@ -131,7 +131,7 @@ Playwright tests in the CoomÜnity SuperApp project.
 
 3. **Mock Authentication:**
    - Tests assume mock authentication is enabled
-   - Verify `VITE_ENABLE_MOCK_AUTH=true` in environment
+   - Verify `VITE_ENABLE_MOCK_AUTH=false` in environment
    - Tests should not require real authentication flows
 
 **Best Practices:**

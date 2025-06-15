@@ -23,7 +23,7 @@ import {
   Analytics as AnalyticsIcon,
   Info as InfoIcon,
   Star as StarIcon,
-} from '@mui/material/icons';
+} from '@mui/icons-material';
 
 // Import our enhanced components
 import InteractiveVideoPlayerOverlay from '../components/modules/uplay/components/InteractiveVideoPlayerOverlay';

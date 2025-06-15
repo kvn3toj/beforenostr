@@ -17,7 +17,7 @@ import {
   Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { authAPIDebug } from '../../lib/api-service-debug';
+// import { authAPIDebug } from '../../lib/api-service-debug'; // COMENTADO: archivo no existe
 
 interface NetworkErrorDebugProps {
   error?: Error | any;

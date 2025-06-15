@@ -67,26 +67,31 @@ class ApiService {
   private getAuthToken(): string | null {
     try {
       const token = localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
-      if (token) {
-        // Basic JWT validation - check if it's not expired
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          const now = Date.now() / 1000;
-          
-          if (payload.exp && payload.exp < now) {
-            console.warn(`${AUTH_CONFIG.LOG_PREFIX} 🔒 Token expired, clearing auth tokens`);
-            this.clearAuthTokens();
-            return null;
-          }
-          
-          return token;
-        } catch (parseError) {
-          console.warn(`${AUTH_CONFIG.LOG_PREFIX} 🔒 Invalid token format, clearing auth tokens`);
+      
+      // 📊 Debug logging mejorado
+      if (!token) {
+        console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔑 No token found in localStorage`);
+        return null;
+      }
+
+      // Basic JWT validation - check if it's not expired
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const now = Date.now() / 1000;
+        
+        if (payload.exp && payload.exp < now) {
+          console.warn(`${AUTH_CONFIG.LOG_PREFIX} 🔒 Token expired, clearing auth tokens`);
           this.clearAuthTokens();
           return null;
         }
+        
+        console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔑 Valid token found: ${token.substring(0, 20)}...`);
+        return token;
+      } catch (parseError) {
+        console.warn(`${AUTH_CONFIG.LOG_PREFIX} 🔒 Invalid token format, clearing auth tokens`);
+        this.clearAuthTokens();
+        return null;
       }
-      return null;
     } catch (error) {
       console.warn(`${AUTH_CONFIG.LOG_PREFIX} ⚠️ Failed to get auth token:`, error);
       return null;
@@ -106,7 +111,12 @@ class ApiService {
       const token = this.getAuthToken();
       if (token) {
         headers.Authorization = `Bearer ${token}`;
+        console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔑 Authorization header set with token: ${token.substring(0, 20)}...`);
+      } else {
+        console.warn(`${AUTH_CONFIG.LOG_PREFIX} ⚠️ No token available for authorization header`);
       }
+    } else {
+      console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔓 Request without authentication`);
     }
 
     return headers;
@@ -354,7 +364,10 @@ class ApiService {
 
     try {
       const url = `${this.baseURL}${endpoint}`;
-      const headers = this.createHeaders(options.headers ? false : true);
+      
+      // 🔑 SIEMPRE incluir autenticación por defecto, a menos que se especifique lo contrario
+      const includeAuth = (options as any).includeAuth !== false;
+      const headers = this.createHeaders(includeAuth);
 
       // Merge custom headers if provided
       if (options.headers) {
@@ -538,60 +551,11 @@ class ApiService {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    try {
-      const url = `${this.baseURL}${endpoint}`;
-      const headers = {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-      };
-
-      const config: RequestInit = {
-        ...options,
-        headers: { ...headers, ...options.headers },
-        signal: AbortSignal.timeout(this.timeout),
-      };
-
-      console.log(`🌐 API Request (No Auth): ${options.method || 'GET'} ${url}`);
-      
-      const response = await fetch(url, config);
-
-      if (!response.ok) {
-        const error = await this.handleErrorResponse(response);
-        throw error;
-      }
-
-      const contentType = response.headers.get('content-type');
-      let data: any;
-
-      if (contentType && contentType.includes('application/json')) {
-        data = await response.json();
-      } else {
-        data = await response.text();
-      }
-
-      console.log(`✅ API Success (No Auth): ${options.method || 'GET'} ${url}`, data);
-      return data;
-
-    } catch (error: any) {
-      // Handle CORS errors specifically
-      if (error.message.includes('CORS') || error.message.includes('fetch')) {
-        const corsError = new Error('Error de conexión con el servidor. Por favor, verifica tu conexión.');
-        (corsError as any).category = 'cors_error';
-        (corsError as any).isUserFriendly = true;
-        throw corsError;
-      }
-
-      // Debugging exhaustivo para otros errores
-      console.group(
-        `❌ API Error (No Auth): ${options.method || 'GET'} ${endpoint}`
-      );
-      console.error('💥 Error Message:', error.message);
-      console.error('🏷️ Error Type:', error.name);
-      console.error('📄 Full Error:', error);
-      console.groupEnd();
-
-      throw error;
-    }
+    // 🔑 Usar el método request principal con autenticación deshabilitada
+    return this.request<T>(endpoint, { 
+      ...options, 
+      includeAuth: false 
+    } as any);
   }
 }
 
@@ -622,29 +586,33 @@ export const authAPI = {
 
 // Export the wallet API methods
 export const walletAPI = {
+  // 🆕 NUEVO: Obtener mi wallet completo desde el backend
+  getMyWallet: () =>
+    apiService.get('/wallets/me'),
+  
   getBalance: (userId: string) =>
-    apiService.get(`/wallet/balance/${userId}`),
+    apiService.get(`/wallets/user/${userId}`),
   
   getTransactions: (userId: string) =>
-    apiService.get(`/wallet/transactions/${userId}`),
+    apiService.get(`/wallets/user/${userId}`), // Usa mismo endpoint que balance por ahora
   
   getMerits: (userId: string) =>
-    apiService.get(`/wallet/merits/${userId}`),
+    apiService.get(`/wallets/user/${userId}`), // Usa mismo endpoint que balance por ahora
   
   getAllMerits: () =>
-    apiService.get('/wallet/merits'),
+    apiService.get('/wallets/admin/all'), // Endpoint administrativo
   
   getMeritsLeaderboard: (limit = 10) =>
-    apiService.get(`/wallet/merits/leaderboard?limit=${limit}`),
+    apiService.get(`/wallets/admin/all?limit=${limit}`), // Endpoint administrativo con límite
   
   getMeritHistory: (userId: string, page = 0, limit = 20) =>
-    apiService.get(`/wallet/merits/history/${userId}?page=${page}&limit=${limit}`),
+    apiService.get(`/wallets/user/${userId}?page=${page}&limit=${limit}`), // Agregar params
   
   awardMerit: (userId: string, meritType: string, amount: number, description?: string) =>
-    apiService.post('/wallet/merits/award', { userId, meritType, amount, description }),
+    apiService.post('/wallets/admin/award', { userId, meritType, amount, description }),
   
   transfer: (fromUserId: string, toUserId: string, amount: number, description?: string) =>
-    apiService.post('/wallet/transfer', { fromUserId, toUserId, amount, description }),
+    apiService.post('/wallets/transfer', { fromUserId, toUserId, amount, description }),
 };
 
 // Export the user API methods
@@ -698,13 +666,13 @@ export const marketplaceAPI = {
 // Export the videos API methods
 export const videosAPI = {
   getCategories: () =>
-    apiService.get('/videos/categories'),
+    apiService.get('/video-items/categories'),
   
   getVideos: (category?: string) =>
-    apiService.get(`/videos${category ? `?category=${category}` : ''}`),
+    apiService.get(`/video-items${category ? `?category=${category}` : ''}`),
   
   getPlaylists: () =>
-    apiService.get('/videos/playlists'),
+    apiService.get('/video-items/playlists'),
 };
 
 // Export the stats API methods
@@ -742,53 +710,71 @@ export const mundosAPI = {
 
 // Export the social API methods
 export const socialAPI = {
-  getMatches: () =>
-    apiService.get('/social/matches'),
+  // ❌ ENDPOINTS NO IMPLEMENTADOS EN EL BACKEND - Comentados temporalmente
+  // getMatches: () =>
+  //   apiService.get('/social/matches'),
   
-  getMatch: (matchId: string) =>
-    apiService.get(`/social/matches/${matchId}`),
+  // getMatch: (matchId: string) =>
+  //   apiService.get(`/social/matches/${matchId}`),
   
-  getMessages: (matchId: string, page = 0, limit = 50) =>
-    apiService.get(`/social/matches/${matchId}/messages?page=${page}&limit=${limit}`),
+  // getMessages: (matchId: string, page = 0, limit = 50) =>
+  //   apiService.get(`/social/matches/${matchId}/messages?page=${page}&limit=${limit}`),
   
-  sendMessage: (matchId: string, message: string) =>
-    apiService.post(`/social/matches/${matchId}/messages`, { message }),
+  // sendMessage: (matchId: string, message: string) =>
+  //   apiService.post(`/social/matches/${matchId}/messages`, { message }),
   
-  updateUserStatus: (status: string) =>
-    apiService.patch('/social/status', { status }),
+  // updateUserStatus: (status: string) =>
+  //   apiService.patch('/social/status', { status }),
   
-  getNotifications: () =>
-    apiService.get('/social/notifications'),
+  // ✅ ENDPOINTS CORREGIDOS - Usar las rutas correctas del backend
   
-  markNotificationAsRead: (notificationId: string) =>
-    apiService.patch(`/social/notifications/${notificationId}/read`),
+  // Notificaciones - usar el endpoint correcto
+  getNotifications: (userId: string) =>
+    apiService.get(`/notifications/user/${userId}`),
   
+  markNotificationAsRead: (notificationId: string, userId: string) =>
+    apiService.patch(`/notifications/${notificationId}/read?userId=${userId}`),
+  
+  markAllNotificationsAsRead: (userId: string) =>
+    apiService.patch(`/notifications/user/${userId}/mark-all-read`),
+  
+  getUnreadNotificationsCount: (userId: string) =>
+    apiService.get(`/notifications/user/${userId}/unread-count`),
+  
+  // Estadísticas sociales - usar endpoint disponible
+  getSocialStats: () =>
+    apiService.get('/social/stats'),
+  
+  getRecentActivity: () =>
+    apiService.get('/social/activity/recent'),
+  
+  // Posts/Publicaciones - usar endpoints disponibles
   getPosts: (page = 0, limit = 20) =>
-    apiService.get(`/social/posts?page=${page}&limit=${limit}`),
+    apiService.get(`/social/publications?page=${page}&limit=${limit}`),
   
   getPost: (postId: string) =>
-    apiService.get(`/social/posts/${postId}`),
+    apiService.get(`/social/publications/${postId}`),
   
   createPost: (postData: any) =>
-    apiService.post('/social/posts', postData),
+    apiService.post('/social/publications', postData),
   
   deletePost: (postId: string) =>
-    apiService.delete(`/social/posts/${postId}`),
+    apiService.delete(`/social/publications/${postId}`),
   
   likePost: (postId: string) =>
-    apiService.post(`/social/posts/${postId}/like`),
+    apiService.post(`/social/publications/${postId}/like`),
   
   unlikePost: (postId: string) =>
-    apiService.delete(`/social/posts/${postId}/like`),
+    apiService.delete(`/social/publications/${postId}/like`),
   
   getPostLikes: (postId: string) =>
-    apiService.get(`/social/posts/${postId}/likes`),
+    apiService.get(`/social/publications/${postId}/likes`),
   
   getPostComments: (postId: string, page = 0, limit = 10) =>
-    apiService.get(`/social/posts/${postId}/comments?page=${page}&limit=${limit}`),
+    apiService.get(`/social/publications/${postId}/comments?page=${page}&limit=${limit}`),
   
   createComment: (postId: string, commentData: any) =>
-    apiService.post(`/social/posts/${postId}/comments`, commentData),
+    apiService.post(`/social/publications/${postId}/comments`, commentData),
   
   deleteComment: (commentId: string) =>
     apiService.delete(`/social/comments/${commentId}`),
@@ -798,6 +784,33 @@ export const socialAPI = {
   
   unlikeComment: (commentId: string) =>
     apiService.delete(`/social/comments/${commentId}/like`),
+  
+  // 🚧 FUNCIONALIDADES FUTURAS - Endpoints que se implementarán más adelante
+  // Matches/Coincidencias - Funcionalidad futura
+  getMatches: () => {
+    console.warn('🚧 Matches functionality not yet implemented in backend');
+    return Promise.resolve([]);
+  },
+  
+  getMatch: (matchId: string) => {
+    console.warn('🚧 Match details functionality not yet implemented in backend');
+    return Promise.resolve(null);
+  },
+  
+  getMessages: (matchId: string, page = 0, limit = 50) => {
+    console.warn('🚧 Messages functionality not yet implemented in backend');
+    return Promise.resolve([]);
+  },
+  
+  sendMessage: (matchId: string, message: string) => {
+    console.warn('🚧 Send message functionality not yet implemented in backend');
+    return Promise.resolve({ success: false, message: 'Not implemented yet' });
+  },
+  
+  updateUserStatus: (status: string) => {
+    console.warn('🚧 User status functionality not yet implemented in backend');
+    return Promise.resolve({ success: false, message: 'Not implemented yet' });
+  },
 };
 
 export default apiService;

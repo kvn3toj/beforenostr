@@ -170,7 +170,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
       >
         <CardContent sx={{ p: 2 }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid size={3}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography
                   variant="h6"
@@ -205,7 +205,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
               </Box>
             </Grid>
 
-            <Grid size={3}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography
                   variant="h6"

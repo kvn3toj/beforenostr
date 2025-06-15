@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import 'dotenv/config';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -18,8 +19,8 @@ export default defineConfig({
   
   // Configuración dinámica de baseURL
   use: {
-    // El baseURL se configurará dinámicamente en globalSetup
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+    // El baseURL se configurará dinámicamente en globalSetup, fallback a VITE_BASE_URL
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || process.env.VITE_BASE_URL || 'http://localhost:3001',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
@@ -54,7 +55,7 @@ export default defineConfig({
   // Configuración del servidor web (opcional, para CI)
   webServer: process.env.CI ? {
     command: 'npm run dev',
-    port: 3000,
+    port: parseInt(process.env.VITE_BASE_URL?.split(':')[2] || '3001'),
     reuseExistingServer: false,
     timeout: 120 * 1000,
   } : undefined,

@@ -147,7 +147,14 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
   } = useSocialMatches();
 
   const { data: notificationsData, isLoading: notificationsLoading } =
-    useSocialNotifications();
+    useSocialNotifications(user?.id || '');
+
+  // 🔍 Debug: Verificar datos de notificaciones
+  useEffect(() => {
+    if (notificationsData) {
+      console.log('✅ [SocialMain] Notificaciones obtenidas del backend:', notificationsData);
+    }
+  }, [notificationsData]);
 
   // 🎨 Animación de entrada
   useEffect(() => {

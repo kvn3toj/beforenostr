@@ -13,7 +13,7 @@ import { PlayArrow, BarChart, Groups, ShoppingCart, SwapHoriz } from '@mui/icons
 const MOBILE_NAV_ITEMS = [
   {
     label: 'ÜPlay',
-    value: '/play',
+    value: '/uplay',
     icon: <PlayArrow />,
   },
   {

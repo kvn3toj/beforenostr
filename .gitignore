@@ -24,3 +24,62 @@ dist-ssr
 *.sw?
 
 /src/generated/prisma
+
+# 🚫 DEBUG FILES PREVENTION
+# Prevent debug files from being committed
+*debug*.png
+*debug*.jpg
+*debug*.jpeg
+*debug*.ts
+*debug*.js
+*debug*.log
+*debug*.map
+*debug*.html
+*test*.png
+*test*.jpg
+debug-*
+*-debug.*
+
+# Debug directories
+debug/
+debug-*/
+*-debug/
+
+# Temporary screenshots
+screenshot-*.png
+temp-*.png
+tmp-*.png
+
+# 🗂️ ORGANIZED STRUCTURE MAINTENANCE
+# Prevent accumulation in root directory
+/*.md
+/*.txt
+/*.js
+/*.json
+/*.png
+/*.jpg
+/*.jpeg
+/*.mmd
+/*.csv
+/*.sql
+
+# Exceptions for essential root files
+!README.md
+!package.json
+!turbo.json
+!tsconfig.json
+!PROJECT_STRUCTURE.md
+
+# Allow organized files in their proper directories
+!logs/**/*.log
+!config/**/*.json
+!config/**/*.csv
+!docs/**/*.mmd
+!scripts/**/*.sql
+
+# Temporary and report files
+*-report-*.json
+accessibility-*.json
+audit-*.json
+*-audit-*.md
+*-report-*.md

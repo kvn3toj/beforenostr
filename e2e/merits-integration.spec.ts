@@ -74,7 +74,7 @@ test.describe('Fase A.3: Verificación del Módulo de Méritos y Tokens', () => 
   });
 
   test('Verificar sistema de Méritos en ÜPlay', async ({ page }) => {
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForLoadState('networkidle');
     
     // Buscar elementos de gamificación en ÜPlay
@@ -116,7 +116,7 @@ test.describe('Fase A.3: Verificación del Módulo de Méritos y Tokens', () => 
     const modules = [
       { path: '/', name: 'Home' },
       { path: '/social', name: 'Social' },
-      { path: '/play', name: 'ÜPlay' },
+      { path: '/uplay', name: 'ÜPlay' },
       { path: '/wallet', name: 'Wallet' }
     ];
     

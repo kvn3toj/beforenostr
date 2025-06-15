@@ -70,14 +70,14 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Simplificado', () => {
     
     // Navegar a la página de videos/ÜPlay
     try {
-      // Intentar ir a /play primero
-      await page.goto('/play');
+      // Intentar ir a /uplay primero
+      await page.goto('/uplay');
       await page.waitForLoadState('networkidle');
-      console.log('✅ Navegación a /play exitosa');
+      console.log('✅ Navegación a /uplay exitosa');
     } catch (error) {
-      console.log('ℹ️  /play no disponible, intentando otras rutas...');
+              console.log('ℹ️  /uplay no disponible, intentando otras rutas...');
       
-      // Si /play falla, intentar otras rutas de video
+              // Si /uplay falla, intentar otras rutas de video
       try {
         await page.goto('/videos');
         await page.waitForLoadState('networkidle');
@@ -115,7 +115,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Simplificado', () => {
     console.log('🎯 Verificando capacidad de interacción del jugador...');
     
     // Navegar a página de contenido
-    await page.goto('/play');
+    await page.goto('/uplay');
     await page.waitForLoadState('networkidle');
     
     // Verificar presencia de elementos interactivos

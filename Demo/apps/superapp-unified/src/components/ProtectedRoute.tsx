@@ -1,7 +1,8 @@
 import React from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { AppLayoutSkeleton } from './ui/SkeletonLoaders';
+import { AppLayout } from './layout/AppLayout';
 
 /**
  * ProtectedRoute Component
@@ -9,7 +10,7 @@ import { AppLayoutSkeleton } from './ui/SkeletonLoaders';
  * Protege las rutas que requieren autenticación.
  * - Si el usuario está cargando, muestra un skeleton loader
  * - Si el usuario no está autenticado, redirige a login
- * - Si el usuario está autenticado, renderiza las rutas hijas usando Outlet
+ * - Si el usuario está autenticado, renderiza AppLayout con las rutas hijas
  */
 export const ProtectedRoute: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -25,6 +26,7 @@ export const ProtectedRoute: React.FC = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Si está autenticado, renderizar las rutas hijas
-  return <Outlet />;
+  // 🔧 SOLUCIÓN CRÍTICA: Usar AppLayout para proporcionar Sidebar con enlaces ÜPlay
+  // Si está autenticado, renderizar AppLayout que incluye Sidebar y BottomNavigation
+  return <AppLayout />;
 }; 

@@ -26,7 +26,7 @@ import {
   EmojiEvents as TrophyIcon,
   School as SchoolIcon,
   Refresh as RefreshIcon,
-} from '@mui/material/icons';
+} from '@mui/icons-material';
 
 // Types
 interface Notification {

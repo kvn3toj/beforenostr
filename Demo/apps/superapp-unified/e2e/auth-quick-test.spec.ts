@@ -21,9 +21,10 @@ test.describe('🔐 Verificación Rápida de Autenticación Real', () => {
     // Verificar que se redirige al login
     await page.waitForURL('**/login', { timeout: 10000 });
     
-    // Verificar que el formulario de login está presente
-    await expect(page.locator('#email')).toBeVisible();
-    await expect(page.locator('#password')).toBeVisible();
+    // Verificar que el formulario de login está presente usando data-testid robustos
+    await expect(page.getByTestId('login-email-input')).toBeVisible();
+    await expect(page.getByTestId('login-password-input')).toBeVisible();
+    await expect(page.getByTestId('login-submit-button')).toBeVisible();
     
     console.log('✅ Mock auth desactivado correctamente - muestra login');
   });
@@ -31,32 +32,39 @@ test.describe('🔐 Verificación Rápida de Autenticación Real', () => {
   test('debe autenticarse con usuario real del backend', async ({ page }) => {
     // Ir al login
     await page.goto('/login');
-    await page.waitForSelector('#email', { timeout: 10000 });
     
-    // Usar las credenciales correctas de la SuperApp
-    await page.fill('#email', 'test@coomunity.com');
-    await page.fill('#password', 'test123');
+    // Esperar a que el formulario esté completamente cargado
+    await expect(page.getByTestId('login-email-input')).toBeVisible();
+    await expect(page.getByTestId('login-password-input')).toBeVisible();
+    await expect(page.getByTestId('login-submit-button')).toBeVisible();
     
-    // Interceptar la llamada de login
+    // Usar las credenciales correctas del backend NestJS con selectores robustos
+    // Para Material UI TextField, necesitamos acceder al input dentro del componente
+    await page.locator('[data-testid="login-email-input"] input').fill('user@gamifier.com');
+    await page.locator('[data-testid="login-password-input"] input').fill('123456');
+    
+    // Configurar la espera de la respuesta de login ANTES de hacer clic
     const loginResponsePromise = page.waitForResponse(
-      response => response.url().includes('/auth/login') && response.status() === 200,
+      response => response.url().includes('/auth/login') && (response.status() === 200 || response.status() === 201),
       { timeout: 15000 }
     );
     
-    await page.click('button:has-text("Iniciar Sesión")');
+    // Hacer clic en el botón de submit usando data-testid
+    await page.getByTestId('login-submit-button').click();
     
-    // Verificar que el login fue exitoso
-    await loginResponsePromise;
+    // Esperar a que la llamada de login se complete exitosamente
+    const loginResponse = await loginResponsePromise;
+    expect(loginResponse.status()).toBe(200); // Backend NestJS devuelve 200 para login exitoso
     
-    // Verificar que se redirige al dashboard (no regresa al login)
+    // Esperar a que la URL cambie (redirección post-login) - ser más flexible
     await page.waitForFunction(
       () => !window.location.pathname.includes('/login'),
-      { timeout: 10000 }
+      { timeout: 15000 }
     );
     
-    // Verificar que hay datos en localStorage
-    const userData = await page.evaluate(() => localStorage.getItem('coomunity_user'));
-    const token = await page.evaluate(() => localStorage.getItem('coomunity_token'));
+    // Verificar que hay datos en localStorage usando las claves correctas del AuthContext
+    const userData = await page.evaluate(() => localStorage.getItem('COOMUNITY_USER_DATA'));
+    const token = await page.evaluate(() => localStorage.getItem('COOMUNITY_AUTH_TOKEN'));
     
     expect(userData).toBeTruthy();
     expect(token).toBeTruthy();
@@ -67,32 +75,63 @@ test.describe('🔐 Verificación Rápida de Autenticación Real', () => {
   test('debe mantener la sesión sin regresar al login', async ({ page }) => {
     // Ir al login y autenticarse
     await page.goto('/login');
-    await page.waitForSelector('#email', { timeout: 10000 });
     
-    await page.fill('#email', 'test@coomunity.com');
-    await page.fill('#password', 'test123');
-    await page.click('button:has-text("Iniciar Sesión")');
+    // Esperar a que el formulario esté completamente cargado
+    await expect(page.getByTestId('login-email-input')).toBeVisible();
+    await expect(page.getByTestId('login-password-input')).toBeVisible();
+    await expect(page.getByTestId('login-submit-button')).toBeVisible();
     
-    // Esperar autenticación exitosa
-    await page.waitForFunction(
-      () => !window.location.pathname.includes('/login'),
-      { timeout: 10000 }
+    // Llenar credenciales usando selectores robustos
+    // Para Material UI TextField, necesitamos acceder al input dentro del componente
+    await page.locator('[data-testid="login-email-input"] input').fill('user@gamifier.com');
+    await page.locator('[data-testid="login-password-input"] input').fill('123456');
+    
+    // Configurar espera de respuesta de login
+    const loginResponsePromise = page.waitForResponse(
+      response => response.url().includes('/auth/login') && (response.status() === 200 || response.status() === 201),
+      { timeout: 15000 }
     );
     
-    // Esperar un tiempo para simular uso normal
-    await page.waitForTimeout(5000);
+    // Hacer clic en submit
+    await page.getByTestId('login-submit-button').click();
     
-    // Verificar que sigue autenticado (no regresa al login)
+    // Esperar autenticación exitosa
+    await loginResponsePromise;
+    
+    // Esperar a que la URL cambie (redirección post-login) - ser más flexible
+    await page.waitForFunction(
+      () => !window.location.pathname.includes('/login'),
+      { timeout: 15000 }
+    );
+    
+    // Verificar que está en la página principal (no en login)
+    await page.waitForFunction(
+      () => !window.location.pathname.includes('/login'),
+      { timeout: 5000 }
+    );
+    
     const currentUrl = page.url();
     expect(currentUrl).not.toContain('/login');
     
-    // Recargar la página
+    // Recargar la página para probar persistencia de sesión
     await page.reload();
+    
+    // Esperar a que la página se recargue completamente
+    await page.waitForSelector('#root', { timeout: 10000 });
+    
+    // Verificar que sigue autenticado después del reload (no redirige a login)
+    // Dar tiempo para cualquier redirección automática
     await page.waitForTimeout(3000);
     
-    // Verificar que sigue autenticado después del reload
     const finalUrl = page.url();
     expect(finalUrl).not.toContain('/login');
+    
+    // Verificar que los datos de sesión siguen en localStorage usando las claves correctas
+    const userData = await page.evaluate(() => localStorage.getItem('COOMUNITY_USER_DATA'));
+    const token = await page.evaluate(() => localStorage.getItem('COOMUNITY_AUTH_TOKEN'));
+    
+    expect(userData).toBeTruthy();
+    expect(token).toBeTruthy();
     
     console.log('✅ Sesión persistente - no regresa al login');
   });

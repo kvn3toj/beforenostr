@@ -1,7 +1,9 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 // import { sentryVitePlugin } from '@sentry/vite-plugin'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 // https://vitejs.dev/config/
@@ -81,7 +83,74 @@ export default defineConfig(({ mode }) => ({
     //   release: {
     //     name: process.env.VITE_APP_VERSION || '1.0.0'
     //   }
-    // })
+    // }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'icon-*.png', 'screenshot-*.png'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10MB
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\.coomunity\.com\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 // 24 horas
+              }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'google-fonts-stylesheets',
+            }
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-webfonts',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 año
+              }
+            }
+          }
+        ]
+      },
+      manifest: {
+        name: 'CoomÜnity SuperApp',
+        short_name: 'CoomÜnity',
+        description: 'SuperApp de CoomÜnity - Economía colaborativa, gamificación y desarrollo personal integrados',
+        theme_color: '#E91E63',
+        background_color: '#ffffff',
+        display: 'standalone',
+        scope: '/',
+        start_url: '/',
+        icons: [
+          {
+            src: 'icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          },
+          {
+            src: 'icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
+          }
+        ]
+      }
+    })
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -116,5 +185,14 @@ export default defineConfig(({ mode }) => ({
       'react-router-dom',
       '@tanstack/react-query'
     ]
-  }
+  },
+  preview: {
+    port: 3001,
+    host: true
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+  },
 }))

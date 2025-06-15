@@ -1478,10 +1478,11 @@ export function useUpdateUserStatus() {
   });
 }
 
-export function useSocialNotifications() {
+export function useSocialNotifications(userId: string) {
   return useQuery({
-    queryKey: ['social', 'notifications'],
-    queryFn: () => socialAPI.getNotifications(),
+    queryKey: ['social', 'notifications', userId],
+    queryFn: () => socialAPI.getNotifications(userId),
+    enabled: !!userId, // Solo ejecutar si tenemos userId
     staleTime: 1000 * 60 * 2, // 2 minutos
     refetchInterval: 1000 * 30, // Refetch cada 30 segundos
   });
@@ -1491,14 +1492,39 @@ export function useMarkNotificationAsRead() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (notificationId: string) =>
-      socialAPI.markNotificationAsRead(notificationId),
+    mutationFn: ({ notificationId, userId }: { notificationId: string; userId: string }) =>
+      socialAPI.markNotificationAsRead(notificationId, userId),
 
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ['social', 'notifications'],
+        queryKey: ['social', 'notifications', variables.userId],
       });
     },
+  });
+}
+
+export function useMarkAllNotificationsAsRead() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userId: string) =>
+      socialAPI.markAllNotificationsAsRead(userId),
+
+    onSuccess: (data, userId) => {
+      queryClient.invalidateQueries({
+        queryKey: ['social', 'notifications', userId],
+      });
+    },
+  });
+}
+
+export function useUnreadNotificationsCount(userId: string) {
+  return useQuery({
+    queryKey: ['social', 'notifications', 'unread-count', userId],
+    queryFn: () => socialAPI.getUnreadNotificationsCount(userId),
+    enabled: !!userId,
+    staleTime: 1000 * 60, // 1 minuto
+    refetchInterval: 1000 * 30, // Refetch cada 30 segundos
   });
 }
 
