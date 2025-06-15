@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Req, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Req, ForbiddenException, NotFoundException, Inject } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -16,7 +16,7 @@ interface AuthenticatedRequest extends Request {
 @UseGuards(JwtAuthGuard)
 @Controller('wallets')
 export class WalletsController {
-  constructor(private readonly walletsService: WalletsService) {
+  constructor(@Inject(WalletsService) private readonly walletsService: WalletsService) {
     console.log('>>> WalletsController CONSTRUCTOR: this.walletsService IS', this.walletsService ? 'DEFINED' : 'UNDEFINED');
   }
 
@@ -26,6 +26,16 @@ export class WalletsController {
   testEndpoint() {
       console.log('>>> WalletsController.testEndpoint: STARTING');
       return { message: 'Wallets controller is working', timestamp: new Date().toISOString() };
+  }
+
+  @Get('/me')
+  @ApiOperation({ summary: 'Get my wallet balance and transactions' })
+  @ApiResponse({ status: 200, description: 'My wallet data with balance and transactions.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 404, description: 'Wallet not found.' })
+  async getMyWallet(@Req() req: AuthenticatedRequest) {
+    // req.user.id es añadido por el JwtAuthGuard
+    return this.walletsService.findUserWallet(req.user.id);
   }
 
   @Get('/user/:userId')

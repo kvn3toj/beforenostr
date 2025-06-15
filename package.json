@@ -88,7 +88,11 @@
     "ci:test": "turbo run test test:ux --parallel",
     "ci:deploy": "npm run ci:install && npm run ci:build && npm run ci:test && npm run deploy:prod",
     "health:backend": "node check-backend-health.js",
-    "debug:connection": "node check-backend-health.js"
+    "debug:connection": "node check-backend-health.js",
+    "verify:design-system": "cd Demo/apps/superapp-unified && node scripts/verify-design-system.cjs",
+    "design:verify": "npm run verify:design-system",
+    "design:status": "npm run verify:design-system",
+    "design:help": "echo '🎨 Design System Commands:' && echo '  📊 npm run verify:design-system   - Verify design system implementation' && echo '  📊 npm run design:verify          - Alias for verification' && echo '  📊 npm run design:status          - Quick status check' && echo '  📚 npm run design:help            - Show this help' && echo '' && echo '📂 Design System Location: Demo/apps/superapp-unified/src/components/ui/' && echo '📖 Documentation: DESIGN_SYSTEM_README.md'"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

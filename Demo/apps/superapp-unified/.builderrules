@@ -1,0 +1,206 @@
+# 🎯 BUILDER.IO CUSTOM RULES - COOMUNITY SUPERAPP
+# Reglas específicas para prevenir errores comunes en desarrollo con Builder.io
+
+## 🚨 REGLAS CRÍTICAS PARA PREVENIR ERRORES DE HOOKS Y IMPORTS
+
+### 1. 🔧 IMPORTS DE MATERIAL UI - OBLIGATORIO
+**NUNCA usar imports masivos de Material UI que causen bundle bloat:**
+
+❌ PROHIBIDO:
+```typescript
+import {
+  Box, Typography, Card, Button, IconButton, Dialog, DialogContent,
+  Fade, Zoom, Grid, Container, Stack, Slide, Alert, Slider
+} from '@mui/material';
+
+import {
+  PlayArrow, Pause, VolumeUp, VolumeOff, Fullscreen, FullscreenExit,
+  Quiz, CheckCircle, Cancel, Star, EmojiEvents, ArrowBack, Settings,
+  Add, SkipNext, Timer, Bolt, Diamond, ChevronLeft
+} from '@mui/icons-material';
+```
+
+✅ OBLIGATORIO:
+```typescript
+// Imports específicos de componentes MUI
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
+// Imports específicos de iconos MUI
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+```
+
+**RAZÓN:** Los imports masivos causan bundle bloat y pueden generar errores de dependencias circulares.
+
+### 2. 🔄 ORDEN DE HOOKS - CRÍTICO
+**Los useCallback deben declararse en orden de dependencias para evitar referencias circulares:**
+
+✅ ORDEN CORRECTO:
+```typescript
+// 1. Primero: Funciones sin dependencias de otros callbacks
+const clearQuestionTimer = useCallback(() => {
+  // Lógica de limpieza
+}, []);
+
+// 2. Segundo: Funciones que dependen de las anteriores
+const handleSkipQuestion = useCallback(() => {
+  clearQuestionTimer(); // ✅ Ya está definido
+}, [clearQuestionTimer]);
+
+// 3. Tercero: Funciones que dependen de las anteriores
+const startQuestionTimer = useCallback((timeLimit: number) => {
+  // Puede usar handleSkipQuestion
+}, [handleSkipQuestion]);
+```
+
+❌ ORDEN INCORRECTO:
+```typescript
+// ❌ startQuestionTimer usa handleSkipQuestion que aún no existe
+const startQuestionTimer = useCallback(() => {
+  handleSkipQuestion(); // ❌ Error: no está definido
+}, [handleSkipQuestion]);
+
+const handleSkipQuestion = useCallback(() => {
+  // Definido después
+}, []);
+```
+
+### 3. 🧹 CLEANUP OBLIGATORIO
+**SIEMPRE implementar cleanup de timers y event listeners:**
+
+✅ OBLIGATORIO:
+```typescript
+// Cleanup effect al final del componente
+useEffect(() => {
+  return () => {
+    // Limpiar todos los timers
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    if (questionTimerRef.current) {
+      clearInterval(questionTimerRef.current);
+    }
+  };
+}, []);
+
+// Error handlers para debugging
+useEffect(() => {
+  const handleError = (event: ErrorEvent) => {
+    console.error('🚨 Error capturado:', event.message);
+  };
+  
+  window.addEventListener('error', handleError);
+  return () => window.removeEventListener('error', handleError);
+}, []);
+```
+
+### 4. 🛡️ ERROR BOUNDARIES ESPECIALIZADOS
+**Usar Error Boundaries específicos para componentes complejos:**
+
+✅ OBLIGATORIO para componentes de video/media:
+```typescript
+// En App.tsx
+<VideoPlayerErrorBoundary>
+  <HorizontalPlayerDemo />
+</VideoPlayerErrorBoundary>
+```
+
+### 5. 📦 REFS TIPADOS CORRECTAMENTE
+**Usar tipos específicos para refs según el elemento:**
+
+✅ CORRECTO:
+```typescript
+const videoRef = useRef<HTMLVideoElement>(null);
+const containerRef = useRef<HTMLDivElement>(null);
+```
+
+❌ INCORRECTO:
+```typescript
+const videoRef = useRef<HTMLIFrameElement>(null); // Para video HTML5
+```
+
+### 6. 🎯 DEBUGGING SISTEMÁTICO
+**Incluir logging estructurado para debugging:**
+
+✅ OBLIGATORIO:
+```typescript
+const checkForQuestions = useCallback((time: number) => {
+  console.log('🔍 Verificando preguntas para tiempo:', time);
+  console.log('📋 Preguntas disponibles:', mockVideoData.questions.map(q => ({
+    id: q.id, timestamp: q.timestamp
+  })));
+  // Lógica...
+}, [dependencies]);
+```
+
+### 7. 🔄 DEPENDENCIAS DE USEEFFECT
+**Incluir TODAS las dependencias en useEffect:**
+
+✅ CORRECTO:
+```typescript
+useEffect(() => {
+  // Lógica que usa isPlaying, activeQuestion, checkForQuestions
+}, [isPlaying, activeQuestion, checkForQuestions]);
+```
+
+❌ INCORRECTO:
+```typescript
+useEffect(() => {
+  // Usa variables pero no las incluye en dependencias
+}, []); // ❌ Dependencias faltantes
+```
+
+### 8. 🚨 DETECCIÓN DE ERRORES BUILDER.IO
+**Implementar detección específica de errores de Builder.io:**
+
+✅ OBLIGATORIO:
+```typescript
+// Al inicio del componente
+useEffect(() => {
+  const handleBuilderError = (event: ErrorEvent) => {
+    if (event.message.includes('Builder') || 
+        event.message.includes('hook') ||
+        event.filename?.includes('builder')) {
+      console.error('🚨 Builder.io Error detectado:', {
+        message: event.message,
+        filename: event.filename,
+        component: 'ComponentName'
+      });
+    }
+  };
+  
+  window.addEventListener('error', handleBuilderError);
+  return () => window.removeEventListener('error', handleBuilderError);
+}, []);
+```
+
+## 🎯 CHECKLIST ANTES DE COMMIT
+
+Antes de hacer commit de cualquier componente React, verificar:
+
+- [ ] ✅ Imports específicos (no masivos) de Material UI
+- [ ] ✅ useCallback en orden correcto de dependencias  
+- [ ] ✅ Cleanup effect implementado
+- [ ] ✅ Error boundary aplicado si es componente complejo
+- [ ] ✅ Refs tipados correctamente
+- [ ] ✅ Logging de debugging incluido
+- [ ] ✅ Todas las dependencias en useEffect
+- [ ] ✅ Manejo de errores Builder.io implementado
+
+## 🚀 TESTING OBLIGATORIO
+
+Para componentes complejos, crear versión simplificada para testing:
+
+```typescript
+// ComponenteComplejo.tsx - Versión principal
+// ComponenteComplejoSimple.tsx - Versión de testing sin funcionalidades avanzadas
+```
+
+**ESTAS REGLAS SON OBLIGATORIAS PARA TODOS LOS COMPONENTES QUE USEN BUILDER.IO**
+
+---
+
+*Última actualización: 2025-06-14 - Reglas implementadas después del error d5xc6yq0t* 

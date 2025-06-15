@@ -1,8 +1,9 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, Inject } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, Inject, UseGuards, Req } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -39,9 +40,12 @@ export class AuthController {
   }
 
   @Get('me')
-  @ApiOperation({ summary: 'Obtener usuario actual' })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Obtener usuario actual autenticado' })
   @ApiResponse({ status: 200, description: 'Usuario obtenido correctamente' })
-  async getCurrentUser() {
-    return this.authService.getCurrentUser();
+  async getCurrentUser(@Req() req) {
+    console.log('>>> AuthController.getCurrentUser: User from token:', req.user);
+    return this.authService.getCurrentUser(req.user);
   }
 } 

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authAPI } from '../lib/api-service';
+import { authAPI, apiService } from '../lib/api-service';
 import { ENV, EnvironmentHelpers } from '../lib/environment';
+import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
 import {
   checkMockAuthStatus,
   validateMockUser,
@@ -92,7 +93,7 @@ const backendSignIn = async (
   }
 
   try {
-    const response = await authAPI.login(email, password);
+    const response = await authAPI.login({ email, password });
 
     // El backend puede devolver diferentes estructuras, adaptamos
     const userData = response.user || response.data || response;
@@ -196,13 +197,13 @@ const checkAuthFromToken = async (): Promise<User | null> => {
   // 🧪 **MOCK: Si el mock está habilitado, devolver usuario mock directamente**
   if (isMockAuthEnabled()) {
     console.log(
-      '[Auth Mock] Mock auth verificación habilitada - auto-autenticando usuario de prueba'
+      `${AUTH_CONFIG.LOG_PREFIX} Mock auth verificación habilitada - auto-autenticando usuario de prueba`
     );
     return { ...MOCK_AUTHENTICATED_USER };
   }
 
   try {
-    const savedToken = localStorage.getItem('coomunity_token');
+    const savedToken = localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
 
     if (!savedToken || savedToken === 'null' || savedToken === 'undefined') {
       return null;
@@ -218,16 +219,15 @@ const checkAuthFromToken = async (): Promise<User | null> => {
     // Mapear datos del usuario del backend
     const user = mapBackendUserToFrontend(userData, savedToken);
 
-    // Actualizar localStorage con datos frescos
-    localStorage.setItem('coomunity_user', JSON.stringify(user));
+    // Actualizar localStorage con datos frescos usando claves canónicas
+    localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(user));
 
     return user;
   } catch (error: any) {
-    console.warn('[Auth] Error verificando token:', error);
+    console.warn(`${AUTH_CONFIG.LOG_PREFIX} Error verificando token:`, error);
 
-    // Token inválido o expirado, limpiar localStorage
-    localStorage.removeItem('coomunity_user');
-    localStorage.removeItem('coomunity_token');
+    // Token inválido o expirado, limpiar localStorage usando api-service
+    apiService.clearAuthTokens();
     return null;
   }
 };
@@ -258,17 +258,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         if (isMockAuthEnabled() && authenticatedUser) {
           try {
             localStorage.setItem(
-              'coomunity_user',
+              AUTH_STORAGE_KEYS.USER,
               JSON.stringify(authenticatedUser)
             );
             localStorage.setItem(
-              'coomunity_token',
+              AUTH_STORAGE_KEYS.TOKEN,
               authenticatedUser.access_token || ''
             );
             logAuthFlowStep('Mock user saved to localStorage');
           } catch (error) {
             console.warn(
-              '[Auth Mock] Error guardando usuario mock en localStorage:',
+              `${AUTH_CONFIG.LOG_PREFIX} Error guardando usuario mock en localStorage:`,
               error
             );
           }
@@ -300,12 +300,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setUser(authUser);
 
-      // Guardar en localStorage
+      // Guardar en localStorage usando las claves canónicas
       try {
-        localStorage.setItem('coomunity_user', JSON.stringify(authUser));
-        localStorage.setItem('coomunity_token', authUser.access_token || '');
+        localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(authUser));
+        localStorage.setItem(AUTH_STORAGE_KEYS.TOKEN, authUser.access_token || '');
+        console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔐 Token guardado en localStorage:`, authUser.access_token?.substring(0, 20) + '...');
       } catch (error) {
-        console.warn('[Auth] Error guardando en localStorage:', error);
+        console.warn(`${AUTH_CONFIG.LOG_PREFIX} Error guardando en localStorage:`, error);
       }
     } catch (error) {
       // Re-lanzar el error para que el componente lo maneje
@@ -322,12 +323,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setUser(newUser);
 
-      // Guardar en localStorage
+      // Guardar en localStorage usando las claves canónicas
       try {
-        localStorage.setItem('coomunity_user', JSON.stringify(newUser));
-        localStorage.setItem('coomunity_token', newUser.access_token || '');
+        localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(newUser));
+        localStorage.setItem(AUTH_STORAGE_KEYS.TOKEN, newUser.access_token || '');
       } catch (error) {
-        console.warn('[Auth] Error guardando en localStorage:', error);
+        console.warn(`${AUTH_CONFIG.LOG_PREFIX} Error guardando en localStorage:`, error);
       }
     } catch (error) {
       // Re-lanzar el error para que el componente lo maneje
@@ -355,14 +356,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         console.log('[Auth Mock] Mock logout - saltando llamada al backend');
       }
 
-      // Limpiar estado local
+      // Limpiar estado local del contexto
       setUser(null);
-      try {
-        localStorage.removeItem('coomunity_user');
-        localStorage.removeItem('coomunity_token');
-      } catch (error) {
-        console.warn('[Auth] Error limpiando localStorage:', error);
-      }
+      
+      // Limpiar tokens usando el método del api-service
+      apiService.clearAuthTokens();
 
       // Pequeño delay para UX
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -390,10 +388,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser(updatedUser);
 
         try {
-          localStorage.setItem('coomunity_user', JSON.stringify(updatedUser));
+          localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(updatedUser));
         } catch (error) {
           console.warn(
-            '[Auth Mock] Error guardando perfil actualizado:',
+            `${AUTH_CONFIG.LOG_PREFIX} Error guardando perfil actualizado:`,
             error
           );
         }
@@ -411,9 +409,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setUser(updatedUser);
       try {
-        localStorage.setItem('coomunity_user', JSON.stringify(updatedUser));
+        localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(updatedUser));
       } catch (error) {
-        console.warn('[Auth] Error guardando perfil actualizado:', error);
+        console.warn(`${AUTH_CONFIG.LOG_PREFIX} Error guardando perfil actualizado:`, error);
       }
     } catch (error: any) {
       console.error('[Auth] Error actualizando perfil:', error);

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { VERIFIED_CREDENTIALS, performLogin } from './config/test-credentials';
 
 test.describe('🔐 Verificación de Credenciales Backend NestJS', () => {
   

@@ -51,7 +51,20 @@
     "admin:open": "echo '🔗 Opening Gamifier Admin...' && open http://localhost:3000",
     "superapp:open": "echo '🔗 Opening SuperApp...' && open http://localhost:3001",
     "backend:open": "echo '🔗 Opening Backend API docs...' && open http://localhost:3002/api",
-    "help:ecosystem": "echo '📋 CoomÜnity Ecosystem Development:' && echo '' && echo '🏠 FROM ROOT (../../..):' && echo '  🌐 npm run dev:fullstack          - Start Backend + Admin + SuperApp' && echo '  🔗 npm run dev:backend-admin      - Start Backend + Admin only' && echo '  🔗 npm run dev:admin-superapp     - Start Admin + SuperApp only' && echo '  🚀 npm run dev:admin              - Start Gamifier Admin only' && echo '  🚀 npm run dev:backend            - Start Backend only' && echo '  ✅ npm run ecosystem:status       - Check all services' && echo '' && echo '📱 FROM SUPERAPP (here):' && echo '  🚀 npm run dev                    - Start SuperApp only' && echo '  🔗 npm run dev:with-admin         - SuperApp with Admin instructions' && echo '  🌐 npm run ecosystem:status       - Check all services' && echo '  🔗 npm run admin:open             - Open Admin in browser' && echo '' && echo '📂 Expected structure:' && echo '  admin-frontend/     - Gamifier Admin (port 3000)' && echo '  backend/           - NestJS Backend (port 3002)' && echo '  Demo/apps/superapp-unified/ - SuperApp (port 3001)'"
+    "help:ecosystem": "echo '📋 CoomÜnity Ecosystem Development:' && echo '' && echo '🏠 FROM ROOT (../../..):' && echo '  🌐 npm run dev:fullstack          - Start Backend + Admin + SuperApp' && echo '  🔗 npm run dev:backend-admin      - Start Backend + Admin only' && echo '  🔗 npm run dev:admin-superapp     - Start Admin + SuperApp only' && echo '  🚀 npm run dev:admin              - Start Gamifier Admin only' && echo '  🚀 npm run dev:backend            - Start Backend only' && echo '  ✅ npm run ecosystem:status       - Check all services' && echo '' && echo '📱 FROM SUPERAPP (here):' && echo '  🚀 npm run dev                    - Start SuperApp only' && echo '  🔗 npm run dev:with-admin         - SuperApp with Admin instructions' && echo '  🌐 npm run ecosystem:status       - Check all services' && echo '  🔗 npm run admin:open             - Open Admin in browser' && echo '' && echo '📂 Expected structure:' && echo '  admin-frontend/     - Gamifier Admin (port 3000)' && echo '  backend/           - NestJS Backend (port 3002)' && echo '  Demo/apps/superapp-unified/ - SuperApp (port 3001)'",
+    "validate:builder": "node scripts/validate-builder-rules.cjs",
+    "validate:builder:fix": "npm run validate:builder && npm run lint:fix",
+    "lint:builder": "eslint . --config .eslintrc.builder.js --ext ts,tsx",
+    "pre-commit": "npm run validate:builder && npm run lint && npm run type-check:skip",
+    "builder:check": "echo '🎯 Checking Builder.io compatibility...' && npm run validate:builder",
+    "builder:help": "echo '📖 Builder.io Rules Help:' && echo '' && echo '🎯 Available commands:' && echo '  npm run validate:builder     - Validate Builder.io rules' && echo '  npm run validate:builder:fix - Validate and auto-fix linting' && echo '  npm run lint:builder         - Run Builder.io specific linting' && echo '  npm run pre-commit           - Full pre-commit validation' && echo '  npm run builder:check        - Quick compatibility check' && echo '' && echo '📋 Rules enforced:' && echo '  ✅ No massive Material UI imports' && echo '  ✅ Proper useCallback order' && echo '  ✅ Cleanup effects for timers' && echo '  ✅ Error handling for components' && echo '  ✅ Proper ref typing' && echo '' && echo '📖 See .builderrules for detailed guidelines'",
+    "verify:design-system": "node scripts/verify-design-system.cjs",
+    "design:verify": "npm run verify:design-system",
+    "design:status": "echo '🎨 Design System Status:' && npm run verify:design-system",
+    "design:help": "echo '🎨 Design System Commands:' && echo '' && echo '🔍 Verification:' && echo '  npm run verify:design-system  - Full system verification' && echo '  npm run design:verify         - Alias for verification' && echo '  npm run design:status         - Quick status check' && echo '' && echo '🌐 Access Points:' && echo '  /design-system                - Interactive showcase' && echo '  /design-validator             - Automated validator' && echo '  /performance-monitor          - Performance metrics' && echo '  /theme-test                   - Dark mode testing' && echo '' && echo '📊 Expected Score: 95%+ for production readiness'",
+    "verify:credentials": "./scripts/verify-credentials.sh",
+    "credentials:check": "npm run verify:credentials",
+    "credentials:help": "echo '🔐 Credenciales Verificadas - Regla Obligatoria:' && echo '' && echo '🎯 Comandos disponibles:' && echo '  npm run verify:credentials    - Verificar credenciales del backend' && echo '  npm run credentials:check     - Alias para verificación' && echo '  npx playwright test verified-credentials-validation.spec.ts - Test E2E completo' && echo '' && echo '📋 Credenciales verificadas:' && echo '  🔑 ADMIN:      admin@gamifier.com / admin123' && echo '  👤 USER:       user@gamifier.com / 123456' && echo '  💎 PREMIUM:    premium@gamifier.com / 123456' && echo '  🎨 CREATOR:    creator@gamifier.com / 123456' && echo '  🛡️ MODERATOR:  moderator@gamifier.com / 123456' && echo '' && echo '🚨 NUNCA usar credenciales inventadas que causan errores 400/401' && echo '📖 Ver: CREDENCIALES_VERIFICADAS.md para más detalles'"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -71,6 +84,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.17.0",
     "gtag": "^1.0.1",
+    "immer": "^10.1.1",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -85,7 +99,7 @@
     "uuid": "^11.1.0",
     "web-vitals": "^4.2.4",
     "zod": "^3.23.8",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
@@ -100,6 +114,7 @@
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
+    "glob": "^7.2.3",
     "globals": "^16.2.0",
     "postcss": "^8.4.48",
     "rollup-plugin-visualizer": "^6.0.3",

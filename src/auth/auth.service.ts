@@ -216,17 +216,17 @@ export class AuthService {
     }
   }
 
-  async getCurrentUser() {
-    console.log('>>> AuthService getCurrentUser called');
-    // For now, return a mock current user
-    // In a real implementation, this would get the user from the JWT payload
+  async getCurrentUser(authenticatedUser: any) {
+    console.log('>>> AuthService getCurrentUser called with user:', authenticatedUser);
+    
+    // Return the user data from the JWT token (already validated by JwtStrategy)
     return {
-      id: '00000000-0000-0000-0000-000000000001',
-      email: 'admin@gamifier.com',
-      name: 'Administrator',
-      avatarUrl: null,
-      roles: ['admin'],
-      permissions: ['admin:all']
+      id: authenticatedUser.id,
+      email: authenticatedUser.email,
+      name: authenticatedUser.name,
+      avatarUrl: authenticatedUser.avatarUrl,
+      roles: authenticatedUser.roles,
+      permissions: authenticatedUser.permissions
     };
   }
 } 

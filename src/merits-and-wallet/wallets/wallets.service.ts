@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Inject } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import type { Wallet, Prisma } from '../../generated/prisma';
 
@@ -7,7 +7,7 @@ type AuthenticatedUser = { id: string; roles: string[]; /* other properties */ }
 
 @Injectable()
 export class WalletsService {
-  constructor(private prisma: PrismaService) {
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {
     console.log('>>> WalletsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
@@ -206,4 +206,53 @@ export class WalletsService {
             throw error;
         }
     }
+
+  // New method: Find user wallet with transactions
+  async findUserWallet(userId: string) {
+    const wallet = await this.prisma.wallet.findUnique({
+      where: { userId },
+      include: {
+        transactionsTo: { // Incluir las transacciones recibidas
+          orderBy: { createdAt: 'desc' }, // Ordenarlas de más reciente a más antigua
+          include: {
+            fromUser: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                username: true,
+              }
+            }
+          }
+        },
+        transactionsFrom: { // Incluir las transacciones enviadas
+          orderBy: { createdAt: 'desc' }, // Ordenarlas de más reciente a más antigua
+          include: {
+            toUser: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                username: true,
+              }
+            }
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            username: true,
+          }
+        }
+      },
+    });
+    
+    if (!wallet) {
+      throw new NotFoundException(`Wallet for user ${userId} not found`);
+    }
+    
+    return wallet;
+  }
 } 

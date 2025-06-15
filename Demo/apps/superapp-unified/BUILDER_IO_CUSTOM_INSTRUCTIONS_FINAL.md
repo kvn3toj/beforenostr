@@ -223,4 +223,4 @@ Cada componente debe reflejar:
 
 **🚨 ESTAS REGLAS SON OBLIGATORIAS PARA PREVENIR ERRORES COMO "d5xc6yq0t"**
 
-*Implementado después del error de hooks en HorizontalPlayerDemo - 2025-06-14*
+*Implementado después del error de hooks en HorizontalPlayerDemo - 2025-06-14* 

@@ -21,7 +21,7 @@ import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { NetworkErrorDebug } from '../components/debug/NetworkErrorDebug';
 import { authAPIDebug } from '../lib/api-service-debug';
 
-export const Login: React.FC = () => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, loading } = useAuth();
@@ -563,3 +563,5 @@ export const Login: React.FC = () => {
     </Container>
   );
 };
+
+export default Login;

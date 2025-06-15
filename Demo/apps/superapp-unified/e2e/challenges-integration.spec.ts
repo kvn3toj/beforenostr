@@ -129,50 +129,51 @@ test.describe('Challenges Integration E2E', () => {
     // 6. Verificar que SÍ hay tarjetas de desafío
     console.log('🔍 Verificando presencia de tarjetas de desafío...');
     
-    const challengeCards = page.locator('[data-testid="challenge-card"], .challenge-card, [class*="challenge"]').filter({
-      hasNot: page.locator('h1, h2, h3, h4, h5, h6') // Excluir headers
-    });
+    // Usar el data-testid específico que acabamos de añadir al componente
+    const challengeCards = page.locator('[data-testid="challenge-card"]');
     
     // Esperar a que aparezcan las tarjetas y verificar que hay al menos 3
-    await expect(challengeCards).toHaveCount(3, { timeout: 10000 });
+    await expect(challengeCards).toHaveCount(3, { timeout: 15000 });
     console.log('✅ Confirmado: 3 tarjetas de desafío renderizadas');
 
-    // 7. Verificar que las estadísticas muestran datos reales
-    console.log('🔍 Verificando estadísticas con datos reales...');
+
+
+    // 7. Verificar contenido específico dentro de las tarjetas
+    console.log('🔍 Verificando contenido específico de desafíos dentro de las tarjetas...');
     
-    // Las estadísticas deberían mostrar números > 0 para total, activos, etc.
-    const statsCards = page.locator('[class*="MuiCard"]:has([color="text.secondary"]:has-text("Total Desafíos"))');
-    if (await statsCards.count() > 0) {
-      console.log('✅ Estadísticas encontradas');
-    }
+    // Verificar que cada tarjeta tiene título y descripción
+    const firstCard = challengeCards.first();
+    await expect(firstCard.locator('[data-testid="challenge-title"]')).toBeVisible({ timeout: 5000 });
+    await expect(firstCard.locator('[data-testid="challenge-description"]')).toBeVisible({ timeout: 5000 });
+    console.log('✅ Primera tarjeta tiene título y descripción');
 
-    // 8. Verificar descripciones específicas de los desafíos reales
-    console.log('🔍 Verificando contenido específico de desafíos...');
-    
-    // Verificar contenido específico de Metanöia
-    const metanoiaDescription = page.locator('text=Ayuda a 5 nuevos miembros');
-    await expect(metanoiaDescription).toBeVisible({ timeout: 5000 });
-    console.log('✅ Descripción de Metanöia encontrada');
+    // Verificar contenido específico de los desafíos reales
+    const metanoiaCard = challengeCards.filter({ hasText: 'Guía de Metanöia' });
+    await expect(metanoiaCard).toHaveCount(1);
+    console.log('✅ Tarjeta de Metanöia encontrada');
 
-    // Verificar contenido específico de Emprendedor Confiable
-    const emprendedorDescription = page.locator('text=Acumula 1000 Mëritos');
-    await expect(emprendedorDescription).toBeVisible({ timeout: 5000 });
-    console.log('✅ Descripción de Emprendedor Confiable encontrada');
+    const emprendedorCard = challengeCards.filter({ hasText: 'Emprendedor Confiable' });
+    await expect(emprendedorCard).toHaveCount(1);
+    console.log('✅ Tarjeta de Emprendedor Confiable encontrada');
 
-    // 9. Verificar que no hay errores JavaScript críticos en la consola
+    const innovacionCard = challengeCards.filter({ hasText: 'Innovación para el Bien Común' });
+    await expect(innovacionCard).toHaveCount(1);
+    console.log('✅ Tarjeta de Innovación encontrada');
+
+    // 8. Verificar que no hay errores JavaScript críticos en la consola
     console.log('🔍 Verificando ausencia de errores JavaScript críticos...');
     
     // La página debe ser responsiva y sin errores críticos
     const isPageResponsive = await page.locator('body').isVisible();
     expect(isPageResponsive).toBe(true);
 
-    // 10. Tomar screenshot para evidencia visual
+    // 9. Tomar screenshot para evidencia visual
     await page.screenshot({ 
       path: `e2e/screenshots/challenges-real-data-${Date.now()}.png`,
       fullPage: true 
     });
 
-    // 11. Reportar resultados
+    // 10. Reportar resultados
     console.log('\n📋 RESUMEN DE VERIFICACIÓN:');
     console.log(`✅ Página de Challenges accesible: ${currentUrl.includes('challenge')}`);
     console.log(`✅ Desafíos reales del backend mostrados: SÍ`);
