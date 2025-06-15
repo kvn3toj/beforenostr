@@ -1,118 +1,130 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { ThemeProvider } from '@mui/material'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { useEffect } from 'react'
-import { HomePage } from './pages/HomePage'
-import { MainLayout } from './layouts/MainLayout'
-import { MundosPage } from './pages/MundosPage'
-import { MundoDetailPage } from './pages/MundoDetailPage'
-import { MundoContentPage } from './pages/MundoContentPage'
-import { PlaylistDetailPage } from './pages/PlaylistDetailPage'
-import { VideoConfigPage } from './pages/VideoConfigPage'
-import { GamifiedPlaylistsPage } from './pages/GamifiedPlaylistsPage'
-import { PlaylistDirectPage } from './pages/PlaylistDirectPage'
-import { PlaylistRedirectPage } from './pages/PlaylistRedirectPage'
-import { LoginPage } from './pages/LoginPage'
-import { RegisterPage } from './pages/RegisterPage'
-import { BetaRegisterPage } from './pages/BetaRegisterPage'
-import { UsersPage } from './pages/UsersPage'
-import { RolesPage } from './pages/RolesPage'
-import { PermissionsPage } from './pages/PermissionsPage'
-import { ItemsPage } from './pages/ItemsPage'
-import { AnalyticsPage } from './pages/AnalyticsPage'
-import { AuditLogsPage } from './pages/AuditLogsPage'
-import { SettingsPage } from './pages/SettingsPage'
-import { ProfilePage } from './pages/ProfilePage'
-import { TokensPage } from './pages/TokensPage'
-import { WalletPage } from './pages/WalletPage'
-import { MeritsPage } from './pages/MeritsPage'
-import { GroupsPage } from './pages/GroupsPage'
-import { ChallengesPage } from './pages/ChallengesPage'
-import { ChallengeDetailPage } from './pages/ChallengeDetailPage'
-import { CreateChallengePage } from './pages/CreateChallengePage'
-import { SocialPage } from './pages/SocialPage'
-import { MarketplacePage } from './pages/MarketplacePage'
-import { InvitationsPage } from './pages/InvitationsPage'
-import { NewInvitationPage } from './pages/NewInvitationPage'
-import { PersonalitiesPage } from './pages/PersonalitiesPage'
-import { AITest } from './components/AITest'
-import { Toaster } from 'sonner'
-import { createAppTheme } from './theme'
-import { useAuthStore } from './store/authStore'
-import NostrDemoPage from './pages/NostrDemoPage'
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { CssBaseline, Box } from '@mui/material';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Toaster } from 'sonner';
 
-const queryClient = new QueryClient()
-const theme = createAppTheme('light');
+// Contexts
+import { ThemeProvider } from './contexts/ThemeContext';
+import { AuthProvider } from './contexts/AuthContext';
+
+// Layout Components
+import { MainLayout } from './layouts/MainLayout';
+
+// Lazy Components
+import { LazyPages, preloadCriticalComponents, preloadRouteComponents } from './utils/lazyComponents';
+
+// Error Boundary
+import { ErrorBoundary } from 'react-error-boundary';
+
+// Query Client Configuration
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// Error Fallback Component
+const ErrorFallback: React.FC<{ error: Error; resetErrorBoundary: () => void }> = ({
+  error,
+  resetErrorBoundary,
+}) => (
+  <Box className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
+    <h2 className="text-2xl font-bold mb-4">¡Oops! Algo salió mal</h2>
+    <p className="text-gray-600 mb-4">{error.message}</p>
+    <button
+      onClick={resetErrorBoundary}
+      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    >
+      Intentar de nuevo
+    </button>
+  </Box>
+);
+
+// Route Preloader Component
+const RoutePreloader: React.FC = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    preloadRouteComponents(location.pathname);
+  }, [location.pathname]);
+
+  return null;
+};
 
 function App() {
-  const { initializeAuth } = useAuthStore();
-
-  // Inicializar autenticación al cargar la aplicación
+  // Preload critical components on app start
   useEffect(() => {
-    initializeAuth();
-  }, [initializeAuth]);
+    preloadCriticalComponents();
+  }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            {/* Rutas de autenticación (sin layout) */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/beta-register" element={<BetaRegisterPage />} />
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <CssBaseline />
+            <Router>
+              <RoutePreloader />
+              <Routes>
+                {/* Authentication Routes (without layout) */}
+                <Route path="/login" element={<LazyPages.LoginPage />} />
+                <Route path="/register" element={<LazyPages.RegisterPage />} />
+                
+                {/* Main Routes (with layout) */}
+                <Route element={<MainLayout />}>
+                  <Route path="/" element={<LazyPages.HomePage />} />
+                  <Route path="/home" element={<LazyPages.HomePage />} />
+                  <Route path="/marketplace" element={<LazyPages.MarketplacePage />} />
+                  <Route path="/social" element={<LazyPages.SocialPage />} />
+                  <Route path="/profile" element={<LazyPages.ProfilePage />} />
+                  <Route path="/wallet" element={<LazyPages.WalletPage />} />
+                  <Route path="/settings" element={<LazyPages.SettingsPage />} />
+                  <Route path="/challenges" element={<LazyPages.ChallengesPage />} />
+                  <Route path="/groups" element={<LazyPages.GroupsPage />} />
+                  <Route path="/mundos" element={<LazyPages.MundosPage />} />
+                  <Route path="/playlists" element={<LazyPages.GamifiedPlaylistsPage />} />
+                  
+                  {/* Design System Routes */}
+                  <Route path="/design-system" element={<LazyPages.DesignSystemShowcase />} />
+                  <Route path="/theme-test" element={<LazyPages.ThemeTestSuite />} />
+                  <Route path="/design-validator" element={<LazyPages.DesignSystemValidator />} />
+                  <Route path="/performance-monitor" element={<LazyPages.PerformanceMonitor />} />
+                </Route>
+                
+                {/* Fallback Route */}
+                <Route path="*" element={<LazyPages.HomePage />} />
+              </Routes>
+              
+              {/* Toast Notifications */}
+              <Toaster 
+                richColors 
+                position="top-right"
+                toastOptions={{
+                  style: {
+                    background: 'var(--background)',
+                    color: 'var(--foreground)',
+                    border: '1px solid var(--border)',
+                  },
+                }}
+              />
+            </Router>
             
-            {/* Rutas principales (con layout) */}
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/mundos" element={<MundosPage />} />
-              <Route path="/mundos/:mundoId" element={<MundoDetailPage />} />
-              <Route path="/mundos/:mundoId/contenido" element={<MundoContentPage />} />
-              <Route path="/playlists" element={<GamifiedPlaylistsPage />} />
-              <Route path="/playlist-direct" element={<PlaylistDirectPage />} />
-              <Route path="/playlist" element={<PlaylistRedirectPage />} />
-              <Route path="/playlists/:playlistId" element={<PlaylistDetailPage />} />
-              <Route path="/items" element={<ItemsPage />} />
-              <Route path="/items/:itemId/config" element={<VideoConfigPage />} />
-              
-              {/* Rutas de administración */}
-              <Route path="/users" element={<UsersPage />} />
-              <Route path="/roles" element={<RolesPage />} />
-              <Route path="/permissions" element={<PermissionsPage />} />
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/audit-logs" element={<AuditLogsPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              
-              {/* Rutas de gamificación */}
-              <Route path="/tokens" element={<TokensPage />} />
-              <Route path="/wallet" element={<WalletPage />} />
-              <Route path="/merits" element={<MeritsPage />} />
-              <Route path="/groups" element={<GroupsPage />} />
-              <Route path="/challenges" element={<ChallengesPage />} />
-              <Route path="/challenges/:challengeId" element={<ChallengeDetailPage />} />
-              <Route path="/challenges/create" element={<CreateChallengePage />} />
-              <Route path="/social" element={<SocialPage />} />
-              <Route path="/marketplace" element={<MarketplacePage />} />
-              <Route path="/invitations" element={<InvitationsPage />} />
-              <Route path="/invitations/new" element={<NewInvitationPage />} />
-              <Route path="/personalities" element={<PersonalitiesPage />} />
-              
-              {/* Ruta de perfil de usuario */}
-              <Route path="/profile" element={<ProfilePage />} />
-              
-              {/* Otras rutas */}
-              <Route path="/ai-test" element={<AITest />} />
-              <Route path="/nostr-demo" element={<NostrDemoPage />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          <Toaster richColors position="top-right" />
-        </BrowserRouter>
-      </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  )
+            {/* React Query DevTools (only in development) */}
+            {process.env.NODE_ENV === 'development' && (
+              <ReactQueryDevtools initialIsOpen={false} />
+            )}
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
 }
 
-export default App
+export default App;
