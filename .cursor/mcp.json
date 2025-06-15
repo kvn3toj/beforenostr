@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "coomunity-database": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-postgres"],
+      "env": {
+        "POSTGRES_CONNECTION_STRING": "postgresql://localhost:5432/coomunity_dev"
+      }
+    },
+    "coomunity-filesystem": {
+      "command": "npx", 
+      "args": ["@modelcontextprotocol/server-filesystem", "/Users/kevinp/Movies/GAMIFIER copy"],
+      "env": {
+        "ALLOWED_DIRECTORIES": "/Users/kevinp/Movies/GAMIFIER copy"
+      }
+    },
+    "coomunity-github": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_TOKEN_HERE"
+      }
+    }
+  }
+} 

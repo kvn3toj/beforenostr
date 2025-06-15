@@ -525,4 +525,60 @@ export class MarketplaceService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  /**
+   * Obtener items favoritos del usuario
+   * TODO: Implementar esquema de base de datos para favoritos (UserFavoriteItem junction table)
+   */
+  async getUserFavorites(userId: string) {
+    console.log('>>> MarketplaceService.getUserFavorites: Getting favorite items for user', userId);
+
+    // Verificar que el usuario existe
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    // TODO: Implementar cuando se cree el esquema de favoritos
+    // Por ahora retornamos una estructura vacía pero válida
+    // Cuando se implemente el esquema, la consulta sería algo como:
+    // 
+    // const favoriteItems = await this.prisma.userFavoriteItem.findMany({
+    //   where: { 
+    //     userId,
+    //     item: {
+    //       isActive: true,
+    //       isDeleted: false,
+    //       status: 'ACTIVE'
+    //     }
+    //   },
+    //   include: {
+    //     item: {
+    //       include: {
+    //         seller: { 
+    //           select: { 
+    //             id: true, 
+    //             firstName: true, 
+    //             lastName: true,
+    //             username: true,
+    //             avatarUrl: true
+    //           } 
+    //         }
+    //       }
+    //     }
+    //   },
+    //   orderBy: { createdAt: 'desc' }
+    // });
+
+    return {
+      items: [], // Array vacío hasta que se implemente el esquema
+      total: 0,
+      userId,
+      message: 'Endpoint de favoritos disponible. Esquema de base de datos pendiente de implementación.',
+      timestamp: new Date().toISOString()
+    };
+  }
 } 

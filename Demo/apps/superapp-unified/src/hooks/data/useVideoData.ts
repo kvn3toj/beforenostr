@@ -104,7 +104,7 @@ const VideoApiService = {
 
   // Obtener detalle de un video específico
   async getVideoById(videoId: string): Promise<VideoData> {
-    const response = await apiService.get(`/videos/${videoId}`);
+    const response = await apiService.get(`/video-items/${videoId}`);
     return validateVideoData(response.data);
   },
 

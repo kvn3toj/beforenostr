@@ -23,8 +23,9 @@ setup('authenticate as admin', async ({ page }) => {
   // Esperar redirección exitosa a la página principal
   await page.waitForURL('**/', { timeout: 15000 });
   
-  // Verificar que el usuario está autenticado y tiene datos en localStorage
-  await expect(page.locator('text=CoomÜnity')).toBeVisible();
+  // Verificar que el usuario está autenticado y el dashboard carga
+  // Usar el brand logo que siempre está presente en el header
+  await expect(page.locator('h6.brand-logo')).toBeVisible({ timeout: 10000 });
   
   // Esperar un momento adicional para asegurar que el localStorage se complete
   await page.waitForTimeout(2000);

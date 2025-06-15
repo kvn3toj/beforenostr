@@ -143,6 +143,24 @@ export class MarketplaceController {
   }
 
   /**
+   * Obtener items favoritos del usuario autenticado
+   */
+  @Get('favorites')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'USER')
+  async getUserFavorites(@Req() req: any) {
+    console.log('>>> MarketplaceController.getUserFavorites: Getting favorite items for authenticated user');
+    
+    // Obtener el userId del token JWT
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    return await this.marketplaceService.getUserFavorites(userId);
+  }
+
+  /**
    * Obtener items del usuario autenticado (mis items)
    */
   @Get('my-items')

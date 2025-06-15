@@ -212,4 +212,48 @@ export class AnalyticsController {
   async getContentStats() {
     return this.analyticsService.getContentStats();
   }
+
+  @Get('/videos')
+  @UseGuards(RolesGuard)
+  @Roles('admin')
+  @ApiOperation({ summary: 'Get video analytics summary' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Video analytics data retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        totalViews: { type: 'number' },
+        averageWatchTime: { type: 'number' },
+        mostViewedVideo: { type: 'string' },
+        totalQuestionsAnswered: { type: 'number' },
+        totalVideos: { type: 'number' },
+        topVideos: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              title: { type: 'string' },
+              views: { type: 'number' },
+              duration: { type: 'number' }
+            }
+          }
+        },
+        viewsByDay: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              date: { type: 'string' },
+              views: { type: 'number' }
+            }
+          }
+        }
+      }
+    }
+  })
+  async getVideoAnalytics() {
+    return this.analyticsService.getVideoAnalytics();
+  }
 } 

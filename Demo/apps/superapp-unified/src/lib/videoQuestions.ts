@@ -421,7 +421,7 @@ export const seedQuestionsToBackend = async (
   try {
     for (const [videoId, questions] of Object.entries(videoQuestionsDatabase)) {
       for (const question of questions) {
-        await apiService.post('/videos/questions', {
+        await apiService.post('/video-items/questions', {
           videoId: question.videoId,
           timestamp: question.timestamp,
           endTimestamp: question.endTimestamp,

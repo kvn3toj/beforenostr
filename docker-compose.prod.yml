@@ -95,7 +95,7 @@ services:
   # ================================================================
   admin:
     build:
-      context: ./admin-frontend
+      context: ./apps/admin-frontend
       dockerfile: Dockerfile
       target: production
       args:

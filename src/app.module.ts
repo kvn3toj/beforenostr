@@ -14,6 +14,9 @@ import { QuestionModule } from './questions/question.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { VideoItemsModule } from './video-items/video-items.module';
 import { SocialModule } from './social/social.module';
+import { MeritsAndWalletModule } from './merits-and-wallet/merits-and-wallet.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { MarketplaceModule } from './marketplace/marketplace.module';
 
 @Module({
   imports: [
@@ -30,6 +33,9 @@ import { SocialModule } from './social/social.module';
     RbacModule,        // Import full RBAC module instead of just RolesModule to get guards
     AnalyticsModule,   // Agregar para endpoints /analytics
     SocialModule,      // Agregar para endpoints /social
+    MeritsAndWalletModule, // Agregar para endpoints /wallets, /merits, /transactions
+    NotificationsModule, // Agregar para endpoints /notifications
+    MarketplaceModule, // Agregar para endpoints /marketplace
   ],
   controllers: [AppController],
   providers: [AppService],

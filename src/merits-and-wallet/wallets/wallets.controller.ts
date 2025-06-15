@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Req, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Req, ForbiddenException, NotFoundException, Inject } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -16,7 +16,14 @@ interface AuthenticatedRequest extends Request {
 @UseGuards(JwtAuthGuard)
 @Controller('wallets')
 export class WalletsController {
-  constructor(private readonly walletsService: WalletsService) {}
+  constructor(@Inject(WalletsService) private readonly walletsService: WalletsService) {}
+
+  @Get('/me')
+  @ApiOperation({ summary: 'Get all wallet balances for the authenticated user' })
+  @ApiResponse({ status: 200, description: 'List of wallet balances for the authenticated user.' })
+  async getMyWalletBalances(@Req() req: AuthenticatedRequest) {
+    return this.walletsService.getAllBalancesForUser(req.user.id, req.user);
+  }
 
   @Get('/user/:userId')
   @ApiOperation({ summary: 'Get all wallet balances for a specific user (Owner or Admin only)' })
@@ -31,26 +38,21 @@ export class WalletsController {
       return this.walletsService.getAllBalancesForUser(userId, req.user);
   }
 
-  @Get('/user/:userId/:meritSlug')
-  @ApiOperation({ summary: 'Get balance for a specific merit for a user (Owner or Admin only)' })
-  @ApiResponse({ status: 200, description: 'Wallet balance for the merit.' })
-  @ApiResponse({ status: 404, description: 'Wallet or Merit not found.' })
+  @Get('/user/:userId/wallet')
+  @ApiOperation({ summary: 'Get wallet details for a specific user (Owner or Admin only)' })
+  @ApiResponse({ status: 200, description: 'Wallet details for the user.' })
+  @ApiResponse({ status: 404, description: 'Wallet not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   @ApiParam({ name: 'userId', description: 'ID of the user' })
-  @ApiParam({ name: 'meritSlug', description: 'Slug of the merit' })
-  async getBalanceForUser(
+  async getWalletForUser(
     @Req() req: AuthenticatedRequest,
     @Param('userId') userId: string,
-    @Param('meritSlug') meritSlug: string,
   ) {
       // Check if the authenticated user is requesting their own data OR is an admin
       if (req.user.id !== userId && !req.user.roles.includes('admin')) {
-          throw new ForbiddenException('You do not have permission to view this wallet balance.');
+          throw new ForbiddenException('You do not have permission to view this wallet.');
       }
-      const wallet = await this.walletsService.getBalanceForUser(userId, meritSlug, req.user);
-      if (!wallet) {
-          throw new NotFoundException(`Wallet balance for merit ${meritSlug} not found for user ${userId}`);
-      }
+      const wallet = await this.walletsService.getWalletForUser(userId, req.user);
       return wallet;
   }
 
@@ -68,21 +70,16 @@ export class WalletsController {
 
    @UseGuards(JwtAuthGuard, RolesGuard)
    @Roles('admin')
-   @Get('/admin/user/:userId/:meritSlug')
-   @ApiOperation({ summary: '[ADMIN] Get balance for a specific merit for any user (Admin only)' })
-   @ApiResponse({ status: 200, description: 'Wallet balance for the merit (Admin only).' })
-   @ApiResponse({ status: 404, description: 'Wallet or Merit not found.' })
+   @Get('/admin/user/:userId/wallet')
+   @ApiOperation({ summary: '[ADMIN] Get wallet details for any user (Admin only)' })
+   @ApiResponse({ status: 200, description: 'Wallet details (Admin only).' })
+   @ApiResponse({ status: 404, description: 'Wallet not found.' })
    @ApiResponse({ status: 403, description: 'Forbidden resource.' })
    @ApiParam({ name: 'userId', description: 'ID of the user' })
-   @ApiParam({ name: 'meritSlug', description: 'Slug of the merit' })
-   async getBalanceForUserAdmin(
+   async getWalletForUserAdmin(
        @Param('userId') userId: string,
-       @Param('meritSlug') meritSlug: string,
    ) {
-       const wallet = await this.walletsService.getBalanceForUserAdmin(userId, meritSlug);
-        if (!wallet) {
-          throw new NotFoundException(`Wallet balance for merit ${meritSlug} not found for user ${userId}`);
-      }
+       const wallet = await this.walletsService.getWalletForUserAdmin(userId);
        return wallet;
    }
 

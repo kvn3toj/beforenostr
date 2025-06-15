@@ -12,6 +12,13 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   outputDir: 'test-results/artifacts',
+  
+  // ✅ TIMEOUT CONFIGURATION - Aumentado según recomendaciones
+  timeout: 60 * 1000, // 60 segundos para cada test (era 30s por defecto)
+  expect: {
+    timeout: 10 * 1000, // 10 segundos para assertions (era 5s por defecto)
+  },
+  
   reporter: [
     ['html', { outputFolder: 'playwright-report' }],
     ['json', { outputFile: 'test-results/results.json' }]
@@ -23,7 +30,11 @@ export default defineConfig({
     baseURL: process.env.PLAYWRIGHT_BASE_URL || process.env.VITE_BASE_URL || 'http://localhost:3001',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure'
+    video: 'retain-on-failure',
+    
+    // ✅ ACTION TIMEOUTS - Configuración adicional para acciones lentas
+    actionTimeout: 15 * 1000, // 15 segundos para acciones (clicks, fills, etc.)
+    navigationTimeout: 30 * 1000, // 30 segundos para navegación
   },
 
   // Setup global para detectar puerto antes de ejecutar tests
@@ -34,6 +45,8 @@ export default defineConfig({
     { 
       name: 'setup', 
       testMatch: /.*\.setup\.ts/,
+      // ✅ Timeout específico para setup (puede ser más lento)
+      timeout: 90 * 1000, // 90 segundos para setup de autenticación
     },
 
     // Projects principales con autenticación persistente

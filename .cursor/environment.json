@@ -1,18 +1,19 @@
 {
-  "agentCanUpdateSnapshot": true,
-  "install": "npm install --legacy-peer-deps",
+  "snapshot": "POPULATED_FROM_SETTINGS",
+  "install": "npm install --legacy-peer-deps && cd Demo/apps/superapp-unified && npm install --legacy-peer-deps && cd ../../../",
+  "start": "echo 'Starting CoomÜnity development environment...'",
   "terminals": [
     {
       "name": "Backend NestJS",
-      "command": "npm run start:backend:dev"
+      "command": "npm run dev:backend"
     },
     {
       "name": "SuperApp Frontend", 
-      "command": "cd Demo/apps/superapp-unified && npm run dev"
+      "command": "npm run dev:superapp"
     },
     {
-      "name": "Gamifier Admin",
-      "command": "cd apps/admin-frontend && npm run dev"
+      "name": "Health Monitor",
+      "command": "while true; do echo '=== Health Check ===' && curl -s http://localhost:3002/health && curl -s -I http://localhost:3001 && echo '' && sleep 30; done"
     }
   ]
 }

@@ -9,6 +9,41 @@ export class VideoItemsController {
     console.log('>>> VideoItemsController CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get all video items' })
+  @ApiResponse({ status: 200, description: 'List of video items' })
+  async findAll() {
+    console.log('>>> VideoItemsController.findAll: Starting...');
+    console.log('>>> VideoItemsController.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    
+    try {
+      console.log('>>> VideoItemsController.findAll: About to call prisma.videoItem.findMany');
+      const videoItems = await this.prisma.videoItem.findMany({
+        include: {
+          subtitles: {
+            where: { isActive: true }
+          },
+          questions: {
+            where: { isActive: true },
+            include: {
+              answerOptions: {
+                orderBy: { order: 'asc' }
+              }
+            }
+          }
+        },
+        orderBy: { id: 'asc' }
+      });
+
+      console.log('>>> VideoItemsController.findAll: Query result:', videoItems.length, 'items found');
+      console.log('>>> VideoItemsController.findAll: SUCCESS, returning', videoItems.length, 'videoItems');
+      return videoItems;
+    } catch (error) {
+      console.error('>>> VideoItemsController.findAll: ERROR:', error);
+      throw error;
+    }
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a video item by ID' })
   @ApiResponse({ status: 200, description: 'Video item found' })

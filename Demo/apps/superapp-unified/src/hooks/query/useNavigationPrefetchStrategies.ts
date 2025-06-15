@@ -35,7 +35,7 @@ export const useHoverPrefetch = () => {
         if (videoId) {
           queryClient.prefetchQuery({
             queryKey: ['video', videoId],
-            queryFn: () => fetch(`/api/videos/${videoId}`).then(res => res.json()),
+            queryFn: () => fetch(`/api/video-items/${videoId}`).then(res => res.json()),
             staleTime: 1000 * 60 * 15,
           });
         }
@@ -171,7 +171,7 @@ export const useTimePrefetch = () => {
         case '/uplay':
           queryClient.prefetchQuery({
             queryKey: ['recommended-videos'],
-            queryFn: () => fetch('/api/videos/recommended').then(res => res.json()),
+            queryFn: () => fetch('/api/video-items/recommended').then(res => res.json()),
             staleTime: 1000 * 60 * 10,
           });
           break;

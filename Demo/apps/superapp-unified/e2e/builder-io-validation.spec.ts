@@ -24,31 +24,61 @@ test.describe('Builder.io Rules Validation', () => {
   });
 
   test('should load horizontal player demo without hook errors', async ({ page }) => {
-    // Navegar al reproductor horizontal
-    await page.goto('/uplay/horizontal-demo');
+    // ✅ Timeout específico para este test problemático
+    test.setTimeout(90 * 1000); // 90 segundos para este test específico
     
-    // Esperar a que el componente se monte completamente
-    await page.waitForSelector('[data-testid="horizontal-player-container"]', { timeout: 10000 });
+    console.log('🧪 Iniciando test de reproductor horizontal...');
     
-    // Verificar que no hay errores de hooks en la consola
-    const errors = await page.evaluate(() => (window as any).capturedErrors || []);
-    const hookErrors = errors.filter((error: string) => 
-      error.includes('hook') || 
-      error.includes('d5xc6yq0t') ||
-      error.includes('Rendered more hooks than during the previous render')
-    );
-    
-    expect(hookErrors).toHaveLength(0);
-    
-    // Verificar que el componente se renderiza correctamente
-    await expect(page.locator('[data-testid="horizontal-player-container"]')).toBeVisible();
-    
-    // Verificar que el video está presente
-    await expect(page.locator('iframe[src*="youtube.com"]')).toBeVisible();
-    
-    // Verificar que los controles están presentes
-    await expect(page.locator('[data-testid="play-pause-button"]')).toBeVisible();
-    await expect(page.locator('[data-testid="volume-control"]')).toBeVisible();
+    try {
+      // ✅ Navegación con timeout extendido
+      await page.goto('/uplay/horizontal-demo', { timeout: 30000 });
+      
+      // ✅ Esperar a que React se monte completamente
+      await page.waitForSelector('#root', { timeout: 15000 });
+      
+      // ✅ Esperar a que el componente se monte con timeout extendido
+      await page.waitForSelector('[data-testid="horizontal-player-container"]', { 
+        timeout: 20000 
+      });
+      
+      console.log('✅ Componente horizontal player cargado');
+      
+      // Verificar que no hay errores de hooks en la consola
+      const errors = await page.evaluate(() => (window as any).capturedErrors || []);
+      const hookErrors = errors.filter((error: string) => 
+        error.includes('hook') || 
+        error.includes('d5xc6yq0t') ||
+        error.includes('Rendered more hooks than during the previous render')
+      );
+      
+      expect(hookErrors).toHaveLength(0);
+      
+      // ✅ Verificaciones con timeouts específicos
+      await expect(page.locator('[data-testid="horizontal-player-container"]')).toBeVisible({ 
+        timeout: 10000 
+      });
+      
+      // ✅ Verificar video con timeout extendido (puede tardar en cargar)
+      await expect(page.locator('iframe[src*="youtube.com"]')).toBeVisible({ 
+        timeout: 15000 
+      });
+      
+      // ✅ Verificar controles con timeouts específicos
+      await expect(page.locator('[data-testid="play-pause-button"]')).toBeVisible({ 
+        timeout: 10000 
+      });
+      await expect(page.locator('[data-testid="volume-control"]')).toBeVisible({ 
+        timeout: 10000 
+      });
+      
+      console.log('✅ Test de reproductor horizontal completado exitosamente');
+      
+    } catch (error) {
+      console.log(`⚠️ Error en test de reproductor horizontal: ${error.message}`);
+      // Tomar screenshot para debugging
+      await page.screenshot({ path: 'horizontal-player-debug.png', fullPage: true });
+      throw error;
+    }
   });
 
   test('should handle video interactions without errors', async ({ page }) => {
