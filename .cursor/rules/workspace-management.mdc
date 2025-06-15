@@ -1,0 +1,335 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 🏗️ REGLAS CRÍTICAS DE GESTIÓN DE WORKSPACE - PROYECTO COOMUNITY
+
+# ===============================================================================
+# REGLAS BASADAS EN APRENDIZAJES COSTOSOS Y EXPERIENCIAS REALES
+# Estas reglas previenen errores que han causado reprocesos significativos
+# ===============================================================================
+
+## 🚨 **REGLA DE ORO FUNDAMENTAL - CRÍTICA**
+
+### **"TODOS LOS COMANDOS DESDE LA RAÍZ DEL MONOREPO"**
+
+**UBICACIÓN DE LA RAÍZ:** `/Users/kevinp/Movies/GAMIFIER copy/`
+
+**REGLA OBLIGATORIA:**
+```bash
+# ✅ CORRECTO - SIEMPRE desde la raíz
+pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER copy
+npm run dev
+npm run test:e2e --workspace=Demo/apps/superapp-unified
+
+# ❌ PROHIBIDO - NUNCA desde subdirectorios
+cd Demo/apps/superapp-unified/ && npm run dev  # ❌ CAUSA ERRORES
+cd backend/ && npm run dev                      # ❌ CAUSA ERRORES
+```
+
+**RAZÓN CRÍTICA:** Ejecutar comandos desde subdirectorios causa:
+- Errores de contexto e importaciones rotas
+- Configuraciones incorrectas 
+- Fallos fantasma en tests
+- Pérdida de orquestación del monorepo
+
+---
+
+## 🔄 **GESTIÓN DE PROCESOS MÚLTIPLES - CRÍTICA**
+
+### **PROBLEMA IDENTIFICADO:**
+Múltiples procesos `npm run dev` y `vite` ejecutándose simultáneamente causan:
+- Conflictos de puerto
+- Errores de compilación
+- Comportamiento impredecible
+- Consumo excesivo de recursos
+
+### **PROTOCOLO DE LIMPIEZA OBLIGATORIO:**
+
+**Antes de CUALQUIER comando de desarrollo:**
+```bash
+# 1. DETECTAR PROCESOS MÚLTIPLES
+ps aux | grep -E "(vite|npm run dev)" | grep -v grep
+
+# 2. LIMPIAR PROCESOS CONFLICTIVOS
+pkill -f "vite" 2>/dev/null || true
+pkill -f "npm run dev" 2>/dev/null || true
+
+# 3. LIMPIAR PUERTOS OCUPADOS
+lsof -ti:3000,3001,3002,3003,5173 | xargs kill -9 2>/dev/null || true
+
+# 4. VERIFICAR LIMPIEZA
+lsof -i :3001 || echo "Puerto 3001 libre ✅"
+lsof -i :3002 || echo "Puerto 3002 libre ✅"
+
+# 5. INICIAR SERVICIOS LIMPIOS
+npm run dev  # Desde la raíz
+```
+
+**REGLA DE UN SOLO PROCESO:** NUNCA ejecutar múltiples instancias de `npm run dev` simultáneamente.
+
+---
+
+## 🏛️ **SEPARACIÓN ARQUITECTÓNICA CRÍTICA**
+
+### **APRENDIZAJE COSTOSO RESUELTO:**
+**PROBLEMA:** 151 archivos React (.tsx/.jsx) estaban mezclados en `./src/` del backend NestJS
+**SÍNTOMA:** Error "Failed to resolve import ../pages/AnalyticsPage"
+**SOLUCIÓN:** Archivos movidos a `./_temp_frontend_src_files/` para aislarlos
+
+### **REGLAS DE SEPARACIÓN ESTRICTA:**
+
+**Directorios Backend:**
+```bash
+./src/                    # SOLO archivos NestJS (controllers, services, modules)
+./prisma/                 # SOLO esquemas y migraciones de base de datos
+./dist/                   # SOLO builds del backend compilado
+```
+
+**Directorios Frontend:**
+```bash
+Demo/apps/superapp-unified/src/    # SOLO archivos React de SuperApp
+admin-frontend/src/                # SOLO archivos React de Admin
+```
+
+**PROHIBIDO ABSOLUTAMENTE:**
+- Archivos `.tsx/.jsx` en directorios del backend
+- Archivos de backend en directorios de frontend
+- Importaciones cruzadas entre backend y frontend
+- Dependencias compartidas sin workspace específico
+
+---
+
+## 📂 **ORGANIZACIÓN DE DIRECTORIO RAÍZ**
+
+### **REORGANIZACIÓN MASIVA COMPLETADA:**
+- **ANTES:** 483 archivos en directorio raíz (caos total)
+- **DESPUÉS:** 27 archivos en directorio raíz (94% reducción)
+
+### **ESTRUCTURA ORGANIZADA OBLIGATORIA:**
+
+**Directorio Raíz (SOLO archivos esenciales):**
+```bash
+/Users/kevinp/Movies/GAMIFIER copy/
+├── package.json          # Orquestador principal
+├── turbo.json           # Configuración Turborepo
+├── .env                 # Variables globales
+├── tsconfig.json        # Configuración TypeScript global
+├── .gitignore          # Exclusiones Git
+└── README.md           # Documentación principal
+```
+
+**Directorios Organizacionales:**
+```bash
+logs/                    # 31 archivos organizados (auth/, backend/, testing/)
+config/                  # 16 archivos de configuración (json/, backup/)
+docs/diagrams/           # 6 archivos de diagramas (.mmd)
+scripts/database/        # 7 archivos SQL y scripts de DB
+```
+
+**REGLA DE MANTENIMIENTO:** El directorio raíz NUNCA debe exceder 30 archivos.
+
+---
+
+## 🎯 **PROTOCOLO PRE-FLIGHT CHECK EXPANDIDO**
+
+### **VERIFICACIÓN OBLIGATORIA antes de cualquier tarea:**
+
+```bash
+#!/bin/bash
+echo "🔍 INICIANDO PRE-FLIGHT CHECK CRÍTICO..."
+
+# 1. VERIFICAR UBICACIÓN CORRECTA
+CURRENT_DIR=$(pwd)
+EXPECTED_DIR="/Users/kevinp/Movies/GAMIFIER copy"
+if [ "$CURRENT_DIR" != "$EXPECTED_DIR" ]; then
+  echo "❌ ERROR: Ubicación incorrecta"
+  echo "📍 Actual: $CURRENT_DIR"
+  echo "📍 Esperada: $EXPECTED_DIR"
+  echo "🔧 Ejecuta: cd '$EXPECTED_DIR'"
+  exit 1
+fi
+echo "✅ Ubicación correcta verificada"
+
+# 2. LIMPIAR PROCESOS MÚLTIPLES
+echo "🧹 Limpiando procesos múltiples..."
+pkill -f "vite" 2>/dev/null || true
+pkill -f "npm run dev" 2>/dev/null || true
+sleep 2
+
+# 3. VERIFICAR LIMPIEZA DE PROCESOS
+RUNNING_PROCESSES=$(ps aux | grep -E "(vite|npm run dev)" | grep -v grep | wc -l)
+if [ $RUNNING_PROCESSES -gt 0 ]; then
+  echo "⚠️ ADVERTENCIA: Procesos aún ejecutándose:"
+  ps aux | grep -E "(vite|npm run dev)" | grep -v grep
+fi
+
+# 4. LIMPIAR PUERTOS OCUPADOS
+echo "🔧 Liberando puertos ocupados..."
+lsof -ti:3000,3001,3002,3003,5173 | xargs kill -9 2>/dev/null || true
+
+# 5. VERIFICAR CONFIGURACIÓN DE PUERTOS
+echo "📋 Verificando configuración de puertos..."
+if [ -f "Demo/apps/superapp-unified/.env" ]; then
+  SUPERAPP_PORT=$(grep VITE_BASE_URL Demo/apps/superapp-unified/.env | cut -d':' -f3 | cut -d'/' -f1)
+  if [ "$SUPERAPP_PORT" != "3001" ]; then
+    echo "⚠️ ADVERTENCIA: Puerto SuperApp no es 3001 (actual: $SUPERAPP_PORT)"
+  fi
+fi
+
+# 6. VERIFICAR DEPENDENCIAS CRÍTICAS
+echo "📦 Verificando dependencias críticas..."
+cd Demo/apps/superapp-unified/
+npm ls @sentry/react >/dev/null 2>&1 || echo "⚠️ FALTA: @sentry/react"
+npm ls web-vitals >/dev/null 2>&1 || echo "⚠️ FALTA: web-vitals"
+npm ls @playwright/test >/dev/null 2>&1 || echo "⚠️ FALTA: @playwright/test"
+cd ../../../
+
+# 7. VERIFICAR SERVICIOS (si están ejecutándose)
+echo "🌐 Verificando servicios disponibles..."
+curl -s http://localhost:3002/health >/dev/null && echo "✅ Backend (3002) disponible" || echo "⚠️ Backend (3002) no disponible"
+curl -s -I http://localhost:3001 >/dev/null && echo "✅ SuperApp (3001) disponible" || echo "ℹ️ SuperApp (3001) no iniciada"
+
+echo "🏁 PRE-FLIGHT CHECK COMPLETADO"
+echo "▶️ Listo para ejecutar: npm run dev"
+```
+
+---
+
+## 🎮 **COMANDOS CANÓNICOS DEFINITIVOS**
+
+### **Comandos de Desarrollo (desde la raíz ÚNICAMENTE):**
+
+```bash
+# 🚀 INICIAR ECOSISTEMA COMPLETO (Comando Principal)
+npm run dev
+
+# 🎯 WORKSPACE ESPECÍFICO
+npm run dev --workspace=backend
+npm run test:e2e --workspace=Demo/apps/superapp-unified
+
+# 🔍 FILTROS TURBOREPO
+turbo run dev --filter=...backend*
+turbo run dev --filter=...superapp*
+
+# 📊 TESTS ESPECÍFICOS
+npm run test:e2e --workspace=Demo/apps/superapp-unified -- e2e/auth-quick-test.spec.ts
+```
+
+### **Comandos de Verificación:**
+
+```bash
+# 📍 VERIFICAR UBICACIÓN
+pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER copy
+
+# 🔍 DETECTAR PROCESOS MÚLTIPLES
+ps aux | grep -E "(vite|npm)" | grep -v grep
+
+# 🌐 VERIFICAR SERVICIOS
+curl http://localhost:3002/health  # Backend
+curl http://localhost:3001 -I      # SuperApp
+
+# 📋 VERIFICAR CONFIGURACIÓN
+cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
+```
+
+---
+
+## 🚨 **ERRORES CRÍTICOS A EVITAR ABSOLUTAMENTE**
+
+### **❌ PROHIBIDO:**
+
+1. **Comandos desde subdirectorios:**
+   ```bash
+   # ❌ NUNCA HACER ESTO:
+   cd Demo/apps/superapp-unified/ && npm run dev
+   cd backend/ && npm run dev
+   ```
+
+2. **Múltiples procesos simultáneos:**
+   ```bash
+   # ❌ NUNCA ejecutar múltiples instancias
+   npm run dev  # Ya ejecutándose
+   npm run dev  # ❌ Segunda instancia causa conflictos
+   ```
+
+3. **Mezclar archivos backend/frontend:**
+   ```bash
+   # ❌ NUNCA poner archivos React en:
+   ./src/components/          # ❌ Es directorio de backend
+   ./src/pages/              # ❌ Es directorio de backend
+   ```
+
+4. **Ignorar limpieza de procesos:**
+   ```bash
+   # ❌ NUNCA iniciar sin limpiar:
+   npm run dev  # Sin pkill previo causa conflictos
+   ```
+
+### **✅ OBLIGATORIO:**
+
+1. **Siempre verificar ubicación:**
+   ```bash
+   pwd  # Verificar raíz antes de comandos
+   ```
+
+2. **Siempre limpiar procesos:**
+   ```bash
+   pkill -f "vite" && pkill -f "npm run dev"
+   ```
+
+3. **Siempre usar workspace sintaxis:**
+   ```bash
+   npm run <script> --workspace=<nombre_del_paquete>
+   ```
+
+4. **Siempre mantener separación arquitectónica:**
+   ```bash
+   # Backend: ./src/ - SOLO NestJS
+   # Frontend: Demo/apps/superapp-unified/src/ - SOLO React
+   ```
+
+---
+
+## 📈 **BENEFICIOS COMPROBADOS**
+
+### **Implementando estas reglas se logró:**
+
+- ✅ **Tests E2E al 100%** (3/3 exitosos)
+- ✅ **Eliminación completa de errores de importación**
+- ✅ **Arquitectura limpia y mantenible**
+- ✅ **Desarrollo sin conflictos de puerto**
+- ✅ **Reducción 94% de archivos en directorio raíz**
+- ✅ **Orquestación eficiente con Turborepo**
+- ✅ **Separación estricta backend/frontend**
+
+### **Costos evitados:**
+- 🚫 Reprocesos por errores de contexto
+- 🚫 Debugging de importaciones rotas
+- 🚫 Conflictos de puerto y procesos
+- 🚫 Confusión arquitectónica
+- 🚫 Pérdida de tiempo en configuración
+
+---
+
+## 🎯 **RESUMEN EJECUTIVO**
+
+### **REGLA FUNDAMENTAL:**
+> **"El directorio raíz del monorepo es el centro de comando. Todo se ejecuta desde ahí, todo se organiza desde ahí, y todo se controla desde ahí."**
+
+### **PROTOCOLO OBLIGATORIO:**
+1. **Verificar ubicación** (`pwd`)
+2. **Limpiar procesos** (`pkill -f "vite"`)
+3. **Verificar puertos** (`lsof -i :3001`)
+4. **Ejecutar desde raíz** (`npm run dev`)
+5. **Usar workspace sintaxis** (`--workspace=<name>`)
+
+### **PROHIBICIONES ABSOLUTAS:**
+- ❌ Comandos desde subdirectorios
+- ❌ Múltiples procesos simultáneos
+- ❌ Mezclar archivos backend/frontend
+- ❌ Más de 30 archivos en directorio raíz
+- ❌ Ignorar limpieza de procesos
+
+**Estas reglas son el resultado de aprendizajes costosos y DEBEN seguirse para mantener la estabilidad y eficiencia del proyecto CoomÜnity.**

@@ -1,0 +1,87 @@
+# ================================================================
+# CoomÜnity - Docker Compose para Validación de Conectividad
+# Prueba de conectividad con servicios locales
+# ================================================================
+
+version: '3.8'
+
+services:
+  # ================================================================
+  # Contenedor de Prueba de Conectividad
+  # ================================================================
+  connectivity-test:
+    image: alpine:latest
+    container_name: coomunity-connectivity-test
+    command: |
+      sh -c "
+        echo '🔍 Iniciando pruebas de conectividad...'
+        apk add --no-cache curl
+        
+        echo '📡 Probando conectividad con SuperApp (puerto 3004)...'
+        if curl -s -f http://host.docker.internal:3004 > /dev/null; then
+          echo '✅ SuperApp (3004): CONECTADO'
+        else
+          echo '❌ SuperApp (3004): NO DISPONIBLE'
+        fi
+        
+        echo '📡 Probando conectividad con Backend (puerto 3002)...'
+        if curl -s -f http://host.docker.internal:3002/health > /dev/null; then
+          echo '✅ Backend (3002): CONECTADO'
+        else
+          echo '❌ Backend (3002): NO DISPONIBLE'
+        fi
+        
+        echo '🎯 Pruebas de conectividad completadas'
+        sleep 5
+      "
+    networks:
+      - test-network
+
+  # ================================================================
+  # Contenedor Nginx Simple para Validar Proxy
+  # ================================================================
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: coomunity-nginx-test
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-test.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - connectivity-test
+    networks:
+      - test-network
+    command: |
+      sh -c "
+        echo 'events { worker_connections 1024; }
+        http {
+          upstream superapp {
+            server host.docker.internal:3004;
+          }
+          upstream backend {
+            server host.docker.internal:3002;
+          }
+          server {
+            listen 80;
+            location / {
+              proxy_pass http://superapp;
+              proxy_set_header Host \$$host;
+              proxy_set_header X-Real-IP \$$remote_addr;
+            }
+            location /api/ {
+              proxy_pass http://backend/;
+              proxy_set_header Host \$$host;
+              proxy_set_header X-Real-IP \$$remote_addr;
+            }
+          }
+        }' > /etc/nginx/nginx.conf
+        nginx -g 'daemon off;'
+      "
+
+# ================================================================
+# Networks
+# ================================================================
+networks:
+  test-network:
+    driver: bridge
+    name: coomunity-test-network 

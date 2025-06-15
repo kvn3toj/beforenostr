@@ -34,7 +34,7 @@ import {
   Quiz as QuizIcon,
   Refresh as RefreshIcon,
   Info as InfoIcon,
-} from '@mui/material/icons-material';
+} from '@mui/icons-material';
 
 interface PlayerMetricsData {
   merits: number;
