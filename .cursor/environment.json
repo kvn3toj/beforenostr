@@ -1,6 +1,6 @@
 {
   "agentCanUpdateSnapshot": true,
-  "install": "npm install",
+  "install": "npm install --legacy-peer-deps",
   "terminals": [
     {
       "name": "Backend NestJS",
@@ -9,6 +9,10 @@
     {
       "name": "SuperApp Frontend", 
       "command": "cd Demo/apps/superapp-unified && npm run dev"
+    },
+    {
+      "name": "Gamifier Admin",
+      "command": "cd apps/admin-frontend && npm run dev"
     }
   ]
 }
