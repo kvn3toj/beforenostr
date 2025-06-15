@@ -101,7 +101,7 @@ test.describe('🎫 Invitation Flow - Beta Registration', () => {
     
     // Llenar datos personales usando selectores más específicos
     await page.locator('input[label="Nombre Completo"], input[name="fullName"], input:has-text("Nombre Completo")').first().fill('Usuario Test Beta');
-    await page.locator('input[label="Email"], input[name="email"], input[type="email"]').first().fill('test@coomunity.com');
+    await page.locator('input[label="Email"], input[name="email"], input[type="email"]').first().fill('admin@gamifier.com');
     
     // Seleccionar país
     await page.locator('div[role="combobox"], .MuiSelect-select').click();
@@ -127,7 +127,7 @@ test.describe('🎫 Invitation Flow - Beta Registration', () => {
     await expect(page.locator('h4')).toContainText('Datos Personales');
     
     await page.locator('input[label="Nombre Completo"], input[name="fullName"], input:has-text("Nombre Completo")').first().fill('Usuario Test');
-    await page.locator('input[label="Email"], input[name="email"], input[type="email"]').first().fill('test@coomunity.com');
+    await page.locator('input[label="Email"], input[name="email"], input[type="email"]').first().fill('admin@gamifier.com');
     await page.locator('div[role="combobox"], .MuiSelect-select').click();
     await page.locator('li:has-text("Argentina")').click();
     await page.locator('button:has-text("Siguiente")').click();
@@ -152,7 +152,7 @@ test.describe('🎫 Invitation Flow - Beta Registration', () => {
     
     // Paso 2: Datos personales
     await page.locator('input[label="Nombre Completo"], input[name="fullName"], input:has-text("Nombre Completo")').first().fill('Usuario Test Beta');
-    await page.locator('input[label="Email"], input[name="email"], input[type="email"]').first().fill('test@coomunity.com');
+    await page.locator('input[label="Email"], input[name="email"], input[type="email"]').first().fill('admin@gamifier.com');
     await page.locator('div[role="combobox"], .MuiSelect-select').click();
     await page.locator('li:has-text("Argentina")').click();
     await page.locator('button:has-text("Siguiente")').click();
@@ -173,7 +173,7 @@ test.describe('🎫 Invitation Flow - Beta Registration', () => {
     
     // Verificar resumen de registro
     await expect(page.locator('text=BETA-12345678')).toBeVisible();
-    await expect(page.locator('text=test@coomunity.com')).toBeVisible();
+    await expect(page.locator('text=admin@gamifier.com')).toBeVisible();
     await expect(page.locator('text=AR')).toBeVisible();
   });
 

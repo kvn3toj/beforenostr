@@ -30,25 +30,53 @@ export default defineConfig({
   globalSetup: path.resolve(__dirname, 'utils/global-setup.cjs'),
 
   projects: [
+    // Setup project para autenticación persistente
+    { 
+      name: 'setup', 
+      testMatch: /.*\.setup\.ts/,
+    },
+
+    // Projects principales con autenticación persistente
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Usar estado de autenticación guardado
+        storageState: 'playwright/.auth/admin.json',
+      },
+      dependencies: ['setup'],
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { 
+        ...devices['Desktop Firefox'],
+        storageState: 'playwright/.auth/admin.json',
+      },
+      dependencies: ['setup'],
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { 
+        ...devices['Desktop Safari'],
+        storageState: 'playwright/.auth/admin.json',
+      },
+      dependencies: ['setup'],
     },
     {
       name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] },
+      use: { 
+        ...devices['Pixel 5'],
+        storageState: 'playwright/.auth/admin.json',
+      },
+      dependencies: ['setup'],
     },
     {
       name: 'mobile-safari',
-      use: { ...devices['iPhone 12'] },
+      use: { 
+        ...devices['iPhone 12'],
+        storageState: 'playwright/.auth/admin.json',
+      },
+      dependencies: ['setup'],
     },
   ],
 

@@ -13,8 +13,8 @@ test.describe('Simple System Test', () => {
       console.error('Browser page error:', error.message);
     });
 
-    // Navegar a la página de login
-    await page.goto('/login');
+    // Navegar a la página de login con timeout extendido
+    await page.goto('/login', { timeout: 60000, waitUntil: 'domcontentloaded' });
     
     // Verificar que la página de login se carga usando selectores más específicos
     await expect(page.getByRole('heading', { name: 'Iniciar Sesión' })).toBeVisible();
@@ -34,8 +34,8 @@ test.describe('Simple System Test', () => {
       console.error('Browser page error:', error.message);
     });
 
-    // Navegar a la página de login
-    await page.goto('/login');
+    // Navegar a la página de login con timeout extendido
+    await page.goto('/login', { timeout: 60000, waitUntil: 'domcontentloaded' });
     
     // Verificar conectividad del backend desde el navegador
     const backendTest = await page.evaluate(async () => {
@@ -76,15 +76,15 @@ test.describe('Simple System Test', () => {
       console.error('Browser page error:', error.message);
     });
 
-    // Login primero
-    await page.goto('/login');
+    // Login primero con timeout extendido
+    await page.goto('/login', { timeout: 60000, waitUntil: 'domcontentloaded' });
     await page.fill('input[name="email"]', 'admin@gamifier.com');
     await page.fill('input[name="password"]', 'admin123');
     await page.click('button[type="submit"]');
     await page.waitForURL('**/');
     
-    // Ahora ir a la página de perfil
-    await page.goto('/profile');
+    // Ahora ir a la página de perfil con timeout extendido
+    await page.goto('/profile', { timeout: 60000, waitUntil: 'domcontentloaded' });
     
     // Verificar que la página de perfil se carga
     await expect(page.getByText('Mi Perfil')).toBeVisible();

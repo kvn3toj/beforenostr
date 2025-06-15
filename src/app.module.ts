@@ -13,6 +13,7 @@ import { SubtitleModule } from './subtitle/subtitle.module';
 import { QuestionModule } from './questions/question.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { VideoItemsModule } from './video-items/video-items.module';
+import { SocialModule } from './social/social.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { VideoItemsModule } from './video-items/video-items.module';
     AdminModule,       // Agregar para endpoints /admin/*
     RbacModule,        // Import full RBAC module instead of just RolesModule to get guards
     AnalyticsModule,   // Agregar para endpoints /analytics
+    SocialModule,      // Agregar para endpoints /social
   ],
   controllers: [AppController],
   providers: [AppService],

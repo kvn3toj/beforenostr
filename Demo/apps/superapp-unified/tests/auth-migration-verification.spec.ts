@@ -120,8 +120,8 @@ test.describe('🔐 VERIFICACIÓN DE MIGRACIÓN DE AUTENTICACIÓN - BACKEND NEST
       console.log('✅ Formulario de registro encontrado');
 
       // 3. Llenar formulario con datos de prueba
-      await emailInput.fill('test@coomunity.com');
-      await passwordInput.fill('test123456');
+      await emailInput.fill('admin@gamifier.com');
+      await passwordInput.fill('admin123456');
       if (await nameInput.count() > 0) {
         await nameInput.fill('Usuario de Prueba');
       }
@@ -168,7 +168,7 @@ test.describe('🔐 VERIFICACIÓN DE MIGRACIÓN DE AUTENTICACIÓN - BACKEND NEST
       localStorage.setItem('coomunity_token', 'test-token');
       localStorage.setItem('coomunity_user', JSON.stringify({
         id: 'test-user',
-        email: 'test@coomunity.com',
+        email: 'admin@gamifier.com',
         access_token: 'test-token'
       }));
     });
@@ -224,7 +224,7 @@ test.describe('🔐 VERIFICACIÓN DE MIGRACIÓN DE AUTENTICACIÓN - BACKEND NEST
       localStorage.setItem('coomunity_token', 'valid-test-token');
       localStorage.setItem('coomunity_user', JSON.stringify({
         id: 'test-user',
-        email: 'test@coomunity.com',
+        email: 'admin@gamifier.com',
         access_token: 'valid-test-token'
       }));
     });

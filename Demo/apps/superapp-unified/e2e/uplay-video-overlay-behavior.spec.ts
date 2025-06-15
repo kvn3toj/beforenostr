@@ -10,8 +10,8 @@ test.describe('ÜPlay Video Overlay Behavior', () => {
     const loginButton = page.locator('button:has-text("Entrar")');
     if (await loginButton.isVisible()) {
       await loginButton.click();
-      await page.fill('input[type="email"]', 'test@coomunity.com');
-      await page.fill('input[type="password"]', 'test123');
+      await page.fill('input[type="email"]', 'admin@gamifier.com');
+      await page.fill('input[type="password"]', 'admin123');
       await page.click('button[type="submit"]');
       await page.waitForLoadState('networkidle');
     }

@@ -1,3 +1,5 @@
+import { test, expect } from '@playwright/test';
+
 test('🔍 PARTE 2: Verificar visualización de contenido en SuperApp', async ({ page }) => {
   console.log('✅ SuperApp cargada correctamente');
   console.log('🎯 Verificando visualización de contenido desde Backend...');

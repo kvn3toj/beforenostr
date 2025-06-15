@@ -31,8 +31,8 @@ test.describe('Groups Module (CoPs) - Integration Tests', () => {
     const passwordInput = page.locator('input[type="password"], input[name="password"]').first();
     const loginButton = page.locator('button[type="submit"], button:has-text("Iniciar"), button:has-text("Login")').first();
     
-    await emailInput.fill('test@coomunity.com');
-    await passwordInput.fill('test123');
+    await emailInput.fill('admin@gamifier.com');
+    await passwordInput.fill('admin123');
     await loginButton.click();
     
     // Esperar a que el login se complete (buscar indicadores de sesión activa)

@@ -30,8 +30,8 @@ test.describe('Challenges Backend Integration E2E', () => {
     }
     
     // 🔐 PASO 3: AUTENTICACIÓN REAL con Backend NestJS (Usuario Jugador)
-    await page.fill('#email', 'test@coomunity.com');
-    await page.fill('#password', 'test123');
+    await page.fill('#email', 'admin@gamifier.com');
+    await page.fill('#password', 'admin123');
     
     // Interceptar la respuesta de login para verificar éxito
     const loginResponsePromise = page.waitForResponse(

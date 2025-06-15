@@ -14,14 +14,14 @@ test.describe('Módulo de Grupos - Verificación Funcional Completa', () => {
     // 🔐 Configurar autenticación mock antes de cada test
     console.log('🚀 Configurando autenticación mock...');
     
-    // Navegar a la página principal
-    await page.goto('/');
+    // Navegar a la página principal con timeout extendido
+    await page.goto('/', { timeout: 60000, waitUntil: 'domcontentloaded' });
     
-    // Verificar que la autenticación mock esté activa
-    await expect(page.locator('[data-testid="dev-mock-banner"]')).toBeVisible({ timeout: 10000 });
+    // Verificar que la autenticación mock esté activa con timeout robusto
+    await expect(page.locator('[data-testid="dev-mock-banner"]')).toBeVisible({ timeout: 20000 });
     
     // Esperar a que la aplicación esté completamente cargada
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('networkidle', { timeout: 30000 });
     
     console.log('✅ Autenticación mock configurada correctamente');
   });

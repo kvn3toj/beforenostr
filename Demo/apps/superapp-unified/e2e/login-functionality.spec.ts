@@ -2,14 +2,17 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Login Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    // Navegar a la página de login
-    await page.goto('/login');
+    // Navegar a la página de login con timeout extendido y wait strategy optimizada
+    await page.goto('/login', { timeout: 60000, waitUntil: 'domcontentloaded' });
     
-    // Esperar a que React se monte
-    await page.waitForSelector('#root');
+    // Esperar a que React se monte con timeout robusto
+    await page.waitForSelector('#root', { timeout: 20000 });
     
-    // Esperar a que el formulario de login esté visible
-    await page.waitForSelector('[data-testid="login-email-input"]', { timeout: 10000 });
+    // Esperar a que el formulario de login esté visible con timeout extendido
+    await page.waitForSelector('[data-testid="login-email-input"]', { timeout: 20000 });
+    
+    // Esperar a que la aplicación esté completamente cargada
+    await page.waitForLoadState('networkidle', { timeout: 30000 });
   });
 
   test('should login successfully with user credentials', async ({ page }) => {

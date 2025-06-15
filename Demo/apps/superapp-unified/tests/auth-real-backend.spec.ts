@@ -13,7 +13,7 @@ const BACKEND_URL = 'http://localhost:3000';  // Backend (si existe) en puerto 3
 
 // Datos de test
 const TEST_USER = {
-  email: 'test@coomunity.com',
+  email: 'admin@gamifier.com',
   password: 'testpassword123',
   fullName: 'Usuario Test CoomÜnity'
 };
@@ -367,7 +367,7 @@ test.describe('🔐 Autenticación Real - Fase 49', () => {
         // Simular usuario autenticado en localStorage
         const mockUser = {
           id: 'test-user-id',
-          email: 'test@coomunity.com',
+          email: 'admin@gamifier.com',
           full_name: 'Usuario Test',
           role: 'user',
           created_at: new Date().toISOString(),
@@ -404,7 +404,7 @@ test.describe('🔐 Autenticación Real - Fase 49', () => {
       await page.evaluate(() => {
         const mockUser = {
           id: 'test-user-id',
-          email: 'test@coomunity.com',
+          email: 'admin@gamifier.com',
           full_name: 'Usuario Test',
           access_token: 'mock-test-token'
         };
@@ -437,7 +437,7 @@ test.describe('🔐 Autenticación Real - Fase 49', () => {
       await page.evaluate(() => {
         const mockUser = {
           id: 'test-user-id',
-          email: 'test@coomunity.com',
+          email: 'admin@gamifier.com',
           full_name: 'Usuario Test',
           access_token: 'mock-test-token'
         };
@@ -468,7 +468,7 @@ test.describe('🔐 Autenticación Real - Fase 49', () => {
       await page.evaluate(() => {
         const mockUser = {
           id: 'test-user-id',
-          email: 'test@coomunity.com',
+          email: 'admin@gamifier.com',
           full_name: 'Usuario Test',
           access_token: 'mock-test-token'
         };

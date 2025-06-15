@@ -12,8 +12,8 @@ test.describe('🔐 Verificación de Credenciales Backend NestJS', () => {
     const emailValue = await page.locator('#email').inputValue();
     const passwordValue = await page.locator('#password').inputValue();
     
-    expect(emailValue).toBe('test@coomunity.com');
-    expect(passwordValue).toBe('test123');
+    expect(emailValue).toBe('admin@gamifier.com');
+    expect(passwordValue).toBe('admin123');
     
     console.log('✅ Campos prellenados con credenciales correctas del Backend NestJS');
     
@@ -22,7 +22,7 @@ test.describe('🔐 Verificación de Credenciales Backend NestJS', () => {
     await expect(devInfo).toBeVisible();
     
     // Verificar que aparece la credencial específica del Backend NestJS
-    await expect(page.locator('text=test@coomunity.com / test123')).toBeVisible();
+    await expect(page.locator('text=admin@gamifier.com / admin123')).toBeVisible();
     
     // Verificar que aparece la aclaración sobre el Backend NestJS
     await expect(page.locator('text=Usuario jugador del Backend NestJS')).toBeVisible();
@@ -55,7 +55,7 @@ test.describe('🔐 Verificación de Credenciales Backend NestJS', () => {
     const responseBody = await loginResponse.json();
     
     expect(responseBody.access_token).toBeTruthy();
-    expect(responseBody.user.email).toBe('test@coomunity.com');
+    expect(responseBody.user.email).toBe('admin@gamifier.com');
     
     console.log('✅ Login exitoso con Backend NestJS usando credenciales correctas');
     

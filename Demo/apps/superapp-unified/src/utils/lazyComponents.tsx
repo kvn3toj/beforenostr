@@ -66,7 +66,7 @@ export const LazyPages = {
   ),
   
   ThemeTestSuite: createLazyComponent(
-    () => import('../components/modules/ThemeTestSuite'),
+    () => import('../components/ui/ThemeTestSuite'),
     <SimpleLoader />
   ),
   
@@ -240,7 +240,7 @@ export const LazyModules = {
   
   // Theme test suite
   ThemeTestSuite: createLazyComponent(
-    () => import('../components/modules/ThemeTestSuite')
+    () => import('../components/ui/ThemeTestSuite')
   ),
 };
 
@@ -251,7 +251,7 @@ export const preloadCriticalComponents = () => {
   // Preload most commonly used components
   import('../pages/Home');
   import('../pages/Login');
-  import('../components/modules/ThemeTestSuite');
+  import('../components/ui/ThemeTestSuite');
 };
 
 /**

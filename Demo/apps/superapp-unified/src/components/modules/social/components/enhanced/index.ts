@@ -1,9 +1,14 @@
 // Enhanced Social Components Exports
-export { default as AyniSocialMetrics } from './AyniSocialMetrics';
-export { default as CommunityFeed } from './CommunityFeed';
-export { default as ConnectionsManager } from './ConnectionsManager';
-export { default as SocialChatArea } from './SocialChatArea';
-export { default as SocialWelcomeHeader } from './SocialWelcomeHeader';
+import { AyniSocialMetrics } from './AyniSocialMetrics';
+import { CommunityFeed } from './CommunityFeed';
+import { ConnectionsManager } from './ConnectionsManager';
+import { SocialChatArea } from './SocialChatArea';
+import { SocialWelcomeHeader } from './SocialWelcomeHeader';
+import { CollaborationHub } from './CollaborationHub';
 
-// Placeholder para CollaborationHub (por crear si es necesario)
-export const CollaborationHub = () => null; 
+export { AyniSocialMetrics };
+export { CommunityFeed };
+export { ConnectionsManager };
+export { SocialChatArea };
+export { SocialWelcomeHeader };
+export { CollaborationHub }; 

@@ -55,7 +55,7 @@ test.describe('🔐 VERIFICACIÓN FINAL - MIGRACIÓN DE AUTENTICACIÓN', () => {
 
     // Llenar formulario con datos de prueba
     await page.fill('input[type="email"], input[name="email"]', 'test@example.com');
-    await page.fill('input[type="password"], input[name="password"]', 'test123');
+    await page.fill('input[type="password"], input[name="password"]', 'admin123');
     
     // Interceptar la llamada de login
     const responsePromise = page.waitForResponse(response => 
@@ -125,7 +125,7 @@ test.describe('🔐 VERIFICACIÓN FINAL - MIGRACIÓN DE AUTENTICACIÓN', () => {
       const uniqueEmail = `test${Date.now()}@example.com`;
       
       await page.fill('input[type="email"], input[name="email"]', uniqueEmail);
-      await page.fill('input[type="password"], input[name="password"]', 'test123456');
+      await page.fill('input[type="password"], input[name="password"]', 'admin123456');
       
       // Buscar campo de nombre si existe
       const nameField = page.locator('input[name="name"], input[name="fullName"], input[name="full_name"]');

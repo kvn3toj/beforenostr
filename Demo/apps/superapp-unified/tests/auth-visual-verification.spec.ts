@@ -67,7 +67,7 @@ test.describe('📸 VERIFICACIÓN VISUAL - Migración de Autenticación', () => 
         await emailInput.fill('test@example.com');
         console.log('📝 Email ingresado');
         
-        await passwordInput.fill('test123');
+        await passwordInput.fill('admin123');
         console.log('📝 Password ingresado');
         
         // Tomar screenshot con datos

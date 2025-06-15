@@ -11,8 +11,8 @@ test.describe('🔐 Verificación de Credenciales en Login', () => {
     const emailValue = await page.locator('#email').inputValue();
     const passwordValue = await page.locator('#password').inputValue();
     
-    expect(emailValue).toBe('test@coomunity.com');
-    expect(passwordValue).toBe('test123');
+    expect(emailValue).toBe('admin@gamifier.com');
+    expect(passwordValue).toBe('admin123');
     
     console.log('✅ Campos prellenados con credenciales correctas de SuperApp');
     
@@ -21,7 +21,7 @@ test.describe('🔐 Verificación de Credenciales en Login', () => {
     await expect(devInfo).toBeVisible();
     
     // Verificar que aparece la credencial específica de SuperApp
-    await expect(page.locator('text=test@coomunity.com / test123')).toBeVisible();
+    await expect(page.locator('text=admin@gamifier.com / admin123')).toBeVisible();
     
     // Verificar que aparece la aclaración sobre las diferencias
     await expect(page.locator('text=Para SuperApp CoomÜnity usar estas credenciales')).toBeVisible();

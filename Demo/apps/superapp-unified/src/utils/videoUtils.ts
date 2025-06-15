@@ -177,4 +177,40 @@ export const getVideoThumbnail = (content: string, quality: 'default' | 'medium'
   }
   
   return null;
+};
+
+/**
+ * Finds a working video URL from an array of video sources
+ * @param videoSources Array of video URLs to test
+ * @returns Promise that resolves to the first working URL or null
+ */
+export const findWorkingVideoUrl = async (videoSources: string[]): Promise<string | null> => {
+  for (const url of videoSources) {
+    if (await checkVideoAvailability(url)) {
+      return url;
+    }
+  }
+  return null;
+};
+
+/**
+ * Checks if a video URL is available and accessible
+ * @param url Video URL to check
+ * @returns Promise that resolves to true if video is available
+ */
+export const checkVideoAvailability = async (url: string): Promise<boolean> => {
+  try {
+    // For YouTube videos, we can check if the URL is valid
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      const videoId = extractYouTubeVideoId(url);
+      return videoId !== null && videoId.length > 0;
+    }
+    
+    // For other video sources, we could implement a more sophisticated check
+    // For now, just validate if it's a valid URL
+    return isValidVideoUrl(url);
+  } catch (error) {
+    console.error('Error checking video availability:', error);
+    return false;
+  }
 }; 

@@ -37,3 +37,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useThemeContext = () => useContext(ThemeContext);
+
+// Alias for backwards compatibility
+export const useTheme = useThemeContext;

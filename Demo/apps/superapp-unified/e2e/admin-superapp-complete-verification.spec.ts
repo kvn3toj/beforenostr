@@ -298,15 +298,24 @@ test.describe('🚀 SuperApp CoomÜnity - Verificación Completa con Admin', () 
       console.log('✅ Elementos de estadísticas detectados');
     }
 
-    // Buscar métricas gamificadas
-    const statsTerms = ['Mëritos', 'Öndas', 'Progreso', 'Estadísticas'];
+    // Buscar métricas gamificadas con selectores más específicos
+    const statsTerms = [
+      { term: 'Mëritos', selector: 'text=Mëritos' },
+      { term: 'Öndas', selector: 'text=Öndas' },
+      { term: 'Progreso', selector: 'h5:has-text("Tu Progreso CoomÜnity")' }, // Selector más específico
+      { term: 'Estadísticas', selector: 'text=Estadísticas' }
+    ];
     let foundStatsTerms = 0;
     
-    for (const term of statsTerms) {
-      const termElement = page.locator(`text=${term}`);
-      if (await termElement.isVisible()) {
-        foundStatsTerms++;
-        console.log(`✅ Término de estadísticas encontrado: ${term}`);
+    for (const { term, selector } of statsTerms) {
+      try {
+        const termElement = page.locator(selector).first(); // Usar .first() para evitar strict mode
+        if (await termElement.isVisible()) {
+          foundStatsTerms++;
+          console.log(`✅ Término de estadísticas encontrado: ${term}`);
+        }
+      } catch (error) {
+        console.log(`ℹ️ Término ${term} no encontrado o no visible`);
       }
     }
 

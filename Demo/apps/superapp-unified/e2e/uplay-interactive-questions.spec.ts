@@ -27,8 +27,8 @@ test.describe('ÜPlay - Funcionalidad de Interacción Avanzada (Auth Real)', () 
     }
     
     // 🔐 PASO 3: AUTENTICACIÓN REAL con Backend NestJS
-    await page.fill('#email', 'test@coomunity.com');
-    await page.fill('#password', 'test123');
+    await page.fill('#email', 'admin@gamifier.com');
+    await page.fill('#password', 'admin123');
     
     // Interceptar la respuesta de login para verificar éxito
     const loginResponsePromise = page.waitForResponse(
@@ -578,8 +578,8 @@ test.describe('ÜPlay - Funcionalidad de Interacción Avanzada (Auth Real)', () 
     
     if (needsLogin) {
       // Login nuevamente después del reload usando selectores correctos
-      await page.fill('#email', 'test@coomunity.com');
-      await page.fill('#password', 'test123');
+      await page.fill('#email', 'admin@gamifier.com');
+      await page.fill('#password', 'admin123');
       await page.click('button:has-text("Iniciar Sesión")');
       await page.waitForSelector('text=CoomÜnity', { timeout: 10000 });
     } else {
@@ -636,8 +636,8 @@ test.describe('ÜPlay - Funcionalidad de Interacción Avanzada (Auth Real)', () 
     // Paso 3: Si hay formulario de login, intentar login
     if (pageContent.hasLoginForm) {
       console.log('Paso 3: Detectado formulario de login, realizando login...');
-      await page.fill('#email', 'test@coomunity.com');
-      await page.fill('#password', 'test123');
+      await page.fill('#email', 'admin@gamifier.com');
+      await page.fill('#password', 'admin123');
       await page.click('button:has-text("Iniciar Sesión")');
       
       // Esperar a que el login procese

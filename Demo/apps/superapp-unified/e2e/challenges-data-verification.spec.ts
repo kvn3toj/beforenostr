@@ -15,7 +15,7 @@ test.describe('Challenges Data Verification', () => {
       localStorage.setItem('coomunity_token', 'mock-jwt-token-for-testing');
       localStorage.setItem('coomunity_user', JSON.stringify({
         id: 'test-user-id',
-        email: 'test@coomunity.com',
+        email: 'admin@gamifier.com',
         access_token: 'mock-jwt-token-for-testing'
       }));
     });

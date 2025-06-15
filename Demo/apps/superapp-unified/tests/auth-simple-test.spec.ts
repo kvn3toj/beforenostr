@@ -41,7 +41,7 @@ test.describe('🔐 TEST SIMPLE - Verificación de Autenticación', () => {
     
     // Llenar formulario
     await emailInput.fill('test@example.com');
-    await passwordInput.fill('test123');
+    await passwordInput.fill('admin123');
     
     console.log('📝 Formulario llenado');
     

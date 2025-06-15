@@ -58,8 +58,8 @@ test.describe('🔍 Análisis de Errores de Consola - SuperApp', () => {
     await page.waitForSelector('#email', { timeout: 10000 });
     
     // Realizar login
-    await page.fill('#email', 'test@coomunity.com');
-    await page.fill('#password', 'test123');
+    await page.fill('#email', 'admin@gamifier.com');
+    await page.fill('#password', 'admin123');
     
     const loginResponsePromise = page.waitForResponse(
       response => response.url().includes('/auth/login'),
@@ -204,8 +204,8 @@ test.describe('🔍 Análisis de Errores de Consola - SuperApp', () => {
     // Si hay login, hacerlo
     const isLoginPage = await page.locator('#email').isVisible();
     if (isLoginPage) {
-      await page.fill('#email', 'test@coomunity.com');
-      await page.fill('#password', 'test123');
+      await page.fill('#email', 'admin@gamifier.com');
+      await page.fill('#password', 'admin123');
       await page.click('button:has-text("Iniciar Sesión")');
       await page.waitForTimeout(5000);
     }
