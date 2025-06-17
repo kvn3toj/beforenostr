@@ -453,6 +453,7 @@ export function HomePage() {
                     className="enhanced-cosmic-widget enhanced-glow enhanced-scale enhanced-delay-2 constellation-bg"
                     sx={{
                       position: 'relative',
+                      zIndex: 1000, // ⭐ Z-INDEX MÁS ALTO PARA SER PROTAGONISTA
                       minHeight: {
                         xs: '600px',
                         sm: '700px',
@@ -541,6 +542,7 @@ export function HomePage() {
                         className="enhanced-actions enhanced-glow enhanced-scale enhanced-delay-3"
                         sx={{
                           position: 'relative',
+                          zIndex: 10, // ⚡ Z-INDEX MENOR QUE BALANCE AYNI
                           minHeight: { xs: '280px', sm: '320px', md: '360px' },
                           mb: { xs: 3, md: 4 },
                           display: 'flex',
@@ -571,6 +573,7 @@ export function HomePage() {
                         className="enhanced-sidebar-widget enhanced-scroll enhanced-delay-4"
                         sx={{
                           position: 'relative',
+                          zIndex: 5, // 🔔 Z-INDEX MENOR QUE BALANCE AYNI
                           minHeight: { xs: '280px', sm: '320px', md: '360px' },
                           mb: { xs: 3, md: 4 },
                           background: 'rgba(255, 255, 255, 0.03)',
@@ -606,6 +609,7 @@ export function HomePage() {
                         className="enhanced-fade-in enhanced-delay-5"
                         sx={{
                           position: 'relative',
+                          zIndex: 3, // 🎯 Z-INDEX MENOR QUE BALANCE AYNI
                           minHeight: { xs: '600px', sm: '700px', md: '800px' },
                           mb: { xs: 4, md: 6 },
                           background: 'rgba(255, 255, 255, 0.02)',
@@ -652,6 +656,7 @@ export function HomePage() {
                       inset 0 0 30px rgba(255, 255, 255, 0.03)
                     `,
                       position: 'relative',
+                      zIndex: 2, // 💭 Z-INDEX MENOR QUE BALANCE AYNI
                       overflow: 'hidden',
                       // Efecto de resplandor místico
                       '&::before': {

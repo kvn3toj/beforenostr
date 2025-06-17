@@ -44,7 +44,7 @@ export const AyniWalletWidget: React.FC<AyniWalletWidgetProps> = ({
       sx={{
         width: '100%',
         position: 'relative',
-        zIndex: 2,
+        zIndex: 1100, // 🌍 Z-INDEX SUPREMO PARA EL BALANCE AYNI
         background:
           'radial-gradient(circle at center, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.95) 50%, rgba(15, 23, 42, 0.98) 100%)',
         borderRadius: '32px',
@@ -127,7 +127,7 @@ export const AyniWalletWidget: React.FC<AyniWalletWidgetProps> = ({
       <Box
         sx={{
           position: 'relative',
-          zIndex: 100,
+          zIndex: 1200, // 🌍 Z-INDEX MÁXIMO PARA EL MUNDO
           background: 'rgba(0, 0, 0, 0.3)',
           borderRadius: '24px',
           padding: { xs: 3, sm: 4, md: 5 },
@@ -159,7 +159,7 @@ export const AyniWalletWidget: React.FC<AyniWalletWidgetProps> = ({
         sx={{
           mt: 4,
           position: 'relative',
-          zIndex: 2,
+          zIndex: 1150, // 💰 Z-INDEX ALTO PARA CARTERA
           background: 'rgba(0, 0, 0, 0.15)',
           borderRadius: '20px',
           padding: { xs: 2, sm: 3 },
