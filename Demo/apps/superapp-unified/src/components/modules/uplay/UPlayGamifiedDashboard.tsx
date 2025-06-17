@@ -656,7 +656,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
           {/* Grid de videos */}
           <Grid container spacing={3}>
             {category.videos.map((video) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
+              <Grid size={{xs:12,sm:6,md:4,lg:3}} key={video.id}>
                 <VideoCard video={video} onPlay={handleVideoPlay} />
               </Grid>
             ))}
@@ -670,7 +670,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     <Container maxWidth="lg">
       <Grid container spacing={3}>
         {unlockedAchievements.map((achievement) => (
-          <Grid item xs={12} sm={6} md={4} key={achievement.id}>
+          <Grid size={{xs:12,sm:6,md:4}} key={achievement.id}>
             <Card>
               <CardContent>
                 <Box display="flex" alignItems="center" gap={2} mb={2}>

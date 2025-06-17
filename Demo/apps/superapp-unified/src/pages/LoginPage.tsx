@@ -8,26 +8,43 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useAuth } from '../hooks/useAuth'
+import { BuilderIOHelpers } from '../lib/environment'
 import { toast } from 'sonner'
 
 export const LoginPage = () => {
   const navigate = useNavigate()
-  const { isAuthenticated, login, isLoading: authLoading } = useAuth()
+  const { isAuthenticated, login, isLoading: authLoading, isBuilderIOMode } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Redirigir si ya está autenticado
+  // Redirigir si ya está autenticado o si está en modo Builder.io
   useEffect(() => {
+    // 🏗️ **BUILDER.IO: Redirección automática**
+    if (isBuilderIOMode) {
+      console.log('[LoginPage] Builder.io mode detectado - redirigiendo automáticamente')
+      toast.success('Builder.io Mode: Admin auto-autenticado')
+      navigate('/', { replace: true })
+      return
+    }
+
     if (isAuthenticated && !authLoading) {
       console.log('[LoginPage] Usuario autenticado, redirigiendo a /')
       navigate('/', { replace: true })
     }
-  }, [isAuthenticated, authLoading, navigate])
+  }, [isAuthenticated, authLoading, isBuilderIOMode, navigate])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // 🏗️ **BUILDER.IO: No procesar login si está en Builder.io**
+    if (isBuilderIOMode) {
+      console.log('[LoginPage] Builder.io mode - login ignorado')
+      navigate('/', { replace: true })
+      return
+    }
+
     setError(null)
     setIsLoading(true)
 
@@ -68,8 +85,8 @@ export const LoginPage = () => {
     }
   }
 
-  // Mostrar loading mientras se inicializa la autenticación
-  if (authLoading) {
+  // Mostrar loading mientras se inicializa la autenticación o en Builder.io
+  if (authLoading || isBuilderIOMode) {
     return (
       <Container maxWidth="sm">
         <Box
@@ -82,7 +99,10 @@ export const LoginPage = () => {
         >
           <CircularProgress />
           <Typography variant="body2" sx={{ mt: 2 }}>
-            Verificando autenticación...
+            {isBuilderIOMode 
+              ? 'Builder.io Mode: Redirigiendo automáticamente...'
+              : 'Verificando autenticación...'
+            }
           </Typography>
         </Box>
       </Container>

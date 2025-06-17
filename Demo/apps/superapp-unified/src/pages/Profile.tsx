@@ -33,41 +33,17 @@ import {
   Badge,
   Switch,
   FormControlLabel,
-  Rating,
-  Slider,
   Skeleton,
   Snackbar,
   CircularProgress,
   Tooltip,
   Collapse,
   Stack,
-  AvatarGroup,
-  CardActions,
-  ButtonGroup,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
   ToggleButton,
   ToggleButtonGroup,
   InputAdornment,
-  OutlinedInput,
-  FormHelperText,
-  RadioGroup,
-  Radio,
-  Checkbox,
   ListItemAvatar,
-  ListItemSecondaryAction,
   CardHeader,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Menu,
-  ListSubheader,
-  SpeedDial,
-  SpeedDialIcon,
-  SpeedDialAction,
-  Fab,
 } from '@mui/material';
 import {
   Person,
@@ -75,83 +51,43 @@ import {
   Settings,
   Security,
   Notifications,
-  Work,
-  School,
   LocationOn,
   Language,
-  Visibility,
-  VisibilityOff,
   Star,
   TrendingUp,
   EmojiEvents,
   Group,
-  LocalAtm,
-  AccountBalance,
   PhotoCamera,
   Phone,
   Email,
   CalendarMonth,
   Verified,
-  PublicOff,
-  Public,
-  LockOpen,
-  Lock,
   Analytics,
   Timeline,
-  BusinessCenter,
-  SportsEsports,
   VideoLibrary,
   Palette,
   Save,
   Cancel,
   Share,
-  Download,
-  Upload,
   ContentCopy,
-  QrCode,
   Link,
-  Facebook,
   Twitter,
   LinkedIn,
-  Instagram,
   WhatsApp,
   Telegram,
   ExpandMore,
   ExpandLess,
-  History,
-  TrendingDown,
   SwapHoriz,
   Assignment,
-  Receipt,
-  AccountCircle,
   Badge as BadgeIcon,
-  CardGiftcard,
   Stars,
-  LocalFireDepartment,
   WaterDrop,
-  Nature,
   Balance,
   SelfImprovement,
   Psychology,
-  FavoriteRounded,
-  MoreVert,
-  Close,
-  Check,
-  Warning,
-  Info,
-  Error as ErrorIcon,
   Refresh,
   CloudUpload,
-  FileUpload,
-  Image,
-  CameraAlt,
-  Crop,
-  Tune,
-  FilterVintage,
   Brightness6,
-  Contrast,
-  Opacity,
-  FormatColorFill,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -159,14 +95,9 @@ import {
   useUpdateUserProfile,
   profileValidation,
   UpdateProfileData,
-  useProfileStats,
-  useUserPreferences,
-  useUserActivities,
-  useUserAchievements,
-  useGamificationMetrics,
-  useUpdateAvatar,
 } from '../hooks/useUserProfile';
 import '../styles/profile-enhanced.css';
+import { safeToLocaleString } from '../utils/numberUtils';
 
 // 🔧 SOLUCIÓN: Función segura para formatear fechas
 const formatSafeDate = (
@@ -233,14 +164,7 @@ interface Achievement {
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
 }
 
-interface SocialConnection {
-  id: string;
-  name: string;
-  avatar: string;
-  relationship: 'friend' | 'collaborator' | 'mentor' | 'follower';
-  ayniScore: number;
-  lastInteraction: string;
-}
+
 
 // 🎨 Utilidades para temas y colores CoomÜnity
 const coomunityColors = {
@@ -682,7 +606,7 @@ const Profile: React.FC = () => {
   }, [profileData]);
 
   // 🎯 Manejadores de eventos
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
@@ -758,7 +682,7 @@ const Profile: React.FC = () => {
       showNotification('Avatar actualizado exitosamente', 'success');
       setAvatarDialogOpen(false);
       setSelectedImage(null);
-    } catch (error) {
+    } catch {
       showNotification('Error al actualizar avatar', 'error');
     }
   };
@@ -814,7 +738,7 @@ const Profile: React.FC = () => {
             </Box>
             <Grid container spacing={3}>
               {[...Array(6)].map((_, index) => (
-                <Grid item xs={6} sm={4} md={2} key={index}>
+                <Grid size={{xs:6,sm:4,md:2}} key={index}>
                   <Box sx={{ textAlign: 'center' }}>
                     <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
                     <Skeleton variant="text" sx={{ fontSize: '0.875rem' }} />
@@ -1094,7 +1018,7 @@ const Profile: React.FC = () => {
         {/* Métricas CoomÜnity Mejoradas */}
         <CardContent sx={{ p: 4 }}>
           <Grid container spacing={3}>
-            <Grid item xs={6} sm={4} md={2}>
+            <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Nivel"
                 value={mockMetrics.level}
@@ -1104,25 +1028,25 @@ const Profile: React.FC = () => {
                 progress={levelProgress}
               />
             </Grid>
-            <Grid item xs={6} sm={4} md={2}>
+            <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Mëritos"
-                value={mockMetrics.meritos.toLocaleString()}
+                value={safeToLocaleString(mockMetrics.meritos)}
                 icon={<Stars />}
                 color={coomunityColors.merito}
                 subtitle="Bien Común"
               />
             </Grid>
-            <Grid item xs={6} sm={4} md={2}>
+            <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Öndas"
-                value={mockMetrics.ondas.toLocaleString()}
+                value={safeToLocaleString(mockMetrics.ondas)}
                 icon={<WaterDrop />}
                 color={coomunityColors.onda}
                 subtitle="Energía Vibracional"
               />
             </Grid>
-            <Grid item xs={6} sm={4} md={2}>
+            <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Ayni"
                 value={`${mockMetrics.ayniLevel}%`}
@@ -1131,16 +1055,16 @@ const Profile: React.FC = () => {
                 subtitle="Reciprocidad"
               />
             </Grid>
-            <Grid item xs={6} sm={4} md={2}>
+            <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Conexiones"
-                value={mockMetrics.socialConnections}
+                value={safeToLocaleString(mockMetrics.socialConnections)}
                 icon={<Group />}
                 color={coomunityColors.social}
                 subtitle="Red CoomÜnity"
               />
             </Grid>
-            <Grid item xs={6} sm={4} md={2}>
+            <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Rating"
                 value={mockMetrics.marketplaceRating}
@@ -1206,7 +1130,7 @@ const Profile: React.FC = () => {
       <TabPanel value={tabValue} index={0}>
         <Grid container spacing={3}>
           {/* Información Básica */}
-          <Grid item xs={12} md={6}>
+          <Grid size={{xs:12,md:6}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Person color="primary" />}
@@ -1276,7 +1200,7 @@ const Profile: React.FC = () => {
           </Grid>
 
           {/* Estado de la Cuenta */}
-          <Grid item xs={12} md={6}>
+          <Grid size={{xs:12,md:6}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Security color="primary" />}
@@ -1339,7 +1263,7 @@ const Profile: React.FC = () => {
           </Grid>
 
           {/* Estadísticas de Gamificación */}
-          <Grid item xs={12}>
+          <Grid size={{xs:12}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Analytics color="primary" />}
@@ -1348,56 +1272,56 @@ const Profile: React.FC = () => {
               />
               <CardContent>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid size={{xs:12,sm:6,md:3}}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
                         color={coomunityColors.merito}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        {mockMetrics.completedChallenges}
+                        {safeToLocaleString(mockMetrics.completedChallenges)}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Desafíos Completados
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid size={{xs:12,sm:6,md:3}}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
                         color={coomunityColors.pilgrim}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        {mockMetrics.pilgrimProgress}%
+                        {safeToLocaleString(mockMetrics.pilgrimProgress)}%
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Progreso Pilgrim
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid size={{xs:12,sm:6,md:3}}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
                         color={coomunityColors.marketplace}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        {mockMetrics.marketplaceRating}
+                        {safeToLocaleString(mockMetrics.marketplaceRating)}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Rating Marketplace
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid size={{xs:12,sm:6,md:3}}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
                         color={coomunityColors.social}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        {mockMetrics.socialConnections}
+                        {safeToLocaleString(mockMetrics.socialConnections)}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Conexiones
@@ -1414,7 +1338,7 @@ const Profile: React.FC = () => {
       {/* 🎯 Tab Panel 1: Actividad Reciente */}
       <TabPanel value={tabValue} index={1}>
         <Grid container spacing={3}>
-          <Grid item xs={12} lg={8}>
+          <Grid size={{xs:12,lg:8}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Timeline color="primary" />}
@@ -1432,7 +1356,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} lg={4}>
+          <Grid size={{xs:12,lg:4}}>
             <Stack spacing={3}>
               {/* Resumen de Actividad */}
               <Card elevation={3} sx={{ borderRadius: 3 }}>
@@ -1442,56 +1366,56 @@ const Profile: React.FC = () => {
                 />
                 <CardContent>
                   <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid size={{xs:6}}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h5"
                           color={coomunityColors.merito}
                           sx={{ fontWeight: 'bold' }}
                         >
-                          350
+                          {safeToLocaleString(350)}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Mëritos
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{xs:6}}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h5"
                           color={coomunityColors.onda}
                           sx={{ fontWeight: 'bold' }}
                         >
-                          280
+                          {safeToLocaleString(280)}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Öndas
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{xs:6}}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h5"
                           color={coomunityColors.social}
                           sx={{ fontWeight: 'bold' }}
                         >
-                          12
+                          {safeToLocaleString(12)}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Interacciones
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{xs:6}}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h5"
                           color={coomunityColors.uplay}
                           sx={{ fontWeight: 'bold' }}
                         >
-                          4
+                          {safeToLocaleString(4)}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Videos
@@ -1564,7 +1488,7 @@ const Profile: React.FC = () => {
 
         <Grid container spacing={3}>
           {mockAchievements.map((achievement) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={achievement.id}>
+            <Grid size={{xs:12,sm:6,md:4,lg:3}} key={achievement.id}>
               <AchievementCard achievement={achievement} />
             </Grid>
           ))}
@@ -1578,7 +1502,7 @@ const Profile: React.FC = () => {
           <Card elevation={3} sx={{ borderRadius: 3 }}>
             <CardContent>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{xs:12,md:6}}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -1613,7 +1537,7 @@ const Profile: React.FC = () => {
                   </Typography>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{xs:12,md:6}}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -1665,7 +1589,7 @@ const Profile: React.FC = () => {
         </Alert>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+          <Grid size={{xs:12,md:8}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Group color="primary" />}
@@ -1687,7 +1611,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{xs:12,md:4}}>
             <Stack spacing={3}>
               <Card elevation={3} sx={{ borderRadius: 3 }}>
                 <CardHeader
@@ -1696,28 +1620,28 @@ const Profile: React.FC = () => {
                 />
                 <CardContent>
                   <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid size={{xs:6}}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h4"
                           color={coomunityColors.ayni}
                           sx={{ fontWeight: 'bold' }}
                         >
-                          147
+                          {safeToLocaleString(147)}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Conexiones
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{xs:6}}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h4"
                           color={coomunityColors.social}
                           sx={{ fontWeight: 'bold' }}
                         >
-                          78%
+                          {safeToLocaleString(78)}%
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Ayni Score
@@ -1739,7 +1663,7 @@ const Profile: React.FC = () => {
                     color={coomunityColors.merito}
                     sx={{ fontWeight: 'bold', textAlign: 'center' }}
                   >
-                    23
+                    {safeToLocaleString(23)}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -1758,7 +1682,7 @@ const Profile: React.FC = () => {
       {/* 🎯 Tab Panel 4: Configuración */}
       <TabPanel value={tabValue} index={4}>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid size={{xs:12}}>
             <Alert severity="info" sx={{ mb: 3, borderRadius: 3 }}>
               <Typography variant="h6">Configuraciones de Usuario</Typography>
               <Typography variant="body2">
@@ -1769,7 +1693,7 @@ const Profile: React.FC = () => {
             </Alert>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{xs:12,md:6}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Notifications color="primary" />}
@@ -1798,7 +1722,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{xs:12,md:6}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Security color="primary" />}
@@ -1827,7 +1751,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{xs:12,md:6}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Language color="primary" />}
@@ -1872,7 +1796,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{xs:12,md:6}}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Palette color="primary" />}
@@ -1951,7 +1875,7 @@ const Profile: React.FC = () => {
           )}
 
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs:12,md:6}}>
               <TextField
                 autoFocus
                 label="Nombre Completo"
@@ -1975,7 +1899,7 @@ const Profile: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs:12,md:6}}>
               <TextField
                 label="Teléfono"
                 fullWidth
@@ -1999,7 +1923,7 @@ const Profile: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs:12,md:6}}>
               <TextField
                 label="Ubicación"
                 fullWidth
@@ -2023,7 +1947,7 @@ const Profile: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs:12,md:6}}>
               <TextField
                 label="Sitio Web"
                 fullWidth
@@ -2047,7 +1971,7 @@ const Profile: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{xs:12}}>
               <TextField
                 label="Biografía"
                 multiline
@@ -2201,7 +2125,7 @@ const Profile: React.FC = () => {
                 Compartir en redes sociales
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{xs:6,sm:3}}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -2211,7 +2135,7 @@ const Profile: React.FC = () => {
                     WhatsApp
                   </Button>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{xs:6,sm:3}}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -2221,7 +2145,7 @@ const Profile: React.FC = () => {
                     Telegram
                   </Button>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{xs:6,sm:3}}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -2231,7 +2155,7 @@ const Profile: React.FC = () => {
                     Twitter
                   </Button>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{xs:6,sm:3}}>
                   <Button
                     fullWidth
                     variant="outlined"

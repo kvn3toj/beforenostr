@@ -29,4 +29,5 @@ export { ThemeTestSuite };
 
 // Types
 export type { CoomunityButtonProps } from './CoomunityButton';
-export type { CoomunityCardProps } from './CoomunityCard'; 
+export type { CoomunityCardProps } from './CoomunityCard';
+export { default as BuilderIOStatus } from './BuilderIOStatus'; 

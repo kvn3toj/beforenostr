@@ -99,7 +99,7 @@ const SkeletonFallback: React.FC<{ variant?: 'card' | 'list' | 'grid' }> = ({
       return (
         <Grid container spacing={2} sx={{ p: 2 }}>
           {Array.from({ length: 8 }).map((_, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <Grid size={{xs:12,sm:6,md:3}} key={index}>
               <Skeleton variant="rectangular" height={150} />
               <Skeleton variant="text" height={20} sx={{ mt: 1 }} />
               <Skeleton variant="text" height={16} width="80%" />

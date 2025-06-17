@@ -384,7 +384,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
 
         {/* 📊 Métricas principales en grid */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={6} sm={3}>
+          <Grid size={{xs:6,sm:3}}>
             <Box textAlign="center">
               <Typography
                 variant="h4"
@@ -407,7 +407,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid size={{xs:6,sm:3}}>
             <Box textAlign="center">
               <Typography variant="h4" fontWeight="bold" color="success.main">
                 {groupData.meritos}
@@ -421,7 +421,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid size={{xs:6,sm:3}}>
             <Box textAlign="center">
               <Typography variant="h4" fontWeight="bold" color="info.main">
                 {groupData.ondas}
@@ -435,7 +435,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid size={{xs:6,sm:3}}>
             <Box textAlign="center">
               <Typography variant="h4" fontWeight="bold" color="warning.main">
                 {groupData.proyectosActivos}
@@ -518,7 +518,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
             Elementos en Equilibrio
           </Typography>
           <Grid container spacing={2} justifyContent="center">
-            <Grid item>
+            <Grid>
               <GroupElementIcon
                 element="comunicacion"
                 value={groupData.elementos.comunicacion}
@@ -526,7 +526,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
                 description="Claridad en la comunicación del grupo"
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <GroupElementIcon
                 element="colaboracion"
                 value={groupData.elementos.colaboracion}
@@ -534,7 +534,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
                 description="Fluidez en la colaboración"
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <GroupElementIcon
                 element="estabilidad"
                 value={groupData.elementos.estabilidad}
@@ -542,7 +542,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
                 description="Estabilidad y confianza del grupo"
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <GroupElementIcon
                 element="inspiracion"
                 value={groupData.elementos.inspiracion}
@@ -555,7 +555,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
 
         {/* 🎯 Impacto en el Bien Común */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs:12,sm:4}}>
             <Paper
               sx={{
                 p: 2,
@@ -573,7 +573,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
               />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <Grid size={{xs:12,sm:8}}>
             <Stack spacing={2}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <ForumOutlined color="primary" />
@@ -635,7 +635,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
               Detalles de Reciprocidad Ayni
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{xs:6}}>
                 <Paper sx={{ p: 2, textAlign: 'center' }}>
                   <AutoAwesome sx={{ color: 'success.main', mb: 1 }} />
                   <Typography
@@ -650,7 +650,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
                   </Typography>
                 </Paper>
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{xs:6}}>
                 <Paper sx={{ p: 2, textAlign: 'center' }}>
                   <Bolt sx={{ color: 'info.main', mb: 1 }} />
                   <Typography variant="h6" fontWeight="bold" color="info.main">

@@ -131,7 +131,7 @@ export const LetsListings: React.FC = () => {
         </Typography>
         
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={4}>
+          <Grid size={{xs:12,md:4}}>
             <TextField
               fullWidth
               placeholder="Buscar por título, descripción o tags..."
@@ -144,7 +144,7 @@ export const LetsListings: React.FC = () => {
             />
           </Grid>
           
-          <Grid item xs={12} md={2}>
+          <Grid size={{xs:12,md:2}}>
             <FormControl fullWidth>
               <InputLabel>Tipo</InputLabel>
               <Select
@@ -158,7 +158,7 @@ export const LetsListings: React.FC = () => {
             </FormControl>
           </Grid>
           
-          <Grid item xs={12} md={2}>
+          <Grid size={{xs:12,md:2}}>
             <FormControl fullWidth>
               <InputLabel>Categoría</InputLabel>
               <Select
@@ -175,7 +175,7 @@ export const LetsListings: React.FC = () => {
             </FormControl>
           </Grid>
           
-          <Grid item xs={12} md={2}>
+          <Grid size={{xs:12,md:2}}>
             <TextField
               fullWidth
               label="Ubicación"
@@ -187,7 +187,7 @@ export const LetsListings: React.FC = () => {
             />
           </Grid>
           
-          <Grid item xs={12} md={2}>
+          <Grid size={{xs:12,md:2}}>
             <Box display="flex" gap={1}>
               <Button
                 variant="contained"
@@ -210,7 +210,7 @@ export const LetsListings: React.FC = () => {
 
       {/* Estadísticas rápidas */}
       <Grid container spacing={2} mb={3}>
-        <Grid item xs={6} md={3}>
+        <Grid size={{xs:6,md:3}}>
           <Card sx={{ p: 2, textAlign: 'center' }}>
             <TrendingUp color="success" sx={{ fontSize: 32, mb: 1 }} />
             <Typography variant="h6" fontWeight="bold">
@@ -221,7 +221,7 @@ export const LetsListings: React.FC = () => {
             </Typography>
           </Card>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{xs:6,md:3}}>
           <Card sx={{ p: 2, textAlign: 'center' }}>
             <TrendingDown color="warning" sx={{ fontSize: 32, mb: 1 }} />
             <Typography variant="h6" fontWeight="bold">
@@ -232,7 +232,7 @@ export const LetsListings: React.FC = () => {
             </Typography>
           </Card>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{xs:6,md:3}}>
           <Card sx={{ p: 2, textAlign: 'center' }}>
             <Handshake color="primary" sx={{ fontSize: 32, mb: 1 }} />
             <Typography variant="h6" fontWeight="bold">
@@ -243,7 +243,7 @@ export const LetsListings: React.FC = () => {
             </Typography>
           </Card>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{xs:6,md:3}}>
           <Card sx={{ p: 2, textAlign: 'center' }}>
             <Category color="info" sx={{ fontSize: 32, mb: 1 }} />
             <Typography variant="h6" fontWeight="bold">
@@ -260,7 +260,7 @@ export const LetsListings: React.FC = () => {
       <Grid container spacing={2}>
         {listings && listings.length > 0 ? (
           listings.map((listing) => (
-            <Grid item xs={12} md={6} lg={4} key={listing.id}>
+            <Grid size={{xs:12,md:6,lg:4}} key={listing.id}>
               <LetsListingCard
                 listing={listing}
                 onInteract={() => {
@@ -271,7 +271,7 @@ export const LetsListings: React.FC = () => {
             </Grid>
           ))
         ) : (
-          <Grid item xs={12}>
+          <Grid size={{xs:12}}>
             <Card sx={{ p: 4, textAlign: 'center' }}>
               <Typography variant="h6" color="text.secondary" mb={2}>
                 No se encontraron intercambios
@@ -631,7 +631,7 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
 
           <Grid container spacing={2}>
             {/* Categoría */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs:12,md:6}}>
               <FormControl fullWidth required>
                 <InputLabel>Categoría</InputLabel>
                 <Select
@@ -648,7 +648,7 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
             </Grid>
 
             {/* Valor en Ünits */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs:12,md:6}}>
               <TextField
                 label="Valor en Ünits"
                 type="number"
@@ -662,7 +662,7 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
             </Grid>
 
             {/* Horas estimadas */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs:12,md:6}}>
               <TextField
                 label="Horas Estimadas (opcional)"
                 type="number"
@@ -675,7 +675,7 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
             </Grid>
 
             {/* Ubicación */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs:12,md:6}}>
               <TextField
                 label="Ubicación (opcional)"
                 value={formData.location || ''}

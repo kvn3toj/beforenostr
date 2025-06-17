@@ -887,7 +887,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{xs:6}}>
                 <Box textAlign="center">
                   <Typography variant="h6" fontWeight="bold">
                     {impactProducts.length}
@@ -897,7 +897,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
                   </Typography>
                 </Box>
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{xs:6}}>
                 <Box textAlign="center">
                   <Typography variant="h6" fontWeight="bold">
                     8
@@ -1049,7 +1049,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           {isLoadingItems ? (
             <Grid container spacing={2}>
               {Array.from({ length: 6 }).map((_, index) => (
-                <Grid item xs={6} key={index}>
+                <Grid size={{xs:6}} key={index}>
                   <Skeleton
                     variant="rectangular"
                     height={220}
@@ -1094,16 +1094,11 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
               }}
             >
               {itemsToDisplay.map((item, index) => (
-                <Grid
-                  item
-                  xs={6}
-                  sm={6}
-                  key={item.id}
+                <Grid size={{xs:6,sm:6}} key={item.id}
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                  }}
-                >
+                  }}>
                   <Zoom in timeout={300 + index * 50}>
                     <Box sx={{ height: '100%' }}>
                       <EnhancedMobileProductCard

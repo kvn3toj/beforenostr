@@ -22,7 +22,7 @@ const FeaturedProducts = React.lazy(() => import('../components/modules/marketpl
 
 const MarketplacePage: React.FC = () => {
   const theme = useTheme();
-  const { isDark } = useTheme as useCoomunityTheme();
+  const { isDark } = useCoomunityTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -182,7 +182,7 @@ const MarketplacePage: React.FC = () => {
           {/* Filters Sidebar */}
           <AnimatePresence>
             {showFilters && (
-              <Grid item xs={12} md={3}>
+              <Grid size={{xs:12,md:3}}>
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -198,7 +198,7 @@ const MarketplacePage: React.FC = () => {
           </AnimatePresence>
 
           {/* Products/Services Grid */}
-          <Grid item xs={12} md={showFilters ? 9 : 12}>
+          <Grid size={{xs:12}} md={showFilters ? 9 : 12}>
             <motion.div variants={itemVariants}>
               <Suspense fallback={<LoadingSpinner size="large" />}>
                 <AnimatePresence mode="wait">

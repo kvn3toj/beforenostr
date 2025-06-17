@@ -523,7 +523,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
 
           {/* Métricas rápidas */}
           <Grid container spacing={2}>
-            <Grid item xs={3}>
+            <Grid size={{xs:3}}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   {communityMetrics.dailyInteractions}
@@ -531,7 +531,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
                 <Typography variant="caption">Interacciones hoy</Typography>
               </Box>
             </Grid>
-            <Grid item xs={3}>
+            <Grid size={{xs:3}}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   {communityMetrics.ayniExchanges}
@@ -539,7 +539,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
                 <Typography variant="caption">Intercambios Ayni</Typography>
               </Box>
             </Grid>
-            <Grid item xs={3}>
+            <Grid size={{xs:3}}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   {communityMetrics.activeCircles}
@@ -547,7 +547,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
                 <Typography variant="caption">Círculos activos</Typography>
               </Box>
             </Grid>
-            <Grid item xs={3}>
+            <Grid size={{xs:3}}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   +{communityMetrics.weeklyGrowth}%
@@ -567,7 +567,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
           </Typography>
           <Grid container spacing={2}>
             {quickActions.map((action, index) => (
-              <Grid item xs={6} sm={3} key={action.id}>
+              <Grid size={{xs:6,sm:3}} key={action.id}>
                 <Button
                   fullWidth
                   variant="outlined"

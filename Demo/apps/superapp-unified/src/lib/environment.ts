@@ -15,6 +15,8 @@ interface EnvironmentConfig {
   isDevelopment: boolean;
   isProduction: boolean;
   isTesting: boolean;
+  isBuilderIO: boolean;
+  forceAdminMode: boolean;
   currentOrigin: string;
   backendHealthUrl: string;
 }
@@ -52,6 +54,37 @@ const getEnvironmentType = (): 'development' | 'production' | 'testing' => {
 };
 
 /**
+ * 🏗️ Detect Builder.io environment
+ */
+const isBuilderIOEnvironment = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  
+  const currentPort = parseInt(window.location.port);
+  const hostname = window.location.hostname;
+  
+  // Builder.io typically uses ports in the 48000+ range
+  const isBuilderPort = currentPort >= 48000 && currentPort <= 49000;
+  
+  // Check for Builder.io specific indicators
+  const hasBuilderIndicators = 
+    hostname === 'localhost' && isBuilderPort ||
+    window.location.search.includes('builder') ||
+    window.location.search.includes('localEditUrl') ||
+    document.querySelector('[data-builder-io]') !== null;
+  
+  if (hasBuilderIndicators) {
+    console.log('🏗️ Builder.io environment detected:', {
+      port: currentPort,
+      hostname,
+      search: window.location.search,
+      builderElement: !!document.querySelector('[data-builder-io]')
+    });
+  }
+  
+  return hasBuilderIndicators;
+};
+
+/**
  * 🎯 Smart API URL detection
  *
  * Handles different scenarios:
@@ -59,29 +92,42 @@ const getEnvironmentType = (): 'development' | 'production' | 'testing' => {
  * - Development default
  * - Testing environment with dynamic ports
  * - Production URLs
+ * - Builder.io proxy detection
  */
 const getApiBaseUrl = (): string => {
-  // 1. Check for explicit environment variable
+  // 1. DETECCIÓN SIMPLIFICADA - Si no estamos en puerto 3001, usar proxy
+  if (typeof window !== 'undefined') {
+    const currentPort = parseInt(window.location.port);
+    const currentOrigin = window.location.origin;
+    
+    // Si NO estamos en puerto 3001 (puerto nativo de SuperApp), usar proxy
+    if (currentPort !== 3001) {
+      console.log('🔧 Non-native port detected, using proxy:', {
+        port: currentPort,
+        origin: currentOrigin,
+        usingProxy: true
+      });
+      return '/api'; // USAR PROXY SIEMPRE que no sea puerto 3001
+    }
+    
+    console.log('🏠 Native SuperApp port detected:', {
+      port: currentPort,
+      origin: currentOrigin,
+      usingDirect: true
+    });
+  }
+
+  // 2. Check for explicit environment variable (solo para puerto 3001)
   const envApiUrl = import.meta.env.VITE_API_BASE_URL;
-  if (envApiUrl && envApiUrl !== 'undefined') {
+  if (envApiUrl) {
+    console.log('🔧 Using explicit VITE_API_BASE_URL:', envApiUrl);
     return envApiUrl;
   }
 
-  // 2. Environment-specific defaults
-  const envType = getEnvironmentType();
-
-  switch (envType) {
-    case 'production':
-      return 'https://api.coomunity.com'; // Production API
-
-    case 'testing':
-      // For testing, always use localhost with standard backend port
-      return 'http://localhost:3002';
-
-    case 'development':
-    default:
-      return 'http://localhost:3002';
-  }
+  // 3. Development default (solo para puerto 3001)
+  const defaultUrl = 'http://localhost:3002';
+  console.log('🏠 Using development default:', defaultUrl);
+  return defaultUrl;
 };
 
 /**
@@ -133,6 +179,7 @@ const createEnvironmentConfig = (): EnvironmentConfig => {
   const baseUrl = getBaseUrl();
   const currentOrigin =
     typeof window !== 'undefined' ? window.location.origin : baseUrl;
+  const isBuilderIO = isBuilderIOEnvironment();
 
   return {
     apiBaseUrl,
@@ -143,6 +190,8 @@ const createEnvironmentConfig = (): EnvironmentConfig => {
     isDevelopment: envType === 'development',
     isProduction: envType === 'production',
     isTesting: envType === 'testing',
+    isBuilderIO,
+    forceAdminMode: isBuilderIO, // 🏗️ FORZAR MODO ADMIN EN BUILDER.IO
     currentOrigin,
     backendHealthUrl: `${apiBaseUrl}/health`,
   };
@@ -171,6 +220,16 @@ export const EnvironmentHelpers = {
   isProduction: () => ENV.isProduction,
 
   /**
+   * Check if we're in Builder.io
+   */
+  isBuilderIO: () => ENV.isBuilderIO,
+
+  /**
+   * Check if admin mode should be forced
+   */
+  shouldForceAdminMode: () => ENV.forceAdminMode,
+
+  /**
    * Get current environment type
    */
   getEnvironmentType,
@@ -185,49 +244,92 @@ export const EnvironmentHelpers = {
    */
   getApiTimeout: () => {
     if (ENV.isTesting) return 5000; // 5s for tests
-    if (ENV.isDevelopment) return 10000; // 10s for dev
-    return 15000; // 15s for production
+    if (ENV.isBuilderIO) return 10000; // 10s for Builder.io (puede ser más lento)
+    return 8000; // 8s for normal development
   },
 
   /**
-   * Check if we should log debug information
+   * Get debug level based on environment
    */
-  shouldLogDebug: () => ENV.isDevelopment || ENV.isTesting,
+  getDebugLevel: () => {
+    if (ENV.isProduction) return 'error';
+    if (ENV.isTesting) return 'warn';
+    return 'debug';
+  },
 
   /**
-   * Get CORS-friendly headers for requests
+   * Check if we should show debug information
    */
-  getCorsHeaders: () => ({
-    'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-    Origin: ENV.currentOrigin,
-  }),
+  shouldShowDebugInfo: () => !ENV.isProduction,
 
   /**
-   * Generate troubleshooting info for connection issues
+   * Get environment-specific configuration
    */
-  getTroubleshootingInfo: () => ({
-    environment: getEnvironmentType(),
-    currentOrigin: ENV.currentOrigin,
-    apiBaseUrl: ENV.apiBaseUrl,
-    backendHealthUrl: ENV.backendHealthUrl,
-    userAgent:
-      typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
-    timestamp: new Date().toISOString(),
-    troubleshootingSteps: [
-      `1. Check backend is running: npm run start:backend:dev`,
-      `2. Test backend health: ${ENV.backendHealthUrl}`,
-      `3. Verify CORS allows origin: ${ENV.currentOrigin}`,
-      `4. Check browser network tab for details`,
-      `5. Try manual test: curl -X POST ${ENV.apiBaseUrl}/auth/login -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"test123"}'`,
-    ],
-  }),
+  getConfig: () => ENV,
 };
+
+// 🏗️ Builder.io specific helpers
+export const BuilderIOHelpers = {
+  /**
+   * Get mock admin user for Builder.io
+   */
+  getMockAdminUser: () => ({
+    id: '00000000-0000-0000-0000-000000000001',
+    email: 'admin@gamifier.com',
+    name: 'Administrator',
+    avatarUrl: null,
+    roles: ['admin'],
+    permissions: [
+      'users:read',
+      'users:write',
+      'analytics:read',
+      'content:write',
+      'content:read',
+      'admin:view_all',
+      'groups:manage',
+      'roles:read',
+      'invitations:send',
+      'wallet:manage',
+      'gamification:manage',
+      'roles:write'
+    ]
+  }),
+
+  /**
+   * Get mock admin token for Builder.io
+   */
+  getMockAdminToken: () => 'mock-admin-token-for-builder-io',
+
+  /**
+   * Check if we should bypass authentication
+   */
+  shouldBypassAuth: () => ENV.isBuilderIO && ENV.forceAdminMode,
+};
+
+/**
+ * 🚀 Initialize environment
+ */
+export const initializeEnvironment = () => {
+  if (ENV.isBuilderIO) {
+    console.log('🏗️ Builder.io environment detected - Admin mode activated');
+    console.log('🔧 Configuration:', {
+      apiBaseUrl: ENV.apiBaseUrl,
+      baseUrl: ENV.baseUrl,
+      forceAdminMode: ENV.forceAdminMode,
+      currentOrigin: ENV.currentOrigin
+    });
+  }
+};
+
+// Auto-initialize when module loads
+if (typeof window !== 'undefined') {
+  initializeEnvironment();
+}
 
 /**
  * 🔧 Debug environment information
  */
-if (EnvironmentHelpers.shouldLogDebug()) {
+if (EnvironmentHelpers.shouldShowDebugInfo()) {
   console.group('🌍 Environment Configuration');
   console.log('📊 Environment Type:', getEnvironmentType());
   console.log('🎯 API Base URL:', ENV.apiBaseUrl);

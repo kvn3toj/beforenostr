@@ -38,6 +38,11 @@ export const LazyPages = {
     () => import('../pages/Marketplace'),
     <SimpleLoader />
   ),
+
+  Marketplace: createLazyComponent(
+    () => import('../pages/Marketplace'),
+    <SimpleLoader />
+  ),
   
   UPlayPage: createLazyComponent(
     () => import('../pages/UPlay'),
@@ -45,6 +50,11 @@ export const LazyPages = {
   ),
   
   SocialPage: createLazyComponent(
+    () => import('../pages/Social'),
+    <SimpleLoader />
+  ),
+
+  Social: createLazyComponent(
     () => import('../pages/Social'),
     <SimpleLoader />
   ),
@@ -201,14 +211,9 @@ export const LazyPages = {
     <SimpleLoader />
   ),
 
-  AuditLogsPage: createLazyComponent(
-    () => import('../pages/AuditLogsPage'),
-    <SimpleLoader />
-  ),
-
-  // Alternative Home Page
+  // Alternative Home Page (using same as main Home)
   HomePageAlternative: createLazyComponent(
-    () => import('../pages/HomePage'),
+    () => import('../pages/Home'),
     <SimpleLoader />
   ),
 
@@ -320,12 +325,7 @@ export const preloadRouteComponents = (route: string) => {
     case '/groups':
       import('../pages/GroupsPageEnhanced');
       break;
-    case '/analytics':
-      import('../pages/Analytics');
-      break;
-    case '/mundos':
-      import('../pages/Mundos');
-      break;
+
     case '/settings':
       import('../pages/Settings');
       break;
@@ -360,11 +360,9 @@ export const preloadRouteComponents = (route: string) => {
     case '/pwa-demo':
       import('../pages/PWADemo');
       break;
-    case '/admin/audit-logs':
-      import('../pages/AuditLogsPage');
-      break;
+
     case '/home-alt':
-      import('../pages/HomePage');
+      import('../pages/Home');
       break;
     default:
       // Handle dynamic routes

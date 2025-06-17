@@ -403,7 +403,7 @@ const ThemeTestSuite: React.FC = () => {
         </Typography>
         <Grid container spacing={2}>
           {testModules.map(({ id, name }) => (
-            <Grid item xs={12} sm={6} md={3} key={id}>
+            <Grid size={{xs:12,sm:6,md:3}} key={id}>
               <Box
                 sx={{
                   p: 2,

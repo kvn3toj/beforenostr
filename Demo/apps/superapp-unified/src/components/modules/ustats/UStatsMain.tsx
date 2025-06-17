@@ -531,7 +531,7 @@ const UStatsMain: React.FC = () => {
 
       <Grid container spacing={3} sx={{ mb: 5 }}>
         {performanceData.map((metric, index) => (
-          <Grid item xs={12} sm={6} md={3} key={metric.metric}>
+          <Grid size={{xs:12,sm:6,md:3}} key={metric.metric}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -546,7 +546,7 @@ const UStatsMain: React.FC = () => {
       {/* Gráficos diversos */}
       <Grid container spacing={4}>
         {/* Gráfico de barras */}
-        <Grid item xs={12} lg={6}>
+        <Grid size={{xs:12,lg:6}}>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -561,7 +561,7 @@ const UStatsMain: React.FC = () => {
         </Grid>
 
         {/* Gráfico de torta */}
-        <Grid item xs={12} lg={6}>
+        <Grid size={{xs:12,lg:6}}>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -576,7 +576,7 @@ const UStatsMain: React.FC = () => {
         </Grid>
 
         {/* Mapa de calor */}
-        <Grid item xs={12}>
+        <Grid size={{xs:12}}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -604,7 +604,7 @@ const UStatsMain: React.FC = () => {
 
       <Grid container spacing={4}>
         {/* Búsquedas por término */}
-        <Grid item xs={12} lg={8}>
+        <Grid size={{xs:12,lg:8}}>
           <Card>
             <CardContent sx={{ p: 4 }}>
               <Box display="flex" alignItems="center" mb={3}>
@@ -674,7 +674,7 @@ const UStatsMain: React.FC = () => {
                     </Box>
 
                     <Grid container spacing={3}>
-                      <Grid item xs={12} sm={4}>
+                      <Grid size={{xs:12,sm:4}}>
                         <Typography variant="body2" color="text.secondary">
                           Solicitudes
                         </Typography>
@@ -682,7 +682,7 @@ const UStatsMain: React.FC = () => {
                           {stat.requests}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12} sm={4}>
+                      <Grid size={{xs:12,sm:4}}>
                         <Typography variant="body2" color="text.secondary">
                           Exitosas
                         </Typography>
@@ -694,7 +694,7 @@ const UStatsMain: React.FC = () => {
                           {stat.success}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12} sm={4}>
+                      <Grid size={{xs:12,sm:4}}>
                         <Typography variant="body2" color="text.secondary">
                           Tiempo promedio
                         </Typography>
@@ -710,7 +710,7 @@ const UStatsMain: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} lg={4}>
+        <Grid size={{xs:12,lg:4}}>
           <Card sx={{ height: '100%' }}>
             <CardContent sx={{ p: 4 }}>
               <Typography
@@ -809,7 +809,7 @@ const UStatsMain: React.FC = () => {
 
       <Grid container spacing={4}>
         {/* Mapa de ubicación */}
-        <Grid item xs={12}>
+        <Grid size={{xs:12}}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -823,7 +823,7 @@ const UStatsMain: React.FC = () => {
         </Grid>
 
         {/* Estadísticas por país */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -842,7 +842,7 @@ const UStatsMain: React.FC = () => {
         </Grid>
 
         {/* Distribución regional */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -896,7 +896,7 @@ const UStatsMain: React.FC = () => {
       </Typography>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} lg={8}>
+        <Grid size={{xs:12,lg:8}}>
           <Card>
             <CardContent sx={{ p: 4 }}>
               <Box display="flex" alignItems="center" mb={4}>
@@ -991,7 +991,7 @@ const UStatsMain: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} lg={4}>
+        <Grid size={{xs:12,lg:4}}>
           <Card sx={{ height: '100%' }}>
             <CardContent sx={{ p: 4 }}>
               <Typography

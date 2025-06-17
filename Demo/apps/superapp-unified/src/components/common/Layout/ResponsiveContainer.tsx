@@ -97,61 +97,7 @@ export const ResponsiveContainer: React.FC<ResponsiveContainerProps> = ({
   );
 };
 
-// Componente específico para páginas de administración
-export const AdminPageContainer: React.FC<{
-  children: React.ReactNode;
-  title?: string;
-  subtitle?: string;
-}> = ({ children, title, subtitle }) => {
-  const theme = useTheme();
-  
-  return (
-    <ResponsiveContainer
-      maxWidth="xl"
-      background="default"
-      padding={theme.spacing(3)}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 3,
-          minHeight: 'calc(100vh - 64px)', // Altura menos el header
-        }}
-      >
-        {(title || subtitle) && (
-          <Box>
-            {title && (
-              <Typography
-                variant="h4"
-                component="h1"
-                sx={{
-                  fontWeight: 700,
-                  color: 'text.primary',
-                  mb: subtitle ? 1 : 0,
-                }}
-              >
-                {title}
-              </Typography>
-            )}
-            {subtitle && (
-              <Typography
-                variant="body1"
-                color="text.secondary"
-                sx={{ maxWidth: '600px' }}
-              >
-                {subtitle}
-              </Typography>
-            )}
-          </Box>
-        )}
-        <Box sx={{ flex: 1 }}>
-          {children}
-        </Box>
-      </Box>
-    </ResponsiveContainer>
-  );
-};
+
 
 // Componente para grids responsivos
 export const ResponsiveGrid: React.FC<{

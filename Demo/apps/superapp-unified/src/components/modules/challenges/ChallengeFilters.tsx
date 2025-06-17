@@ -395,7 +395,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
           <AccordionDetails sx={{ px: 0, pt: 0 }}>
             <Grid container spacing={3}>
               {/* Status Filter */}
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid size={{xs:12,sm:6,md:3}}>
                 <Typography variant="subtitle2" gutterBottom>
                   Estado
                 </Typography>
@@ -441,7 +441,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
               </Grid>
 
               {/* Difficulty Filter */}
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid size={{xs:12,sm:6,md:3}}>
                 <Typography variant="subtitle2" gutterBottom>
                   Dificultad
                 </Typography>
@@ -480,7 +480,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
               </Grid>
 
               {/* Category Filter */}
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid size={{xs:12,sm:6,md:3}}>
                 <Typography variant="subtitle2" gutterBottom>
                   Categoría
                 </Typography>
@@ -525,7 +525,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
               </Grid>
 
               {/* Type Filter */}
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid size={{xs:12,sm:6,md:3}}>
                 <Typography variant="subtitle2" gutterBottom>
                   Tipo
                 </Typography>
@@ -564,13 +564,13 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
               </Grid>
 
               {/* Sorting Options */}
-              <Grid item xs={12}>
+              <Grid size={{xs:12}}>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="subtitle2" gutterBottom>
                   Ordenar por
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{xs:12,sm:6}}>
                     <FormControl fullWidth size="small">
                       <InputLabel>Campo</InputLabel>
                       <Select
@@ -588,7 +588,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{xs:12,sm:6}}>
                     <FormControl fullWidth size="small">
                       <InputLabel>Orden</InputLabel>
                       <Select
@@ -608,7 +608,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
 
               {/* Saved Presets */}
               {savedPresets && savedPresets.length > 0 && (
-                <Grid item xs={12}>
+                <Grid size={{xs:12}}>
                   <Divider sx={{ my: 2 }} />
                   <Typography variant="subtitle2" gutterBottom>
                     Filtros Guardados
@@ -630,7 +630,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
 
               {/* Save Current Filters */}
               {onSavePreset && hasActiveFilters() && (
-                <Grid item xs={12}>
+                <Grid size={{xs:12}}>
                   <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                     <TextField
                       size="small"

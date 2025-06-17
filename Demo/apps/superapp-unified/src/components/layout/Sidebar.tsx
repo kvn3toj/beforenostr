@@ -25,6 +25,7 @@ import {
   Settings,
   Help,
   PhoneAndroid,
+  SwapHoriz,
 } from '@mui/icons-material';
 
 interface NavigationItem {
@@ -55,6 +56,12 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     label: 'Marketplace',
     icon: <Store />,
     path: '/marketplace',
+    section: 'modules',
+  },
+  {
+    label: 'LETS',
+    icon: <SwapHoriz />,
+    path: '/lets',
     section: 'modules',
   },
   {

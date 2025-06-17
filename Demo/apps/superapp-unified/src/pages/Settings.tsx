@@ -39,6 +39,7 @@ import {
   ArrowForwardIos,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { LetsEducationTest } from '../components/test/LetsEducationTest';
 
 const Settings: React.FC = () => {
   const theme = useTheme();
@@ -501,6 +502,9 @@ const Settings: React.FC = () => {
           </Button>
         </CardContent>
       </Card>
+
+      {/* Componente de prueba temporal para LETS Education Context */}
+      <LetsEducationTest />
     </Box>
   );
 };

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI, apiService } from '../lib/api-service';
-import { ENV, EnvironmentHelpers } from '../lib/environment';
+import { ENV, EnvironmentHelpers, BuilderIOHelpers } from '../lib/environment';
 import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
 import {
   checkMockAuthStatus,
@@ -29,6 +29,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<void>;
   isAuthenticated: boolean;
+  isBuilderIOMode: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,10 +54,28 @@ const MOCK_AUTHENTICATED_USER: User = {
   refresh_token: 'mock-refresh-token-for-coomunity-player',
 };
 
+// 🏗️ **ADMIN USER PARA BUILDER.IO - SIEMPRE ACTIVO**
+const BUILDER_IO_ADMIN_USER: User = {
+  id: '00000000-0000-0000-0000-000000000001',
+  email: 'admin@gamifier.com',
+  full_name: 'Administrator',
+  avatar_url: null,
+  role: 'admin',
+  created_at: new Date().toISOString(),
+  access_token: 'mock-admin-token-for-builder-io',
+  refresh_token: 'mock-admin-refresh-token',
+};
+
 // 🔧 **FUNCIÓN PARA VERIFICAR SI EL MOCK ESTÁ HABILITADO**
 const isMockAuthEnabled = (): boolean => {
   return EnvironmentHelpers.shouldUseMockAuth();
 };
+
+// 🏗️ **FUNCIÓN PARA VERIFICAR SI ESTAMOS EN MODO BUILDER.IO**
+const isBuilderIOMode = (): boolean => {
+  return BuilderIOHelpers.shouldBypassAuth();
+};
+
 // 🔄 Función para mapear respuesta del backend al formato User del frontend
 const mapBackendUserToFrontend = (
   backendUser: any,
@@ -84,6 +103,13 @@ const backendSignIn = async (
   email: string,
   password: string
 ): Promise<User> => {
+  // 🏗️ **BUILDER.IO: Si estamos en Builder.io, devolver admin directamente**
+  if (isBuilderIOMode()) {
+    console.log('[Auth Builder.io] Modo admin forzado - saltando autenticación');
+    await new Promise((resolve) => setTimeout(resolve, 300)); // Simular delay mínimo
+    return { ...BUILDER_IO_ADMIN_USER };
+  }
+
   // 🧪 **MOCK: Si el mock está habilitado, devolver usuario mock**
   if (isMockAuthEnabled()) {
     console.log('[Auth Mock] Mock login habilitado - usando usuario de prueba');
@@ -139,6 +165,13 @@ const backendSignUp = async (
   password: string,
   fullName?: string
 ): Promise<User> => {
+  // 🏗️ **BUILDER.IO: Si estamos en Builder.io, devolver admin directamente**
+  if (isBuilderIOMode()) {
+    console.log('[Auth Builder.io] Modo admin forzado - saltando registro');
+    await new Promise((resolve) => setTimeout(resolve, 300)); // Simular delay mínimo
+    return { ...BUILDER_IO_ADMIN_USER };
+  }
+
   // 🧪 **MOCK: Si el mock está habilitado, devolver usuario mock actualizado**
   if (isMockAuthEnabled()) {
     console.log(
@@ -194,6 +227,14 @@ const backendSignUp = async (
 
 // Función para verificar si el usuario está autenticado
 const checkAuthFromToken = async (): Promise<User | null> => {
+  // 🏗️ **BUILDER.IO: Si estamos en Builder.io, devolver admin directamente**
+  if (isBuilderIOMode()) {
+    console.log(
+      `${AUTH_CONFIG.LOG_PREFIX} Builder.io mode - auto-autenticando admin`
+    );
+    return { ...BUILDER_IO_ADMIN_USER };
+  }
+
   // 🧪 **MOCK: Si el mock está habilitado, devolver usuario mock directamente**
   if (isMockAuthEnabled()) {
     console.log(
@@ -202,32 +243,30 @@ const checkAuthFromToken = async (): Promise<User | null> => {
     return { ...MOCK_AUTHENTICATED_USER };
   }
 
+  // Verificar si hay token almacenado
+  const token = localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
+  if (!token) {
+    console.log(`${AUTH_CONFIG.LOG_PREFIX} No token found in localStorage`);
+    return null;
+  }
+
   try {
-    const savedToken = localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
-
-    if (!savedToken || savedToken === 'null' || savedToken === 'undefined') {
-      return null;
-    }
-
-    // Verificar token con el backend NestJS
-    const userData = await authAPI.getCurrentUser();
+    // Verificar token con el backend
+    const response = await apiService.get('/auth/me');
+    const userData = response.data || response;
 
     if (!userData) {
-      throw new Error('No se pudo obtener información del usuario');
+      throw new Error('No user data received from server');
     }
 
-    // Mapear datos del usuario del backend
-    const user = mapBackendUserToFrontend(userData, savedToken);
-
-    // Actualizar localStorage con datos frescos usando claves canónicas
-    localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(user));
-
-    return user;
+    return mapBackendUserToFrontend(userData, token);
   } catch (error: any) {
-    console.warn(`${AUTH_CONFIG.LOG_PREFIX} Error verificando token:`, error);
+    console.error(`${AUTH_CONFIG.LOG_PREFIX} Token validation failed:`, error);
 
-    // Token inválido o expirado, limpiar localStorage usando api-service
-    apiService.clearAuthTokens();
+    // Limpiar token inválido
+    localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.USER_DATA);
+
     return null;
   }
 };
@@ -242,6 +281,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        // 🏗️ **BUILDER.IO: Si estamos en Builder.io, auto-autenticar admin**
+        if (isBuilderIOMode()) {
+          console.log('[Auth Builder.io] Auto-autenticando admin para Builder.io');
+          setUser({ ...BUILDER_IO_ADMIN_USER });
+          setLoading(false);
+          return;
+        }
+
         // 🧪 **VERIFICACIÓN INICIAL DEL MOCK**
         const mockEnabled = checkMockAuthStatus();
         logAuthFlowStep('Starting authentication check', { mockEnabled });
@@ -294,6 +341,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    // 🏗️ **BUILDER.IO: Si estamos en Builder.io, no hacer nada (ya está autenticado)**
+    if (isBuilderIOMode()) {
+      console.log('[Auth Builder.io] Login ignorado - admin ya autenticado');
+      return;
+    }
+
     setLoading(true);
     try {
       const authUser = await backendSignIn(email, password);
@@ -317,6 +370,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
+    // 🏗️ **BUILDER.IO: Si estamos en Builder.io, no hacer nada (ya está autenticado)**
+    if (isBuilderIOMode()) {
+      console.log('[Auth Builder.io] Registro ignorado - admin ya autenticado');
+      return;
+    }
+
     setLoading(true);
     try {
       const newUser = await backendSignUp(email, password, fullName);
@@ -339,6 +398,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const signOut = async () => {
+    // 🏗️ **BUILDER.IO: Si estamos en Builder.io, no hacer logout (mantener admin)**
+    if (isBuilderIOMode()) {
+      console.log('[Auth Builder.io] Logout ignorado - manteniendo admin activo');
+      return;
+    }
+
     setLoading(true);
     try {
       // 🧪 **MOCK: Si el mock está habilitado, saltear logout del backend**
@@ -377,6 +442,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setLoading(true);
     try {
+      // 🏗️ **BUILDER.IO: Si estamos en Builder.io, simular actualización local**
+      if (isBuilderIOMode()) {
+        console.log('[Auth Builder.io] Update profile - actualizando admin localmente');
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        const updatedUser = { ...user, ...updates };
+        setUser(updatedUser);
+        return;
+      }
+
       // 🧪 **MOCK: Si el mock está habilitado, simular actualización local**
       if (isMockAuthEnabled()) {
         console.log(
@@ -398,24 +473,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      // Actualizar en backend usando authAPI
-      const profileData = await authAPI.updateProfile(updates);
+      // Actualización real con el backend
+      const response = await apiService.put('/auth/profile', updates);
+      const updatedUserData = response.data || response;
 
-      // Mapear respuesta del backend y mantener el token actual
       const updatedUser = mapBackendUserToFrontend(
-        profileData,
+        updatedUserData,
         user.access_token
       );
-
       setUser(updatedUser);
+
+      // Actualizar localStorage
       try {
         localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(updatedUser));
       } catch (error) {
-        console.warn(`${AUTH_CONFIG.LOG_PREFIX} Error guardando perfil actualizado:`, error);
+        console.warn(
+          `${AUTH_CONFIG.LOG_PREFIX} Error guardando perfil actualizado:`,
+          error
+        );
       }
     } catch (error: any) {
-      console.error('[Auth] Error actualizando perfil:', error);
-      throw new Error(error.message || 'Error al actualizar perfil');
+      console.error('[Auth] Error en updateProfile:', error);
+      throw new Error(
+        error.message || 'Error al actualizar el perfil'
+      );
     } finally {
       setLoading(false);
     }
@@ -429,6 +510,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     signOut,
     updateProfile,
     isAuthenticated: !!user && !!user.access_token,
+    isBuilderIOMode: isBuilderIOMode(),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -384,7 +384,7 @@ const InteractiveVideoEnhanced: React.FC = () => {
             }}
           >
             <Grid container alignItems="center" spacing={3}>
-              <Grid item xs={12} md={8}>
+              <Grid size={{xs:12,md:8}}>
                 <Typography
                   variant="h3"
                   sx={{
@@ -429,7 +429,7 @@ const InteractiveVideoEnhanced: React.FC = () => {
                   />
                 </Stack>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{xs:12,md:4}}>
                 <Paper
                   sx={{
                     p: 3,
@@ -465,7 +465,7 @@ const InteractiveVideoEnhanced: React.FC = () => {
         {/* Main Content */}
         <Grid container spacing={4}>
           {/* Video Player */}
-          <Grid item xs={12} lg={8}>
+          <Grid size={{xs:12,lg:8}}>
             <Card sx={{ borderRadius: 3, overflow: 'hidden', mb: 3 }}>
               <CardContent sx={{ p: 0 }}>
                 <InteractiveVideoPlayerOverlay
@@ -642,7 +642,7 @@ const InteractiveVideoEnhanced: React.FC = () => {
                         rarity: 'legendary',
                       },
                     ].map((achievement, index) => (
-                      <Grid item xs={12} sm={6} key={index}>
+                      <Grid size={{xs:12,sm:6}} key={index}>
                         <Paper
                           sx={{
                             p: 2,
@@ -693,7 +693,7 @@ const InteractiveVideoEnhanced: React.FC = () => {
           </Grid>
 
           {/* Metrics Panel */}
-          <Grid item xs={12} lg={4}>
+          <Grid size={{xs:12,lg:4}}>
             <Fade in={!isLoading}>
               <Box>
                 <EnhancedPlayerMetrics

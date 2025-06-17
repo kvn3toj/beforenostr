@@ -1,7 +1,7 @@
 {
   "snapshot": "POPULATED_FROM_SETTINGS",
   "install": "npm install --legacy-peer-deps && cd Demo/apps/superapp-unified && npm install --legacy-peer-deps && cd ../../../",
-  "start": "echo 'Starting CoomÜnity development environment...'",
+  "start": "echo 'Starting CoomÜnity development environment...' && npm run dev",
   "terminals": [
     {
       "name": "Backend NestJS",
@@ -15,5 +15,10 @@
       "name": "Health Monitor",
       "command": "while true; do echo '=== Health Check ===' && curl -s http://localhost:3002/health && curl -s -I http://localhost:3001 && echo '' && sleep 30; done"
     }
-  ]
+  ],
+  "secrets": {},
+  "environment": {
+    "NODE_ENV": "development",
+    "WORKSPACE_ROOT": "."
+  }
 }

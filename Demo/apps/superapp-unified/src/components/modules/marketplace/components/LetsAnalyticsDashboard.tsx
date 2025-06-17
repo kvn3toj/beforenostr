@@ -275,7 +275,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
 
       {/* Métricas principales */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <MetricCard
             title="Ünits Circulando"
             value={analytics?.totalUnitsCirculating || 0}
@@ -285,7 +285,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
             trend={12.5}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <MetricCard
             title="Transacciones Hoy"
             value={analytics?.dailyTransactions || 0}
@@ -295,7 +295,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
             trend={8.3}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <MetricCard
             title="Usuarios Activos"
             value={analytics?.activeUsers || 0}
@@ -305,7 +305,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
             trend={15.7}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <MetricCard
             title="Promedio Confianza"
             value="4.2/5.0"
@@ -330,7 +330,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
       {/* Contenido de tabs */}
       <TabPanel value={tabValue} index={0}>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid size={{xs:12}}>
             <AyniIndexCard />
           </Grid>
         </Grid>
@@ -338,7 +338,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
 
       <TabPanel value={tabValue} index={1}>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid size={{xs:12}}>
             <Card>
               <CardContent>
                 <Typography variant="h6" sx={{ mb: 3 }}>
@@ -359,7 +359,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
 
       <TabPanel value={tabValue} index={2}>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid size={{xs:12}}>
             <Card>
               <CardContent>
                 <Typography variant="h6" sx={{ mb: 3 }}>
@@ -389,7 +389,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
 
       <TabPanel value={tabValue} index={3}>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid size={{xs:12}}>
             <Card>
               <CardContent>
                 <Typography variant="h6" sx={{ mb: 2 }}>

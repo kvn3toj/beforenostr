@@ -64,7 +64,9 @@
     "design:help": "echo '🎨 Design System Commands:' && echo '' && echo '🔍 Verification:' && echo '  npm run verify:design-system  - Full system verification' && echo '  npm run design:verify         - Alias for verification' && echo '  npm run design:status         - Quick status check' && echo '' && echo '🌐 Access Points:' && echo '  /design-system                - Interactive showcase' && echo '  /design-validator             - Automated validator' && echo '  /performance-monitor          - Performance metrics' && echo '  /theme-test                   - Dark mode testing' && echo '' && echo '📊 Expected Score: 95%+ for production readiness'",
     "verify:credentials": "./scripts/verify-credentials.sh",
     "credentials:check": "npm run verify:credentials",
-    "credentials:help": "echo '🔐 Credenciales Verificadas - Regla Obligatoria:' && echo '' && echo '🎯 Comandos disponibles:' && echo '  npm run verify:credentials    - Verificar credenciales del backend' && echo '  npm run credentials:check     - Alias para verificación' && echo '  npx playwright test verified-credentials-validation.spec.ts - Test E2E completo' && echo '' && echo '📋 Credenciales verificadas:' && echo '  🔑 ADMIN:      admin@gamifier.com / admin123' && echo '  👤 USER:       user@gamifier.com / 123456' && echo '  💎 PREMIUM:    premium@gamifier.com / 123456' && echo '  🎨 CREATOR:    creator@gamifier.com / 123456' && echo '  🛡️ MODERATOR:  moderator@gamifier.com / 123456' && echo '' && echo '🚨 NUNCA usar credenciales inventadas que causan errores 400/401' && echo '📖 Ver: CREDENCIALES_VERIFICADAS.md para más detalles'"
+    "credentials:help": "echo '🔐 Credenciales Verificadas - Regla Obligatoria:' && echo '' && echo '🎯 Comandos disponibles:' && echo '  npm run verify:credentials    - Verificar credenciales del backend' && echo '  npm run credentials:check     - Alias para verificación' && echo '  npx playwright test verified-credentials-validation.spec.ts - Test E2E completo' && echo '' && echo '📋 Credenciales verificadas:' && echo '  🔑 ADMIN:      admin@gamifier.com / admin123' && echo '  👤 USER:       user@gamifier.com / 123456' && echo '  💎 PREMIUM:    premium@gamifier.com / 123456' && echo '  🎨 CREATOR:    creator@gamifier.com / 123456' && echo '  🛡️ MODERATOR:  moderator@gamifier.com / 123456' && echo '' && echo '🚨 NUNCA usar credenciales inventadas que causan errores 400/401' && echo '📖 Ver: CREDENCIALES_VERIFICADAS.md para más detalles'",
+    "builder:dev": "npx @builder.io/cli@latest launch -p 3001 --no-open",
+    "builder:start": "npm run builder:dev"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -98,6 +100,7 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
+    "@builder.io/dev-tools": "^1.6.108",
     "@eslint/js": "^9.28.0",
     "@playwright/test": "^1.53.0",
     "@types/react": "^19.1.8",

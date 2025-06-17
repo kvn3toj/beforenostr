@@ -510,7 +510,7 @@ const GroupsPageEnhanced: React.FC = () => {
 
         {/* Métricas CoomÜnity principales */}
         <Grid container spacing={1} sx={{ mb: 2 }}>
-          <Grid item xs={3}>
+          <Grid size={{xs:3}}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography
                 variant="h6"
@@ -524,7 +524,7 @@ const GroupsPageEnhanced: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={3}>
+          <Grid size={{xs:3}}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h6" color="success.main">
                 {group.meritos}
@@ -534,7 +534,7 @@ const GroupsPageEnhanced: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={3}>
+          <Grid size={{xs:3}}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h6" color="info.main">
                 {group.ondas}
@@ -544,7 +544,7 @@ const GroupsPageEnhanced: React.FC = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={3}>
+          <Grid size={{xs:3}}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h6" color="secondary.main">
                 {Math.round(group.ayniMetrics.ayniBalance * 100)}%
@@ -828,7 +828,7 @@ const GroupsPageEnhanced: React.FC = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{xs:12,md:6}}>
                     <FormControl fullWidth>
                       <InputLabel>Balance Ayni</InputLabel>
                       <Select
@@ -845,7 +845,7 @@ const GroupsPageEnhanced: React.FC = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{xs:12,md:6}}>
                     <FormControl fullWidth>
                       <InputLabel>Impacto Bien Común</InputLabel>
                       <Select
@@ -862,7 +862,7 @@ const GroupsPageEnhanced: React.FC = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid size={{xs:12,md:4}}>
                     <FormControlLabel
                       control={
                         <Switch
@@ -878,7 +878,7 @@ const GroupsPageEnhanced: React.FC = () => {
                       label="Con proyectos activos"
                     />
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid size={{xs:12,md:4}}>
                     <FormControlLabel
                       control={
                         <Switch
@@ -894,7 +894,7 @@ const GroupsPageEnhanced: React.FC = () => {
                       label="Con mentorías"
                     />
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid size={{xs:12,md:4}}>
                     <FormControlLabel
                       control={
                         <Switch
@@ -986,7 +986,7 @@ const GroupsPageEnhanced: React.FC = () => {
         {groupsLoading ? (
           <Grid container spacing={3}>
             {[...Array(6)].map((_, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid size={{xs:12,sm:6,md:4}} key={index}>
                 <Card sx={{ height: 450 }}>
                   <CardContent>
                     <Skeleton
@@ -1017,7 +1017,7 @@ const GroupsPageEnhanced: React.FC = () => {
 
         <Grid container spacing={3}>
           {filteredGroups.map((group) => (
-            <Grid item xs={12} sm={6} md={4} key={group.id}>
+            <Grid size={{xs:12,sm:6,md:4}} key={group.id}>
               {renderEnhancedGroupCard(group)}
             </Grid>
           ))}
@@ -1052,7 +1052,7 @@ const GroupsPageEnhanced: React.FC = () => {
       <TabPanel value={activeTab} index={1}>
         <Grid container spacing={3}>
           {filteredGroups.map((group) => (
-            <Grid item xs={12} sm={6} md={4} key={group.id}>
+            <Grid size={{xs:12,sm:6,md:4}} key={group.id}>
               {renderEnhancedGroupCard(group)}
             </Grid>
           ))}
@@ -1088,7 +1088,7 @@ const GroupsPageEnhanced: React.FC = () => {
       <TabPanel value={activeTab} index={2}>
         <Grid container spacing={3}>
           {filteredGroups.map((group) => (
-            <Grid item xs={12} sm={6} md={4} key={group.id}>
+            <Grid size={{xs:12,sm:6,md:4}} key={group.id}>
               {renderEnhancedGroupCard(group)}
             </Grid>
           ))}
@@ -1126,7 +1126,7 @@ const GroupsPageEnhanced: React.FC = () => {
       <TabPanel value={activeTab} index={3}>
         <Grid container spacing={3}>
           {filteredGroups.map((group) => (
-            <Grid item xs={12} sm={6} md={4} key={group.id}>
+            <Grid size={{xs:12,sm:6,md:4}} key={group.id}>
               {renderEnhancedGroupCard(group)}
             </Grid>
           ))}
@@ -1242,7 +1242,7 @@ const GroupsPageEnhanced: React.FC = () => {
             />
 
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{xs:12,sm:6}}>
                 <FormControl fullWidth>
                   <InputLabel>Categoría</InputLabel>
                   <Select
@@ -1264,7 +1264,7 @@ const GroupsPageEnhanced: React.FC = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{xs:12,sm:6}}>
                 <TextField
                   label="Máximo de Miembros"
                   type="number"

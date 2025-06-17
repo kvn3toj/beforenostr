@@ -108,7 +108,7 @@ export const PilgrimJourney: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Video Player Principal */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{xs:12,md:8}}>
           <Card elevation={3} sx={{ position: 'relative', borderRadius: 3 }}>
             <CardContent sx={{ p: 0 }}>
               <Box 
@@ -166,7 +166,7 @@ export const PilgrimJourney: React.FC = () => {
         </Grid>
 
         {/* Panel de Características */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{xs:12,md:4}}>
           <Card elevation={2} sx={{ borderRadius: 3, mb: 3 }}>
             <CardContent>
               <Typography variant="h6" component="h3" gutterBottom color="primary">

@@ -1,2 +1,2 @@
-export { ResponsiveContainer, AdminPageContainer, ResponsiveGrid } from './ResponsiveContainer';
+export { ResponsiveContainer, ResponsiveGrid } from './ResponsiveContainer';
 export type { ResponsiveContainerProps } from './ResponsiveContainer'; 

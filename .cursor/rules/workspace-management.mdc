@@ -14,12 +14,12 @@ alwaysApply: true
 
 ### **"TODOS LOS COMANDOS DESDE LA RAÍZ DEL MONOREPO"**
 
-**UBICACIÓN DE LA RAÍZ:** `/Users/kevinp/Movies/GAMIFIER copy/`
+**UBICACIÓN DE LA RAÍZ:** `/Users/kevinp/Movies/GAMIFIER-copy/`
 
 **REGLA OBLIGATORIA:**
 ```bash
 # ✅ CORRECTO - SIEMPRE desde la raíz
-pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER copy
+pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER-copy
 npm run dev
 npm run test:e2e --workspace=Demo/apps/superapp-unified
 
@@ -33,6 +33,56 @@ cd backend/ && npm run dev                      # ❌ CAUSA ERRORES
 - Configuraciones incorrectas 
 - Fallos fantasma en tests
 - Pérdida de orquestación del monorepo
+
+---
+
+## 🗄️ **DEPENDENCIA POSTGRESQL OBLIGATORIA - CRÍTICA**
+
+### **APRENDIZAJE COSTOSO RESUELTO - JUNIO 2025:**
+**PROBLEMA:** Backend NestJS falló al iniciar con error `Can't reach database server at localhost:5432`
+**SÍNTOMA:** Error P1001 - PostgreSQL database server not running
+**SOLUCIÓN:** PostgreSQL debe estar ejecutándose ANTES de iniciar el backend
+
+### **REGLAS DE DEPENDENCIA POSTGRESQL:**
+
+**PostgreSQL es OBLIGATORIO para el funcionamiento del backend:**
+```bash
+# ✅ VERIFICAR ESTADO DE POSTGRESQL
+brew services list | grep postgresql
+
+# ✅ INICIAR POSTGRESQL (si no está ejecutándose)
+brew services start postgresql@15
+
+# ✅ VERIFICAR CONECTIVIDAD
+lsof -i :5432  # Debe mostrar postgres escuchando
+
+# ✅ VERIFICAR LOGS DE CONEXIÓN
+# En logs del backend buscar: "Database connection established"
+```
+
+**PROTOCOLO DE RESOLUCIÓN DE PROBLEMAS DE BD:**
+```bash
+# 1. VERIFICAR SERVICIO POSTGRESQL
+brew services list | grep postgresql
+
+# 2. INICIAR SI ESTÁ DETENIDO
+brew services start postgresql@15
+
+# 3. VERIFICAR PUERTO 5432
+lsof -i :5432
+
+# 4. REINTENTAR BACKEND
+npm run dev:backend
+
+# 5. VERIFICAR LOGS DE CONEXIÓN
+# Buscar: "PrismaService onModuleInit - Database connection established"
+```
+
+**SÍNTOMAS DE FALLO DE BD:**
+- Backend se inicia pero no responde en puerto 3002
+- Error P1001 en logs del backend
+- Mensaje "Can't reach database server at localhost:5432"
+- Health check falla con "connection refused"
 
 ---
 
@@ -142,7 +192,7 @@ echo "🔍 INICIANDO PRE-FLIGHT CHECK CRÍTICO..."
 
 # 1. VERIFICAR UBICACIÓN CORRECTA
 CURRENT_DIR=$(pwd)
-EXPECTED_DIR="/Users/kevinp/Movies/GAMIFIER copy"
+EXPECTED_DIR="/Users/kevinp/Movies/GAMIFIER-copy"
 if [ "$CURRENT_DIR" != "$EXPECTED_DIR" ]; then
   echo "❌ ERROR: Ubicación incorrecta"
   echo "📍 Actual: $CURRENT_DIR"
@@ -152,25 +202,46 @@ if [ "$CURRENT_DIR" != "$EXPECTED_DIR" ]; then
 fi
 echo "✅ Ubicación correcta verificada"
 
-# 2. LIMPIAR PROCESOS MÚLTIPLES
+# 2. 🆕 VERIFICAR POSTGRESQL (CRÍTICO)
+echo "🗄️ Verificando PostgreSQL..."
+POSTGRES_STATUS=$(brew services list | grep postgresql@15 | awk '{print $2}')
+if [ "$POSTGRES_STATUS" != "started" ]; then
+  echo "❌ ERROR: PostgreSQL no está ejecutándose"
+  echo "🔧 Ejecutando: brew services start postgresql@15"
+  brew services start postgresql@15
+  sleep 3
+fi
+
+# Verificar conectividad PostgreSQL
+POSTGRES_RUNNING=$(lsof -i :5432 | grep LISTEN | wc -l)
+if [ $POSTGRES_RUNNING -eq 0 ]; then
+  echo "❌ ERROR: PostgreSQL no está escuchando en puerto 5432"
+  echo "🔧 Reiniciando PostgreSQL..."
+  brew services restart postgresql@15
+  sleep 5
+else
+  echo "✅ PostgreSQL ejecutándose en puerto 5432"
+fi
+
+# 3. LIMPIAR PROCESOS MÚLTIPLES
 echo "🧹 Limpiando procesos múltiples..."
 pkill -f "vite" 2>/dev/null || true
 pkill -f "npm run dev" 2>/dev/null || true
 pkill -f "turbo" 2>/dev/null || true
 sleep 2
 
-# 3. VERIFICAR LIMPIEZA DE PROCESOS
+# 4. VERIFICAR LIMPIEZA DE PROCESOS
 RUNNING_PROCESSES=$(ps aux | grep -E "(vite|npm run dev)" | grep -v grep | wc -l)
 if [ $RUNNING_PROCESSES -gt 0 ]; then
   echo "⚠️ ADVERTENCIA: Procesos aún ejecutándose:"
   ps aux | grep -E "(vite|npm run dev)" | grep -v grep
 fi
 
-# 4. LIMPIAR PUERTOS OCUPADOS
+# 5. LIMPIAR PUERTOS OCUPADOS
 echo "🔧 Liberando puertos ocupados..."
 lsof -ti:3000,3001,3002,3003,5173 | xargs kill -9 2>/dev/null || true
 
-# 5. VERIFICAR CONFIGURACIÓN DE PUERTOS
+# 6. VERIFICAR CONFIGURACIÓN DE PUERTOS
 echo "📋 Verificando configuración de puertos..."
 if [ -f "Demo/apps/superapp-unified/.env" ]; then
   SUPERAPP_PORT=$(grep VITE_BASE_URL Demo/apps/superapp-unified/.env | cut -d':' -f3 | cut -d'/' -f1)
@@ -179,7 +250,7 @@ if [ -f "Demo/apps/superapp-unified/.env" ]; then
   fi
 fi
 
-# 6. 🆕 VERIFICAR TURBOREPO LOCAL
+# 7. VERIFICAR TURBOREPO LOCAL
 echo "🔧 Verificando Turborepo local..."
 TURBO_LOCAL=$(npm ls turbo 2>/dev/null | grep turbo@ | cut -d@ -f2)
 if [ -z "$TURBO_LOCAL" ]; then
@@ -189,7 +260,7 @@ else
   echo "✅ Turborepo local: v$TURBO_LOCAL"
 fi
 
-# 7. VERIFICAR DEPENDENCIAS CRÍTICAS
+# 8. VERIFICAR DEPENDENCIAS CRÍTICAS
 echo "📦 Verificando dependencias críticas..."
 cd Demo/apps/superapp-unified/
 npm ls @sentry/react >/dev/null 2>&1 || echo "⚠️ FALTA: @sentry/react"
@@ -197,9 +268,10 @@ npm ls web-vitals >/dev/null 2>&1 || echo "⚠️ FALTA: web-vitals"
 npm ls @playwright/test >/dev/null 2>&1 || echo "⚠️ FALTA: @playwright/test"
 cd ../../../
 
-# 8. VERIFICAR SERVICIOS (si están ejecutándose)
+# 9. 🆕 VERIFICAR SERVICIOS CON DEPENDENCIA DE BD
 echo "🌐 Verificando servicios disponibles..."
-curl -s http://localhost:3002/health >/dev/null && echo "✅ Backend (3002) disponible" || echo "⚠️ Backend (3002) no disponible"
+echo "🗄️ Verificando backend con PostgreSQL..."
+curl -s http://localhost:3002/health >/dev/null && echo "✅ Backend (3002) disponible" || echo "⚠️ Backend (3002) no disponible - verificar PostgreSQL"
 curl -s -I http://localhost:3001 >/dev/null && echo "✅ SuperApp (3001) disponible" || echo "ℹ️ SuperApp (3001) no iniciada"
 
 echo "🏁 PRE-FLIGHT CHECK COMPLETADO"
@@ -299,20 +371,26 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
    npm run dev  # ❌ Segunda instancia causa conflictos
    ```
 
-3. **Mezclar archivos backend/frontend:**
+3. **🆕 Iniciar backend sin PostgreSQL:**
+   ```bash
+   # ❌ NUNCA iniciar backend sin verificar PostgreSQL
+   npm run dev:backend  # Sin verificar brew services list | grep postgresql
+   ```
+
+4. **Mezclar archivos backend/frontend:**
    ```bash
    # ❌ NUNCA poner archivos React en:
    ./src/components/          # ❌ Es directorio de backend
    ./src/pages/              # ❌ Es directorio de backend
    ```
 
-4. **Ignorar limpieza de procesos:**
+5. **Ignorar limpieza de procesos:**
    ```bash
    # ❌ NUNCA iniciar sin limpiar:
    npm run dev  # Sin pkill previo causa conflictos
    ```
 
-5. **🆕 Usar solo Turborepo global:**
+6. **Usar solo Turborepo global:**
    ```bash
    # ❌ EVITAR: Solo instalación global (causa advertencias)
    # WARNING: No locally installed `turbo` found
@@ -320,28 +398,35 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 
 ### **✅ OBLIGATORIO:**
 
-1. **Siempre verificar ubicación:**
+1. **🆕 Siempre verificar PostgreSQL primero:**
    ```bash
-   pwd  # Verificar raíz antes de comandos
+   brew services list | grep postgresql  # Verificar estado
+   brew services start postgresql@15     # Iniciar si es necesario
+   lsof -i :5432                        # Verificar conectividad
    ```
 
-2. **Siempre limpiar procesos:**
+2. **Siempre verificar ubicación:**
+   ```bash
+   pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER-copy
+   ```
+
+3. **Siempre limpiar procesos:**
    ```bash
    pkill -f "vite" && pkill -f "npm run dev" && pkill -f "turbo"
    ```
 
-3. **🆕 Instalar Turborepo localmente:**
+4. **Instalar Turborepo localmente:**
    ```bash
    npm install turbo --save-dev --legacy-peer-deps
    npm ls turbo  # Verificar instalación local
    ```
 
-4. **Siempre usar workspace sintaxis:**
+5. **Siempre usar workspace sintaxis:**
    ```bash
    npm run <script> --workspace=<nombre_del_paquete>
    ```
 
-5. **Siempre mantener separación arquitectónica:**
+6. **Siempre mantener separación arquitectónica:**
    ```bash
    # Backend: ./src/ - SOLO NestJS
    # Frontend: Demo/apps/superapp-unified/src/ - SOLO React
@@ -364,6 +449,7 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 - ✅ **SuperApp funcional** (puerto 3001, HTTP/1.1 200 OK)
 - ✅ **Base de datos Prisma conectada** (todas las rutas mapeadas)
 - ✅ **Configuración Turborepo corregida** (tasks, packageManager, workspaces)
+- ✅ **🆕 PostgreSQL como dependencia crítica identificada y documentada** ⭐ **JUNIO 2025**
 
 ### **Costos evitados:**
 - 🚫 Reprocesos por errores de contexto
@@ -371,24 +457,28 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 - 🚫 Conflictos de puerto y procesos
 - 🚫 Confusión arquitectónica
 - 🚫 Pérdida de tiempo en configuración
+- 🚫 **🆕 Fallos de backend por PostgreSQL no disponible**
 
 ---
 
 ## 🎯 **RESUMEN EJECUTIVO**
 
 ### **REGLA FUNDAMENTAL:**
-> **"El directorio raíz del monorepo es el centro de comando. Todo se ejecuta desde ahí, todo se organiza desde ahí, y todo se controla desde ahí."**
+> **"El directorio raíz del monorepo es el centro de comando. Todo se ejecuta desde ahí, todo se organiza desde ahí, y todo se controla desde ahí. PostgreSQL debe estar ejecutándose ANTES que el backend."**
 
 ### **PROTOCOLO OBLIGATORIO:**
 1. **Verificar ubicación** (`pwd`)
-2. **Limpiar procesos** (`pkill -f "vite" && pkill -f "turbo"`)
-3. **Verificar puertos** (`lsof -i :3001`)
-4. **Ejecutar desde raíz** (`turbo run dev`)
-5. **Usar workspace sintaxis** (`--workspace=<name>`)
+2. **🆕 Verificar PostgreSQL** (`brew services list | grep postgresql`)
+3. **🆕 Iniciar PostgreSQL si es necesario** (`brew services start postgresql@15`)
+4. **Limpiar procesos** (`pkill -f "vite" && pkill -f "turbo"`)
+5. **Verificar puertos** (`lsof -i :3001`)
+6. **Ejecutar desde raíz** (`turbo run dev`)
+7. **Usar workspace sintaxis** (`--workspace=<name>`)
 
 ### **PROHIBICIONES ABSOLUTAS:**
 - ❌ Comandos desde subdirectorios
 - ❌ Múltiples procesos simultáneos
+- ❌ **🆕 Iniciar backend sin PostgreSQL ejecutándose**
 - ❌ Mezclar archivos backend/frontend
 - ❌ Más de 30 archivos en directorio raíz
 - ❌ Ignorar limpieza de procesos
@@ -402,6 +492,7 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 ### **✅ ESTADO CONFIRMADO:**
 
 - **Turborepo**: Funcionando correctamente con configuración corregida
+- **🆕 PostgreSQL**: Identificado como dependencia crítica obligatoria
 - **Backend NestJS**: Operacional en puerto 3002 (health check exitoso)
 - **SuperApp**: Operacional en puerto 3001 (HTTP/1.1 200 OK)
 - **Base de datos**: Prisma conectada, todas las rutas mapeadas
@@ -410,16 +501,17 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 ### **🚀 COMANDOS PRINCIPALES VERIFICADOS:**
 
 ```bash
-# Comando principal (desde la raíz)
-turbo run dev                    # ✅ FUNCIONAL
+# 🆕 COMANDO COMPLETO CON VERIFICACIÓN DE BD
+brew services start postgresql@15   # ✅ OBLIGATORIO PRIMERO
+turbo run dev                       # ✅ FUNCIONAL
 
 # Servicios individuales
-npm run dev:backend              # ✅ FUNCIONAL (puerto 3002)
-npm run dev:superapp            # ✅ FUNCIONAL (puerto 3001)
+npm run dev:backend                 # ✅ FUNCIONAL (puerto 3002) - REQUIERE POSTGRESQL
+npm run dev:superapp               # ✅ FUNCIONAL (puerto 3001)
 
 # Verificación de servicios
-curl http://localhost:3002/health # ✅ RESPONDE
-curl http://localhost:3001 -I    # ✅ RESPONDE
+curl http://localhost:3002/health  # ✅ RESPONDE (solo si PostgreSQL está activo)
+curl http://localhost:3001 -I     # ✅ RESPONDE
 ```
 
 ### **📋 CONFIGURACIÓN CLAVE EXITOSA:**
@@ -429,6 +521,7 @@ curl http://localhost:3001 -I    # ✅ RESPONDE
 - **turbo.json**: "tasks" en lugar de "pipeline" ✅
 - **Scripts de orquestación**: Configurados y funcionales ✅
 - **Turborepo local**: v2.5.4 instalado localmente ✅ (eliminó advertencias)
+- **🆕 PostgreSQL**: Dependencia crítica documentada y verificada ✅
 
 ### **🔧 INSTALACIÓN TURBOREPO LOCAL RECOMENDADA:**
 
@@ -449,3 +542,10 @@ turbo --version  # Debe mostrar solo: 2.5.4 (sin warnings)
 - ✅ **Caching optimizado** específico del proyecto
 - ✅ **CI/CD determinístico** con versión fija
 - ✅ **Configuración robusta** para producción
+
+### **🆕 BENEFICIOS DE LA REGLA POSTGRESQL:**
+- ✅ **Prevención de fallos de backend** por dependencia faltante
+- ✅ **Diagnóstico rápido** de problemas de conectividad de BD
+- ✅ **Protocolo claro** para resolución de problemas
+- ✅ **Documentación del aprendizaje** para futuros desarrolladores
+- ✅ **Integración en pre-flight check** para verificación automática

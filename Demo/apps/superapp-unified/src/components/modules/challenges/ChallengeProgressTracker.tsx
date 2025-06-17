@@ -431,13 +431,13 @@ export const ChallengeProgressTracker: React.FC<
         <Collapse in={showDetails}>
           <Grid container spacing={3}>
             {/* Estadísticas */}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{xs:12,sm:6}}>
               <Typography variant="subtitle2" gutterBottom>
                 📊 Estadísticas
               </Typography>
               <Paper sx={{ p: 2, bgcolor: 'background.default' }}>
                 <Grid container spacing={2}>
-                  <Grid item xs={6}>
+                  <Grid size={{xs:6}}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography variant="h6" color="success.main">
                         {progress.tasksCompleted || 0}
@@ -445,7 +445,7 @@ export const ChallengeProgressTracker: React.FC<
                       <Typography variant="caption">Completadas</Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={{xs:6}}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography variant="h6" color="warning.main">
                         {(progress.totalTasks || 0) -
@@ -460,7 +460,7 @@ export const ChallengeProgressTracker: React.FC<
 
             {/* Recompensas disponibles */}
             {rewards.length > 0 && (
-              <Grid item xs={12} sm={6}>
+              <Grid size={{xs:12,sm:6}}>
                 <Typography variant="subtitle2" gutterBottom>
                   🎁 Recompensas
                 </Typography>
@@ -498,7 +498,7 @@ export const ChallengeProgressTracker: React.FC<
 
             {/* Tareas */}
             {tasks.length > 0 && (
-              <Grid item xs={12}>
+              <Grid size={{xs:12}}>
                 <Box
                   sx={{
                     display: 'flex',
@@ -530,7 +530,7 @@ export const ChallengeProgressTracker: React.FC<
 
             {/* Timeline */}
             {showTimeline && (
-              <Grid item xs={12}>
+              <Grid size={{xs:12}}>
                 <Typography variant="subtitle2" gutterBottom>
                   📅 Cronología
                 </Typography>
@@ -539,7 +539,7 @@ export const ChallengeProgressTracker: React.FC<
             )}
 
             {/* Acciones adicionales */}
-            <Grid item xs={12}>
+            <Grid size={{xs:12}}>
               <Divider sx={{ my: 2 }} />
               <Stack direction="row" spacing={1} justifyContent="flex-end">
                 {onResetProgress && (

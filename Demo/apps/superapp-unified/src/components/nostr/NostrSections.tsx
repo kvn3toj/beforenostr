@@ -137,7 +137,7 @@ const NostrSections: React.FC<NostrSectionsProps> = ({
           const mundoProfile = profiles.get(mundo.pubkey) || null;
           const mundoDisplayName = typeof mundo.pubkey === 'string' ? getUserDisplayName(mundo.pubkey) : '';
           return (
-            <Grid item xs={12} sm={6} md={4} key={`${mundo.pubkey}:${dTag}`}>
+            <Grid size={{xs:12,sm:6,md:4}} key={`${mundo.pubkey}:${dTag}`}>
               <Card elevation={2} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardHeader
                   avatar={getProfilePicture(mundoProfile) ? (
@@ -164,7 +164,7 @@ const NostrSections: React.FC<NostrSectionsProps> = ({
           );
         })}
       {mundos.size === 0 && (
-        <Grid item xs={12}><Typography>No hay Mundos disponibles.</Typography></Grid>
+        <Grid size={{xs:12}}><Typography>No hay Mundos disponibles.</Typography></Grid>
       )}
     </Grid>
   );
@@ -189,7 +189,7 @@ const NostrSections: React.FC<NostrSectionsProps> = ({
           const playlistProfile = profiles.get(playlist.pubkey) || null;
           const playlistDisplayName = typeof playlist.pubkey === 'string' ? getUserDisplayName(playlist.pubkey) : '';
           return (
-            <Grid item xs={12} sm={6} md={4} key={`${playlist.pubkey}:${dTag}`}>
+            <Grid size={{xs:12,sm:6,md:4}} key={`${playlist.pubkey}:${dTag}`}>
               <Card elevation={2} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardHeader
                   avatar={getProfilePicture(playlistProfile) ? (
@@ -216,7 +216,7 @@ const NostrSections: React.FC<NostrSectionsProps> = ({
           );
         })}
       {playlists.size === 0 && (
-        <Grid item xs={12}><Typography>No hay Playlists disponibles.</Typography></Grid>
+        <Grid size={{xs:12}}><Typography>No hay Playlists disponibles.</Typography></Grid>
       )}
     </Grid>
   );
@@ -241,7 +241,7 @@ const NostrSections: React.FC<NostrSectionsProps> = ({
           const experienciaProfile = profiles.get(experiencia.pubkey) || null;
           const experienciaDisplayName = typeof experiencia.pubkey === 'string' ? getUserDisplayName(experiencia.pubkey) : '';
           return (
-            <Grid item xs={12} sm={6} md={4} key={`${experiencia.pubkey}:${dTag}`}>
+            <Grid size={{xs:12,sm:6,md:4}} key={`${experiencia.pubkey}:${dTag}`}>
               <Card elevation={2} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardHeader
                   avatar={getProfilePicture(experienciaProfile) ? (
@@ -268,7 +268,7 @@ const NostrSections: React.FC<NostrSectionsProps> = ({
           );
         })}
       {experiencias.size === 0 && (
-        <Grid item xs={12}><Typography>No hay Experiencias disponibles.</Typography></Grid>
+        <Grid size={{xs:12}}><Typography>No hay Experiencias disponibles.</Typography></Grid>
       )}
     </Grid>
   );

@@ -129,7 +129,7 @@ export const SubtitleManager: React.FC<SubtitleManagerProps> = ({ videoItemId })
           }}
         >
           <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12} md={8}>
+            <Grid size={{xs:12,md:8}}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 2 }}>
                 <Box sx={{ 
                   p: 2, 
@@ -155,7 +155,7 @@ export const SubtitleManager: React.FC<SubtitleManagerProps> = ({ videoItemId })
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{xs:12,md:4}}>
               <Stack spacing={2} direction={{ xs: 'column', sm: 'row', md: 'column' }}>
                 <Button
                   variant="contained"
@@ -341,7 +341,7 @@ export const SubtitleManager: React.FC<SubtitleManagerProps> = ({ videoItemId })
             
             <Grid container spacing={3}>
               {subtitles.map((subtitle: Subtitle) => (
-                <Grid item xs={12} lg={6} key={subtitle.id}>
+                <Grid size={{xs:12,lg:6}} key={subtitle.id}>
                   <SubtitleCard
                     subtitle={subtitle}
                     onToggleActive={handleToggleActive}

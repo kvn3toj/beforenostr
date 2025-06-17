@@ -44,7 +44,7 @@ export const GamificationDashboard: React.FC = () => {
 
       {/* User Stats */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
@@ -56,7 +56,7 @@ export const GamificationDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
@@ -68,7 +68,7 @@ export const GamificationDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
@@ -80,7 +80,7 @@ export const GamificationDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <Card>
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
@@ -96,7 +96,7 @@ export const GamificationDashboard: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Wallet Balances */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -126,7 +126,7 @@ export const GamificationDashboard: React.FC = () => {
         </Grid>
 
         {/* Active Challenges */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -159,7 +159,7 @@ export const GamificationDashboard: React.FC = () => {
         </Grid>
 
         {/* Recent Transactions */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -189,7 +189,7 @@ export const GamificationDashboard: React.FC = () => {
         </Grid>
 
         {/* My Challenges */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>

@@ -271,7 +271,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
 
       {/* Métricas principales */}
       <Grid container spacing={3} mb={4}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <MetricCard
             title="Mëritos Totales"
             value={playerMetrics.meritos}
@@ -281,7 +281,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
           />
         </Grid>
         
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <MetricCard
             title="Öndas Generadas"
             value={playerMetrics.ondas}
@@ -291,7 +291,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
           />
         </Grid>
         
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <MetricCard
             title="Nivel Actual"
             value={playerMetrics.level}
@@ -302,7 +302,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
           />
         </Grid>
         
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <MetricCard
             title="Racha Actual"
             value={playerMetrics.currentStreak}
@@ -316,7 +316,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
       {/* Progreso y estadísticas detalladas */}
       <Grid container spacing={3} mb={4}>
         {/* Progreso de nivel */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -352,7 +352,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
         </Grid>
 
         {/* Estadísticas de aprendizaje */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -408,7 +408,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
       {/* Logros y análisis */}
       <Grid container spacing={3}>
         {/* Logros recientes */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card>
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
@@ -455,7 +455,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
         </Grid>
 
         {/* Análisis de rendimiento */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -465,7 +465,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
               <Divider sx={{ mb: 2 }} />
               
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid size={{xs:6}}>
                   <Box textAlign="center">
                     <Typography variant="h4" color="primary" fontWeight="bold">
                       {derivedMetrics.learningEfficiency.toFixed(0)}%
@@ -476,7 +476,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
                   </Box>
                 </Grid>
                 
-                <Grid item xs={6}>
+                <Grid size={{xs:6}}>
                   <Box textAlign="center">
                     <Typography variant="h4" color="secondary" fontWeight="bold">
                       {derivedMetrics.avgTimePerVideo.toFixed(0)}m
@@ -487,7 +487,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
                   </Box>
                 </Grid>
                 
-                <Grid item xs={6}>
+                <Grid size={{xs:6}}>
                   <Box textAlign="center">
                     <Typography variant="h4" color="success.main" fontWeight="bold">
                       {derivedMetrics.meritOndasRatio.toFixed(1)}
@@ -498,7 +498,7 @@ export const PlayerMetricsDashboard: React.FC = () => {
                   </Box>
                 </Grid>
                 
-                <Grid item xs={6}>
+                <Grid size={{xs:6}}>
                   <Box textAlign="center">
                     <Typography variant="h4" color="warning.main" fontWeight="bold">
                       {derivedMetrics.recentAchievements}

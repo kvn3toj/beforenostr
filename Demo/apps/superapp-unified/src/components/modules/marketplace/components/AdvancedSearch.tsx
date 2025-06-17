@@ -687,7 +687,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 
             <Grid container spacing={3}>
               {/* Categoría */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12,md:6}}>
                 <Autocomplete
                   value={
                     filters.category
@@ -731,7 +731,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               </Grid>
 
               {/* Ubicación */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12,md:6}}>
                 <Autocomplete
                   value={filters.location}
                   onChange={(_, value) =>
@@ -756,7 +756,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               </Grid>
 
               {/* Rango de precios */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12,md:6}}>
                 <Typography gutterBottom>Rango de precios (ü)</Typography>
                 <Slider
                   value={filters.priceRange}
@@ -780,7 +780,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               </Grid>
 
               {/* Calificación mínima */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{xs:12,md:6}}>
                 <Typography gutterBottom>Calificación mínima</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   {[1, 2, 3, 4, 5].map((rating) => (
@@ -803,7 +803,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               </Grid>
 
               {/* Tags */}
-              <Grid item xs={12}>
+              <Grid size={{xs:12}}>
                 <Autocomplete
                   multiple
                   value={filters.tags}
@@ -830,7 +830,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               </Grid>
 
               {/* Switches */}
-              <Grid item xs={12}>
+              <Grid size={{xs:12}}>
                 <Stack direction="row" spacing={3} flexWrap="wrap">
                   <FormControlLabel
                     control={
@@ -858,7 +858,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               </Grid>
 
               {/* Ordenar por */}
-              <Grid item xs={12}>
+              <Grid size={{xs:12}}>
                 <Typography gutterBottom fontWeight="bold">
                   Ordenar por
                 </Typography>

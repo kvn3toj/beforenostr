@@ -249,7 +249,7 @@ const AyniMetrics: React.FC<{
         </Box>
 
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid size={{xs:6}}>
             <Box sx={{ textAlign: 'center', p: 1 }}>
               <Typography variant="h6" fontWeight="bold" color="primary.main">
                 {collaborationScore}
@@ -259,7 +259,7 @@ const AyniMetrics: React.FC<{
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={{xs:6}}>
             <Box sx={{ textAlign: 'center', p: 1 }}>
               <Typography variant="h6" fontWeight="bold" color="warning.main">
                 {communityRank}
@@ -361,7 +361,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
 
       {/* 💰 Tarjetas de balance principales */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <BalanceCard
             title="Balance Principal"
             amount={normalizedData.balance}
@@ -375,7 +375,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <BalanceCard
             title="ÜCoins CoomÜnity"
             amount={normalizedData.ucoins}
@@ -391,7 +391,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
 
       {/* 🌟 Mëritos y Öndas */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <motion.div
             onHoverStart={() => setHoveredCard('meritos')}
             onHoverEnd={() => setHoveredCard(null)}
@@ -427,7 +427,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
           </motion.div>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <motion.div
             onHoverStart={() => setHoveredCard('ondas')}
             onHoverEnd={() => setHoveredCard(null)}
@@ -463,7 +463,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
           </motion.div>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <Card sx={{ bgcolor: 'info.50', border: 1, borderColor: 'info.200' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -484,7 +484,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{xs:12,sm:6,md:3}}>
           <Card
             sx={{ bgcolor: 'purple.50', border: 1, borderColor: 'purple.200' }}
           >

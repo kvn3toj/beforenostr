@@ -255,7 +255,7 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
 
           {/* 🎯 Métricas principales */}
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid item xs={6} sm={3}>
+            <Grid size={{xs:6,sm:3}}>
               <Box textAlign="center">
                 <Typography
                   variant="h4"
@@ -278,7 +278,7 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} sm={3}>
+            <Grid size={{xs:6,sm:3}}>
               <Box textAlign="center">
                 <Typography variant="h4" fontWeight="bold" color="success.main">
                   {Math.round(userStats.ayniBalance * 100)}%
@@ -292,7 +292,7 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} sm={3}>
+            <Grid size={{xs:6,sm:3}}>
               <Box textAlign="center">
                 <Typography variant="h4" fontWeight="bold" color="warning.main">
                   {userStats.socialMeritos}
@@ -306,7 +306,7 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} sm={3}>
+            <Grid size={{xs:6,sm:3}}>
               <Box textAlign="center">
                 <Typography
                   variant="h4"
@@ -386,28 +386,28 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
               Elementos Sociales en Equilibrio
             </Typography>
             <Grid container spacing={2} justifyContent="center">
-              <Grid item>
+              <Grid>
                 <SocialElementIcon
                   element="comunicacion"
                   value={userStats.elementos.comunicacion}
                   color="#8b5cf6"
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <SocialElementIcon
                   element="empatia"
                   value={userStats.elementos.empatia}
                   color="#06b6d4"
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <SocialElementIcon
                   element="confianza"
                   value={userStats.elementos.confianza}
                   color="#78716c"
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <SocialElementIcon
                   element="inspiracion"
                   value={userStats.elementos.inspiracion}
@@ -426,7 +426,7 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
             Estado de la Comunidad
           </Typography>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={{xs:6}}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Group color="primary" />
                 <Box>
@@ -439,7 +439,7 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
                 </Box>
               </Stack>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{xs:6}}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Handshake color="success" />
                 <Box>
@@ -452,7 +452,7 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
                 </Box>
               </Stack>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{xs:6}}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <People color="secondary" />
                 <Box>
@@ -465,7 +465,7 @@ export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
                 </Box>
               </Stack>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{xs:6}}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <TrendingUp color="warning" />
                 <Box>

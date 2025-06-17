@@ -12,21 +12,21 @@ import {
   Tooltip,
   IconButton,
   Divider,
+
 } from '@mui/material';
 import {
   TrendingUp,
   WorkspacePremium,
   Group,
-  Schedule,
   Star,
   LocalFireDepartment,
   Psychology,
   MonetizationOn,
   EmojiEvents,
-  Timeline,
   Refresh,
   InfoOutlined,
 } from '@mui/icons-material';
+import { safeToLocaleString } from '../../../utils/numberUtils';
 
 interface ChallengeStatsProps {
   stats: {
@@ -131,7 +131,7 @@ const StatCard: React.FC<{
               component="div"
               sx={{
                 fontWeight: 700,
-                color: color,
+                color,
                 lineHeight: 1,
                 display: 'flex',
                 alignItems: 'center',
@@ -289,7 +289,7 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
 
       {/* Main Stats Grid */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={6} sm={3}>
+        <Grid size={{ xs: 6, sm: 3 }}>
           <StatCard
             title="Total Desafíos"
             value={stats.total}
@@ -298,7 +298,7 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
             tooltip="Número total de desafíos disponibles en la plataforma"
           />
         </Grid>
-        <Grid item xs={6} sm={3}>
+        <Grid size={{ xs: 6, sm: 3 }}>
           <StatCard
             title="Activos"
             value={stats.active}
@@ -308,7 +308,7 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
             tooltip="Desafíos actualmente disponibles para unirse"
           />
         </Grid>
-        <Grid item xs={6} sm={3}>
+        <Grid size={{ xs: 6, sm: 3 }}>
           <StatCard
             title="Participando"
             value={stats.participating}
@@ -318,10 +318,11 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
             tooltip="Desafíos en los que estás participando actualmente"
           />
         </Grid>
-        <Grid item xs={6} sm={3}>
+        <Grid size={{ xs: 6, sm: 3 }}>
           <StatCard
             title="Completados"
             value={stats.completed}
+            subtitle={`${completionRate.toFixed(1)}% tasa de finalización`}
             icon={<WorkspacePremium />}
             color="#9C27B0"
             trend="up"
@@ -341,7 +342,7 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
 
           <Grid container spacing={3} sx={{ mb: 4 }}>
             {/* Experience Progress */}
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Card sx={{ p: 3, textAlign: 'center', height: '100%' }}>
                 <Typography variant="h6" gutterBottom>
                   Nivel {userStats.level}
@@ -366,13 +367,13 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
             </Grid>
 
             {/* Rewards Summary */}
-            <Grid item xs={12} md={8}>
+            <Grid size={{ xs: 12, md: 8 }}>
               <Card sx={{ p: 3, height: '100%' }}>
                 <Typography variant="h6" gutterBottom>
                   💰 Recompensas Acumuladas
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid item xs={6} sm={3}>
+                  <Grid size={{ xs: 6, sm: 3 }}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Avatar
                         sx={{ bgcolor: 'warning.main', mx: 'auto', mb: 1 }}
@@ -380,12 +381,12 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
                         <WorkspacePremium />
                       </Avatar>
                       <Typography variant="h6" color="warning.main">
-                        {userStats.totalMerits.toLocaleString()}
+                        {safeToLocaleString(userStats.totalMerits)}
                       </Typography>
                       <Typography variant="caption">Mëritos</Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6} sm={3}>
+                  <Grid size={{ xs: 6, sm: 3 }}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Avatar
                         sx={{ bgcolor: 'success.main', mx: 'auto', mb: 1 }}
@@ -393,23 +394,23 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
                         <MonetizationOn />
                       </Avatar>
                       <Typography variant="h6" color="success.main">
-                        {userStats.totalLukas.toLocaleString()}
+                        {safeToLocaleString(userStats.totalLukas)}
                       </Typography>
                       <Typography variant="caption">Lükas</Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6} sm={3}>
+                  <Grid size={{ xs: 6, sm: 3 }}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Avatar sx={{ bgcolor: 'info.main', mx: 'auto', mb: 1 }}>
                         <Psychology />
                       </Avatar>
                       <Typography variant="h6" color="info.main">
-                        {userStats.totalOndas.toLocaleString()}
+                        {safeToLocaleString(userStats.totalOndas)}
                       </Typography>
                       <Typography variant="caption">Öndas</Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6} sm={3}>
+                  <Grid size={{ xs: 6, sm: 3 }}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Avatar
                         sx={{ bgcolor: 'secondary.main', mx: 'auto', mb: 1 }}
@@ -450,7 +451,7 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
               )}
             </Box>
             <Grid container spacing={3} alignItems="center">
-              <Grid item xs={12} md={8}>
+              <Grid size={{ xs: 12, md: 8 }}>
                 <Box sx={{ mb: 1 }}>
                   <Typography variant="body2" color="text.secondary">
                     Meta semanal: {userStats.weeklyProgress}% completada
@@ -471,7 +472,7 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
                   }}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Stack direction="row" spacing={2} justifyContent="center">
                   <Box sx={{ textAlign: 'center' }}>
                     <Typography variant="h5" color="primary.main">
@@ -498,40 +499,40 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
           🌍 Estadísticas de la Comunidad
         </Typography>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h4" color="primary.main">
-                {stats.totalParticipants?.toLocaleString() || '0'}
+                {safeToLocaleString(stats.totalParticipants)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Participantes totales
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h4" color="success.main">
-                {stats.successRate?.toFixed(1) || '0'}%
+                {safeToLocaleString(stats.successRate || 0)}%
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Tasa de éxito promedio
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h4" color="warning.main">
-                {stats.averageRating?.toFixed(1) || '0'}
+                {safeToLocaleString(stats.averageRating)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Calificación promedio
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h4" color="info.main">
-                {stats.totalPoints?.toLocaleString() || '0'}
+                {safeToLocaleString(stats.totalPoints)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Mëritos totales

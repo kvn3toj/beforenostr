@@ -54,6 +54,8 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
+        // ✅ FORZAR VIEWPORT DESKTOP para evitar layout móvil
+        viewport: { width: 1280, height: 720 }, // Asegurar que sea > 768px (breakpoint md)
         // Usar estado de autenticación guardado
         storageState: 'playwright/.auth/admin.json',
       },
@@ -63,6 +65,8 @@ export default defineConfig({
       name: 'firefox',
       use: { 
         ...devices['Desktop Firefox'],
+        // ✅ FORZAR VIEWPORT DESKTOP
+        viewport: { width: 1280, height: 720 },
         storageState: 'playwright/.auth/admin.json',
       },
       dependencies: ['setup'],
@@ -71,6 +75,8 @@ export default defineConfig({
       name: 'webkit',
       use: { 
         ...devices['Desktop Safari'],
+        // ✅ FORZAR VIEWPORT DESKTOP
+        viewport: { width: 1280, height: 720 },
         storageState: 'playwright/.auth/admin.json',
       },
       dependencies: ['setup'],

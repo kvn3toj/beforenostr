@@ -8,6 +8,10 @@ export { QuickActionsGrid } from './QuickActionsGrid';
 export { ModuleCards } from './ModuleCards';
 export { NotificationCenter } from './NotificationCenter';
 
+// 🚀 Phase 3: Advanced Visual Components
+export { AdvancedInsightsPanel } from './AdvancedInsightsPanel';
+export { AyniBalanceVisualization } from './AyniBalanceVisualization';
+
 // Tipos compartidos entre componentes
 export interface HomeComponentProps {
   isLoading?: boolean;

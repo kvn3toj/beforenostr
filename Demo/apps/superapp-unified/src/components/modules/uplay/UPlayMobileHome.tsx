@@ -291,6 +291,8 @@ const BackendVideoCard: React.FC<{
     // Vista completa para lista
     return (
       <Card
+        data-testid={`video-item-${video.id}`}
+        className="video-item"
         sx={{
           mb: 2,
           borderRadius: 3,
@@ -406,6 +408,8 @@ const BackendVideoCard: React.FC<{
   // Vista compacta para carrusel horizontal
   return (
     <Box
+      data-testid={`video-card-${video.id}`}
+      className="video-card"
       sx={{
         width: 140,
         flexShrink: 0,
@@ -583,47 +587,89 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   const { 
     data: backendVideos, 
     isLoading: isBackendLoading,
-    isError: isBackendError 
+    isError: isBackendError,
+    error: backendError
   } = useVideos();
 
   // Combinar estados de loading
   const isLoading = isBackendLoading;
 
-  // Log para debugging
+  // 🔧 LOGS DE DEBUG EXTENSIVOS PARA DIAGNOSTICAR EL PROBLEMA
   React.useEffect(() => {
-    console.log('🔥 DEBUG UPlayMobileHome:');
-    console.log('  - isBackendLoading:', isBackendLoading);
-    console.log('  - isBackendError:', isBackendError);
-    console.log('  - backendVideos:', backendVideos);
-    console.log('  - backendVideos length:', backendVideos?.length);
-  }, [isBackendLoading, isBackendError, backendVideos]);
+    console.log('[ÜPLAY DEBUG] ===== ESTADO DEL HOOK useVideos =====');
+    console.log('[ÜPLAY DEBUG] Is Loading:', isBackendLoading);
+    console.log('[ÜPLAY DEBUG] Is Error:', isBackendError);
+    console.log('[ÜPLAY DEBUG] Error Object:', backendError);
+    console.log('[ÜPLAY DEBUG] Data Received:', backendVideos);
+    console.log('[ÜPLAY DEBUG] Data Type:', typeof backendVideos);
+    console.log('[ÜPLAY DEBUG] Data is Array:', Array.isArray(backendVideos));
+    console.log('[ÜPLAY DEBUG] Data Length:', backendVideos?.length);
+    
+    if (backendVideos && Array.isArray(backendVideos)) {
+      console.log('[ÜPLAY DEBUG] First Video:', backendVideos[0]);
+      console.log('[ÜPLAY DEBUG] All Videos:', backendVideos);
+    }
+    
+    if (isBackendError) {
+      console.error('[ÜPLAY DEBUG] ❌ ERROR DETAILS:', {
+        error: backendError,
+        message: backendError?.message,
+        stack: backendError?.stack
+      });
+    }
+    
+    console.log('[ÜPLAY DEBUG] =====================================');
+  }, [isBackendLoading, isBackendError, backendVideos, backendError]);
 
   // Procesar videos del backend
   const processedVideos = React.useMemo(() => {
+    console.log('[ÜPLAY DEBUG] ===== PROCESANDO VIDEOS =====');
+    console.log('[ÜPLAY DEBUG] backendVideos raw:', backendVideos);
+    console.log('[ÜPLAY DEBUG] backendVideos type:', typeof backendVideos);
+    console.log('[ÜPLAY DEBUG] backendVideos isArray:', Array.isArray(backendVideos));
+    
     if (!backendVideos || !Array.isArray(backendVideos)) {
-      console.log('🔥 No hay datos del backend válidos');
+      console.log('[ÜPLAY DEBUG] ❌ No hay datos del backend válidos');
       return [];
     }
 
-    // Filtrar solo videos activos
-    const activeVideos = backendVideos.filter((video: any) => video.isActive);
+    console.log('[ÜPLAY DEBUG] Total videos recibidos:', backendVideos.length);
     
-    console.log('🔥 Videos activos del backend:', activeVideos.length);
+    // Filtrar solo videos activos
+    const activeVideos = backendVideos.filter((video: any) => {
+      console.log('[ÜPLAY DEBUG] Video:', video.title, 'isActive:', video.isActive);
+      return video.isActive;
+    });
+    
+    console.log('[ÜPLAY DEBUG] ✅ Videos activos filtrados:', activeVideos.length);
+    console.log('[ÜPLAY DEBUG] Videos activos:', activeVideos);
+    console.log('[ÜPLAY DEBUG] =====================================');
+    
     return activeVideos as BackendVideo[];
   }, [backendVideos]);
 
   // Agrupar videos por playlist para mejor organización
   const videosByPlaylist = React.useMemo(() => {
+    console.log('[ÜPLAY DEBUG] ===== AGRUPANDO POR PLAYLIST =====');
+    console.log('[ÜPLAY DEBUG] processedVideos para agrupar:', processedVideos);
+    console.log('[ÜPLAY DEBUG] processedVideos length:', processedVideos.length);
+    
     const grouped: Record<string, BackendVideo[]> = {};
     
     processedVideos.forEach((video) => {
       const playlistName = video.playlist?.name || 'Sin Playlist';
+      console.log('[ÜPLAY DEBUG] Video:', video.title, 'Playlist:', playlistName);
+      
       if (!grouped[playlistName]) {
         grouped[playlistName] = [];
       }
       grouped[playlistName].push(video);
     });
 
+    console.log('[ÜPLAY DEBUG] ✅ Videos agrupados por playlist:', grouped);
+    console.log('[ÜPLAY DEBUG] Número de playlists:', Object.keys(grouped).length);
+    console.log('[ÜPLAY DEBUG] =====================================');
+    
     return grouped;
   }, [processedVideos]);
 
@@ -907,7 +953,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
           // Desktop Layout - Grid-based with improved organization
           <Grid container spacing={4}>
             {/* Left Column - Continue Watching & Featured */}
-            <Grid item xs={12} md={8}>
+            <Grid size={{xs:12,md:8}}>
               {/* Continuar viendo - Solo si hay videos del backend */}
               {processedVideos.length > 0 && (
                 <Box sx={{ mb: 4 }}>
@@ -938,7 +984,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     onClick={handleContinueWatching}
                   >
                     <Grid container>
-                      <Grid item xs={5}>
+                      <Grid size={{xs:5}}>
                         <VideoThumbnail 
                           width="100%" 
                           height={200} 
@@ -946,7 +992,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                           thumbnailUrl={processedVideos[0]?.thumbnailUrl}
                         />
                       </Grid>
-                      <Grid item xs={7}>
+                      <Grid size={{xs:7}}>
                         <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                           <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
                             {processedVideos[0]?.title || 'Video Destacado'}
@@ -975,7 +1021,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
             </Grid>
 
             {/* Right Column - Stats & Progress */}
-            <Grid item xs={12} md={4}>
+            <Grid size={{xs:12,md:4}}>
               {/* User Stats Card - Enhanced for Desktop */}
               <Card sx={{ borderRadius: 3, mb: 3 }}>
                 <Box
@@ -989,7 +1035,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     📊 Tu Progreso
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid size={{xs:6}}>
                       <Box textAlign="center">
                         <Typography variant="h3" sx={{ fontWeight: 800 }}>
                           {enhancedUserStats.completedVideos}
@@ -999,7 +1045,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{xs:6}}>
                       <Box textAlign="center">
                         <Typography variant="h3" sx={{ fontWeight: 800 }}>
                           {Math.floor(enhancedUserStats.totalWatchTime / 3600)}h
@@ -1142,6 +1188,14 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
         )}
 
         {/* Videos disponibles por playlist */}
+        {(() => {
+          console.log('[ÜPLAY DEBUG] ===== RENDERIZANDO VIDEOS POR PLAYLIST =====');
+          console.log('[ÜPLAY DEBUG] videosByPlaylist:', videosByPlaylist);
+          console.log('[ÜPLAY DEBUG] Object.entries(videosByPlaylist):', Object.entries(videosByPlaylist));
+          console.log('[ÜPLAY DEBUG] Object.entries length:', Object.entries(videosByPlaylist).length);
+          console.log('[ÜPLAY DEBUG] =====================================');
+          return null;
+        })()}
         {Object.entries(videosByPlaylist).map(([playlistName, videos]) => (
           <Box key={playlistName} sx={{ mb: 4 }}>
             <Typography
@@ -1252,7 +1306,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
           <Collapse in={showStats}>
             <CardContent sx={{ p: 3 }}>
               <Grid container spacing={3}>
-                <Grid item xs={6}>
+                <Grid size={{xs:6}}>
                   <Box textAlign="center">
                     <Typography
                       variant="h4"
@@ -1266,7 +1320,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{xs:6}}>
                   <Box textAlign="center">
                     <Typography
                       variant="h4"
@@ -1280,7 +1334,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{xs:6}}>
                   <Box textAlign="center">
                     <Typography
                       variant="h4"
@@ -1294,7 +1348,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{xs:6}}>
                   <Box textAlign="center">
                     <Typography
                       variant="h4"

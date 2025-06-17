@@ -534,7 +534,7 @@ const MarketplaceMain: React.FC = () => {
             <Skeleton variant="text" width={250} height={40} sx={{ mb: 3 }} />
             <Grid container spacing={2}>
               {Array.from({ length: 8 }).map((_, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
+                <Grid size={{xs:12,sm:6,md:3}} key={index}>
                   <Skeleton
                     variant="rectangular"
                     height={100}
@@ -548,7 +548,7 @@ const MarketplaceMain: React.FC = () => {
           {/* Products grid skeleton */}
           <Grid container spacing={{ xs: 2, sm: 3, md: 3 }}>
             {Array.from({ length: 12 }).map((_, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Grid size={{xs:12,sm:6,md:4,lg:3}} key={index}>
                 <Box>
                   <Skeleton
                     variant="rectangular"
@@ -679,7 +679,7 @@ const MarketplaceMain: React.FC = () => {
                 className="animate-scale-in"
               >
                 <Grid container spacing={3}>
-                  <Grid item xs={6} sm={3}>
+                  <Grid size={{xs:6,sm:3}}>
                     <Box
                       textAlign="center"
                       sx={{ position: 'relative', zIndex: 1 }}
@@ -728,7 +728,7 @@ const MarketplaceMain: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6} sm={3}>
+                  <Grid size={{xs:6,sm:3}}>
                     <Box
                       textAlign="center"
                       sx={{ position: 'relative', zIndex: 1 }}
@@ -779,7 +779,7 @@ const MarketplaceMain: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6} sm={3}>
+                  <Grid size={{xs:6,sm:3}}>
                     <Box
                       textAlign="center"
                       sx={{ position: 'relative', zIndex: 1 }}
@@ -828,7 +828,7 @@ const MarketplaceMain: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6} sm={3}>
+                  <Grid size={{xs:6,sm:3}}>
                     <Box
                       textAlign="center"
                       sx={{ position: 'relative', zIndex: 1 }}
@@ -921,7 +921,7 @@ const MarketplaceMain: React.FC = () => {
           </Typography>
           <Grid container spacing={2}>
             {impactCategories.map((category, index) => (
-              <Grid item xs={12} sm={6} md={3} key={category.id}>
+              <Grid size={{xs:12,sm:6,md:3}} key={category.id}>
                 <Fade in timeout={400 + index * 100}>
                   <Card
                     onClick={() => {
@@ -1081,12 +1081,12 @@ const MarketplaceMain: React.FC = () => {
           
           <Grid container spacing={3}>
             {/* UnitsWallet */}
-            <Grid item xs={12} md={4}>
+            <Grid size={{xs:12,md:4}}>
               <UnitsWallet userId={user?.id || ''} />
             </Grid>
             
             {/* LETS Quick Actions */}
-            <Grid item xs={12} md={8}>
+            <Grid size={{xs:12,md:8}}>
               <Card sx={{ p: 3, height: '100%' }}>
                 <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
                   💫 Intercambios Locales con Ünits
@@ -1096,7 +1096,7 @@ const MarketplaceMain: React.FC = () => {
                 </Typography>
                 
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{xs:12,sm:6}}>
                                          <Button
                        fullWidth
                        variant="outlined"
@@ -1114,7 +1114,7 @@ const MarketplaceMain: React.FC = () => {
                        Ver Ofertas LETS
                      </Button>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{xs:12,sm:6}}>
                                          <Button
                        fullWidth
                        variant="contained"
@@ -1363,7 +1363,7 @@ const MarketplaceMain: React.FC = () => {
         {isLoading ? (
           <Grid container spacing={{ xs: 2, sm: 3, md: 3 }}>
             {Array.from({ length: 8 }).map((_, index) => (
-              <Grid item xs={12} sm={6} md={4} xl={3} key={index}>
+              <Grid size={{xs:12,sm:6,md:4,xl:3}} key={index}>
                 <Skeleton
                   variant="rectangular"
                   height={{ xs: 320, sm: 300, md: 280 }}
@@ -1420,19 +1420,12 @@ const MarketplaceMain: React.FC = () => {
             className="marketplace-grid-container marketplace-grid-enhanced"
           >
             {itemsToDisplay.map((item, index) => (
-              <Grid
-                item
-                xs={6}
-                sm={6}
-                md={6}
-                lg={6}
-                xl={6}
-                key={item.id}
+              <Grid size={{xs:6,sm:6,md:6,lg:6,xl:6}} key={item.id}
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
                   height: 'auto',
-                  '& > div': {
+                  '&> div': {
                     height: '100%',
                     minHeight: 'inherit',
                   },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Typography,
   Grid,
@@ -6,7 +6,8 @@ import {
   LinearProgress,
   Chip,
   Stack,
-  Avatar,
+  Tooltip,
+  IconButton,
 } from '@mui/material';
 import {
   AutoAwesome,
@@ -17,12 +18,21 @@ import {
   Waves,
   Park,
   Air,
-  Star,
+  Refresh,
+  TrendingUp,
+  WifiOff,
 } from '@mui/icons-material';
 
-// Import our new design system components
+// Import our enhanced design system components
 import { AyniCard } from '../ui';
-import { cn, getElementColor, elementColors } from '../../utils/styles';
+import { 
+  MetricsRelationships, 
+  AdvancedElementalProgress,
+  EnhancedLoadingState 
+} from '../ui/enhanced';
+import { useElementalBalance } from '../../hooks/home';
+import { cn, elementColors } from '../../utils/styles';
+import { safeToLocaleString } from '../../utils/numberUtils';
 
 interface ElementStats {
   fuego: number;
@@ -42,76 +52,112 @@ interface AyniMetricsProps {
   elementos: ElementStats;
   isLoading?: boolean;
   isConnected?: boolean;
+  onRefresh?: () => void;
 }
 
-// Element configuration with CoomÜnity philosophy
+// Enhanced element configuration with CoomÜnity philosophy
 const elementConfig = {
   fuego: {
     name: 'Fuego',
     icon: <LocalFireDepartment />,
     color: elementColors.fuego.primary,
-    description: 'Pasión y acción',
+    description: 'Pasión y acción transformadora',
+    keywords: ['Creatividad', 'Liderazgo', 'Innovación'],
   },
   agua: {
     name: 'Agua',
     icon: <Waves />,
     color: elementColors.agua.primary,
-    description: 'Fluir y adaptabilidad',
+    description: 'Fluir y adaptabilidad consciente',
+    keywords: ['Empatía', 'Colaboración', 'Flexibilidad'],
   },
   tierra: {
     name: 'Tierra',
     icon: <Park />,
     color: elementColors.tierra.primary,
-    description: 'Estabilidad y confianza',
+    description: 'Estabilidad y confianza sólida',
+    keywords: ['Responsabilidad', 'Perseverancia', 'Fundamentos'],
   },
   aire: {
     name: 'Aire',
     icon: <Air />,
     color: elementColors.aire.primary,
-    description: 'Comunicación e ideas',
+    description: 'Comunicación e ideas elevadas',
+    keywords: ['Visión', 'Comunicación', 'Inspiración'],
   },
 };
 
-const ElementIcon: React.FC<{
+const EnhancedElementIcon: React.FC<{
   element: keyof typeof elementConfig;
   value: number;
-}> = ({ element, value }) => {
+  isHovered: boolean;
+  onHover: (element: keyof typeof elementConfig | null) => void;
+}> = ({ element, value, isHovered, onHover }) => { // eslint-disable-line no-unused-vars
   const elementData = elementConfig[element];
 
   return (
-    <Box className="text-center relative">
-      <Box
-        className={cn(
-          "w-16 h-16 rounded-full flex items-center justify-center relative mb-2",
-          "cursor-pointer transition-transform duration-200 hover:scale-105"
-        )}
-        style={{
-          background: `conic-gradient(${elementData.color} ${value * 3.6}deg, ${elementData.color}20 0deg)`,
-        }}
-      >
-        <Box
-          className={cn(
-            "w-13 h-13 rounded-full bg-white flex items-center justify-center",
-            "text-2xl"
-          )}
-          style={{ color: elementData.color }}
-        >
-          {elementData.icon}
+    <Tooltip
+      title={
+        <Box className="p-2">
+          <Typography variant="subtitle2" className="font-bold mb-1">
+            {elementData.name} - {value}%
+          </Typography>
+          <Typography variant="caption" className="block mb-2">
+            {elementData.description}
+          </Typography>
+          <Box className="flex flex-wrap gap-1">
+            {elementData.keywords.map((keyword) => (
+              <Chip
+                key={keyword}
+                label={keyword}
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: '0.7rem', height: 20 }}
+              />
+            ))}
+          </Box>
         </Box>
+      }
+      arrow
+      placement="top"
+    >
+      <Box 
+        className="text-center relative cursor-pointer"
+        onMouseEnter={() => onHover(element)}
+        onMouseLeave={() => onHover(null)}
+      >
+        <AdvancedElementalProgress
+          element={element}
+          progress={value}
+          size="md"
+          animated={true}
+          glowEffect={isHovered}
+          showLabel={false}
+          className={cn(
+            "transition-all duration-300",
+            isHovered && "scale-110"
+          )}
+        />
+        <Typography
+          variant="caption"
+          className={cn(
+            "coomunity-caption font-bold capitalize block mb-1 transition-colors",
+            isHovered ? "text-coomunity-700" : "text-coomunity-600"
+          )}
+        >
+          {elementData.name}
+        </Typography>
+        <Typography 
+          variant="caption" 
+          className={cn(
+            "coomunity-caption transition-colors",
+            isHovered ? "text-coomunity-600" : "text-coomunity-500"
+          )}
+        >
+          {value}%
+        </Typography>
       </Box>
-      <Typography
-        variant="caption"
-        className="coomunity-caption font-bold capitalize block mb-1"
-      >
-        {elementData.name}
-      </Typography>
-      <Typography 
-        variant="caption" 
-        className="coomunity-caption text-coomunity-500"
-      >
-        {value}%
-      </Typography>
-    </Box>
+    </Tooltip>
   );
 };
 
@@ -126,243 +172,273 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
   elementos,
   isLoading = false,
   isConnected = true,
+  onRefresh,
 }) => {
+  const [hoveredElement, setHoveredElement] = useState<keyof typeof elementConfig | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Convert elementos to the format expected by useElementalBalance
+  const elementalData = {
+    tierra: elementos.tierra,
+    agua: elementos.agua,
+    fuego: elementos.fuego,
+    aire: elementos.aire,
+  };
+
+  const elementalBalance = useElementalBalance(elementalData, ondas, meritos);
+
+  const handleRefresh = async () => {
+    if (onRefresh && !isRefreshing) {
+      setIsRefreshing(true);
+      await onRefresh();
+      setTimeout(() => setIsRefreshing(false), 1000);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <AyniCard className="p-6">
+        <EnhancedLoadingState 
+          message="Calculando tu balance Ayni..." 
+          showMessage={true}
+        />
+      </AyniCard>
+    );
+  }
+
   return (
-    <AyniCard
-      className={cn(
-        "h-full relative overflow-hidden",
-        "bg-gradient-to-br from-coomunity-50 via-white to-purple-50"
-      )}
-    >
-      {/* Decorative background elements using design tokens */}
-      <Box
-        className={cn(
-          "absolute -top-24 -right-24 w-48 h-48 rounded-full",
-          "bg-gradient-radial from-coomunity-100/20 to-transparent"
-        )}
-      />
-
-      <Box className="p-6 relative z-10 space-y-6">
-        {/* Header section with design tokens */}
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar
-            className={cn(
-              "w-12 h-12 bg-gradient-coomunity"
-            )}
-          >
-            <AutoAwesome />
-          </Avatar>
-          <Box className="flex-1">
-            <Typography 
-              variant="h5" 
-              className="coomunity-h5 font-bold text-coomunity-900"
-            >
-              Tu Progreso CoomÜnity
-            </Typography>
-            <Typography 
-              variant="body2" 
-              className="coomunity-body-sm text-coomunity-600"
-            >
-              Balance Ayni y Contribución al Bien Común
-            </Typography>
-          </Box>
+    <AyniCard className="p-6 space-y-6 relative overflow-hidden">
+      {/* Enhanced header with connection status */}
+      <Box className="flex items-center justify-between">
+        <Typography 
+          variant="h5" 
+          className="coomunity-h5 font-bold text-coomunity-800 flex items-center gap-2"
+        >
+          <AutoAwesome className="text-coomunity-600" />
+          Tu Balance Ayni
+        </Typography>
+        
+        <Stack direction="row" spacing={1} alignItems="center">
           {!isConnected && (
-            <Chip
-              label="Offline"
-              color="warning"
-              size="small"
-              variant="outlined"
-              className="font-medium"
-            />
+            <Tooltip title="Sin conexión - Datos locales">
+              <WifiOff className="text-orange-500" fontSize="small" />
+            </Tooltip>
           )}
+          
+          <Tooltip title="Actualizar métricas">
+            <IconButton
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              size="small"
+              className={cn(
+                "transition-all duration-300",
+                isRefreshing && "animate-spin"
+              )}
+            >
+              <Refresh fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Stack>
+      </Box>
 
-        {/* Main metrics using design tokens */}
+      {/* Enhanced metrics grid */}
+      <Box className="space-y-6">
         <Grid container spacing={3}>
-          <Grid item xs={6} sm={3}>
-            <Box className="text-center">
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Box className="text-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <Typography
                 variant="h3"
                 className={cn(
                   "coomunity-h3 font-bold text-gradient-coomunity",
-                  "flex items-center justify-center"
+                  "flex items-center justify-center hover-lift"
                 )}
               >
-                {ondas.toLocaleString()}
-              </Typography>
-              <Typography
-                variant="body2"
-                className="coomunity-body-sm text-coomunity-700 font-bold"
-              >
-                Öndas Acumuladas
+                {safeToLocaleString(ondas)}
+                <Box className="ml-2">
+                  <AutoAwesome sx={{ fontSize: 28, color: '#6366f1' }} />
+                </Box>
               </Typography>
               <Typography 
                 variant="caption" 
-                className="coomunity-caption text-coomunity-500"
+                className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
               >
-                Energía vibracional
+                Öndas
               </Typography>
             </Box>
           </Grid>
-          
-          <Grid item xs={6} sm={3}>
-            <Box className="text-center">
+
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Box className="text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <Typography
                 variant="h3"
                 className={cn(
-                  "coomunity-h3 font-bold text-gold-600",
-                  "flex items-center justify-center gap-2"
+                  "coomunity-h3 font-bold text-gradient-coomunity",
+                  "flex items-center justify-center hover-lift"
                 )}
               >
-                <EmojiEvents className="text-3xl" />
-                {meritos}
+                {safeToLocaleString(meritos)}
+                <Box className="ml-2">
+                  <EmojiEvents sx={{ fontSize: 28, color: '#f59e0b' }} />
+                </Box>
               </Typography>
-              <Typography
-                variant="body2"
-                className="coomunity-body-sm text-coomunity-700 font-bold"
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
               >
                 Mëritos
               </Typography>
-              <Typography 
-                variant="caption" 
-                className="coomunity-caption text-coomunity-500"
-              >
-                Logros por Bien Común
-              </Typography>
             </Box>
           </Grid>
-          
-          <Grid item xs={6} sm={3}>
-            <Box className="text-center">
+
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Box className="text-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
               <Typography
                 variant="h3"
                 className={cn(
-                  "coomunity-h3 font-bold text-green-600",
-                  "flex items-center justify-center gap-2"
+                  "coomunity-h3 font-bold text-gradient-coomunity",
+                  "flex items-center justify-center hover-lift"
                 )}
               >
-                <Favorite className="text-3xl" />
-                {Math.round(balanceAyni * 100)}%
-              </Typography>
-              <Typography
-                variant="body2"
-                className="coomunity-body-sm text-coomunity-700 font-bold"
-              >
-                Balance Ayni
+                {safeToLocaleString(bienComunContributions)}
+                <Box className="ml-2">
+                  <Favorite sx={{ fontSize: 28, color: '#ef4444' }} />
+                </Box>
               </Typography>
               <Typography 
                 variant="caption" 
-                className="coomunity-caption text-coomunity-500"
-              >
-                Dar y recibir
-              </Typography>
-            </Box>
-          </Grid>
-          
-          <Grid item xs={6} sm={3}>
-            <Box className="text-center">
-              <Typography
-                variant="h3"
-                className={cn(
-                  "coomunity-h3 font-bold text-red-600",
-                  "flex items-center justify-center gap-2"
-                )}
-              >
-                <Psychology className="text-3xl" />
-                {bienComunContributions}
-              </Typography>
-              <Typography
-                variant="body2"
-                className="coomunity-body-sm text-coomunity-700 font-bold"
+                className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
               >
                 Bien Común
               </Typography>
+            </Box>
+          </Grid>
+
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Box className="text-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <Typography
+                variant="h3"
+                className={cn(
+                  "coomunity-h3 font-bold",
+                  balanceAyni >= 80 ? "text-green-600" : 
+                  balanceAyni >= 60 ? "text-yellow-600" : "text-red-600",
+                  "flex items-center justify-center hover-lift"
+                )}
+              >
+                {safeToLocaleString(balanceAyni)}%
+                <Box className="ml-2">
+                  <Psychology sx={{ fontSize: 28 }} />
+                </Box>
+              </Typography>
               <Typography 
                 variant="caption" 
-                className="coomunity-caption text-coomunity-500"
+                className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
               >
-                Contribuciones
+                Balance Ayni
               </Typography>
             </Box>
           </Grid>
         </Grid>
 
-        {/* Level progress using design tokens */}
-        <Box className="space-y-3">
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Chip
-              label={ayniLevel}
-              color="primary"
-              variant="outlined"
-              className={cn(
-                "font-bold bg-gradient-to-r from-coomunity-50 to-purple-50",
-                "border-coomunity-300"
-              )}
-            />
+        {/* Enhanced Ayni level progress */}
+        <Box className="space-y-3 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography 
-              variant="body2" 
-              className="coomunity-body-sm text-coomunity-600"
+              variant="body1" 
+              className="coomunity-body1 font-bold text-coomunity-800"
             >
-              Progreso a <strong className="text-coomunity-800">{nextLevel}</strong>
+              Nivel Ayni: {ayniLevel}
             </Typography>
+            <Chip
+              label={`Próximo: ${nextLevel}`}
+              size="small"
+              variant="outlined"
+              className="font-medium hover-lift"
+              icon={<TrendingUp />}
+            />
           </Stack>
-          
-          <LinearProgress
-            variant="determinate"
-            value={ayniProgress}
-            className="h-3 rounded-full"
-            sx={{
-              backgroundColor: 'var(--color-coomunity-100)',
-              '& .MuiLinearProgress-bar': {
-                background: 'linear-gradient(90deg, var(--color-coomunity-500), var(--color-coomunity-600))',
-                borderRadius: '6px',
-              },
-            }}
-          />
-          
-          <Typography
-            variant="caption"
-            className="coomunity-caption text-coomunity-500 block"
-          >
-            {ayniProgress}% completado • Continúa contribuyendo al Bien Común
-          </Typography>
+          <Box className="relative">
+            <LinearProgress
+              variant="determinate"
+              value={ayniProgress}
+              className={cn(
+                "h-3 rounded-full bg-coomunity-100",
+                "smooth-transition hover-lift"
+              )}
+              sx={{
+                '& .MuiLinearProgress-bar': {
+                  background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%)',
+                  borderRadius: '9999px',
+                },
+              }}
+            />
+            <Typography
+              variant="caption"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-white font-bold text-xs"
+            >
+              {safeToLocaleString(ayniProgress)}%
+            </Typography>
+          </Box>
         </Box>
 
-        {/* Elemental balance using design tokens */}
-        <Box className="space-y-4">
-          <Typography
-            variant="subtitle1"
-            className="coomunity-h6 font-bold text-coomunity-900"
+        {/* Enhanced elemental balance section */}
+        <Box className="space-y-4 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <Typography 
+            variant="h6" 
+            className="coomunity-h6 font-bold text-coomunity-800 text-center"
           >
-            Equilibrio Elemental
+            Balance Elemental
           </Typography>
           
           <Grid container spacing={2} justifyContent="center">
-            {Object.entries(elementos).map(([elemento, valor]) => (
-              <Grid item key={elemento}>
-                <ElementIcon 
-                  element={elemento as keyof typeof elementConfig} 
-                  value={valor} 
+            {(Object.keys(elementConfig) as Array<keyof typeof elementConfig>).map((element) => (
+              <Grid size={{ xs: 3 }} key={element}>
+                <EnhancedElementIcon
+                  element={element}
+                  value={elementos[element]}
+                  isHovered={hoveredElement === element}
+                  onHover={setHoveredElement}
                 />
               </Grid>
             ))}
           </Grid>
-          
-          <Typography
-            variant="caption"
-            className={cn(
-              "coomunity-caption text-coomunity-500 block text-center",
-              "leading-relaxed"
-            )}
-          >
-            Los cuatro elementos representan diferentes aspectos de tu
-            desarrollo personal y contribución a la comunidad
-          </Typography>
         </Box>
+
+        {/* Enhanced metrics relationships */}
+        <Box className="animate-fade-in" style={{ animationDelay: '0.7s' }}>
+          <MetricsRelationships
+            ondas={ondas}
+            meritos={meritos}
+            ayniBalance={balanceAyni / 100}
+            className="hover-lift"
+          />
+        </Box>
+
+        {/* Enhanced balance insights */}
+        {elementalBalance.recommendations && elementalBalance.recommendations.length > 0 && (
+          <Box 
+            className={cn(
+              "p-4 rounded-xl border-l-4 animate-fade-in",
+              "bg-gradient-subtle hover-lift smooth-transition"
+            )}
+            style={{ 
+              borderLeftColor: elementConfig[elementalBalance.dominantElement].color,
+              animationDelay: '0.8s'
+            }}
+          >
+            <Typography 
+              variant="body2" 
+              className="coomunity-body-sm font-medium text-coomunity-700 mb-2"
+            >
+              💡 Insight Elemental
+            </Typography>
+            <Typography 
+              variant="body2" 
+              className="coomunity-body-sm text-coomunity-600"
+            >
+              {elementalBalance.recommendations[0]}
+            </Typography>
+          </Box>
+        )}
       </Box>
     </AyniCard>
   );

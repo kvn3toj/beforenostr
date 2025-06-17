@@ -8,10 +8,12 @@ import { Toaster } from 'sonner';
 // Contexts
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { LetsEducationProvider } from './contexts/LetsEducationContext';
 
 // Route Protection
 import { ProtectedRoute } from './components/ProtectedRoute';
 import ErrorBoundary from './components/ui/ErrorBoundary';
+import { BuilderIOStatus } from './components/ui';
 
 // Lazy Components
 import { 
@@ -60,21 +62,15 @@ const AppRoutes: React.FC = () => {
       <Route element={<ProtectedRoute />}>
         {/* Main Pages */}
         <Route path="/" element={<LazyPages.HomePage />} />
-        <Route path="/marketplace" element={<LazyPages.MarketplacePage />} />
+        <Route path="/marketplace" element={<LazyPages.Marketplace />} />
         <Route path="/uplay" element={<LazyPages.UPlayPage />} />
-        <Route path="/social" element={<LazyPages.SocialPage />} />
+        <Route path="/social" element={<LazyPages.Social />} />
         <Route path="/profile" element={<LazyPages.ProfilePage />} />
         <Route path="/wallet" element={<LazyPages.WalletPage />} />
-        
-        {/* 📊 Analytics & Data Pages */}
-        <Route path="/analytics" element={<LazyPages.AnalyticsPage />} />
         
         {/* 🎯 Challenge & Group Pages */}
         <Route path="/challenges" element={<LazyPages.ChallengesPage />} />
         <Route path="/groups" element={<LazyPages.GroupsPage />} />
-        
-        {/* 🌍 Mundos Page */}
-        <Route path="/mundos" element={<LazyPages.MundosPage />} />
         
         {/* 🎥 Video/UPlay Routes */}
         <Route path="/uplay/video/:videoId" element={<LazyPages.UPlayVideoPlayer />} />
@@ -84,29 +80,19 @@ const AppRoutes: React.FC = () => {
         <Route path="/videos" element={<LazyPages.VideoHome />} />
         <Route path="/video/:videoId" element={<LazyPages.VideoPlayer />} />
         
-        {/* 🛒 Marketplace Routes */}
+        {/* 🏪 Marketplace Routes - Módulo principal de intercambio */}
         <Route path="/marketplace/test" element={<LazyPages.MarketplaceTest />} />
-        <Route path="/marketplace/product/:productId" element={<LazyPages.ProductDetail />} />
-        <Route path="/product/:productId" element={<LazyPages.ProductDetails />} />
         
-        {/* 👥 Social Routes */}
-        <Route path="/social/chat" element={<LazyPages.SocialChat />} />
-        <Route path="/social/feed" element={<LazyPages.SocialFeed />} />
+        {/* 🔄 LETS Routes - Módulo independiente de intercambio local */}
+        <Route path="/lets" element={<LazyPages.LetsPage />} />
+        <Route path="/lets/analytics" element={<LazyPages.LetsAnalyticsDashboard />} />
         
         {/* 🎯 Challenge Routes */}
         <Route path="/challenges/:challengeId" element={<LazyPages.ChallengeDetailPage />} />
         
-        {/* 🔧 Admin/Special Routes */}
-        <Route path="/admin/audit-logs" element={<LazyPages.AuditLogsPage />} />
-        <Route path="/beta-register" element={<LazyPages.BetaRegister />} />
-        <Route path="/pwa-demo" element={<LazyPages.PWADemo />} />
-        <Route path="/home-alt" element={<LazyPages.HomePageAlternative />} />
-        
-        {/* 🔄 LETS Routes */}
-        <Route path="/lets" element={<LazyPages.LetsPage />} />
-        <Route path="/lets/marketplace" element={<LazyPages.LetsMarketplace />} />
-        <Route path="/lets/analytics" element={<LazyPages.LetsAnalyticsDashboard />} />
-        <Route path="/marketplace/lets" element={<LazyPages.LetsMarketplace />} />
+        {/* 👥 Social Routes */}
+        <Route path="/social/chat" element={<LazyPages.SocialChat />} />
+        <Route path="/social/feed" element={<LazyPages.SocialFeed />} />
         
         {/* Special Pages */}
         <Route path="/design-system" element={<LazyPages.DesignSystemShowcase />} />
@@ -116,6 +102,11 @@ const AppRoutes: React.FC = () => {
         {/* Settings */}
         <Route path="/settings" element={<LazyPages.SettingsPage />} />
         <Route path="/help" element={<LazyPages.HelpPage />} />
+        
+        {/* PWA Demo */}
+        <Route path="/pwa-demo" element={<LazyPages.PWADemo />} />
+        <Route path="/beta-register" element={<LazyPages.BetaRegister />} />
+        <Route path="/home-alt" element={<LazyPages.HomePageAlternative />} />
       </Route>
       
       {/* 404 - Debe estar fuera de las rutas protegidas */}
@@ -136,9 +127,11 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthProvider>
-            <CssBaseline />
+            <LetsEducationProvider>
+              <CssBaseline />
               <Router>
                 <RoutePreloader />
+                <BuilderIOStatus />
                 <Box
                   sx={{
                     minHeight: '100vh',
@@ -169,6 +162,7 @@ const App: React.FC = () => {
                   <ReactQueryDevtools initialIsOpen={false} />
                 )}
               </Router>
+            </LetsEducationProvider>
           </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>
