@@ -69,7 +69,7 @@ export const useUnitsTransactions = (userId?: string, filters?: {
   return useQuery({
     queryKey: ['units-transactions', userId, filters],
     queryFn: async (): Promise<UnitsTransaction[]> => {
-      const endpoint = userId ? `/lets/transactions/user/${userId}` : '/lets/transactions';
+      const endpoint = userId ? `/lets/history/${userId}` : '/lets/history';
       const response = await apiService.get(endpoint, { params: filters });
       return response.data || response;
     },

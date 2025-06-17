@@ -12,4 +12,7 @@ export { useTopInteractedContentQuery } from './useTopInteractedContentQuery';
 export { useLeastViewedMundosQuery } from './useLeastViewedMundosQuery';
 export { useLeastViewedPlaylistsQuery } from './useLeastViewedPlaylistsQuery';
 export { useLeastInteractedMundosQuery } from './useLeastInteractedMundosQuery';
-export { useLeastInteractedPlaylistsQuery } from './useLeastInteractedPlaylistsQuery'; 
+export { useLeastInteractedPlaylistsQuery } from './useLeastInteractedPlaylistsQuery';
+
+// 🔥 HOOK PRINCIPAL PARA DASHBOARD USTATS
+export { useDashboardAnalytics } from './useDashboardAnalytics'; 

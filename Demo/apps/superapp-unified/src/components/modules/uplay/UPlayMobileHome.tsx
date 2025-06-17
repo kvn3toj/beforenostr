@@ -74,6 +74,9 @@ import {
 // 🔥 Hook para datos reales del backend
 import { useVideos } from '../../../hooks/useRealBackendData';
 
+// 🌌 IMPORT DEL NUEVO DESIGN SYSTEM CÓSMICO
+import { CosmicCard } from '../../../design-system/components/cosmic/CosmicCard';
+
 // Enhanced types for mobile experience
 interface EnhancedMockUserStats {
   name: string;
@@ -251,7 +254,8 @@ const VideoThumbnail: React.FC<{
   </Box>
 ));
 
-// Componente para mostrar un video del backend
+// 🌌 COMPONENTE REFACTORIZADO CON DESIGN SYSTEM CÓSMICO
+// Componente para mostrar un video del backend usando CosmicCard
 const BackendVideoCard: React.FC<{
   video: BackendVideo;
   onClick?: () => void;
@@ -288,27 +292,28 @@ const BackendVideoCard: React.FC<{
   }, [onClick]);
 
   if (showFullInfo) {
-    // Vista completa para lista
+    // 🎬 Vista completa para lista usando CosmicCard
     return (
-      <Card
-        data-testid={`video-item-${video.id}`}
-        className="video-item"
+      <CosmicCard
+        variant="elevated"
+        element="agua"
+        enableAnimations={true}
+        enableGlow={true}
+        enableParticles={true}
+        enableOrbitalEffects={true}
+        cosmicIntensity="intense"
+        onClick={handleClick}
         sx={{
           mb: 2,
-          borderRadius: 3,
-          overflow: 'hidden',
           cursor: onClick ? 'pointer' : 'default',
-          transition: 'all 0.3s ease',
-          '&:hover': onClick
-            ? {
-                transform: 'translateY(-2px)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-              }
-            : {},
+          width: '100%'
         }}
-        onClick={handleClick}
+        className="video-item"
       >
-        <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
+        <Box 
+          data-testid={`video-item-${video.id}`}
+          sx={{ display: 'flex', gap: 2 }}
+        >
           <Box sx={{ position: 'relative' }}>
             <VideoThumbnail
               width={120}
@@ -401,28 +406,28 @@ const BackendVideoCard: React.FC<{
             )}
           </Box>
         </Box>
-      </Card>
+      </CosmicCard>
     );
   }
 
-  // Vista compacta para carrusel horizontal
+  // 🌌 Vista compacta para carrusel horizontal usando CosmicCard
   return (
-    <Box
-      data-testid={`video-card-${video.id}`}
-      className="video-card"
+    <CosmicCard
+      variant="elevated"
+      element="agua"
+      enableAnimations={true}
+      enableGlow={true}
+      enableParticles={true}
+      cosmicIntensity="intense"
+      onClick={handleClick}
       sx={{
         width: 140,
         flexShrink: 0,
-        cursor: onClick ? 'pointer' : 'default',
-        transition: 'transform 0.2s ease-in-out',
-        '&:hover': onClick
-          ? {
-              transform: 'translateY(-4px) scale(1.02)',
-            }
-          : {},
+        p: 1
       }}
-      onClick={handleClick}
+      className="video-card"
     >
+      <Box data-testid={`video-card-${video.id}`}>
       <Box sx={{ position: 'relative' }}>
         <VideoThumbnail
           width={140}
@@ -515,7 +520,8 @@ const BackendVideoCard: React.FC<{
           </Stack>
         )}
       </Box>
-    </Box>
+      </Box>
+    </CosmicCard>
   );
 });
 

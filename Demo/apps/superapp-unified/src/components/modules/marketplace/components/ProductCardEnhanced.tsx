@@ -45,6 +45,9 @@ import {
   useDeleteMarketplaceItem,
 } from '../../../../hooks/useRealBackendData';
 
+// 🌌 COSMIC DESIGN SYSTEM IMPORT
+import { CosmicCard } from '../../../../design-system/components/cosmic/CosmicCard';
+
 interface ProductCardEnhancedProps {
   id: string;
   title: string;
@@ -176,10 +179,13 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
 
   return (
     <>
-      <Card
-        ref={cardRef}
-        onMouseEnter={() => enableHover && setIsHovered(true)}
-        onMouseLeave={() => enableHover && setIsHovered(false)}
+      <CosmicCard
+        element="tierra"
+        variant="elevated"
+        enableAnimations={enableHover}
+        enableGlow={true}
+        enableParticles={featured || trending}
+        cosmicIntensity={featured ? "intense" : trending ? "medium" : "medium"}
         onClick={handleProductClick}
         sx={{
           cursor: 'pointer',
@@ -189,22 +195,20 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
           flexDirection: 'column',
           position: 'relative',
           overflow: 'hidden',
-          borderRadius: { xs: '14px', sm: '16px', md: '18px' },
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: '0 3px 12px rgba(0, 0, 0, 0.08)',
-          border: featured ? '2px solid #FFD700' : '1px solid #e0e0e0',
-          background: '#ffffff',
-          '&:hover': enableHover
-            ? {
-                transform: 'translateY(-6px)',
-                boxShadow: '0 12px 28px rgba(0,0,0,0.15)',
-                borderColor: featured ? '#FFD700' : '#c0c0c0',
-              }
-            : {},
         }}
         className="card-micro-interactive marketplace-card marketplace-fade-in"
         data-testid="item-card"
       >
+        <Box
+          ref={cardRef}
+          onMouseEnter={() => enableHover && setIsHovered(true)}
+          onMouseLeave={() => enableHover && setIsHovered(false)}
+          sx={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
         {/* Imagen del producto mejorada */}
         <Box
           className="marketplace-card-image-container"
@@ -660,7 +664,8 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
             }}
           />
         )}
-      </Card>
+        </Box>
+      </CosmicCard>
 
       {/* Modal de Vista Rápida */}
       <Dialog

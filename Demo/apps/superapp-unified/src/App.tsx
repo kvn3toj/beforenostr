@@ -72,6 +72,10 @@ const AppRoutes: React.FC = () => {
         <Route path="/challenges" element={<LazyPages.ChallengesPage />} />
         <Route path="/groups" element={<LazyPages.GroupsPage />} />
         
+        {/* 📊 UStats - Estadísticas y Analytics */}
+        <Route path="/ustats" element={<LazyPages.UStatsPage />} />
+        <Route path="/analytics" element={<LazyPages.AnalyticsPage />} />
+        
         {/* 🎥 Video/UPlay Routes */}
         <Route path="/uplay/video/:videoId" element={<LazyPages.UPlayVideoPlayer />} />
         <Route path="/uplay/unified" element={<LazyPages.UnifiedUPlay />} />

@@ -27,6 +27,9 @@ import {
   useBackendAvailability,
 } from '../../../hooks/useRealBackendData';
 
+// 🌌 NUEVO: Import del Design System Cósmico
+import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
+
 // 🎯 Componentes modulares del Social mejorados
 import {
   SocialWelcomeHeader,
@@ -197,241 +200,259 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      {/* 🔗 Estado de conexión al backend */}
-      {!backendAvailability.isAvailable && (
-        <Fade in={true}>
-          <Alert
-            severity="info"
-            action={
-              <Button
-                size="small"
-                startIcon={<Refresh />}
-                onClick={handleRefresh}
-                sx={{ color: 'inherit' }}
-              >
-                Reconectar
-              </Button>
-            }
-            sx={{
-              m: 2,
-              borderRadius: 2,
-              bgcolor: alpha(theme.palette.info.main, 0.1),
-              border: `1px solid ${alpha(theme.palette.info.main, 0.3)}`,
-            }}
-          >
-            🌐 Modo Exploración - Experimentando funciones sociales con datos de
-            demostración
-          </Alert>
-        </Fade>
-      )}
-
-      <Container maxWidth="xl" sx={{ py: 3 }}>
-        {/* 🎯 Header de bienvenida social */}
-        <Fade in={animate} timeout={600}>
-          <Box sx={{ mb: 4 }}>
-            <SocialWelcomeHeader
-              userName={
-                (user?.full_name || '').split(' ')[0] || 'Miembro de CoomÜnity'
+    <RevolutionaryWidget
+      title="🌊 Conexiones CoomÜnity"
+      subtitle="Tu espacio sagrado de colaboración y reciprocidad"
+      variant="elevated"
+      element="agua" // Paleta de colores asociada al agua - fluidez, conexión y profundidad emocional
+      cosmicEffects={{ 
+        enableParticles: true, 
+        particleTheme: 'waterRipples',
+        enableGlow: true,
+        glowIntensity: 1.2,
+        enableAnimations: true,
+        enableOrbitalEffects: true
+      }}
+      isConnected={backendAvailability.isAvailable}
+      onRefresh={handleRefresh}
+      cosmicIntensity="intense"
+    >
+      <Box sx={{ minHeight: '100vh', bgcolor: 'transparent' }}>
+        {/* 🔗 Estado de conexión al backend */}
+        {!backendAvailability.isAvailable && (
+          <Fade in={true}>
+            <Alert
+              severity="info"
+              action={
+                <Button
+                  size="small"
+                  startIcon={<Refresh />}
+                  onClick={handleRefresh}
+                  sx={{ color: 'inherit' }}
+                >
+                  Reconectar
+                </Button>
               }
-              userLevel={dynamicStats.socialLevel}
-              isBackendConnected={backendAvailability.isAvailable}
-              notificationCount={normalizedNotifications.length}
-              onNotificationClick={() => console.log('Ver notificaciones')}
-              onSettingsClick={() => console.log('Configuración social')}
-            />
-          </Box>
-        </Fade>
-
-        {/* 🎯 Navegación por pestañas mejorada */}
-        <Fade in={animate} timeout={800}>
-          <Box sx={{ mb: 3 }}>
-            <Tabs
-              value={activeTab}
-              onChange={handleTabChange}
-              centered
               sx={{
-                bgcolor: alpha(theme.palette.primary.main, 0.05),
-                borderRadius: 3,
-                p: 1,
-                '& .MuiTab-root': {
-                  fontWeight: 'bold',
-                  borderRadius: 2,
-                  mx: 0.5,
-                  transition: 'all 0.3s ease-in-out',
-                  '&:hover': {
-                    bgcolor: alpha(theme.palette.primary.main, 0.1),
-                  },
-                  '&.Mui-selected': {
-                    bgcolor: theme.palette.primary.main,
-                    color: 'white',
-                    boxShadow: theme.shadows[4],
-                  },
-                },
+                mb: 3,
+                borderRadius: 2,
+                bgcolor: alpha(theme.palette.info.main, 0.1),
+                border: `1px solid ${alpha(theme.palette.info.main, 0.3)}`,
               }}
             >
-              <Tab
-                label="Feed Comunitario"
-                icon={
-                  <Badge
-                    badgeContent={
-                      mockSocialData.communityMetrics.dailyInteractions
-                    }
-                    color="secondary"
-                  >
-                    <PeopleIcon />
-                  </Badge>
+              🌐 Modo Exploración - Experimentando funciones sociales con datos de
+              demostración
+            </Alert>
+          </Fade>
+        )}
+
+        <Container maxWidth="xl" sx={{ py: 0 }}>
+          {/* 🎯 Header de bienvenida social */}
+          <Fade in={animate} timeout={600}>
+            <Box sx={{ mb: 4 }}>
+              <SocialWelcomeHeader
+                userName={
+                  (user?.full_name || '').split(' ')[0] || 'Miembro de CoomÜnity'
                 }
-                iconPosition="start"
+                userLevel={dynamicStats.socialLevel}
+                isBackendConnected={backendAvailability.isAvailable}
+                notificationCount={normalizedNotifications.length}
+                onNotificationClick={() => console.log('Ver notificaciones')}
+                onSettingsClick={() => console.log('Configuración social')}
               />
-              <Tab
-                label="Conexiones Ayni"
-                icon={
-                  <Badge
-                    badgeContent={normalizedMatches.length}
-                    color="primary"
-                  >
-                    <ChatIcon />
-                  </Badge>
-                }
-                iconPosition="start"
-              />
-              <Tab
-                label="Círculos de Colaboración"
-                icon={
-                  <Badge
-                    badgeContent={mockSocialData.communityMetrics.activeCircles}
-                    color="warning"
-                  >
-                    <GroupsIcon />
-                  </Badge>
-                }
-                iconPosition="start"
-              />
-              <Tab
-                label="Hub de Crecimiento"
-                icon={<TrendingIcon />}
-                iconPosition="start"
-              />
-            </Tabs>
+            </Box>
+          </Fade>
+
+          {/* 🎯 Navegación por pestañas mejorada */}
+          <Fade in={animate} timeout={800}>
+            <Box sx={{ mb: 3 }}>
+              <Tabs
+                value={activeTab}
+                onChange={handleTabChange}
+                centered
+                sx={{
+                  bgcolor: alpha(theme.palette.primary.main, 0.05),
+                  borderRadius: 3,
+                  p: 1,
+                  '& .MuiTab-root': {
+                    fontWeight: 'bold',
+                    borderRadius: 2,
+                    mx: 0.5,
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    },
+                    '&.Mui-selected': {
+                      bgcolor: theme.palette.primary.main,
+                      color: 'white',
+                      boxShadow: theme.shadows[4],
+                    },
+                  },
+                }}
+              >
+                <Tab
+                  label="Feed Comunitario"
+                  icon={
+                    <Badge
+                      badgeContent={
+                        mockSocialData.communityMetrics.dailyInteractions
+                      }
+                      color="secondary"
+                    >
+                      <PeopleIcon />
+                    </Badge>
+                  }
+                  iconPosition="start"
+                />
+                <Tab
+                  label="Conexiones Ayni"
+                  icon={
+                    <Badge
+                      badgeContent={normalizedMatches.length}
+                      color="primary"
+                    >
+                      <ChatIcon />
+                    </Badge>
+                  }
+                  iconPosition="start"
+                />
+                <Tab
+                  label="Círculos de Colaboración"
+                  icon={
+                    <Badge
+                      badgeContent={mockSocialData.communityMetrics.activeCircles}
+                      color="warning"
+                    >
+                      <GroupsIcon />
+                    </Badge>
+                  }
+                  iconPosition="start"
+                />
+                <Tab
+                  label="Hub de Crecimiento"
+                  icon={<TrendingIcon />}
+                  iconPosition="start"
+                />
+              </Tabs>
+            </Box>
+          </Fade>
+
+          {/* 🎯 Contenido de las pestañas */}
+          <Fade in={animate} timeout={1000}>
+            <Box>
+              {/* Tab 0: Feed Comunitario */}
+              {activeTab === 0 && (
+                <Grid container spacing={3}>
+                  <Grid size={{xs:12,lg:8}}>
+                    <CommunityFeed
+                      isConnected={backendAvailability.isAvailable}
+                      quickActions={mockSocialData.quickActions}
+                      onQuickAction={handleQuickAction}
+                      communityMetrics={mockSocialData.communityMetrics}
+                    />
+                  </Grid>
+                  <Grid size={{xs:12,lg:4}}>
+                    <AyniSocialMetrics
+                      userStats={dynamicStats}
+                      communityMetrics={mockSocialData.communityMetrics}
+                      notifications={normalizedNotifications}
+                      isLoading={notificationsLoading}
+                      isConnected={backendAvailability.isAvailable}
+                    />
+                  </Grid>
+                </Grid>
+              )}
+
+              {/* Tab 1: Conexiones Ayni */}
+              {activeTab === 1 && (
+                <Grid container spacing={3}>
+                  <Grid size={{xs:12,md:4}}>
+                    <ConnectionsManager
+                      connections={normalizedMatches}
+                      isLoading={matchesLoading}
+                      isError={matchesError}
+                      onRefresh={refetchMatches}
+                      userStats={dynamicStats}
+                    />
+                  </Grid>
+                  <Grid size={{xs:12,md:8}}>
+                    <SocialChatArea
+                      connections={normalizedMatches}
+                      isLoading={matchesLoading}
+                      isConnected={backendAvailability.isAvailable}
+                    />
+                  </Grid>
+                </Grid>
+              )}
+
+              {/* Tab 2: Círculos de Colaboración */}
+              {activeTab === 2 && (
+                <CollaborationHub
+                  userStats={dynamicStats}
+                  isConnected={backendAvailability.isAvailable}
+                  onCreateCircle={() =>
+                    handleQuickAction('create-circle', '/social/create-circle')
+                  }
+                  onJoinCircle={(circleId: string) =>
+                    console.log(`Unirse al círculo: ${circleId}`)
+                  }
+                />
+              )}
+
+              {/* Tab 3: Hub de Crecimiento */}
+              {activeTab === 3 && (
+                <Grid container spacing={3}>
+                  <Grid size={{xs:12}}>
+                    <AyniSocialMetrics
+                      userStats={dynamicStats}
+                      communityMetrics={mockSocialData.communityMetrics}
+                      notifications={normalizedNotifications}
+                      isLoading={notificationsLoading}
+                      isConnected={backendAvailability.isAvailable}
+                      showDetailedView={true}
+                    />
+                  </Grid>
+                </Grid>
+              )}
+            </Box>
+          </Fade>
+        </Container>
+
+        {/* 🌟 Mensaje inspiracional flotante específico para Social */}
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 24,
+            left: 24,
+            maxWidth: 280,
+            p: 2,
+            borderRadius: 3,
+            background: `linear-gradient(135deg, ${alpha(
+              theme.palette.secondary.main,
+              0.9
+            )} 0%, ${alpha(theme.palette.primary.main, 0.9)} 100%)`,
+            color: 'white',
+            boxShadow: theme.shadows[8],
+            backdropFilter: 'blur(10px)',
+            border: `1px solid ${alpha('#fff', 0.2)}`,
+            opacity: animate ? 1 : 0,
+            transform: animate ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 0.6s ease-in-out 2.5s',
+            zIndex: 1000,
+          }}
+        >
+          <Box sx={{ fontSize: '1.2rem', mb: 1 }}>🤝</Box>
+          <Box sx={{ fontSize: '0.85rem', fontWeight: 'bold', mb: 0.5 }}>
+            Reflexión Social
           </Box>
-        </Fade>
-
-        {/* 🎯 Contenido de las pestañas */}
-        <Fade in={animate} timeout={1000}>
-          <Box>
-            {/* Tab 0: Feed Comunitario */}
-            {activeTab === 0 && (
-              <Grid container spacing={3}>
-                <Grid size={{xs:12,lg:8}}>
-                  <CommunityFeed
-                    isConnected={backendAvailability.isAvailable}
-                    quickActions={mockSocialData.quickActions}
-                    onQuickAction={handleQuickAction}
-                    communityMetrics={mockSocialData.communityMetrics}
-                  />
-                </Grid>
-                <Grid size={{xs:12,lg:4}}>
-                  <AyniSocialMetrics
-                    userStats={dynamicStats}
-                    communityMetrics={mockSocialData.communityMetrics}
-                    notifications={normalizedNotifications}
-                    isLoading={notificationsLoading}
-                    isConnected={backendAvailability.isAvailable}
-                  />
-                </Grid>
-              </Grid>
-            )}
-
-            {/* Tab 1: Conexiones Ayni */}
-            {activeTab === 1 && (
-              <Grid container spacing={3}>
-                <Grid size={{xs:12,md:4}}>
-                  <ConnectionsManager
-                    connections={normalizedMatches}
-                    isLoading={matchesLoading}
-                    isError={matchesError}
-                    onRefresh={refetchMatches}
-                    userStats={dynamicStats}
-                  />
-                </Grid>
-                <Grid size={{xs:12,md:8}}>
-                  <SocialChatArea
-                    connections={normalizedMatches}
-                    isLoading={matchesLoading}
-                    isConnected={backendAvailability.isAvailable}
-                  />
-                </Grid>
-              </Grid>
-            )}
-
-            {/* Tab 2: Círculos de Colaboración */}
-            {activeTab === 2 && (
-              <CollaborationHub
-                userStats={dynamicStats}
-                isConnected={backendAvailability.isAvailable}
-                onCreateCircle={() =>
-                  handleQuickAction('create-circle', '/social/create-circle')
-                }
-                onJoinCircle={(circleId: string) =>
-                  console.log(`Unirse al círculo: ${circleId}`)
-                }
-              />
-            )}
-
-            {/* Tab 3: Hub de Crecimiento */}
-            {activeTab === 3 && (
-              <Grid container spacing={3}>
-                <Grid size={{xs:12}}>
-                  <AyniSocialMetrics
-                    userStats={dynamicStats}
-                    communityMetrics={mockSocialData.communityMetrics}
-                    notifications={normalizedNotifications}
-                    isLoading={notificationsLoading}
-                    isConnected={backendAvailability.isAvailable}
-                    showDetailedView={true}
-                  />
-                </Grid>
-              </Grid>
-            )}
+          <Box sx={{ fontSize: '0.75rem', opacity: 0.9, fontStyle: 'italic' }}>
+            "En cada conexión auténtica que creas, tejes un hilo más en la red
+            sagrada del Bien Común. Que tus interacciones siembren semillas de
+            cooperación."
           </Box>
-        </Fade>
-      </Container>
-
-      {/* 🌟 Mensaje inspiracional flotante específico para Social */}
-      <Box
-        sx={{
-          position: 'fixed',
-          bottom: 24,
-          left: 24,
-          maxWidth: 280,
-          p: 2,
-          borderRadius: 3,
-          background: `linear-gradient(135deg, ${alpha(
-            theme.palette.secondary.main,
-            0.9
-          )} 0%, ${alpha(theme.palette.primary.main, 0.9)} 100%)`,
-          color: 'white',
-          boxShadow: theme.shadows[8],
-          backdropFilter: 'blur(10px)',
-          border: `1px solid ${alpha('#fff', 0.2)}`,
-          opacity: animate ? 1 : 0,
-          transform: animate ? 'translateY(0)' : 'translateY(20px)',
-          transition: 'all 0.6s ease-in-out 2.5s',
-          zIndex: 1000,
-        }}
-      >
-        <Box sx={{ fontSize: '1.2rem', mb: 1 }}>🤝</Box>
-        <Box sx={{ fontSize: '0.85rem', fontWeight: 'bold', mb: 0.5 }}>
-          Reflexión Social
-        </Box>
-        <Box sx={{ fontSize: '0.75rem', opacity: 0.9, fontStyle: 'italic' }}>
-          "En cada conexión auténtica que creas, tejes un hilo más en la red
-          sagrada del Bien Común. Que tus interacciones siembren semillas de
-          cooperación."
         </Box>
       </Box>
-    </Box>
+    </RevolutionaryWidget>
   );
 };
 

@@ -188,7 +188,8 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
 
   // 🎨 Generar estilos revolucionarios
   const revolutionaryStyles = useMemo(() => {
-    const baseVariant = componentVariants[variant] || componentVariants.primary;
+    const variantStyles = componentVariants(theme);
+    const baseVariant = variantStyles[variant] || variantStyles.primary;
     const elementalStyles = element ? applyElementalHomeGradient(element) : {};
     
     return {
@@ -219,7 +220,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
           : 'none'
       })
     };
-  }, [variant, element, responsive, isHovered, isActive, effects, cosmicIntensity]);
+  }, [variant, element, responsive, isHovered, isActive, effects, cosmicIntensity, theme]);
 
   // 🌟 Manejadores de eventos
   const handleMouseEnter = useCallback(() => {

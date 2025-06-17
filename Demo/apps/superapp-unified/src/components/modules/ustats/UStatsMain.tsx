@@ -42,6 +42,9 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 
+// 🌌 IMPORTS DEL DESIGN SYSTEM REVOLUCIONARIO
+import { RevolutionaryWidget } from '../../../design-system';
+
 // Import new chart components
 import MinimalMetricCard from './components/MinimalMetricCard';
 import RealTimeStatus from './components/RealTimeStatus';
@@ -745,7 +748,7 @@ const UStatsMain: React.FC = () => {
                     color="text.secondary"
                     sx={{ lineHeight: 1.6 }}
                   >
-                    ��� category=trasciende (45%)
+                    • category=trasciende (45%)
                   </Typography>
                 </Box>
 
@@ -1116,54 +1119,69 @@ const UStatsMain: React.FC = () => {
       <AppHeader />
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Box sx={{ mb: 4 }}>
-          <Tabs
-            value={activeTab}
-            onChange={(_, newValue) => setActiveTab(newValue)}
-            sx={{
-              borderBottom: 1,
-              borderColor: 'divider',
-              '& .MuiTab-root': {
-                textTransform: 'none',
-                fontWeight: 500,
-                fontSize: '1rem',
-                minWidth: 140,
-                py: 2,
-                color: 'text.secondary',
-                '&.Mui-selected': {
-                  color: 'primary.main',
-                  fontWeight: 600,
+        <RevolutionaryWidget
+          title="🔥 Tus Estadísticas de Progreso"
+          subtitle="Métricas revolucionarias de tu evolución en CoomÜnity"
+          variant="elevated"
+          element="fuego" // Paleta de colores asociada al fuego, la energía y la acción
+          cosmicEffects={{ 
+            enableGlow: true, 
+            particleTheme: 'embers',
+            enableAnimations: true,
+            glowIntensity: 1.2
+          }}
+          cosmicIntensity="medium"
+          interactionMode="hover"
+        >
+          <Box sx={{ mb: 4 }}>
+            <Tabs
+              value={activeTab}
+              onChange={(_, newValue) => setActiveTab(newValue)}
+              sx={{
+                borderBottom: 1,
+                borderColor: 'divider',
+                '& .MuiTab-root': {
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  fontSize: '1rem',
+                  minWidth: 140,
+                  py: 2,
+                  color: 'text.secondary',
+                  '&.Mui-selected': {
+                    color: 'primary.main',
+                    fontWeight: 600,
+                  },
+                  '&:hover': {
+                    color: 'primary.main',
+                    opacity: 0.8,
+                  },
                 },
-                '&:hover': {
-                  color: 'primary.main',
-                  opacity: 0.8,
+                '& .MuiTabs-indicator': {
+                  height: 3,
+                  borderRadius: '3px 3px 0 0',
+                  backgroundColor: 'primary.main',
                 },
-              },
-              '& .MuiTabs-indicator': {
-                height: 3,
-                borderRadius: '3px 3px 0 0',
-                backgroundColor: 'primary.main',
-              },
-            }}
-          >
-            <Tab
-              label="Vista General"
-              icon={<BarChartIcon />}
-              iconPosition="start"
-            />
-            <Tab label="Búsquedas" icon={<SearchIcon />} iconPosition="start" />
-            <Tab label="Geografía" icon={<MapIcon />} iconPosition="start" />
-            <Tab
-              label="Rendimiento"
-              icon={<SpeedIcon />}
-              iconPosition="start"
-            />
-          </Tabs>
-        </Box>
+              }}
+            >
+              <Tab
+                label="Vista General"
+                icon={<BarChartIcon />}
+                iconPosition="start"
+              />
+              <Tab label="Búsquedas" icon={<SearchIcon />} iconPosition="start" />
+              <Tab label="Geografía" icon={<MapIcon />} iconPosition="start" />
+              <Tab
+                label="Rendimiento"
+                icon={<SpeedIcon />}
+                iconPosition="start"
+              />
+            </Tabs>
+          </Box>
 
-        <Box sx={{ mt: 4 }}>
-          <TabContent />
-        </Box>
+          <Box sx={{ mt: 4 }}>
+            <TabContent />
+          </Box>
+        </RevolutionaryWidget>
       </Container>
     </Box>
   );

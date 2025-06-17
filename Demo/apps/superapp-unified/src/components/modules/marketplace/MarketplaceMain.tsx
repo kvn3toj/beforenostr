@@ -65,13 +65,32 @@ import ProductCardEnhanced from './components/ProductCardEnhanced';
 import { MobileMarketplaceView } from './components';
 import {
   useMarketplaceData,
-  useCreateMarketplaceItem,
 } from '../../../hooks/useRealBackendData';
 import { useQueryClient } from '@tanstack/react-query';
 import CreateItemModal from './components/CreateItemModal';
 // 🔄 LETS Integration
 import UnitsWallet from './components/UnitsWallet';
 import LetsListings from './components/LetsListings';
+
+// 🌌 DESIGN SYSTEM CÓSMICO IMPORTS
+import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
+
+// 🌍 COSMIC EFFECTS PARA MARKETPLACE (ELEMENTO TIERRA) - INTENSIFICADOS
+const marketplaceCosmicEffects = {
+  enableGlow: true,
+  enableParticles: true,
+  enableAnimations: true,
+  enableOrbitalEffects: true,
+  glowIntensity: 1.5, // Incrementado para mayor impacto
+  particleConfig: {
+    count: 8, // Más partículas
+    size: 5, // Partículas más grandes
+    color: '#8BC34A', // Verde tierra
+    speed: 1.2, // Movimiento más dinámico
+    opacity: 0.7, // Mayor visibilidad
+    blur: true
+  }
+};
 
 // 🌱 Tipos de datos optimizados para el bien común
 interface MarketplaceItem {
@@ -249,8 +268,6 @@ const MarketplaceMain: React.FC = () => {
     error: itemsError,
     refetch: refetchMarketplaceData,
   } = useMarketplaceData();
-  const createItemMutation = useCreateMarketplaceItem();
-
   // 🧹 Limpiar caché antigua al montar el componente
   useEffect(() => {
     // Invalidar cachés antiguas que puedan tener datos de test del backend
@@ -297,7 +314,7 @@ const MarketplaceMain: React.FC = () => {
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false); // Eliminamos loading persistente
+  const [isLoading] = useState(false); // Eliminamos loading persistente
 
   // 🆕 Estado para el modal de creación de items
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -378,8 +395,6 @@ const MarketplaceMain: React.FC = () => {
     },
   ];
 
-  // 🎯 Los datos de productos ahora vienen del backend real
-
   // Navegación optimizada
   const handleProductClick = useCallback(
     (productId: string) => {
@@ -439,6 +454,7 @@ const MarketplaceMain: React.FC = () => {
     [currentFilters.query]
   );
 
+  // Función para manejar cambios de filtros (disponible para extensión futura)
   const handleFiltersChange = useCallback((filters: SearchFilters) => {
     setCurrentFilters(filters);
     setIsSearchActive(
@@ -624,8 +640,28 @@ const MarketplaceMain: React.FC = () => {
 
   // 🖥️ Layout de escritorio optimizado
   return (
-    <Box
-      sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}
+    <RevolutionaryWidget
+      title="🏪 Marketplace CoomÜnity"
+      subtitle="Economía colaborativa para el bien común"
+      variant="elevated"
+      element="tierra"
+      cosmicEffects={{ 
+        enableGlow: true,
+        enableAnimations: true,
+        enableParticles: true,
+        enableOrbitalEffects: true,
+        glowIntensity: 1.5,
+        particleTheme: 'dust',
+        particleConfig: {
+          count: 8,
+          size: 5,
+          color: '#8BC34A',
+          speed: 1.2,
+          opacity: 0.7
+        }
+      }}
+      cosmicIntensity="intense"
+      style={{ minHeight: '100vh' }}
       data-testid="marketplace-main"
     >
       <Container maxWidth="xl" sx={{ py: 3 }}>
@@ -1585,7 +1621,7 @@ const MarketplaceMain: React.FC = () => {
         onClose={handleCloseCreateModal}
         onSuccess={handleCreateSuccess}
       />
-    </Box>
+    </RevolutionaryWidget>
   );
 };
 

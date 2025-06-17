@@ -98,7 +98,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   {
     label: 'ÜStats',
     icon: <Analytics />,
-    path: '/analytics',
+    path: '/ustats',
     section: 'modules',
   },
   {

@@ -152,15 +152,22 @@ export const letsBackendService = {
     page: number;
     totalPages: number;
   }> {
-    const response = await apiService.get(`/lets/transactions/${userId}`, {
-      params: { page, limit }
+    const response = await apiService.get(`/lets/history/${userId}`, {
+      params: { limit }
     });
-    return response.data;
+    return {
+      transactions: response.data,
+      total: response.data.length,
+      page: 1,
+      totalPages: 1
+    };
   },
 
   async getTransactionById(transactionId: string): Promise<UnitsTransaction> {
-    const response = await apiService.get(`/lets/transactions/detail/${transactionId}`);
-    return response.data;
+    // TODO: Implementar endpoint /lets/transactions/detail/:id en el backend
+    throw new Error('Transaction detail endpoint not implemented yet');
+    // const response = await apiService.get(`/lets/transactions/detail/${transactionId}`);
+    // return response.data;
   },
 
   // Trust System

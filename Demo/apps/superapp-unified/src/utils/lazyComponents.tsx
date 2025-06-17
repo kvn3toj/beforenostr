@@ -124,6 +124,11 @@ export const LazyPages = {
     <SimpleLoader />
   ),
   
+  UStatsPage: createLazyComponent(
+    () => import('../pages/UStats'),
+    <SimpleLoader />
+  ),
+  
   MundosPage: createLazyComponent(
     () => import('../pages/Mundos'),
     <SimpleLoader />
@@ -325,7 +330,12 @@ export const preloadRouteComponents = (route: string) => {
     case '/groups':
       import('../pages/GroupsPageEnhanced');
       break;
-
+    case '/ustats':
+      import('../pages/UStats');
+      break;
+    case '/analytics':
+      import('../pages/Analytics');
+      break;
     case '/settings':
       import('../pages/Settings');
       break;

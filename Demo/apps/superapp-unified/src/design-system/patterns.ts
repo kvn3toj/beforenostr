@@ -17,22 +17,23 @@
 import { alpha, Theme } from '@mui/material';
 
 // 🎨 REVOLUTIONARY PATTERN BASE - EXTRAÍDO DEL HOME
-export const revolutionaryPattern = {
+// 🔥 REFACTORIZADO: Ahora es una función que acepta el theme para mayor flexibilidad
+export const revolutionaryPattern = (theme: Theme) => ({
   // Glassmorphism base con configuración probada HOME
   background: 'rgba(255, 254, 251, 0.85)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
   
-  // Bordes cósmicos perfeccionados
-  border: '1px solid rgba(255, 183, 77, 0.2)',
+  // Bordes cósmicos perfeccionados con theme integration
+  border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
   borderRadius: '24px',
   
-  // Sombras profundas en capas (patrón HOME)
+  // Sombras profundas en capas (patrón HOME) con theme colors
   boxShadow: [
-    '0 8px 32px rgba(139, 69, 19, 0.1)',
-    '0 2px 16px rgba(255, 152, 0, 0.08)',
+    `0 8px 32px ${alpha(theme.palette.primary.dark, 0.1)}`,
+    `0 2px 16px ${alpha(theme.palette.secondary.main, 0.08)}`,
     'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-    'inset 0 -1px 0 rgba(255, 183, 77, 0.1)',
+    `inset 0 -1px 0 ${alpha(theme.palette.primary.main, 0.1)}`,
   ].join(', '),
   
   // Efectos de profundidad 3D (crucial para planetas orbitales)
@@ -44,14 +45,14 @@ export const revolutionaryPattern = {
   // Transiciones fluidas golden ratio
   transition: 'all 0.618s cubic-bezier(0.34, 1.56, 0.64, 1)',
   
-  // Estados interactivos con feedback cósmico
+  // Estados interactivos con feedback cósmico usando theme
   '&:hover': {
     transform: 'translateY(-6px) translateZ(12px) rotateX(2deg)',
     boxShadow: [
-      '0 20px 60px rgba(139, 69, 19, 0.15)',
-      '0 8px 32px rgba(255, 152, 0, 0.12)',
+      `0 20px 60px ${alpha(theme.palette.primary.dark, 0.15)}`,
+      `0 8px 32px ${alpha(theme.palette.secondary.main, 0.12)}`,
       'inset 0 2px 0 rgba(255, 255, 255, 0.8)',
-      'inset 0 -2px 0 rgba(255, 183, 77, 0.2)',
+      `inset 0 -2px 0 ${alpha(theme.palette.primary.main, 0.2)}`,
     ].join(', '),
     background: 'rgba(255, 254, 251, 0.95)',
   },
@@ -60,57 +61,64 @@ export const revolutionaryPattern = {
     transform: 'translateY(-2px) translateZ(4px)',
     transition: 'all 0.1s ease-out',
   },
-};
+});
 
 // 🌟 COSMIC CARD PATTERN - MEJORADO CON ANÁLISIS HOME
-export const cosmicCardPattern = (theme: Theme) => ({
-  // Fondo glassmorphism optimizado
-  background: `linear-gradient(135deg, 
-    ${alpha('#fffefb', 0.9)} 0%, 
-    ${alpha('#f8f6f0', 0.85)} 50%, 
-    ${alpha('#f1ede3', 0.8)} 100%)`,
+// 🔥 REFACTORIZADO: Ahora acepta variant y cosmicIntensity como parámetros
+export const cosmicCardPattern = (theme: Theme, variant: string = 'primary', cosmicIntensity: string = 'medium') => {
+  // Base pattern usando theme
+  const baseOpacity = cosmicIntensity === 'intense' ? 0.95 : cosmicIntensity === 'medium' ? 0.9 : 0.85;
+  const glowIntensity = cosmicIntensity === 'intense' ? 0.15 : cosmicIntensity === 'medium' ? 0.1 : 0.08;
   
-  // Borde con gradiente sutil
-  border: `1px solid transparent`,
-  backgroundImage: `
-    linear-gradient(135deg, rgba(255, 254, 251, 0.9) 0%, rgba(248, 246, 240, 0.85) 50%, rgba(241, 237, 227, 0.8) 100%),
-    linear-gradient(90deg, rgba(255, 183, 77, 0.3), rgba(255, 152, 0, 0.2), rgba(255, 193, 7, 0.1))
-  `,
-  backgroundOrigin: 'border-box',
-  backgroundClip: 'padding-box, border-box',
-  
-  borderRadius: '24px',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
-  
-  // Sombras cósmicas multicapa
-  boxShadow: [
-    '0 8px 32px rgba(139, 69, 19, 0.08)',
-    '0 2px 16px rgba(255, 152, 0, 0.06)',
-    'inset 0 1px 0 rgba(255, 255, 255, 0.7)',
-    'inset 0 -1px 0 rgba(255, 183, 77, 0.1)',
-  ].join(', '),
-  
-  // Transición con proporción áurea
-  transition: 'all 0.618s cubic-bezier(0.23, 1, 0.32, 1)',
-  position: 'relative' as const,
-  overflow: 'visible' as const,
-  
-  // Sistema de interacción cósmica
-  '&:hover': {
-    transform: 'translateY(-8px) scale(1.02)',
-    boxShadow: [
-      '0 20px 60px rgba(139, 69, 19, 0.12)',
-      '0 8px 32px rgba(255, 152, 0, 0.1)',
-      'inset 0 2px 0 rgba(255, 255, 255, 0.9)',
-      'inset 0 -2px 0 rgba(255, 183, 77, 0.15)',
-    ].join(', '),
+  return {
+    // Fondo glassmorphism optimizado con theme integration
     background: `linear-gradient(135deg, 
-      ${alpha('#fffefb', 0.95)} 0%, 
-      ${alpha('#f8f6f0', 0.9)} 50%, 
-      ${alpha('#f1ede3', 0.85)} 100%)`,
-  },
-});
+      ${alpha('#fffefb', baseOpacity)} 0%, 
+      ${alpha('#f8f6f0', baseOpacity - 0.05)} 50%, 
+      ${alpha('#f1ede3', baseOpacity - 0.1)} 100%)`,
+    
+    // Borde con gradiente sutil usando theme colors
+    border: `1px solid transparent`,
+    backgroundImage: `
+      linear-gradient(135deg, ${alpha('#fffefb', baseOpacity)} 0%, ${alpha('#f8f6f0', baseOpacity - 0.05)} 50%, ${alpha('#f1ede3', baseOpacity - 0.1)} 100%),
+      linear-gradient(90deg, ${alpha(theme.palette.primary.main, 0.3)}, ${alpha(theme.palette.secondary.main, 0.2)}, ${alpha(theme.palette.warning.main, 0.1)})
+    `,
+    backgroundOrigin: 'border-box',
+    backgroundClip: 'padding-box, border-box',
+    
+    borderRadius: '24px',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    
+    // Sombras cósmicas multicapa con theme integration
+    boxShadow: [
+      `0 8px 32px ${alpha(theme.palette.primary.dark, glowIntensity)}`,
+      `0 2px 16px ${alpha(theme.palette.secondary.main, glowIntensity * 0.75)}`,
+      'inset 0 1px 0 rgba(255, 255, 255, 0.7)',
+      `inset 0 -1px 0 ${alpha(theme.palette.primary.main, 0.1)}`,
+    ].join(', '),
+    
+    // Transición con proporción áurea
+    transition: 'all 0.618s cubic-bezier(0.23, 1, 0.32, 1)',
+    position: 'relative' as const,
+    overflow: 'visible' as const,
+    
+    // Sistema de interacción cósmica con theme
+    '&:hover': {
+      transform: 'translateY(-8px) scale(1.02)',
+      boxShadow: [
+        `0 20px 60px ${alpha(theme.palette.primary.dark, glowIntensity + 0.04)}`,
+        `0 8px 32px ${alpha(theme.palette.secondary.main, glowIntensity + 0.02)}`,
+        'inset 0 2px 0 rgba(255, 255, 255, 0.9)',
+        `inset 0 -2px 0 ${alpha(theme.palette.primary.main, 0.15)}`,
+      ].join(', '),
+      background: `linear-gradient(135deg, 
+        ${alpha('#fffefb', baseOpacity + 0.05)} 0%, 
+        ${alpha('#f8f6f0', baseOpacity)} 50%, 
+        ${alpha('#f1ede3', baseOpacity - 0.05)} 100%)`,
+    },
+  };
+};
 
 // 🔥 ELEMENTAL PATTERNS - EXTRAÍDOS Y REFINADOS
 export const elementalPatterns = {
@@ -306,55 +314,135 @@ export const cosmicUtils = {
 };
 
 // 🎯 COMPONENT VARIANTS - SISTEMA COMPLETO DE VARIANTES
-export const componentVariants = {
+// 🔥 REFACTORIZADO: Ahora es una función que acepta el theme para usar revolutionaryPattern()
+export const componentVariants = (theme: Theme) => ({
   // Variante principal para elementos hero
   primary: {
-    ...revolutionaryPattern,
+    ...revolutionaryPattern(theme),
     background: 'rgba(255, 254, 251, 0.9)',
-    border: '1px solid rgba(255, 183, 77, 0.3)',
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
     boxShadow: [
-      '0 12px 40px rgba(139, 69, 19, 0.1)',
-      '0 4px 20px rgba(255, 152, 0, 0.08)',
+      `0 12px 40px ${alpha(theme.palette.primary.dark, 0.1)}`,
+      `0 4px 20px ${alpha(theme.palette.secondary.main, 0.08)}`,
       'inset 0 2px 0 rgba(255, 255, 255, 0.8)',
     ].join(', '),
   },
   
   // Variante secundaria para elementos de soporte
   secondary: {
-    ...revolutionaryPattern,
+    ...revolutionaryPattern(theme),
     background: 'rgba(248, 246, 240, 0.8)',
-    border: '1px solid rgba(255, 183, 77, 0.2)',
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
     boxShadow: [
-      '0 6px 24px rgba(139, 69, 19, 0.08)',
-      '0 2px 12px rgba(255, 152, 0, 0.06)',
+      `0 6px 24px ${alpha(theme.palette.primary.dark, 0.08)}`,
+      `0 2px 12px ${alpha(theme.palette.secondary.main, 0.06)}`,
       'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
     ].join(', '),
   },
   
   // Variante accent para elementos destacados
   accent: {
-    ...revolutionaryPattern,
-    background: 'linear-gradient(135deg, rgba(255, 183, 77, 0.15) 0%, rgba(255, 152, 0, 0.1) 100%)',
-    border: '1px solid rgba(255, 183, 77, 0.4)',
+    ...revolutionaryPattern(theme),
+    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.4)}`,
     boxShadow: [
-      '0 8px 32px rgba(255, 152, 0, 0.15)',
-      '0 2px 16px rgba(255, 183, 77, 0.1)',
+      `0 8px 32px ${alpha(theme.palette.secondary.main, 0.15)}`,
+      `0 2px 16px ${alpha(theme.palette.primary.main, 0.1)}`,
       'inset 0 1px 0 rgba(255, 255, 255, 0.9)',
     ].join(', '),
   },
   
   // Variante elevada para modales y overlays
   elevated: {
-    ...revolutionaryPattern,
+    ...revolutionaryPattern(theme),
     transform: 'translateZ(24px)',
-    background: 'rgba(255, 254, 251, 0.95)',
-    border: '1px solid rgba(255, 183, 77, 0.3)',
+    
+    // ✨ GLASSMORPHISM EXTREMO REVOLUCIONARIO
+    background: `
+      radial-gradient(circle at 20% 30%, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, ${alpha(theme.palette.secondary.main, 0.06)} 0%, transparent 50%),
+      linear-gradient(135deg, rgba(255, 254, 251, 0.98) 0%, rgba(248, 246, 240, 0.95) 50%, rgba(241, 237, 227, 0.92) 100%)
+    `,
+    
+    backdropFilter: 'blur(30px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+    
+    // 🌟 BORDES CÓSMICOS CON GRADIENTE ELEMENTAL
+    border: `2px solid transparent`,
+    backgroundImage: `
+      linear-gradient(135deg, rgba(255, 254, 251, 0.98) 0%, rgba(248, 246, 240, 0.95) 50%, rgba(241, 237, 227, 0.92) 100%),
+      linear-gradient(45deg, 
+        ${alpha(theme.palette.primary.main, 0.4)} 0%,
+        ${alpha(theme.palette.secondary.main, 0.3)} 25%,
+        ${alpha(theme.palette.warning.main, 0.2)} 50%,
+        ${alpha(theme.palette.info.main, 0.3)} 75%,
+        ${alpha(theme.palette.primary.main, 0.4)} 100%
+      )
+    `,
+    backgroundOrigin: 'border-box',
+    backgroundClip: 'padding-box, border-box',
+    
+    borderRadius: '32px',
+    
+    // 🔥 SOMBRAS CÓSMICAS MULTICAPA EXTREMAS
     boxShadow: [
-      '0 24px 80px rgba(139, 69, 19, 0.15)',
-      '0 8px 40px rgba(255, 152, 0, 0.12)',
-      'inset 0 2px 0 rgba(255, 255, 255, 0.9)',
-      'inset 0 -2px 0 rgba(255, 183, 77, 0.1)',
+      `0 32px 120px ${alpha(theme.palette.primary.dark, 0.25)}`, // Sombra profunda principal
+      `0 16px 60px ${alpha(theme.palette.secondary.main, 0.18)}`, // Sombra secundaria
+      `0 8px 40px ${alpha(theme.palette.warning.main, 0.12)}`, // Aura dorada
+      `0 4px 20px ${alpha(theme.palette.info.main, 0.15)}`, // Brillo azul
+      'inset 0 4px 0 rgba(255, 255, 255, 0.95)', // Brillo interno superior
+      `inset 0 -4px 0 ${alpha(theme.palette.primary.main, 0.15)}`, // Sombra interna inferior
+      `inset 0 0 20px ${alpha(theme.palette.primary.light, 0.1)}`, // Aura interna
     ].join(', '),
+    
+    // ⚡ PROPIEDADES 3D AVANZADAS
+    transformStyle: 'preserve-3d',
+    perspective: '2000px',
+    overflow: 'visible',
+    
+    // 🌊 TRANSICIONES SUAVES CON GOLDEN RATIO
+    transition: 'all 0.618s cubic-bezier(0.34, 1.56, 0.64, 1)',
+    
+    // 🎯 EFECTOS HOVER DRAMÁTICOS
+    '&:hover': {
+      transform: 'translateY(-12px) translateZ(32px) rotateX(3deg) scale(1.02)',
+      
+      // Fondo más brillante en hover
+      background: `
+        radial-gradient(circle at 20% 30%, ${alpha(theme.palette.primary.main, 0.12)} 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, ${alpha(theme.palette.secondary.main, 0.10)} 0%, transparent 50%),
+        linear-gradient(135deg, rgba(255, 254, 251, 1) 0%, rgba(248, 246, 240, 0.98) 50%, rgba(241, 237, 227, 0.95) 100%)
+      `,
+      
+      // Sombras hover intensificadas
+      boxShadow: [
+        `0 48px 160px ${alpha(theme.palette.primary.dark, 0.35)}`, // Sombra principal amplificada
+        `0 24px 80px ${alpha(theme.palette.secondary.main, 0.25)}`, // Sombra secundaria intensificada
+        `0 12px 60px ${alpha(theme.palette.warning.main, 0.18)}`, // Aura dorada expandida
+        `0 6px 30px ${alpha(theme.palette.info.main, 0.22)}`, // Brillo azul aumentado
+        'inset 0 6px 0 rgba(255, 255, 255, 1)', // Brillo interno máximo
+        `inset 0 -6px 0 ${alpha(theme.palette.primary.main, 0.25)}`, // Sombra interna profunda
+        `inset 0 0 40px ${alpha(theme.palette.primary.light, 0.15)}`, // Aura interna expandida
+        `0 0 80px ${alpha(theme.palette.primary.main, 0.3)}`, // ✨ AURA EXTERNA BRILLANTE
+      ].join(', '),
+      
+      // Backdrop filter intensificado
+      backdropFilter: 'blur(40px) saturate(200%) brightness(110%)',
+      WebkitBackdropFilter: 'blur(40px) saturate(200%) brightness(110%)',
+    },
+    
+    // 🚀 EFECTOS ACTIVE PARA FEEDBACK TÁCTIL
+    '&:active': {
+      transform: 'translateY(-8px) translateZ(16px) rotateX(1deg)',
+      transition: 'all 0.1s ease-out',
+      
+      boxShadow: [
+        `0 24px 80px ${alpha(theme.palette.primary.dark, 0.3)}`,
+        `0 12px 40px ${alpha(theme.palette.secondary.main, 0.2)}`,
+        'inset 0 2px 0 rgba(255, 255, 255, 0.9)',
+        `inset 0 -2px 0 ${alpha(theme.palette.primary.main, 0.2)}`,
+      ].join(', '),
+    },
   },
   
   // Variante minimal para elementos discretos
@@ -362,18 +450,18 @@ export const componentVariants = {
     background: 'rgba(255, 254, 251, 0.6)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 183, 77, 0.1)',
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
     borderRadius: '16px',
-    boxShadow: '0 4px 16px rgba(139, 69, 19, 0.05)',
+    boxShadow: `0 4px 16px ${alpha(theme.palette.primary.dark, 0.05)}`,
     transition: 'all 0.3s ease',
     
     '&:hover': {
       background: 'rgba(255, 254, 251, 0.8)',
-      border: '1px solid rgba(255, 183, 77, 0.2)',
+      border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
       transform: 'translateY(-2px)',
     },
   },
-};
+});
 
 export default {
   revolutionaryPattern,

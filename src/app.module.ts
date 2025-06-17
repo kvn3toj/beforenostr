@@ -17,6 +17,7 @@ import { SocialModule } from './social/social.module';
 import { MeritsAndWalletModule } from './merits-and-wallet/merits-and-wallet.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
+import { LetsModule } from './lets/lets.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { MarketplaceModule } from './marketplace/marketplace.module';
     MeritsAndWalletModule, // Agregar para endpoints /wallets, /merits, /transactions
     NotificationsModule, // Agregar para endpoints /notifications
     MarketplaceModule, // Agregar para endpoints /marketplace
+    LetsModule, // Agregar para endpoints /lets
   ],
   controllers: [AppController],
   providers: [AppService],

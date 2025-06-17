@@ -57,7 +57,7 @@ export const CosmicCard: React.FC<CosmicCardProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
-  // 🎨 Generar estilos base revolucionarios
+  // 🎨 Generar estilos base revolucionarios - CORREGIDO: Ahora son funciones
   const basePattern = revolutionaryPattern(theme);
   const cosmicPattern = cosmicCardPattern(theme, variant, cosmicIntensity);
 

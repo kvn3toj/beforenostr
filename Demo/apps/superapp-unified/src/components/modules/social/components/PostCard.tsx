@@ -7,7 +7,6 @@
 
 import React, { useState } from 'react';
 import {
-  Card,
   CardHeader,
   CardContent,
   CardActions,
@@ -36,6 +35,9 @@ import {
   Send as SendIcon,
   Delete as DeleteIcon,
 } from '@mui/icons-material';
+
+// 🌌 NUEVO: Import del Design System Cósmico
+import { CosmicCard } from '../../../../design-system/components/cosmic/CosmicCard';
 
 // Hooks
 import {
@@ -206,19 +208,21 @@ const PostCard: React.FC<PostCardProps> = ({
   };
 
   return (
-    <Card
-      data-testid="post-card"
+    <CosmicCard
+      element="agua" // Elemento agua para el módulo social - fluidez y conexión emocional
+      cosmicIntensity="medium" // Incrementado para más impacto visual
+      enableAnimations={true}
+      enableGlow={true} // Activado para efecto cósmico
+      enableParticles={true} // Activado para atmósfera cósmica
+      onClick={() => onPostClick?.(post.id)}
       sx={{
         mb: 2,
-        boxShadow: 2,
         '&:hover': {
-          boxShadow: 4,
-          transform: 'translateY(-1px)',
-          transition: 'all 0.2s ease-in-out',
+          transform: onPostClick ? 'perspective(1000px) rotateX(1deg) rotateY(1deg) translateY(-2px)' : 'none',
+          transition: 'all 0.3s ease-in-out',
         },
         cursor: onPostClick ? 'pointer' : 'default',
       }}
-      onClick={() => onPostClick?.(post.id)}
     >
       {/* Header del post */}
       <CardHeader
@@ -598,7 +602,7 @@ const PostCard: React.FC<PostCardProps> = ({
           </MenuItem>
         )}
       </Menu>
-    </Card>
+    </CosmicCard>
   );
 };
 

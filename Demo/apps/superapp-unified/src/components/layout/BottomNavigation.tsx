@@ -23,7 +23,7 @@ const MOBILE_NAV_ITEMS = [
   },
   {
     label: 'ÜStats',
-    value: '/stats',
+    value: '/ustats',
     icon: <BarChart />,
   },
   {

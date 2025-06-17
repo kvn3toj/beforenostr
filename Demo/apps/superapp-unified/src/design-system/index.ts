@@ -51,6 +51,16 @@ export {
   responsivePattern
 } from './patterns';
 
+// 🔧 IMPORTS EXPLÍCITOS PARA DEFAULT EXPORT
+import patternsDefault from './patterns';
+import cosmicHomeGradientsDefault from './styles/gradients/cosmic-home';
+import CosmicCardDefault from './components/cosmic/CosmicCard';
+import RevolutionaryWidgetDefault from './templates/RevolutionaryWidget';
+import {
+  cosmicUtils as cosmicUtilsImport,
+  componentVariants as componentVariantsImport,
+} from './patterns';
+
 // 🎯 VARIANTES PRE-CONFIGURADAS PARA FÁCIL USO
 
 // Widgets revolucionarios
@@ -238,16 +248,16 @@ export const SOURCE_COMPONENTS = [
 // 🏆 EXPORT POR DEFECTO CON TODA LA FUNCIONALIDAD
 export default {
   // Patrones
-  patterns,
-  cosmicHomeGradients,
+  patterns: patternsDefault,
+  cosmicHomeGradients: cosmicHomeGradientsDefault,
   
   // Componentes
-  CosmicCard,
-  RevolutionaryWidget,
+  CosmicCard: CosmicCardDefault,
+  RevolutionaryWidget: RevolutionaryWidgetDefault,
   
   // Utilidades
-  cosmicUtils,
-  componentVariants,
+  cosmicUtils: cosmicUtilsImport,
+  componentVariants: componentVariantsImport,
   
   // Presets
   REVOLUTIONARY_PRESETS,
