@@ -1,0 +1,533 @@
+/* 🎨 MEJORAS ESPECÍFICAS PARA DISTRIBUCIÓN VISUAL INTUITIVA
+   Refinamientos basados en el análisis del dashboard actual */
+
+:root {
+  /* ========================
+     🎯 MEJORAS DE ESPACIADO VISUAL
+     ======================== */
+
+  /* Espaciado más equilibrado entre secciones */
+  --enhanced-section-gap: 24px; /* Más espacio entre secciones principales */
+  --enhanced-widget-gap: 16px; /* Espaciado entre widgets relacionados */
+  --enhanced-content-gap: 12px; /* Espaciado interno de contenido */
+  --enhanced-micro-gap: 8px; /* Espaciado mínimo */
+
+  /* Padding más inteligente */
+  --enhanced-container-padding: 20px; /* Padding de contenedores principales */
+  --enhanced-widget-padding: 16px; /* Padding interno de widgets */
+  --enhanced-content-padding: 12px; /* Padding de contenido */
+
+  /* ========================
+     🌊 JERARQUÍA VISUAL MEJORADA
+     ======================== */
+
+  /* Alturas más balanceadas */
+  --enhanced-hero-height: 180px; /* Hero más compacto */
+  --enhanced-main-widget-height: 450px; /* Widget principal optimizado */
+  --enhanced-sidebar-widget-height: 200px; /* Widgets sidebar balanceados */
+  --enhanced-action-bar-height: 120px; /* Barra de acciones optimizada */
+
+  /* Anchos más intuitivos */
+  --enhanced-main-width: 65%; /* Contenido principal ligeramente más ancho */
+  --enhanced-sidebar-width: 35%; /* Sidebar más compacto */
+
+  /* ========================
+     🎨 COLORES Y TRANSPARENCIAS REFINADAS
+     ======================== */
+
+  /* Fondos más sutiles */
+  --enhanced-bg-primary: rgba(255, 255, 255, 0.06);
+  --enhanced-bg-secondary: rgba(255, 255, 255, 0.04);
+  --enhanced-bg-tertiary: rgba(255, 255, 255, 0.02);
+
+  /* Bordes más definidos */
+  --enhanced-border-primary: rgba(255, 255, 255, 0.12);
+  --enhanced-border-secondary: rgba(255, 255, 255, 0.08);
+  --enhanced-border-tertiary: rgba(255, 255, 255, 0.04);
+
+  /* ========================
+     ✨ EFECTOS VISUALES MEJORADOS
+     ======================== */
+
+  /* Sombras más naturales */
+  --enhanced-shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --enhanced-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --enhanced-shadow-prominent: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --enhanced-shadow-focus: 0 0 0 3px rgba(0, 188, 212, 0.2);
+
+  /* Blur más sutil */
+  --enhanced-blur-light: blur(12px);
+  --enhanced-blur-medium: blur(16px);
+  --enhanced-blur-heavy: blur(24px);
+}
+
+/* ========================
+   🏗️ LAYOUT PRINCIPAL MEJORADO
+   ======================== */
+
+.enhanced-dashboard-container {
+  display: grid;
+  grid-template-areas:
+    'header header'
+    'main sidebar'
+    'actions actions';
+  grid-template-columns: var(--enhanced-main-width) var(
+      --enhanced-sidebar-width
+    );
+  grid-template-rows: auto 1fr auto;
+  gap: var(--enhanced-section-gap);
+  padding: var(--enhanced-container-padding);
+  min-height: 100vh;
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(0, 188, 212, 0.03) 0%,
+    rgba(255, 107, 53, 0.02) 30%,
+    rgba(102, 187, 106, 0.02) 60%,
+    transparent 100%
+  );
+}
+
+/* ========================
+   🎯 SECCIONES OPTIMIZADAS
+   ======================== */
+
+/* Header más compacto y elegante */
+.enhanced-header {
+  grid-area: header;
+  padding: var(--enhanced-content-padding);
+  background: var(--enhanced-bg-tertiary);
+  border: 1px solid var(--enhanced-border-tertiary);
+  border-radius: 16px;
+  backdrop-filter: var(--enhanced-blur-light);
+  transition: all 0.3s ease;
+}
+
+.enhanced-header:hover {
+  background: var(--enhanced-bg-secondary);
+  border-color: var(--enhanced-border-secondary);
+  transform: translateY(-2px);
+}
+
+/* Widget principal con mejor proporción */
+.enhanced-main-widget {
+  grid-area: main;
+  height: var(--enhanced-main-widget-height);
+  background: var(--enhanced-bg-primary);
+  border: 1px solid var(--enhanced-border-primary);
+  border-radius: 20px;
+  backdrop-filter: var(--enhanced-blur-medium);
+  box-shadow: var(--enhanced-shadow-medium);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-main-widget:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--enhanced-shadow-prominent);
+  border-color: rgba(0, 188, 212, 0.3);
+}
+
+.enhanced-main-widget::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 188, 212, 0.05) 0%,
+    transparent 50%,
+    rgba(255, 107, 53, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.enhanced-main-widget:hover::before {
+  opacity: 1;
+}
+
+/* Sidebar más organizado */
+.enhanced-sidebar {
+  grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
+  gap: var(--enhanced-widget-gap);
+}
+
+.enhanced-sidebar-widget {
+  height: var(--enhanced-sidebar-widget-height);
+  background: var(--enhanced-bg-secondary);
+  border: 1px solid var(--enhanced-border-secondary);
+  border-radius: 16px;
+  backdrop-filter: var(--enhanced-blur-light);
+  box-shadow: var(--enhanced-shadow-subtle);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-sidebar-widget:hover {
+  transform: translateY(-2px);
+  background: var(--enhanced-bg-primary);
+  border-color: var(--enhanced-border-primary);
+  box-shadow: var(--enhanced-shadow-medium);
+}
+
+/* Barra de acciones más intuitiva */
+.enhanced-actions {
+  grid-area: actions;
+  height: var(--enhanced-action-bar-height);
+  background: var(--enhanced-bg-secondary);
+  border: 1px solid var(--enhanced-border-secondary);
+  border-radius: 18px;
+  backdrop-filter: var(--enhanced-blur-medium);
+  box-shadow: var(--enhanced-shadow-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: sticky;
+  bottom: 20px;
+  z-index: 100;
+}
+
+.enhanced-actions:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--enhanced-shadow-prominent);
+  background: var(--enhanced-bg-primary);
+}
+
+/* ========================
+   📱 RESPONSIVE MEJORADO
+   ======================== */
+
+/* Mobile - Stack más inteligente */
+@media (max-width: 768px) {
+  .enhanced-dashboard-container {
+    grid-template-areas:
+      'header'
+      'main'
+      'sidebar'
+      'actions';
+    grid-template-columns: 1fr;
+    gap: var(--enhanced-widget-gap);
+    padding: 16px;
+  }
+
+  .enhanced-main-widget {
+    height: 350px; /* Más compacto en móvil */
+  }
+
+  .enhanced-sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: var(--enhanced-micro-gap);
+    padding-bottom: 8px;
+  }
+
+  .enhanced-sidebar-widget {
+    min-width: 280px; /* Ancho mínimo en móvil */
+    height: 160px; /* Más compacto en móvil */
+  }
+
+  .enhanced-actions {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    height: 80px;
+    border-radius: 20px;
+  }
+}
+
+/* Tablet - Transición suave */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .enhanced-dashboard-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'header'
+      'main'
+      'sidebar'
+      'actions';
+  }
+
+  .enhanced-sidebar {
+    flex-direction: row;
+    gap: var(--enhanced-widget-gap);
+  }
+
+  .enhanced-sidebar-widget {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* Desktop Large - Máximo aprovechamiento */
+@media (min-width: 1400px) {
+  .enhanced-dashboard-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 32px;
+    gap: 32px;
+  }
+
+  .enhanced-main-widget {
+    height: 500px;
+  }
+
+  .enhanced-sidebar-widget {
+    height: 220px;
+  }
+}
+
+/* ========================
+   🎨 MEJORAS VISUALES ESPECÍFICAS
+   ======================== */
+
+/* Indicadores de contenido */
+.enhanced-content-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 8px;
+  height: 8px;
+  background: #00bcd4;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Separadores sutiles */
+.enhanced-separator {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--enhanced-border-secondary) 50%,
+    transparent 100%
+  );
+  margin: var(--enhanced-content-gap) 0;
+}
+
+/* Texto con mejor jerarquía */
+.enhanced-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: var(--enhanced-micro-gap);
+  line-height: 1.2;
+}
+
+.enhanced-subtitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: var(--enhanced-content-gap);
+  line-height: 1.4;
+}
+
+.enhanced-caption {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+/* ========================
+   ⚡ MICRO-INTERACCIONES MEJORADAS
+   ======================== */
+
+/* Botones más responsivos */
+.enhanced-button {
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--enhanced-border-secondary);
+  background: var(--enhanced-bg-secondary);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.enhanced-button:hover {
+  transform: translateY(-1px);
+  background: var(--enhanced-bg-primary);
+  border-color: var(--enhanced-border-primary);
+  box-shadow: var(--enhanced-shadow-subtle);
+}
+
+.enhanced-button:active {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+/* Cards más intuitivos */
+.enhanced-card {
+  background: var(--enhanced-bg-tertiary);
+  border: 1px solid var(--enhanced-border-tertiary);
+  border-radius: 12px;
+  padding: var(--enhanced-content-padding);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.enhanced-card:hover {
+  background: var(--enhanced-bg-secondary);
+  border-color: var(--enhanced-border-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--enhanced-shadow-subtle);
+}
+
+/* ========================
+   🌟 EFECTOS ESPECIALES
+   ======================== */
+
+/* Brillo sutil en hover */
+.enhanced-glow {
+  position: relative;
+}
+
+.enhanced-glow::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 188, 212, 0.1),
+    rgba(255, 107, 53, 0.1),
+    rgba(102, 187, 106, 0.1),
+    rgba(255, 213, 79, 0.1)
+  );
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.enhanced-glow:hover::after {
+  opacity: 1;
+}
+
+/* Scroll más suave */
+.enhanced-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.enhanced-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.enhanced-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.enhanced-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.enhanced-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ========================
+   🎯 UTILIDADES FINALES
+   ======================== */
+
+/* Fade in suave */
+.enhanced-fade-in {
+  opacity: 0;
+  animation: enhancedFadeIn 0.6s ease forwards;
+}
+
+@keyframes enhancedFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide up elegante */
+.enhanced-slide-up {
+  transform: translateY(20px);
+  opacity: 0;
+  animation: enhancedSlideUp 0.5s ease forwards;
+}
+
+@keyframes enhancedSlideUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Scale suave */
+.enhanced-scale {
+  transform: scale(0.95);
+  opacity: 0;
+  animation: enhancedScale 0.4s ease forwards;
+}
+
+@keyframes enhancedScale {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Delays escalonados para animaciones */
+.enhanced-delay-1 {
+  animation-delay: 0.1s;
+}
+.enhanced-delay-2 {
+  animation-delay: 0.2s;
+}
+.enhanced-delay-3 {
+  animation-delay: 0.3s;
+}
+.enhanced-delay-4 {
+  animation-delay: 0.4s;
+}
+.enhanced-delay-5 {
+  animation-delay: 0.5s;
+}
+
+/* Estados de carga más elegantes */
+.enhanced-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-loading::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: enhancedShimmer 2s infinite;
+}
+
+@keyframes enhancedShimmer {
+  to {
+    transform: translateX(100%);
+  }
+}

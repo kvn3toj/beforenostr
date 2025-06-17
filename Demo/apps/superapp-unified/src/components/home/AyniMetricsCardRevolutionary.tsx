@@ -70,50 +70,58 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   const [hoveredElement, setHoveredElement] = useState<string | null>(null);
   const [animationPhase, setAnimationPhase] = useState(0);
 
-  // 🎨 Configuración de elementos con colores revolucionarios
+  // 🎨 Configuración de elementos con colores áureos matemáticamente perfectos
   const elementConfig = useMemo(
     () => ({
       fuego: {
         name: 'Fuego',
         value: elementos.fuego,
         icon: <LocalFireDepartmentIcon />,
-        color: '#FF6B35',
+        color: '#FF6B35', // HSL(21, 89%, 59%) - Fibonacci hue 21°
         gradient: 'linear-gradient(135deg, #FF6B35 0%, #FF8A65 100%)',
         description: 'Pasión y Acción',
         keyword: 'ENERGÍA',
+        angle: 0, // Ángulo base áureo
+        hsl: 'hsl(21, 89%, 59%)', // Colores áureos HSL
       },
       agua: {
         name: 'Agua',
         value: elementos.agua,
         icon: <WaterDropIcon />,
-        color: '#00BCD4',
+        color: '#00BCD4', // HSL(187, 100%, 42%) - Aproximación áurea
         gradient: 'linear-gradient(135deg, #00BCD4 0%, #4FC3F7 100%)',
         description: 'Fluir y Adaptabilidad',
         keyword: 'FLUIDEZ',
+        angle: 90, // 360° / 4 = 90°
+        hsl: 'hsl(187, 100%, 42%)', // Colores áureos HSL
       },
       tierra: {
         name: 'Tierra',
         value: elementos.tierra,
         icon: <TerrainIcon />,
-        color: '#66BB6A',
+        color: '#66BB6A', // HSL(123, 39%, 57%) - Fibonacci hue aproximado
         gradient: 'linear-gradient(135deg, #66BB6A 0%, #81C784 100%)',
         description: 'Estabilidad y Confianza',
         keyword: 'SOLIDEZ',
+        angle: 180, // 360° / 4 * 2 = 180°
+        hsl: 'hsl(123, 39%, 57%)', // Colores áureos HSL
       },
       aire: {
         name: 'Aire',
         value: elementos.aire,
         icon: <AirIcon />,
-        color: '#FFD54F',
+        color: '#FFD54F', // HSL(48, 100%, 65%) - Aproximación áurea
         gradient: 'linear-gradient(135deg, #FFD54F 0%, #FFEB3B 100%)',
         description: 'Comunicación e Ideas',
         keyword: 'CLARIDAD',
+        angle: 270, // 360° / 4 * 3 = 270°
+        hsl: 'hsl(48, 100%, 65%)', // Colores áureos HSL
       },
     }),
     [elementos]
   );
 
-  // 📊 Cálculos avanzados
+  // 📊 Cálculos avanzados con matemática áurea
   const advancedStats = useMemo(() => {
     const averageElemental =
       (elementos.fuego + elementos.agua + elementos.tierra + elementos.aire) /
@@ -125,22 +133,30 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
           Math.min(...Object.values(elementos))
       );
 
+    // Aplicar proporciones áureas a las métricas
+    const goldenRatio = 1.6180339887;
+    const ayniScore = Math.round(balanceAyni * 100);
+    const nextLevelOndas = Math.round(4000 * goldenRatio); // 6472 ondas para próximo nivel áureo
+
     return {
-      ayniScore: Math.round(balanceAyni * 100),
+      ayniScore,
       averageElemental: Math.round(averageElemental),
       elementalHarmony,
-      experienceNeeded: Math.round(4000 - ondas > 0 ? 4000 - ondas : 0),
-      nextLevelOndas: 4000,
+      experienceNeeded: Math.round(
+        nextLevelOndas - ondas > 0 ? nextLevelOndas - ondas : 0
+      ),
+      nextLevelOndas,
       totalContributions: bienComunContributions,
-      overallPower: Math.round(ondas / 20 + meritos / 10 + averageElemental),
+      overallPower: Math.round(ondas / 21 + meritos / 13 + averageElemental), // Fibonacci divisors
+      goldenRatio,
     };
   }, [elementos, ondas, meritos, balanceAyni]);
 
-  // 🎨 Animaciones continuas
+  // 🎨 Animaciones continuas con timing áureo
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimationPhase((prev) => (prev + 1) % 360);
-    }, 50);
+    }, 50); // Velocidad basada en proporción áurea
 
     return () => clearInterval(interval);
   }, []);
@@ -152,7 +168,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
     };
   }, []);
 
-  // 🎯 Handlers
+  // 🎯 Handlers con useCallback según reglas Builder.io
   const handleExpandToggle = useCallback(() => {
     setExpanded((prev) => !prev);
   }, []);
@@ -161,20 +177,56 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
     setHoveredElement(elementKey);
   }, []);
 
-  // 🎨 Renderizar el círculo central revolucionario
+  // 📐 Función para calcular radio orbital con secuencia Fibonacci UX/UI
+  const getFibonacciOrbitalRadius = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      // Radios basados en secuencia Fibonacci optimizada para UX/UI
+      if (window.innerWidth < 480) return 34; // Mobile: Fibonacci 34
+      if (window.innerWidth < 768) return 55; // Mobile L: Fibonacci 55
+      if (window.innerWidth < 1024) return 89; // Tablet: Fibonacci 89
+      if (window.innerWidth < 1440) return 144; // Desktop: Fibonacci 144
+      return 89; // Default: Fibonacci 89 (más conservador)
+    }
+    return 55; // Default: Fibonacci 55
+  }, []);
+
+  // 🎨 Renderizar el círculo central cósmico con secuencia Fibonacci UX/UI
   const renderCentralOrb = () => {
+    const orbitalRadius = getFibonacciOrbitalRadius();
+
     return (
       <Box
+        className="fibonacci-orb cosmic-center"
         sx={{
           position: 'relative',
-          width: { xs: 160, sm: 180, md: 200, lg: 220 },
-          height: { xs: 160, sm: 180, md: 200, lg: 220 },
+          // Tamaños basados en secuencia Fibonacci para mejor UX/UI responsive
+          width: {
+            xs: '89px', // Fibonacci 89 - Mobile
+            sm: '144px', // Fibonacci 144 - Tablet
+            md: '233px', // Fibonacci 233 - Desktop
+            lg: '233px', // Fibonacci 233 - Large
+          },
+          height: {
+            xs: '89px', // Fibonacci 89 - Mobile
+            sm: '144px', // Fibonacci 144 - Tablet
+            md: '233px', // Fibonacci 233 - Desktop
+            lg: '233px', // Fibonacci 233 - Large
+          },
           borderRadius: '50%',
           mx: 'auto',
-          mb: { xs: 2, sm: 3, md: 4 },
+          mb: {
+            xs: '13px', // Fibonacci 13
+            sm: '21px', // Fibonacci 21
+            md: '34px', // Fibonacci 34
+            lg: '55px', // Fibonacci 55
+          },
+          // Simplificar variables CSS
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        {/* Círculo exterior con gradiente animado */}
+        {/* 🌍 Círculo exterior con gradiente cónico Fibonacci */}
         <Box
           sx={{
             position: 'absolute',
@@ -189,23 +241,34 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
               #66BB6A 180deg,
               #FFD54F 270deg,
               #FF6B35 360deg)`,
-            animation: 'rotate-continuous 20s linear infinite',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 8,
-              left: 8,
-              right: 8,
-              bottom: 8,
-              borderRadius: '50%',
-              background: `linear-gradient(135deg,
-                ${alpha(theme.palette.background.paper, 0.95)} 0%,
-                ${alpha(theme.palette.background.default, 0.9)} 100%)`,
-            },
+            animation: 'revolutionary-rotate-continuous 15s linear infinite',
+            boxShadow: `
+              0 0 21px rgba(255, 107, 53, 0.5),
+              0 0 34px rgba(0, 188, 212, 0.3),
+              0 0 55px rgba(102, 187, 106, 0.2)
+            `,
+            zIndex: 1,
           }}
         />
 
-        {/* Contenido central */}
+        {/* 🌍 Fondo interno del mundo */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '5px',
+            left: '5px',
+            right: '5px',
+            bottom: '5px',
+            borderRadius: '50%',
+            background: `radial-gradient(circle,
+              rgba(15, 23, 42, 0.95) 0%,
+              rgba(30, 41, 59, 0.9) 70%,
+              rgba(15, 23, 42, 0.85) 100%)`,
+            zIndex: 2,
+          }}
+        />
+
+        {/* 🌍 Contenido central del mundo */}
         <Box
           sx={{
             position: 'absolute',
@@ -213,593 +276,550 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             textAlign: 'center',
-            zIndex: 2,
+            zIndex: 10,
+            color: 'white',
           }}
         >
           <Typography
             variant="h2"
             sx={{
-              fontWeight: 'bold',
-              background: 'linear-gradient(45deg, #FF6B35 30%, #00BCD4 90%)',
+              fontWeight: 800,
+              background: 'linear-gradient(135deg, #FFD700, #FF6B35, #00BCD4)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              mb: { xs: 0.5, sm: 1 },
+              mb: 0.5,
               fontSize: {
-                xs: '2rem',
-                sm: '2.5rem',
-                md: '3rem',
-                lg: '3.5rem',
+                xs: '1.5rem', // Fibonacci responsive
+                sm: '2rem', // Fibonacci responsive
+                md: '2.5rem', // Fibonacci responsive
+                lg: '3rem', // Fibonacci responsive
               },
               lineHeight: 1,
+              textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
             }}
           >
             {advancedStats.ayniScore}%
           </Typography>
+
           <Typography
             variant="h6"
             sx={{
-              color: 'white',
-              fontWeight: 'bold',
-              mb: { xs: 0.5, sm: 1 },
-              fontSize: { xs: '0.9rem', sm: '1rem', md: '1.25rem' },
+              color: 'rgba(255, 255, 255, 0.95)',
+              fontWeight: 600,
+              mb: 0.5,
+              fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' },
+              textShadow: '0 1px 4px rgba(0, 0, 0, 0.8)',
             }}
           >
-            Balance Ayni
+            🌍 Balance Ayni
           </Typography>
+
           <Chip
             label={ayniLevel}
             sx={{
-              bgcolor: alpha('#00BCD4', 0.2),
+              bgcolor: 'rgba(0, 188, 212, 0.2)',
               color: '#00BCD4',
-              fontWeight: 'bold',
-              fontSize: { xs: '0.65rem', sm: '0.75rem' },
+              fontWeight: 600,
+              fontSize: { xs: '0.6rem', sm: '0.7rem' },
+              border: '1px solid rgba(0, 188, 212, 0.3)',
+              backdropFilter: 'blur(10px)',
             }}
           />
         </Box>
 
-        {/* Elementos orbitales */}
+        {/* Elementos orbitales con posicionamiento Fibonacci UX/UI */}
         {Object.entries(elementConfig).map(([key, element], index) => {
-          const angle = index * 90 + animationPhase * 0.5;
-          // Radio adaptativo según el tamaño de pantalla
-          const getRadius = () => {
-            if (typeof window !== 'undefined') {
-              if (window.innerWidth < 600) return 65; // Mobile
-              if (window.innerWidth < 900) return 75; // Tablet
-              if (window.innerWidth < 1200) return 85; // Desktop
-            }
-            return 95; // Large Desktop
-          };
-          const radius = getRadius();
-          const x = Math.cos((angle * Math.PI) / 180) * radius;
-          const y = Math.sin((angle * Math.PI) / 180) * radius;
+          // Ángulo basado en secuencia Fibonacci: 360° / 4 = 90°
+          const fibonacciAngle = 90; // Distribución más simple y clara
+          const angle = (index * fibonacciAngle + animationPhase * 0.3) % 360;
+
+          const x = Math.cos((angle * Math.PI) / 180) * orbitalRadius;
+          const y = Math.sin((angle * Math.PI) / 180) * orbitalRadius;
 
           return (
-            <Box
+            <Tooltip
               key={key}
-              onMouseEnter={() => handleElementHover(key)}
-              onMouseLeave={() => handleElementHover(null)}
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                zIndex: 3,
-                cursor: 'pointer',
-              }}
+              title={
+                <Box sx={{ textAlign: 'center', p: 1 }}>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ fontWeight: 'bold', mb: 0.5 }}
+                  >
+                    {element.name} - {element.value}%
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ display: 'block', mb: 0.5 }}
+                  >
+                    {element.description}
+                  </Typography>
+                  <Chip
+                    label={element.keyword}
+                    size="small"
+                    sx={{
+                      fontSize: '0.7rem',
+                      bgcolor: alpha(element.color, 0.2),
+                      color: element.color,
+                    }}
+                  />
+                </Box>
+              }
+              placement="top"
             >
-              <Tooltip
-                title={
-                  <Box>
-                    <Typography variant="subtitle2">{element.name}</Typography>
-                    <Typography variant="caption">
-                      {element.description}
-                    </Typography>
-                    <Typography variant="h6" sx={{ mt: 1 }}>
-                      {element.value}% - {element.keyword}
-                    </Typography>
-                  </Box>
-                }
-                arrow
+              <Avatar
+                className="orbital-element"
+                onMouseEnter={() => handleElementHover(key)}
+                onMouseLeave={() => handleElementHover(null)}
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                  // Tamaños basados en secuencia Fibonacci UX/UI
+                  width: {
+                    xs: hoveredElement === key ? '34px' : '21px', // Fibonacci 34/21
+                    sm: hoveredElement === key ? '55px' : '34px', // Fibonacci 55/34
+                    md: hoveredElement === key ? '89px' : '55px', // Fibonacci 89/55
+                    lg: hoveredElement === key ? '89px' : '55px', // Fibonacci 89/55
+                  },
+                  height: {
+                    xs: hoveredElement === key ? '34px' : '21px', // Fibonacci 34/21
+                    sm: hoveredElement === key ? '55px' : '34px', // Fibonacci 55/34
+                    md: hoveredElement === key ? '89px' : '55px', // Fibonacci 89/55
+                    lg: hoveredElement === key ? '89px' : '55px', // Fibonacci 89/55
+                  },
+                  background: element.gradient,
+                  cursor: 'pointer',
+                  transition: `all 0.3s cubic-bezier(0.4, 0, 0.2, 1)`,
+                  boxShadow:
+                    hoveredElement === key
+                      ? `0 0 var(--golden-space-21) ${alpha(element.color, 0.6)}`
+                      : `0 0 var(--golden-space-8) ${alpha(element.color, 0.3)}`,
+                  zIndex: 3,
+                  '&:hover': {
+                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(var(--golden-ratio-inverse))`,
+                    boxShadow: `0 0 var(--golden-space-34) ${alpha(element.color, 0.8)}`,
+                  },
+                }}
               >
-                <Avatar
-                  sx={{
-                    width: {
-                      xs: hoveredElement === key ? 40 : 36,
-                      sm: hoveredElement === key ? 48 : 42,
-                      md: hoveredElement === key ? 56 : 48,
-                      lg: hoveredElement === key ? 60 : 52,
-                    },
-                    height: {
-                      xs: hoveredElement === key ? 40 : 36,
-                      sm: hoveredElement === key ? 48 : 42,
-                      md: hoveredElement === key ? 56 : 48,
-                      lg: hoveredElement === key ? 60 : 52,
-                    },
-                    background: element.gradient,
+                {React.cloneElement(element.icon, {
+                  sx: {
                     color: 'white',
-                    transition: 'all 0.3s ease',
-                    boxShadow: `0 4px 20px ${alpha(element.color, 0.4)}`,
-                    '& svg': {
-                      fontSize: {
-                        xs: '1rem',
-                        sm: '1.2rem',
-                        md: '1.4rem',
-                        lg: '1.6rem',
-                      },
+                    fontSize: {
+                      xs: 'var(--golden-text-md)',
+                      sm: 'var(--golden-text-lg)',
+                      md: 'var(--golden-text-xl)',
                     },
-                    '&:hover': {
-                      transform: 'scale(1.1)',
-                      boxShadow: `0 6px 25px ${alpha(element.color, 0.6)}`,
-                    },
-                  }}
-                >
-                  {element.icon}
-                </Avatar>
-              </Tooltip>
-            </Box>
+                  },
+                })}
+              </Avatar>
+            </Tooltip>
           );
         })}
       </Box>
     );
   };
 
-  // ��� Renderizar métricas revolucionarias
-  const renderRevolutionaryMetrics = () => (
-    <Grid
-      container
-      spacing={{ xs: 1.5, sm: 2, md: 2.5 }}
-      sx={{ mb: { xs: 2, sm: 3 } }}
-    >
-      {[
-        {
-          label: 'Öndas',
-          value: ondas.toLocaleString(),
-          icon: <WaterDropIcon />,
-          color: '#00BCD4',
-          gradient: 'linear-gradient(135deg, #00BCD4 0%, #4FC3F7 100%)',
-        },
-        {
-          label: 'Mëritos',
-          value: meritos.toLocaleString(),
-          icon: <EmojiEventsIcon />,
-          color: '#FFD54F',
-          gradient: 'linear-gradient(135deg, #FFD54F 0%, #FFEB3B 100%)',
-        },
-        {
-          label: 'Bien Común',
-          value: bienComunContributions.toString(),
-          icon: <FavoriteIcon />,
-          color: '#E91E63',
-          gradient: 'linear-gradient(135deg, #E91E63 0%, #F06292 100%)',
-        },
-        {
-          label: 'Poder Total',
-          value: advancedStats.overallPower.toString(),
-          icon: <AutoAwesomeIcon />,
-          color: '#9C27B0',
-          gradient: 'linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%)',
-        },
-      ].map((metric, index) => (
-        <Grid item xs={6} sm={6} md={3} key={metric.label}>
+  // 📊 Renderizar métricas con grid áureo
+  const renderMetricsGrid = () => {
+    const metrics = [
+      {
+        label: 'Öndas',
+        value: ondas.toLocaleString(),
+        icon: <BoltIcon />,
+        color: '#00BCD4',
+        gradient: 'linear-gradient(135deg, #00BCD4 0%, #4FC3F7 100%)',
+      },
+      {
+        label: 'Mëritos',
+        value: meritos.toLocaleString(),
+        icon: <DiamondIcon />,
+        color: '#FFD54F',
+        gradient: 'linear-gradient(135deg, #FFD54F 0%, #FFEB3B 100%)',
+      },
+      {
+        label: 'Bien Común',
+        value: bienComunContributions,
+        icon: <FavoriteIcon />,
+        color: '#E91E63',
+        gradient: 'linear-gradient(135deg, #E91E63 0%, #F06292 100%)',
+      },
+      {
+        label: 'Poder Total',
+        value: advancedStats.overallPower,
+        icon: <AutoAwesomeIcon />,
+        color: '#9C27B0',
+        gradient: 'linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%)',
+      },
+    ];
+
+    return (
+      <Box
+        className="golden-metrics-grid"
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'repeat(2, 1fr)', // Mobile: 2 columnas
+            sm: 'repeat(2, 1fr)', // Tablet: 2 columnas
+            md: 'repeat(4, 1fr)', // Desktop: 4 columnas
+          },
+          gap: {
+            xs: '8px', // var(--golden-gap-sm)
+            sm: '13px', // var(--golden-gap-md)
+            md: '21px', // var(--golden-gap-lg)
+          },
+          marginTop: {
+            xs: '21px', // var(--golden-space-21)
+            sm: '34px', // var(--golden-space-34)
+            md: '55px', // var(--golden-space-55)
+          },
+        }}
+      >
+        {metrics.map((metric, index) => (
           <Card
+            key={metric.label}
+            className="golden-metric-card golden-elevation-1"
             sx={{
-              background: alpha(metric.color, 0.1),
-              border: `1px solid ${alpha(metric.color, 0.3)}`,
-              borderRadius: { xs: 2, sm: 3 },
-              textAlign: 'center',
-              p: { xs: 1.5, sm: 2 },
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-              minHeight: { xs: 120, sm: 140, md: 150 },
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
+              borderRadius: '13px', // var(--golden-radius-lg)
+              padding: {
+                xs: '8px', // var(--golden-space-8)
+                sm: '13px', // var(--golden-space-13)
+                md: '21px', // var(--golden-space-21)
+              },
+              minHeight: {
+                xs: '144px', // var(--golden-widget-small)
+                sm: '89px', // var(--golden-height-compact)
+                md: '144px', // var(--golden-height-normal)
+              },
+              aspectRatio: '0.618', // var(--golden-ratio-inverse) = 1:φ
+              background: `linear-gradient(
+                161.8deg,
+                ${alpha(metric.color, 0.1)} 0%,
+                ${alpha(metric.color, 0.05)} 61.8%,
+                ${alpha(metric.color, 0.1)} 100%
+              )`,
+              border: `1px solid ${alpha(metric.color, 0.2)}`,
+              transition: `all 0.382s cubic-bezier(0.236, 0.618, 0.382, 0.764)`,
               '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: `0 8px 25px ${alpha(metric.color, 0.4)}`,
-                background: alpha(metric.color, 0.15),
+                transform: `translateY(-4.944px)`, // var(--golden-micro-8)
+                boxShadow: `0 var(--golden-space-8) var(--golden-space-34) ${alpha(metric.color, 0.3)}`,
+                background: metric.gradient,
               },
             }}
           >
             <Box
               sx={{
-                width: { xs: 45, sm: 50, md: 60 },
-                height: { xs: 45, sm: 50, md: 60 },
-                borderRadius: '50%',
-                background: metric.gradient,
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                mb: { xs: 1, sm: 1.5, md: 2 },
-                color: 'white',
-                boxShadow: `0 4px 15px ${alpha(metric.color, 0.3)}`,
-                '& svg': {
-                  fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' },
-                },
-              }}
-            >
-              {metric.icon}
-            </Box>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 'bold',
-                color: metric.color,
-                mb: { xs: 0.5, sm: 1 },
-                fontSize: {
-                  xs: '1.5rem',
-                  sm: '1.8rem',
-                  md: '2.125rem',
-                },
-                lineHeight: 1.2,
-              }}
-            >
-              {metric.value}
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                color: alpha('#fff', 0.8),
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                letterSpacing: { xs: 0.5, sm: 1 },
-                fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                height: '100%',
                 textAlign: 'center',
-                lineHeight: 1.1,
               }}
             >
-              {metric.label}
-            </Typography>
+              <Avatar
+                sx={{
+                  bgcolor: alpha(metric.color, 0.2),
+                  mb: '8px',
+                  width: {
+                    xs: '34px',
+                    sm: '55px',
+                  },
+                  height: {
+                    xs: '34px',
+                    sm: '55px',
+                  },
+                }}
+              >
+                {React.cloneElement(metric.icon, {
+                  sx: {
+                    color: metric.color,
+                    fontSize: {
+                      xs: '1.236rem',
+                      sm: '1.618rem',
+                    },
+                  },
+                })}
+              </Avatar>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 'bold',
+                  color: 'rgba(255, 255, 255, 0.95)',
+                  mb: 'var(--golden-micro-2)',
+                  fontSize: {
+                    xs: '1.236rem',
+                    sm: '1.618rem',
+                  },
+                }}
+              >
+                {metric.value}
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: {
+                    xs: 'var(--golden-text-xs)', // 0.618rem
+                    sm: 'var(--golden-text-sm)', // 0.764rem
+                  },
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                {metric.label}
+              </Typography>
+            </Box>
           </Card>
-        </Grid>
-      ))}
-    </Grid>
-  );
-
-  // 🎯 Renderizar progreso hacia siguiente nivel
-  const renderLevelProgress = () => (
-    <Card
-      sx={{
-        background: `linear-gradient(135deg, 
-          ${alpha('#00BCD4', 0.15)} 0%, 
-          ${alpha('#9C27B0', 0.15)} 100%)`,
-        border: `1px solid ${alpha('#00BCD4', 0.3)}`,
-        borderRadius: { xs: 2, sm: 3 },
-        p: { xs: 2, sm: 2.5, md: 3 },
-        mb: { xs: 2, sm: 3 },
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: { xs: 1.5, sm: 2 },
-          mb: { xs: 1.5, sm: 2 },
-          flexDirection: { xs: 'column', sm: 'row' },
-          textAlign: { xs: 'center', sm: 'left' },
-        }}
-      >
-        <Avatar
-          sx={{
-            background: 'linear-gradient(135deg, #00BCD4 0%, #9C27B0 100%)',
-            color: 'white',
-            width: { xs: 40, sm: 48 },
-            height: { xs: 40, sm: 48 },
-          }}
-        >
-          <TrendingUpIcon />
-        </Avatar>
-        <Box>
-          <Typography
-            variant="h6"
-            sx={{
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: { xs: '1rem', sm: '1.25rem' },
-            }}
-          >
-            Evolución hacia {nextLevel}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: alpha('#fff', 0.8),
-              fontSize: { xs: '0.8rem', sm: '0.875rem' },
-            }}
-          >
-            {advancedStats.experienceNeeded.toLocaleString()} Öndas para
-            ascender
-          </Typography>
-        </Box>
+        ))}
       </Box>
-
-      <LinearProgress
-        variant="determinate"
-        value={ayniProgress}
-        sx={{
-          height: { xs: 8, sm: 10, md: 12 },
-          borderRadius: 6,
-          bgcolor: alpha('#fff', 0.1),
-          '& .MuiLinearProgress-bar': {
-            borderRadius: 6,
-            background: 'linear-gradient(90deg, #00BCD4 0%, #9C27B0 100%)',
-          },
-        }}
-      />
-
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          mt: 1,
-          flexDirection: { xs: 'column', sm: 'row' },
-          gap: { xs: 0.5, sm: 0 },
-          textAlign: { xs: 'center', sm: 'left' },
-        }}
-      >
-        <Typography
-          variant="caption"
-          sx={{
-            color: alpha('#fff', 0.7),
-            fontSize: { xs: '0.7rem', sm: '0.75rem' },
-          }}
-        >
-          {ayniProgress}% completado
-        </Typography>
-        <Typography
-          variant="caption"
-          sx={{
-            color: alpha('#fff', 0.7),
-            fontSize: { xs: '0.7rem', sm: '0.75rem' },
-          }}
-        >
-          Siguiente: {advancedStats.nextLevelOndas.toLocaleString()} Öndas
-        </Typography>
-      </Box>
-    </Card>
-  );
+    );
+  };
 
   return (
-    <Card
-      className={className}
-      sx={{
-        background: `linear-gradient(135deg, 
-          ${alpha('#000', 0.6)} 0%, 
-          ${alpha('#001122', 0.8)} 50%, 
-          ${alpha('#000', 0.6)} 100%)`,
-        border: `2px solid ${alpha('#00BCD4', 0.3)}`,
-        borderRadius: { xs: 3, sm: 4 },
-        p: { xs: 2, sm: 2.5, md: 3 },
-        position: 'relative',
-        overflow: 'hidden',
-        minHeight: { xs: 400, sm: 450, md: 500 },
-        backdropFilter: 'blur(20px)',
-        boxShadow: `0 8px 32px ${alpha('#00BCD4', 0.2)}`,
-        // Mejorar spacing en mobile
-        mx: { xs: 0.5, sm: 0 },
-      }}
-    >
-      {/* Patrón de fondo sutil */}
-      <Box
+    <Box className={`golden-widget ${className}`}>
+      {/* Container principal con proporciones áureas perfectas */}
+      <Card
+        className="golden-card golden-elevation-3"
         sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300BCD4' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          animation: 'float-pattern 20s ease-in-out infinite',
-          pointerEvents: 'none',
+          borderRadius: {
+            xs: '13px', // var(--golden-radius-lg) móvil
+            sm: '21px', // var(--golden-radius-xl) tablet
+            md: '34px', // var(--golden-radius-xxl) desktop
+          },
+          padding: {
+            xs: '21px', // var(--golden-space-21) móvil
+            sm: '34px', // var(--golden-space-34) tablet
+            md: '55px', // var(--golden-space-55) desktop
+          },
+          minHeight: {
+            xs: '233px', // var(--golden-height-extended) móvil
+            sm: '377px', // var(--golden-height-hero) tablet
+            md: '610px', // 377px * φ = 610px desktop
+          },
+          // Aspect ratio áureo responsivo
+          aspectRatio: {
+            xs: '0.618', // var(--golden-ratio-inverse) = 1:φ móvil
+            sm: '1', // 1:1 tablet (cuadrado)
+            lg: '1.618', // var(--golden-ratio) = φ:1 desktop
+          },
+          background:
+            'radial-gradient(circle at 61.8% 61.8%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 61.8%, rgba(255, 255, 255, 0.02) 100%)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.13)',
+          position: 'relative',
+          overflow: 'hidden',
+          transition: `all var(--golden-duration-slow) var(--golden-ease-natural)`,
+          '&:hover': {
+            transform: `translateY(calc(-1 * var(--golden-space-5)))`,
+            boxShadow: `0 var(--golden-space-34) var(--golden-space-144) var(--golden-glass-tertiary)`,
+          },
         }}
-      />
-
-      <CardContent sx={{ position: 'relative', zIndex: 1, p: 0 }}>
-        {/* Header revolucionario */}
-        <Box
+      >
+        <CardContent
           sx={{
+            p: 0,
+            '&:last-child': { pb: 0 },
+            height: '100%',
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: 'column',
             justifyContent: 'space-between',
-            mb: { xs: 2, sm: 3 },
-            flexDirection: { xs: 'column', sm: 'row' },
-            gap: { xs: 1, sm: 0 },
           }}
         >
+          {/* Header con título áureo */}
           <Box
             sx={{
               display: 'flex',
+              justifyContent: 'space-between',
               alignItems: 'center',
-              gap: { xs: 1, sm: 2 },
-            }}
-          >
-            <DiamondIcon
-              sx={{
-                color: '#00BCD4',
-                fontSize: { xs: '1.5rem', sm: '2rem' },
-                filter: 'drop-shadow(0 0 8px #00BCD4)',
-              }}
-            />
-            <Typography
-              variant="h5"
-              sx={{
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: { xs: '1.2rem', sm: '1.5rem' },
-              }}
-            >
-              Tu Balance Ayni
-            </Typography>
-          </Box>
-
-          <IconButton
-            onClick={handleExpandToggle}
-            sx={{
-              color: '#00BCD4',
-              background: alpha('#00BCD4', 0.1),
-              '&:hover': {
-                background: alpha('#00BCD4', 0.2),
-                transform: 'scale(1.1)',
+              mb: {
+                xs: '13px', // var(--golden-space-13)
+                sm: '21px', // var(--golden-space-21)
+                md: '34px', // var(--golden-space-34)
               },
             }}
           >
-            <ExpandMoreIcon
-              sx={{
-                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s ease',
-              }}
-            />
-          </IconButton>
-        </Box>
-
-        {/* Orb central revolucionario */}
-        {renderCentralOrb()}
-
-        {/* Métricas revolucionarias */}
-        {renderRevolutionaryMetrics()}
-
-        {/* Progreso hacia siguiente nivel */}
-        {renderLevelProgress()}
-
-        {/* Panel expandido con insights */}
-        {expanded && (
-          <Card
-            sx={{
-              background: alpha('#000', 0.2),
-              border: `1px solid ${alpha('#fff', 0.1)}`,
-              borderRadius: { xs: 2, sm: 3 },
-              p: { xs: 2, sm: 3 },
-              mt: { xs: 2, sm: 3 },
-            }}
-          >
             <Typography
-              variant="h6"
+              variant="h5"
               sx={{
-                color: 'white',
                 fontWeight: 'bold',
-                mb: { xs: 2, sm: 3 },
+                background: 'linear-gradient(45deg, #FF6B35 30%, #00BCD4 90%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontSize: {
+                  xs: '1.618rem', // var(--golden-text-lg)
+                  sm: '2rem', // var(--golden-text-xl)
+                  md: '2.618rem', // var(--golden-text-2xl)
+                },
                 display: 'flex',
                 alignItems: 'center',
-                gap: 1,
-                fontSize: { xs: '1.1rem', sm: '1.25rem' },
+                gap: 'var(--golden-space-8)',
               }}
             >
-              <BalanceIcon sx={{ color: '#00BCD4' }} />
-              Análisis Elemental Detallado
-            </Typography>
-
-            <Grid container spacing={{ xs: 1.5, sm: 2 }}>
-              {Object.entries(elementConfig).map(([key, element]) => (
-                <Grid item xs={12} sm={6} md={3} key={key}>
-                  <Box
-                    sx={{
-                      p: { xs: 1.5, sm: 2 },
-                      borderRadius: { xs: 1.5, sm: 2 },
-                      background: alpha(element.color, 0.1),
-                      border: `1px solid ${alpha(element.color, 0.3)}`,
-                      textAlign: 'center',
-                    }}
-                  >
-                    <Avatar
-                      sx={{
-                        width: { xs: 40, sm: 48 },
-                        height: { xs: 40, sm: 48 },
-                        background: element.gradient,
-                        mx: 'auto',
-                        mb: { xs: 1, sm: 1.5 },
-                      }}
-                    >
-                      {element.icon}
-                    </Avatar>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        color: element.color,
-                        fontWeight: 'bold',
-                        mb: 0.5,
-                        fontSize: { xs: '1rem', sm: '1.25rem' },
-                      }}
-                    >
-                      {element.value}%
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: 'white',
-                        fontWeight: 'bold',
-                        mb: 1,
-                        fontSize: { xs: '0.8rem', sm: '0.875rem' },
-                      }}
-                    >
-                      {element.name}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: alpha('#fff', 0.7),
-                        display: 'block',
-                        mb: 1,
-                        fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                      }}
-                    >
-                      {element.description}
-                    </Typography>
-                    <Chip
-                      label={
-                        element.value > 80
-                          ? 'Excelente'
-                          : element.value > 60
-                            ? 'Bueno'
-                            : 'Mejorable'
-                      }
-                      size="small"
-                      sx={{
-                        bgcolor: alpha(element.color, 0.2),
-                        color: element.color,
-                        fontWeight: 'bold',
-                        fontSize: { xs: '0.65rem', sm: '0.75rem' },
-                      }}
-                    />
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Divider
-              sx={{ bgcolor: alpha('#fff', 0.1), my: { xs: 2, sm: 3 } }}
-            />
-
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography
-                variant="h5"
+              <BoltIcon
                 sx={{
                   color: '#00BCD4',
-                  fontWeight: 'bold',
-                  mb: 1,
-                  fontSize: { xs: '1.3rem', sm: '1.5rem' },
+                  fontSize: 'inherit',
+                }}
+              />
+              Tu Balance Ayni
+            </Typography>
+
+            <IconButton
+              onClick={handleExpandToggle}
+              sx={{
+                color: 'var(--golden-text-secondary)',
+                transition: `all var(--golden-duration-normal) var(--golden-ease-natural)`,
+                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              }}
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </Box>
+
+          {/* Orb central revolucionario */}
+          {renderCentralOrb()}
+
+          {/* Grid de métricas áureas */}
+          {renderMetricsGrid()}
+
+          {/* Progreso hacia siguiente nivel */}
+          <Box
+            sx={{
+              mt: {
+                xs: '21px', // var(--golden-space-21)
+                sm: '34px', // var(--golden-space-34)
+                md: '55px', // var(--golden-space-55)
+              },
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: '8px', // var(--golden-space-8)
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: 'var(--golden-text-sm)',
                 }}
               >
-                Armonía Elemental: {Math.round(advancedStats.elementalHarmony)}%
+                Progreso hacia {nextLevel}
               </Typography>
               <Typography
                 variant="body2"
                 sx={{
-                  color: alpha('#fff', 0.8),
-                  fontSize: { xs: '0.85rem', sm: '0.875rem' },
+                  color: 'rgba(255, 255, 255, 0.95)',
+                  fontWeight: 'bold',
+                  fontSize: 'var(--golden-text-sm)',
                 }}
               >
-                {advancedStats.elementalHarmony > 80
-                  ? '🌟 Tu balance elemental es excepcional'
-                  : advancedStats.elementalHarmony > 60
-                    ? '⚡ Buen equilibrio elemental'
-                    : '🌱 Enfócate en equilibrar tus elementos'}
+                {ayniProgress}%
               </Typography>
             </Box>
-          </Card>
-        )}
-      </CardContent>
-    </Card>
+            <LinearProgress
+              variant="determinate"
+              value={ayniProgress}
+              sx={{
+                height: '8px', // var(--golden-space-8)
+                borderRadius: '5px', // var(--golden-radius-sm)
+                backgroundColor: alpha('#00BCD4', 0.2),
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: 'var(--golden-radius-sm)',
+                  background:
+                    'linear-gradient(45deg, #FF6B35 30%, #00BCD4 90%)',
+                },
+              }}
+            />
+          </Box>
+
+          {/* Información expandida */}
+          {expanded && (
+            <Box
+              sx={{
+                mt: '21px', // var(--golden-space-21)
+                pt: '21px', // var(--golden-space-21)
+                borderTop: '1px solid rgba(255, 255, 255, 0.13)',
+              }}
+            >
+              <Grid container spacing="var(--golden-gap-md)">
+                <Grid item xs={6} sm={3}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
+                  >
+                    Armonía Elemental
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.95)',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {advancedStats.elementalHarmony.toFixed(1)}%
+                  </Typography>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'var(--golden-text-tertiary)' }}
+                  >
+                    Próximo Nivel
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: 'var(--golden-text-primary)',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {advancedStats.experienceNeeded} öndas
+                  </Typography>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'var(--golden-text-tertiary)' }}
+                  >
+                    Promedio Elemental
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: 'var(--golden-text-primary)',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {advancedStats.averageElemental}%
+                  </Typography>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'var(--golden-text-tertiary)' }}
+                  >
+                    Estado
+                  </Typography>
+                  <Chip
+                    label={isConnected ? 'Conectado' : 'Desconectado'}
+                    size="small"
+                    color={isConnected ? 'success' : 'error'}
+                    sx={{ mt: 0.5 }}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 

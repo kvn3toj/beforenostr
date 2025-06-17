@@ -1,11 +1,11 @@
 import React from 'react';
 
-// 🚀 IMPORTAR EL DASHBOARD REVOLUCIONARIO COMPLETO
-import HomeRevolutionary from './HomeRevolutionary';
+// 🚀 IMPORTAR LA NUEVA ESTRUCTURA SEMÁNTICA
+import { HomePage } from './HomePage';
 
-// 🎯 Home principal que utiliza el Dashboard Revolucionario
+// 🎯 Home principal que utiliza la nueva estructura semántica por capas
 const Home: React.FC = () => {
-  return <HomeRevolutionary />;
+  return <HomePage />;
 };
 
 export default Home;

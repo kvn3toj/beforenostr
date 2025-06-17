@@ -25,6 +25,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useIntuitiveBehavior } from '../hooks/home/useIntuitiveBehavior';
 
 // 🚀 IMPORTAR COMPONENTES REVOLUCIONARIOS INDIVIDUALES
 import WelcomeHeaderRevolutionary from '../components/home/WelcomeHeaderRevolutionary';
@@ -34,8 +35,13 @@ import QuickActionsGridRevolutionary from '../components/home/QuickActionsGridRe
 import ModuleCardsRevolutionary from '../components/home/ModuleCardsRevolutionary';
 import NotificationCenterRevolutionary from '../components/home/NotificationCenterRevolutionary';
 
-// 🎨 IMPORTAR SISTEMA REVOLUCIONARIO
+// 🎨 IMPORTAR SISTEMAS REVOLUCIONARIOS Y PROPORCIONES ÁUREAS
 import '../styles/home-revolutionary-system.css';
+import '../styles/golden-ratio-system.css';
+import '../styles/golden-color-system.css';
+import '../styles/intuitive-interactions.css';
+import '../styles/smart-layout.css';
+import '../styles/dashboard-enhancements.css';
 
 // 🏷️ Tipos para las notificaciones
 interface Notification {
@@ -112,6 +118,13 @@ const HomeRevolutionary: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // 🧠 Sistema de micro-interacciones inteligentes
+  const intuitive = useIntuitiveBehavior({
+    enableProgressiveReveal: true,
+    enableHoverEffects: true,
+    revealThreshold: 0.1,
+  });
 
   // 🎛️ Estados básicos
   const [isLoading, setIsLoading] = useState(true);
@@ -314,8 +327,13 @@ const HomeRevolutionary: React.FC = () => {
       <Box className="revolutionary-container">
         <Container
           maxWidth="xl"
+          className="golden-container"
           sx={{
-            py: { xs: 2, sm: 3, md: 4 },
+            py: {
+              xs: 'var(--golden-space-21)',
+              sm: 'var(--golden-space-34)',
+              md: 'var(--golden-space-55)',
+            },
             position: 'relative',
             zIndex: 2,
           }}
@@ -399,58 +417,216 @@ const HomeRevolutionary: React.FC = () => {
             </Box>
           </Fade>
 
-          {/* 🎯 SECCIÓN PRINCIPAL - HERO */}
-          <Fade in timeout={800}>
-            <Box sx={{ mb: { xs: 2, sm: 3 } }}>
-              <WelcomeHeaderRevolutionary
-                onNotificationClick={() => navigate('/notifications')}
-                totalNotifications={unreadCount}
-              />
-            </Box>
-          </Fade>
+          {/* 🎯 HEADER OPTIMIZADO CON UX MEJORADA */}
+          <Box
+            gridArea="header"
+            className="enhanced-header enhanced-slide-up enhanced-delay-1"
+            sx={{
+              position: 'relative',
+              zIndex: 10,
+              // Altura más compacta pero elegante
+              minHeight: {
+                xs: '120px',
+                sm: '140px',
+                md: '160px',
+              },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <WelcomeHeaderRevolutionary
+              onNotificationClick={() => navigate('/notifications')}
+              totalNotifications={unreadCount}
+            />
+            {/* Indicador de estado activo */}
+            <Box className="enhanced-content-indicator" />
+          </Box>
 
-          {/* 🎨 GRID PRINCIPAL REVOLUCIONARIO */}
-          <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
-            {/* 💎 BALANCE AYNI REVOLUCIONARIO */}
-            <Grid item xs={12} md={6} lg={4}>
-              <Fade in timeout={1000}>
-                <Box>
-                  <AyniMetricsCardRevolutionary
-                    ondas={mockData.ayni.ondas}
-                    meritos={mockData.ayni.meritos}
-                    ayniLevel={mockData.ayni.ayniLevel}
-                    nextLevel={mockData.ayni.nextLevel}
-                    ayniProgress={mockData.ayni.ayniProgress}
-                    bienComunContributions={
-                      mockData.ayni.bienComunContributions
-                    }
-                    balanceAyni={mockData.ayni.balanceAyni}
-                    elementos={mockData.elementos}
-                    isLoading={isLoading}
-                    isConnected={true}
-                  />
-                </Box>
-              </Fade>
-            </Grid>
+          {/* 🎯 DASHBOARD CON DISTRIBUCIÓN VISUAL OPTIMIZADA */}
+          <Box
+            className="enhanced-dashboard-container enhanced-fade-in"
+            sx={{
+              // Responsive breakpoints más inteligentes
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: '1fr',
+                md: '1.8fr 1fr', // Proporción más equilibrada
+                lg: '2fr 1fr', // En pantallas grandes, más espacio al contenido principal
+              },
+              // Gaps más balanceados
+              gap: {
+                xs: 2, // 16px en móvil
+                sm: 3, // 24px en tablet
+                md: 4, // 32px en desktop
+                lg: 5, // 40px en pantallas grandes
+              },
+              // Padding adaptativo
+              padding: {
+                xs: 2, // 16px en móvil
+                sm: 3, // 24px en tablet
+                md: 4, // 32px en desktop
+                lg: 6, // 48px en pantallas grandes
+              },
+            }}
+          >
+            {/* Grid inteligente que se adapta al contenido */}
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateAreas: {
+                  xs: '"hero" "main" "sidebar" "actions"', // Mobile: stack vertical
+                  sm: '"hero" "main" "sidebar" "actions"', // Tablet: stack vertical
+                  md: '"hero hero" "main sidebar" "actions actions"', // Desktop: proporción áurea
+                  lg: '"hero hero" "main sidebar" "actions actions"', // Large: proporción áurea optimizada
+                },
+                gridTemplateColumns: {
+                  xs: '1fr',
+                  sm: '1fr',
+                  md: '1.618fr 1fr', // Proporción áurea
+                  lg: '1.618fr 1fr',
+                },
+                gridTemplateRows: {
+                  xs: 'auto auto auto auto',
+                  md: 'auto 1fr auto',
+                },
+                gap: {
+                  xs: 2, // 16px
+                  sm: 3, // 24px
+                  md: 4, // 32px
+                  lg: 5, // 40px
+                },
+                padding: {
+                  xs: 2,
+                  sm: 3,
+                  md: 4,
+                  lg: 6,
+                },
+              }}
+            >
+              {/* 💎 WIDGET PRINCIPAL - BALANCE AYNI OPTIMIZADO */}
+              <Box
+                gridArea="main"
+                className="enhanced-main-widget enhanced-glow enhanced-scale enhanced-delay-2"
+                sx={{
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  // Altura adaptativa más inteligente
+                  minHeight: {
+                    xs: '400px', // Compacto en móvil
+                    sm: '450px', // Medio en tablet
+                    md: '500px', // Completo en desktop
+                    lg: '550px', // Expansivo en pantallas grandes
+                  },
+                  // Padding interno optimizado
+                  padding: {
+                    xs: '16px',
+                    sm: '20px',
+                    md: '24px',
+                    lg: '28px',
+                  },
+                }}
+              >
+                <AyniMetricsCardRevolutionary
+                  ondas={mockData.ayni.ondas}
+                  meritos={mockData.ayni.meritos}
+                  ayniLevel={mockData.ayni.ayniLevel}
+                  nextLevel={mockData.ayni.nextLevel}
+                  ayniProgress={mockData.ayni.ayniProgress}
+                  bienComunContributions={mockData.ayni.bienComunContributions}
+                  balanceAyni={mockData.ayni.balanceAyni}
+                  elementos={mockData.elementos}
+                  isLoading={isLoading}
+                  isConnected={true}
+                />
 
-            {/* 💰 WALLET REVOLUCIONARIO */}
-            <Grid item xs={12} md={6} lg={4}>
-              <Fade in timeout={1200}>
-                <Box>
+                {/* Overlay sutil para mejor legibilidad */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    background:
+                      'linear-gradient(135deg, rgba(0, 188, 212, 0.02) 0%, transparent 50%, rgba(255, 107, 53, 0.02) 100%)',
+                    pointerEvents: 'none',
+                    borderRadius: 'inherit',
+                  }}
+                />
+              </Box>
+
+              {/* 📱 SIDEBAR OPTIMIZADO - CONTENIDO BALANCEADO */}
+              <Box
+                gridArea="sidebar"
+                className="enhanced-sidebar enhanced-slide-up enhanced-delay-3"
+                sx={{
+                  position: 'relative',
+                  // En móvil, convertir a horizontal scroll
+                  flexDirection: {
+                    xs: 'row',
+                    md: 'column',
+                  },
+                  overflowX: {
+                    xs: 'auto',
+                    md: 'visible',
+                  },
+                  overflowY: 'visible',
+                  gap: {
+                    xs: 2, // 16px en móvil
+                    md: 3, // 24px en desktop
+                  },
+                  paddingBottom: {
+                    xs: 1, // Espacio para scroll horizontal
+                    md: 0,
+                  },
+                }}
+              >
+                {/* Wallet - Widget Primario del Sidebar */}
+                <Box
+                  className="enhanced-sidebar-widget enhanced-card enhanced-delay-1"
+                  sx={{
+                    minWidth: { xs: '280px', md: 'auto' }, // Ancho mínimo en móvil
+                    flex: { xs: '0 0 auto', md: '1' },
+                    // Altura más balanceada
+                    minHeight: {
+                      xs: '180px',
+                      md: '220px',
+                      lg: '240px',
+                    },
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    padding: {
+                      xs: '12px',
+                      md: '16px',
+                      lg: '20px',
+                    },
+                  }}
+                >
                   <WalletOverviewRevolutionary
                     onAddFunds={() => navigate('/wallet/add')}
                     onSend={() => navigate('/wallet/send')}
                     onExchange={() => navigate('/wallet/exchange')}
                     onViewTransactions={() => navigate('/wallet/transactions')}
                   />
+                  <Box className="enhanced-content-indicator" />
                 </Box>
-              </Fade>
-            </Grid>
 
-            {/* 🔔 CENTRO DE NOTIFICACIONES */}
-            <Grid item xs={12} md={6} lg={4}>
-              <Fade in timeout={1400}>
-                <Box>
+                {/* Notificaciones - Widget Secundario */}
+                <Box
+                  className="enhanced-sidebar-widget enhanced-scroll enhanced-delay-2"
+                  sx={{
+                    minWidth: { xs: '300px', md: 'auto' },
+                    flex: { xs: '0 0 auto', md: '1' },
+                    minHeight: {
+                      xs: '160px',
+                      md: '200px',
+                      lg: '220px',
+                    },
+                    position: 'relative',
+                  }}
+                >
                   <NotificationCenterRevolutionary
                     onNotificationClick={handleNotificationClick}
                     onMarkAllRead={() => {
@@ -465,29 +641,122 @@ const HomeRevolutionary: React.FC = () => {
                     onViewAll={() => navigate('/notifications')}
                   />
                 </Box>
-              </Fade>
-            </Grid>
 
-            {/* ⚡ ACCIONES RÁPIDAS REVOLUCIONARIAS */}
-            <Grid item xs={12} lg={8}>
-              <Fade in timeout={1600}>
-                <Box>
-                  <QuickActionsGridRevolutionary
-                    onActionClick={(action) => {
+                {/* Módulos Rápidos - Solo Desktop */}
+                <Box
+                  className="enhanced-sidebar-widget enhanced-delay-3"
+                  sx={{
+                    display: { xs: 'none', lg: 'flex' }, // Solo en pantallas grandes
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    minHeight: '180px',
+                    position: 'relative',
+                  }}
+                >
+                  <ModuleCardsRevolutionary
+                    onModuleClick={(moduleId) => {
                       setSnackbarMessage(
-                        `🚀 Navegando a ${action.toUpperCase()}`
+                        `🚀 Abriendo módulo: ${moduleId.toUpperCase()}`
                       );
                       setSnackbarOpen(true);
                     }}
                   />
+                  <Box
+                    className="enhanced-content-indicator"
+                    sx={{ background: '#66BB6A' }}
+                  />
                 </Box>
-              </Fade>
-            </Grid>
+              </Box>
 
-            {/* 🎯 MÓDULOS PRINCIPALES REVOLUCIONARIOS */}
-            <Grid item xs={12} lg={4}>
-              <Fade in timeout={1800}>
-                <Box>
+              {/* ⚡ CENTRO DE ACCIONES - BARRA INTUITIVA OPTIMIZADA */}
+              <Box
+                gridArea="actions"
+                className="enhanced-actions enhanced-glow enhanced-scale enhanced-delay-4"
+                sx={{
+                  position: {
+                    xs: 'fixed', // Fijo en móvil para fácil acceso
+                    md: 'static', // Estático en desktop
+                  },
+                  bottom: {
+                    xs: 16, // Flotante en móvil
+                    md: 'auto',
+                  },
+                  left: {
+                    xs: 16,
+                    md: 'auto',
+                  },
+                  right: {
+                    xs: 16,
+                    md: 'auto',
+                  },
+                  zIndex: 100,
+                  // Altura optimizada
+                  minHeight: {
+                    xs: '80px', // Compacto en móvil
+                    md: '120px', // Normal en desktop
+                    lg: '140px', // Amplio en pantallas grandes
+                  },
+                  // Mejor distribución interna
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: {
+                    xs: '8px 16px',
+                    md: '12px 20px',
+                    lg: '16px 24px',
+                  },
+                  // Efecto glassmorphism más sutil
+                  backdropFilter: 'blur(20px)',
+                  // Sombra más prominente en móvil
+                  boxShadow: {
+                    xs: '0 8px 32px rgba(0, 0, 0, 0.15)',
+                    md: '0 4px 16px rgba(0, 0, 0, 0.08)',
+                  },
+                }}
+              >
+                <QuickActionsGridRevolutionary
+                  onActionClick={(action) => {
+                    setSnackbarMessage(
+                      `🚀 Navegando a ${action.toUpperCase()}`
+                    );
+                    setSnackbarOpen(true);
+                  }}
+                />
+
+                {/* Indicador de centro de comando */}
+                <Box
+                  className="enhanced-content-indicator"
+                  sx={{
+                    background: '#FFD54F',
+                    top: '8px',
+                    right: '8px',
+                  }}
+                />
+              </Box>
+
+              {/* 📱 MÓDULOS MÓVILES - Distribución horizontal intuitiva */}
+              <Box
+                sx={{
+                  display: { xs: 'block', lg: 'none' }, // Visible solo cuando módulos no están en sidebar
+                  gridColumn: '1 / -1',
+                  mt: { xs: 0, md: 3 }, // Sin margin top en móvil (por el fixed actions)
+                  mb: { xs: 12, md: 0 }, // Margin bottom en móvil para el fixed actions
+                }}
+                className="enhanced-fade-in enhanced-delay-5"
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    gap: 2,
+                    overflowX: 'auto',
+                    padding: '16px 0',
+                    '& > *': {
+                      minWidth: '250px',
+                      flex: '0 0 auto',
+                    },
+                  }}
+                  className="enhanced-scroll"
+                >
                   <ModuleCardsRevolutionary
                     onModuleClick={(moduleId) => {
                       setSnackbarMessage(
@@ -497,9 +766,9 @@ const HomeRevolutionary: React.FC = () => {
                     }}
                   />
                 </Box>
-              </Fade>
-            </Grid>
-          </Grid>
+              </Box>
+            </Box>
+          </Box>
 
           {/* 💡 Mensaje Inspiracional */}
           <Fade in timeout={2000}>

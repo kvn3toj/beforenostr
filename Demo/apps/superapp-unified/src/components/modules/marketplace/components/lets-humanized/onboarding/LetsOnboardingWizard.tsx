@@ -19,7 +19,7 @@ import {
   Chip,
   Avatar,
   Stack,
-  Divider
+  Divider,
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -34,9 +34,9 @@ import {
   Timer as TimerIcon,
   SwapHoriz as SwapHorizIcon,
   Favorite as FavoriteIcon,
-  Star as StarIcon
+  Star as StarIcon,
 } from '@mui/icons-material';
-import { useLetsEducation } from '../../../../../contexts/LetsEducationContext';
+import { useLetsEducation } from '../../../../../../contexts/LetsEducationContext';
 
 // ============================================================================
 // INTERFACES Y TIPOS
@@ -66,7 +66,7 @@ interface OnboardingStep {
 
 const TimeEqualsValueAnimation: React.FC = () => {
   const theme = useTheme();
-  
+
   return (
     <Box
       sx={{
@@ -77,7 +77,7 @@ const TimeEqualsValueAnimation: React.FC = () => {
         p: 4,
         background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
         borderRadius: 3,
-        border: `2px dashed ${alpha(theme.palette.primary.main, 0.3)}`
+        border: `2px dashed ${alpha(theme.palette.primary.main, 0.3)}`,
       }}
     >
       <Avatar sx={{ bgcolor: 'primary.main', width: 64, height: 64 }}>
@@ -100,7 +100,7 @@ const TimeEqualsValueAnimation: React.FC = () => {
 
 const UnitsFlowAnimation: React.FC = () => {
   const theme = useTheme();
-  
+
   return (
     <Box
       sx={{
@@ -111,7 +111,7 @@ const UnitsFlowAnimation: React.FC = () => {
         p: 4,
         background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)}, ${alpha(theme.palette.info.main, 0.1)})`,
         borderRadius: 3,
-        border: `2px dashed ${alpha(theme.palette.success.main, 0.3)}`
+        border: `2px dashed ${alpha(theme.palette.success.main, 0.3)}`,
       }}
     >
       <Avatar sx={{ bgcolor: 'success.main', width: 64, height: 64 }}>
@@ -142,7 +142,7 @@ const UnitsFlowAnimation: React.FC = () => {
 
 const CommunityNetworkAnimation: React.FC = () => {
   const theme = useTheme();
-  
+
   return (
     <Box
       sx={{
@@ -153,7 +153,7 @@ const CommunityNetworkAnimation: React.FC = () => {
         p: 4,
         background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)}, ${alpha(theme.palette.error.main, 0.1)})`,
         borderRadius: 3,
-        border: `2px dashed ${alpha(theme.palette.warning.main, 0.3)}`
+        border: `2px dashed ${alpha(theme.palette.warning.main, 0.3)}`,
       }}
     >
       <Avatar sx={{ bgcolor: 'warning.main', width: 64, height: 64 }}>
@@ -162,7 +162,14 @@ const CommunityNetworkAnimation: React.FC = () => {
       <Typography variant="h6" color="warning.main" textAlign="center">
         Red de Comunidad
       </Typography>
-      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+      >
         {['👨‍🍳', '👩‍🏫', '👨‍🔧', '👩‍⚕️', '👨‍🌾'].map((emoji, index) => (
           <Avatar key={index} sx={{ bgcolor: `hsl(${index * 72}, 70%, 60%)` }}>
             {emoji}
@@ -178,7 +185,7 @@ const CommunityNetworkAnimation: React.FC = () => {
 
 const TrustSystemAnimation: React.FC = () => {
   const theme = useTheme();
-  
+
   return (
     <Box
       sx={{
@@ -189,7 +196,7 @@ const TrustSystemAnimation: React.FC = () => {
         p: 4,
         background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.1)}, ${alpha(theme.palette.primary.main, 0.1)})`,
         borderRadius: 3,
-        border: `2px dashed ${alpha(theme.palette.info.main, 0.3)}`
+        border: `2px dashed ${alpha(theme.palette.info.main, 0.3)}`,
       }}
     >
       <Avatar sx={{ bgcolor: 'info.main', width: 64, height: 64 }}>
@@ -200,7 +207,9 @@ const TrustSystemAnimation: React.FC = () => {
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Box textAlign="center">
-          <Box sx={{ display: 'flex', gap: 0.5, mb: 1, justifyContent: 'center' }}>
+          <Box
+            sx={{ display: 'flex', gap: 0.5, mb: 1, justifyContent: 'center' }}
+          >
             {[1, 2, 3, 4, 5].map((star) => (
               <StarIcon key={star} sx={{ color: 'gold', fontSize: 20 }} />
             ))}
@@ -221,7 +230,7 @@ const TrustSystemAnimation: React.FC = () => {
 
 const LocalEconomyAnimation: React.FC = () => {
   const theme = useTheme();
-  
+
   return (
     <Box
       sx={{
@@ -232,7 +241,7 @@ const LocalEconomyAnimation: React.FC = () => {
         p: 4,
         background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.1)}, ${alpha(theme.palette.success.main, 0.1)})`,
         borderRadius: 3,
-        border: `2px dashed ${alpha(theme.palette.secondary.main, 0.3)}`
+        border: `2px dashed ${alpha(theme.palette.secondary.main, 0.3)}`,
       }}
     >
       <Avatar sx={{ bgcolor: 'secondary.main', width: 64, height: 64 }}>
@@ -264,57 +273,67 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     id: 'welcome',
     title: '¡Bienvenido a LETS!',
     subtitle: 'Local Exchange Trading System',
-    explanation: 'LETS es un sistema de intercambio local que permite a las comunidades comerciar servicios y productos usando una moneda local basada en tiempo.',
-    example: 'Imagina poder intercambiar una hora de jardinería por una hora de clases de idiomas, ¡sin dinero tradicional!',
+    explanation:
+      'LETS es un sistema de intercambio local que permite a las comunidades comerciar servicios y productos usando una moneda local basada en tiempo.',
+    example:
+      'Imagina poder intercambiar una hora de jardinería por una hora de clases de idiomas, ¡sin dinero tradicional!',
     visualDemo: TimeEqualsValueAnimation,
     icon: SchoolIcon,
     color: '#1976d2',
-    achievement: 'first_step'
+    achievement: 'first_step',
   },
   {
     id: 'time_value',
     title: 'El Tiempo como Valor',
     subtitle: 'Una hora = Una unidad LETS',
-    explanation: 'En LETS, el tiempo es la unidad de valor fundamental. Una hora de trabajo de cualquier persona vale lo mismo, sin importar el tipo de trabajo.',
-    example: 'Una hora de limpieza = Una hora de consultoría = Una hora de cocina = 1 LETS',
+    explanation:
+      'En LETS, el tiempo es la unidad de valor fundamental. Una hora de trabajo de cualquier persona vale lo mismo, sin importar el tipo de trabajo.',
+    example:
+      'Una hora de limpieza = Una hora de consultoría = Una hora de cocina = 1 LETS',
     visualDemo: UnitsFlowAnimation,
     icon: TimerIcon,
     color: '#388e3c',
-    achievement: 'time_concept'
+    achievement: 'time_concept',
   },
   {
     id: 'community',
     title: 'Comunidad Colaborativa',
     subtitle: 'Todos contribuyen, todos se benefician',
-    explanation: 'LETS funciona porque cada miembro de la comunidad ofrece sus habilidades y recibe lo que necesita de otros miembros.',
-    example: 'María ofrece clases de piano, Juan repara bicicletas, Ana cultiva vegetales. ¡Todos intercambian entre sí!',
+    explanation:
+      'LETS funciona porque cada miembro de la comunidad ofrece sus habilidades y recibe lo que necesita de otros miembros.',
+    example:
+      'María ofrece clases de piano, Juan repara bicicletas, Ana cultiva vegetales. ¡Todos intercambian entre sí!',
     visualDemo: CommunityNetworkAnimation,
     icon: PeopleIcon,
     color: '#f57c00',
-    achievement: 'community_spirit'
+    achievement: 'community_spirit',
   },
   {
     id: 'trust',
     title: 'Sistema de Confianza',
     subtitle: 'La reputación es clave',
-    explanation: 'La confianza se construye a través de intercambios exitosos. Cada transacción completada aumenta tu reputación en la comunidad.',
-    example: 'Después de 10 intercambios exitosos, otros miembros confiarán más en tus servicios.',
+    explanation:
+      'La confianza se construye a través de intercambios exitosos. Cada transacción completada aumenta tu reputación en la comunidad.',
+    example:
+      'Después de 10 intercambios exitosos, otros miembros confiarán más en tus servicios.',
     visualDemo: TrustSystemAnimation,
     icon: HandshakeIcon,
     color: '#7b1fa2',
-    achievement: 'trust_builder'
+    achievement: 'trust_builder',
   },
   {
     id: 'local_economy',
     title: 'Fortaleciendo lo Local',
     subtitle: 'Economía sostenible y resiliente',
-    explanation: 'LETS fortalece la economía local manteniendo el valor dentro de la comunidad y reduciendo la dependencia del dinero tradicional.',
-    example: 'En lugar de contratar servicios externos, la comunidad se autoabastece y prospera junta.',
+    explanation:
+      'LETS fortalece la economía local manteniendo el valor dentro de la comunidad y reduciendo la dependencia del dinero tradicional.',
+    example:
+      'En lugar de contratar servicios externos, la comunidad se autoabastece y prospera junta.',
     visualDemo: LocalEconomyAnimation,
     icon: AccountBalanceIcon,
     color: '#d32f2f',
-    achievement: 'local_champion'
-  }
+    achievement: 'local_champion',
+  },
 ];
 
 // ============================================================================
@@ -324,12 +343,14 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
 const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   open,
   onClose,
-  onComplete
+  onComplete,
 }) => {
   const theme = useTheme();
   const { completeOnboarding, addAchievement } = useLetsEducation();
   const [currentStep, setCurrentStep] = useState(0);
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('left');
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>(
+    'left'
+  );
 
   const currentStepData = ONBOARDING_STEPS[currentStep];
   const isLastStep = currentStep === ONBOARDING_STEPS.length - 1;
@@ -344,8 +365,8 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
       handleComplete();
     } else {
       setSlideDirection('left');
-      setCurrentStep(prev => prev + 1);
-      
+      setCurrentStep((prev) => prev + 1);
+
       // Agregar logro del paso actual
       if (currentStepData.achievement) {
         addAchievement(currentStepData.achievement);
@@ -356,7 +377,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   const handleBack = () => {
     if (!isFirstStep) {
       setSlideDirection('right');
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
   };
 
@@ -367,15 +388,15 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   const handleComplete = () => {
     // Completar onboarding en el contexto
     completeOnboarding();
-    
+
     // Agregar logro de completar onboarding
     addAchievement('onboarding_completed');
-    
+
     // Agregar logro del último paso si existe
     if (currentStepData.achievement) {
       addAchievement(currentStepData.achievement);
     }
-    
+
     // Llamar callback de completado
     onComplete();
   };
@@ -399,12 +420,12 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
       fullScreen
       PaperProps={{
         sx: {
-          background: `linear-gradient(135deg, 
-            ${alpha(theme.palette.primary.main, 0.05)} 0%, 
-            ${alpha(theme.palette.secondary.main, 0.05)} 50%, 
+          background: `linear-gradient(135deg,
+            ${alpha(theme.palette.primary.main, 0.05)} 0%,
+            ${alpha(theme.palette.secondary.main, 0.05)} 50%,
             ${alpha(theme.palette.success.main, 0.05)} 100%)`,
-          backdropFilter: 'blur(10px)'
-        }
+          backdropFilter: 'blur(10px)',
+        },
       }}
     >
       <DialogContent sx={{ p: 0, height: '100vh', overflow: 'hidden' }}>
@@ -415,7 +436,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
             background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
             color: 'white',
             p: 3,
-            boxShadow: theme.shadows[4]
+            boxShadow: theme.shadows[4],
           }}
         >
           <IconButton
@@ -426,7 +447,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
               right: 16,
               color: 'white',
               bgcolor: alpha('white', 0.1),
-              '&:hover': { bgcolor: alpha('white', 0.2) }
+              '&:hover': { bgcolor: alpha('white', 0.2) },
             }}
           >
             <CloseIcon />
@@ -437,17 +458,23 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
               Descubre LETS
             </Typography>
             <Typography variant="subtitle1" sx={{ opacity: 0.9, mb: 3 }}>
-              Sistema de Intercambio Local - Tu puerta a una economía colaborativa
+              Sistema de Intercambio Local - Tu puerta a una economía
+              colaborativa
             </Typography>
 
             {/* Progreso */}
             <Box sx={{ mb: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
                 <Typography variant="body2">
                   Paso {currentStep + 1} de {ONBOARDING_STEPS.length}
                 </Typography>
                 <Typography variant="body2">
-                  {Math.round(((currentStep + 1) / ONBOARDING_STEPS.length) * 100)}%
+                  {Math.round(
+                    ((currentStep + 1) / ONBOARDING_STEPS.length) * 100
+                  )}
+                  %
                 </Typography>
               </Box>
               <LinearProgress
@@ -459,8 +486,8 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
                   bgcolor: alpha('white', 0.2),
                   '& .MuiLinearProgress-bar': {
                     bgcolor: 'white',
-                    borderRadius: 4
-                  }
+                    borderRadius: 4,
+                  },
                 }}
               />
             </Box>
@@ -473,9 +500,11 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
                 '& .MuiStepIcon-root': {
                   color: alpha('white', 0.3),
                   '&.Mui-active': { color: 'white' },
-                  '&.Mui-completed': { color: alpha('white', 0.8) }
+                  '&.Mui-completed': { color: alpha('white', 0.8) },
                 },
-                '& .MuiStepConnector-line': { borderColor: alpha('white', 0.3) }
+                '& .MuiStepConnector-line': {
+                  borderColor: alpha('white', 0.3),
+                },
               }}
             >
               {ONBOARDING_STEPS.map((step, index) => (
@@ -502,7 +531,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
             alignItems: 'center',
             justifyContent: 'center',
             p: 4,
-            minHeight: 'calc(100vh - 300px)'
+            minHeight: 'calc(100vh - 300px)',
           }}
         >
           <Slide
@@ -517,7 +546,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
                 width: '100%',
                 boxShadow: theme.shadows[8],
                 borderRadius: 4,
-                overflow: 'hidden'
+                overflow: 'hidden',
               }}
             >
               <CardContent sx={{ p: 6 }}>
@@ -528,8 +557,9 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
                       height: 80,
                       mx: 'auto',
                       mb: 3,
-                      bgcolor: currentStepData?.color || theme.palette.primary.main,
-                      boxShadow: theme.shadows[4]
+                      bgcolor:
+                        currentStepData?.color || theme.palette.primary.main,
+                      boxShadow: theme.shadows[4],
                     }}
                   >
                     {currentStepData?.icon && (
@@ -540,7 +570,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
                   <Typography variant="h3" gutterBottom fontWeight="bold">
                     {currentStepData?.title}
                   </Typography>
-                  
+
                   <Typography
                     variant="h6"
                     color="text.secondary"
@@ -561,7 +591,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
                     fontSize: '1.1rem',
                     lineHeight: 1.7,
                     textAlign: 'center',
-                    mb: 4
+                    mb: 4,
                   }}
                 >
                   {currentStepData?.explanation}
@@ -581,7 +611,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
                   sx={{
                     bgcolor: alpha(theme.palette.info.main, 0.05),
                     border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
-                    mb: 4
+                    mb: 4,
                   }}
                 >
                   <CardContent>
@@ -609,7 +639,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
             p: 3,
             bgcolor: alpha(theme.palette.background.paper, 0.8),
             backdropFilter: 'blur(10px)',
-            borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+            borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
           }}
         >
           <Box
@@ -618,7 +648,7 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
               justifyContent: 'space-between',
               alignItems: 'center',
               maxWidth: 800,
-              mx: 'auto'
+              mx: 'auto',
             }}
           >
             <Button
@@ -648,8 +678,11 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
               sx={{
                 bgcolor: currentStepData?.color || theme.palette.primary.main,
                 '&:hover': {
-                  bgcolor: alpha(currentStepData?.color || theme.palette.primary.main, 0.8)
-                }
+                  bgcolor: alpha(
+                    currentStepData?.color || theme.palette.primary.main,
+                    0.8
+                  ),
+                },
               }}
             >
               {isLastStep ? '¡Comenzar!' : 'Siguiente'}
@@ -661,4 +694,4 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   );
 };
 
-export default LetsOnboardingWizard; 
+export default LetsOnboardingWizard;

@@ -250,10 +250,12 @@ const WelcomeHeaderRevolutionary: React.FC<WelcomeHeaderRevolutionaryProps> = ({
             <Typography
               variant="h5"
               sx={{
-                color: 'rgba(255, 255, 255, 0.9)',
+                color: 'rgba(255, 255, 255, 0.95)',
                 fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' },
-                fontWeight: 500,
-                textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                fontWeight: 600,
+                textShadow:
+                  '0 3px 12px rgba(0,0,0,0.8), 0 1px 4px rgba(0,0,0,0.9)',
+                letterSpacing: '0.5px',
               }}
             >
               {displayName}
@@ -363,19 +365,35 @@ const WelcomeHeaderRevolutionary: React.FC<WelcomeHeaderRevolutionaryProps> = ({
         <Typography
           variant="body1"
           sx={{
-            color: 'rgba(255, 255, 255, 0.9)',
+            color: 'rgba(255, 255, 255, 0.98)',
             textAlign: 'center',
             fontStyle: 'italic',
-            fontWeight: 500,
+            fontWeight: 600,
+            fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
+            textShadow:
+              '0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 4px rgba(0, 0, 0, 0.9)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: 1,
+            letterSpacing: '0.3px',
           }}
         >
-          <FavoriteIcon sx={{ color: '#E91E63', fontSize: '1.2rem' }} />
+          <FavoriteIcon
+            sx={{
+              color: '#FF1744',
+              fontSize: '1.3rem',
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))',
+            }}
+          />
           "Tu energía elemental está en perfecta armonía hoy"
-          <AutoAwesomeIcon sx={{ color: '#FFD700', fontSize: '1.2rem' }} />
+          <AutoAwesomeIcon
+            sx={{
+              color: '#FFD700',
+              fontSize: '1.3rem',
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))',
+            }}
+          />
         </Typography>
       </Box>
 
