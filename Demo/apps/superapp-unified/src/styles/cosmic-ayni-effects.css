@@ -235,28 +235,35 @@
   animation: revolutionary-rotate-continuous 20s linear infinite;
 }
 
-/* Reglas específicas para el Balance Ayni */
+/* Reglas específicas para el Balance Ayni - PROTAGONISTA ABSOLUTO */
 .fibonacci-orb.cosmic-center {
   min-width: 89px !important;
   min-height: 89px !important;
   display: flex !important;
   position: relative !important;
   margin: 0 auto !important;
-  z-index: 100 !important;
+  z-index: 1300 !important; /* 🌍 Z-INDEX SUPREMO */
 }
 
-/* Asegurar que el contenido del mundo sea visible */
+/* Asegurar que el contenido del mundo sea visible POR ENCIMA DE TODO */
 .fibonacci-orb .MuiBox-root {
   position: relative !important;
-  z-index: 101 !important;
+  z-index: 1400 !important; /* 🌍 CONTENIDO DEL MUNDO */
 }
 
-/* Elementos orbitales visibles */
+/* Elementos orbitales visibles POR ENCIMA DE TODO */
 .orbital-element {
-  z-index: 102 !important;
+  z-index: 1500 !important; /* 🪐 ELEMENTOS ORBITANDO */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  position: relative !important;
+}
+
+/* Widget cósmico principal con máxima prioridad */
+.enhanced-cosmic-widget {
+  z-index: 1000 !important;
+  position: relative !important;
 }
 
 /* Responsive adjustments para móvil */
