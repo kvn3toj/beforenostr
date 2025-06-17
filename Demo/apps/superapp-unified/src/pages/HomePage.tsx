@@ -47,6 +47,7 @@ import '../styles/intuitive-interactions.css';
 import '../styles/smart-layout.css';
 import '../styles/dashboard-enhancements.css';
 import '../styles/cosmic-ayni-effects.css';
+import '../styles/home-responsive-layout.css';
 
 // 🏷️ Tipos para las notificaciones
 interface Notification {
@@ -563,87 +564,52 @@ export function HomePage() {
                 </Fade>
               </Grid>
 
-              {/* === CAPA 2B: WALLET Y ACCIONES === */}
-              <Grid size={12}>
-                <Grid container spacing={{ xs: 4, sm: 5, md: 6 }}>
-                  {/* --- Wallet Individual --- */}
-                  <Grid size={{ xs: 12, lg: 4 }}>
-                    <Fade in timeout={1000} appear={false}>
-                      <Box>
-                        <WalletOnlyWidget
-                          onAddFunds={() => navigate('/wallet/add')}
-                          onSend={() => navigate('/wallet/send')}
-                          onExchange={() => navigate('/wallet/exchange')}
-                          onViewTransactions={() =>
-                            navigate('/wallet/transactions')
-                          }
-                        />
-                      </Box>
-                    </Fade>
-                  </Grid>
-
-                  {/* --- Acciones Rápidas --- */}
-                  <Grid size={{ xs: 12, lg: 8 }}>
-                    <Fade in timeout={1200}>
-                      <Box
-                        className="enhanced-actions enhanced-glow enhanced-scale enhanced-delay-3"
-                        sx={{
-                          position: 'relative',
-                          zIndex: 10,
-                          minHeight: { xs: '280px', sm: '320px', md: '360px' },
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          borderRadius: '20px',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          backdropFilter: 'blur(20px)',
-                        }}
-                      >
-                        <QuickActionsWidget
-                          onActionClick={(action) => {
-                            setSnackbarMessage(
-                              `🚀 Navegando a ${action.toUpperCase()}`
-                            );
-                            setSnackbarOpen(true);
-                          }}
-                        />
-                      </Box>
-                    </Fade>
-                  </Grid>
-                </Grid>
+              {/* === WALLET === */}
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Fade in timeout={1600}>
+                  <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+                    <WalletOnlyWidget
+                      onAddFunds={() => navigate('/wallet/add')}
+                      onSend={() => navigate('/wallet/send')}
+                      onExchange={() => navigate('/wallet/exchange')}
+                      onViewTransactions={() =>
+                        navigate('/wallet/transactions')
+                      }
+                    />
+                  </Box>
+                </Fade>
               </Grid>
 
-              {/* === REFLEXIÓN FILOSÓFICA === */}
-              <Grid size={12}>
-                <Box
-                  sx={{
-                    textAlign: 'center',
-                    mt: { xs: 4, md: 6 },
-                    mb: { xs: 2, md: 3 },
-                  }}
-                >
-                  <Typography
+              {/* === REFLEXIÓN FINAL === */}
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Fade in timeout={1800}>
+                  <Box
                     sx={{
-                      color: 'rgba(255, 255, 255, 0.98)',
-                      fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
-                      fontStyle: 'italic',
-                      fontWeight: 600,
-                      textShadow:
-                        '0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 4px rgba(0, 0, 0, 0.9)',
-                      letterSpacing: '0.3px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: 2,
+                      minHeight: { xs: '200px', md: '300px' },
+                      textAlign: 'center',
+                      p: { xs: 2, sm: 3, md: 4 },
                     }}
                   >
-                    <AutoAwesomeIcon sx={{ color: '#FFD700' }} />
-                    "La estructura semántica libera la potencia de cada
-                    interacción en el ecosistema CoomÜnity"
-                    <AutoAwesomeIcon sx={{ color: '#FFD700' }} />
-                  </Typography>
-                </Box>
+                    <Typography
+                      sx={{
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
+                        fontStyle: 'italic',
+                        fontWeight: 500,
+                        lineHeight: 1.6,
+                        maxWidth: '400px',
+                      }}
+                    >
+                      <AutoAwesomeIcon sx={{ color: '#FFD700', mr: 1 }} />
+                      "El equilibrio Ayni transforma cada interacción en un paso
+                      hacia el bien común"
+                      <AutoAwesomeIcon sx={{ color: '#FFD700', ml: 1 }} />
+                    </Typography>
+                  </Box>
+                </Fade>
               </Grid>
             </Grid>
           </Box>

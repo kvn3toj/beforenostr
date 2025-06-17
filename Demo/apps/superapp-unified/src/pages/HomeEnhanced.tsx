@@ -687,7 +687,7 @@ export const HomeEnhanced: React.FC = () => {
     >
       {/* 🌌 FONDO CÓSMICO - Widget Ayni Balance como fondo de pantalla */}
       {/* TEMPORALMENTE DESHABILITADO PARA EVITAR DUPLICACIÓN */}
-      {/* 
+      {/*
       <Fade in={animate} timeout={600}>
         <Box
           className="background-ayni-visualization"
@@ -756,34 +756,7 @@ export const HomeEnhanced: React.FC = () => {
         )}
 
         {/* 🚀 Sistema Solar Ayni 3D - TEMPORALMENTE DESHABILITADO PARA EVITAR DUPLICACIÓN */}
-        {/* 
-        <Fade in={animate} timeout={1200}>
-          <Box
-            className="harmony-widget-fullscreen"
-            sx={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100vw',
-              height: '100vh',
-              zIndex: 0, // Fondo
-              pointerEvents: 'none', // No interfiere con navegación
-            }}
-          >
-            <AyniBalanceVisualization
-              balanceAyni={normalizedGameData.balanceAyni}
-              elementos={normalizedGameData.elementos}
-              userLevel={normalizedGameData.ayniLevel}
-              recentActivity={{
-                streak: normalizedGameData.streak,
-                lastInteraction: lastInteraction,
-                totalContributions: normalizedGameData.bienComunContributions,
-              }}
-              className="fullscreen-background"
-            />
-          </Box>
-        </Fade>
-        */}
+        {/* Balance Ayni como fondo - Comentado para evitar duplicación */}
 
         {/*  Hero Section Mejorado */}
         {renderEnhancedHero()}
