@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   Typography,
   Grid,
@@ -8,10 +8,6 @@ import {
   Stack,
   Tooltip,
   IconButton,
-  Collapse,
-  Card,
-  CardContent,
-  Divider,
 } from '@mui/material';
 import {
   AutoAwesome,
@@ -25,9 +21,6 @@ import {
   Refresh,
   TrendingUp,
   WifiOff,
-  ExpandMore,
-  ExpandLess,
-  Balance,
 } from '@mui/icons-material';
 
 // Import our enhanced design system components
@@ -94,13 +87,12 @@ const elementConfig = {
   },
 };
 
-// Memoized component for better performance
 const EnhancedElementIcon: React.FC<{
   element: keyof typeof elementConfig;
   value: number;
   isHovered: boolean;
   onHover: (element: keyof typeof elementConfig | null) => void;
-}> = React.memo(({ element, value, isHovered, onHover }) => {
+}> = ({ element, value, isHovered, onHover }) => { // eslint-disable-line no-unused-vars
   const elementData = elementConfig[element];
 
   return (
@@ -137,7 +129,7 @@ const EnhancedElementIcon: React.FC<{
         <AdvancedElementalProgress
           element={element}
           progress={value}
-          size="sm"
+          size="md"
           animated={true}
           glowEffect={isHovered}
           showLabel={false}
@@ -167,175 +159,7 @@ const EnhancedElementIcon: React.FC<{
       </Box>
     </Tooltip>
   );
-});
-
-EnhancedElementIcon.displayName = 'EnhancedElementIcon';
-
-// Main balance display component
-const MainBalanceDisplay: React.FC<{
-  balanceAyni: number;
-  ayniLevel: string;
-  nextLevel: string;
-  ayniProgress: number;
-}> = React.memo(({ balanceAyni, ayniLevel, nextLevel, ayniProgress }) => {
-  const getBalanceColor = useMemo(() => {
-    if (balanceAyni >= 80) return 'text-green-600';
-    if (balanceAyni >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  }, [balanceAyni]);
-
-  const getBalanceMessage = useMemo(() => {
-    if (balanceAyni >= 90) return 'Excelente equilibrio Ayni';
-    if (balanceAyni >= 80) return 'Muy buen balance';
-    if (balanceAyni >= 60) return 'Balance moderado';
-    if (balanceAyni >= 40) return 'Necesita atención';
-    return 'Requiere enfoque urgente';
-  }, [balanceAyni]);
-
-  const getBalanceGradient = useMemo(() => {
-    if (balanceAyni >= 80) return 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-    if (balanceAyni >= 60) return 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
-    return 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-  }, [balanceAyni]);
-
-  return (
-    <Card 
-      className="relative overflow-hidden"
-      sx={{
-        background: getBalanceGradient,
-        color: 'white',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)',
-        }
-      }}
-    >
-      <CardContent className="relative z-10">
-        <Stack spacing={3}>
-          {/* Main balance number */}
-          <Box className="text-center">
-            <Stack direction="row" alignItems="center" justifyContent="center" spacing={2}>
-              <Balance sx={{ fontSize: 40, opacity: 0.9 }} />
-              <Typography
-                variant="h1"
-                className="font-bold"
-                sx={{ fontSize: { xs: '3rem', sm: '4rem' } }}
-              >
-                {safeToLocaleString(balanceAyni)}%
-              </Typography>
-            </Stack>
-            <Typography 
-              variant="h6" 
-              className="font-medium opacity-90"
-            >
-              Balance Ayni Principal
-            </Typography>
-            <Typography 
-              variant="body2" 
-              className="opacity-80 mt-1"
-            >
-              {getBalanceMessage}
-            </Typography>
-          </Box>
-
-          {/* Level progress */}
-          <Box>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" className="mb-2">
-              <Typography variant="body1" className="font-bold">
-                {ayniLevel}
-              </Typography>
-              <Chip
-                label={`→ ${nextLevel}`}
-                size="small"
-                sx={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  color: 'white',
-                  fontWeight: 'bold'
-                }}
-                icon={<TrendingUp sx={{ color: 'white !important' }} />}
-              />
-            </Stack>
-            <Box className="relative">
-              <LinearProgress
-                variant="determinate"
-                value={ayniProgress}
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                  '& .MuiLinearProgress-bar': {
-                    backgroundColor: 'white',
-                    borderRadius: 4,
-                  },
-                }}
-              />
-              <Typography
-                variant="caption"
-                className="absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xs"
-                sx={{ color: 'rgba(0, 0, 0, 0.7)' }}
-              >
-                {safeToLocaleString(ayniProgress)}%
-              </Typography>
-            </Box>
-          </Box>
-        </Stack>
-      </CardContent>
-    </Card>
-  );
-});
-
-MainBalanceDisplay.displayName = 'MainBalanceDisplay';
-
-// Compact metrics display
-const CompactMetrics: React.FC<{
-  ondas: number;
-  meritos: number;
-  bienComunContributions: number;
-}> = React.memo(({ ondas, meritos, bienComunContributions }) => (
-  <Grid container spacing={2}>
-    <Grid size={{ xs: 4 }}>
-      <Box className="text-center p-3 rounded-lg bg-gradient-to-br from-indigo-50 to-purple-50 hover:shadow-md transition-all">
-        <AutoAwesome sx={{ fontSize: 24, color: '#6366f1', mb: 1 }} />
-        <Typography variant="h6" className="font-bold text-coomunity-800">
-          {safeToLocaleString(ondas)}
-        </Typography>
-        <Typography variant="caption" className="text-coomunity-600 font-medium">
-          Öndas
-        </Typography>
-      </Box>
-    </Grid>
-    <Grid size={{ xs: 4 }}>
-      <Box className="text-center p-3 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 hover:shadow-md transition-all">
-        <EmojiEvents sx={{ fontSize: 24, color: '#f59e0b', mb: 1 }} />
-        <Typography variant="h6" className="font-bold text-coomunity-800">
-          {safeToLocaleString(meritos)}
-        </Typography>
-        <Typography variant="caption" className="text-coomunity-600 font-medium">
-          Mëritos
-        </Typography>
-      </Box>
-    </Grid>
-    <Grid size={{ xs: 4 }}>
-      <Box className="text-center p-3 rounded-lg bg-gradient-to-br from-red-50 to-pink-50 hover:shadow-md transition-all">
-        <Favorite sx={{ fontSize: 24, color: '#ef4444', mb: 1 }} />
-        <Typography variant="h6" className="font-bold text-coomunity-800">
-          {safeToLocaleString(bienComunContributions)}
-        </Typography>
-        <Typography variant="caption" className="text-coomunity-600 font-medium">
-          Bien Común
-        </Typography>
-      </Box>
-    </Grid>
-  </Grid>
-));
-
-CompactMetrics.displayName = 'CompactMetrics';
+};
 
 export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
   ondas,
@@ -352,29 +176,24 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
 }) => {
   const [hoveredElement, setHoveredElement] = useState<keyof typeof elementConfig | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [showDetailedView, setShowDetailedView] = useState(false);
 
-  // Memoized elemental data conversion
-  const elementalData = useMemo(() => ({
+  // Convert elementos to the format expected by useElementalBalance
+  const elementalData = {
     tierra: elementos.tierra,
     agua: elementos.agua,
     fuego: elementos.fuego,
     aire: elementos.aire,
-  }), [elementos]);
+  };
 
   const elementalBalance = useElementalBalance(elementalData, ondas, meritos);
 
-  const handleRefresh = useCallback(async () => {
+  const handleRefresh = async () => {
     if (onRefresh && !isRefreshing) {
       setIsRefreshing(true);
       await onRefresh();
       setTimeout(() => setIsRefreshing(false), 1000);
     }
-  }, [onRefresh, isRefreshing]);
-
-  const toggleDetailedView = useCallback(() => {
-    setShowDetailedView(prev => !prev);
-  }, []);
+  };
 
   if (isLoading) {
     return (
@@ -389,7 +208,7 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
 
   return (
     <AyniCard className="p-6 space-y-6 relative overflow-hidden">
-      {/* Optimized header */}
+      {/* Enhanced header with connection status */}
       <Box className="flex items-center justify-between">
         <Typography 
           variant="h5" 
@@ -405,16 +224,6 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
               <WifiOff className="text-orange-500" fontSize="small" />
             </Tooltip>
           )}
-          
-          <Tooltip title="Ver detalles">
-            <IconButton
-              onClick={toggleDetailedView}
-              size="small"
-              className="transition-all duration-300"
-            >
-              {showDetailedView ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
-          </Tooltip>
           
           <Tooltip title="Actualizar métricas">
             <IconButton
@@ -432,84 +241,205 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
         </Stack>
       </Box>
 
-      {/* Main balance display - Always visible */}
-      <MainBalanceDisplay
-        balanceAyni={balanceAyni}
-        ayniLevel={ayniLevel}
-        nextLevel={nextLevel}
-        ayniProgress={ayniProgress}
-      />
+      {/* Enhanced metrics grid */}
+      <Box className="space-y-6">
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Box className="text-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <Typography
+                variant="h3"
+                className={cn(
+                  "coomunity-h3 font-bold text-gradient-coomunity",
+                  "flex items-center justify-center hover-lift"
+                )}
+              >
+                {safeToLocaleString(ondas)}
+                <Box className="ml-2">
+                  <AutoAwesome sx={{ fontSize: 28, color: '#6366f1' }} />
+                </Box>
+              </Typography>
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
+              >
+                Öndas
+              </Typography>
+            </Box>
+          </Grid>
 
-      {/* Compact metrics - Always visible */}
-      <CompactMetrics
-        ondas={ondas}
-        meritos={meritos}
-        bienComunContributions={bienComunContributions}
-      />
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Box className="text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <Typography
+                variant="h3"
+                className={cn(
+                  "coomunity-h3 font-bold text-gradient-coomunity",
+                  "flex items-center justify-center hover-lift"
+                )}
+              >
+                {safeToLocaleString(meritos)}
+                <Box className="ml-2">
+                  <EmojiEvents sx={{ fontSize: 28, color: '#f59e0b' }} />
+                </Box>
+              </Typography>
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
+              >
+                Mëritos
+              </Typography>
+            </Box>
+          </Grid>
 
-      {/* Detailed view - Collapsible */}
-      <Collapse in={showDetailedView}>
-        <Box className="space-y-6 pt-4">
-          <Divider />
-          
-          {/* Enhanced elemental balance section */}
-          <Box className="space-y-4">
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Box className="text-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <Typography
+                variant="h3"
+                className={cn(
+                  "coomunity-h3 font-bold text-gradient-coomunity",
+                  "flex items-center justify-center hover-lift"
+                )}
+              >
+                {safeToLocaleString(bienComunContributions)}
+                <Box className="ml-2">
+                  <Favorite sx={{ fontSize: 28, color: '#ef4444' }} />
+                </Box>
+              </Typography>
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
+              >
+                Bien Común
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Box className="text-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <Typography
+                variant="h3"
+                className={cn(
+                  "coomunity-h3 font-bold",
+                  balanceAyni >= 80 ? "text-green-600" : 
+                  balanceAyni >= 60 ? "text-yellow-600" : "text-red-600",
+                  "flex items-center justify-center hover-lift"
+                )}
+              >
+                {safeToLocaleString(balanceAyni)}%
+                <Box className="ml-2">
+                  <Psychology sx={{ fontSize: 28 }} />
+                </Box>
+              </Typography>
+              <Typography 
+                variant="caption" 
+                className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
+              >
+                Balance Ayni
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+
+        {/* Enhanced Ayni level progress */}
+        <Box className="space-y-3 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography 
-              variant="h6" 
-              className="coomunity-h6 font-bold text-coomunity-800 text-center"
+              variant="body1" 
+              className="coomunity-body1 font-bold text-coomunity-800"
             >
-              Balance Elemental Detallado
+              Nivel Ayni: {ayniLevel}
             </Typography>
-            
-            <Grid container spacing={2} justifyContent="center">
-              {(Object.keys(elementConfig) as Array<keyof typeof elementConfig>).map((element) => (
-                <Grid size={{ xs: 3 }} key={element}>
-                  <EnhancedElementIcon
-                    element={element}
-                    value={elementos[element]}
-                    isHovered={hoveredElement === element}
-                    onHover={setHoveredElement}
-                  />
-                </Grid>
-              ))}
-            </Grid>
+            <Chip
+              label={`Próximo: ${nextLevel}`}
+              size="small"
+              variant="outlined"
+              className="font-medium hover-lift"
+              icon={<TrendingUp />}
+            />
+          </Stack>
+          <Box className="relative">
+            <LinearProgress
+              variant="determinate"
+              value={ayniProgress}
+              className={cn(
+                "h-3 rounded-full bg-coomunity-100",
+                "smooth-transition hover-lift"
+              )}
+              sx={{
+                '& .MuiLinearProgress-bar': {
+                  background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%)',
+                  borderRadius: '9999px',
+                },
+              }}
+            />
+            <Typography
+              variant="caption"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-white font-bold text-xs"
+            >
+              {safeToLocaleString(ayniProgress)}%
+            </Typography>
           </Box>
+        </Box>
 
-          {/* Enhanced metrics relationships */}
+        {/* Enhanced elemental balance section */}
+        <Box className="space-y-4 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <Typography 
+            variant="h6" 
+            className="coomunity-h6 font-bold text-coomunity-800 text-center"
+          >
+            Balance Elemental
+          </Typography>
+          
+          <Grid container spacing={2} justifyContent="center">
+            {(Object.keys(elementConfig) as Array<keyof typeof elementConfig>).map((element) => (
+              <Grid size={{ xs: 3 }} key={element}>
+                <EnhancedElementIcon
+                  element={element}
+                  value={elementos[element]}
+                  isHovered={hoveredElement === element}
+                  onHover={setHoveredElement}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Enhanced metrics relationships */}
+        <Box className="animate-fade-in" style={{ animationDelay: '0.7s' }}>
           <MetricsRelationships
             ondas={ondas}
             meritos={meritos}
             ayniBalance={balanceAyni / 100}
             className="hover-lift"
           />
-
-          {/* Enhanced balance insights */}
-          {elementalBalance.recommendations && elementalBalance.recommendations.length > 0 && (
-            <Box 
-              className={cn(
-                "p-4 rounded-xl border-l-4",
-                "bg-gradient-subtle hover-lift smooth-transition"
-              )}
-              style={{ 
-                borderLeftColor: elementConfig[elementalBalance.dominantElement].color,
-              }}
-            >
-              <Typography 
-                variant="body2" 
-                className="coomunity-body-sm font-medium text-coomunity-700 mb-2"
-              >
-                💡 Insight Elemental
-              </Typography>
-              <Typography 
-                variant="body2" 
-                className="coomunity-body-sm text-coomunity-600"
-              >
-                {elementalBalance.recommendations[0]}
-              </Typography>
-            </Box>
-          )}
         </Box>
-      </Collapse>
+
+        {/* Enhanced balance insights */}
+        {elementalBalance.recommendations && elementalBalance.recommendations.length > 0 && (
+          <Box 
+            className={cn(
+              "p-4 rounded-xl border-l-4 animate-fade-in",
+              "bg-gradient-subtle hover-lift smooth-transition"
+            )}
+            style={{ 
+              borderLeftColor: elementConfig[elementalBalance.dominantElement].color,
+              animationDelay: '0.8s'
+            }}
+          >
+            <Typography 
+              variant="body2" 
+              className="coomunity-body-sm font-medium text-coomunity-700 mb-2"
+            >
+              💡 Insight Elemental
+            </Typography>
+            <Typography 
+              variant="body2" 
+              className="coomunity-body-sm text-coomunity-600"
+            >
+              {elementalBalance.recommendations[0]}
+            </Typography>
+          </Box>
+        )}
+      </Box>
     </AyniCard>
   );
 };
