@@ -134,39 +134,245 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* ===== AYNI BALANCE 3D ===== */
+/* ===== AYNI SOLAR SYSTEM 3D - SISTEMA COMPLETO ===== */
 
-.ayni-balance-3d {
+.ayni-solar-system-universe {
   transform-style: preserve-3d;
-  perspective: 1000px;
+  perspective: 2000px;
+  perspective-origin: center center;
 }
 
-.ayni-balance-3d-container {
+.universe-background-orbital {
   transform-style: preserve-3d;
-  animation: gentle-float 6s ease-in-out infinite;
+  will-change: transform;
 }
 
-@keyframes gentle-float {
-  0%,
-  100% {
-    transform: translateY(0px) rotateY(0deg);
+.stars-field {
+  animation: stellar-twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes stellar-twinkle {
+  0% {
+    opacity: 0.4;
   }
   50% {
-    transform: translateY(-8px) rotateY(5deg);
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
   }
 }
 
-.element-card-3d {
+.solar-system-container {
   transform-style: preserve-3d;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: cosmic-drift 20s ease-in-out infinite;
 }
 
-.element-card-3d:hover {
-  transform: translateY(-8px) rotateY(10deg) rotateX(5deg);
+@keyframes cosmic-drift {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotateX(0deg) rotateZ(0deg);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotateX(2deg) rotateZ(1deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotateX(0deg) rotateZ(-1deg);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotateX(-2deg) rotateZ(0deg);
+  }
 }
 
-.ayni-balance-indicator {
-  animation: orbital-rotation 20s linear infinite;
+/* ===== PLANETA CENTRAL 3D ===== */
+
+.central-planet-sphere {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.central-planet-sphere:hover {
+  animation: planet-magnetic-pulse 2s ease-in-out infinite;
+}
+
+@keyframes planet-magnetic-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotateY(var(--rotation, 0deg))
+      rotateX(15deg) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotateY(var(--rotation, 0deg))
+      rotateX(15deg) scale(1.05);
+  }
+}
+
+/* ===== ELEMENTOS ORBITALES 3D ===== */
+
+.orbital-element-sphere {
+  transform-style: preserve-3d;
+  will-change: transform;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
+
+.orbital-element-sphere:hover {
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+}
+
+@keyframes element-pulse {
+  0%,
+  100% {
+    box-shadow:
+      inset -5px -5px 10px rgba(0, 0, 0, 0.4),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.3),
+      0 0 15px var(--element-color, #fff),
+      0 0 30px var(--element-color, #fff);
+  }
+  50% {
+    box-shadow:
+      inset -5px -5px 10px rgba(0, 0, 0, 0.4),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.3),
+      0 0 25px var(--element-color, #fff),
+      0 0 50px var(--element-color, #fff);
+  }
+}
+
+@keyframes orbital-ring {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== ÓRBITAS ELÍPTICAS ===== */
+
+@keyframes orbit-fade {
+  0% {
+    opacity: 0.2;
+    stroke-width: 1;
+  }
+  100% {
+    opacity: 0.6;
+    stroke-width: 2;
+  }
+}
+
+/* ===== PANELES FLOTANTES ===== */
+
+.info-panel-floating {
+  animation: panel-float 6s ease-in-out infinite;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+@keyframes panel-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.detailed-analysis-panel {
+  animation: panel-slide-in 0.5s ease-out;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+@keyframes panel-slide-in {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+/* ===== EFECTOS CÓSMICOS AVANZADOS ===== */
+
+@keyframes cosmic-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3))
+      drop-shadow(0 0 15px var(--glow-color, #4fc3f7))
+      drop-shadow(0 0 25px var(--glow-color, #4fc3f7));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))
+      drop-shadow(0 0 20px var(--glow-color, #4fc3f7))
+      drop-shadow(0 0 35px var(--glow-color, #4fc3f7));
+  }
+}
+
+/* ===== OPTIMIZACIONES DE PERFORMANCE ===== */
+
+.ayni-solar-system-universe *,
+.orbital-element-sphere *,
+.central-planet-sphere * {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* ===== RESPONSIVIDAD MÓVIL ===== */
+
+@media (max-width: 768px) {
+  .solar-system-container {
+    width: 350px !important;
+    height: 350px !important;
+  }
+
+  .info-panel-floating {
+    max-width: 250px !important;
+    font-size: 0.8rem;
+  }
+
+  .detailed-analysis-panel {
+    max-width: 300px !important;
+    max-height: 50vh !important;
+  }
+
+  .orbital-element-sphere {
+    transform: scale(0.8) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .ayni-solar-system-universe {
+    height: 80vh !important;
+  }
+
+  .solar-system-container {
+    width: 280px !important;
+    height: 280px !important;
+  }
+}
+
+/* ===== REDUCCIÓN DE MOVIMIENTO ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-system-container,
+  .orbital-element-sphere,
+  .central-planet-sphere,
+  .universe-background-orbital {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .stars-field {
+    animation: none !important;
+  }
 }
 
 /* ===== ENERGY WEATHER WIDGET ===== */

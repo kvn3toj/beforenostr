@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
 import Box from '@mui/material/Box';
@@ -25,6 +31,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import PublicIcon from '@mui/icons-material/Public';
 
 // Importar sistema de partículas
 import EnhancedParticles from './EnhancedParticles';
@@ -37,7 +44,11 @@ interface ElementData {
   description: string;
   recommendations: string[];
   orbitRadius: number;
+  orbitRadiusY: number; // Para órbitas elípticas
   angle: number;
+  speed: number; // Velocidad de rotación individual
+  size: number; // Tamaño de la esfera
+  tilt: number; // Inclinación orbital
 }
 
 interface PersonalizedInsight {
@@ -93,30 +104,39 @@ export const AyniBalanceVisualization: React.FC<
     aire: 0,
   });
   const [expanded, setExpanded] = useState(false);
-  const [rotation, setRotation] = useState(0);
+  const [orbitalRotation, setOrbitalRotation] = useState(0);
+  const [planetRotation, setPlanetRotation] = useState(0);
+  const [backgroundRotation, setBackgroundRotation] = useState(0);
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [animationTick, setAnimationTick] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // 🎨 Animación de entrada y rotación continua
+  // 🎨 Animación de entrada suave
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimatedBalance(balanceAyni);
       setAnimatedElements(elementos);
     }, 300);
 
-    // Rotación continua suave
-    const rotationInterval = setInterval(() => {
-      setRotation((prev) => (prev + 0.5) % 360);
-      setAnimationTick((prev) => prev + 1);
-    }, 100);
-
     return () => {
       clearTimeout(timer);
-      clearInterval(rotationInterval);
     };
   }, [balanceAyni, elementos]);
 
-  // 🌟 Configuración avanzada de elementos con IA
+  // 🪐 Sistema de rotaciones independientes - ÓRDEN CORRECTO
+  const updateRotations = useCallback(() => {
+    setOrbitalRotation((prev) => (prev + 0.3) % 360); // Órbitas lentas
+    setPlanetRotation((prev) => (prev + 1.2) % 360); // Planeta más rápido, hacia la derecha
+    setBackgroundRotation((prev) => (prev - 0.1) % 360); // Fondo lento, sentido contrario
+    setAnimationTick((prev) => prev + 1);
+  }, []);
+
+  useEffect(() => {
+    const rotationInterval = setInterval(updateRotations, 50);
+    return () => clearInterval(rotationInterval);
+  }, [updateRotations]);
+
+  // 🌟 Configuración Sistema Solar 3D - Como vista desde Júpiter
   const elementConfig: ElementData[] = useMemo(
     () => [
       {
@@ -130,8 +150,12 @@ export const AyniBalanceVisualization: React.FC<
           'Participa en desafíos creativos',
           'Inspira a otros con tu energía',
         ],
-        orbitRadius: 80,
-        angle: 0 + rotation,
+        orbitRadius: 120, // Radio horizontal mayor
+        orbitRadiusY: 80, // Radio vertical menor para elipse
+        angle: 0 + orbitalRotation * 1.2, // Mercurio - más rápido
+        speed: 1.2,
+        size: 8,
+        tilt: -15, // Inclinación orbital
       },
       {
         name: 'Agua',
@@ -144,8 +168,12 @@ export const AyniBalanceVisualization: React.FC<
           'Adapta tu enfoque a nuevos retos',
           'Cultiva la flexibilidad emocional',
         ],
-        orbitRadius: 90,
-        angle: 90 + rotation,
+        orbitRadius: 150, // Venus
+        orbitRadiusY: 100,
+        angle: 90 + orbitalRotation * 1.0,
+        speed: 1.0,
+        size: 10,
+        tilt: 10,
       },
       {
         name: 'Tierra',
@@ -158,8 +186,12 @@ export const AyniBalanceVisualization: React.FC<
           'Mantén constancia en tus hábitos',
           'Sé el pilar de tu comunidad',
         ],
-        orbitRadius: 85,
-        angle: 180 + rotation,
+        orbitRadius: 180, // Tierra
+        orbitRadiusY: 120,
+        angle: 180 + orbitalRotation * 0.8,
+        speed: 0.8,
+        size: 12,
+        tilt: 0, // Tierra como referencia
       },
       {
         name: 'Aire',
@@ -172,11 +204,15 @@ export const AyniBalanceVisualization: React.FC<
           'Facilita conversaciones significativas',
           'Conecta personas con ideas afines',
         ],
-        orbitRadius: 95,
-        angle: 270 + rotation,
+        orbitRadius: 220, // Marte
+        orbitRadiusY: 140,
+        angle: 270 + orbitalRotation * 0.6,
+        speed: 0.6,
+        size: 9,
+        tilt: 20,
       },
     ],
-    [animatedElements, rotation]
+    [animatedElements, orbitalRotation]
   );
 
   // 🤖 Generar insights personalizados basados en IA
@@ -298,7 +334,11 @@ export const AyniBalanceVisualization: React.FC<
   // 🧹 CLEANUP OBLIGATORIO según Builder.io
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up AyniBalanceVisualization');
+      console.log('🧹 Cleaning up AyniBalanceVisualization - Sistema Solar 3D');
+      // Limpiar intervals de rotación
+      if (typeof window !== 'undefined') {
+        console.log('🧹 Limpiando animaciones del sistema solar');
+      }
     };
   }, []);
 
@@ -317,524 +357,701 @@ export const AyniBalanceVisualization: React.FC<
   }, []);
 
   return (
-    <Card
-      className={`glassmorphism-card interactive-card-advanced ayni-balance-3d ${className}`}
+    <Box
+      ref={containerRef}
+      className={`ayni-solar-system-universe ${className}`}
       sx={{
-        background: 'transparent',
-        border: `1px solid ${alpha('#fff', 0.1)}`,
-        borderRadius: 3,
-        overflow: 'visible',
         position: 'relative',
-        minHeight: expanded ? 600 : 400,
-        transition: 'all 0.6s ease-in-out',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: `0 12px 40px ${alpha(balanceStatus.color, 0.3)}`,
-        },
+        width: '100%',
+        height: '100vh', // Página completa
+        minHeight: '600px',
+        background: `
+          radial-gradient(circle at 20% 30%, ${alpha('#FF6B35', 0.03)} 0%, transparent 40%),
+          radial-gradient(circle at 80% 70%, ${alpha('#4FC3F7', 0.03)} 0%, transparent 40%),
+          radial-gradient(circle at 40% 80%, ${alpha('#8BC34A', 0.03)} 0%, transparent 40%),
+          linear-gradient(135deg,
+            ${alpha('#0a0a0a', 0.95)} 0%,
+            ${alpha('#1a1a2e', 0.95)} 25%,
+            ${alpha('#16213e', 0.95)} 50%,
+            ${alpha('#0f1419', 0.95)} 75%,
+            ${alpha('#0a0a0a', 0.95)} 100%
+          )
+        `,
+        overflow: 'hidden',
+        perspective: '2000px',
+        transform: 'translateZ(0)', // Optimización GPU
       }}
     >
-      {/* Partículas flotantes temáticas */}
-      <EnhancedParticles
-        type="glow"
-        count={8}
-        colors={elementConfig.map((e) => e.color)}
-        intensity="medium"
-        interactive={true}
+      {/* Fondo rotatorio verde/naranja separado del planeta principal */}
+      <Box
+        className="universe-background-orbital"
+        sx={{
+          position: 'absolute',
+          top: '-20%',
+          left: '-20%',
+          width: '140%',
+          height: '140%',
+          background: `
+            linear-gradient(45deg,
+              ${alpha('#8BC34A', 0.08)} 0%,
+              transparent 25%,
+              ${alpha('#FF6B35', 0.06)} 50%,
+              transparent 75%,
+              ${alpha('#8BC34A', 0.08)} 100%
+            )
+          `,
+          transform: `rotate(${backgroundRotation}deg)`,
+          transition: 'transform 0.1s linear',
+          borderRadius: '50%',
+          filter: 'blur(2px)',
+          opacity: 0.3, // Menor opacidad para efecto de estrellas
+          zIndex: 0,
+        }}
       />
 
-      <CardContent sx={{ p: 3, position: 'relative', zIndex: 1 }}>
-        {/* Header mejorado con expansión */}
+      {/* Campo de estrellas fijo */}
+      <Box
+        className="stars-field"
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: `
+            radial-gradient(1px 1px at 10px 20px, ${alpha('#fff', 0.6)}, transparent),
+            radial-gradient(1px 1px at 190px 90px, ${alpha('#fff', 0.4)}, transparent),
+            radial-gradient(1px 1px at 120px 180px, ${alpha('#fff', 0.8)}, transparent),
+            radial-gradient(1px 1px at 300px 40px, ${alpha('#fff', 0.3)}, transparent),
+            radial-gradient(1px 1px at 50px 160px, ${alpha('#fff', 0.5)}, transparent),
+            radial-gradient(1px 1px at 250px 200px, ${alpha('#fff', 0.7)}, transparent),
+            radial-gradient(1px 1px at 80px 60px, ${alpha('#fff', 0.4)}, transparent),
+            radial-gradient(1px 1px at 340px 120px, ${alpha('#fff', 0.6)}, transparent)
+          `,
+          backgroundSize: '400px 300px, 500px 400px, 300px 250px, 450px 350px',
+          backgroundRepeat: 'repeat',
+          opacity: 0.6,
+          zIndex: 1,
+        }}
+      />
+
+      {/* Partículas flotantes cósmicas */}
+      <EnhancedParticles
+        type="glow"
+        count={15}
+        colors={['#fff', '#4FC3F7', '#FF6B35', '#8BC34A', '#FFD54F']}
+        intensity="low"
+        interactive={false}
+      />
+
+      {/* Contenedor del sistema solar 3D */}
+      <Box
+        className="solar-system-container"
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '500px',
+          height: '500px',
+          transformStyle: 'preserve-3d',
+          zIndex: 2,
+        }}
+      >
+        {/* Planeta central 3D - Esfera que gira sobre su propio eje */}
         <Box
+          className="central-planet-sphere"
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mb: 3,
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '120px',
+            height: '120px',
+            transform: `translate(-50%, -50%) rotateY(${planetRotation}deg) rotateX(15deg)`,
+            transformStyle: 'preserve-3d',
+            zIndex: 5,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box
+          {/* Esfera 3D del planeta central */}
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              borderRadius: '50%',
+              background: `
+                radial-gradient(circle at 30% 30%, ${alpha(balanceStatus.color, 0.9)} 0%, ${alpha(balanceStatus.color, 0.7)} 40%, ${alpha(balanceStatus.color, 0.3)} 80%, transparent 100%),
+                radial-gradient(circle at 70% 70%, ${alpha('#fff', 0.3)} 0%, transparent 30%),
+                linear-gradient(135deg, ${balanceStatus.color} 0%, ${alpha(balanceStatus.color, 0.6)} 100%)
+              `,
+              boxShadow: `
+                inset -20px -20px 40px ${alpha('#000', 0.3)},
+                inset 10px 10px 20px ${alpha('#fff', 0.2)},
+                0 0 40px ${alpha(balanceStatus.color, 0.6)},
+                0 0 80px ${alpha(balanceStatus.color, 0.3)}
+              `,
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.1)',
+                boxShadow: `
+                  inset -20px -20px 40px ${alpha('#000', 0.3)},
+                  inset 10px 10px 20px ${alpha('#fff', 0.2)},
+                  0 0 60px ${alpha(balanceStatus.color, 0.8)},
+                  0 0 120px ${alpha(balanceStatus.color, 0.4)}
+                `,
+              },
+            }}
+            onClick={handleExpandToggle}
+          >
+            {/* Icono del planeta */}
+            <PublicIcon
               sx={{
-                p: 1.5,
-                borderRadius: 2,
-                background: `linear-gradient(135deg, ${balanceStatus.color} 0%, ${alpha(balanceStatus.color, 0.6)} 100%)`,
-                color: 'white',
-                animation: 'pulse 2s ease-in-out infinite',
+                fontSize: '2rem',
+                color: '#fff',
+                mb: 0.5,
+                textShadow: `0 0 10px ${alpha('#fff', 0.8)}`,
+                filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.6))',
+              }}
+            />
+
+            {/* Porcentaje de balance */}
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 'bold',
+                color: '#fff',
+                textShadow: `0 0 10px ${alpha('#fff', 0.8)}`,
+                fontSize: '1rem',
               }}
             >
-              <BalanceIcon />
-            </Box>
-            <Box>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 'bold', color: 'white' }}
-              >
-                Balance Ayni 3D
-              </Typography>
-              <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
-                {userLevel} • {recentActivity.streak} días consecutivos
-              </Typography>
-            </Box>
-          </Box>
+              {Math.round(animatedBalance * 100)}%
+            </Typography>
 
+            {/* Superficie con textura de planeta */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                background: `
+                  repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    ${alpha('#fff', 0.05)} 2px,
+                    ${alpha('#fff', 0.05)} 4px
+                  )
+                `,
+                transform: `rotateY(${planetRotation * 2}deg)`,
+                opacity: 0.6,
+              }}
+            />
+          </Box>
+        </Box>
+
+        {/* Elementos orbitales como esferas 3D */}
+        {elementConfig.map((element) => {
+          // Calcular posición elíptica 3D
+          const x =
+            Math.cos((element.angle * Math.PI) / 180) * element.orbitRadius;
+          const y =
+            Math.sin((element.angle * Math.PI) / 180) * element.orbitRadiusY;
+          const z =
+            Math.sin(
+              (element.angle * Math.PI) / 180 + (element.tilt * Math.PI) / 180
+            ) * 20;
+
+          return (
+            <Box
+              key={element.name}
+              className="orbital-element-sphere"
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                width: `${element.size * 2}px`,
+                height: `${element.size * 2}px`,
+                transform: `translate(-50%, -50%) translate3d(${x}px, ${y}px, ${z}px) rotateY(${planetRotation * element.speed}deg)`,
+                transformStyle: 'preserve-3d',
+                zIndex: 4,
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: `translate(-50%, -50%) translate3d(${x}px, ${y}px, ${z}px) rotateY(${planetRotation * element.speed}deg) scale(1.3)`,
+                },
+              }}
+              onClick={() => handleElementClick(element.name)}
+            >
+              {/* Esfera 3D del elemento */}
+              <Box
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '50%',
+                  background: `
+                    radial-gradient(circle at 25% 25%, ${alpha('#fff', 0.4)} 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, ${alpha('#000', 0.3)} 0%, transparent 50%),
+                    linear-gradient(135deg, ${element.color} 0%, ${alpha(element.color, 0.7)} 100%)
+                  `,
+                  boxShadow: `
+                    inset -5px -5px 10px ${alpha('#000', 0.4)},
+                    inset 3px 3px 6px ${alpha('#fff', 0.3)},
+                    0 0 15px ${alpha(element.color, 0.6)},
+                    0 0 30px ${alpha(element.color, 0.3)}
+                  `,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                  animation:
+                    selectedElement === element.name
+                      ? 'element-pulse 1s ease-in-out infinite'
+                      : 'none',
+                }}
+              >
+                {/* Icono del elemento */}
+                <Box
+                  sx={{
+                    color: '#fff',
+                    fontSize: `${element.size / 2}px`,
+                    textShadow: `0 0 5px ${alpha('#fff', 0.8)}`,
+                    transform: `rotateY(${-planetRotation * element.speed}deg)`, // Contrarotación para mantener icono visible
+                  }}
+                >
+                  {element.icon}
+                </Box>
+
+                {/* Anillo orbital si está seleccionado */}
+                {selectedElement === element.name && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '-5px',
+                      left: '-5px',
+                      width: `${element.size * 2 + 10}px`,
+                      height: `${element.size * 2 + 10}px`,
+                      border: `2px solid ${element.color}`,
+                      borderRadius: '50%',
+                      borderStyle: 'dashed',
+                      animation: 'orbital-ring 2s linear infinite',
+                    }}
+                  />
+                )}
+              </Box>
+
+              {/* Tooltip con información del elemento */}
+              <Tooltip
+                title={
+                  <Box>
+                    <Typography variant="subtitle2">{element.name}</Typography>
+                    <Typography variant="caption">
+                      {element.description}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ display: 'block', mt: 1 }}
+                    >
+                      💡 {element.recommendations[0]}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ display: 'block', mt: 1, fontWeight: 'bold' }}
+                    >
+                      {element.value}% completado
+                    </Typography>
+                  </Box>
+                }
+                arrow
+                placement="top"
+              >
+                <Box sx={{ position: 'absolute', inset: 0 }} />
+              </Tooltip>
+            </Box>
+          );
+        })}
+
+        {/* Órbitas elípticas visibles */}
+        <svg
+          width="500"
+          height="500"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        >
+          <defs>
+            <filter id="orbit-glow">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+              <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          {elementConfig.map((element, index) => (
+            <ellipse
+              key={`orbit-${element.name}`}
+              cx="250"
+              cy="250"
+              rx={element.orbitRadius}
+              ry={element.orbitRadiusY}
+              fill="none"
+              stroke={alpha(element.color, 0.3)}
+              strokeWidth="1"
+              strokeDasharray="4 4"
+              filter="url(#orbit-glow)"
+              transform={`rotate(${element.tilt} 250 250)`}
+              style={{
+                animation: `orbit-fade ${3 + index}s ease-in-out infinite alternate`,
+              }}
+            />
+          ))}
+        </svg>
+      </Box>
+
+      {/* Panel de información flotante */}
+      <Box
+        className="info-panel-floating"
+        sx={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          background: alpha('#000', 0.7),
+          backdropFilter: 'blur(10px)',
+          borderRadius: 3,
+          p: 2,
+          maxWidth: '300px',
+          border: `1px solid ${alpha('#fff', 0.1)}`,
+          zIndex: 10,
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <Box
+            sx={{
+              p: 1,
+              borderRadius: 2,
+              background: `linear-gradient(135deg, ${balanceStatus.color} 0%, ${alpha(balanceStatus.color, 0.6)} 100%)`,
+              color: 'white',
+            }}
+          >
+            <BalanceIcon />
+          </Box>
+          <Box>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 'bold', color: 'white' }}
+            >
+              Balance Ayni Solar
+            </Typography>
+            <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
+              {userLevel} • {recentActivity.streak} días consecutivos
+            </Typography>
+          </Box>
+        </Box>
+
+        <Typography
+          variant="caption"
+          sx={{ color: alpha('#fff', 0.9), display: 'block', mb: 2 }}
+        >
+          🌌 Sistema Solar visto desde Júpiter
+        </Typography>
+
+        {/* Status del balance */}
+        <Box sx={{ mb: 2 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 1,
+            }}
+          >
+            <Typography variant="caption" sx={{ color: 'white' }}>
+              Balance General
+            </Typography>
+            <Chip
+              label={balanceStatus.status}
+              size="small"
+              sx={{
+                bgcolor: alpha(balanceStatus.color, 0.2),
+                color: balanceStatus.color,
+                fontWeight: 'bold',
+              }}
+            />
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={animatedBalance * 100}
+            sx={{
+              height: 6,
+              borderRadius: 3,
+              bgcolor: alpha('#fff', 0.1),
+              '& .MuiLinearProgress-bar': {
+                borderRadius: 3,
+                background: `linear-gradient(90deg, ${balanceStatus.color} 0%, ${alpha(balanceStatus.color, 0.6)} 100%)`,
+              },
+            }}
+          />
+        </Box>
+
+        {/* Elementos miniatura */}
+        <Typography
+          variant="caption"
+          sx={{ color: 'white', display: 'block', mb: 1 }}
+        >
+          Elementos Orbitales:
+        </Typography>
+        <Grid container spacing={1}>
+          {elementConfig.map((element) => (
+            <Grid item xs={6} key={element.name}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  p: 1,
+                  borderRadius: 1,
+                  background: alpha(element.color, 0.1),
+                  border:
+                    selectedElement === element.name
+                      ? `1px solid ${element.color}`
+                      : `1px solid ${alpha(element.color, 0.3)}`,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    background: alpha(element.color, 0.2),
+                  },
+                }}
+                onClick={() => handleElementClick(element.name)}
+              >
+                <Box sx={{ color: element.color, fontSize: '0.8rem' }}>
+                  {element.icon}
+                </Box>
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                      display: 'block',
+                    }}
+                  >
+                    {element.name}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: alpha('#fff', 0.7), fontSize: '0.6rem' }}
+                  >
+                    {element.value}%
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Botón de expansión */}
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
           <IconButton
             onClick={handleExpandToggle}
             sx={{
               color: balanceStatus.color,
-              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.3s ease',
+              background: alpha(balanceStatus.color, 0.1),
+              '&:hover': {
+                background: alpha(balanceStatus.color, 0.2),
+              },
             }}
           >
-            <ExpandMoreIcon />
+            <ExpandMoreIcon
+              sx={{
+                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease',
+              }}
+            />
           </IconButton>
         </Box>
+      </Box>
 
-        {/* Balance Circle 3D con elementos orbitales */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-          <Box
-            className="ayni-balance-3d-container"
-            sx={{
-              position: 'relative',
-              width: 240,
-              height: 240,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              perspective: '1000px',
-            }}
-          >
-            {/* SVG con gradientes avanzados */}
-            <svg
-              width="240"
-              height="240"
-              style={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}
-            >
-              <defs>
-                <radialGradient id="balanceGradient" cx="50%" cy="50%" r="50%">
-                  <stop
-                    offset="0%"
-                    stopColor={alpha(balanceStatus.color, 0.8)}
-                  />
-                  <stop
-                    offset="70%"
-                    stopColor={alpha(balanceStatus.color, 0.4)}
-                  />
-                  <stop offset="100%" stopColor="transparent" />
-                </radialGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              {/* Background Circle con glow */}
-              <circle
-                cx="120"
-                cy="120"
-                r="100"
-                fill="none"
-                stroke={alpha('#fff', 0.1)}
-                strokeWidth="12"
-              />
-
-              {/* Progress Circle con animación */}
-              <circle
-                cx="120"
-                cy="120"
-                r="100"
-                fill="none"
-                stroke="url(#balanceGradient)"
-                strokeWidth="12"
-                strokeDasharray={`${animatedBalance * 628} 628`}
-                strokeLinecap="round"
-                transform="rotate(-90 120 120)"
-                filter="url(#glow)"
-                style={{
-                  transition: 'stroke-dasharray 1.5s ease-in-out',
-                }}
-              />
-
-              {/* Indicadores orbitales para elementos */}
-              {elementConfig.map((element, index) => {
-                const x =
-                  120 +
-                  Math.cos((element.angle * Math.PI) / 180) *
-                    element.orbitRadius;
-                const y =
-                  120 +
-                  Math.sin((element.angle * Math.PI) / 180) *
-                    element.orbitRadius;
-
-                return (
-                  <g key={element.name}>
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r="8"
-                      fill={element.color}
-                      stroke={alpha(element.color, 0.6)}
-                      strokeWidth="2"
-                      filter="url(#glow)"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => handleElementClick(element.name)}
-                    />
-                    {selectedElement === element.name && (
-                      <circle
-                        cx={x}
-                        cy={y}
-                        r="12"
-                        fill="none"
-                        stroke={element.color}
-                        strokeWidth="2"
-                        strokeDasharray="4 4"
-                        opacity="0.8"
-                      />
-                    )}
-                  </g>
-                );
-              })}
-            </svg>
-
-            {/* Centro 3D con contenido */}
-            <Box
-              sx={{
-                textAlign: 'center',
-                zIndex: 2,
-                transform: `rotateY(${rotation * 0.2}deg) rotateX(${Math.sin(animationTick * 0.02) * 5}deg)`,
-                transition: 'transform 0.1s ease-out',
-              }}
-            >
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 'bold',
-                  color: balanceStatus.color,
-                  mb: 0.5,
-                  textShadow: `0 0 20px ${alpha(balanceStatus.color, 0.6)}`,
-                  animation: 'pulse 2s ease-in-out infinite',
-                }}
-              >
-                {Math.round(animatedBalance * 100)}%
-              </Typography>
-              <Typography variant="caption" sx={{ color: alpha('#fff', 0.8) }}>
-                Balance Ayni
-              </Typography>
-              <Box sx={{ mt: 1 }}>
-                <Chip
-                  label={balanceStatus.status}
-                  sx={{
-                    bgcolor: alpha(balanceStatus.color, 0.2),
-                    color: balanceStatus.color,
-                    fontWeight: 'bold',
-                    fontSize: '0.75rem',
-                  }}
-                />
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Cards de elementos interactivos */}
-        <Box sx={{ mb: 3 }}>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              color: 'white',
-              mb: 2,
-              textAlign: 'center',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 1,
-            }}
-          >
-            <AutoAwesomeIcon sx={{ fontSize: '1.2rem' }} />
-            Elementos Interactivos
-          </Typography>
-
-          <Grid container spacing={2}>
-            {elementConfig.map((element, index) => (
-              <Grid item xs={6} key={element.name}>
-                <Tooltip
-                  title={
-                    <Box>
-                      <Typography variant="subtitle2">
-                        {element.name}
-                      </Typography>
-                      <Typography variant="caption">
-                        {element.description}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{ display: 'block', mt: 1, fontStyle: 'italic' }}
-                      >
-                        💡 {element.recommendations[0]}
-                      </Typography>
-                    </Box>
-                  }
-                  arrow
-                >
-                  <Box
-                    className="element-card-3d"
-                    onClick={() => handleElementClick(element.name)}
-                    onMouseEnter={() => handleElementHover(element.name)}
-                    onMouseLeave={() => handleElementHover(null)}
-                    sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      background: `linear-gradient(135deg, ${alpha(element.color, 0.15)} 0%, ${alpha(element.color, 0.05)} 100%)`,
-                      border:
-                        selectedElement === element.name
-                          ? `2px solid ${element.color}`
-                          : `1px solid ${alpha(element.color, 0.3)}`,
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.4s ease',
-                      transform:
-                        selectedElement === element.name
-                          ? 'translateY(-4px) scale(1.02)'
-                          : 'translateY(0) scale(1)',
-                      boxShadow:
-                        selectedElement === element.name
-                          ? `0 8px 24px ${alpha(element.color, 0.4)}`
-                          : 'none',
-                      animationDelay: `${index * 100}ms`,
-                      '&:hover': {
-                        background: `linear-gradient(135deg, ${alpha(element.color, 0.25)} 0%, ${alpha(element.color, 0.1)} 100%)`,
-                        transform: 'translateY(-2px) scale(1.02)',
-                        boxShadow: `0 6px 20px ${alpha(element.color, 0.3)}`,
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        color: element.color,
-                        mb: 1,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        transform:
-                          selectedElement === element.name
-                            ? 'scale(1.2)'
-                            : 'scale(1)',
-                        transition: 'transform 0.3s ease',
-                      }}
-                    >
-                      {element.icon}
-                    </Box>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: 'white',
-                        fontWeight: 'bold',
-                        display: 'block',
-                        mb: 1,
-                      }}
-                    >
-                      {element.name}
-                    </Typography>
-                    <LinearProgress
-                      variant="determinate"
-                      value={element.value}
-                      sx={{
-                        height: 6,
-                        borderRadius: 3,
-                        bgcolor: alpha('#fff', 0.1),
-                        '& .MuiLinearProgress-bar': {
-                          borderRadius: 3,
-                          background: `linear-gradient(90deg, ${element.color} 0%, ${alpha(element.color, 0.6)} 100%)`,
-                        },
-                      }}
-                    />
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: alpha('#fff', 0.8),
-                        fontSize: '0.75rem',
-                        mt: 0.5,
-                        display: 'block',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {element.value}%
-                    </Typography>
-                  </Box>
-                </Tooltip>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        {/* Panel expandible con insights inteligentes */}
-        <Collapse in={expanded}>
-          <Box sx={{ pt: 3, borderTop: `1px solid ${alpha('#fff', 0.1)}` }}>
-            {/* Insights personalizados */}
-            <Typography
-              variant="subtitle2"
-              sx={{
-                color: 'white',
-                mb: 2,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-              }}
-            >
-              <PsychologyIcon sx={{ fontSize: '1.2rem' }} />
-              Análisis Inteligente
-            </Typography>
-
-            <Grid container spacing={2} sx={{ mb: 3 }}>
-              {personalizedInsights.map((insight, index) => (
-                <Grid item xs={12} key={index}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      background: alpha(insight.color, 0.1),
-                      border: `1px solid ${alpha(insight.color, 0.3)}`,
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: 2,
-                    }}
-                  >
-                    <Box sx={{ color: insight.color, mt: 0.5 }}>
-                      {insight.icon}
-                    </Box>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: alpha('#fff', 0.9),
-                        lineHeight: 1.4,
-                        flex: 1,
-                      }}
-                    >
-                      {insight.message}
-                    </Typography>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-
-            {/* Recomendaciones específicas por elemento */}
-            <Typography variant="subtitle2" sx={{ color: 'white', mb: 2 }}>
-              🎯 Recomendaciones Personalizadas
-            </Typography>
-
-            <Grid container spacing={1}>
-              {elementRecommendations.map((rec, index) => (
-                <Grid item xs={12} key={index}>
-                  <Box
-                    sx={{
-                      p: 1.5,
-                      borderRadius: 2,
-                      background: alpha(
-                        rec.priority === 'high'
-                          ? theme.palette.warning.main
-                          : rec.priority === 'medium'
-                            ? theme.palette.info.main
-                            : theme.palette.success.main,
-                        0.1
-                      ),
-                      border: `1px solid ${alpha(
-                        rec.priority === 'high'
-                          ? theme.palette.warning.main
-                          : rec.priority === 'medium'
-                            ? theme.palette.info.main
-                            : theme.palette.success.main,
-                        0.3
-                      )}`,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        mb: 0.5,
-                      }}
-                    >
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'white', fontWeight: 'bold' }}
-                      >
-                        {rec.element}
-                      </Typography>
-                      <Chip
-                        label={rec.priority.toUpperCase()}
-                        size="small"
-                        sx={{
-                          height: 18,
-                          fontSize: '0.6rem',
-                          bgcolor: alpha(
-                            rec.priority === 'high'
-                              ? theme.palette.warning.main
-                              : rec.priority === 'medium'
-                                ? theme.palette.info.main
-                                : theme.palette.success.main,
-                            0.2
-                          ),
-                          color:
-                            rec.priority === 'high'
-                              ? theme.palette.warning.main
-                              : rec.priority === 'medium'
-                                ? theme.palette.info.main
-                                : theme.palette.success.main,
-                        }}
-                      />
-                    </Box>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: alpha('#fff', 0.9),
-                        display: 'block',
-                        mb: 0.5,
-                      }}
-                    >
-                      🎯 {rec.action}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: alpha('#fff', 0.7),
-                        fontStyle: 'italic',
-                        fontSize: '0.7rem',
-                      }}
-                    >
-                      📈 {rec.impact}
-                    </Typography>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </Collapse>
-
-        {/* Mensaje inspiracional dinámico */}
+      {/* Panel expandible con análisis detallado */}
+      <Collapse in={expanded}>
         <Box
+          className="detailed-analysis-panel"
           sx={{
-            mt: 3,
-            p: 2,
-            borderRadius: 2,
-            background: `linear-gradient(135deg, ${alpha(balanceStatus.color, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
-            border: `1px solid ${alpha(balanceStatus.color, 0.3)}`,
-            textAlign: 'center',
+            position: 'absolute',
+            bottom: '20px',
+            right: '20px',
+            background: alpha('#000', 0.8),
+            backdropFilter: 'blur(15px)',
+            borderRadius: 3,
+            p: 3,
+            maxWidth: '400px',
+            maxHeight: '60vh',
+            overflow: 'auto',
+            border: `1px solid ${alpha('#fff', 0.1)}`,
+            zIndex: 10,
           }}
         >
           <Typography
-            variant="caption"
-            sx={{ color: alpha('#fff', 0.9), fontStyle: 'italic' }}
+            variant="h6"
+            sx={{
+              color: 'white',
+              mb: 2,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+            }}
           >
-            {animatedBalance >= 0.8
-              ? '🌟 Tu energía Ayni irradia equilibrio. Eres un faro de inspiración para la comunidad.'
-              : animatedBalance >= 0.6
-                ? '💫 Tu balance Ayni muestra progreso constante. Continúa cultivando intercambios conscientes.'
-                : '🌱 Cada paso hacia el equilibrio Ayni fortalece el tejido comunitario. ¡Sigue creciendo!'}
+            <PsychologyIcon />
+            Análisis Cósmico Detallado
           </Typography>
+
+          {/* Insights personalizados */}
+          {personalizedInsights.map((insight, index) => (
+            <Box
+              key={index}
+              sx={{
+                p: 2,
+                mb: 2,
+                borderRadius: 2,
+                background: alpha(insight.color, 0.1),
+                border: `1px solid ${alpha(insight.color, 0.3)}`,
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 2,
+              }}
+            >
+              <Box sx={{ color: insight.color, mt: 0.5 }}>{insight.icon}</Box>
+              <Typography
+                variant="caption"
+                sx={{ color: alpha('#fff', 0.9), lineHeight: 1.4, flex: 1 }}
+              >
+                {insight.message}
+              </Typography>
+            </Box>
+          ))}
+
+          {/* Recomendaciones específicas */}
+          <Typography variant="subtitle2" sx={{ color: 'white', mb: 2 }}>
+            🎯 Recomendaciones Orbitales
+          </Typography>
+
+          {elementRecommendations.map((rec, index) => (
+            <Box
+              key={index}
+              sx={{
+                p: 1.5,
+                mb: 1.5,
+                borderRadius: 2,
+                background: alpha(
+                  rec.priority === 'high'
+                    ? theme.palette.warning.main
+                    : rec.priority === 'medium'
+                      ? theme.palette.info.main
+                      : theme.palette.success.main,
+                  0.1
+                ),
+                border: `1px solid ${alpha(
+                  rec.priority === 'high'
+                    ? theme.palette.warning.main
+                    : rec.priority === 'medium'
+                      ? theme.palette.info.main
+                      : theme.palette.success.main,
+                  0.3
+                )}`,
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 1,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'white', fontWeight: 'bold' }}
+                >
+                  {rec.element}
+                </Typography>
+                <Chip
+                  label={rec.priority.toUpperCase()}
+                  size="small"
+                  sx={{
+                    height: 18,
+                    fontSize: '0.6rem',
+                    bgcolor: alpha(
+                      rec.priority === 'high'
+                        ? theme.palette.warning.main
+                        : rec.priority === 'medium'
+                          ? theme.palette.info.main
+                          : theme.palette.success.main,
+                      0.2
+                    ),
+                    color:
+                      rec.priority === 'high'
+                        ? theme.palette.warning.main
+                        : rec.priority === 'medium'
+                          ? theme.palette.info.main
+                          : theme.palette.success.main,
+                  }}
+                />
+              </Box>
+              <Typography
+                variant="caption"
+                sx={{ color: alpha('#fff', 0.9), display: 'block', mb: 0.5 }}
+              >
+                🎯 {rec.action}
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: alpha('#fff', 0.7),
+                  fontStyle: 'italic',
+                  fontSize: '0.7rem',
+                }}
+              >
+                📈 {rec.impact}
+              </Typography>
+            </Box>
+          ))}
+
+          {/* Mensaje inspiracional */}
+          <Box
+            sx={{
+              mt: 3,
+              p: 2,
+              borderRadius: 2,
+              background: `linear-gradient(135deg, ${alpha(balanceStatus.color, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
+              border: `1px solid ${alpha(balanceStatus.color, 0.3)}`,
+              textAlign: 'center',
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{ color: alpha('#fff', 0.9), fontStyle: 'italic' }}
+            >
+              {animatedBalance >= 0.8
+                ? '🌟 Tu energía Ayni irradia equilibrio cósmico. Eres un faro de inspiración para toda la galaxia comunitaria.'
+                : animatedBalance >= 0.6
+                  ? '💫 Tu balance Ayni muestra una órbita estable. Continúa cultivando intercambios conscientes en el universo.'
+                  : '🌱 Cada rotación hacia el equilibrio Ayni fortalece las fuerzas gravitacionales de la comunidad. ¡El cosmos está contigo!'}
+            </Typography>
+          </Box>
         </Box>
-      </CardContent>
-    </Card>
+      </Collapse>
+    </Box>
   );
 };
 

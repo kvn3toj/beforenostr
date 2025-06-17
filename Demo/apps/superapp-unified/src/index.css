@@ -21,6 +21,15 @@
 /* Import enhanced home module styles */
 @import './styles/home-enhanced.css';
 
+/* Import cosmic effects for Ayni Balance planetary system */
+@import './styles/cosmic-ayni-effects.css';
+
+/* Import orbital harmony animations for Ayni Revolutionary Widget */
+@import './styles/orbital-harmony-animations.css';
+
+/* Import simple orbital animations - More intuitive approach */
+@import './styles/simple-orbital-animations.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -156,11 +165,11 @@ body {
   .coomunity-container-lg {
     padding: 0 var(--space-mobile-md);
   }
-  
+
   .mobile-padding {
     padding: var(--space-mobile-md);
   }
-  
+
   .mobile-hidden {
     display: none;
   }
@@ -213,63 +222,63 @@ body {
   .no-print {
     display: none !important;
   }
-  
+
   .print-only {
     display: block !important;
   }
-  
+
   * {
     background: transparent !important;
     color: black !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
+
   a,
   a:visited {
     text-decoration: underline;
   }
-  
+
   a[href]:after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
   }
-  
+
   abbr[title]:after {
-    content: " (" attr(title) ")";
+    content: ' (' attr(title) ')';
   }
-  
+
   .ir a:after,
-  a[href^="javascript:"]:after,
-  a[href^="#"]:after {
-    content: "";
+  a[href^='javascript:']:after,
+  a[href^='#']:after {
+    content: '';
   }
-  
+
   pre,
   blockquote {
     border: 1px solid #999;
     page-break-inside: avoid;
   }
-  
+
   thead {
     display: table-header-group;
   }
-  
+
   tr,
   img {
     page-break-inside: avoid;
   }
-  
+
   img {
     max-width: 100% !important;
   }
-  
+
   p,
   h2,
   h3 {
     orphans: 3;
     widows: 3;
   }
-  
+
   h2,
   h3 {
     page-break-after: avoid;

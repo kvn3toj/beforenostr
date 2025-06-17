@@ -1,0 +1,149 @@
+/* ===== AYNI SOLAR SYSTEM FULLSCREEN BACKGROUND ===== */
+
+.harmony-widget-fullscreen {
+  overflow: hidden;
+}
+
+.ayni-solar-system-universe.fullscreen-background {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -1 !important;
+}
+
+/* Ajustes para que el contenido del Home sea visible sobre el fondo */
+.home-enhanced-container {
+  position: relative;
+  z-index: 1;
+}
+
+.harmony-widget-expanded {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Hacer que los paneles del sistema solar sean interactivos por encima */
+.ayni-solar-system-universe.fullscreen-background .info-panel-floating,
+.ayni-solar-system-universe.fullscreen-background .detailed-analysis-panel,
+.ayni-solar-system-universe.fullscreen-background .central-planet-sphere,
+.ayni-solar-system-universe.fullscreen-background .orbital-element-sphere {
+  z-index: 1500 !important;
+  pointer-events: auto !important;
+}
+
+/* Asegurar que el sistema solar sea visible pero no interfiera con navegación */
+.ayni-solar-system-universe.fullscreen-background {
+  pointer-events: none !important;
+}
+
+.ayni-solar-system-universe.fullscreen-background .solar-system-container,
+.ayni-solar-system-universe.fullscreen-background .info-panel-floating,
+.ayni-solar-system-universe.fullscreen-background .detailed-analysis-panel {
+  pointer-events: auto !important;
+}
+
+/* Los elementos interactivos del sistema solar deben estar por encima de todo */
+.ayni-solar-system-universe.fullscreen-background .central-planet-sphere,
+.ayni-solar-system-universe.fullscreen-background .orbital-element-sphere {
+  z-index: 2000 !important;
+}
+
+/* El fondo del universo debe ser sutil */
+.ayni-solar-system-universe.fullscreen-background {
+  z-index: 0 !important;
+}
+
+/* Optimizaciones para el fondo */
+.ayni-solar-system-universe.fullscreen-background .universe-background-orbital {
+  opacity: 0.15 !important; /* Más sutil como fondo */
+}
+
+.ayni-solar-system-universe.fullscreen-background .stars-field {
+  opacity: 0.4 !important; /* Estrellas más sutiles */
+}
+
+/* Responsividad para el sistema en pantalla completa */
+@media (max-width: 768px) {
+  .ayni-solar-system-universe.fullscreen-background .info-panel-floating {
+    top: 60px !important; /* Dejar espacio para header móvil */
+    left: 10px !important;
+    right: 10px !important;
+    max-width: none !important;
+  }
+
+  .ayni-solar-system-universe.fullscreen-background .detailed-analysis-panel {
+    bottom: 10px !important;
+    right: 10px !important;
+    left: 10px !important;
+    max-width: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .ayni-solar-system-universe.fullscreen-background .solar-system-container {
+    top: 60% !important; /* Mover hacia abajo en móviles */
+  }
+}
+
+/* Animaciones suaves para la transición */
+.harmony-widget-fullscreen {
+  animation: fullscreen-fade-in 1.5s ease-out;
+}
+
+@keyframes fullscreen-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Efectos especiales para el modo pantalla completa */
+.ayni-solar-system-universe.fullscreen-background .central-planet-sphere {
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
+}
+
+.ayni-solar-system-universe.fullscreen-background .orbital-element-sphere {
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+}
+
+/* Pulso cósmico de fondo */
+.ayni-solar-system-universe.fullscreen-background::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.8),
+    0 0 12px rgba(255, 255, 255, 0.6),
+    0 0 18px rgba(255, 255, 255, 0.4),
+    0 0 24px rgba(255, 255, 255, 0.2);
+  animation: cosmic-core-pulse 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes cosmic-core-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.4;
+  }
+}

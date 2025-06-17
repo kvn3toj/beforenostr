@@ -29,11 +29,15 @@ import { useIntuitiveBehavior } from '../hooks/home/useIntuitiveBehavior';
 
 // 🚀 IMPORTAR WIDGETS DE LA NUEVA ESTRUCTURA SEMÁNTICA
 import { WelcomeWidget } from '../components/home/widgets/WelcomeWidget';
-import { AyniWalletWidget } from '../components/home/widgets/AyniWalletWidget';
+import { AyniBalanceFullWidget } from '../components/home/widgets/AyniBalanceFullWidget';
+import { WalletOnlyWidget } from '../components/home/widgets/WalletOnlyWidget';
 import { QuickActionsWidget } from '../components/home/widgets/QuickActionsWidget';
 import { NotificationsWidget } from '../components/home/widgets/NotificationsWidget';
 import { MainModulesWidget } from '../components/home/widgets/MainModulesWidget';
 import { DailyReflectionWidget } from '../components/home/widgets/DailyReflectionWidget';
+
+// 🌌 IMPORTAR FONDO UNIVERSAL CÓSMICO
+import UniversalCosmicBackground from '../components/home/UniversalCosmicBackground';
 
 // 🎨 IMPORTAR SISTEMAS REVOLUCIONARIOS Y PROPORCIONES ÁUREAS
 import '../styles/home-revolutionary-system.css';
@@ -75,6 +79,17 @@ class HomePageErrorBoundary extends React.Component<
 
   static getDerivedStateFromError(error: Error) {
     console.error('🚨 HomePage Error:', error.message);
+
+    // Manejar específicamente errores de scroll/transición
+    if (
+      error.message?.includes('scrollTop') ||
+      error.message?.includes('node.scrollTop')
+    ) {
+      console.warn(
+        '🔄 Error de transición detectado, reiniciando componente...'
+      );
+    }
+
     return { hasError: true, error };
   }
 
@@ -169,14 +184,22 @@ export function HomePage() {
     initializeDashboard();
   }, []);
 
-  // 📜 Scroll handler
+  // 📜 Scroll handler con validaciones
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
+      try {
+        if (typeof window !== 'undefined' && window.scrollY !== undefined) {
+          setShowScrollTop(window.scrollY > 400);
+        }
+      } catch (error) {
+        console.warn('🚨 Error en scroll handler:', error);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
   }, []);
 
   // 🔄 Handlers
@@ -194,10 +217,16 @@ export function HomePage() {
   }, []);
 
   const handleScrollToTop = useCallback(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    try {
+      if (typeof window !== 'undefined' && window.scrollTo) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      }
+    } catch (error) {
+      console.warn('🚨 Error en scroll to top:', error);
+    }
   }, []);
 
   const handleNotificationClick = useCallback((notification: Notification) => {
@@ -295,6 +324,9 @@ export function HomePage() {
 
   return (
     <HomePageErrorBoundary>
+      {/* 🌌 FONDO UNIVERSAL CÓSMICO - Cubre toda la página */}
+      <UniversalCosmicBackground />
+
       <Box className="revolutionary-container">
         <Container
           maxWidth="xl"
@@ -426,8 +458,8 @@ export function HomePage() {
           >
             <Grid container spacing={{ xs: 4, sm: 5, md: 8 }}>
               {/* === CAPA 1: BIENVENIDA Y ESTADO PERSONAL (Ocupa toda la fila) === */}
-              <Grid item xs={12}>
-                <Fade in timeout={800}>
+              <Grid size={12}>
+                <Fade in timeout={800} appear={false}>
                   <Box
                     className="enhanced-header enhanced-slide-up enhanced-delay-1"
                     sx={{
@@ -447,7 +479,7 @@ export function HomePage() {
               {/* === CAPA 2: EL CORAZÓN DE TU ECOSISTEMA (Columna principal y secundaria) === */}
 
               {/* === CAPA 2A: TU BALANCE AYNI - EL CORAZÓN DEL UNIVERSO === */}
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Fade in timeout={800}>
                   <Box
                     className="enhanced-cosmic-widget enhanced-glow enhanced-scale enhanced-delay-2 constellation-bg"
@@ -520,24 +552,17 @@ export function HomePage() {
                       },
                     }}
                   >
-                    <AyniWalletWidget
-                      onAddFunds={() => navigate('/wallet/add')}
-                      onSend={() => navigate('/wallet/send')}
-                      onExchange={() => navigate('/wallet/exchange')}
-                      onViewTransactions={() =>
-                        navigate('/wallet/transactions')
-                      }
-                    />
+                    <AyniBalanceFullWidget />
                   </Box>
                 </Fade>
               </Grid>
 
               {/* === CAPA 2B: ACCIONES Y MÓDULOS DISTRIBUIDOS === */}
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Grid container spacing={{ xs: 4, sm: 5, md: 6 }}>
                   {/* --- Columna Principal: Acciones Rápidas --- */}
-                  <Grid item xs={12} lg={8}>
-                    <Fade in timeout={1200}>
+                  <Grid size={{ xs: 12, lg: 8 }}>
+                    <Fade in timeout={1200} appear={false}>
                       <Box
                         className="enhanced-actions enhanced-glow enhanced-scale enhanced-delay-3"
                         sx={{
@@ -567,7 +592,7 @@ export function HomePage() {
                   </Grid>
 
                   {/* --- Columna Secundaria: Notificaciones --- */}
-                  <Grid item xs={12} lg={4}>
+                  <Grid size={{ xs: 12, lg: 4 }}>
                     <Fade in timeout={1400}>
                       <Box
                         className="enhanced-sidebar-widget enhanced-scroll enhanced-delay-4"
@@ -603,7 +628,7 @@ export function HomePage() {
                   </Grid>
 
                   {/* --- Módulos Principales: Fila Completa --- */}
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Fade in timeout={1600}>
                       <Box
                         className="enhanced-fade-in enhanced-delay-5"
@@ -633,116 +658,132 @@ export function HomePage() {
                 </Grid>
               </Grid>
 
-              {/* === CAPA 3: REFLEXIÓN Y CIERRE CÓSMICO === */}
-              <Grid item xs={12}>
-                <Fade in timeout={1800}>
+              {/* === CAPA 2A: TU BALANCE AYNI - EL CORAZÓN DEL UNIVERSO (ANCHO COMPLETO) === */}
+              <Grid size={12}>
+                <Fade in timeout={800} appear={false}>
                   <Box
-                    className="enhanced-fade-in enhanced-delay-6"
                     sx={{
-                      mt: { xs: 6, md: 8 },
-                      mx: { xs: 1, sm: 2, md: 4 },
-                      minHeight: { xs: '240px', sm: '280px', md: '320px' },
-                      background: `
-                      radial-gradient(circle at 30% 70%, rgba(156, 39, 176, 0.08) 0%, transparent 50%),
-                      radial-gradient(circle at 70% 30%, rgba(233, 30, 99, 0.06) 0%, transparent 50%),
-                      linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.8))
-                    `,
-                      borderRadius: '28px',
-                      border: '2px solid rgba(156, 39, 176, 0.2)',
-                      backdropFilter: 'blur(25px)',
-                      boxShadow: `
-                      0 20px 60px rgba(0, 0, 0, 0.2),
-                      0 0 40px rgba(156, 39, 176, 0.1),
-                      inset 0 0 30px rgba(255, 255, 255, 0.03)
-                    `,
-                      position: 'relative',
-                      zIndex: 2, // 💭 Z-INDEX MENOR QUE BALANCE AYNI
-                      overflow: 'hidden',
-                      // Efecto de resplandor místico
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        width: '120%',
-                        height: '120%',
-                        background:
-                          'conic-gradient(from 0deg, rgba(156, 39, 176, 0.1), transparent, rgba(233, 30, 99, 0.08), transparent)',
-                        borderRadius: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        animation:
-                          'revolutionary-rotate-continuous 30s linear infinite',
-                        opacity: 0.6,
-                        zIndex: 0,
-                      },
+                      mb: { xs: 6, md: 8 },
+                      mx: { xs: 1, sm: 2, md: 3 },
                     }}
                   >
-                    <DailyReflectionWidget />
+                    <AyniBalanceFullWidget className="enhanced-cosmic-widget enhanced-glow enhanced-scale enhanced-delay-2 constellation-bg" />
                   </Box>
                 </Fade>
               </Grid>
+
+              {/* === CAPA 2B: WALLET Y ACCIONES === */}
+              <Grid size={12}>
+                <Grid container spacing={{ xs: 4, sm: 5, md: 6 }}>
+                  {/* --- Wallet Individual --- */}
+                  <Grid size={{ xs: 12, lg: 4 }}>
+                    <Fade in timeout={1000} appear={false}>
+                      <Box>
+                        <WalletOnlyWidget
+                          onAddFunds={() => navigate('/wallet/add')}
+                          onSend={() => navigate('/wallet/send')}
+                          onExchange={() => navigate('/wallet/exchange')}
+                          onViewTransactions={() =>
+                            navigate('/wallet/transactions')
+                          }
+                        />
+                      </Box>
+                    </Fade>
+                  </Grid>
+
+                  {/* --- Acciones Rápidas --- */}
+                  <Grid size={{ xs: 12, lg: 8 }}>
+                    <Fade in timeout={1200}>
+                      <Box
+                        className="enhanced-actions enhanced-glow enhanced-scale enhanced-delay-3"
+                        sx={{
+                          position: 'relative',
+                          zIndex: 10,
+                          minHeight: { xs: '280px', sm: '320px', md: '360px' },
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          borderRadius: '20px',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          backdropFilter: 'blur(20px)',
+                        }}
+                      >
+                        <QuickActionsWidget
+                          onActionClick={(action) => {
+                            setSnackbarMessage(
+                              `🚀 Navegando a ${action.toUpperCase()}`
+                            );
+                            setSnackbarOpen(true);
+                          }}
+                        />
+                      </Box>
+                    </Fade>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              {/* === REFLEXIÓN FILOSÓFICA === */}
+              <Grid size={12}>
+                <Box
+                  sx={{
+                    textAlign: 'center',
+                    mt: { xs: 4, md: 6 },
+                    mb: { xs: 2, md: 3 },
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.98)',
+                      fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
+                      fontStyle: 'italic',
+                      fontWeight: 600,
+                      textShadow:
+                        '0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 4px rgba(0, 0, 0, 0.9)',
+                      letterSpacing: '0.3px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 2,
+                    }}
+                  >
+                    <AutoAwesomeIcon sx={{ color: '#FFD700' }} />
+                    "La estructura semántica libera la potencia de cada
+                    interacción en el ecosistema CoomÜnity"
+                    <AutoAwesomeIcon sx={{ color: '#FFD700' }} />
+                  </Typography>
+                </Box>
+              </Grid>
             </Grid>
           </Box>
-
-          {/* 💡 Mensaje Inspiracional Revolucionario */}
-          <Fade in timeout={2000}>
-            <Box
-              sx={{
-                mt: { xs: 3, sm: 4 },
-                p: 2,
-                background: 'rgba(255, 255, 255, 0.08)',
-                borderRadius: 'var(--revolutionary-radius-lg)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                textAlign: 'center',
-              }}
-            >
-              <Typography
-                variant="body1"
-                sx={{
-                  color: 'rgba(255, 255, 255, 0.98)',
-                  fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
-                  fontStyle: 'italic',
-                  fontWeight: 600,
-                  textShadow:
-                    '0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 4px rgba(0, 0, 0, 0.9)',
-                  letterSpacing: '0.3px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 2,
-                }}
-              >
-                <AutoAwesomeIcon sx={{ color: '#FFD700' }} />
-                "La estructura semántica libera la potencia de cada interacción
-                en el ecosistema CoomÜnity"
-                <AutoAwesomeIcon sx={{ color: '#FFD700' }} />
-              </Typography>
-            </Box>
-          </Fade>
         </Container>
 
         {/* 🎪 BOTÓN FLOTANTE DE SCROLL REVOLUCIONARIO */}
-        <Fade in={showScrollTop}>
-          <Fab
-            onClick={handleScrollToTop}
-            sx={{
-              position: 'fixed',
-              bottom: { xs: 20, sm: 32 },
-              right: { xs: 20, sm: 32 },
-              background:
-                'conic-gradient(from 0deg, #FF6B35, #00BCD4, #66BB6A, #FFD54F, #FF6B35)',
-              width: 56,
-              height: 56,
-              zIndex: 1000,
-              '&:hover': {
-                transform: 'scale(1.1)',
-                boxShadow: '0 12px 40px rgba(255, 107, 53, 0.4)',
-              },
-              transition: 'all 0.3s ease',
-            }}
-          >
-            <KeyboardArrowUpIcon sx={{ color: 'white', fontSize: '1.8rem' }} />
-          </Fab>
+        <Fade in={showScrollTop} timeout={300} appear={false}>
+          <Box>
+            <Fab
+              onClick={handleScrollToTop}
+              sx={{
+                position: 'fixed',
+                bottom: { xs: 20, sm: 32 },
+                right: { xs: 20, sm: 32 },
+                background:
+                  'conic-gradient(from 0deg, #FF6B35, #00BCD4, #66BB6A, #FFD54F, #FF6B35)',
+                width: 56,
+                height: 56,
+                zIndex: 1000,
+                '&:hover': {
+                  transform: 'scale(1.1)',
+                  boxShadow: '0 12px 40px rgba(255, 107, 53, 0.4)',
+                },
+                transition: 'all 0.3s ease',
+              }}
+            >
+              <KeyboardArrowUpIcon
+                sx={{ color: 'white', fontSize: '1.8rem' }}
+              />
+            </Fab>
+          </Box>
         </Fade>
 
         {/* 🎊 SNACKBAR REVOLUCIONARIO */}

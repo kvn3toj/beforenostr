@@ -487,7 +487,7 @@ export const HomeEnhanced: React.FC = () => {
 
   const handleNotificationAction = useCallback((notification: Notification) => {
     setLastInteraction(new Date());
-    console.log('🔔 Notification action:', notification);
+    console.log('���� Notification action:', notification);
     if (notification.onAction) {
       notification.onAction();
     }
@@ -678,31 +678,45 @@ export const HomeEnhanced: React.FC = () => {
 
   return (
     <Box
+      className="home-enhanced-container"
       sx={{
         minHeight: '100vh',
-        background: `linear-gradient(135deg,
-          ${alpha('#0D47A1', 0.9)} 0%,
-          ${alpha('#1565C0', 0.8)} 25%,
-          ${alpha('#1976D2', 0.7)} 50%,
-          ${alpha('#1E88E5', 0.8)} 75%,
-          ${alpha('#2196F3', 0.9)} 100%)`,
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* 🌟 Partículas flotantes de fondo */}
-      <EnhancedParticles
-        type="sparkle"
-        count={10}
-        colors={['#4FC3F7', '#8BC34A', '#FFD54F', '#FF8A65', '#BA68C8']}
-        intensity={performanceMode === 'optimized' ? 'low' : 'medium'}
-        interactive={true}
-      />
+      {/* 🚀 Sistema Solar Ayni 3D - Fondo de página completa */}
+      <Fade in={animate} timeout={1200}>
+        <Box
+          className="harmony-widget-fullscreen"
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            zIndex: 0, // Fondo
+            pointerEvents: 'none', // No interfiere con navegación
+          }}
+        >
+          <AyniBalanceVisualization
+            balanceAyni={normalizedGameData.balanceAyni}
+            elementos={normalizedGameData.elementos}
+            userLevel={normalizedGameData.ayniLevel}
+            recentActivity={{
+              streak: normalizedGameData.streak,
+              lastInteraction: lastInteraction,
+              totalContributions: normalizedGameData.bienComunContributions,
+            }}
+            className="fullscreen-background"
+          />
+        </Box>
+      </Fade>
 
       <Container
         maxWidth="xl"
         className="home-container coomunity-container harmony-container"
-        sx={{ position: 'relative', zIndex: 1 }}
+        sx={{ position: 'relative', zIndex: 10 }}
       >
         {/* 🔗 Estado de conexión al backend */}
         {!backendAvailability.isAvailable && (
@@ -887,26 +901,6 @@ export const HomeEnhanced: React.FC = () => {
                   </Box>
                 </Grid>
               </Grid>
-            </Fade>
-          </Grid>
-
-          {/* 🚀 Ayni Balance Visualization 3D */}
-          <Grid item xs={12} lg={6}>
-            <Fade in={animate} timeout={1200}>
-              <Box className="harmony-widget-expanded">
-                <AyniBalanceVisualization
-                  balanceAyni={normalizedGameData.balanceAyni}
-                  elementos={normalizedGameData.elementos}
-                  userLevel={normalizedGameData.ayniLevel}
-                  recentActivity={{
-                    streak: normalizedGameData.streak,
-                    lastInteraction: lastInteraction,
-                    totalContributions:
-                      normalizedGameData.bienComunContributions,
-                  }}
-                  className=""
-                />
-              </Box>
             </Fade>
           </Grid>
 

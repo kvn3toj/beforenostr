@@ -37,6 +37,44 @@
   }
 }
 
+/* Animación específica para el planeta central */
+@keyframes planet-pulse {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 10px rgba(0, 188, 212, 0.5));
+  }
+  25% {
+    transform: scale(1.1) rotate(90deg);
+    filter: drop-shadow(0 0 15px rgba(102, 187, 106, 0.6));
+  }
+  50% {
+    transform: scale(1.05) rotate(180deg);
+    filter: drop-shadow(0 0 20px rgba(255, 213, 79, 0.7));
+  }
+  75% {
+    transform: scale(1.1) rotate(270deg);
+    filter: drop-shadow(0 0 15px rgba(255, 107, 53, 0.6));
+  }
+}
+
+/* Animación para las órbitas visuales */
+@keyframes orbital-pulse {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  33% {
+    opacity: 0.3;
+    transform: scale(1.02);
+  }
+  66% {
+    opacity: 0.2;
+    transform: scale(0.98);
+  }
+}
+
 /* Rotación orbital de elementos */
 @keyframes orbital-rotation {
   0% {
@@ -44,6 +82,114 @@
   }
   100% {
     transform: rotate(360deg) translateX(100px) rotate(-360deg);
+  }
+}
+
+/* Órbitas circulares específicas para cada elemento */
+@keyframes orbital-fire {
+  0% {
+    transform: rotate(0deg) translateX(80px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(80px) rotate(-360deg);
+  }
+}
+
+@keyframes orbital-water {
+  0% {
+    transform: rotate(90deg) translateX(80px) rotate(-90deg);
+  }
+  100% {
+    transform: rotate(450deg) translateX(80px) rotate(-450deg);
+  }
+}
+
+@keyframes orbital-earth {
+  0% {
+    transform: rotate(180deg) translateX(80px) rotate(-180deg);
+  }
+  100% {
+    transform: rotate(540deg) translateX(80px) rotate(-540deg);
+  }
+}
+
+@keyframes orbital-air {
+  0% {
+    transform: rotate(270deg) translateX(80px) rotate(-270deg);
+  }
+  100% {
+    transform: rotate(630deg) translateX(80px) rotate(-630deg);
+  }
+}
+
+/* Responsive orbital animations */
+@media (max-width: 768px) {
+  @keyframes orbital-fire {
+    0% {
+      transform: rotate(0deg) translateX(50px) rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg) translateX(50px) rotate(-360deg);
+    }
+  }
+  @keyframes orbital-water {
+    0% {
+      transform: rotate(90deg) translateX(50px) rotate(-90deg);
+    }
+    100% {
+      transform: rotate(450deg) translateX(50px) rotate(-450deg);
+    }
+  }
+  @keyframes orbital-earth {
+    0% {
+      transform: rotate(180deg) translateX(50px) rotate(-180deg);
+    }
+    100% {
+      transform: rotate(540deg) translateX(50px) rotate(-540deg);
+    }
+  }
+  @keyframes orbital-air {
+    0% {
+      transform: rotate(270deg) translateX(50px) rotate(-270deg);
+    }
+    100% {
+      transform: rotate(630deg) translateX(50px) rotate(-630deg);
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  @keyframes orbital-fire {
+    0% {
+      transform: rotate(0deg) translateX(120px) rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg) translateX(120px) rotate(-360deg);
+    }
+  }
+  @keyframes orbital-water {
+    0% {
+      transform: rotate(90deg) translateX(120px) rotate(-90deg);
+    }
+    100% {
+      transform: rotate(450deg) translateX(120px) rotate(-450deg);
+    }
+  }
+  @keyframes orbital-earth {
+    0% {
+      transform: rotate(180deg) translateX(120px) rotate(-180deg);
+    }
+    100% {
+      transform: rotate(540deg) translateX(120px) rotate(-540deg);
+    }
+  }
+  @keyframes orbital-air {
+    0% {
+      transform: rotate(270deg) translateX(120px) rotate(-270deg);
+    }
+    100% {
+      transform: rotate(630deg) translateX(120px) rotate(-630deg);
+    }
   }
 }
 
