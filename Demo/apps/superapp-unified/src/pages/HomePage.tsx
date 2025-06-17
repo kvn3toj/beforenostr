@@ -487,80 +487,22 @@ export function HomePage() {
                 </Fade>
               </Grid>
 
-              {/* === CAPA 2: EL CORAZÓN DE TU ECOSISTEMA (Columna principal y secundaria) === */}
-
-              {/* === CAPA 2A: TU BALANCE AYNI - EL CORAZÓN DEL UNIVERSO === */}
+              {/* === BALANCE AYNI - PROTAGONISTA === */}
               <Grid size={12}>
                 <Fade in timeout={800}>
                   <Box
-                    className="enhanced-cosmic-widget enhanced-glow enhanced-scale enhanced-delay-2 constellation-bg"
                     sx={{
                       position: 'relative',
-                      zIndex: 1000, // ⭐ Z-INDEX MÁS ALTO PARA SER PROTAGONISTA
                       minHeight: {
-                        xs: '600px',
-                        sm: '700px',
-                        md: '800px',
-                        lg: '900px',
+                        xs: '500px',
+                        sm: '600px',
+                        md: '700px',
+                        lg: '800px',
                       },
-                      mb: { xs: 6, md: 8 },
-                      mx: { xs: 1, sm: 2, md: 3 },
+                      mb: { xs: 2, sm: 3, md: 4 },
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      background: `
-                      radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 80%, rgba(0, 188, 212, 0.06) 0%, transparent 50%),
-                      radial-gradient(circle at 40% 90%, rgba(102, 187, 106, 0.04) 0%, transparent 50%),
-                      linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8))
-                    `,
-                      borderRadius: '32px',
-                      border: '3px solid transparent',
-                      backgroundClip: 'padding-box',
-                      boxShadow: `
-                      0 25px 80px rgba(0, 0, 0, 0.3),
-                      0 0 60px rgba(255, 107, 53, 0.15),
-                      inset 0 0 40px rgba(255, 255, 255, 0.05)
-                    `,
-                      overflow: 'visible',
-                      // Borde con gradiente elemental
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: '-3px',
-                        left: '-3px',
-                        right: '-3px',
-                        bottom: '-3px',
-                        background:
-                          'linear-gradient(45deg, #FF6B35, #00BCD4, #66BB6A, #FFD54F, #FF6B35)',
-                        borderRadius: '35px',
-                        zIndex: -1,
-                        animation:
-                          'revolutionary-rotate-continuous 20s linear infinite',
-                      },
-                      // Efecto de partículas espaciales
-                      '&::after': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: `
-                        radial-gradient(2px 2px at 10% 20%, rgba(255, 255, 255, 0.4), transparent),
-                        radial-gradient(1px 1px at 80% 10%, rgba(255, 107, 53, 0.3), transparent),
-                        radial-gradient(1px 1px at 20% 80%, rgba(0, 188, 212, 0.3), transparent),
-                        radial-gradient(1px 1px at 90% 70%, rgba(102, 187, 106, 0.3), transparent),
-                        radial-gradient(2px 2px at 60% 30%, rgba(255, 213, 79, 0.3), transparent)
-                      `,
-                        backgroundSize:
-                          '300px 300px, 200px 200px, 250px 250px, 400px 400px, 180px 180px',
-                        animation: 'cosmic-drift 30s linear infinite',
-                        borderRadius: '32px',
-                        opacity: 0.6,
-                        pointerEvents: 'none',
-                        zIndex: 0,
-                      },
                     }}
                   >
                     <AyniBalanceFullWidget />
@@ -568,105 +510,57 @@ export function HomePage() {
                 </Fade>
               </Grid>
 
-              {/* === CAPA 2B: ACCIONES Y MÓDULOS DISTRIBUIDOS === */}
+              {/* === ACCIONES Y MÓDULOS === */}
+              <Grid size={{ xs: 12, lg: 8 }}>
+                <Fade in timeout={1000}>
+                  <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+                    <QuickActionsWidget
+                      onActionClick={(action) => {
+                        setSnackbarMessage(
+                          `🚀 Navegando a ${action.toUpperCase()}`
+                        );
+                        setSnackbarOpen(true);
+                      }}
+                    />
+                  </Box>
+                </Fade>
+              </Grid>
+
+              {/* === NOTIFICACIONES === */}
+              <Grid size={{ xs: 12, lg: 4 }}>
+                <Fade in timeout={1200}>
+                  <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+                    <NotificationsWidget
+                      onNotificationClick={handleNotificationClick}
+                      onMarkAllRead={() => {
+                        setNotifications((prev) =>
+                          prev.map((n) => ({ ...n, isRead: true }))
+                        );
+                        setSnackbarMessage(
+                          '✅ Notificaciones marcadas como leídas'
+                        );
+                        setSnackbarOpen(true);
+                      }}
+                      onViewAll={() => navigate('/notifications')}
+                    />
+                  </Box>
+                </Fade>
+              </Grid>
+
+              {/* === MÓDULOS PRINCIPALES === */}
               <Grid size={12}>
-                <Grid container spacing={{ xs: 4, sm: 5, md: 6 }}>
-                  {/* --- Columna Principal: Acciones Rápidas --- */}
-                  <Grid size={{ xs: 12, lg: 8 }}>
-                    <Fade in timeout={1200} appear={false}>
-                      <Box
-                        className="enhanced-actions enhanced-glow enhanced-scale enhanced-delay-3"
-                        sx={{
-                          position: 'relative',
-                          zIndex: 10, // ⚡ Z-INDEX MENOR QUE BALANCE AYNI
-                          minHeight: { xs: '280px', sm: '320px', md: '360px' },
-                          mb: { xs: 3, md: 4 },
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          borderRadius: '20px',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          backdropFilter: 'blur(20px)',
-                        }}
-                      >
-                        <QuickActionsWidget
-                          onActionClick={(action) => {
-                            setSnackbarMessage(
-                              `🚀 Navegando a ${action.toUpperCase()}`
-                            );
-                            setSnackbarOpen(true);
-                          }}
-                        />
-                      </Box>
-                    </Fade>
-                  </Grid>
-
-                  {/* --- Columna Secundaria: Notificaciones --- */}
-                  <Grid size={{ xs: 12, lg: 4 }}>
-                    <Fade in timeout={1400}>
-                      <Box
-                        className="enhanced-sidebar-widget enhanced-scroll enhanced-delay-4"
-                        sx={{
-                          position: 'relative',
-                          zIndex: 5, // 🔔 Z-INDEX MENOR QUE BALANCE AYNI
-                          minHeight: { xs: '280px', sm: '320px', md: '360px' },
-                          mb: { xs: 3, md: 4 },
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          borderRadius: '20px',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          backdropFilter: 'blur(20px)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <NotificationsWidget
-                          onNotificationClick={handleNotificationClick}
-                          onMarkAllRead={() => {
-                            setNotifications((prev) =>
-                              prev.map((n) => ({ ...n, isRead: true }))
-                            );
-                            setSnackbarMessage(
-                              '✅ Notificaciones marcadas como leídas'
-                            );
-                            setSnackbarOpen(true);
-                          }}
-                          onViewAll={() => navigate('/notifications')}
-                        />
-                      </Box>
-                    </Fade>
-                  </Grid>
-
-                  {/* --- Módulos Principales: Fila Completa --- */}
-                  <Grid size={12}>
-                    <Fade in timeout={1600}>
-                      <Box
-                        className="enhanced-fade-in enhanced-delay-5"
-                        sx={{
-                          position: 'relative',
-                          zIndex: 3, // 🎯 Z-INDEX MENOR QUE BALANCE AYNI
-                          minHeight: { xs: '600px', sm: '700px', md: '800px' },
-                          mb: { xs: 4, md: 6 },
-                          background: 'rgba(255, 255, 255, 0.02)',
-                          borderRadius: '24px',
-                          border: '1px solid rgba(255, 255, 255, 0.08)',
-                          backdropFilter: 'blur(15px)',
-                          padding: { xs: 2, sm: 3, md: 4 },
-                        }}
-                      >
-                        <MainModulesWidget
-                          onModuleClick={(moduleId) => {
-                            setSnackbarMessage(
-                              `🚀 Abriendo módulo: ${moduleId.toUpperCase()}`
-                            );
-                            setSnackbarOpen(true);
-                          }}
-                        />
-                      </Box>
-                    </Fade>
-                  </Grid>
-                </Grid>
+                <Fade in timeout={1400}>
+                  <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+                    <MainModulesWidget
+                      onModuleClick={(moduleId) => {
+                        setSnackbarMessage(
+                          `🚀 Abriendo módulo: ${moduleId.toUpperCase()}`
+                        );
+                        setSnackbarOpen(true);
+                      }}
+                    />
+                  </Box>
+                </Fade>
               </Grid>
 
               {/* === CAPA 2B: WALLET Y ACCIONES === */}
