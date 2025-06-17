@@ -24,8 +24,15 @@ export { EnhancedParticles } from './EnhancedParticles';
 export { PersonalProgressWidget } from './PersonalProgressWidget';
 export { ActiveChallengesWidget } from './ActiveChallengesWidget';
 
-// ��� Componentes revolucionarios
-export { AyniMetricsCardRevolutionary } from './AyniMetricsCardRevolutionary';
+// 🚀 Componentes revolucionarios
+export { default as AyniMetricsCardRevolutionary } from './AyniMetricsCardRevolutionary';
+export { default as WelcomeHeaderRevolutionary } from './WelcomeHeaderRevolutionary';
+export { default as WalletOverviewRevolutionary } from './WalletOverviewRevolutionary';
+export { default as QuickActionsGridRevolutionary } from './QuickActionsGridRevolutionary';
+export { default as ModuleCardsRevolutionary } from './ModuleCardsRevolutionary';
+export { default as NotificationCenterRevolutionary } from './NotificationCenterRevolutionary';
+export { default as PersonalProgressWidgetRevolutionary } from './PersonalProgressWidgetRevolutionary';
+export { default as ActiveChallengesWidgetRevolutionary } from './ActiveChallengesWidgetRevolutionary';
 
 // Tipos compartidos entre componentes
 export interface HomeComponentProps {

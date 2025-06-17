@@ -21,7 +21,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import WaterIcon from '@mui/icons-material/Water';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import TerrainIcon from '@mui/icons-material/Terrain';
 import AirIcon from '@mui/icons-material/Air';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -52,9 +52,7 @@ interface AyniMetricsRevolutionaryProps {
   className?: string;
 }
 
-export const AyniMetricsCardRevolutionary: React.FC<
-  AyniMetricsRevolutionaryProps
-> = ({
+const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   ondas,
   meritos,
   ayniLevel,
@@ -87,7 +85,7 @@ export const AyniMetricsCardRevolutionary: React.FC<
       agua: {
         name: 'Agua',
         value: elementos.agua,
-        icon: <WaterIcon />,
+        icon: <WaterDropIcon />,
         color: '#00BCD4',
         gradient: 'linear-gradient(135deg, #00BCD4 0%, #4FC3F7 100%)',
         description: 'Fluir y Adaptabilidad',
@@ -115,11 +113,11 @@ export const AyniMetricsCardRevolutionary: React.FC<
     [elementos]
   );
 
-  // 🎯 Calcular estadísticas avanzadas
+  // 📊 Cálculos avanzados
   const advancedStats = useMemo(() => {
-    const totalElemental =
-      elementos.fuego + elementos.agua + elementos.tierra + elementos.aire;
-    const averageElemental = totalElemental / 4;
+    const averageElemental =
+      (elementos.fuego + elementos.agua + elementos.tierra + elementos.aire) /
+      4;
     const elementalHarmony =
       100 -
       Math.abs(
@@ -127,16 +125,13 @@ export const AyniMetricsCardRevolutionary: React.FC<
           Math.min(...Object.values(elementos))
       );
 
-    const nextLevelOndas = Math.ceil(ondas * 1.5);
-    const experienceNeeded = nextLevelOndas - ondas;
-
     return {
-      totalElemental,
-      averageElemental,
-      elementalHarmony,
-      nextLevelOndas,
-      experienceNeeded,
       ayniScore: Math.round(balanceAyni * 100),
+      averageElemental: Math.round(averageElemental),
+      elementalHarmony,
+      experienceNeeded: Math.round(4000 - ondas > 0 ? 4000 - ondas : 0),
+      nextLevelOndas: 4000,
+      totalContributions: bienComunContributions,
       overallPower: Math.round(ondas / 20 + meritos / 10 + averageElemental),
     };
   }, [elementos, ondas, meritos, balanceAyni]);
@@ -168,17 +163,15 @@ export const AyniMetricsCardRevolutionary: React.FC<
 
   // 🎨 Renderizar el círculo central revolucionario
   const renderCentralOrb = () => {
-    const orbSize = 200;
-    const progress = ayniProgress / 100;
-
     return (
       <Box
         sx={{
           position: 'relative',
-          width: orbSize,
-          height: orbSize,
+          width: { xs: 160, sm: 180, md: 200, lg: 220 },
+          height: { xs: 160, sm: 180, md: 200, lg: 220 },
+          borderRadius: '50%',
           mx: 'auto',
-          mb: 4,
+          mb: { xs: 2, sm: 3, md: 4 },
         }}
       >
         {/* Círculo exterior con gradiente animado */}
@@ -190,7 +183,7 @@ export const AyniMetricsCardRevolutionary: React.FC<
             width: '100%',
             height: '100%',
             borderRadius: '50%',
-            background: `conic-gradient(from ${animationPhase}deg, 
+            background: `conic-gradient(from ${animationPhase}deg,
               #FF6B35 0deg,
               #00BCD4 90deg,
               #66BB6A 180deg,
@@ -205,8 +198,8 @@ export const AyniMetricsCardRevolutionary: React.FC<
               right: 8,
               bottom: 8,
               borderRadius: '50%',
-              background: `linear-gradient(135deg, 
-                ${alpha(theme.palette.background.paper, 0.95)} 0%, 
+              background: `linear-gradient(135deg,
+                ${alpha(theme.palette.background.paper, 0.95)} 0%,
                 ${alpha(theme.palette.background.default, 0.9)} 100%)`,
             },
           }}
@@ -231,15 +224,26 @@ export const AyniMetricsCardRevolutionary: React.FC<
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              mb: 1,
-              fontSize: '3rem',
+              mb: { xs: 0.5, sm: 1 },
+              fontSize: {
+                xs: '2rem',
+                sm: '2.5rem',
+                md: '3rem',
+                lg: '3.5rem',
+              },
+              lineHeight: 1,
             }}
           >
             {advancedStats.ayniScore}%
           </Typography>
           <Typography
             variant="h6"
-            sx={{ color: 'white', fontWeight: 'bold', mb: 1 }}
+            sx={{
+              color: 'white',
+              fontWeight: 'bold',
+              mb: { xs: 0.5, sm: 1 },
+              fontSize: { xs: '0.9rem', sm: '1rem', md: '1.25rem' },
+            }}
           >
             Balance Ayni
           </Typography>
@@ -249,7 +253,7 @@ export const AyniMetricsCardRevolutionary: React.FC<
               bgcolor: alpha('#00BCD4', 0.2),
               color: '#00BCD4',
               fontWeight: 'bold',
-              fontSize: '0.75rem',
+              fontSize: { xs: '0.65rem', sm: '0.75rem' },
             }}
           />
         </Box>
@@ -257,7 +261,16 @@ export const AyniMetricsCardRevolutionary: React.FC<
         {/* Elementos orbitales */}
         {Object.entries(elementConfig).map(([key, element], index) => {
           const angle = index * 90 + animationPhase * 0.5;
-          const radius = 85;
+          // Radio adaptativo según el tamaño de pantalla
+          const getRadius = () => {
+            if (typeof window !== 'undefined') {
+              if (window.innerWidth < 600) return 65; // Mobile
+              if (window.innerWidth < 900) return 75; // Tablet
+              if (window.innerWidth < 1200) return 85; // Desktop
+            }
+            return 95; // Large Desktop
+          };
+          const radius = getRadius();
           const x = Math.cos((angle * Math.PI) / 180) * radius;
           const y = Math.sin((angle * Math.PI) / 180) * radius;
 
@@ -291,12 +304,30 @@ export const AyniMetricsCardRevolutionary: React.FC<
               >
                 <Avatar
                   sx={{
-                    width: hoveredElement === key ? 56 : 48,
-                    height: hoveredElement === key ? 56 : 48,
+                    width: {
+                      xs: hoveredElement === key ? 40 : 36,
+                      sm: hoveredElement === key ? 48 : 42,
+                      md: hoveredElement === key ? 56 : 48,
+                      lg: hoveredElement === key ? 60 : 52,
+                    },
+                    height: {
+                      xs: hoveredElement === key ? 40 : 36,
+                      sm: hoveredElement === key ? 48 : 42,
+                      md: hoveredElement === key ? 56 : 48,
+                      lg: hoveredElement === key ? 60 : 52,
+                    },
                     background: element.gradient,
                     color: 'white',
                     transition: 'all 0.3s ease',
                     boxShadow: `0 4px 20px ${alpha(element.color, 0.4)}`,
+                    '& svg': {
+                      fontSize: {
+                        xs: '1rem',
+                        sm: '1.2rem',
+                        md: '1.4rem',
+                        lg: '1.6rem',
+                      },
+                    },
                     '&:hover': {
                       transform: 'scale(1.1)',
                       boxShadow: `0 6px 25px ${alpha(element.color, 0.6)}`,
@@ -313,49 +344,58 @@ export const AyniMetricsCardRevolutionary: React.FC<
     );
   };
 
-  // 📊 Renderizar métricas principales
-  const renderMainMetrics = () => (
-    <Grid container spacing={3} sx={{ mb: 4 }}>
+  // ��� Renderizar métricas revolucionarias
+  const renderRevolutionaryMetrics = () => (
+    <Grid
+      container
+      spacing={{ xs: 1.5, sm: 2, md: 2.5 }}
+      sx={{ mb: { xs: 2, sm: 3 } }}
+    >
       {[
         {
-          label: 'Öndas Generadas',
+          label: 'Öndas',
           value: ondas.toLocaleString(),
-          icon: <BoltIcon />,
-          color: '#FFD54F',
-          gradient: 'linear-gradient(135deg, #FFD54F 0%, #FFEB3B 100%)',
+          icon: <WaterDropIcon />,
+          color: '#00BCD4',
+          gradient: 'linear-gradient(135deg, #00BCD4 0%, #4FC3F7 100%)',
         },
         {
-          label: 'Mëritos Ganados',
+          label: 'Mëritos',
           value: meritos.toLocaleString(),
-          icon: <DiamondIcon />,
-          color: '#9C27B0',
-          gradient: 'linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%)',
+          icon: <EmojiEventsIcon />,
+          color: '#FFD54F',
+          gradient: 'linear-gradient(135deg, #FFD54F 0%, #FFEB3B 100%)',
         },
         {
           label: 'Bien Común',
           value: bienComunContributions.toString(),
           icon: <FavoriteIcon />,
           color: '#E91E63',
-          gradient: 'linear-gradient(135deg, #E91E63 0%, #EC407A 100%)',
+          gradient: 'linear-gradient(135deg, #E91E63 0%, #F06292 100%)',
         },
         {
           label: 'Poder Total',
           value: advancedStats.overallPower.toString(),
           icon: <AutoAwesomeIcon />,
-          color: '#00BCD4',
-          gradient: 'linear-gradient(135deg, #00BCD4 0%, #4FC3F7 100%)',
+          color: '#9C27B0',
+          gradient: 'linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%)',
         },
       ].map((metric, index) => (
-        <Grid item xs={6} md={3} key={metric.label}>
+        <Grid item xs={6} sm={6} md={3} key={metric.label}>
           <Card
             sx={{
               background: alpha(metric.color, 0.1),
               border: `1px solid ${alpha(metric.color, 0.3)}`,
-              borderRadius: 3,
+              borderRadius: { xs: 2, sm: 3 },
               textAlign: 'center',
-              p: 2,
+              p: { xs: 1.5, sm: 2 },
               transition: 'all 0.3s ease',
               cursor: 'pointer',
+              minHeight: { xs: 120, sm: 140, md: 150 },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
               '&:hover': {
                 transform: 'translateY(-4px)',
                 boxShadow: `0 8px 25px ${alpha(metric.color, 0.4)}`,
@@ -365,17 +405,19 @@ export const AyniMetricsCardRevolutionary: React.FC<
           >
             <Box
               sx={{
-                width: 60,
-                height: 60,
+                width: { xs: 45, sm: 50, md: 60 },
+                height: { xs: 45, sm: 50, md: 60 },
                 borderRadius: '50%',
                 background: metric.gradient,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                mx: 'auto',
-                mb: 2,
+                mb: { xs: 1, sm: 1.5, md: 2 },
                 color: 'white',
                 boxShadow: `0 4px 15px ${alpha(metric.color, 0.3)}`,
+                '& svg': {
+                  fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' },
+                },
               }}
             >
               {metric.icon}
@@ -385,7 +427,13 @@ export const AyniMetricsCardRevolutionary: React.FC<
               sx={{
                 fontWeight: 'bold',
                 color: metric.color,
-                mb: 1,
+                mb: { xs: 0.5, sm: 1 },
+                fontSize: {
+                  xs: '1.5rem',
+                  sm: '1.8rem',
+                  md: '2.125rem',
+                },
+                lineHeight: 1.2,
               }}
             >
               {metric.value}
@@ -396,7 +444,10 @@ export const AyniMetricsCardRevolutionary: React.FC<
                 color: alpha('#fff', 0.8),
                 fontWeight: 'bold',
                 textTransform: 'uppercase',
-                letterSpacing: 1,
+                letterSpacing: { xs: 0.5, sm: 1 },
+                fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                textAlign: 'center',
+                lineHeight: 1.1,
               }}
             >
               {metric.label}
@@ -415,25 +466,49 @@ export const AyniMetricsCardRevolutionary: React.FC<
           ${alpha('#00BCD4', 0.15)} 0%, 
           ${alpha('#9C27B0', 0.15)} 100%)`,
         border: `1px solid ${alpha('#00BCD4', 0.3)}`,
-        borderRadius: 3,
-        p: 3,
-        mb: 3,
+        borderRadius: { xs: 2, sm: 3 },
+        p: { xs: 2, sm: 2.5, md: 3 },
+        mb: { xs: 2, sm: 3 },
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: { xs: 1.5, sm: 2 },
+          mb: { xs: 1.5, sm: 2 },
+          flexDirection: { xs: 'column', sm: 'row' },
+          textAlign: { xs: 'center', sm: 'left' },
+        }}
+      >
         <Avatar
           sx={{
             background: 'linear-gradient(135deg, #00BCD4 0%, #9C27B0 100%)',
             color: 'white',
+            width: { xs: 40, sm: 48 },
+            height: { xs: 40, sm: 48 },
           }}
         >
           <TrendingUpIcon />
         </Avatar>
         <Box>
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
+          <Typography
+            variant="h6"
+            sx={{
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: { xs: '1rem', sm: '1.25rem' },
+            }}
+          >
             Evolución hacia {nextLevel}
           </Typography>
-          <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: alpha('#fff', 0.8),
+              fontSize: { xs: '0.8rem', sm: '0.875rem' },
+            }}
+          >
             {advancedStats.experienceNeeded.toLocaleString()} Öndas para
             ascender
           </Typography>
@@ -444,7 +519,7 @@ export const AyniMetricsCardRevolutionary: React.FC<
         variant="determinate"
         value={ayniProgress}
         sx={{
-          height: 12,
+          height: { xs: 8, sm: 10, md: 12 },
           borderRadius: 6,
           bgcolor: alpha('#fff', 0.1),
           '& .MuiLinearProgress-bar': {
@@ -454,198 +529,61 @@ export const AyniMetricsCardRevolutionary: React.FC<
         }}
       />
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-        <Typography variant="caption" sx={{ color: alpha('#fff', 0.7) }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          mt: 1,
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: { xs: 0.5, sm: 0 },
+          textAlign: { xs: 'center', sm: 'left' },
+        }}
+      >
+        <Typography
+          variant="caption"
+          sx={{
+            color: alpha('#fff', 0.7),
+            fontSize: { xs: '0.7rem', sm: '0.75rem' },
+          }}
+        >
           {ayniProgress}% completado
         </Typography>
-        <Typography variant="caption" sx={{ color: alpha('#fff', 0.7) }}>
+        <Typography
+          variant="caption"
+          sx={{
+            color: alpha('#fff', 0.7),
+            fontSize: { xs: '0.7rem', sm: '0.75rem' },
+          }}
+        >
           Siguiente: {advancedStats.nextLevelOndas.toLocaleString()} Öndas
         </Typography>
       </Box>
     </Card>
   );
 
-  // 🌟 Renderizar elementos expandidos
-  const renderExpandedElements = () => (
-    <Card
-      sx={{
-        background: alpha('#000', 0.2),
-        border: `1px solid ${alpha('#fff', 0.1)}`,
-        borderRadius: 3,
-        p: 3,
-      }}
-    >
-      <Typography
-        variant="h6"
-        sx={{
-          color: 'white',
-          fontWeight: 'bold',
-          mb: 3,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-        }}
-      >
-        <BalanceIcon sx={{ color: '#00BCD4' }} />
-        Armonía Elemental Detallada
-      </Typography>
-
-      <Grid container spacing={2}>
-        {Object.entries(elementConfig).map(([key, element]) => (
-          <Grid item xs={12} md={6} key={key}>
-            <Box
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                background: alpha(element.color, 0.1),
-                border: `1px solid ${alpha(element.color, 0.3)}`,
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  background: alpha(element.color, 0.15),
-                  transform: 'translateY(-2px)',
-                },
-              }}
-            >
-              <Box
-                sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}
-              >
-                <Avatar
-                  sx={{
-                    background: element.gradient,
-                    color: 'white',
-                    width: 40,
-                    height: 40,
-                  }}
-                >
-                  {element.icon}
-                </Avatar>
-                <Box>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ color: 'white', fontWeight: 'bold' }}
-                  >
-                    {element.name}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: alpha('#fff', 0.7) }}
-                  >
-                    {element.description}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box sx={{ mb: 2 }}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    mb: 1,
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ color: alpha('#fff', 0.8) }}
-                  >
-                    Nivel de {element.keyword}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: element.color, fontWeight: 'bold' }}
-                  >
-                    {element.value}%
-                  </Typography>
-                </Box>
-
-                <LinearProgress
-                  variant="determinate"
-                  value={element.value}
-                  sx={{
-                    height: 8,
-                    borderRadius: 4,
-                    bgcolor: alpha('#fff', 0.1),
-                    '& .MuiLinearProgress-bar': {
-                      borderRadius: 4,
-                      background: element.gradient,
-                    },
-                  }}
-                />
-              </Box>
-
-              <Chip
-                label={
-                  element.value > 80
-                    ? 'Excelente'
-                    : element.value > 60
-                      ? 'Bueno'
-                      : 'Mejorable'
-                }
-                size="small"
-                sx={{
-                  bgcolor: alpha(element.color, 0.2),
-                  color: element.color,
-                  fontWeight: 'bold',
-                }}
-              />
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Divider sx={{ bgcolor: alpha('#fff', 0.1), my: 3 }} />
-
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography
-          variant="h5"
-          sx={{
-            color: '#00BCD4',
-            fontWeight: 'bold',
-            mb: 1,
-          }}
-        >
-          Armonía Elemental: {Math.round(advancedStats.elementalHarmony)}%
-        </Typography>
-        <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
-          {advancedStats.elementalHarmony > 80
-            ? '🌟 Tu balance elemental es excepcional'
-            : advancedStats.elementalHarmony > 60
-              ? '⚡ Buen equilibrio elemental'
-              : '🌱 Enfócate en equilibrar tus elementos'}
-        </Typography>
-      </Box>
-    </Card>
-  );
-
-  if (isLoading) {
-    return (
-      <Card className={`harmony-card ${className}`}>
-        <CardContent className="harmony-p-lg">
-          <Box sx={{ textAlign: 'center', py: 8 }}>
-            <Typography variant="h6" sx={{ color: alpha('#fff', 0.6) }}>
-              Cargando tu Balance Ayni...
-            </Typography>
-          </Box>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card
-      className={`harmony-card interactive-card-advanced ${className}`}
+      className={className}
       sx={{
         background: `linear-gradient(135deg, 
-          ${alpha('#0A0E27', 0.95)} 0%, 
-          ${alpha('#1A1F3A', 0.9)} 50%,
-          ${alpha('#0A0E27', 0.95)} 100%)`,
-        border: `1px solid ${alpha('#00BCD4', 0.3)}`,
-        borderRadius: 4,
-        overflow: 'hidden',
+          ${alpha('#000', 0.6)} 0%, 
+          ${alpha('#001122', 0.8)} 50%, 
+          ${alpha('#000', 0.6)} 100%)`,
+        border: `2px solid ${alpha('#00BCD4', 0.3)}`,
+        borderRadius: { xs: 3, sm: 4 },
+        p: { xs: 2, sm: 2.5, md: 3 },
         position: 'relative',
-        minHeight: 600,
-        '&::before': {
-          content: '""',
+        overflow: 'hidden',
+        minHeight: { xs: 400, sm: 450, md: 500 },
+        backdropFilter: 'blur(20px)',
+        boxShadow: `0 8px 32px ${alpha('#00BCD4', 0.2)}`,
+        // Mejorar spacing en mobile
+        mx: { xs: 0.5, sm: 0 },
+      }}
+    >
+      {/* Patrón de fondo sutil */}
+      <Box
+        sx={{
           position: 'absolute',
           top: 0,
           left: 0,
@@ -654,102 +592,213 @@ export const AyniMetricsCardRevolutionary: React.FC<
           background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300BCD4' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           animation: 'float-pattern 20s ease-in-out infinite',
           pointerEvents: 'none',
-        },
-      }}
-    >
-      <CardContent
-        className="harmony-p-xl"
-        sx={{ position: 'relative', zIndex: 1 }}
-      >
+        }}
+      />
+
+      <CardContent sx={{ position: 'relative', zIndex: 1, p: 0 }}>
         {/* Header revolucionario */}
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            mb: 4,
+            mb: { xs: 2, sm: 3 },
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: { xs: 1, sm: 0 },
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Avatar
-              sx={{
-                width: 64,
-                height: 64,
-                background:
-                  'linear-gradient(135deg, #FF6B35 0%, #00BCD4 50%, #9C27B0 100%)',
-                color: 'white',
-                animation: 'pulse 2s ease-in-out infinite',
-              }}
-            >
-              <AutoAwesomeIcon sx={{ fontSize: '2rem' }} />
-            </Avatar>
-            <Box>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: 'bold',
-                  background:
-                    'linear-gradient(45deg, #FF6B35 30%, #00BCD4 70%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  mb: 0.5,
-                }}
-              >
-                Tu Balance Ayni
-              </Typography>
-              <Typography variant="body1" sx={{ color: alpha('#fff', 0.8) }}>
-                Dashboard Energético Revolucionario
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            {!isConnected && (
-              <Chip
-                label="Offline"
-                color="warning"
-                size="small"
-                icon={<RefreshIcon />}
-              />
-            )}
-            <IconButton
-              onClick={handleExpandToggle}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: { xs: 1, sm: 2 },
+            }}
+          >
+            <DiamondIcon
               sx={{
                 color: '#00BCD4',
+                fontSize: { xs: '1.5rem', sm: '2rem' },
+                filter: 'drop-shadow(0 0 8px #00BCD4)',
+              }}
+            />
+            <Typography
+              variant="h5"
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: { xs: '1.2rem', sm: '1.5rem' },
+              }}
+            >
+              Tu Balance Ayni
+            </Typography>
+          </Box>
+
+          <IconButton
+            onClick={handleExpandToggle}
+            sx={{
+              color: '#00BCD4',
+              background: alpha('#00BCD4', 0.1),
+              '&:hover': {
+                background: alpha('#00BCD4', 0.2),
+                transform: 'scale(1.1)',
+              },
+            }}
+          >
+            <ExpandMoreIcon
+              sx={{
                 transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
                 transition: 'transform 0.3s ease',
               }}
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </Box>
+            />
+          </IconButton>
         </Box>
 
         {/* Orb central revolucionario */}
         {renderCentralOrb()}
 
-        {/* Métricas principales */}
-        {renderMainMetrics()}
+        {/* Métricas revolucionarias */}
+        {renderRevolutionaryMetrics()}
 
         {/* Progreso hacia siguiente nivel */}
         {renderLevelProgress()}
 
-        {/* Panel expandido */}
-        {expanded && renderExpandedElements()}
-      </CardContent>
+        {/* Panel expandido con insights */}
+        {expanded && (
+          <Card
+            sx={{
+              background: alpha('#000', 0.2),
+              border: `1px solid ${alpha('#fff', 0.1)}`,
+              borderRadius: { xs: 2, sm: 3 },
+              p: { xs: 2, sm: 3 },
+              mt: { xs: 2, sm: 3 },
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                mb: { xs: 2, sm: 3 },
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                fontSize: { xs: '1.1rem', sm: '1.25rem' },
+              }}
+            >
+              <BalanceIcon sx={{ color: '#00BCD4' }} />
+              Análisis Elemental Detallado
+            </Typography>
 
-      {/* CSS personalizado para animaciones */}
-      <style jsx>{`
-        @keyframes rotate-continuous {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
+            <Grid container spacing={{ xs: 1.5, sm: 2 }}>
+              {Object.entries(elementConfig).map(([key, element]) => (
+                <Grid item xs={12} sm={6} md={3} key={key}>
+                  <Box
+                    sx={{
+                      p: { xs: 1.5, sm: 2 },
+                      borderRadius: { xs: 1.5, sm: 2 },
+                      background: alpha(element.color, 0.1),
+                      border: `1px solid ${alpha(element.color, 0.3)}`,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: { xs: 40, sm: 48 },
+                        height: { xs: 40, sm: 48 },
+                        background: element.gradient,
+                        mx: 'auto',
+                        mb: { xs: 1, sm: 1.5 },
+                      }}
+                    >
+                      {element.icon}
+                    </Avatar>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: element.color,
+                        fontWeight: 'bold',
+                        mb: 0.5,
+                        fontSize: { xs: '1rem', sm: '1.25rem' },
+                      }}
+                    >
+                      {element.value}%
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        mb: 1,
+                        fontSize: { xs: '0.8rem', sm: '0.875rem' },
+                      }}
+                    >
+                      {element.name}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: alpha('#fff', 0.7),
+                        display: 'block',
+                        mb: 1,
+                        fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                      }}
+                    >
+                      {element.description}
+                    </Typography>
+                    <Chip
+                      label={
+                        element.value > 80
+                          ? 'Excelente'
+                          : element.value > 60
+                            ? 'Bueno'
+                            : 'Mejorable'
+                      }
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(element.color, 0.2),
+                        color: element.color,
+                        fontWeight: 'bold',
+                        fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+
+            <Divider
+              sx={{ bgcolor: alpha('#fff', 0.1), my: { xs: 2, sm: 3 } }}
+            />
+
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  color: '#00BCD4',
+                  fontWeight: 'bold',
+                  mb: 1,
+                  fontSize: { xs: '1.3rem', sm: '1.5rem' },
+                }}
+              >
+                Armonía Elemental: {Math.round(advancedStats.elementalHarmony)}%
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: alpha('#fff', 0.8),
+                  fontSize: { xs: '0.85rem', sm: '0.875rem' },
+                }}
+              >
+                {advancedStats.elementalHarmony > 80
+                  ? '🌟 Tu balance elemental es excepcional'
+                  : advancedStats.elementalHarmony > 60
+                    ? '⚡ Buen equilibrio elemental'
+                    : '🌱 Enfócate en equilibrar tus elementos'}
+              </Typography>
+            </Box>
+          </Card>
+        )}
+      </CardContent>
     </Card>
   );
 };

@@ -8,9 +8,12 @@ export interface TimeOfDayData {
   contextualMessage: string;
   weatherElement: 'tierra' | 'agua' | 'fuego' | 'aire';
   hour: number;
+  formattedTime: string;
 }
 
-export const useTimeOfDay = (ayniLevel: string = 'Colaborador Equilibrado'): TimeOfDayData => {
+export const useTimeOfDay = (
+  ayniLevel: string = 'Colaborador Equilibrado'
+): TimeOfDayData => {
   const [timeData, setTimeData] = useState<TimeOfDayData>(() => {
     const now = new Date();
     const hour = now.getHours();
@@ -41,6 +44,10 @@ const generateTimeData = (hour: number, ayniLevel: string): TimeOfDayData => {
   const greeting = getTimeBasedGreeting(timeOfDay, ayniLevel);
   const contextualMessage = getContextualMessage(timeOfDay, ayniLevel);
   const weatherElement = getWeatherElement(timeOfDay);
+  const formattedTime = new Date().toLocaleTimeString('es-ES', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   return {
     timeOfDay,
@@ -48,6 +55,7 @@ const generateTimeData = (hour: number, ayniLevel: string): TimeOfDayData => {
     contextualMessage,
     weatherElement,
     hour,
+    formattedTime,
   };
 };
 
@@ -58,7 +66,10 @@ const getTimeOfDay = (hour: number): TimeOfDay => {
   return 'night';
 };
 
-const getTimeBasedGreeting = (timeOfDay: TimeOfDay, ayniLevel: string): string => {
+const getTimeBasedGreeting = (
+  timeOfDay: TimeOfDay,
+  ayniLevel: string
+): string => {
   const greetings = {
     morning: `🌅 Buenos días! Que este nuevo amanecer traiga equilibrio a tu Ayni`,
     afternoon: `☀️ ¡Tarde productiva! Tu energía ${ayniLevel} está en pleno flujo`,
@@ -69,7 +80,10 @@ const getTimeBasedGreeting = (timeOfDay: TimeOfDay, ayniLevel: string): string =
   return greetings[timeOfDay];
 };
 
-const getContextualMessage = (timeOfDay: TimeOfDay, ayniLevel: string): string => {
+const getContextualMessage = (
+  timeOfDay: TimeOfDay,
+  ayniLevel: string
+): string => {
   const messages = {
     morning: `Es un buen momento para establecer intenciones de reciprocidad para el día`,
     afternoon: `Tu energía está en su punto más alto, ideal para contribuir al Bien Común`,
@@ -80,7 +94,9 @@ const getContextualMessage = (timeOfDay: TimeOfDay, ayniLevel: string): string =
   return messages[timeOfDay];
 };
 
-const getWeatherElement = (timeOfDay: TimeOfDay): 'tierra' | 'agua' | 'fuego' | 'aire' => {
+const getWeatherElement = (
+  timeOfDay: TimeOfDay
+): 'tierra' | 'agua' | 'fuego' | 'aire' => {
   const elementMap = {
     morning: 'aire' as const, // Nuevos comienzos, claridad mental
     afternoon: 'fuego' as const, // Energía, acción, productividad
@@ -89,4 +105,4 @@ const getWeatherElement = (timeOfDay: TimeOfDay): 'tierra' | 'agua' | 'fuego' | 
   };
 
   return elementMap[timeOfDay];
-}; 
+};
