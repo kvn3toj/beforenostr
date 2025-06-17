@@ -36,6 +36,18 @@ import PublicIcon from '@mui/icons-material/Public';
 // Importar sistema de partículas
 import EnhancedParticles from './EnhancedParticles';
 
+// 🌍 CoomÜnity SuperApp - Visualización Avanzada Balance Ayni
+// Sistema solar 3D con integración al Sistema Elemental Unificado
+
+// 🌍 IMPORTACIÓN DEL SISTEMA ELEMENTAL UNIFICADO
+import {
+  UNIFIED_ELEMENTAL_CONFIG,
+  ELEMENTAL_PRESETS,
+  ElementalUtils,
+  type ElementType,
+  type ElementalConfiguration,
+} from '../universe/ElementalSystem';
+
 interface ElementData {
   name: string;
   value: number;
@@ -44,11 +56,15 @@ interface ElementData {
   description: string;
   recommendations: string[];
   orbitRadius: number;
-  orbitRadiusY: number; // Para órbitas elípticas
+  orbitRadiusY: number;
   angle: number;
-  speed: number; // Velocidad de rotación individual
-  size: number; // Tamaño de la esfera
-  tilt: number; // Inclinación orbital
+  speed: number;
+  size: number;
+  tilt: number;
+  // 🆕 Nuevos campos del sistema unificado
+  config: ElementalConfiguration;
+  harmonic?: number;
+  affinity?: number;
 }
 
 interface PersonalizedInsight {
@@ -65,14 +81,64 @@ interface ElementRecommendation {
   priority: 'high' | 'medium' | 'low';
 }
 
+// 🆕 PHASE 2: Interfaces expandidas para información detallada
+interface HistoricalDataPoint {
+  date: Date;
+  balance: number;
+  elements: { fuego: number; agua: number; tierra: number; aire: number };
+}
+
+interface CommunityMetrics {
+  ranking: number;
+  totalUsers: number;
+  percentile: number;
+  averageBalance: number;
+  regionRanking: number;
+  levelPeers: number;
+}
+
+interface PredictiveInsight {
+  type: 'milestone' | 'risk' | 'opportunity' | 'trend';
+  title: string;
+  description: string;
+  confidence: number;
+  timeframe: string;
+  icon: React.ReactElement;
+  color: string;
+}
+
+interface Milestone {
+  id: string;
+  title: string;
+  description: string;
+  achieved: boolean;
+  achievedDate?: Date;
+  requiredBalance: number;
+  reward: string;
+}
+
+interface EnhancedAyniData {
+  // Datos actuales
+  balanceAyni: number;
+  elementos: { fuego: number; agua: number; tierra: number; aire: number };
+  
+  // 🆕 Datos históricos
+  historicalData: HistoricalDataPoint[];
+  
+  // 🆕 Métricas comunitarias
+  communityMetrics: CommunityMetrics;
+  
+  // 🆕 Predicciones IA
+  predictions: PredictiveInsight[];
+  
+  // 🆕 Milestones
+  milestones: Milestone[];
+}
+
+// 🆕 PHASE 2: Props expandidos con nuevos datos
 interface AyniBalanceVisualizationProps {
   balanceAyni: number;
-  elementos: {
-    fuego: number;
-    agua: number;
-    tierra: number;
-    aire: number;
-  };
+  elementos: { fuego: number; agua: number; tierra: number; aire: number };
   className?: string;
   userLevel?: string;
   recentActivity?: {
@@ -80,11 +146,11 @@ interface AyniBalanceVisualizationProps {
     lastInteraction: Date;
     totalContributions: number;
   };
+  // 🆕 Datos expandidos opcionales
+  enhancedData?: Partial<EnhancedAyniData>;
 }
 
-export const AyniBalanceVisualization: React.FC<
-  AyniBalanceVisualizationProps
-> = ({
+export const AyniBalanceVisualization: React.FC<AyniBalanceVisualizationProps> = ({
   balanceAyni,
   elementos,
   className = '',
@@ -94,6 +160,7 @@ export const AyniBalanceVisualization: React.FC<
     lastInteraction: new Date(),
     totalContributions: 25,
   },
+  enhancedData, // 🆕 Nuevos datos opcionales
 }) => {
   const theme = useTheme();
   const [animatedBalance, setAnimatedBalance] = useState(0);
@@ -110,6 +177,9 @@ export const AyniBalanceVisualization: React.FC<
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [animationTick, setAnimationTick] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // 🆕 PHASE 2: Estado para secciones expandidas
+  const [expandedSection, setExpandedSection] = useState<'insights' | 'historical' | 'community' | 'predictions'>('insights');
 
   // 🎨 Animación de entrada suave
   useEffect(() => {
@@ -136,96 +206,76 @@ export const AyniBalanceVisualization: React.FC<
     return () => clearInterval(rotationInterval);
   }, [updateRotations]);
 
-  // 🌟 Configuración Sistema Solar 3D - Como vista desde Júpiter
-  const elementConfig: ElementData[] = useMemo(
-    () => [
-      {
-        name: 'Fuego',
-        value: animatedElements.fuego,
-        icon: <LocalFireDepartmentIcon />,
-        color: '#FF6B35',
-        description: 'Pasión y acción',
+  // 🌟 Configuración Sistema Solar 3D - UNIFICADA con ElementalSystem
+  const elementConfig: ElementData[] = useMemo(() => {
+    // Mapeo de íconos para compatibilidad
+    const elementIcons = {
+      fuego: <LocalFireDepartmentIcon />,
+      agua: <WaterIcon />,
+      tierra: <TerrainIcon />,
+      aire: <AirIcon />,
+    } as const;
+
+    return (['fuego', 'agua', 'tierra', 'aire'] as ElementType[]).map((elementType) => {
+      const unifiedConfig = UNIFIED_ELEMENTAL_CONFIG[elementType];
+      const value = animatedElements[elementType];
+      
+      // Calcula posición orbital usando utilidades unificadas
+      const orbitalPosition = ElementalUtils.calculateFibonacciOrbitalPosition(
+        elementType,
+        orbitalRotation,
+        400, // containerWidth
+        300  // containerHeight
+      );
+
+      return {
+        name: unifiedConfig.name,
+        value,
+        icon: elementIcons[elementType],
+        color: unifiedConfig.visuals.primaryColor,
+        description: unifiedConfig.name === 'Fuego' ? 'Pasión y acción' :
+                    unifiedConfig.name === 'Agua' ? 'Fluir y adaptabilidad' :
+                    unifiedConfig.name === 'Tierra' ? 'Estabilidad y confianza' :
+                    'Comunicación e ideas',
         recommendations: [
-          'Lidera un proyecto comunitario',
-          'Participa en desafíos creativos',
-          'Inspira a otros con tu energía',
-        ],
-        orbitRadius: 120, // Radio horizontal mayor
-        orbitRadiusY: 80, // Radio vertical menor para elipse
-        angle: 0 + orbitalRotation * 1.2, // Mercurio - más rápido
-        speed: 1.2,
-        size: 8,
-        tilt: -15, // Inclinación orbital
-      },
-      {
-        name: 'Agua',
-        value: animatedElements.agua,
-        icon: <WaterIcon />,
-        color: '#4FC3F7',
-        description: 'Fluir y adaptabilidad',
-        recommendations: [
-          'Colabora en intercambios Ayni',
-          'Adapta tu enfoque a nuevos retos',
-          'Cultiva la flexibilidad emocional',
-        ],
-        orbitRadius: 150, // Venus
-        orbitRadiusY: 100,
-        angle: 90 + orbitalRotation * 1.0,
-        speed: 1.0,
-        size: 10,
-        tilt: 10,
-      },
-      {
-        name: 'Tierra',
-        value: animatedElements.tierra,
-        icon: <TerrainIcon />,
-        color: '#8BC34A',
-        description: 'Estabilidad y confianza',
-        recommendations: [
-          'Construye relaciones duraderas',
-          'Mantén constancia en tus hábitos',
-          'Sé el pilar de tu comunidad',
-        ],
-        orbitRadius: 180, // Tierra
-        orbitRadiusY: 120,
-        angle: 180 + orbitalRotation * 0.8,
-        speed: 0.8,
-        size: 12,
-        tilt: 0, // Tierra como referencia
-      },
-      {
-        name: 'Aire',
-        value: animatedElements.aire,
-        icon: <AirIcon />,
-        color: '#FFD54F',
-        description: 'Comunicación e ideas',
-        recommendations: [
+          unifiedConfig.name === 'Fuego' ? 'Lidera un proyecto comunitario' :
+          unifiedConfig.name === 'Agua' ? 'Colabora en intercambios Ayni' :
+          unifiedConfig.name === 'Tierra' ? 'Construye relaciones duraderas' :
           'Comparte conocimiento abiertamente',
+          
+          unifiedConfig.name === 'Fuego' ? 'Participa en desafíos creativos' :
+          unifiedConfig.name === 'Agua' ? 'Adapta tu enfoque a nuevos retos' :
+          unifiedConfig.name === 'Tierra' ? 'Mantén constancia en tus hábitos' :
           'Facilita conversaciones significativas',
+          
+          unifiedConfig.name === 'Fuego' ? 'Inspira a otros con tu energía' :
+          unifiedConfig.name === 'Agua' ? 'Cultiva la flexibilidad emocional' :
+          unifiedConfig.name === 'Tierra' ? 'Sé el pilar de tu comunidad' :
           'Conecta personas con ideas afines',
         ],
-        orbitRadius: 220, // Marte
-        orbitRadiusY: 140,
-        angle: 270 + orbitalRotation * 0.6,
-        speed: 0.6,
-        size: 9,
-        tilt: 20,
-      },
-    ],
-    [animatedElements, orbitalRotation]
-  );
+        // Usar configuración orbital unificada
+        orbitRadius: unifiedConfig.orbital.radius,
+        orbitRadiusY: unifiedConfig.orbital.radiusY,
+        angle: orbitalPosition.x,
+        speed: unifiedConfig.orbital.orbitSpeed,
+        size: 8 + (unifiedConfig.physics.mass * 4), // Tamaño basado en masa
+        tilt: unifiedConfig.orbital.inclination,
+        
+        // 🆕 Nuevos campos del sistema unificado
+        config: unifiedConfig,
+        harmonic: orbitalPosition.harmony,
+        affinity: ElementalUtils.calculateAffinity(elementType, 'tierra'), // Afinidad con elemento tierra como base
+      };
+    });
+  }, [animatedElements, orbitalRotation]);
 
-  // 🤖 Generar insights personalizados basados en IA
+  // 🤖 Generar insights personalizados basados en IA - MEJORADO con sistema unificado
   const personalizedInsights = useMemo((): PersonalizedInsight[] => {
     const insights: PersonalizedInsight[] = [];
-    const total =
-      animatedElements.fuego +
-      animatedElements.agua +
-      animatedElements.tierra +
-      animatedElements.aire;
+    const total = animatedElements.fuego + animatedElements.agua + animatedElements.tierra + animatedElements.aire;
     const average = total / 4;
 
-    // Análisis de fortalezas
+    // Análisis de fortalezas usando configuración unificada
     const strongest = elementConfig.reduce((max, element) =>
       element.value > max.value ? element : max
     );
@@ -233,40 +283,40 @@ export const AyniBalanceVisualization: React.FC<
     if (strongest.value > average + 15) {
       insights.push({
         type: 'strength',
-        message: `Tu ${strongest.name.toLowerCase()} está especialmente desarrollado. ¡Aprovecha esta fortaleza para liderar!`,
+        message: `Tu ${strongest.name.toLowerCase()} está especialmente desarrollado. Resonancia armónica: ${strongest.config.interaction.harmonicFrequency}Hz`,
         icon: strongest.icon,
         color: strongest.color,
       });
     }
 
-    // Análisis de oportunidades
+    // Análisis de oportunidades con afinidades elementales
     const weakest = elementConfig.reduce((min, element) =>
       element.value < min.value ? element : min
     );
 
     if (weakest.value < average - 10) {
+      const affinities = weakest.config.interaction.affinities.join(', ');
       insights.push({
         type: 'opportunity',
-        message: `Considera fortalecer tu ${weakest.name.toLowerCase()} para mayor equilibrio elemental.`,
+        message: `Fortalece tu ${weakest.name.toLowerCase()} trabajando con elementos afines: ${affinities}`,
         icon: <LightbulbIcon />,
         color: theme.palette.warning.main,
       });
     }
 
-    // Análisis de balance general
+    // Análisis de balance general con frecuencia armónica
+    const harmonicFreq = ElementalUtils.calculateHarmonicFrequency(['fuego', 'agua', 'tierra', 'aire']);
     if (animatedBalance >= 0.8) {
       insights.push({
         type: 'balance',
-        message:
-          '¡Excelente equilibrio Ayni! Eres un ejemplo para la comunidad.',
+        message: `¡Excelente equilibrio Ayni! Frecuencia armónica: ${harmonicFreq.toFixed(0)}Hz`,
         icon: <AutoAwesomeIcon />,
         color: theme.palette.success.main,
       });
     } else if (animatedBalance < 0.5) {
       insights.push({
         type: 'action',
-        message:
-          'Participa más en intercambios comunitarios para mejorar tu balance Ayni.',
+        message: 'Participa más en intercambios comunitarios para sincronizar tu frecuencia elemental.',
         icon: <PsychologyIcon />,
         color: theme.palette.info.main,
       });
@@ -355,6 +405,133 @@ export const AyniBalanceVisualization: React.FC<
     // Efecto hover para elementos orbitales
     console.log('🎯 Element hover:', elementName);
   }, []);
+
+  // 🆕 PHASE 2: Generar datos históricos simulados si no se proveen
+  const historicalData = useMemo((): HistoricalDataPoint[] => {
+    if (enhancedData?.historicalData) return enhancedData.historicalData;
+    
+    // Generar datos simulados para demostración
+    const mockData: HistoricalDataPoint[] = [];
+    const now = new Date();
+    
+    for (let i = 30; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const baseBalance = balanceAyni;
+      const variation = (Math.random() - 0.5) * 0.2; // ±10% variación
+      
+      mockData.push({
+        date,
+        balance: Math.max(0, Math.min(1, baseBalance + variation)),
+        elements: {
+          fuego: Math.max(0, Math.min(100, elementos.fuego + (Math.random() - 0.5) * 20)),
+          agua: Math.max(0, Math.min(100, elementos.agua + (Math.random() - 0.5) * 20)),
+          tierra: Math.max(0, Math.min(100, elementos.tierra + (Math.random() - 0.5) * 20)),
+          aire: Math.max(0, Math.min(100, elementos.aire + (Math.random() - 0.5) * 20)),
+        },
+      });
+    }
+    
+    return mockData;
+  }, [enhancedData?.historicalData, balanceAyni, elementos]);
+
+  // 🆕 PHASE 2: Métricas comunitarias simuladas
+  const communityMetrics = useMemo((): CommunityMetrics => {
+    if (enhancedData?.communityMetrics) return enhancedData.communityMetrics;
+    
+    const totalUsers = 15247;
+    const ranking = Math.floor(balanceAyni * totalUsers * 0.3) + Math.floor(Math.random() * 1000);
+    
+    return {
+      ranking,
+      totalUsers,
+      percentile: Math.round((1 - ranking / totalUsers) * 100),
+      averageBalance: 0.65,
+      regionRanking: Math.floor(ranking * 0.08) + Math.floor(Math.random() * 50),
+      levelPeers: 1250,
+    };
+  }, [enhancedData?.communityMetrics, balanceAyni]);
+
+  // 🆕 PHASE 2: Predicciones IA simuladas
+  const predictions = useMemo((): PredictiveInsight[] => {
+    if (enhancedData?.predictions) return enhancedData.predictions;
+    
+    const predictions: PredictiveInsight[] = [];
+    
+    if (balanceAyni < 0.8) {
+      predictions.push({
+        type: 'milestone',
+        title: 'Próximo Nivel Cósmico',
+        description: `Con tu tendencia actual, alcanzarás el 85% de balance Ayni en aproximadamente ${Math.ceil((0.85 - balanceAyni) * 45)} días.`,
+        confidence: 78,
+        timeframe: '15-30 días',
+        icon: <TrendingUpIcon />,
+        color: theme.palette.success.main,
+      });
+    }
+
+    const weakestElement = Object.entries(elementos).reduce((min, [key, value]) => 
+      value < min.value ? { key, value } : min, { key: 'fuego', value: 100 }
+    );
+
+    predictions.push({
+      type: 'opportunity',
+      title: `Fortalecimiento ${weakestElement.key}`,
+      description: `Fortalecer tu elemento ${weakestElement.key} podría aumentar tu balance general un 12-15%.`,
+      confidence: 85,
+      timeframe: '7-14 días',
+      icon: <LightbulbIcon />,
+      color: theme.palette.warning.main,
+    });
+
+    if (balanceAyni > 0.9) {
+      predictions.push({
+        type: 'trend',
+        title: 'Influenciador Cósmico',
+        description: 'Tu alto balance te posiciona para liderar iniciativas comunitarias de gran impacto.',
+        confidence: 92,
+        timeframe: 'Inmediato',
+        icon: <AutoAwesomeIcon />,
+        color: theme.palette.secondary.main,
+      });
+    }
+
+    return predictions;
+  }, [enhancedData?.predictions, balanceAyni, elementos, theme]);
+
+  // 🆕 PHASE 2: Milestones simulados
+  const milestones = useMemo((): Milestone[] => {
+    if (enhancedData?.milestones) return enhancedData.milestones;
+    
+    return [
+      {
+        id: 'harmony_70',
+        title: 'Armonía Elemental 70%',
+        description: 'Alcanzar 70% de balance en los cuatro elementos',
+        achieved: balanceAyni >= 0.7,
+        achievedDate: balanceAyni >= 0.7 ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) : undefined,
+        requiredBalance: 0.7,
+        reward: '100 Lükas + Título "Equilibrista Cósmico"',
+      },
+      {
+        id: 'cosmic_85',
+        title: 'Resonancia Cósmica 85%',
+        description: 'Sintonizar con la frecuencia cósmica universal',
+        achieved: balanceAyni >= 0.85,
+        achievedDate: balanceAyni >= 0.85 ? new Date(Date.now() - Math.random() * 15 * 24 * 60 * 60 * 1000) : undefined,
+        requiredBalance: 0.85,
+        reward: '250 Lükas + Badge "Resonador Cósmico"',
+      },
+      {
+        id: 'master_95',
+        title: 'Maestro del Ayni 95%',
+        description: 'Alcanzar la maestría en el equilibrio universal',
+        achieved: balanceAyni >= 0.95,
+        achievedDate: balanceAyni >= 0.95 ? new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000) : undefined,
+        requiredBalance: 0.95,
+        reward: '500 Lükas + Título "Maestro del Ayni Universal"',
+      },
+    ];
+  }, [enhancedData?.milestones, balanceAyni]);
 
   return (
     <Box

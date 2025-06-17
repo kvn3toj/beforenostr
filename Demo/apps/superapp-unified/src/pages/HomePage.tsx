@@ -424,13 +424,10 @@ export function HomePage() {
             </Box>
           </Fade>
 
-          {/* 🎯 ESTRUCTURA SEMÁNTICA CÓSMICA CON VISUAL REVOLUCIONARIO */}
+          {/* 🎯 ESTRUCTURA SEMÁNTICA OPTIMIZADA */}
           <Box
             sx={{
               flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: { xs: 4, sm: 5, md: 8 },
               overflow: 'visible',
               position: 'relative',
               // Fondo de constelaciones sutiles
@@ -456,18 +453,32 @@ export function HomePage() {
               },
             }}
           >
-            <Grid container spacing={{ xs: 4, sm: 5, md: 8 }}>
-              {/* === CAPA 1: BIENVENIDA Y ESTADO PERSONAL (Ocupa toda la fila) === */}
+            <Grid
+              container
+              spacing={{
+                xs: 2,
+                sm: 3,
+                md: 4,
+                lg: 5,
+              }}
+              sx={{
+                width: '100%',
+                margin: 0,
+                '& .MuiGrid-item': {
+                  paddingLeft: {
+                    xs: '8px',
+                    sm: '12px',
+                    md: '16px',
+                    lg: '20px',
+                  },
+                  paddingTop: { xs: '8px', sm: '12px', md: '16px', lg: '20px' },
+                },
+              }}
+            >
+              {/* === BIENVENIDA === */}
               <Grid size={12}>
-                <Fade in timeout={800} appear={false}>
-                  <Box
-                    className="enhanced-header enhanced-slide-up enhanced-delay-1"
-                    sx={{
-                      position: 'relative',
-                      zIndex: 10,
-                      mb: { xs: 2, md: 3 },
-                    }}
-                  >
+                <Fade in timeout={600}>
+                  <Box sx={{ mb: { xs: 1, sm: 2, md: 3 } }}>
                     <WelcomeWidget
                       onNotificationClick={() => navigate('/notifications')}
                       totalNotifications={unreadCount}
@@ -656,20 +667,6 @@ export function HomePage() {
                     </Fade>
                   </Grid>
                 </Grid>
-              </Grid>
-
-              {/* === CAPA 2A: TU BALANCE AYNI - EL CORAZÓN DEL UNIVERSO (ANCHO COMPLETO) === */}
-              <Grid size={12}>
-                <Fade in timeout={800} appear={false}>
-                  <Box
-                    sx={{
-                      mb: { xs: 6, md: 8 },
-                      mx: { xs: 1, sm: 2, md: 3 },
-                    }}
-                  >
-                    <AyniBalanceFullWidget className="enhanced-cosmic-widget enhanced-glow enhanced-scale enhanced-delay-2 constellation-bg" />
-                  </Box>
-                </Fade>
               </Grid>
 
               {/* === CAPA 2B: WALLET Y ACCIONES === */}

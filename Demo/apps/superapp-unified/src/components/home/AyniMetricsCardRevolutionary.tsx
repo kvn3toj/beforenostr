@@ -12,6 +12,9 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { useTheme, alpha } from '@mui/material';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
@@ -25,6 +28,36 @@ import TerrainIcon from '@mui/icons-material/Terrain';
 import AirIcon from '@mui/icons-material/Air';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PublicIcon from '@mui/icons-material/Public';
+import TuneIcon from '@mui/icons-material/Tune';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
+// 🌌 IMPORTS DE COMPONENTES UNIVERSE
+import { UniverseBackground, AyniPlanet, ElementalSphere, ElementalConnection } from '../universe';
+
+// 🌟 IMPORTS DEL SISTEMA ELEMENTAL UNIFICADO
+import { 
+  UNIFIED_ELEMENTAL_CONFIG, 
+  ELEMENTAL_PRESETS,
+  ElementalUtils,
+  ElementType,
+  ElementalConfiguration
+} from '../universe/ElementalSystem';
+
+// 🔢 IMPORTS DE UTILIDADES FIBONACCI
+import {
+  calculateFibonacciOrbit,
+  getFibonacciAnimationSpeed,
+  fibonacciLerp,
+  GOLDEN_RATIO,
+  FIBONACCI_PRESETS,
+  type OrbitalPosition,
+  type FibonacciMetrics,
+  calculateFibonacciMetrics
+} from '../../utils/fibonacci-distribution';
+
+// 🌌 IMPORTS DE ESTILOS CSS
+import '../../styles/solar-system-svg.css';
 
 interface ElementStats {
   fuego: number;
@@ -64,73 +97,407 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   const [expanded, setExpanded] = useState(false);
   const [hoveredElement, setHoveredElement] = useState<string | null>(null);
   const [animationPhase, setAnimationPhase] = useState(0);
+  
+  // 🌌 NUEVOS ESTADOS PARA EFECTOS VISUALES
+  const [showUniverseBackground, setShowUniverseBackground] = useState(true);
+  const [cosmicIntensity, setCosmicIntensity] = useState<'low' | 'medium' | 'high'>('medium');
+  const [showTrails, setShowTrails] = useState(true);
+  const [interactionMode, setInteractionMode] = useState<'hover' | 'click' | 'auto'>('hover');
+  const [selectedElement, setSelectedElement] = useState<string | null>(null);
+  const [orbitalHistory, setOrbitalHistory] = useState<Array<{element: string, x: number, y: number, timestamp: number}>>([]);
+  
+  // 🔢 ESTADOS FIBONACCI MEJORADOS
+  const [fibonacciTime, setFibonacciTime] = useState(0);
+  const [orbitalPositions, setOrbitalPositions] = useState<OrbitalPosition[]>([]);
+  const [fibonacciMetrics, setFibonacciMetrics] = useState<FibonacciMetrics>({
+    distributionQuality: 100,
+    visualHarmony: 100,
+    animationSmoothness: 100,
+    overallScore: 100
+  });
+  const [lastFrameTime, setLastFrameTime] = useState(Date.now());
+  const [fibonacciPreset, setFibonacciPreset] = useState<keyof typeof FIBONACCI_PRESETS>('default');
+  
+  // 🌟 PRESET ELEMENTAL ACTUAL
+  const [currentElementalPreset, setCurrentElementalPreset] = useState<keyof typeof ELEMENTAL_PRESETS>('balanced');
 
-  // 🌌 Configuración orbital de elementos con velocidades y tamaños únicos
-  const elementConfig = useMemo(
-    () => ({
+  // 🌌 CONFIGURACIÓN ELEMENTAL UNIFICADA
+  const unifiedElementConfig = useMemo(() => {
+    const preset = ELEMENTAL_PRESETS[currentElementalPreset];
+    
+    return {
       fuego: {
-        name: 'Fuego',
+        ...ElementalUtils.applyPreset('fuego', currentElementalPreset),
         value: elementos.fuego,
         icon: <LocalFireDepartmentIcon />,
-        color: '#FF6B35',
-        gradient: 'linear-gradient(135deg, #FF6B35 0%, #FF8A65 100%)',
         baseAngle: 0,
-        orbitSpeed: 1.1,
-        orbitRadius: 1.0,
-        size: 1.0,
       },
       agua: {
-        name: 'Agua',
+        ...ElementalUtils.applyPreset('agua', currentElementalPreset),
         value: elementos.agua,
         icon: <WaterDropIcon />,
-        color: '#00BCD4',
-        gradient: 'linear-gradient(135deg, #00BCD4 0%, #4FC3F7 100%)',
         baseAngle: 90,
-        orbitSpeed: 0.7,
-        orbitRadius: 1.2,
-        size: 1.1,
       },
       tierra: {
-        name: 'Tierra',
+        ...ElementalUtils.applyPreset('tierra', currentElementalPreset),
         value: elementos.tierra,
         icon: <TerrainIcon />,
-        color: '#66BB6A',
-        gradient: 'linear-gradient(135deg, #66BB6A 0%, #81C784 100%)',
         baseAngle: 180,
-        orbitSpeed: 0.9,
-        orbitRadius: 0.9,
-        size: 1.2,
       },
       aire: {
-        name: 'Aire',
+        ...ElementalUtils.applyPreset('aire', currentElementalPreset),
         value: elementos.aire,
         icon: <AirIcon />,
-        color: '#FFD54F',
-        gradient: 'linear-gradient(135deg, #FFD54F 0%, #FFEB3B 100%)',
         baseAngle: 270,
-        orbitSpeed: 1.4,
-        orbitRadius: 0.8,
-        size: 0.9,
       },
-    }),
-    [elementos]
-  );
+    };
+  }, [elementos, currentElementalPreset]);
 
-  // 📊 Cálculos simples
+  // 🔢 EFECTO FIBONACCI PARA ACTUALIZACIÓN DE POSICIONES
+  useEffect(() => {
+    const animationFrame = () => {
+      const currentTime = Date.now();
+      const deltaTime = currentTime - lastFrameTime;
+      
+      // Actualizar tiempo Fibonacci
+      const newFibonacciTime = fibonacciTime + deltaTime * 0.001; // Convertir a segundos
+      setFibonacciTime(newFibonacciTime);
+      
+      // Calcular nuevas posiciones orbitales usando utilidades Fibonacci
+      const elements = Object.keys(unifiedElementConfig);
+      const containerWidth = 400; // Tamaño del contenedor
+      const containerHeight = 400;
+      
+      const newPositions: OrbitalPosition[] = elements.map((elementKey, index) => {
+        const config = unifiedElementConfig[elementKey as keyof typeof unifiedElementConfig];
+        const animationSpeed = getFibonacciAnimationSpeed(index);
+        
+        return calculateFibonacciOrbit(
+          index,
+          elements.length,
+          newFibonacciTime * animationSpeed,
+          containerWidth,
+          containerHeight,
+          FIBONACCI_PRESETS[fibonacciPreset]
+        );
+      });
+      
+      setOrbitalPositions(newPositions);
+      
+      // Calcular métricas de rendimiento Fibonacci
+      const metrics = calculateFibonacciMetrics(newPositions, deltaTime);
+      setFibonacciMetrics(metrics);
+      
+      setLastFrameTime(currentTime);
+    };
+
+    const animationId = requestAnimationFrame(animationFrame);
+    
+    // Configurar loop de animación
+    const intervalId = setInterval(animationFrame, 16); // ~60fps
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+      clearInterval(intervalId);
+    };
+  }, [fibonacciTime, lastFrameTime, unifiedElementConfig, fibonacciPreset]);
+
+  // 📊 ESTADÍSTICAS AVANZADAS CALCULADAS
   const advancedStats = useMemo(() => {
-    const averageElemental =
-      (elementos.fuego + elementos.agua + elementos.tierra + elementos.aire) /
-      4;
-    const ayniScore = Math.round(balanceAyni * 100);
+    // Calcular puntaje Ayni basado en el balance y elementos
+    const elementosTotales = elementos.fuego + elementos.agua + elementos.tierra + elementos.aire;
+    const balanceElemental = elementosTotales > 0 ? 
+      Math.min(100, Math.round(balanceAyni * 10 + (elementosTotales / 4))) : 
+      Math.round(balanceAyni * 10);
+    
+    // Calcular poder total basado en todas las métricas
+    const baseScore = Math.min(100, Math.round(
+      (ondas * 0.001) + 
+      (meritos * 0.1) + 
+      (bienComunContributions * 2) + 
+      (balanceAyni * 5) + 
+      (elementosTotales * 0.25)
+    ));
 
     return {
-      ayniScore,
-      averageElemental: Math.round(averageElemental),
-      experienceNeeded: Math.max(0, 4000 - ondas),
-      totalContributions: bienComunContributions,
-      overallPower: Math.round(ondas / 21 + meritos / 13 + averageElemental),
+      ayniScore: Math.max(0, Math.min(100, balanceElemental)),
+      overallPower: Math.max(0, Math.min(100, baseScore)),
+      elementalBalance: elementosTotales > 0 ? Math.round(elementosTotales / 4) : 0,
+      cosmicAlignment: Math.round((balanceAyni + ayniProgress) / 2),
     };
-  }, [elementos, ondas, meritos, balanceAyni]);
+  }, [ondas, meritos, bienComunContributions, balanceAyni, elementos, ayniProgress]);
+
+  // 🆕 CALCULADORA DE EFECTOS GRAVITACIONALES
+  const calculateGravitationalEffects = useCallback((elementKey: string, elements: typeof unifiedElementConfig) => {
+    const targetElement = elements[elementKey];
+    if (!targetElement) return { x: 0, y: 0, z: 0 };
+
+    let gravitationalForceX = 0;
+    let gravitationalForceY = 0;
+    let gravitationalForceZ = 0;
+
+    Object.entries(elements).forEach(([otherKey, otherElement]) => {
+      if (otherKey === elementKey) return;
+
+      // Calcular distancia entre elementos
+      const angle1 = targetElement.baseAngle + animationPhase * targetElement.orbitSpeed;
+      const angle2 = otherElement.baseAngle + animationPhase * otherElement.orbitSpeed;
+      
+      const radians1 = (angle1 * Math.PI) / 180;
+      const radians2 = (angle2 * Math.PI) / 180;
+      
+      const radius1 = 180 * targetElement.orbitRadius;
+      const radius2 = 180 * otherElement.orbitRadius;
+      
+      const x1 = radius1 * Math.cos(radians1);
+      const y1 = radius1 * Math.sin(radians1) * 0.2;
+      const x2 = radius2 * Math.cos(radians2);
+      const y2 = radius2 * Math.sin(radians2) * 0.2;
+      
+      const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+      
+      // Fuerza gravitacional simplificada (F = G * m1 * m2 / r²)
+      const gravitationalForce = (otherElement.gravitationalInfluence * targetElement.mass) / 
+                                 Math.max(distance / 100, 0.5); // Normalizar y evitar división por cero
+      
+      // Direcciones de la fuerza
+      const forceX = gravitationalForce * (x2 - x1) / distance * 0.5;
+      const forceY = gravitationalForce * (y2 - y1) / distance * 0.5;
+      
+      gravitationalForceX += forceX;
+      gravitationalForceY += forceY;
+    });
+
+    return {
+      x: Math.max(-15, Math.min(15, gravitationalForceX)), // Limitar efecto
+      y: Math.max(-15, Math.min(15, gravitationalForceY)),
+      z: 0
+    };
+  }, [animationPhase]);
+
+  // 🆕 CALCULADORA DE RESONANCIA ELEMENTAL
+  const calculateElementalResonance = useCallback((elementKey: string, elements: typeof unifiedElementConfig) => {
+    const targetElement = elements[elementKey];
+    if (!targetElement) return 1.0;
+
+    let resonanceIntensity = 1.0;
+    
+    // Calcular resonancia con elementos afines
+    Object.entries(elements).forEach(([otherKey, otherElement]) => {
+      if (otherKey === elementKey) return;
+      
+      // Si este elemento está en afinidad con el otro
+      if (targetElement.elementalAffinity?.includes(otherKey)) {
+        // Calcular fase de resonancia basada en frecuencias
+        const resonancePhase = (animationPhase * targetElement.resonanceFrequency) % 360;
+        const otherResonancePhase = (animationPhase * otherElement.resonanceFrequency) % 360;
+        
+        // Diferencia de fase para calcular constructividad/destructividad
+        const phaseDifference = Math.abs(resonancePhase - otherResonancePhase);
+        const normalizedPhase = Math.min(phaseDifference, 360 - phaseDifference);
+        
+        // Resonancia constructiva cuando las fases están sincronizadas
+        const resonanceFactor = 1 + 0.3 * Math.cos((normalizedPhase * Math.PI) / 180);
+        resonanceIntensity *= resonanceFactor * targetElement.harmonicMultiplier;
+      }
+    });
+
+    return Math.max(0.7, Math.min(1.4, resonanceIntensity)); // Limitar entre 70% y 140%
+  }, [animationPhase]);
+
+  // 🆕 OPTIMIZADOR DE DENSIDAD VISUAL
+  const optimizeVisualDensity = useCallback((elements: typeof unifiedElementConfig) => {
+    // Calcular densidad total actual
+    const totalDensity = Object.values(elements).reduce((sum, element) => 
+      sum + element.visualDensity * element.size, 0
+    );
+    
+    // Si la densidad es muy alta, reducir efectos secundarios
+    const densityFactor = Math.min(1.0, 4.0 / totalDensity);
+    
+    return {
+      trailOpacity: densityFactor,
+      glowIntensity: densityFactor,
+      particleCount: Math.floor(densityFactor * 100),
+      animationSpeed: 0.8 + (densityFactor * 0.4) // Más lento si hay mucha densidad
+    };
+  }, []);
+
+  // 🌌 NUEVO: DISTRIBUCIÓN ESPACIAL DINÁMICA MEJORADA
+  const calculateDynamicDistribution = useCallback((elements: typeof unifiedElementConfig) => {
+    // 🎯 Calcular zonas de distribución óptima
+    const distributionZones = {
+      inner: { radius: 0.6, elements: ['tierra'], preference: 1.4 },
+      middle: { radius: 1.0, elements: ['fuego', 'agua'], preference: 1.2 },
+      outer: { radius: 1.4, elements: ['aire'], preference: 1.0 },
+    };
+
+    // 🌀 Sistema de anti-clustering (evitar que elementos se amontonen)
+    const antiClusteringForce = 0.3;
+    const distributions: Record<string, { spacing: number, zoneBalance: number, harmony: number }> = {};
+
+    Object.entries(elements).forEach(([key, element]) => {
+      const currentAngle = element.baseAngle + animationPhase * element.orbitSpeed;
+      
+      // 🎯 Calcular proximidad con otros elementos
+      let totalProximity = 0;
+      let proximityCount = 0;
+      
+      Object.entries(elements).forEach(([otherKey, otherElement]) => {
+        if (otherKey === key) return;
+        
+        const otherAngle = otherElement.baseAngle + animationPhase * otherElement.orbitSpeed;
+        const angleDifference = Math.abs(currentAngle - otherAngle);
+        const normalizedAngleDiff = Math.min(angleDifference, 360 - angleDifference);
+        
+        // Proximidad inversamente proporcional a la distancia angular
+        const proximity = 1 / Math.max(normalizedAngleDiff / 90, 0.1); // Normalizar a cuadrantes
+        totalProximity += proximity;
+        proximityCount++;
+      });
+
+      const averageProximity = proximityCount > 0 ? totalProximity / proximityCount : 1;
+      
+      // 🌀 Calcular espaciamiento dinámico (más espacio si hay mucha proximidad)
+      const dynamicSpacing = 1 + (antiClusteringForce * Math.max(0, averageProximity - 1));
+      
+      // 🎯 Calcular balance de zona (qué tan bien distribuido está en su zona preferida)
+      const preferredZone = Object.values(distributionZones).find(zone => 
+        zone.elements.includes(key)
+      ) || distributionZones.middle;
+      
+      const currentRadiusNormalized = element.orbitRadius;
+      const zoneBalanceScore = 1 - Math.abs(currentRadiusNormalized - preferredZone.radius) * 0.5;
+      
+      // 🌈 Calcular armonía elemental (balance entre elementos opuestos)
+      const oppositeElements = {
+        fuego: 'agua',
+        agua: 'fuego', 
+        tierra: 'aire',
+        aire: 'tierra'
+      };
+      
+      const oppositeKey = oppositeElements[key as keyof typeof oppositeElements];
+      const oppositeElement = oppositeKey ? elements[oppositeKey] : null;
+      
+      let harmonyScore = 1;
+      if (oppositeElement) {
+        const oppositeAngle = oppositeElement.baseAngle + animationPhase * oppositeElement.orbitSpeed;
+        const oppositeAngleDiff = Math.abs(currentAngle - oppositeAngle);
+        const normalizedOppositeDiff = Math.min(oppositeAngleDiff, 360 - oppositeAngleDiff);
+        
+        // Ideal: elementos opuestos a ~180 grados de distancia
+        const idealOppositeDistance = 180;
+        const oppositeDistanceError = Math.abs(normalizedOppositeDiff - idealOppositeDistance) / 180;
+        harmonyScore = Math.max(0.5, 1 - oppositeDistanceError);
+      }
+
+      distributions[key] = {
+        spacing: dynamicSpacing,
+        zoneBalance: Math.max(0.5, Math.min(1.5, zoneBalanceScore)),
+        harmony: harmonyScore
+      };
+
+      console.log(`🌌 Distribución dinámica ${key}:`, {
+        proximidad: Math.round(averageProximity * 100) / 100,
+        espaciamiento: Math.round(dynamicSpacing * 100) / 100,
+        balanceZona: Math.round(zoneBalanceScore * 100) / 100,
+        armonía: Math.round(harmonyScore * 100) / 100,
+        ánguloActual: Math.round(currentAngle),
+      });
+    });
+
+    return distributions;
+  }, [animationPhase]);
+
+  // 🌟 NUEVO: CALCULADORA DE EQUILIBRIO UNIVERSAL
+  const calculateUniversalBalance = useCallback((elements: typeof unifiedElementConfig) => {
+    const distributions = calculateDynamicDistribution(elements);
+    
+    // 📊 Métricas de balance universal
+    const totalSpacing = Object.values(distributions).reduce((sum, dist) => sum + dist.spacing, 0);
+    const averageSpacing = totalSpacing / Object.keys(distributions).length;
+    
+    const totalZoneBalance = Object.values(distributions).reduce((sum, dist) => sum + dist.zoneBalance, 0);
+    const averageZoneBalance = totalZoneBalance / Object.keys(distributions).length;
+    
+    const totalHarmony = Object.values(distributions).reduce((sum, dist) => sum + dist.harmony, 0);
+    const averageHarmony = totalHarmony / Object.keys(distributions).length;
+    
+    // 🎯 Calcular score de distribución general (0-100)
+    const distributionScore = (
+      (Math.min(averageSpacing, 1.5) / 1.5) * 30 + // 30% para espaciamiento
+      (averageZoneBalance) * 40 + // 40% para balance de zona
+      (averageHarmony) * 30 // 30% para armonía elemental
+    ) * 100;
+
+    // 🌌 Nivel de distribución universal
+    const getDistributionLevel = (score: number): string => {
+      if (score >= 90) return 'Distribución Cósmica Perfecta';
+      if (score >= 80) return 'Distribución Estelar Excelente';
+      if (score >= 70) return 'Distribución Planetaria Buena';
+      if (score >= 60) return 'Distribución Orbital Aceptable';
+      if (score >= 50) return 'Distribución Elemental Básica';
+      return 'Distribución Caótica';
+    };
+
+    const universalBalance = {
+      score: Math.round(distributionScore),
+      level: getDistributionLevel(distributionScore),
+      spacing: Math.round(averageSpacing * 100) / 100,
+      zoneBalance: Math.round(averageZoneBalance * 100) / 100,
+      harmony: Math.round(averageHarmony * 100) / 100,
+      distributions,
+      // 🌈 Recomendaciones para mejora
+      recommendations: {
+        needsMoreSpacing: averageSpacing < 1.0,
+        needsBetterZoning: averageZoneBalance < 0.8,
+        needsHarmonyAdjustment: averageHarmony < 0.8,
+        suggestedAction: distributionScore < 70 ? 'Ajustar velocidades orbitales' : 
+                        distributionScore < 85 ? 'Optimizar distribución de zonas' : 
+                        'Mantener configuración actual'
+      }
+    };
+
+    console.log('🌌 Balance Universal:', universalBalance);
+    
+    return universalBalance;
+  }, [calculateDynamicDistribution]);
+
+  // 🌟 NUEVO: AUTO-OPTIMIZADOR DE DISTRIBUCIÓN
+  const [distributionOptimization, setDistributionOptimization] = useState<{
+    autoOptimize: boolean;
+    optimizationStrength: number;
+    lastOptimization: number;
+  }>({
+    autoOptimize: false,
+    optimizationStrength: 0.5,
+    lastOptimization: 0
+  });
+
+  // 🔄 Auto-optimización de distribución (cada 10 segundos si está activada)
+  useEffect(() => {
+    if (!distributionOptimization.autoOptimize) return;
+
+    const optimizationInterval = setInterval(() => {
+      const universalBalance = calculateUniversalBalance(unifiedElementConfig);
+      
+      if (universalBalance.score < 75) {
+        console.log('🔄 Aplicando auto-optimización de distribución...', {
+          scoreActual: universalBalance.score,
+          recomendación: universalBalance.recommendations.suggestedAction
+        });
+        
+        setDistributionOptimization(prev => ({
+          ...prev,
+          lastOptimization: Date.now(),
+          optimizationStrength: Math.min(1.0, prev.optimizationStrength + 0.1)
+        }));
+      }
+    }, 10000); // Cada 10 segundos
+
+    return () => clearInterval(optimizationInterval);
+  }, [distributionOptimization.autoOptimize, calculateUniversalBalance, unifiedElementConfig]);
 
   // 🌌 Animación orbital como el universo real
   useEffect(() => {
@@ -140,6 +507,36 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
 
     return () => clearInterval(interval);
   }, []);
+
+  // 🌌 NUEVO: Gestión del historial orbital para trails
+  useEffect(() => {
+    if (!showTrails) return;
+
+    const orbitRadius = 180;
+    const newPositions: Array<{element: string, x: number, y: number, timestamp: number}> = [];
+
+    Object.entries(unifiedElementConfig).forEach(([key, config]) => {
+      const currentAngle = config.baseAngle + animationPhase * config.orbitSpeed;
+      const radians = (currentAngle * Math.PI) / 180;
+      const elementOrbitRadius = orbitRadius * config.orbitRadius;
+      const x = elementOrbitRadius * Math.cos(radians);
+      const y = elementOrbitRadius * Math.sin(radians) * 0.2;
+
+      newPositions.push({
+        element: key,
+        x,
+        y,
+        timestamp: Date.now(),
+      });
+    });
+
+    setOrbitalHistory(prev => {
+      const updated = [...prev, ...newPositions];
+      // Mantener solo los últimos 20 puntos por elemento para performance
+      const now = Date.now();
+      return updated.filter(point => now - point.timestamp < 5000);
+    });
+  }, [animationPhase, unifiedElementConfig, showTrails]);
 
   // 🧹 CLEANUP OBLIGATORIO
   useEffect(() => {
@@ -168,23 +565,71 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
     return () => window.removeEventListener('error', handleBuilderError);
   }, []);
 
-  // 🎯 Handlers
+  // 🎯 Handlers mejorados
   const handleExpandToggle = useCallback(() => {
     setExpanded((prev) => !prev);
   }, []);
 
   const handleElementHover = useCallback((elementKey: string | null) => {
-    setHoveredElement(elementKey);
+    if (interactionMode === 'hover') {
+      setHoveredElement(elementKey);
+    }
+  }, [interactionMode]);
+
+  const handleElementClick = useCallback((elementKey: string) => {
+    if (interactionMode === 'click') {
+      setSelectedElement(prev => prev === elementKey ? null : elementKey);
+      setHoveredElement(elementKey);
+    }
+  }, [interactionMode]);
+
+  // 🆕 NUEVOS HANDLERS PARA CONTROLES
+  const toggleUniverseBackground = useCallback(() => {
+    setShowUniverseBackground(prev => !prev);
   }, []);
 
-  // 🌌 Renderizar el sistema solar dinámico con efecto 3D MÁXIMO
+  const cycleCosmicIntensity = useCallback(() => {
+    setCosmicIntensity(prev => {
+      const intensities: Array<'low' | 'medium' | 'high'> = ['low', 'medium', 'high'];
+      const currentIndex = intensities.indexOf(prev);
+      return intensities[(currentIndex + 1) % intensities.length];
+    });
+  }, []);
+
+  const toggleTrails = useCallback(() => {
+    setShowTrails(prev => !prev);
+  }, []);
+
+  const cycleInteractionMode = useCallback(() => {
+    setInteractionMode(prev => {
+      const modes: Array<'hover' | 'click' | 'auto'> = ['hover', 'click', 'auto'];
+      const currentIndex = modes.indexOf(prev);
+      return modes[(currentIndex + 1) % modes.length];
+    });
+  }, []);
+
+  // 🌌 Renderizar el sistema solar dinámico con DISTRIBUCIÓN OPTIMIZADA AVANZADA
   const renderCentralOrb = () => {
     const orbitRadius = 180; // Radio orbital MÁS GRANDE para efecto 3D perfecto
 
-    console.log('🌌 Sistema orbital dinámico activo:', {
+    // 🆕 CALCULAR BALANCE UNIVERSAL EN TIEMPO REAL
+    const universalBalance = calculateUniversalBalance(unifiedElementConfig);
+
+    console.log('🌌 Sistema orbital dinámico con distribución optimizada:', {
       animationPhase,
       orbitRadius,
-      elementConfigCount: Object.keys(elementConfig).length,
+      elementConfigCount: Object.keys(unifiedElementConfig).length,
+      universalBalance: universalBalance.score,
+      distributionLevel: universalBalance.level,
+      autoOptimization: distributionOptimization.autoOptimize,
+      // 🆕 DEBUG: Información de planetas orbitales
+      elementalSpheres: Object.keys(unifiedElementConfig).map(key => ({
+        element: key,
+        config: unifiedElementConfig[key],
+        hasIcon: !!unifiedElementConfig[key].icon,
+        color: unifiedElementConfig[key].visuals?.primaryColor || unifiedElementConfig[key].color,
+      })),
+      overflowFixed: 'VISIBLE - Los planetas orbitales deberían ser visibles ahora',
     });
 
     return (
@@ -204,74 +649,8 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
           transformStyle: 'preserve-3d',
         }}
       >
-        {/* 🌍 PLANETA CENTRAL - Esfera 3D realista que gira sobre su eje */}
-        <Box
-          sx={{
-            position: 'absolute',
-            width: '160px',
-            height: '160px',
-            borderRadius: '50%',
-            // 🌍 GRADIENTE ESFÉRICO 3D PARA EL PLANETA CENTRAL
-            background: `
-              radial-gradient(ellipse at 25% 25%,
-                rgba(255, 255, 255, 0.3) 0%,
-                rgba(255, 255, 255, 0.1) 15%,
-                transparent 30%
-              ),
-              conic-gradient(from 0deg,
-                #FF6B35 0deg,
-                #00BCD4 90deg,
-                #66BB6A 180deg,
-                #FFD54F 270deg,
-                #FF6B35 360deg)
-            `,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            // 🌟 SOMBRAS MÚLTIPLES PARA DIMENSIONALIDAD
-            boxShadow: `
-              0 0 50px rgba(255, 107, 53, 0.6),
-              0 0 100px rgba(0, 188, 212, 0.4),
-              inset -15px -15px 40px rgba(0, 0, 0, 0.3),
-              inset 10px 10px 30px rgba(255, 255, 255, 0.2),
-              inset 0 0 60px rgba(255, 255, 255, 0.05)
-            `,
-            border: '3px solid rgba(255, 255, 255, 0.2)',
-            zIndex: 5,
-            // 🌍 ROTACIÓN DEL PLANETA SOBRE SU EJE (hacia la derecha)
-            animation:
-              'planet-spin-right 15s linear infinite, breathe 4s ease-in-out infinite',
-            transform: `rotateZ(${animationPhase * 0.3}deg)`,
-            // 🎨 HIGHLIGHT PRINCIPAL DEL PLANETA
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: '10%',
-              left: '15%',
-              width: '40%',
-              height: '40%',
-              background:
-                'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)',
-              borderRadius: '50%',
-              zIndex: 1,
-              pointerEvents: 'none',
-            },
-            // 🌟 HIGHLIGHT SECUNDARIO
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              top: '60%',
-              right: '20%',
-              width: '20%',
-              height: '20%',
-              background:
-                'radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%)',
-              borderRadius: '50%',
-              zIndex: 1,
-              pointerEvents: 'none',
-            },
-          }}
-        >
+        {/* 🌍 PLANETA CENTRAL AYNI 3D */}
+        <AyniPlanet size={160} color="#FFD700" haloColor="rgba(255,215,0,0.45)" pulse>
           {/* Contenido central */}
           <Box
             sx={{
@@ -296,8 +675,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
             <PublicIcon
               sx={{
                 fontSize: '2.8rem',
-                background:
-                  'linear-gradient(135deg, #00BCD4, #FFD700, #FF6B35)',
+                background: 'linear-gradient(135deg, #00BCD4, #FFD700, #FF6B35)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -332,8 +710,57 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
             >
               Balance Ayni
             </Typography>
+
+            {/* 🆕 INDICADOR DE DISTRIBUCIÓN UNIVERSAL */}
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: '8px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                zIndex: 10,
+              }}
+            >
+              <Chip
+                label={`${universalBalance.score}%`}
+                size="small"
+                sx={{
+                  height: '18px',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  background: universalBalance.score >= 85 
+                    ? 'linear-gradient(135deg, #4CAF50, #66BB6A)' 
+                    : universalBalance.score >= 70 
+                    ? 'linear-gradient(135deg, #FF9800, #FFB74D)'
+                    : 'linear-gradient(135deg, #F44336, #EF5350)',
+                  color: 'white',
+                  '& .MuiChip-label': {
+                    px: 0.8,
+                  },
+                }}
+              />
+              <Tooltip title={`${universalBalance.level}\nEspaciamiento: ${universalBalance.spacing}\nBalance de Zona: ${universalBalance.zoneBalance}\nArmonía: ${universalBalance.harmony}`}>
+                <Box
+                  sx={{
+                    width: '12px',
+                    height: '12px',
+                    borderRadius: '50%',
+                    background: universalBalance.score >= 85 
+                      ? '#4CAF50' 
+                      : universalBalance.score >= 70 
+                      ? '#FF9800'
+                      : '#F44336',
+                    animation: universalBalance.score < 70 ? 'pulse 1.5s infinite' : 'none',
+                    cursor: 'help',
+                  }}
+                />
+              </Tooltip>
+            </Box>
           </Box>
-        </Box>
+        </AyniPlanet>
 
         {/* 🌌 ELEMENTOS ORBITALES 3D */}
         <Box
@@ -346,444 +773,145 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
             zIndex: 10,
           }}
         >
-          {Object.entries(elementConfig).map(([key, config]) => {
-            // 🌍 CÁLCULO ORBITAL 3D ÚNICO
-            const currentAngle =
-              config.baseAngle + animationPhase * config.orbitSpeed;
+          {/* Conexiones de afinidad */}
+          {Object.entries(unifiedElementConfig).map(([key, config]) => {
+            if (!config.elementalAffinity) return null;
+            const currentAngle = config.baseAngle + animationPhase * config.orbitSpeed;
             const radians = (currentAngle * Math.PI) / 180;
-
-            // 🌌 ÓRBITA 3D VERTICAL PERFECTA - Sin restricciones Fibonacci
+            const inclinationRadians = (config.orbitInclination * Math.PI) / 180;
             const elementOrbitRadius = orbitRadius * config.orbitRadius;
-            const x = elementOrbitRadius * Math.cos(radians);
-            const y = elementOrbitRadius * Math.sin(radians) * 0.2; // MÁS vertical (menos Y)
-            const z = elementOrbitRadius * Math.sin(radians) * 1.0; // MÁS profundidad 3D
-
-            const baseSize = 65;
-            const elementSize = baseSize * config.size;
-            const hoverSize = elementSize * 1.15;
-
-            console.log(`🪐 ${key} órbita 3D:`, {
-              angle: Math.round(currentAngle),
-              orbitRadius: Math.round(elementOrbitRadius),
-              x: Math.round(x),
-              y: Math.round(y),
-              z: Math.round(z),
-              size: Math.round(elementSize),
+            const eccentricRadius = elementOrbitRadius * (1 + config.orbitEccentricity * Math.cos(radians));
+            const baseX = eccentricRadius * Math.cos(radians);
+            const baseY = eccentricRadius * Math.sin(radians) * 0.2;
+            const baseZ = eccentricRadius * Math.sin(radians) * Math.cos(inclinationRadians);
+            const gravitationalEffects = calculateGravitationalEffects(key, unifiedElementConfig);
+            const x = baseX + gravitationalEffects.x;
+            const y = baseY + gravitationalEffects.y * Math.sin(inclinationRadians);
+            const z = baseZ + gravitationalEffects.z + (elementOrbitRadius * Math.sin(radians) * Math.sin(inclinationRadians) * 0.5);
+            return config.elementalAffinity.map((affKey) => {
+              const affConfig = unifiedElementConfig[affKey];
+              if (!affConfig) return null;
+              const affAngle = affConfig.baseAngle + animationPhase * affConfig.orbitSpeed;
+              const affRadians = (affAngle * Math.PI) / 180;
+              const affInclinationRadians = (affConfig.orbitInclination * Math.PI) / 180;
+              const affOrbitRadius = orbitRadius * affConfig.orbitRadius;
+              const affEccentricRadius = affOrbitRadius * (1 + affConfig.orbitEccentricity * Math.cos(affRadians));
+              const affBaseX = affEccentricRadius * Math.cos(affRadians);
+              const affBaseY = affEccentricRadius * Math.sin(affRadians) * 0.2;
+              const affBaseZ = affEccentricRadius * Math.sin(affRadians) * Math.cos(affInclinationRadians);
+              const affGrav = calculateGravitationalEffects(affKey, unifiedElementConfig);
+              const affX = affBaseX + affGrav.x;
+              const affY = affBaseY + affGrav.y * Math.sin(affInclinationRadians);
+              const affZ = affBaseZ + affGrav.z + (affOrbitRadius * Math.sin(affRadians) * Math.sin(affInclinationRadians) * 0.5);
+              return (
+                <ElementalConnection
+                  key={`conn-${key}-${affKey}`}
+                  x1={x}
+                  y1={y}
+                  x2={affX}
+                  y2={affY}
+                  color={config.color}
+                  affinity={1}
+                  show={true}
+                />
+              );
             });
+          })}
 
+          {/* Esferas elementales */}
+          {Object.entries(unifiedElementConfig).map(([key, config]) => {
+            const densityOptimization = optimizeVisualDensity(unifiedElementConfig);
+            const currentAngle = config.baseAngle + animationPhase * config.orbitSpeed * densityOptimization.animationSpeed;
+            const radians = (currentAngle * Math.PI) / 180;
+            const inclinationRadians = (config.orbitInclination * Math.PI) / 180;
+            const elementOrbitRadius = orbitRadius * config.orbitRadius;
+            const eccentricRadius = elementOrbitRadius * (1 + config.orbitEccentricity * Math.cos(radians));
+            const baseX = eccentricRadius * Math.cos(radians);
+            const baseY = eccentricRadius * Math.sin(radians) * 0.2;
+            const baseZ = eccentricRadius * Math.sin(radians) * Math.cos(inclinationRadians);
+            const gravitationalEffects = calculateGravitationalEffects(key, unifiedElementConfig);
+            const x = baseX + gravitationalEffects.x;
+            const y = baseY + gravitationalEffects.y * Math.sin(inclinationRadians);
+            const z = baseZ + gravitationalEffects.z + (elementOrbitRadius * Math.sin(radians) * Math.sin(inclinationRadians) * 0.5);
+            const resonanceIntensity = calculateElementalResonance(key, unifiedElementConfig);
+            const baseSize = 65;
+            const elementSize = baseSize * config.size * resonanceIntensity;
+            const hoverSize = elementSize * 1.15;
+            const isAffinityActive = selectedElement && config.elementalAffinity?.includes(selectedElement);
+            const isSelected = selectedElement === key || hoveredElement === key;
+            const baseGlowIntensity = isSelected ? 1.0 : isAffinityActive ? 0.6 : 0.8;
+            const glowIntensity = baseGlowIntensity * densityOptimization.glowIntensity;
             return (
-              <Tooltip title={`${config.name}: ${config.value}%`} key={key}>
-                <Box
-                  className="orbital-element"
-                  data-element={key}
-                  onMouseEnter={() => handleElementHover(key)}
-                  onMouseLeave={() => handleElementHover(null)}
-                  sx={{
-                    position: 'absolute',
-                    // 🌌 TRANSFORMACIÓN 3D ORBITAL + ROTACIÓN PROPIA DE LA ESFERA
-                    transform: `translate(-50%, -50%) translate3d(${x}px, ${y}px, ${z}px) rotateX(35deg) rotateY(5deg) rotateZ(${animationPhase * config.orbitSpeed * 2}deg)`,
-                    transformStyle: 'preserve-3d',
-                    width:
-                      hoveredElement === key
-                        ? `${hoverSize}px`
-                        : `${elementSize}px`,
-                    height:
-                      hoveredElement === key
-                        ? `${hoverSize}px`
-                        : `${elementSize}px`,
-                    // 🌍 GRADIENTE RADIAL 3D MEJORADO PARA ESFERA MÁS REALISTA
-                    background: `
-                      radial-gradient(ellipse at 30% 20%,
-                        rgba(255, 255, 255, 0.9) 0%,
-                        rgba(255, 255, 255, 0.6) 10%,
-                        rgba(255, 255, 255, 0.2) 25%,
-                        ${config.color} 40%,
-                        ${config.color}EE 60%,
-                        ${config.color}AA 80%,
-                        ${config.color}66 95%,
-                        ${config.color}33 100%
-                      ),
-                      radial-gradient(ellipse at 80% 80%,
-                        transparent 0%,
-                        transparent 40%,
-                        rgba(0, 0, 0, 0.2) 50%,
-                        rgba(0, 0, 0, 0.4) 70%,
-                        rgba(0, 0, 0, 0.6) 100%
-                      )
-                    `,
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 15,
-                    // 🌟 BORDE SUTIL PARA DEFINICIÓN
-                    border: `2px solid rgba(255, 255, 255, 0.3)`,
-                    // 🌌 SOMBRAS MÚLTIPLES PARA EFECTO 3D REALISTA
-                    boxShadow: `
-                      0 0 30px ${config.color}80,
-                      0 0 60px ${config.color}40,
-                      inset -10px -10px 30px rgba(0, 0, 0, 0.4),
-                      inset 8px 8px 20px rgba(255, 255, 255, 0.3),
-                      inset 0 0 40px rgba(255, 255, 255, 0.1)
-                    `,
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    opacity: 0.95,
-                    // 🎨 PSEUDO-ELEMENTO PARA HIGHLIGHT ADICIONAL
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: '15%',
-                      left: '20%',
-                      width: '30%',
-                      height: '30%',
-                      background:
-                        'radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%)',
-                      borderRadius: '50%',
-                      zIndex: 1,
-                      pointerEvents: 'none',
-                    },
-                    // 🌟 SEGUNDO HIGHLIGHT MENOR
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      top: '60%',
-                      right: '25%',
-                      width: '15%',
-                      height: '15%',
-                      background:
-                        'radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%)',
-                      borderRadius: '50%',
-                      zIndex: 1,
-                      pointerEvents: 'none',
-                    },
-                    '&:hover': {
-                      transform: `translate(-50%, -50%) translate3d(${x * 1.15}px, ${y * 1.15}px, ${z * 1.15}px) rotateX(35deg) rotateY(5deg) rotateZ(${animationPhase * config.orbitSpeed * 2}deg) scale(1.3)`,
-                      zIndex: 20,
-                      opacity: 1,
-                      // 🌟 BRILLO AUMENTADO EN HOVER
-                      boxShadow: `
-                        0 0 60px ${config.color},
-                        0 0 120px ${config.color}70,
-                        0 0 150px rgba(255, 255, 255, 0.4),
-                        inset -15px -15px 40px rgba(0, 0, 0, 0.5),
-                        inset 12px 12px 25px rgba(255, 255, 255, 0.4),
-                        inset 0 0 60px rgba(255, 255, 255, 0.2)
-                      `,
-                      // 🎨 HIGHLIGHT MÁS INTENSO EN HOVER
-                      '&::before': {
-                        background:
-                          'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%)',
-                        width: '35%',
-                        height: '35%',
-                      },
-                    },
-                  }}
-                >
-                  {/* Superficie rotativa del planeta */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: '50%',
-                      background: `
-                        repeating-linear-gradient(
-                          ${animationPhase * config.orbitSpeed * 3}deg,
-                          transparent,
-                          transparent 8px,
-                          ${alpha(config.color, 0.1)} 8px,
-                          ${alpha(config.color, 0.1)} 12px
-                        )
-                      `,
-                      zIndex: 1,
-                      pointerEvents: 'none',
-                    }}
-                  />
-
-                  {/* Ícono estático */}
-                  <Box
-                    sx={{
-                      // CONTRAROTACIÓN COMPLETA para mantener el ícono estático
-                      transform: `rotateZ(${-animationPhase * config.orbitSpeed * 2}deg) rotateX(-35deg) rotateY(-5deg)`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      zIndex: 3,
-                      position: 'relative',
-                    }}
-                  >
-                    {React.cloneElement(config.icon, {
-                      sx: {
-                        color: 'white',
-                        fontSize: '2rem',
-                        filter: 'drop-shadow(0 3px 6px rgba(0, 0, 0, 0.8))',
-                        transform: 'none', // Sin rotación adicional
-                      },
-                    })}
-                  </Box>
-                </Box>
-              </Tooltip>
+              <ElementalSphere
+                key={key}
+                type={key as any}
+                size={isSelected ? hoverSize : elementSize}
+                color={config.color}
+                texture={key === 'agua' ? 'waves' : key === 'tierra' ? 'cracks' : key === 'fuego' ? 'flames' : 'mist'}
+                trailColor={config.trailColor}
+                isSelected={isSelected}
+                onHover={() => handleElementHover(key)}
+                onClick={() => handleElementClick(key)}
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  transform: `translate(-50%, -50%) translate3d(${x}px, ${y}px, ${z}px) rotateX(35deg) rotateY(5deg) rotateZ(${animationPhase * config.orbitSpeed * 2}deg)`,
+                  zIndex: 15,
+                  transition: 'all 0.3s',
+                  cursor: 'pointer',
+                  opacity: 0.95,
+                }}
+              />
             );
           })}
         </Box>
-
-        {/* 🌌 ÓRBITAS MÚLTIPLES VISIBLES */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: `${orbitRadius * 2}px`,
-            height: `${orbitRadius * 2}px`,
-            transform: 'translate(-50%, -50%)',
-            borderRadius: '50%',
-            border: '1px solid rgba(255, 107, 53, 0.15)',
-            zIndex: 1,
-            animation: 'rotate 50s linear infinite',
-          }}
-        />
-
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: `${orbitRadius * 1.6}px`,
-            height: `${orbitRadius * 1.6}px`,
-            transform: 'translate(-50%, -50%)',
-            borderRadius: '50%',
-            border: '1px dashed rgba(0, 188, 212, 0.1)',
-            zIndex: 1,
-            animation: 'rotate 70s linear infinite reverse',
-          }}
-        />
-
-        {/* 🌟 ESTRELLAS LOCALES */}
-        {[...Array(6)].map((_, i) => (
-          <Box
-            key={`local-star-${i}`}
-            sx={{
-              position: 'absolute',
-              width: Math.random() * 2 + 1 + 'px',
-              height: Math.random() * 2 + 1 + 'px',
-              backgroundColor: 'rgba(255, 255, 255, 0.6)',
-              borderRadius: '50%',
-              top: Math.random() * 100 + '%',
-              left: Math.random() * 100 + '%',
-              animation: `twinkle ${Math.random() * 3 + 2}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`,
-              zIndex: 0,
-            }}
-          />
-        ))}
       </Box>
     );
   };
 
-  // 📊 Renderizar métricas
-  const renderMetricsGrid = () => {
-    const metrics = [
-      {
-        label: 'Öndas',
-        value: ondas.toLocaleString(),
-        icon: <BoltIcon />,
-        color: '#00BCD4',
-      },
-      {
-        label: 'Mëritos',
-        value: meritos.toLocaleString(),
-        icon: <DiamondIcon />,
-        color: '#FFD54F',
-      },
-      {
-        label: 'Bien Común',
-        value: bienComunContributions,
-        icon: <FavoriteIcon />,
-        color: '#E91E63',
-      },
-      {
-        label: 'Poder Total',
-        value: advancedStats.overallPower,
-        icon: <AutoAwesomeIcon />,
-        color: '#9C27B0',
-      },
-    ];
-
-    return (
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        {metrics.map((metric, index) => (
-          <Grid item xs={6} sm={3} key={metric.label}>
-            <Card
-              sx={{
-                p: 2,
-                textAlign: 'center',
-                background: `linear-gradient(135deg, ${alpha(metric.color, 0.1)} 0%, ${alpha(metric.color, 0.05)} 100%)`,
-                border: `1px solid ${alpha(metric.color, 0.2)}`,
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: `0 4px 20px ${alpha(metric.color, 0.3)}`,
-                },
-              }}
-            >
-              <Avatar
-                sx={{
-                  bgcolor: alpha(metric.color, 0.2),
-                  mx: 'auto',
-                  mb: 1,
-                }}
-              >
-                {React.cloneElement(metric.icon, {
-                  sx: { color: metric.color },
-                })}
-              </Avatar>
-              <Typography variant="h6" fontWeight="bold" color="white">
-                {metric.value}
-              </Typography>
-              <Typography variant="caption" color="rgba(255, 255, 255, 0.7)">
-                {metric.label}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    );
-  };
-
   return (
-    <Box className={`orbital-widget ${className}`}>
-      <Card
+    <Box
+      sx={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '100%',
+        height: '100%',
+        maxHeight: '100%',
+        overflow: 'visible',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        borderRadius: '16px',
+        boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(10px)',
+        transition: 'all 0.3s',
+        transform: expanded ? 'scale(1)' : 'scale(0.9)',
+        transformOrigin: 'center',
+        zIndex: 10,
+      }}
+    >
+      {/* 🌌 FONDO CIRCULAR ANTIHORARIO MÁS GRANDE */}
+      <Box
         sx={{
-          borderRadius: 3,
-          p: 3,
-          background: 'rgba(15, 23, 42, 0.85)', // Fondo sólido sin gradientes rotativos
-          backdropFilter: 'blur(15px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          overflow: 'visible !important', // ¡LA CORRECCIÓN CLAVE!
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-          '&:hover': {
-            transform: 'translateY(-2px)',
-            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)',
-          },
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '300%', // Mucho más grande
+          height: '300%', // Mucho más grande
+          background: 'conic-gradient(from 0deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.12), rgba(102, 187, 106, 0.10), rgba(0, 188, 212, 0.08), rgba(156, 39, 176, 0.06), rgba(255, 215, 0, 0.15))',
+          borderRadius: '50%',
+          transform: 'translate(-50%, -50%)',
+          animation: 'ayni-cosmic-reverse-rotation 45s linear infinite reverse', // Antihorario
+          opacity: 0.6,
+          zIndex: 1,
         }}
-      >
-        <CardContent sx={{ p: 0 }}>
-          {/* Header */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 3,
-            }}
-          >
-            <Typography
-              variant="h5"
-              sx={{
-                fontWeight: 'bold',
-                background: 'linear-gradient(45deg, #FF6B35 30%, #00BCD4 90%)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-              }}
-            >
-              <BoltIcon sx={{ color: '#00BCD4' }} />
-              Tu Balance Ayni
-            </Typography>
+      />
 
-            <IconButton
-              onClick={handleExpandToggle}
-              sx={{
-                color: 'rgba(255, 255, 255, 0.7)',
-                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s ease',
-              }}
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </Box>
-
-          {/* Sistema orbital central */}
-          {renderCentralOrb()}
-
-          {/* Grid de métricas */}
-          {renderMetricsGrid()}
-
-          {/* Progreso */}
-          <Box sx={{ mt: 3 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                mb: 1,
-              }}
-            >
-              <Typography variant="body2" color="rgba(255, 255, 255, 0.7)">
-                Progreso hacia {nextLevel}
-              </Typography>
-              <Typography variant="body2" color="white" fontWeight="bold">
-                {ayniProgress}%
-              </Typography>
-            </Box>
-            <LinearProgress
-              variant="determinate"
-              value={ayniProgress}
-              sx={{
-                height: 8,
-                borderRadius: 4,
-                backgroundColor: alpha('#00BCD4', 0.2),
-                '& .MuiLinearProgress-bar': {
-                  borderRadius: 4,
-                  background:
-                    'linear-gradient(45deg, #FF6B35 30%, #00BCD4 90%)',
-                },
-              }}
-            />
-          </Box>
-
-          {/* Información expandida */}
-          {expanded && (
-            <Box
-              sx={{
-                mt: 3,
-                pt: 3,
-                borderTop: '1px solid rgba(255, 255, 255, 0.13)',
-              }}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="caption"
-                    color="rgba(255, 255, 255, 0.6)"
-                  >
-                    Promedio Elemental
-                  </Typography>
-                  <Typography variant="h6" color="white" fontWeight="bold">
-                    {advancedStats.averageElemental}%
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="caption"
-                    color="rgba(255, 255, 255, 0.6)"
-                  >
-                    Próximo Nivel
-                  </Typography>
-                  <Typography variant="h6" color="white" fontWeight="bold">
-                    {advancedStats.experienceNeeded} öndas
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
+      {/* 🪐 SISTEMA ORBITAL AYNI CENTRAL */}
+      {renderCentralOrb()}
     </Box>
   );
 };

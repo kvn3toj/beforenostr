@@ -28,6 +28,20 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
+import SolarSystemSVG from '../universe/SolarSystemSVG';
+
+// 🔢 IMPORTS DE UTILIDADES FIBONACCI
+import {
+  calculateFibonacciOrbit,
+  getFibonacciAnimationSpeed,
+  fibonacciLerp,
+  GOLDEN_RATIO,
+  FIBONACCI_PRESETS,
+  type OrbitalPosition,
+  type FibonacciMetrics,
+  calculateFibonacciMetrics
+} from '../../utils/fibonacci-distribution';
+
 interface Challenge {
   id: string;
   title: string;
@@ -180,6 +194,18 @@ const ActiveChallengesWidgetRevolutionary: React.FC<
     Array<{ id: string; x: number; y: number; difficulty: string }>
   >([]);
 
+  // 🔢 ESTADOS FIBONACCI MEJORADOS
+  const [fibonacciTime, setFibonacciTime] = useState(0);
+  const [orbitalPositions, setOrbitalPositions] = useState<OrbitalPosition[]>([]);
+  const [fibonacciMetrics, setFibonacciMetrics] = useState<FibonacciMetrics>({
+    distributionQuality: 100,
+    visualHarmony: 100,
+    animationSmoothness: 100,
+    overallScore: 100
+  });
+  const [lastFrameTime, setLastFrameTime] = useState(Date.now());
+  const [fibonacciPreset, setFibonacciPreset] = useState<keyof typeof FIBONACCI_PRESETS>('fast');
+
   // 🎨 Configuración de elementos
   const elementConfig = {
     fire: {
@@ -246,6 +272,54 @@ const ActiveChallengesWidgetRevolutionary: React.FC<
     const interval = setInterval(generateParticles, 3500);
     return () => clearInterval(interval);
   }, []);
+
+  // 🔢 EFECTO FIBONACCI PARA ACTUALIZACIÓN DE POSICIONES
+  useEffect(() => {
+    const animationFrame = () => {
+      const currentTime = Date.now();
+      const deltaTime = currentTime - lastFrameTime;
+      
+      // Actualizar tiempo Fibonacci
+      const newFibonacciTime = fibonacciTime + deltaTime * 0.001; // Convertir a segundos
+      setFibonacciTime(newFibonacciTime);
+      
+      // Calcular nuevas posiciones orbitales usando utilidades Fibonacci para challenges activos
+      const activeChallenges = filteredChallenges.slice(0, 4); // Máximo 4 challenges visibles
+      const containerWidth = 350; // Tamaño del contenedor de challenges
+      const containerHeight = 350;
+      
+      const newPositions: OrbitalPosition[] = activeChallenges.map((challenge, index) => {
+        const animationSpeed = getFibonacciAnimationSpeed(index) * 0.8; // Más lento para challenges
+        
+        return calculateFibonacciOrbit(
+          index,
+          activeChallenges.length,
+          newFibonacciTime * animationSpeed,
+          containerWidth,
+          containerHeight,
+          FIBONACCI_PRESETS[fibonacciPreset]
+        );
+      });
+      
+      setOrbitalPositions(newPositions);
+      
+      // Calcular métricas de rendimiento Fibonacci
+      const metrics = calculateFibonacciMetrics(newPositions, deltaTime);
+      setFibonacciMetrics(metrics);
+      
+      setLastFrameTime(currentTime);
+    };
+
+    const animationId = requestAnimationFrame(animationFrame);
+    
+    // Configurar loop de animación más suave para challenges
+    const intervalId = setInterval(animationFrame, 20); // ~50fps para mejor rendimiento
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+      clearInterval(intervalId);
+    };
+  }, [fibonacciTime, lastFrameTime, filteredChallenges, fibonacciPreset]);
 
   // 🔽 Filtrar challenges
   const filteredChallenges = useMemo(() => {
@@ -326,6 +400,10 @@ const ActiveChallengesWidgetRevolutionary: React.FC<
         minHeight: 500,
       }}
     >
+      {/* 🌌 Sistema Solar SVG animado */}
+      <Box sx={{ maxWidth: 420, mx: 'auto', pb: 3 }}>
+        <SolarSystemSVG />
+      </Box>
       {/* ✨ Partículas de Challenges */}
       <Box className="revolutionary-particles">
         {particles.map((particle) => {

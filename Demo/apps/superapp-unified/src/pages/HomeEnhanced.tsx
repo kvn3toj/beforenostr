@@ -685,10 +685,12 @@ export const HomeEnhanced: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      {/* 🚀 Sistema Solar Ayni 3D - Fondo de página completa */}
-      <Fade in={animate} timeout={1200}>
+      {/* 🌌 FONDO CÓSMICO - Widget Ayni Balance como fondo de pantalla */}
+      {/* TEMPORALMENTE DESHABILITADO PARA EVITAR DUPLICACIÓN */}
+      {/* 
+      <Fade in={animate} timeout={600}>
         <Box
-          className="harmony-widget-fullscreen"
+          className="background-ayni-visualization"
           sx={{
             position: 'fixed',
             top: 0,
@@ -712,6 +714,7 @@ export const HomeEnhanced: React.FC = () => {
           />
         </Box>
       </Fade>
+      */}
 
       <Container
         maxWidth="xl"
@@ -752,7 +755,37 @@ export const HomeEnhanced: React.FC = () => {
           </Fade>
         )}
 
-        {/* �� Hero Section Mejorado */}
+        {/* 🚀 Sistema Solar Ayni 3D - TEMPORALMENTE DESHABILITADO PARA EVITAR DUPLICACIÓN */}
+        {/* 
+        <Fade in={animate} timeout={1200}>
+          <Box
+            className="harmony-widget-fullscreen"
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              zIndex: 0, // Fondo
+              pointerEvents: 'none', // No interfiere con navegación
+            }}
+          >
+            <AyniBalanceVisualization
+              balanceAyni={normalizedGameData.balanceAyni}
+              elementos={normalizedGameData.elementos}
+              userLevel={normalizedGameData.ayniLevel}
+              recentActivity={{
+                streak: normalizedGameData.streak,
+                lastInteraction: lastInteraction,
+                totalContributions: normalizedGameData.bienComunContributions,
+              }}
+              className="fullscreen-background"
+            />
+          </Box>
+        </Fade>
+        */}
+
+        {/*  Hero Section Mejorado */}
         {renderEnhancedHero()}
 
         <Grid container className="harmony-grid">
