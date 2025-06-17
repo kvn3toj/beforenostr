@@ -1,0 +1,331 @@
+/* ===============================================================================
+   🎨 PALETA DE COLORES UNIFICADA Y AMIGABLE - COOMUNITY SUPERAPP
+   Diseñada siguiendo heurísticas UX/UI de Nielsen y principios de accesibilidad
+   =============================================================================== */
+
+:root {
+  /* ===== HEURÍSTICA 1: CONSISTENCIA Y ESTÁNDARES ===== */
+  /* Paleta primaria unificada basada en calma y confianza */
+  --coomunity-primary-50: #eef2ff;
+  --coomunity-primary-100: #e0e7ff;
+  --coomunity-primary-200: #c7d2fe;
+  --coomunity-primary-300: #a5b4fc;
+  --coomunity-primary-400: #818cf8;
+  --coomunity-primary-500: #6366f1; /* Azul principal más suave */
+  --coomunity-primary-600: #4f46e5;
+  --coomunity-primary-700: #4338ca;
+  --coomunity-primary-800: #3730a3;
+  --coomunity-primary-900: #312e81;
+
+  /* Paleta secundaria complementaria - Verdes para balance Ayni */
+  --coomunity-secondary-50: #f0fdf4;
+  --coomunity-secondary-100: #dcfce7;
+  --coomunity-secondary-200: #bbf7d0;
+  --coomunity-secondary-300: #86efac;
+  --coomunity-secondary-400: #4ade80;
+  --coomunity-secondary-500: #22c55e; /* Verde equilibrado principal */
+  --coomunity-secondary-600: #16a34a;
+  --coomunity-secondary-700: #15803d;
+  --coomunity-secondary-800: #166534;
+  --coomunity-secondary-900: #14532d;
+
+  /* ===== HEURÍSTICA 2: VISIBILIDAD DEL ESTADO DEL SISTEMA ===== */
+  /* Colores semánticos claros y reconocibles */
+  --color-success: #22c55e; /* Verde éxito */
+  --color-success-light: #dcfce7;
+  --color-success-dark: #15803d;
+
+  --color-warning: #f59e0b; /* Ámbar cálido para advertencias */
+  --color-warning-light: #fef3c7;
+  --color-warning-dark: #d97706;
+
+  --color-error: #ef4444; /* Rojo suave para errores */
+  --color-error-light: #fecaca;
+  --color-error-dark: #dc2626;
+
+  --color-info: #3b82f6; /* Azul información */
+  --color-info-light: #dbeafe;
+  --color-info-dark: #1d4ed8;
+
+  /* ===== HEURÍSTICA 3: JERARQUÍA VISUAL CLARA ===== */
+  /* Escala de grises suave y natural */
+  --neutral-50: #f8fafc; /* Backgrounds muy claros */
+  --neutral-100: #f1f5f9; /* Backgrounds claros */
+  --neutral-200: #e2e8f0; /* Borders sutiles */
+  --neutral-300: #cbd5e1; /* Borders normales */
+  --neutral-400: #94a3b8; /* Text disabled */
+  --neutral-500: #64748b; /* Text secondary */
+  --neutral-600: #475569; /* Text primary */
+  --neutral-700: #334155; /* Text emphasis */
+  --neutral-800: #1e293b; /* Text strong */
+  --neutral-900: #0f172a; /* Text maximum */
+
+  /* ===== HEURÍSTICA 4: RECONOCIMIENTO SOBRE RECORDAR ===== */
+  /* Colores para elementos naturales con significado intuitivo */
+  --element-fuego: #f97316; /* Naranja cálido como el fuego */
+  --element-fuego-light: #fed7aa;
+  --element-agua: #0ea5e9; /* Azul cielo como el agua */
+  --element-agua-light: #bae6fd;
+  --element-tierra: #a3a3a3; /* Gris tierra natural */
+  --element-tierra-light: #f5f5f5;
+  --element-aire: #8b5cf6; /* Púrpura etéreo como el aire */
+  --element-aire-light: #e9d5ff;
+
+  /* ===== HEURÍSTICA 5: FLEXIBILIDAD Y EFICIENCIA ===== */
+  /* Tokens específicos para diferentes contextos de uso */
+
+  /* Textos con contraste óptimo pero no agresivo */
+  --text-primary: var(--neutral-700); /* 10.7:1 contraste */
+  --text-secondary: var(--neutral-600); /* 7.2:1 contraste */
+  --text-tertiary: var(--neutral-500); /* 4.9:1 contraste */
+  --text-disabled: var(--neutral-400); /* 3.1:1 contraste */
+  --text-inverse: #ffffff;
+
+  /* Backgrounds progresivos */
+  --bg-primary: #ffffff;
+  --bg-secondary: var(--neutral-50);
+  --bg-tertiary: var(--neutral-100);
+  --bg-muted: var(--neutral-200);
+
+  /* Borders coherentes */
+  --border-subtle: var(--neutral-200);
+  --border-normal: var(--neutral-300);
+  --border-strong: var(--neutral-400);
+  --border-accent: var(--coomunity-primary-300);
+
+  /* ===== VARIABLES ESPECÍFICAS PARA HOME ===== */
+  /* Eliminamos los negros agresivos por colores más amigables */
+  --home-heading-primary: var(--neutral-800); /* Fuerte pero no negro */
+  --home-heading-secondary: var(--neutral-700);
+  --home-text-primary: var(--neutral-700);
+  --home-text-secondary: var(--neutral-600);
+  --home-text-accent: var(--coomunity-primary-600);
+
+  /* Métricas con colores significativos */
+  --metric-ondas: var(--coomunity-primary-600);
+  --metric-meritos: var(--color-warning-dark);
+  --metric-ayni: var(--coomunity-secondary-600);
+  --metric-balance: var(--element-agua);
+
+  /* Cards con gradientes suaves */
+  --card-bg-primary: #ffffff;
+  --card-bg-soft: var(--neutral-50);
+  --card-border: var(--border-subtle);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover:
+    0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+
+  /* Gradientes amigables */
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--coomunity-primary-500) 0%,
+    var(--coomunity-secondary-500) 100%
+  );
+  --gradient-soft: linear-gradient(
+    135deg,
+    var(--coomunity-primary-100) 0%,
+    var(--coomunity-secondary-100) 100%
+  );
+  --gradient-card: linear-gradient(135deg, var(--neutral-50) 0%, #ffffff 100%);
+
+  /* ===== ESTADOS INTERACTIVOS AMIGABLES ===== */
+  --interactive-default: var(--coomunity-primary-600);
+  --interactive-hover: var(--coomunity-primary-700);
+  --interactive-active: var(--coomunity-primary-800);
+  --interactive-focus: var(--coomunity-primary-500);
+  --interactive-disabled: var(--neutral-400);
+
+  /* ===== ANIMACIONES Y TRANSICIONES ===== */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== MODO OSCURO AMIGABLE ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Invertir la escala pero mantener calidez */
+    --neutral-50: #1e293b;
+    --neutral-100: #334155;
+    --neutral-200: #475569;
+    --neutral-300: #64748b;
+    --neutral-400: #94a3b8;
+    --neutral-500: #cbd5e1;
+    --neutral-600: #e2e8f0;
+    --neutral-700: #f1f5f9;
+    --neutral-800: #f8fafc;
+    --neutral-900: #ffffff;
+
+    /* Ajustar backgrounds */
+    --bg-primary: #0f172a;
+    --bg-secondary: var(--neutral-50);
+    --bg-tertiary: var(--neutral-100);
+
+    /* Mantener colores primarios vibrantes en oscuro */
+    --coomunity-primary-500: #818cf8;
+    --coomunity-secondary-500: #4ade80;
+
+    /* Ajustar elementos */
+    --element-fuego: #fb923c;
+    --element-agua: #38bdf8;
+    --element-tierra: #d1d5db;
+    --element-aire: #c084fc;
+
+    /* Cards en modo oscuro */
+    --card-bg-primary: var(--neutral-50);
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ===== UTILIDADES DE APLICACIÓN ===== */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-accent {
+  color: var(--home-text-accent);
+}
+
+.bg-card {
+  background: var(--card-bg-primary);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition-normal);
+}
+
+.bg-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.gradient-text {
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Fallback para navegadores sin soporte */
+  color: var(--coomunity-primary-600);
+}
+
+.interactive-element {
+  color: var(--interactive-default);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.interactive-element:hover {
+  color: var(--interactive-hover);
+}
+
+.interactive-element:focus-visible {
+  outline: 2px solid var(--interactive-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ===== ELEMENTOS ESPECÍFICOS ===== */
+.element-fuego {
+  color: var(--element-fuego);
+}
+
+.element-agua {
+  color: var(--element-agua);
+}
+
+.element-tierra {
+  color: var(--element-tierra);
+}
+
+.element-aire {
+  color: var(--element-aire);
+}
+
+/* ===== MÉTRICAS ESPECÍFICAS ===== */
+.metric-ondas {
+  color: var(--metric-ondas);
+  font-weight: 600;
+}
+
+.metric-meritos {
+  color: var(--metric-meritos);
+  font-weight: 600;
+}
+
+.metric-ayni {
+  color: var(--metric-ayni);
+  font-weight: 600;
+}
+
+.metric-balance {
+  color: var(--metric-balance);
+  font-weight: 600;
+}
+
+/* ===== COMPONENTES HOME ESPECÍFICOS ===== */
+.home-welcome-header {
+  background: var(--gradient-card);
+  border: 1px solid var(--card-border);
+}
+
+.home-metrics-card {
+  background: var(--card-bg-primary);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+.home-progress-bar {
+  background-color: var(--neutral-200);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.home-progress-fill {
+  background: var(--gradient-primary);
+  transition: var(--transition-normal);
+  border-radius: 9999px;
+}
+
+/* ===== REDUCIR MOVIMIENTO ===== */
+@media (prefers-reduced-motion: reduce) {
+  .bg-card,
+  .interactive-element,
+  .home-progress-fill {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ===== ALTO CONTRASTE ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --home-heading-primary: #000000;
+    --card-border: #000000;
+    --interactive-focus: #000000;
+  }
+
+  .gradient-text {
+    color: #000000 !important;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
+  }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  * {
+    color: #000000 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  .bg-card {
+    border: 1px solid #000000 !important;
+  }
+}

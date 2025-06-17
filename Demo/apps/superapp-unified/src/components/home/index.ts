@@ -11,6 +11,21 @@ export { NotificationCenter } from './NotificationCenter';
 // 🚀 Phase 3: Advanced Visual Components
 export { AdvancedInsightsPanel } from './AdvancedInsightsPanel';
 export { AyniBalanceVisualization } from './AyniBalanceVisualization';
+export { PerformanceMonitor } from './PerformanceMonitor';
+export { SmartQuickActions } from './SmartQuickActions';
+export { IntelligentNotificationCenter } from './IntelligentNotificationCenter';
+
+// 🌟 Fase Avanzada: Nuevos componentes 3D y efectos
+export { EnergyWeatherWidget } from './EnergyWeatherWidget';
+export { LiveActivityFeed } from './LiveActivityFeed';
+export { EnhancedParticles } from './EnhancedParticles';
+
+// 🎯 Widgets adicionales gamificados
+export { PersonalProgressWidget } from './PersonalProgressWidget';
+export { ActiveChallengesWidget } from './ActiveChallengesWidget';
+
+// ��� Componentes revolucionarios
+export { AyniMetricsCardRevolutionary } from './AyniMetricsCardRevolutionary';
 
 // Tipos compartidos entre componentes
 export interface HomeComponentProps {

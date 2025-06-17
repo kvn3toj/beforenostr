@@ -1,0 +1,175 @@
+/* ===============================================================================
+   🍂 TEMA OTOÑAL UNIFICADO - COOMUNITY SUPERAPP
+   Paleta limpia, consistente y sin conflictos
+   =============================================================================== */
+
+/* ===== VARIABLES OTOÑALES PRINCIPALES ===== */
+:root {
+  /* 🍂 Colores otoñales principales */
+  --autumn-primary: #f97316; /* Naranja cálido */
+  --autumn-secondary: #dc2626; /* Rojo otoñal */
+  --autumn-accent: #f59e0b; /* Dorado */
+  --autumn-success: #16a34a; /* Verde bosque */
+  
+  /* 🌿 Neutrales cálidos */
+  --autumn-bg-primary: #fffefb; /* Blanco cálido */
+  --autumn-bg-secondary: #fafaf9;
+  --autumn-surface: #f8fafc;
+  --autumn-border: #e7e5e4;
+  
+  /* 📝 Textos legibles */
+  --autumn-text-primary: #292524;
+  --autumn-text-secondary: #57534e;
+  --autumn-text-muted: #78716c;
+  
+  /* 🎨 Elementos interactivos */
+  --autumn-hover: #ea580c;
+  --autumn-focus: rgba(249, 115, 22, 0.2);
+}
+
+/* ===== APLICACIÓN GLOBAL LIMPIA ===== */
+body {
+  background: var(--autumn-bg-primary);
+  color: var(--autumn-text-primary);
+  font-family: 'Inter', 'Roboto', sans-serif;
+}
+
+/* ===== COMPONENTES PRINCIPALES ===== */
+
+/* Header/AppBar */
+.MuiAppBar-root {
+  background: linear-gradient(135deg, var(--autumn-surface) 0%, var(--autumn-bg-secondary) 100%);
+  color: var(--autumn-text-primary);
+  border-bottom: 1px solid var(--autumn-border);
+  box-shadow: 0 2px 4px rgba(249, 115, 22, 0.1);
+}
+
+/* Cards */
+.MuiCard-root, .MuiPaper-root {
+  background: var(--autumn-bg-primary);
+  border: 1px solid var(--autumn-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.08);
+  transition: all 0.2s ease;
+}
+
+.MuiCard-root:hover {
+  box-shadow: 0 8px 24px rgba(249, 115, 22, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Botones */
+.MuiButton-contained {
+  background: linear-gradient(135deg, var(--autumn-primary) 0%, var(--autumn-accent) 100%);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+}
+
+.MuiButton-contained:hover {
+  background: linear-gradient(135deg, var(--autumn-hover) 0%, #d97706 100%);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.2);
+}
+
+.MuiButton-outlined {
+  color: var(--autumn-primary);
+  border-color: var(--autumn-primary);
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.MuiButton-outlined:hover {
+  background: var(--autumn-focus);
+  border-color: var(--autumn-hover);
+}
+
+/* Navegación lateral */
+.MuiDrawer-paper {
+  background: var(--autumn-bg-primary);
+  border-right: 1px solid var(--autumn-border);
+}
+
+.MuiListItemButton-root:hover {
+  background: var(--autumn-focus);
+  color: var(--autumn-hover);
+}
+
+/* Progress bars */
+.MuiLinearProgress-root {
+  background: var(--autumn-bg-secondary);
+  border-radius: 8px;
+  height: 8px;
+}
+
+.MuiLinearProgress-bar {
+  background: linear-gradient(90deg, var(--autumn-primary) 0%, var(--autumn-accent) 100%);
+  border-radius: 8px;
+}
+
+/* ===== MÉTRICAS Y ELEMENTOS ESPECÍFICOS ===== */
+
+/* Balance Ayni */
+.ayni-balance {
+  color: var(--autumn-success);
+  font-weight: 700;
+  font-size: 2.5rem;
+}
+
+/* Métricas principales */
+.metric-value {
+  background: linear-gradient(135deg, var(--autumn-primary) 0%, var(--autumn-accent) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  font-size: 3rem;
+}
+
+/* ===== ESTADOS ESPECÍFICOS ===== */
+
+/* Elementos con fondos inline problemáticos */
+[style*="background-color: rgb(41, 37, 36)"],
+[style*="backgroundColor: rgb(41, 37, 36)"] {
+  background: var(--autumn-bg-primary) !important;
+  color: var(--autumn-text-primary) !important;
+  border: 1px solid var(--autumn-border) !important;
+}
+
+/* Outlines problemáticos */
+[style*="outline: rgb(99, 102, 241)"] {
+  outline: 2px solid var(--autumn-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* Textos muy claros en fondos claros */
+[style*="color: rgb(248, 250, 252)"],
+[style*="color: rgb(241, 245, 249)"] {
+  color: var(--autumn-text-primary) !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .MuiCard-root {
+    border-radius: 12px;
+    margin: 8px;
+  }
+  
+  .metric-value {
+    font-size: 2rem;
+  }
+  
+  .ayni-balance {
+    font-size: 2rem;
+  }
+}
+
+/* ===== MODO OSCURO ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --autumn-bg-primary: #292524;
+    --autumn-bg-secondary: #1c1917;
+    --autumn-text-primary: #fafaf9;
+    --autumn-text-secondary: #e7e5e4;
+  }
+} 

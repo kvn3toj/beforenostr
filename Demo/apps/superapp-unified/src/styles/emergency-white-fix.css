@@ -1,0 +1,170 @@
+/* ===============================================================================
+   🚨 CORRECCIÓN DE EMERGENCIA - FONDOS NEGROS PERSISTENTES
+   Máxima agresividad CSS para forzar fondos blancos
+   =============================================================================== */
+
+/* ===== ESPECIFICIDAD MÁXIMA ABSOLUTA ===== */
+html body * {
+  /* Eliminar CUALQUIER fondo negro/oscuro */
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* Resetear específicamente los colores problemáticos */
+*[style*='backgroundColor: rgb(41, 37, 36)'],
+*[style*='background-color: rgb(41, 37, 36)'],
+*[style*='backgroundColor:rgb(41,37,36)'],
+*[style*='background-color:rgb(41,37,36)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15) !important;
+}
+
+*[style*='backgroundColor: rgb(55, 65, 81)'],
+*[style*='background-color: rgb(55, 65, 81)'],
+*[style*='backgroundColor: rgb(31, 41, 55)'],
+*[style*='background-color: rgb(31, 41, 55)'],
+*[style*='backgroundColor: rgb(17, 24, 39)'],
+*[style*='background-color: rgb(17, 24, 39)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #16a34a !important;
+  border-radius: 16px !important;
+}
+
+/* ===== TEXTOS EN ELEMENTOS CORREGIDOS ===== */
+*[style*='backgroundColor: rgb(41, 37, 36)'] *,
+*[style*='background-color: rgb(41, 37, 36)'] *,
+*[style*='backgroundColor: rgb(55, 65, 81)'] *,
+*[style*='background-color: rgb(55, 65, 81)'] * {
+  color: #1f2937 !important;
+}
+
+/* ===== FORZAR NÚMEROS Y LABELS ===== */
+*[style*='backgroundColor: rgb(41, 37, 36)'] span {
+  color: #15803d !important;
+  font-weight: 700 !important;
+}
+
+/* ===== ELIMINAR OUTLINES PROBLEMÁTICOS ===== */
+* {
+  outline: none !important;
+  outline-color: transparent !important;
+}
+
+/* ===== SELECTORES ULTRA ESPECÍFICOS ===== */
+html body div[data-builder-component] * {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+html body main * {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+html body section * {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ===== FORZAR POR TIPO DE ELEMENTO ===== */
+div,
+span,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ===== CLASES ESPECÍFICAS PARA MÉTRICAS ===== */
+.metrics-card,
+.metric-card,
+.stats-card,
+[data-testid*='metric'],
+[data-testid*='stats'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15) !important;
+}
+
+/* ===== PREVENIR CUALQUIER FONDO OSCURO ===== */
+*:not(img):not(svg):not(video) {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ===== ESPECÍFICO PARA ELEMENTOS CON COLOR INLINE ===== */
+[style] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ===== ANTI-DARK MODE TEMPORAL ===== */
+@media (prefers-color-scheme: dark) {
+  * {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #1f2937 !important;
+  }
+}
+
+/* ===== RESET COMPLETO DE FONDOS ===== */
+body,
+body *,
+body *::before,
+body *::after {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  background-image: none !important;
+}
+
+/* ===== EXCEPCIONES PARA ELEMENTOS QUE SÍ NECESITAN COLOR ===== */
+/* Solo botones, links y elementos interactivos pueden tener color */
+button:not([style*='background']),
+a:not([style*='background']),
+.MuiButton-contained:not([style*='background']) {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* ===== ICONOS Y SVG ===== */
+svg {
+  color: #16a34a !important;
+  fill: #16a34a !important;
+}
+
+/* ===== FORZAR VISIBILIDAD ===== */
+[style*='color: rgb(255, 255, 255)'],
+[style*='color: rgb(248, 250, 252)'],
+[style*='color: rgb(241, 245, 249)'] {
+  color: #1f2937 !important;
+}
+
+/* ===== ESPECÍFICO PARA BUILDER.IO ===== */
+[data-builder-block] *,
+[data-builder-component] *,
+[data-builder-content] * {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+/* ===== ÚLTIMA LÍNEA DE DEFENSA ===== */
+html * {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}

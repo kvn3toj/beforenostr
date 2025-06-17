@@ -1,0 +1,534 @@
+/* ===============================================================================
+   🏠 ESTILOS HOME UNIFICADOS Y AMIGABLES - COOMUNITY SUPERAPP
+   Aplicación de la nueva paleta de colores siguiendo heurísticas UX/UI
+   =============================================================================== */
+
+/* ===== RESET DE CORRECCIONES ANTERIORES ===== */
+/* Anulamos los estilos demasiado agresivos de archivos anteriores */
+.home-container,
+.home-container * {
+  color: unset !important;
+  background: unset !important;
+  font-weight: unset !important;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.home-container {
+  background: linear-gradient(
+    180deg,
+    var(--neutral-50) 0%,
+    #ffffff 20%,
+    #ffffff 100%
+  ) !important;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ===== WELCOME HEADER ===== */
+.home-welcome-header {
+  background: var(--gradient-card) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  margin-bottom: 32px !important;
+  box-shadow: var(--card-shadow) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-welcome-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+  border-radius: 20px 20px 0 0;
+}
+
+.home-welcome-header h1,
+.home-welcome-header .MuiTypography-h1,
+.home-welcome-header .MuiTypography-h4 {
+  color: var(--home-heading-primary) !important;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+}
+
+.home-welcome-header .MuiTypography-subtitle1,
+.home-welcome-header .MuiTypography-body1 {
+  color: var(--home-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== MÉTRICAS AYNI CARD ===== */
+.home-metrics-card,
+.ayni-metrics-card {
+  background: var(--card-bg-primary) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--card-shadow) !important;
+  padding: 32px !important;
+  transition: var(--transition-normal) !important;
+}
+
+.home-metrics-card:hover,
+.ayni-metrics-card:hover {
+  box-shadow: var(--card-shadow-hover) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Títulos principales de métricas */
+.home-metrics-card h2,
+.home-metrics-card .MuiTypography-h2,
+.home-metrics-card .MuiTypography-h3,
+.ayni-metrics-card .MuiTypography-h3 {
+  color: var(--home-heading-primary) !important;
+  font-weight: 700 !important;
+  margin-bottom: 24px !important;
+}
+
+/* Valores de métricas principales */
+.home-metrics-card .metric-value,
+.ayni-metrics-card .metric-value,
+.home-metrics-card .MuiTypography-h1,
+.ayni-metrics-card .MuiTypography-h1 {
+  color: var(--metric-ayni) !important;
+  font-weight: 800 !important;
+  font-size: clamp(2rem, 5vw, 3.5rem) !important;
+  line-height: 1.1 !important;
+  margin-bottom: 8px !important;
+}
+
+/* Etiquetas de métricas */
+.home-metrics-card .metric-label,
+.ayni-metrics-card .metric-label,
+.home-metrics-card .MuiTypography-body2,
+.ayni-metrics-card .MuiTypography-body2 {
+  color: var(--home-text-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* ===== ELEMENTOS NATURALES ===== */
+.element-card,
+.elemental-card {
+  background: var(--card-bg-soft) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  transition: var(--transition-normal) !important;
+  margin-bottom: 16px !important;
+}
+
+.element-card:hover,
+.elemental-card:hover {
+  background: var(--card-bg-primary) !important;
+  border-color: var(--border-accent) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+/* Específico para cada elemento */
+.element-fuego .element-icon,
+.element-fuego .MuiSvgIcon-root {
+  color: var(--element-fuego) !important;
+}
+
+.element-agua .element-icon,
+.element-agua .MuiSvgIcon-root {
+  color: var(--element-agua) !important;
+}
+
+.element-tierra .element-icon,
+.element-tierra .MuiSvgIcon-root {
+  color: var(--element-tierra) !important;
+}
+
+.element-aire .element-icon,
+.element-aire .MuiSvgIcon-root {
+  color: var(--element-aire) !important;
+}
+
+/* Porcentajes de elementos */
+.element-percentage {
+  color: var(--home-heading-primary) !important;
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+}
+
+/* ===== PROGRESS BARS ===== */
+.home-progress-bar,
+.MuiLinearProgress-root {
+  background-color: var(--neutral-200) !important;
+  border-radius: 9999px !important;
+  height: 8px !important;
+  overflow: hidden !important;
+}
+
+.home-progress-fill,
+.MuiLinearProgress-bar {
+  background: var(--gradient-primary) !important;
+  border-radius: 9999px !important;
+  transition: var(--transition-normal) !important;
+}
+
+/* Progress específicos por elemento */
+.progress-fuego .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--element-fuego-light),
+    var(--element-fuego)
+  ) !important;
+}
+
+.progress-agua .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--element-agua-light),
+    var(--element-agua)
+  ) !important;
+}
+
+.progress-tierra .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--element-tierra-light),
+    var(--element-tierra)
+  ) !important;
+}
+
+.progress-aire .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--element-aire-light),
+    var(--element-aire)
+  ) !important;
+}
+
+/* ===== WALLET OVERVIEW ===== */
+.wallet-card {
+  background: var(--card-bg-primary) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  box-shadow: var(--card-shadow) !important;
+  margin-bottom: 24px !important;
+}
+
+.wallet-balance {
+  color: var(--metric-ondas) !important;
+  font-weight: 700 !important;
+  font-size: 2rem !important;
+}
+
+.wallet-label {
+  color: var(--home-text-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* ===== QUICK ACTIONS ===== */
+.quick-actions-grid {
+  margin-bottom: 32px !important;
+}
+
+.action-card {
+  background: var(--card-bg-primary) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  transition: var(--transition-normal) !important;
+  cursor: pointer !important;
+  text-align: center !important;
+}
+
+.action-card:hover {
+  background: var(--card-bg-soft) !important;
+  border-color: var(--border-accent) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+.action-card .MuiSvgIcon-root {
+  color: var(--interactive-default) !important;
+  font-size: 2.5rem !important;
+  margin-bottom: 12px !important;
+}
+
+.action-card .action-title {
+  color: var(--home-heading-primary) !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+.action-card .action-description {
+  color: var(--home-text-secondary) !important;
+  font-weight: 400 !important;
+  font-size: 0.85rem !important;
+}
+
+/* ===== MODULE CARDS ===== */
+.module-cards-container {
+  margin-top: 40px !important;
+}
+
+.module-card {
+  background: var(--card-bg-primary) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 20px !important;
+  padding: 28px !important;
+  transition: var(--transition-normal) !important;
+  cursor: pointer !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+  transform: translateX(-100%);
+  transition: var(--transition-normal);
+}
+
+.module-card:hover::before {
+  transform: translateX(0);
+}
+
+.module-card:hover {
+  background: var(--card-bg-soft) !important;
+  border-color: var(--border-accent) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+.module-card .module-icon {
+  color: var(--interactive-default) !important;
+  font-size: 3rem !important;
+  margin-bottom: 16px !important;
+}
+
+.module-card .module-title {
+  color: var(--home-heading-primary) !important;
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+  margin-bottom: 12px !important;
+}
+
+.module-card .module-description {
+  color: var(--home-text-secondary) !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+}
+
+/* ===== NOTIFICATION CENTER ===== */
+.notification-center {
+  background: var(--card-bg-primary) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--card-shadow-hover) !important;
+  padding: 20px !important;
+}
+
+.notification-item {
+  background: var(--card-bg-soft) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  margin-bottom: 12px !important;
+  transition: var(--transition-fast) !important;
+}
+
+.notification-item:hover {
+  background: var(--neutral-100) !important;
+  border-color: var(--border-accent) !important;
+}
+
+.notification-title {
+  color: var(--home-heading-primary) !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+.notification-message {
+  color: var(--home-text-secondary) !important;
+  font-weight: 400 !important;
+  font-size: 0.9rem !important;
+}
+
+/* ===== BUTTONS ===== */
+.MuiButton-contained {
+  background: var(--gradient-primary) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  text-transform: none !important;
+  box-shadow: var(--card-shadow) !important;
+  border: none !important;
+  transition: var(--transition-normal) !important;
+}
+
+.MuiButton-contained:hover {
+  background: var(--gradient-primary) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+  filter: brightness(1.05) !important;
+}
+
+.MuiButton-outlined {
+  color: var(--interactive-default) !important;
+  border-color: var(--border-accent) !important;
+  background: transparent !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  text-transform: none !important;
+  transition: var(--transition-fast) !important;
+}
+
+.MuiButton-outlined:hover {
+  background: var(--coomunity-primary-50) !important;
+  border-color: var(--interactive-hover) !important;
+  color: var(--interactive-hover) !important;
+}
+
+/* ===== FLOATING ACTION BUTTON ===== */
+.MuiFab-root {
+  background: var(--gradient-primary) !important;
+  color: #ffffff !important;
+  box-shadow: var(--card-shadow-hover) !important;
+  border: none !important;
+}
+
+.MuiFab-root:hover {
+  background: var(--gradient-primary) !important;
+  transform: scale(1.05) translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+  filter: brightness(1.1) !important;
+}
+
+/* ===== CHIPS ===== */
+.MuiChip-root {
+  background: var(--neutral-100) !important;
+  color: var(--home-text-primary) !important;
+  border: 1px solid var(--border-subtle) !important;
+  font-weight: 500 !important;
+  border-radius: 20px !important;
+}
+
+.MuiChip-filled {
+  background: var(--coomunity-primary-100) !important;
+  color: var(--coomunity-primary-700) !important;
+  border-color: var(--coomunity-primary-200) !important;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .home-metrics-card,
+  .ayni-metrics-card {
+    padding: 20px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .module-card {
+    padding: 20px !important;
+  }
+
+  .home-welcome-header {
+    padding: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .action-card {
+    padding: 16px !important;
+  }
+}
+
+/* ===== FOCUS STATES ===== */
+.interactive-element:focus-visible,
+.action-card:focus-visible,
+.module-card:focus-visible,
+.MuiButton-root:focus-visible {
+  outline: 2px solid var(--interactive-focus) !important;
+  outline-offset: 2px !important;
+  border-radius: 8px !important;
+}
+
+/* ===== LOADING STATES ===== */
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    var(--neutral-200) 0%,
+    var(--neutral-100) 50%,
+    var(--neutral-200) 100%
+  ) !important;
+  border-radius: 8px !important;
+  animation: shimmer 1.5s infinite !important;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* ===== MODO OSCURO ===== */
+@media (prefers-color-scheme: dark) {
+  .home-container {
+    background: linear-gradient(
+      180deg,
+      var(--neutral-50) 0%,
+      var(--bg-primary) 20%,
+      var(--bg-primary) 100%
+    ) !important;
+  }
+
+  .home-welcome-header,
+  .home-metrics-card,
+  .ayni-metrics-card,
+  .wallet-card,
+  .action-card,
+  .module-card,
+  .notification-center {
+    background: var(--card-bg-primary) !important;
+    border-color: var(--card-border) !important;
+  }
+
+  .MuiButton-outlined:hover {
+    background: var(--neutral-100) !important;
+  }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .home-container,
+  .home-welcome-header,
+  .home-metrics-card,
+  .ayni-metrics-card {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    box-shadow: none !important;
+  }
+
+  .MuiFab-root,
+  .floating-elements {
+    display: none !important;
+  }
+
+  * {
+    color: #000000 !important;
+  }
+}

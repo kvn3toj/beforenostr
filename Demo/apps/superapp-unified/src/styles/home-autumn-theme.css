@@ -1,0 +1,718 @@
+/* ===============================================================================
+   🍂 HOME OTOÑAL - ESTILOS CON PALETA DE OTOÑO VERDADERO
+   Aplicación completa de colores cálidos y terrosos para el Home
+   =============================================================================== */
+
+/* ===== RESET ANTERIOR ===== */
+.home-container,
+.home-container * {
+  color: unset !important;
+  background: unset !important;
+  font-weight: unset !important;
+}
+
+/* ===== CONTAINER PRINCIPAL OTOÑAL ===== */
+.home-container {
+  background: linear-gradient(
+    180deg,
+    var(--warm-neutral-50) 0%,
+    var(--bg-primary-autumn) 30%,
+    #fffefb 100%
+  ) !important;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Efecto de hojas otoñales de fondo */
+.home-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(249, 115, 22, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(245, 158, 11, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      rgba(220, 38, 38, 0.05) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== WELCOME HEADER OTOÑAL ===== */
+.home-welcome-header,
+.autumn-welcome-header {
+  background: var(--gradient-autumn-card) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 24px !important;
+  padding: 28px !important;
+  margin-bottom: 32px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.home-welcome-header::before,
+.autumn-welcome-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--gradient-autumn-primary);
+  border-radius: 24px 24px 0 0;
+}
+
+/* Títulos principales otoñales */
+.home-welcome-header h1,
+.home-welcome-header .MuiTypography-h1,
+.home-welcome-header .MuiTypography-h4,
+.autumn-welcome-header h1,
+.autumn-welcome-header .MuiTypography-h4 {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 800 !important;
+  margin-bottom: 12px !important;
+  text-shadow: 0 1px 2px rgba(124, 45, 18, 0.1) !important;
+}
+
+.home-welcome-header .MuiTypography-subtitle1,
+.home-welcome-header .MuiTypography-body1,
+.autumn-welcome-header .MuiTypography-subtitle1 {
+  color: var(--home-text-secondary-autumn) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== MÉTRICAS AYNI CARD OTOÑAL ===== */
+.home-metrics-card,
+.ayni-metrics-card,
+.autumn-metrics-card {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 28px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  padding: 36px !important;
+  transition: var(--transition-autumn-normal) !important;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.home-metrics-card::after,
+.ayni-metrics-card::after,
+.autumn-metrics-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-autumn-primary);
+  opacity: 0.9;
+  z-index: -1;
+}
+
+.home-metrics-card:hover,
+.ayni-metrics-card:hover,
+.autumn-metrics-card:hover {
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  transform: translateY(-3px) !important;
+  border-color: var(--autumn-primary-300) !important;
+}
+
+/* Títulos principales de métricas otoñales */
+.home-metrics-card h2,
+.home-metrics-card .MuiTypography-h2,
+.home-metrics-card .MuiTypography-h3,
+.ayni-metrics-card .MuiTypography-h3,
+.autumn-metrics-card .MuiTypography-h3 {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 800 !important;
+  margin-bottom: 24px !important;
+  text-shadow: 0 1px 2px rgba(124, 45, 18, 0.1) !important;
+}
+
+/* Valores de métricas principales otoñales */
+.home-metrics-card .metric-value,
+.ayni-metrics-card .metric-value,
+.autumn-metrics-card .metric-value,
+.home-metrics-card .MuiTypography-h1,
+.ayni-metrics-card .MuiTypography-h1,
+.autumn-metrics-card .MuiTypography-h1 {
+  background: var(--gradient-autumn-primary) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: var(--metric-ayni-autumn) !important; /* Fallback */
+  font-weight: 900 !important;
+  font-size: clamp(2.5rem, 6vw, 4rem) !important;
+  line-height: 1.1 !important;
+  margin-bottom: 12px !important;
+  text-shadow: none !important;
+}
+
+/* Etiquetas de métricas otoñales */
+.home-metrics-card .metric-label,
+.ayni-metrics-card .metric-label,
+.autumn-metrics-card .metric-label,
+.home-metrics-card .MuiTypography-body2,
+.ayni-metrics-card .MuiTypography-body2,
+.autumn-metrics-card .MuiTypography-body2 {
+  color: var(--home-text-secondary-autumn) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+/* ===== ELEMENTOS NATURALES OTOÑALES ===== */
+.element-card,
+.elemental-card {
+  background: var(--card-bg-soft-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  transition: var(--transition-autumn-normal) !important;
+  margin-bottom: 20px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.element-card::before,
+.elemental-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-autumn-warm);
+  opacity: 0.6;
+}
+
+.element-card:hover,
+.elemental-card:hover {
+  background: var(--card-bg-autumn) !important;
+  border-color: var(--border-accent-autumn) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+}
+
+/* Específico para cada elemento otoñal */
+.element-fuego .element-icon,
+.element-fuego .MuiSvgIcon-root {
+  color: var(--element-fuego-autumn) !important;
+  filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.3)) !important;
+}
+
+.element-agua .element-icon,
+.element-agua .MuiSvgIcon-root {
+  color: var(--element-agua-autumn) !important;
+  filter: drop-shadow(0 2px 4px rgba(15, 118, 110, 0.3)) !important;
+}
+
+.element-tierra .element-icon,
+.element-tierra .MuiSvgIcon-root {
+  color: var(--element-tierra-autumn) !important;
+  filter: drop-shadow(0 2px 4px rgba(120, 113, 108, 0.3)) !important;
+}
+
+.element-aire .element-icon,
+.element-aire .MuiSvgIcon-root {
+  color: var(--element-aire-autumn) !important;
+  filter: drop-shadow(0 2px 4px rgba(107, 113, 104, 0.3)) !important;
+}
+
+/* Porcentajes de elementos otoñales */
+.element-percentage {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 800 !important;
+  font-size: 1.8rem !important;
+  text-shadow: 0 1px 2px rgba(124, 45, 18, 0.1) !important;
+}
+
+/* ===== PROGRESS BARS OTOÑALES ===== */
+.home-progress-bar,
+.autumn-progress-bar,
+.MuiLinearProgress-root {
+  background-color: var(--warm-neutral-200) !important;
+  border-radius: 9999px !important;
+  height: 10px !important;
+  overflow: hidden !important;
+  box-shadow: inset 0 1px 2px rgba(124, 45, 18, 0.1) !important;
+}
+
+.home-progress-fill,
+.autumn-progress-fill,
+.MuiLinearProgress-bar {
+  background: var(--gradient-autumn-primary) !important;
+  border-radius: 9999px !important;
+  transition: var(--transition-autumn-normal) !important;
+}
+
+/* Progress específicos por elemento otoñal */
+.progress-fuego .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--element-fuego-autumn-light),
+    var(--element-fuego-autumn)
+  ) !important;
+}
+
+.progress-agua .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--element-agua-autumn-light),
+    var(--element-agua-autumn)
+  ) !important;
+}
+
+.progress-tierra .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--element-tierra-autumn-light),
+    var(--element-tierra-autumn)
+  ) !important;
+}
+
+.progress-aire .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--element-aire-autumn-light),
+    var(--element-aire-autumn)
+  ) !important;
+}
+
+/* ===== WALLET OVERVIEW OTOÑAL ===== */
+.wallet-card {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 24px !important;
+  padding: 28px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  margin-bottom: 28px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-autumn-primary);
+  opacity: 0.8;
+}
+
+.wallet-balance {
+  color: var(--metric-ondas-autumn) !important;
+  font-weight: 800 !important;
+  font-size: 2.2rem !important;
+  text-shadow: 0 1px 2px rgba(245, 158, 11, 0.2) !important;
+}
+
+.wallet-label {
+  color: var(--home-text-secondary-autumn) !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+}
+
+/* ===== QUICK ACTIONS OTOÑALES ===== */
+.quick-actions-grid {
+  margin-bottom: 36px !important;
+}
+
+.action-card {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  transition: var(--transition-autumn-normal) !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-autumn-warm);
+  transform: translateX(-100%);
+  transition: var(--transition-autumn-normal);
+}
+
+.action-card:hover::before {
+  transform: translateX(0);
+}
+
+.action-card:hover {
+  background: var(--card-bg-soft-autumn) !important;
+  border-color: var(--border-accent-autumn) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+}
+
+.action-card .MuiSvgIcon-root {
+  color: var(--interactive-default-autumn) !important;
+  font-size: 3rem !important;
+  margin-bottom: 16px !important;
+  filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.2)) !important;
+}
+
+.action-card .action-title {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+}
+
+.action-card .action-description {
+  color: var(--home-text-secondary-autumn) !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+}
+
+/* ===== MODULE CARDS OTOÑALES ===== */
+.module-cards-container {
+  margin-top: 48px !important;
+}
+
+.module-card {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 24px !important;
+  padding: 32px !important;
+  transition: var(--transition-autumn-normal) !important;
+  cursor: pointer !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--gradient-autumn-primary);
+  transform: translateX(-100%);
+  transition: var(--transition-autumn-normal);
+}
+
+.module-card:hover::before {
+  transform: translateX(0);
+}
+
+.module-card:hover {
+  background: var(--card-bg-soft-autumn) !important;
+  border-color: var(--border-accent-autumn) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+}
+
+.module-card .module-icon {
+  color: var(--interactive-default-autumn) !important;
+  font-size: 3.5rem !important;
+  margin-bottom: 20px !important;
+  filter: drop-shadow(0 3px 6px rgba(249, 115, 22, 0.3)) !important;
+}
+
+.module-card .module-title {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 800 !important;
+  font-size: 1.6rem !important;
+  margin-bottom: 16px !important;
+  text-shadow: 0 1px 2px rgba(124, 45, 18, 0.1) !important;
+}
+
+.module-card .module-description {
+  color: var(--home-text-secondary-autumn) !important;
+  font-weight: 500 !important;
+  line-height: 1.7 !important;
+  font-size: 1rem !important;
+}
+
+/* ===== NOTIFICATION CENTER OTOÑAL ===== */
+.notification-center {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  padding: 24px !important;
+}
+
+.notification-item {
+  background: var(--card-bg-soft-autumn) !important;
+  border: 1px solid var(--card-border-autumn) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  margin-bottom: 16px !important;
+  transition: var(--transition-autumn-fast) !important;
+}
+
+.notification-item:hover {
+  background: var(--warm-neutral-100) !important;
+  border-color: var(--border-accent-autumn) !important;
+  transform: translateX(4px) !important;
+}
+
+.notification-title {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 700 !important;
+  margin-bottom: 6px !important;
+}
+
+.notification-message {
+  color: var(--home-text-secondary-autumn) !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.6 !important;
+}
+
+/* ===== BUTTONS OTOÑALES ===== */
+.MuiButton-contained,
+.autumn-button-primary {
+  background: var(--gradient-autumn-primary) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-radius: 16px !important;
+  padding: 16px 32px !important;
+  text-transform: none !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  border: none !important;
+  transition: var(--transition-autumn-normal) !important;
+}
+
+.MuiButton-contained:hover,
+.autumn-button-primary:hover {
+  background: var(--gradient-autumn-primary) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  filter: brightness(1.1) saturate(1.1) !important;
+}
+
+.MuiButton-outlined,
+.autumn-button-secondary {
+  color: var(--interactive-default-autumn) !important;
+  border-color: var(--border-accent-autumn) !important;
+  background: transparent !important;
+  font-weight: 700 !important;
+  border-radius: 16px !important;
+  padding: 16px 32px !important;
+  text-transform: none !important;
+  transition: var(--transition-autumn-fast) !important;
+}
+
+.MuiButton-outlined:hover,
+.autumn-button-secondary:hover {
+  background: var(--autumn-primary-50) !important;
+  border-color: var(--interactive-hover-autumn) !important;
+  color: var(--interactive-hover-autumn) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ===== FLOATING ACTION BUTTON OTOÑAL ===== */
+.MuiFab-root {
+  background: var(--gradient-autumn-primary) !important;
+  color: #ffffff !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  border: none !important;
+}
+
+.MuiFab-root:hover {
+  background: var(--gradient-autumn-primary) !important;
+  transform: scale(1.08) translateY(-3px) !important;
+  box-shadow: 0 12px 24px rgba(124, 45, 18, 0.2) !important;
+  filter: brightness(1.15) saturate(1.2) !important;
+}
+
+/* ===== CHIPS OTOÑALES ===== */
+.MuiChip-root {
+  background: var(--warm-neutral-100) !important;
+  color: var(--home-text-primary-autumn) !important;
+  border: 1px solid var(--border-subtle-autumn) !important;
+  font-weight: 600 !important;
+  border-radius: 24px !important;
+}
+
+.MuiChip-filled {
+  background: var(--autumn-primary-100) !important;
+  color: var(--autumn-primary-800) !important;
+  border-color: var(--autumn-primary-200) !important;
+}
+
+/* ===== RESPONSIVE OTOÑAL ===== */
+@media (max-width: 768px) {
+  .home-metrics-card,
+  .ayni-metrics-card,
+  .autumn-metrics-card {
+    padding: 24px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .module-card {
+    padding: 24px !important;
+  }
+
+  .home-welcome-header,
+  .autumn-welcome-header {
+    padding: 20px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .action-card {
+    padding: 20px !important;
+  }
+}
+
+/* ===== FOCUS STATES OTOÑALES ===== */
+.autumn-interactive-element:focus-visible,
+.action-card:focus-visible,
+.module-card:focus-visible,
+.MuiButton-root:focus-visible {
+  outline: 3px solid var(--interactive-focus-autumn) !important;
+  outline-offset: 3px !important;
+  border-radius: 12px !important;
+}
+
+/* ===== LOADING STATES OTOÑALES ===== */
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    var(--warm-neutral-200) 0%,
+    var(--warm-neutral-100) 50%,
+    var(--warm-neutral-200) 100%
+  ) !important;
+  border-radius: 12px !important;
+  animation: autumn-shimmer 1.8s infinite !important;
+}
+
+@keyframes autumn-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* ===== MODO OSCURO OTOÑAL ===== */
+@media (prefers-color-scheme: dark) {
+  .home-container {
+    background: linear-gradient(
+      180deg,
+      var(--warm-neutral-50) 0%,
+      var(--bg-primary-autumn) 30%,
+      var(--bg-primary-autumn) 100%
+    ) !important;
+  }
+
+  .home-welcome-header,
+  .autumn-welcome-header,
+  .home-metrics-card,
+  .ayni-metrics-card,
+  .autumn-metrics-card,
+  .wallet-card,
+  .action-card,
+  .module-card,
+  .notification-center {
+    background: var(--card-bg-autumn) !important;
+    border-color: var(--card-border-autumn) !important;
+  }
+
+  .MuiButton-outlined:hover,
+  .autumn-button-secondary:hover {
+    background: var(--warm-neutral-100) !important;
+  }
+}
+
+/* ===== PRINT STYLES OTOÑALES ===== */
+@media print {
+  .home-container,
+  .home-welcome-header,
+  .autumn-welcome-header,
+  .home-metrics-card,
+  .ayni-metrics-card,
+  .autumn-metrics-card {
+    background: #ffffff !important;
+    border: 1px solid #8b4513 !important;
+    box-shadow: none !important;
+  }
+
+  .MuiFab-root,
+  .floating-elements {
+    display: none !important;
+  }
+
+  * {
+    color: #000000 !important;
+  }
+}
+
+/* ===== EFECTOS ESPECIALES OTOÑALES ===== */
+.autumn-sparkle::after {
+  content: '✨';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.2rem;
+  opacity: 0.7;
+  animation: autumn-sparkle-glow 3s ease-in-out infinite;
+}
+
+@keyframes autumn-sparkle-glow {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.autumn-leaf-decoration::before {
+  content: '🍂';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 1.5rem;
+  opacity: 0.6;
+  animation: autumn-leaf-sway 4s ease-in-out infinite;
+}
+
+@keyframes autumn-leaf-sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(3deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+}

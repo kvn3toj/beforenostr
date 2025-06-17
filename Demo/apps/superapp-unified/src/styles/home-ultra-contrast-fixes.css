@@ -1,0 +1,223 @@
+/* ===============================================================================
+   🚀 ULTRA-SPECIFIC CONTRAST FIXES - SOBRESCRIBIR MATERIAL UI AUTO-GENERADO
+   Especificidad máxima para sobrescribir clases como css-11extc, css-1s59nrj
+   =============================================================================== */
+
+/* ===== VARIABLES ULTRA-CONTRASTADAS ===== */
+:root {
+  --ultra-text-primary: #0f172a !important; /* Slate-900 - 21:1 contrast */
+  --ultra-text-secondary: #1e293b !important; /* Slate-800 - 15:1 contrast */
+  --ultra-bg-card: #ffffff !important; /* Fondo blanco puro */
+  --ultra-border: #e2e8f0 !important; /* Slate-200 */
+
+  /* Colores temáticos ultra-contrastados */
+  --ultra-primary: #1e40af !important; /* Blue-800 */
+  --ultra-success: #166534 !important; /* Green-800 */
+  --ultra-warning: #92400e !important; /* Yellow-800 */
+  --ultra-error: #991b1b !important; /* Red-800 */
+}
+
+/* ===== ULTRA-SPECIFIC SELECTORS PARA SOBRESCRIBIR MUI ===== */
+
+/* Target: Elementos con data-loc que contengan "Home.tsx" */
+[data-loc*='Home.tsx'] * {
+  /* Reset de colores problemáticos */
+}
+
+/* ===== CARDS PROBLEMÁTICAS - ESPECIFICIDAD MÁXIMA ===== */
+
+/* Card rosa con texto claro (254, 242, 242) */
+body
+  div[css*='backgroundColor: "rgb(254, 242, 242)"']
+  h6[css*='color: "rgb(248, 250, 252)"'] {
+  color: var(--ultra-error) !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+
+body
+  div[css*='backgroundColor: "rgb(254, 242, 242)"']
+  p[css*='color: "rgb(229, 231, 235)"'] {
+  color: var(--ultra-text-primary) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Card azul con texto claro (239, 246, 255) */
+body
+  div[css*='backgroundColor: "rgb(239, 246, 255)"']
+  h6[css*='color: "rgb(248, 250, 252)"'] {
+  color: var(--ultra-primary) !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+
+body
+  div[css*='backgroundColor: "rgb(239, 246, 255)"']
+  p[css*='color: "rgb(229, 231, 235)"'] {
+  color: var(--ultra-text-primary) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Card verde con texto claro (240, 253, 244) */
+body
+  div[css*='backgroundColor: "rgb(240, 253, 244)"']
+  h6[css*='color: "rgb(248, 250, 252)"'] {
+  color: var(--ultra-success) !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+
+body
+  div[css*='backgroundColor: "rgb(240, 253, 244)"']
+  p[css*='color: "rgb(229, 231, 235)"'] {
+  color: var(--ultra-text-primary) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* ===== BOTONES PROBLEMÁTICOS ===== */
+
+/* Botones con texto muy claro */
+body button[css*='color: "rgb(249, 250, 251)"'] {
+  color: var(--ultra-text-primary) !important;
+  background-color: var(--ultra-bg-card) !important;
+  border: 2px solid var(--ultra-primary) !important;
+  font-weight: 600 !important;
+}
+
+body button[css*='color: "rgb(249, 250, 251)"']:hover {
+  background-color: var(--ultra-primary) !important;
+  color: white !important;
+}
+
+/* ===== CLASES AUTO-GENERADAS MUI - ULTRA ESPECÍFICAS ===== */
+
+/* Sobrescribir clases css-* con máxima especificidad */
+body [class*='css-'] h6[css*='color: "rgb(248, 250, 252)"'] {
+  color: var(--ultra-text-primary) !important;
+  font-weight: 700 !important;
+}
+
+body [class*='css-'] p[css*='color: "rgb(229, 231, 235)"'] {
+  color: var(--ultra-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+body [class*='css-'] button[css*='color: "rgb(249, 250, 251)"'] {
+  color: var(--ultra-text-primary) !important;
+  background-color: var(--ultra-bg-card) !important;
+  border: 2px solid var(--ultra-primary) !important;
+}
+
+/* ===== ELEMENTOS CON ATRIBUTO CSS DIRECTO ===== */
+
+/* Para elementos que usan css-in-js directamente */
+*[css*='color: "rgb(248, 250, 252)"'] {
+  color: var(--ultra-text-primary) !important;
+}
+
+*[css*='color: "rgb(229, 231, 235)"'] {
+  color: var(--ultra-text-secondary) !important;
+}
+
+*[css*='color: "rgb(249, 250, 251)"'] {
+  color: var(--ultra-text-primary) !important;
+}
+
+*[css*='color: "rgb(156, 163, 175)"'] {
+  color: var(--ultra-text-secondary) !important;
+}
+
+/* ===== GRADIENTES Y FONDOS ===== */
+
+/* Mejorar contraste en gradientes */
+*[css*='background:'] {
+  color: var(--ultra-text-primary) !important;
+}
+
+/* Asegurar que el texto sobre gradientes sea legible */
+*[style*='background: linear-gradient'] {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+*[style*='background: radial-gradient'] {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ===== ICONOS ===== */
+
+/* Iconos con colores problemáticos */
+svg[css*='color: "rgb(156, 163, 175)"'] {
+  color: var(--ultra-text-secondary) !important;
+  fill: var(--ultra-text-secondary) !important;
+}
+
+svg[css*='color: "rgb(229, 231, 235)"'] {
+  color: var(--ultra-text-secondary) !important;
+  fill: var(--ultra-text-secondary) !important;
+}
+
+/* ===== PROGRESS BARS ===== */
+
+/* Barras de progreso con poco contraste */
+*[role='progressbar'] {
+  background-color: var(--ultra-border) !important;
+  border: 1px solid var(--ultra-text-secondary) !important;
+}
+
+*[role='progressbar'] > * {
+  background-color: var(--ultra-primary) !important;
+}
+
+/* ===== TEXTO EN GENERAL ===== */
+
+/* Asegurar contraste mínimo en todo el texto */
+body [data-loc*='Home'] * {
+  min-height: auto !important;
+}
+
+/* Elementos con opacity problemática */
+*[css*='opacity: 0.7'] {
+  opacity: 1 !important;
+  color: var(--ultra-text-secondary) !important;
+}
+
+*[css*='opacity: 0.8'] {
+  opacity: 1 !important;
+  color: var(--ultra-text-secondary) !important;
+}
+
+*[css*='opacity: 0.9'] {
+  opacity: 1 !important;
+  color: var(--ultra-text-primary) !important;
+}
+
+/* ===== FALLBACKS UNIVERSALES ===== */
+
+/* Último recurso - aplicar a elementos muy específicos */
+body div[class*='MuiBox'] div[class*='MuiBox'] h6 {
+  color: var(--ultra-text-primary) !important;
+  font-weight: 700 !important;
+}
+
+body div[class*='MuiBox'] div[class*='MuiBox'] p {
+  color: var(--ultra-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+body div[class*='MuiCard'] * {
+  color: var(--ultra-text-primary) !important;
+}
+
+/* ===== RESPONSIVE - MANTENER EN MOBILE ===== */
+@media (max-width: 768px) {
+  *[css*='color: "rgb(248, 250, 252)"'],
+  *[css*='color: "rgb(229, 231, 235)"'],
+  *[css*='color: "rgb(249, 250, 251)"'] {
+    color: var(--ultra-text-primary) !important;
+  }
+}

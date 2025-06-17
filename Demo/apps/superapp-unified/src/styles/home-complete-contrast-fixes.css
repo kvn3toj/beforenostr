@@ -1,0 +1,1300 @@
+/* ===============================================================================
+   🎨 CORRECCIONES COMPLETAS DE CONTRASTE - HOME COOMUNITY SUPERAPP
+   Solución integral para TODOS los problemas de contraste identificados
+   🔄 VERSIÓN ACTUALIZADA: Diciembre 2024 - Ultra Específicas CSS Classes
+   =============================================================================== */
+
+/* ===== VARIABLES CSS ADICIONALES PARA MÁXIMO CONTRASTE ===== */
+:root {
+  /* Colores extremos para máximo contraste */
+  --ultra-dark-text: #000000; /* Negro absoluto */
+  --dark-text: #0f172a; /* Slate-900 */
+  --medium-dark-text: #1e293b; /* Slate-800 */
+  --readable-text: #334155; /* Slate-700 */
+  --secondary-text: #475569; /* Slate-600 */
+
+  /* Backgrounds con alto contraste */
+  --pure-white: #ffffff;
+  --subtle-gray: #f8fafc; /* Slate-50 */
+  --light-gray: #f1f5f9; /* Slate-100 */
+
+  /* Borders más definidos */
+  --strong-border: #cbd5e1; /* Slate-300 */
+  --medium-border: #e2e8f0; /* Slate-200 */
+}
+
+/* ===== CORRECCIONES GLOBALES DE TEXTO ===== */
+
+/* Todos los títulos principales */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.MuiTypography-h1,
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6 {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+}
+
+/* Todos los subtítulos */
+.MuiTypography-subtitle1,
+.MuiTypography-subtitle2 {
+  color: var(--dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Todo el texto del cuerpo */
+.MuiTypography-body1,
+.MuiTypography-body2 {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* Texto pequeño pero legible */
+.MuiTypography-caption {
+  color: var(--readable-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== WALLET OVERVIEW - CORRECCIONES ESPECÍFICAS ===== */
+.WalletOverview .MuiTypography-h4,
+.WalletOverview .MuiTypography-h6 {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+}
+
+.WalletOverview .MuiTypography-body2,
+.WalletOverview .MuiTypography-caption {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* Corregir colores específicos de Wallet */
+.text-coomunity-primary-700,
+.coomunity-h3,
+.text-coomunity-primary-600,
+.coomunity-h1 {
+  color: var(--ultra-dark-text) !important;
+}
+
+.text-gray-600,
+.coomunity-body-lg,
+.text-gray-500,
+.coomunity-caption {
+  color: var(--readable-text) !important;
+}
+
+/* ===== SMART ACTIONS - CORRECCIONES ESPECÍFICAS ===== */
+.SmartActions .MuiTypography-h6 {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+}
+
+.SmartActions .MuiTypography-body2 {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== MODULE FOCUS - CORRECCIONES ESPECÍFICAS ===== */
+.ModuleFocus .MuiTypography-h5,
+.ModuleFocus .MuiTypography-h6 {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+}
+
+.ModuleFocus .MuiTypography-body2,
+.ModuleFocus .MuiTypography-caption {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== NOTIFICATION CENTER - CORRECCIONES ESPECÍFICAS ===== */
+.NotificationCenter .MuiTypography-h6 {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+}
+
+.NotificationCenter .MuiTypography-subtitle1 {
+  color: var(--dark-text) !important;
+  font-weight: 600 !important;
+}
+
+.NotificationCenter .MuiTypography-body2 {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== ADVANCED INSIGHTS PANEL - CORRECCIONES ESPECÍFICAS ===== */
+.AdvancedInsightsPanel .MuiTypography-h6 {
+  color: var(--pure-white) !important;
+  font-weight: 700 !important;
+}
+
+.AdvancedInsightsPanel .MuiTypography-subtitle2 {
+  color: var(--pure-white) !important;
+  font-weight: 600 !important;
+}
+
+.AdvancedInsightsPanel .MuiTypography-body2 {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== AYNI BALANCE VISUALIZATION - CORRECCIONES ESPECÍFICAS ===== */
+.AyniBalanceVisualization .MuiTypography-h6,
+.AyniBalanceVisualization .MuiTypography-h4 {
+  color: var(--pure-white) !important;
+  font-weight: 700 !important;
+}
+
+.AyniBalanceVisualization .MuiTypography-subtitle2,
+.AyniBalanceVisualization .MuiTypography-caption {
+  color: var(--pure-white) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CORRECCIONES POR COLORES ESPECÍFICOS ===== */
+
+/* Textos que aparecen como rgb(249, 250, 251) - gris muy claro */
+[style*='color: rgb(249, 250, 251)'],
+[style*='color: rgb(248, 250, 252)'],
+[style*='color: rgb(241, 245, 249)'] {
+  color: var(--ultra-dark-text) !important;
+}
+
+/* Textos que aparecen como rgb(229, 231, 235) - gris claro */
+[style*='color: rgb(229, 231, 235)'],
+[style*='color: rgb(209, 213, 219)'],
+[style*='color: rgb(156, 163, 175)'] {
+  color: var(--medium-dark-text) !important;
+}
+
+/* Fondos muy claros que necesitan bordes */
+[style*='background-color: rgb(249, 250, 251)'],
+[style*='background-color: rgb(248, 250, 252)'],
+[style*='backgroundColor: rgb(249, 250, 251)'] {
+  background-color: var(--pure-white) !important;
+  border: 1px solid var(--strong-border) !important;
+}
+
+/* ===== CORRECCIÓN DE OPACIDADES PROBLEMÁTICAS ===== */
+.MuiTypography-root[style*='opacity: 0.5'],
+.MuiTypography-root[style*='opacity: 0.6'],
+.MuiTypography-root[style*='opacity: 0.7'],
+.MuiTypography-root[style*='opacity: 0.8'],
+.MuiTypography-root[style*='opacity: 0.9'] {
+  opacity: 1 !important;
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CORRECCIONES ESPECÍFICAS DE CLASES CSS ===== */
+
+/* Clases que aparecen con poco contraste */
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.text-slate-400,
+.text-slate-500,
+.text-slate-600 {
+  color: var(--readable-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== COMPONENTES UI ESPECÍFICOS ===== */
+.MuiChip-root {
+  background-color: var(--light-gray) !important;
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+.MuiChip-root .MuiChip-label {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+.MuiChip-outlined {
+  border: 2px solid var(--strong-border) !important;
+}
+
+.MuiLinearProgress-root {
+  background-color: var(--light-gray) !important;
+}
+
+.MuiLinearProgress-bar {
+  background-color: var(--ultra-dark-text) !important;
+}
+
+.MuiCard-root,
+.MuiPaper-root {
+  background-color: var(--pure-white) !important;
+  border: 1px solid var(--medium-border) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.MuiButton-root {
+  font-weight: 600 !important;
+}
+
+.MuiButton-contained {
+  color: var(--pure-white) !important;
+  background-color: var(--ultra-dark-text) !important;
+}
+
+.MuiButton-outlined {
+  color: var(--ultra-dark-text) !important;
+  border: 2px solid var(--ultra-dark-text) !important;
+  background-color: var(--pure-white) !important;
+}
+
+.MuiButton-text {
+  color: var(--ultra-dark-text) !important;
+  background-color: transparent !important;
+}
+
+.MuiSvgIcon-root {
+  color: var(--medium-dark-text) !important;
+}
+
+.MuiIconButton-root .MuiSvgIcon-root {
+  color: var(--ultra-dark-text) !important;
+}
+
+/* ===== TOOLTIPS Y OVERLAYS ===== */
+.MuiTooltip-tooltip {
+  background-color: var(--ultra-dark-text) !important;
+  color: var(--pure-white) !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--strong-border) !important;
+}
+
+/* ===== INPUTS Y FORMULARIOS ===== */
+.MuiInputBase-root {
+  color: var(--ultra-dark-text) !important;
+}
+
+.MuiInputLabel-root {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== TEXTOS CON GRADIENTES ===== */
+.gradient-text,
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--ultra-dark-text) 0%,
+    var(--dark-text) 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 700 !important;
+}
+
+/* ===== MEDIA QUERIES PARA TEMAS OSCUROS ===== */
+@media (prefers-color-scheme: dark) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .MuiTypography-h1,
+  .MuiTypography-h2,
+  .MuiTypography-h3,
+  .MuiTypography-h4,
+  .MuiTypography-h5,
+  .MuiTypography-h6 {
+    color: var(--pure-white) !important;
+  }
+
+  .MuiTypography-subtitle1,
+  .MuiTypography-subtitle2 {
+    color: var(--light-gray) !important;
+  }
+
+  .MuiTypography-caption {
+    color: var(--subtle-gray) !important;
+  }
+
+  .MuiCard-root,
+  .MuiPaper-root {
+    background-color: var(--dark-text) !important;
+    border: 1px solid var(--medium-dark-text) !important;
+  }
+
+  .MuiButton-outlined {
+    color: var(--pure-white) !important;
+    border: 2px solid var(--pure-white) !important;
+  }
+}
+
+/* ===== MEDIA QUERIES PARA ALTO CONTRASTE ===== */
+@media (prefers-contrast: high) {
+  * {
+    color: var(--ultra-dark-text) !important;
+    font-weight: 700 !important;
+    border-width: 2px !important;
+  }
+
+  .MuiButton-contained {
+    background-color: var(--ultra-dark-text) !important;
+    color: var(--pure-white) !important;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    * {
+      color: var(--pure-white) !important;
+      background-color: var(--ultra-dark-text) !important;
+    }
+
+    .MuiButton-contained {
+      background-color: var(--pure-white) !important;
+      color: var(--ultra-dark-text) !important;
+    }
+  }
+}
+
+/* ===== CORRECCIONES ESPECÍFICAS DE COMPONENTES HOME ===== */
+
+/* Smart Header */
+.smart-header .MuiTypography-h4 {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+}
+
+/* Primary Dashboard */
+[data-testid='primary-dashboard'] .MuiTypography-h1 {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 900 !important;
+}
+
+/* Module Cards */
+[data-testid*='module-card'] .MuiTypography-h6 {
+  color: var(--ultra-dark-text) !important;
+}
+
+[data-testid*='module-card'] .MuiTypography-body2 {
+  color: var(--medium-dark-text) !important;
+}
+
+[data-testid*='module-card'] .MuiTypography-caption {
+  color: var(--readable-text) !important;
+}
+
+/* Quick Actions Grid */
+.QuickActionsGrid .MuiTypography-h6 {
+  color: var(--ultra-dark-text) !important;
+}
+
+.QuickActionsGrid .MuiTypography-subtitle1 {
+  color: var(--dark-text) !important;
+}
+
+.QuickActionsGrid .MuiTypography-body2 {
+  color: var(--medium-dark-text) !important;
+}
+
+/* ===== UTILIDADES DE CONTRASTE ===== */
+.low-contrast-fix,
+.contrast-enhanced,
+.text-enhanced {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+.force-white-text {
+  color: var(--pure-white) !important;
+  font-weight: 600 !important;
+}
+
+.fade-in-contrast {
+  animation: fadeInWithContrast 0.3s ease-in-out;
+}
+
+@keyframes fadeInWithContrast {
+  from {
+    opacity: 0;
+    color: var(--readable-text);
+  }
+  to {
+    opacity: 1;
+    color: var(--ultra-dark-text);
+  }
+}
+
+/* ===== CORRECCIONES AVANZADAS PARA ELEMENTOS DINÁMICOS ===== */
+
+/* Cualquier texto dentro de Box con estilos inline problemáticos */
+.MuiBox-root > .MuiTypography-root[style*='color: rgb('],
+.MuiStack-root > .MuiTypography-root[style*='color: rgb('],
+.MuiGrid-root > .MuiTypography-root[style*='color: rgb('] {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* Elementos con colores RGB específicos problemáticos */
+[style*='color: rgb(229'],
+[style*='color: rgb(156'],
+[style*='color: rgb(107'],
+[style*='color: rgb(75'],
+[style*='color: rgb(55'],
+[style*='color: rgb(31'] {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CORRECCIONES ESPECÍFICAS PARA CLASES CSS AUTO-GENERADAS ===== */
+
+/* Debugging - Esto ayuda a identificar elementos problemáticos en desarrollo */
+@media screen and (max-width: 0px) {
+  .debug-contrast {
+    outline: 2px solid red !important;
+    background-color: yellow !important;
+    color: black !important;
+  }
+}
+
+/* ===== CORRECCIONES UNIVERSALES PARA CLASES CSS-* DE MATERIAL UI ===== */
+
+/* 🎯 CORRECCIONES PARA TODAS LAS CLASES CSS AUTO-GENERADAS */
+[class*='css-'] .MuiTypography-root,
+[class*='css-'] .MuiTypography-h1,
+[class*='css-'] .MuiTypography-h2,
+[class*='css-'] .MuiTypography-h3,
+[class*='css-'] .MuiTypography-h4,
+[class*='css-'] .MuiTypography-h5,
+[class*='css-'] .MuiTypography-h6,
+[class*='css-'] .MuiTypography-subtitle1,
+[class*='css-'] .MuiTypography-subtitle2,
+[class*='css-'] .MuiTypography-body1,
+[class*='css-'] .MuiTypography-body2,
+[class*='css-'] .MuiTypography-caption {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* 🎯 CORRECCIONES ESPECÍFICAS PARA COLORES RGB PROBLEMÁTICOS EN CLASES CSS-* */
+[class*='css-'][style*='color: rgb(249'],
+[class*='css-'][style*='color: rgb(248'],
+[class*='css-'][style*='color: rgb(241'],
+[class*='css-'][style*='color: rgb(229'],
+[class*='css-'][style*='color: rgb(209'],
+[class*='css-'][style*='color: rgb(156'],
+[class*='css-'][style*='color: rgb(107'],
+[class*='css-'][style*='color: rgb(75'],
+[class*='css-'][style*='color: rgb(55'],
+[class*='css-'][style*='color: rgb(31'] {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* ===== CORRECCIONES ESPECÍFICAS PARA "OPORTUNIDAD DE CRECIMIENTO" ===== */
+
+/* Targeting cards que contienen "Oportunidad de Crecimiento" */
+[class*='css-'] .MuiCard-root:has(.MuiTypography-root:contains('Oportunidad de Crecimiento')),
+[class*='css-'] .MuiCardContent-root:has(.MuiTypography-root:contains('Oportunidad de Crecimiento')),
+.MuiCard-root:has(.MuiTypography-root:contains('Oportunidad de Crecimiento')) {
+  background-color: var(--pure-white) !important;
+  border: 2px solid var(--strong-border) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Texto dentro de cards de "Oportunidad de Crecimiento" */
+[class*='css-'] .MuiCard-root:has(.MuiTypography-root:contains('Oportunidad de Crecimiento')) .MuiTypography-root,
+.MuiCard-root:has(.MuiTypography-root:contains('Oportunidad de Crecimiento')) .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--ultra-dark-text) !important;
+}
+
+/* ===== CORRECCIONES PARA ADVANCED INSIGHTS PANEL CON CLASES CSS-* ===== */
+[class*='css-'] .AdvancedInsightsPanel,
+[class*='css-'] .insights-panel,
+.AdvancedInsightsPanel[class*='css-'] {
+  background: rgba(0, 0, 0, 0.9) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+[class*='css-'] .AdvancedInsightsPanel .MuiTypography-root,
+.AdvancedInsightsPanel[class*='css-'] .MuiTypography-root {
+  color: var(--pure-white) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ===== CORRECCIONES ESPECÍFICAS PARA PSYCHOLOGY ICONS ===== */
+[class*='css-'] .MuiCard-root:has(.MuiSvgIcon-root[data-testid='PsychologyIcon']),
+[class*='css-'] .MuiCardContent-root:has(.MuiSvgIcon-root[data-testid='PsychologyIcon']),
+.MuiCard-root:has(.MuiSvgIcon-root[data-testid='PsychologyIcon']) {
+  background-color: var(--pure-white) !important;
+  border: 2px solid var(--strong-border) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Psychology Icons específicos */
+[class*='css-'] .MuiSvgIcon-root[data-testid='PsychologyIcon'],
+.MuiSvgIcon-root[data-testid='PsychologyIcon'] {
+  color: #dc2626 !important; /* Rojo fuerte para máximo contraste */
+  font-size: 24px !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* ===== CORRECCIONES PARA BOTONES EN CLASES CSS-* ===== */
+[class*='css-'] .MuiButton-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+  border-width: 2px !important;
+}
+
+[class*='css-'] .MuiButton-contained {
+  background-color: var(--ultra-dark-text) !important;
+  color: var(--pure-white) !important;
+  border: 2px solid var(--ultra-dark-text) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ===== CORRECCIONES PARA CHIPS EN CLASES CSS-* ===== */
+[class*='css-'] .MuiChip-root {
+  background-color: var(--light-gray) !important;
+  color: var(--ultra-dark-text) !important;
+  border: 1px solid var(--strong-border) !important;
+  font-weight: 700 !important;
+}
+
+[class*='css-'] .MuiChip-filled {
+  background-color: var(--ultra-dark-text) !important;
+  color: var(--pure-white) !important;
+  border: 1px solid var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+}
+
+/* ===== CORRECCIONES PARA PROGRESS BARS EN CLASES CSS-* ===== */
+[class*='css-'] .MuiLinearProgress-root {
+  background-color: var(--light-gray) !important;
+  border: 1px solid var(--strong-border) !important;
+  height: 8px !important;
+}
+
+[class*='css-'] .MuiLinearProgress-bar {
+  background-color: var(--ultra-dark-text) !important;
+  opacity: 1 !important;
+}
+
+/* ===== CORRECCIONES PARA TOOLTIPS EN CLASES CSS-* ===== */
+[class*='css-'] .MuiTooltip-tooltip {
+  background-color: var(--ultra-dark-text) !important;
+  color: var(--pure-white) !important;
+  font-weight: 600 !important;
+  border: 2px solid var(--strong-border) !important;
+  font-size: 0.875rem !important;
+}
+
+/* ===== CORRECCIONES PARA STACKS Y LAYOUTS EN CLASES CSS-* ===== */
+[class*='css-'] .MuiStack-root .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+[class*='css-'] .MuiBox-root .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--ultra-dark-text) !important;
+}
+
+/* ===== CORRECCIONES DE EMERGENCIA PARA OPACIDAD EN CLASES CSS-* ===== */
+[class*='css-'][style*='opacity: 0.'],
+[class*='css-'] [style*='opacity: 0.'] {
+  opacity: 1 !important;
+}
+
+/* ===== CORRECCIONES DE EMERGENCIA PARA BACKGROUND COLORS EN CLASES CSS-* ===== */
+[class*='css-'][style*='background-color: rgb(249'],
+[class*='css-'][style*='background-color: rgb(248'],
+[class*='css-'][style*='background-color: rgb(241'] {
+  background-color: var(--pure-white) !important;
+  border: 1px solid var(--strong-border) !important;
+}
+
+/* ===== CORRECCIONES PARA ESTADOS INTERACTIVOS EN CLASES CSS-* ===== */
+[class*='css-']:hover .MuiTypography-root,
+[class*='css-'] .MuiCard-root:hover .MuiTypography-root,
+[class*='css-'] .MuiButton-root:hover .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+[class*='css-']:focus-within .MuiTypography-root,
+[class*='css-'] .MuiCard-root:focus-within .MuiTypography-root,
+[class*='css-'] .MuiButton-root:focus-within .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  outline: 2px solid var(--ultra-dark-text) !important;
+  outline-offset: 2px !important;
+}
+
+/* ===== CORRECCIONES RESPONSIVAS PARA CLASES CSS-* ===== */
+@media (max-width: 768px) {
+  [class*='css-'] .MuiTypography-root {
+    color: var(--ultra-dark-text) !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.4 !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  [class*='css-'] .MuiTypography-root {
+    color: var(--ultra-dark-text) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+  }
+}
+
+/* ===== CORRECCIONES DE MÁXIMA ESPECIFICIDAD PARA CASOS EXTREMOS ===== */
+.MuiCard-root[class*='css-'] .MuiCardContent-root[class*='css-'] .MuiTypography-root[class*='css-'],
+.MuiBox-root[class*='css-'] .MuiStack-root[class*='css-'] .MuiTypography-root[class*='css-'],
+.MuiGrid-root[class*='css-'] .MuiBox-root[class*='css-'] .MuiTypography-root[class*='css-'] {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--ultra-dark-text) !important;
+}
+
+/* ===== OVERRIDE FINAL PARA CUALQUIER ELEMENTO PROBLEMÁTICO ===== */
+*[class*='css-'] {
+  color: var(--ultra-dark-text) !important;
+}
+
+/* ===== CORRECCIONES PARA VARIABLES CSS DE MUI ===== */
+:root {
+  --mui-palette-text-primary: var(--ultra-dark-text) !important;
+  --mui-palette-text-secondary: var(--medium-dark-text) !important;
+  --mui-palette-grey-500: var(--readable-text) !important;
+  --mui-palette-grey-400: var(--secondary-text) !important;
+}
+
+/* ===============================================================================
+   🎯 FIN DE CORRECCIONES AVANZADAS
+   Todas las correcciones de contraste implementadas para máxima accesibilidad
+   =============================================================================== */
+
+/* ===============================================================================
+   🚨 CORRECCIONES ULTRA-ESPECÍFICAS PARA CLASES CSS AUTO-GENERADAS
+   Solucionando específicamente las clases problemáticas identificadas
+   =============================================================================== */
+
+/* ===== CORRECCIONES PARA CLASES CSS EXACTAS DEL HTML PROBLEMÁTICO ===== */
+
+/* Clase css-11extc - Contenedor de insights "Oportunidad de Crecimiento" */
+.MuiBox-root.css-11extc,
+.css-11extc {
+  background-color: var(--pure-white) !important;
+  border: 2px solid var(--strong-border) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.MuiBox-root.css-11extc .MuiTypography-root,
+.css-11extc .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Clase css-1s59nrj - Títulos "Oportunidad de Crecimiento" */
+.MuiTypography-subtitle2.css-1s59nrj,
+.css-1s59nrj {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+}
+
+/* Clase css-9dafnp - Descripciones de insights */
+.MuiTypography-body2.css-9dafnp,
+.css-9dafnp {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Clase css-1rr4qq7 - Contenedor de texto en insights */
+.MuiBox-root.css-1rr4qq7,
+.css-1rr4qq7 {
+  background-color: transparent !important;
+}
+
+.MuiBox-root.css-1rr4qq7 .MuiTypography-root,
+.css-1rr4qq7 .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Clase css-1h9mz9o - Stack de insights */
+.MuiStack-root.css-1h9mz9o-MuiStack-root,
+.css-1h9mz9o-MuiStack-root {
+  background-color: var(--pure-white) !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+}
+
+.MuiStack-root.css-1h9mz9o-MuiStack-root .MuiTypography-root,
+.css-1h9mz9o-MuiStack-root .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Clase css-1fhgjcy - Contenedor de iconos */
+.MuiBox-root.css-1fhgjcy,
+.css-1fhgjcy {
+  background-color: var(--light-gray) !important;
+  border: 1px solid var(--strong-border) !important;
+  border-radius: 50% !important;
+}
+
+.MuiBox-root.css-1fhgjcy .MuiSvgIcon-root,
+.css-1fhgjcy .MuiSvgIcon-root {
+  color: var(--ultra-dark-text) !important;
+}
+
+/* Clase css-1eupedn - Iconos Psychology */
+.MuiSvgIcon-root.css-1eupedn-MuiSvgIcon-root,
+.css-1eupedn-MuiSvgIcon-root {
+  color: var(--ultra-dark-text) !important;
+  opacity: 1 !important;
+}
+
+/* Clase css-1b64xpx - Iconos Waves */
+.MuiSvgIcon-root.css-1b64xpx-MuiSvgIcon-root,
+.css-1b64xpx-MuiSvgIcon-root {
+  color: var(--ultra-dark-text) !important;
+  opacity: 1 !important;
+}
+
+/* Clase css-1ptgut4 - Segundo contenedor de insights */
+.MuiBox-root.css-1ptgut4,
+.css-1ptgut4 {
+  background-color: var(--pure-white) !important;
+  border: 2px solid var(--strong-border) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.MuiBox-root.css-1ptgut4 .MuiTypography-root,
+.css-1ptgut4 .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Clase css-1sazv7p - Stack principal de insights */
+.MuiStack-root.css-1sazv7p-MuiStack-root,
+.css-1sazv7p-MuiStack-root {
+  background-color: var(--pure-white) !important;
+  gap: 16px !important;
+}
+
+.MuiStack-root.css-1sazv7p-MuiStack-root .MuiTypography-root,
+.css-1sazv7p-MuiStack-root .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Clase css-1xlinfi - Título "Insights Inteligentes" */
+.MuiTypography-h6.css-1xlinfi-MuiTypography-root,
+.css-1xlinfi-MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+}
+
+/* ===== CORRECCIONES PARA ELEMENTOS DEL ANÁLISIS DETALLADO ===== */
+
+/* Clases para "Todos los Insights" */
+.MuiBox-root.css-1rd3fax,
+.css-1rd3fax {
+  background-color: var(--pure-white) !important;
+  border: 1px solid var(--medium-border) !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  margin-bottom: 8px !important;
+}
+
+.MuiBox-root.css-1rd3fax .MuiTypography-root,
+.css-1rd3fax .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Clases para stack de insights individuales */
+.MuiStack-root.css-1sos3zc-MuiStack-root,
+.css-1sos3zc-MuiStack-root {
+  background-color: transparent !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+}
+
+.MuiStack-root.css-1sos3zc-MuiStack-root .MuiTypography-root,
+.css-1sos3zc-MuiStack-root .MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Clases para texto de insights en análisis detallado */
+.MuiTypography-body2.css-1pr1wf8-MuiTypography-root,
+.css-1pr1wf8-MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+}
+
+.MuiTypography-caption.css-1rp6oxo-MuiTypography-root,
+.css-1rp6oxo-MuiTypography-root {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+  font-size: 0.75rem !important;
+}
+
+/* ===== CORRECCIONES PARA BOTONES DE ACCIÓN ===== */
+
+/* Botón "Empezar a ayudar" */
+.MuiButton-outlined.css-y14a0c-MuiButtonBase-root-MuiButton-root,
+.css-y14a0c-MuiButtonBase-root-MuiButton-root {
+  color: var(--ultra-dark-text) !important;
+  border-color: var(--ultra-dark-text) !important;
+  border-width: 2px !important;
+  font-weight: 600 !important;
+}
+
+.MuiButton-outlined.css-y14a0c-MuiButtonBase-root-MuiButton-root:hover,
+.css-y14a0c-MuiButtonBase-root-MuiButton-root:hover {
+  background-color: var(--ultra-dark-text) !important;
+  color: var(--pure-white) !important;
+  border-color: var(--ultra-dark-text) !important;
+}
+
+/* ===== CORRECCIONES PARA ACCIONES RECOMENDADAS ===== */
+
+/* Título de Acciones Recomendadas */
+.MuiTypography-h6.css-1lwg0st-MuiTypography-root,
+.css-1lwg0st-MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+}
+
+/* Descripción de Acciones Recomendadas */
+.MuiTypography-body2.css-pkvn81-MuiTypography-root,
+.css-pkvn81-MuiTypography-root {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* Títulos de tarjetas de acción */
+.MuiTypography-h6.css-qsjol9-MuiTypography-root,
+.css-qsjol9-MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+}
+
+/* Descripciones de tarjetas de acción */
+.MuiTypography-body2.css-s8fott-MuiTypography-root,
+.css-s8fott-MuiTypography-root {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CORRECCIONES PARA ELEMENTOS DE PROGRESO ===== */
+
+/* Texto de progreso de nivel */
+.MuiTypography-body2.css-1n8v0zg-MuiTypography-root,
+.css-1n8v0zg-MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Porcentaje completado */
+.MuiTypography-caption.css-t15we0-MuiTypography-root,
+.css-t15we0-MuiTypography-root {
+  color: var(--medium-dark-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CORRECCIONES PARA BALANCE ELEMENTAL ===== */
+
+/* Nombres de elementos */
+.MuiTypography-caption.css-14lmkve-MuiTypography-root,
+.css-14lmkve-MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+}
+
+/* Porcentajes de elementos */
+.MuiTypography-caption.css-1svfkuc-MuiTypography-root,
+.css-1svfkuc-MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+}
+
+/* ===== CORRECCIONES PARA TÍTULOS DE SECCIÓN ===== */
+
+/* Títulos h6 generales */
+.MuiTypography-h6.css-462s34-MuiTypography-root,
+.css-462s34-MuiTypography-root,
+.MuiTypography-h6.css-ozve08-MuiTypography-root,
+.css-ozve08-MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+}
+
+/* ===== CORRECCIONES MÁXIMA ESPECIFICIDAD ===== */
+
+/* Selector ultra-específico para cualquier texto dentro de clases CSS auto-generadas */
+[class*="css-"] .MuiTypography-root,
+[class*="css-"].MuiTypography-root,
+div[class*="css-"] .MuiTypography-root,
+div[class*="css-"].MuiTypography-root {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Selector específico para elementos con "Oportunidad de Crecimiento" */
+[class*="css-"]:has(.MuiTypography-root:contains("Oportunidad de Crecimiento")),
+[class*="css-"] .MuiTypography-root:contains("Oportunidad de Crecimiento") {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 700 !important;
+  background-color: var(--pure-white) !important;
+  border: 2px solid var(--strong-border) !important;
+  border-radius: 8px !important;
+  padding: 8px !important;
+}
+
+/* Selector específico para iconos Psychology */
+[class*="css-"] .MuiSvgIcon-root[data-testid="PsychologyIcon"],
+[class*="css-"].MuiSvgIcon-root[data-testid="PsychologyIcon"] {
+  color: var(--ultra-dark-text) !important;
+  opacity: 1 !important;
+}
+
+/* Selector específico para iconos Waves */
+[class*="css-"] .MuiSvgIcon-root[data-testid="WavesIcon"],
+[class*="css-"].MuiSvgIcon-root[data-testid="WavesIcon"] {
+  color: var(--ultra-dark-text) !important;
+  opacity: 1 !important;
+}
+
+/* ===== CORRECCIÓN DE EMERGENCIA PARA CUALQUIER TEXTO CLARO ===== */
+
+/* Forzar contraste en cualquier elemento con color claro */
+*[style*="color: rgb(249"],
+*[style*="color: rgb(229"],
+*[style*="color: rgb(156"],
+*[style*="color: rgb(107"],
+*[style*="color: rgb(148"] {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+}
+
+/* Forzar opacidad completa */
+*[style*="opacity: 0."] {
+  opacity: 1 !important;
+}
+
+/* ===== CORRECCIÓN FINAL CON MÁXIMA ESPECIFICIDAD ===== */
+
+/* Para asegurar que TODOS los textos en el Home tengan contraste adecuado */
+[data-testid="primary-dashboard"] *,
+#smart-actions *,
+.home-card-enhanced * {
+  color: var(--ultra-dark-text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Excepciones para elementos que deben mantener colores específicos */
+[data-testid="primary-dashboard"] .MuiLinearProgress-bar,
+[data-testid="primary-dashboard"] .MuiSvgIcon-root,
+#smart-actions .MuiLinearProgress-bar,
+#smart-actions .MuiSvgIcon-root {
+  color: inherit !important;
+}
+
+/* ===== DEBUG: RESALTAR ELEMENTOS PROBLEMÁTICOS ===== */
+/* Descomenta para debug */
+/*
+[class*="css-11extc"],
+[class*="css-1s59nrj"],
+[class*="css-9dafnp"] {
+  background-color: yellow !important;
+  border: 3px solid red !important;
+}
+*/
+
+/* ===============================================================================
+   🔥 SELECTORES ULTRA-AGRESIVOS - MÁXIMA ESPECIFICIDAD POSIBLE
+   Estos selectores tienen la máxima especificidad para sobrescribir cualquier CSS
+   =============================================================================== */
+
+/* Selectores combinados con atributos para máxima especificidad */
+div.MuiBox-root[class*="css-11extc"].MuiBox-root .MuiTypography-root,
+div.MuiBox-root[class*="css-1s59nrj"].MuiTypography-subtitle2,
+div.MuiBox-root[class*="css-9dafnp"].MuiTypography-body2,
+div.MuiBox-root[class*="css-1rr4qq7"].MuiBox-root .MuiTypography-root,
+div.MuiStack-root[class*="css-1h9mz9o"].MuiStack-root .MuiTypography-root,
+div.MuiBox-root[class*="css-1ptgut4"].MuiBox-root .MuiTypography-root,
+div.MuiStack-root[class*="css-1sazv7p"].MuiStack-root .MuiTypography-root {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  background-color: transparent !important;
+}
+
+/* Selectores específicos para títulos con ID y clase */
+h6.MuiTypography-h6[class*="css-1xlinfi"].MuiTypography-root,
+h6.MuiTypography-h6[class*="css-462s34"].MuiTypography-root,
+h6.MuiTypography-h6[class*="css-ozve08"].MuiTypography-root,
+h6.MuiTypography-h6[class*="css-1lwg0st"].MuiTypography-root,
+h6.MuiTypography-h6[class*="css-qsjol9"].MuiTypography-root {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+  opacity: 1 !important;
+}
+
+/* Selectores específicos para descripciones */
+p.MuiTypography-body2[class*="css-9dafnp"].MuiTypography-root,
+p.MuiTypography-body2[class*="css-s8fott"].MuiTypography-root,
+p.MuiTypography-body2[class*="css-pkvn81"].MuiTypography-root,
+p.MuiTypography-body2[class*="css-1pr1wf8"].MuiTypography-root {
+  color: #1e293b !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  opacity: 1 !important;
+}
+
+/* Selectores específicos para captions */
+span.MuiTypography-caption[class*="css-1rp6oxo"].MuiTypography-root,
+span.MuiTypography-caption[class*="css-t15we0"].MuiTypography-root,
+span.MuiTypography-caption[class*="css-14lmkve"].MuiTypography-root,
+span.MuiTypography-caption[class*="css-1svfkuc"].MuiTypography-root {
+  color: #334155 !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+}
+
+/* Selector ultra-específico para elementos dentro del dashboard principal */
+div[data-testid="primary-dashboard"].MuiCard-root .MuiBox-root .MuiTypography-root,
+div[data-testid="primary-dashboard"].MuiCard-root .MuiStack-root .MuiTypography-root,
+div[data-testid="primary-dashboard"].MuiCard-root .MuiGrid-root .MuiTypography-root {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Selector ultra-específico para acciones recomendadas */
+div#smart-actions.MuiBox-root .MuiCard-root .MuiTypography-root,
+div#smart-actions.MuiBox-root .MuiGrid-root .MuiTypography-root,
+div#smart-actions.MuiBox-root .MuiStack-root .MuiTypography-root {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Selectores con pseudo-elementos para máxima especificidad */
+.MuiTypography-root[class*="css-"]:not(:empty),
+.MuiTypography-root[class*="css-"]:not(:disabled),
+.MuiTypography-root[class*="css-"]:not([aria-hidden="true"]) {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Selectores específicos para elementos con texto "Oportunidad de Crecimiento" */
+*:has(.MuiTypography-root:contains("Oportunidad de Crecimiento")) .MuiTypography-root,
+*:has(.MuiTypography-root:contains("Elemento Agua Dominante")) .MuiTypography-root,
+*:has(.MuiTypography-root:contains("Balance Ayni")) .MuiTypography-root {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Selectores para iconos específicos */
+svg.MuiSvgIcon-root[data-testid="PsychologyIcon"][class*="css-"],
+svg.MuiSvgIcon-root[data-testid="WavesIcon"][class*="css-"],
+svg.MuiSvgIcon-root[data-testid="SendIcon"][class*="css-"],
+svg.MuiSvgIcon-root[data-testid="SchoolIcon"][class*="css-"] {
+  color: #000000 !important;
+  opacity: 1 !important;
+}
+
+/* Selectores para botones específicos */
+button.MuiButton-root[class*="css-y14a0c"],
+button.MuiButton-root[class*="css-w3138o"],
+button.MuiButtonBase-root[class*="css-"] {
+  color: #000000 !important;
+  border-color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+/* ===== CORRECCIÓN NUCLEAR - MÁXIMA ESPECIFICIDAD ===== */
+
+/* Selector que sobrescribe TODO */
+html body div.MuiContainer-root div.MuiGrid-root div.MuiBox-root .MuiCard-root .MuiBox-root .MuiTypography-root,
+html body div.MuiContainer-root div.MuiGrid-root div.MuiBox-root .MuiCard-root .MuiStack-root .MuiTypography-root,
+html body div.MuiContainer-root div.MuiGrid-root div.MuiBox-root .MuiCard-root .MuiGrid-root .MuiTypography-root {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+/* Selector específico para Material UI con especificidad extrema */
+.MuiThemeProvider-root .MuiCssBaseline-root .MuiContainer-root .MuiTypography-root[class*="css-"],
+.MuiThemeProvider-root .MuiCssBaseline-root .MuiContainer-root .MuiBox-root[class*="css-"] .MuiTypography-root,
+.MuiThemeProvider-root .MuiCssBaseline-root .MuiContainer-root .MuiStack-root[class*="css-"] .MuiTypography-root {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* ===== CORRECCIÓN DE EMERGENCIA ABSOLUTA ===== */
+
+/* Fuerza todos los textos a ser negros */
+* {
+  --mui-palette-text-primary: #000000 !important;
+  --mui-palette-text-secondary: #1e293b !important;
+}
+
+/* Sobrescribe variables CSS de Material UI */
+:root {
+  --mui-palette-text-primary: #000000 !important;
+  --mui-palette-text-secondary: #1e293b !important;
+  --mui-palette-grey-500: #000000 !important;
+  --mui-palette-grey-600: #000000 !important;
+  --mui-palette-grey-700: #000000 !important;
+}
+
+/* ===== CORRECCIÓN JAVASCRIPT-PROOF ===== */
+
+/* Sobrescribe estilos inline */
+[style*="color"] {
+  color: #000000 !important;
+}
+
+[style*="opacity"] {
+  opacity: 1 !important;
+}
+
+/* Corrección específica para clases problemáticas identificadas */
+.css-11extc,
+.css-1s59nrj,
+.css-9dafnp,
+.css-1rr4qq7,
+.css-1h9mz9o-MuiStack-root,
+.css-1ptgut4,
+.css-1sazv7p-MuiStack-root,
+.css-1xlinfi-MuiTypography-root,
+.css-1rd3fax,
+.css-1sos3zc-MuiStack-root,
+.css-1pr1wf8-MuiTypography-root,
+.css-1rp6oxo-MuiTypography-root {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+.css-11extc *,
+.css-1s59nrj *,
+.css-9dafnp *,
+.css-1rr4qq7 *,
+.css-1h9mz9o-MuiStack-root *,
+.css-1ptgut4 *,
+.css-1sazv7p-MuiStack-root *,
+.css-1xlinfi-MuiTypography-root *,
+.css-1rd3fax *,
+.css-1sos3zc-MuiStack-root *,
+.css-1pr1wf8-MuiTypography-root *,
+.css-1rp6oxo-MuiTypography-root * {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* ===== ANIMACIÓN PARA VERIFICAR QUE LOS ESTILOS SE APLICAN ===== */
+
+/* Agregar una animación sutil para confirmar que el CSS se está aplicando */
+@keyframes contrastFixApplied {
+  0% { 
+    border-left: 3px solid transparent; 
+  }
+  50% { 
+    border-left: 3px solid #000000; 
+  }
+  100% { 
+    border-left: 3px solid transparent; 
+  }
+}
+
+/* Aplicar animación a elementos problemáticos para debug */
+.css-11extc,
+.css-1s59nrj,
+.css-9dafnp {
+  animation: contrastFixApplied 2s ease-in-out;
+}
+
+/* ===== CORRECCIÓN FINAL ABSOLUTA ===== */
+
+/* Fuerza TODOS los elementos de texto a ser negros sin excepción */
+body * {
+  color: #000000 !important;
+}
+
+/* Excepciones específicas para elementos que deben mantener otros colores */
+body .MuiLinearProgress-bar,
+body .MuiSvgIcon-root:not([data-testid]),
+body .MuiButton-contained,
+body [role="progressbar"],
+body svg circle,
+body svg path:not(:first-child) {
+  color: inherit !important;
+}
+
+/* ===== MENSAJE DE VERIFICACIÓN ===== */
+/* Si puedes ver este comentario en las herramientas de desarrollador, 
+   el archivo CSS se está cargando correctamente */
+
+/* Agregar un pseudo-elemento para verificar que el CSS se aplica */
+.css-11extc::before {
+  content: "✅ CSS Applied";
+  position: absolute;
+  top: -20px;
+  left: 0;
+  font-size: 10px;
+  color: green;
+  background: yellow;
+  padding: 2px 4px;
+  border-radius: 2px;
+  z-index: 9999;
+  opacity: 0.7;
+}

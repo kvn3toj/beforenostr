@@ -1,0 +1,362 @@
+/* ===============================================================================
+   🎨 CORRECCIONES DE CONTRASTE - HOME COOMUNITY SUPERAPP
+   Soluciones específicas para problemas de contraste identificados
+   =============================================================================== */
+
+/* ===== CORRECCIÓN 1: WELCOME HEADER - TEXTO MEJORADO ===== */
+.home-welcome-header .MuiTypography-h4,
+[data-testid='welcome-header'] .MuiTypography-h4 {
+  /* Forzar negro puro para máximo contraste */
+  color: var(--welcome-header-text) !important;
+  font-weight: 700 !important;
+  /* Eliminar gradientes que reducen contraste */
+  background: none !important;
+  background-clip: unset !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: var(--welcome-header-text) !important;
+}
+
+/* Texto secundario en welcome header */
+.home-welcome-header .MuiTypography-body1,
+[data-testid='welcome-header'] .MuiTypography-body1 {
+  color: var(--home-text-medium) !important;
+  font-weight: 500 !important;
+}
+
+/* Fallback para navegadores sin soporte de background-clip */
+@supports not (background-clip: text) {
+  .home-welcome-header .MuiTypography-h4 {
+    color: var(--welcome-header-text) !important;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
+  }
+}
+
+/* ===== CORRECCIÓN 2: PORCENTAJE PRINCIPAL - MÁXIMO CONTRASTE ===== */
+.ayni-metrics-card .percentage-display,
+.ayni-metrics-card .MuiTypography-h2,
+.ayni-metrics-card .MuiTypography-h1,
+[data-testid*='percentage'],
+.percentage-main,
+[data-testid*='primary-dashboard'] .MuiTypography-h1 {
+  color: var(--home-percentage-text) !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  /* Forzar negro puro para máximo contraste */
+  background: none !important;
+  -webkit-text-fill-color: var(--home-percentage-text) !important;
+  -webkit-background-clip: unset !important;
+}
+
+/* Selector más específico para el porcentaje principal */
+.MuiBox-root .MuiTypography-h1,
+.MuiBox-root .MuiTypography-h2,
+.home-percentage-display {
+  color: var(--home-percentage-text) !important;
+  font-weight: 800 !important;
+  /* Asegurar que no se apliquen gradientes que reduzcan contraste */
+  background: none !important;
+  -webkit-text-fill-color: var(--home-percentage-text) !important;
+}
+
+/* ===== CORRECCIÓN 3: TEXTOS EN CARDS - CONTRASTE MEJORADO ===== */
+.home-card .MuiTypography-body2,
+.home-card .MuiTypography-caption,
+.module-card .MuiTypography-body2,
+.metrics-card .MuiTypography-body2 {
+  color: var(--home-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* Textos de énfasis en cards */
+.home-card .MuiTypography-subtitle1,
+.home-card .MuiTypography-subtitle2,
+.module-card .MuiTypography-subtitle1,
+.metrics-card .MuiTypography-subtitle1 {
+  color: var(--home-text-strong) !important;
+  font-weight: 600 !important;
+}
+
+/* Títulos principales mejorados */
+.home-card .MuiTypography-h5,
+.home-card .MuiTypography-h6,
+[data-testid*='primary-dashboard'] .MuiTypography-h6,
+[data-testid*='smart-header'] .MuiTypography-h4 {
+  color: var(--home-heading-primary) !important;
+  font-weight: 700 !important;
+}
+
+/* Texto de contenido principal */
+.home-card .MuiTypography-body1,
+[data-testid*='primary-dashboard'] .MuiTypography-body1 {
+  color: var(--home-text-primary) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CORRECCIÓN 4: VALORES DE MÉTRICAS - CONTRASTE MEJORADO ===== */
+.metrics-value,
+.ayni-metrics .metric-number,
+.stats-value,
+[data-testid*='metric-value'],
+.MuiTypography-h3,
+.MuiTypography-h4,
+.home-metric-enhanced {
+  color: var(--metric-value) !important;
+  font-weight: 700 !important;
+}
+
+/* Números específicos en métricas por tipo */
+.metric-ondas {
+  color: var(--metric-ondas-text) !important;
+  font-weight: 700 !important;
+}
+
+.metric-meritos {
+  color: var(--metric-meritos-text) !important;
+  font-weight: 700 !important;
+}
+
+.metric-ayni {
+  color: var(--metric-ayni-text) !important;
+  font-weight: 700 !important;
+}
+
+.metric-bien-comun {
+  color: var(--metric-bien-comun-text) !important;
+  font-weight: 700 !important;
+}
+
+/* Números específicos en métricas */
+.ayni-metrics-card .MuiTypography-h6,
+.ayni-metrics-card .metric-display,
+[data-testid*='primary-dashboard'] .MuiTypography-h4 {
+  color: var(--metric-value) !important;
+  font-weight: 700 !important;
+}
+
+/* ===== CORRECCIÓN 5: ELEMENTOS DE PROGRESO ===== */
+.elemental-progress-circle,
+.progress-circle,
+.circular-progress {
+  /* Mejorar contraste de círculos de progreso */
+}
+
+.elemental-progress-circle .element-fuego {
+  color: var(--element-fuego-contrast) !important;
+}
+
+.elemental-progress-circle .element-agua {
+  color: var(--element-agua-contrast) !important;
+}
+
+.elemental-progress-circle .element-tierra {
+  color: var(--element-tierra-contrast) !important;
+}
+
+.elemental-progress-circle .element-aire {
+  color: var(--element-aire-contrast) !important;
+}
+
+/* ===== CORRECCIÓN 6: ICONOS Y ELEMENTOS INTERACTIVOS ===== */
+.MuiIconButton-root .MuiSvgIcon-root,
+.home-icon,
+.module-icon {
+  color: var(--home-text-accent) !important;
+}
+
+/* Iconos en estado activo/hover */
+.MuiIconButton-root:hover .MuiSvgIcon-root {
+  color: var(--home-text-primary) !important;
+}
+
+/* ===== CORRECCIÓN 7: CHIPS Y BADGES ===== */
+.MuiChip-root {
+  background-color: var(--home-card-bg-subtle) !important;
+  color: var(--home-text-primary) !important;
+  border: 1px solid var(--home-card-border) !important;
+}
+
+.MuiChip-root.MuiChip-outlined {
+  border-color: var(--home-text-secondary) !important;
+  color: var(--home-text-secondary) !important;
+}
+
+/* ===== CORRECCIÓN 8: PROGRESS BARS ===== */
+.MuiLinearProgress-root {
+  background-color: var(--gray-200) !important;
+}
+
+.MuiLinearProgress-bar {
+  background-color: var(--ayni-primary) !important;
+}
+
+/* ===== CORRECCIÓN 9: CARDS Y CONTAINERS ===== */
+.home-card,
+.module-card,
+.metrics-card,
+.ayni-metrics-card {
+  background-color: var(--home-card-bg) !important;
+  border: 1px solid var(--home-card-border) !important;
+}
+
+/* ===== CORRECCIÓN 10: BOTONES Y ELEMENTOS INTERACTIVOS ===== */
+.MuiButton-root {
+  font-weight: 600 !important;
+}
+
+.MuiButton-contained {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.MuiButton-outlined {
+  color: var(--home-text-primary) !important;
+  border-color: var(--home-text-secondary) !important;
+}
+
+/* ===== CORRECCIÓN 11: MODULE CARDS - CONTRASTE MEJORADO ===== */
+[data-testid*='module-card'] .MuiTypography-h6,
+.module-card .MuiTypography-h6 {
+  color: var(--module-card-title) !important;
+  font-weight: 700 !important;
+}
+
+[data-testid*='module-card'] .MuiTypography-body2:first-of-type,
+.module-card .MuiTypography-subtitle2 {
+  color: var(--module-card-subtitle) !important;
+  font-weight: 600 !important;
+}
+
+[data-testid*='module-card'] .MuiTypography-body2:last-of-type,
+.module-card .MuiTypography-body2 {
+  color: var(--module-card-description) !important;
+  font-weight: 500 !important;
+}
+
+[data-testid*='module-card'] .MuiTypography-caption,
+.module-card .MuiTypography-caption {
+  color: var(--caption-text) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CORRECCIÓN 12: QUICK ACTIONS - CONTRASTE MEJORADO ===== */
+.QuickActionsGrid .MuiTypography-h6,
+.quick-actions .MuiTypography-h6 {
+  color: var(--home-heading-primary) !important;
+  font-weight: 700 !important;
+}
+
+.QuickActionsGrid .MuiTypography-subtitle1,
+.quick-actions .MuiTypography-subtitle1 {
+  color: var(--action-card-text) !important;
+  font-weight: 600 !important;
+}
+
+.QuickActionsGrid .MuiTypography-body2,
+.quick-actions .MuiTypography-body2 {
+  color: var(--home-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CORRECCIÓN 13: ESTADÍSTICAS Y NÚMEROS ===== */
+.module-card .stats-value,
+.home-metric-enhanced,
+.stats-numbers {
+  color: var(--stats-numbers) !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* ===== MODO OSCURO - AJUSTES ESPECÍFICOS ===== */
+@media (prefers-color-scheme: dark) {
+  .home-welcome-header .MuiTypography-h4 {
+    color: var(--home-text-primary) !important;
+  }
+
+  .MuiChip-root {
+    background-color: var(--home-card-bg-subtle) !important;
+    color: var(--home-text-primary) !important;
+  }
+
+  .home-card,
+  .module-card,
+  .metrics-card,
+  .ayni-metrics-card {
+    background-color: var(--home-card-bg) !important;
+    border-color: var(--home-card-border) !important;
+  }
+}
+
+/* ===== MODO DE ALTO CONTRASTE ===== */
+@media (prefers-contrast: high) {
+  .home-welcome-header .MuiTypography-h4,
+  .percentage-display,
+  .MuiTypography-h1,
+  .MuiTypography-h2,
+  .MuiTypography-h3,
+  .MuiTypography-h4 {
+    color: #000000 !important;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
+    text-shadow: none !important;
+  }
+
+  .home-card,
+  .module-card,
+  .metrics-card,
+  .ayni-metrics-card {
+    background-color: #ffffff !important;
+    border: 2px solid #000000 !important;
+  }
+
+  .MuiIconButton-root .MuiSvgIcon-root,
+  .home-icon,
+  .module-icon {
+    color: #000000 !important;
+  }
+}
+
+/* ===== ACCESIBILIDAD - MOTION REDUCIDO ===== */
+@media (prefers-reduced-motion: reduce) {
+  .home-welcome-header .MuiTypography-h4,
+  .percentage-display,
+  .metrics-value {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ===== FOCUS STATES MEJORADOS ===== */
+.enhanced-focus:focus-visible,
+.MuiButton-root:focus-visible,
+.MuiIconButton-root:focus-visible {
+  outline: 2px solid var(--ayni-primary) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* ===== SELECCIONES ESPECÍFICAS POR COMPONENTE ===== */
+
+/* WelcomeHeader específico */
+[data-testid='welcome-header'] .MuiTypography-h4 {
+  color: var(--home-text-primary) !important;
+  font-weight: 700 !important;
+}
+
+/* AyniMetricsCard específico */
+[data-testid*='ayni-metrics'] .MuiTypography-h2,
+[data-testid*='ayni-metrics'] .MuiTypography-h1 {
+  color: var(--home-percentage-text) !important;
+  font-weight: 800 !important;
+}
+
+/* ModuleCards específico */
+[data-testid*='module-card'] .MuiTypography-h6 {
+  color: var(--home-text-primary) !important;
+  font-weight: 600 !important;
+}
+
+[data-testid*='module-card'] .MuiTypography-body2 {
+  color: var(--home-text-secondary) !important;
+  font-weight: 500 !important;
+}

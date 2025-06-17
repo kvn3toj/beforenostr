@@ -49,7 +49,10 @@ interface ModuleData {
 
 interface ModuleCardsProps {
   onModuleClick?: (moduleId: string, path: string) => void;
+  onModuleHover?: (moduleId: string | null) => void;
+  hoveredModule?: string | null;
   isLoading?: boolean;
+  performanceMode?: 'normal' | 'optimized';
 }
 
 const modules: ModuleData[] = [
@@ -65,7 +68,7 @@ const modules: ModuleData[] = [
     path: '/uplay',
     stats: [
       { label: 'Videos completados', value: '12', icon: <VideoLibrary /> },
-      { label: 'Horas de aprendizaje', value: '24h', icon: <TrendingUp /> }
+      { label: 'Horas de aprendizaje', value: '24h', icon: <TrendingUp /> },
     ],
     isActive: true,
     userLevel: 'Explorador Visual',
@@ -84,7 +87,7 @@ const modules: ModuleData[] = [
     path: '/marketplace',
     stats: [
       { label: 'Intercambios Ayni', value: '8', icon: <Store /> },
-      { label: 'Confianza', value: '95%', icon: <Star /> }
+      { label: 'Confianza', value: '95%', icon: <Star /> },
     ],
     isActive: true,
     userLevel: 'Comerciante Confiable',
@@ -103,7 +106,7 @@ const modules: ModuleData[] = [
     path: '/social',
     stats: [
       { label: 'Conexiones activas', value: '34', icon: <People /> },
-      { label: 'Colaboraciones', value: '12', icon: <TrendingUp /> }
+      { label: 'Colaboraciones', value: '12', icon: <TrendingUp /> },
     ],
     isActive: true,
     isNew: true,
@@ -123,7 +126,7 @@ const modules: ModuleData[] = [
     path: '/ustats',
     stats: [
       { label: 'Insights generados', value: '15', icon: <Timeline /> },
-      { label: 'Progreso semanal', value: '+23%', icon: <TrendingUp /> }
+      { label: 'Progreso semanal', value: '+23%', icon: <TrendingUp /> },
     ],
     isActive: true,
     userLevel: 'Analista de Progreso',
@@ -132,18 +135,34 @@ const modules: ModuleData[] = [
   },
 ];
 
-export const ModuleCards: React.FC<ModuleCardsProps> = ({ 
-  onModuleClick, 
-  isLoading = false 
+export const ModuleCards: React.FC<ModuleCardsProps> = ({
+  onModuleClick,
+  onModuleHover,
+  hoveredModule: externalHoveredModule,
+  isLoading = false,
+  performanceMode = 'normal',
 }) => {
   const navigate = useNavigate();
-  const [hoveredModule, setHoveredModule] = useState<string | null>(null);
+  const [internalHoveredModule, setInternalHoveredModule] = useState<
+    string | null
+  >(null);
+
+  // Use external hover state if provided, otherwise use internal state
+  const hoveredModule = externalHoveredModule ?? internalHoveredModule;
 
   const handleModuleClick = (moduleId: string, path: string) => {
     if (onModuleClick) {
       onModuleClick(moduleId, path);
     } else {
       navigate(path);
+    }
+  };
+
+  const handleModuleHover = (moduleId: string | null) => {
+    if (onModuleHover) {
+      onModuleHover(moduleId);
+    } else {
+      setInternalHoveredModule(moduleId);
     }
   };
 
@@ -157,11 +176,11 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({
           size="sm"
           showMessage={false}
         />
-        
+
         {/* Module cards skeleton */}
         <Grid container spacing={3}>
           {[1, 2, 3, 4].map((index) => (
-            <Grid size={{xs:12,sm:6,lg:3}} key={index}>
+            <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={index}>
               <EnhancedLoadingState
                 type="skeleton"
                 variant="card"
@@ -185,14 +204,14 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({
         className="mb-6"
       >
         <Box>
-          <Typography 
-            variant="h5" 
+          <Typography
+            variant="h5"
             className="coomunity-h5 font-bold text-coomunity-900 mb-2 animate-fade-in"
           >
             Módulos CoomÜnity
           </Typography>
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             className="coomunity-body-sm text-coomunity-600 animate-fade-in"
             style={{ animationDelay: '0.1s' }}
           >
@@ -219,7 +238,7 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({
       {/* Enhanced module grid */}
       <Grid container spacing={3}>
         {modules.map((module, index) => (
-          <Grid size={{xs:12,sm:6,lg:3}} key={module.id}>
+          <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={module.id}>
             <Box
               className="animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
@@ -235,9 +254,9 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({
                 isActive={hoveredModule === module.id}
                 onClick={() => handleModuleClick(module.id, module.path)}
                 className={cn(
-                  "module-card-enhanced",
+                  'module-card-enhanced',
                   getElementColor(module.element || 'aire', 'border'),
-                  module.isNew && "module-card-new"
+                  module.isNew && 'module-card-new'
                 )}
               />
             </Box>
@@ -248,9 +267,9 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({
       {/* Enhanced inspirational message */}
       <Box
         className={cn(
-          "mt-6 p-6 rounded-xl text-center animate-fade-in",
-          "bg-gradient-subtle border border-dashed border-coomunity-300",
-          "hover-lift smooth-transition"
+          'mt-6 p-6 rounded-xl text-center animate-fade-in',
+          'bg-gradient-subtle border border-dashed border-coomunity-300',
+          'hover-lift smooth-transition'
         )}
         style={{ animationDelay: '0.5s' }}
       >
@@ -261,8 +280,8 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({
           🌟 "Cada módulo es una puerta hacia una nueva dimensión de tu
           potencial"
         </Typography>
-        <Typography 
-          variant="caption" 
+        <Typography
+          variant="caption"
           className="coomunity-caption text-coomunity-600"
         >
           Desarrolla equilibradamente todas las áreas de tu ser para contribuir
@@ -280,7 +299,7 @@ style.textContent = `
     0%, 100% { transform: scale(1); opacity: 0.7; }
     50% { transform: scale(1.1); opacity: 0.4; }
   }
-  
+
   @keyframes bounce {
     0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
     40% { transform: translateY(-10px); }

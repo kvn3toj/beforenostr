@@ -5,7 +5,6 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import Fade from '@mui/material/Fade';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import Fab from '@mui/material/Fab';
@@ -15,7 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Badge from '@mui/material/Badge';
 import { useTheme, alpha, useMediaQuery } from '@mui/material';
 
-// 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
+// ��� REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -30,10 +29,6 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import SpeedIcon from '@mui/icons-material/Speed';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-
-// Importar la versión renovada y mejorada
-import { HomeRenovated } from './HomeRenovated';
-import { HomeEnhanced } from './HomeEnhanced';
 import {
   useDashboardData,
   useBackendAvailability,
@@ -42,6 +37,11 @@ import {
   type BackendUser,
 } from '../hooks/useRealBackendData';
 import { toSafeNumber } from '../utils/numberUtils';
+import SafeFade from '../components/ui/SafeFade';
+
+// 🎯 Hooks personalizados mejorados
+import { useIntelligentNavigation } from '../hooks/home/useIntelligentNavigation';
+import { useHomeSkeletons } from '../components/home/OptimizedHomeSkeletons';
 
 // 🎯 Componentes modulares del Home
 import {
@@ -57,15 +57,26 @@ import {
   PerformanceMonitor,
   SmartQuickActions,
   IntelligentNotificationCenter,
-  // 🌟 Fase Avanzada: Nuevos componentes 3D
+  // 🎯 Nuevos componentes optimizados
+  OptimizedHomeSkeletons,
+  AccessibilityEnhancer,
+  // 🚀 Componentes visuales mejorados
+  EnhancedWelcomeBanner,
+  EnhancedModuleCards,
+  RealTimeMetricsDashboard,
+  AchievementsProgressPanel,
   EnergyWeatherWidget,
   LiveActivityFeed,
-  EnhancedParticles,
 } from '../components/home';
 
-// 🎨 Importar estilos Phase 3 y efectos avanzados
+// 🎨 Importar estilos Phase 3
 import '../styles/home-enhanced.css';
-import '../styles/home-effects-advanced.css';
+// 🎯 Importar corrección inteligente (mantiene colores, elimina problemas)
+import '../styles/home-smart-fix.css';
+// 📐 Importar ajustes finales de espaciado
+import '../styles/home-spacing-final.css';
+// 🛡️ Importar prevención de errores de scroll
+import '../styles/scroll-error-prevention.css';
 
 // 🏷️ Tipos para las notificaciones inteligentes
 interface Notification {
@@ -233,19 +244,45 @@ const useScrollToTop = () => {
 
   // Función de scroll sin dependencias
   const scrollToTop = useCallback(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    try {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    } catch (error) {
+      console.warn('Error en scrollToTop:', error);
+      // Fallback sin smooth scroll
+      try {
+        window.scrollTo(0, 0);
+      } catch (fallbackError) {
+        console.warn('Error en fallback scrollTo:', fallbackError);
+      }
+    }
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
+      try {
+        setShowScrollTop(window.scrollY > 300);
+      } catch (error) {
+        console.warn('Error obteniendo window.scrollY:', error);
+        setShowScrollTop(false);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    try {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => {
+        try {
+          window.removeEventListener('scroll', handleScroll);
+        } catch (error) {
+          console.warn('Error removiendo scroll listener:', error);
+        }
+      };
+    } catch (error) {
+      console.warn('Error agregando scroll listener:', error);
+      return () => {};
+    }
   }, []);
 
   return { showScrollTop, scrollToTop };
@@ -306,7 +343,7 @@ const useHomePerformance = () => {
 };
 
 // 🎯 Componente principal del Home
-export const HomeOriginal: React.FC = () => {
+export const Home: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -341,6 +378,18 @@ export const HomeOriginal: React.FC = () => {
   // 🔗 Conectar al backend real con fallback a mock data
   const backendAvailability = useBackendAvailability();
   const dashboardData = useDashboardData(user?.id || 'mock-user-id');
+
+  // 🎯 Navegación inteligente con prefetch
+  const {
+    navigateWithPrefetch,
+    prefetchRoute,
+    getRouteRecommendations,
+    isNavigating,
+  } = useIntelligentNavigation();
+
+  // 🎯 Skeletons optimizados
+  const { shouldShowSkeleton, skeletonVariant } =
+    useHomeSkeletons(dashboardData);
 
   // 🎯 Hooks personalizados para funcionalidades avanzadas (ORDEN CORRECTO)
   const { showScrollTop, scrollToTop } = useScrollToTop();
@@ -380,13 +429,11 @@ export const HomeOriginal: React.FC = () => {
   const walletData = dashboardData.walletData as BackendWalletData | undefined;
   const userData = dashboardData.userProfile as BackendUser | undefined;
 
-  // 🎨 Animación de entrada optimizada
+  // 🎨 Animación de entrada optimizada - Iniciar inmediatamente para evitar errores de scroll
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setAnimate(true);
-      updatePerformanceMetrics();
-    }, 100);
-    return () => clearTimeout(timer);
+    // Establecer animate inmediatamente para evitar problemas con Transition
+    setAnimate(true);
+    updatePerformanceMetrics();
   }, [updatePerformanceMetrics]);
 
   // 🧹 CLEANUP OBLIGATORIO según Builder.io
@@ -467,36 +514,41 @@ export const HomeOriginal: React.FC = () => {
     []
   );
 
-  // 🎯 Handlers de navegación (ORDEN #3 - Depende de handlers anteriores)
+  // 🎯 Handlers de navegación inteligente (ORDEN #3 - Depende de handlers anteriores)
   const handleModuleClick = useCallback(
     (moduleId: string, path: string) => {
       setLastInteraction(new Date());
       setHoveredModule(null);
 
-      // Analytics tracking mejorado
-      console.log('🎯 Module clicked:', {
-        moduleId,
-        path,
-        timestamp: new Date(),
+      // Navegación inteligente con prefetch
+      navigateWithPrefetch(path, {
+        analytics: {
+          source: 'home',
+          module: moduleId,
+          action: 'module_click',
+        },
+        prefetchRelated: true,
+        priority: 'high',
       });
-      navigate(path);
     },
-    [navigate]
+    [navigateWithPrefetch]
   );
 
   const handleQuickActionClick = useCallback(
     (path: string, actionType?: string) => {
       setLastInteraction(new Date());
 
-      // Analytics tracking
-      console.log('⚡ Quick action:', {
-        path,
-        actionType,
-        timestamp: new Date(),
+      // Navegación inteligente con analytics
+      navigateWithPrefetch(path, {
+        analytics: {
+          source: 'home',
+          module: 'quick_actions',
+          action: actionType || 'quick_action',
+        },
+        priority: 'high',
       });
-      navigate(path);
     },
-    [navigate]
+    [navigateWithPrefetch]
   );
 
   // 🎯 Handlers de interacción avanzados (ORDEN #4)
@@ -571,60 +623,32 @@ export const HomeOriginal: React.FC = () => {
     };
   }, [walletData]);
 
-  // 🎯 Componente de esqueleto de carga
-  const LoadingSkeleton = () => (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
-      <Skeleton
-        variant="rectangular"
-        height={120}
-        sx={{ mb: 3, borderRadius: 2 }}
+  // 🎯 Mostrar skeleton optimizado mientras carga
+  if (shouldShowSkeleton) {
+    return (
+      <OptimizedHomeSkeletons
+        variant={skeletonVariant || 'full'}
+        showAnimation={performanceMode === 'normal'}
+        performanceMode={performanceMode}
       />
-      <Grid container spacing={3}>
-        <Grid item xs={12} lg={8}>
-          <Skeleton
-            variant="rectangular"
-            height={400}
-            sx={{ borderRadius: 2 }}
-          />
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          <Skeleton
-            variant="rectangular"
-            height={200}
-            sx={{ mb: 2, borderRadius: 2 }}
-          />
-          <Skeleton
-            variant="rectangular"
-            height={180}
-            sx={{ borderRadius: 2 }}
-          />
-        </Grid>
-      </Grid>
-    </Container>
-  );
-
-  // 🎯 Mostrar esqueleto mientras carga
-  if (dashboardData.isLoading && !gameData && !walletData) {
-    return <LoadingSkeleton />;
+    );
   }
 
   return (
     <Container
       maxWidth="xl"
-      className="home-container coomunity-container gradient-mesh-bg"
-      sx={{ py: 3, position: 'relative', overflow: 'hidden' }}
+      className="home-container coomunity-container"
+      sx={{
+        position: 'relative',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: { xs: 2, md: 3, lg: 4 }
+      }}
     >
-      {/* 🌟 Partículas flotantes de fondo */}
-      <EnhancedParticles
-        type="sparkle"
-        count={12}
-        colors={['#4FC3F7', '#8BC34A', '#FFD54F', '#FF8A65', '#BA68C8']}
-        intensity={performanceMode === 'optimized' ? 'low' : 'medium'}
-        interactive={true}
-      />
       {/* 🔗 Estado de conexión al backend mejorado */}
       {!backendAvailability.isAvailable && (
-        <Fade in={true}>
+        <SafeFade in={true}>
           <Alert
             severity="warning"
             action={
@@ -677,12 +701,12 @@ export const HomeOriginal: React.FC = () => {
               </Box>
             )}
           </Alert>
-        </Fade>
+        </SafeFade>
       )}
 
       {/* 🔄 Indicador de actualización en tiempo real mejorado */}
       {backendAvailability.isAvailable && (
-        <Fade in={true}>
+        <SafeFade in={true}>
           <Alert
             severity="info"
             action={
@@ -751,40 +775,51 @@ export const HomeOriginal: React.FC = () => {
               Render: {Math.round(performanceMetrics.renderTime)}ms
             </Box>
           </Alert>
-        </Fade>
+        </SafeFade>
       )}
 
-      {/* 🎯 Header principal con saludo personalizado */}
-      <Fade in={animate} timeout={600}>
-        <Box sx={{ mb: 4 }}>
-          <WelcomeHeader
-            userName={
-              (userData?.full_name || '').split(' ')[0] ||
-              (user?.full_name || '').split(' ')[0] ||
-              'CoomÜnity'
-            }
-            isBackendConnected={backendAvailability.isAvailable}
-            notificationCount={notificationStats.unread}
-            onNotificationClick={handleNotificationClick}
-            onSettingsClick={handleSettingsClick}
-            ayniLevel={normalizedGameData.ayniLevel}
-            progressToNextLevel={normalizedGameData.ayniProgress}
-            primaryAction={{
-              label: quickActionsExpanded
-                ? 'Ocultar Acciones'
-                : 'Acciones Rápidas',
-              onClick: handleQuickActionsToggle,
-              icon: <AutoAwesomeIcon />,
-            }}
-          />
-        </Box>
-      </Fade>
+      {/* 🎯 Banner de bienvenida mejorado */}
+      <Box id="welcome-header" role="banner">
+        <EnhancedWelcomeBanner
+          userName={
+            (userData?.full_name || '').split(' ')[0] ||
+            (user?.full_name || '').split(' ')[0] ||
+            'CoomÜnity'
+          }
+          ayniLevel={normalizedGameData.ayniLevel}
+          ayniProgress={normalizedGameData.ayniProgress}
+          ondas={normalizedGameData.ondas}
+          meritos={normalizedGameData.meritos}
+          streak={normalizedGameData.streak}
+          onStartJourney={() => navigateWithPrefetch('/uplay', {
+            analytics: { source: 'home', module: 'enhanced_banner', action: 'start_journey' },
+            priority: 'high',
+          })}
+        />
+      </Box>
 
-      <Grid container spacing={3}>
-        {/* 🎯 Panel principal - Métricas Ayni */}
-        <Grid item xs={12} lg={8}>
-          <Fade in={animate} timeout={800}>
-            <Box className="">
+      {/* 🚀 Dashboard de Métricas en Tiempo Real */}
+      <Box>
+        <RealTimeMetricsDashboard
+          gameData={normalizedGameData}
+          walletData={normalizedWalletData}
+          isConnected={backendAvailability.isAvailable}
+          onRefresh={handleRefresh}
+        />
+      </Box>
+
+      {/* 🎯 Grid principal con mejor estructura */}
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={{ xs: 2, md: 3, lg: 4 }}>
+          {/* 🎯 Panel principal - Métricas Ayni */}
+          <Grid item xs={12} lg={8}>
+            <SafeFade in={animate} timeout={800}>
+              <Box
+              id="main-content"
+              role="main"
+              aria-label="Balance Ayni personal"
+              className=""
+            >
               <AyniMetricsCard
                 ondas={normalizedGameData.ondas}
                 meritos={normalizedGameData.meritos}
@@ -800,13 +835,13 @@ export const HomeOriginal: React.FC = () => {
                 isConnected={backendAvailability.isAvailable}
               />
             </Box>
-          </Fade>
+          </SafeFade>
         </Grid>
 
         {/* 🎯 Panel lateral - Wallet y acciones */}
         <Grid item xs={12} lg={4}>
           <Fade in={animate} timeout={1000}>
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, md: 3 }}>
               {/* 💰 Wallet Overview */}
               <Grid item xs={12}>
                 <WalletOverview
@@ -822,57 +857,47 @@ export const HomeOriginal: React.FC = () => {
 
               {/* 🎯 Acciones Ayni mejoradas con IA */}
               <Grid item xs={12}>
-                <SmartQuickActions
-                  onActionClick={(action) =>
-                    handleQuickActionClick(action.path, action.category)
-                  }
-                  isExpanded={quickActionsExpanded}
-                  onToggleExpanded={handleQuickActionsToggle}
-                  performanceMode={performanceMode}
-                  userLevel={
-                    normalizedGameData.ayniProgress > 80
-                      ? 'advanced'
-                      : normalizedGameData.ayniProgress > 40
-                        ? 'intermediate'
-                        : 'beginner'
-                  }
-                />
+                <Box
+                  id="quick-actions"
+                  role="complementary"
+                  aria-label="Acciones rápidas personalizadas"
+                >
+                  <SmartQuickActions
+                    onActionClick={(action) =>
+                      handleQuickActionClick(action.path, action.category)
+                    }
+                    isExpanded={quickActionsExpanded}
+                    onToggleExpanded={handleQuickActionsToggle}
+                    performanceMode={performanceMode}
+                    userLevel={
+                      normalizedGameData.ayniProgress > 80
+                        ? 'advanced'
+                        : normalizedGameData.ayniProgress > 40
+                          ? 'intermediate'
+                          : 'beginner'
+                    }
+                  />
+                </Box>
               </Grid>
 
-              {/* 🚀 Phase 3: Ayni Balance Visualization Mejorado */}
+              {/* 🚀 Phase 3: Ayni Balance Visualization Mejorada */}
               <Grid item xs={12}>
                 <Fade in={animate} timeout={1200}>
                   <Box>
                     <AyniBalanceVisualization
                       balanceAyni={normalizedGameData.balanceAyni}
                       elementos={normalizedGameData.elementos}
-                      userLevel={normalizedGameData.ayniLevel}
-                      recentActivity={{
-                        streak: normalizedGameData.streak,
-                        lastInteraction: lastInteraction,
-                        totalContributions:
-                          normalizedGameData.bienComunContributions,
-                      }}
                       className=""
                     />
                   </Box>
                 </Fade>
               </Grid>
 
-              {/* 🌤️ EnergyWeatherWidget - NUEVO */}
+              {/* 🌤️ Widget de Clima Energético */}
               <Grid item xs={12}>
-                <Fade in={animate} timeout={1400}>
+                <Fade in={animate} timeout={1300}>
                   <Box>
-                    <EnergyWeatherWidget
-                      userMetrics={{
-                        ondas: normalizedGameData.ondas,
-                        meritos: normalizedGameData.meritos,
-                        elementos: normalizedGameData.elementos,
-                        balanceAyni: normalizedGameData.balanceAyni,
-                        socialConnections: 25, // Mock data - se podría conectar a datos reales
-                      }}
-                      className=""
-                    />
+                    <EnergyWeatherWidget gameData={normalizedGameData} />
                   </Box>
                 </Fade>
               </Grid>
@@ -897,33 +922,34 @@ export const HomeOriginal: React.FC = () => {
           </Fade>
         </Grid>
 
-        {/* 🌊 LiveActivityFeed - NUEVO */}
-        <Grid item xs={12} lg={6}>
-          <Fade in={animate} timeout={1600}>
-            <Box>
-              <LiveActivityFeed
-                maxActivities={8}
-                updateInterval={15}
-                className=""
+          {/* 🏆 Panel de Logros y Progreso */}
+          <Grid item xs={12}>
+            <Fade in={animate} timeout={1200}>
+              <AchievementsProgressPanel
+                gameData={normalizedGameData}
+                onClaimReward={(achievementId) => {
+                  console.log('🏆 Claiming reward for:', achievementId);
+                  setSuccessMessage('¡Recompensa reclamada exitosamente!');
+                }}
               />
-            </Box>
-          </Fade>
-        </Grid>
+            </Fade>
+          </Grid>
 
-        {/* 🎯 Módulos principales */}
-        <Grid item xs={12} lg={6}>
-          <Fade in={animate} timeout={1400}>
-            <Box className="">
-              <ModuleCards
-                onModuleClick={handleModuleClick}
-                onModuleHover={handleModuleHover}
-                hoveredModule={hoveredModule}
-                isLoading={dashboardData.isLoading}
-                performanceMode={performanceMode}
-              />
-            </Box>
-          </Fade>
-        </Grid>
+          {/* 🎯 Módulos principales */}
+          <Grid item xs={12}>
+            <Fade in={animate} timeout={1400}>
+              <Box
+                id="modules"
+                role="navigation"
+                aria-label="Módulos principales de CoomÜnity"
+              >
+                <EnhancedModuleCards
+                  onModuleClick={handleModuleClick}
+                  performanceMode={performanceMode}
+                />
+              </Box>
+            </SafeFade>
+          </Grid>
 
         {/* 🔔 Centro de notificaciones inteligente */}
         {notificationsOpen && (
@@ -968,7 +994,15 @@ export const HomeOriginal: React.FC = () => {
             </Box>
           </Grid>
         )}
-      </Grid>
+
+          {/* 🌊 Feed de Actividad en Tiempo Real */}
+          <Grid item xs={12}>
+            <Fade in={animate} timeout={1600}>
+              <LiveActivityFeed />
+            </Fade>
+          </Grid>
+        </Grid>
+      </Box>
 
       {/* 🌟 Mensaje inspiracional flotante */}
       <Box
@@ -979,15 +1013,11 @@ export const HomeOriginal: React.FC = () => {
           maxWidth: isMobile ? 280 : 300,
           p: 2,
           borderRadius: 3,
-          background: `linear-gradient(135deg, ${alpha(
-            theme.palette.primary.main,
-            0.9
-          )} 0%, ${alpha(theme.palette.secondary.main, 0.9)} 100%)`,
+          background: theme.palette.primary.main,
           color: 'white',
-          boxShadow: theme.shadows[8],
-          backdropFilter: 'blur(10px)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
           border: `1px solid ${alpha('#fff', 0.2)}`,
-          opacity: animate ? 1 : 0,
+          opacity: animate ? 0.95 : 0,
           transform: animate ? 'translateY(0)' : 'translateY(20px)',
           transition: 'all 0.6s ease-in-out 2s',
           zIndex: 1000,
@@ -1157,10 +1187,33 @@ export const HomeOriginal: React.FC = () => {
         isVisible={insightsPanelOpen}
         onClose={handleInsightsPanelClose}
       />
+
+      {/* 🎯 Accessibility Enhancer */}
+      <AccessibilityEnhancer
+        onNavigateToSection={(sectionId) => {
+          const element = document.getElementById(sectionId);
+          if (element && element.isConnected) {
+            try {
+              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              element.focus();
+            } catch (error) {
+              console.warn('Error en scrollIntoView:', error);
+              try {
+                element.scrollIntoView();
+                element.focus();
+              } catch (fallbackError) {
+                console.warn('Error en fallback scrollIntoView:', fallbackError);
+                element.focus();
+              }
+            }
+          }
+        }}
+        onToggleNotifications={handleNotificationClick}
+        onOpenSettings={handleSettingsClick}
+        onShowHelp={() => console.log('🆘 Showing help')}
+      />
     </Container>
   );
 };
 
-// Exportar la versión mejorada que integra todos los widgets
-export const Home = HomeEnhanced;
-export default HomeEnhanced;
+export default Home;

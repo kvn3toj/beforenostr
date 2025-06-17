@@ -1,0 +1,307 @@
+/* ===============================================================================
+   🎯 BUILDER.IO OVERRIDE FORCE - ESPECIFICIDAD MÁXIMA
+   CSS ultra agresivo específicamente para elementos Builder.io
+   =============================================================================== */
+
+/* ===== ESPECIFICIDAD NUCLEAR - BUILDER.IO ===== */
+html
+  body
+  div[data-builder-component]
+  div[style*='backgroundColor: rgb(41, 37, 36)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15) !important;
+}
+
+html
+  body
+  div[data-builder-component]
+  div[style*='backgroundColor: rgb(55, 65, 81)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #16a34a !important;
+  border-radius: 16px !important;
+}
+
+html
+  body
+  div[data-builder-component]
+  div[style*='backgroundColor: rgb(31, 41, 55)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #16a34a !important;
+  border-radius: 16px !important;
+}
+
+html
+  body
+  div[data-builder-component]
+  div[style*='backgroundColor: rgb(17, 24, 39)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #16a34a !important;
+  border-radius: 16px !important;
+}
+
+/* ===== VARIANTES SIN ESPACIOS ===== */
+html
+  body
+  div[data-builder-component]
+  div[style*='backgroundColor:rgb(41,37,36)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+  border-radius: 16px !important;
+}
+
+html
+  body
+  div[data-builder-component]
+  div[style*='background-color:rgb(41,37,36)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+  border-radius: 16px !important;
+}
+
+/* ===== TODOS LOS HIJOS DE BUILDER ===== */
+div[data-builder-component] * {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+div[data-builder-content] * {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+div[data-builder-block] * {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ===== ESPECIFICIDAD EXTREMA PARA ELEMENTOS PROBLEMÁTICOS ===== */
+html body main section div div div[style*='backgroundColor: rgb(41, 37, 36)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15) !important;
+}
+
+html body main section div div div[style*='backgroundColor: rgb(55, 65, 81)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #16a34a !important;
+  border-radius: 16px !important;
+}
+
+/* ===== SELECTORS CON TRIPLE ANIDACIÓN ===== */
+html body div div div[style*='backgroundColor: rgb(41, 37, 36)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+  border-radius: 16px !important;
+}
+
+html body div div div[style*='backgroundColor: rgb(55, 65, 81)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #16a34a !important;
+  border-radius: 16px !important;
+}
+
+html body div div div[style*='backgroundColor: rgb(31, 41, 55)'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #16a34a !important;
+  border-radius: 16px !important;
+}
+
+/* ===== ESPECÍFICO PARA MÉTRICAS (NÚMEROS GRANDES) ===== */
+div[style*='backgroundColor: rgb(41, 37, 36)'] span[style*='fontSize'] {
+  color: #15803d !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+
+div[style*='backgroundColor: rgb(41, 37, 36)'] span:not([style*='fontSize']) {
+  color: #166534 !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* ===== OUTLINES PROBLEMÁTICOS ===== */
+html body *[style*='outline: rgb(99, 102, 241)'] {
+  outline: none !important;
+  outline-color: transparent !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+}
+
+html body *[style*='outlineColor: rgb(99, 102, 241)'] {
+  outline: none !important;
+  outline-color: transparent !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+}
+
+html body *[style*='outline-color: rgb(99, 102, 241)'] {
+  outline: none !important;
+  outline-color: transparent !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+}
+
+/* ===== ELIMINAR CUALQUIER OUTLINE AZUL/MORADO ===== */
+html body * {
+  outline-color: transparent !important;
+}
+
+/* ===== FORZAR TODOS LOS ELEMENTOS INLINE ===== */
+[style*='backgroundColor'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+[style*='background-color'] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ===== ELEMENTOS ESPECÍFICOS POR CONTENIDO ===== */
+div:contains('10+') {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+}
+
+div:contains('2.4K') {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 2px solid #22c55e !important;
+}
+
+/* ===== REGLAS CATCH-ALL ULTRA AGRESIVAS ===== */
+div[style],
+span[style],
+section[style],
+article[style],
+main[style] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ===== OVERRIDE PARA CUALQUIER GRADIENTE OSCURO ===== */
+[style*='linear-gradient'] {
+  background: #ffffff !important;
+  background-image: none !important;
+}
+
+[style*='backgroundImage'] {
+  background: #ffffff !important;
+  background-image: none !important;
+}
+
+/* ===== ÚLTIMO RECURSO - RESETEAR TODO ===== */
+* {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ===== EXCEPCIONES PARA ELEMENTOS QUE SÍ DEBEN TENER COLOR ===== */
+/* Permitir colores solo en botones y elementos interactivos */
+button:not([style*='background']),
+a:not([style*='background']),
+input:not([style*='background']),
+.MuiButton-contained:not([style*='background']) {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+  color: #ffffff !important;
+}
+
+/* Permitir imágenes, videos y SVGs */
+img,
+video,
+canvas,
+svg {
+  background: transparent !important;
+}
+
+/* ===== ANIMACIÓN VERDE PARA ELEMENTOS CORREGIDOS ===== */
+@keyframes green-fix-pulse {
+  0% {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+  }
+  100% {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+}
+
+div[style*='backgroundColor: rgb(41, 37, 36)'] {
+  animation: green-fix-pulse 2s ease-in-out infinite;
+}
+
+/* ===== DEBUGGING - MARCAR ELEMENTOS CORREGIDOS ===== */
+div[style*='backgroundColor: rgb(41, 37, 36)']::after {
+  content: '✅ CORREGIDO';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #22c55e;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* ===== MEDIA QUERIES PARA ASEGURAR COMPATIBILIDAD ===== */
+@media screen {
+  * {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+  }
+}
+
+@media print {
+  * {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
+/* ===== PREFIJOS DE NAVEGADOR ===== */
+*::-webkit-any() {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+*::-moz-any() {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
