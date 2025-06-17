@@ -1,29 +1,33 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import {
-  Container,
-  Grid,
-  Alert,
-  Button,
-  Fade,
-  Box,
-  useTheme,
-  alpha,
-  Snackbar,
-  Fab,
-  Skeleton,
-  useMediaQuery,
-  Tooltip,
-  CircularProgress,
-} from '@mui/material';
-import { 
-  Refresh,
-  AutoAwesome,
-  EmojiEvents,
-  Groups,
-  KeyboardArrowUp,
-  Update,
-  Psychology,
-} from '@mui/icons-material';
+
+// 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
+import Box from '@mui/material/Box';
+import Snackbar from '@mui/material/Snackbar';
+import Fab from '@mui/material/Fab';
+import Skeleton from '@mui/material/Skeleton';
+import Tooltip from '@mui/material/Tooltip';
+import CircularProgress from '@mui/material/CircularProgress';
+import Badge from '@mui/material/Badge';
+import { useTheme, alpha, useMediaQuery } from '@mui/material';
+
+// 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
+import RefreshIcon from '@mui/icons-material/Refresh';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import GroupsIcon from '@mui/icons-material/Groups';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import UpdateIcon from '@mui/icons-material/Update';
+import PsychologyIcon from '@mui/icons-material/Psychology';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SettingsIcon from '@mui/icons-material/Settings';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import InsightsIcon from '@mui/icons-material/Insights';
+import SpeedIcon from '@mui/icons-material/Speed';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -46,24 +50,38 @@ import {
   // 🚀 Phase 3: Advanced Visual Components
   AdvancedInsightsPanel,
   AyniBalanceVisualization,
+  PerformanceMonitor,
+  SmartQuickActions,
+  IntelligentNotificationCenter,
 } from '../components/home';
 
 // 🎨 Importar estilos Phase 3
 import '../styles/home-enhanced.css';
 
-// 🏷️ Tipos para las notificaciones
+// 🏷️ Tipos para las notificaciones inteligentes
 interface Notification {
   id: string;
-  type: 'ayni' | 'meritos' | 'social' | 'marketplace' | 'system';
+  type:
+    | 'ayni'
+    | 'meritos'
+    | 'social'
+    | 'marketplace'
+    | 'system'
+    | 'achievement'
+    | 'tip';
   title: string;
   message: string;
   time: string;
   icon: React.ReactElement;
   color: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info';
   isRead?: boolean;
-  priority?: 'high' | 'medium' | 'low';
+  priority: 'critical' | 'high' | 'medium' | 'low';
   actionLabel?: string;
   onAction?: () => void;
+  category: 'urgent' | 'social' | 'achievement' | 'tip' | 'system';
+  aiScore?: number;
+  userEngagement?: number;
+  smartSuggestion?: string;
 }
 
 // 🎭 Datos mock con terminología CoomÜnity actualizada
@@ -99,9 +117,11 @@ const mockDashboardData = {
       message:
         'Has completado un intercambio equilibrado con María. Tu balance Ayni ha mejorado.',
       time: '2h',
-      icon: <AutoAwesome />,
+      icon: <AutoAwesomeIcon />,
       color: 'success' as const,
       priority: 'high' as const,
+      actionLabel: 'Ver detalles',
+      onAction: () => console.log('Viewing Ayni details'),
     },
     {
       id: '2',
@@ -110,9 +130,11 @@ const mockDashboardData = {
       message:
         'Has ganado 50 Mëritos por tu contribución al proyecto "Huerta Comunitaria"',
       time: '4h',
-      icon: <EmojiEvents />,
+      icon: <EmojiEventsIcon />,
       color: 'warning' as const,
       priority: 'high' as const,
+      actionLabel: 'Ver logros',
+      onAction: () => console.log('Viewing achievements'),
     },
     {
       id: '3',
@@ -121,16 +143,92 @@ const mockDashboardData = {
       message:
         'Te han invitado a unirte al círculo "Emprendedores Confiables de Medellín"',
       time: '1d',
-      icon: <Groups />,
+      icon: <GroupsIcon />,
       color: 'primary' as const,
       priority: 'medium' as const,
+      actionLabel: 'Responder',
+      onAction: () => console.log('Responding to invitation'),
+    },
+    {
+      id: '4',
+      type: 'system' as const,
+      title: 'Actualización disponible',
+      message:
+        'Nueva versión de CoomÜnity disponible con mejoras en el sistema de Ayni',
+      time: '3d',
+      icon: <UpdateIcon />,
+      color: 'info' as const,
+      priority: 'low' as const,
+      actionLabel: 'Actualizar',
+      onAction: () => console.log('Updating system'),
+    },
+    {
+      id: '5',
+      type: 'marketplace' as const,
+      title: 'Oferta personalizada',
+      message:
+        'Basado en tu actividad, hemos encontrado productos que podrían interesarte',
+      time: '5h',
+      icon: <TrendingUpIcon />,
+      color: 'secondary' as const,
+      priority: 'medium' as const,
+      actionLabel: 'Ver ofertas',
+      onAction: () => console.log('Viewing marketplace offers'),
+      aiScore: 85,
+      userEngagement: 72,
+      smartSuggestion: 'Productos relacionados con tus intereses recientes',
+      category: 'social' as const,
+    },
+    {
+      id: '6',
+      type: 'achievement' as const,
+      title: 'Nuevo logro desbloqueado',
+      message:
+        '¡Felicitaciones! Has alcanzado el nivel "Colaborador Experimentado"',
+      time: '1h',
+      icon: <EmojiEventsIcon />,
+      color: 'success' as const,
+      priority: 'high' as const,
+      actionLabel: 'Ver perfil',
+      onAction: () => console.log('Viewing profile'),
+      aiScore: 95,
+      userEngagement: 90,
+      smartSuggestion: 'Comparte este logro con tu red para inspirar a otros',
+      category: 'achievement' as const,
+      isRead: false,
+    },
+    {
+      id: '7',
+      type: 'tip' as const,
+      title: 'Tip inteligente',
+      message:
+        'Basado en tu actividad, te recomendamos explorar el módulo de ÜStats para optimizar tu progreso',
+      time: '6h',
+      icon: <PsychologyIcon />,
+      color: 'info' as const,
+      priority: 'low' as const,
+      actionLabel: 'Ir a ÜStats',
+      onAction: () => console.log('Going to UStats'),
+      aiScore: 78,
+      userEngagement: 65,
+      smartSuggestion:
+        'Los usuarios con tu perfil aumentan 40% su productividad usando ÜStats',
+      category: 'tip' as const,
     },
   ] as Notification[],
 };
 
-// 🎯 Hook personalizado para scroll to top
+// 🎯 Hook personalizado para scroll to top (ORDEN #1 - Sin dependencias)
 const useScrollToTop = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Función de scroll sin dependencias
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -141,21 +239,15 @@ const useScrollToTop = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  }, []);
-
   return { showScrollTop, scrollToTop };
 };
 
-// 🔄 Hook personalizado para actualizaciones en tiempo real
+// 🔄 Hook personalizado para actualizaciones en tiempo real (ORDEN #2 - Depende de función externa)
 const useRealTimeUpdates = (refetchFunction?: () => void) => {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isUpdating, setIsUpdating] = useState(false);
 
+  // useCallback con orden correcto de dependencias
   const updateData = useCallback(async () => {
     if (!refetchFunction) return;
 
@@ -164,7 +256,7 @@ const useRealTimeUpdates = (refetchFunction?: () => void) => {
       await refetchFunction();
       setLastUpdate(new Date());
     } catch (error) {
-      console.error('Error updating data:', error);
+      console.error('🚨 Error updating data:', error);
     } finally {
       setIsUpdating(false);
     }
@@ -179,70 +271,173 @@ const useRealTimeUpdates = (refetchFunction?: () => void) => {
   return { lastUpdate, isUpdating, updateData };
 };
 
+// 🎯 Hook personalizado para métricas de performance (NUEVO)
+const useHomePerformance = () => {
+  const [performanceMetrics, setPerformanceMetrics] = useState({
+    renderTime: 0,
+    interactiveTime: 0,
+    lastOptimization: new Date(),
+  });
+
+  const updatePerformanceMetrics = useCallback(() => {
+    const renderEnd = performance.now();
+    setPerformanceMetrics((prev) => ({
+      ...prev,
+      renderTime: renderEnd,
+      interactiveTime: renderEnd,
+      lastOptimization: new Date(),
+    }));
+  }, []);
+
+  useEffect(() => {
+    updatePerformanceMetrics();
+  }, [updatePerformanceMetrics]);
+
+  return { performanceMetrics, updatePerformanceMetrics };
+};
+
 // 🎯 Componente principal del Home
 export const Home: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user } = useAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  // 🎯 Estados locales
+  const isTablet = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+
+  // 🎯 Estados locales básicos
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [animate, setAnimate] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
-  // 🚀 Phase 3: Advanced Visual States
+
+  // 🚀 Estados avanzados para funcionalidades mejoradas
   const [insightsPanelOpen, setInsightsPanelOpen] = useState(false);
   const [showAyniVisualization, setShowAyniVisualization] = useState(false);
+  const [quickActionsExpanded, setQuickActionsExpanded] = useState(false);
+  const [performanceMode, setPerformanceMode] = useState<
+    'normal' | 'optimized'
+  >('normal');
+  const [notificationFilter, setNotificationFilter] = useState<
+    'all' | 'high' | 'unread'
+  >('all');
+
+  // 🎯 Estados de interacción avanzados
+  const [hoveredModule, setHoveredModule] = useState<string | null>(null);
+  const [lastInteraction, setLastInteraction] = useState<Date>(new Date());
+  const [userPreferences, setUserPreferences] = useState({
+    autoRefresh: true,
+    showAnimations: true,
+    compactMode: false,
+  });
 
   // 🔗 Conectar al backend real con fallback a mock data
   const backendAvailability = useBackendAvailability();
   const dashboardData = useDashboardData(user?.id || 'mock-user-id');
 
-  // 🎯 Hooks personalizados para funcionalidades avanzadas
+  // 🎯 Hooks personalizados para funcionalidades avanzadas (ORDEN CORRECTO)
   const { showScrollTop, scrollToTop } = useScrollToTop();
-  const { lastUpdate, isUpdating, updateData } = useRealTimeUpdates(dashboardData.refetch);
+  const { lastUpdate, isUpdating, updateData } = useRealTimeUpdates(
+    dashboardData.refetch
+  );
+  const { performanceMetrics, updatePerformanceMetrics } = useHomePerformance();
+
+  // 🎯 Nuevos hooks para métricas inteligentes
+  const filteredNotifications = useMemo(() => {
+    const notifications = mockDashboardData.notifications;
+
+    switch (notificationFilter) {
+      case 'high':
+        return notifications.filter((n) => n.priority === 'high');
+      case 'unread':
+        return notifications.filter((n) => !n.isRead);
+      default:
+        return notifications;
+    }
+  }, [notificationFilter]);
+
+  const notificationStats = useMemo(() => {
+    const total = mockDashboardData.notifications.length;
+    const unread = mockDashboardData.notifications.filter(
+      (n) => !n.isRead
+    ).length;
+    const high = mockDashboardData.notifications.filter(
+      (n) => n.priority === 'high'
+    ).length;
+
+    return { total, unread, high };
+  }, []);
 
   // 🎯 Decidir qué datos usar basado en disponibilidad del backend
   const gameData = dashboardData.gameData as BackendGameData | undefined;
   const walletData = dashboardData.walletData as BackendWalletData | undefined;
   const userData = dashboardData.userProfile as BackendUser | undefined;
 
-  // 🎨 Animación de entrada
+  // 🎨 Animación de entrada optimizada
   useEffect(() => {
-    const timer = setTimeout(() => setAnimate(true), 100);
+    const timer = setTimeout(() => {
+      setAnimate(true);
+      updatePerformanceMetrics();
+    }, 100);
     return () => clearTimeout(timer);
+  }, [updatePerformanceMetrics]);
+
+  // 🧹 CLEANUP OBLIGATORIO según Builder.io
+  useEffect(() => {
+    return () => {
+      // Limpiar todos los timers y referencias
+      console.log('🧹 Cleaning up Home component');
+    };
   }, []);
 
-  // 🔄 Función para refrescar datos con feedback
+  // 🛡️ Error boundary para debugging según Builder.io
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      if (
+        event.message.includes('Builder') ||
+        event.message.includes('hook') ||
+        event.filename?.includes('builder')
+      ) {
+        console.error('🚨 Builder.io Error detectado en Home:', {
+          message: event.message,
+          filename: event.filename,
+          component: 'Home',
+        });
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  // 🎯 Auto-save de preferencias de usuario
+  useEffect(() => {
+    const savePreferences = setTimeout(() => {
+      localStorage.setItem('home-preferences', JSON.stringify(userPreferences));
+    }, 1000);
+
+    return () => clearTimeout(savePreferences);
+  }, [userPreferences]);
+
+  // 🔄 Función para refrescar datos con feedback mejorado
   const handleRefresh = useCallback(async () => {
     try {
+      setLastInteraction(new Date());
       await updateData();
+      updatePerformanceMetrics();
       setSuccessMessage('Datos actualizados correctamente');
     } catch (error) {
-      console.error('Error refreshing data:', error);
+      console.error('🚨 Error refreshing data:', error);
+      setSuccessMessage('Error al actualizar. Reintentando...');
     }
-  }, [updateData]);
+  }, [updateData, updatePerformanceMetrics]);
 
-  // 🎯 Handlers para las acciones (optimizados con useCallback)
-  const handleNotificationClick = useCallback(() => {
-    setNotificationsOpen(!notificationsOpen);
-  }, [notificationsOpen]);
-
+  // 🎯 Handlers básicos (ORDEN #1 - Sin dependencias complejas)
   const handleSettingsClick = useCallback(() => {
+    setLastInteraction(new Date());
     navigate('/profile');
   }, [navigate]);
 
-  const handleModuleClick = useCallback((path: string) => {
-    // Analytics tracking aquí si es necesario
-    navigate(path);
-  }, [navigate]);
-
-  const handleQuickActionClick = useCallback((path: string) => {
-    navigate(path);
-  }, [navigate]);
-
-  // 🚀 Phase 3: Advanced Visual Handlers
   const handleInsightsClick = useCallback(() => {
+    setLastInteraction(new Date());
     setInsightsPanelOpen(true);
   }, []);
 
@@ -250,23 +445,104 @@ export const Home: React.FC = () => {
     setInsightsPanelOpen(false);
   }, []);
 
+  // 🎯 Handlers de notificaciones (ORDEN #2 - Depende de estados locales)
+  const handleNotificationClick = useCallback(() => {
+    setLastInteraction(new Date());
+    setNotificationsOpen(!notificationsOpen);
+  }, [notificationsOpen]);
+
+  const handleNotificationFilterChange = useCallback(
+    (filter: 'all' | 'high' | 'unread') => {
+      setNotificationFilter(filter);
+    },
+    []
+  );
+
+  // 🎯 Handlers de navegación (ORDEN #3 - Depende de handlers anteriores)
+  const handleModuleClick = useCallback(
+    (moduleId: string, path: string) => {
+      setLastInteraction(new Date());
+      setHoveredModule(null);
+
+      // Analytics tracking mejorado
+      console.log('🎯 Module clicked:', {
+        moduleId,
+        path,
+        timestamp: new Date(),
+      });
+      navigate(path);
+    },
+    [navigate]
+  );
+
+  const handleQuickActionClick = useCallback(
+    (path: string, actionType?: string) => {
+      setLastInteraction(new Date());
+
+      // Analytics tracking
+      console.log('⚡ Quick action:', {
+        path,
+        actionType,
+        timestamp: new Date(),
+      });
+      navigate(path);
+    },
+    [navigate]
+  );
+
+  // 🎯 Handlers de interacción avanzados (ORDEN #4)
+  const handleModuleHover = useCallback((moduleId: string | null) => {
+    setHoveredModule(moduleId);
+  }, []);
+
   const handleAyniVisualizationToggle = useCallback(() => {
+    setLastInteraction(new Date());
     setShowAyniVisualization(!showAyniVisualization);
   }, [showAyniVisualization]);
 
+  const handleQuickActionsToggle = useCallback(() => {
+    setQuickActionsExpanded(!quickActionsExpanded);
+  }, [quickActionsExpanded]);
+
+  const handlePerformanceModeToggle = useCallback(() => {
+    const newMode = performanceMode === 'normal' ? 'optimized' : 'normal';
+    setPerformanceMode(newMode);
+    setUserPreferences((prev) => ({
+      ...prev,
+      showAnimations: newMode === 'normal',
+    }));
+  }, [performanceMode]);
+
+  // 🎯 Handler de notificación individual
+  const handleNotificationAction = useCallback((notification: Notification) => {
+    setLastInteraction(new Date());
+    console.log('🔔 Notification action:', notification);
+
+    if (notification.onAction) {
+      notification.onAction();
+    }
+  }, []);
+
   // 🎨 Mapear datos del backend al formato esperado por la UI (optimizado con useMemo)
   const normalizedGameData = useMemo(() => {
-    const experience = toSafeNumber(gameData?.experience, mockDashboardData.gamification.ondas);
+    const experience = toSafeNumber(
+      gameData?.experience,
+      mockDashboardData.gamification.ondas
+    );
     const wisdom = toSafeNumber(gameData?.stats?.wisdom, 0);
     const nextLevelExp = toSafeNumber(gameData?.nextLevelExp, 2000);
 
     return {
       ondas: experience,
-      meritos: wisdom > 0 ? wisdom * 10 : mockDashboardData.gamification.meritos,
+      meritos:
+        wisdom > 0 ? wisdom * 10 : mockDashboardData.gamification.meritos,
       ayniLevel: gameData?.title || mockDashboardData.gamification.ayniLevel,
       nextLevel: mockDashboardData.gamification.nextLevel,
-      ayniProgress: Math.floor((experience / nextLevelExp) * 100) || mockDashboardData.gamification.ayniProgress,
-      bienComunContributions: mockDashboardData.gamification.bienComunContributions,
+      ayniProgress:
+        Math.floor((experience / nextLevelExp) * 100) ||
+        mockDashboardData.gamification.ayniProgress,
+      bienComunContributions:
+        mockDashboardData.gamification.bienComunContributions,
       balanceAyni: mockDashboardData.gamification.balanceAyni,
       streak: mockDashboardData.gamification.streak,
       elementos: mockDashboardData.gamification.elementos,
@@ -276,7 +552,10 @@ export const Home: React.FC = () => {
   const normalizedWalletData = useMemo(() => {
     return {
       lukas: toSafeNumber(walletData?.balance, mockDashboardData.wallet.lukas),
-      ayniCredits: toSafeNumber(walletData?.ucoins, mockDashboardData.wallet.ayniCredits),
+      ayniCredits: toSafeNumber(
+        walletData?.ucoins,
+        mockDashboardData.wallet.ayniCredits
+      ),
       monthlyChange: mockDashboardData.wallet.monthlyChange,
       pendingTransactions: mockDashboardData.wallet.pendingTransactions,
       ayniBalance: mockDashboardData.wallet.ayniBalance,
@@ -286,14 +565,30 @@ export const Home: React.FC = () => {
   // 🎯 Componente de esqueleto de carga
   const LoadingSkeleton = () => (
     <Container maxWidth="xl" sx={{ py: 3 }}>
-      <Skeleton variant="rectangular" height={120} sx={{ mb: 3, borderRadius: 2 }} />
+      <Skeleton
+        variant="rectangular"
+        height={120}
+        sx={{ mb: 3, borderRadius: 2 }}
+      />
       <Grid container spacing={3}>
-        <Grid size={{xs:12,lg:8}}>
-          <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 2 }} />
+        <Grid item xs={12} lg={8}>
+          <Skeleton
+            variant="rectangular"
+            height={400}
+            sx={{ borderRadius: 2 }}
+          />
         </Grid>
-        <Grid size={{xs:12,lg:4}}>
-          <Skeleton variant="rectangular" height={200} sx={{ mb: 2, borderRadius: 2 }} />
-          <Skeleton variant="rectangular" height={180} sx={{ borderRadius: 2 }} />
+        <Grid item xs={12} lg={4}>
+          <Skeleton
+            variant="rectangular"
+            height={200}
+            sx={{ mb: 2, borderRadius: 2 }}
+          />
+          <Skeleton
+            variant="rectangular"
+            height={180}
+            sx={{ borderRadius: 2 }}
+          />
         </Grid>
       </Grid>
     </Container>
@@ -305,26 +600,48 @@ export const Home: React.FC = () => {
   }
 
   return (
-    <Container 
-      maxWidth="xl" 
-      className="home-container coomunity-container gradient-mesh-bg" 
+    <Container
+      maxWidth="xl"
+      className="home-container coomunity-container gradient-mesh-bg"
       sx={{ py: 3, position: 'relative' }}
     >
-      {/* 🔗 Estado de conexión al backend */}
+      {/* 🔗 Estado de conexión al backend mejorado */}
       {!backendAvailability.isAvailable && (
         <Fade in={true}>
           <Alert
             severity="warning"
             action={
-              <Button
-                size="small"
-                startIcon={<Refresh />}
-                onClick={handleRefresh}
-                disabled={isUpdating}
-                sx={{ color: 'inherit' }}
-              >
-                {isUpdating ? <CircularProgress size={16} color="inherit" /> : 'Reintentar'}
-              </Button>
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Tooltip
+                  title={`Última interacción: ${lastInteraction.toLocaleTimeString()}`}
+                >
+                  <Button
+                    size="small"
+                    startIcon={
+                      isUpdating ? (
+                        <CircularProgress size={16} color="inherit" />
+                      ) : (
+                        <RefreshIcon />
+                      )
+                    }
+                    onClick={handleRefresh}
+                    disabled={isUpdating}
+                    sx={{ color: 'inherit' }}
+                  >
+                    {isUpdating ? 'Actualizando...' : 'Reintentar'}
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Alternar modo performance">
+                  <Button
+                    size="small"
+                    startIcon={<SpeedIcon />}
+                    onClick={handlePerformanceModeToggle}
+                    sx={{ color: 'inherit', minWidth: 'auto', px: 1 }}
+                  >
+                    {performanceMode === 'optimized' ? '⚡' : '🐌'}
+                  </Button>
+                </Tooltip>
+              </Box>
             }
             sx={{
               mb: 3,
@@ -334,27 +651,73 @@ export const Home: React.FC = () => {
             }}
           >
             🔌 Modo Offline - Experimentando con datos simulados de CoomÜnity
+            {performanceMode === 'optimized' && (
+              <Box
+                component="span"
+                sx={{ ml: 2, opacity: 0.8, fontSize: '0.875rem' }}
+              >
+                ⚡ Modo Performance Activado
+              </Box>
+            )}
           </Alert>
         </Fade>
       )}
 
-      {/* 🔄 Indicador de actualización en tiempo real */}
+      {/* 🔄 Indicador de actualización en tiempo real mejorado */}
       {backendAvailability.isAvailable && (
         <Fade in={true}>
           <Alert
             severity="info"
             action={
-              <Tooltip title={`Última actualización: ${lastUpdate.toLocaleTimeString()}`}>
-                <Button
-                  size="small"
-                  startIcon={isUpdating ? <CircularProgress size={16} color="inherit" /> : <Update />}
-                  onClick={handleRefresh}
-                  disabled={isUpdating}
-                  sx={{ color: 'inherit' }}
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Tooltip
+                  title={`Última actualización: ${lastUpdate.toLocaleTimeString()}`}
                 >
-                  {isUpdating ? 'Actualizando...' : 'Actualizar'}
-                </Button>
-              </Tooltip>
+                  <Button
+                    size="small"
+                    startIcon={
+                      isUpdating ? (
+                        <CircularProgress size={16} color="inherit" />
+                      ) : (
+                        <UpdateIcon />
+                      )
+                    }
+                    onClick={handleRefresh}
+                    disabled={isUpdating}
+                    sx={{ color: 'inherit' }}
+                  >
+                    {isUpdating ? 'Actualizando...' : 'Actualizar'}
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Ver métricas de performance">
+                  <Button
+                    size="small"
+                    startIcon={<InsightsIcon />}
+                    onClick={handleInsightsClick}
+                    sx={{ color: 'inherit', minWidth: 'auto', px: 1 }}
+                  >
+                    📊
+                  </Button>
+                </Tooltip>
+                <Tooltip
+                  title={`Notificaciones (${notificationStats.unread} sin leer)`}
+                >
+                  <Button
+                    size="small"
+                    startIcon={
+                      <Badge
+                        badgeContent={notificationStats.unread}
+                        color="error"
+                        max={9}
+                      >
+                        <NotificationsIcon />
+                      </Badge>
+                    }
+                    onClick={handleNotificationClick}
+                    sx={{ color: 'inherit', minWidth: 'auto', px: 1 }}
+                  />
+                </Tooltip>
+              </Box>
             }
             sx={{
               mb: 3,
@@ -364,6 +727,12 @@ export const Home: React.FC = () => {
             }}
           >
             🌐 Conectado al backend - Datos en tiempo real
+            <Box
+              component="span"
+              sx={{ ml: 2, opacity: 0.8, fontSize: '0.875rem' }}
+            >
+              Render: {Math.round(performanceMetrics.renderTime)}ms
+            </Box>
           </Alert>
         </Fade>
       )}
@@ -378,19 +747,25 @@ export const Home: React.FC = () => {
               'CoomÜnity'
             }
             isBackendConnected={backendAvailability.isAvailable}
-            notificationCount={mockDashboardData.notifications.length}
+            notificationCount={notificationStats.unread}
             onNotificationClick={handleNotificationClick}
             onSettingsClick={handleSettingsClick}
             ayniLevel={normalizedGameData.ayniLevel}
             progressToNextLevel={normalizedGameData.ayniProgress}
-            lastAchievement="Guardián del Agua"
+            primaryAction={{
+              label: quickActionsExpanded
+                ? 'Ocultar Acciones'
+                : 'Acciones Rápidas',
+              onClick: handleQuickActionsToggle,
+              icon: <AutoAwesomeIcon />,
+            }}
           />
         </Box>
       </Fade>
 
       <Grid container spacing={3}>
         {/* 🎯 Panel principal - Métricas Ayni */}
-        <Grid size={{xs:12,lg:8}}>
+        <Grid item xs={12} lg={8}>
           <Fade in={animate} timeout={800}>
             <Box className="">
               <AyniMetricsCard
@@ -412,11 +787,11 @@ export const Home: React.FC = () => {
         </Grid>
 
         {/* 🎯 Panel lateral - Wallet y acciones */}
-        <Grid size={{xs:12,lg:4}}>
+        <Grid item xs={12} lg={4}>
           <Fade in={animate} timeout={1000}>
             <Grid container spacing={3}>
               {/* 💰 Wallet Overview */}
-              <Grid size={{xs:12}}>
+              <Grid item xs={12}>
                 <WalletOverview
                   lukas={normalizedWalletData.lukas}
                   ayniCredits={normalizedWalletData.ayniCredits}
@@ -428,13 +803,27 @@ export const Home: React.FC = () => {
                 />
               </Grid>
 
-              {/* 🎯 Acciones Ayni */}
-              <Grid size={{xs:12}}>
-                <QuickActionsGrid onActionClick={handleQuickActionClick} />
+              {/* 🎯 Acciones Ayni mejoradas con IA */}
+              <Grid item xs={12}>
+                <SmartQuickActions
+                  onActionClick={(action) =>
+                    handleQuickActionClick(action.path, action.category)
+                  }
+                  isExpanded={quickActionsExpanded}
+                  onToggleExpanded={handleQuickActionsToggle}
+                  performanceMode={performanceMode}
+                  userLevel={
+                    normalizedGameData.ayniProgress > 80
+                      ? 'advanced'
+                      : normalizedGameData.ayniProgress > 40
+                        ? 'intermediate'
+                        : 'beginner'
+                  }
+                />
               </Grid>
 
               {/* 🚀 Phase 3: Ayni Balance Visualization */}
-              <Grid size={{xs:12}}>
+              <Grid item xs={12}>
                 <Fade in={animate} timeout={1200}>
                   <Box>
                     <AyniBalanceVisualization
@@ -445,38 +834,83 @@ export const Home: React.FC = () => {
                   </Box>
                 </Fade>
               </Grid>
+
+              {/* 🚀 Performance Monitor */}
+              {(backendAvailability.isAvailable ||
+                performanceMode === 'optimized') && (
+                <Grid item xs={12}>
+                  <Fade in={animate} timeout={1400}>
+                    <Box>
+                      <PerformanceMonitor
+                        metrics={performanceMetrics}
+                        isVisible={true}
+                        performanceMode={performanceMode}
+                        onToggleMode={handlePerformanceModeToggle}
+                      />
+                    </Box>
+                  </Fade>
+                </Grid>
+              )}
             </Grid>
           </Fade>
         </Grid>
 
         {/* 🎯 Módulos principales */}
-        <Grid size={{xs:12}}>
+        <Grid item xs={12}>
           <Fade in={animate} timeout={1400}>
-                          <Box className="">
-              <ModuleCards onModuleClick={handleModuleClick} />
+            <Box className="">
+              <ModuleCards
+                onModuleClick={handleModuleClick}
+                onModuleHover={handleModuleHover}
+                hoveredModule={hoveredModule}
+                isLoading={dashboardData.isLoading}
+                performanceMode={performanceMode}
+              />
             </Box>
           </Fade>
         </Grid>
 
-        {/* 🔔 Centro de notificaciones */}
+        {/* 🔔 Centro de notificaciones inteligente */}
         {notificationsOpen && (
-          <Grid size={{xs:12}}>
-            <NotificationCenter
-              notifications={mockDashboardData.notifications}
-              isOpen={notificationsOpen}
-              onNotificationClick={(notification) => {
-                console.log('Notification clicked:', notification);
-                // Aquí puedes manejar la navegación específica para cada tipo de notificación
-              }}
-              onMarkAsRead={(notificationId) => {
-                console.log('Mark as read:', notificationId);
-                // Aquí puedes actualizar el estado de la notificación
-              }}
-              onClearAll={() => {
-                console.log('Clear all notifications');
-                setNotificationsOpen(false);
-              }}
-            />
+          <Grid item xs={12}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <IntelligentNotificationCenter
+                notifications={filteredNotifications}
+                isOpen={notificationsOpen}
+                currentFilter={notificationFilter}
+                notificationStats={{
+                  ...notificationStats,
+                  avgEngagement: 75,
+                  byType: {
+                    ayni: 2,
+                    meritos: 1,
+                    social: 1,
+                    marketplace: 1,
+                    system: 1,
+                    achievement: 1,
+                    tip: 1,
+                  },
+                }}
+                onFilterChange={handleNotificationFilterChange}
+                onNotificationClick={handleNotificationAction}
+                onMarkAsRead={(notificationId) => {
+                  console.log('🔔 Mark as read:', notificationId);
+                  setLastInteraction(new Date());
+                }}
+                onMarkAllAsRead={() => {
+                  console.log('🔔 Mark all as read');
+                  setLastInteraction(new Date());
+                }}
+                onClearAll={() => {
+                  console.log('🧹 Clear all notifications');
+                  setNotificationsOpen(false);
+                  setLastInteraction(new Date());
+                }}
+                onClose={() => {
+                  setNotificationsOpen(false);
+                }}
+              />
+            </Box>
           </Grid>
         )}
       </Grid>
@@ -514,31 +948,105 @@ export const Home: React.FC = () => {
         </Box>
       </Box>
 
-      {/* 🚀 Phase 3: Floating Action Button for Insights */}
-      <Fade in={animate} timeout={2000}>
-        <Tooltip title="Ver Insights Inteligentes" placement="left">
-          <Fab
-            color="secondary"
-            size="medium"
-            onClick={handleInsightsClick}
-            sx={{
-              position: 'fixed',
-              bottom: isMobile ? 24 : 170,
-              right: 24,
-              zIndex: 1000,
-              background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
-              '&:hover': {
-                background: `linear-gradient(135deg, ${theme.palette.secondary.dark} 0%, ${theme.palette.primary.dark} 100%)`,
-                transform: 'scale(1.1)',
-              },
-              transition: 'all 0.3s ease-in-out',
-              animation: 'gentle-pulse 3s ease-in-out infinite',
-            }}
+      {/* 🚀 Floating Action Buttons Stack */}
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: isMobile ? 24 : 100,
+          right: 24,
+          zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+        }}
+      >
+        {/* Performance Monitor Toggle */}
+        <Fade in={animate} timeout={2000}>
+          <Tooltip
+            title={`Modo ${performanceMode === 'normal' ? 'Optimizado' : 'Normal'}`}
+            placement="left"
           >
-            <Psychology />
-          </Fab>
-        </Tooltip>
-      </Fade>
+            <Fab
+              size="small"
+              onClick={handlePerformanceModeToggle}
+              sx={{
+                bgcolor:
+                  performanceMode === 'optimized'
+                    ? alpha(theme.palette.success.main, 0.9)
+                    : alpha(theme.palette.grey[600], 0.9),
+                color: 'white',
+                '&:hover': {
+                  bgcolor:
+                    performanceMode === 'optimized'
+                      ? theme.palette.success.dark
+                      : theme.palette.grey[700],
+                  transform: 'scale(1.1)',
+                },
+                transition: 'all 0.3s ease-in-out',
+              }}
+            >
+              <SpeedIcon />
+            </Fab>
+          </Tooltip>
+        </Fade>
+
+        {/* Insights Panel */}
+        <Fade in={animate} timeout={2200}>
+          <Tooltip title="Ver Insights Inteligentes" placement="left">
+            <Fab
+              color="secondary"
+              size="medium"
+              onClick={handleInsightsClick}
+              sx={{
+                background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
+                '&:hover': {
+                  background: `linear-gradient(135deg, ${theme.palette.secondary.dark} 0%, ${theme.palette.primary.dark} 100%)`,
+                  transform: 'scale(1.1)',
+                },
+                transition: 'all 0.3s ease-in-out',
+              }}
+            >
+              <PsychologyIcon />
+            </Fab>
+          </Tooltip>
+        </Fade>
+
+        {/* Notificaciones inteligentes */}
+        <Fade in={animate} timeout={2400}>
+          <Tooltip
+            title={`${notificationStats.unread} notificaciones sin leer`}
+            placement="left"
+          >
+            <Fab
+              size="small"
+              onClick={handleNotificationClick}
+              sx={{
+                bgcolor:
+                  notificationStats.unread > 0
+                    ? alpha(theme.palette.warning.main, 0.9)
+                    : alpha(theme.palette.info.main, 0.9),
+                color: 'white',
+                '&:hover': {
+                  bgcolor:
+                    notificationStats.unread > 0
+                      ? theme.palette.warning.dark
+                      : theme.palette.info.dark,
+                  transform: 'scale(1.1)',
+                },
+                transition: 'all 0.3s ease-in-out',
+              }}
+            >
+              <Badge
+                badgeContent={notificationStats.unread}
+                color="error"
+                max={9}
+              >
+                <NotificationsIcon />
+              </Badge>
+            </Fab>
+          </Tooltip>
+        </Fade>
+      </Box>
 
       {/* 🔝 Botón flotante para scroll to top */}
       <Fade in={showScrollTop}>
@@ -548,9 +1056,9 @@ export const Home: React.FC = () => {
           onClick={scrollToTop}
           sx={{
             position: 'fixed',
-            bottom: isMobile ? 24 : 100,
+            bottom: isMobile ? 24 : 280,
             right: 24,
-            zIndex: 1000,
+            zIndex: 999,
             background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
             '&:hover': {
               background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
@@ -559,7 +1067,7 @@ export const Home: React.FC = () => {
             transition: 'all 0.3s ease-in-out',
           }}
         >
-          <KeyboardArrowUp />
+          <KeyboardArrowUpIcon />
         </Fab>
       </Fade>
 
