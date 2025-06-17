@@ -201,16 +201,16 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
           position: 'relative',
           // Tamaños basados en secuencia Fibonacci para mejor UX/UI responsive
           width: {
-            xs: '89px',   // Fibonacci 89 - Mobile
-            sm: '144px',  // Fibonacci 144 - Tablet
-            md: '233px',  // Fibonacci 233 - Desktop
-            lg: '233px',  // Fibonacci 233 - Large
+            xs: '89px', // Fibonacci 89 - Mobile
+            sm: '144px', // Fibonacci 144 - Tablet
+            md: '233px', // Fibonacci 233 - Desktop
+            lg: '233px', // Fibonacci 233 - Large
           },
           height: {
-            xs: '89px',   // Fibonacci 89 - Mobile
-            sm: '144px',  // Fibonacci 144 - Tablet
-            md: '233px',  // Fibonacci 233 - Desktop
-            lg: '233px',  // Fibonacci 233 - Large
+            xs: '89px', // Fibonacci 89 - Mobile
+            sm: '144px', // Fibonacci 144 - Tablet
+            md: '233px', // Fibonacci 233 - Desktop
+            lg: '233px', // Fibonacci 233 - Large
           },
           borderRadius: '50%',
           mx: 'auto',
@@ -225,7 +225,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
           alignItems: 'center',
           justifyContent: 'center',
         }}
-        >
+      >
         {/* 🌍 Círculo exterior con gradiente cónico Fibonacci */}
         <Box
           sx={{
@@ -290,10 +290,10 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
               WebkitTextFillColor: 'transparent',
               mb: 0.5,
               fontSize: {
-                xs: '1.5rem',   // Fibonacci responsive
-                sm: '2rem',     // Fibonacci responsive
-                md: '2.5rem',   // Fibonacci responsive
-                lg: '3rem',     // Fibonacci responsive
+                xs: '1.5rem', // Fibonacci responsive
+                sm: '2rem', // Fibonacci responsive
+                md: '2.5rem', // Fibonacci responsive
+                lg: '3rem', // Fibonacci responsive
               },
               lineHeight: 1,
               textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
@@ -630,6 +630,19 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
             overflow: 'visible', // 🪐 PERMITIR QUE LOS ELEMENTOS ORBITALES SE VEAN
           }}
         >
+          {/* Header con título áureo */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: {
+                xs: '13px', // var(--golden-space-13)
+                sm: '21px', // var(--golden-space-21)
+                md: '34px', // var(--golden-space-34)
+              },
+            }}
+          >
             <Typography
               variant="h5"
               sx={{
