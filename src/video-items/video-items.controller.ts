@@ -1,12 +1,19 @@
-import { Controller, Get, Param, NotFoundException, Inject } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Param, NotFoundException, Inject, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { PrismaService } from '../prisma/prisma.service';
+import { VideoItemsService } from './video-items.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('video-items')
 @Controller('video-items')
+@ApiBearerAuth() // Para indicar que requiere token JWT en Swagger
 export class VideoItemsController {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
+  constructor(
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(VideoItemsService) private readonly videoItemsService: VideoItemsService
+  ) {
     console.log('>>> VideoItemsController CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    console.log('>>> VideoItemsController CONSTRUCTOR: this.videoItemsService IS', this.videoItemsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   @Get()
@@ -88,6 +95,25 @@ export class VideoItemsController {
       return videoItem;
     } catch (error) {
       console.error('>>> VideoItemsController.findOne: ERROR:', error);
+      throw error;
+    }
+  }
+
+  @Get(':videoId/questions')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get interactive questions for a specific video' })
+  @ApiResponse({ status: 200, description: 'Returns questions and answer options for the video.' })
+  @ApiResponse({ status: 404, description: 'Video not found or no questions found.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - JWT token required.' })
+  async getQuestionsForVideo(@Param('videoId') videoId: string) {
+    console.log('>>> VideoItemsController.getQuestionsForVideo: Starting with videoId:', videoId);
+    
+    try {
+      const questions = await this.videoItemsService.findQuestionsByVideoId(videoId);
+      console.log('>>> VideoItemsController.getQuestionsForVideo: SUCCESS, returning', questions.length, 'questions');
+      return questions;
+    } catch (error) {
+      console.error('>>> VideoItemsController.getQuestionsForVideo: ERROR:', error);
       throw error;
     }
   }

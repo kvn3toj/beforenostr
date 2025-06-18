@@ -1039,4 +1039,49 @@ export class VideoItemsService {
     // Si la duración calculada parece más confiable (no es un fallback obvio), actualizar
     return true;
   }
+
+  /**
+   * Encuentra todas las preguntas asociadas a un video específico
+   * Incluye las opciones de respuesta para cada pregunta
+   */
+  async findQuestionsByVideoId(videoId: string) {
+    this.logger.log(`Finding questions for video ID: ${videoId}`);
+    
+    try {
+      const questions = await this.prisma.question.findMany({
+        where: { videoItemId: videoId },
+        include: {
+          answerOptions: true, // CRÍTICO: Incluir las opciones de respuesta
+        },
+        orderBy: { timestamp: 'asc' }, // Ordenar por tiempo de aparición en el video
+      });
+
+      this.logger.log(`Found ${questions.length} questions for video ${videoId}`);
+
+      // Mapear para que coincida con la estructura esperada por el frontend (QuestionOverlay)
+      return questions.map(q => ({
+        id: q.id,
+        timestamp: q.timestamp,
+        endTimestamp: q.endTimestamp,
+        type: q.type,
+        question: q.text, // Mapear 'text' a 'question'
+        timeLimit: q.timeLimit,
+        difficulty: q.difficulty,
+        reward: { 
+          merits: q.meritsReward || 0, 
+          ondas: q.ondasReward || 0 
+        },
+        options: q.answerOptions.map(opt => ({
+          id: opt.id,
+          label: opt.label,
+          text: opt.text,
+          isCorrect: opt.isCorrect,
+        })),
+      }));
+
+    } catch (error) {
+      this.logger.error(`Error finding questions for video ${videoId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw error;
+    }
+  }
 } 
