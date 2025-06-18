@@ -27,12 +27,19 @@ const HeatMap: React.FC<HeatMapProps> = ({ data, title }) => {
   const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  const maxValue = Math.max(...data.map((d) => d.value));
-  const minValue = Math.min(...data.map((d) => d.value));
+  // 🔥 PREVENIR ERROR NaN - Validar datos antes de procesar
+  const validData = data?.filter(d => d && typeof d.value === 'number' && !isNaN(d.value)) || [];
+  const maxValue = validData.length > 0 ? Math.max(...validData.map((d) => d.value)) : 100;
+  const minValue = validData.length > 0 ? Math.min(...validData.map((d) => d.value)) : 0;
+  
+  // 🔥 VALIDACIÓN ADICIONAL - Asegurar valores válidos
+  const safeMaxValue = maxValue > 0 && !isNaN(maxValue) ? maxValue : 100;
+  const safeMinValue = minValue >= 0 && !isNaN(minValue) ? minValue : 0;
 
   const getIntensity = (value: number) => {
-    if (maxValue === minValue) return 0.5;
-    return (value - minValue) / (maxValue - minValue);
+    if (safeMaxValue === safeMinValue) return 0.5;
+    const intensity = (value - safeMinValue) / (safeMaxValue - safeMinValue);
+    return isNaN(intensity) ? 0.5 : Math.max(0, Math.min(1, intensity));
   };
 
   const getColor = (intensity: number) => {
@@ -41,13 +48,12 @@ const HeatMap: React.FC<HeatMapProps> = ({ data, title }) => {
   };
 
   const getCellData = (day: string, hour: number) => {
-    return (
-      data.find((d) => d.day === day && d.hour === hour) || {
-        day,
-        hour,
-        value: 0,
-      }
-    );
+    const found = validData.find((d) => d.day === day && d.hour === hour);
+    return found || {
+      day,
+      hour,
+      value: 0,
+    };
   };
 
   const cellSize = 25;

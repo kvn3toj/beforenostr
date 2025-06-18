@@ -31,7 +31,9 @@ const UserLocationMap: React.FC<UserLocationMapProps> = ({ data, title }) => {
     null
   );
 
-  const maxUsers = Math.max(...data.map((d) => d.users));
+  // 🔥 PREVENIR ERROR NaN - Validar datos antes de procesar
+  const validData = data?.filter(d => d && typeof d.users === 'number' && !isNaN(d.users) && d.users > 0) || [];
+  const maxUsers = validData.length > 0 ? Math.max(...validData.map((d) => d.users)) : 1;
 
   // Simplified map of Latin America (approximate coordinates)
   const mapPath = `
@@ -50,7 +52,9 @@ const UserLocationMap: React.FC<UserLocationMapProps> = ({ data, title }) => {
   `;
 
   const getMarkerSize = (users: number) => {
-    return 4 + (users / maxUsers) * 16;
+    const safeUsers = typeof users === 'number' && !isNaN(users) ? users : 0;
+    const safeMaxUsers = maxUsers > 0 ? maxUsers : 1;
+    return 4 + (safeUsers / safeMaxUsers) * 16;
   };
 
   const getLocationPosition = (country: string, city: string) => {
@@ -99,7 +103,7 @@ const UserLocationMap: React.FC<UserLocationMapProps> = ({ data, title }) => {
             />
 
             {/* Location markers */}
-            {data.map((location, index) => {
+            {validData.map((location, index) => {
               const position = getLocationPosition(
                 location.country,
                 location.city
@@ -258,7 +262,7 @@ const UserLocationMap: React.FC<UserLocationMapProps> = ({ data, title }) => {
           </Typography>
 
           <Stack spacing={2} sx={{ maxHeight: 300, overflow: 'auto' }}>
-            {data
+            {validData
               .sort((a, b) => b.users - a.users)
               .slice(0, 8)
               .map((location, index) => (

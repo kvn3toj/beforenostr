@@ -68,6 +68,7 @@ import ReactPlayer from 'react-player';
 
 // Import hooks and services
 import { useInteractiveVideo } from '../../../../hooks/useInteractiveVideo';
+import { useVideoQuestions } from '../../../../hooks/uplay/useVideoQuestions';
 import { apiService } from '../../../../lib/api-service';
 import { getVideoQuestions } from '../../../../lib/videoQuestions';
 import {
@@ -117,137 +118,11 @@ interface EnhancedInteractiveVideoPlayerProps {
   showBackButton?: boolean;
 }
 
-// Mock questions for when backend is not available
-const getMockQuestions = (videoId: string): QuestionOverlay[] => {
-  const questionSets: Record<string, QuestionOverlay[]> = {
-    default: [
-      {
-        id: 1,
-        timestamp: 15,
-        endTimestamp: 45,
-        type: 'multiple-choice',
-        question: '¿Cuál es el principio fundamental de Ayni en CoomÜnity?',
-        timeLimit: 25,
-        difficulty: 'medium',
-        reward: { merits: 20, ondas: 8 },
-        options: [
-          {
-            id: 'a',
-            label: 'A',
-            text: 'Reciprocidad y equilibrio energético',
-            isCorrect: true,
-          },
-          {
-            id: 'b',
-            label: 'B',
-            text: 'Competencia individual extrema',
-            isCorrect: false,
-          },
-          {
-            id: 'c',
-            label: 'C',
-            text: 'Acumulación ilimitada de recursos',
-            isCorrect: false,
-          },
-          {
-            id: 'd',
-            label: 'D',
-            text: 'Jerarquía social rígida',
-            isCorrect: false,
-          },
-        ],
-      },
-      {
-        id: 2,
-        timestamp: 60,
-        endTimestamp: 80,
-        type: 'true-false',
-        question:
-          '¿Las Öndas representan energía vibracional positiva que se genera al contribuir al Bien Común?',
-        timeLimit: 18,
-        difficulty: 'easy',
-        reward: { merits: 15, ondas: 12 },
-        options: [
-          { id: 'true', label: 'V', text: 'Verdadero', isCorrect: true },
-          { id: 'false', label: 'F', text: 'Falso', isCorrect: false },
-        ],
-      },
-      {
-        id: 3,
-        timestamp: 120,
-        endTimestamp: 140,
-        type: 'quick-response',
-        question: 'En CoomÜnity, ¿qué significa priorizar el "Bien Común"?',
-        timeLimit: 12,
-        difficulty: 'hard',
-        reward: { merits: 35, ondas: 15 },
-        options: [
-          {
-            id: 'a',
-            label: 'A',
-            text: 'Beneficio colectivo sobre individual',
-            isCorrect: true,
-          },
-          {
-            id: 'b',
-            label: 'B',
-            text: 'Ganancia personal máxima',
-            isCorrect: false,
-          },
-          {
-            id: 'c',
-            label: 'C',
-            text: 'Neutralidad en decisiones',
-            isCorrect: false,
-          },
-        ],
-      },
-      {
-        id: 4,
-        timestamp: 180,
-        endTimestamp: 200,
-        type: 'multiple-choice',
-        question:
-          '¿Qué representa la Metanöia en el desarrollo personal dentro de CoomÜnity?',
-        timeLimit: 20,
-        difficulty: 'medium',
-        reward: { merits: 25, ondas: 10 },
-        options: [
-          {
-            id: 'a',
-            label: 'A',
-            text: 'Transformación profunda de la consciencia',
-            isCorrect: true,
-          },
-          {
-            id: 'b',
-            label: 'B',
-            text: 'Acumulación de conocimiento técnico',
-            isCorrect: false,
-          },
-          {
-            id: 'c',
-            label: 'C',
-            text: 'Competencia con otros miembros',
-            isCorrect: false,
-          },
-          {
-            id: 'd',
-            label: 'D',
-            text: 'Obtención de privilegios especiales',
-            isCorrect: false,
-          },
-        ],
-      },
-    ],
-  };
+// 🎯 [ELIMINADO] getMockQuestions - Reemplazado por useVideoQuestions hook
+// Las preguntas ahora se obtienen dinámicamente del backend
 
-  return questionSets[videoId] || questionSets.default;
-};
-
-const EnhancedInteractiveVideoPlayer: React.FC<
-  EnhancedInteractiveVideoPlayerProps
-> = ({
+// 🎯 [NUEVO] Componente interno con toda la lógica de hooks
+const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
   videoData,
   onBack,
   onVideoComplete,
@@ -260,48 +135,12 @@ const EnhancedInteractiveVideoPlayer: React.FC<
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Validación inicial del videoData
-  if (!videoData || !videoData.id || !videoData.url) {
-    console.warn('❌ EnhancedInteractiveVideoPlayer: videoData is invalid:', videoData);
-    return (
-      <Box
-        sx={{
-          position: 'relative',
-          width: '100%',
-          height: isMobile ? '100vh' : '80vh',
-          backgroundColor: '#000',
-          borderRadius: isMobile ? 0 : 3,
-          overflow: 'hidden',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Stack alignItems="center" spacing={2}>
-          <Typography color="white" variant="h6">
-            Error: Datos de video inválidos
-          </Typography>
-          <Typography color="white" variant="body2">
-            No se pueden cargar los datos del video
-          </Typography>
-          {onBack && (
-            <Button
-              variant="contained"
-              onClick={onBack}
-              sx={{
-                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
-                },
-              }}
-            >
-              Volver
-            </Button>
-          )}
-        </Stack>
-      </Box>
-    );
-  }
+  // 🎯 [NUEVO] Hook para obtener preguntas dinámicas del backend
+  const {
+    data: questionsFromBackend,
+    isLoading: questionsLoading,
+    isError: questionsError,
+  } = useVideoQuestions(videoData.id);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -419,69 +258,51 @@ const EnhancedInteractiveVideoPlayer: React.FC<
     resolveVideoUrl();
   }, [videoData.id, videoData.url]);
 
-  // Load video questions on mount
+  // 🎯 [REFACTORIZADO] Integración con hook de preguntas dinámicas
   useEffect(() => {
-    const loadQuestions = async () => {
-      try {
-        // Temporalmente deshabilitado para desarrollo - ir directo a preguntas locales
-        // const backendQuestions = await apiService.get(
-        //   `/videos/${videoData.id}/questions`
-        // );
-        // if (
-        //   backendQuestions &&
-        //   Array.isArray(backendQuestions) &&
-        //   backendQuestions.length > 0
-        // ) {
-        //   setQuestionsData(backendQuestions);
-        //   console.log(
-        //     '📚 Using backend questions for video:',
-        //     videoData.id,
-        //     backendQuestions.length,
-        //     'questions'
-        //   );
-        // } else {
-        // Fallback to configured questions
-        const configuredQuestions = getVideoQuestions(videoData.id);
-        if (configuredQuestions.length > 0) {
-          setQuestionsData(configuredQuestions);
-          console.log(
-            '📚 Using configured questions for video:',
-            videoData.id,
-            configuredQuestions.length,
-            'questions'
-          );
-        } else {
-          // Last fallback to mock questions
-          setQuestionsData(getMockQuestions(videoData.id));
-          console.log(
-            '📚 Using fallback mock questions for video:',
-            videoData.id
-          );
-        }
-        // }
-      } catch (error) {
-        // Use configured questions if backend is not available
-        const configuredQuestions = getVideoQuestions(videoData.id);
-        if (configuredQuestions.length > 0) {
-          setQuestionsData(configuredQuestions);
-          console.log(
-            '📚 Backend not available, using configured questions for video:',
-            videoData.id,
-            configuredQuestions.length,
-            'questions'
-          );
-        } else {
-          setQuestionsData(getMockQuestions(videoData.id));
-          console.log(
-            '📚 Backend not available, using fallback mock questions for video:',
-            videoData.id
-          );
-        }
-      }
-    };
+    console.log('🎯 [VideoPlayer] Questions loading state:', {
+      questionsLoading,
+      questionsError,
+      questionsCount: questionsFromBackend?.length || 0,
+      videoId: videoData.id,
+    });
 
-    loadQuestions();
-  }, [videoData.id]);
+    // Si las preguntas del backend están disponibles, usarlas
+    if (questionsFromBackend && questionsFromBackend.length > 0) {
+      setQuestionsData(questionsFromBackend);
+      console.log(
+        '✅ [VideoPlayer] Using backend questions for video:',
+        videoData.id,
+        questionsFromBackend.length,
+        'questions'
+      );
+      return;
+    }
+
+    // Si hay error o no hay preguntas del backend, usar fallback
+    if (questionsError || (!questionsLoading && (!questionsFromBackend || questionsFromBackend.length === 0))) {
+      console.log('🔄 [VideoPlayer] Backend questions not available, using fallback');
+      
+      // Fallback to configured questions
+      const configuredQuestions = getVideoQuestions(videoData.id);
+      if (configuredQuestions.length > 0) {
+        setQuestionsData(configuredQuestions);
+        console.log(
+          '📚 [VideoPlayer] Using configured questions for video:',
+          videoData.id,
+          configuredQuestions.length,
+          'questions'
+        );
+      } else {
+        // Si no hay preguntas configuradas, usar array vacío
+        setQuestionsData([]);
+        console.log(
+          '⚠️ [VideoPlayer] No questions available for video:',
+          videoData.id
+        );
+      }
+    }
+  }, [questionsFromBackend, questionsLoading, questionsError, videoData.id]);
 
   // Format time helper
   const formatTime = useCallback((seconds: number): string => {
@@ -1811,6 +1632,60 @@ const EnhancedInteractiveVideoPlayer: React.FC<
       </Collapse>
     </Box>
   );
+};
+
+// 🎯 [NUEVO] Componente wrapper con validación y manejo de estados
+const EnhancedInteractiveVideoPlayer: React.FC<
+  EnhancedInteractiveVideoPlayerProps
+> = (props) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Validación inicial del videoData
+  if (!props.videoData || !props.videoData.id || !props.videoData.url) {
+    console.warn('❌ EnhancedInteractiveVideoPlayer: videoData is invalid:', props.videoData);
+    return (
+      <Box
+        sx={{
+          position: 'relative',
+          width: '100%',
+          height: isMobile ? '100vh' : '80vh',
+          backgroundColor: '#000',
+          borderRadius: isMobile ? 0 : 3,
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Stack alignItems="center" spacing={2}>
+          <Typography color="white" variant="h6">
+            Error: Datos de video inválidos
+          </Typography>
+          <Typography color="white" variant="body2">
+            No se pueden cargar los datos del video
+          </Typography>
+          {props.onBack && (
+            <Button
+              variant="contained"
+              onClick={props.onBack}
+              sx={{
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
+                },
+              }}
+            >
+              Volver
+            </Button>
+          )}
+        </Stack>
+      </Box>
+    );
+  }
+
+  // Si la validación pasa, renderizar el componente principal
+  return <VideoPlayerContent {...props} />;
 };
 
 export default EnhancedInteractiveVideoPlayer;

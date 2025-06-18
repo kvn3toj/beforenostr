@@ -3,34 +3,144 @@ import React from 'react';
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 
 // 🚀 REUTILIZAR EL COMPONENTE REVOLUCIONARIO EXISTENTE
 import AyniMetricsCardRevolutionary from '../AyniMetricsCardRevolutionary';
+
+// 🌟 IMPORTAR HOOKS DINÁMICOS
+import { useAyniMetrics } from '../../../hooks/home/useAyniMetrics';
+import { useElementalConfig } from '../../../hooks/home/useElementalConfig';
 
 interface AyniBalanceFullWidgetProps {
   className?: string;
 }
 
-// 📊 Mock data completo para el widget
-const mockAyniData = {
-  ondas: 1250,
-  meritos: 485,
-  ayniLevel: 'Colaborador Equilibrado',
-  nextLevel: 'Guardián del Bien Común',
-  ayniProgress: 78,
-  bienComunContributions: 23,
-  balanceAyni: 0.85,
-  elementos: {
-    fuego: 85, // Pasión y acción
-    agua: 92, // Fluir y adaptabilidad
-    tierra: 78, // Estabilidad y confianza
-    aire: 88, // Comunicación e ideas
-  },
-};
-
 export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
   className = '',
 }) => {
+  // 🌟 USAR HOOKS DINÁMICOS EN LUGAR DE DATOS HARDCODEADOS
+  const { 
+    data: ayniMetrics, 
+    isLoading: ayniLoading, 
+    error: ayniError 
+  } = useAyniMetrics();
+  
+  const { 
+    data: elementalConfig, 
+    isLoading: configLoading, 
+    error: configError 
+  } = useElementalConfig();
+
+  // 🔄 Estados de carga
+  const isLoading = ayniLoading || configLoading;
+  const hasError = ayniError || configError;
+
+  // 🚨 Manejo de errores
+  if (hasError) {
+    return (
+      <Box
+        className={`ayni-balance-full-widget ${className}`}
+        sx={{
+          width: '100%',
+          minHeight: '400px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 4,
+        }}
+      >
+        <Alert 
+          severity="warning" 
+          sx={{ 
+            maxWidth: '500px',
+            background: 'rgba(255, 193, 7, 0.1)',
+            color: 'rgba(255, 255, 255, 0.9)',
+            border: '1px solid rgba(255, 193, 7, 0.3)',
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            🌟 Conectando con el Cosmos...
+          </Typography>
+          <Typography variant="body2">
+            Estamos sincronizando tus métricas Ayni con el universo. 
+            Los datos se cargarán automáticamente.
+          </Typography>
+        </Alert>
+      </Box>
+    );
+  }
+
+  // 🔄 Estado de carga cósmico
+  if (isLoading || !ayniMetrics) {
+    return (
+      <Box
+        className={`ayni-balance-full-widget ${className}`}
+        sx={{
+          width: '100%',
+          minHeight: '500px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 3,
+          background: `
+            radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(0, 188, 212, 0.06) 0%, transparent 50%),
+            linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8))
+          `,
+          borderRadius: '32px',
+          p: 4,
+        }}
+      >
+        <Box
+          sx={{
+            width: 120,
+            height: 120,
+            borderRadius: '50%',
+            background: 'conic-gradient(from 0deg, #FF6B35, #00BCD4, #66BB6A, #FFD54F, #FF6B35)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            animation: 'revolutionary-rotate-continuous 2s linear infinite',
+          }}
+        >
+          <CircularProgress 
+            size={80} 
+            thickness={2} 
+            sx={{ color: 'white' }} 
+          />
+        </Box>
+
+        <Typography
+          variant="h5"
+          sx={{
+            background: 'linear-gradient(135deg, #E91E63, #9C27B0, #3F51B5)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 700,
+            textAlign: 'center',
+          }}
+        >
+          🌌 Sincronizando Balance Ayni
+        </Typography>
+
+        <Typography
+          variant="body1"
+          sx={{
+            color: 'rgba(255, 255, 255, 0.8)',
+            textAlign: 'center',
+            fontStyle: 'italic',
+          }}
+        >
+          "Conectando con las energías elementales del universo..."
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       className={`ayni-balance-full-widget ${className}`}
@@ -152,11 +262,24 @@ export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
             mx: 'auto',
           }}
         >
-          El Universo de Tu Prosperidad Elemental
+          🌟 {ayniMetrics.ayniLevel} - Universo de Prosperidad Elemental
+        </Typography>
+        
+        {/* 📊 Indicador de datos en tiempo real */}
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'rgba(255, 255, 255, 0.6)',
+            mt: 1,
+            fontSize: '0.875rem',
+            fontStyle: 'italic',
+          }}
+        >
+          ✨ Datos actualizados: {new Date(ayniMetrics.lastUpdated).toLocaleTimeString()}
         </Typography>
       </Box>
 
-      {/* 🌍 Sistema Planetario Balance Ayni */}
+      {/* 🌍 Sistema Planetario Balance Ayni - AHORA CON DATOS DINÁMICOS */}
       <Box
         sx={{
           position: 'relative',
@@ -173,14 +296,14 @@ export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
         }}
       >
         <AyniMetricsCardRevolutionary
-          ondas={mockAyniData.ondas}
-          meritos={mockAyniData.meritos}
-          ayniLevel={mockAyniData.ayniLevel}
-          nextLevel={mockAyniData.nextLevel}
-          ayniProgress={mockAyniData.ayniProgress}
-          bienComunContributions={mockAyniData.bienComunContributions}
-          balanceAyni={mockAyniData.balanceAyni}
-          elementos={mockAyniData.elementos}
+          ondas={ayniMetrics.ondas}
+          meritos={ayniMetrics.meritos}
+          ayniLevel={ayniMetrics.ayniLevel}
+          nextLevel={ayniMetrics.nextLevel}
+          ayniProgress={ayniMetrics.ayniProgress}
+          bienComunContributions={ayniMetrics.bienComunContributions}
+          balanceAyni={ayniMetrics.balanceAyni}
+          elementos={ayniMetrics.elementos}
           isLoading={false}
           isConnected={true}
         />

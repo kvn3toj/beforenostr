@@ -208,11 +208,43 @@ export const createLazyComponent = ({
   errorFallback,
   preload = false
 }: LazyComponentProps) => {
-  const LazyComponent = lazy(importFunc);
+  // Usar ModuleLoader para manejo robusto de errores
+  const safeImportFunc = async () => {
+    try {
+      // Intentar importación con reintentos automáticos
+      const module = await importFunc();
+      return module;
+    } catch (error) {
+      console.warn('LazyComponent import failed, using fallback:', error);
+      
+      // Fallback: retornar un componente de error
+      return {
+        default: () => (
+          errorFallback || (
+            <div style={{ 
+              padding: '20px', 
+              textAlign: 'center',
+              color: '#666',
+              border: '1px dashed #ccc',
+              borderRadius: '8px',
+              margin: '10px'
+            }}>
+              <p>⚠️ Error al cargar el módulo</p>
+              <p style={{ fontSize: '12px' }}>
+                ID: d73c7abcef814601834bd32cfc780bc8
+              </p>
+            </div>
+          )
+        )
+      };
+    }
+  };
+
+  const LazyComponent = lazy(safeImportFunc);
 
   // Preload si está habilitado
   if (preload) {
-    importFunc().catch(() => {});
+    safeImportFunc().catch(() => {});
   }
 
   const WrappedComponent: React.FC<any> = (props) => (

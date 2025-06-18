@@ -18,7 +18,12 @@ const PieChart: React.FC<PieChartProps> = ({ data, title, size = 200 }) => {
   const theme = useTheme();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const total = data.reduce((sum, item) => sum + item.value, 0);
+  // 🔥 PREVENIR ERROR NaN - Validar datos antes de procesar
+  const validData = data?.filter(d => d && typeof d.value === 'number' && !isNaN(d.value) && d.value > 0) || [];
+  const total = validData.reduce((sum, item) => sum + item.value, 0);
+  
+  // 🔥 VALIDACIÓN ADICIONAL - Asegurar que total no sea 0
+  const safeTotal = total > 0 ? total : 1;
   const radius = size / 2 - 20;
   const center = size / 2;
 
@@ -72,9 +77,9 @@ const PieChart: React.FC<PieChartProps> = ({ data, title, size = 200 }) => {
             />
 
             {/* Pie slices */}
-            {data.map((item, index) => {
-              const percentage = (item.value / total) * 100;
-              const angle = (item.value / total) * 360;
+            {validData.map((item, index) => {
+              const percentage = (item.value / safeTotal) * 100;
+              const angle = (item.value / safeTotal) * 360;
               const startAngle = currentAngle;
               const endAngle = currentAngle + angle;
               const isHovered = hoveredIndex === index;
@@ -158,14 +163,14 @@ const PieChart: React.FC<PieChartProps> = ({ data, title, size = 200 }) => {
               fill={theme.palette.text.secondary}
               textAnchor="middle"
             >
-              {total.toLocaleString()}
+              {safeTotal.toLocaleString()}
             </text>
           </svg>
         </Box>
 
         {/* Legend */}
         <Stack spacing={2}>
-          {data.map((item, index) => (
+          {validData.map((item, index) => (
             <Box
               key={item.name}
               display="flex"
@@ -191,7 +196,7 @@ const PieChart: React.FC<PieChartProps> = ({ data, title, size = 200 }) => {
                   {item.name}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  {item.value} ({((item.value / total) * 100).toFixed(1)}%)
+                  {item.value} ({((item.value / safeTotal) * 100).toFixed(1)}%)
                 </Typography>
               </Box>
             </Box>

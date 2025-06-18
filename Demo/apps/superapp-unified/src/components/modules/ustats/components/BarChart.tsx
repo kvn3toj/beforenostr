@@ -22,7 +22,13 @@ const BarChart: React.FC<BarChartProps> = ({
   maxValue,
 }) => {
   const theme = useTheme();
-  const max = maxValue || Math.max(...data.map((d) => d.value));
+  
+  // 🔥 PREVENIR ERROR NaN - Validar datos antes de procesar
+  const validData = data?.filter(d => d && typeof d.value === 'number' && !isNaN(d.value)) || [];
+  const max = maxValue || (validData.length > 0 ? Math.max(...validData.map((d) => d.value)) : 1);
+  
+  // 🔥 VALIDACIÓN ADICIONAL - Asegurar que max no sea 0 o NaN
+  const safeMax = max > 0 && !isNaN(max) ? max : 1;
 
   return (
     <Paper sx={{ p: 3 }}>
@@ -56,16 +62,16 @@ const BarChart: React.FC<BarChartProps> = ({
               textAnchor="end"
               alignmentBaseline="middle"
             >
-              {Math.round((max / 4) * i)}
+              {Math.round((safeMax / 4) * i)}
             </text>
           ))}
 
           {/* Bars */}
-          {data.map((item, index) => {
-            const barWidth = (330 / data.length) * 0.8;
-            const barHeight = (item.value / max) * 200;
-            const x =
-              50 + index * (330 / data.length) + (330 / data.length) * 0.1;
+          {validData.map((item, index) => {
+            const barWidth = validData.length > 0 ? (330 / validData.length) * 0.8 : 0;
+            const barHeight = (item.value / safeMax) * 200;
+            const x = validData.length > 0 ?
+              50 + index * (330 / validData.length) + (330 / validData.length) * 0.1 : 50;
             const y = 250 - barHeight;
 
             return (

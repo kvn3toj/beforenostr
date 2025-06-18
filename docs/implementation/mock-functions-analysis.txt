@@ -1,0 +1,458 @@
+Demo/apps/superapp-unified/src/components/home/AyniBalanceVisualization.tsx:    const mockData: HistoricalDataPoint[] = [];
+Demo/apps/superapp-unified/src/components/home/AyniBalanceVisualization.tsx:      mockData.push({
+Demo/apps/superapp-unified/src/components/home/AyniBalanceVisualization.tsx:    return mockData;
+Demo/apps/superapp-unified/src/components/home/WalletOverviewRevolutionary.tsx:const mockWalletData = {
+Demo/apps/superapp-unified/src/components/home/WalletOverviewRevolutionary.tsx:  const totalBalance = mockWalletData.totalBalance;
+Demo/apps/superapp-unified/src/components/home/WalletOverviewRevolutionary.tsx:          label={`+${mockWalletData.recentActivity.weeklyGrowth}% esta semana`}
+Demo/apps/superapp-unified/src/components/home/WalletOverviewRevolutionary.tsx:        {mockWalletData.currencies.map((currency) => {
+Demo/apps/superapp-unified/src/components/home/WalletOverviewRevolutionary.tsx:          🎯 {mockWalletData.recentActivity.transactions} transacciones •
+Demo/apps/superapp-unified/src/components/home/WalletOverviewRevolutionary.tsx:          Última: {mockWalletData.recentActivity.lastTransaction}
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:const mockAyniData = {
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:          ondas={mockAyniData.ondas}
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:          meritos={mockAyniData.meritos}
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:          ayniLevel={mockAyniData.ayniLevel}
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:          nextLevel={mockAyniData.nextLevel}
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:          ayniProgress={mockAyniData.ayniProgress}
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:          bienComunContributions={mockAyniData.bienComunContributions}
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:          balanceAyni={mockAyniData.balanceAyni}
+Demo/apps/superapp-unified/src/components/home/widgets/AyniWalletWidget.tsx:          elementos={mockAyniData.elementos}
+Demo/apps/superapp-unified/src/components/features/questions/QuestionManager.test.tsx:const mockQuestionsData: Question[] = [
+Demo/apps/superapp-unified/src/components/features/questions/QuestionManager.test.tsx:      data: mockQuestionsData,
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:const mockData: MockData[] = [
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:const mockColumns: ColumnDefinition<MockData>[] = [
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    data: mockData,
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    totalCount: mockData.length,
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    vi.mocked(CircularProgress).mockClear();
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    vi.mocked(TablePagination).mockClear();
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    vi.mocked(TableSortLabel).mockClear();
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    vi.mocked(TableCell).mockClear();
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    vi.mocked(TableRow).mockClear();
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    expect(onRowClick).toHaveBeenCalledWith(mockData[0]);
+Demo/apps/superapp-unified/src/components/common/DataTable/DataTable.test.tsx:    expect(onActionClick).toHaveBeenCalledWith(mockData[0]);
+Demo/apps/superapp-unified/src/components/common/NotificationSystem.tsx:        const mockData = [
+Demo/apps/superapp-unified/src/components/common/NotificationSystem.tsx:        console.log('🧪 Mock notifications data:', mockData);
+Demo/apps/superapp-unified/src/components/common/NotificationSystem.tsx:        return mockData;
+Demo/apps/superapp-unified/src/components/modules/uplay/components/RefactoredHorizontalPlayer.tsx:const mockVideoData = {
+Demo/apps/superapp-unified/src/components/modules/uplay/components/RefactoredHorizontalPlayer.tsx:  videoData?: typeof mockVideoData;
+Demo/apps/superapp-unified/src/components/modules/uplay/components/RefactoredHorizontalPlayer.tsx:  videoData = mockVideoData,
+Demo/apps/superapp-unified/src/components/modules/uplay/components/EnhancedInteractiveVideoPlayer.tsx:// 🎯 [ELIMINADO] getMockQuestions - Reemplazado por useVideoQuestions hook
+Demo/apps/superapp-unified/src/components/modules/uplay/UnifiedUPlayPlayer.tsx:const mockVideoData: VideoData = {
+Demo/apps/superapp-unified/src/components/modules/uplay/UnifiedUPlayPlayer.tsx:          questions: mockVideoData.questions, // Use mock questions for now
+Demo/apps/superapp-unified/src/components/modules/uplay/UnifiedUPlayPlayer.tsx:    return mockVideoData;
+Demo/apps/superapp-unified/src/components/modules/uplay/UPlayGamifiedDashboard.tsx:  const mockCategories: CategoryData[] = [
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:const mockSocialData = {
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:    : mockSocialData.notifications;
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:    ...mockSocialData.userStats,
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:      normalizedMatches.length || mockSocialData.userStats.connectionsCount,
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:                        mockSocialData.communityMetrics.dailyInteractions
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:                      badgeContent={mockSocialData.communityMetrics.activeCircles}
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:                      quickActions={mockSocialData.quickActions}
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:                      communityMetrics={mockSocialData.communityMetrics}
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:                      communityMetrics={mockSocialData.communityMetrics}
+Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx:                      communityMetrics={mockSocialData.communityMetrics}
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:  const mockUpdateUserData: UpdateUserData = {
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:    vi.mocked(updateUser).mockResolvedValue(mockUpdatedUser);
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:    await result.current.mutate({ id: mockUserId, data: mockUpdateUserData });
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:      expect(updateUser).toHaveBeenCalledWith(mockUserId, mockUpdateUserData);
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:    vi.mocked(updateUser).mockRejectedValue(mockError);
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:    await result.current.mutate({ id: mockUserId, data: mockUpdateUserData });
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:      expect(updateUser).toHaveBeenCalledWith(mockUserId, mockUpdateUserData);
+Demo/apps/superapp-unified/src/hooks/useUpdateUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:  const mockCreateUserData: CreateUserData = {
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:    vi.mocked(createUser).mockResolvedValue(mockCreatedUser);
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:    await result.current.mutate(mockCreateUserData);
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:      expect(createUser).toHaveBeenCalledWith(mockCreateUserData);
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:    vi.mocked(createUser).mockRejectedValue(mockError);
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:    await result.current.mutate(mockCreateUserData);
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:      expect(createUser).toHaveBeenCalledWith(mockCreateUserData);
+Demo/apps/superapp-unified/src/hooks/useCreateUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para gameData');
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para walletData');
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:  mockData: T,
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:    data: shouldUseMock ? mockData : realDataQuery.data,
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:  const mockUpdateRoleData: UpdateRoleData = {
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    vi.mocked(updateRole).mockResolvedValue(mockUpdatedRole);
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    result.current.mutate({ id: mockRoleId, data: mockUpdateRoleData });
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:      expect(updateRole).toHaveBeenCalledWith(mockRoleId, mockUpdateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    vi.mocked(updateRole).mockRejectedValue(mockError);
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    result.current.mutate({ id: mockRoleId, data: mockUpdateRoleData });
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:      expect(updateRole).toHaveBeenCalledWith(mockRoleId, mockUpdateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    vi.mocked(updateRole).mockResolvedValue(mockUpdatedRole);
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    result.current.mutate({ id: mockRoleId, data: mockUpdateRoleData });
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:      expect(updateRole).toHaveBeenCalledWith(mockRoleId, mockUpdateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:    result.current.mutate({ id: mockRoleId, data: secondUpdateData });
+Demo/apps/superapp-unified/src/hooks/features/roles/useUpdateRoleMutation.test.ts:      expect(updateRole).toHaveBeenCalledWith(mockRoleId, secondUpdateData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:// Define a type for the mocked useMutation result
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:  const mockCreateRoleData: CreateRoleData = {
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    vi.mocked(createRole).mockResolvedValue(mockCreatedRole);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    result.current.mutate(mockCreateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:      expect(createRole).toHaveBeenCalledWith(mockCreateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    vi.mocked(createRole).mockRejectedValue(mockError);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    result.current.mutate(mockCreateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:      expect(createRole).toHaveBeenCalledWith(mockCreateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    vi.mocked(createRole).mockResolvedValue(mockCreatedRole);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:    result.current.mutate(mockCreateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useCreateRoleMutation.test.ts:      expect(createRole).toHaveBeenCalledWith(mockCreateRoleData);
+Demo/apps/superapp-unified/src/hooks/features/roles/useAvailablePermissionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useAvailablePermissionsQuery.test.ts:    vi.mocked(fetchAvailablePermissions).mockResolvedValue(mockPermissions);
+Demo/apps/superapp-unified/src/hooks/features/roles/useAvailablePermissionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useAvailablePermissionsQuery.test.ts:    vi.mocked(fetchAvailablePermissions).mockRejectedValue(mockError);
+Demo/apps/superapp-unified/src/hooks/features/roles/useAvailablePermissionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useAvailablePermissionsQuery.test.ts:    vi.mocked(useQuery).mockImplementation(mockUseQuery);
+Demo/apps/superapp-unified/src/hooks/features/roles/useAvailablePermissionsQuery.test.ts:    vi.mocked(fetchAvailablePermissions).mockResolvedValue([]);
+Demo/apps/superapp-unified/src/hooks/features/roles/useAvailablePermissionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useDeleteRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useDeleteRoleMutation.test.ts:    vi.mocked(deleteRole).mockResolvedValue();
+Demo/apps/superapp-unified/src/hooks/features/roles/useDeleteRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useDeleteRoleMutation.test.ts:    vi.mocked(deleteRole).mockRejectedValue(mockError);
+Demo/apps/superapp-unified/src/hooks/features/roles/useDeleteRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useDeleteRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/roles/useDeleteRoleMutation.test.ts:    vi.mocked(deleteRole).mockResolvedValue();
+Demo/apps/superapp-unified/src/hooks/features/roles/useDeleteRoleMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/users/useDeleteUserMutation.test.tsx:    vi.mocked(toast.success).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useDeleteUserMutation.test.tsx:    vi.mocked(toast.error).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useDeleteUserMutation.test.tsx:    vi.mocked(deleteUser).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useDeleteUserMutation.test.tsx:    vi.mocked(deleteUser).mockResolvedValue({});
+Demo/apps/superapp-unified/src/hooks/features/users/useDeleteUserMutation.test.tsx:    vi.mocked(deleteUser).mockRejectedValue(errorResponse);
+Demo/apps/superapp-unified/src/hooks/features/users/useDeleteUserMutation.test.tsx:    vi.mocked(deleteUser).mockRejectedValue(errorResponse);
+Demo/apps/superapp-unified/src/hooks/features/users/useDeleteUserMutation.test.tsx:    vi.mocked(deleteUser).mockResolvedValue({});
+Demo/apps/superapp-unified/src/hooks/features/users/useUpdateUserMutation.test.tsx:    vi.mocked(toast.success).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useUpdateUserMutation.test.tsx:    vi.mocked(toast.error).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useUpdateUserMutation.test.tsx:    vi.mocked(updateUser).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useUpdateUserMutation.test.tsx:    vi.mocked(updateUser).mockResolvedValue({});
+Demo/apps/superapp-unified/src/hooks/features/users/useUpdateUserMutation.test.tsx:    vi.mocked(updateUser).mockRejectedValue(errorResponse);
+Demo/apps/superapp-unified/src/hooks/features/users/useUpdateUserMutation.test.tsx:    vi.mocked(updateUser).mockRejectedValue(errorResponse);
+Demo/apps/superapp-unified/src/hooks/features/users/useUpdateUserMutation.test.tsx:    vi.mocked(updateUser).mockResolvedValue({});
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(useTranslation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(extractErrorMessage).mockImplementation((error, t) => {
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(toast.success).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(toast.error).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(createUser).mockClear();
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    const mockUserData: CreateUserData = { 
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:      ...mockUserData 
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(createUser).mockResolvedValueOnce(mockSuccessResponse);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:      result.current.mutate(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(createUser).toHaveBeenCalledWith(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(toast.success)).toHaveBeenCalledWith('Usuario creado exitosamente');
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(toast.error)).not.toHaveBeenCalled();
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    const mockUserData: CreateUserData = { 
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(createUser).mockRejectedValueOnce(mockApiError);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:      result.current.mutate(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(createUser).toHaveBeenCalledWith(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(extractErrorMessage)).toHaveBeenCalledWith(mockApiError, vi.mocked(useTranslation)().t);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(useTranslation)().t).toHaveBeenCalledWith('toast_error_creating_user', { message: apiErrorMessage });
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(toast.error)).toHaveBeenCalledWith(`Error al crear usuario: ${apiErrorMessage}`);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(toast.success)).not.toHaveBeenCalled();
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    const mockUserData: CreateUserData = { 
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(createUser).mockRejectedValueOnce(mockStandardError);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:      result.current.mutate(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(createUser).toHaveBeenCalledWith(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(extractErrorMessage)).toHaveBeenCalledWith(mockStandardError, vi.mocked(useTranslation)().t);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(useTranslation)().t).toHaveBeenCalledWith('toast_error_creating_user', { message: standardErrorMessage });
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(toast.error)).toHaveBeenCalledWith(`Error al crear usuario: ${standardErrorMessage}`);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(toast.success)).not.toHaveBeenCalled();
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    const mockUserData: CreateUserData = { 
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(createUser).mockRejectedValueOnce(mockUnknownError);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:      result.current.mutate(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(createUser).toHaveBeenCalledWith(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(extractErrorMessage)).toHaveBeenCalledWith(mockUnknownError, vi.mocked(useTranslation)().t);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(useTranslation)().t).toHaveBeenCalledWith('toast_error_creating_user', { message: 'Error desconocido' });
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(toast.error)).toHaveBeenCalledWith(`Error al crear usuario: Error desconocido`);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    expect(vi.mocked(toast.success)).not.toHaveBeenCalled();
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    const mockUserData: CreateUserData = { 
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(createUser).mockReturnValueOnce(controlledPromise as any);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:      result.current.mutate(mockUserData);
+Demo/apps/superapp-unified/src/hooks/features/users/useCreateUserMutation.test.tsx:    vi.mocked(createUser).mockResolvedValue({});
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useSubtitlesQuery.test.tsx:    vi.mocked(subtitleService.findAll).mockResolvedValue(mockSubtitles);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useSubtitlesQuery.test.tsx:    vi.mocked(subtitleService.findAll).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useSubtitlesQuery.test.tsx:    vi.mocked(subtitleService.findAll).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useSubtitlesQuery.test.tsx:    vi.mocked(subtitleService.findAll).mockResolvedValue(mockSubtitles);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useSubtitlesQuery.test.tsx:    vi.mocked(subtitleService.findAll).mockResolvedValue(mockSubtitles);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useSubtitlesQuery.test.tsx:    vi.mocked(subtitleService.findAll).mockResolvedValue(mockSubtitles);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(useTranslation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.create).mockResolvedValue(mockSubtitle);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.create).mockResolvedValue(mockSubtitle);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.create).mockRejectedValue(apiError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.create).mockRejectedValue(genericError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.create).mockRejectedValue(unknownError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(undefined);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.create).mockReturnValue(pendingPromise);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.create).mockRejectedValue(fileError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useCreateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(useTranslation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockResolvedValue(undefined);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockResolvedValue(undefined);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockRejectedValue(apiError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockRejectedValue(genericError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockRejectedValue(permissionError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockRejectedValue(notFoundError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockRejectedValue(unknownError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(undefined);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockReturnValue(pendingPromise);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockRejectedValue(serverError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockResolvedValue(undefined);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(subtitleService.remove).mockRejectedValue(invalidIdError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useDeleteSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(useTranslation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockResolvedValue(updatedSubtitle);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockResolvedValue(updatedSubtitle);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockRejectedValue(apiError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockRejectedValue(genericError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockRejectedValue(permissionError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockRejectedValue(unknownError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(undefined);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockReturnValue(pendingPromise);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockResolvedValue(activatedSubtitle);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockResolvedValue(updatedSubtitle);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(subtitleService.update).mockRejectedValue(notFoundError);
+Demo/apps/superapp-unified/src/hooks/features/subtitles/useUpdateSubtitleMutation.test.tsx:    vi.mocked(extractErrorMessage).mockReturnValue(extractedMessage);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:  const mockCreateQuestionData: CreateQuestionDto = {
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock());
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(useQueryClient).mockReturnValue(mockQueryClient);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:      variables: mockCreateQuestionData,
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(questionService.create).mockResolvedValueOnce(mockCreatedQuestion);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:      mutationConfig.onSuccess(mockCreatedQuestion, mockCreateQuestionData, undefined);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:      variables: mockCreateQuestionData,
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(questionService.create).mockRejectedValueOnce(apiError);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:      mutationConfig.onError(apiError, mockCreateQuestionData, undefined);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:      variables: mockCreateQuestionData,
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(questionService.create).mockRejectedValueOnce(standardError);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:      mutationConfig.onError(standardError, mockCreateQuestionData, undefined);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(questionService.create).mockResolvedValueOnce(mockCreatedQuestion);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:      await mutationConfig.mutationFn(mockCreateQuestionData);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    expect(questionService.create).toHaveBeenCalledWith(mockCreateQuestionData);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(useQueryClient).mockReturnValue(mockQueryClient);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    vi.mocked(questionService.create).mockResolvedValueOnce(mockTrueFalseQuestion);
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useCreateQuestionMutation.test.ts:      mutationConfig.onSuccess(mockTrueFalseQuestion, trueFalseQuestionData, undefined);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:  const mockUpdateQuestionData: UpdateQuestionDto = {
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    data: mockUpdateQuestionData
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock());
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useQueryClient).mockReturnValue(mockQueryClient);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(questionService.update).mockResolvedValueOnce(mockUpdatedQuestion);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(questionService.update).mockRejectedValueOnce(apiError);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(questionService.update).mockRejectedValueOnce(standardError);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(questionService.update).mockResolvedValueOnce(mockUpdatedQuestion);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useQueryClient).mockReturnValue(mockQueryClient);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(questionService.update).mockResolvedValueOnce(mockPartiallyUpdatedQuestion);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useQueryClient).mockReturnValue(mockQueryClient);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    vi.mocked(questionService.update).mockResolvedValueOnce(mockToggledQuestion);
+Demo/apps/superapp-unified/src/hooks/features/questions/useUpdateQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock());
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useQueryClient).mockReturnValue(mockQueryClient);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(questionService.remove).mockResolvedValueOnce(undefined);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(questionService.remove).mockRejectedValueOnce(apiError);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(questionService.remove).mockRejectedValueOnce(standardError);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(questionService.remove).mockResolvedValueOnce(undefined);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useQueryClient).mockReturnValue(mockQueryClient);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(questionService.remove).mockResolvedValueOnce(undefined);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(questionService.remove).mockRejectedValueOnce(unauthorizedError);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(useMutation).mockReturnValue(createMutationResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    vi.mocked(questionService.remove).mockRejectedValueOnce(notFoundError);
+Demo/apps/superapp-unified/src/hooks/features/questions/useDeleteQuestionMutation.test.ts:    const mutationConfig = vi.mocked(useMutation).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue(createQueryResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue(createQueryResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue(createQueryResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue(createQueryResultMock());
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue(createQueryResultMock());
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    vi.mocked(questionService.findAll).mockResolvedValueOnce(mockQuestions);
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue(createQueryResultMock({
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    const queryConfig = vi.mocked(useQuery).mock.calls[0][0];
+Demo/apps/superapp-unified/src/hooks/features/questions/useQuestionsQuery.test.ts:    vi.mocked(useQuery).mockReturnValue(createQueryResultMock({
+Demo/apps/superapp-unified/src/hooks/useDeleteUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useDeleteUserMutation.test.ts:    vi.mocked(deleteUser).mockResolvedValue();
+Demo/apps/superapp-unified/src/hooks/useDeleteUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useDeleteUserMutation.test.ts:    vi.mocked(deleteUser).mockRejectedValue(mockError);
+Demo/apps/superapp-unified/src/hooks/useDeleteUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useDeleteUserMutation.test.ts:    vi.mocked(useMutation).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useUsersQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useUsersQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useUsersQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useUsersQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/analytics/useActiveUsersOverTimeQuery.test.tsx:  const mockActiveUsersOverTimeData: ActiveUsersOverTimeMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useActiveUsersOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchActiveUsersOverTime).mockResolvedValue(mockActiveUsersOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useActiveUsersOverTimeQuery.test.tsx:    expect(result.current.data).toEqual(mockActiveUsersOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useActiveUsersOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchActiveUsersOverTime).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useActiveUsersOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchActiveUsersOverTime).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useActiveUsersOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchActiveUsersOverTime).mockResolvedValue(mockActiveUsersOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useActiveUsersOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchActiveUsersOverTime).mockResolvedValue(mockActiveUsersOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedPlaylistsQuery.test.tsx:  const mockLeastViewedPlaylistsData: LeastViewedPlaylistsMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedPlaylists).mockResolvedValue(mockLeastViewedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedPlaylistsQuery.test.tsx:    expect(result.current.data).toEqual(mockLeastViewedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedPlaylists).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedPlaylists).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedPlaylists).mockResolvedValue([]);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedPlaylists).mockResolvedValue(mockLeastViewedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedPlaylists).mockResolvedValue(lowViewCountData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalMundosQuery.test.tsx:  const mockTotalMundosData: TotalCountMetric = {
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalMundos).mockResolvedValue(mockTotalMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalMundosQuery.test.tsx:    expect(result.current.data).toEqual(mockTotalMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalMundos).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalMundos).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalMundos).mockResolvedValue(mockTotalMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/usePlaylistsCreatedOverTimeQuery.test.tsx:  const mockPlaylistsCreatedOverTimeData: TimeSeriesDataPoint[] = [
+Demo/apps/superapp-unified/src/hooks/analytics/usePlaylistsCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchPlaylistsCreatedOverTime).mockResolvedValue(mockPlaylistsCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/usePlaylistsCreatedOverTimeQuery.test.tsx:    expect(result.current.data).toEqual(mockPlaylistsCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/usePlaylistsCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchPlaylistsCreatedOverTime).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/usePlaylistsCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchPlaylistsCreatedOverTime).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/usePlaylistsCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchPlaylistsCreatedOverTime).mockResolvedValue(mockPlaylistsCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/usePlaylistsCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchPlaylistsCreatedOverTime).mockResolvedValue(mockPlaylistsCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalUsersQuery.test.tsx:  const mockTotalUsersData: TotalCountMetric = {
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalUsersQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalUsers).mockResolvedValue(mockTotalUsersData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalUsersQuery.test.tsx:    expect(result.current.data).toEqual(mockTotalUsersData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalUsersQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalUsers).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalUsersQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalUsers).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalUsersQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalUsers).mockResolvedValue(mockTotalUsersData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:  const mockLeastInteractedMundosData: LeastInteractedMundosMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedMundos).mockResolvedValue(mockLeastInteractedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:    expect(result.current.data).toEqual(mockLeastInteractedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedMundos).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedMundos).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedMundos).mockResolvedValue([]);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedMundos).mockResolvedValue(mockLeastInteractedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedMundos).mockResolvedValue(zeroInteractionData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedMundos).mockResolvedValue(validContentTypeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedMundosQuery.test.tsx:  const mockLeastViewedMundosData: LeastViewedMundosMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedMundos).mockResolvedValue(mockLeastViewedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedMundosQuery.test.tsx:    expect(result.current.data).toEqual(mockLeastViewedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedMundos).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedMundos).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedMundos).mockResolvedValue([]);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedMundos).mockResolvedValue(mockLeastViewedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastViewedMundos).mockResolvedValue(veryLowViewCountData);
+Demo/apps/superapp-unified/src/hooks/analytics/useMundosCreatedOverTimeQuery.test.tsx:  const mockMundosCreatedOverTimeData: TimeSeriesDataPoint[] = [
+Demo/apps/superapp-unified/src/hooks/analytics/useMundosCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchMundosCreatedOverTime).mockResolvedValue(mockMundosCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useMundosCreatedOverTimeQuery.test.tsx:    expect(result.current.data).toEqual(mockMundosCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useMundosCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchMundosCreatedOverTime).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useMundosCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchMundosCreatedOverTime).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useMundosCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchMundosCreatedOverTime).mockResolvedValue(mockMundosCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useMundosCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchMundosCreatedOverTime).mockResolvedValue(mockMundosCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedPlaylistsQuery.test.tsx:  const mockLeastInteractedPlaylistsData: LeastInteractedPlaylistsMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedPlaylists).mockResolvedValue(mockLeastInteractedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedPlaylistsQuery.test.tsx:    expect(result.current.data).toEqual(mockLeastInteractedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedPlaylists).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedPlaylists).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedPlaylists).mockResolvedValue([]);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedPlaylists).mockResolvedValue(mockLeastInteractedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useLeastInteractedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchLeastInteractedPlaylists).mockResolvedValue(zeroInteractionData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:  const mockTopViewedPlaylistsData: TopViewedPlaylistsMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedPlaylists).mockResolvedValue(mockTopViewedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    expect(result.current.data).toEqual(mockTopViewedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedPlaylists).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedPlaylists).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedPlaylists).mockResolvedValue([]);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedPlaylists).mockResolvedValue(mockTopViewedPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    const mockDataWithoutThumbnails: TopViewedPlaylistsMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedPlaylists).mockResolvedValue(mockDataWithoutThumbnails);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedPlaylistsQuery.test.tsx:    expect(result.current.data).toEqual(mockDataWithoutThumbnails);
+Demo/apps/superapp-unified/src/hooks/analytics/useUsersCreatedOverTimeQuery.test.tsx:  const mockUsersCreatedOverTimeData: UsersCreatedOverTimeMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useUsersCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchUsersCreatedOverTime).mockResolvedValue(mockUsersCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useUsersCreatedOverTimeQuery.test.tsx:    expect(result.current.data).toEqual(mockUsersCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useUsersCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchUsersCreatedOverTime).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useUsersCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchUsersCreatedOverTime).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useUsersCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchUsersCreatedOverTime).mockResolvedValue(mockUsersCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useUsersCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchUsersCreatedOverTime).mockResolvedValue(mockUsersCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useUsersCreatedOverTimeQuery.test.tsx:    vi.mocked(analyticsService.fetchUsersCreatedOverTime).mockResolvedValue(mockUsersCreatedOverTimeData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopInteractedContentQuery.test.tsx:  const mockTopInteractedContentData: TopInteractedContentMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useTopInteractedContentQuery.test.tsx:    vi.mocked(analyticsService.fetchTopInteractedContent).mockResolvedValue(mockTopInteractedContentData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopInteractedContentQuery.test.tsx:    expect(result.current.data).toEqual(mockTopInteractedContentData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopInteractedContentQuery.test.tsx:    vi.mocked(analyticsService.fetchTopInteractedContent).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useTopInteractedContentQuery.test.tsx:    vi.mocked(analyticsService.fetchTopInteractedContent).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useTopInteractedContentQuery.test.tsx:    vi.mocked(analyticsService.fetchTopInteractedContent).mockResolvedValue([]);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopInteractedContentQuery.test.tsx:    vi.mocked(analyticsService.fetchTopInteractedContent).mockResolvedValue(mixedContentData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopInteractedContentQuery.test.tsx:    vi.mocked(analyticsService.fetchTopInteractedContent).mockResolvedValue(mockTopInteractedContentData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:  const mockTopViewedMundosData: TopViewedMundosMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedMundos).mockResolvedValue(mockTopViewedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    expect(result.current.data).toEqual(mockTopViewedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedMundos).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedMundos).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedMundos).mockResolvedValue([]);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedMundos).mockResolvedValue(mockTopViewedMundosData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    const mockDataWithoutThumbnails: TopViewedMundosMetric = [
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    vi.mocked(analyticsService.fetchTopViewedMundos).mockResolvedValue(mockDataWithoutThumbnails);
+Demo/apps/superapp-unified/src/hooks/analytics/useTopViewedMundosQuery.test.tsx:    expect(result.current.data).toEqual(mockDataWithoutThumbnails);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalPlaylistsQuery.test.tsx:  const mockTotalPlaylistsData: TotalCountMetric = {
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalPlaylists).mockResolvedValue(mockTotalPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalPlaylistsQuery.test.tsx:    expect(result.current.data).toEqual(mockTotalPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalPlaylists).mockImplementation(() => new Promise(() => {})); // Never resolves
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalPlaylists).mockRejectedValue(new Error(errorMessage));
+Demo/apps/superapp-unified/src/hooks/analytics/useTotalPlaylistsQuery.test.tsx:    vi.mocked(analyticsService.fetchTotalPlaylists).mockResolvedValue(mockTotalPlaylistsData);
+Demo/apps/superapp-unified/src/hooks/useRolesQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useRolesQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useRolesQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/hooks/useRolesQuery.test.ts:    vi.mocked(useQuery).mockReturnValue({
+Demo/apps/superapp-unified/src/lib/environment.ts:  getMockAdminUser: () => ({
+Demo/apps/superapp-unified/src/lib/environment.ts:  getMockAdminToken: () => 'mock-admin-token-for-builder-io',
+Demo/apps/superapp-unified/src/lib/feature-flags.tsx:  mockDataGeneration: boolean;
+Demo/apps/superapp-unified/src/lib/feature-flags.tsx:  mockDataGeneration: {
+Demo/apps/superapp-unified/src/lib/lets-mock-service.ts:    const fromWallet = this.mockWallets.get(transferData.fromUserId);
+Demo/apps/superapp-unified/src/lib/lets-mock-service.ts:    const toWallet = this.mockWallets.get(transferData.toUserId);
+Demo/apps/superapp-unified/src/pages/LoginPage.test.tsx:    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
+Demo/apps/superapp-unified/src/pages/LoginPage.test.tsx:    vi.mocked(authService.login).mockImplementation(mockLogin);
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:  const mockData = {
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:                  ondas={mockData.ayni.ondas}
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:                  meritos={mockData.ayni.meritos}
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:                  ayniLevel={mockData.ayni.ayniLevel}
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:                  nextLevel={mockData.ayni.nextLevel}
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:                  ayniProgress={mockData.ayni.ayniProgress}
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:                  bienComunContributions={mockData.ayni.bienComunContributions}
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:                  balanceAyni={mockData.ayni.balanceAyni}
+Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx:                  elementos={mockData.elementos}
