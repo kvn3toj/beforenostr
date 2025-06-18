@@ -27,6 +27,9 @@ import { Toaster } from 'sonner'
 import { createAppTheme } from './theme'
 import { useAuthStore } from './store/authStore'
 import NostrDemoPage from './pages/NostrDemoPage'
+import { ChallengesPage } from './pages/ChallengesPage'
+import { MarketplacePage } from './pages/MarketplacePage'
+import { TransactionsPage } from './pages/TransactionsPage'
 
 const queryClient = new QueryClient()
 const theme = createAppTheme('light');
@@ -67,6 +70,9 @@ function App() {
               <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/audit-logs" element={<AuditLogsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/challenges" element={<ChallengesPage />} />
+              <Route path="/marketplace" element={<MarketplacePage />} />
+              <Route path="/transactions" element={<TransactionsPage />} />
               
               {/* Ruta de perfil de usuario */}
               <Route path="/profile" element={<ProfilePage />} />
