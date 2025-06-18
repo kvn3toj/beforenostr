@@ -196,7 +196,7 @@ const createEnvironmentConfig = (): EnvironmentConfig => {
     isProduction: envType === 'production',
     isTesting: envType === 'testing',
     isBuilderIO,
-    forceAdminMode: isBuilderIO, // 🏗️ FORZAR MODO ADMIN EN BUILDER.IO
+    forceAdminMode: false, // ✅ DESHABILITADO: Nunca forzar modo admin - usar autenticación real
     currentOrigin,
     backendHealthUrl: `${apiBaseUrl}/health`,
   };
@@ -308,7 +308,7 @@ export const BuilderIOHelpers = {
   /**
    * Check if we should bypass authentication
    */
-  shouldBypassAuth: () => ENV.isBuilderIO && ENV.forceAdminMode,
+  shouldBypassAuth: () => false, // ✅ DESHABILITADO: Nunca saltar autenticación - usar siempre datos reales
 };
 
 /**

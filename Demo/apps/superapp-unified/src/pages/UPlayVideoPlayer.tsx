@@ -368,46 +368,18 @@ const UPlayVideoPlayer: React.FC = () => {
         return;
       }
 
-      // PRIORIDAD 3: Fallback: usar datos mock si no se encuentra en backend y no está cargando
-      if (!isBackendLoading && !isBackendError) {
-        console.log('⚠️ Tomando el camino: Fallback a mock data');
-        console.log('🔄 No video found in backend, using fallback mock data for:', videoId);
-        
-        // Crear video fallback basado en el videoId
-        const fallbackVideo = {
-          id: videoId || 'fallback-video',
-          title: 'Video de Demostración',
-          description: 'Este es un video de demostración mientras se carga el contenido real.',
-          url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-          duration: 300,
-          questions: [],
-          thumbnail: '',
-          category: 'Demo',
-          difficulty: 'medium' as const,
-          estimatedRewards: {
-            merits: 50,
-            ondas: 25
-          },
-          tags: ['demo', 'fallback']
-        };
-        
-        console.log('🎯 Using fallback video data:', fallbackVideo);
-        setCurrentVideo(fallbackVideo);
-        setIsLoading(false);
-        return;
-      }
-
-      // PRIORIDAD 4: Si está cargando, mantener estado de loading
+      // PRIORIDAD 3: Si está cargando, mantener estado de loading
       if (isBackendLoading) {
         console.log('⏳ Backend still loading, waiting...');
         return;
       }
 
-      // PRIORIDAD 5: Si hay error del backend, mostrar error
-      if (isBackendError) {
-        console.error('❌ Backend error, cannot load video');
-        setError(`Error al cargar el video "${videoId}". Problema de conexión con el backend.`);
+      // PRIORIDAD 4: Si hay error del backend o no se encuentra video, mostrar error
+      if (isBackendError || (!isBackendLoading && !currentVideo)) {
+        console.error('❌ Backend error or video not found');
+        setError(`Error al cargar el video "${videoId}". Problema de conexión con el backend o video no encontrado.`);
         setIsLoading(false);
+        return;
       }
     };
 

@@ -73,7 +73,11 @@ const isMockAuthEnabled = (): boolean => {
 
 // 🏗️ **FUNCIÓN PARA VERIFICAR SI ESTAMOS EN MODO BUILDER.IO**
 const isBuilderIOMode = (): boolean => {
-  return BuilderIOHelpers.shouldBypassAuth();
+  // ✅ DESHABILITADO: Nunca activar modo Builder.io - usar siempre datos reales
+  return false;
+  
+  // ❌ CÓDIGO ORIGINAL DESHABILITADO:
+  // return BuilderIOHelpers.shouldBypassAuth();
 };
 
 // 🔄 Función para mapear respuesta del backend al formato User del frontend
