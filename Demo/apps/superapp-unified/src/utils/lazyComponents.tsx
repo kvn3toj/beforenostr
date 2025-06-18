@@ -142,6 +142,11 @@ export const LazyPages = {
   // PÁGINAS FALTANTES AÑADIDAS
 
   // 🆕 NUEVAS PÁGINAS DESARROLLADAS
+  OnboardingTutorial: createLazyComponent(
+    () => import('../pages/OnboardingTutorial'),
+    <SimpleLoader />
+  ),
+
   NotificationsPage: createLazyComponent(
     () => import('../pages/NotificationsPage'),
     <SimpleLoader />

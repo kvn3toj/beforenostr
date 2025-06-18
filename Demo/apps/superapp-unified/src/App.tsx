@@ -57,6 +57,7 @@ const AppRoutes: React.FC = () => {
       {/* 🔓 Rutas Públicas - No requieren autenticación */}
       <Route path="/login" element={<LazyPages.LoginPage />} />
       <Route path="/register" element={<LazyPages.RegisterPage />} />
+      <Route path="/onboarding" element={<LazyPages.OnboardingTutorial />} />
       
       {/* 🔒 Rutas Protegidas - Requieren autenticación y usan AppLayout */}
       <Route element={<ProtectedRoute />}>
