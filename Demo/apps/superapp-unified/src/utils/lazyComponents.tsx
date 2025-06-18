@@ -98,12 +98,12 @@ export const LazyPages = {
   
   // Login and Auth
   LoginPage: createLazyComponent(
-    () => import('../pages/Login'),
+    () => import('../pages/LoginPage'),
     <SimpleLoader />
   ),
   
   RegisterPage: createLazyComponent(
-    () => import('../pages/Register'),
+    () => import('../pages/RegisterPage'),
     <SimpleLoader />
   ),
   
