@@ -64,199 +64,7 @@ import {
   Category as CategoryIcon,
   Groups as GroupsIcon,
 } from '@mui/icons-material';
-
-// Import enhanced mock data hook
-import {
-  useUPlayMockData,
-  MockVideo,
-  MockPlaylist,
-} from '../../../hooks/useUPlayMockData';
-
-// 🔥 Hook para datos reales del backend
-import { useVideos } from '../../../hooks/useRealBackendData';
-
-// 🌌 IMPORT DEL NUEVO DESIGN SYSTEM CÓSMICO
-import { CosmicCard } from '../../../design-system/components/cosmic/CosmicCard';
-
-// 🏫 IMPORT DEL PANEL DE FUNCIONALIDADES SOCIALES
-import { SocialFeaturesPanel } from './components/SocialFeaturesPanel';
-
-// Enhanced types for mobile experience
-interface EnhancedMockUserStats {
-  name: string;
-  activePlayers: number;
-  burnedPlayers: number;
-  level: number;
-  merits: number;
-  ondas: number;
-  experience: number;
-  experienceToNext: number;
-  weeklyGoal: number;
-  currentStreak: number;
-  completedVideos: number;
-  totalWatchTime: number;
-  achievements: number;
-  ranking: number;
-}
-
-interface VideoProgress {
-  videoId: number;
-  progress: number;
-  completed: boolean;
-  questionsAnswered: number;
-  totalQuestions: number;
-  meritsEarned: number;
-  lastWatched: Date;
-}
-
-// Tipo para videos del backend
-interface BackendVideo {
-  id: number;
-  title: string;
-  description: string;
-  url: string;
-  platform: string;
-  externalId: string;
-  duration: number;
-  categories: string;
-  tags: string;
-  thumbnailUrl: string;
-  playlist?: {
-    name: string;
-    description: string;
-  };
-}
-
-// Enhanced placeholder component with better design
-const VideoThumbnail: React.FC<{
-  width: number | string;
-  height: number | string;
-  className?: string;
-  isPlaying?: boolean;
-  progress?: number;
-  thumbnailUrl?: string;
-}> = React.memo(({ width, height, className, isPlaying = false, progress = 0, thumbnailUrl }) => (
-  <Box
-    className={className}
-    sx={{
-      width,
-      height,
-      backgroundColor: '#E0E0E0',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: 2,
-      position: 'relative',
-      overflow: 'hidden',
-      background: thumbnailUrl 
-        ? `url(${thumbnailUrl})` 
-        : 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-    }}
-  >
-    {/* Fallback geometric shapes if no thumbnail */}
-    {!thumbnailUrl && (
-      <>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '25%',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: 0,
-            height: 0,
-            borderLeft: '16px solid transparent',
-            borderRight: '16px solid transparent',
-            borderBottom: '28px solid #94a3b8',
-            opacity: 0.7,
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '25%',
-            left: '30%',
-            width: '12px',
-            height: '16px',
-            backgroundColor: '#64748b',
-            borderRadius: 1,
-            opacity: 0.6,
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '25%',
-            right: '30%',
-            width: '18px',
-            height: '18px',
-            backgroundColor: '#475569',
-            borderRadius: '50%',
-            opacity: 0.6,
-          }}
-        />
-      </>
-    )}
-
-    {/* Play overlay */}
-    {isPlaying && (
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          backgroundColor: 'rgba(99, 102, 241, 0.9)',
-          borderRadius: '50%',
-          width: 32,
-          height: 32,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <PlayIcon sx={{ color: 'white', fontSize: 18 }} />
-      </Box>
-    )}
-
-    {/* Progress bar */}
-    {progress > 0 && (
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 3,
-          backgroundColor: 'rgba(0,0,0,0.1)',
-        }}
-      >
-        <Box
-          sx={{
-            height: '100%',
-            width: `${progress}%`,
-            backgroundColor: '#6366f1',
-            transition: 'width 0.3s ease',
-          }}
-        />
-      </Box>
-    )}
-
-    {/* Dark overlay for better text readability */}
-    <Box
-      sx={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: '100%',
-        background: 'linear-gradient(transparent 60%, rgba(0,0,0,0.7) 100%)',
-        pointerEvents: 'none',
-      }}
-    />
-  </Box>
-));
+import { useVideos, useVideoPlaylists } from '../../../hooks/useRealBackendData';
 
 // 🌌 COMPONENTE REFACTORIZADO CON DESIGN SYSTEM CÓSMICO
 // Componente para mostrar un video del backend usando CosmicCard
@@ -538,6 +346,64 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
 
+  // Usar datos REALES del backend únicamente
+  const { data: videos, isLoading: videosLoading, error: videosError } = useVideos();
+  const { data: playlists, isLoading: playlistsLoading, error: playlistsError } = useVideoPlaylists();
+  
+  const [userStats, setUserStats] = useState({
+    name: 'Usuario CoomÜnity',
+    activePlayers: 150,
+    burnedPlayers: 50,
+    level: 12,
+    merits: 2350,
+    experience: 1875,
+  });
+
+  // Estados de loading unificados
+  const isLoading = videosLoading || playlistsLoading;
+  const hasError = videosError || playlistsError;
+
+  // Función para formatear duración desde backend
+  const formatDuration = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const getProgressText = (progress: number): string => {
+    return `${progress}% completado`;
+  };
+
+  if (isLoading) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <CircularProgress size={60} />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Cargando contenido real de ÜPlay...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Typography variant="h6" color="error">
+          Error cargando contenido del backend: {videosError?.message || playlistsError?.message}
+        </Typography>
+      </Box>
+    );
+  }
+
+  // Procesar videos del backend para el componente
+  const continueWatching = videos && videos.length > 0 ? {
+    ...videos[0],
+    progress: 35, // Se podría obtener del backend en el futuro
+  } : null;
+
+  const staffPlaylists = videos ? videos.slice(1, 4) : [];
+  const myPlaylists = playlists ? playlists.slice(0, 3) : [];
+
   // Enhanced state management - ALWAYS call hooks in the same order
   const [showStats, setShowStats] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
@@ -590,19 +456,11 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   // Use enhanced mock data hook para fallback
   const {
     isLoading: isMockLoading,
-    continueWatching,
-    formatDuration,
-    getProgressText,
+    continueWatching: mockContinueWatching,
+    formatDuration: mockFormatDuration,
+    getProgressText: mockGetProgressText,
     isPreviewEnvironment,
   } = useUPlayMockData();
-
-  // 🔥 Usar datos reales del backend (principal)
-  const { 
-    data: backendVideos, 
-    isLoading: isBackendLoading,
-    isError: isBackendError,
-    error: backendError
-  } = useVideos();
 
   // Combinar estados de loading
   const isLoading = isBackendLoading;
@@ -915,19 +773,19 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
         {/* Status de conexión con Backend */}
         <Box sx={{ mb: 2 }}>
           <Alert 
-            severity={isBackendError ? "error" : "success"} 
+            severity={hasError ? "error" : "success"} 
             icon={<VideoLibraryIcon />}
             sx={{ 
               borderRadius: 2,
-              backgroundColor: isBackendError ? '#ffebee' : '#e8f5e8',
-              border: `1px solid ${isBackendError ? '#f44336' : '#4caf50'}`,
+              backgroundColor: hasError ? '#ffebee' : '#e8f5e8',
+              border: `1px solid ${hasError ? '#f44336' : '#4caf50'}`,
               fontSize: '14px',
               '& .MuiAlert-message': {
                 fontWeight: 600
               }
             }}
           >
-            {isBackendError ? (
+            {hasError ? (
               <>❌ <strong>Sin conexión al backend:</strong> Usando datos de demostración</>
             ) : (
               <>✅ <strong>Conectado al backend:</strong> {processedVideos.length} videos disponibles</>
@@ -949,13 +807,13 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
           <EnhancedStatusChip
             icon={<PersonIcon sx={{ fontSize: 12 }} />}
             label="Activos"
-            value={enhancedUserStats.activePlayers}
+            value={userStats.activePlayers}
             color="success"
           />
           <EnhancedStatusChip
             icon={<FireIcon sx={{ fontSize: 12 }} />}
             label="Quemados"
-            value={enhancedUserStats.burnedPlayers}
+            value={userStats.burnedPlayers}
             color="error"
           />
           <EnhancedStatusChip
@@ -1056,7 +914,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     <Grid size={{xs:6}}>
                       <Box textAlign="center">
                         <Typography variant="h3" sx={{ fontWeight: 800 }}>
-                          {enhancedUserStats.completedVideos}
+                          {userStats.completedVideos}
                         </Typography>
                         <Typography variant="body2" sx={{ opacity: 0.9 }}>
                           Videos Completados
@@ -1066,7 +924,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     <Grid size={{xs:6}}>
                       <Box textAlign="center">
                         <Typography variant="h3" sx={{ fontWeight: 800 }}>
-                          {Math.floor(enhancedUserStats.totalWatchTime / 3600)}h
+                          {Math.floor(userStats.totalWatchTime / 3600)}h
                         </Typography>
                         <Typography variant="body2" sx={{ opacity: 0.9 }}>
                           Tiempo Total
@@ -1083,15 +941,15 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                   <Box sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                       <Typography variant="body2">
-                        {enhancedUserStats.weeklyGoal} videos
+                        {userStats.weeklyGoal} videos
                       </Typography>
                       <Typography variant="body2" color="primary">
-                        {currentStreak}/{enhancedUserStats.weeklyGoal}
+                        {currentStreak}/{userStats.weeklyGoal}
                       </Typography>
                     </Box>
                     <LinearProgress
                       variant="determinate"
-                      value={(currentStreak / enhancedUserStats.weeklyGoal) * 100}
+                      value={(currentStreak / userStats.weeklyGoal) * 100}
                       sx={{
                         height: 8,
                         borderRadius: 4,
@@ -1284,7 +1142,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                 No hay videos disponibles
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {isBackendError 
+                {hasError 
                   ? 'Error conectando al backend. Verifica que el servicio esté ejecutándose.'
                   : 'No se encontraron videos en el backend.'
                 }
@@ -1331,7 +1189,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color="primary"
                       sx={{ fontWeight: 800 }}
                     >
-                      {enhancedUserStats.completedVideos}
+                      {userStats.completedVideos}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
                       Videos Completados
@@ -1345,7 +1203,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color="success.main"
                       sx={{ fontWeight: 800 }}
                     >
-                      {Math.floor(enhancedUserStats.totalWatchTime / 3600)}h
+                      {Math.floor(userStats.totalWatchTime / 3600)}h
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
                       Tiempo Total
@@ -1359,7 +1217,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color="warning.main"
                       sx={{ fontWeight: 800 }}
                     >
-                      {enhancedUserStats.merits}
+                      {userStats.merits}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
                       Mëritos
@@ -1373,10 +1231,10 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color="secondary.main"
                       sx={{ fontWeight: 800 }}
                     >
-                      {enhancedUserStats.ondas}
+                      {userStats.experience}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                      Öndas
+                      Experiencia
                     </Typography>
                   </Box>
                 </Grid>
@@ -1396,15 +1254,15 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                   }}
                 >
                   <Typography variant="body2">
-                    Meta semanal: {enhancedUserStats.weeklyGoal} videos
+                    Meta semanal: {userStats.weeklyGoal} videos
                   </Typography>
                   <Typography variant="body2" color="primary">
-                    {currentStreak}/{enhancedUserStats.weeklyGoal}
+                    {currentStreak}/{userStats.weeklyGoal}
                   </Typography>
                 </Box>
                 <LinearProgress
                   variant="determinate"
-                  value={(currentStreak / enhancedUserStats.weeklyGoal) * 100}
+                  value={(currentStreak / userStats.weeklyGoal) * 100}
                   sx={{
                     height: 8,
                     borderRadius: 4,

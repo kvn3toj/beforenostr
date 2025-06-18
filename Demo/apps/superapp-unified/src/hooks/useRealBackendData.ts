@@ -758,96 +758,28 @@ export function useMarketplaceData(filters?: any) {
   return useQuery({
     queryKey,
     queryFn: async () => {
-      // 🎨 CARGAR DATOS MOCK RICOS - Simulando carga realista
-      console.info(
-        '🎨 Cargando datos mock ricos del marketplace con productos diversos'
-      );
-
-      // Simular tiempo de carga optimizado (200-400ms)
-      await new Promise((resolve) =>
-        setTimeout(resolve, Math.random() * 200 + 200)
-      );
-
-      // Limpiar localStorage de caché si existe
       try {
-        const cacheKeys = Object.keys(localStorage).filter((key) =>
-          key.includes('marketplace')
-        );
-        cacheKeys.forEach((key) => localStorage.removeItem(key));
-      } catch (e) {
-        // Ignorar errores de localStorage en caso de que no esté disponible
-      }
-
-      const { marketplaceMockData } = await import(
-        '../data/marketplaceMockData'
-      );
-
-      console.info(
-        `✅ Cargados ${marketplaceMockData.length} productos del marketplace`
-      );
-
-      return {
-        items: marketplaceMockData,
-        total: marketplaceMockData.length,
-        page: 1,
-        limit: marketplaceMockData.length,
-        hasMore: false,
-        source: 'mock-rich-data', // Indicador de fuente
-      };
-      // NOTA: Código comentado para futura implementación cuando el backend tenga datos reales diversos
-      /*
-      try {
-        // Intentar obtener datos del backend real primero
+        console.log('� Iniciando carga de datos REALES del marketplace desde backend NestJS');
+        
+        // Intentar obtener datos del backend real ÚNICAMENTE
         const response = await marketplaceAPI.getItems(filters);
-
-        // 🔍 Detectar si el backend tiene solo datos de test genéricos
-        const hasOnlyTestData = response?.items?.length === 0 || response?.items?.every((item: any) =>
-          item.title?.includes('Test Item by Admin') ||
-          item.description?.includes('test E2E') ||
-          item.title?.startsWith('Test Item') ||
-          item.description?.includes('Este item fue creado por un test') ||
-          !item.title ||
-          item.title.trim() === ''
-        );
-
-        // Si solo hay datos de test, usar nuestros datos mock ricos
-        if (hasOnlyTestData) {
-          console.info('🎨 Backend tiene solo datos de test genéricos, usando datos mock ricos del marketplace');
-
-          const { marketplaceMockData } = await import(
-            '../data/marketplaceMockData'
-          );
-
-          return {
-            items: marketplaceMockData,
-            total: marketplaceMockData.length,
-            page: 1,
-            limit: marketplaceMockData.length,
-            hasMore: false,
-            source: 'mock-fallback',
-          };
+        
+        if (!response || !response.items) {
+          throw new Error('Backend no retornó datos válidos');
         }
 
-        // Si hay datos reales diversos, usarlos
-        return { ...response, source: 'backend-real' };
-      } catch (error) {
-        console.warn('Backend no disponible, usando datos mock:', error);
-
-        // Fallback a datos mock locales
-        const { marketplaceMockData } = await import(
-          '../data/marketplaceMockData'
-        );
+        console.log(`✅ Cargados ${response.items.length} productos REALES del marketplace desde backend`);
 
         return {
-          items: marketplaceMockData,
-          total: marketplaceMockData.length,
-          page: 1,
-          limit: marketplaceMockData.length,
-          hasMore: false,
-          source: 'mock-error-fallback',
+          ...response,
+          source: 'backend-real',
         };
+      } catch (error) {
+        console.error('❌ Error obteniendo datos del backend:', error);
+        
+        // NO USAR FALLBACK A MOCK - Solo datos reales del backend
+        throw new Error('Backend no disponible. Datos mock eliminados para mostrar efectos visuales.');
       }
-      */
     },
     staleTime: 5 * 60 * 1000, // 5 minutos - mantener datos frescos por un tiempo razonable
     cacheTime: 10 * 60 * 1000, // 10 minutos en caché
