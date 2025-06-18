@@ -36,28 +36,42 @@ cd backend/ && npm run dev                      # ❌ CAUSA ERRORES
 
 ---
 
-## 🗄️ **DEPENDENCIA POSTGRESQL OBLIGATORIA - CRÍTICA**
+## 🗄️ **DEPENDENCIAS CRÍTICAS DEL BACKEND - OBLIGATORIAS**
 
-### **APRENDIZAJE COSTOSO RESUELTO - JUNIO 2025:**
+### **APRENDIZAJES COSTOSOS RESUELTOS - JUNIO 2025:**
+
+#### **1. POSTGRESQL (CRÍTICO):**
 **PROBLEMA:** Backend NestJS falló al iniciar con error `Can't reach database server at localhost:5432`
 **SÍNTOMA:** Error P1001 - PostgreSQL database server not running
 **SOLUCIÓN:** PostgreSQL debe estar ejecutándose ANTES de iniciar el backend
 
-### **REGLAS DE DEPENDENCIA POSTGRESQL:**
+#### **2. REDIS (CRÍTICO):**
+**PROBLEMA:** Backend NestJS falló con errores ECONNREFUSED a localhost:6379
+**SÍNTOMA:** Multiple "Redis Client Error" en logs, CacheService connection failed
+**SOLUCIÓN:** Redis debe estar ejecutándose ANTES de iniciar el backend
 
-**PostgreSQL es OBLIGATORIO para el funcionamiento del backend:**
+### **REGLAS DE DEPENDENCIAS CRÍTICAS:**
+
+**AMBAS DEPENDENCIAS SON OBLIGATORIAS para el funcionamiento del backend:**
 ```bash
 # ✅ VERIFICAR ESTADO DE POSTGRESQL
 brew services list | grep postgresql
 
+# ✅ VERIFICAR ESTADO DE REDIS
+brew services list | grep redis
+
 # ✅ INICIAR POSTGRESQL (si no está ejecutándose)
 brew services start postgresql@15
 
+# ✅ INICIAR REDIS (si no está ejecutándose)
+brew services start redis
+
 # ✅ VERIFICAR CONECTIVIDAD
-lsof -i :5432  # Debe mostrar postgres escuchando
+lsof -i :5432  # PostgreSQL escuchando
+lsof -i :6379  # Redis escuchando
 
 # ✅ VERIFICAR LOGS DE CONEXIÓN
-# En logs del backend buscar: "Database connection established"
+# En logs del backend buscar: "Database connection established" y "Redis connection established"
 ```
 
 **PROTOCOLO DE RESOLUCIÓN DE PROBLEMAS DE BD:**
@@ -151,6 +165,48 @@ admin-frontend/src/                # SOLO archivos React de Admin
 
 ---
 
+## 🔗 **ERRORES DE IMPORTACIONES LAZY LOADING - CRÍTICO**
+
+### **APRENDIZAJE COSTOSO RESUELTO - JUNIO 2025:**
+**PROBLEMA:** Errores Vite 504 "Outdated Optimize Dep" y "Failed to resolve import"
+**SÍNTOMA:** 
+- `No matching export in "src/utils/lazyComponents.ts" for import "preloadCriticalComponents"`
+- `Failed to resolve import "../pages/UPlayPage" from "src/utils/lazyComponents.ts"`
+**SOLUCIÓN:** Mapear correctamente nombres de archivos reales a importaciones lazy
+
+### **REGLAS DE LAZY LOADING CRÍTICAS:**
+
+**Verificar SIEMPRE que las importaciones coincidan con archivos reales:**
+```bash
+# ✅ VERIFICAR ARCHIVOS EXISTENTES
+ls Demo/apps/superapp-unified/src/pages/
+
+# ❌ ERRORES COMUNES DE MAPEO:
+UPlayPage → import('../pages/UPlayPage')     # ❌ No existe
+ProfilePage → import('../pages/ProfilePage') # ❌ No existe
+WalletPage → import('../pages/WalletPage')   # ❌ No existe
+
+# ✅ MAPEO CORRECTO:
+UPlayPage → import('../pages/UPlay')         # ✅ UPlay.tsx existe
+ProfilePage → import('../pages/Profile')     # ✅ Profile.tsx existe
+WalletPage → import('../pages/Wallet')       # ✅ Wallet.tsx existe
+```
+
+**FUNCIONES OBLIGATORIAS en lazyComponents.ts:**
+```typescript
+// ✅ SIEMPRE INCLUIR estas funciones
+export const preloadCriticalComponents = () => { ... };
+export const preloadRouteComponents = (pathname: string) => { ... };
+```
+
+**SÍNTOMAS DE IMPORTACIONES ROTAS:**
+- Errores Vite 504 "Outdated Optimize Dep" 
+- "Failed to scan for dependencies from entries"
+- "No matching export" en lazyComponents.ts
+- SuperApp no carga correctamente
+
+---
+
 ## 📂 **ORGANIZACIÓN DE DIRECTORIO RAÍZ**
 
 ### **REORGANIZACIÓN MASIVA COMPLETADA:**
@@ -202,7 +258,7 @@ if [ "$CURRENT_DIR" != "$EXPECTED_DIR" ]; then
 fi
 echo "✅ Ubicación correcta verificada"
 
-# 2. 🆕 VERIFICAR POSTGRESQL (CRÍTICO)
+# 2. 🆕 VERIFICAR DEPENDENCIAS CRÍTICAS DEL BACKEND
 echo "🗄️ Verificando PostgreSQL..."
 POSTGRES_STATUS=$(brew services list | grep postgresql@15 | awk '{print $2}')
 if [ "$POSTGRES_STATUS" != "started" ]; then
@@ -221,6 +277,26 @@ if [ $POSTGRES_RUNNING -eq 0 ]; then
   sleep 5
 else
   echo "✅ PostgreSQL ejecutándose en puerto 5432"
+fi
+
+echo "🔧 Verificando Redis..."
+REDIS_STATUS=$(brew services list | grep redis | awk '{print $2}')
+if [ "$REDIS_STATUS" != "started" ]; then
+  echo "❌ ERROR: Redis no está ejecutándose"
+  echo "🔧 Ejecutando: brew services start redis"
+  brew services start redis
+  sleep 3
+fi
+
+# Verificar conectividad Redis
+REDIS_RUNNING=$(lsof -i :6379 | grep LISTEN | wc -l)
+if [ $REDIS_RUNNING -eq 0 ]; then
+  echo "❌ ERROR: Redis no está escuchando en puerto 6379"
+  echo "🔧 Reiniciando Redis..."
+  brew services restart redis
+  sleep 3
+else
+  echo "✅ Redis ejecutándose en puerto 6379"
 fi
 
 # 3. LIMPIAR PROCESOS MÚLTIPLES
@@ -371,10 +447,11 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
    npm run dev  # ❌ Segunda instancia causa conflictos
    ```
 
-3. **🆕 Iniciar backend sin PostgreSQL:**
+3. **🆕 Iniciar backend sin dependencias críticas:**
    ```bash
-   # ❌ NUNCA iniciar backend sin verificar PostgreSQL
+   # ❌ NUNCA iniciar backend sin verificar PostgreSQL Y Redis
    npm run dev:backend  # Sin verificar brew services list | grep postgresql
+   npm run dev:backend  # Sin verificar brew services list | grep redis
    ```
 
 4. **Mezclar archivos backend/frontend:**
@@ -396,13 +473,23 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
    # WARNING: No locally installed `turbo` found
    ```
 
+7. **🆕 Importaciones lazy loading incorrectas:**
+   ```bash
+   # ❌ NUNCA usar nombres que no coincidan con archivos reales
+   import('../pages/UPlayPage')    # ❌ Si UPlay.tsx es el archivo real
+   import('../pages/ProfilePage')  # ❌ Si Profile.tsx es el archivo real
+   ```
+
 ### **✅ OBLIGATORIO:**
 
-1. **🆕 Siempre verificar PostgreSQL primero:**
+1. **🆕 Siempre verificar dependencias críticas primero:**
    ```bash
-   brew services list | grep postgresql  # Verificar estado
-   brew services start postgresql@15     # Iniciar si es necesario
-   lsof -i :5432                        # Verificar conectividad
+   brew services list | grep postgresql  # Verificar PostgreSQL
+   brew services list | grep redis       # Verificar Redis
+   brew services start postgresql@15     # Iniciar PostgreSQL si es necesario
+   brew services start redis            # Iniciar Redis si es necesario
+   lsof -i :5432                        # Verificar conectividad PostgreSQL
+   lsof -i :6379                        # Verificar conectividad Redis
    ```
 
 2. **Siempre verificar ubicación:**
@@ -432,6 +519,12 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
    # Frontend: Demo/apps/superapp-unified/src/ - SOLO React
    ```
 
+7. **🆕 Verificar importaciones lazy loading:**
+   ```bash
+   ls Demo/apps/superapp-unified/src/pages/  # Verificar archivos reales
+   # Mapear correctamente: UPlay.tsx → import('../pages/UPlay')
+   ```
+
 ---
 
 ## 📈 **BENEFICIOS COMPROBADOS**
@@ -449,7 +542,8 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 - ✅ **SuperApp funcional** (puerto 3001, HTTP/1.1 200 OK)
 - ✅ **Base de datos Prisma conectada** (todas las rutas mapeadas)
 - ✅ **Configuración Turborepo corregida** (tasks, packageManager, workspaces)
-- ✅ **🆕 PostgreSQL como dependencia crítica identificada y documentada** ⭐ **JUNIO 2025**
+- ✅ **🆕 PostgreSQL + Redis como dependencias críticas identificadas** ⭐ **JUNIO 2025**
+- ✅ **🆕 Errores de importaciones lazy loading resueltos** ⭐ **JUNIO 2025**
 
 ### **Costos evitados:**
 - 🚫 Reprocesos por errores de contexto
@@ -458,27 +552,31 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 - 🚫 Confusión arquitectónica
 - 🚫 Pérdida de tiempo en configuración
 - 🚫 **🆕 Fallos de backend por PostgreSQL no disponible**
+- 🚫 **🆕 Fallos de backend por Redis no disponible**
+- 🚫 **🆕 Errores Vite por importaciones lazy loading incorrectas**
 
 ---
 
 ## 🎯 **RESUMEN EJECUTIVO**
 
 ### **REGLA FUNDAMENTAL:**
-> **"El directorio raíz del monorepo es el centro de comando. Todo se ejecuta desde ahí, todo se organiza desde ahí, y todo se controla desde ahí. PostgreSQL debe estar ejecutándose ANTES que el backend."**
+> **"El directorio raíz del monorepo es el centro de comando. Todo se ejecuta desde ahí, todo se organiza desde ahí, y todo se controla desde ahí. PostgreSQL Y Redis deben estar ejecutándose ANTES que el backend."**
 
 ### **PROTOCOLO OBLIGATORIO:**
 1. **Verificar ubicación** (`pwd`)
 2. **🆕 Verificar PostgreSQL** (`brew services list | grep postgresql`)
-3. **🆕 Iniciar PostgreSQL si es necesario** (`brew services start postgresql@15`)
-4. **Limpiar procesos** (`pkill -f "vite" && pkill -f "turbo"`)
-5. **Verificar puertos** (`lsof -i :3001`)
-6. **Ejecutar desde raíz** (`turbo run dev`)
-7. **Usar workspace sintaxis** (`--workspace=<name>`)
+3. **🆕 Verificar Redis** (`brew services list | grep redis`)
+4. **🆕 Iniciar PostgreSQL si es necesario** (`brew services start postgresql@15`)
+5. **🆕 Iniciar Redis si es necesario** (`brew services start redis`)
+6. **Limpiar procesos** (`pkill -f "vite" && pkill -f "turbo"`)
+7. **Verificar puertos** (`lsof -i :3001`)
+8. **Ejecutar desde raíz** (`turbo run dev`)
+9. **Usar workspace sintaxis** (`--workspace=<name>`)
 
 ### **PROHIBICIONES ABSOLUTAS:**
 - ❌ Comandos desde subdirectorios
 - ❌ Múltiples procesos simultáneos
-- ❌ **🆕 Iniciar backend sin PostgreSQL ejecutándose**
+- ❌ **🆕 Iniciar backend sin PostgreSQL Y Redis ejecutándose**
 - ❌ Mezclar archivos backend/frontend
 - ❌ Más de 30 archivos en directorio raíz
 - ❌ Ignorar limpieza de procesos
@@ -492,7 +590,7 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 ### **✅ ESTADO CONFIRMADO:**
 
 - **Turborepo**: Funcionando correctamente con configuración corregida
-- **🆕 PostgreSQL**: Identificado como dependencia crítica obligatoria
+- **🆕 PostgreSQL + Redis**: Identificados como dependencias críticas obligatorias
 - **Backend NestJS**: Operacional en puerto 3002 (health check exitoso)
 - **SuperApp**: Operacional en puerto 3001 (HTTP/1.1 200 OK)
 - **Base de datos**: Prisma conectada, todas las rutas mapeadas
@@ -501,8 +599,9 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 ### **🚀 COMANDOS PRINCIPALES VERIFICADOS:**
 
 ```bash
-# 🆕 COMANDO COMPLETO CON VERIFICACIÓN DE BD
+# 🆕 COMANDOS COMPLETOS CON VERIFICACIÓN DE DEPENDENCIAS CRÍTICAS
 brew services start postgresql@15   # ✅ OBLIGATORIO PRIMERO
+brew services start redis          # ✅ OBLIGATORIO SEGUNDO
 turbo run dev                       # ✅ FUNCIONAL
 
 # Servicios individuales
