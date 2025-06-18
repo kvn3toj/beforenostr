@@ -66,11 +66,11 @@ import {
 } from '@mui/icons-material';
 
 // Import enhanced mock data hook
-// import {
-//   useUPlayMockData,
-//   MockVideo,
-//   MockPlaylist,
-// } from '../../../hooks/useUPlayMockData';
+import {
+  useUPlayMockData,
+  MockVideo,
+  MockPlaylist,
+} from '../../../hooks/useUPlayMockData';
 
 // Types for mock data compatibility
 interface MockVideo {
@@ -565,54 +565,18 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   // 🏫 Estado para el panel de funcionalidades sociales
   const [showSocialPanel, setShowSocialPanel] = useState(false);
 
-  // Enhanced mock user stats - stable reference to prevent re-renders
-  const enhancedUserStats: EnhancedMockUserStats = React.useMemo(() => ({
-    name: 'Lucía',
-    activePlayers: 150,
-    burnedPlayers: 50,
-    level: 12,
-    merits: 2350,
-    ondas: 1680,
-    experience: 3750,
-    experienceToNext: 1250,
-    weeklyGoal: 7,
-    currentStreak: 3,
-    completedVideos: 28,
-    totalWatchTime: 45600, // seconds
-    achievements: 15,
-    ranking: 47,
-  }), []);
-
-  // Enhanced mock data with progress - stable reference
-  const mockVideoProgress: VideoProgress[] = React.useMemo(() => [
-    {
-      videoId: 1,
-      progress: 35,
-      completed: false,
-      questionsAnswered: 3,
-      totalQuestions: 7,
-      meritsEarned: 45,
-      lastWatched: new Date(),
-    },
-    {
-      videoId: 2,
-      progress: 100,
-      completed: true,
-      questionsAnswered: 5,
-      totalQuestions: 5,
-      meritsEarned: 75,
-      lastWatched: new Date(Date.now() - 86400000),
-    },
-  ], []);
-
-  // Use enhanced mock data hook para fallback
+  // Mock data hook with enhanced features
   const {
+    mockVideos,
+    mockPlaylists,
+    enhancedUserStats,
+    currentStreak: mockCurrentStreak,
     isLoading: isMockLoading,
     continueWatching,
     formatDuration,
     getProgressText,
     isPreviewEnvironment,
-  // } = useUPlayMockData();
+  } = useUPlayMockData();
 
   // 🔥 Usar datos reales del backend (principal)
   const { 
