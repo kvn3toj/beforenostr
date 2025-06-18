@@ -1,5 +1,4 @@
 {
-  "snapshot": "current",
   "install": "npm install --legacy-peer-deps && cd apps/admin-frontend && npm install --legacy-peer-deps && cd ../../Demo/apps/superapp-unified && npm install --legacy-peer-deps && cd ../../../",
   "start": "echo 'Starting CoomÜnity development environment...' && npm run preflight && npm run dev",
   "terminals": [
