@@ -23,10 +23,11 @@ import {
  * Esta página muestra una vista previa de todos los datos mock generados
  */
 export const MarketplaceTest: React.FC = () => {
-  // const featuredItems = getFeaturedItems();
-  // const trendingItems = getTrendingItems();
-  // const sustainabilityItems = getItemsByCategory('sostenibilidad');
-  // const educationItems = getItemsByCategory('educacion');
+  // Mock data temporarily disabled during Phase 2 elimination
+  const featuredItems: any[] = [];
+  const trendingItems: any[] = [];
+  const sustainabilityItems: any[] = [];
+  const educationItems: any[] = [];
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -58,19 +59,19 @@ export const MarketplaceTest: React.FC = () => {
           </Grid>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {featuredItems.length}
+              {0}
             </Typography>
             <Typography variant="body2">Items Destacados</Typography>
           </Grid>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {trendingItems.length}
+              {0}
             </Typography>
             <Typography variant="body2">Items Trending</Typography>
           </Grid>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {new Set(// marketplaceMockData.map((item) => item.category)).size}
+              {0}
             </Typography>
             <Typography variant="body2">Categorías</Typography>
           </Grid>
@@ -263,17 +264,7 @@ export const MarketplaceTest: React.FC = () => {
       >
         <pre style={{ fontSize: '12px', margin: 0 }}>
           {JSON.stringify(
-            // marketplaceMockData.map((item) => ({
-              id: item.id,
-              title: item.title,
-              price: item.price,
-              category: item.category,
-              type: item.type,
-              seller: `${item.seller.firstName} ${item.seller.lastName}`,
-              images: item.images.length,
-              featured: item.featured,
-              trending: item.trending,
-            })),
+            [],
             null,
             2
           )}

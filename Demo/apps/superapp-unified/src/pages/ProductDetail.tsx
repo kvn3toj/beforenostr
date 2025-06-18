@@ -508,7 +508,9 @@ export const ProductDetail: React.FC = () => {
   // Función para generar producto dinámico basado en ID
   const generateProductFromId = (productId: string): Product => {
     // Primero buscar en los datos mock nuevos del marketplace
-    const mockItem = getItemById(productId);
+    // Mock function disabled during Phase 2 elimination
+    // const mockItem = getItemById(productId);
+    const mockItem = null;
     if (mockItem) {
       // Convertir formato de mock a formato Product esperado por ProductDetailView
       return {
@@ -686,11 +688,11 @@ export const ProductDetail: React.FC = () => {
     }
 
     // Generar producto dinámico basado en el ID usando datos del array
-    if (false // marketplaceMockData.length > 0) {
-      // Usar el primer item como base y modificar
-      // const baseItem = marketplaceMockData[0];
-      return generateProductFromId(baseItem.id);
-    }
+    // Mock data disabled during Phase 2 elimination
+    // if (marketplaceMockData.length > 0) {
+    //   const baseItem = marketplaceMockData[0];
+    //   return generateProductFromId(baseItem.id);
+    // }
 
     // Producto genérico por defecto como último recurso
     return {

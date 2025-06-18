@@ -292,7 +292,7 @@ export const COLOR_PALETTES: Record<PaletteType, ColorPalette> = {
 };
 
 // ️ CONFIGURACIÓN ACTIVA (CAMBIAR AQUÍ PARA TODA LA APP)
-export const ACTIVE_PALETTE: PaletteType = 'autumn'; // 👈 CAMBIAR AQUÍ
+export const ACTIVE_PALETTE: PaletteType = 'autumn'; // 👈 REGRESADO A AUTUMN PARA VERIFICACIÓN
 
 // 🎨 PALETA ACTUALMENTE SELECCIONADA
 export const activePalette = COLOR_PALETTES[ACTIVE_PALETTE];
