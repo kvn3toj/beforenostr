@@ -69,7 +69,7 @@
     "react-i18next": "^13.2.2",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^6.26.2",
-    "recharts": "^2.12.2",
+    "recharts": "^2.15.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "set-cookie-parser": "^2.7.1",

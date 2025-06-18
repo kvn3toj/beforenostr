@@ -1,23 +1,17 @@
 /**
- * 🎮 Console Page - Gamifier Admin
+ * 🎮 Console Page - Enhanced Experience Management
  * 
- * Página principal de la Consola de Experiencias CoomÜnity
- * Permite al Gamifier diseñar, configurar y desplegar experiencias gamificadas hacia la SuperApp
+ * Página principal de la Consola de Experiencias mejorada
  */
 
 import React from 'react';
 import { Box } from '@mui/material';
-import ExperienceConsole from '../components/features/console/ExperienceConsole';
+import ExperienceConsoleEnhanced from '../components/features/console/ExperienceConsoleEnhanced';
 
 const ConsolePage: React.FC = () => {
   return (
-    <Box sx={{ 
-      width: '100%', 
-      height: '100vh',
-      overflow: 'auto',
-      bgcolor: 'background.default' 
-    }}>
-      <ExperienceConsole />
+    <Box sx={{ width: '100%', height: '100vh', overflow: 'auto' }}>
+      <ExperienceConsoleEnhanced />
     </Box>
   );
 };
