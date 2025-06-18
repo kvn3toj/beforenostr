@@ -91,7 +91,7 @@ interface SystemAlert {
 const fetchSystemMetrics = async (): Promise<SystemMetrics> => {
   return {
     serverHealth: {
-    status: 'HEALTHY',
+      status: 'HEALTHY',
       uptime: 2592000, // 30 days in seconds
       cpu: 35.2,
       memory: 67.8,
@@ -131,26 +131,26 @@ const fetchSystemMetrics = async (): Promise<SystemMetrics> => {
 
 const fetchSystemAlerts = async (): Promise<SystemAlert[]> => {
   return [
-      {
-        id: '1',
-        type: 'WARNING',
+    {
+      id: '1',
+      type: 'WARNING',
       title: 'Alto uso de memoria en servidor principal',
       message: 'El uso de memoria ha superado el 65% durante los últimos 15 minutos',
       timestamp: '2024-01-15T14:30:00Z',
       component: 'SERVER',
-        resolved: false
-      },
-      {
-        id: '2',
-        type: 'INFO',
+      resolved: false
+    },
+    {
+      id: '2',
+      type: 'INFO',
       title: 'Actualización de seguridad completada',
       message: 'Se han aplicado exitosamente las últimas actualizaciones de seguridad del sistema',
       timestamp: '2024-01-15T02:15:00Z',
       component: 'SECURITY',
-        resolved: true
-      },
-      {
-        id: '3',
+      resolved: true
+    },
+    {
+      id: '3',
       type: 'ERROR',
       title: 'Fallo temporal en servicio de notificaciones',
       message: 'El servicio de notificaciones experimentó una interrupción de 2 minutos',
@@ -239,26 +239,26 @@ export const MonitoringPage: React.FC = () => {
       {metrics && (
         <>
           <Grid container spacing={3} mb={3}>
-          <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(205, 171, 90, 0.15)' }}>
                 <CardContent>
                   <Box display="flex" alignItems="center" justifyContent="space-between">
                     <Box>
                       <Typography variant="h6" fontWeight="bold" sx={{ color: '#2C2C2C' }}>
                         Servidor
-              </Typography>
+                      </Typography>
                       <Typography variant="body2" sx={{ color: getStatusColor(metrics.serverHealth.status) }}>
                         {metrics.serverHealth.status}
                       </Typography>
                     </Box>
                     <ServerIcon sx={{ color: getStatusColor(metrics.serverHealth.status), fontSize: 32 }} />
-                      </Box>
+                  </Box>
                   <Typography variant="caption" color="text.secondary">
                     Uptime: {formatUptime(metrics.serverHealth.uptime)}
-                          </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15)' }}>
                 <CardContent>
@@ -266,7 +266,7 @@ export const MonitoringPage: React.FC = () => {
                     <Box>
                       <Typography variant="h6" fontWeight="bold" sx={{ color: '#2C2C2C' }}>
                         Base de Datos
-                    </Typography>
+                      </Typography>
                       <Typography variant="body2" sx={{ color: getStatusColor(metrics.databaseHealth.status) }}>
                         {metrics.databaseHealth.status}
                       </Typography>
@@ -316,7 +316,7 @@ export const MonitoringPage: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-            </Grid>
+          </Grid>
 
           {/* Resource Usage */}
           <Grid container spacing={3} mb={3}>
@@ -325,15 +325,15 @@ export const MonitoringPage: React.FC = () => {
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold" sx={{ color: '#CDAB5A', mb: 2 }}>
                     Uso de Recursos del Servidor
-                    </Typography>
+                  </Typography>
                   <Stack spacing={2}>
                     <Box>
-                    <Box display="flex" justifyContent="space-between" mb={1}>
+                      <Box display="flex" justifyContent="space-between" mb={1}>
                         <Typography variant="body2">CPU</Typography>
                         <Typography variant="body2" fontWeight="bold">{metrics.serverHealth.cpu}%</Typography>
-                    </Box>
-                    <LinearProgress
-                      variant="determinate"
+                      </Box>
+                      <LinearProgress 
+                        variant="determinate" 
                         value={metrics.serverHealth.cpu} 
                         sx={{ 
                           height: 8, 
@@ -387,7 +387,7 @@ export const MonitoringPage: React.FC = () => {
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold" sx={{ color: '#CDAB5A', mb: 2 }}>
                     Métricas de la Aplicación
-                    </Typography>
+                  </Typography>
                   <Stack spacing={2}>
                     <Box display="flex" justifyContent="space-between">
                       <Typography variant="body2">Requests/min:</Typography>
@@ -396,7 +396,7 @@ export const MonitoringPage: React.FC = () => {
                     <Box display="flex" justifyContent="space-between">
                       <Typography variant="body2">Tiempo de respuesta:</Typography>
                       <Typography variant="body2" fontWeight="bold">{metrics.applicationMetrics.responseTime}ms</Typography>
-                  </Box>
+                    </Box>
                     <Box display="flex" justifyContent="space-between">
                       <Typography variant="body2">Tasa de error:</Typography>
                       <Typography variant="body2" fontWeight="bold" sx={{ color: metrics.applicationMetrics.errorRate > 1 ? '#EF4444' : '#10B981' }}>
@@ -411,7 +411,7 @@ export const MonitoringPage: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-            </Grid>
+          </Grid>
 
           {/* Gamification Metrics */}
           <Grid container spacing={3} mb={3}>
@@ -429,48 +429,48 @@ export const MonitoringPage: React.FC = () => {
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Desafíos Completados
-                    </Typography>
-                  </Box>
+                        </Typography>
+                      </Box>
                     </Grid>
                     <Grid item xs={12} sm={6} md={2.4}>
                       <Box textAlign="center" sx={{ p: 2, backgroundColor: '#F8F9FA', borderRadius: 2 }}>
                         <Typography variant="h4" fontWeight="bold" sx={{ color: '#10B981' }}>
                           {metrics.gameMetrics.meritsAwarded}
-                      </Typography>
+                        </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Méritos Otorgados
-                          </Typography>
-                        </Box>
+                        </Typography>
+                      </Box>
                     </Grid>
                     <Grid item xs={12} sm={6} md={2.4}>
                       <Box textAlign="center" sx={{ p: 2, backgroundColor: '#F8F9FA', borderRadius: 2 }}>
                         <Typography variant="h4" fontWeight="bold" sx={{ color: '#3B82F6' }}>
                           {metrics.gameMetrics.marketplaceTransactions}
-                          </Typography>
+                        </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Transacciones GMP
-                          </Typography>
-                        </Box>
+                        </Typography>
+                      </Box>
                     </Grid>
                     <Grid item xs={12} sm={6} md={2.4}>
                       <Box textAlign="center" sx={{ p: 2, backgroundColor: '#F8F9FA', borderRadius: 2 }}>
                         <Typography variant="h4" fontWeight="bold" sx={{ color: '#8B5CF6' }}>
                           {metrics.gameMetrics.studyRoomsActive}
-                      </Typography>
+                        </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Salas de Estudio
-                          </Typography>
-                        </Box>
+                        </Typography>
+                      </Box>
                     </Grid>
                     <Grid item xs={12} sm={6} md={2.4}>
                       <Box textAlign="center" sx={{ p: 2, backgroundColor: '#F8F9FA', borderRadius: 2 }}>
                         <Typography variant="h4" fontWeight="bold" sx={{ color: '#F59E0B' }}>
                           {metrics.gameMetrics.notificationsSent}
-                          </Typography>
+                        </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Notificaciones
-                          </Typography>
-                        </Box>
+                        </Typography>
+                      </Box>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -542,10 +542,10 @@ export const MonitoringPage: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
-                </CardContent>
-              </Card>
+        </CardContent>
+      </Card>
     </Box>
   )
 }
 
-export default MonitoringPage 
+export default MonitoringPage

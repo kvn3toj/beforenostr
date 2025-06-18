@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles';
-import { createAppTheme } from '../theme';
+import { createCentralizedTheme } from '../theme-centralized';
 
-const theme = createAppTheme('light');
+const theme = createCentralizedTheme('light');
 
 export const TestWrapper: React.FC<{
   children: React.ReactNode;

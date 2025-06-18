@@ -376,7 +376,7 @@ export const NotificationsPage: React.FC = () => {
     if (selectedNotification) {
       updateMutation.mutate({ id: selectedNotification.id, data: formData })
     } else {
-    createMutation.mutate(formData)
+      createMutation.mutate(formData)
     }
   }
 
@@ -842,9 +842,9 @@ export const NotificationsPage: React.FC = () => {
                     Métricas de Rendimiento por Notificación
                   </Typography>
                   <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
                           <TableCell sx={{ fontWeight: 'bold' }}>Título</TableCell>
                           <TableCell sx={{ fontWeight: 'bold' }}>Tipo</TableCell>
                           <TableCell sx={{ fontWeight: 'bold' }}>Destinatarios</TableCell>
@@ -852,19 +852,19 @@ export const NotificationsPage: React.FC = () => {
                           <TableCell sx={{ fontWeight: 'bold' }}>Clics</TableCell>
                           <TableCell sx={{ fontWeight: 'bold' }}>Tasa Lectura</TableCell>
                           <TableCell sx={{ fontWeight: 'bold' }}>Tasa Clics</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
                         {filteredNotifications
                           .filter(n => n.status === 'DELIVERED')
                           .map((notification) => (
-                <TableRow key={notification.id}>
-                  <TableCell>
-                    <Typography variant="body2" fontWeight="bold">
-                      {notification.title}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
+                            <TableRow key={notification.id}>
+                              <TableCell>
+                                <Typography variant="body2" fontWeight="bold">
+                                  {notification.title}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
                                 <Box display="flex" alignItems="center">
                                   {getTypeIcon(notification.type)}
                                   <Typography variant="body2" sx={{ ml: 1 }}>
@@ -883,22 +883,22 @@ export const NotificationsPage: React.FC = () => {
                                 >
                                   {getReadRate(notification)}%
                                 </Typography>
-                  </TableCell>
-                  <TableCell>
+                              </TableCell>
+                              <TableCell>
                                 <Typography 
                                   variant="body2" 
                                   fontWeight="bold"
                                   sx={{ color: getClickRate(notification) > 40 ? '#10B981' : '#F59E0B' }}
                                 >
                                   {getClickRate(notification)}%
-                    </Typography>
-                  </TableCell>
-                </TableRow>
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
                           ))
                         }
-            </TableBody>
-          </Table>
-        </TableContainer>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </CardContent>
               </Card>
             </Grid>
@@ -1101,4 +1101,4 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
   )
 }
 
-export default NotificationsPage 
+export default NotificationsPage
