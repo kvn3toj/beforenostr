@@ -66,6 +66,77 @@ import {
 } from '@mui/icons-material';
 import { useVideos, useVideoPlaylists } from '../../../hooks/useRealBackendData';
 
+// ✨ IMPORTS CRÍTICOS FALTANTES - COSMIC DESIGN SYSTEM
+import { CosmicCard } from '../../../design-system';
+
+// ✨ IMPORTS DE COMPONENTES Y TIPOS FALTANTES
+// Asumiendo que VideoThumbnail está definido en otro lugar o necesita ser importado
+const VideoThumbnail: React.FC<{
+  width: number;
+  height: number;
+  thumbnailUrl?: string;
+}> = ({ width, height, thumbnailUrl }) => (
+  <Box
+    sx={{
+      width,
+      height,
+      backgroundColor: '#f5f5f5',
+      borderRadius: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundImage: thumbnailUrl ? `url(${thumbnailUrl})` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+  >
+    {!thumbnailUrl && <PlayIcon sx={{ fontSize: '2rem', color: '#ccc' }} />}
+  </Box>
+);
+
+// ✨ TIPOS FALTANTES DEFINIDOS
+interface BackendVideo {
+  id: number;
+  title: string;
+  description: string;
+  duration: number;
+  platform: string;
+  thumbnailUrl?: string;
+  categories?: string;
+  tags?: string;
+  playlist?: {
+    id: number;
+    name: string;
+  };
+}
+
+interface EnhancedMockUserStats {
+  name: string;
+  activePlayers: number;
+  burnedPlayers: number;
+  level: number;
+  merits: number;
+  ondas: number;
+  experience: number;
+  experienceToNext: number;
+  weeklyGoal: number;
+  currentStreak: number;
+  completedVideos: number;
+  totalWatchTime: number;
+  achievements: number;
+  ranking: number;
+}
+
+interface VideoProgress {
+  videoId: number;
+  progress: number;
+  completed: boolean;
+  questionsAnswered: number;
+  totalQuestions: number;
+  meritsEarned: number;
+  lastWatched: Date;
+}
+
 // 🌌 COMPONENTE REFACTORIZADO CON DESIGN SYSTEM CÓSMICO
 // Componente para mostrar un video del backend usando CosmicCard
 const BackendVideoCard: React.FC<{
@@ -454,53 +525,53 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   ], []);
 
   // ✅ SOLO datos reales del backend - NO más fallbacks a mock
-  const isLoading = isBackendLoading;
+  const isLoading = videosLoading || playlistsLoading;
 
   // 🔧 LOGS DE DEBUG EXTENSIVOS PARA DIAGNOSTICAR EL PROBLEMA
   React.useEffect(() => {
     console.log('[ÜPLAY DEBUG] ===== ESTADO DEL HOOK useVideos =====');
-    console.log('[ÜPLAY DEBUG] Is Loading:', isBackendLoading);
-    console.log('[ÜPLAY DEBUG] Is Error:', isBackendError);
-    console.log('[ÜPLAY DEBUG] Error Object:', backendError);
-    console.log('[ÜPLAY DEBUG] Data Received:', backendVideos);
-    console.log('[ÜPLAY DEBUG] Data Type:', typeof backendVideos);
-    console.log('[ÜPLAY DEBUG] Data is Array:', Array.isArray(backendVideos));
-    console.log('[ÜPLAY DEBUG] Data Length:', backendVideos?.length);
+    console.log('[ÜPLAY DEBUG] Is Loading:', videosLoading);
+    console.log('[ÜPLAY DEBUG] Is Error:', videosError);
+    console.log('[ÜPLAY DEBUG] Error Object:', videosError);
+    console.log('[ÜPLAY DEBUG] Data Received:', videos);
+    console.log('[ÜPLAY DEBUG] Data Type:', typeof videos);
+    console.log('[ÜPLAY DEBUG] Data is Array:', Array.isArray(videos));
+    console.log('[ÜPLAY DEBUG] Data Length:', videos?.length);
     
-    if (backendVideos && Array.isArray(backendVideos)) {
-      console.log('[ÜPLAY DEBUG] First Video:', backendVideos[0]);
-      console.log('[ÜPLAY DEBUG] All Videos:', backendVideos);
+    if (videos && Array.isArray(videos)) {
+      console.log('[ÜPLAY DEBUG] First Video:', videos[0]);
+      console.log('[ÜPLAY DEBUG] All Videos:', videos);
     }
     
-    if (isBackendError) {
+    if (videosError) {
       console.error('[ÜPLAY DEBUG] ❌ ERROR DETAILS:', {
-        error: backendError,
-        message: backendError?.message,
-        stack: backendError?.stack
+        error: videosError,
+        message: videosError?.message,
+        stack: videosError?.stack
       });
     }
     
     console.log('[ÜPLAY DEBUG] =====================================');
-  }, [isBackendLoading, isBackendError, backendVideos, backendError]);
+  }, [videosLoading, videosError, videos]);
 
   // Procesar videos del backend
   const processedVideos = React.useMemo(() => {
     console.log('[ÜPLAY DEBUG] ===== PROCESANDO VIDEOS =====');
-    console.log('[ÜPLAY DEBUG] backendVideos raw:', backendVideos);
-    console.log('[ÜPLAY DEBUG] backendVideos type:', typeof backendVideos);
-    console.log('[ÜPLAY DEBUG] backendVideos isArray:', Array.isArray(backendVideos));
+    console.log('[ÜPLAY DEBUG] videos raw:', videos);
+    console.log('[ÜPLAY DEBUG] videos type:', typeof videos);
+    console.log('[ÜPLAY DEBUG] videos isArray:', Array.isArray(videos));
     
-    if (!backendVideos || !Array.isArray(backendVideos)) {
+    if (!videos || !Array.isArray(videos)) {
       console.log('[ÜPLAY DEBUG] ❌ No hay datos del backend válidos');
       return [];
     }
 
-    console.log('[ÜPLAY DEBUG] Total videos recibidos:', backendVideos.length);
+    console.log('[ÜPLAY DEBUG] Total videos recibidos:', videos.length);
     
     // Filtrar solo videos activos
-    const activeVideos = backendVideos.filter((video: any) => {
+    const activeVideos = videos.filter((video: any) => {
       console.log('[ÜPLAY DEBUG] Video:', video.title, 'isActive:', video.isActive);
-      return video.isActive;
+      return video.isActive !== false; // Incluir videos sin isActive definido
     });
     
     console.log('[ÜPLAY DEBUG] ✅ Videos activos filtrados:', activeVideos.length);
@@ -508,7 +579,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     console.log('[ÜPLAY DEBUG] =====================================');
     
     return activeVideos as BackendVideo[];
-  }, [backendVideos]);
+  }, [videos]);
 
   // Agrupar videos por playlist para mejor organización
   const videosByPlaylist = React.useMemo(() => {
