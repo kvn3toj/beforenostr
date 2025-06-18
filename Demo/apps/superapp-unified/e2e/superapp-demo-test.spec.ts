@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+impor { test, expect } from '@playwright/test';
 
 /**
  * SUPERAPP DEMO TEST SUITE
