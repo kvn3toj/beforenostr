@@ -453,16 +453,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     },
   ], []);
 
-  // Use enhanced mock data hook para fallback
-  const {
-    isLoading: isMockLoading,
-    continueWatching: mockContinueWatching,
-    formatDuration: mockFormatDuration,
-    getProgressText: mockGetProgressText,
-    isPreviewEnvironment,
-  } = useUPlayMockData();
-
-  // Combinar estados de loading
+  // ✅ SOLO datos reales del backend - NO más fallbacks a mock
   const isLoading = isBackendLoading;
 
   // 🔧 LOGS DE DEBUG EXTENSIVOS PARA DIAGNOSTICAR EL PROBLEMA

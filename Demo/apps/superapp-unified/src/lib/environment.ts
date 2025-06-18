@@ -54,34 +54,39 @@ const getEnvironmentType = (): 'development' | 'production' | 'testing' => {
 };
 
 /**
- * 🏗️ Detect Builder.io environment
+ * 🏗️ Detect Builder.io environment - DESHABILITADO PARA FORZAR DATOS REALES
  */
 const isBuilderIOEnvironment = (): boolean => {
-  if (typeof window === 'undefined') return false;
+  // ✅ DESHABILITADO: Siempre retornar false para forzar datos reales
+  // ❌ NO detectar Builder.io - esto forzaba modo mock
+  return false;
   
-  const currentPort = parseInt(window.location.port);
-  const hostname = window.location.hostname;
-  
-  // Builder.io typically uses ports in the 48000+ range
-  const isBuilderPort = currentPort >= 48000 && currentPort <= 49000;
-  
-  // Check for Builder.io specific indicators
-  const hasBuilderIndicators = 
-    hostname === 'localhost' && isBuilderPort ||
-    window.location.search.includes('builder') ||
-    window.location.search.includes('localEditUrl') ||
-    document.querySelector('[data-builder-io]') !== null;
-  
-  if (hasBuilderIndicators) {
-    console.log('🏗️ Builder.io environment detected:', {
-      port: currentPort,
-      hostname,
-      search: window.location.search,
-      builderElement: !!document.querySelector('[data-builder-io]')
-    });
-  }
-  
-  return hasBuilderIndicators;
+  // ❌ CÓDIGO ORIGINAL COMENTADO:
+  // if (typeof window === 'undefined') return false;
+  // 
+  // const currentPort = parseInt(window.location.port);
+  // const hostname = window.location.hostname;
+  // 
+  // // Builder.io typically uses ports in the 48000+ range
+  // const isBuilderPort = currentPort >= 48000 && currentPort <= 49000;
+  // 
+  // // Check for Builder.io specific indicators
+  // const hasBuilderIndicators = 
+  //   hostname === 'localhost' && isBuilderPort ||
+  //   window.location.search.includes('builder') ||
+  //   window.location.search.includes('localEditUrl') ||
+  //   document.querySelector('[data-builder-io]') !== null;
+  // 
+  // if (hasBuilderIndicators) {
+  //   console.log('🏗️ Builder.io environment detected:', {
+  //     port: currentPort,
+  //     hostname,
+  //     search: window.location.search,
+  //     builderElement: !!document.querySelector('[data-builder-io]')
+  //   });
+  // }
+  // 
+  // return hasBuilderIndicators;
 };
 
 /**

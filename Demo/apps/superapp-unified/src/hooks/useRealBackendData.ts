@@ -261,72 +261,26 @@ export function useUserProfile(userId: string) {
 
 // 🎮 Hook para datos de gamificación
 export function useGameData(userId: string) {
-  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
-  const isBuilderEnvironment = typeof window !== 'undefined' && 
-    (window.location.hostname.includes('builder.io') || 
-     window.location.port === '48752' ||
-     window.location.hostname.includes('preview'));
+  // ✅ ELIMINADO: Builder.io Safe Mode - Usar SOLO datos reales del backend
+  // ❌ BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
+  // const isBuilderEnvironment = typeof window !== 'undefined' && 
+  //   (window.location.hostname.includes('builder.io') || 
+  //    window.location.port === '48752' ||
+  //    window.location.hostname.includes('preview'));
 
   return useOptionalQuery({
     queryKey: queryKeys.gameData(userId),
     queryFn: async () => {
-      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
-      if (isBuilderEnvironment) {
-        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para gameData');
-        return {
-          id: userId,
-          name: 'Usuario CoomÜnity Demo',
-          avatar: '/assets/images/default-avatar.jpg',
-          level: 5,
-          totalPoints: 1250,
-          currentLevelPoints: 750,
-          nextLevelPoints: 2000,
-          experience: 1250,
-          nextLevelExp: 2000,
-          title: 'Colaborador Equilibrado',
-          achievements: ['Primer Video', 'Ayni Básico', 'Colaborador'],
-          currentQuests: [
-            { id: '1', title: 'Ver 3 videos', progress: 2, total: 3 },
-            { id: '2', title: 'Responder preguntas', progress: 5, total: 10 }
-          ],
-          completedQuests: [
-            { id: 'welcome', title: 'Bienvenida completada', completedAt: new Date().toISOString() }
-          ],
-          dailyProgress: {
-            videosWatched: 2,
-            questsCompleted: 1,
-            pointsEarned: 45,
-            target: {
-              videosWatched: 3,
-              questsCompleted: 1,
-              pointsEarned: 50,
-            },
-          },
-          statistics: {
-            totalTimeWatched: 3600,
-            totalQuestsCompleted: 8,
-            streak: 5,
-            favoriteCategory: 'Educación',
-          },
-          journey: {
-            currentStage: 'Explorador',
-            completedQuests: 8,
-            totalQuests: 15,
-            currentPath: 'Descubrimiento',
-          },
-          stats: {
-            wisdom: 35,
-            courage: 28,
-            compassion: 42,
-            insight: 25,
-          },
-        };
-      }
+      // ✅ ELIMINADO: Builder.io Safe Mode - Solo llamada API real
+      // if (isBuilderEnvironment) {
+      //   console.log('🎭 [Builder.io Safe Mode] Usando datos mock para gameData');
+      //   return { /* datos mock */ };
+      // }
 
-      // 🔗 En desarrollo normal, intentar llamada API con fallback
+      // 🔗 SIEMPRE usar datos reales del backend NestJS
       return await gameAPI.getUserStats(userId);
     },
-    enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en Builder.io
+    enabled: !!userId, // ✅ CAMBIADO: Siempre habilitado, no deshabilitar en Builder.io
     silentFail: true, // Don't log errors for missing game endpoint
     fallbackData: {
       id: userId,
@@ -382,75 +336,23 @@ export function useQuests() {
 
 // 💰 Hook para datos del wallet - CACHÉ REAL-TIME
 export function useWalletData(userId: string) {
-  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
-  const isBuilderEnvironment = typeof window !== 'undefined' && 
-    (window.location.hostname.includes('builder.io') || 
-     window.location.port === '48752' ||
-     window.location.hostname.includes('preview'));
+  // ✅ ELIMINADO: Builder.io Safe Mode - Usar SOLO datos reales del backend
+  // ❌ BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
+  // const isBuilderEnvironment = typeof window !== 'undefined' && 
+  //   (window.location.hostname.includes('builder.io') || 
+  //    window.location.port === '48752' ||
+  //    window.location.hostname.includes('preview'));
 
   return useRealTimeQuery(
     queryKeys.walletData(userId),
     async () => {
-      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
-      if (isBuilderEnvironment) {
-        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para walletData');
-        const mockBalance = 185000; // Balance fijo para demo
-        const mockUcoins = 650; // UCoins fijos para demo
-        return {
-          balance: mockBalance,
-          currency: 'COP',
-          ucoins: mockUcoins,
-          meritos: 485,
-          ondas: 1250,
-          pendingBalance: 25000,
-          monthlyChange: 12.5,
-          ayniLevel: 68,
-          collaborationScore: 8.7,
-          communityRank: '#1,247',
-          accounts: [
-            {
-              id: 'default',
-              type: 'checking',
-              balance: mockBalance,
-            },
-            {
-              id: 'savings',
-              type: 'savings',
-              balance: Math.floor(mockBalance * 0.3),
-            },
-            {
-              id: 'ucoins',
-              type: 'crypto',
-              balance: mockUcoins,
-            },
-          ],
-          transactions: [
-            {
-              id: '1',
-              type: 'income',
-              amount: 18500,
-              description: 'Recompensa por colaboración CoomÜnity',
-              date: new Date(Date.now() - 86400000).toISOString(),
-            },
-            {
-              id: '2',
-              type: 'expense',
-              amount: 9250,
-              description: 'Intercambio de servicios',
-              date: new Date(Date.now() - 172800000).toISOString(),
-            },
-            {
-              id: '3',
-              type: 'exchange',
-              amount: 5000,
-              description: 'Conversión COP a ÜCoins',
-              date: new Date(Date.now() - 259200000).toISOString(),
-            },
-          ],
-        };
-      }
+      // ✅ ELIMINADO: Builder.io Safe Mode - Solo llamada API real
+      // if (isBuilderEnvironment) {
+      //   console.log('🎭 [Builder.io Safe Mode] Usando datos mock para walletData');
+      //   return { /* datos mock grandes */ };
+      // }
 
-      // 🔗 En desarrollo normal, intentar llamada API con fallback
+      // 🔗 SIEMPRE intentar llamada API real al backend NestJS
       try {
         return await walletAPI.getBalance(userId);
       } catch (error) {
@@ -494,7 +396,7 @@ export function useWalletData(userId: string) {
       }
     },
     {
-      enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en Builder.io
+      enabled: !!userId, // ✅ CAMBIADO: Siempre habilitado, no deshabilitar en Builder.io
       retry: false, // No reintentar para fallback inmediato
     }
   );
@@ -1272,13 +1174,16 @@ export function useSubmitForm() {
 
 // 🛠️ Hook para verificar si el backend real está disponible
 export function useBackendAvailability() {
-  const { data: healthData, isError, isLoading } = useBackendHealth();
+  const { data: healthData, isLoading, isError } = useBackendHealth();
 
   return {
-    isAvailable: !isError && !!healthData,
+    isAvailable: !!healthData,
     isLoading,
+    isError,
     healthData,
-    shouldUseMock: isError || !healthData,
+    // ✅ CRÍTICO: NO forzar mock automáticamente - permitir que los datos reales prevalezcan
+    shouldUseMock: false, // CAMBIADO: Era "isError || !healthData" - ahora siempre false
+    backendStatus: healthData?.status || 'unknown',
   };
 }
 
@@ -1303,16 +1208,16 @@ export function useDashboardData(userId: string) {
   };
 }
 
-// 🔧 Hook para configuración híbrida (mock + real)
+// 🔧 Hook para configuración híbrida (mock + real) - ACTUALIZADO PARA FORZAR DATOS REALES
 export function useHybridData<T>(
   realDataHook: () => any,
   mockData: T,
-  fallbackToMock: boolean = true
+  fallbackToMock: boolean = false  // ✅ CAMBIADO: Ahora FALSE por defecto - NO usar mock
 ) {
   const backendAvailability = useBackendAvailability();
   const realDataQuery = realDataHook();
 
-  // Decidir qué datos usar
+  // ✅ FORZAR DATOS REALES - Solo usar mock si explícitamente se requiere
   const shouldUseMock =
     fallbackToMock &&
     (backendAvailability.shouldUseMock || realDataQuery.isError);
