@@ -29,7 +29,7 @@ test.describe('SuperApp Demo - Comprehensive Testing Showcase', () => {
       console.log(`📍 Testing ${route.name} (${route.path})`);
       
       try {
-        await page.goto(`http://localhost:3001${route.path}`, { timeout: 10000 });
+        await page.goto(`http://localhost:2222${route.path}`, { timeout: 10000 });
         
         // Check if page loads
         await page.waitForLoadState('networkidle', { timeout: 5000 });
@@ -56,7 +56,7 @@ test.describe('SuperApp Demo - Comprehensive Testing Showcase', () => {
     console.log('🧪 DEMO: Testing button functionality patterns...');
     
     try {
-      await page.goto('http://localhost:3001/login', { timeout: 10000 });
+      await page.goto('http://localhost:2222/login', { timeout: 10000 });
       await page.waitForLoadState('networkidle', { timeout: 5000 });
       
       // Find all buttons
@@ -96,7 +96,7 @@ test.describe('SuperApp Demo - Comprehensive Testing Showcase', () => {
     console.log('🧪 DEMO: Analyzing style consistency patterns...');
     
     try {
-      await page.goto('http://localhost:3001/login', { timeout: 10000 });
+      await page.goto('http://localhost:2222/login', { timeout: 10000 });
       await page.waitForLoadState('networkidle', { timeout: 5000 });
       
       // Check for design system elements
@@ -132,7 +132,7 @@ test.describe('SuperApp Demo - Comprehensive Testing Showcase', () => {
     console.log('🧪 DEMO: Detecting progressive enhancement features...');
     
     try {
-      await page.goto('http://localhost:3001/login', { timeout: 10000 });
+      await page.goto('http://localhost:2222/login', { timeout: 10000 });
       await page.waitForLoadState('networkidle', { timeout: 5000 });
       
       // Check for progressive enhancement features
@@ -170,7 +170,7 @@ test.describe('SuperApp Demo - Comprehensive Testing Showcase', () => {
     try {
       // Measure page load time
       const startTime = Date.now();
-      await page.goto('http://localhost:3001/login', { timeout: 15000 });
+      await page.goto('http://localhost:2222/login', { timeout: 15000 });
       await page.waitForLoadState('networkidle', { timeout: 10000 });
       const loadTime = Date.now() - startTime;
       
@@ -221,7 +221,7 @@ test.describe('SuperApp Demo - Comprehensive Testing Showcase', () => {
     };
     
     try {
-      await page.goto('http://localhost:3001/login', { timeout: 10000 });
+      await page.goto('http://localhost:2222/login', { timeout: 10000 });
       await page.waitForLoadState('networkidle', { timeout: 5000 });
       
       // Accessibility check
@@ -283,7 +283,7 @@ test.describe('SuperApp Demo - Advanced Testing Patterns', () => {
     console.log('🧪 DEMO: Testing cross-browser compatibility patterns...');
     
     try {
-      await page.goto('http://localhost:3001/login', { timeout: 10000 });
+      await page.goto('http://localhost:2222/login', { timeout: 10000 });
       
       // Check for modern web APIs
       const webAPIs = await page.evaluate(() => {
@@ -320,7 +320,7 @@ test.describe('SuperApp Demo - Advanced Testing Patterns', () => {
     console.log('🧪 DEMO: Assessing security features...');
     
     try {
-      await page.goto('http://localhost:3001/login', { timeout: 10000 });
+      await page.goto('http://localhost:2222/login', { timeout: 10000 });
       
       // Check for security-related features
       const securityFeatures = {

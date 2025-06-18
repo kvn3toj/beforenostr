@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
 
 // Helper para autenticación
 async function getAuthToken(): Promise<string> {
-  const response = await fetch('http://localhost:3002/auth/login', {
+  const response = await fetch('http://localhost:1111/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -46,7 +46,7 @@ test.describe('Security & Data Validation Tests', () => {
     for (const payload of sqlInjectionPayloads) {
       // Test en endpoint de búsqueda/filtrado
       const response = await fetch(
-        `http://localhost:3002/video-items?search=${encodeURIComponent(payload)}`,
+        `http://localhost:1111/video-items?search=${encodeURIComponent(payload)}`,
         {
           headers: { 'Authorization': `Bearer ${authToken}` }
         }
@@ -86,7 +86,7 @@ test.describe('Security & Data Validation Tests', () => {
     // Test en diferentes campos de input
     for (const payload of xssPayloads) {
       // Simular creación de video con script malicioso
-      const response = await fetch('http://localhost:3002/video-items', {
+      const response = await fetch('http://localhost:1111/video-items', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -134,7 +134,7 @@ test.describe('Security & Data Validation Tests', () => {
     ];
     
     for (const headers of bypassAttempts) {
-      const response = await fetch('http://localhost:3002/video-items', { headers });
+      const response = await fetch('http://localhost:1111/video-items', { headers });
       
       // Todos deben resultar en 401 Unauthorized
       expect(response.status).toBe(401);
@@ -175,7 +175,7 @@ test.describe('Security & Data Validation Tests', () => {
     ];
     
     for (const invalidData of invalidDataTypes) {
-      const response = await fetch('http://localhost:3002/video-items', {
+      const response = await fetch('http://localhost:1111/video-items', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -200,7 +200,7 @@ test.describe('Security & Data Validation Tests', () => {
     console.log('🔄 Testing CSRF Protection...');
     
     // Simular request desde origen externo
-    const csrfResponse = await fetch('http://localhost:3002/video-items', {
+    const csrfResponse = await fetch('http://localhost:1111/video-items', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${authToken}`,
@@ -236,7 +236,7 @@ test.describe('Security & Data Validation Tests', () => {
     // Hacer 30 requests rápidos al mismo endpoint
     for (let i = 0; i < 30; i++) {
       rapidRequests.push(
-        fetch('http://localhost:3002/analytics/dashboard-metrics', {
+        fetch('http://localhost:1111/analytics/dashboard-metrics', {
           headers: { 'Authorization': `Bearer ${authToken}` }
         })
       );
@@ -291,7 +291,7 @@ test.describe('Security & Data Validation Tests', () => {
       const formData = new FormData();
       formData.append('file', new Blob([file.content], { type: file.type }), file.name);
       
-      const response = await fetch('http://localhost:3002/upload', {
+      const response = await fetch('http://localhost:1111/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authToken}`
@@ -313,9 +313,9 @@ test.describe('Security & Data Validation Tests', () => {
     
     // Verificar que las respuestas no expongan datos sensibles
     const endpoints = [
-      'http://localhost:3002/video-items',
-      'http://localhost:3002/analytics/dashboard-metrics',
-      'http://localhost:3002/health'
+      'http://localhost:1111/video-items',
+      'http://localhost:1111/analytics/dashboard-metrics',
+      'http://localhost:1111/health'
     ];
     
     for (const endpoint of endpoints) {
@@ -380,7 +380,7 @@ test.describe('Security & Data Validation Tests', () => {
     ];
     
     for (const testData of longInputTests) {
-      const response = await fetch('http://localhost:3002/video-items', {
+      const response = await fetch('http://localhost:1111/video-items', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -401,9 +401,9 @@ test.describe('Security & Data Validation Tests', () => {
     
     // Test con versiones de API incorrectas
     const versionTests = [
-      'http://localhost:3002/v999/video-items', // Versión inexistente
-      'http://localhost:3002/v0/video-items',   // Versión muy antigua
-      'http://localhost:3002/api/v99/video-items' // Versión futura
+      'http://localhost:1111/v999/video-items', // Versión inexistente
+      'http://localhost:1111/v0/video-items',   // Versión muy antigua
+      'http://localhost:1111/api/v99/video-items' // Versión futura
     ];
     
     for (const versionUrl of versionTests) {

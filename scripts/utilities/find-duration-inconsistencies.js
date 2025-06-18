@@ -72,7 +72,7 @@ async function findDurationInconsistencies() {
   
   try {
     // Obtener todos los videos de la API usando el endpoint correcto
-    const response = await fetch('http://localhost:3002/content/items/test');
+    const response = await fetch('http://localhost:1111/content/items/test');
     const data = await response.json();
     
     if (!data || typeof data !== 'object') {
@@ -174,7 +174,7 @@ async function findDurationInconsistencies() {
         console.log(`📹 Video ${inc.id}: "${inc.title}"`);
         console.log(`   YouTube ID: ${inc.videoId}`);
         console.log(`   Stored: ${inc.storedFormatted} | Real: ${inc.realFormatted} | Diff: ${inc.difference}s`);
-        console.log(`   URL: http://localhost:3000/items/${inc.id}/config`);
+        console.log(`   URL: http://localhost:3333/items/${inc.id}/config`);
         console.log('');
       });
       

@@ -97,7 +97,7 @@ echo "================================="
 echo ""
 
 # Verificar SuperApp
-if curl -s -I http://localhost:3001 | grep -q "200 OK"; then
+if curl -s -I http://localhost:2222 | grep -q "200 OK"; then
     echo -e "${GREEN}✅ SUPERAPP FUNCIONANDO:${NC} Puerto 3001"
     echo "   🌐 HTTP 200 OK"
     ((SUCCESS_COUNT++))
@@ -108,7 +108,7 @@ fi
 echo ""
 
 # Verificar Backend
-if curl -s http://localhost:3002/health | grep -q "ok"; then
+if curl -s http://localhost:1111/health | grep -q "ok"; then
     echo -e "${GREEN}✅ BACKEND FUNCIONANDO:${NC} Puerto 3002"
     echo "   🔗 Health check exitoso"
     ((SUCCESS_COUNT++))
@@ -175,7 +175,7 @@ fi
 
 echo ""
 echo "📋 PRÓXIMOS PASOS RECOMENDADOS:"
-echo "1. 🌐 Abrir SuperApp en http://localhost:3001"
+echo "1. 🌐 Abrir SuperApp en http://localhost:2222"
 echo "2. 🔍 Verificar visibilidad de efectos cósmicos"
 echo "3. 🎨 Confirmar Glassmorphism en tarjetas"
 echo "4. ✨ Observar partículas dinámicas en UI"

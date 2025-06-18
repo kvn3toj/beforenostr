@@ -162,7 +162,7 @@ cd ../../../backend
 npm install
 npm run dev
 
-# Should see: "🚀 Gamifier API is running on: http://localhost:3002"
+# Should see: "🚀 Gamifier API is running on: http://localhost:1111"
 ```
 
 ### **Test Backend Health**

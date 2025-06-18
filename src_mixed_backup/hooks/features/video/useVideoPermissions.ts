@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { VideoPermissions } from '../../../types/videoPermissions.types';
 
-const API_BASE_URL = 'http://localhost:3002';
+const API_BASE_URL = 'http://localhost:1111';
 
 async function fetchVideoPermissions(videoItemId: number): Promise<VideoPermissions | null> {
   try {

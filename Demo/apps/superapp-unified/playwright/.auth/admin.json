@@ -2,7 +2,7 @@
   "cookies": [],
   "origins": [
     {
-      "origin": "http://localhost:3001",
+      "origin": "http://localhost:2222",
       "localStorage": [
         {
           "name": "COOMUNITY_AUTH_TOKEN",

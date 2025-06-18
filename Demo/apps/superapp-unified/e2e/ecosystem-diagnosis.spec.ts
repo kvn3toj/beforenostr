@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
 test.describe('🔍 Ecosystem Diagnosis', () => {
   test('📱 SuperApp - Diagnóstico de página', async ({ page }) => {
     console.log('🔗 Accediendo a SuperApp...');
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     await page.waitForLoadState('networkidle');
     
     // Tomar screenshot
@@ -115,7 +115,7 @@ test.describe('🔍 Ecosystem Diagnosis', () => {
     
     // Verificar backend
     try {
-      const backendResponse = await fetch('http://localhost:3002/health');
+      const backendResponse = await fetch('http://localhost:1111/health');
       const backendData = await backendResponse.json();
       console.log(`✅ Backend: ${backendResponse.status} - ${backendData.message}`);
     } catch (error) {
@@ -124,7 +124,7 @@ test.describe('🔍 Ecosystem Diagnosis', () => {
     
     // Verificar SuperApp
     try {
-      const superappResponse = await fetch('http://localhost:3001');
+      const superappResponse = await fetch('http://localhost:2222');
       console.log(`✅ SuperApp: ${superappResponse.status}`);
     } catch (error) {
       console.log(`❌ SuperApp: Error - ${error}`);

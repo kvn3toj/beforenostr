@@ -56,7 +56,7 @@ cd admin-frontend/ && npm run dev
 # Pre-flight check
 ps aux | grep -E "(node|tsx|npm)" | grep -v grep
 cat apps/superapp-unified/.env
-curl http://localhost:3002/health -v
+curl http://localhost:1111/health -v
 ```
 
 ---
@@ -198,9 +198,9 @@ Este proyecto utiliza un **Agente IA especializado** configurado con reglas espe
 
 ### **Contacto Técnico:**
 - **Workspace Activo:** `apps/superapp-unified/`
-- **Backend API:** `http://localhost:3002`
-- **Admin Panel:** `http://localhost:3000`
-- **SuperApp:** `http://localhost:3001`
+- **Backend API:** `http://localhost:1111`
+- **Admin Panel:** `http://localhost:3333`
+- **SuperApp:** `http://localhost:2222`
 
 ---
 

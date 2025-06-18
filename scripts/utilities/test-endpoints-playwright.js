@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('API Endpoints Verification', () => {
-  const baseURL = 'http://localhost:3002';
+  const baseURL = 'http://localhost:1111';
 
   test('should verify /users endpoint works correctly', async ({ request }) => {
     console.log('🔍 Testing /users endpoint...');

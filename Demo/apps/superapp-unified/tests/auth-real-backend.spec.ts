@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
 
 // Configuración de URLs - Corregido para usar el puerto real del frontend
 const BASE_URL = 'http://localhost:3005';  // Frontend está en puerto 3005
-const BACKEND_URL = 'http://localhost:3000';  // Backend (si existe) en puerto 3000
+const BACKEND_URL = 'http://localhost:3333';  // Backend (si existe) en puerto 3000
 
 // Datos de test
 const TEST_USER = {

@@ -13,7 +13,7 @@ async function testAdminDataVerification() {
   try {
     // 1. LOGIN
     console.log('📝 Paso 1: Iniciando sesión como administrador...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -39,7 +39,7 @@ async function testAdminDataVerification() {
 
     // 2. VERIFICAR MUNDOS
     console.log('\n📝 Paso 2: Verificando página de Mundos...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     
     // Buscar datos de mundos
@@ -75,7 +75,7 @@ async function testAdminDataVerification() {
 
     // 3. VERIFICAR USUARIOS
     console.log('\n📝 Paso 3: Verificando página de Usuarios...');
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
     
     // Buscar datos de usuarios
@@ -109,7 +109,7 @@ async function testAdminDataVerification() {
 
     // 4. VERIFICAR TOKENS
     console.log('\n📝 Paso 4: Verificando página de Tokens...');
-    await page.goto('http://localhost:3000/tokens');
+    await page.goto('http://localhost:3333/tokens');
     await page.waitForLoadState('networkidle');
     
     // Buscar datos de tokens
@@ -143,7 +143,7 @@ async function testAdminDataVerification() {
 
     // 5. VERIFICAR WALLET
     console.log('\n📝 Paso 5: Verificando página de Wallet...');
-    await page.goto('http://localhost:3000/wallet');
+    await page.goto('http://localhost:3333/wallet');
     await page.waitForLoadState('networkidle');
     
     // Buscar datos de wallets
@@ -162,7 +162,7 @@ async function testAdminDataVerification() {
 
     // 6. VERIFICAR GRUPOS
     console.log('\n📝 Paso 6: Verificando página de Grupos...');
-    await page.goto('http://localhost:3000/groups');
+    await page.goto('http://localhost:3333/groups');
     await page.waitForLoadState('networkidle');
     
     // Buscar datos de grupos
@@ -199,7 +199,7 @@ async function testAdminDataVerification() {
 
     // 7. VERIFICAR ANALYTICS
     console.log('\n📝 Paso 7: Verificando página de Analytics...');
-    await page.goto('http://localhost:3000/analytics');
+    await page.goto('http://localhost:3333/analytics');
     await page.waitForLoadState('networkidle');
     
     // Buscar gráficos o datos de analytics

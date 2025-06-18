@@ -6,9 +6,9 @@ La **Gamifier API** es el backend de la plataforma educativa gamificada que impl
 
 ## 🚀 **Configuración y Acceso**
 
-- **URL Base**: `http://localhost:3002`
-- **Documentación Swagger**: `http://localhost:3002/api`
-- **Endpoint Health Check**: `http://localhost:3002/health`
+- **URL Base**: `http://localhost:1111`
+- **Documentación Swagger**: `http://localhost:1111/api`
+- **Endpoint Health Check**: `http://localhost:1111/health`
 
 ## 🏗️ **Arquitectura y Tecnologías**
 
@@ -156,20 +156,20 @@ Panel de administración (en desarrollo)
 
 ### **Health Check**
 ```bash
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 ```
 
 ### **Testing de Endpoints**
 ```bash
 # Ejemplo: Listar mundos
-curl http://localhost:3002/content/mundos
+curl http://localhost:1111/content/mundos
 
 # Ejemplo: Ping de notificaciones
-curl http://localhost:3002/notifications/ping
+curl http://localhost:1111/notifications/ping
 ```
 
 ### **Swagger Documentation**
-Visita `http://localhost:3002/api` para la documentación interactiva completa.
+Visita `http://localhost:1111/api` para la documentación interactiva completa.
 
 ## 🔧 **Configuración de Desarrollo**
 

@@ -14,7 +14,7 @@ async function testRolePermissionsFix() {
   try {
     // 1. LOGIN
     console.log('🔐 Iniciando sesión...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -38,7 +38,7 @@ async function testRolePermissionsFix() {
 
     // 2. NAVEGACIÓN A ROLES
     console.log('📋 Navegando a la página de Roles...');
-    await page.goto('http://localhost:3000/roles');
+    await page.goto('http://localhost:3333/roles');
     await page.waitForLoadState('networkidle');
 
     // Verificar que estamos en la página de roles

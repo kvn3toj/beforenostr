@@ -18,7 +18,7 @@ async function bootstrap() {
 
   // Enable CORS for frontend communication
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:5173'], // Frontend ports: React dev, custom port, Vite
+    origin: ['http://localhost:3333', 'http://localhost:2222', 'http://localhost:1111', 'http://localhost:3003', 'http://localhost:5173', 'http://localhost:1111', 'http://localhost:2222', 'http://localhost:3333'], // Frontend ports: React dev, custom port, Vite
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
@@ -43,8 +43,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  // Start server on port 3002 to match user's configuration and avoid conflicts
-  const port = process.env.PORT || 3002;
+  // Start server on port 1111 (changed from 3002 for better port organization)
+  const port = process.env.PORT || 1111;
   await app.listen(port);
   
   console.log(`🚀 Gamifier API is running on: http://localhost:${port}`);

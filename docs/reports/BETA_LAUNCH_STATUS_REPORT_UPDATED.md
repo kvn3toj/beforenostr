@@ -96,7 +96,7 @@ BETA_LAUNCH_STATUS_REPORT_UPDATED.md - Este reporte actualizado
 - **Quiz filosófico:** 3 preguntas profundas sobre valores CoomÜnity
 - **Analytics tracking:** Cada interacción monitoreada
 - **Responsive design:** Funcional en todos los dispositivos
-- **URL funcional:** `http://localhost:3001/beta-register`
+- **URL funcional:** `http://localhost:2222/beta-register`
 
 ### 🔐 **Sistema de Códigos Mejorado**
 - **Total disponibles:** 100 códigos únicos generados

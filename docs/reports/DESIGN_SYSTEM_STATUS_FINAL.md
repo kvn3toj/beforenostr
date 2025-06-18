@@ -292,11 +292,11 @@ El sistema de diseño de la CoomÜnity SuperApp ha sido implementado exitosament
 
 ## 🔗 Enlaces Útiles
 
-- **Aplicación**: http://localhost:3001
-- **Design System**: http://localhost:3001/design-system
-- **Theme Test**: http://localhost:3001/theme-test
-- **Validator**: http://localhost:3001/design-validator
-- **Performance**: http://localhost:3001/performance-monitor
+- **Aplicación**: http://localhost:2222
+- **Design System**: http://localhost:2222/design-system
+- **Theme Test**: http://localhost:2222/theme-test
+- **Validator**: http://localhost:2222/design-validator
+- **Performance**: http://localhost:2222/performance-monitor
 
 ---
 

@@ -40,7 +40,7 @@ async function testFrontendBackendConnection() {
         timestamp: new Date().toISOString()
       });
       console.log(`🔴 Network Error: ${response.status()} ${response.statusText()} - ${response.url()}`);
-    } else if (response.url().includes('localhost:3002')) {
+    } else if (response.url().includes('localhost:1111')) {
       console.log(`✅ Backend Response: ${response.status()} - ${response.url()}`);
     }
   });
@@ -57,14 +57,14 @@ async function testFrontendBackendConnection() {
   try {
     // Login
     console.log('\n🔐 Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@coomunity.co');
     await page.fill('input[name="password"]', '123456');
     await page.click('button[type="submit"]');
     
-    await page.waitForURL('http://localhost:3000/', { timeout: 10000 });
+    await page.waitForURL('http://localhost:3333/', { timeout: 10000 });
     await page.waitForLoadState('networkidle');
     console.log('✅ Login exitoso');
     
@@ -73,7 +73,7 @@ async function testFrontendBackendConnection() {
     
     const backendResponse = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/mundos');
+        const response = await fetch('http://localhost:1111/mundos');
         const data = await response.json();
         return {
           success: true,
@@ -98,7 +98,7 @@ async function testFrontendBackendConnection() {
     
     // Test 2: Verificar página de Mundos
     console.log('\n🔍 Test 2: Navegando a página de Mundos...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     
     // Esperar un poco para que las consultas se ejecuten
@@ -149,7 +149,7 @@ async function testFrontendBackendConnection() {
     
     // Test 4: Verificar página de Playlists
     console.log('\n🔍 Test 4: Navegando a página de Playlists...');
-    await page.goto('http://localhost:3000/playlists');
+    await page.goto('http://localhost:3333/playlists');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(5000);
     
@@ -170,7 +170,7 @@ async function testFrontendBackendConnection() {
     // Test 5: Verificar conectividad a playlists desde el navegador
     const playlistResponse = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/playlists');
+        const response = await fetch('http://localhost:1111/playlists');
         const data = await response.json();
         return {
           success: true,
@@ -239,7 +239,7 @@ console.log('- VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
 
 // Test 2: Test de conectividad básica
 async function testConnection() {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
   
   try {
     console.log('🌐 Testing health endpoint...');

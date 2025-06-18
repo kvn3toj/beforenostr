@@ -82,9 +82,9 @@ cat << EOF
    ./test.sh                 # Tests automáticos de todos los endpoints
 
 📚 URLs importantes:
-   Backend API:    http://localhost:3000
-   Health Check:   http://localhost:3000/health
-   Documentación:  http://localhost:3000/api
+   Backend API:    http://localhost:3333
+   Health Check:   http://localhost:3333/health
+   Documentación:  http://localhost:3333/api
 
 EOF
 

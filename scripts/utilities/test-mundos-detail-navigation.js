@@ -31,7 +31,7 @@ async function testMundosDetailNavigation() {
 
   try {
     console.log('1. 🔐 Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -43,7 +43,7 @@ async function testMundosDetailNavigation() {
     console.log('✅ Login exitoso');
 
     console.log('\n2. 🌍 Navegando a la página de Mundos...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     console.log('✅ Página de Mundos cargada');
 
@@ -75,7 +75,7 @@ async function testMundosDetailNavigation() {
     // Obtener un ID de mundo del backend
     const response = await page.evaluate(async () => {
       try {
-        const res = await fetch('http://localhost:3002/content/mundos');
+        const res = await fetch('http://localhost:1111/content/mundos');
         const mundos = await res.json();
         return mundos.length > 0 ? mundos[0] : null;
       } catch (error) {
@@ -87,7 +87,7 @@ async function testMundosDetailNavigation() {
       console.log(`🆔 Probando navegación directa al mundo ID: ${response.id}`);
       
       // Probar navegación directa al detalle
-      const detailUrl = `http://localhost:3000/mundos/${response.id}`;
+      const detailUrl = `http://localhost:3333/mundos/${response.id}`;
       console.log(`🔗 Navegando a: ${detailUrl}`);
       
       await page.goto(detailUrl);
@@ -111,7 +111,7 @@ async function testMundosDetailNavigation() {
     console.log('\n5. 🔍 Probando botón "Ver detalles"...');
     
     // Volver a la página de mundos
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     
     // Buscar botón de "Ver detalles" (icono de ojo)
@@ -127,7 +127,7 @@ async function testMundosDetailNavigation() {
         console.log('📍 URL después de clic en "Ver detalles":', currentUrl);
         
         // Verificar si hay navegación
-        if (currentUrl !== 'http://localhost:3000/mundos') {
+        if (currentUrl !== 'http://localhost:3333/mundos') {
           console.log('✅ Navegación desde botón "Ver detalles" exitosa');
         } else {
           console.log('⚠️ Botón "Ver detalles" no navega (puede estar deshabilitado)');
@@ -143,9 +143,9 @@ async function testMundosDetailNavigation() {
     
     // Probar endpoints del backend
     const backendTests = [
-      'http://localhost:3002/content/mundos',
-      'http://localhost:3002/content/mundos/11111111-1111-1111-1111-111111111111',
-      'http://localhost:3002/mundos',
+      'http://localhost:1111/content/mundos',
+      'http://localhost:1111/content/mundos/11111111-1111-1111-1111-111111111111',
+      'http://localhost:1111/mundos',
     ];
 
     for (const url of backendTests) {

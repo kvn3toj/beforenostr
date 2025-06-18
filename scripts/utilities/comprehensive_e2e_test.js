@@ -36,7 +36,7 @@ async function runComprehensiveE2ETest() {
     results.total++;
     
     try {
-      await page.goto(`http://localhost:3000${url}`);
+      await page.goto(`http://localhost:3333${url}`);
       await page.waitForLoadState('networkidle');
       
       // Verificar que no estamos en login
@@ -71,7 +71,7 @@ async function runComprehensiveE2ETest() {
   try {
     // FASE 1: LOGIN
     console.log('📋 FASE 1: Login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');

@@ -37,7 +37,7 @@ test.describe('Visual Diagnosis - Homepage States', () => {
     // 5. Check backend connectivity
     const backendStatus = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/health');
+        const response = await fetch('http://localhost:1111/health');
         const data = await response.json();
         return { available: true, data };
       } catch (error) {

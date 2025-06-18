@@ -29,7 +29,7 @@ async function testVideoQuestionsFunctionality() {
   try {
     // 1. LOGIN
     console.log('1. Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     await page.fill('input[name="email"]', 'admin@gamifier.com');
     await page.fill('input[name="password"]', 'admin123');
@@ -50,7 +50,7 @@ async function testVideoQuestionsFunctionality() {
 
     // 2. NAVEGAR DIRECTAMENTE AL VIDEO 39 CONFIG
     console.log('\n2. Navegando directamente a configuración del video 39...');
-    await page.goto('http://localhost:3000/items/39/config');
+    await page.goto('http://localhost:3333/items/39/config');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 

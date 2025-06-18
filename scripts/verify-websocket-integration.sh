@@ -77,9 +77,9 @@ echo ""
 log_step "2" "Verificando servicios backend y frontend"
 
 # Backend health check
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     log_success "Backend NestJS disponible (puerto 3002)"
-    BACKEND_HEALTH=$(curl -s http://localhost:3002/health | grep "ok")
+    BACKEND_HEALTH=$(curl -s http://localhost:1111/health | grep "ok")
     if [ -n "$BACKEND_HEALTH" ]; then
         log_success "Backend health check: OK"
     fi
@@ -89,7 +89,7 @@ else
 fi
 
 # Frontend check
-if curl -s -I http://localhost:3001 | grep "200 OK" > /dev/null; then
+if curl -s -I http://localhost:2222 | grep "200 OK" > /dev/null; then
     log_success "SuperApp frontend disponible (puerto 3001)"
 else
     log_error "SuperApp frontend no disponible en puerto 3001"
@@ -138,9 +138,9 @@ echo "=================================="
 echo ""
 
 echo -e "${YELLOW}1. Testing de Conexión WebSocket:${NC}"
-echo "   - Navegar a: http://localhost:3001/login"
+echo "   - Navegar a: http://localhost:2222/login"
 echo "   - Login con: admin@gamifier.com / admin123"
-echo "   - Ir a: http://localhost:3001/websocket-test"
+echo "   - Ir a: http://localhost:2222/websocket-test"
 echo "   - Hacer clic en 'Conectar Auto'"
 echo "   - Verificar estado 'Conectado'"
 echo ""
@@ -148,7 +148,7 @@ echo ""
 echo -e "${YELLOW}2. Testing de Chat Bidireccional:${NC}"
 echo "   - Abrir segunda ventana en modo incógnito"
 echo "   - Login con: user@gamifier.com / 123456"
-echo "   - Navegar a: http://localhost:3001/websocket-test"
+echo "   - Navegar a: http://localhost:2222/websocket-test"
 echo "   - Conectar WebSocket en ambas ventanas"
 echo "   - Unirse a la misma sala en ambas: 'test-room-123'"
 echo "   - Enviar mensajes entre ventanas"
@@ -167,7 +167,7 @@ echo "   - Verificar mensaje de sincronización en ambas"
 echo ""
 
 echo -e "${YELLOW}5. Testing del ChatBox Integrado:${NC}"
-echo "   - Navegar a: http://localhost:3001/uplay"
+echo "   - Navegar a: http://localhost:2222/uplay"
 echo "   - Buscar componente ChatBox en la interfaz"
 echo "   - Verificar indicador de conexión (verde/rojo)"
 echo "   - Probar envío de mensajes si está disponible"

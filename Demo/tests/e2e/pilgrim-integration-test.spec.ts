@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Pilgrim Integration Test - Experiencia de Video Interactivo', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
   });
 
   test('Pilgrim está completamente integrado', async ({ page }) => {

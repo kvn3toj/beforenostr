@@ -148,7 +148,7 @@ echo -e "\n${BLUE}🌐 VERIFICANDO SERVICIOS ACTIVOS...${NC}"
 echo "--------------------------------------------"
 
 # Verificar que la SuperApp esté ejecutándose
-if curl -s http://localhost:3001 >/dev/null 2>&1; then
+if curl -s http://localhost:2222 >/dev/null 2>&1; then
     echo -e "✅ ${GREEN}[PASS]${NC} SuperApp ejecutándose en puerto 3001"
     PASSED_CHECKS=$((PASSED_CHECKS + 1))
 else
@@ -157,7 +157,7 @@ fi
 TOTAL_CHECKS=$((TOTAL_CHECKS + 1))
 
 # Verificar que el backend esté ejecutándose
-if timeout 3 curl -s http://localhost:3002/health >/dev/null 2>&1; then
+if timeout 3 curl -s http://localhost:1111/health >/dev/null 2>&1; then
     echo -e "✅ ${GREEN}[PASS]${NC} Backend ejecutándose en puerto 3002"
     PASSED_CHECKS=$((PASSED_CHECKS + 1))
 else
@@ -189,7 +189,7 @@ fi
 
 echo -e "\n${BLUE}🌌 PRÓXIMOS PASOS RECOMENDADOS:${NC}"
 echo "=============================================================="
-echo "1. Abrir SuperApp en ventana de incógnito: http://localhost:3001"
+echo "1. Abrir SuperApp en ventana de incógnito: http://localhost:2222"
 echo "2. Navegar a /social, /uplay y /marketplace"
 echo "3. Verificar que se vean fondos cósmicos oscuros y efectos glassmorphism"
 echo "4. Confirmar que las tarjetas tienen efectos de brillo y partículas"

@@ -121,7 +121,7 @@ npm run type-check
 ./scripts/health-check.sh
 
 # Con configuración personalizada
-SUPERAPP_URL=http://localhost:3000 BACKEND_URL=http://localhost:3002 ./scripts/health-check.sh
+SUPERAPP_URL=http://localhost:3333 BACKEND_URL=http://localhost:1111 ./scripts/health-check.sh
 ```
 
 ### **2. Docker Build (`scripts/docker-build.sh`)**

@@ -26,7 +26,7 @@ test.describe('LETS Integration Complete - Backend Real', () => {
     // Verificar conectividad con endpoints LETS
     const analyticsResponse = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/analytics/dashboard-metrics', {
+        const response = await fetch('http://localhost:1111/analytics/dashboard-metrics', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('COOMUNITY_AUTH_TOKEN')}`
           }

@@ -14,7 +14,7 @@ async function testAdminLogin() {
     console.log('   Email:', loginData.email);
     console.log('   Password:', loginData.password);
     
-    const response = await fetch('http://localhost:3002/auth/login', {
+    const response = await fetch('http://localhost:1111/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ async function testAdminLogin() {
         console.log('\n🔒 Probando llamada autenticada...');
         const token = responseData.token || responseData.access_token;
         
-        const protectedResponse = await fetch('http://localhost:3002/users/profile', {
+        const protectedResponse = await fetch('http://localhost:1111/users/profile', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ async function testAdminLogin() {
     
     // Verificar si el backend está corriendo
     try {
-      const healthCheck = await fetch('http://localhost:3002/health');
+      const healthCheck = await fetch('http://localhost:1111/health');
       if (healthCheck.ok) {
         console.log('🔍 Backend está corriendo, el problema es específico del login');
       }

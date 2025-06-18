@@ -14,7 +14,7 @@ async function testPersonalityAssignmentComplete() {
   try {
     // 1. LOGIN
     console.log('🔐 Iniciando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -37,7 +37,7 @@ async function testPersonalityAssignmentComplete() {
 
     // 2. NAVEGACIÓN A PERSONALIDADES
     console.log('\n📋 Navegando a la página de personalidades...');
-    await page.goto('http://localhost:3000/personalities');
+    await page.goto('http://localhost:3333/personalities');
     await page.waitForLoadState('networkidle');
 
     // Verificar que la página cargó

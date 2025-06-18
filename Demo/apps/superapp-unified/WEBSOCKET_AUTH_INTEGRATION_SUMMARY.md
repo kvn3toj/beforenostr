@@ -67,14 +67,14 @@ export const hasValidAuthForWebSocket = (): boolean
 ### WebSocket Test Page
 
 ```
-URL: http://localhost:3001/websocket-test
+URL: http://localhost:2222/websocket-test
 Requisitos: Usuario autenticado (admin@gamifier.com / admin123)
 ```
 
 ### Flujo de Testing Recomendado
 
-1. **Login:** `http://localhost:3001/login` con credenciales válidas
-2. **Navegar:** `http://localhost:3001/websocket-test`
+1. **Login:** `http://localhost:2222/login` con credenciales válidas
+2. **Navegar:** `http://localhost:2222/websocket-test`
 3. **Conectar:** Usar cualquiera de los dos botones de conexión
 4. **Verificar:** Observar logs de autenticación en DevTools
 5. **Probar:** Unirse a sala, enviar mensajes, sincronizar video
@@ -101,7 +101,7 @@ Requisitos: Usuario autenticado (admin@gamifier.com / admin123)
 ### Network Tab Verification
 
 ```
-URL: ws://localhost:3002/study-rooms?token=eyJhbGci...
+URL: ws://localhost:1111/study-rooms?token=eyJhbGci...
 Headers: Authorization: Bearer eyJhbGci...
 Status: 101 Switching Protocols (exitoso)
 ```
@@ -128,7 +128,7 @@ Status: 101 Switching Protocols (exitoso)
 
 1. **Iniciar ecosystem:** `npm run dev` desde raíz
 2. **Login como admin:** `admin@gamifier.com / admin123`
-3. **Abrir test page:** `http://localhost:3001/websocket-test`
+3. **Abrir test page:** `http://localhost:2222/websocket-test`
 4. **Probar conexión autenticada**
 
 ### Para Desarrollo Continuo

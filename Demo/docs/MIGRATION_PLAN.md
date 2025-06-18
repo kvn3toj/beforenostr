@@ -126,19 +126,19 @@ find data/backups/my_recovered_website -name "*.js" -exec grep -l "api/" {} \;
 
 | URL Original | Nueva URL Backend | Método | Sección |
 |-------------|-------------------|--------|---------|
-| `/api/health` | `http://localhost:3000/health` | GET | Core |
-| `/api/pilgrim/*` | `http://localhost:3000/api/pilgrim/*` | GET | Pilgrim |
-| `/api/merchant/*` | `http://localhost:3000/api/merchant/*` | GET | Merchant |
-| `/api/red-pill/*` | `http://localhost:3000/api/red-pill/*` | GET | Red Pill |
-| `/api/data/*` | `http://localhost:3000/api/data/*` | GET | Data |
-| `/api/submit-form` | `http://localhost:3000/api/submit-form` | POST | Forms |
+| `/api/health` | `http://localhost:3333/health` | GET | Core |
+| `/api/pilgrim/*` | `http://localhost:3333/api/pilgrim/*` | GET | Pilgrim |
+| `/api/merchant/*` | `http://localhost:3333/api/merchant/*` | GET | Merchant |
+| `/api/red-pill/*` | `http://localhost:3333/api/red-pill/*` | GET | Red Pill |
+| `/api/data/*` | `http://localhost:3333/api/data/*` | GET | Data |
+| `/api/submit-form` | `http://localhost:3333/api/submit-form` | POST | Forms |
 
 #### Configuración de Base URLs
 
 **Opción 1: Variable Global**
 ```javascript
 // En cada sección, definir:
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:3333';
 
 // Usar en fetch:
 fetch(`${API_BASE_URL}/api/pilgrim/profile`)
@@ -147,7 +147,7 @@ fetch(`${API_BASE_URL}/api/pilgrim/profile`)
 **Opción 2: Función Helper**
 ```javascript
 function getApiUrl(endpoint) {
-  const baseUrl = 'http://localhost:3000';
+  const baseUrl = 'http://localhost:3333';
   return `${baseUrl}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
 }
 
@@ -166,7 +166,7 @@ fetch(getApiUrl('/api/pilgrim/profile'))
 ```javascript
 // config/api-config.js
 const API_CONFIG = {
-  BASE_URL: 'http://localhost:3000',
+  BASE_URL: 'http://localhost:3333',
   ENDPOINTS: {
     HEALTH: '/health',
     PILGRIM: {
@@ -350,25 +350,25 @@ form.addEventListener('submit', async (e) => {
 **Tests de Endpoints:**
 ```bash
 # Health check
-curl http://localhost:3000/health
+curl http://localhost:3333/health
 
 # Pilgrim APIs
-curl http://localhost:3000/api/pilgrim/profile
-curl http://localhost:3000/api/pilgrim/journey
-curl http://localhost:3000/api/pilgrim/quests
+curl http://localhost:3333/api/pilgrim/profile
+curl http://localhost:3333/api/pilgrim/journey
+curl http://localhost:3333/api/pilgrim/quests
 
 # Merchant APIs  
-curl http://localhost:3000/api/merchant/profile
-curl http://localhost:3000/api/merchant/products
-curl http://localhost:3000/api/merchant/matches
+curl http://localhost:3333/api/merchant/profile
+curl http://localhost:3333/api/merchant/products
+curl http://localhost:3333/api/merchant/matches
 
 # Red Pill APIs
-curl http://localhost:3000/api/red-pill/questions
-curl "http://localhost:3000/api/red-pill/questions?category=critical-thinking"
-curl "http://localhost:3000/api/red-pill/results?sessionId=test123"
+curl http://localhost:3333/api/red-pill/questions
+curl "http://localhost:3333/api/red-pill/questions?category=critical-thinking"
+curl "http://localhost:3333/api/red-pill/results?sessionId=test123"
 
 # Form submission
-curl -X POST http://localhost:3000/api/submit-form \
+curl -X POST http://localhost:3333/api/submit-form \
   -H "Content-Type: application/json" \
   -d '{"formType":"test","data":{"field":"value"}}'
 ```
@@ -454,7 +454,7 @@ node scripts/setup/coomunity-local-server.js
 
 ```bash
 # 1. Verificar backend está corriendo
-curl http://localhost:3000/health
+curl http://localhost:3333/health
 
 # 2. Verificar frontend está corriendo  
 curl http://localhost:8080

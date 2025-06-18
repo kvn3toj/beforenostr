@@ -5,7 +5,7 @@ echo "========================================================"
 
 # Verificar que el backend esté disponible
 echo "1. 🏥 Verificando health del backend..."
-HEALTH_CHECK=$(curl -s http://localhost:3002/health)
+HEALTH_CHECK=$(curl -s http://localhost:1111/health)
 if [[ $? -eq 0 ]]; then
     echo "✅ Backend disponible en puerto 3002"
     echo "   Response: $HEALTH_CHECK"
@@ -18,7 +18,7 @@ echo -e "\n2. 📊 VERIFICANDO ENDPOINTS EXISTENTES..."
 
 # Token de autenticación (necesario para algunos endpoints)
 echo "   Obteniendo token de autenticación..."
-TOKEN_RESPONSE=$(curl -s -X POST "http://localhost:3002/auth/login" \
+TOKEN_RESPONSE=$(curl -s -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@gamifier.com", "password": "admin123"}')
 
@@ -48,7 +48,7 @@ endpoints_analytics=(
 
 for endpoint in "${endpoints_analytics[@]}"; do
     echo -n "   $endpoint: "
-    response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:3002$endpoint")
+    response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:1111$endpoint")
     if [[ $response -eq 404 ]]; then
         echo "❌ NO EXISTE - NECESITA IMPLEMENTACIÓN"
     elif [[ $response -eq 401 ]]; then
@@ -72,9 +72,9 @@ endpoints_lets=(
 for endpoint in "${endpoints_lets[@]}"; do
     echo -n "   $endpoint: "
     if [[ -n "$TOKEN" ]]; then
-        response=$(curl -s -w "%{http_code}" -o /dev/null -H "$AUTH_HEADER" "http://localhost:3002$endpoint")
+        response=$(curl -s -w "%{http_code}" -o /dev/null -H "$AUTH_HEADER" "http://localhost:1111$endpoint")
     else
-        response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:3002$endpoint")
+        response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:1111$endpoint")
     fi
     
     if [[ $response -eq 404 ]]; then
@@ -100,9 +100,9 @@ endpoints_marketplace=(
 for endpoint in "${endpoints_marketplace[@]}"; do
     echo -n "   $endpoint: "
     if [[ -n "$TOKEN" ]]; then
-        response=$(curl -s -w "%{http_code}" -o /dev/null -H "$AUTH_HEADER" "http://localhost:3002$endpoint")
+        response=$(curl -s -w "%{http_code}" -o /dev/null -H "$AUTH_HEADER" "http://localhost:1111$endpoint")
     else
-        response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:3002$endpoint")
+        response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:1111$endpoint")
     fi
     
     if [[ $response -eq 404 ]]; then
@@ -126,7 +126,7 @@ endpoints_social=(
 
 for endpoint in "${endpoints_social[@]}"; do
     echo -n "   $endpoint: "
-    response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:3002$endpoint")
+    response=$(curl -s -w "%{http_code}" -o /dev/null "http://localhost:1111$endpoint")
     
     if [[ $response -eq 404 ]]; then
         echo "❌ NO EXISTE"

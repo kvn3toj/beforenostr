@@ -111,7 +111,7 @@ echo "🌐 4. VERIFICANDO SERVICIOS..."
 echo "============================"
 
 # Verificar Backend
-if curl -s http://localhost:3002/health >/dev/null 2>&1; then
+if curl -s http://localhost:1111/health >/dev/null 2>&1; then
   BACKEND_STATUS="✅ BACKEND DISPONIBLE (3002)"
 else
   BACKEND_STATUS="⚠️  Backend no disponible (puerto 3002)"
@@ -119,7 +119,7 @@ fi
 echo "$BACKEND_STATUS"
 
 # Verificar SuperApp
-if curl -s -I http://localhost:3001 >/dev/null 2>&1; then
+if curl -s -I http://localhost:2222 >/dev/null 2>&1; then
   SUPERAPP_STATUS="✅ SUPERAPP DISPONIBLE (3001)"
 else
   SUPERAPP_STATUS="ℹ️  SuperApp no iniciada (puerto 3001)"

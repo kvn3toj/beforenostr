@@ -74,7 +74,7 @@ else
 fi
 
 # Verificar puerto 3001 
-if curl -s -I http://localhost:3001/ | grep -q "200 OK"; then
+if curl -s -I http://localhost:2222/ | grep -q "200 OK"; then
     echo -e "${GREEN}✅ Servidor Node.js puerto 3001 funcionando${NC}"
 else
     echo -e "${YELLOW}⚠️  Servidor Node.js puerto 3001 no responde${NC}"
@@ -86,7 +86,7 @@ echo "================================================"
 echo -e "${GREEN}📁 Página unificada ubicada en: $UNIFIED_DIR${NC}"
 echo -e "${GREEN}🌐 URLs de acceso:${NC}"
 echo "   - http://localhost:8080/ (Python server)"
-echo "   - http://localhost:3001/ (Node.js server)"
+echo "   - http://localhost:2222/ (Node.js server)"
 echo -e "${GREEN}📝 Para implementar mejoras, trabajar SIEMPRE en: $UNIFIED_DIR${NC}"
 
 echo -e "\n✅ Verificación completada." 

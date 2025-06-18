@@ -27,7 +27,7 @@ async function testContentItemsDirectly() {
 
     // 1. PRIMERO: Login siguiendo protocolo @puertoyflujo
     console.log('🔒 PASO 1: Navegando a login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     console.log('🔑 PASO 2: Realizando login...');
@@ -40,7 +40,7 @@ async function testContentItemsDirectly() {
 
     // 2. NAVEGACIÓN DIRECTA A ITEMS
     console.log('📋 PASO 3: Navegando directamente a /items...');
-    await page.goto('http://localhost:3000/items');
+    await page.goto('http://localhost:3333/items');
     await page.waitForLoadState('networkidle');
 
     // Tomar screenshot de la página de items
@@ -74,7 +74,7 @@ async function testContentItemsDirectly() {
       
       // Verificar que el backend correcto funciona
       console.log('\n🔍 PASO 5: Verificando que el backend funciona...');
-      const backendResponse = await page.request.get('http://localhost:3002/video-items');
+      const backendResponse = await page.request.get('http://localhost:1111/video-items');
       console.log('✅ Backend /video-items responde:', backendResponse.status());
       
       if (backendResponse.ok()) {

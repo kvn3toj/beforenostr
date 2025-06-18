@@ -49,7 +49,7 @@ echo "=============================="
 
 # 1. Verificar que la SuperApp esté ejecutándose
 check_criterion "SuperApp ejecutándose en puerto 3001" \
-    "curl -s -I http://localhost:3001 | grep -q 'HTTP/1.1 200 OK'" \
+    "curl -s -I http://localhost:2222 | grep -q 'HTTP/1.1 200 OK'" \
     "should_pass"
 
 # 2. Verificar que formatPrice esté importado en EnhancedMarketplaceCard

@@ -28,7 +28,7 @@ test.describe('🔗 Datos del Backend en SuperApp', () => {
     
     // Interceptar llamadas al backend
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         backendCalls.push(`${request.method()} ${request.url()}`);
         console.log(`🌐 Llamada: ${request.method()} ${request.url()}`);
       }
@@ -36,7 +36,7 @@ test.describe('🔗 Datos del Backend en SuperApp', () => {
     
     // Interceptar respuestas del backend
     page.on('response', async response => {
-      if (response.url().includes('localhost:3002') && response.status() === 200) {
+      if (response.url().includes('localhost:1111') && response.status() === 200) {
         try {
           const data = await response.json();
           backendResponses.push({
@@ -75,7 +75,7 @@ test.describe('🔗 Datos del Backend en SuperApp', () => {
     // Realizar llamada directa al endpoint de videos
     const videosResponse = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/video-items');
+        const response = await fetch('http://localhost:1111/video-items');
         const data = await response.json();
         return { 
           success: true, 
@@ -110,7 +110,7 @@ test.describe('🔗 Datos del Backend en SuperApp', () => {
     // Realizar llamada directa al endpoint de mundos
     const mundosResponse = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/mundos');
+        const response = await fetch('http://localhost:1111/mundos');
         const data = await response.json();
         return { 
           success: true, 
@@ -167,7 +167,7 @@ test.describe('🔗 Datos del Backend en SuperApp', () => {
     
     // Interceptar todas las interacciones con el backend
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         backendCallsCount++;
         const endpoint = new URL(request.url()).pathname;
         endpoints.add(endpoint);
@@ -175,7 +175,7 @@ test.describe('🔗 Datos del Backend en SuperApp', () => {
     });
     
     page.on('response', response => {
-      if (response.url().includes('localhost:3002') && response.status() === 200) {
+      if (response.url().includes('localhost:1111') && response.status() === 200) {
         successfulResponses++;
       }
     });

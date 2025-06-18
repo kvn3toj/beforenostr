@@ -29,7 +29,7 @@ async function testVideoConfigurationComplete() {
   try {
     // 1. LOGIN PRIMERO (como me recuerda el usuario)
     console.log('1. Navegando a login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     console.log('2. Llenando credenciales...');
@@ -57,7 +57,7 @@ async function testVideoConfigurationComplete() {
 
     // 6. NAVEGAR A ITEMS PAGE
     console.log('\n5. Navegando a página de Items...');
-    await page.goto('http://localhost:3000/items');
+    await page.goto('http://localhost:3333/items');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -120,7 +120,7 @@ async function testVideoConfigurationComplete() {
     } else {
       console.log('⚠️ Intentando navegación manual a configuración...');
       // Intentar navegación manual a video 39
-      await page.goto('http://localhost:3000/items/39/config');
+      await page.goto('http://localhost:3333/items/39/config');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(3000);
     }

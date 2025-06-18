@@ -346,7 +346,7 @@ grep -n "challenges" src/App.tsx
 
 ```bash
 # Verificar conexión al backend
-curl http://localhost:3002/challenges
+curl http://localhost:1111/challenges
 ```
 
 ### Debug Mode

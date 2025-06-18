@@ -14,7 +14,7 @@ async function testVideoPermissionsIntegration() {
   try {
     // 1. LOGIN
     console.log('🔐 Paso 1: Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -37,7 +37,7 @@ async function testVideoPermissionsIntegration() {
 
     // 2. NAVEGACIÓN A ITEMS
     console.log('\n📂 Paso 2: Navegando a la página de Items...');
-    await page.goto('http://localhost:3000/items');
+    await page.goto('http://localhost:3333/items');
     await page.waitForLoadState('networkidle');
 
     // Verificar que estamos en la página de items

@@ -56,7 +56,7 @@ fi
 log "✅ Load balancer operativo"
 
 # Verificar backend NestJS
-if ! curl -s http://localhost:3002/health > /dev/null; then
+if ! curl -s http://localhost:1111/health > /dev/null; then
     error "Backend NestJS no está operativo en puerto 3002"
     echo "Iniciar backend: cd backend/ && npm run dev"
     exit 1

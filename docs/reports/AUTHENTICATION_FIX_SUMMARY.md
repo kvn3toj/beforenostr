@@ -68,14 +68,14 @@ origin: (origin, callback) => {
 ### Backend Connectivity Test
 
 ```bash
-curl -s "http://localhost:3002/health"
+curl -s "http://localhost:1111/health"
 # Expected: {"status":"ok","timestamp":"...","message":"Backend is running"}
 ```
 
 ### Auth Endpoint Test
 
 ```bash
-curl -s -X POST "http://localhost:3002/auth/login" \
+curl -s -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@gamifier.com","password":"admin123"}'
 # Expected: {"access_token":"...","user":{...}}

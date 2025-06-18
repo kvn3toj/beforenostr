@@ -122,14 +122,14 @@ check_services_status() {
     echo -e "${CYAN}🌐 Estado de servicios:${NC}"
     
     # Backend
-    if curl -s http://localhost:3002/health >/dev/null 2>&1; then
+    if curl -s http://localhost:1111/health >/dev/null 2>&1; then
         echo -e "${GREEN}✅ Backend (3002): OK${NC}"
     else
         echo -e "${RED}❌ Backend (3002): NO DISPONIBLE${NC}"
     fi
     
     # SuperApp
-    if curl -s -I http://localhost:3001 >/dev/null 2>&1; then
+    if curl -s -I http://localhost:2222 >/dev/null 2>&1; then
         echo -e "${GREEN}✅ SuperApp (3001): OK${NC}"
     else
         echo -e "${RED}❌ SuperApp (3001): NO DISPONIBLE${NC}"

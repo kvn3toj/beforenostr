@@ -1,12 +1,12 @@
 const { chromium } = require('playwright');
 
 const pages = [
-  { name: 'Home', url: 'http://localhost:3000' },
-  { name: 'Profile', url: 'http://localhost:3000/profile' },
-  { name: 'Wallet', url: 'http://localhost:3000/wallet' },
-  { name: 'Marketplace', url: 'http://localhost:3000/marketplace' },
-  { name: 'Social', url: 'http://localhost:3000/social' },
-  { name: 'Pilgrim', url: 'http://localhost:3000/pilgrim' }
+  { name: 'Home', url: 'http://localhost:3333' },
+  { name: 'Profile', url: 'http://localhost:3333/profile' },
+  { name: 'Wallet', url: 'http://localhost:3333/wallet' },
+  { name: 'Marketplace', url: 'http://localhost:3333/marketplace' },
+  { name: 'Social', url: 'http://localhost:3333/social' },
+  { name: 'Pilgrim', url: 'http://localhost:3333/pilgrim' }
 ];
 
 (async () => {

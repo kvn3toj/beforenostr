@@ -14,7 +14,7 @@ echo -e "${BLUE}1️⃣ Verificando errores de importación de módulos...${NC}"
 
 # Verificar que el backend esté ejecutándose
 echo "🔍 Verificando backend en puerto 3002..."
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     echo -e "${GREEN}✅ Backend disponible en puerto 3002${NC}"
 else
     echo -e "${RED}❌ Backend NO disponible en puerto 3002${NC}"
@@ -24,7 +24,7 @@ fi
 
 # Verificar que la SuperApp esté ejecutándose
 echo "🔍 Verificando SuperApp en puerto 3001..."
-if curl -s -I http://localhost:3001 > /dev/null; then
+if curl -s -I http://localhost:2222 > /dev/null; then
     echo -e "${GREEN}✅ SuperApp disponible en puerto 3001${NC}"
 else
     echo -e "${RED}❌ SuperApp NO disponible en puerto 3001${NC}"

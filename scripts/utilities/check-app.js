@@ -19,8 +19,8 @@ const { chromium } = require('playwright');
   });
 
   try {
-    console.log('🌐 Navegando a http://localhost:3001...');
-    await page.goto('http://localhost:3001', { 
+    console.log('🌐 Navegando a http://localhost:2222...');
+    await page.goto('http://localhost:2222', { 
       waitUntil: 'networkidle',
       timeout: 15000 
     });

@@ -266,7 +266,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Completo', () => {
           headers['Authorization'] = `Bearer ${authToken}`;
         }
         
-        const response = await page.request.get(`http://localhost:3002${endpoint}`, {
+        const response = await page.request.get(`http://localhost:1111${endpoint}`, {
           headers
         });
         
@@ -329,7 +329,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Completo', () => {
         headers['Authorization'] = `Bearer ${authToken}`;
       }
       
-      const response = await page.request.get('http://localhost:3002/video-items', { headers });
+      const response = await page.request.get('http://localhost:1111/video-items', { headers });
       if (response.ok()) {
         checks.apiConnectivity = true;
         console.log('✅ Conectividad API verificada');

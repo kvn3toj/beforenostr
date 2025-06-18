@@ -13,7 +13,7 @@ test.describe('Video Duration - Backend & Frontend Verification', () => {
 
   test('backend endpoint returns correct duration', async ({ page }) => {
     // Test directo del endpoint backend
-    const response = await page.request.get('http://localhost:3002/video-items/17');
+    const response = await page.request.get('http://localhost:1111/video-items/17');
     expect(response.status()).toBe(200);
     
     const videoData = await response.json();
@@ -26,7 +26,7 @@ test.describe('Video Duration - Backend & Frontend Verification', () => {
 
   test('content items endpoint includes durations', async ({ page }) => {
     // Test del endpoint que usa el frontend
-    const response = await page.request.get('http://localhost:3002/content/items/test');
+    const response = await page.request.get('http://localhost:1111/content/items/test');
     expect(response.status()).toBe(200);
     
     const contentData = await response.json();

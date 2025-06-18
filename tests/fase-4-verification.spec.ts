@@ -119,8 +119,8 @@ test.describe('🚀 FASE 4: Monorepo y Despliegue - Verificación Completa', () 
     // Verificar configuración de URLs
     expect(scriptContent).toContain('SUPERAPP_URL=');
     expect(scriptContent).toContain('BACKEND_URL=');
-    expect(scriptContent).toContain('localhost:3000');
-    expect(scriptContent).toContain('localhost:3002');
+    expect(scriptContent).toContain('localhost:3333');
+    expect(scriptContent).toContain('localhost:1111');
     
     // Verificar funciones de verificación
     expect(scriptContent).toContain('check_url()');
@@ -438,12 +438,12 @@ test.describe('🔧 Verificación de Integración FASE 4', () => {
     // Verificar puertos coherentes
     expect(nginxContent).toContain('listen 3000');
     expect(dockerComposeContent).toContain('"3000:3000"');
-    expect(healthCheckContent).toContain('localhost:3000');
+    expect(healthCheckContent).toContain('localhost:3333');
 
     // Verificar URLs del backend
     expect(nginxContent).toContain('backend:3002');
     expect(dockerComposeContent).toContain('host.docker.internal:3002');
-    expect(healthCheckContent).toContain('localhost:3002');
+    expect(healthCheckContent).toContain('localhost:1111');
 
     console.log('✅ Configuraciones coherentes entre archivos');
   });

@@ -185,7 +185,7 @@ useEffect(() => {
 
 ### Variables de entorno:
 ```bash
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 VITE_ENABLE_MOCK_AUTH=false
 ```
 

@@ -14,7 +14,7 @@ async function testVideoPermissionsFunctionality() {
   try {
     // 1. LOGIN
     console.log('🔐 Paso 1: Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -40,7 +40,7 @@ async function testVideoPermissionsFunctionality() {
     
     // Navegar directamente a la configuración de un video específico
     const videoId = '35'; // Usar un video que sabemos que existe
-    await page.goto(`http://localhost:3000/items/${videoId}/config`);
+    await page.goto(`http://localhost:3333/items/${videoId}/config`);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 

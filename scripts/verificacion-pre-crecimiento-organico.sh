@@ -54,8 +54,8 @@ print_header "1. VERIFICACIÓN DEL BACKEND NESTJS (Puerto 3002)"
 
 print_status "INFO" "Verificando que el backend esté corriendo..."
 
-if curl -s http://localhost:3002/health > /dev/null; then
-    BACKEND_RESPONSE=$(curl -s http://localhost:3002/health)
+if curl -s http://localhost:1111/health > /dev/null; then
+    BACKEND_RESPONSE=$(curl -s http://localhost:1111/health)
     print_status "SUCCESS" "Backend está funcionando correctamente"
     echo "## ✅ Backend NestJS" >> $REPORT_FILE
     echo "- **Estado:** ✅ Funcionando" >> $REPORT_FILE
@@ -68,7 +68,7 @@ if curl -s http://localhost:3002/health > /dev/null; then
     print_status "INFO" "Probando endpoints críticos del API..."
     
     # Test auth endpoint
-    if curl -s -f http://localhost:3002/auth/login -X POST -H "Content-Type: application/json" -d '{}' > /dev/null 2>&1 || [ $? -eq 22 ]; then
+    if curl -s -f http://localhost:1111/auth/login -X POST -H "Content-Type: application/json" -d '{}' > /dev/null 2>&1 || [ $? -eq 22 ]; then
         print_status "SUCCESS" "Endpoint de autenticación disponible"
         echo "- **Auth Endpoint:** ✅ Disponible" >> $REPORT_FILE
     else
@@ -77,7 +77,7 @@ if curl -s http://localhost:3002/health > /dev/null; then
     fi
     
     # Test users endpoint (might require auth)
-    if curl -s -f http://localhost:3002/users > /dev/null 2>&1 || [ $? -eq 22 ]; then
+    if curl -s -f http://localhost:1111/users > /dev/null 2>&1 || [ $? -eq 22 ]; then
         print_status "SUCCESS" "Endpoint de usuarios disponible"
         echo "- **Users Endpoint:** ✅ Disponible" >> $REPORT_FILE
     else
@@ -102,7 +102,7 @@ print_header "2. VERIFICACIÓN DE LA SUPERAPP (Puerto 3000)"
 
 print_status "INFO" "Verificando que la SuperApp esté corriendo..."
 
-if curl -s -I http://localhost:3000 | grep -q "200 OK"; then
+if curl -s -I http://localhost:3333 | grep -q "200 OK"; then
     print_status "SUCCESS" "SuperApp está funcionando correctamente"
     echo "## ✅ SuperApp Frontend" >> $REPORT_FILE
     echo "- **Estado:** ✅ Funcionando" >> $REPORT_FILE
@@ -113,7 +113,7 @@ if curl -s -I http://localhost:3000 | grep -q "200 OK"; then
     # Verify config file
     if [ -f "Demo/apps/superapp-unified/.env" ]; then
         BACKEND_URL=$(grep VITE_API_BASE_URL Demo/apps/superapp-unified/.env | cut -d'=' -f2)
-        if [ "$BACKEND_URL" = "http://localhost:3002" ]; then
+        if [ "$BACKEND_URL" = "http://localhost:1111" ]; then
             print_status "SUCCESS" "Configuración de backend correcta"
             echo "- **Backend Config:** ✅ Apunta a puerto 3002" >> $REPORT_FILE
         else
@@ -302,12 +302,12 @@ TOTAL_CHECKS=6
 PASSED_CHECKS=0
 
 # Backend check
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     ((PASSED_CHECKS++))
 fi
 
 # SuperApp check
-if curl -s -I http://localhost:3000 | grep -q "200 OK"; then
+if curl -s -I http://localhost:3333 | grep -q "200 OK"; then
     ((PASSED_CHECKS++))
 fi
 
@@ -322,12 +322,12 @@ if $ALL_FILES_OK; then
 fi
 
 # Dependencies (assume OK if SuperApp is running)
-if curl -s -I http://localhost:3000 | grep -q "200 OK"; then
+if curl -s -I http://localhost:3333 | grep -q "200 OK"; then
     ((PASSED_CHECKS++))
 fi
 
 # Connectivity (if both are running)
-if curl -s http://localhost:3002/health > /dev/null && curl -s -I http://localhost:3000 | grep -q "200 OK"; then
+if curl -s http://localhost:1111/health > /dev/null && curl -s -I http://localhost:3333 | grep -q "200 OK"; then
     ((PASSED_CHECKS++))
 fi
 

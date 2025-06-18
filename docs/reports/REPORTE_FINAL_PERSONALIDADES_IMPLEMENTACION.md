@@ -89,7 +89,7 @@ ESFP - Animador        ✅ Creado
 
 ### **Backend Status**
 ```bash
-✅ Backend running: http://localhost:3002
+✅ Backend running: http://localhost:1111
 ✅ Health check: 200 OK
 ✅ Personality ping: 200 OK  
 ✅ Personalities endpoint: 16 results returned
@@ -99,7 +99,7 @@ ESFP - Animador        ✅ Creado
 
 ### **Frontend Status**
 ```bash
-✅ Page accessible: http://localhost:3000/personalities
+✅ Page accessible: http://localhost:3333/personalities
 ✅ MBTI types displayed: 16/16 found
 ✅ Visual elements: 17 avatars, 64 chips, 16 progress bars
 ✅ Assignment button: Present and functional
@@ -200,15 +200,15 @@ ESFP - Animador        ✅ Creado
 
 ### **Verificar Backend**
 ```bash
-curl http://localhost:3002/personality
-curl http://localhost:3002/personality/stats
-curl http://localhost:3002/personality/ping
+curl http://localhost:1111/personality
+curl http://localhost:1111/personality/stats
+curl http://localhost:1111/personality/ping
 ```
 
 ### **Verificar Frontend**
 ```bash
 # Navegar a:
-http://localhost:3000/personalities
+http://localhost:3333/personalities
 
 # Test automatizado:
 node test-personality-final-verification.js

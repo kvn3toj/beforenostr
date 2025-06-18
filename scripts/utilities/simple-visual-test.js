@@ -13,19 +13,19 @@ async function simpleVisualTest() {
 
   try {
     console.log('1. Navegando a la raíz...');
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForTimeout(3000);
     await page.screenshot({ path: `visual-root-${Date.now()}.png`, fullPage: true });
     console.log('✅ Screenshot de la raíz guardado');
     
     console.log('2. Navegando a /login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForTimeout(3000);
     await page.screenshot({ path: `visual-login-${Date.now()}.png`, fullPage: true });
     console.log('✅ Screenshot de login guardado');
     
     console.log('3. Navegando a /admin...');
-    await page.goto('http://localhost:3000/admin');
+    await page.goto('http://localhost:3333/admin');
     await page.waitForTimeout(3000);
     await page.screenshot({ path: `visual-admin-${Date.now()}.png`, fullPage: true });
     console.log('✅ Screenshot de admin guardado');

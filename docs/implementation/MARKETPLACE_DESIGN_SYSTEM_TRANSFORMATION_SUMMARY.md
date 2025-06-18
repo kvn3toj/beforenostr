@@ -189,7 +189,7 @@ const marketplaceCosmicEffects = {
    - Patterns elementales funcionando
 6. **Application Accessibility** ✅
 
-   - Página accesible en http://localhost:3001/marketplace
+   - Página accesible en http://localhost:2222/marketplace
    - Performance mantenida
    - Responsividad completa
 
@@ -305,7 +305,7 @@ El Marketplace ahora forma parte integral del **Plan Maestro Material UI**, mant
 
 ---
 
-**🔗 Acceso directo:** [http://localhost:3001/marketplace](http://localhost:3001/marketplace)
+**🔗 Acceso directo:** [http://localhost:2222/marketplace](http://localhost:2222/marketplace)
 
 **📝 Verificación:** `./scripts/verify-marketplace-transformation.sh`
 

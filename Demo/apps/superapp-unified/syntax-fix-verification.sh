@@ -9,7 +9,7 @@ echo "📍 Current directory: $(pwd)"
 # Test SuperApp service
 echo ""
 echo "🌐 Testing SuperApp service..."
-SUPERAPP_STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3001)
+SUPERAPP_STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:2222)
 if [ "$SUPERAPP_STATUS" = "200" ]; then
     echo "✅ SuperApp is running correctly (HTTP $SUPERAPP_STATUS)"
 else
@@ -19,7 +19,7 @@ fi
 # Test Backend service
 echo ""
 echo "🏗️ Testing Backend service..."
-BACKEND_RESPONSE=$(curl -s http://localhost:3002/health)
+BACKEND_RESPONSE=$(curl -s http://localhost:1111/health)
 if echo "$BACKEND_RESPONSE" | grep -q "Backend is running"; then
     echo "✅ Backend is running correctly"
     echo "   Response: $BACKEND_RESPONSE"

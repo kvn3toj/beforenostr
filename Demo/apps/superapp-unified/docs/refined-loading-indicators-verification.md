@@ -13,8 +13,8 @@ npm run dev
 ### Abrir en Navegador
 ```bash
 # Abre automáticamente
-open http://localhost:3000
-# O navega manualmente a http://localhost:3000
+open http://localhost:3333
+# O navega manualmente a http://localhost:3333
 ```
 
 ## 📊 Paso 2: Verificar DashboardSkeleton Refinado

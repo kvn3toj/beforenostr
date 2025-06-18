@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Menu Navigation Inspection', () => {
   test.beforeEach(async ({ page }) => {
     // Navegar al home primero
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
   });
 
@@ -61,7 +61,7 @@ test.describe('Menu Navigation Inspection', () => {
     for (const route of routes) {
       console.log(`\n--- Testing route: ${route} ---`);
       
-      await page.goto(`http://localhost:3000${route}`);
+      await page.goto(`http://localhost:3333${route}`);
       await page.waitForLoadState('networkidle');
       
       const currentUrl = page.url();

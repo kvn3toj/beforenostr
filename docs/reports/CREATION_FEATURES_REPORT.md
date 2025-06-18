@@ -119,8 +119,8 @@ npx prisma studio
 ### **3. Verificación de Endpoints Backend**
 ```bash
 # Testear endpoints de creación
-curl -X POST http://localhost:3002/mundos -H "Authorization: Bearer <token>"
-curl -X POST http://localhost:3002/users -H "Authorization: Bearer <token>"
+curl -X POST http://localhost:1111/mundos -H "Authorization: Bearer <token>"
+curl -X POST http://localhost:1111/users -H "Authorization: Bearer <token>"
 ```
 
 ### **4. Tests de Integración**

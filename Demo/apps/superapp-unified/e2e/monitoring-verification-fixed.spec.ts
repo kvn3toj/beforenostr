@@ -25,7 +25,7 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
     });
 
     // Navegar a la aplicación
-    await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('http://localhost:3333', { waitUntil: 'networkidle' });
   });
 
   test('🚀 Monitoring Initialization - Fixed', async () => {
@@ -47,26 +47,26 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
     // Verificar que la aplicación carga correctamente
     const pageTitle = await page.title();
     expect(pageTitle).toBeTruthy();
-    expect(page.url()).toContain('localhost:3000');
+    expect(page.url()).toContain('localhost:3333');
     
     console.log('✅ Application loaded successfully with title:', pageTitle);
   });
 
   test('📊 Page View Tracking - Fixed', async () => {
     // Verificar tracking de navegación automática usando navegación directa
-    await page.goto('http://localhost:3000/');
+    await page.goto('http://localhost:3333/');
     await page.waitForTimeout(1000);
     
     // Navegar a diferentes páginas usando goto en lugar de clicks complejos
     console.log('🔄 Testing navigation tracking...');
     
-    await page.goto('http://localhost:3000/profile');
+    await page.goto('http://localhost:3333/profile');
     await page.waitForTimeout(1000);
     
-    await page.goto('http://localhost:3000/marketplace');
+    await page.goto('http://localhost:3333/marketplace');
     await page.waitForTimeout(1000);
     
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForTimeout(1000);
     
     // Verificar que no hay errores de JavaScript durante la navegación
@@ -80,7 +80,7 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
 
   test('🚨 Error Boundary Functionality - Fixed', async () => {
     // Simular un error y verificar que se maneja correctamente
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Inyectar error de prueba de forma más segura
     const errorGenerated = await page.evaluate(() => {
@@ -106,7 +106,7 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
 
   test('⚡ Performance Monitoring - Fixed', async () => {
     // Verificar que Web Vitals se están midiendo
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Esperar a que se cargue completamente
     await page.waitForLoadState('networkidle');
@@ -146,7 +146,7 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
 
   test('🧪 MonitoringTestComponent Functionality - Fixed', async () => {
     // Solo en desarrollo - verificar componente de testing
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Buscar el componente de testing con selector más específico
     const testComponent = page.locator('text="Monitoring Test Component"').first();
@@ -205,7 +205,7 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
 
   test('🔧 Hooks Integration Verification - Fixed', async () => {
     // Verificar que los hooks de monitoreo funcionan correctamente
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     console.log('🔄 Testing hooks integration...');
@@ -221,10 +221,10 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
     }
     
     // Navigation (usePageViewTracking)
-    await page.goto('http://localhost:3000/profile');
+    await page.goto('http://localhost:3333/profile');
     await page.waitForTimeout(1000);
     
-    await page.goto('http://localhost:3000/marketplace');
+    await page.goto('http://localhost:3333/marketplace');
     await page.waitForTimeout(1000);
     
     console.log('✅ Page view tracking tested');
@@ -247,14 +247,14 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
       networkRequests.push(request.url());
     });
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // Navegar por la aplicación para generar requests
-    await page.goto('http://localhost:3000/profile');
+    await page.goto('http://localhost:3333/profile');
     await page.waitForTimeout(1000);
     
-    await page.goto('http://localhost:3000/marketplace');
+    await page.goto('http://localhost:3333/marketplace');
     await page.waitForTimeout(1000);
     
     // Verificar que se capturaron requests
@@ -281,7 +281,7 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
     
     for (const viewport of viewports) {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
-      await page.goto('http://localhost:3000');
+      await page.goto('http://localhost:3333');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(1000);
       
@@ -294,10 +294,10 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
   });
 
   test('🎯 Error Recovery Testing - Fixed', async () => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Simular navegación a página inexistente
-    await page.goto('http://localhost:3000/nonexistent-page');
+    await page.goto('http://localhost:3333/nonexistent-page');
     await page.waitForTimeout(2000);
     
     // Verificar que la aplicación maneja errores de navegación
@@ -308,7 +308,7 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
     expect(pageContent.length).toBeGreaterThan(0);
     
     // Volver a página válida
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForTimeout(1000);
     
     // Verificar que la aplicación se recupera
@@ -331,15 +331,15 @@ test.describe('🔍 Monitoring Implementation Verification - Fixed', () => {
       }
     });
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
     
     // Navegar por diferentes secciones
-    await page.goto('http://localhost:3000/profile');
+    await page.goto('http://localhost:3333/profile');
     await page.waitForTimeout(1000);
     
-    await page.goto('http://localhost:3000/marketplace');
+    await page.goto('http://localhost:3333/marketplace');
     await page.waitForTimeout(1000);
     
     // Verificar logs de monitoreo en desarrollo
@@ -390,18 +390,18 @@ test.describe('🔧 Integration Tests - Fixed', () => {
     });
     
     // Complete user journey
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
     // Simulate real user interactions
-    await page.goto('http://localhost:3000/profile');
+    await page.goto('http://localhost:3333/profile');
     await page.waitForTimeout(1000);
     
-    await page.goto('http://localhost:3000/marketplace');
+    await page.goto('http://localhost:3333/marketplace');
     await page.waitForTimeout(1000);
     
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForTimeout(1000);
     
     // Interact with elements safely

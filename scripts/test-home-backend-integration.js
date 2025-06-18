@@ -7,8 +7,8 @@
 
 const https = require('http');
 
-const BACKEND_URL = 'http://localhost:3002';
-const SUPERAPP_URL = 'http://localhost:3001';
+const BACKEND_URL = 'http://localhost:1111';
+const SUPERAPP_URL = 'http://localhost:2222';
 
 // 🔑 Credenciales de prueba
 const TEST_CREDENTIALS = {
@@ -176,7 +176,7 @@ async function generateReport(backendResult, superAppResult) {
   }
   
   console.log('\n💡 PRÓXIMOS PASOS:');
-  console.log('1. Abrir la SuperApp en http://localhost:3001');
+  console.log('1. Abrir la SuperApp en http://localhost:2222');
   console.log('2. Iniciar sesión con admin@gamifier.com / admin123');
   console.log('3. Navegar al Dashboard Home');
   console.log('4. Verificar que las métricas Ayni se carguen dinámicamente');

@@ -117,7 +117,7 @@ SonarLint / ESLint / Prettier: Para asegurar la calidad, consistencia y legibili
     "https://json.schemastore.org/grafana-dashboard": "grafana*.json"
   },
   "rest-client.environmentVariables": {
-    "local": { "baseUrl": "http://localhost:3002" },
+    "local": { "baseUrl": "http://localhost:1111" },
     "staging": { "baseUrl": "https://staging.coomunity.global" }
   }
 }

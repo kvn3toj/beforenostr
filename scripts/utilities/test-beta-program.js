@@ -10,8 +10,8 @@ console.log('🧪 INICIANDO TESTING COMPLETO DEL PROGRAMA BETA COOMÜNITY\n');
 
 // Configuración de testing
 const config = {
-  baseUrl: 'http://localhost:3001',
-  backendUrl: 'http://localhost:3002',
+  baseUrl: 'http://localhost:2222',
+  backendUrl: 'http://localhost:1111',
   testCodes: [
     'BETA-MR7X9K2L', // María Elena Rodríguez
     'BETA-CS4N8M1P', // Dr. Carlos Sánchez

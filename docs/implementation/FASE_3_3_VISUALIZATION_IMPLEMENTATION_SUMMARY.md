@@ -116,7 +116,7 @@ npx tsx watch --no-cache --clear-screen=false --tsconfig tsconfig.backend.json s
 
 ### **2. Verificar Métricas**
 ```bash
-curl http://localhost:3002/prometheus-metrics
+curl http://localhost:1111/prometheus-metrics
 ```
 
 ### **3. Iniciar Infraestructura de Monitoreo**
@@ -127,7 +127,7 @@ docker-compose up -d prometheus grafana
 
 ### **4. Acceder a Dashboards**
 - **Prometheus**: http://localhost:9090
-- **Grafana**: http://localhost:3001 (admin/admin123)
+- **Grafana**: http://localhost:2222 (admin/admin123)
 
 ## 🔍 ENDPOINTS DISPONIBLES
 

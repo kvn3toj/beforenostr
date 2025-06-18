@@ -43,7 +43,7 @@ Simplificar y actualizar las reglas del Agente IA eliminando redundancias, obsol
 
 ### **2. Rutas Actualizadas:**
 - ✅ **Directorio de trabajo:** `Demo/apps/superapp-unified/`
-- ✅ **API Backend:** `http://localhost:3002` (NestJS externo)
+- ✅ **API Backend:** `http://localhost:1111` (NestJS externo)
 - ✅ **Variables de entorno:** Confirmadas desde .env real
 
 ### **3. Redundancias Eliminadas:**

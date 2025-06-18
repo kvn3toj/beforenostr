@@ -2,7 +2,7 @@ import { apiService } from './api.service';
 import { Mundo, CreateMundoData, UpdateMundoData, MundoVersion } from '../types/mundo.types';
 
 // Configuración de endpoints
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const MUNDOS_ENDPOINT = '/mundos'; // Usar el endpoint /mundos que está funcionando
 
 export interface FetchMundosParams {

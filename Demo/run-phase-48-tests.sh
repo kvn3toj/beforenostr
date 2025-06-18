@@ -163,8 +163,8 @@ if [ "$BACKEND_CHECK" = "true" ]; then
         print_success "Frontend está corriendo en puerto 3000"
         
         # Try to reach the frontend
-        if wait_for_service "http://localhost:3000" "Frontend React"; then
-            print_success "Frontend accesible en http://localhost:3000"
+        if wait_for_service "http://localhost:3333" "Frontend React"; then
+            print_success "Frontend accesible en http://localhost:3333"
         else
             print_warning "Frontend no responde, pero el puerto está ocupado"
         fi
@@ -178,9 +178,9 @@ if [ "$BACKEND_CHECK" = "true" ]; then
     
     # Check for backend on port 3000 (API endpoints)
     print_status "Verificando backend API..."
-    if curl -s "http://localhost:3000/health" >/dev/null 2>&1; then
+    if curl -s "http://localhost:3333/health" >/dev/null 2>&1; then
         print_success "Backend API disponible en /health"
-    elif curl -s "http://localhost:3000/api" >/dev/null 2>&1; then
+    elif curl -s "http://localhost:3333/api" >/dev/null 2>&1; then
         print_success "Backend API detectado en /api"
     else
         print_warning "Backend API no detectado - Tests ejecutarán en modo offline"
@@ -329,7 +329,7 @@ else
     print_status ""
     print_status "💡 Consejos para debugging:"
     print_status "  1. Verifica que el frontend esté corriendo: npm run dev"
-    print_status "  2. Opcional: Inicia el backend en localhost:3000"
+    print_status "  2. Opcional: Inicia el backend en localhost:3333"
     print_status "  3. Ejecuta con --headed para ver el navegador"
     print_status "  4. Usa --debug para modo paso a paso"
     print_status "  5. Prueba escenarios individuales: --scenario offline"

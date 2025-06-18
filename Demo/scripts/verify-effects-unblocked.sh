@@ -12,8 +12,8 @@ echo "🔧 VERIFICACIONES TÉCNICAS:"
 
 # 1. Verificar servicios ejecutándose
 echo "├── 🌐 Verificando servicios..."
-BACKEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/health 2>/dev/null || echo "000")
-FRONTEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 2>/dev/null || echo "000")
+BACKEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1111/health 2>/dev/null || echo "000")
+FRONTEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:2222 2>/dev/null || echo "000")
 
 if [ "$BACKEND_STATUS" = "200" ]; then
     echo "│   ├── ✅ Backend NestJS (puerto 3002): HTTP $BACKEND_STATUS"
@@ -74,7 +74,7 @@ TOTAL_ENDPOINTS=${#ENDPOINTS[@]}
 for endpoint_pair in "${ENDPOINTS[@]}"; do
     endpoint=${endpoint_pair%%:*}
     module=${endpoint_pair##*:}
-    status=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3002/$endpoint" 2>/dev/null || echo "000")
+    status=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:1111/$endpoint" 2>/dev/null || echo "000")
     
     if [ "$status" = "200" ] || [ "$status" = "401" ]; then
         echo "│   ├── ✅ $module ($endpoint): HTTP $status"
@@ -189,7 +189,7 @@ if [ "$UNBLOCK_SCORE" -lt 80 ]; then
     fi
 else
     echo "├── 🎨 VERIFICACIÓN VISUAL:"
-    echo "│   ├── Navegar a http://localhost:3001"
+    echo "│   ├── Navegar a http://localhost:2222"
     echo "│   ├── Verificar efectos en /marketplace"
     echo "│   ├── Verificar efectos en /uplay"
     echo "│   └── Verificar efectos en /social"

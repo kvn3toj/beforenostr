@@ -14,7 +14,7 @@ async function waitForBackend() {
   
   while (retries < maxRetries) {
     try {
-      const response = await fetch('http://localhost:3002/health');
+      const response = await fetch('http://localhost:1111/health');
       if (response.ok) {
         console.log('✅ Backend is ready');
         return true;
@@ -32,7 +32,7 @@ async function waitForBackend() {
 
 // Helper function to login
 async function loginUser(page: Page) {
-  await page.goto('http://localhost:3001/auth/login');
+  await page.goto('http://localhost:2222/auth/login');
   await page.fill('[data-testid="email-input"]', 'admin@gamifier.com');
   await page.fill('[data-testid="password-input"]', 'admin123');
   await page.click('[data-testid="login-button"]');

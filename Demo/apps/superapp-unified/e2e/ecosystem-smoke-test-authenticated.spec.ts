@@ -35,7 +35,7 @@ test.describe('🧪 Ecosystem Smoke Test - CoomÜnity Authenticated Integration'
     console.log('🔗 PASO 1.1: Acceso a la SuperApp');
     
     // 1.1 Acceder a SuperApp
-    await superappPage.goto('http://localhost:3001');
+    await superappPage.goto('http://localhost:2222');
     await superappPage.waitForLoadState('networkidle');
     
     // Verificar que la página carga correctamente
@@ -301,7 +301,7 @@ test.describe('🧪 Ecosystem Smoke Test - CoomÜnity Authenticated Integration'
     console.log('🔍 PASO FINAL: Verificación de Backend Compartido');
     
     // Verificar que ambos frontends se comunican con el mismo backend
-    const backendHealthCheck = await fetch('http://localhost:3002/health');
+    const backendHealthCheck = await fetch('http://localhost:1111/health');
     const healthData = await backendHealthCheck.json();
     
     expect(backendHealthCheck.status).toBe(200);
@@ -311,7 +311,7 @@ test.describe('🧪 Ecosystem Smoke Test - CoomÜnity Authenticated Integration'
     console.log(`✅ Timestamp del backend: ${healthData.timestamp}`);
     
     // Verificar conectividad de ambos frontends
-    const superappResponse = await fetch('http://localhost:3001');
+    const superappResponse = await fetch('http://localhost:2222');
     const adminResponse = await fetch('http://localhost:3003');
     
     expect(superappResponse.status).toBe(200);

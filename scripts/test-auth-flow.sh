@@ -5,8 +5,8 @@ echo "=================================================================="
 
 # Verificar servicios
 echo "📡 1. Verificando servicios..."
-BACKEND_HEALTH=$(curl -s http://localhost:3002/health | jq -r '.status' 2>/dev/null || echo "ERROR")
-SUPERAPP_STATUS=$(curl -s -I http://localhost:3001 | head -n 1 | grep "200 OK" >/dev/null && echo "OK" || echo "ERROR")
+BACKEND_HEALTH=$(curl -s http://localhost:1111/health | jq -r '.status' 2>/dev/null || echo "ERROR")
+SUPERAPP_STATUS=$(curl -s -I http://localhost:2222 | head -n 1 | grep "200 OK" >/dev/null && echo "OK" || echo "ERROR")
 
 echo "   Backend (3002): $BACKEND_HEALTH"
 echo "   SuperApp (3001): $SUPERAPP_STATUS"
@@ -20,7 +20,7 @@ fi
 # Verificar credenciales de administrador
 echo ""
 echo "🔐 2. Verificando credenciales de administrador..."
-ADMIN_LOGIN=$(curl -s -X POST "http://localhost:3002/auth/login" \
+ADMIN_LOGIN=$(curl -s -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@gamifier.com", "password": "admin123"}')
 
@@ -36,7 +36,7 @@ fi
 # Verificar credenciales de usuario regular
 echo ""
 echo "👤 3. Verificando credenciales de usuario regular..."
-USER_LOGIN=$(curl -s -X POST "http://localhost:3002/auth/login" \
+USER_LOGIN=$(curl -s -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "user@gamifier.com", "password": "123456"}')
 
@@ -69,7 +69,7 @@ if [ "$ADMIN_TOKEN" != "null" ] && [ "$ADMIN_TOKEN" != "" ] && [ "$USER_TOKEN" !
     echo "   ✅ SuperApp conectada al backend real (puerto 3002)"
     echo ""
     echo "🚀 ESTADO: Sistema listo para uso"
-    echo "💻 Accede a: http://localhost:3001/login"
+    echo "💻 Accede a: http://localhost:2222/login"
     echo "📝 Usa las credenciales verificadas arriba"
 else
     echo "   ❌ Hay problemas con la autenticación"

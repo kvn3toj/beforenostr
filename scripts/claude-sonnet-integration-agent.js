@@ -38,8 +38,8 @@ Sé directo, preciso, técnico.`,
     repository: 'beforenostr'
   },
   endpoints: {
-    backend: 'http://localhost:3002',
-    frontend: 'http://localhost:3001'
+    backend: 'http://localhost:1111',
+    frontend: 'http://localhost:2222'
   },
   cache: {
     enabled: true,

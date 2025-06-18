@@ -14,7 +14,7 @@ async function testPermissionsUpdate() {
   try {
     // 1. LOGIN
     console.log('📝 1. Navegando a login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     console.log('📝 2. Llenando credenciales...');
@@ -40,7 +40,7 @@ async function testPermissionsUpdate() {
 
     // 5. Navegación a Roles
     console.log('📝 4. Navegando a página de Roles...');
-    await page.goto('http://localhost:3000/roles');
+    await page.goto('http://localhost:3333/roles');
     await page.waitForLoadState('networkidle');
 
     // 6. Verificar que la página cargó

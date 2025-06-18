@@ -136,7 +136,7 @@ echo "=============================================="
 
 # Verificar que la SuperApp esté funcionando
 echo -n "  🌐 Verificando SuperApp en puerto 3001... "
-SUPERAPP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 2>/dev/null)
+SUPERAPP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:2222 2>/dev/null)
 if [ "$SUPERAPP_STATUS" = "200" ]; then
     echo -e "${GREEN}✅ SuperApp activa (HTTP $SUPERAPP_STATUS)${NC}"
 else
@@ -145,7 +145,7 @@ fi
 
 # Verificar acceso específico a la página social
 echo -n "  🤝 Verificando página Social... "
-SOCIAL_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001/social 2>/dev/null)
+SOCIAL_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:2222/social 2>/dev/null)
 if [ "$SOCIAL_STATUS" = "200" ]; then
     echo -e "${GREEN}✅ Página Social accesible (HTTP $SOCIAL_STATUS)${NC}"
 else

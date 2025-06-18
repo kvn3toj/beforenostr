@@ -83,7 +83,7 @@ class BackendNestJSServer {
 
 ```typescript
 // apps/superapp-unified/src/lib/api-service.ts (A MIGRAR)
-const API_BASE_URL = 'http://localhost:3002';  // Backend NestJS REAL
+const API_BASE_URL = 'http://localhost:1111';  // Backend NestJS REAL
 
 class ApiService {
   // Se conectará al backend NestJS compartido
@@ -110,7 +110,7 @@ export const supabase = createClient(...);  // ❌ Era temporal
 // apps/superapp-unified/src/lib/nestjs-integration.ts
 export class NestJSApiService {
   async signIn(email: string, password: string) {
-    const response = await fetch('http://localhost:3002/auth/login', {
+    const response = await fetch('http://localhost:1111/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -186,7 +186,7 @@ const { data, error } = await supabase.auth.signInWithPassword({
 **A (real):**
 ```typescript
 // Backend NestJS real
-const response = await fetch('http://localhost:3002/auth/login', {
+const response = await fetch('http://localhost:1111/auth/login', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ email, password })
@@ -199,12 +199,12 @@ const response = await fetch('http://localhost:3002/auth/login', {
 ```bash
 VITE_SUPABASE_URL=...          # ❌ Eliminar
 VITE_SUPABASE_ANON_KEY=...     # ❌ Eliminar
-VITE_API_BASE_URL=http://localhost:3000  # ❌ Era Express temporal
+VITE_API_BASE_URL=http://localhost:3333  # ❌ Era Express temporal
 ```
 
 **DESPUÉS (real):**
 ```bash
-VITE_API_BASE_URL=http://localhost:3002  # ✅ Backend NestJS real
+VITE_API_BASE_URL=http://localhost:1111  # ✅ Backend NestJS real
 VITE_JWT_SECRET_KEY=...                  # ✅ Del Backend NestJS
 ```
 
@@ -257,7 +257,7 @@ npm run test:ux      # Tests contra Backend NestJS:3002
 
 ```bash
 # apps/superapp-unified/.env
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 VITE_ENABLE_MOCK_AUTH=false
 VITE_JWT_SECRET_KEY=your-nestjs-jwt-secret
 

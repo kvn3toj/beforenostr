@@ -13,13 +13,13 @@ async function testUsersPageSpecific() {
 
   // Capturar todas las solicitudes de red
   page.on('request', request => {
-    if (request.url().includes('localhost:3002')) {
+    if (request.url().includes('localhost:1111')) {
       console.log(`📡 REQUEST: ${request.method()} ${request.url()}`);
     }
   });
 
   page.on('response', response => {
-    if (response.url().includes('localhost:3002')) {
+    if (response.url().includes('localhost:1111')) {
       console.log(`📨 RESPONSE: ${response.status()} ${response.url()}`);
       if (response.status() !== 200) {
         console.log(`   ❌ Status Code: ${response.status()}`);
@@ -34,7 +34,7 @@ async function testUsersPageSpecific() {
   try {
     // 1. LOGIN
     console.log('📍 Navegando a /login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -47,7 +47,7 @@ async function testUsersPageSpecific() {
     
     // 2. NAVEGAR A USERS
     console.log('\n📍 Navegando a /users...');
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(5000); // Dar más tiempo
     

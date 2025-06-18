@@ -206,10 +206,10 @@ private async getYouTubeDurationFromScraping(videoId: string): Promise<number | 
 ### **Verificación del Estado Actual:**
 ```bash
 # Verificar backend
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 
 # Verificar endpoint de video específico
-curl http://localhost:3002/video-items/35
+curl http://localhost:1111/video-items/35
 
 # Ejecutar análisis de inconsistencias
 node find-duration-inconsistencies.js

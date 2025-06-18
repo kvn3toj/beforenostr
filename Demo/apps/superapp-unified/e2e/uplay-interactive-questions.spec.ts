@@ -130,7 +130,7 @@ test.describe('ÜPlay - Funcionalidad de Interacción Avanzada (Auth Real)', () 
       if (!token) return { success: false, error: 'NO_TOKEN' };
       
       try {
-        const apiResponse = await fetch('http://localhost:3002/video-items', {
+        const apiResponse = await fetch('http://localhost:1111/video-items', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'
@@ -197,7 +197,7 @@ test.describe('ÜPlay - Funcionalidad de Interacción Avanzada (Auth Real)', () 
     // Verificar llamadas de red
     const apiRequests = [];
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         apiRequests.push({
           url: request.url(),
           method: request.method(),
@@ -506,7 +506,7 @@ test.describe('ÜPlay - Funcionalidad de Interacción Avanzada (Auth Real)', () 
       if (!token) return { hasPermissions: false, error: 'NO_TOKEN' };
       
       try {
-        const response = await fetch('http://localhost:3002/video-items', {
+        const response = await fetch('http://localhost:1111/video-items', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'

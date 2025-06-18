@@ -141,8 +141,8 @@ npm run preflight:quick
 turbo run dev
 
 # Verificar servicios
-curl http://localhost:3002/health  # Backend
-curl http://localhost:3001 -I      # SuperApp
+curl http://localhost:1111/health  # Backend
+curl http://localhost:2222 -I      # SuperApp
 ```
 
 ### **Resolución de Problemas**

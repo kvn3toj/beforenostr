@@ -17,7 +17,7 @@ async function runSimpleAdminTest() {
   try {
     // FASE 1: LOGIN COMO ADMIN
     console.log('📋 FASE 1: Login como admin...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -37,7 +37,7 @@ async function runSimpleAdminTest() {
     // Test Users Page
     totalPages++;
     console.log('\n🧪 Probando Users Page...');
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000); // Esperar a que cargue
     
@@ -56,7 +56,7 @@ async function runSimpleAdminTest() {
     // Test Items Page
     totalPages++;
     console.log('\n🧪 Probando Items Page...');
-    await page.goto('http://localhost:3000/items');
+    await page.goto('http://localhost:3333/items');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -75,7 +75,7 @@ async function runSimpleAdminTest() {
     // Test Roles Page
     totalPages++;
     console.log('\n🧪 Probando Roles Page...');
-    await page.goto('http://localhost:3000/roles');
+    await page.goto('http://localhost:3333/roles');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -98,7 +98,7 @@ async function runSimpleAdminTest() {
     // Test Mundos Page
     totalPages++;
     console.log('\n🧪 Probando Mundos Page...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -120,7 +120,7 @@ async function runSimpleAdminTest() {
     // Test Playlists Page
     totalPages++;
     console.log('\n🧪 Probando Playlists Page...');
-    await page.goto('http://localhost:3000/playlists');
+    await page.goto('http://localhost:3333/playlists');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -142,7 +142,7 @@ async function runSimpleAdminTest() {
     // Test Social Page (Nueva implementación)
     totalPages++;
     console.log('\n🧪 Probando Social Page...');
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -161,7 +161,7 @@ async function runSimpleAdminTest() {
     // Test Wallet Page
     totalPages++;
     console.log('\n🧪 Probando Wallet Page...');
-    await page.goto('http://localhost:3000/wallet');
+    await page.goto('http://localhost:3333/wallet');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -183,7 +183,7 @@ async function runSimpleAdminTest() {
     // Test Analytics Page (evitando las llamadas problemáticas)
     totalPages++;
     console.log('\n🧪 Probando Analytics Page...');
-    await page.goto('http://localhost:3000/analytics');
+    await page.goto('http://localhost:3333/analytics');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000); // Más tiempo para analytics
     

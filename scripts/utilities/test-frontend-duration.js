@@ -10,7 +10,7 @@ async function testFrontendDuration() {
     console.log('🔍 Testing video item endpoint like frontend would...');
     
     const videoItemId = 9; // ID del video que sabemos que existe
-    const response = await fetch(`http://localhost:3002/video-items/${videoItemId}`);
+    const response = await fetch(`http://localhost:1111/video-items/${videoItemId}`);
     
     if (!response.ok) {
       throw new Error(`Video item endpoint failed: ${response.status}`);
@@ -102,7 +102,7 @@ async function testFrontendDuration() {
     console.log('   ✅ Ready for frontend integration');
     
     console.log('\n🔧 To verify the fix in the browser:');
-    console.log(`   1. Open: http://localhost:3000/items/${videoItemId}/config`);
+    console.log(`   1. Open: http://localhost:3333/items/${videoItemId}/config`);
     console.log('   2. Click on the "Questions" tab');
     console.log('   3. Look at the timeline - it should show the estimated duration');
     console.log('   4. Verify that question markers are positioned correctly');

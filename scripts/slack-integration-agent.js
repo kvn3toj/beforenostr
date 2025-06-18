@@ -36,8 +36,8 @@ const CONFIG = {
     repository: 'beforenostr' // Repositorio base
   },
   endpoints: {
-    backend: 'http://localhost:3002',
-    frontend: 'http://localhost:3001'
+    backend: 'http://localhost:1111',
+    frontend: 'http://localhost:2222'
   }
 };
 

@@ -65,7 +65,7 @@ main() {
     
     # Check if SuperApp is running
     print_step "Verificando que la SuperApp esté ejecutándose..."
-    if curl -s http://localhost:3001 > /dev/null 2>&1; then
+    if curl -s http://localhost:2222 > /dev/null 2>&1; then
         print_status "SuperApp detectada en puerto 3001"
     else
         print_warning "SuperApp no detectada en puerto 3001"
@@ -75,7 +75,7 @@ main() {
         print_info "Esperando que el servidor inicie..."
         sleep 10
         
-        if curl -s http://localhost:3001 > /dev/null 2>&1; then
+        if curl -s http://localhost:2222 > /dev/null 2>&1; then
             print_status "Servidor iniciado exitosamente"
         else
             print_error "No se pudo iniciar el servidor. Verifica la configuración."

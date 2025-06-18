@@ -24,7 +24,7 @@ async function testAllPagesVerification() {
   try {
     // 1. Login
     console.log('\n🔐 Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     await page.fill('#email', 'admin@coomunity.co');
     await page.fill('#password', '123456');
@@ -39,7 +39,7 @@ async function testAllPagesVerification() {
 
     // 2. Home Page
     console.log('\n🏠 Verificando página de inicio...');
-    await page.goto('http://localhost:3000/');
+    await page.goto('http://localhost:3333/');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -52,7 +52,7 @@ async function testAllPagesVerification() {
 
     // 3. Mundos Page
     console.log('\n🌍 Verificando página de Mundos...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -72,7 +72,7 @@ async function testAllPagesVerification() {
 
     // 4. Playlists Page
     console.log('\n🎵 Verificando página de Playlists...');
-    await page.goto('http://localhost:3000/playlists');
+    await page.goto('http://localhost:3333/playlists');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -92,7 +92,7 @@ async function testAllPagesVerification() {
 
     // 5. Users Page
     console.log('\n👥 Verificando página de Usuarios...');
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -114,7 +114,7 @@ async function testAllPagesVerification() {
 
     // 6. Roles Page
     console.log('\n🔐 Verificando página de Roles...');
-    await page.goto('http://localhost:3000/roles');
+    await page.goto('http://localhost:3333/roles');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -136,7 +136,7 @@ async function testAllPagesVerification() {
 
     // 7. Analytics Page
     console.log('\n📈 Verificando página de Analytics...');
-    await page.goto('http://localhost:3000/analytics');
+    await page.goto('http://localhost:3333/analytics');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -156,7 +156,7 @@ async function testAllPagesVerification() {
 
     // 8. Settings Page
     console.log('\n⚙️ Verificando página de Configuración...');
-    await page.goto('http://localhost:3000/settings');
+    await page.goto('http://localhost:3333/settings');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -178,7 +178,7 @@ async function testAllPagesVerification() {
 
     // 9. Audit Logs Page
     console.log('\n📋 Verificando página de Audit Logs...');
-    await page.goto('http://localhost:3000/audit-logs');
+    await page.goto('http://localhost:3333/audit-logs');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -212,11 +212,11 @@ async function testAllPagesVerification() {
     console.log(`✅ Audit Logs: ${auditData.hasTable ? auditData.rowsCount + ' filas' : '❌ Sin tabla'}, ${auditData.errorCount === 0 ? 'Sin errores' : '❌ Con errores'}`);
 
     // Tomar screenshots finales
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForTimeout(2000);
     await page.screenshot({ path: 'verification-mundos-final.png', fullPage: true });
 
-    await page.goto('http://localhost:3000/playlists');
+    await page.goto('http://localhost:3333/playlists');
     await page.waitForTimeout(2000);
     await page.screenshot({ path: 'verification-playlists-final.png', fullPage: true });
 

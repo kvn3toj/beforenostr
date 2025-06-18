@@ -8,7 +8,7 @@ async function testVideoDurationFix() {
   try {
     // 1. Primero hacer login para obtener un token de autenticación
     console.log('🔑 Logging in...');
-    const loginResponse = await fetch('http://localhost:3002/auth/login', {
+    const loginResponse = await fetch('http://localhost:1111/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ async function testVideoDurationFix() {
 
     // 2. Obtener la lista de video items disponibles
     console.log('📹 Getting available video items...');
-    const itemsResponse = await fetch('http://localhost:3002/content/items', {
+    const itemsResponse = await fetch('http://localhost:1111/content/items', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -55,7 +55,7 @@ async function testVideoDurationFix() {
 
     // 4. Probar el endpoint del video item específico
     console.log('\n🔍 Testing video-items endpoint...');
-    const videoItemResponse = await fetch(`http://localhost:3002/video-items/${firstItem.id}`);
+    const videoItemResponse = await fetch(`http://localhost:1111/video-items/${firstItem.id}`);
     
     if (videoItemResponse.ok) {
       const videoItemData = await videoItemResponse.json();
@@ -108,7 +108,7 @@ async function testVideoDurationFix() {
 
     // 6. Probar acceso a la página de configuración del video
     console.log('\n🌐 Testing frontend video config page access...');
-    const frontendUrl = `http://localhost:3000/items/${firstItem.id}/config`;
+    const frontendUrl = `http://localhost:3333/items/${firstItem.id}/config`;
     console.log(`   Frontend URL: ${frontendUrl}`);
     console.log('   ✅ URL generated successfully');
     console.log('   💡 You can now test the video duration fix by visiting this URL in your browser');

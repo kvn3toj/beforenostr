@@ -56,8 +56,8 @@ async function diagnoseModuleError() {
       });
     });
 
-    console.log('🌐 Navegando a http://localhost:3001...');
-    await page.goto('http://localhost:3001', { 
+    console.log('🌐 Navegando a http://localhost:2222...');
+    await page.goto('http://localhost:2222', { 
       waitUntil: 'networkidle0',
       timeout: 30000 
     });
@@ -102,7 +102,7 @@ async function diagnoseModuleError() {
         console: consoleErrors,
         network: networkErrors
       },
-      url: 'http://localhost:3001',
+      url: 'http://localhost:2222',
       userAgent: await browser.userAgent()
     };
 

@@ -56,7 +56,7 @@ AuthContext.tsx
 ### 5. **Comunicación API**
 ```bash
 # ✅ CORRECTO
-[SUPERAPP→BACKEND] Llamada desde SuperApp a http://localhost:3002/users
+[SUPERAPP→BACKEND] Llamada desde SuperApp a http://localhost:1111/users
 
 # ❌ INCORRECTO
 La API no responde

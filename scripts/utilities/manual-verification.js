@@ -10,7 +10,7 @@ async function verifyApplication() {
   try {
     // 1. Verificar página principal
     console.log('📱 Verificando página principal...');
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForTimeout(2000);
     
     const title = await page.title();
@@ -18,7 +18,7 @@ async function verifyApplication() {
     
     // 2. Verificar página beta register
     console.log('🧪 Verificando página beta register...');
-    await page.goto('http://localhost:3000/beta-register');
+    await page.goto('http://localhost:3333/beta-register');
     await page.waitForTimeout(2000);
     
     const betaTitle = await page.title();
@@ -44,7 +44,7 @@ async function verifyApplication() {
     
     // 4. Verificar que el componente Logo se renderiza correctamente
     console.log('🎨 Verificando componente Logo...');
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     const logoExists = await page.locator('svg').first().isVisible();
     if (logoExists) {

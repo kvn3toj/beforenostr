@@ -76,7 +76,7 @@ print_status "INFO" "Verificando que la plataforma esté operativa..."
 BACKEND_OK=false
 SUPERAPP_OK=false
 
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     print_status "SUCCESS" "Backend funcionando correctamente"
     BACKEND_OK=true
     echo "## ✅ Pre-verificación" >> $BETA_LOG
@@ -89,7 +89,7 @@ else
     exit 1
 fi
 
-if curl -s -I http://localhost:3000 | grep -q "200 OK"; then
+if curl -s -I http://localhost:3333 | grep -q "200 OK"; then
     print_status "SUCCESS" "SuperApp funcionando correctamente"
     SUPERAPP_OK=true
     echo "- **SuperApp:** ✅ Operativa (puerto 3000)" >> $BETA_LOG

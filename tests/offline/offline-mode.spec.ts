@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
 
 // Helper para autenticación
 async function getAuthToken(): Promise<string> {
-  const response = await fetch('http://localhost:3002/auth/login', {
+  const response = await fetch('http://localhost:1111/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -34,7 +34,7 @@ test.describe('Offline Mode Testing Suite', () => {
   test('1. Service Worker Installation', async ({ page }) => {
     console.log('🔧 Testing Service Worker installation');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Verificar si service worker está registrado
     const swRegistration = await page.evaluate(async () => {
@@ -66,7 +66,7 @@ test.describe('Offline Mode Testing Suite', () => {
   test('2. Local Storage Persistence', async ({ page }) => {
     console.log('🗄️ Testing Local Storage persistence');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Guardar datos importantes en localStorage
     const testData = {
@@ -104,7 +104,7 @@ test.describe('Offline Mode Testing Suite', () => {
   test('3. Offline Content Availability', async ({ page }) => {
     console.log('📚 Testing offline content availability');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Guardar contenido offline
     const offlineContent = await page.evaluate(() => {
@@ -141,7 +141,7 @@ test.describe('Offline Mode Testing Suite', () => {
   test('4. Offline Action Queueing', async ({ page }) => {
     console.log('⏳ Testing offline action queueing');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.setOfflineMode(true);
     
     // Simular acciones offline que deben ser encoladas
@@ -164,7 +164,7 @@ test.describe('Offline Mode Testing Suite', () => {
   test('5. Network Status Detection', async ({ page }) => {
     console.log('🚦 Testing network status detection');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Verificar estado online inicial
     const onlineStatus = await page.evaluate(() => navigator.onLine);

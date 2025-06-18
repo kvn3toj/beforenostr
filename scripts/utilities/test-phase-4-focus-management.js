@@ -25,7 +25,7 @@ async function testPhase4FocusManagement() {
     // === 1. TEST ENHANCED FOCUS STYLES ===
     console.log('📋 1. TESTING ENHANCED FOCUS STYLES...\n');
     
-    await page.goto('http://localhost:3001/login');
+    await page.goto('http://localhost:2222/login');
     await page.waitForLoadState('networkidle');
     
     // Test focus styles on form elements
@@ -163,7 +163,7 @@ async function testPhase4FocusManagement() {
     console.log('📋 5. TESTING FOCUS RING VISIBILITY...\n');
     
     // Navigate to a page with multiple interactive elements
-    await page.goto('http://localhost:3001/users');
+    await page.goto('http://localhost:2222/users');
     await page.waitForLoadState('networkidle');
     
     // Test focus rings on various elements

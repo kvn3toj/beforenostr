@@ -194,7 +194,7 @@ test.describe('AI Question Generator Debug', () => {
         console.log('🔑 Token found, making API call...');
 
         // Hacer llamada directa a la API
-        const response = await fetch('http://localhost:3002/ai/generate-questions', {
+        const response = await fetch('http://localhost:1111/ai/generate-questions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

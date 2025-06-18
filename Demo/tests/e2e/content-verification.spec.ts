@@ -8,7 +8,7 @@ test.describe('CoomÜnity SuperApp - Verificación de Contenido Recopilado', () 
   
   test.beforeEach(async ({ page }) => {
     // Navegar a la aplicación principal
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     await page.waitForLoadState('networkidle');
   });
 

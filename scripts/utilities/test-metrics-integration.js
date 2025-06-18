@@ -6,7 +6,7 @@ async function testMetricsIntegration() {
   try {
     // 1. Verificar que el backend esté funcionando
     console.log('1️⃣ Verificando estado del backend...');
-    const healthResponse = await fetch('http://localhost:3002/health');
+    const healthResponse = await fetch('http://localhost:1111/health');
     const healthData = await healthResponse.json();
     console.log('✅ Backend funcionando:', healthData.message);
 
@@ -15,14 +15,14 @@ async function testMetricsIntegration() {
     
     // Generar métricas HTTP
     for (let i = 0; i < 5; i++) {
-      await fetch('http://localhost:3002/metrics-test');
+      await fetch('http://localhost:1111/metrics-test');
       console.log(`   📊 Métricas generadas ${i + 1}/5`);
       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     // 3. Verificar métricas de Prometheus
     console.log('\n3️⃣ Verificando métricas de Prometheus...');
-    const metricsResponse = await fetch('http://localhost:3002/prometheus-metrics');
+    const metricsResponse = await fetch('http://localhost:1111/prometheus-metrics');
     const metricsText = await metricsResponse.text();
     
     console.log(`✅ Métricas generadas: ${metricsText.length} caracteres`);

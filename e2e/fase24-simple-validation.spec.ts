@@ -47,7 +47,7 @@ test.describe('🚀 FASE 2.4: Validación Simple de Backend Integration', () => 
     // Capturar requests
     const requests: any[] = [];
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         requests.push({
           url: request.url(),
           method: request.method()
@@ -130,7 +130,7 @@ test.describe('🚀 FASE 2.4: Validación Simple de Backend Integration', () => 
         estado: 'Funcional'
       },
       backend: {
-        url: 'http://localhost:3002',
+        url: 'http://localhost:1111',
         estado: 'Conectado'
       },
       conclusion: 'Integración backend validada exitosamente. Sistema de fallbacks funcionando correctamente.'

@@ -8,7 +8,7 @@ The SuperApp frontend running on unusual port `48752` (likely a test environment
 
 ```
 Failed to fetch
-Cannot connect to backend at http://localhost:3002
+Cannot connect to backend at http://localhost:1111
 CORS: Origin http://localhost:48752 not allowed by CORS policy
 ```
 
@@ -131,7 +131,7 @@ npm run debug:connection
 ### CORS Test Results
 
 ```bash
-curl -X OPTIONS http://localhost:3002/auth/login \
+curl -X OPTIONS http://localhost:1111/auth/login \
   -H "Origin: http://localhost:48752" \
   -H "Access-Control-Request-Method: POST"
 
@@ -144,7 +144,7 @@ curl -X OPTIONS http://localhost:3002/auth/login \
 ### Backend Health Check
 
 ```bash
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 # ✅ Response: "OK" or health status
 ```
 

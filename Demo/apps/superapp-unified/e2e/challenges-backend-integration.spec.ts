@@ -96,7 +96,7 @@ test.describe('Challenges Backend Integration E2E', () => {
 
     // 1. Navegar a la página de Challenges
     console.log('📍 Navegando a la página de Challenges...');
-    await page.goto('http://localhost:3001/challenges');
+    await page.goto('http://localhost:2222/challenges');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(5000); // Esperar a que se complete la carga y las llamadas API
 
@@ -208,7 +208,7 @@ test.describe('Challenges Backend Integration E2E', () => {
     });
 
     // Navegar a challenges
-    await page.goto('http://localhost:3001/challenges');
+    await page.goto('http://localhost:2222/challenges');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 

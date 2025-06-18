@@ -48,7 +48,7 @@ rm Demo/apps/superapp-unified/src/data/marketplaceMockData.ts
 # MarketplaceMain.tsx: Eliminar referencias a mock data
 
 # 3. VERIFICAR backend endpoints
-curl http://localhost:3002/marketplace/items
+curl http://localhost:1111/marketplace/items
 ```
 
 #### **✅ Success Criteria**
@@ -82,8 +82,8 @@ grep -n "mock\|fallback" Demo/apps/superapp-unified/src/hooks/useUPlayMockData.t
 # useUPlayMockData → useVideos, useVideoProgress, useVideoQuestions
 
 # 3. INTEGRAR con backend NestJS
-curl http://localhost:3002/video-items
-curl http://localhost:3002/questions
+curl http://localhost:1111/video-items
+curl http://localhost:1111/questions
 ```
 
 #### **✅ Success Criteria**
@@ -111,8 +111,8 @@ curl http://localhost:3002/questions
 # Separar en hooks específicos: useGroups, useGroupMembers, useGroupMessages
 
 # 2. CONECTAR con endpoints sociales
-curl http://localhost:3002/social/groups
-curl http://localhost:3002/social/posts
+curl http://localhost:1111/social/groups
+curl http://localhost:1111/social/posts
 ```
 
 ---
@@ -201,14 +201,14 @@ echo "✅ FASE 1 COMPLETADA - MARKETPLACE MOCK ELIMINADO"
 echo "🏥 VERIFICANDO DISPONIBILIDAD DE ENDPOINTS BACKEND"
 
 # Backend Health Check
-curl -s http://localhost:3002/health && echo "✅ Backend disponible" || echo "❌ Backend no disponible"
+curl -s http://localhost:1111/health && echo "✅ Backend disponible" || echo "❌ Backend no disponible"
 
 # Endpoints específicos por módulo
 echo -e "\n📊 ENDPOINTS POR MÓDULO:"
-curl -s -o /dev/null -w "Marketplace: %{http_code}\n" http://localhost:3002/marketplace/items
-curl -s -o /dev/null -w "Videos: %{http_code}\n" http://localhost:3002/video-items  
-curl -s -o /dev/null -w "Social: %{http_code}\n" http://localhost:3002/social/posts
-curl -s -o /dev/null -w "Challenges: %{http_code}\n" http://localhost:3002/challenges
+curl -s -o /dev/null -w "Marketplace: %{http_code}\n" http://localhost:1111/marketplace/items
+curl -s -o /dev/null -w "Videos: %{http_code}\n" http://localhost:1111/video-items  
+curl -s -o /dev/null -w "Social: %{http_code}\n" http://localhost:1111/social/posts
+curl -s -o /dev/null -w "Challenges: %{http_code}\n" http://localhost:1111/challenges
 ```
 
 ---

@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Gamifier Admin Frontend - Content Items Loading', () => {
   const ADMIN_EMAIL = 'admin@gamifier.com';
   const ADMIN_PASSWORD = 'admin123';
-  const FRONTEND_URL = 'http://localhost:3000';
-  const BACKEND_BASE_URL = 'http://localhost:3002';
+  const FRONTEND_URL = 'http://localhost:3333';
+  const BACKEND_BASE_URL = 'http://localhost:1111';
 
   test('should correctly load and display content items', async ({ page }) => {
     // Configurar listeners para capturar errores de red y consola

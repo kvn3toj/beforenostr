@@ -1,8 +1,8 @@
 // Simple test to verify frontend-backend integration
 const fetch = require('node-fetch');
 
-const BACKEND_URL = 'http://localhost:3002';
-const FRONTEND_URL = 'http://localhost:3000';
+const BACKEND_URL = 'http://localhost:1111';
+const FRONTEND_URL = 'http://localhost:3333';
 
 async function testBackendEndpoints() {
   console.log('🔍 Testing Backend Endpoints...\n');
@@ -53,7 +53,7 @@ async function main() {
   
   console.log('\n✨ Integration test completed!');
   console.log('\n📝 Next steps:');
-  console.log('1. Open http://localhost:3000 in your browser');
+  console.log('1. Open http://localhost:3333 in your browser');
   console.log('2. Navigate to different pages to test data loading');
   console.log('3. Check browser console for any API errors');
 }

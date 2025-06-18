@@ -40,7 +40,7 @@ test.describe('Simple System Test', () => {
     // Verificar conectividad del backend desde el navegador
     const backendTest = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/health');
+        const response = await fetch('http://localhost:1111/health');
         const data = await response.json();
         return { success: true, status: response.status, data };
       } catch (error: any) {

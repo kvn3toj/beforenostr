@@ -8,7 +8,7 @@ import {
 } from '../types/contentItem.types';
 
 // Configuración de URLs base
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const CONTENT_ITEMS_ENDPOINT = `${API_BASE_URL}/content/items`;
 const ITEM_TYPES_ENDPOINT = `${API_BASE_URL}/content/item-types`;
 

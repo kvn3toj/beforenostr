@@ -258,14 +258,14 @@ cd Demo/apps/superapp-unifie..._
 
  59. 🤖 **ASSISTANT** (158 chars)
      _Revisa porqué esta ruta que es de un video lleva a un home de baja calidad y no al real video y no al home real:
-http://localhost:3001/uplay/video/kJQ..._
+http://localhost:2222/uplay/video/kJQ..._
 
  60. 🤖 **ASSISTANT** (281 chars)
      _sucede lo mismo con estas rutas, por favor solucionalo tambien:
 
-http://localhost:3001/groups
-http://localhost:3001/challenges
-http://localhost:3001/p..._
+http://localhost:2222/groups
+http://localhost:2222/challenges
+http://localhost:2222/p..._
 
  61. 🤖 **ASSISTANT** (45 chars)
      _Si por favor.

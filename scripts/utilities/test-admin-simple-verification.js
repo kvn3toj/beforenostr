@@ -25,7 +25,7 @@ async function testAdminLoginAndNavigation() {
     });
 
     console.log('📄 Navegando a la página de login...');
-    await page.goto('http://localhost:3001/login');
+    await page.goto('http://localhost:2222/login');
     await page.waitForLoadState('networkidle');
 
     // Verificar que estamos en la página de login

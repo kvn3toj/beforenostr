@@ -179,7 +179,7 @@ echo "🌐 6. VERIFICANDO ACCESIBILIDAD DE PÁGINA"
 echo "========================================="
 
 # Verificar que la SuperApp esté ejecutándose
-if curl -s -I http://localhost:3001/ustats | grep -q "200 OK"; then
+if curl -s -I http://localhost:2222/ustats | grep -q "200 OK"; then
     echo -e "  ✅ ${GREEN}ACCESSIBLE${NC} - Página UStats respondiendo en puerto 3001"
     CHECKS_PASSED=$((CHECKS_PASSED + 1))
 else

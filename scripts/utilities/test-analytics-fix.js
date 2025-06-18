@@ -29,7 +29,7 @@ async function testAnalyticsPageFix() {
   try {
     // 1. LOGIN
     console.log('1. Navegando a login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     console.log('2. Llenando credenciales...');
@@ -57,7 +57,7 @@ async function testAnalyticsPageFix() {
 
     // 6. NAVEGAR A ANALYTICS PAGE
     console.log('5. Navegando a página de Analytics...');
-    await page.goto('http://localhost:3000/analytics');
+    await page.goto('http://localhost:3333/analytics');
     
     // Esperar más tiempo para que carguen todas las queries
     console.log('6. Esperando que carguen los datos de analytics...');

@@ -122,8 +122,8 @@ pkill -f "vite" && pkill -f "npm run dev" && pkill -f "turbo"
 lsof -i :3001,3002 || echo "Puertos disponibles ✅"
 
 # 4. Verificar servicios
-curl http://localhost:3002/health  # Backend
-curl http://localhost:3001 -I      # SuperApp
+curl http://localhost:1111/health  # Backend
+curl http://localhost:2222 -I      # SuperApp
 ```
 
 ---

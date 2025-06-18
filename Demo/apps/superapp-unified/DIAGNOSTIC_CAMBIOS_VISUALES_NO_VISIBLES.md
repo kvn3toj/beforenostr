@@ -20,7 +20,7 @@
 **Evidencia:**
 ```bash
 # Al hacer curl al puerto 3002:
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 # Devuelve HTML en lugar de JSON del health check
 ```
 
@@ -52,9 +52,9 @@ curl http://localhost:3002/health
 ### ✅ **Configuración de Entorno**
 1. **Archivo .env creado:**
    ```env
-   VITE_API_BASE_URL=http://localhost:3002
+   VITE_API_BASE_URL=http://localhost:1111
    VITE_ENABLE_MOCK_AUTH=false
-   VITE_BASE_URL=http://localhost:3001
+   VITE_BASE_URL=http://localhost:2222
    ```
 
 2. **Configuración TypeScript Backend:**

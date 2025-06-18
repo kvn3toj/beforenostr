@@ -14,8 +14,8 @@ PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
 # Configuración
-SUPERAPP_URL="${SUPERAPP_URL:-http://localhost:3000}"
-BACKEND_URL="${BACKEND_URL:-http://localhost:3002}"
+SUPERAPP_URL="${SUPERAPP_URL:-http://localhost:3333}"
+BACKEND_URL="${BACKEND_URL:-http://localhost:1111}"
 TIMEOUT="${TIMEOUT:-10}"
 RETRIES="${RETRIES:-3}"
 

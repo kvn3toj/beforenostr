@@ -1,7 +1,7 @@
 const { request } = require('playwright');
 
 async function testEndpoints() {
-  const baseURL = 'http://localhost:3002';
+  const baseURL = 'http://localhost:1111';
   
   // Crear contexto de request
   const requestContext = await request.newContext();

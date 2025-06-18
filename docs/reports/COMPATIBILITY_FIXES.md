@@ -70,7 +70,7 @@ import { DatePicker } from '@mui/material'; // ❌ Incorrecto
 
 ### ✅ Funcionando Correctamente
 
-- Servidor de desarrollo en http://localhost:3000
+- Servidor de desarrollo en http://localhost:3333
 - Todos los componentes cargan sin errores
 - Funcionalidad de fechas preservada con controles nativos
 - Página de ejemplo accesible y funcional
@@ -123,7 +123,7 @@ import { Button, TextField, Box } from '@mui/material';
 ```
 
 ### Servidor de Desarrollo ✅
-- Puerto: http://localhost:3000
+- Puerto: http://localhost:3333
 - Estado: Funcionando
 - Página de ejemplo: Accesible
 

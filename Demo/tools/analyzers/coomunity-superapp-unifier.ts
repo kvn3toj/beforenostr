@@ -773,7 +773,7 @@ VITE_WHATSAPP_API_TOKEN=your_whatsapp_token_here
 
 # Development
 VITE_APP_ENV=development
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=http://localhost:3333
 `;
 
     const targetPath = path.join(this.config.targetRoot, '.env.template');

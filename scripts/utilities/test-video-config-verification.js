@@ -24,7 +24,7 @@ async function testVideoConfigPages() {
   try {
     // 1. LOGIN
     console.log('🔐 === PASO 1: LOGIN COMO ADMINISTRADOR ===');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -36,7 +36,7 @@ async function testVideoConfigPages() {
 
     // 2. VERIFICAR PÁGINA DE ITEMS
     console.log('📋 === PASO 2: NAVEGANDO A PÁGINA DE ITEMS ===');
-    await page.goto('http://localhost:3000/items');
+    await page.goto('http://localhost:3333/items');
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(3000);
     
@@ -58,7 +58,7 @@ async function testVideoConfigPages() {
     const testVideoId = 39; // Sabemos que este video tiene datos
     console.log(`📍 Navegando a /items/${testVideoId}/config...`);
     
-    await page.goto(`http://localhost:3000/items/${testVideoId}/config`);
+    await page.goto(`http://localhost:3333/items/${testVideoId}/config`);
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(3000);
     

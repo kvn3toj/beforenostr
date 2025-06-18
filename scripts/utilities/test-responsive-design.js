@@ -35,7 +35,7 @@ async function testResponsiveLogin(page, deviceInfo) {
 
   try {
     // Navegar a login
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     // Verificar elementos responsivos del login
@@ -100,7 +100,7 @@ async function testResponsiveLayout(page, deviceInfo) {
 
   try {
     // Login primero
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -288,7 +288,7 @@ async function captureResponsiveScreenshots(page, deviceInfo) {
 
   try {
     // Screenshot del login
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     const loginScreenshot = `responsive-login-${deviceInfo.name.replace(/\s+/g, '-').toLowerCase()}-${deviceInfo.width}x${deviceInfo.height}.png`;

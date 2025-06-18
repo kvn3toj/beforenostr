@@ -17,11 +17,11 @@ cp env.example .env.local
 2. Edita `.env.local` con las configuraciones correctas:
 ```bash
 # Backend principal
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=http://localhost:3333
 VITE_ENABLE_MOCK_AUTH=false
 
 # Gamifier API (si tienes uno)
-VITE_GAMIFIER_API_URL=http://localhost:3002
+VITE_GAMIFIER_API_URL=http://localhost:1111
 VITE_GAMIFIER_API_KEY=tu-api-key
 
 # Modo desarrollo
@@ -43,9 +43,9 @@ Deberías ver:
 ```
 🚀 CoomÜnity Backend API Server
 =====================================
-🌐 Server running on: http://localhost:3000
-📊 Health check: http://localhost:3000/health
-📚 API docs: http://localhost:3000/api
+🌐 Server running on: http://localhost:3333
+📊 Health check: http://localhost:3333/health
+📚 API docs: http://localhost:3333/api
 ```
 
 ### **Paso 3: Iniciar el Frontend**
@@ -59,7 +59,7 @@ npm run dev
 
 ### **Paso 4: Verificar la Conectividad**
 
-Abre la aplicación en tu navegador: `http://localhost:3000`
+Abre la aplicación en tu navegador: `http://localhost:3333`
 
 #### **🔍 Indicadores de Conexión**
 
@@ -95,10 +95,10 @@ Abre la aplicación en tu navegador: `http://localhost:3000`
 1. Abre **DevTools** → **Network**
 2. Recarga la página
 3. Busca llamadas a:
-   - `http://localhost:3000/health`
-   - `http://localhost:3000/api/user-profile/`
-   - `http://localhost:3000/api/merchant-data`
-   - `http://localhost:3000/api/pilgrim/profile`
+   - `http://localhost:3333/health`
+   - `http://localhost:3333/api/user-profile/`
+   - `http://localhost:3333/api/merchant-data`
+   - `http://localhost:3333/api/pilgrim/profile`
 
 **Status 200 = ✅ Conexión exitosa**
 **Status 4xx/5xx = ❌ Error de conexión**
@@ -159,7 +159,7 @@ La aplicación implementa un **sistema híbrido** que:
 
 ### **Problema: "Modo Offline" permanente**
 **Solución:**
-1. Verifica que el backend esté corriendo en `localhost:3000`
+1. Verifica que el backend esté corriendo en `localhost:3333`
 2. Revisa las variables de entorno (`VITE_API_BASE_URL`)
 3. Comprueba la consola del navegador para errores CORS
 4. Verifica que no haya un firewall bloqueando el puerto 3000
@@ -197,7 +197,7 @@ La aplicación implementa un **sistema híbrido** que:
 ## 📞 Soporte
 
 Si encuentras problemas con la integración, verifica:
-1. **Backend Status**: `curl http://localhost:3000/health`
+1. **Backend Status**: `curl http://localhost:3333/health`
 2. **Variables de entorno**: Revisa `.env.local`
 3. **Console logs**: Busca errores en DevTools
 4. **Network tab**: Verifica las llamadas HTTP

@@ -14,7 +14,7 @@ Hemos reemplazado los indicadores de carga genéricos (spinners) por **skeleton 
 
 2. **Abrir en el navegador:**
    ```
-   http://localhost:3000
+   http://localhost:3333
    ```
 
 ## 🔍 Verificaciones Específicas por Componente

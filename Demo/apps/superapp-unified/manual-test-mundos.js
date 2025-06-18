@@ -34,23 +34,23 @@ async function runTests() {
   
   const tests = [
     {
-      url: 'http://localhost:3000',
+      url: 'http://localhost:3333',
       description: 'SuperApp Frontend - Página principal'
     },
     {
-      url: 'http://localhost:3000/mundos',
+      url: 'http://localhost:3333/mundos',
       description: 'SuperApp Frontend - Página de mundos'
     },
     {
-      url: 'http://localhost:3002/health',
+      url: 'http://localhost:1111/health',
       description: 'Backend NestJS - Health check'
     },
     {
-      url: 'http://localhost:3002/mundos/test',
+      url: 'http://localhost:1111/mundos/test',
       description: 'Backend NestJS - Test de mundos'
     },
     {
-      url: 'http://localhost:3002/mundos/simple',
+      url: 'http://localhost:1111/mundos/simple',
       description: 'Backend NestJS - Lista de mundos'
     }
   ];
@@ -94,11 +94,11 @@ console.log(`
 📋 INSTRUCCIONES:
 ================
 
-1. Asegúrate de que la SuperApp esté corriendo en http://localhost:3000
-2. Asegúrate de que el Backend NestJS esté corriendo en http://localhost:3002
+1. Asegúrate de que la SuperApp esté corriendo en http://localhost:3333
+2. Asegúrate de que el Backend NestJS esté corriendo en http://localhost:1111
 3. Ejecuta este script en la consola del navegador:
 
-   - Abre http://localhost:3000/mundos en tu navegador
+   - Abre http://localhost:3333/mundos en tu navegador
    - Abre las DevTools (F12)
    - Ve a la pestaña Console
    - Copia y pega la función runTests() y luego ejecuta: runTests()

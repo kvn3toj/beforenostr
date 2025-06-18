@@ -22,7 +22,7 @@ async function testAllAdminPages() {
   try {
     // 1. LOGIN
     console.log('1. Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     await page.fill('input[name="email"]', 'admin@gamifier.com');
     await page.fill('input[name="password"]', 'admin123');
@@ -59,7 +59,7 @@ async function testAllAdminPages() {
       console.log(`\n📋 Verificando página: ${adminPage.name}`);
       
       try {
-        await page.goto(`http://localhost:3000${adminPage.url}`);
+        await page.goto(`http://localhost:3333${adminPage.url}`);
         await page.waitForLoadState('networkidle');
         
         // Verificar si hay errores visibles
@@ -98,7 +98,7 @@ async function testAllAdminPages() {
       console.log(`\n📋 Verificando página: ${gamPage.name}`);
       
       try {
-        await page.goto(`http://localhost:3000${gamPage.url}`);
+        await page.goto(`http://localhost:3333${gamPage.url}`);
         await page.waitForLoadState('networkidle');
         
         // Verificar si hay errores visibles

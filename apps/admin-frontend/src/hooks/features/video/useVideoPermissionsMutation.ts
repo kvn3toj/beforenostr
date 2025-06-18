@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { VideoPermissions, DEFAULT_VIDEO_PERMISSIONS } from '../../../types/videoPermissions.types';
 import { toast } from 'sonner';
 
-const API_BASE_URL = 'http://localhost:3002';
+const API_BASE_URL = 'http://localhost:1111';
 
 interface UpsertVideoPermissionsParams {
   videoItemId: number;

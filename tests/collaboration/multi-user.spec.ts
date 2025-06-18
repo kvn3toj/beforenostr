@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
 
 // Helper para autenticación
 async function getAuthToken(): Promise<string> {
-  const response = await fetch('http://localhost:3002/auth/login', {
+  const response = await fetch('http://localhost:1111/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -57,7 +57,7 @@ test.describe('Multi-User Collaboration Testing Suite', () => {
     
     try {
       // Usuario 1 crea una sala de estudio
-      await users[0].page.goto('http://localhost:3000');
+      await users[0].page.goto('http://localhost:3333');
       
       // Simular creación de sala
       const roomData = await users[0].page.evaluate((token) => {
@@ -82,7 +82,7 @@ test.describe('Multi-User Collaboration Testing Suite', () => {
       
       // Usuarios 2 y 3 se unen a la sala
       for (let i = 1; i < users.length; i++) {
-        await users[i].page.goto('http://localhost:3000');
+        await users[i].page.goto('http://localhost:3333');
         
         const joinResult = await users[i].page.evaluate((data) => {
           const { roomId, userId, token } = data;
@@ -131,7 +131,7 @@ test.describe('Multi-User Collaboration Testing Suite', () => {
     try {
       // Setup ambos usuarios en la misma sala
       for (const user of users) {
-        await user.page.goto('http://localhost:3000');
+        await user.page.goto('http://localhost:3333');
         await user.page.evaluate((data) => {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('currentRoom', JSON.stringify({
@@ -234,7 +234,7 @@ test.describe('Multi-User Collaboration Testing Suite', () => {
       };
       
       for (const user of users) {
-        await user.page.goto('http://localhost:3000');
+        await user.page.goto('http://localhost:3333');
         await user.page.evaluate((data) => {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('videoSession', JSON.stringify(data.session));
@@ -341,7 +341,7 @@ test.describe('Multi-User Collaboration Testing Suite', () => {
       };
       
       for (const user of users) {
-        await user.page.goto('http://localhost:3000');
+        await user.page.goto('http://localhost:3333');
         await user.page.evaluate((data) => {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('questionSession', JSON.stringify(data.session));
@@ -410,7 +410,7 @@ test.describe('Multi-User Collaboration Testing Suite', () => {
       };
       
       for (const user of users) {
-        await user.page.goto('http://localhost:3000');
+        await user.page.goto('http://localhost:3333');
         await user.page.evaluate((data) => {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('sharedDocument', JSON.stringify(data.document));
@@ -513,7 +513,7 @@ test.describe('Multi-User Collaboration Testing Suite', () => {
       };
       
       for (const user of users) {
-        await user.page.goto('http://localhost:3000');
+        await user.page.goto('http://localhost:3333');
         await user.page.evaluate((data) => {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('groupProgress', JSON.stringify(data.progress));

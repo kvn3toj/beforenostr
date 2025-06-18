@@ -178,9 +178,9 @@ if [ "$COMMAND" != "logs" ] && [ "$COMMAND" != "help" ]; then
     
     echo ""
     log_info "Access URLs:"
-    echo "  🌐 SuperApp:       http://localhost:3001"
-    echo "  ⚙️  Gamifier Admin: http://localhost:3000"
-    echo "  🔗 Backend API:    http://localhost:3002/api"
+    echo "  🌐 SuperApp:       http://localhost:2222"
+    echo "  ⚙️  Gamifier Admin: http://localhost:3333"
+    echo "  🔗 Backend API:    http://localhost:1111/api"
     echo "  📊 Grafana:        http://localhost:3003 (if monitoring enabled)"
     echo "  📈 Prometheus:     http://localhost:9090 (if monitoring enabled)"
 fi 

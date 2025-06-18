@@ -10,13 +10,13 @@ La implementación de la **Página "Nueva Invitación"** ha sido **completamente
 
 ### ✅ **FASE 1: Verificación del Estado del Backend**
 - **Puerto Backend**: 3002 ✓
-- **Conectividad**: `curl http://localhost:3002/health` → 200 OK ✓
-- **Logs de inicio**: `🚀 Gamifier API is running on: http://localhost:3002` ✓
+- **Conectividad**: `curl http://localhost:1111/health` → 200 OK ✓
+- **Logs de inicio**: `🚀 Gamifier API is running on: http://localhost:1111` ✓
 - **Base de datos**: `>>> PrismaService onModuleInit - Database connection established` ✓
 
 ### ✅ **FASE 2: Verificación del Frontend**
 - **Puerto Frontend**: 3000 ✓
-- **Conectividad**: `curl http://localhost:3000` → 200 OK ✓
+- **Conectividad**: `curl http://localhost:3333` → 200 OK ✓
 - **Rutas configuradas**: `/invitations/new` ✓
 - **Separación de puertos**: Sin conflictos ✓
 
@@ -84,7 +84,7 @@ La implementación de la **Página "Nueva Invitación"** ha sido **completamente
 - **Integración Material-UI**: Componentes funcionando ✓
 
 ### ✅ **Backend Integration**
-- **API calls**: Comunicación `http://localhost:3002` ✓
+- **API calls**: Comunicación `http://localhost:1111` ✓
 - **Endpoints disponibles**: 
   - `/invitations/stats` → Estadísticas ✓
   - `/invitations/gift-cards` → Crear gift cards ✓

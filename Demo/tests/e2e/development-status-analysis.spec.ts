@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Análisis de Estado de Desarrollo - CoomÜnity SuperApp', () => {
   
   test('Detectar módulos marcados como "en desarrollo"', async ({ page }) => {
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     await page.waitForLoadState('networkidle');
 
     console.log('🔍 Buscando módulos marcados como "en desarrollo"...');
@@ -78,7 +78,7 @@ test.describe('Análisis de Estado de Desarrollo - CoomÜnity SuperApp', () => {
   });
 
   test('Mapear navegación vs estado de desarrollo', async ({ page }) => {
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     await page.waitForLoadState('networkidle');
 
     console.log('🗺️  Mapeando navegación vs estado de implementación...');
@@ -124,7 +124,7 @@ test.describe('Análisis de Estado de Desarrollo - CoomÜnity SuperApp', () => {
           });
 
           // Volver al inicio para el siguiente test
-          await page.goto('http://localhost:3001');
+          await page.goto('http://localhost:2222');
           await page.waitForLoadState('networkidle');
         }
       } catch (error) {
@@ -162,7 +162,7 @@ test.describe('Análisis de Estado de Desarrollo - CoomÜnity SuperApp', () => {
   });
 
   test('Correlacionar módulos en desarrollo con contenido extraído', async ({ page }) => {
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     
     console.log('🔗 Correlacionando módulos en desarrollo con contenido extraído...');
 

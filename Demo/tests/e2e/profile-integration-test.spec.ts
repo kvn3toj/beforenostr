@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Profile Integration Test - Sistema de Gestión de Usuario', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3002');
+    await page.goto('http://localhost:1111');
   });
 
   // Función helper para navegar a Mi Perfil

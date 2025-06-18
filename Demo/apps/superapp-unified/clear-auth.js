@@ -1,7 +1,7 @@
 // Script temporal para limpiar datos de autenticación corruptos
 console.log('🧹 Limpiando datos de autenticación...');
 
-// Abrir consola del navegador en http://localhost:3001 y ejecutar:
+// Abrir consola del navegador en http://localhost:2222 y ejecutar:
 localStorage.removeItem('coomunity_token');
 localStorage.removeItem('coomunity_user');
 localStorage.removeItem('auth_user');

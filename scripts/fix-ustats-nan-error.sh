@@ -8,7 +8,7 @@ echo "1️⃣ Verificando estado actual del módulo UStats..."
 
 # Verificar que el backend esté ejecutándose
 echo "🔍 Verificando backend en puerto 3002..."
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     echo "✅ Backend disponible en puerto 3002"
 else
     echo "❌ Backend NO disponible en puerto 3002"
@@ -18,7 +18,7 @@ fi
 
 # Verificar que la SuperApp esté ejecutándose
 echo "🔍 Verificando SuperApp en puerto 3001..."
-if curl -s -I http://localhost:3001 > /dev/null; then
+if curl -s -I http://localhost:2222 > /dev/null; then
     echo "✅ SuperApp disponible en puerto 3001"
 else
     echo "❌ SuperApp NO disponible en puerto 3001"
@@ -114,7 +114,7 @@ echo "7️⃣ Verificación final..."
 
 # Verificar que UStats esté accesible
 echo "🔍 Verificando acceso a UStats..."
-if curl -s http://localhost:3001/ustats > /dev/null; then
+if curl -s http://localhost:2222/ustats > /dev/null; then
     echo "✅ Página UStats accesible"
 else
     echo "⚠️  Página UStats puede no estar accesible aún"
@@ -130,7 +130,7 @@ echo "4. ✅ Validaciones de datos antes de renderizar componentes"
 echo ""
 echo "🔧 PRÓXIMOS PASOS:"
 echo "=================="
-echo "1. Navega a http://localhost:3001/ustats"
+echo "1. Navega a http://localhost:2222/ustats"
 echo "2. Abre las DevTools (F12) para verificar errores"
 echo "3. Si persisten errores NaN, verifica que los datos tengan valores válidos"
 echo "4. El error de WebSocket es normal en desarrollo y no afecta funcionalidad"

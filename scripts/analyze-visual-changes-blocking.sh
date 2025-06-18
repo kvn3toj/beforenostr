@@ -131,7 +131,7 @@ echo "6️⃣ VERIFICANDO ESTADO DE SERVICIOS..."
 echo "------------------------------------"
 
 # Backend check
-if curl -s http://localhost:3002/health > /dev/null 2>&1; then
+if curl -s http://localhost:1111/health > /dev/null 2>&1; then
     echo "✅ Backend está ejecutándose en puerto 3002"
     BACKEND_ISSUE=false
 else
@@ -140,7 +140,7 @@ else
 fi
 
 # Frontend check
-if curl -s http://localhost:3001 > /dev/null 2>&1; then
+if curl -s http://localhost:2222 > /dev/null 2>&1; then
     echo "✅ SuperApp está ejecutándose en puerto 3001"
     FRONTEND_ISSUE=false
 else

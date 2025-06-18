@@ -24,7 +24,7 @@ async function testMundosFinalFunctionality() {
 
   try {
     console.log('1. 🔐 Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -36,7 +36,7 @@ async function testMundosFinalFunctionality() {
     console.log('✅ Login exitoso');
 
     console.log('\n2. 🌍 Navegando a la página de Mundos...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     console.log('✅ Página de Mundos cargada');
 
@@ -102,7 +102,7 @@ async function testMundosFinalFunctionality() {
     console.log('\n5. ✅ VERIFICANDO PROBLEMA 3: Error 500 en navegación a detalle...');
     
     // Refrescar página para ver mundos actualizados
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     
     // Hacer clic en la primera fila para navegar a detalle
@@ -147,7 +147,7 @@ async function testMundosFinalFunctionality() {
     console.log('\n6. 🧪 Verificando botón "Ver detalles"...');
     
     // Volver a la página de mundos
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     
     // Probar botón "Ver detalles"

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL || 'http://localhost:3000';
+const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL || 'http://localhost:3333';
 const TEST_VIDEO_ITEM_ID = 9; // Video que sabemos que funciona
 
 test.describe('Video Timeline Duration Fix', () => {

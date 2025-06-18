@@ -25,7 +25,7 @@ test.describe('🚀 Migración Fase 2.4 - Verificación SuperApp', () => {
 
       // 1. Verificar home carga correctamente
       console.log('📱 1. Verificando Home...');
-      await page.goto('http://localhost:3000');
+      await page.goto('http://localhost:3333');
       await page.waitForLoadState('networkidle');
       
       // Verificar que la página no tiene errores críticos
@@ -35,7 +35,7 @@ test.describe('🚀 Migración Fase 2.4 - Verificación SuperApp', () => {
 
       // 2. Verificar Mundos (backend real)
       console.log('\n🌍 2. Verificando Mundos (backend real)...');
-      await page.goto('http://localhost:3000/mundos');
+      await page.goto('http://localhost:3333/mundos');
       await page.waitForLoadState('networkidle');
       
       // Esperar contenido de mundos
@@ -47,7 +47,7 @@ test.describe('🚀 Migración Fase 2.4 - Verificación SuperApp', () => {
 
       // 3. Verificar Wallet (con fallback)
       console.log('\n💰 3. Verificando Wallet (con fallback)...');
-      await page.goto('http://localhost:3000/wallet');
+      await page.goto('http://localhost:3333/wallet');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
       
@@ -58,7 +58,7 @@ test.describe('🚀 Migración Fase 2.4 - Verificación SuperApp', () => {
 
       // 4. Verificar Social (con fallback)
       console.log('\n🤝 4. Verificando Social (con fallback)...');
-      await page.goto('http://localhost:3000/social');
+      await page.goto('http://localhost:3333/social');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
       
@@ -69,7 +69,7 @@ test.describe('🚀 Migración Fase 2.4 - Verificación SuperApp', () => {
 
       // 5. Verificar Profile
       console.log('\n👤 5. Verificando Profile...');
-      await page.goto('http://localhost:3000/profile');
+      await page.goto('http://localhost:3333/profile');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(1000);
       

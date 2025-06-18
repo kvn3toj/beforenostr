@@ -197,8 +197,8 @@ log_section "8. VERIFICACIÓN DE SERVICIOS"
 log_info "Verificando backend con dependencia PostgreSQL..."
 
 # Test de conectividad backend
-if curl -s http://localhost:3002/health >/dev/null 2>&1; then
-    BACKEND_RESPONSE=$(curl -s http://localhost:3002/health)
+if curl -s http://localhost:1111/health >/dev/null 2>&1; then
+    BACKEND_RESPONSE=$(curl -s http://localhost:1111/health)
     log_success "Backend (3002) disponible"
     log_info "Respuesta: $BACKEND_RESPONSE"
 else
@@ -206,7 +206,7 @@ else
 fi
 
 # Test de conectividad SuperApp
-if curl -s -I http://localhost:3001 >/dev/null 2>&1; then
+if curl -s -I http://localhost:2222 >/dev/null 2>&1; then
     log_success "SuperApp (3001) disponible"
 else
     log_info "SuperApp (3001) no iniciada (normal si no se ha ejecutado npm run dev:superapp)"
@@ -228,8 +228,8 @@ echo "  npm run dev:backend    # Backend NestJS (puerto 3002)"
 echo "  npm run dev:superapp   # SuperApp (puerto 3001)"
 echo ""
 echo "  # Verificar servicios:"
-echo "  curl http://localhost:3002/health"
-echo "  curl http://localhost:3001 -I"
+echo "  curl http://localhost:1111/health"
+echo "  curl http://localhost:2222 -I"
 echo ""
 
 # Verificar si hay advertencias pendientes

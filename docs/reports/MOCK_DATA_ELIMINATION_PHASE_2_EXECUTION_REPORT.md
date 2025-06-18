@@ -225,7 +225,7 @@ grep -r "Builder\.io\|BUILDER\.IO" Demo/apps/superapp-unified/src/ || echo "✅ 
 grep -r "VITE_ENABLE_MOCK\|enableMockAuth" Demo/apps/superapp-unified/ || echo "✅ Mock Auth eliminated"
 
 # Verificar efectos visuales
-curl http://localhost:3001 -I | grep "200 OK" && echo "✅ SuperApp functional"
+curl http://localhost:2222 -I | grep "200 OK" && echo "✅ SuperApp functional"
 ```
 
 ---

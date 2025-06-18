@@ -86,7 +86,7 @@ export const FORBIDDEN_CREDENTIALS = [
  * 🎯 CONFIGURACIÓN DE ENDPOINTS
  */
 export const BACKEND_CONFIG = {
-  BASE_URL: 'http://localhost:3002',
+  BASE_URL: 'http://localhost:1111',
   ENDPOINTS: {
     LOGIN: '/auth/login',
     HEALTH: '/health',

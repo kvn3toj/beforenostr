@@ -139,7 +139,7 @@ POST   /video-permissions/video/:videoItemId/publish # Publicar video
 
 ### Crear Permisos
 ```bash
-curl -X POST http://localhost:3002/video-permissions/video/8/upsert \
+curl -X POST http://localhost:1111/video-permissions/video/8/upsert \
   -H "Content-Type: application/json" \
   -d '{
     "showWaveCount": true,
@@ -151,7 +151,7 @@ curl -X POST http://localhost:3002/video-permissions/video/8/upsert \
 
 ### Obtener Permisos
 ```bash
-curl http://localhost:3002/video-permissions/video/8
+curl http://localhost:1111/video-permissions/video/8
 ```
 
 ## 🎯 Próximos Pasos

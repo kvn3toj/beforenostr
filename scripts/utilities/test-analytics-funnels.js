@@ -21,7 +21,7 @@ async function testAnalyticsFunnels() {
   try {
     // 1. LOGIN FLOW
     console.log('📋 FASE 1: Login y Configuración Inicial...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -142,7 +142,7 @@ async function testAnalyticsFunnels() {
     // Check if analytics endpoint received data
     const response = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/analytics/data', {
+        const response = await fetch('http://localhost:1111/analytics/data', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -9,7 +9,7 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     // Enable CORS for frontend communication
     app.enableCors({
-        origin: ['http://localhost:3000', 'http://localhost:5173'], // Vite dev server ports
+        origin: ['http://localhost:3333', 'http://localhost:5173'], // Vite dev server ports
         credentials: true,
     });
     // Global validation pipe

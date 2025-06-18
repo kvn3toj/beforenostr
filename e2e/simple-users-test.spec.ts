@@ -14,7 +14,7 @@ async function simpleUsersTest() {
   try {
     // 1. Ir directamente a la página principal (sin login por ahora)
     console.log('🏠 Navegando a la página principal...');
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     console.log('✅ Página principal cargada');
@@ -54,7 +54,7 @@ async function simpleUsersTest() {
 
     // 4. Intentar navegar a usuarios
     console.log('📋 Navegando a usuarios...');
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
     
     console.log('URL de usuarios:', page.url());

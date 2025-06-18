@@ -186,12 +186,12 @@ The JWT consolidation establishes a **solid foundation** for authentication:
 
 1. **ProductDetail Navigation**:
 
-   - Visit: `http://localhost:3001/product/blockchain-consulting-001`
+   - Visit: `http://localhost:2222/product/blockchain-consulting-001`
    - Verify: Page loads without import errors
    - Check: All product data displays correctly
 2. **Study Rooms WebSocket**:
 
-   - Visit: `http://localhost:3001/uplay`
+   - Visit: `http://localhost:2222/uplay`
    - Login: Use `admin@gamifier.com / admin123` [[memory:4486372751698081570]]
    - Test: Join study room and verify chat functionality
    - Monitor: Backend logs should show successful JWT authentication

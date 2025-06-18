@@ -92,13 +92,13 @@ fi
 echo -e "${BLUE}7️⃣ Verificando servicios funcionando...${NC}"
 
 # Verificar que los servicios están ejecutándose
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     echo -e "${GREEN}✅ Backend funcionando (puerto 3002)${NC}"
 else
     echo -e "${YELLOW}⚠️ Backend no disponible - inicia con: npm run dev:backend${NC}"
 fi
 
-if curl -s -I http://localhost:3001 > /dev/null; then
+if curl -s -I http://localhost:2222 > /dev/null; then
     echo -e "${GREEN}✅ SuperApp funcionando (puerto 3001)${NC}"
 else
     echo -e "${YELLOW}⚠️ SuperApp no disponible - inicia con: npm run dev:superapp${NC}"

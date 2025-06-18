@@ -1,6 +1,6 @@
 import { apiService } from './api.service';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const ADMIN_CONFIG_ENDPOINT = `${API_BASE_URL}/admin/config`;
 
 export interface AppConfig {

@@ -51,7 +51,7 @@ test.describe('🔍 Mundos Debug - Verificación Manual Simple', () => {
     
     // 4. Verificar backend directamente
     console.log('📍 PASO 4: Verificando backend directamente...');
-    const backendResponse = await page.request.get('http://localhost:3002/mundos');
+    const backendResponse = await page.request.get('http://localhost:1111/mundos');
     console.log(`📍 Backend status: ${backendResponse.status()}`);
     
     if (backendResponse.status() === 200) {

@@ -11,7 +11,7 @@ const fs = require('fs');
 console.log('🚀 Iniciando verificación manual del Módulo de Wallet...\n');
 
 // Configuración
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:3333';
 const TIMEOUT = 10000;
 
 // Función para hacer requests HTTP simples

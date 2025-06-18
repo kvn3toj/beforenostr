@@ -14,8 +14,8 @@ fi
 
 # Verificar que la aplicación está corriendo
 echo "📡 Verificando que la aplicación esté corriendo..."
-if curl -s http://localhost:3000 > /dev/null; then
-    echo "✅ Aplicación corriendo en localhost:3000"
+if curl -s http://localhost:3333 > /dev/null; then
+    echo "✅ Aplicación corriendo en localhost:3333"
 else
     echo "❌ Aplicación no está corriendo. Iniciando..."
     npm run dev &

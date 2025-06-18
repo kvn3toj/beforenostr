@@ -137,7 +137,7 @@ npm run test:ux      # Tests E2E con Playwright
 ### **Variables de Entorno REALES Y DEFINITIVAS:**
 ```bash
 # apps/superapp-unified/.env (PARA INTEGRACIÓN CON BACKEND NESTJS)
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 VITE_ENABLE_MOCK_AUTH=false
 # ❌ NO CONFIGURAR: Variables de Supabase, Express
 
@@ -213,7 +213,7 @@ apps/superapp-unified/src/hooks/
 **Agente (CORRECTO - DEFINITIVO):**
 > "Para obtener datos de usuarios en la SuperApp, necesitas conectarte al **Backend NestJS compartido en puerto 3002**:
 > 
-> 1. **Configurar API service**: Actualizar `api-service.ts` para apuntar a `http://localhost:3002`
+> 1. **Configurar API service**: Actualizar `api-service.ts` para apuntar a `http://localhost:1111`
 > 2. **Usar endpoints NestJS**: Conectar con `/api/users` del Backend NestJS
 > 3. **JWT Authentication**: Usar el sistema de autenticación del Backend NestJS compartido
 > 

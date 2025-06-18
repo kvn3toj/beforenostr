@@ -25,7 +25,7 @@ async function testPersonalityFinalVerification() {
   try {
     // 1. Navegación directa a personalidades
     console.log('📋 Navegando a página de personalidades...');
-    await page.goto('http://localhost:3000/personalities');
+    await page.goto('http://localhost:3333/personalities');
     await page.waitForLoadState('networkidle');
     
     // Esperar un poco para que los componentes se carguen

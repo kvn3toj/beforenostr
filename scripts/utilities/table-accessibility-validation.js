@@ -9,7 +9,7 @@ async function validateTableAccessibility() {
   try {
     // 1. LOGIN
     console.log('🔐 Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -22,7 +22,7 @@ async function validateTableAccessibility() {
     
     // 2. NAVEGAR A USUARIOS
     console.log('👤 Navegando a página de usuarios...');
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
     
     // Esperar a que desaparezca el estado de carga

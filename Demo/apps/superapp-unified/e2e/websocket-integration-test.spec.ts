@@ -3,8 +3,8 @@
 
 import { test, expect, Page } from '@playwright/test';
 
-const BACKEND_URL = 'http://localhost:3002';
-const SUPERAPP_URL = 'http://localhost:3001';
+const BACKEND_URL = 'http://localhost:1111';
+const SUPERAPP_URL = 'http://localhost:2222';
 
 // Credenciales de desarrollo
 const TEST_USERS = {
@@ -23,7 +23,7 @@ test.describe('🔌 WebSocket Integration Tests', () => {
     
     // Verificar que la SuperApp esté disponible
     await page.goto(SUPERAPP_URL);
-    expect(page.url()).toContain('localhost:3001');
+    expect(page.url()).toContain('localhost:2222');
   });
 
   test('🔐 1. WebSocket Authentication Flow', async ({ page }) => {
@@ -312,7 +312,7 @@ async function joinTestRoom(page: Page, roomId: string) {
 test.describe('WebSocket Integration: useStudyRooms + ChatBox', () => {
   test.beforeEach(async ({ page }) => {
     // Verificar que el backend esté disponible
-    const healthResponse = await page.request.get('http://localhost:3002/health');
+    const healthResponse = await page.request.get('http://localhost:1111/health');
     expect(healthResponse.status()).toBe(200);
   });
 

@@ -3,7 +3,7 @@ import { Role, AvailablePermissionsList } from '../types/user.types';
 import { CreateRoleData } from '../components/features/roles/components/RoleForm';
 
 // Configuración de URLs base
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const ROLES_ENDPOINT = `${API_BASE_URL}/roles`;
 const PERMISSIONS_ENDPOINT = `${API_BASE_URL}/permissions`;
 

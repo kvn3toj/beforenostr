@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 // 🔧 Configuración para tests
-const BASE_URL = 'http://localhost:3000';
-const BACKEND_URL = 'http://localhost:3002';
+const BASE_URL = 'http://localhost:3333';
+const BACKEND_URL = 'http://localhost:1111';
 
 // Usuario de prueba registrado anteriormente
 const TEST_USER = {

@@ -24,8 +24,8 @@ El último informe de regresión reveló un problema crítico: a pesar de que la
 **Parte 1: Investigar y Corregir la Configuración de Playwright**
 *   **1.1. [SUPERAPP]** Abrir el archivo de configuración de Playwright: `playwright.config.ts`.
 *   **1.2. [SUPERAPP]** Localizar el objeto `use: { ... }` dentro de la configuración.
-*   **1.3. [SUPERAPP]** Encontrar la propiedad `baseURL`. Es muy probable que esté hardcodeada a `http://localhost:3000` o `3003`.
-*   **1.4. [SUPERAPP]** Corregir la `baseURL` para que utilice la variable de entorno de nuestro archivo `.env`, que ya sabemos que es `http://localhost:3001`. Esto crea una única fuente de verdad para la URL de la aplicación.
+*   **1.3. [SUPERAPP]** Encontrar la propiedad `baseURL`. Es muy probable que esté hardcodeada a `http://localhost:3333` o `3003`.
+*   **1.4. [SUPERAPP]** Corregir la `baseURL` para que utilice la variable de entorno de nuestro archivo `.env`, que ya sabemos que es `http://localhost:2222`. Esto crea una única fuente de verdad para la URL de la aplicación.
 
     ```typescript
     // En playwright.config.ts, dentro del objeto `use`
@@ -36,7 +36,7 @@ El último informe de regresión reveló un problema crítico: a pesar de que la
     // ...
     use: {
       /* Base URL to use in actions like `await page.goto('/')`. */
-      baseURL: process.env.VITE_BASE_URL || 'http://localhost:3001', // <-- CORRECCIÓN CLAVE
+      baseURL: process.env.VITE_BASE_URL || 'http://localhost:2222', // <-- CORRECCIÓN CLAVE
 
       /* Collect trace when retrying the failed test. */
       trace: 'on-first-retry',

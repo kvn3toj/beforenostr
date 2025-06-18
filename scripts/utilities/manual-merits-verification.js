@@ -6,22 +6,22 @@
 
 const testUrls = [
   {
-    url: 'http://localhost:3000/',
+    url: 'http://localhost:3333/',
     name: 'Home Page',
     expected: ['CoomÜnity', 'dashboard', 'inicio']
   },
   {
-    url: 'http://localhost:3000/merits',
+    url: 'http://localhost:3333/merits',
     name: 'Página de Méritos',
     expected: ['Sistema de Méritos', 'méritos', 'Merit', 'MERITO', 'ONDA', 'VIBRA']
   },
   {
-    url: 'http://localhost:3000/tokens',
+    url: 'http://localhost:3333/tokens',
     name: 'Página de Tokens',
     expected: ['Tokens del Sistema', 'tokens', 'Token', 'Total de Tokens']
   },
   {
-    url: 'http://localhost:3000/wallet',
+    url: 'http://localhost:3333/wallet',
     name: 'Página de Wallet',
     expected: ['wallet', 'Wallet', 'saldo', 'balance', 'transacción']
   }
@@ -75,7 +75,7 @@ async function verifyBackendConnectivity() {
   console.log(`\n🔗 Verificando conectividad con Backend NestJS...`);
   
   try {
-    const response = await fetch('http://localhost:3002/health');
+    const response = await fetch('http://localhost:1111/health');
     const data = await response.json();
     
     console.log(`✅ Backend NestJS responde: ${data.status}`);

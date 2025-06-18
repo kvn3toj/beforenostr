@@ -17,8 +17,8 @@ echo "================================================================"
 
 # Función para verificar si el servidor está ejecutándose
 check_server() {
-    if curl -s http://localhost:3001 > /dev/null; then
-        echo -e "${GREEN}✅ Servidor ejecutándose en http://localhost:3001${NC}"
+    if curl -s http://localhost:2222 > /dev/null; then
+        echo -e "${GREEN}✅ Servidor ejecutándose en http://localhost:2222${NC}"
         return 0
     else
         echo -e "${RED}❌ Servidor no disponible${NC}"
@@ -76,10 +76,10 @@ generate_progress_report() {
 - [ ] Sistema Merchant Avanzado
 
 ### 📊 Métricas de la Aplicación
-$(curl -s http://localhost:3001 | grep -o '<title>[^<]*' | sed 's/<title>/Título: /' || echo "Título: No disponible")
+$(curl -s http://localhost:2222 | grep -o '<title>[^<]*' | sed 's/<title>/Título: /' || echo "Título: No disponible")
 
 ### 🔗 Links de Verificación
-- [Aplicación Principal](http://localhost:3001)
+- [Aplicación Principal](http://localhost:2222)
 - [Reporte HTML Playwright](test-results/html-report/index.html)
 - [Screenshots](test-results/screenshots/)
 

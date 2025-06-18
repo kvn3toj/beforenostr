@@ -9,7 +9,7 @@ import { join } from 'path';
 test.describe('Análisis de Contenido Faltante - CoomÜnity SuperApp', () => {
   
   test('Analizar datos extraídos vs contenido actual', async ({ page }) => {
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     await page.waitForLoadState('networkidle');
 
     // Obtener todo el contenido textual de la página
@@ -147,7 +147,7 @@ test.describe('Análisis de Contenido Faltante - CoomÜnity SuperApp', () => {
   });
 
   test('Comparar funcionalidades implementadas vs extraídas', async ({ page }) => {
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     
     // Verificar funcionalidades específicas
     const functionalityChecks = [

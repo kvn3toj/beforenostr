@@ -6,7 +6,7 @@ This guide helps resolve CORS and backend connectivity issues in the CoomÜnity 
 
 ```
 Failed to fetch
-Cannot connect to backend at http://localhost:3002
+Cannot connect to backend at http://localhost:1111
 CORS: Origin not allowed by CORS policy
 Network request failed
 ```
@@ -36,7 +36,7 @@ npm run ecosystem:status
 
 ```bash
 # Check if backend is running
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 
 # Start backend if not running
 npm run start:backend:dev
@@ -55,7 +55,7 @@ The backend has been configured to automatically allow:
 **Test CORS manually:**
 
 ```bash
-curl -X OPTIONS http://localhost:3002/auth/login \
+curl -X OPTIONS http://localhost:1111/auth/login \
   -H "Origin: http://localhost:48752" \
   -H "Access-Control-Request-Method: POST" \
   -H "Access-Control-Request-Headers: Content-Type"
@@ -72,7 +72,7 @@ access-control-allow-headers: Content-Type,Accept,Authorization,...
 ### Step 3: Test Authentication Endpoint
 
 ```bash
-curl -X POST http://localhost:3002/auth/login \
+curl -X POST http://localhost:1111/auth/login \
   -H "Content-Type: application/json" \
   -H "Origin: http://localhost:48752" \
   -d '{"email":"test@example.com","password":"invalid"}'
@@ -86,7 +86,7 @@ curl -X POST http://localhost:3002/auth/login \
 
 ```bash
 # Demo/apps/superapp-unified/.env
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 VITE_ENABLE_MOCK_AUTH=false
 ```
 
@@ -162,7 +162,7 @@ npm run dev
 
 Some antivirus software blocks localhost connections:
 
-- Add localhost:3002 to exceptions
+- Add localhost:1111 to exceptions
 - Temporarily disable firewall
 - Check corporate network restrictions
 

@@ -18,7 +18,7 @@ async function testInvitationPageSimple() {
   try {
     // 1. IR DIRECTAMENTE A LA PÁGINA DE NUEVA INVITACIÓN (FRONTEND: 3000)
     console.log('📝 Paso 1: Navegando directamente a /invitations/new...');
-    await page.goto('http://localhost:3000/invitations/new');
+    await page.goto('http://localhost:3333/invitations/new');
     await page.waitForLoadState('networkidle');
 
     // Verificar que la página se carga (aunque nos redirija al login)
@@ -60,7 +60,7 @@ async function testInvitationPageSimple() {
     console.log('\n📝 Paso 2: Verificando que la ruta /invitations/new existe...');
     
     // Intentar navegar directamente
-    await page.goto('http://localhost:3000/invitations/new');
+    await page.goto('http://localhost:3333/invitations/new');
     await page.waitForTimeout(2000);
     
     const finalUrl = page.url();
@@ -75,7 +75,7 @@ async function testInvitationPageSimple() {
 
     // 3. VERIFICAR PÁGINA DE INVITACIONES PRINCIPAL
     console.log('\n📝 Paso 3: Verificando página principal de invitaciones...');
-    await page.goto('http://localhost:3000/invitations');
+    await page.goto('http://localhost:3333/invitations');
     await page.waitForLoadState('networkidle');
     
     const invitationsUrl = page.url();

@@ -178,7 +178,7 @@ Con el 80% de verificaciones exitosas, el proyecto está listo para:
    - Variables mock constantes en componentes
 
 2. **Verificación Visual Completa:**
-   - Navegar a http://localhost:3001
+   - Navegar a http://localhost:2222
    - Confirmar efectos cósmicos visibles
    - Validar glassmorphism en tarjetas
    - Observar partículas dinámicas

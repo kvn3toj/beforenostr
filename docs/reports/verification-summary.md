@@ -9,7 +9,7 @@
 - ✅ **Endpoint**: `POST /video-items/recalculate-durations` (implementado pero requiere fix en DI)
 
 ```bash
-curl http://localhost:3002/video-items -s | jq '.[] | {id: .id, title: .title, duration: .duration}'
+curl http://localhost:1111/video-items -s | jq '.[] | {id: .id, title: .title, duration: .duration}'
 # Resultado: Todos los videos tienen duration: 300 ✅
 ```
 

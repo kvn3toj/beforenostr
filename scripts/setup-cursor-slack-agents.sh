@@ -187,13 +187,13 @@ check_port 3002
 # 10. VERIFICAR SERVICIOS (si están ejecutándose)
 log_info "Verificando servicios disponibles..."
 
-if curl -s http://localhost:3002/health >/dev/null; then
+if curl -s http://localhost:1111/health >/dev/null; then
     log_success "Backend (3002) disponible"
 else
     log_info "Backend (3002) no disponible (normal si no está iniciado)"
 fi
 
-if curl -s -I http://localhost:3001 >/dev/null; then
+if curl -s -I http://localhost:2222 >/dev/null; then
     log_success "SuperApp (3001) disponible"
 else
     log_info "SuperApp (3001) no disponible (normal si no está iniciada)"

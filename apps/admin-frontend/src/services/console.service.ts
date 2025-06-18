@@ -410,7 +410,7 @@ class ConsoleService {
 
   async subscribeToConsoleEvents(): Promise<EventSource> {
     // WebSocket/SSE connection for real-time updates
-    const baseUrl = 'http://localhost:3002'; // Use the same base URL as apiService
+    const baseUrl = 'http://localhost:1111'; // Use the same base URL as apiService
     return new EventSource(`${baseUrl}/console/events/stream`);
   }
 

@@ -72,7 +72,7 @@ sleep 5
 # Verificar que el backend esté respondiendo
 echo "🔍 Verificando backend..."
 for i in {1..10}; do
-    if curl -s http://localhost:3002/health > /dev/null; then
+    if curl -s http://localhost:1111/health > /dev/null; then
         echo "✅ Backend respondiendo en puerto 3002"
         break
     fi
@@ -94,9 +94,9 @@ echo ""
 echo "🎉 ¡Ecosistema CoomÜnity iniciado exitosamente!"
 echo ""
 echo "📋 Servicios disponibles:"
-echo "🔧 Backend NestJS:     http://localhost:3002"
-echo "🎯 SuperApp:           http://localhost:3001"
-echo "⚙️ Admin Frontend:     http://localhost:3000"
+echo "🔧 Backend NestJS:     http://localhost:1111"
+echo "🎯 SuperApp:           http://localhost:2222"
+echo "⚙️ Admin Frontend:     http://localhost:3333"
 echo ""
 echo "💡 Presiona Ctrl+C para detener todos los servicios"
 

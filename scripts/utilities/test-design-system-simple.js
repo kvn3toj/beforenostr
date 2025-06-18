@@ -13,7 +13,7 @@ async function testDesignSystemSimple() {
 
   try {
     console.log('1. 🔗 Navegando a la página de login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     console.log('2. 📸 Tomando screenshot del login con Design System...');
@@ -35,7 +35,7 @@ async function testDesignSystemSimple() {
     
     // Intentar navegar a users para verificar otros componentes
     console.log('\n4. 🏠 Navegando a página principal...');
-    await page.goto('http://localhost:3000/');
+    await page.goto('http://localhost:3333/');
     await page.waitForLoadState('networkidle');
     
     await page.screenshot({ 

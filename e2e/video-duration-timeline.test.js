@@ -112,7 +112,7 @@ test.describe('Video Duration vs Timeline Verification', () => {
     console.log('>>> Getting backend data for video 35...');
     const backendVideoData = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/video-items/35');
+        const response = await fetch('http://localhost:1111/video-items/35');
         const data = await response.json();
         return data;
       } catch (error) {
@@ -126,7 +126,7 @@ test.describe('Video Duration vs Timeline Verification', () => {
     console.log('>>> Getting backend questions data for video 35...');
     const backendQuestionsData = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/questions/search?videoItemId=35');
+        const response = await fetch('http://localhost:1111/questions/search?videoItemId=35');
         const data = await response.json();
         return data;
       } catch (error) {

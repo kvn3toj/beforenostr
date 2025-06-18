@@ -51,14 +51,14 @@ fi
 
 # Verificar configuración específica del backend NestJS
 echo -e "\n4. 🏗️ Verificando configuración backend NestJS..."
-if curl -s http://localhost:3002/health >/dev/null 2>&1; then
+if curl -s http://localhost:1111/health >/dev/null 2>&1; then
     echo "   ✅ Backend NestJS disponible en puerto 3002"
     
     # Verificar endpoints específicos de gamifier2.0
     echo "   🔍 Verificando endpoints críticos..."
     
     # Verificar LETS (crítico en gamifier2.0)
-    LETS_STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3002/lets/ping)
+    LETS_STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:1111/lets/ping)
     if [[ $LETS_STATUS -eq 200 ]] || [[ $LETS_STATUS -eq 401 ]]; then
         echo "      ✅ LETS endpoints disponibles"
     else
@@ -66,7 +66,7 @@ if curl -s http://localhost:3002/health >/dev/null 2>&1; then
     fi
     
     # Verificar Marketplace (crítico en gamifier2.0)
-    MARKETPLACE_STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3002/marketplace/ping)
+    MARKETPLACE_STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:1111/marketplace/ping)
     if [[ $MARKETPLACE_STATUS -eq 200 ]]; then
         echo "      ✅ Marketplace endpoints disponibles"
     else
@@ -74,7 +74,7 @@ if curl -s http://localhost:3002/health >/dev/null 2>&1; then
     fi
     
     # Verificar Social (crítico en gamifier2.0)
-    SOCIAL_STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:3002/social/publications)
+    SOCIAL_STATUS=$(curl -s -w "%{http_code}" -o /dev/null http://localhost:1111/social/publications)
     if [[ $SOCIAL_STATUS -eq 200 ]]; then
         echo "      ✅ Social endpoints disponibles"
     else
@@ -88,7 +88,7 @@ fi
 
 # Verificar SuperApp frontend
 echo -e "\n5. 🎨 Verificando SuperApp frontend..."
-if curl -s -I http://localhost:3001 >/dev/null 2>&1; then
+if curl -s -I http://localhost:2222 >/dev/null 2>&1; then
     echo "   ✅ SuperApp disponible en puerto 3001"
 else
     echo "   ❌ SuperApp no disponible"

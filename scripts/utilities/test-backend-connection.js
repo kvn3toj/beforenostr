@@ -2,7 +2,7 @@
  * 🔍 Script simple para probar la conectividad del backend
  */
 
-const API_BASE_URL = 'http://localhost:3002';
+const API_BASE_URL = 'http://localhost:1111';
 
 async function testConnection() {
   console.log('🔍 Testing backend connection...\n');

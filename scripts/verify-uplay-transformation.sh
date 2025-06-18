@@ -58,15 +58,15 @@ echo ""
 echo "🌐 5. VERIFICANDO SERVICIOS:"
 
 # Verificar SuperApp
-if curl -s http://localhost:3001 > /dev/null 2>&1; then
-  echo "✅ SuperApp ejecutándose en http://localhost:3001"
+if curl -s http://localhost:2222 > /dev/null 2>&1; then
+  echo "✅ SuperApp ejecutándose en http://localhost:2222"
 else
   echo "⚠️ SuperApp NO disponible en puerto 3001"
 fi
 
 # Verificar Backend
-if curl -s http://localhost:3002/health > /dev/null 2>&1; then
-  echo "✅ Backend ejecutándose en http://localhost:3002"
+if curl -s http://localhost:1111/health > /dev/null 2>&1; then
+  echo "✅ Backend ejecutándose en http://localhost:1111"
 else
   echo "⚠️ Backend NO disponible en puerto 3002"
 fi
@@ -75,7 +75,7 @@ fi
 echo ""
 echo "📱 6. VERIFICANDO PÁGINA UPLAY:"
 
-if curl -s http://localhost:3001/uplay > /dev/null 2>&1; then
+if curl -s http://localhost:2222/uplay > /dev/null 2>&1; then
   echo "✅ Página UPlay accesible"
 else
   echo "⚠️ Página UPlay NO accesible"
@@ -148,7 +148,7 @@ if grep -q "revolutionaryPattern(theme)" Demo/apps/superapp-unified/src/design-s
 fi
 ((total_checks++))
 
-if curl -s http://localhost:3001 > /dev/null 2>&1; then
+if curl -s http://localhost:2222 > /dev/null 2>&1; then
   ((passed_checks++))
 fi
 ((total_checks++))

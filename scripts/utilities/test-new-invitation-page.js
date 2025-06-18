@@ -14,7 +14,7 @@ async function testNewInvitationPage() {
   try {
     // 1. LOGIN
     console.log('📝 Paso 1: Navegando a login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     console.log('🔐 Paso 2: Realizando login...');
@@ -38,7 +38,7 @@ async function testNewInvitationPage() {
 
     // 2. NAVEGACIÓN A INVITACIONES
     console.log('🎯 Paso 3: Navegando a página de invitaciones...');
-    await page.goto('http://localhost:3000/invitations');
+    await page.goto('http://localhost:3333/invitations');
     await page.waitForLoadState('networkidle');
 
     // Verificar que estamos en la página de invitaciones

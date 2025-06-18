@@ -18,7 +18,7 @@ test.describe('Fase A.7 - Verificación de Errores JavaScript en Grupos', () => 
     });
     
     // Ir a la página de grupos
-    await page.goto('http://localhost:3001/groups', { waitUntil: 'networkidle' });
+    await page.goto('http://localhost:2222/groups', { waitUntil: 'networkidle' });
     
     // Esperar a que la página se estabilice
     await page.waitForTimeout(3000);
@@ -40,7 +40,7 @@ test.describe('Fase A.7 - Verificación de Errores JavaScript en Grupos', () => 
   });
 
   test('A.7.E2 - Verificar que la aplicación React monta correctamente', async ({ page }) => {
-    await page.goto('http://localhost:3001/groups');
+    await page.goto('http://localhost:2222/groups');
     
     // Esperar que React monte
     await page.waitForSelector('#root', { timeout: 10000 });
@@ -53,7 +53,7 @@ test.describe('Fase A.7 - Verificación de Errores JavaScript en Grupos', () => 
   });
 
   test('A.7.E3 - Verificar navegación a grupos desde barra lateral', async ({ page }) => {
-    await page.goto('http://localhost:3001/');
+    await page.goto('http://localhost:2222/');
     
     // Esperar a que la página principal cargue
     await page.waitForSelector('#root', { timeout: 10000 });

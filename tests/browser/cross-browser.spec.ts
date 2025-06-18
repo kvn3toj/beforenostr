@@ -17,7 +17,7 @@ const browsers = [
 
 // Helper para autenticación
 async function getAuthToken(): Promise<string> {
-  const response = await fetch('http://localhost:3002/auth/login', {
+  const response = await fetch('http://localhost:1111/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -46,7 +46,7 @@ test.describe('Cross-Browser Compatibility Testing', () => {
       test('1. Basic Page Loading', async ({ page }) => {
         console.log(`🌐 Testing basic loading in ${browserConfig.name}`);
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Verificar que la página carga correctamente
         await expect(page).toHaveTitle(/SuperApp/);
@@ -61,7 +61,7 @@ test.describe('Cross-Browser Compatibility Testing', () => {
       test('2. JavaScript Functionality', async ({ page }) => {
         console.log(`⚡ Testing JavaScript in ${browserConfig.name}`);
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Test funcionalidad JavaScript básica
         const jsSupport = await page.evaluate(() => {
@@ -85,7 +85,7 @@ test.describe('Cross-Browser Compatibility Testing', () => {
       test('3. CSS Rendering', async ({ page }) => {
         console.log(`🎨 Testing CSS rendering in ${browserConfig.name}`);
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Verificar que CSS se aplica correctamente
         const cssSupport = await page.evaluate(() => {
@@ -110,7 +110,7 @@ test.describe('Cross-Browser Compatibility Testing', () => {
       test('4. Local Storage Support', async ({ page }) => {
         console.log(`💾 Testing Local Storage in ${browserConfig.name}`);
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Test localStorage functionality
         const storageTest = await page.evaluate(() => {
@@ -144,12 +144,12 @@ test.describe('Cross-Browser Compatibility Testing', () => {
       test('5. API Fetch Support', async ({ page }) => {
         console.log(`🔗 Testing API Fetch in ${browserConfig.name}`);
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Test fetch API
         const fetchTest = await page.evaluate(async (token) => {
           try {
-            const response = await fetch('http://localhost:3002/health');
+            const response = await fetch('http://localhost:1111/health');
             const data = await response.json();
             
             return {
@@ -186,7 +186,7 @@ test.describe('Cross-Browser Compatibility Testing', () => {
     try {
       for (const context of contexts) {
         const page = await context.newPage();
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         const features = await page.evaluate(() => {
           return {

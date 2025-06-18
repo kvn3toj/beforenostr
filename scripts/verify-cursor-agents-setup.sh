@@ -97,7 +97,7 @@ fi
 
 # Verificar configuración de puertos en .env
 if [ -f "Demo/apps/superapp-unified/.env" ]; then
-    if grep -q "VITE_BASE_URL=http://localhost:3001" "Demo/apps/superapp-unified/.env"; then
+    if grep -q "VITE_BASE_URL=http://localhost:2222" "Demo/apps/superapp-unified/.env"; then
         echo -e "${GREEN}✅ Puerto SuperApp configurado correctamente (3001)${NC}"
         success_count=$((success_count + 1))
     else

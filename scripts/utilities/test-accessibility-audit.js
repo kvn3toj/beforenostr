@@ -32,7 +32,7 @@ async function auditAccessibility() {
     // === 1. AUDITORÍA DE PÁGINA DE LOGIN ===
     console.log('📋 1. AUDITANDO PÁGINA DE LOGIN...\n');
     
-    await page.goto('http://localhost:3001/login');
+    await page.goto('http://localhost:2222/login');
     await page.waitForLoadState('networkidle');
     
     const loginAudit = await auditPage(page, 'Login');
@@ -59,11 +59,11 @@ async function auditAccessibility() {
     
     // === 3. AUDITORÍA DE PÁGINAS PRINCIPALES ===
     const pagesToAudit = [
-      { url: 'http://localhost:3001/', name: 'Dashboard' },
-      { url: 'http://localhost:3001/users', name: 'Users' },
-      { url: 'http://localhost:3001/roles', name: 'Roles' },
-      { url: 'http://localhost:3001/items', name: 'Items' },
-      { url: 'http://localhost:3001/mundos', name: 'Mundos' }
+      { url: 'http://localhost:2222/', name: 'Dashboard' },
+      { url: 'http://localhost:2222/users', name: 'Users' },
+      { url: 'http://localhost:2222/roles', name: 'Roles' },
+      { url: 'http://localhost:2222/items', name: 'Items' },
+      { url: 'http://localhost:2222/mundos', name: 'Mundos' }
     ];
     
     for (const pageInfo of pagesToAudit) {
@@ -79,7 +79,7 @@ async function auditAccessibility() {
     // === 4. AUDITORÍA DE NAVEGACIÓN POR TECLADO ===
     console.log('⌨️  4. AUDITANDO NAVEGACIÓN POR TECLADO...\n');
     
-    await page.goto('http://localhost:3001/');
+    await page.goto('http://localhost:2222/');
     await page.waitForLoadState('networkidle');
     
     const keyboardAudit = await auditKeyboardNavigation(page);

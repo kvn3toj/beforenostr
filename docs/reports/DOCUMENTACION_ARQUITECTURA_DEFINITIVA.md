@@ -174,10 +174,10 @@ import { nestJSApiService } from '@/lib/nestjs-api-service';
 ```bash
 # ANTES (temporal):
 VITE_SUPABASE_URL=...
-VITE_API_BASE_URL=http://localhost:3000  # Express temporal
+VITE_API_BASE_URL=http://localhost:3333  # Express temporal
 
 # DESPUÉS (definitivo):
-VITE_API_BASE_URL=http://localhost:3002  # Backend NestJS real
+VITE_API_BASE_URL=http://localhost:1111  # Backend NestJS real
 VITE_JWT_SECRET_KEY=...
 ```
 
@@ -244,8 +244,8 @@ find . -name "@playwright" -type d
 # Pre-flight check obligatorio
 ps aux | grep -E "(node|tsx|npm)" | grep -v grep
 cat apps/superapp-unified/.env
-curl http://localhost:3002/health -v
-curl http://localhost:3001 -I
+curl http://localhost:1111/health -v
+curl http://localhost:2222 -I
 ```
 
 ---

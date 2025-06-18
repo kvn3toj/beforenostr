@@ -36,7 +36,7 @@ async function finalAccessibilityValidation() {
     console.log('🔐 FASE 1: VALIDACIÓN DE LOGIN Y SKIP LINKS\n');
     
     // 1. LOGIN AND SKIP LINKS VALIDATION
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     // Check skip links on login page first
@@ -141,7 +141,7 @@ async function finalAccessibilityValidation() {
     console.log('\n📊 FASE 4: VALIDACIÓN DE TABLA (USUARIOS)\n');
     
     // 4. TABLE VALIDATION (Navigate to Users)
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
     
     const tableValidation = await page.evaluate(() => {

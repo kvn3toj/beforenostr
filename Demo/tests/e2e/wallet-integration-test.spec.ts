@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Wallet Integration Test - Sistema de Billetera Mejorado', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3002');
+    await page.goto('http://localhost:1111');
   });
 
   test('Wallet está completamente integrado con datos del análisis', async ({ page }) => {

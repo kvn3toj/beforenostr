@@ -78,7 +78,7 @@ Este documento registra la **transformación completa del Módulo Social** de la
 
 ```bash
 # ✅ SUPERAPP FUNCIONAL
-HTTP/1.1 200 OK - http://localhost:3001/social
+HTTP/1.1 200 OK - http://localhost:2222/social
 
 # ✅ MÓDULO SOCIAL ACCESIBLE
 Página /social carga correctamente con nuevos efectos visuales

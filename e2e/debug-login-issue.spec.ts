@@ -26,13 +26,13 @@ test.describe('Debug Login Issue', () => {
     
     // Interceptar requests para ver qué está pasando
     page.on('request', (request) => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         console.log('🌐 Request to backend:', request.method(), request.url());
       }
     });
     
     page.on('response', (response) => {
-      if (response.url().includes('localhost:3002')) {
+      if (response.url().includes('localhost:1111')) {
         console.log('📡 Response from backend:', response.status(), response.url());
       }
     });
@@ -59,7 +59,7 @@ test.describe('Debug Login Issue', () => {
     // Test de conectividad directo desde el navegador
     console.log('🌐 Testing backend connectivity from browser...');
     const connectivityTest = await page.evaluate(async () => {
-      const API_BASE_URL = 'http://localhost:3002'; // Hardcoded para test
+      const API_BASE_URL = 'http://localhost:1111'; // Hardcoded para test
       
       try {
         // Test health endpoint

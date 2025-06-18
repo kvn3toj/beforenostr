@@ -18,7 +18,7 @@ async function testDesignSystem() {
   try {
     // 1. LOGIN CON DESIGN SYSTEM COMPONENTS
     console.log('1. 🔑 Probando Login con componentes del Design System...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     // Verificar que el login se renderice correctamente
@@ -45,7 +45,7 @@ async function testDesignSystem() {
     
     // 2. VERIFICAR USERS PAGE CON DESIGN SYSTEM
     console.log('\n2. 👥 Verificando UsersPage con Design System...');
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
     
     // Verificar que la página se cargue

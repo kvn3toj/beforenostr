@@ -4,7 +4,7 @@ async function testAIGenerator() {
 
     // 1. Login primero
     console.log('🔑 Logging in...');
-    const loginResponse = await fetch('http://localhost:3002/auth/login', {
+    const loginResponse = await fetch('http://localhost:1111/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ async function testAIGenerator() {
 
     // 2. Obtener un video para probar
     console.log('📹 Getting video for testing...');
-    const videosResponse = await fetch('http://localhost:3002/content/items', {
+    const videosResponse = await fetch('http://localhost:1111/content/items', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -60,7 +60,7 @@ async function testAIGenerator() {
     console.log('🚀 Generating questions with AI...');
     console.log('   Config:', JSON.stringify(generateConfig, null, 2));
 
-    const generateResponse = await fetch('http://localhost:3002/ai/generate-questions', {
+    const generateResponse = await fetch('http://localhost:1111/ai/generate-questions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

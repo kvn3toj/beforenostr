@@ -9,7 +9,7 @@ test.describe('Services Health Check', () => {
     console.log('🌐 Verificando Frontend SuperApp en puerto 3001...');
     
     // Navegar a la aplicación
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     
     // Verificar que la página carga
     await expect(page).toHaveTitle(/CoomÜnity SuperApp/);
@@ -51,7 +51,7 @@ test.describe('Services Health Check', () => {
     
     try {
       // Verificar endpoint de health
-      const healthResponse = await request.get('http://localhost:3002/health', {
+      const healthResponse = await request.get('http://localhost:1111/health', {
         timeout: 5000
       });
       
@@ -81,9 +81,9 @@ test.describe('Services Health Check', () => {
     
     for (const endpoint of endpoints) {
       try {
-        console.log(`🎯 Probando: http://localhost:3002${endpoint.path}`);
+        console.log(`🎯 Probando: http://localhost:1111${endpoint.path}`);
         
-        const response = await request.get(`http://localhost:3002${endpoint.path}`, {
+        const response = await request.get(`http://localhost:1111${endpoint.path}`, {
           timeout: 5000,
           ignoreHTTPSErrors: true
         });
@@ -112,7 +112,7 @@ test.describe('Services Health Check', () => {
     console.log('🔗 Verificando comunicación Frontend <-> Backend...');
     
     // Navegar a la aplicación
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     
     // Esperar a que React se monte
     await page.waitForSelector('#root');
@@ -122,7 +122,7 @@ test.describe('Services Health Check', () => {
     
     page.on('request', (request) => {
       const url = request.url();
-      if (url.includes('localhost:3002')) {
+      if (url.includes('localhost:1111')) {
         apiCalls.push(url);
         console.log(`📡 API Call detectada: ${url}`);
       }
@@ -141,7 +141,7 @@ test.describe('Services Health Check', () => {
   test('Configuración de puertos correcta', async ({ page }) => {
     console.log('⚙️ Verificando configuración de puertos...');
     
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     await page.waitForSelector('#root');
     
     // Verificar variables de entorno en el navegador

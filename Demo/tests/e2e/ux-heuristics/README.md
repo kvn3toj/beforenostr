@@ -182,7 +182,7 @@ La suite maestra (`00-master-ux-validation.spec.ts`) genera un reporte completo 
 
 ```bash
 # Cambiar URL base
-export BASE_URL=http://localhost:3000
+export BASE_URL=http://localhost:3333
 
 # Modo CI (más reintentos, sin paralelización)
 export CI=true

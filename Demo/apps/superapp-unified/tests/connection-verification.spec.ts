@@ -12,13 +12,13 @@ test.describe('🔗 Verificación de Conexión Backend-Frontend - Fase 2.1', () 
   test.beforeEach(async ({ page }) => {
     // Configurar interceptor para capturar requests API
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         console.log(`📡 API Request: ${request.method()} ${request.url()}`);
       }
     });
 
     page.on('response', response => {
-      if (response.url().includes('localhost:3002')) {
+      if (response.url().includes('localhost:1111')) {
         console.log(`📨 API Response: ${response.status()} ${response.url()}`);
       }
     });
@@ -57,13 +57,13 @@ test.describe('🔗 Verificación de Conexión Backend-Frontend - Fase 2.1', () 
     
     // Interceptar llamadas API
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         apiCalls.push(`${request.method()} ${request.url()}`);
       }
     });
 
     page.on('response', response => {
-      if (response.url().includes('localhost:3002')) {
+      if (response.url().includes('localhost:1111')) {
         backendResponses.push({ url: response.url(), status: response.status() });
       }
     });
@@ -82,7 +82,7 @@ test.describe('🔗 Verificación de Conexión Backend-Frontend - Fase 2.1', () 
 
     // Al menos debería haber intentado conectarse al backend
     // (incluso si falla por autenticación, la conexión se establece)
-    const hasBackendConnection = apiCalls.some(call => call.includes('localhost:3002'));
+    const hasBackendConnection = apiCalls.some(call => call.includes('localhost:1111'));
     
     if (hasBackendConnection) {
       console.log('✅ Conexión al backend NestJS detectada');

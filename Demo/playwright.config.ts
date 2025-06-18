@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * Configuración Playwright para Tests UX CoomÜnity
  * Optimizada para verificar las heurísticas UX/UI implementadas
- * ACTUALIZADA: Apunta a la aplicación React unificada en localhost:3000
+ * ACTUALIZADA: Apunta a la aplicación React unificada en localhost:3333
  */
 export default defineConfig({
   testDir: './apps/superapp-unified/e2e',
@@ -28,7 +28,7 @@ export default defineConfig({
   /* Configuración global de tests */
   use: {
     /* URL base para todos los tests - ACTUALIZADA para la aplicación React */
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3333',
     
     /* Collect trace cuando un test falla */
     trace: 'on-first-retry',
@@ -135,7 +135,7 @@ export default defineConfig({
   /* 
   webServer: {
     command: 'cd apps/superapp-unified && npm run dev',
-    url: 'http://localhost:3000',
+    url: 'http://localhost:3333',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },

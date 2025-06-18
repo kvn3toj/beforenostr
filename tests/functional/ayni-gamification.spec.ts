@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
 
 // Helper para autenticación
 async function getAuthToken(): Promise<string> {
-  const response = await fetch('http://localhost:3002/auth/login', {
+  const response = await fetch('http://localhost:1111/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -24,7 +24,7 @@ async function getAuthToken(): Promise<string> {
 
 // Helper para obtener datos del usuario
 async function getUserData(token: string) {
-  const response = await fetch('http://localhost:3002/users/me', {
+  const response = await fetch('http://localhost:1111/users/me', {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   
@@ -47,7 +47,7 @@ test.describe('Ayni Gamification System Tests', () => {
     console.log('🎬 Testing Video Completion Rewards...');
     
     // Obtener lista de videos disponibles
-    const videosResponse = await fetch('http://localhost:3002/video-items', {
+    const videosResponse = await fetch('http://localhost:1111/video-items', {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
     
@@ -86,7 +86,7 @@ test.describe('Ayni Gamification System Tests', () => {
     console.log('💰 Testing Ayni Currency System...');
     
     // Verificar métricas de monedas Ayni
-    const analyticsResponse = await fetch('http://localhost:3002/analytics/dashboard-metrics', {
+    const analyticsResponse = await fetch('http://localhost:1111/analytics/dashboard-metrics', {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
     
@@ -117,7 +117,7 @@ test.describe('Ayni Gamification System Tests', () => {
   test('3. Trust Level Calculation', async () => {
     console.log('🤝 Testing Trust Level Calculation...');
     
-    const analyticsResponse = await fetch('http://localhost:3002/analytics/dashboard-metrics', {
+    const analyticsResponse = await fetch('http://localhost:1111/analytics/dashboard-metrics', {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
     
@@ -154,7 +154,7 @@ test.describe('Ayni Gamification System Tests', () => {
     console.log('🛒 Testing Marketplace Ayni Integration...');
     
     // Obtener items del marketplace
-    const marketplaceResponse = await fetch('http://localhost:3002/marketplace/items', {
+    const marketplaceResponse = await fetch('http://localhost:1111/marketplace/items', {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
     
@@ -183,7 +183,7 @@ test.describe('Ayni Gamification System Tests', () => {
     console.log('🔄 Testing LETS System Integration...');
     
     // Test LETS recommendations
-    const letsResponse = await fetch('http://localhost:3002/lets/recommendations/1', {
+    const letsResponse = await fetch('http://localhost:1111/lets/recommendations/1', {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
     
@@ -199,7 +199,7 @@ test.describe('Ayni Gamification System Tests', () => {
     }
     
     // Test LETS analytics
-    const letsAnalyticsResponse = await fetch('http://localhost:3002/lets/analytics/ayni', {
+    const letsAnalyticsResponse = await fetch('http://localhost:1111/lets/analytics/ayni', {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
     
@@ -222,7 +222,7 @@ test.describe('Ayni Gamification System Tests', () => {
     console.log('🌱 Testing Ayni Philosophy Integration...');
     
     // Verificar que el sistema refleja los valores de reciprocidad
-    const analyticsResponse = await fetch('http://localhost:3002/analytics/dashboard-metrics', {
+    const analyticsResponse = await fetch('http://localhost:1111/analytics/dashboard-metrics', {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
     

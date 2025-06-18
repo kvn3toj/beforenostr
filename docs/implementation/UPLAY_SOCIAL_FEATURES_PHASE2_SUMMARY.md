@@ -101,7 +101,7 @@ const EMOJI_REACTIONS = {
 
 ```typescript
 const WS_CONFIG = {
-  baseUrl: 'ws://localhost:3002/study-rooms',
+  baseUrl: 'ws://localhost:1111/study-rooms',
   reconnectInterval: 3000,
   maxReconnectAttempts: 5,
   heartbeatInterval: 30000,

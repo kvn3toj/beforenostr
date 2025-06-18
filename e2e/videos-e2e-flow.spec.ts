@@ -252,7 +252,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Completo', () => {
       try {
         console.log(`🔍 Probando endpoint: ${endpoint}`);
         
-        const response = await page.request.get(`http://localhost:3002${endpoint}`, {
+        const response = await page.request.get(`http://localhost:1111${endpoint}`, {
           headers: {
             'Authorization': 'Bearer mock-jwt-token-for-testing-do-not-use-in-production'
           }
@@ -279,7 +279,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Completo', () => {
     }
     
     // Al menos uno de los endpoints debe funcionar
-    const basicResponse = await page.request.get('http://localhost:3002/video-items');
+    const basicResponse = await page.request.get('http://localhost:1111/video-items');
     expect(basicResponse.ok()).toBe(true);
     
     console.log('✅ Capacidad de analíticas verificada');
@@ -298,7 +298,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Completo', () => {
     
     try {
       // 1. Verificar conexión con backend
-      const healthResponse = await page.request.get('http://localhost:3002/health');
+      const healthResponse = await page.request.get('http://localhost:1111/health');
       results.backendConnection = healthResponse.ok();
       
       // 2. Verificar visualización de contenido
@@ -311,11 +311,11 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Completo', () => {
       results.userInteraction = (await interactiveElements.count()) > 0;
       
       // 4. Verificar persistencia de datos (API funcional)
-      const apiResponse = await page.request.get('http://localhost:3002/video-items');
+      const apiResponse = await page.request.get('http://localhost:1111/video-items');
       results.dataPersistence = apiResponse.ok();
       
       // 5. Verificar capacidad de analíticas
-      const analyticsResponse = await page.request.get('http://localhost:3002/playlists');
+      const analyticsResponse = await page.request.get('http://localhost:1111/playlists');
       results.analyticsCapability = analyticsResponse.ok();
       
     } catch (error) {

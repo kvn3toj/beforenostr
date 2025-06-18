@@ -68,8 +68,8 @@ echo ""
 echo "🌐 VERIFICANDO SERVICIOS..."
 
 # 6. Verificar servicios
-BACKEND_STATUS=$(curl -s http://localhost:3002/health | grep -o '"status":"ok"' || echo "ERROR")
-SUPERAPP_STATUS=$(curl -s -I http://localhost:3001 | head -1 | grep "200 OK" || echo "ERROR")
+BACKEND_STATUS=$(curl -s http://localhost:1111/health | grep -o '"status":"ok"' || echo "ERROR")
+SUPERAPP_STATUS=$(curl -s -I http://localhost:2222 | head -1 | grep "200 OK" || echo "ERROR")
 
 if [ "$BACKEND_STATUS" = '"status":"ok"' ]; then
     echo "✅ Backend NestJS: OPERACIONAL (puerto 3002)"
@@ -204,6 +204,6 @@ fi
 echo ""
 echo "📋 PRÓXIMOS PASOS:"
 echo "1. Si puntuación < 8, revisar criterios fallidos"
-echo "2. Abrir SuperApp en navegador: http://localhost:3001"
+echo "2. Abrir SuperApp en navegador: http://localhost:2222"
 echo "3. Verificar efectos visuales en Dashboard Home"
 echo "4. Confirmar datos reales en Marketplace" 

@@ -14,7 +14,7 @@ echo "✅ PostgreSQL ejecutándose correctamente"
 
 # 2. Verificar que el backend esté respondiendo
 echo "2. 🔧 Verificando Backend..."
-BACKEND_HEALTH=$(curl -s http://localhost:3002/health | grep -o '"status":"ok"')
+BACKEND_HEALTH=$(curl -s http://localhost:1111/health | grep -o '"status":"ok"')
 if [ -z "$BACKEND_HEALTH" ]; then
   echo "❌ ERROR: Backend no responde en puerto 3002"
   exit 1
@@ -23,7 +23,7 @@ echo "✅ Backend respondiendo correctamente"
 
 # 3. Verificar que la SuperApp esté respondiendo
 echo "3. 🌐 Verificando SuperApp..."
-SUPERAPP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001)
+SUPERAPP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:2222)
 if [ "$SUPERAPP_STATUS" != "200" ]; then
   echo "❌ ERROR: SuperApp no responde en puerto 3001"
   exit 1
@@ -33,7 +33,7 @@ echo "✅ SuperApp respondiendo correctamente"
 # 4. Verificar endpoint LETs con autenticación
 echo "4. 💰 Verificando endpoints LETs..."
 # Obtener token JWT
-TOKEN_RESPONSE=$(curl -s -X POST "http://localhost:3002/auth/login" \
+TOKEN_RESPONSE=$(curl -s -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@gamifier.com", "password": "admin123"}')
 
@@ -45,14 +45,14 @@ if [ -z "$ACCESS_TOKEN" ]; then
 fi
 
 # Probar endpoint LETs ping
-LETS_PING=$(curl -s -H "Authorization: Bearer $ACCESS_TOKEN" http://localhost:3002/lets/ping | grep -o '"message":"LETS module is working"')
+LETS_PING=$(curl -s -H "Authorization: Bearer $ACCESS_TOKEN" http://localhost:1111/lets/ping | grep -o '"message":"LETS module is working"')
 if [ -z "$LETS_PING" ]; then
   echo "❌ ERROR: Endpoint LETs ping no funciona"
   exit 1
 fi
 
 # Probar endpoint LETs history
-LETS_HISTORY=$(curl -s -H "Authorization: Bearer $ACCESS_TOKEN" http://localhost:3002/lets/history/00000000-0000-0000-0000-000000000001)
+LETS_HISTORY=$(curl -s -H "Authorization: Bearer $ACCESS_TOKEN" http://localhost:1111/lets/history/00000000-0000-0000-0000-000000000001)
 if [[ $LETS_HISTORY == *"error"* ]]; then
   echo "❌ ERROR: Endpoint LETs history retorna error"
   exit 1

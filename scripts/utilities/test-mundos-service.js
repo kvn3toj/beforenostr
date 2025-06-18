@@ -1,5 +1,5 @@
 // Test script para verificar el servicio de Mundos refactorizado
-const API_BASE_URL = 'http://localhost:3002';
+const API_BASE_URL = 'http://localhost:1111';
 
 async function testMundosService() {
   console.log('🧪 Iniciando pruebas del servicio de Mundos...\n');

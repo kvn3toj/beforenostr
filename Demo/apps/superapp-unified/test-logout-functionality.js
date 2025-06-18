@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 
 test('Verificar funcionalidad de cierre de sesión', async ({ page }) => {
   // Navegar a la aplicación
-  await page.goto('http://localhost:3001');
+  await page.goto('http://localhost:2222');
 
   // Esperar a que la aplicación cargue
   await page.waitForSelector('[data-testid="app-header"]', { timeout: 10000 });
@@ -54,7 +54,7 @@ test('Verificar funcionalidad de cierre de sesión', async ({ page }) => {
 
 test('Verificar navegación a configuración', async ({ page }) => {
   // Navegar a la aplicación
-  await page.goto('http://localhost:3001');
+  await page.goto('http://localhost:2222');
 
   // Esperar a que la aplicación cargue
   await page.waitForSelector('[data-testid="app-header"]', { timeout: 10000 });

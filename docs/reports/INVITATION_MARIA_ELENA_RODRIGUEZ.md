@@ -53,7 +53,7 @@ Como **Beta Founder** tendrás:
 **Código Exclusivo:** **BETA-MR7X9K2L**
 
 Este código es **único y personal** para ti. Úsalo para registrarte en:
-**http://localhost:3000/beta-register?invite=BETA-MR7X9K2L**
+**http://localhost:3333/beta-register?invite=BETA-MR7X9K2L**
 
 ## 📞 Próximos Pasos Inmediatos
 

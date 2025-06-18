@@ -271,7 +271,7 @@ El objeto `advancedStats` incluye:
 
 ### 🌐 SuperApp Operacional
 ```bash
-curl -I http://localhost:3001
+curl -I http://localhost:2222
 HTTP/1.1 200 OK ✅
 ```
 

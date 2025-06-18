@@ -130,7 +130,7 @@ const getApiBaseUrl = (): string => {
   }
 
   // 3. Development default (solo para puerto 3001)
-  const defaultUrl = 'http://localhost:3002';
+  const defaultUrl = 'http://localhost:1111';
   console.log('🏠 Using development default:', defaultUrl);
   return defaultUrl;
 };
@@ -160,7 +160,7 @@ const getBaseUrl = (): string => {
     case 'testing':
     case 'development':
     default:
-      return 'http://localhost:3001';
+      return 'http://localhost:2222';
   }
 };
 

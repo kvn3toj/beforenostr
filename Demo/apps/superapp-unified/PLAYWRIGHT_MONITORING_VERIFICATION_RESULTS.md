@@ -4,7 +4,7 @@
 **Herramienta:** Playwright  
 **Navegador:** Chromium  
 **Aplicación:** CoomÜnity SuperApp  
-**Entorno:** Desarrollo Local (localhost:3000)
+**Entorno:** Desarrollo Local (localhost:3333)
 
 ---
 
@@ -29,7 +29,7 @@
 **Verificaciones:**
 - ✅ Aplicación carga exitosamente
 - ✅ Título correcto: "CoomÜnity SuperApp - Plataforma Unificada"
-- ✅ URL accesible en localhost:3000
+- ✅ URL accesible en localhost:3333
 - ℹ️ Sentry: No disponible (esperado sin variables de entorno)
 - ℹ️ GA4: No disponible (esperado sin variables de entorno)
 

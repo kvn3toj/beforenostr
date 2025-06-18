@@ -25,18 +25,18 @@ if ! command -v npx &> /dev/null; then
 fi
 
 # Verificar que el servidor esté corriendo
-echo -e "${YELLOW}🔍 Verificando servidor en localhost:3001...${NC}"
-if curl -s http://localhost:3001 > /dev/null; then
-    echo -e "${GREEN}✅ Servidor activo en localhost:3001${NC}"
+echo -e "${YELLOW}🔍 Verificando servidor en localhost:2222...${NC}"
+if curl -s http://localhost:2222 > /dev/null; then
+    echo -e "${GREEN}✅ Servidor activo en localhost:2222${NC}"
 else
-    echo -e "${RED}❌ Error: Servidor no está corriendo en localhost:3001${NC}"
+    echo -e "${RED}❌ Error: Servidor no está corriendo en localhost:2222${NC}"
     echo -e "${YELLOW}💡 Inicia el servidor con: npm run dev${NC}"
     exit 1
 fi
 
 # Verificar que el marketplace sea accesible
 echo -e "${YELLOW}🔍 Verificando acceso al marketplace...${NC}"
-if curl -s http://localhost:3001/marketplace > /dev/null; then
+if curl -s http://localhost:2222/marketplace > /dev/null; then
     echo -e "${GREEN}✅ Marketplace accesible${NC}"
 else
     echo -e "${RED}❌ Error: No se puede acceder al marketplace${NC}"
@@ -108,7 +108,7 @@ cat > test-results/fase49/validation-summary.md << EOF
 ## ✅ Estado: COMPLETADO CON ÉXITO
 
 **Fecha:** $(date '+%d de %B de %Y a las %H:%M')
-**Marketplace:** http://localhost:3001/marketplace
+**Marketplace:** http://localhost:2222/marketplace
 **Alineación con Agile Inception:** 93%
 
 ## 🧪 Pruebas Ejecutadas

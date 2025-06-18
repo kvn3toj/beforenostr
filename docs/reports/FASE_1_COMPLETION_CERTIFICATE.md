@@ -88,23 +88,23 @@
 
 ### **✅ BACKEND FUNCIONANDO CORRECTAMENTE**
 - **Puerto**: 3002 ✅ ACTIVO
-- **Health Check**: `http://localhost:3002/health` ✅ RESPONDIENDO
-- **Swagger Docs**: `http://localhost:3002/api` ✅ DISPONIBLE
+- **Health Check**: `http://localhost:1111/health` ✅ RESPONDIENDO
+- **Swagger Docs**: `http://localhost:1111/api` ✅ DISPONIBLE
 - **Base de Datos**: PostgreSQL ✅ CONECTADA
 - **Cache Redis**: ✅ OPERATIVO
 
 ### **✅ EJEMPLOS DE ENDPOINTS FUNCIONALES**
 ```bash
 # ✅ Mundos gamificados
-curl http://localhost:3002/content/mundos
+curl http://localhost:1111/content/mundos
 # → [{"id":"11111111...","name":"Mundo de Gamificación..."}]
 
 # ✅ Health check
-curl http://localhost:3002/health  
+curl http://localhost:1111/health  
 # → {"status":"ok","timestamp":"2025-05-29T..."}
 
 # ✅ Documentación interactiva
-# → http://localhost:3002/api (100% endpoints documentados)
+# → http://localhost:1111/api (100% endpoints documentados)
 ```
 
 ## 🚀 **ESTADO DE PRODUCCIÓN**

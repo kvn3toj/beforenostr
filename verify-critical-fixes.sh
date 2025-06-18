@@ -34,7 +34,7 @@ echo
 echo "✅ TEST 2: SuperApp Frontend Accessibility"
 echo "------------------------------------------"
 
-SUPERAPP_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001)
+SUPERAPP_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:2222)
 if [ "$SUPERAPP_RESPONSE" = "200" ]; then
     echo "✅ SuperApp responds HTTP 200 OK (Port 3001)"
 else
@@ -47,7 +47,7 @@ echo
 echo "✅ TEST 3: Backend and StudyRoomsModule Fix"
 echo "-------------------------------------------"
 
-BACKEND_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/health)
+BACKEND_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1111/health)
 if [ "$BACKEND_RESPONSE" = "200" ]; then
     echo "✅ Backend responds HTTP 200 OK (Port 3002)"
 else
@@ -135,7 +135,7 @@ echo "- WebSocket Auth Fix: $(grep -q "import { AuthModule }" src/study-rooms/st
 
 echo
 echo "🔗 Next Steps:"
-echo "1. Test ProductDetail page: http://localhost:3001/product/blockchain-consulting-001"
-echo "2. Test Study Rooms WebSocket: http://localhost:3001/uplay"
+echo "1. Test ProductDetail page: http://localhost:2222/product/blockchain-consulting-001"
+echo "2. Test Study Rooms WebSocket: http://localhost:2222/uplay"
 echo "3. Monitor backend logs for WebSocket authentication success"
 echo "4. Verify chat functionality in Study Rooms" 

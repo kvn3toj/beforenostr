@@ -70,7 +70,7 @@ npm run dev
 **Verificar que la aplicación inicia sin errores:**
 ```
 ✅ Debe mostrar: "🔍 Monitoring initialized" en la consola
-✅ Puerto: http://localhost:3000
+✅ Puerto: http://localhost:3333
 ✅ Sin errores de compilación
 ```
 
@@ -79,7 +79,7 @@ npm run dev
 ### 4.1 Verificar Sentry Error Tracking
 
 **Método 1: Error Boundary Test**
-1. Navega a `http://localhost:3000`
+1. Navega a `http://localhost:3333`
 2. Abre DevTools (F12)
 3. En la consola, ejecuta:
 ```javascript
@@ -220,7 +220,7 @@ const TestComponent = () => {
 ### Configuración Inicial
 - [ ] Dependencias instaladas sin errores
 - [ ] Variables de entorno configuradas
-- [ ] Aplicación inicia en `http://localhost:3000`
+- [ ] Aplicación inicia en `http://localhost:3333`
 - [ ] Consola muestra "🔍 Monitoring initialized"
 
 ### Error Tracking (Sentry)

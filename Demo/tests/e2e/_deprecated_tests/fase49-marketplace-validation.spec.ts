@@ -9,7 +9,7 @@ test.describe('FASE 49 - Marketplace CoomÜnity - Validación Agile Inception', 
 
   test.beforeEach(async ({ page }) => {
     // Navegar al marketplace
-    await page.goto('http://localhost:3001/marketplace');
+    await page.goto('http://localhost:2222/marketplace');
     await page.waitForLoadState('networkidle');
   });
 

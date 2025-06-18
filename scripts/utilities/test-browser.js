@@ -31,9 +31,9 @@ const { chromium } = require('playwright');
   });
   
   try {
-    console.log('🌐 Navegando a http://localhost:3001...');
+    console.log('🌐 Navegando a http://localhost:2222...');
     // Abrir la aplicación
-    await page.goto('http://localhost:3001', { 
+    await page.goto('http://localhost:2222', { 
       waitUntil: 'domcontentloaded',
       timeout: 30000 
     });
@@ -67,7 +67,7 @@ const { chromium } = require('playwright');
   }
   
   // No cerrar el navegador para mantenerlo abierto
-  console.log('🌐 Navegador abierto en http://localhost:3001');
+  console.log('🌐 Navegador abierto en http://localhost:2222');
   console.log('💡 Presiona Ctrl+C para cerrar');
   
   // Mantener el proceso vivo

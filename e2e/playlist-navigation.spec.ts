@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Playlist Navigation', () => {
   test.beforeEach(async ({ page }) => {
     // Navegar al home primero
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
   });
 
@@ -11,7 +11,7 @@ test.describe('Playlist Navigation', () => {
     console.log('Testing /playlist-direct route...');
     
     // Navegar directamente a /playlist-direct
-    await page.goto('http://localhost:3000/playlist-direct');
+    await page.goto('http://localhost:3333/playlist-direct');
     await page.waitForLoadState('networkidle');
     
     // Verificar la URL actual después de la navegación
@@ -37,7 +37,7 @@ test.describe('Playlist Navigation', () => {
     console.log('Testing /playlist route...');
     
     // Navegar directamente a /playlist
-    await page.goto('http://localhost:3000/playlist');
+    await page.goto('http://localhost:3333/playlist');
     await page.waitForLoadState('networkidle');
     
     // Verificar la URL actual después de la navegación

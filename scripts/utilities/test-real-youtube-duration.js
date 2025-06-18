@@ -104,7 +104,7 @@ async function testRealYouTubeDuration() {
   try {
     console.log('1️⃣ Testing calculate-duration endpoint...');
     
-    const response = await fetch('http://localhost:3002/video-items/calculate-duration', {
+    const response = await fetch('http://localhost:1111/video-items/calculate-duration', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: videoUrl })
@@ -121,7 +121,7 @@ async function testRealYouTubeDuration() {
         console.log('\n2️⃣ Testing with a different YouTube video...');
         
         const differentVideo = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'; // Rick Roll - known duration
-        const response2 = await fetch('http://localhost:3002/video-items/calculate-duration', {
+        const response2 = await fetch('http://localhost:1111/video-items/calculate-duration', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content: differentVideo })
@@ -135,7 +135,7 @@ async function testRealYouTubeDuration() {
         // Test 3: Force recalculate to see logs
         console.log('\n3️⃣ Testing force recalculate to see backend logs...');
         
-        const response3 = await fetch('http://localhost:3002/video-items/force-recalculate-durations', {
+        const response3 = await fetch('http://localhost:1111/video-items/force-recalculate-durations', {
           method: 'POST'
         });
         

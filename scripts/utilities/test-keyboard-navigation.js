@@ -16,7 +16,7 @@ async function testKeyboardNavigation() {
     // 1. LOGIN Y NAVEGACIÓN INICIAL
     console.log('🎯 1. PROBANDO LOGIN CON TECLADO...\n');
     
-    await page.goto('http://localhost:3001/login');
+    await page.goto('http://localhost:2222/login');
     await page.waitForLoadState('networkidle');
     
     // Skip link test

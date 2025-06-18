@@ -24,7 +24,7 @@ ID del Error: 59dc6ab244c847e2b81f40dcc89b6ba5
 
 ### 4. Error WebSocket
 ```
-[Error] WebSocket connection to 'ws://localhost:3001/?token=IC8AlKsfEScM' failed: WebSocket is closed due to suspension.
+[Error] WebSocket connection to 'ws://localhost:2222/?token=IC8AlKsfEScM' failed: WebSocket is closed due to suspension.
 ```
 
 ## ✅ Soluciones Implementadas

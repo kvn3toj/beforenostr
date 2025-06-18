@@ -42,7 +42,7 @@ async function testMultiPlatformSupport() {
     
     try {
       // Test platform detection endpoint
-      const response = await fetch('http://localhost:3002/video-items/detect-platform', {
+      const response = await fetch('http://localhost:1111/video-items/detect-platform', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -92,7 +92,7 @@ async function testMultiPlatformSupport() {
     console.log(`\n📋 Testing duration for: ${test.name}`);
     
     try {
-      const response = await fetch('http://localhost:3002/video-items/calculate-duration', {
+      const response = await fetch('http://localhost:1111/video-items/calculate-duration', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

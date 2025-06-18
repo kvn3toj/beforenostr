@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Marketplace Integration - CoomÜnity SuperApp', () => {
   
   test('Verificar que Marketplace está completamente integrado', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('🔍 Verificando integración del Marketplace...');
@@ -77,7 +77,7 @@ test.describe('Marketplace Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Verificar funcionalidades específicas del Marketplace', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     // Ir al Marketplace
@@ -125,7 +125,7 @@ test.describe('Marketplace Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Comparar Marketplace antes vs después', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('📊 Comparando estado antes vs después de la integración...');

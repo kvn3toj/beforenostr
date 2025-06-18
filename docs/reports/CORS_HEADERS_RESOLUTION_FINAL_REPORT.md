@@ -25,7 +25,7 @@ El problema de **"Failed to fetch"** en el Dashboard de Analytics del Gamifier A
 ### ❌ **Síntomas Identificados**
 
 1. **Errores en consola del navegador:** `TypeError: Failed to fetch`
-2. **Llamadas CORS bloqueadas** desde frontend (localhost:3000) al backend (localhost:3002)
+2. **Llamadas CORS bloqueadas** desde frontend (localhost:3333) al backend (localhost:1111)
 3. **Dashboard de Analytics no cargaba datos** reales
 4. **Respuestas 200 OK del backend con curl** pero fallos desde el navegador
 
@@ -44,7 +44,7 @@ El problema de **"Failed to fetch"** en el Dashboard de Analytics del Gamifier A
 ```typescript
 // ANTES - Configuración básica
 app.enableCors({
-  origin: ['http://localhost:3000', ...],
+  origin: ['http://localhost:3333', ...],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   credentials: true,
 });
@@ -52,9 +52,9 @@ app.enableCors({
 // DESPUÉS - Configuración completa y robusta
 app.enableCors({
   origin: [
-    'http://localhost:3000', 
-    'http://localhost:3001', 
-    'http://localhost:3002', 
+    'http://localhost:3333', 
+    'http://localhost:2222', 
+    'http://localhost:1111', 
     'http://localhost:3003', 
     'http://localhost:5173',
     'http://127.0.0.1:3000',     // ← AGREGADO
@@ -121,13 +121,13 @@ const response = await fetch(`${API_BASE_URL}${endpoint}`, {
 
 ```bash
 # Muestra de respuestas exitosas capturadas:
-✅ 200 - http://localhost:3002/analytics/total-users
-✅ 200 - http://localhost:3002/analytics/total-playlists  
-✅ 200 - http://localhost:3002/analytics/total-mundos
-✅ 200 - http://localhost:3002/analytics/users-created-over-time?interval=day&...
-✅ 200 - http://localhost:3002/analytics/playlists-created-over-time?interval=day&...
-✅ 200 - http://localhost:3002/analytics/mundos-created-over-time?interval=day&...
-✅ 200 - http://localhost:3002/analytics/active-users-over-time?interval=day&...
+✅ 200 - http://localhost:1111/analytics/total-users
+✅ 200 - http://localhost:1111/analytics/total-playlists  
+✅ 200 - http://localhost:1111/analytics/total-mundos
+✅ 200 - http://localhost:1111/analytics/users-created-over-time?interval=day&...
+✅ 200 - http://localhost:1111/analytics/playlists-created-over-time?interval=day&...
+✅ 200 - http://localhost:1111/analytics/mundos-created-over-time?interval=day&...
+✅ 200 - http://localhost:1111/analytics/active-users-over-time?interval=day&...
 
 # Resultado del test automático:
 🎉 ✅ CORRECCIÓN CORS EXITOSA - Analytics funcionando!

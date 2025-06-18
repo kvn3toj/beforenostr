@@ -285,10 +285,10 @@ npm run dev
 # Press Ctrl+Shift+E in browser
 
 # Test wallet endpoint
-curl http://localhost:3002/wallets/user/mock-user-id-coomunity-tester-123
+curl http://localhost:1111/wallets/user/mock-user-id-coomunity-tester-123
 
 # Test notifications endpoint
-curl http://localhost:3002/notifications/user/mock-user-id-coomunity-tester-123
+curl http://localhost:1111/notifications/user/mock-user-id-coomunity-tester-123
 ```
 
 ### **Success Indicators:**

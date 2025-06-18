@@ -15,7 +15,7 @@ import {
 } from '../types/analytics.types';
 
 // Configuración de la API
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const ANALYTICS_ENDPOINT = `${API_BASE_URL}/analytics`;
 
 // Función auxiliar para manejar errores de analíticas

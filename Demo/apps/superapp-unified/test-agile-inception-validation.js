@@ -14,7 +14,7 @@ const __dirname = dirname(__filename);
 const validationTests = [
   {
     name: '🏪 Marketplace CoomÜnity - Validación Agile Inception',
-    url: 'http://localhost:3001/marketplace',
+    url: 'http://localhost:2222/marketplace',
     expectedElements: [
       // Elementos Core del Agile Inception
       '🏪 Marketplace CoomÜnity', // Header oficial
@@ -186,7 +186,7 @@ async function runValidation() {
 
   } catch (error) {
     log(colors.red, `❌ Error en la validación: ${error.message}`);
-    log(colors.yellow, '⚠️  Asegúrate de que el servidor esté corriendo en http://localhost:3001');
+    log(colors.yellow, '⚠️  Asegúrate de que el servidor esté corriendo en http://localhost:2222');
   }
 
   log(colors.blue, '\n================================================================');

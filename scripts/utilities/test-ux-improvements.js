@@ -18,7 +18,7 @@ async function testFormImprovements() {
   try {
     // 1. LOGIN
     console.log('1. 🔑 Iniciando sesión en Gamifier...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     // Capturar screenshot inicial

@@ -220,7 +220,7 @@ export default defineConfig({
   testDir: './e2e',
   timeout: 60 * 1000,
   use: {
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://localhost:2222',
     viewport: { width: 1280, height: 720 },
   },
   projects: [

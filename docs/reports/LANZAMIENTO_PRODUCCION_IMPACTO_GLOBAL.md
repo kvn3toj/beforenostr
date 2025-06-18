@@ -30,8 +30,8 @@
 | **Grafana** | ✅ Operativo | http://localhost:3003 | Dashboards |
 | **Redis Cache** | ✅ Operativo | localhost:6380 | Caching distribuido |
 | **PostgreSQL** | ✅ Operativo | localhost:5433 | Base de datos |
-| **Backend NestJS** | ✅ Operativo | http://localhost:3002 | API principal |
-| **SuperApp Frontend** | ✅ Operativo | http://localhost:3000 | Aplicación usuario |
+| **Backend NestJS** | ✅ Operativo | http://localhost:1111 | API principal |
+| **SuperApp Frontend** | ✅ Operativo | http://localhost:3333 | Aplicación usuario |
 
 ### **✅ Funcionalidades Completadas**
 - 🔐 **Sistema de Autenticación**: JWT, roles, permisos

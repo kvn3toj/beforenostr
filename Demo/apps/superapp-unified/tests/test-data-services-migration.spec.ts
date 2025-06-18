@@ -12,13 +12,13 @@ test.describe('🔄 Migración de Servicios de Datos Core - Fase 2.3', () => {
   test.beforeEach(async ({ page }) => {
     // Configurar interceptores para capturar requests API
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         console.log(`📡 API Request: ${request.method()} ${request.url()}`);
       }
     });
 
     page.on('response', response => {
-      if (response.url().includes('localhost:3002')) {
+      if (response.url().includes('localhost:1111')) {
         console.log(`📨 API Response: ${response.status()} ${response.url()}`);
       }
     });
@@ -129,7 +129,7 @@ test.describe('🔄 Migración de Servicios de Datos Core - Fase 2.3', () => {
     
     // Interceptar llamadas API
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         apiCalls.push(`${request.method()} ${request.url()}`);
       }
     });
@@ -145,7 +145,7 @@ test.describe('🔄 Migración de Servicios de Datos Core - Fase 2.3', () => {
 
     if (apiCalls.length > 0) {
       // Verificar que se hicieron llamadas al backend correcto
-      const backendCalls = apiCalls.filter(call => call.includes('localhost:3002'));
+      const backendCalls = apiCalls.filter(call => call.includes('localhost:1111'));
       expect(backendCalls.length).toBeGreaterThan(0);
 
       // Verificar endpoints específicos de los servicios migrados
@@ -167,7 +167,7 @@ test.describe('🔄 Migración de Servicios de Datos Core - Fase 2.3', () => {
     console.log('🚨 Simulando Backend no disponible...');
     
     // Interceptar y fallar requests al backend
-    await page.route('**/localhost:3002/**', route => {
+    await page.route('**/localhost:1111/**', route => {
       route.abort('failed');
     });
 
@@ -250,7 +250,7 @@ test.describe('🔄 Migración de Servicios de Datos Core - Fase 2.3', () => {
     console.log('📸 Estado inicial capturado');
 
     // Simular pérdida de conexión
-    await page.route('**/localhost:3002/**', route => {
+    await page.route('**/localhost:1111/**', route => {
       route.abort('failed');
     });
 

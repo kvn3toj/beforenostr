@@ -9,7 +9,7 @@ echo "🔍 VALIDANDO NUEVOS ENDPOINTS DE INTEGRACIÓN - $(date)"
 echo "=============================================="
 
 # Configuración
-BACKEND_URL="http://localhost:3002"
+BACKEND_URL="http://localhost:1111"
 TEST_USER_EMAIL="user@gamifier.com"
 TEST_USER_PASSWORD="123456"
 AUTH_TOKEN=""

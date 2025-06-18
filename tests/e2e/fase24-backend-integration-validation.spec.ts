@@ -15,7 +15,7 @@ test.describe('🚀 FASE 2.4: Validación de Integración Backend', () => {
     const consoleErrors: any[] = [];
     
     page.on('request', request => {
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         networkRequests.push({
           url: request.url(),
           method: request.method(),
@@ -68,7 +68,7 @@ test.describe('🚀 FASE 2.4: Validación de Integración Backend', () => {
     
     // Verificar que se realizaron requests al backend
     const requests = (page as any).networkRequests || [];
-    const backendRequests = requests.filter((req: any) => req.url.includes('localhost:3002'));
+    const backendRequests = requests.filter((req: any) => req.url.includes('localhost:1111'));
     
     console.log(`📊 Requests al backend detectados: ${backendRequests.length}`);
     backendRequests.forEach((req: any) => {
@@ -229,7 +229,7 @@ test.describe('🚀 FASE 2.4: Validación de Integración Backend', () => {
       fase: '2.4 - Testing and Validation of Backend Integration',
       estado: 'COMPLETADA',
       backend: {
-        url: 'http://localhost:3002',
+        url: 'http://localhost:1111',
         health: '✅ Operativo'
       },
       frontend: {

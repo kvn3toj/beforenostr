@@ -258,7 +258,7 @@ Una vez completado, revisar el PR generado automáticamente
 
 ```bash
 # Verificar backend
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 
 # Iniciar si es necesario
 npm run dev:backend

@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
 
 // Helper para autenticación
 async function getAuthToken(): Promise<string> {
-  const response = await fetch('http://localhost:3002/auth/login', {
+  const response = await fetch('http://localhost:1111/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -34,7 +34,7 @@ test.describe('Data Migration Testing Suite', () => {
   test('1. Schema Version Compatibility', async ({ page }) => {
     console.log('📊 Testing schema version compatibility');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Simular datos de versión anterior
     const oldSchemaData = await page.evaluate(() => {
@@ -112,7 +112,7 @@ test.describe('Data Migration Testing Suite', () => {
   test('2. Data Backup and Restore', async ({ page }) => {
     console.log('💾 Testing data backup and restore');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Crear datos de prueba
     const testData = await page.evaluate(() => {
@@ -216,7 +216,7 @@ test.describe('Data Migration Testing Suite', () => {
   test('3. Progressive Data Migration', async ({ page }) => {
     console.log('🔄 Testing progressive data migration');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Simular múltiples versiones de migración
     const migrationChain = await page.evaluate(() => {
@@ -310,7 +310,7 @@ test.describe('Data Migration Testing Suite', () => {
     const schemaEvolution = await page.evaluate(async (token) => {
       try {
         // Simular verificación de esquema del servidor
-        const response = await fetch('http://localhost:3002/admin/schema-version', {
+        const response = await fetch('http://localhost:1111/admin/schema-version', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
@@ -353,7 +353,7 @@ test.describe('Data Migration Testing Suite', () => {
   test('5. Cross-Platform Data Sync', async ({ page }) => {
     console.log('🔄 Testing cross-platform data synchronization');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Simular datos de diferentes plataformas
     const crossPlatformSync = await page.evaluate(() => {

@@ -59,7 +59,7 @@ cd ../../..
 echo -e "${BLUE}5️⃣ Verificando acceso al módulo UStats...${NC}"
 
 # Verificar que el módulo UStats responde
-USTATS_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001/ustats)
+USTATS_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:2222/ustats)
 
 if [ "$USTATS_RESPONSE" = "200" ]; then
     echo -e "${GREEN}✅ Módulo UStats accesible (HTTP 200)${NC}"
@@ -70,7 +70,7 @@ fi
 echo -e "${BLUE}6️⃣ Verificando backend analytics disponible...${NC}"
 
 # Verificar que el backend está disponible
-BACKEND_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/health)
+BACKEND_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1111/health)
 
 if [ "$BACKEND_RESPONSE" = "200" ]; then
     echo -e "${GREEN}✅ Backend disponible (HTTP 200)${NC}"

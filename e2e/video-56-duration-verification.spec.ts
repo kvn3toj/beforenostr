@@ -107,7 +107,7 @@ test.describe('🎯 VERIFICACIÓN ESPECÍFICA: Video ID 56 - Duración 1:04', ()
     console.log('🌐 Verificando endpoint del backend para video 56...');
     
     // Hacer request directo al backend
-    const response = await page.request.get('http://localhost:3002/video-items/56');
+    const response = await page.request.get('http://localhost:1111/video-items/56');
     expect(response.ok()).toBeTruthy();
     
     const videoData = await response.json();

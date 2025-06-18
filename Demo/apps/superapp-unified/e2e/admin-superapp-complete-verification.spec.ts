@@ -18,8 +18,8 @@
 import { test, expect, Page } from '@playwright/test';
 
 // 🎯 CONFIGURACIÓN DEL TEST
-const SUPERAPP_BASE_URL = 'http://localhost:3001';
-const BACKEND_BASE_URL = 'http://localhost:3002';
+const SUPERAPP_BASE_URL = 'http://localhost:2222';
+const BACKEND_BASE_URL = 'http://localhost:1111';
 
 // 🔐 CREDENCIALES DE ADMINISTRADOR (según reglas del proyecto)
 const ADMIN_CREDENTIALS = {

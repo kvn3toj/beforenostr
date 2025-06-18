@@ -135,13 +135,13 @@ src/common/logger/      # Módulo de logging
 ### Comandos de Verificación:
 ```bash
 # Probar logging básico
-curl http://localhost:3002/test-logging
+curl http://localhost:1111/test-logging
 
 # Verificar salud del sistema
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 
 # Probar cálculo de duración con métricas
-curl http://localhost:3002/video-items/1
+curl http://localhost:1111/video-items/1
 ```
 
 ## 📈 Beneficios Implementados

@@ -10,8 +10,8 @@
  * - Authentication endpoints
  */
 
-const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:3002';
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:3001';
+const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:1111';
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:2222';
 
 console.log('🏥 CoomÜnity Backend Health Check');
 console.log('====================================');
@@ -128,7 +128,7 @@ async function checkHealth() {
   // 4. Custom origin test (for dynamic ports like 48752)
   const testOrigins = [
     'http://localhost:48752', // The problematic port from the error
-    'http://localhost:3001',
+    'http://localhost:2222',
     'http://localhost:5173',
     'http://127.0.0.1:48752',
   ];

@@ -8,7 +8,7 @@ async function identifyAriaIssue() {
   
   try {
     console.log('📍 Navigating to login page...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     console.log('🔐 Performing login...');

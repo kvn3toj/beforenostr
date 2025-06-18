@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test.describe('ÜStats Integration - CoomÜnity SuperApp', () => {
   
   test('Verificar que ÜStats está completamente integrado', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('📊 Verificando integración de ÜStats...');
@@ -75,7 +75,7 @@ test.describe('ÜStats Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Verificar datos del análisis extraído', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     // Ir a ÜStats
@@ -145,7 +145,7 @@ test.describe('ÜStats Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Verificar funcionalidad de tabs', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     // Ir a ÜStats
@@ -209,7 +209,7 @@ test.describe('ÜStats Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Comparar ÜStats antes vs después', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('📊 Comparando estado antes vs después de la integración de ÜStats...');

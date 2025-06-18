@@ -6,7 +6,7 @@ async function testFrontendIntegration() {
   try {
     console.log('🔑 Step 1: Login...');
     
-    const loginResponse = await fetch('http://localhost:3002/auth/login', {
+    const loginResponse = await fetch('http://localhost:1111/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ async function testFrontendIntegration() {
     console.log('🤖 Step 2: Generate questions via backend API...');
     
     // Esta es la misma llamada que hace el frontend corregido
-    const response = await fetch('http://localhost:3002/ai/generate-questions', {
+    const response = await fetch('http://localhost:1111/ai/generate-questions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

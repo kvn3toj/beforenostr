@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
 async function testMonitoringSystem() {
   console.log('🎯 Iniciando test del Sistema de Monitoreo...\n');
   
-  const baseUrl = 'http://localhost:3002';
+  const baseUrl = 'http://localhost:1111';
   
   // Función helper para hacer requests HTTP
   async function makeRequest(url, options = {}) {

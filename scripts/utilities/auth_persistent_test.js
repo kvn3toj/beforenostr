@@ -25,7 +25,7 @@ async function runAuthPersistenceTest() {
   try {
     // FASE 1: LOGIN INICIAL Y VERIFICACIÓN
     console.log('📋 FASE 1: Login inicial...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     // Rellenar credenciales de admin
@@ -51,7 +51,7 @@ async function runAuthPersistenceTest() {
 
     // FASE 2: VERIFICAR PERSISTENCIA EN PÁGINA DE ROLES
     console.log('\n📋 FASE 2: Verificando página de Roles...');
-    await page.goto('http://localhost:3000/roles');
+    await page.goto('http://localhost:3333/roles');
     await page.waitForLoadState('networkidle');
     
     // Verificar que no nos redirige a login
@@ -74,7 +74,7 @@ async function runAuthPersistenceTest() {
 
     // FASE 3: VERIFICAR PERSISTENCIA EN PÁGINA DE MUNDOS
     console.log('\n📋 FASE 3: Verificando página de Mundos...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     
     const mundosUrl = page.url();
@@ -95,7 +95,7 @@ async function runAuthPersistenceTest() {
 
     // FASE 4: VERIFICAR PERSISTENCIA EN PÁGINA DE PLAYLISTS
     console.log('\n📋 FASE 4: Verificando página de Playlists...');
-    await page.goto('http://localhost:3000/playlists');
+    await page.goto('http://localhost:3333/playlists');
     await page.waitForLoadState('networkidle');
     
     const playlistsUrl = page.url();
@@ -116,7 +116,7 @@ async function runAuthPersistenceTest() {
 
     // FASE 5: VERIFICAR SOCIAL PAGE (Nueva implementación)
     console.log('\n📋 FASE 5: Verificando página Social...');
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     
     const socialUrl = page.url();

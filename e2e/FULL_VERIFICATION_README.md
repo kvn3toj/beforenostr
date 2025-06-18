@@ -40,8 +40,8 @@ npm run dev
 ```
 
 Verificar que:
-- Backend: http://localhost:3002
-- Frontend: http://localhost:3000
+- Backend: http://localhost:1111
+- Frontend: http://localhost:3333
 
 ### 3. Verificar Datos del Seeder
 

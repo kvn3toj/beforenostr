@@ -125,16 +125,16 @@ src/App.tsx                        - Nueva ruta /beta-register
 
 ### 🌐 URLs y Endpoints
 ```
-SuperApp:           http://localhost:3001
-Backend:            http://localhost:3002
-Registro Beta:      http://localhost:3001/beta-register
+SuperApp:           http://localhost:2222
+Backend:            http://localhost:1111
+Registro Beta:      http://localhost:2222/beta-register
 ```
 
 ### 📁 Variables de Entorno Configuradas
 ```
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 VITE_ENABLE_MOCK_AUTH=false
-VITE_BASE_URL=http://localhost:3001
+VITE_BASE_URL=http://localhost:2222
 VITE_GA_TRACKING_ID=G-XXXXXXXXXX
 VITE_HOTJAR_ID=XXXXXXX
 VITE_ENABLE_ANALYTICS=true

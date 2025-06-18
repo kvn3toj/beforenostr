@@ -7,8 +7,8 @@ echo "🔍 VERIFICANDO FIX DEL ENDPOINT LETS..."
 echo "======================================================"
 
 # Variables
-BACKEND_URL="http://localhost:3002"
-SUPERAPP_URL="http://localhost:3001"
+BACKEND_URL="http://localhost:1111"
+SUPERAPP_URL="http://localhost:2222"
 TEST_USER_ID="00000000-0000-0000-0000-000000000001"
 
 # Colores para output

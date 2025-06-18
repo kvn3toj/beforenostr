@@ -16,7 +16,7 @@
 - `Demo/apps/superapp-unified/.builder/config.json`
 
 ### Issue 2: Missing Analytics Endpoints (404 Errors)
-**Error:** `POST http://localhost:3002/analytics/video-progress 404 (Not Found)`
+**Error:** `POST http://localhost:1111/analytics/video-progress 404 (Not Found)`
 
 **Root Cause:** SuperApp frontend was trying to call analytics endpoints that don't exist yet in the NestJS backend.
 
@@ -44,8 +44,8 @@
 
 ✅ **Builder.io Cookie Access:** Fixed with proper iframe sandbox configuration
 ✅ **Analytics Endpoints:** Gracefully handled with informative development messages
-✅ **Port Configuration:** SuperApp running on http://localhost:3001
-✅ **Backend Connection:** Backend running on http://localhost:3002
+✅ **Port Configuration:** SuperApp running on http://localhost:2222
+✅ **Backend Connection:** Backend running on http://localhost:1111
 
 ## 🔍 Development Notes
 
@@ -73,8 +73,8 @@ The following endpoints are expected by the frontend but not yet implemented:
 
 ```bash
 # Check services are running
-curl -I http://localhost:3001      # SuperApp Frontend
-curl -I http://localhost:3002/health # Backend Health Check
+curl -I http://localhost:2222      # SuperApp Frontend
+curl -I http://localhost:1111/health # Backend Health Check
 
 # Check for port conflicts
 lsof -ti:3001    # Should show SuperApp process

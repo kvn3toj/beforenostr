@@ -10,7 +10,7 @@ echo "======================================================="
 
 # Verificar backend disponible
 echo "🔍 1. Verificando backend..."
-BACKEND_STATUS=$(curl -s http://localhost:3002/health | jq -r '.status' 2>/dev/null || echo "ERROR")
+BACKEND_STATUS=$(curl -s http://localhost:1111/health | jq -r '.status' 2>/dev/null || echo "ERROR")
 
 if [ "$BACKEND_STATUS" != "ok" ]; then
     echo "❌ Backend no disponible en puerto 3002"
@@ -20,7 +20,7 @@ echo "✅ Backend operacional: status=$BACKEND_STATUS"
 
 # Obtener token JWT
 echo "🔑 2. Obteniendo token de autenticación..."
-TOKEN=$(curl -X POST "http://localhost:3002/auth/login" \
+TOKEN=$(curl -X POST "http://localhost:1111/auth/login" \
     -H "Content-Type: application/json" \
     -d '{"email": "admin@gamifier.com", "password": "admin123"}' \
     -s | jq -r '.access_token' 2>/dev/null)
@@ -34,7 +34,7 @@ echo "✅ Token obtenido: ${TOKEN:0:20}..."
 # Verificar endpoint de preguntas
 echo "🎯 3. Verificando endpoint de preguntas..."
 QUESTIONS_RESPONSE=$(curl -H "Authorization: Bearer $TOKEN" \
-    http://localhost:3002/video-items/1/questions -s)
+    http://localhost:1111/video-items/1/questions -s)
 
 QUESTIONS_COUNT=$(echo "$QUESTIONS_RESPONSE" | jq 'length' 2>/dev/null || echo "0")
 

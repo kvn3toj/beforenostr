@@ -1,7 +1,7 @@
 import { apiService } from './api.service';
 import type { Challenge } from './challenge.service';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const USER_CHALLENGES_ENDPOINT = `${API_BASE_URL}/user-challenges`;
 
 // Types

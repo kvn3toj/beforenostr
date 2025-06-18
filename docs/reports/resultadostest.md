@@ -184,7 +184,7 @@ ium/error-context.md
 
 🚀Navegandoalapáginadelwallet...
 
-🌐CurrentURL:http://localhost:3001/wallet
+🌐CurrentURL:http://localhost:2222/wallet
 
 💰Verificandoelementosdelwallet...
 
@@ -436,7 +436,7 @@ ium/error-context.md
 
 📍Step1:Initialloginpagestate
 
-🌐InitialURL:http://localhost:3001/login
+🌐InitialURL:http://localhost:2222/login
 
 📍Step2:Performinglogin
 
@@ -444,7 +444,7 @@ ium/error-context.md
 
 📍Step3:Waitingforauthenticationredirect
 
-✅Successfullyredirectedto:http://localhost:3001/login
+✅Successfullyredirectedto:http://localhost:2222/login
 
 📍Step4:Directnavigationtowallet
 
@@ -466,29 +466,29 @@ ium/error-context.md
 
 …:12:3›WalletPageDebug-BackendIntegration›DEBUG:Completeauthenticationandwalletnavigationflow
 
-🌐WalletURLafterdirectnavigation:http://localhost:3001/login
+🌐WalletURLafterdirectnavigation:http://localhost:2222/login
 
-❌Notonwalletpage,redirectedto:http://localhost:3001/login
+❌Notonwalletpage,redirectedto:http://localhost:2222/login
 
 ❌Consoleerrorsduringflow: [
 
 '[Auth] Error en login: Error: Error de conexión con el servidor. Por favor, verifica tu conexión.\n'+
 
-'    at ApiService.requestWithoutAuth (http://localhost:3001/src/lib/api-service.ts:417:27)\n'+
+'    at ApiService.requestWithoutAuth (http://localhost:2222/src/lib/api-service.ts:417:27)\n'+
 
-'    at async backendSignIn (http://localhost:3001/src/contexts/AuthContext.tsx:70:22)\n'+
+'    at async backendSignIn (http://localhost:2222/src/contexts/AuthContext.tsx:70:22)\n'+
 
-'    at async signIn (http://localhost:3001/src/contexts/AuthContext.tsx:211:24)\n'+
+'    at async signIn (http://localhost:2222/src/contexts/AuthContext.tsx:211:24)\n'+
 
-'    at async handleSubmit (http://localhost:3001/src/pages/Login.tsx:58:7)',
+'    at async handleSubmit (http://localhost:2222/src/pages/Login.tsx:58:7)',
 
 'Original Error: Error: Error de conexión con el servidor. Por favor, verifica tu conexión.\n'+
 
-'    at backendSignIn (http://localhost:3001/src/contexts/AuthContext.tsx:92:11)\n'+
+'    at backendSignIn (http://localhost:2222/src/contexts/AuthContext.tsx:92:11)\n'+
 
-'    at async signIn (http://localhost:3001/src/contexts/AuthContext.tsx:211:24)\n'+
+'    at async signIn (http://localhost:2222/src/contexts/AuthContext.tsx:211:24)\n'+
 
-'    at async handleSubmit (http://localhost:3001/src/pages/Login.tsx:58:7)',
+'    at async handleSubmit (http://localhost:2222/src/pages/Login.tsx:58:7)',
 
 'Message: Error de conexión con el servidor. Por favor, verifica tu conexión.',
 
@@ -496,11 +496,11 @@ ium/error-context.md
 
 'Stack: Error: Error de conexión con el servidor. Por favor, verifica tu conexión.\n'+
 
-'    at backendSignIn (http://localhost:3001/src/contexts/AuthContext.tsx:92:11)\n'+
+'    at backendSignIn (http://localhost:2222/src/contexts/AuthContext.tsx:92:11)\n'+
 
-'    at async signIn (http://localhost:3001/src/contexts/AuthContext.tsx:211:24)\n'+
+'    at async signIn (http://localhost:2222/src/contexts/AuthContext.tsx:211:24)\n'+
 
-'    at async handleSubmit (http://localhost:3001/src/pages/Login.tsx:58:7)',
+'    at async handleSubmit (http://localhost:2222/src/pages/Login.tsx:58:7)',
 
 'Troubleshooting: undefined',
 
@@ -550,7 +550,7 @@ r.com/v6/upgrading/future#v7_relativesplatpath.'
 
 …ec.ts:124:3›WalletPageDebug-BackendIntegration›DEBUG:Checkauthenticationstateandwalletaccess
 
-🌐FinalURLafterwalletaccessattempt:http://localhost:3001/wallet
+🌐FinalURLafterwalletaccessattempt:http://localhost:2222/wallet
 
 🔐Userappearstobeauthenticated:true
 

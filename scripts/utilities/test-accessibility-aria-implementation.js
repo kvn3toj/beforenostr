@@ -14,7 +14,7 @@ async function testAccessibilityAria() {
   try {
     // 1. LOGIN Y NAVEGACIÓN
     console.log('🔐 Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@gamifier.com');

@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Social Integration - CoomÜnity SuperApp', () => {
   
   test('Verificar que Social está completamente integrado', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('💬 Verificando integración de Social/Gossip...');
@@ -74,7 +74,7 @@ test.describe('Social Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Verificar funcionalidad de chat', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     // Ir a Social
@@ -125,7 +125,7 @@ test.describe('Social Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Verificar características del análisis extraído', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     // Ir a Social
@@ -174,7 +174,7 @@ test.describe('Social Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Comparar Social antes vs después', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('📊 Comparando estado antes vs después de la integración de Social...');

@@ -100,14 +100,14 @@ echo -e "\n${BLUE}🌐 PARTE 3: VERIFICACIÓN DE SERVICIOS${NC}"
 echo "======================================"
 
 # Verificar SuperApp funcionando
-if curl -s http://localhost:3001 >/dev/null; then
+if curl -s http://localhost:2222 >/dev/null; then
     echo -e "  ${GREEN}✅${NC} SuperApp respondiendo en puerto 3001"
 else
     echo -e "  ${RED}❌${NC} SuperApp no responde en puerto 3001"
 fi
 
 # Verificar backend funcionando
-if curl -s http://localhost:3002/health >/dev/null; then
+if curl -s http://localhost:1111/health >/dev/null; then
     echo -e "  ${GREEN}✅${NC} Backend NestJS respondiendo en puerto 3002"
 else
     echo -e "  ${YELLOW}⚠️${NC} Backend NestJS no responde en puerto 3002"
@@ -154,7 +154,7 @@ echo -e "💨 Efectos sutiles que evocan comunicación y ligereza"
 
 echo -e "\n${BLUE}🎯 PRÓXIMOS PASOS SUGERIDOS${NC}"
 echo "==========================="
-echo -e "1. Navegar a ${YELLOW}http://localhost:3001/social${NC} para verificar visualmente"
+echo -e "1. Navegar a ${YELLOW}http://localhost:2222/social${NC} para verificar visualmente"
 echo -e "2. Probar interacciones (likes, comentarios) para validar funcionalidad"
 echo -e "3. Verificar responsividad en diferentes tamaños de pantalla"
 echo -e "4. Continuar con transformación de otros módulos del Plan Maestro"

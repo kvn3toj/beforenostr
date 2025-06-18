@@ -14,7 +14,7 @@ async function testAdminMenu() {
   try {
     // Navegar a la página de login
     console.log('📍 Navegando a login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     // Realizar login
@@ -25,7 +25,7 @@ async function testAdminMenu() {
     
     // Esperar redirección
     console.log('⏳ Esperando redirección...');
-    await page.waitForURL('http://localhost:3000/', { timeout: 10000 });
+    await page.waitForURL('http://localhost:3333/', { timeout: 10000 });
     await page.waitForLoadState('networkidle');
     
     console.log('✅ Login exitoso, URL actual:', page.url());

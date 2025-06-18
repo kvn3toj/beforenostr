@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Mobile Marketplace Search Suggestions', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the marketplace
-    await page.goto('http://localhost:3001/marketplace');
+    await page.goto('http://localhost:2222/marketplace');
     await page.waitForSelector('#root');
 
     // Wait for the mobile marketplace view to load

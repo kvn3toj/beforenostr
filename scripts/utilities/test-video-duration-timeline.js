@@ -174,7 +174,7 @@ test.describe('Video Duration vs Timeline Verification', () => {
       // Make a direct API call to get the expected duration
       const response = await page.evaluate(async (id) => {
         try {
-          const res = await fetch(`http://localhost:3002/video-items/${id}`);
+          const res = await fetch(`http://localhost:1111/video-items/${id}`);
           return await res.json();
         } catch (error) {
           return { error: error.message };

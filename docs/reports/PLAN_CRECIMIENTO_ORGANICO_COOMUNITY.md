@@ -38,8 +38,8 @@ Iniciar el crecimiento orgánico de la plataforma CoomÜnity utilizando la infra
 # Comandos de verificación
 cd Demo/apps/superapp-unified
 npm run dev  # Puerto 3000
-curl http://localhost:3000 -I  # Verificar respuesta
-curl http://localhost:3002/health -v  # Verificar backend
+curl http://localhost:3333 -I  # Verificar respuesta
+curl http://localhost:1111/health -v  # Verificar backend
 ```
 
 ### **1.2 Preparación de Datos de Prueba**

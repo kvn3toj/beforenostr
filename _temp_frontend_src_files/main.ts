@@ -18,7 +18,7 @@ async function bootstrap() {
 
   // Enable CORS for frontend communication
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:5173'], // Frontend ports: React dev, custom port, Vite
+    origin: ['http://localhost:3333', 'http://localhost:2222', 'http://localhost:1111', 'http://localhost:3003', 'http://localhost:5173'], // Frontend ports: React dev, custom port, Vite
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });

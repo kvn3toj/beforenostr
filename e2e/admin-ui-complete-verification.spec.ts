@@ -1,8 +1,8 @@
 import { test, expect, Page } from '@playwright/test';
 
 // Configuration constants
-const FRONTEND_BASE_URL = 'http://localhost:3000';
-const BACKEND_BASE_URL = 'http://localhost:3002';
+const FRONTEND_BASE_URL = 'http://localhost:3333';
+const BACKEND_BASE_URL = 'http://localhost:1111';
 const ADMIN_CREDENTIALS = {
   email: 'admin@gamifier.com',
   password: 'admin123'

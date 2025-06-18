@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test.describe('ÜPlay Integration - CoomÜnity SuperApp', () => {
   
   test('Verificar que ÜPlay está completamente integrado', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('🎮 Verificando integración de ÜPlay...');
@@ -74,7 +74,7 @@ test.describe('ÜPlay Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Verificar funcionalidad de creación de gigs', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     // Ir a ÜPlay
@@ -131,7 +131,7 @@ test.describe('ÜPlay Integration - CoomÜnity SuperApp', () => {
   });
 
   test('Comparar ÜPlay antes vs después', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('📊 Comparando estado antes vs después de la integración de ÜPlay...');

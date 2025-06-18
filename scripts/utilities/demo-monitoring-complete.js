@@ -10,7 +10,7 @@ async function demoMonitoringComplete() {
     
     // Backend GAMIFIER
     console.log('🔍 Verificando Backend GAMIFIER...');
-    const healthResponse = await fetch('http://localhost:3002/health');
+    const healthResponse = await fetch('http://localhost:1111/health');
     const healthData = await healthResponse.json();
     console.log(`✅ Backend GAMIFIER: ${healthData.message} (Puerto 3002)`);
 
@@ -23,7 +23,7 @@ async function demoMonitoringComplete() {
 
     // Grafana
     console.log('🔍 Verificando Grafana...');
-    const grafanaResponse = await fetch('http://localhost:3001/api/health');
+    const grafanaResponse = await fetch('http://localhost:2222/api/health');
     const grafanaData = await grafanaResponse.json();
     console.log(`✅ Grafana: v${grafanaData.version} funcionando (Puerto 3001)`);
 
@@ -41,7 +41,7 @@ async function demoMonitoringComplete() {
       console.log(`📊 Generando request ${i + 1}/10: GET ${endpoint}`);
       
       try {
-        await fetch(`http://localhost:3002${endpoint}`);
+        await fetch(`http://localhost:1111${endpoint}`);
         console.log(`   ✅ Request exitoso`);
       } catch (error) {
         console.log(`   ❌ Request falló: ${error.message}`);
@@ -53,7 +53,7 @@ async function demoMonitoringComplete() {
     // 3. Mostrar métricas actuales
     console.log('\n3️⃣ MÉTRICAS ACTUALES DEL SISTEMA...\n');
     
-    const metricsResponse = await fetch('http://localhost:3002/prometheus-metrics');
+    const metricsResponse = await fetch('http://localhost:1111/prometheus-metrics');
     const metricsText = await metricsResponse.text();
     
     console.log(`📈 Total de métricas generadas: ${metricsText.length} caracteres`);
@@ -95,14 +95,14 @@ async function demoMonitoringComplete() {
     console.log('      • histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))');
     
     console.log('\n📊 GRAFANA (Dashboards Visuales):');
-    console.log('   📍 URL: http://localhost:3001');
+    console.log('   📍 URL: http://localhost:2222');
     console.log('   🔐 Credenciales: admin / admin123');
     console.log('   📈 Dashboard: "GAMIFIER Backend Metrics"');
     
     console.log('\n🔗 ENDPOINTS DE MÉTRICAS:');
-    console.log('   📍 Backend Health: http://localhost:3002/health');
-    console.log('   📍 Métricas Prometheus: http://localhost:3002/prometheus-metrics');
-    console.log('   📍 Test de Métricas: http://localhost:3002/metrics-test');
+    console.log('   📍 Backend Health: http://localhost:1111/health');
+    console.log('   📍 Métricas Prometheus: http://localhost:1111/prometheus-metrics');
+    console.log('   📍 Test de Métricas: http://localhost:1111/metrics-test');
 
     // 6. Verificar targets de Prometheus
     console.log('\n6️⃣ ESTADO DE TARGETS EN PROMETHEUS...\n');
@@ -134,7 +134,7 @@ async function demoMonitoringComplete() {
     console.log('   • Métricas de HTTP, Cache y Performance');
     
     console.log('\n📋 Próximos pasos recomendados:');
-    console.log('   1. Abrir Grafana en http://localhost:3001');
+    console.log('   1. Abrir Grafana en http://localhost:2222');
     console.log('   2. Explorar el dashboard "GAMIFIER Backend Metrics"');
     console.log('   3. Crear queries personalizadas en Prometheus');
     console.log('   4. Configurar alertas basadas en métricas');

@@ -78,13 +78,13 @@ fi
 # 6. Verificar servicios funcionando
 echo ""
 echo "✅ 6. Verificando servicios..."
-if curl -s http://localhost:3001 > /dev/null; then
+if curl -s http://localhost:2222 > /dev/null; then
     echo "   ✅ SuperApp ejecutándose en puerto 3001"
 else
     echo "   ❌ SuperApp NO disponible en puerto 3001"
 fi
 
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     echo "   ✅ Backend ejecutándose en puerto 3002"
 else
     echo "   ⚠️ Backend no disponible en puerto 3002 (opcional para esta verificación)"
@@ -106,7 +106,7 @@ echo "   El fondo oscuro rgb(41, 37, 36) debe estar ERRADICADO"
 echo "   y reemplazado por el color otoñal #fffefb"
 echo ""
 echo "🌐 SIGUIENTE PASO:"
-echo "   Abrir http://localhost:3001 y recargar con Cmd+Shift+R"
+echo "   Abrir http://localhost:2222 y recargar con Cmd+Shift+R"
 echo "   para verificar visualmente que el fondo oscuro ha sido eliminado."
 echo ""
 echo "🍂 ¡SOLUCIÓN DEFINITIVA IMPLEMENTADA!" 

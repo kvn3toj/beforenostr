@@ -328,7 +328,7 @@ export const createWebSocketService = (config: WebSocketConfig): WebSocketServic
 
 // 🔧 Configuración por defecto para CoomÜnity
 export const COOMUNITY_WEBSOCKET_CONFIG: WebSocketConfig = {
-  url: 'http://localhost:3002',
+  url: 'http://localhost:1111',
   namespace: '/study-rooms',
   autoConnect: false,
   transports: ['websocket'],

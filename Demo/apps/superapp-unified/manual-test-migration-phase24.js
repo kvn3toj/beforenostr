@@ -24,7 +24,7 @@ async function testMigrationPhase24() {
   try {
     // 1. LOGIN CON CREDENTIALS DEL BACKEND
     console.log('📝 1. Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -37,7 +37,7 @@ async function testMigrationPhase24() {
 
     // 2. VERIFICAR HOME CON DATOS MIXTOS (REAL + FALLBACK)
     console.log('\n📊 2. Verificando página Home (backend real + fallbacks)...');
-    await page.goto('http://localhost:3000/');
+    await page.goto('http://localhost:3333/');
     await page.waitForLoadState('networkidle');
 
     // Verificar que la página carga sin errores críticos
@@ -56,7 +56,7 @@ async function testMigrationPhase24() {
 
     // 3. VERIFICAR WALLET CON FALLBACKS
     console.log('\n💰 3. Verificando página Wallet (con fallbacks)...');
-    await page.goto('http://localhost:3000/wallet');
+    await page.goto('http://localhost:3333/wallet');
     await page.waitForLoadState('networkidle');
 
     // Verificar que se muestran datos de balance (reales o fallback)
@@ -73,7 +73,7 @@ async function testMigrationPhase24() {
 
     // 4. VERIFICAR MUNDOS (DEBE USAR BACKEND REAL)
     console.log('\n🌍 4. Verificando página Mundos (backend real)...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
 
     // Esperar que carguen los mundos del backend real
@@ -92,7 +92,7 @@ async function testMigrationPhase24() {
 
     // 5. VERIFICAR VIDEOS (BACKEND REAL)
     console.log('\n🎥 5. Verificando datos de videos...');
-    await page.goto('http://localhost:3000/play');
+    await page.goto('http://localhost:3333/play');
     await page.waitForLoadState('networkidle');
 
     // Esperar que aparezcan videos o contenido relacionado
@@ -103,7 +103,7 @@ async function testMigrationPhase24() {
 
     // 6. VERIFICAR SOCIAL (CON FALLBACKS)
     console.log('\n🤝 6. Verificando página Social (con fallbacks)...');
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
 
     // Verificar que la página social carga
@@ -114,7 +114,7 @@ async function testMigrationPhase24() {
 
     // 7. VERIFICAR PROFILE (ESTÁTICO POR AHORA)
     console.log('\n👤 7. Verificando página Profile...');
-    await page.goto('http://localhost:3000/profile');
+    await page.goto('http://localhost:3333/profile');
     await page.waitForLoadState('networkidle');
 
     const profileContent = await page.locator('text=Perfil,text=Usuario').count();
@@ -124,7 +124,7 @@ async function testMigrationPhase24() {
 
     // 8. VERIFICAR MARKETPLACE (ESTÁTICO POR AHORA)
     console.log('\n🏪 8. Verificando página Marketplace...');
-    await page.goto('http://localhost:3000/marketplace');
+    await page.goto('http://localhost:3333/marketplace');
     await page.waitForLoadState('networkidle');
 
     const marketplaceContent = await page.locator('text=Marketplace,text=Productos,text=Servicios').count();

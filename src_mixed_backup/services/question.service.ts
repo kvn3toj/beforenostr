@@ -5,7 +5,7 @@ import type { Question } from '../generated/prisma';
 import { apiService } from './api.service';
 
 // Configuración del backend - ajustar según tu configuración
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const QUESTIONS_ENDPOINT = `${API_BASE_URL}/questions`;
 
 // Helper function para manejar respuestas HTTP

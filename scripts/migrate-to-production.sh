@@ -32,7 +32,7 @@ error() {
 log "Verificando prerrequisitos..."
 
 # Verificar que el backend NestJS esté ejecutándose
-if ! curl -s http://localhost:3002/health > /dev/null; then
+if ! curl -s http://localhost:1111/health > /dev/null; then
     error "Backend NestJS no está ejecutándose en puerto 3002"
     echo "Por favor, inicia el backend NestJS primero:"
     echo "cd backend/ && npm run dev"

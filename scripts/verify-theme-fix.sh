@@ -59,13 +59,13 @@ fi
 # 5. Verificar servicios
 echo ""
 echo "✅ 5. Verificando servicios..."
-if curl -s http://localhost:3001 > /dev/null; then
+if curl -s http://localhost:2222 > /dev/null; then
     echo "   ✅ SuperApp (puerto 3001) - OPERACIONAL"
 else
     echo "   ❌ SuperApp (puerto 3001) - NO DISPONIBLE"
 fi
 
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     echo "   ✅ Backend (puerto 3002) - OPERACIONAL"
 else
     echo "   ❌ Backend (puerto 3002) - NO DISPONIBLE"
@@ -92,7 +92,7 @@ echo "   El fondo oscuro (rgb(41, 37, 36)) ha sido eliminado definitivamente"
 echo "   y reemplazado por el tema otoñal cálido (#fffefb)"
 echo ""
 echo "📋 SIGUIENTE PASO:"
-echo "   → Abrir http://localhost:3001 en el navegador"
+echo "   → Abrir http://localhost:2222 en el navegador"
 echo "   → Recargar con Cmd+Shift+R (ignorar caché)"
 echo "   → Verificar que ya NO hay fondos oscuros"
 echo "   → Inspeccionar elemento <body> - debe tener background-color: #fffefb" 

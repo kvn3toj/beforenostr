@@ -24,7 +24,7 @@ async function testMundosEditFunctionality() {
 
   try {
     console.log('1. 🔐 Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -46,7 +46,7 @@ async function testMundosEditFunctionality() {
     }
 
     console.log('\n2. 🌍 Navegando a la página de Mundos...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
 
     // Verificar que la página de mundos carga
@@ -165,7 +165,7 @@ async function testMundosEditFunctionality() {
     
     // Probar hacer clic en el nombre de un mundo para ver detalles
     try {
-      await page.goto('http://localhost:3000/mundos');
+      await page.goto('http://localhost:3333/mundos');
       await page.waitForLoadState('networkidle');
       
       // Buscar el primer mundo en la tabla y hacer clic en su nombre

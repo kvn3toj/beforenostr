@@ -105,10 +105,10 @@ El Background Agent ha completado exitosamente el **análisis modular exhaustivo
 ### **🏥 Verificación Backend**
 ```bash
 # Verificar endpoints disponibles
-curl http://localhost:3002/health
-curl http://localhost:3002/marketplace/items
-curl http://localhost:3002/video-items
-curl http://localhost:3002/social/posts
+curl http://localhost:1111/health
+curl http://localhost:1111/marketplace/items
+curl http://localhost:1111/video-items
+curl http://localhost:1111/social/posts
 ```
 
 ---

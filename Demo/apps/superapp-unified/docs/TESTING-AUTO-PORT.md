@@ -83,7 +83,7 @@ PLAYWRIGHT_BASE_URL=http://localhost:[PUERTO_DETECTADO]
 ```typescript
 // playwright.config.ts
 use: {
-  baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+  baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3333',
   // ...
 },
 globalSetup: path.resolve(__dirname, 'utils/global-setup.cjs'),

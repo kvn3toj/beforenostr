@@ -35,9 +35,9 @@ npx playwright test tests/e2e/ux-heuristics/02-consistency-standards.spec.ts --r
 
 ```bash
 # Usar axe-core para validación automática
-npx @axe-core/cli http://localhost:3000/sections/red-pill/
-npx @axe-core/cli http://localhost:3000/sections/merchant/
-npx @axe-core/cli http://localhost:3000/sections/pilgrim/
+npx @axe-core/cli http://localhost:3333/sections/red-pill/
+npx @axe-core/cli http://localhost:3333/sections/merchant/
+npx @axe-core/cli http://localhost:3333/sections/pilgrim/
 ```
 
 ### 3.1 Verificación Manual de Accesibilidad
@@ -50,9 +50,9 @@ npx @axe-core/cli http://localhost:3000/sections/pilgrim/
 
 ```bash
 # Lighthouse para cada sección
-lighthouse http://localhost:3000/sections/red-pill/ --output=html --output-path=./reports/red-pill-lighthouse.html
-lighthouse http://localhost:3000/sections/merchant/ --output=html --output-path=./reports/merchant-lighthouse.html
-lighthouse http://localhost:3000/sections/pilgrim/ --output=html --output-path=./reports/pilgrim-lighthouse.html
+lighthouse http://localhost:3333/sections/red-pill/ --output=html --output-path=./reports/red-pill-lighthouse.html
+lighthouse http://localhost:3333/sections/merchant/ --output=html --output-path=./reports/merchant-lighthouse.html
+lighthouse http://localhost:3333/sections/pilgrim/ --output=html --output-path=./reports/pilgrim-lighthouse.html
 ```
 
 ### 4.1 Métricas a Verificar
@@ -126,7 +126,7 @@ npx eslint shared/js/unified-scripts.js
 
 ```bash
 # Test de carga básico con Artillery
-artillery quick --count 10 --num 5 http://localhost:3000/sections/red-pill/
+artillery quick --count 10 --num 5 http://localhost:3333/sections/red-pill/
 ```
 
 ## 10. Checklist Final de Consistencia

@@ -13,7 +13,7 @@ const fetch = require('node-fetch');
 const path = require('path');
 
 // Configuration
-const BACKEND_URL = process.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const BACKEND_URL = process.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const BACKEND_DIR = path.join(__dirname, '../../../..');
 const TIMEOUT_MS = 5000;
 

@@ -49,7 +49,7 @@ redis-cli -h localhost -p 6379 ping >/dev/null 2>&1
 print_status $? "Redis conectividad (puerto 6379)"
 
 # Test Backend Health Check
-HEALTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/health 2>/dev/null)
+HEALTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1111/health 2>/dev/null)
 print_status $([ "$HEALTH_RESPONSE" = "200" ] && echo 0 || echo 1) "Backend Health Check (puerto 3002): HTTP $HEALTH_RESPONSE"
 
 # 3. Verificar endpoints críticos del backend
@@ -57,18 +57,18 @@ echo ""
 echo "🔧 Verificando endpoints críticos..."
 
 # Test de autenticación (debe devolver 401 sin credenciales)
-AUTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/auth/me 2>/dev/null)
+AUTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1111/auth/me 2>/dev/null)
 print_status $([ "$AUTH_RESPONSE" = "401" ] && echo 0 || echo 1) "Auth endpoint (/auth/me): HTTP $AUTH_RESPONSE (esperado 401)"
 
 # Test de usuarios (debe devolver 401 sin autenticación)
-USERS_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/users 2>/dev/null)
+USERS_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1111/users 2>/dev/null)
 print_status $([ "$USERS_RESPONSE" = "401" ] && echo 0 || echo 1) "Users endpoint (/users): HTTP $USERS_RESPONSE (esperado 401)"
 
 # 4. Test de login con credenciales de desarrollo
 echo ""
 echo "🔐 Probando autenticación con credenciales de desarrollo..."
 
-LOGIN_RESPONSE=$(curl -s -X POST "http://localhost:3002/auth/login" \
+LOGIN_RESPONSE=$(curl -s -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@gamifier.com", "password": "admin123"}' 2>/dev/null)
 
@@ -79,7 +79,7 @@ if echo "$LOGIN_RESPONSE" | jq -e '.access_token' >/dev/null 2>&1; then
     TOKEN=$(echo "$LOGIN_RESPONSE" | jq -r '.access_token')
     
     # Test endpoint autenticado
-    ME_RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" http://localhost:3002/auth/me 2>/dev/null)
+    ME_RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" http://localhost:1111/auth/me 2>/dev/null)
     if echo "$ME_RESPONSE" | jq -e '.email' >/dev/null 2>&1; then
         USER_EMAIL=$(echo "$ME_RESPONSE" | jq -r '.email')
         print_status 0 "Endpoint autenticado funcional (usuario: $USER_EMAIL)"
@@ -127,5 +127,5 @@ echo "   - Reiniciar servicios: docker-compose -f docker-compose.prod.yml --env-
 
 echo ""
 echo "🔗 URLs de verificación manual:"
-echo "   - Health Check: http://localhost:3002/health"
-echo "   - API Docs: http://localhost:3002/api (si está habilitado)" 
+echo "   - Health Check: http://localhost:1111/health"
+echo "   - API Docs: http://localhost:1111/api (si está habilitado)" 

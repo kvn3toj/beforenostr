@@ -155,7 +155,7 @@ cd backend/ && npm run dev
 cd Demo/apps/superapp-unified/ && npm run dev
 
 # Verificar conectividad Backend
-curl http://localhost:3002/health -v
+curl http://localhost:1111/health -v
 ```
 
 ---

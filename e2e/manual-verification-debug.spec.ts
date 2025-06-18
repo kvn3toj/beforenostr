@@ -137,7 +137,7 @@ test.describe('Manual Verification Debug - Mundos Integration', () => {
     console.log('🔍 STEP 4: Backend connectivity verification...');
     
     // Test direct backend call
-    const response = await page.request.get('http://localhost:3002/mundos');
+    const response = await page.request.get('http://localhost:1111/mundos');
     const status = response.status();
     const data = await response.json().catch(() => null);
     

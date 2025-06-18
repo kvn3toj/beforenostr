@@ -81,7 +81,7 @@ if [ -f ".env.local" ]; then
 else
     print_warning "No se encontró .env.local - usando configuración por defecto"
     print_info "Para configurar el backend real, crea .env.local con:"
-    echo "  VITE_API_BASE_URL=http://localhost:3000"
+    echo "  VITE_API_BASE_URL=http://localhost:3333"
     echo "  VITE_ENABLE_MOCK_AUTH=false"
     echo
 fi
@@ -89,20 +89,20 @@ fi
 print_step "2. Verificando estado del sistema..."
 
 # Verificar si el frontend está corriendo
-if curl -s http://localhost:3000 > /dev/null; then
-    print_success "Frontend accesible en http://localhost:3000"
+if curl -s http://localhost:3333 > /dev/null; then
+    print_success "Frontend accesible en http://localhost:3333"
 else
-    print_warning "Frontend no está corriendo en http://localhost:3000"
+    print_warning "Frontend no está corriendo en http://localhost:3333"
     print_info "Para iniciar el frontend: npm run dev"
 fi
 
 # Verificar si el backend está corriendo
 print_info "Verificando backend..."
-if curl -s http://localhost:3000/health > /dev/null; then
-    print_success "Backend accesible en http://localhost:3000/health"
+if curl -s http://localhost:3333/health > /dev/null; then
+    print_success "Backend accesible en http://localhost:3333/health"
     BACKEND_STATUS="available"
 else
-    print_warning "Backend no disponible en http://localhost:3000/health"
+    print_warning "Backend no disponible en http://localhost:3333/health"
     print_info "Los tests verificarán el manejo de errores de conectividad"
     BACKEND_STATUS="unavailable"
 fi
@@ -292,7 +292,7 @@ if [ "$BACKEND_STATUS" = "available" ]; then
     print_success "Backend disponible - Tests con autenticación real ejecutados"
 else
     print_warning "Backend no disponible - Tests con modo fallback ejecutados"
-    print_info "Para tests completos, configura y inicia el backend en http://localhost:3000"
+    print_info "Para tests completos, configura y inicia el backend en http://localhost:3333"
 fi
 
 echo

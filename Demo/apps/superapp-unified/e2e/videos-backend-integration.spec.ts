@@ -89,7 +89,7 @@ test.describe('Videos Backend Integration - UPlay Component', () => {
     if (!apiCallMade) {
       console.log('🔧 Verificando endpoint directamente...');
       
-      const response = await page.request.get('http://localhost:3002/video-items', {
+      const response = await page.request.get('http://localhost:1111/video-items', {
         headers: {
           'Authorization': 'Bearer mock-token'
         }
@@ -139,7 +139,7 @@ test.describe('Videos Backend Integration - UPlay Component', () => {
     console.log('📊 Verificando estructura de datos de videos del backend...');
     
     // Hacer llamada directa al backend para verificar estructura
-    const response = await page.request.get('http://localhost:3002/video-items', {
+    const response = await page.request.get('http://localhost:1111/video-items', {
       headers: {
         'Authorization': 'Bearer mock-token'
       }
@@ -209,7 +209,7 @@ test.describe('Videos Backend Integration - UPlay Component', () => {
     console.log('🌍 Verificando integración de contexto de Mundos...');
     
     // Obtener videos del backend
-    const videosResponse = await page.request.get('http://localhost:3002/video-items', {
+    const videosResponse = await page.request.get('http://localhost:1111/video-items', {
       headers: {
         'Authorization': 'Bearer mock-token'
       }
@@ -219,7 +219,7 @@ test.describe('Videos Backend Integration - UPlay Component', () => {
     const videos = await videosResponse.json();
     
     // Obtener mundos del backend
-    const mundosResponse = await page.request.get('http://localhost:3002/mundos', {
+    const mundosResponse = await page.request.get('http://localhost:1111/mundos', {
       headers: {
         'Authorization': 'Bearer mock-token'
       }
@@ -267,7 +267,7 @@ test.describe('Videos Backend Integration - UPlay Component', () => {
     console.log('📋 Verificando organización de playlists dentro de mundos...');
     
     // Obtener videos del backend
-    const videosResponse = await page.request.get('http://localhost:3002/video-items', {
+    const videosResponse = await page.request.get('http://localhost:1111/video-items', {
       headers: {
         'Authorization': 'Bearer mock-token'
       }

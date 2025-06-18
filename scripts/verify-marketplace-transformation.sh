@@ -151,11 +151,11 @@ echo "================================================"
 
 # Verificar que la aplicación esté ejecutándose
 echo "🔍 Verificando que la SuperApp esté ejecutándose..."
-if curl -s -I http://localhost:3001 | grep -q "200 OK"; then
+if curl -s -I http://localhost:2222 | grep -q "200 OK"; then
     echo "✅ SuperApp ejecutándose en puerto 3001"
     
     # Verificar que la ruta del marketplace responda
-    if curl -s -I http://localhost:3001/marketplace | grep -q "200 OK"; then
+    if curl -s -I http://localhost:2222/marketplace | grep -q "200 OK"; then
         echo "✅ Ruta del Marketplace accesible"
     else
         echo "⚠️ Ruta del Marketplace no accesible (puede ser normal)"
@@ -200,7 +200,7 @@ if [ $ERRORS -eq 0 ]; then
     echo ""
     echo "📍 Para verificar visualmente:"
     echo "   1. Asegúrate de que la SuperApp esté ejecutándose: npm run dev"
-    echo "   2. Navega a http://localhost:3001/marketplace"
+    echo "   2. Navega a http://localhost:2222/marketplace"
     echo "   3. Observa la estética 'Tierra' con tonos verdes/tierra y efectos cósmicos"
     echo "   4. Verifica que las tarjetas de producto tengan efectos de brillo y partículas"
     echo ""

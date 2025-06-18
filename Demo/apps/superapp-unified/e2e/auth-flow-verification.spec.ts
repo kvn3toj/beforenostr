@@ -95,7 +95,7 @@ test.describe('🔐 Flujo de Autenticación End-to-End', () => {
       
       if (token) {
         try {
-          await fetch('http://localhost:3002/auth/me', {
+          await fetch('http://localhost:1111/auth/me', {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'

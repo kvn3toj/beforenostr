@@ -29,12 +29,12 @@ Hemos completado exitosamente la migración de una infraestructura de desarrollo
 | Servicio | URL | Estado | Función | Performance |
 |----------|-----|--------|---------|-------------|
 | **Load Balancer** | http://localhost:8080 | ✅ Operativo | Distribución de carga | Latencia: 1.6ms |
-| **Backend NestJS** | http://localhost:3002 | ✅ Operativo | API principal | Respuesta: <5ms |
+| **Backend NestJS** | http://localhost:1111 | ✅ Operativo | API principal | Respuesta: <5ms |
 | **Prometheus** | http://localhost:9091 | ✅ Operativo | Métricas y alertas | Recolección activa |
 | **Grafana** | http://localhost:3003 | ✅ Operativo | Dashboards | admin/coomunity2025 |
 | **Redis Cache** | localhost:6380 | ✅ Operativo | Caching distribuido | Performance optimizada |
 | **PostgreSQL** | localhost:5433 | ✅ Operativo | Base de datos | Métricas filosóficas |
-| **SuperApp Frontend** | http://localhost:3000 | ✅ Operativo | Aplicación usuario | Integración completa |
+| **SuperApp Frontend** | http://localhost:3333 | ✅ Operativo | Aplicación usuario | Integración completa |
 
 ### **✅ Funcionalidades Completadas y Verificadas**
 - 🔐 **Sistema de Autenticación**: JWT, roles, permisos (100% funcional)
@@ -244,8 +244,8 @@ Hemos completado exitosamente la migración de una infraestructura de desarrollo
 
 ### **🔗 URLs de Servicios Operativos**
 - **Load Balancer**: http://localhost:8080
-- **Backend API**: http://localhost:3002
-- **SuperApp**: http://localhost:3000
+- **Backend API**: http://localhost:1111
+- **SuperApp**: http://localhost:3333
 - **Prometheus**: http://localhost:9091
 - **Grafana**: http://localhost:3003 (admin/coomunity2025)
 

@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 async function getToken() {
   try {
-    const response = await fetch('http://localhost:3002/auth/login', {
+    const response = await fetch('http://localhost:1111/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: 'admin@gamifier.com', password: 'admin123' })

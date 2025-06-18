@@ -181,7 +181,7 @@ Configuración:
 - Backend: puerto 3002, endpoints REST
 - SuperApp: puerto 3001, React Query
 - Autenticación: JWT con credenciales verificadas
-- CORS configurado para localhost:3001
+- CORS configurado para localhost:2222
 
 Implementación:
 - DTOs tipados compartidos

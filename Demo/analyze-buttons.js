@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
   const page = await browser.newPage();
   
   // Navegar exactamente igual que el test
-  await page.goto('http://localhost:3000');
+  await page.goto('http://localhost:3333');
   await page.waitForLoadState('networkidle');
   
   // Replicar exactamente la lógica del test

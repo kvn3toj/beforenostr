@@ -6,7 +6,7 @@ async function testUIManual() {
   console.log('🧪 Manual UI Test for Video Duration Fix...\n');
   
   const VIDEO_ITEM_ID = 9;
-  const FRONTEND_URL = `http://localhost:3000/items/${VIDEO_ITEM_ID}/config`;
+  const FRONTEND_URL = `http://localhost:3333/items/${VIDEO_ITEM_ID}/config`;
   
   console.log('📋 Manual Testing Instructions:');
   console.log('=====================================\n');
@@ -43,7 +43,7 @@ async function testUIManual() {
   
   try {
     // Test backend health
-    const healthResponse = await fetch('http://localhost:3002/health');
+    const healthResponse = await fetch('http://localhost:1111/health');
     if (healthResponse.ok) {
       console.log('   ✅ Backend is running on port 3002');
     } else {
@@ -51,7 +51,7 @@ async function testUIManual() {
     }
     
     // Test video item endpoint
-    const videoResponse = await fetch(`http://localhost:3002/video-items/${VIDEO_ITEM_ID}`);
+    const videoResponse = await fetch(`http://localhost:1111/video-items/${VIDEO_ITEM_ID}`);
     if (videoResponse.ok) {
       const videoData = await videoResponse.json();
       console.log(`   ✅ Video item ${VIDEO_ITEM_ID} is accessible`);
@@ -61,7 +61,7 @@ async function testUIManual() {
     }
     
     // Test frontend
-    const frontendResponse = await fetch('http://localhost:3000');
+    const frontendResponse = await fetch('http://localhost:3333');
     if (frontendResponse.ok) {
       console.log('   ✅ Frontend is running on port 3000');
     } else {

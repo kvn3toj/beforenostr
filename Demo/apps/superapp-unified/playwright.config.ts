@@ -27,7 +27,7 @@ export default defineConfig({
   // Configuración dinámica de baseURL
   use: {
     // El baseURL se configurará dinámicamente en globalSetup, fallback a VITE_BASE_URL
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || process.env.VITE_BASE_URL || 'http://localhost:3001',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || process.env.VITE_BASE_URL || 'http://localhost:2222',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -102,7 +102,7 @@ export default defineConfig({
   // Configuración del servidor web (opcional, para CI)
   webServer: process.env.CI ? {
     command: 'npm run dev',
-    port: parseInt(process.env.VITE_BASE_URL?.split(':')[2] || '3001'),
+    port: parseInt(process.env.VITE_BASE_URL?.split(':')[2] || '2222'),
     reuseExistingServer: false,
     timeout: 120 * 1000,
   } : undefined,

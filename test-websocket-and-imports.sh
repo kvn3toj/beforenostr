@@ -73,7 +73,7 @@ echo "🌐 TEST 3: Service Availability"
 echo "-------------------------------"
 
 # Test backend
-BACKEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/health)
+BACKEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1111/health)
 if [ "$BACKEND_STATUS" = "200" ]; then
     echo "✅ Backend accessible (Port 3002)"
 else
@@ -81,7 +81,7 @@ else
 fi
 
 # Test SuperApp
-SUPERAPP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001)
+SUPERAPP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:2222)
 if [ "$SUPERAPP_STATUS" = "200" ]; then
     echo "✅ SuperApp accessible (Port 3001)"
 else
@@ -103,7 +103,7 @@ const mockToken = 'test_token_for_debugging';
 
 console.log('🔌 Testing WebSocket connection...');
 
-const socket = io('http://localhost:3002/study-rooms', {
+const socket = io('http://localhost:1111/study-rooms', {
   auth: {
     token: mockToken
   },
@@ -168,11 +168,11 @@ echo "------------------------------------------"
 
 echo "📋 NEXT MANUAL TESTS:"
 echo "1. 🛒 ProductDetail Page Test:"
-echo "   URL: http://localhost:3001/product/blockchain-consulting-001"
+echo "   URL: http://localhost:2222/product/blockchain-consulting-001"
 echo "   Expected: Page loads without import errors"
 echo ""
 echo "2. 🎮 ÜPlay Module Test:"
-echo "   URL: http://localhost:3001/uplay"
+echo "   URL: http://localhost:2222/uplay"
 echo "   Expected: No useUPlayMockData import errors"
 echo ""
 echo "3. 🏫 Study Rooms WebSocket Test:"

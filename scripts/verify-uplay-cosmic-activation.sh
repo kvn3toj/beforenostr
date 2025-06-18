@@ -127,7 +127,7 @@ echo ""
 echo "🌐 4. Verificando conectividad y rendimiento..."
 
 # Verificar que SuperApp esté ejecutándose
-if curl -s http://localhost:3001 > /dev/null; then
+if curl -s http://localhost:2222 > /dev/null; then
     echo "✅ SuperApp funcionando en puerto 3001 🚀"
 else
     echo "❌ ERROR: SuperApp no responde en puerto 3001"
@@ -181,7 +181,7 @@ if [ "$PERCENTAGE" -ge 90 ]; then
     echo "💫 ÜPlay ahora brilla con la intensidad cósmica del Dashboard HOME"
     echo ""
     echo "🎯 ACCIONES SIGUIENTES:"
-    echo "1. Abrir http://localhost:3001/uplay en ventana incógnito"
+    echo "1. Abrir http://localhost:2222/uplay en ventana incógnito"
     echo "2. Hacer Hard Refresh (Cmd+Shift+R)"
     echo "3. Observar la transformación visual drástica"
     echo "4. Verificar glassmorphism, gradientes y efectos orbitales"
@@ -202,9 +202,9 @@ echo "========================================="
 
 echo ""
 echo "🔗 Enlaces útiles:"
-echo "   🌐 SuperApp: http://localhost:3001"
-echo "   🎬 ÜPlay: http://localhost:3001/uplay"
-echo "   🏠 Dashboard HOME (referencia): http://localhost:3001/"
+echo "   🌐 SuperApp: http://localhost:2222"
+echo "   🎬 ÜPlay: http://localhost:2222/uplay"
+echo "   🏠 Dashboard HOME (referencia): http://localhost:2222/"
 echo ""
 
 # Generar reporte de análisis visual

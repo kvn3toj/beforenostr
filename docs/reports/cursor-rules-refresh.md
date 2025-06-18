@@ -19,7 +19,7 @@
    - ✅ Revisar logs del servidor y consola del navegador
 
 2. **Verificación de Servicios Base**:
-   - ✅ Backend corriendo en puerto 3002 (`curl http://localhost:3002/health`)
+   - ✅ Backend corriendo en puerto 3002 (`curl http://localhost:1111/health`)
    - ✅ Frontend accesible en puerto configurado
    - ✅ Base de datos conectada (verificar logs de Prisma)
    - ✅ Variables de entorno cargadas correctamente

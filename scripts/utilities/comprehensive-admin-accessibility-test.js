@@ -46,7 +46,7 @@ async function comprehensiveAdminAccessibilityTest() {
     
     // 1. COMPLETE LOGIN VALIDATION
     console.log('📍 Navegando a la página de login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     // Verify we're on login page
@@ -211,7 +211,7 @@ async function comprehensiveAdminAccessibilityTest() {
       }
     } catch {
       // Fallback: direct navigation
-      await page.goto('http://localhost:3000/users');
+      await page.goto('http://localhost:3333/users');
       console.log('✅ Navegado directamente a usuarios');
     }
     

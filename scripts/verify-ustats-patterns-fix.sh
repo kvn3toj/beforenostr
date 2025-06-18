@@ -173,11 +173,11 @@ echo "🌐 5. VERIFICANDO SUPERAPP FUNCIONANDO:"
 echo "--------------------------------------"
 
 # Verificar que el servidor esté ejecutándose
-if curl -s http://localhost:3001 > /dev/null; then
+if curl -s http://localhost:2222 > /dev/null; then
     echo "✅ SuperApp ejecutándose en puerto 3001"
     
     # Verificar respuesta HTTP específica
-    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001)
+    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:2222)
     if [ "$HTTP_STATUS" = "200" ]; then
         echo "✅ SuperApp responde HTTP 200 OK"
     else
@@ -228,7 +228,7 @@ if [ -f "$APP_FILE" ] && [ -f "$BOTTOM_NAV" ] && [ -f "$SIDEBAR" ]; then
     PASSED_CHECKS=$((PASSED_CHECKS + 1))
 fi
 
-if curl -s http://localhost:3001 > /dev/null; then
+if curl -s http://localhost:2222 > /dev/null; then
     PASSED_CHECKS=$((PASSED_CHECKS + 1))
 fi
 
@@ -253,7 +253,7 @@ if [ "$PERCENTAGE" -ge 85 ]; then
     echo "🎉 ¡VERIFICACIÓN EXITOSA! UStats patterns error resuelto"
     echo ""
     echo "🔥 PRÓXIMOS PASOS RECOMENDADOS:"
-    echo "1. Navegar a http://localhost:3001/ustats para probar"
+    echo "1. Navegar a http://localhost:2222/ustats para probar"
     echo "2. Verificar que no aparezcan errores en consola"
     echo "3. Comprobar que los widgets cósmicos se muestren correctamente"
 elif [ "$PERCENTAGE" -ge 70 ]; then

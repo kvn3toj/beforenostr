@@ -2,7 +2,7 @@ async function getVideosWithAuth() {
   try {
     // 1. Hacer login
     console.log('🔑 Logging in...');
-    const loginResponse = await fetch('http://localhost:3002/auth/login', {
+    const loginResponse = await fetch('http://localhost:1111/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ async function getVideosWithAuth() {
 
     // 2. Obtener videos
     console.log('📹 Getting video items...');
-    const videosResponse = await fetch('http://localhost:3002/content/items', {
+    const videosResponse = await fetch('http://localhost:1111/content/items', {
       headers: {
         'Authorization': `Bearer ${token}`
       }

@@ -16,7 +16,7 @@ test.describe('🌍 Mundos Integration via Playlists - Verificación Fase B', ()
     
     // 1. Verificar que el backend devuelve playlists con información de mundos
     console.log('📍 PASO 1: Verificando datos del backend...');
-    const response = await page.request.get('http://localhost:3002/video-items');
+    const response = await page.request.get('http://localhost:1111/video-items');
     const videoData = await response.json();
     
     console.log('🎥 Datos de videos del backend:');
@@ -33,7 +33,7 @@ test.describe('🌍 Mundos Integration via Playlists - Verificación Fase B', ()
         
         // Verificar que el mundo existe
         if (firstVideo.playlist.mundoId) {
-          const mundoResponse = await page.request.get(`http://localhost:3002/mundos/${firstVideo.playlist.mundoId}`);
+          const mundoResponse = await page.request.get(`http://localhost:1111/mundos/${firstVideo.playlist.mundoId}`);
           if (mundoResponse.ok()) {
             const mundoData = await mundoResponse.json();
             console.log(`✅ Mundo encontrado: "${mundoData.name}"`);

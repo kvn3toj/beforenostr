@@ -14,7 +14,7 @@ async function testGamificationPagesComplete() {
   try {
     // 1. LOGIN
     console.log('🔐 Paso 1: Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -38,37 +38,37 @@ async function testGamificationPagesComplete() {
     const gamificationPages = [
       {
         name: 'Wallets',
-        path: 'http://localhost:3000/wallet',
+        path: 'http://localhost:3333/wallet',
         expectedContent: ['wallet', 'billetera', 'saldo'],
         realDataCheck: 'wallet.*test|billetera.*test|saldo'
       },
       {
         name: 'Merits',
-        path: 'http://localhost:3000/merits',
+        path: 'http://localhost:3333/merits',
         expectedContent: ['merit', 'mérito', 'puntos'],
         realDataCheck: 'MERITO|ONDA|VIBRA'
       },
       {
         name: 'Groups',
-        path: 'http://localhost:3000/groups',
+        path: 'http://localhost:3333/groups',
         expectedContent: ['group', 'grupo', 'equipo'],
         realDataCheck: 'Total Grupos|Gobierno|Clan|Amigos'
       },
       {
         name: 'Tokens',
-        path: 'http://localhost:3000/tokens',
+        path: 'http://localhost:3333/tokens',
         expectedContent: ['token', 'unidad'],
         realDataCheck: 'CIRCULATING_UNIT|PROMOTIONAL_UNIT|TOIN'
       },
       {
         name: 'Marketplace',
-        path: 'http://localhost:3000/marketplace',
+        path: 'http://localhost:3333/marketplace',
         expectedContent: ['marketplace', 'tienda'],
         realDataCheck: 'Total Items|Vendedores|marketplace.*disponible'
       },
       {
         name: 'Invitations',
-        path: 'http://localhost:3000/invitations',
+        path: 'http://localhost:3333/invitations',
         expectedContent: ['invitation', 'invitación'],
         realDataCheck: 'Total Enviadas|Canjeadas|invitaciones.*disponible'
       }
@@ -152,7 +152,7 @@ async function testGamificationPagesComplete() {
     console.log('\n🎯 Verificando navegación del menú de gamificación...');
     
     try {
-      await page.goto('http://localhost:3000/');
+      await page.goto('http://localhost:3333/');
       await page.waitForLoadState('networkidle');
       
       // Buscar el menú de gamificación

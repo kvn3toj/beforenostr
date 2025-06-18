@@ -115,7 +115,7 @@ async function main() {
 
   // Verificar que el backend esté corriendo
   const backendCheck = runCommand(
-    'curl -s http://localhost:3002/health',
+    'curl -s http://localhost:1111/health',
     'Backend health check'
   );
   totalChecks++;

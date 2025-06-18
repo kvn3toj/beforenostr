@@ -28,12 +28,12 @@ npm run start:backend:dev
 **Expected output:**
 
 ```
-🚀 Gamifier API is running on: http://localhost:3002
+🚀 Gamifier API is running on: http://localhost:1111
 ```
 
 ### 2. 🔍 Verify Backend Health
 
-Open your browser and go to: http://localhost:3002/health
+Open your browser and go to: http://localhost:1111/health
 
 **Expected response:**
 
@@ -50,7 +50,7 @@ Open your browser and go to: http://localhost:3002/health
 Verify your `.env` file in `Demo/apps/superapp-unified/.env`:
 
 ```bash
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 VITE_ENABLE_MOCK_AUTH=false
 ```
 

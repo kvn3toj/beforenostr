@@ -11,8 +11,8 @@ La verificación E2E completa ha sido ejecutada exitosamente, revelando que el *
 ## 🚀 CONFIGURACIÓN DE LA VERIFICACIÓN
 
 ### **Servicios Verificados:**
-- ✅ **Backend NestJS:** `http://localhost:3002` - Operativo
-- ✅ **Frontend React:** `http://localhost:3000` - Operativo
+- ✅ **Backend NestJS:** `http://localhost:1111` - Operativo
+- ✅ **Frontend React:** `http://localhost:3333` - Operativo
 - ✅ **Base de Datos:** Conectada y con datos
 - ✅ **Autenticación:** Sistema JWT funcionando correctamente
 

@@ -37,7 +37,7 @@ async function testCorsFixVerification() {
 
   try {
     console.log('🔐 1. Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     // Login
@@ -52,7 +52,7 @@ async function testCorsFixVerification() {
     console.log('✅ Login completado\n');
 
     console.log('📊 2. Navegando a página de Analytics...');
-    await page.goto('http://localhost:3000/analytics');
+    await page.goto('http://localhost:3333/analytics');
     await page.waitForLoadState('domcontentloaded');
     
     // Esperar a que se carguen los datos (más tiempo para ver las llamadas)

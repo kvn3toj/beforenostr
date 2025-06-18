@@ -22,7 +22,7 @@ test.describe('Social Module - Debug', () => {
     });
 
     // Ir a la página de Social
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
@@ -53,7 +53,7 @@ test.describe('Social Module - Debug', () => {
   });
 
   test('Debug: Verificar imports y dependencias', async ({ page }) => {
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     
     // Ejecutar JavaScript para verificar qué está disponible

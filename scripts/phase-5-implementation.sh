@@ -66,7 +66,7 @@ check_system_status() {
     log "🔍 Verificando estado actual del sistema..."
     
     # Verificar Backend
-    if curl -s http://localhost:3002/health > /dev/null; then
+    if curl -s http://localhost:1111/health > /dev/null; then
         log "✅ Backend NestJS operativo en puerto 3002"
     else
         error "Backend NestJS no responde en puerto 3002"
@@ -74,7 +74,7 @@ check_system_status() {
     fi
     
     # Verificar Frontend
-    if curl -s http://localhost:3000 > /dev/null; then
+    if curl -s http://localhost:3333 > /dev/null; then
         log "✅ SuperApp Frontend operativo en puerto 3000"
     else
         warn "SuperApp Frontend no responde en puerto 3000"
@@ -127,7 +127,7 @@ services:
     networks:
       - coomunity-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:1111/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -141,7 +141,7 @@ services:
     networks:
       - coomunity-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:1111/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -155,7 +155,7 @@ services:
     networks:
       - coomunity-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:1111/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -604,7 +604,7 @@ fi
 # Configuración de load test
 cat > load-test-config.yml << 'LOADTEST'
 config:
-  target: 'http://localhost:3002'
+  target: 'http://localhost:1111'
   phases:
     - duration: 60
       arrivalRate: 10
@@ -692,7 +692,7 @@ main() {
     echo "1. Ejecutar: cd infrastructure/scalability && docker-compose -f docker-compose-scale.yml up -d"
     echo "2. Configurar monitoreo: ./monitoring/setup-monitoring.sh"
     echo "3. Ejecutar load tests: ./scripts/load-test.sh"
-    echo "4. Monitorear métricas en: http://localhost:3001 (Grafana)"
+    echo "4. Monitorear métricas en: http://localhost:2222 (Grafana)"
     echo "5. Revisar alertas en: http://localhost:9090 (Prometheus)"
     echo ""
     echo "🌟 CoomÜnity está listo para escalar a 10M+ usuarios!"

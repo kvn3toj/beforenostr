@@ -13,7 +13,7 @@ async function testMigrationMultiPlatform() {
       console.log(`\n🔍 Procesando video ID: ${videoId}`);
       
       try {
-        const response = await fetch(`http://localhost:3002/video-items/${videoId}`);
+        const response = await fetch(`http://localhost:1111/video-items/${videoId}`);
         
         if (response.ok) {
           const video = await response.json();
@@ -66,7 +66,7 @@ async function testMigrationMultiPlatform() {
       console.log(`\n📋 Testing: ${test.name}`);
       
       try {
-        const response = await fetch('http://localhost:3002/video-items/detect-platform', {
+        const response = await fetch('http://localhost:1111/video-items/detect-platform', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -95,14 +95,14 @@ test.describe('Navigation Tests', () => {
 
   test('should check backend connectivity', async ({ page }) => {
     // Test directo de conectividad con el backend
-    const response = await page.request.get('http://localhost:3002/mundos');
+    const response = await page.request.get('http://localhost:1111/mundos');
     expect(response.status()).toBe(200);
     
     const data = await response.json();
     expect(Array.isArray(data)).toBe(true);
     
     // Test de playlists-direct que sabemos que funciona
-    const playlistsResponse = await page.request.get('http://localhost:3002/playlists-direct');
+    const playlistsResponse = await page.request.get('http://localhost:1111/playlists-direct');
     expect(playlistsResponse.status()).toBe(200);
     
     const playlistsData = await playlistsResponse.json();

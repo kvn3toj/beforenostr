@@ -18,7 +18,7 @@ test.describe('Fase A.8 - Verificación del Módulo de Challenges', () => {
     });
     
     // Ir a la página de challenges
-    await page.goto('http://localhost:3001/challenges', { waitUntil: 'networkidle' });
+    await page.goto('http://localhost:2222/challenges', { waitUntil: 'networkidle' });
     
     // Esperar a que la página se estabilice
     await page.waitForTimeout(3000);
@@ -40,7 +40,7 @@ test.describe('Fase A.8 - Verificación del Módulo de Challenges', () => {
   });
 
   test('A.8.2 - Verificar que la aplicación React monta correctamente', async ({ page }) => {
-    await page.goto('http://localhost:3001/challenges');
+    await page.goto('http://localhost:2222/challenges');
     
     // Esperar que React monte
     await page.waitForSelector('#root', { timeout: 10000 });
@@ -53,7 +53,7 @@ test.describe('Fase A.8 - Verificación del Módulo de Challenges', () => {
   });
 
   test('A.8.3 - Verificar navegación a challenges desde barra lateral', async ({ page }) => {
-    await page.goto('http://localhost:3001/');
+    await page.goto('http://localhost:2222/');
     
     // Esperar a que la página principal cargue
     await page.waitForSelector('#root', { timeout: 10000 });

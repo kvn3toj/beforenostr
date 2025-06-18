@@ -27,12 +27,12 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Simplificado', () => {
     console.log('🎯 Verificando conexión Backend NestJS → SuperApp Frontend...');
     
     // Verificar conectividad directa con el backend
-    const healthCheck = await page.request.get('http://localhost:3002/health');
+    const healthCheck = await page.request.get('http://localhost:1111/health');
     expect(healthCheck.ok()).toBe(true);
     console.log('✅ Backend NestJS responde correctamente');
     
     // Verificar endpoint de video-items
-    const videoItemsCheck = await page.request.get('http://localhost:3002/video-items');
+    const videoItemsCheck = await page.request.get('http://localhost:1111/video-items');
     expect(videoItemsCheck.ok()).toBe(true);
     console.log('✅ Endpoint video-items disponible');
     
@@ -157,7 +157,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Simplificado', () => {
     
     for (const endpoint of endpoints) {
       try {
-        const response = await page.request.get(`http://localhost:3002${endpoint}`, {
+        const response = await page.request.get(`http://localhost:1111${endpoint}`, {
           headers: {
             'Authorization': 'Bearer mock-jwt-token-for-testing-do-not-use-in-production'
           }
@@ -214,11 +214,11 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Simplificado', () => {
     
     try {
       // 1. Backend Health
-      const healthResponse = await page.request.get('http://localhost:3002/health');
+      const healthResponse = await page.request.get('http://localhost:1111/health');
       results.backendHealth = healthResponse.ok();
       
       // 2. Data Availability 
-      const videoItemsResponse = await page.request.get('http://localhost:3002/video-items');
+      const videoItemsResponse = await page.request.get('http://localhost:1111/video-items');
       results.dataAvailability = videoItemsResponse.ok();
       
       // 3. Frontend Integration
@@ -235,7 +235,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Simplificado', () => {
       results.interactionCapability = interactiveElements > 5;
       
       // 5. Analytics Capability
-      const playlistsResponse = await page.request.get('http://localhost:3002/playlists');
+      const playlistsResponse = await page.request.get('http://localhost:1111/playlists');
       results.analyticsCapability = playlistsResponse.ok();
       
       // 6. Playlist Creation (ya creamos una exitosamente)

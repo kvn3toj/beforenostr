@@ -14,7 +14,7 @@ async function testFinalVideoDurations() {
   try {
     // 1. LOGIN
     console.log('🔐 Logging in...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -37,7 +37,7 @@ async function testFinalVideoDurations() {
 
     // 2. NAVEGAR A ITEMS
     console.log('\n📋 Navigating to Items page...');
-    await page.goto('http://localhost:3000/items');
+    await page.goto('http://localhost:3333/items');
     await page.waitForLoadState('networkidle');
     
     try {
@@ -118,7 +118,7 @@ async function testFinalVideoDurations() {
     console.log('\n🎮 Testing individual video configuration...');
     
     // Test video 39 (el que sabemos que funciona)
-    await page.goto('http://localhost:3000/items/39/config');
+    await page.goto('http://localhost:3333/items/39/config');
     await page.waitForLoadState('networkidle');
     
     try {

@@ -115,10 +115,10 @@ const config = {
     }
   },
   server: {
-    port: 3000,
+    port: 3333,
   },
   preview: {
-    port: 3000,
+    port: 3333,
   },
   // Configuración adicional para SSR si es necesario
   ssr: {

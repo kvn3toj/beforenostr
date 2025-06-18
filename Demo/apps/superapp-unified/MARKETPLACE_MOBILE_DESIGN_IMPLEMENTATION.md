@@ -79,7 +79,7 @@ The marketplace home page has been updated to match the Builder.io design specif
    npm run dev
    ```
 
-2. Open browser and navigate to `http://localhost:3001/marketplace`
+2. Open browser and navigate to `http://localhost:2222/marketplace`
 
 3. Set browser to mobile view (360px width) using DevTools
 

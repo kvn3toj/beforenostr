@@ -78,21 +78,21 @@ fi
 echo -e "${BLUE}5️⃣ Verificando Servicios Activos...${NC}"
 
 # Verificar backend
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     echo -e "${GREEN}✅ Backend NestJS activo (puerto 3002)${NC}"
 else
     echo -e "${RED}❌ Backend NestJS no disponible${NC}"
 fi
 
 # Verificar SuperApp
-if curl -s -I http://localhost:3001 > /dev/null; then
+if curl -s -I http://localhost:2222 > /dev/null; then
     echo -e "${GREEN}✅ SuperApp activa (puerto 3001)${NC}"
 else
     echo -e "${RED}❌ SuperApp no disponible${NC}"
 fi
 
 # Verificar página UStats específicamente
-if curl -s http://localhost:3001/ustats > /dev/null; then
+if curl -s http://localhost:2222/ustats > /dev/null; then
     echo -e "${GREEN}✅ Página UStats accesible${NC}"
 else
     echo -e "${YELLOW}⚠️  Página UStats no accesible directamente${NC}"
@@ -136,17 +136,17 @@ if grep -q "useDashboardAnalytics" Demo/apps/superapp-unified/src/hooks/analytic
 fi
 
 # Backend active
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     CHECKS_PASSED=$((CHECKS_PASSED + 1))
 fi
 
 # SuperApp active
-if curl -s -I http://localhost:3001 > /dev/null; then
+if curl -s -I http://localhost:2222 > /dev/null; then
     CHECKS_PASSED=$((CHECKS_PASSED + 1))
 fi
 
 # UStats page accessible
-if curl -s http://localhost:3001/ustats > /dev/null; then
+if curl -s http://localhost:2222/ustats > /dev/null; then
     CHECKS_PASSED=$((CHECKS_PASSED + 1))
 fi
 
@@ -171,7 +171,7 @@ fi
 echo ""
 echo -e "${BLUE}🎯 PRÓXIMOS PASOS RECOMENDADOS:${NC}"
 echo "================================"
-echo "1. Navega a http://localhost:3001/ustats"
+echo "1. Navega a http://localhost:2222/ustats"
 echo "2. Abre DevTools (F12) y verifica la consola"
 echo "3. Busca que NO aparezcan errores de:"
 echo "   - 'useDashboardAnalytics' is not found"

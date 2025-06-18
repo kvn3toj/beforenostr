@@ -20,7 +20,7 @@ test.describe('Video Duration - Cache & Display Test', () => {
 
   test('backend API returns correct durations', async ({ page }) => {
     // Test directo del endpoint backend que usa el frontend
-    const response = await page.request.get('http://localhost:3002/content/items/test');
+    const response = await page.request.get('http://localhost:1111/content/items/test');
     expect(response.status()).toBe(200);
     
     const data = await response.json();

@@ -163,7 +163,7 @@ DESPUÉS:
 ## 🛠️ Cómo Probar
 
 ### Navegación
-1. Ir a `http://localhost:3001/marketplace`
+1. Ir a `http://localhost:2222/marketplace`
 2. La aplicación debe mostrar 5 productos con información rica
 
 ### Filtros Avanzados
@@ -207,5 +207,5 @@ El Marketplace ahora ofrece una **experiencia de usuario completa y profesional*
 **¡El Marketplace está listo para escalar y conectar con el backend real!** 🚀 
 
 console.log('\n🎯 PRÓXIMOS PASOS RECOMENDADOS:');
-console.log('1. Abrir http://localhost:3001/marketplace en el navegador');
+console.log('1. Abrir http://localhost:2222/marketplace en el navegador');
 console.log('2. Probar el botón de filtros avanzados (🎛️)'); 

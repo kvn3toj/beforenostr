@@ -214,8 +214,8 @@ find . -name "@playwright" -type d 2>/dev/null
 npm ls turbo
 
 # Verificar servicios
-curl http://localhost:3002/health -v  # Backend
-curl http://localhost:3001 -I         # SuperApp
+curl http://localhost:1111/health -v  # Backend
+curl http://localhost:2222 -I         # SuperApp
 
 # ✅ INICIAR ECOSISTEMA COMPLETO (Método Recomendado - Fase E)
 # Desde la raíz del monorepo:
@@ -283,17 +283,17 @@ Checklist para diagnosticar problemas de autenticación.
 
 **Verificaciones de Backend:**
 
-1.  **Health Check:** `curl http://localhost:3002/health`
+1.  **Health Check:** `curl http://localhost:1111/health`
 2.  **Test de Login:**
     ```bash
-    curl -X POST "http://localhost:3002/auth/login" \
+    curl -X POST "http://localhost:1111/auth/login" \
       -H "Content-Type: application/json" \
       -d '{"email": "admin@gamifier.com", "password": "admin123"}'
     ```
 3.  **Verificar Token JWT:**
     ```bash
     # Reemplazar [JWT_TOKEN] con el token obtenido del login
-    curl -H "Authorization: Bearer [JWT_TOKEN]" http://localhost:3002/auth/me
+    curl -H "Authorization: Bearer [JWT_TOKEN]" http://localhost:1111/auth/me
     ```
 
 **Logs Clave a Monitorear en la Consola del Backend:**
@@ -303,7 +303,7 @@ Checklist para diagnosticar problemas de autenticación.
 **Errores Comunes y Causas Probables:**
 - **401 Unauthorized:** Credenciales incorrectas, token JWT inválido/expirado, o header `Authorization` faltante.
 - **403 Forbidden:** El usuario está autenticado pero no tiene los roles/permisos necesarios para el recurso.
-- **Error de CORS:** El backend no está configurado para permitir solicitudes desde el origen del frontend (ej. `http://localhost:3001`).
+- **Error de CORS:** El backend no está configurado para permitir solicitudes desde el origen del frontend (ej. `http://localhost:2222`).
 
 ### 11. Alineación Filosófica Activa ✅ SIN CAMBIOS
 
@@ -364,12 +364,12 @@ PORT=3002
 # ... otras variables del backend
 
 # admin-frontend/.env (Frontend Gamifier Admin)
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 # ... otras variables del frontend Admin
 
 # Demo/apps/superapp-unified/.env (SuperApp)
-VITE_API_BASE_URL=http://localhost:3002
-VITE_BASE_URL=http://localhost:3001 # Puerto de desarrollo de la SuperApp
+VITE_API_BASE_URL=http://localhost:1111
+VITE_BASE_URL=http://localhost:2222 # Puerto de desarrollo de la SuperApp
 # ... otras variables de la SuperApp
 ```
 

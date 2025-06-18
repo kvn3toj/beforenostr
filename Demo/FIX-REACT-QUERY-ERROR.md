@@ -117,7 +117,7 @@ onTTFB(reportWebVital); // ✅ Nueva API v4
 ### **Comandos de Verificación**
 ```bash
 # Test de servidor funcionando
-curl http://localhost:3000 -I
+curl http://localhost:3333 -I
 
 # Test de validación con navegador
 npx playwright test --headed --project="Desktop Chrome" \

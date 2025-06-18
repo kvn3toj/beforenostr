@@ -20,7 +20,7 @@ async function verifyAccessibilityImprovements() {
     // === 1. VERIFICAR SKIP LINK EN LOGIN ===
     console.log('📋 1. VERIFICANDO SKIP LINK EN LOGIN...\n');
     
-    await page.goto('http://localhost:3001/login');
+    await page.goto('http://localhost:2222/login');
     await page.waitForLoadState('networkidle');
     
     // Verificar que el skip link existe en la página de login
@@ -119,7 +119,7 @@ async function verifyAccessibilityImprovements() {
     // === 6. VERIFICAR CONTRASTE EN LOGIN ===
     console.log('\n📋 6. VERIFICANDO CONTRASTE Y COLORES...\n');
     
-    await page.goto('http://localhost:3001/login');
+    await page.goto('http://localhost:2222/login');
     await page.waitForLoadState('networkidle');
     
     // Verificar que no hay errores de React en consola

@@ -20,7 +20,7 @@ async function testFrontendLogin() {
 
   try {
     console.log('📍 Navegando a la página de login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     console.log('📍 Llenando credenciales...');

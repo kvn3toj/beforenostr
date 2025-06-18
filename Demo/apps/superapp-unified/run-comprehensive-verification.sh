@@ -14,9 +14,9 @@ fi
 
 # Verificar que la aplicación esté ejecutándose
 echo "🔍 Verificando que la aplicación esté ejecutándose..."
-if curl -f http://localhost:3000 > /dev/null 2>&1; then
+if curl -f http://localhost:3333 > /dev/null 2>&1; then
     echo "✅ Aplicación detectada en puerto 3000"
-elif curl -f http://localhost:3001 > /dev/null 2>&1; then
+elif curl -f http://localhost:2222 > /dev/null 2>&1; then
     echo "✅ Aplicación detectada en puerto 3001"
 elif curl -f http://localhost:3005 > /dev/null 2>&1; then
     echo "✅ Aplicación detectada en puerto 3005"

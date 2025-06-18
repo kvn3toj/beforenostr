@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 
 # Verificar que el backend esté ejecutándose
 echo -e "${BLUE}🔍 Verificando backend en puerto 3002...${NC}"
-if curl -s http://localhost:3002/health > /dev/null; then
+if curl -s http://localhost:1111/health > /dev/null; then
     echo -e "${GREEN}✅ Backend está ejecutándose correctamente${NC}"
 else
     echo -e "${RED}❌ Backend NO está ejecutándose en puerto 3002${NC}"
@@ -28,7 +28,7 @@ echo ""
 
 # Verificar credenciales de administrador
 echo -e "${BLUE}🔑 Verificando credenciales de ADMIN...${NC}"
-ADMIN_RESPONSE=$(curl -s -X POST "http://localhost:3002/auth/login" \
+ADMIN_RESPONSE=$(curl -s -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@gamifier.com", "password": "admin123"}')
 
@@ -44,7 +44,7 @@ echo ""
 
 # Verificar credenciales de usuario regular
 echo -e "${BLUE}👤 Verificando credenciales de USER...${NC}"
-USER_RESPONSE=$(curl -s -X POST "http://localhost:3002/auth/login" \
+USER_RESPONSE=$(curl -s -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "user@gamifier.com", "password": "123456"}')
 
@@ -67,7 +67,7 @@ if [ -f ".env" ]; then
         echo -e "${YELLOW}⚠️ Verificar VITE_ENABLE_MOCK_AUTH en .env${NC}"
     fi
     
-    if grep -q "VITE_API_BASE_URL=http://localhost:3002" .env; then
+    if grep -q "VITE_API_BASE_URL=http://localhost:1111" .env; then
         echo -e "${GREEN}✅ VITE_API_BASE_URL configurado correctamente${NC}"
     else
         echo -e "${YELLOW}⚠️ Verificar VITE_API_BASE_URL en .env${NC}"

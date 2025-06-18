@@ -16,7 +16,7 @@ async function testAddFormFunctionality() {
     // 1. LOGIN
     // ========================================
     console.log('📝 PASO 1: Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -45,7 +45,7 @@ async function testAddFormFunctionality() {
     // 2. NAVEGAR A ITEMS
     // ========================================
     console.log('\n📂 PASO 2: Navegando a la página de Items...');
-    await page.goto('http://localhost:3000/items');
+    await page.goto('http://localhost:3333/items');
     await page.waitForLoadState('networkidle');
     
     // Verificar que estamos en la página de items de manera más flexible
@@ -76,7 +76,7 @@ async function testAddFormFunctionality() {
     } else {
       // Si no hay botón, navegar directamente al video ID 18
       console.log('⚠️ No se encontró botón de configurar, navegando directamente al video ID 18...');
-      await page.goto('http://localhost:3000/items/18/config');
+      await page.goto('http://localhost:3333/items/18/config');
       await page.waitForLoadState('networkidle');
     }
 

@@ -296,7 +296,7 @@ import { AppConfig } from '@prisma/client';
 import { createClient } from '@supabase/supabase-js';
 
 // ❌ NUNCA uses fetch directo
-fetch('http://localhost:3002/api/users');
+fetch('http://localhost:1111/api/users');
 
 // ✅ SIEMPRE usa apiService
 import { apiService } from '../lib/api-service';
@@ -375,10 +375,10 @@ const AyniExchangeComponent: React.FC = () => {
 
 ```bash
 # Backend NestJS
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 
 # SuperApp Frontend
-VITE_BASE_URL=http://localhost:3001  # O puerto auto-asignado
+VITE_BASE_URL=http://localhost:2222  # O puerto auto-asignado
 
 # Autenticación 
 VITE_ENABLE_MOCK_AUTH=false  # Usar backend real

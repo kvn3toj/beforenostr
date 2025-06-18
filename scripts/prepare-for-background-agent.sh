@@ -45,13 +45,13 @@ fi
 
 # 4. Verificar servicios críticos (opcional)
 echo "🔍 Verificando servicios..."
-if curl -s http://localhost:3002/health >/dev/null; then
+if curl -s http://localhost:1111/health >/dev/null; then
   echo "✅ Backend (3002) disponible"
 else
   echo "ℹ️ Backend (3002) no disponible (normal si no está iniciado)"
 fi
 
-if curl -s -I http://localhost:3001 >/dev/null; then
+if curl -s -I http://localhost:2222 >/dev/null; then
   echo "✅ SuperApp (3001) disponible"
 else
   echo "ℹ️ SuperApp (3001) no disponible (normal si no está iniciada)"

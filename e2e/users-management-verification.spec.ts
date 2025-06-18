@@ -25,7 +25,7 @@ async function testUsersManagement() {
   try {
     // 1. LOGIN
     console.log('🔐 Iniciando sesión...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -50,7 +50,7 @@ async function testUsersManagement() {
 
     // 2. NAVEGACIÓN A USUARIOS
     console.log('📋 Navegando a la página de usuarios...');
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
 
     // Verificar que la página cargó

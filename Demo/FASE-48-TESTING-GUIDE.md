@@ -15,7 +15,7 @@ cd /path/to/Demo
 # 2. Inicia el frontend React
 cd apps/superapp-unified
 npm run dev
-# Debería estar corriendo en http://localhost:3000
+# Debería estar corriendo en http://localhost:3333
 ```
 
 ### 2. Ejecutar Tests Básicos
@@ -119,7 +119,7 @@ npm run dev
 # Terminal 1: Backend (si tienes uno)
 cd backend
 node server.js
-# Debería estar en http://localhost:3000 con endpoints /health, /api/*
+# Debería estar en http://localhost:3333 con endpoints /health, /api/*
 
 # Terminal 2: Frontend  
 cd apps/superapp-unified
@@ -176,7 +176,7 @@ npm run dev
 
 💡 Consejos para debugging:
   1. Verifica que el frontend esté corriendo: npm run dev
-  2. Opcional: Inicia el backend en localhost:3000
+  2. Opcional: Inicia el backend en localhost:3333
   3. Ejecuta con --headed para ver el navegador
   4. Usa --debug para modo paso a paso
   5. Prueba escenarios individuales: --scenario offline

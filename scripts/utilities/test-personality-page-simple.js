@@ -14,7 +14,7 @@ async function testPersonalityPageSimple() {
   try {
     // Ir directamente a la página sin login para ver si carga
     console.log('📋 Navegando directamente a personalidades...');
-    await page.goto('http://localhost:3000/personalities');
+    await page.goto('http://localhost:3333/personalities');
     await page.waitForLoadState('networkidle');
     
     // Verificar si nos redirige al login
@@ -31,7 +31,7 @@ async function testPersonalityPageSimple() {
       await page.waitForURL('**/');
       
       // Volver a navegar a personalidades
-      await page.goto('http://localhost:3000/personalities');
+      await page.goto('http://localhost:3333/personalities');
       await page.waitForLoadState('networkidle');
     }
     

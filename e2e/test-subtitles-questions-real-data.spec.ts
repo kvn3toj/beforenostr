@@ -8,7 +8,7 @@ test.describe('Subtitles and Questions Real Data Test', () => {
     console.log('🔍 Testing backend endpoints directly...');
     
     // Test subtitles endpoint - usando videoItemId=2 que tiene datos reales
-    const subtitlesResponse = await page.request.get('http://localhost:3002/subtitles/search?videoItemId=2');
+    const subtitlesResponse = await page.request.get('http://localhost:1111/subtitles/search?videoItemId=2');
     const subtitlesData = await subtitlesResponse.json();
     
     console.log('📝 Subtitles endpoint response:', subtitlesData.length, 'items');
@@ -24,7 +24,7 @@ test.describe('Subtitles and Questions Real Data Test', () => {
     }
 
     // Test questions endpoint - usando videoItemId=2 que tiene datos reales
-    const questionsResponse = await page.request.get('http://localhost:3002/questions/search?videoItemId=2');
+    const questionsResponse = await page.request.get('http://localhost:1111/questions/search?videoItemId=2');
     const questionsData = await questionsResponse.json();
     
     console.log('❓ Questions endpoint response:', questionsData.length, 'items');

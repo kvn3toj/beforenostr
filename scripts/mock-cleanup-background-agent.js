@@ -38,7 +38,7 @@ const CONFIG = {
     repository: 'beforenostr'
   },
   backend: {
-    baseUrl: 'http://localhost:3002',
+    baseUrl: 'http://localhost:1111',
     healthEndpoint: '/health'
   },
   phases: {

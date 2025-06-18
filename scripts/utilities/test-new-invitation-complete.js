@@ -20,7 +20,7 @@ async function testNewInvitationComplete() {
     console.log('📝 Fase 1: Proceso de Login...');
     
     // 1. Navegar a login
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     console.log('✅ Navegación a /login completada');
 
@@ -53,7 +53,7 @@ async function testNewInvitationComplete() {
     // FASE 2: NAVEGACIÓN A INVITACIONES
     console.log('\n📝 Fase 2: Navegación a página de invitaciones...');
     
-    await page.goto('http://localhost:3000/invitations');
+    await page.goto('http://localhost:3333/invitations');
     await page.waitForLoadState('networkidle');
     
     // Verificar que estamos en la página correcta - MÉTODO ROBUSTO
@@ -85,7 +85,7 @@ async function testNewInvitationComplete() {
         await altButton.click();
       } else {
         console.log('⚠️ Navegando directamente a /invitations/new');
-        await page.goto('http://localhost:3000/invitations/new');
+        await page.goto('http://localhost:3333/invitations/new');
       }
     }
 

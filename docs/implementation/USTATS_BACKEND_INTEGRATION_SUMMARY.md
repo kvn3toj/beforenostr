@@ -174,7 +174,7 @@ interface DashboardData {
 ### Variables de Entorno
 ```bash
 # Demo/apps/superapp-unified/.env
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 VITE_FORCE_YOUTUBE_VIDEOS=false  # ✅ DESACTIVADO
 VITE_ENABLE_MOCK_AUTH=false
 ```
@@ -207,10 +207,10 @@ VITE_ENABLE_MOCK_AUTH=false
 ### 1. **Navegación y Pruebas**
 ```bash
 # Abrir la aplicación
-open http://localhost:3001/ustats
+open http://localhost:2222/ustats
 
 # Verificar funcionalidad
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 ```
 
 ### 2. **Validación Visual**

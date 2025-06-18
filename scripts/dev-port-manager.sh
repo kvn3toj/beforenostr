@@ -145,13 +145,13 @@ main() {
         echo "🔗 URLS DE ACCESO:"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         if lsof -i :3002 >/dev/null 2>&1; then
-            echo "🗄️  Backend:        http://localhost:3002/health"
+            echo "🗄️  Backend:        http://localhost:1111/health"
         fi
         if lsof -i :3000 >/dev/null 2>&1; then
-            echo "👨‍💼 Gamifier Admin: http://localhost:3000"
+            echo "👨‍💼 Gamifier Admin: http://localhost:3333"
         fi
         if lsof -i :3001 >/dev/null 2>&1; then
-            echo "📱 SuperApp:        http://localhost:3001"
+            echo "📱 SuperApp:        http://localhost:2222"
         fi
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         

@@ -4,7 +4,7 @@ test.describe('Fase A.7 - Verificación Simplificada del Módulo de Grupos', () 
   
   test('A.7.S1 - Verificar que la aplicación carga y la ruta /groups responde', async ({ page }) => {
     // Ir a la página de grupos
-    await page.goto('http://localhost:3001/groups');
+    await page.goto('http://localhost:2222/groups');
     
     // Esperar a que React se inicialice (más tiempo)
     await page.waitForTimeout(3000);
@@ -20,7 +20,7 @@ test.describe('Fase A.7 - Verificación Simplificada del Módulo de Grupos', () 
   });
 
   test('A.7.S2 - Verificar presencia de elementos de grupos (con selectors flexibles)', async ({ page }) => {
-    await page.goto('http://localhost:3001/groups');
+    await page.goto('http://localhost:2222/groups');
     await page.waitForTimeout(5000); // Mayor tiempo de espera
     
     // Buscar cualquier elemento que contenga "grupo" (case insensitive)
@@ -60,7 +60,7 @@ test.describe('Fase A.7 - Verificación Simplificada del Módulo de Grupos', () 
       }
     });
     
-    await page.goto('http://localhost:3001/groups');
+    await page.goto('http://localhost:2222/groups');
     await page.waitForTimeout(3000);
     
     // Filtrar errores menores y enfocarse en errores críticos
@@ -82,7 +82,7 @@ test.describe('Fase A.7 - Verificación Simplificada del Módulo de Grupos', () 
   });
 
   test('A.7.S4 - Verificar elementos específicos de GroupsPage si está cargado', async ({ page }) => {
-    await page.goto('http://localhost:3001/groups');
+    await page.goto('http://localhost:2222/groups');
     await page.waitForTimeout(5000);
     
     // Buscar elementos específicos con selectores más flexibles
@@ -125,13 +125,13 @@ test.describe('Fase A.7 - Verificación Simplificada del Módulo de Grupos', () 
 
   test('A.7.S5 - Verificar que la navegación a /groups desde root funciona', async ({ page }) => {
     // Ir a la página principal primero
-    await page.goto('http://localhost:3001/');
+    await page.goto('http://localhost:2222/');
     await page.waitForTimeout(2000);
     
     console.log('📍 Navegando desde página principal');
     
     // Intentar navegar a groups programáticamente
-    await page.goto('http://localhost:3001/groups');
+    await page.goto('http://localhost:2222/groups');
     await page.waitForTimeout(3000);
     
     // Verificar que la URL es correcta
@@ -157,7 +157,7 @@ test.describe('Fase A.7 - Verificación de Integración de Componentes', () => {
   
   test('A.7.I1 - Verificar que GroupsPage se puede importar correctamente', async ({ page }) => {
     // Test que verifica la integración a nivel de JavaScript
-    await page.goto('http://localhost:3001/groups');
+    await page.goto('http://localhost:2222/groups');
     await page.waitForTimeout(2000);
     
     // Verificar que no hay errores de importación de módulos

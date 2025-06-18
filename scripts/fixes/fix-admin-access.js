@@ -5,7 +5,7 @@ console.log('🔧 Fixing admin access...\n');
 try {
   // 1. Verificar que el login funciona
   console.log('🔍 Testing admin login...');
-  const loginResult = execSync(`curl -s -X POST "http://localhost:3002/auth/login" -H "Content-Type: application/json" -d '{"email": "admin@gamifier.com", "password": "admin123"}'`, { encoding: 'utf8' });
+  const loginResult = execSync(`curl -s -X POST "http://localhost:1111/auth/login" -H "Content-Type: application/json" -d '{"email": "admin@gamifier.com", "password": "admin123"}'`, { encoding: 'utf8' });
   
   const loginData = JSON.parse(loginResult);
   

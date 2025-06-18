@@ -17,8 +17,8 @@
 ### **Credenciales de Desarrollo:**
 - **Admin:** `admin@gamifier.com` / `admin123`
 - **Usuario regular:** `user@gamifier.com` / `123456`
-- **Backend endpoint:** `http://localhost:3002`
-- **SuperApp URL:** `http://localhost:3001`
+- **Backend endpoint:** `http://localhost:1111`
+- **SuperApp URL:** `http://localhost:2222`
 
 ### **Stack Tecnológico:**
 - **Frontend:** React 19.1.0 + TypeScript + Material UI + Tailwind CSS
@@ -66,8 +66,8 @@ npm run dev:superapp       # SuperApp individual ✅
 
 ### **Verificación de Estado:**
 ```bash
-curl http://localhost:3002/health    # Backend health check ✅
-curl http://localhost:3001 -I        # SuperApp HTTP 200 OK ✅
+curl http://localhost:1111/health    # Backend health check ✅
+curl http://localhost:2222 -I        # SuperApp HTTP 200 OK ✅
 ps aux | grep -E "(vite|npm)" | grep -v grep  # Verificar procesos
 ```
 

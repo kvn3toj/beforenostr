@@ -14,14 +14,14 @@ async function testDataVerification() {
   try {
     // Login
     console.log('🔐 Realizando login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@coomunity.co');
     await page.fill('input[name="password"]', '123456');
     await page.click('button[type="submit"]');
     
-    await page.waitForURL('http://localhost:3000/', { timeout: 10000 });
+    await page.waitForURL('http://localhost:3333/', { timeout: 10000 });
     await page.waitForLoadState('networkidle');
     console.log('✅ Login exitoso');
     
@@ -182,7 +182,7 @@ async function testDataVerification() {
       console.log(`📍 Navegando a: ${pageInfo.url}`);
       
       try {
-        await page.goto(`http://localhost:3000${pageInfo.url}`);
+        await page.goto(`http://localhost:3333${pageInfo.url}`);
         await page.waitForLoadState('networkidle', { timeout: 15000 });
         
         // Verificar que la página cargó

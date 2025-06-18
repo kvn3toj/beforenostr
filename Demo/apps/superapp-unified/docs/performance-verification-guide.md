@@ -20,8 +20,8 @@ npm run preview
 ### Abrir en Navegador
 ```bash
 # Abre automáticamente en el navegador por defecto
-open http://localhost:3000
-# O manualmente navega a http://localhost:3000
+open http://localhost:3333
+# O manualmente navega a http://localhost:3333
 ```
 
 ## 📈 Paso 2: Verificar Code Splitting y Lazy Loading

@@ -11,7 +11,7 @@ Este documento mapea las funcionalidades de la **SuperApp CoomÜnity** (Frontend
 ## ⚙️ Principios Generales de la API
 
 ### Configuración Base
-- **BaseURL del Backend:** `http://localhost:3002`
+- **BaseURL del Backend:** `http://localhost:1111`
 - **Protocolo de Autenticación:** JWT Bearer Token
 - **Headers Requeridos:** 
   - `Authorization: Bearer <JWT>`
@@ -212,7 +212,7 @@ Este documento mapea las funcionalidades de la **SuperApp CoomÜnity** (Frontend
 
 | Funcionalidad del Frontend | Servicio del Frontend | Protocolo y Endpoint del Backend | Estado del Endpoint | Usa Mock (Fallback) |
 |---------------------------|---------------------|----------------------------------|-------------------|-------------------|
-| Conexión de chat en vivo | `ChatWebSocketService.connect()` | `WebSocket ws://localhost:3002/chat` | ❌ No Implementado | Sí (Temporal) |
+| Conexión de chat en vivo | `ChatWebSocketService.connect()` | `WebSocket ws://localhost:1111/chat` | ❌ No Implementado | Sí (Temporal) |
 | Envío de mensajes en vivo | `ChatWebSocketService.sendMessage()` | `WebSocket Message` | ❌ No Implementado | Sí (Temporal) |
 | Actualización de estado | `ChatWebSocketService.updateStatus()` | `WebSocket Status Update` | ❌ No Implementado | Sí (Temporal) |
 

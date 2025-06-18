@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('Video Config Page - Real Data Integration', () => {
   test('should load video config page and display real subtitles and questions data', async ({ page }) => {
     // Navigate to video config page with a valid video item ID
-    await page.goto('http://localhost:3000/items/31/config');
+    await page.goto('http://localhost:3333/items/31/config');
     
     // Wait for the page to load
     await page.waitForLoadState('networkidle');

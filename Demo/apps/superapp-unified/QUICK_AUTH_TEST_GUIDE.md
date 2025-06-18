@@ -26,7 +26,7 @@ El script generará:
 ```bash
 # Crear .env.local
 cat > .env.local << EOF
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=http://localhost:3333
 VITE_ENABLE_MOCK_AUTH=false
 VITE_DEV_MODE=true
 VITE_DEBUG_BACKEND=true

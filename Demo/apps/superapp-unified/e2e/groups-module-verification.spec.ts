@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Fase A.7 - Verificación Módulo de Grupos (CoPs)', () => {
   test.beforeEach(async ({ page }) => {
     // Ir directamente a la página de grupos (sin autenticación completa para esta verificación)
-    await page.goto('http://localhost:3001/groups');
+    await page.goto('http://localhost:2222/groups');
     
     // Esperar a que la página cargue completamente
     await page.waitForSelector('h3:has-text("👥 Grupos CoPs")', { timeout: 10000 });
@@ -222,7 +222,7 @@ test.describe('Fase A.7 - Verificación Módulo de Grupos (CoPs)', () => {
 test.describe('Fase A.7 - Verificación de Navegación a Grupos', () => {
   test('A.7.9 - Verificar navegación desde sidebar a grupos', async ({ page }) => {
     // Ir a la página principal
-    await page.goto('http://localhost:3001');
+    await page.goto('http://localhost:2222');
     
     // Buscar el enlace de "Grupos" en la navegación
     const groupsLink = page.locator('a[href="/groups"], button:has-text("Grupos")').first();

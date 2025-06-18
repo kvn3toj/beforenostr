@@ -14,7 +14,7 @@ const __dirname = dirname(__filename);
 const tests = [
   {
     name: '🏪 Marketplace con Filtros Avanzados',
-    url: 'http://localhost:3001/marketplace',
+    url: 'http://localhost:2222/marketplace',
     expectedElements: [
       'Marketplace CoomÜnity', // Header
       'productos', // Contador de productos
@@ -128,7 +128,7 @@ async function runAllTests() {
   });
   
   console.log('\n🎯 PRÓXIMOS PASOS RECOMENDADOS:');
-  console.log('1. Abrir http://localhost:3001/marketplace en el navegador');
+  console.log('1. Abrir http://localhost:2222/marketplace en el navegador');
   console.log('2. Probar el botón de filtros avanzados (🎛️)');
   console.log('3. Verificar que la búsqueda funcione');
   console.log('4. Comprobar que los filtros se apliquen correctamente');

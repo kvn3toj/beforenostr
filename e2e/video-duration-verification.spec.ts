@@ -141,7 +141,7 @@ test.describe('Video Duration Verification', () => {
     console.log('🧪 Testing: Backend video item endpoint duration');
 
     // Test the backend endpoint directly
-    const response = await page.request.get('http://localhost:3002/video-items/17');
+    const response = await page.request.get('http://localhost:1111/video-items/17');
     expect(response.ok()).toBeTruthy();
     
     const videoItem = await response.json();
@@ -159,7 +159,7 @@ test.describe('Video Duration Verification', () => {
     console.log('🧪 Testing: Content items test endpoint durations');
 
     // Test the content items endpoint
-    const response = await page.request.get('http://localhost:3002/content/items/test');
+    const response = await page.request.get('http://localhost:1111/content/items/test');
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -191,7 +191,7 @@ test.describe('Video Duration Verification', () => {
 
   test('video duration endpoint includes durations', async ({ page }) => {
     // Test directo del endpoint para verificar que devuelve duraciones
-    const response = await page.request.get('http://localhost:3002/video-items/17');
+    const response = await page.request.get('http://localhost:1111/video-items/17');
     expect(response.status()).toBe(200);
     
     const videoData = await response.json();
@@ -209,7 +209,7 @@ test.describe('Video Duration Verification', () => {
 
   test('duration calculation test endpoint returns correct duration', async ({ page }) => {
     // Test del endpoint de testing de duración
-    const response = await page.request.get('http://localhost:3002/video-items/test-duration/17');
+    const response = await page.request.get('http://localhost:1111/video-items/test-duration/17');
     expect(response.status()).toBe(200);
     
     const testResult = await response.json();
@@ -270,7 +270,7 @@ test.describe('Video Duration Verification', () => {
 
   test('backend duration verification shows all videos are coherent', async ({ page }) => {
     // Test del endpoint de verificación general
-    const response = await page.request.post('http://localhost:3002/video-items/verify-durations');
+    const response = await page.request.post('http://localhost:1111/video-items/verify-durations');
     expect(response.status()).toBe(201);
     
     const verificationResult = await response.json();

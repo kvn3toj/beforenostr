@@ -126,8 +126,8 @@ GET    /analytics/ping               - Health check
 
 ### **Estado del Servidor:**
 - ✅ **Puerto**: 3002
-- ✅ **Health Check**: `http://localhost:3002/health` - Funcionando
-- ✅ **Swagger**: `http://localhost:3002/api` - Funcionando
+- ✅ **Health Check**: `http://localhost:1111/health` - Funcionando
+- ✅ **Swagger**: `http://localhost:1111/api` - Funcionando
 - ✅ **CORS**: Configurado para frontend
 - ✅ **Validación**: Pipes globales configurados
 

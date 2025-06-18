@@ -11,7 +11,7 @@ test.describe('Social Module - Direct Testing', () => {
 
   test('Verificar que el módulo Social carga correctamente', async ({ page }) => {
     // Ir directamente a la página de Social
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
 
     console.log('🤝 Verificando carga del módulo Social...');
@@ -27,7 +27,7 @@ test.describe('Social Module - Direct Testing', () => {
   });
 
   test('Verificar lista de matches/conversaciones', async ({ page }) => {
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
 
     console.log('💬 Verificando lista de conversaciones...');
@@ -46,7 +46,7 @@ test.describe('Social Module - Direct Testing', () => {
   });
 
   test('Verificar funcionalidad de búsqueda', async ({ page }) => {
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -66,7 +66,7 @@ test.describe('Social Module - Direct Testing', () => {
   });
 
   test('Verificar selección de conversación y área de chat', async ({ page }) => {
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -88,7 +88,7 @@ test.describe('Social Module - Direct Testing', () => {
   });
 
   test('Verificar envío de mensaje', async ({ page }) => {
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -116,7 +116,7 @@ test.describe('Social Module - Direct Testing', () => {
   });
 
   test('Verificar estados de usuario', async ({ page }) => {
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -134,7 +134,7 @@ test.describe('Social Module - Direct Testing', () => {
 
     // Desktop
     await page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
     
     // Verificar que en desktop se ven ambas columnas
@@ -152,7 +152,7 @@ test.describe('Social Module - Direct Testing', () => {
   });
 
   test('Verificar componentes de UI Material UI', async ({ page }) => {
-    await page.goto('http://localhost:3000/social');
+    await page.goto('http://localhost:3333/social');
     await page.waitForLoadState('networkidle');
 
     console.log('🎨 Verificando componentes Material UI...');

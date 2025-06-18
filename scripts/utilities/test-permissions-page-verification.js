@@ -19,7 +19,7 @@ async function testPermissionsPage() {
   // Interceptar peticiones de red para monitorear APIs
   const networkRequests = [];
   page.on('request', request => {
-    if (request.url().includes('localhost:3002')) {
+    if (request.url().includes('localhost:1111')) {
       networkRequests.push({
         url: request.url(),
         method: request.method(),
@@ -30,7 +30,7 @@ async function testPermissionsPage() {
   });
   
   page.on('response', response => {
-    if (response.url().includes('localhost:3002')) {
+    if (response.url().includes('localhost:1111')) {
       console.log(`📡 API Response: ${response.status()} ${response.url()}`);
     }
   });
@@ -46,7 +46,7 @@ async function testPermissionsPage() {
   
   try {
     console.log('📍 Paso 1: Navegando al frontend...');
-    await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('http://localhost:3333', { waitUntil: 'networkidle' });
     await page.screenshot({ path: 'debug-permissions-step1-homepage.png' });
     
     console.log('📍 Paso 2: Iniciando sesión...');
@@ -71,7 +71,7 @@ async function testPermissionsPage() {
     
     console.log('📍 Paso 4: Navegando a la página de Permisos...');
     // Intentar navegar directamente a /permissions
-    await page.goto('http://localhost:3000/permissions', { waitUntil: 'networkidle' });
+    await page.goto('http://localhost:3333/permissions', { waitUntil: 'networkidle' });
     await page.waitForTimeout(2000);
     await page.screenshot({ path: 'debug-permissions-step4-permissions-page.png' });
     

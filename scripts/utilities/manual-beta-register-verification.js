@@ -8,8 +8,8 @@ const axios = require('axios');
 async function verifyBetaRegisterPage() {
   console.log('🚀 === VERIFICACIÓN MANUAL PÁGINA BETA REGISTER ===\n');
   
-  const SUPERAPP_BASE_URL = 'http://localhost:3000';
-  const BACKEND_BASE_URL = 'http://localhost:3002';
+  const SUPERAPP_BASE_URL = 'http://localhost:3333';
+  const BACKEND_BASE_URL = 'http://localhost:1111';
   
   try {
     // 1. Verificar que el Backend esté operativo

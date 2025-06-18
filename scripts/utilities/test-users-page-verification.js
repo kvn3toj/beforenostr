@@ -32,8 +32,8 @@ async function testUsersPage() {
 
   try {
     // 1. Navegar a la página principal
-    console.log('📍 Navegando a http://localhost:3001...');
-    await page.goto('http://localhost:3001');
+    console.log('📍 Navegando a http://localhost:2222...');
+    await page.goto('http://localhost:2222');
     await page.waitForLoadState('networkidle');
 
     // 2. Verificar si estamos en la página de login
@@ -54,7 +54,7 @@ async function testUsersPage() {
 
     // 3. Navegar a la página de usuarios
     console.log('📍 Navegando a la página de Usuarios (/users)...');
-    await page.goto('http://localhost:3001/users');
+    await page.goto('http://localhost:2222/users');
     await page.waitForLoadState('networkidle');
 
     // 4. Verificar que la página cargó correctamente

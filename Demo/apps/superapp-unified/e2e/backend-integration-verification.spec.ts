@@ -167,7 +167,7 @@ test.describe('🔗 Integración Backend NestJS ↔ SuperApp', () => {
     // Interceptar llamadas al backend con mejor logging
     page.on('request', request => {
       requestCount++;
-      if (request.url().includes('localhost:3002')) {
+      if (request.url().includes('localhost:1111')) {
         console.log(`🌐 Llamada al backend detectada: ${request.method()} ${request.url()}`);
         backendCallMade = true;
       }
@@ -206,7 +206,7 @@ test.describe('🔗 Integración Backend NestJS ↔ SuperApp', () => {
     // Realizar una llamada directa al health check del backend desde el contexto del navegador
     const healthResponse = await page.evaluate(async () => {
       try {
-        const response = await fetch('http://localhost:3002/health');
+        const response = await fetch('http://localhost:1111/health');
         const data = await response.json();
         return { success: true, data, status: response.status };
       } catch (error) {
@@ -259,7 +259,7 @@ test.describe('🔗 Integración Backend NestJS ↔ SuperApp', () => {
     const backendResponses: any[] = [];
     
     page.on('response', async response => {
-      if (response.url().includes('localhost:3002') && response.status() === 200) {
+      if (response.url().includes('localhost:1111') && response.status() === 200) {
         try {
           const data = await response.json();
           backendResponses.push({

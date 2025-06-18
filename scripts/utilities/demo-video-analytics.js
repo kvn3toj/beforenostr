@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 async function createVideoEngagementEvent(eventData) {
   try {
-    const response = await fetch('http://localhost:3002/analytics/video-engagement/events', {
+    const response = await fetch('http://localhost:1111/analytics/video-engagement/events', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

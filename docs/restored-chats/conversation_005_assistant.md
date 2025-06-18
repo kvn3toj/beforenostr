@@ -40,7 +40,7 @@ Basado en el diseño arquitectónico definitivo para la experiencia de pre-lanza
 **Parte 0: Pre-Flight Check (OBLIGATORIO)**
 *   **0.1. [BACKEND]** Verificar que el backend esté funcionando y que la conexión a la base de datos sea correcta.
     ```bash
-    curl http://localhost:3002/health -v
+    curl http://localhost:1111/health -v
     npx prisma db pull --print
     ```
 *   **0.2. [BACKEND]** Crear un backup del schema actual por seguridad.

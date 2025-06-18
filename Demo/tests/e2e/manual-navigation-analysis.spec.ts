@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Navegación Manual Detallada - CoomÜnity SuperApp', () => {
   
   test('Analizar cada módulo de navegación detalladamente', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     console.log('🔍 Iniciando análisis manual detallado de cada módulo...');
@@ -141,7 +141,7 @@ test.describe('Navegación Manual Detallada - CoomÜnity SuperApp', () => {
       }
 
       // Volver al inicio
-      await page.goto('http://localhost:3000');
+      await page.goto('http://localhost:3333');
       await page.waitForLoadState('networkidle');
     }
 

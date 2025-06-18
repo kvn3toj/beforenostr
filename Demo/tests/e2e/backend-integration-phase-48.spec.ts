@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
  * 🔗 Tests de Verificación - Fase 48: Integración Backend Completa
  * 
  * Verifica que la aplicación React SuperApp de CoomÜnity puede:
- * 1. Conectarse al backend real en localhost:3000
+ * 1. Conectarse al backend real en localhost:3333
  * 2. Funcionar en modo offline con datos mockeados
  * 3. Mostrar indicadores visuales correctos de conectividad
  * 4. Mantener funcionalidad híbrida (online/offline)
@@ -14,7 +14,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
   
   test.beforeEach(async ({ page }) => {
     // Configurar para interceptar requests del backend
-    await page.route('http://localhost:3000/**', (route) => {
+    await page.route('http://localhost:3333/**', (route) => {
       const url = route.request().url();
       console.log(`🔗 Request intercepted: ${url}`);
       route.continue();
@@ -25,7 +25,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
     console.log('🔍 Verificando conectividad con backend real...');
     
     // Navegar a la aplicación
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // Verificar que la página carga
@@ -71,7 +71,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
     // Verificar llamadas de red al backend
     const requests = [];
     page.on('request', (request) => {
-      if (request.url().includes('localhost:3000')) {
+      if (request.url().includes('localhost:3333')) {
         requests.push(request.url());
       }
     });
@@ -94,13 +94,13 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
     console.log('🔍 Verificando modo offline con datos mockeados...');
     
     // Simular que el backend no está disponible
-    await page.route('http://localhost:3000/**', (route) => {
+    await page.route('http://localhost:3333/**', (route) => {
       console.log(`❌ Bloqueando request: ${route.request().url()}`);
       route.abort('connectionrefused');
     });
     
     // Navegar a la aplicación
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // Esperar a que aparezcan los indicadores de modo offline
@@ -159,7 +159,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
   test('🏠 Test 3: Dashboard - Integración Híbrida', async ({ page }) => {
     console.log('🔍 Verificando dashboard con integración híbrida...');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // Verificar elementos del dashboard
@@ -211,7 +211,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
   test('💰 Test 4: Wallet - Datos del Backend vs Mock', async ({ page }) => {
     console.log('🔍 Verificando página de Wallet...');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // Navegar al Wallet
@@ -259,7 +259,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
   test('🏪 Test 5: Marketplace - Productos del Backend', async ({ page }) => {
     console.log('🔍 Verificando página de Marketplace...');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // Navegar al Marketplace
@@ -313,7 +313,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
   test('🔄 Test 6: Funcionalidad de Refresh y Reconexión', async ({ page }) => {
     console.log('🔍 Verificando funcionalidad de refresh...');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // Buscar botones de refresh en la página
@@ -397,7 +397,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
       });
     });
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // Esperar un poco más para capturar requests lazy
@@ -409,8 +409,8 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
     
     // Filtrar requests al backend
     const backendRequests = requests.filter(r => 
-      r.url.includes('localhost:3000') && 
-      !r.url.includes('localhost:3000') // Excluir la página principal
+      r.url.includes('localhost:3333') && 
+      !r.url.includes('localhost:3333') // Excluir la página principal
     );
     
     console.log(`🔗 Backend requests: ${backendRequests.length}`);
@@ -458,7 +458,7 @@ test.describe('🚀 Fase 48: Verificación de Integración Backend', () => {
   test('🎯 Test 8: Verificación End-to-End Completa', async ({ page }) => {
     console.log('🔍 Ejecutando verificación end-to-end completa...');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     
     // 1. Verificar carga inicial

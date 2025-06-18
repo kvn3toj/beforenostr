@@ -64,7 +64,7 @@ check_system_status() {
     log "🔍 Verificando estado actual del sistema..."
     
     # Verificar Backend
-    if curl -s http://localhost:3002/health > /dev/null; then
+    if curl -s http://localhost:1111/health > /dev/null; then
         log "✅ Backend NestJS operativo en puerto 3002"
     else
         error "Backend NestJS no responde en puerto 3002"
@@ -73,7 +73,7 @@ check_system_status() {
     fi
     
     # Verificar Frontend
-    if curl -s http://localhost:3000 > /dev/null; then
+    if curl -s http://localhost:3333 > /dev/null; then
         log "✅ SuperApp Frontend operativo en puerto 3000"
     else
         warn "SuperApp Frontend no responde en puerto 3000"
@@ -162,7 +162,7 @@ services:
     networks:
       - coomunity-network
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3002/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:1111/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -182,7 +182,7 @@ services:
     networks:
       - coomunity-network
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3002/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:1111/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -378,7 +378,7 @@ echo ""
 echo "📋 Servicios disponibles:"
 echo "- Load Balancer: http://localhost:8080"
 echo "- Prometheus: http://localhost:9090"
-echo "- Grafana: http://localhost:3001 (admin/coomunity2025)"
+echo "- Grafana: http://localhost:2222 (admin/coomunity2025)"
 echo "- Redis: localhost:6379"
 echo "- PostgreSQL: localhost:5432"
 echo ""
@@ -418,7 +418,7 @@ echo ""
 echo "🔗 Enlaces útiles:"
 echo "- Load Balancer: http://localhost:8080"
 echo "- Prometheus: http://localhost:9090"
-echo "- Grafana: http://localhost:3001"
+echo "- Grafana: http://localhost:2222"
 echo ""
 echo "💡 Para logs en tiempo real: docker-compose -f docker-compose-scale.yml logs -f"
 EOF
@@ -465,7 +465,7 @@ Esta guía te ayudará a usar el entorno escalado de CoomÜnity para desarrollo 
 |----------|-----|--------------|
 | Load Balancer | http://localhost:8080 | - |
 | Prometheus | http://localhost:9090 | - |
-| Grafana | http://localhost:3001 | admin/coomunity2025 |
+| Grafana | http://localhost:2222 | admin/coomunity2025 |
 | Redis | localhost:6379 | - |
 | PostgreSQL | localhost:5432 | coomunity/coomunity123 |
 
@@ -477,7 +477,7 @@ Esta guía te ayudará a usar el entorno escalado de CoomÜnity para desarrollo 
 - Verifica el estado de salud de los servicios
 
 ### Grafana
-- Accede a http://localhost:3001
+- Accede a http://localhost:2222
 - Usuario: admin
 - Contraseña: coomunity2025
 - Importa dashboards personalizados
@@ -577,7 +577,7 @@ main() {
     echo "📋 PRÓXIMOS PASOS:"
     echo "1. Iniciar entorno escalado: ./scripts/start-scaled-environment.sh"
     echo "2. Monitorear servicios: ./scripts/monitor-scaled-environment.sh"
-    echo "3. Acceder a Grafana: http://localhost:3001 (admin/coomunity2025)"
+    echo "3. Acceder a Grafana: http://localhost:2222 (admin/coomunity2025)"
     echo "4. Acceder a Prometheus: http://localhost:9090"
     echo "5. Probar Load Balancer: http://localhost:8080/health"
     echo ""

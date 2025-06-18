@@ -13,7 +13,7 @@ async function testCreateChallengePage() {
   try {
     // 1. LOGIN
     console.log('📝 Paso 1: Navegando a login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     console.log('🔐 Paso 2: Realizando login...');
@@ -24,7 +24,7 @@ async function testCreateChallengePage() {
 
     // 2. NAVEGACIÓN A DESAFÍOS
     console.log('🎮 Paso 3: Navegando a página de desafíos...');
-    await page.goto('http://localhost:3000/challenges');
+    await page.goto('http://localhost:3333/challenges');
     await page.waitForLoadState('networkidle');
 
     // Verificar que la página de desafíos carga

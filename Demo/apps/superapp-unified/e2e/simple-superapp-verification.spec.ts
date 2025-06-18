@@ -15,7 +15,7 @@ test.describe('SuperApp Comprehensive Verification Demo', () => {
     try {
       // Test 1: Basic Navigation and Accessibility
       console.log('📍 TEST 1: Navigation and Accessibility Check');
-      await page.goto('http://localhost:3001/login', { timeout: 15000 });
+      await page.goto('http://localhost:2222/login', { timeout: 15000 });
       await page.waitForLoadState('networkidle', { timeout: 10000 });
       
       const pageTitle = await page.title();
@@ -242,7 +242,7 @@ test.describe('SuperApp Comprehensive Verification Demo', () => {
       try {
         console.log(`\n📍 Testing ${route.name}: ${route.path}`);
         
-        await page.goto(`http://localhost:3001${route.path}`, { timeout: 10000 });
+        await page.goto(`http://localhost:2222${route.path}`, { timeout: 10000 });
         await page.waitForLoadState('networkidle', { timeout: 5000 });
         
         // Basic functionality check
@@ -274,7 +274,7 @@ test.describe('SuperApp Comprehensive Verification Demo', () => {
     try {
       // This would normally check the ÜPlay route after authentication
       // For demo purposes, we'll check if the route structure exists
-      await page.goto('http://localhost:3001/login', { timeout: 10000 });
+      await page.goto('http://localhost:2222/login', { timeout: 10000 });
       await page.waitForLoadState('networkidle', { timeout: 5000 });
       
       // Check if navigation to ÜPlay would be possible

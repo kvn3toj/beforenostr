@@ -160,7 +160,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   server: {
-    port: 3001,
+    port: 2222,
     host: true,
     // Configuración para permitir iframe embedding desde Builder.io
     headers: {
@@ -170,7 +170,7 @@ export default defineConfig(({ mode }) => ({
     // Proxy para redirigir peticiones de API al backend
     proxy: {
       '/api': {
-        target: 'http://localhost:3002',
+        target: 'http://localhost:1111',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
@@ -208,7 +208,7 @@ export default defineConfig(({ mode }) => ({
     }
   },
   preview: {
-    port: 3001,
+    port: 2222,
     host: true
   },
   test: {

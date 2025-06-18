@@ -69,7 +69,7 @@ window.systemStatusManager.unmarkButtonAsLoading(button, successText)
    # Desde el directorio del proyecto
    cd data/backups/my_recovered_website
    node server.js
-   # Abrir http://localhost:3000
+   # Abrir http://localhost:3333
    ```
 
 2. **Verificar indicadores de estado:**
@@ -289,7 +289,7 @@ window.systemStatusManager.unmarkButtonAsLoading(button, successText)
 
 2. **Abrir navegador:**
    ```
-   http://localhost:3000
+   http://localhost:3333
    ```
 
 ### Secuencia de Pruebas Completa:

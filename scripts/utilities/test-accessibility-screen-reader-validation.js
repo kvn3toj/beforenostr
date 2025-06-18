@@ -55,7 +55,7 @@ async function testScreenReaderCompatibility() {
     console.log('📋 FASE 1: TESTING DE FLUJO DE LOGIN\n');
     
     // 1. TESTING DE FLUJO DE LOGIN
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     console.log('🔍 Verificando estructura semántica de login...');
@@ -208,7 +208,7 @@ async function testScreenReaderCompatibility() {
     console.log('\n📋 FASE 3: TESTING DE GESTIÓN DE USUARIOS\n');
     
     // 3. TESTING DE GESTIÓN DE USUARIOS
-    await page.goto('http://localhost:3000/users');
+    await page.goto('http://localhost:3333/users');
     await page.waitForLoadState('networkidle');
     
     console.log('🔍 Verificando tabla de usuarios...');

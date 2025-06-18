@@ -1,7 +1,7 @@
 import type { AuditLog, SystemSettings, UpdateSystemSettingsData, BackupStatus, RecentBackupsMetric, ServiceStatus, SystemHealthMetric } from '../types/system.types';
 import { apiService } from './api.service';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 const ADMIN_SYSTEM_ENDPOINT = `${API_BASE_URL}/admin/system`;
 
 export interface FetchAuditLogsParams {

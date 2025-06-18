@@ -85,7 +85,7 @@ test.describe('🔧 VERIFICACIÓN DE VARIABLES DE ENTORNO', () => {
     console.log('📋 Llamadas API detectadas:', apiCalls);
 
     // Verificar que se hizo al menos una llamada al backend correcto
-    const backendCalls = apiCalls.filter(call => call.includes('localhost:3002'));
+    const backendCalls = apiCalls.filter(call => call.includes('localhost:1111'));
     
     if (backendCalls.length > 0) {
       console.log('✅ Llamadas al backend NestJS detectadas:', backendCalls);

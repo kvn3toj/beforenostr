@@ -27,7 +27,7 @@ fi
 
 # 3. Verificar backend disponible
 echo "├── 🏥 Verificando backend NestJS..."
-if curl -s http://localhost:3002/health >/dev/null 2>&1; then
+if curl -s http://localhost:1111/health >/dev/null 2>&1; then
     echo "├── ✅ Backend NestJS disponible (puerto 3002)"
 else
     echo "├── ⚠️ Backend NestJS no disponible - proceder con precaución"
@@ -35,7 +35,7 @@ fi
 
 # 4. Verificar endpoints marketplace
 echo "├── 📊 Verificando endpoints marketplace..."
-MARKETPLACE_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/marketplace/items 2>/dev/null || echo "000")
+MARKETPLACE_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1111/marketplace/items 2>/dev/null || echo "000")
 if [ "$MARKETPLACE_STATUS" = "200" ]; then
     echo "└── ✅ Endpoint /marketplace/items disponible (HTTP $MARKETPLACE_STATUS)"
 elif [ "$MARKETPLACE_STATUS" = "404" ]; then

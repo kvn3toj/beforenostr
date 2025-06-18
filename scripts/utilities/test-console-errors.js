@@ -31,7 +31,7 @@ async function testConsoleErrors() {
 
   try {
     console.log('\n🔐 Realizando login...');
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
 
     // Login
@@ -41,14 +41,14 @@ async function testConsoleErrors() {
     await page.waitForLoadState('networkidle');
 
     console.log('\n🌍 Navegando a página de Mundos...');
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     
     // Esperar un poco para que React Query haga las llamadas
     await page.waitForTimeout(3000);
 
     console.log('\n🎵 Navegando a página de Playlists...');
-    await page.goto('http://localhost:3000/playlists');
+    await page.goto('http://localhost:3333/playlists');
     await page.waitForLoadState('networkidle');
     
     // Esperar un poco para que React Query haga las llamadas
@@ -86,14 +86,14 @@ async function testConsoleErrors() {
     // Verificar si hay datos en las tablas
     console.log('\n🔍 Verificando contenido de las páginas...');
     
-    await page.goto('http://localhost:3000/mundos');
+    await page.goto('http://localhost:3333/mundos');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
     const mundosTableRows = await page.locator('table tbody tr').count();
     console.log(`📊 Filas en tabla de mundos: ${mundosTableRows}`);
 
-    await page.goto('http://localhost:3000/playlists');
+    await page.goto('http://localhost:3333/playlists');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     

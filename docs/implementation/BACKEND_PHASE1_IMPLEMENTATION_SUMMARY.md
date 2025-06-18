@@ -199,7 +199,7 @@ La **Gamifier API** es el backend completo de una plataforma educativa gamificad
 - **Seguridad**: Firewall, backups, certificados SSL
 
 ### **3. Swagger/OpenAPI** ✅
-- **URL**: `http://localhost:3002/api`
+- **URL**: `http://localhost:1111/api`
 - **Cobertura**: 100% de endpoints
 - **Interactivo**: Testing directo desde la documentación
 - **Esquemas**: Modelos y DTOs completos

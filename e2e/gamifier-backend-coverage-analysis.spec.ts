@@ -251,7 +251,7 @@ test.describe('📊 ANÁLISIS DE COBERTURA DEL BACKEND', () => {
     
     for (const endpoint of backendEndpoints) {
       try {
-        const response = await page.request.get(`http://localhost:3002${endpoint}`);
+        const response = await page.request.get(`http://localhost:1111${endpoint}`);
         const status = response.status();
         
         if (status === 200) {

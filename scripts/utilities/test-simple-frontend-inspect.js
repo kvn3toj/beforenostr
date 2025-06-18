@@ -26,8 +26,8 @@ async function inspectFrontend() {
     });
 
     // 🔒 PROTOCOLO @puertoyflujo: NAVEGAR PRIMERO A /login
-    console.log('🔒 Navegando a página de login: http://localhost:3000/login...');
-    await page.goto('http://localhost:3000/login');
+    console.log('🔒 Navegando a página de login: http://localhost:3333/login...');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
 
     // Tomar screenshot de la página de login
@@ -114,7 +114,7 @@ async function inspectFrontend() {
           
           // Intentar navegación directa a /items
           console.log('🔄 Intentando navegación directa a /items...');
-          await page.goto('http://localhost:3000/items');
+          await page.goto('http://localhost:3333/items');
           await page.waitForLoadState('networkidle');
           
           await page.screenshot({ path: 'debug-items-direct-navigation.png', fullPage: true });

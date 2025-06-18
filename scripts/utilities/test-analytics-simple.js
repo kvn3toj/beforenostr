@@ -28,7 +28,7 @@ async function testAnalyticsBasics() {
     console.log('📋 FASE 1: Testing Basic Navigation and Analytics...');
     
     // Navigate to the app
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     await page.waitForLoadState('networkidle');
     console.log('✅ Frontend loaded successfully');
 

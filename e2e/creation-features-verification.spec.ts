@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 // Configuración inicial
-const FRONTEND_BASE_URL = 'http://localhost:3000';
+const FRONTEND_BASE_URL = 'http://localhost:3333';
 const ADMIN_CREDENTIALS = {
   email: 'admin@gamifier.com',
   password: 'admin123'

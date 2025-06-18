@@ -103,8 +103,8 @@ Eres parte de algo histórico: la construcción de una economía colaborativa gl
 📚 **RECURSOS BETA TESTERS**
 
 🔗 **ENLACES IMPORTANTES:**
-• SuperApp Beta: http://localhost:3000
-• Página de Registro: http://localhost:3000/beta-register
+• SuperApp Beta: http://localhost:3333
+• Página de Registro: http://localhost:3333/beta-register
 • Backend Admin: [Enlace al admin]
 
 📖 **DOCUMENTACIÓN:**

@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test';
 
 // Helper para autenticación
 async function getAuthToken(): Promise<string> {
-  const response = await fetch('http://localhost:3002/auth/login', {
+  const response = await fetch('http://localhost:1111/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -53,7 +53,7 @@ test.describe('Backend API Stress Testing', () => {
     
     // Intentar 20 logins simultáneos
     const loginRequests = Array.from({ length: 20 }, () =>
-      fetch('http://localhost:3002/auth/login', {
+      fetch('http://localhost:1111/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -85,7 +85,7 @@ test.describe('Backend API Stress Testing', () => {
     
     const startTime = Date.now();
     const responses = await makeConcurrentRequests(
-      'http://localhost:3002/video-items',
+      'http://localhost:1111/video-items',
       authToken,
       25
     );
@@ -108,7 +108,7 @@ test.describe('Backend API Stress Testing', () => {
     console.log('📊 Testing Analytics Data Consistency...');
     
     const responses = await makeConcurrentRequests(
-      'http://localhost:3002/analytics/dashboard-metrics',
+      'http://localhost:1111/analytics/dashboard-metrics',
       authToken,
       15
     );
@@ -138,9 +138,9 @@ test.describe('Backend API Stress Testing', () => {
     console.log('⚡ Running Performance Benchmark...');
     
     const endpoints = [
-      { name: 'Health Check', url: 'http://localhost:3002/health', auth: false },
-      { name: 'Video Items', url: 'http://localhost:3002/video-items', auth: true },
-      { name: 'Analytics Dashboard', url: 'http://localhost:3002/analytics/dashboard-metrics', auth: true }
+      { name: 'Health Check', url: 'http://localhost:1111/health', auth: false },
+      { name: 'Video Items', url: 'http://localhost:1111/video-items', auth: true },
+      { name: 'Analytics Dashboard', url: 'http://localhost:1111/analytics/dashboard-metrics', auth: true }
     ];
     
     const benchmarkResults = [];

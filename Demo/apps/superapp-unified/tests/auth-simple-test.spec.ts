@@ -126,7 +126,7 @@ test.describe('🔐 TEST SIMPLE - Verificación de Autenticación', () => {
     console.log(`- Dev Mode: ${config.dev}`);
     
     // Verificar que esté configurado para usar backend real
-    expect(config.apiBaseUrl).toBe('http://localhost:3002');
+    expect(config.apiBaseUrl).toBe('http://localhost:1111');
     expect(config.mockAuth).toBe('false');
     
     console.log('✅ Configuración correcta para Backend NestJS');

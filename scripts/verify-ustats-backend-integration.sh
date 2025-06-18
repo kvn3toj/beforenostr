@@ -122,7 +122,7 @@ echo "-----------------------------------------"
 
 # Verificar backend
 total=$((total + 1))
-if curl -s http://localhost:3002/health >/dev/null 2>&1; then
+if curl -s http://localhost:1111/health >/dev/null 2>&1; then
     echo -e "${GREEN}✅ Backend NestJS ejecutándose (puerto 3002)${NC}"
     passed=$((passed + 1))
 else
@@ -131,7 +131,7 @@ fi
 
 # Verificar SuperApp
 total=$((total + 1))
-if curl -s http://localhost:3001 >/dev/null 2>&1; then
+if curl -s http://localhost:2222 >/dev/null 2>&1; then
     echo -e "${GREEN}✅ SuperApp ejecutándose (puerto 3001)${NC}"
     passed=$((passed + 1))
 else
@@ -169,7 +169,7 @@ ENDPOINTS=(
 
 for endpoint in "${ENDPOINTS[@]}"; do
     total=$((total + 1))
-    if curl -s "http://localhost:3002$endpoint" >/dev/null 2>&1; then
+    if curl -s "http://localhost:1111$endpoint" >/dev/null 2>&1; then
         echo -e "${GREEN}✅ Endpoint $endpoint disponible${NC}"
         passed=$((passed + 1))
     else
@@ -221,7 +221,7 @@ if [ $passed -eq $total ]; then
     echo "   • ✅ Integra datos LETS y balance de Ünits"
     echo ""
     echo "📍 Próximos pasos recomendados:"
-    echo "   1. Navegar a http://localhost:3001/ustats"
+    echo "   1. Navegar a http://localhost:2222/ustats"
     echo "   2. Verificar que los datos cambien dinámicamente"
     echo "   3. Probar el botón de refresh"
     echo "   4. Verificar que muestre métricas reales"

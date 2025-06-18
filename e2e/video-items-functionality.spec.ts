@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Video Items Functionality Tests', () => {
-  const baseURL = 'http://localhost:3002';
+  const baseURL = 'http://localhost:1111';
 
   test('Video items should have required properties', async ({ request }) => {
     console.log('🎥 Testing video items structure...');

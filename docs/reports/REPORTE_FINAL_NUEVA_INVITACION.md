@@ -65,7 +65,7 @@ La **Página "Nueva Invitación"** ha sido implementada completamente y está **
 
 ### ✅ **Testing de Frontend**
 ```bash
-📝 Servidor frontend: http://localhost:3000
+📝 Servidor frontend: http://localhost:3333
 ✅ Compilación exitosa sin errores
 ✅ Importaciones corregidas
 ✅ Página se renderiza correctamente
@@ -74,7 +74,7 @@ La **Página "Nueva Invitación"** ha sido implementada completamente y está **
 
 ### ✅ **Testing de Backend**
 ```bash
-📝 Servidor backend: http://localhost:3002
+📝 Servidor backend: http://localhost:1111
 ✅ Endpoint /health responde 200 OK
 ✅ Módulo invitations operativo
 ✅ Logs de dependencias: DEFINED

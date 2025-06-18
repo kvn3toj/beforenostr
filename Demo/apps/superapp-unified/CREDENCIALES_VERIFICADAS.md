@@ -56,12 +56,12 @@ Uso: Tests de moderación
 ```bash
 # En Demo/apps/superapp-unified/.env
 VITE_ENABLE_MOCK_AUTH=false
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=http://localhost:1111
 ```
 
 ### Endpoints Verificados
 ```
-Backend: http://localhost:3002
+Backend: http://localhost:1111
 Login: POST /auth/login
 Health: GET /health
 ```
@@ -94,12 +94,12 @@ await page.fill('[data-testid="login-email-input"] input', 'invalid@example.com'
 ### cURL Testing
 ```bash
 # ✅ CORRECTO
-curl -X POST "http://localhost:3002/auth/login" \
+curl -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@gamifier.com", "password": "admin123"}'
 
 # ❌ INCORRECTO - Desperdicia tokens
-curl -X POST "http://localhost:3002/auth/login" \
+curl -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "fake@test.com", "password": "wrong"}'
 ```
@@ -129,10 +129,10 @@ curl -X POST "http://localhost:3002/auth/login" \
 ### Comando de Verificación
 ```bash
 # Verificar que el backend esté funcionando
-curl http://localhost:3002/health
+curl http://localhost:1111/health
 
 # Test rápido de login
-curl -X POST "http://localhost:3002/auth/login" \
+curl -X POST "http://localhost:1111/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@gamifier.com", "password": "admin123"}' | jq
 ```

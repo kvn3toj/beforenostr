@@ -20,7 +20,7 @@ Archivos clave:
 - src/services/*.ts
 
 Resultado esperado:
-- Todas las llamadas API apuntan a localhost:3002
+- Todas las llamadas API apuntan a localhost:1111
 - JWT authentication funcional
 - Error handling robusto
 - Types actualizados del backend

@@ -17,7 +17,7 @@ const mobileDevices = [
 
 // Helper para autenticación
 async function getAuthToken(): Promise<string> {
-  const response = await fetch('http://localhost:3002/auth/login', {
+  const response = await fetch('http://localhost:1111/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -47,7 +47,7 @@ test.describe('Mobile App Testing Suite', () => {
       test('1. Responsive Layout Verification', async ({ page }) => {
         console.log(`📱 Testing responsive layout on ${device.name}`);
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Verificar que la página se carga correctamente
         await expect(page).toHaveTitle(/SuperApp/);
@@ -78,7 +78,7 @@ test.describe('Mobile App Testing Suite', () => {
       test('2. Touch Gesture Support', async ({ page }) => {
         console.log(`👆 Testing touch gestures on ${device.name}`);
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Test tap gestures
         const loginButton = page.locator('button:has-text("Login")');
@@ -112,7 +112,7 @@ test.describe('Mobile App Testing Suite', () => {
       test('3. Mobile-Specific Features', async ({ page }) => {
         console.log(`📲 Testing mobile-specific features on ${device.name}`);
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Test orientación (si es posible)
         const viewport = page.viewportSize();
@@ -151,7 +151,7 @@ test.describe('Mobile App Testing Suite', () => {
         
         const startTime = Date.now();
         
-        await page.goto('http://localhost:3000');
+        await page.goto('http://localhost:3333');
         
         // Esperar a que la página esté completamente cargada
         await page.waitForLoadState('networkidle');
@@ -198,8 +198,8 @@ test.describe('Mobile App Testing Suite', () => {
     
     try {
       // Login en ambos dispositivos
-      await page1.goto('http://localhost:3000');
-      await page2.goto('http://localhost:3000');
+      await page1.goto('http://localhost:3333');
+      await page2.goto('http://localhost:3333');
       
       // Simular acción en device 1
       if (authToken) {
@@ -252,7 +252,7 @@ test.describe('Mobile App Testing Suite', () => {
     
     // Use mobile viewport
     await page.setViewportSize({ width: 375, height: 667 }); // iPhone SE
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Test bottom navigation (común en apps móviles)
     const bottomNav = page.locator('[data-testid="bottom-navigation"]');
@@ -300,7 +300,7 @@ test.describe('Mobile App Testing Suite', () => {
   test('7. Network Connectivity Handling', async ({ page }) => {
     console.log('📶 Testing network connectivity handling');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Test offline detection
     const isOnlineInitial = await page.evaluate(() => navigator.onLine);
@@ -337,10 +337,10 @@ test.describe('Mobile App Testing Suite', () => {
   test('8. Mobile App Install (PWA)', async ({ page }) => {
     console.log('📲 Testing PWA installation capabilities');
     
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3333');
     
     // Verificar manifest.json
-    const manifestResponse = await page.request.get('http://localhost:3000/manifest.json');
+    const manifestResponse = await page.request.get('http://localhost:3333/manifest.json');
     if (manifestResponse.ok()) {
       const manifest = await manifestResponse.json();
       

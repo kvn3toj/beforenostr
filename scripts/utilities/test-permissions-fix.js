@@ -11,7 +11,7 @@ async function testPermissionsFix() {
   try {
     // 1. Ir a la página de login
     console.log('📍 1. Navegando a login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle', { timeout: 10000 });
     
     // 2. Hacer login con las credenciales correctas del admin
@@ -87,7 +87,7 @@ async function testPermissionsFix() {
     
     // 6. Verificar página de permisos específicamente
     console.log('\n🔧 6. Verificando página de permisos...');
-    await page.goto('http://localhost:3000/permissions');
+    await page.goto('http://localhost:3333/permissions');
     await page.waitForLoadState('networkidle');
     
     // Verificar botón "Crear Nuevo Permiso"
@@ -101,7 +101,7 @@ async function testPermissionsFix() {
     
     // 7. Verificar página de roles
     console.log('\n👥 7. Verificando página de roles...');
-    await page.goto('http://localhost:3000/roles');
+    await page.goto('http://localhost:3333/roles');
     await page.waitForLoadState('networkidle');
     
     const createRoleButton = page.locator('button:has-text("Crear Nuevo Rol")').first();

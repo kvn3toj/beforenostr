@@ -14,7 +14,7 @@ async function testGamificationSimple() {
   try {
     // 1. LOGIN
     console.log('🔐 Login...');
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3333/login');
     await page.waitForLoadState('networkidle');
     
     await page.fill('input[name="email"]', 'admin@gamifier.com');
@@ -25,12 +25,12 @@ async function testGamificationSimple() {
 
     // 2. VERIFICAR PÁGINAS PRINCIPALES
     const pages = [
-      { name: 'Wallets', url: 'http://localhost:3000/wallet' },
-      { name: 'Merits', url: 'http://localhost:3000/merits' },
-      { name: 'Groups', url: 'http://localhost:3000/groups' },
-      { name: 'Tokens', url: 'http://localhost:3000/tokens' },
-      { name: 'Marketplace', url: 'http://localhost:3000/marketplace' },
-      { name: 'Invitations', url: 'http://localhost:3000/invitations' }
+      { name: 'Wallets', url: 'http://localhost:3333/wallet' },
+      { name: 'Merits', url: 'http://localhost:3333/merits' },
+      { name: 'Groups', url: 'http://localhost:3333/groups' },
+      { name: 'Tokens', url: 'http://localhost:3333/tokens' },
+      { name: 'Marketplace', url: 'http://localhost:3333/marketplace' },
+      { name: 'Invitations', url: 'http://localhost:3333/invitations' }
     ];
 
     for (const pageInfo of pages) {
@@ -76,7 +76,7 @@ async function testGamificationSimple() {
     console.log('\n🔍 Verificando datos específicos...');
     
     // Verificar Groups tiene datos reales
-    await page.goto('http://localhost:3000/groups');
+    await page.goto('http://localhost:3333/groups');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1000);
     
@@ -86,7 +86,7 @@ async function testGamificationSimple() {
     }
     
     // Verificar Merits tiene datos reales  
-    await page.goto('http://localhost:3000/merits');
+    await page.goto('http://localhost:3333/merits');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1000);
     

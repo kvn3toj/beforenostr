@@ -98,9 +98,9 @@ npm run health:all
 
 Después del deployment exitoso:
 
-- **SuperApp (Usuarios)**: http://localhost:3001
-- **Gamifier Admin**: http://localhost:3000  
-- **Backend API Docs**: http://localhost:3002/api
+- **SuperApp (Usuarios)**: http://localhost:2222
+- **Gamifier Admin**: http://localhost:3333  
+- **Backend API Docs**: http://localhost:1111/api
 - **Grafana** (si monitoring habilitado): http://localhost:3003
 - **Prometheus** (si monitoring habilitado): http://localhost:9090
 

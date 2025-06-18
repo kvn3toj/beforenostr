@@ -69,7 +69,7 @@ test.describe('🔐 Validación de Credenciales Verificadas - REGLA OBLIGATORIA'
       console.log(curlCommand);
       
       // Verificar que el comando contiene las credenciales correctas
-      expect(curlCommand).toContain('http://localhost:3002/auth/login');
+      expect(curlCommand).toContain('http://localhost:1111/auth/login');
       expect(curlCommand).toContain(VERIFIED_CREDENTIALS[userType as keyof typeof VERIFIED_CREDENTIALS].email);
       expect(curlCommand).toContain(VERIFIED_CREDENTIALS[userType as keyof typeof VERIFIED_CREDENTIALS].password);
     });

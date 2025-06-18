@@ -108,7 +108,7 @@ await page.waitForTimeout(3000); // Para carga de datos
 ### 2. **Verificación de Redirecciones**
 ```typescript
 // Detección precisa de páginas no implementadas
-if (finalUrl === 'http://localhost:3000/' || finalUrl.includes('/home')) {
+if (finalUrl === 'http://localhost:3333/' || finalUrl.includes('/home')) {
   console.log(`⚠️ ${pageInfo.name} - REDIRIGE AL HOME (NO IMPLEMENTADO)`);
 }
 ```

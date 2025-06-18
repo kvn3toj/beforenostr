@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Backend Integration Tests', () => {
-  const baseURL = 'http://localhost:3002';
+  const baseURL = 'http://localhost:1111';
 
   test.beforeAll(async () => {
     // Verificar que el backend esté corriendo
