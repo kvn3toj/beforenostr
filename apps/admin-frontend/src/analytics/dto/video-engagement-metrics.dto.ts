@@ -94,7 +94,7 @@ export class VideoEngagementReportDto {
 
   @ApiProperty({ 
     description: 'Métricas de engagement de los videos',
-    type: [VideoEngagementMetricsDto]
+    type: () => [VideoEngagementMetricsDto]
   })
   videos: VideoEngagementMetricsDto[];
 

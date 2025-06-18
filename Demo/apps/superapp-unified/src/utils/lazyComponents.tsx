@@ -237,6 +237,12 @@ export const LazyPages = {
     () => import('../components/ui/DesignSystemValidator'),
     <SimpleLoader />
   ),
+
+  // 🔧 WebSocket Test - Temporal para pruebas
+  WebSocketTest: createLazyComponent(
+    () => import('../components/modules/uplay/WebSocketTest'),
+    <SimpleLoader />
+  ),
 };
 
 /**

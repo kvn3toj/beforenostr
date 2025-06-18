@@ -63,7 +63,7 @@ export class CreateChallengeDto {
   @IsNotEmpty()
   createdBy: string;
 
-  @ApiProperty({ description: 'Rewards for completing the challenge', type: [CreateChallengeRewardDto] })
+  @ApiProperty({ description: 'Rewards for completing the challenge', type: () => [CreateChallengeRewardDto] })
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })

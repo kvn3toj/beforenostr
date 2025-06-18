@@ -135,6 +135,54 @@ export class UsersController {
     return req.user;
   }
 
+  @Get(':id/ayni-metrics')
+  @ApiOperation({ summary: 'Obtener métricas Ayni del usuario' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Métricas Ayni del usuario obtenidas exitosamente',
+    schema: {
+      type: 'object',
+      properties: {
+        ondas: { type: 'number', description: 'Öndas acumuladas del usuario' },
+        meritos: { type: 'number', description: 'Mëritos ganados' },
+        balanceAyni: { type: 'number', description: 'Balance Ayni (0-1)' },
+        ayniLevel: { type: 'string', description: 'Nivel actual de Ayni' },
+        nextLevel: { type: 'string', description: 'Próximo nivel' },
+        ayniProgress: { type: 'number', description: 'Progreso hacia el siguiente nivel (%)' },
+        bienComunContributions: { type: 'number', description: 'Contribuciones al Bien Común' },
+        reciprocityScore: { type: 'number', description: 'Puntuación de reciprocidad' },
+        elementos: {
+          type: 'object',
+          properties: {
+            fuego: { type: 'number', description: 'Puntos de elemento Fuego' },
+            agua: { type: 'number', description: 'Puntos de elemento Agua' },
+            tierra: { type: 'number', description: 'Puntos de elemento Tierra' },
+            aire: { type: 'number', description: 'Puntos de elemento Aire' }
+          }
+        },
+        totalTransactions: { type: 'number', description: 'Total de transacciones' },
+        positiveImpact: { type: 'number', description: 'Impacto positivo generado' },
+        communityRank: { type: 'number', description: 'Ranking en la comunidad' },
+        weeklyGrowth: { type: 'number', description: 'Crecimiento semanal (%)' },
+        lastUpdated: { type: 'string', description: 'Última actualización' },
+        joinedDate: { type: 'string', description: 'Fecha de registro' }
+      }
+    }
+  })
+  async getAyniMetrics(@Param('id') id: string, @Req() req) {
+    // Verificar que el usuario puede acceder a estas métricas
+    const canAccess = req.user.id === id || req.user.roles.includes('admin');
+    
+    if (!canAccess) {
+      return { 
+        message: 'No tienes permisos para ver estas métricas',
+        statusCode: 403 
+      };
+    }
+
+    return this.usersService.getAyniMetrics(id);
+  }
+
   @Get('debug-roles')
   @Roles('admin')
   @ApiOperation({ summary: 'Debug endpoint para probar RolesGuard' })

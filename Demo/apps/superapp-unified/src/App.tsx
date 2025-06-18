@@ -103,6 +103,9 @@ const AppRoutes: React.FC = () => {
         <Route path="/theme-test" element={<LazyPages.ThemeTestSuite />} />
         <Route path="/design-validator" element={<LazyPages.DesignSystemValidator />} />
         
+        {/* 🔧 WebSocket Test - Temporal para pruebas */}
+        <Route path="/websocket-test" element={<LazyPages.WebSocketTest />} />
+        
         {/* Settings */}
         <Route path="/settings" element={<LazyPages.SettingsPage />} />
         <Route path="/help" element={<LazyPages.HelpPage />} />

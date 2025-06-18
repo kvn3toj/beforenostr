@@ -75,6 +75,7 @@ model VideoItem {
   activities   Activity[]
   questions    Question[]
   subtitles    Subtitle[]
+  studyRooms   StudyRoom[]
   playlist     Playlist          @relation(fields: [playlistId], references: [id])
   permissions  VideoPermissions?
 
@@ -180,6 +181,9 @@ model User {
   invitationsReceived        UserInvitation[]
   assignedRoles              UserRole[]            @relation("RoleAssigner")
   userRoles                  UserRole[]
+  hostedStudyRooms           StudyRoom[]           @relation("StudyRoomHost")
+  studyRoomParticipants      StudyRoomParticipant[]
+  sentChatMessages           StudyRoomMessage[]
   personality                Personality?          @relation(fields: [personalityId], references: [id])
   videoPermissions           VideoPermissions[]
   wallet                     Wallet?
@@ -900,4 +904,82 @@ model MarketplaceItem {
   @@index([price])
   @@index([location])
   @@map("marketplace_items")
+}
+
+// =====================================================================
+// STUDY ROOMS MODULE MODELS - ÜPlay Social Collaboration
+// =====================================================================
+
+enum StudyRoomStatus {
+  ACTIVE
+  PAUSED  
+  ENDED
+}
+
+model StudyRoom {
+  id                 String                  @id @default(uuid())
+  name               String
+  description        String?
+  videoId            Int
+  hostId             String
+  maxParticipants    Int                     @default(10)
+  status             StudyRoomStatus         @default(ACTIVE)
+  currentTime        Float                   @default(0)
+  isPaused           Boolean                 @default(false)
+  isActive           Boolean                 @default(true)
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  
+  // Relaciones
+  video              VideoItem               @relation(fields: [videoId], references: [id])
+  host               User                    @relation("StudyRoomHost", fields: [hostId], references: [id])
+  participants       StudyRoomParticipant[]
+  messages           StudyRoomMessage[]
+
+  @@index([hostId])
+  @@index([videoId])
+  @@index([status])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("study_rooms")
+}
+
+model StudyRoomParticipant {
+  id              String    @id @default(uuid())
+  studyRoomId     String
+  userId          String
+  isHost          Boolean   @default(false)
+  joinedAt        DateTime  @default(now())
+  leftAt          DateTime?
+  isActive        Boolean   @default(true)
+  
+  // Relaciones
+  studyRoom       StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([studyRoomId, userId]) // Un usuario solo puede estar una vez en una sala
+  @@index([studyRoomId])
+  @@index([userId])
+  @@index([isActive])
+  @@map("study_room_participants")
+}
+
+model StudyRoomMessage {
+  id              String    @id @default(uuid())
+  studyRoomId     String
+  userId          String
+  message         String    @db.Text
+  messageType     String    @default("CHAT") // CHAT, SYSTEM, VIDEO_EVENT
+  metadata        String?   @db.Text
+  createdAt       DateTime  @default(now())
+  
+  // Relaciones
+  studyRoom       StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([studyRoomId])
+  @@index([userId])
+  @@index([messageType])
+  @@index([createdAt])
+  @@map("study_room_messages")
 }

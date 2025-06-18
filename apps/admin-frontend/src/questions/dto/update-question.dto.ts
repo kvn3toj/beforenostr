@@ -68,7 +68,7 @@ export class UpdateQuestionDto extends PartialType(CreateQuestionDto) {
 
   @ApiPropertyOptional({ 
     description: 'Answer options for multiple-choice questions', 
-    type: [UpdateAnswerOptionDto],
+    type: () => [UpdateAnswerOptionDto],
     isArray: true
   })
   @IsOptional()

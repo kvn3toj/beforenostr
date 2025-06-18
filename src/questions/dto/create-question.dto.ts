@@ -11,7 +11,7 @@ import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAnswerOptionDto {
-  @ApiProperty({ description: 'The text of the answer option' })
+  @ApiProperty({ description: 'The text of the answer option', type: String })
   @IsString()
   text: string;
 
@@ -28,7 +28,7 @@ export class CreateAnswerOptionDto {
 }
 
 export class CreateQuestionDto {
-  @ApiProperty({ description: 'The ID of the video item this question belongs to' })
+  @ApiProperty({ description: 'The ID of the video item this question belongs to', type: Number })
   @IsInt()
   @Type(() => Number)
   videoItemId: number;
@@ -59,7 +59,7 @@ export class CreateQuestionDto {
   @IsIn(['multiple-choice', 'short-answer', 'true-false'])
   type: 'multiple-choice' | 'short-answer' | 'true-false';
 
-  @ApiProperty({ description: 'The text of the question' })
+  @ApiProperty({ description: 'The text of the question', type: String })
   @IsString()
   text: string;
 
@@ -77,7 +77,7 @@ export class CreateQuestionDto {
 
   @ApiPropertyOptional({ 
     description: 'Answer options for multiple-choice questions (required for multiple-choice type)', 
-    type: [CreateAnswerOptionDto],
+    type: () => [CreateAnswerOptionDto],
     isArray: true
   })
   @ValidateIf(o => o.type === 'multiple-choice')

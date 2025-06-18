@@ -76,6 +76,9 @@ import {
   checkVideoAvailability,
 } from '../../../../utils/videoUtils';
 
+// Import Design System Cósmico
+import { CosmicCardAire } from '../../../../design-system/components/cosmic/CosmicCard';
+
 // Enhanced types for better video player
 interface QuestionOverlay {
   id: number;
@@ -118,8 +121,8 @@ interface EnhancedInteractiveVideoPlayerProps {
   showBackButton?: boolean;
 }
 
-// 🎯 [ELIMINADO] getMockQuestions - Reemplazado por useVideoQuestions hook
-// Las preguntas ahora se obtienen dinámicamente del backend
+// 🎯 [INTEGRACIÓN BACKEND] Las preguntas ahora se obtienen dinámicamente del backend NestJS
+// usando el hook useVideoQuestions que conecta con /video-items/:videoId/questions
 
 // 🎯 [NUEVO] Componente interno con toda la lógica de hooks
 const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
@@ -140,7 +143,16 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
     data: questionsFromBackend,
     isLoading: questionsLoading,
     isError: questionsError,
+    error: questionsErrorDetails,
   } = useVideoQuestions(videoData.id);
+
+  console.log('🎯 [VideoPlayer] Questions hook state:', {
+    videoId: videoData.id,
+    questionsLoading,
+    questionsError,
+    questionsCount: questionsFromBackend?.length || 0,
+    errorDetails: questionsErrorDetails,
+  });
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -258,6 +270,50 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
     resolveVideoUrl();
   }, [videoData.id, videoData.url]);
 
+  // 🎯 [NUEVO] Transformador de datos: Backend → Frontend
+  const transformBackendQuestions = useCallback((backendQuestions: any[]): QuestionOverlay[] => {
+    if (!backendQuestions || !Array.isArray(backendQuestions)) {
+      console.warn('🔄 [VideoPlayer] Invalid backend questions data:', backendQuestions);
+      return [];
+    }
+
+    return backendQuestions.map((backendQ, index) => {
+      // Transformar opciones: agregar campo 'label' faltante
+      const transformedOptions = (backendQ.options || []).map((option: any, optionIndex: number) => ({
+        id: String(option.id), // Convertir number → string
+        text: option.text,
+        label: String.fromCharCode(65 + optionIndex), // A, B, C, D
+        isCorrect: option.isCorrect,
+      }));
+
+      // Transformar pregunta principal
+      const transformed: QuestionOverlay = {
+        id: backendQ.id,
+        timestamp: backendQ.timestamp,
+        endTimestamp: backendQ.endTimestamp || (backendQ.timestamp + 30), // +30s si es null
+        type: backendQ.type === 'MULTIPLE_CHOICE' ? 'multiple-choice' : 'true-false', // Convertir formato
+        question: backendQ.question,
+        options: transformedOptions,
+        timeLimit: backendQ.timeLimit || 20, // Default 20s
+        reward: {
+          merits: backendQ.reward?.merits || 5,
+          ondas: backendQ.reward?.ondas || 3,
+        },
+        difficulty: backendQ.difficulty || 'medium',
+      };
+
+      console.log(`✅ [VideoPlayer] Transformed question ${backendQ.id}:`, {
+        originalType: backendQ.type,
+        transformedType: transformed.type,
+        originalOptionsCount: backendQ.options?.length || 0,
+        transformedOptionsCount: transformed.options.length,
+        endTimestamp: transformed.endTimestamp,
+      });
+
+      return transformed;
+    });
+  }, []);
+
   // 🎯 [REFACTORIZADO] Integración con hook de preguntas dinámicas
   useEffect(() => {
     console.log('🎯 [VideoPlayer] Questions loading state:', {
@@ -267,14 +323,15 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
       videoId: videoData.id,
     });
 
-    // Si las preguntas del backend están disponibles, usarlas
+    // Si las preguntas del backend están disponibles, transformarlas y usarlas
     if (questionsFromBackend && questionsFromBackend.length > 0) {
-      setQuestionsData(questionsFromBackend);
+      const transformedQuestions = transformBackendQuestions(questionsFromBackend);
+      setQuestionsData(transformedQuestions);
       console.log(
-        '✅ [VideoPlayer] Using backend questions for video:',
+        '✅ [VideoPlayer] Using transformed backend questions for video:',
         videoData.id,
-        questionsFromBackend.length,
-        'questions'
+        transformedQuestions.length,
+        'questions transformed'
       );
       return;
     }
@@ -302,7 +359,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
         );
       }
     }
-  }, [questionsFromBackend, questionsLoading, questionsError, videoData.id]);
+  }, [questionsFromBackend, questionsLoading, questionsError, videoData.id, transformBackendQuestions]);
 
   // Format time helper
   const formatTime = useCallback((seconds: number): string => {
@@ -311,8 +368,9 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }, []);
 
-  // Enhanced question timing logic
+  // Enhanced question timing logic con mejoras del UPLAY_ENVIRONMENT_REVIEW
   const startQuestionTimer = useCallback((timeLimit: number) => {
+    console.log('🎯 [VideoPlayer] Starting question timer:', timeLimit, 'seconds');
     setQuestionTimeRemaining(timeLimit);
     setIsQuestionTimerActive(true);
     setQuestionStartTime(Date.now());
@@ -322,6 +380,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
         if (prev <= 1) {
           clearInterval(interval);
           setIsQuestionTimerActive(false);
+          console.log('⏰ [VideoPlayer] Question timer expired, auto-skipping');
           handleSkipQuestion();
           return 0;
         }
@@ -338,12 +397,19 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
       questionTimeoutRef.current = null;
     }
     setIsQuestionTimerActive(false);
+    console.log('⏹️ [VideoPlayer] Question timer stopped');
   }, []);
 
-  // Enhanced question handling
+  // 🎯 [MEJORADO] Enhanced question handling según UPLAY_ENVIRONMENT_REVIEW
   const handleAnswerSelect = useCallback(
     async (optionId: string) => {
       if (!activeQuestion || selectedAnswer) return;
+
+      console.log('✅ [VideoPlayer] Answer selected:', {
+        questionId: activeQuestion.id,
+        optionId,
+        timeRemaining: questionTimeRemaining,
+      });
 
       setSelectedAnswer(optionId);
       stopQuestionTimer();
@@ -355,6 +421,8 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
         timeTaken
       );
 
+      console.log('🎊 [VideoPlayer] Answer result:', result);
+
       setAnswerFeedback({
         isVisible: true,
         isCorrect: result.isCorrect,
@@ -364,8 +432,9 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
 
       setAnsweredQuestions((prev) => new Set([...prev, activeQuestion.id]));
 
-      // Hide question after 3 seconds
+      // Mejorar feedback visual según diseño Figma (UPLAY_ENVIRONMENT_REVIEW)
       setTimeout(() => {
+        console.log('🔄 [VideoPlayer] Hiding question overlay, resuming video');
         setActiveQuestion(null);
         setSelectedAnswer(null);
         setAnswerFeedback({ isVisible: false, isCorrect: false, message: '' });
@@ -378,6 +447,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
     [
       activeQuestion,
       selectedAnswer,
+      questionTimeRemaining,
       questionStartTime,
       handleQuestionAnswer,
       stopQuestionTimer,
@@ -387,6 +457,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
   const handleSkipQuestion = useCallback(() => {
     if (!activeQuestion) return;
 
+    console.log('⏭️ [VideoPlayer] Skipping question:', activeQuestion.id);
     stopQuestionTimer();
     handleQuestionSkip(activeQuestion.id);
     setAnsweredQuestions((prev) => new Set([...prev, activeQuestion.id]));
@@ -399,7 +470,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
     }
   }, [activeQuestion, handleQuestionSkip, stopQuestionTimer]);
 
-  // Video event handlers
+  // 🎯 [CRÍTICO] Video event handlers con mejoras de timing del UPLAY_ENVIRONMENT_REVIEW
   const handleTimeUpdate = useCallback(() => {
     if (!videoRef.current) return;
 
@@ -407,21 +478,51 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
     setCurrentTime(time);
     updateWatchTime(time);
 
-    // Check for questions to trigger
-    const question = questionsData.find(
-      (q) =>
-        time >= q.timestamp &&
-        time <= q.endTimestamp &&
-        !answeredQuestions.has(q.id) &&
-        !activeQuestion
+    // 🎯 [MEJORADO] Algoritmo de detección de preguntas con logs detallados
+    console.log('🕐 [VideoPlayer] Time update:', {
+      currentTime: time.toFixed(2),
+      questionsAvailable: questionsData.length,
+      activeQuestionId: activeQuestion?.id || 'none',
+      answeredCount: answeredQuestions.size,
+    });
+
+    // Buscar preguntas para activar con lógica mejorada
+    const candidateQuestion = questionsData.find(
+      (q) => {
+        const isInTimeRange = time >= q.timestamp && time <= q.endTimestamp;
+        const notAnswered = !answeredQuestions.has(q.id);
+        const noActiveQuestion = !activeQuestion;
+        
+        if (isInTimeRange) {
+          console.log('🎯 [VideoPlayer] Question candidate found:', {
+            questionId: q.id,
+            timestamp: q.timestamp,
+            endTimestamp: q.endTimestamp,
+            currentTime: time.toFixed(2),
+            isInTimeRange,
+            notAnswered,
+            noActiveQuestion,
+            willTrigger: isInTimeRange && notAnswered && noActiveQuestion,
+          });
+        }
+        
+        return isInTimeRange && notAnswered && noActiveQuestion;
+      }
     );
 
-    if (question) {
-      setActiveQuestion(question);
+    if (candidateQuestion) {
+      console.log('🚀 [VideoPlayer] ACTIVATING QUESTION:', {
+        questionId: candidateQuestion.id,
+        question: candidateQuestion.question.substring(0, 50) + '...',
+        timestamp: candidateQuestion.timestamp,
+        timeLimit: candidateQuestion.timeLimit,
+      });
+      
+      setActiveQuestion(candidateQuestion);
       setSelectedAnswer(null);
       videoRef.current.pause();
       setIsPlaying(false);
-      startQuestionTimer(question.timeLimit || 20);
+      startQuestionTimer(candidateQuestion.timeLimit || 20);
     }
   }, [
     questionsData,
@@ -824,11 +925,17 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
               </Typography>
               <Stack direction="row" spacing={1} alignItems="center">
                 <Chip
-                  icon={<QuizIcon />}
-                  label={`${answeredCount}/${totalQuestions} preguntas`}
+                  icon={questionsLoading ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <QuizIcon />}
+                  label={
+                    questionsLoading 
+                      ? 'Cargando preguntas...' 
+                      : questionsError 
+                        ? 'Error en preguntas'
+                        : `${answeredCount}/${totalQuestions} preguntas`
+                  }
                   size="small"
                   sx={{
-                    backgroundColor: 'rgba(99, 102, 241, 0.9)',
+                    backgroundColor: questionsError ? 'rgba(239, 68, 68, 0.9)' : 'rgba(99, 102, 241, 0.9)',
                     color: 'white',
                     fontWeight: 600,
                   }}
@@ -872,7 +979,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
         </Box>
       </Fade>
 
-      {/* Enhanced Question Overlay */}
+      {/* 🎯 [MEJORADO] Enhanced Question Overlay - Diseño Figma según UPLAY_ENVIRONMENT_REVIEW */}
       <Dialog
         open={!!activeQuestion}
         maxWidth="md"
@@ -880,31 +987,66 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
         PaperProps={{
           sx: {
             backgroundColor: 'rgba(255, 255, 255, 0.98)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: 3,
+            backdropFilter: 'blur(15px)',
+            borderRadius: 4, // Más redondeado según Figma
             border: `3px solid ${getDifficultyColor(activeQuestion?.difficulty)}`,
-            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            boxShadow: '0 24px 48px rgba(0,0,0,0.15), 0 8px 16px rgba(0,0,0,0.1)', // Material Design 3
             m: 2,
+            // Implementar posicionamiento A/B centrado como en Figma
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: -3,
+              left: -3,
+              right: -3,
+              bottom: -3,
+              background: `linear-gradient(135deg, ${getDifficultyColor(activeQuestion?.difficulty)}, ${getDifficultyColor(activeQuestion?.difficulty)}80)`,
+              borderRadius: 4,
+              zIndex: -1,
+            },
           },
         }}
         BackdropProps={{
           sx: {
-            backgroundColor: 'rgba(0,0,0,0.8)',
+            backgroundColor: 'rgba(0,0,0,0.85)', // Más opaco para mejor contraste
+            backdropFilter: 'blur(8px)',
+          },
+        }}
+        // Mejoras de animación según UPLAY_ENVIRONMENT_REVIEW
+        TransitionProps={{
+          timeout: {
+            enter: 400,
+            exit: 300,
           },
         }}
       >
-        <DialogContent sx={{ p: 4 }}>
+        <DialogContent sx={{ p: 5 }}> {/* Más padding para el diseño Figma */}
           {activeQuestion && (
-            <Stack spacing={3}>
-              {/* Question Header */}
+            <CosmicCardAire
+              element="aire"
+              enableGlow
+              enableAnimations
+              cosmicIntensity={0.8}
+              sx={{
+                p: 4,
+                borderRadius: 3,
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                border: 'none', // El Dialog ya tiene borde
+                boxShadow: 'none', // Usar el shadow del Dialog
+              }}
+            >
+              <Stack spacing={4}> {/* Más espaciado entre elementos */}
+              {/* 🎯 [MEJORADO] Question Header con diseño Material Design 3 */}
               <Box>
                 <Stack
                   direction="row"
                   justifyContent="space-between"
                   alignItems="center"
-                  mb={2}
+                  mb={3} // Más margen según Figma
                 >
-                  <Stack direction="row" spacing={1} alignItems="center">
+                  <Stack direction="row" spacing={2} alignItems="center">
                     <Chip
                       icon={<QuizIcon />}
                       label={`Pregunta ${activeQuestion.id}`}
@@ -914,13 +1056,18 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                         ),
                         color: 'white',
                         fontWeight: 700,
+                        fontSize: '14px',
+                        height: 36, // Más altura para mejor presencia visual
+                        '& .MuiChip-icon': {
+                          color: 'white',
+                        },
                       }}
                     />
                     <Chip
                       label={
                         activeQuestion.difficulty?.toUpperCase() || 'MEDIUM'
                       }
-                      size="small"
+                      size="medium" // Cambiar de small a medium
                       variant="outlined"
                       sx={{
                         borderColor: getDifficultyColor(
@@ -928,12 +1075,13 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                         ),
                         color: getDifficultyColor(activeQuestion.difficulty),
                         fontWeight: 600,
+                        borderWidth: 2, // Borde más grueso
                       }}
                     />
                   </Stack>
 
-                  {/* Enhanced Timer */}
-                  <Stack direction="row" alignItems="center" spacing={1}>
+                  {/* 🎯 [MEJORADO] Enhanced Timer con diseño más visual */}
+                  <Stack direction="row" alignItems="center" spacing={2}>
                     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                       <CircularProgress
                         variant="determinate"
@@ -943,11 +1091,24 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                             (activeQuestion.timeLimit || 20)) *
                           100
                         }
-                        size={40}
-                        thickness={4}
+                        size={48} // Más grande para mejor visibilidad
+                        thickness={5} // Más grueso
                         sx={{
                           color:
-                            questionTimeRemaining <= 5 ? '#ef4444' : '#6366f1',
+                            questionTimeRemaining <= 5 ? '#ef4444' : getDifficultyColor(activeQuestion.difficulty),
+                          // Animación de pulso cuando queda poco tiempo
+                          animation: questionTimeRemaining <= 5 ? 'pulse 1s infinite' : 'none',
+                          '@keyframes pulse': {
+                            '0%': {
+                              transform: 'scale(1)',
+                            },
+                            '50%': {
+                              transform: 'scale(1.05)',
+                            },
+                            '100%': {
+                              transform: 'scale(1)',
+                            },
+                          },
                         }}
                       />
                       <Box
@@ -963,15 +1124,15 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                         }}
                       >
                         <Typography
-                          variant="caption"
+                          variant="body2" // Más grande que caption
                           component="div"
                           sx={{
-                            fontSize: '12px',
+                            fontSize: '14px',
                             fontWeight: 700,
                             color:
                               questionTimeRemaining <= 5
                                 ? '#ef4444'
-                                : '#6366f1',
+                                : getDifficultyColor(activeQuestion.difficulty),
                           }}
                         >
                           {questionTimeRemaining}
@@ -979,7 +1140,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                       </Box>
                     </Box>
                     <Typography
-                      variant="caption"
+                      variant="body2"
                       sx={{
                         color:
                           questionTimeRemaining <= 5 ? '#ef4444' : '#64748b',
@@ -991,48 +1152,57 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                   </Stack>
                 </Stack>
 
-                {/* Question Text */}
+                {/* 🎯 [MEJORADO] Question Text con mejor tipografía */}
                 <Typography
-                  variant="h6"
+                  variant="h5" // Más grande que h6
                   sx={{
                     fontWeight: 700,
                     color: '#1e293b',
-                    mb: 1,
-                    lineHeight: 1.4,
+                    mb: 2,
+                    lineHeight: 1.3, // Mejor legibilidad
+                    textAlign: 'center', // Centrado como en Figma
                   }}
                 >
                   {activeQuestion.question}
                 </Typography>
 
-                {/* Reward Info */}
+                {/* 🎯 [MEJORADO] Reward Info con mejor diseño visual */}
                 {activeQuestion.reward && (
-                  <Stack direction="row" spacing={1} mb={2}>
+                  <Stack direction="row" spacing={2} justifyContent="center" mb={3}>
                     <Chip
                       icon={<DiamondIcon />}
                       label={`+${activeQuestion.reward.merits} Mëritos`}
-                      size="small"
                       sx={{
-                        backgroundColor: '#fef3c7',
-                        color: '#92400e',
-                        fontWeight: 600,
+                        backgroundColor: '#fbbf24', // Color más vibrante
+                        color: 'white',
+                        fontWeight: 700,
+                        fontSize: '13px',
+                        height: 32,
+                        '& .MuiChip-icon': {
+                          color: 'white',
+                        },
                       }}
                     />
                     <Chip
                       icon={<BoltIcon />}
                       label={`+${activeQuestion.reward.ondas} Öndas`}
-                      size="small"
                       sx={{
-                        backgroundColor: '#dcfce7',
-                        color: '#166534',
-                        fontWeight: 600,
+                        backgroundColor: '#10b981', // Color más vibrante
+                        color: 'white',
+                        fontWeight: 700,
+                        fontSize: '13px',
+                        height: 32,
+                        '& .MuiChip-icon': {
+                          color: 'white',
+                        },
                       }}
                     />
                   </Stack>
                 )}
               </Box>
 
-              {/* Answer Options */}
-              <Stack spacing={2}>
+              {/* 🎯 [MEJORADO] Answer Options con diseño A/B centrado según Figma */}
+              <Stack spacing={3}> {/* Más espaciado entre opciones */}
                 {activeQuestion.options.map((option) => (
                   <Button
                     key={option.id}
@@ -1042,37 +1212,43 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                     onClick={() => handleAnswerSelect(option.id)}
                     disabled={!!selectedAnswer}
                     sx={{
-                      p: 2,
+                      p: 3, // Más padding
                       justifyContent: 'flex-start',
                       textAlign: 'left',
-                      borderRadius: 2,
+                      borderRadius: 3, // Más redondeado según Figma
                       textTransform: 'none',
                       fontSize: '16px',
                       fontWeight: 600,
-                      minHeight: 60,
+                      minHeight: 72, // Más altura para mejor presencia
                       border:
                         selectedAnswer === option.id
                           ? 'none'
-                          : '2px solid #e2e8f0',
+                          : `3px solid ${getDifficultyColor(activeQuestion.difficulty)}20`, // Borde sutil
                       backgroundColor:
                         selectedAnswer === option.id
                           ? getDifficultyColor(activeQuestion.difficulty)
-                          : 'transparent',
+                          : 'rgba(255,255,255,0.9)',
                       color: selectedAnswer === option.id ? 'white' : '#1e293b',
+                      boxShadow: selectedAnswer === option.id 
+                        ? `0 8px 24px ${getDifficultyColor(activeQuestion.difficulty)}40`
+                        : '0 2px 8px rgba(0,0,0,0.1)',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Transición suave
                       '&:hover': {
                         backgroundColor:
                           selectedAnswer === option.id
                             ? getDifficultyColor(activeQuestion.difficulty)
-                            : '#f1f5f9',
+                            : `${getDifficultyColor(activeQuestion.difficulty)}10`,
                         borderColor: getDifficultyColor(
                           activeQuestion.difficulty
                         ),
+                        transform: 'translateY(-2px)', // Efecto hover elevado
+                        boxShadow: `0 12px 32px ${getDifficultyColor(activeQuestion.difficulty)}30`,
                       },
                       '&:disabled': {
                         backgroundColor:
                           selectedAnswer === option.id
                             ? getDifficultyColor(activeQuestion.difficulty)
-                            : 'transparent',
+                            : 'rgba(255,255,255,0.7)',
                         color:
                           selectedAnswer === option.id ? 'white' : '#64748b',
                       },
@@ -1080,22 +1256,24 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                   >
                     <Stack
                       direction="row"
-                      spacing={2}
+                      spacing={3} // Más espaciado
                       alignItems="center"
                       width="100%"
                     >
                       <Avatar
                         sx={{
-                          width: 32,
-                          height: 32,
+                          width: 40, // Más grande
+                          height: 40,
                           backgroundColor:
                             selectedAnswer === option.id
-                              ? 'rgba(255,255,255,0.2)'
+                              ? 'rgba(255,255,255,0.25)'
                               : getDifficultyColor(activeQuestion.difficulty),
-                          color:
-                            selectedAnswer === option.id ? 'white' : 'white',
+                          color: 'white',
                           fontWeight: 700,
-                          fontSize: '14px',
+                          fontSize: '16px',
+                          border: selectedAnswer === option.id 
+                            ? '2px solid rgba(255,255,255,0.5)'
+                            : 'none',
                         }}
                       >
                         {option.label}
@@ -1104,6 +1282,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                         sx={{
                           flex: 1,
                           lineHeight: 1.4,
+                          fontSize: '16px',
                         }}
                       >
                         {option.text}
@@ -1113,8 +1292,8 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                 ))}
               </Stack>
 
-              {/* Skip Button */}
-              <Box sx={{ textAlign: 'center', mt: 2 }}>
+              {/* 🎯 [MEJORADO] Skip Button con mejor posicionamiento */}
+              <Box sx={{ textAlign: 'center', mt: 3 }}>
                 <Button
                   variant="text"
                   onClick={handleSkipQuestion}
@@ -1123,12 +1302,17 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                     color: '#64748b',
                     textTransform: 'none',
                     fontWeight: 600,
+                    fontSize: '14px',
+                    '&:hover': {
+                      backgroundColor: 'rgba(100, 116, 139, 0.1)',
+                    },
                   }}
                 >
                   Saltar pregunta (perderás la racha)
                 </Button>
               </Box>
-            </Stack>
+              </Stack>
+            </CosmicCardAire>
           )}
         </DialogContent>
       </Dialog>

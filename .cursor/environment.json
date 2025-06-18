@@ -1,24 +1,73 @@
 {
   "snapshot": "POPULATED_FROM_SETTINGS",
-  "install": "npm install --legacy-peer-deps && cd Demo/apps/superapp-unified && npm install --legacy-peer-deps && cd ../../../",
-  "start": "echo 'Starting CoomÜnity development environment...' && npm run dev",
+  "install": "npm install --legacy-peer-deps && cd apps/admin-frontend && npm install --legacy-peer-deps && cd ../../Demo/apps/superapp-unified && npm install --legacy-peer-deps && cd ../../../",
+  "start": "echo 'Starting CoomÜnity development environment...' && npm run preflight && npm run dev",
   "terminals": [
     {
-      "name": "Backend NestJS",
+      "name": "Backend NestJS (Port 3002)",
       "command": "npm run dev:backend"
     },
     {
-      "name": "SuperApp Frontend", 
+      "name": "SuperApp Frontend (Port 3001)", 
       "command": "npm run dev:superapp"
     },
     {
-      "name": "Health Monitor",
-      "command": "while true; do echo '=== Health Check ===' && curl -s http://localhost:3002/health && curl -s -I http://localhost:3001 && echo '' && sleep 30; done"
+      "name": "Health Monitor & PostgreSQL Check",
+      "command": "while true; do echo '=== PostgreSQL Check ===' && brew services list | grep postgresql && echo '=== Backend Health ===' && curl -s http://localhost:3002/health && echo '=== SuperApp Health ===' && curl -s -I http://localhost:3001 && echo '=== Process Monitor ===' && ps aux | grep -E '(vite|npm run dev)' | grep -v grep | wc -l && echo 'Active processes detected ^' && echo '' && sleep 30; done"
+    },
+    {
+      "name": "Port Manager & Process Cleanup",
+      "command": "echo 'Port Manager Commands Available:' && echo 'npm run port:status - Check port usage' && echo 'npm run port:clean - Clean occupied ports' && echo 'npm run stop:all - Stop all processes' && echo 'npm run preflight - Run pre-flight check' && echo 'Type any command above to execute'"
     }
   ],
-  "secrets": {},
-  "environment": {
-    "NODE_ENV": "development",
-    "WORKSPACE_ROOT": "."
+  "backgroundAgent": {
+    "enabled": true,
+    "maxMode": true,
+    "preferredModel": "claude-4-opus",
+    "workspaceAccess": "full",
+    "reportOutputPath": "docs/reports/",
+    "focusAreas": [
+      "apps/superapp-unified/src/components/modules/uplay/",
+      "apps/superapp-unified/src/components/modules/home/",
+      "apps/superapp-unified/src/components/modules/marketplace/",
+      "apps/superapp-unified/src/components/modules/social/",
+      "apps/superapp-unified/src/hooks/",
+      "apps/superapp-unified/src/stores/"
+    ],
+    "analysisPatterns": {
+      "mockDataPatterns": [
+        "getMockQuestions",
+        "useMockData", 
+        "simulateData",
+        "mockCategories",
+        "MOCK_ROOMS",
+        "mockQuestions"
+      ],
+      "bypassLogicPatterns": [
+        "isBuilderIoEnv",
+        "fallbackData",
+        "VITE_ENABLE_MOCK"
+      ],
+      "conflictingStylesPatterns": [
+        "display: none",
+        "opacity: 0",
+        "!important"
+      ]
+    },
+    "cosmicDesignSystemFocus": {
+      "glassmorphism": true,
+      "cosmicGradients": true,
+      "dynamicParticles": true,
+      "revolutionaryAuras": true,
+      "responsiveDepth": true
+    }
+  },
+  "projectContext": {
+    "name": "CoomÜnity SuperApp",
+    "branch": "gamifier2.0",
+    "framework": "React + TypeScript + Vite",
+    "backend": "NestJS + PostgreSQL",
+    "designSystem": "Cosmic Design System",
+    "mainIssue": "Mock data blocking visual effects manifestation"
   }
 }

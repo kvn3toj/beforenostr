@@ -99,10 +99,13 @@ export interface PaymentMethod {
 
 // 🔄 Función para mapear la respuesta del backend a la interfaz de la SuperApp
 export const mapBackendWalletToWalletData = (backendWallet: BackendWalletResponse): WalletData => {
-  // Combinar transacciones de entrada y salida
+  // Combinar transacciones de entrada y salida - con verificación de arrays
+  const transactionsTo = Array.isArray(backendWallet.transactionsTo) ? backendWallet.transactionsTo : [];
+  const transactionsFrom = Array.isArray(backendWallet.transactionsFrom) ? backendWallet.transactionsFrom : [];
+  
   const allTransactions = [
-    ...backendWallet.transactionsTo,
-    ...backendWallet.transactionsFrom
+    ...transactionsTo,
+    ...transactionsFrom
   ];
 
   // Mapear transacciones del backend al formato de la SuperApp

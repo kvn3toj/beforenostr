@@ -2,11 +2,11 @@ import { IsString, IsOptional, IsObject, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAnalyticsDataDto {
-  @ApiProperty({ description: 'Tipo de evento analytics' })
+  @ApiProperty({ description: 'Tipo de evento analytics', type: String })
   @IsString()
   eventType: string;
 
-  @ApiProperty({ description: 'ID del usuario que generó el evento' })
+  @ApiProperty({ description: 'ID del usuario que generó el evento', type: String })
   @IsString()
   @IsUUID()
   userId: string;

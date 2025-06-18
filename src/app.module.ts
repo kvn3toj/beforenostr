@@ -18,6 +18,8 @@ import { MeritsAndWalletModule } from './merits-and-wallet/merits-and-wallet.mod
 import { NotificationsModule } from './notifications/notifications.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
 import { LetsModule } from './lets/lets.module';
+import { StudyRoomsModule } from './study-rooms/study-rooms.module';
+import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { LetsModule } from './lets/lets.module';
     NotificationsModule, // Agregar para endpoints /notifications
     MarketplaceModule, // Agregar para endpoints /marketplace
     LetsModule, // Agregar para endpoints /lets
+    StudyRoomsModule, // WebSocket functionality for real-time chat and video sync
+    ConfigModule, // Agregar para endpoints /config
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,11 +2,11 @@ import { IsString, IsOptional, IsObject, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateReportDto {
-  @ApiProperty({ description: 'Nombre del reporte' })
+  @ApiProperty({ description: 'Nombre del reporte', type: String })
   @IsString()
   name: string;
 
-  @ApiProperty({ description: 'Tipo de reporte' })
+  @ApiProperty({ description: 'Tipo de reporte', type: String })
   @IsString()
   type: string;
 
@@ -26,7 +26,7 @@ export class CreateReportDto {
   @IsObject()
   data: Record<string, any>;
 
-  @ApiProperty({ description: 'ID del usuario que generó el reporte' })
+  @ApiProperty({ description: 'ID del usuario que generó el reporte', type: String })
   @IsString()
   @IsUUID()
   generatedById: string;

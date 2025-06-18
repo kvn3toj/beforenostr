@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SimpleUsersService {
-  constructor(private readonly prisma: PrismaService) {
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
     console.log('>>> SimpleUsersService CONSTRUCTOR: Initializing...');
     console.log('>>> SimpleUsersService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     console.log('>>> SimpleUsersService CONSTRUCTOR: prisma type:', typeof this.prisma);
     console.log('>>> SimpleUsersService CONSTRUCTOR: prisma constructor:', this.prisma?.constructor?.name);
+    
+    if (!this.prisma) {
+      throw new Error('SimpleUsersService: PrismaService dependency injection failed');
+    }
   }
 
   async findAll() {

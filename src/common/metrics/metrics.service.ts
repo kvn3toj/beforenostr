@@ -84,10 +84,25 @@ export class MetricsService {
   constructor() {
     this.logger.log('>>> MetricsService CONSTRUCTOR: Initializing Prometheus metrics');
     
-    // Registrar métricas por defecto del sistema
-    collectDefaultMetrics({ register });
-    
-    this.logger.log('✅ Prometheus metrics initialized successfully');
+    try {
+      // Limpiar registry existente para evitar duplicados
+      register.clear();
+      
+      // Crear nuevos contadores después de limpiar
+      this.httpRequestsTotal = new Counter({
+        name: 'http_requests_total',
+        help: 'Total number of HTTP requests',
+        labelNames: ['method', 'route', 'status_code'],
+      });
+
+      // Registrar métricas por defecto del sistema
+      collectDefaultMetrics({ register });
+      
+      this.logger.log('✅ Prometheus metrics initialized successfully');
+    } catch (error) {
+      this.logger.error('❌ Error initializing metrics:', error);
+      throw error;
+    }
   }
 
   /**

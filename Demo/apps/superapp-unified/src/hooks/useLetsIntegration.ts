@@ -7,8 +7,9 @@ import { letsMockService } from '../lib/lets-mock-service';
 import { apiService } from '../lib/api-service';
 
 // Switch para usar mock o API real
-const USE_MOCK_LETS = true; // Cambiar a false cuando el backend esté listo
+const USE_MOCK_LETS = false; // ✅ Cambiado a false para usar backend real
 const letsService = USE_MOCK_LETS ? letsMockService : letsApiService;
+
 import {
   UnitsWallet,
   UnitsTransaction,
@@ -28,11 +29,37 @@ import {
   RateTrustRequest
 } from '../types/lets';
 
+// ============================================================================
+// QUERY KEYS - Definidos al inicio para evitar conflictos
+// ============================================================================
+
+export const LETS_QUERY_KEYS = {
+  wallet: (userId: string) => ['lets', 'wallet', userId],
+  transactions: (userId: string) => ['lets', 'transactions', userId],
+  listings: (filters?: LetsSearchFilters) => ['lets', 'listings', filters],
+  listing: (id: string) => ['lets', 'listing', id],
+  knowledgeExchanges: (filters?: any) => ['lets', 'knowledge-exchanges', filters],
+  knowledgeExchange: (id: string) => ['lets', 'knowledge-exchange', id],
+  copHierarchy: (copId: string, userId: string) => ['lets', 'cop-hierarchy', copId, userId],
+  trustRatings: (userId: string) => ['lets', 'trust-ratings', userId],
+  analytics: () => ['lets', 'analytics'],
+  userProfile: (userId: string) => ['lets', 'user-profile', userId],
+  recommendations: (userId: string) => ['lets', 'recommendations', userId],
+  notifications: (userId: string) => ['lets', 'notifications', userId]
+} as const;
+
+// ============================================================================
+// WALLET Y TRANSACCIONES
+// ============================================================================
+
 // 💰 Hook para wallet de Ünits
 export const useUnitsWallet = (userId: string) => {
   return useQuery({
-    queryKey: ['units-wallet', userId],
-    queryFn: () => letsService.getUnitsWallet(userId),
+    queryKey: LETS_QUERY_KEYS.wallet(userId),
+    queryFn: async (): Promise<UnitsWallet> => {
+      const response = await apiService.get(`/lets/wallet/${userId}`);
+      return response.data || response;
+    },
     staleTime: 30000, // 30 segundos
     enabled: !!userId,
     retry: 2,
@@ -45,13 +72,16 @@ export const useTransferUnits = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (transferData: TransferUnitsRequest) => letsService.transferUnits(transferData),
+    mutationFn: async (transferData: TransferUnitsRequest): Promise<UnitsTransaction> => {
+      const response = await apiService.post('/lets/transfer', transferData);
+      return response.data || response;
+    },
     onSuccess: (data, variables) => {
       // Invalidar wallets de ambos usuarios
-      queryClient.invalidateQueries({ queryKey: ['units-wallet', variables.toUserId] });
-      queryClient.invalidateQueries({ queryKey: ['units-transactions'] });
+      queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.wallet(variables.fromUserId) });
+      queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.wallet(variables.toUserId) });
+      queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.transactions(variables.fromUserId) });
       
-      // Mostrar notificación de éxito
       console.log('✅ Transferencia de Ünits completada:', data);
     },
     onError: (error) => {
@@ -67,7 +97,7 @@ export const useUnitsTransactions = (userId?: string, filters?: {
   offset?: number 
 }) => {
   return useQuery({
-    queryKey: ['units-transactions', userId, filters],
+    queryKey: LETS_QUERY_KEYS.transactions(userId || 'all'),
     queryFn: async (): Promise<UnitsTransaction[]> => {
       const endpoint = userId ? `/lets/history/${userId}` : '/lets/history';
       const response = await apiService.get(endpoint, { params: filters });
@@ -78,11 +108,18 @@ export const useUnitsTransactions = (userId?: string, filters?: {
   });
 };
 
+// ============================================================================
+// MARKETPLACE LETS
+// ============================================================================
+
 // 🏪 Hook para listados LETS
 export const useLetsListings = (filters?: LetsSearchFilters) => {
   return useQuery({
-    queryKey: ['lets-listings', filters],
-    queryFn: () => letsService.searchLetsListings(filters || {}),
+    queryKey: LETS_QUERY_KEYS.listings(filters),
+    queryFn: async (): Promise<LetsListing[]> => {
+      const response = await apiService.get('/lets/listings', { params: filters });
+      return response.data || response;
+    },
     staleTime: 60000, // 1 minuto
     enabled: true,
   });
@@ -93,7 +130,10 @@ export const useCreateLetsListing = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (listingData: CreateLetsListingRequest & { userId: string }) => letsService.createLetsListing(listingData),
+    mutationFn: async (listingData: CreateLetsListingRequest & { userId: string }): Promise<LetsListing> => {
+      const response = await apiService.post('/lets/listings', listingData);
+      return response.data || response;
+    },
     onSuccess: () => {
       // Invalidar lista de listados
       queryClient.invalidateQueries({ queryKey: ['lets-listings'] });
@@ -101,22 +141,6 @@ export const useCreateLetsListing = () => {
     },
     onError: (error) => {
       console.error('❌ Error creando listado LETS:', error);
-    },
-  });
-};
-
-// 🔄 Hook para actualizar listado LETS
-export const useUpdateLetsListing = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<CreateLetsListingRequest> }): Promise<LetsListing> => {
-      const response = await apiService.put(`/lets/listings/${id}`, data);
-      return response.data || response;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lets-listings'] });
-      console.log('✅ Listado LETS actualizado exitosamente');
     },
   });
 };
@@ -136,38 +160,56 @@ export const useDeleteLetsListing = () => {
   });
 };
 
-// 🎓 Hook para intercambios de conocimiento
-export const useKnowledgeExchanges = (copId: string) => {
+// ============================================================================
+// KNOWLEDGE EXCHANGES - VERSIÓN CONSOLIDADA ✅
+// ============================================================================
+
+// 🎓 Hook para intercambios de conocimiento - ÚNICA IMPLEMENTACIÓN
+export const useKnowledgeExchanges = (filters?: { copId?: string; category?: string }) => {
   return useQuery({
-    queryKey: ['knowledge-exchanges', copId],
+    queryKey: LETS_QUERY_KEYS.knowledgeExchanges(filters),
     queryFn: async (): Promise<CopKnowledgeExchange[]> => {
-      const response = await apiService.get(`/cops/${copId}/knowledge-exchanges`);
+      const params = new URLSearchParams();
+      if (filters?.copId) params.append('copId', filters.copId);
+      if (filters?.category) params.append('category', filters.category);
+      
+      const queryString = params.toString();
+      const url = queryString ? `/lets/knowledge-exchanges?${queryString}` : '/lets/knowledge-exchanges';
+      
+      const response = await apiService.get(url);
       return response.data || response;
     },
-    staleTime: 30000,
-    enabled: !!copId,
+    staleTime: 2 * 60 * 1000, // 2 minutos
   });
 };
 
-// ➕ Hook para crear intercambio de conocimiento
+// ➕ Hook para crear intercambio de conocimiento - ÚNICA IMPLEMENTACIÓN
 export const useCreateKnowledgeExchange = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
-      copId, 
-      data 
-    }: { 
-      copId: string; 
-      data: CreateKnowledgeExchangeRequest 
+    mutationFn: async (exchangeData: {
+      copId: string;
+      teacherId: string;
+      sessionType: string;
+      title: string;
+      description: string;
+      knowledgeAreas: string[];
+      unitsCost: number;
+      durationHours: number;
+      maxParticipants: number;
+      scheduledAt: string;
     }): Promise<CopKnowledgeExchange> => {
-      const response = await apiService.post(`/cops/${copId}/knowledge-exchanges`, data);
+      const response = await apiService.post('/lets/knowledge-exchanges', exchangeData);
       return response.data || response;
     },
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['knowledge-exchanges', variables.copId] });
+    onSuccess: () => {
+      // Invalidar lista de knowledge exchanges
+      queryClient.invalidateQueries({ 
+        queryKey: LETS_QUERY_KEYS.knowledgeExchanges({}) 
+      });
       console.log('✅ Intercambio de conocimiento creado exitosamente');
-    },
+    }
   });
 };
 
@@ -193,62 +235,19 @@ export const useJoinKnowledgeExchange = () => {
   });
 };
 
-// 🏆 Hook para jerarquía en CoP
-export const useCopHierarchy = (userId: string, copId: string) => {
-  return useQuery({
-    queryKey: ['cop-hierarchy', userId, copId],
-    queryFn: async (): Promise<{
-      userLevel: CopHierarchyLevel | null;
-      levelProgress: number;
-      nextLevelRequirements?: any;
-    }> => {
-      const response = await apiService.get(`/cops/${copId}/hierarchy/${userId}`);
-      return response.data || response;
-    },
-    staleTime: 300000, // 5 minutos
-    enabled: !!userId && !!copId,
-  });
-};
+// ============================================================================
+// TRUST SYSTEM - VERSIÓN CONSOLIDADA ✅
+// ============================================================================
 
-// ⭐ Hook para evaluar participación
-export const useEvaluateParticipation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      exchangeId,
-      participantId,
-      feedbackRating,
-      feedbackComment
-    }: {
-      exchangeId: string;
-      participantId: string;
-      feedbackRating: number;
-      feedbackComment?: string;
-    }): Promise<void> => {
-      await apiService.post(`/knowledge-exchanges/${exchangeId}/evaluate`, {
-        participantId,
-        feedbackRating,
-        feedbackComment
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['knowledge-exchanges'] });
-      queryClient.invalidateQueries({ queryKey: ['cop-hierarchy'] });
-      console.log('✅ Evaluación completada exitosamente');
-    },
-  });
-};
-
-// 🤝 Hook para calificaciones de confianza
+// 🤝 Hook para calificaciones de confianza - ÚNICA IMPLEMENTACIÓN
 export const useTrustRatings = (userId: string) => {
   return useQuery({
-    queryKey: ['trust-ratings', userId],
+    queryKey: LETS_QUERY_KEYS.trustRatings(userId),
     queryFn: async (): Promise<TrustRating[]> => {
       const response = await apiService.get(`/lets/trust-ratings/${userId}`);
       return response.data || response;
     },
-    staleTime: 300000, // 5 minutos
+    staleTime: 5 * 60 * 1000, // 5 minutos
     enabled: !!userId,
   });
 };
@@ -271,88 +270,34 @@ export const useCreateTrustRating = () => {
       return response.data || response;
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['trust-ratings', variables.ratedId] });
-      queryClient.invalidateQueries({ queryKey: ['units-wallet', variables.ratedId] });
+      queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.trustRatings(variables.ratedId) });
+      queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.wallet(variables.ratedId) });
       console.log('✅ Calificación de confianza enviada');
     },
   });
 };
 
-// 📊 Hook para analytics LETS
-export const useLetsAnalytics = (timeRange?: 'day' | 'week' | 'month' | 'year') => {
-  return useQuery({
-    queryKey: ['lets-analytics', timeRange],
-    queryFn: () => letsService.getLetsAnalytics(),
-    staleTime: 300000, // 5 minutos
-    enabled: true,
-  });
-};
+// ============================================================================
+// NOTIFICATIONS - VERSIÓN CONSOLIDADA ✅
+// ============================================================================
 
-// 🔍 Hook para buscar usuarios por confianza
-export const useSearchTrustedUsers = (filters?: {
-  minTrustScore?: number;
-  location?: string;
-  skills?: string[];
-}) => {
-  return useQuery({
-    queryKey: ['trusted-users', filters],
-    queryFn: async (): Promise<Array<{
-      id: string;
-      name: string;
-      avatar?: string;
-      trustScore: number;
-      location?: string;
-      skills: string[];
-      totalTransactions: number;
-    }>> => {
-      const response = await apiService.get('/lets/trusted-users', { params: filters });
-      return response.data || response;
-    },
-    staleTime: 120000, // 2 minutos
-    enabled: true,
-  });
-};
-
-// 🎯 Hook para recomendaciones LETS
-export const useLetsRecommendations = (userId: string) => {
-  return useQuery({
-    queryKey: ['lets-recommendations', userId],
-    queryFn: async (): Promise<{
-      recommendedListings: LetsListing[];
-      recommendedExchanges: CopKnowledgeExchange[];
-      suggestedConnections: Array<{
-        id: string;
-        name: string;
-        avatar?: string;
-        commonInterests: string[];
-        trustScore: number;
-      }>;
-    }> => {
-      const response = await apiService.get(`/lets/recommendations/${userId}`);
-      return response.data || response;
-    },
-    staleTime: 600000, // 10 minutos
-    enabled: !!userId,
-  });
-};
-
-// 🔔 Hook para notificaciones LETS
+// 📬 Hook para notificaciones LETS - ÚNICA IMPLEMENTACIÓN
 export const useLetsNotifications = (userId: string) => {
   return useQuery({
-    queryKey: ['lets-notifications', userId],
+    queryKey: LETS_QUERY_KEYS.notifications(userId),
     queryFn: async (): Promise<Array<{
       id: string;
-      type: 'transaction' | 'listing_match' | 'exchange_reminder' | 'trust_rating';
+      type: 'transaction' | 'listing_match' | 'exchange_request' | 'trust_rating';
       title: string;
       message: string;
-      data?: any;
       read: boolean;
       createdAt: string;
+      metadata?: any;
     }>> => {
       const response = await apiService.get(`/lets/notifications/${userId}`);
       return response.data || response;
     },
-    staleTime: 30000, // 30 segundos
+    staleTime: 60000, // 1 minuto
     enabled: !!userId,
   });
 };
@@ -372,141 +317,44 @@ export const useMarkNotificationRead = () => {
 };
 
 // ============================================================================
-// QUERY KEYS
+// RECOMMENDATIONS AND ANALYTICS
 // ============================================================================
 
-export const LETS_QUERY_KEYS = {
-  wallet: (userId: string) => ['lets', 'wallet', userId],
-  transactions: (userId: string) => ['lets', 'transactions', userId],
-  listings: (filters?: LetsSearchFilters) => ['lets', 'listings', filters],
-  listing: (id: string) => ['lets', 'listing', id],
-  knowledgeExchanges: (copId: string) => ['lets', 'knowledge-exchanges', copId],
-  knowledgeExchange: (id: string) => ['lets', 'knowledge-exchange', id],
-  copHierarchy: (copId: string, userId: string) => ['lets', 'cop-hierarchy', copId, userId],
-  trustRatings: (userId: string) => ['lets', 'trust-ratings', userId],
-  analytics: () => ['lets', 'analytics'],
-  userProfile: (userId: string) => ['lets', 'user-profile', userId],
-  recommendations: (userId: string) => ['lets', 'recommendations', userId]
-} as const;
-
-// ============================================================================
-// MARKETPLACE LETS HOOKS
-// ============================================================================
-
-/**
- * Hook para obtener un listado específico
- */
-export const useLetsListing = (id: string) => {
+// 🎯 Hook para recomendaciones LETS
+export const useLetsRecommendations = (userId: string) => {
   return useQuery({
-    queryKey: LETS_QUERY_KEYS.listing(id),
-    queryFn: async (): Promise<LetsListing> => {
-      const response = await apiService.get(`/lets/listings/${id}`);
-      return response.data;
+    queryKey: LETS_QUERY_KEYS.recommendations(userId),
+    queryFn: async (): Promise<{
+      recommendedListings: LetsListing[];
+      recommendedExchanges: CopKnowledgeExchange[];
+      suggestedConnections: Array<{
+        id: string;
+        name: string;
+        avatar?: string;
+        commonInterests: string[];
+        trustScore: number;
+      }>;
+    }> => {
+      const response = await apiService.get(`/lets/recommendations/${userId}`);
+      return response.data || response;
     },
-    enabled: !!id
-  });
-};
-
-// ============================================================================
-// COMMUNITIES OF PRACTICE KNOWLEDGE EXCHANGE HOOKS
-// ============================================================================
-
-/**
- * Hook para obtener un intercambio de conocimiento específico
- */
-export const useKnowledgeExchange = (id: string) => {
-  return useQuery({
-    queryKey: LETS_QUERY_KEYS.knowledgeExchange(id),
-    queryFn: async (): Promise<CopKnowledgeExchange> => {
-      const response = await apiService.get(`/lets/knowledge-exchanges/${id}`);
-      return response.data;
-    },
-    enabled: !!id
-  });
-};
-
-// ============================================================================
-// HIERARCHY AND PROGRESSION HOOKS
-// ============================================================================
-
-/**
- * Hook para promover a un usuario en la jerarquía de CoP
- */
-export const usePromoteUserInCop = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ 
-      copId, 
-      userId, 
-      newLevel, 
-      requirementsMet 
-    }: { 
-      copId: string; 
-      userId: string; 
-      newLevel: number; 
-      requirementsMet: any 
-    }): Promise<CopHierarchyLevel> => {
-      const response = await apiService.post(`/lets/cop/${copId}/promote`, {
-        userId,
-        newLevel,
-        requirementsMet
-      });
-      return response.data;
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ 
-        queryKey: LETS_QUERY_KEYS.copHierarchy(data.copId, data.userId) 
-      });
-    }
-  });
-};
-
-// ============================================================================
-// TRUST SYSTEM HOOKS
-// ============================================================================
-
-/**
- * Hook para calificar la confianza de un usuario
- */
-export const useRateTrust = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (ratingData: RateTrustRequest): Promise<TrustRating> => {
-      const response = await apiService.post('/lets/trust-ratings', ratingData);
-      return response.data;
-    },
-    onSuccess: (data) => {
-      // Invalidar calificaciones del usuario calificado
-      queryClient.invalidateQueries({ 
-        queryKey: LETS_QUERY_KEYS.trustRatings(data.ratedId) 
-      });
-      
-      // Invalidar wallet para actualizar trust score
-      queryClient.invalidateQueries({ 
-        queryKey: LETS_QUERY_KEYS.wallet(data.ratedId) 
-      });
-    }
-  });
-};
-
-// ============================================================================
-// ANALYTICS AND REPORTING HOOKS
-// ============================================================================
-
-/**
- * Hook para obtener el perfil LETS completo de un usuario
- */
-export const useUserLetsProfile = (userId: string) => {
-  return useQuery({
-    queryKey: LETS_QUERY_KEYS.userProfile(userId),
-    queryFn: async (): Promise<UserLetsProfile> => {
-      const response = await apiService.get(`/lets/users/${userId}/profile`);
-      return response.data;
-    },
+    staleTime: 600000, // 10 minutos
     enabled: !!userId,
-    staleTime: 120000 // 2 minutos
+  });
+};
+
+// 📊 Hook para analytics LETS
+export const useLetsAnalytics = (timeRange?: 'day' | 'week' | 'month' | 'year') => {
+  return useQuery({
+    queryKey: [...LETS_QUERY_KEYS.analytics(), timeRange],
+    queryFn: async (): Promise<LetsAnalytics> => {
+      const response = await apiService.get('/lets/analytics', { 
+        params: timeRange ? { timeRange } : {} 
+      });
+      return response.data || response;
+    },
+    staleTime: 300000, // 5 minutos
+    enabled: true,
   });
 };
 

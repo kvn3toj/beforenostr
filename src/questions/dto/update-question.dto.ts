@@ -6,7 +6,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // DTO para actualizar una opción de respuesta existente
 export class UpdateAnswerOptionDto extends PartialType(CreateAnswerOptionDto) {
-  @ApiProperty({ description: 'The ID of the answer option to update' })
+  @ApiProperty({ description: 'The ID of the answer option to update', type: Number })
   @IsInt()
   @Type(() => Number)
   id: number; // ID de la opción a actualizar
@@ -68,7 +68,7 @@ export class UpdateQuestionDto extends PartialType(CreateQuestionDto) {
 
   @ApiPropertyOptional({ 
     description: 'Answer options for multiple-choice questions', 
-    type: [UpdateAnswerOptionDto],
+    type: () => [UpdateAnswerOptionDto],
     isArray: true
   })
   @IsOptional()

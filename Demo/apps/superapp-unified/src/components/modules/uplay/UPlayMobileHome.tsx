@@ -62,6 +62,7 @@ import {
   PlayCircle as PlayCircleIcon,
   AccessTime as AccessTimeIcon,
   Category as CategoryIcon,
+  Groups as GroupsIcon,
 } from '@mui/icons-material';
 
 // Import enhanced mock data hook
@@ -76,6 +77,9 @@ import { useVideos } from '../../../hooks/useRealBackendData';
 
 // 🌌 IMPORT DEL NUEVO DESIGN SYSTEM CÓSMICO
 import { CosmicCard } from '../../../design-system/components/cosmic/CosmicCard';
+
+// 🏫 IMPORT DEL PANEL DE FUNCIONALIDADES SOCIALES
+import { SocialFeaturesPanel } from './components/SocialFeaturesPanel';
 
 // Enhanced types for mobile experience
 interface EnhancedMockUserStats {
@@ -539,6 +543,9 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   const [showAchievements, setShowAchievements] = useState(false);
   const [currentStreak, setCurrentStreak] = useState(3);
   const [showAllVideos, setShowAllVideos] = useState(false);
+  
+  // 🏫 Estado para el panel de funcionalidades sociales
+  const [showSocialPanel, setShowSocialPanel] = useState(false);
 
   // Enhanced mock user stats - stable reference to prevent re-renders
   const enhancedUserStats: EnhancedMockUserStats = React.useMemo(() => ({
@@ -716,6 +723,11 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   const handleToggleAllVideos = React.useCallback(() => {
     setShowAllVideos(!showAllVideos);
   }, [showAllVideos]);
+
+  // 🏫 Handler para el panel de funcionalidades sociales
+  const handleToggleSocialPanel = React.useCallback(() => {
+    setShowSocialPanel(!showSocialPanel);
+  }, [showSocialPanel]);
 
   // Enhanced status chip component for cleaner code
   const EnhancedStatusChip: React.FC<{
@@ -1409,6 +1421,52 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
           </Collapse>
         </Card>
       </Container>
+
+      {/* 🏫 Floating Action Button para Funcionalidades Sociales */}
+      <Zoom in={true}>
+        <Fab
+          color="secondary"
+          onClick={handleToggleSocialPanel}
+          sx={{
+            position: 'fixed',
+            bottom: 24,
+            right: 24,
+            background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+            color: 'white',
+            width: 64,
+            height: 64,
+            zIndex: 1000,
+            '&:hover': {
+              background: 'linear-gradient(135deg, #7c3aed, #8b5cf6)',
+              transform: 'scale(1.1)',
+            },
+            boxShadow: '0 8px 32px rgba(139, 92, 246, 0.4)',
+          }}
+        >
+          <Badge
+            badgeContent={3}
+            color="error"
+            sx={{
+              '& .MuiBadge-badge': {
+                fontSize: '10px',
+                minWidth: 18,
+                height: 18,
+              }
+            }}
+          >
+            <GroupsIcon sx={{ fontSize: 28 }} />
+          </Badge>
+        </Fab>
+      </Zoom>
+
+      {/* 🏫 Panel de Funcionalidades Sociales */}
+      <SocialFeaturesPanel
+        isOpen={showSocialPanel}
+        onClose={() => setShowSocialPanel(false)}
+        userId="current-user"
+        currentVideoId={processedVideos[0]?.id.toString()}
+        enableBackdrop={true}
+      />
     </Box>
   );
 };

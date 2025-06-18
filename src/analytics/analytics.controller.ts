@@ -256,4 +256,47 @@ export class AnalyticsController {
   async getVideoAnalytics() {
     return this.analyticsService.getVideoAnalytics();
   }
+
+  // Nuevos endpoints requeridos por el reporte de integración
+  @Get('/dashboard-metrics')
+  @ApiOperation({ summary: 'Get comprehensive dashboard metrics for SuperApp' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Dashboard metrics retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        totalUsers: { type: 'number' },
+        activeUsers: { type: 'number' },
+        totalContent: { type: 'number' },
+        engagement: { type: 'object' },
+        recentActivity: { type: 'array' },
+        ayniMetrics: { type: 'object' }
+      }
+    }
+  })
+  async getDashboardMetrics() {
+    return this.analyticsService.getDashboardMetrics();
+  }
+
+  @Get('/system-health')
+  @ApiOperation({ summary: 'Get system health status and metrics' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'System health retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', enum: ['healthy', 'warning', 'critical'] },
+        uptime: { type: 'number' },
+        databaseStatus: { type: 'string' },
+        cacheStatus: { type: 'string' },
+        memoryUsage: { type: 'object' },
+        lastUpdated: { type: 'string' }
+      }
+    }
+  })
+  async getSystemHealth() {
+    return this.analyticsService.getSystemHealth();
+  }
 } 

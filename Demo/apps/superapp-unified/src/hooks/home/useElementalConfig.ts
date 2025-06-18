@@ -78,9 +78,17 @@ export const useElementalConfig = () => {
     queryFn: async () => {
       try {
         const response = await apiService.get('/config/elemental-system');
+        console.log('🌟 ÉXITO: Configuración elemental obtenida del backend real:', {
+          fuego: response.data?.fuego?.name,
+          agua: response.data?.agua?.name,
+          tierra: response.data?.tierra?.name,
+          aire: response.data?.aire?.name,
+          source: 'BACKEND_REAL'
+        });
         return response.data || DEFAULT_ELEMENTAL_CONFIG;
       } catch (error) {
-        console.warn('🌟 Usando configuración elemental por defecto:', error);
+        console.warn('🌟 Usando configuración elemental por defecto (backend no disponible):', error);
+        console.log('🔄 Fallback: Usando configuración elemental estática');
         return DEFAULT_ELEMENTAL_CONFIG;
       }
     },

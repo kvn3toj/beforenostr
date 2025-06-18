@@ -77,7 +77,7 @@ export class CreateQuestionDto {
 
   @ApiPropertyOptional({ 
     description: 'Answer options for multiple-choice questions (required for multiple-choice type)', 
-    type: [CreateAnswerOptionDto],
+    type: () => [CreateAnswerOptionDto],
     isArray: true
   })
   @ValidateIf(o => o.type === 'multiple-choice')

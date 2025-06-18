@@ -74,18 +74,26 @@ export const useAyniMetrics = () => {
       
       try {
         const response = await apiService.get(`/users/${user.id}/ayni-metrics`);
+        console.log('🌟 ÉXITO: Datos Ayni obtenidos del backend real:', {
+          userId: user.id,
+          ondas: response.data.ondas,
+          ayniLevel: response.data.ayniLevel,
+          source: 'BACKEND_REAL'
+        });
         return {
           ...DEFAULT_AYNI_METRICS,
           ...response.data,
           lastUpdated: new Date().toISOString()
         };
       } catch (error) {
-        console.warn('🌟 Usando métricas Ayni por defecto:', error);
+        console.warn('🌟 Usando métricas Ayni por defecto (backend no disponible):', error);
+        console.log('🔄 Fallback: Generando datos simulados para usuario:', user.email);
         return {
           ...DEFAULT_AYNI_METRICS,
           // Personalizar ligeramente basado en el usuario
           ondas: DEFAULT_AYNI_METRICS.ondas + (user.id ? user.id.length * 17 : 0),
           meritos: DEFAULT_AYNI_METRICS.meritos + (user.id ? user.id.length * 3 : 0),
+          lastUpdated: new Date().toISOString()
         };
       }
     },
