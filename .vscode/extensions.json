@@ -1,0 +1,56 @@
+{
+  "recommendations": [
+    // === PACK ESENCIAL DE PRODUCTIVIDAD ===
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "rangav.vscode-thunder-client",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    
+    // === MONITOREO Y PERFORMANCE ===
+    "wix.vscode-import-cost",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    
+    // === ORGANIZACIÓN Y NAVEGACIÓN ===
+    "alefragnani.project-manager",
+    "alefragnani.bookmarks",
+    "johnpapa.vscode-peacock",
+    
+    // === COLABORACIÓN Y GIT ===
+    "ms-vsliveshare.vsliveshare",
+    "GitHub.vscode-pull-request-github",
+    "mhutchie.git-graph",
+    "donjayamanne.githistory",
+    
+    // === REACT/TYPESCRIPT ESPECÍFICAS ===
+    "dsznajder.es7-react-js-snippets",
+    "ms-playwright.playwright",
+    "ms-vscode.vscode-json",
+    
+    // === HERRAMIENTAS AVANZADAS ===
+    "WallabyJs.quokka-vscode",
+    "SonarSource.sonarlint-vscode",
+    "ms-vscode.vscode-docker",
+    
+    // === TESTING Y CALIDAD ===
+    "hbenl.vscode-test-explorer",
+    "ms-vscode.test-adapter-converter",
+    
+    // === UI/UX Y TEMAS ===
+    "PKief.material-icon-theme",
+    "Equinusocio.vsc-material-theme",
+    
+    // === PRODUCTIVIDAD ADICIONAL ===
+    "ms-vscode.vscode-todo-highlight",
+    "Gruntfuggly.todo-tree",
+    "ms-vsliveshare.vsliveshare-pack"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript",
+    "hookyqr.beautify"
+  ]
+} 
