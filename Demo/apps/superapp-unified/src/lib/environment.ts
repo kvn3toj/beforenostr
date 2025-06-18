@@ -189,7 +189,6 @@ const createEnvironmentConfig = (): EnvironmentConfig => {
   return {
     apiBaseUrl,
     baseUrl,
-    enableMockAuth: parseBoolean(import.meta.env.VITE_ENABLE_MOCK_AUTH),
     enableAnalytics: parseBoolean(import.meta.env.VITE_ENABLE_ANALYTICS, true),
     betaTracking: parseBoolean(import.meta.env.VITE_BETA_TRACKING, true),
     isDevelopment: envType === 'development',
