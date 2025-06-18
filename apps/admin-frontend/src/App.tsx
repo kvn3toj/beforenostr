@@ -30,6 +30,7 @@ import NostrDemoPage from './pages/NostrDemoPage'
 import { ChallengesPage } from './pages/ChallengesPage'
 import { MarketplacePage } from './pages/MarketplacePage'
 import { TransactionsPage } from './pages/TransactionsPage'
+import ConsolePage from './pages/ConsolePage'
 
 const queryClient = new QueryClient()
 const theme = createAppTheme('light');
@@ -73,6 +74,9 @@ function App() {
               <Route path="/challenges" element={<ChallengesPage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />
               <Route path="/transactions" element={<TransactionsPage />} />
+              
+              {/* 🎮 Consola de Experiencias CoomÜnity */}
+              <Route path="/console" element={<ConsolePage />} />
               
               {/* Ruta de perfil de usuario */}
               <Route path="/profile" element={<ProfilePage />} />
