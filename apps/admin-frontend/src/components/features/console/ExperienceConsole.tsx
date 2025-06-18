@@ -17,7 +17,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  Grid,
+  Grid2 as Grid,
   Card,
   CardContent,
   Button,
@@ -593,7 +593,7 @@ const ExperienceConsole: React.FC = () => {
 
   const renderStageOverview = () => (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Typography variant="h5" gutterBottom>
           🎭 Customer Journey - Stages Overview
         </Typography>
@@ -603,7 +603,7 @@ const ExperienceConsole: React.FC = () => {
       </Grid>
       
       {stages.map((stage) => (
-        <Grid item xs={12} md={6} lg={3} key={stage.id}>
+        <Grid xs={12} md={6} lg={3} key={stage.id}>
           <Card 
             sx={{ 
               cursor: 'pointer',
@@ -668,7 +668,7 @@ const ExperienceConsole: React.FC = () => {
 
   const renderMeritContests = () => (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
           <Typography variant="h5">
             🏆 Concursos de Mëritos y Öndas
@@ -684,7 +684,7 @@ const ExperienceConsole: React.FC = () => {
       </Grid>
 
       {meritContests.map((contest) => (
-        <Grid item xs={12} key={contest.id}>
+        <Grid xs={12} key={contest.id}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -706,19 +706,19 @@ const ExperienceConsole: React.FC = () => {
               </Box>
 
               <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={12} md={4}>
+                <Grid xs={12} md={4}>
                   <Typography variant="body2" gutterBottom>Premio Total</Typography>
                   <Typography variant="h4" color="primary.main">
                     {contest.totalPrize} Lükas
                   </Typography>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid xs={12} md={4}>
                   <Typography variant="body2" gutterBottom>Participantes</Typography>
                   <Typography variant="h4">
                     {contest.participants}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid xs={12} md={4}>
                   <Typography variant="body2" gutterBottom>Tiempo Restante</Typography>
                   <Typography variant="h4" color="error.main">
                     {Math.ceil((contest.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}d
@@ -781,7 +781,7 @@ const ExperienceConsole: React.FC = () => {
 
   const renderTrustVoting = () => (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Typography variant="h5" gutterBottom>
           🤝 Sistema de Votos de Confianza
         </Typography>
@@ -790,7 +790,7 @@ const ExperienceConsole: React.FC = () => {
         </Typography>
       </Grid>
 
-      <Grid item xs={12} md={6}>
+      <Grid xs={12} md={6}>
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -830,7 +830,7 @@ const ExperienceConsole: React.FC = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12} md={6}>
+      <Grid xs={12} md={6}>
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -857,7 +857,7 @@ const ExperienceConsole: React.FC = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -873,7 +873,7 @@ const ExperienceConsole: React.FC = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={4}>
+                    <Grid xs={12} md={4}>
                       <FormControlLabel
                         control={
                           <Switch 
@@ -884,12 +884,12 @@ const ExperienceConsole: React.FC = () => {
                         label="Requiere aprobación de Promoter"
                       />
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid xs={12} md={4}>
                       <Typography variant="body2">
                         Votos de confianza mínimos: <strong>{workflow.minimumTrustVotes}</strong>
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid xs={12} md={4}>
                       <Typography variant="body2">
                         Timeout: <strong>{workflow.timeoutDays} días</strong>
                       </Typography>
@@ -906,7 +906,7 @@ const ExperienceConsole: React.FC = () => {
 
   const renderGPLManagement = () => (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Typography variant="h5" gutterBottom>
           🎬 GPL (Gamified Play List) Management
         </Typography>
@@ -916,7 +916,7 @@ const ExperienceConsole: React.FC = () => {
       </Grid>
 
       {gplContent.map((content) => (
-        <Grid item xs={12} key={content.id}>
+        <Grid xs={12} key={content.id}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -1025,7 +1025,7 @@ const ExperienceConsole: React.FC = () => {
 
   const renderOctalysisConfig = () => (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Typography variant="h5" gutterBottom>
           🎯 Framework Octalysis Configuration
         </Typography>
@@ -1034,7 +1034,7 @@ const ExperienceConsole: React.FC = () => {
         </Typography>
       </Grid>
 
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Alert severity="info" sx={{ mb: 3 }}>
           <Typography variant="body2">
             El framework Octalysis está implementado al <strong>95%</strong> según el análisis del tablero de Miro.
@@ -1044,7 +1044,7 @@ const ExperienceConsole: React.FC = () => {
       </Grid>
 
       {/* Octalysis elements implementation would go here */}
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -1062,7 +1062,7 @@ const ExperienceConsole: React.FC = () => {
 
   const renderAnalytics = () => (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      <Grid xs={12}>
         <Typography variant="h5" gutterBottom>
           📊 Analytics & Performance
         </Typography>
@@ -1071,7 +1071,7 @@ const ExperienceConsole: React.FC = () => {
         </Typography>
       </Grid>
 
-      <Grid item xs={12} md={3}>
+      <Grid xs={12} md={3}>
         <Card>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
@@ -1087,7 +1087,7 @@ const ExperienceConsole: React.FC = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12} md={3}>
+      <Grid xs={12} md={3}>
         <Card>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
@@ -1103,7 +1103,7 @@ const ExperienceConsole: React.FC = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12} md={3}>
+      <Grid xs={12} md={3}>
         <Card>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
@@ -1119,7 +1119,7 @@ const ExperienceConsole: React.FC = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12} md={3}>
+      <Grid xs={12} md={3}>
         <Card>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>

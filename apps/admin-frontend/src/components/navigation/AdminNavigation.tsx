@@ -26,6 +26,7 @@ import {
   SmartToy as AIIcon,
   Public as NostrIcon,
   Settings as SettingsIcon,
+  Gamepad as ConsoleIcon,
 } from '@mui/icons-material'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -53,6 +54,13 @@ const navigationSections = [
   {
     title: 'Gestión CoomÜnity',
     items: [
+      {
+        path: '/console',
+        label: 'Consola de Experiencias',
+        icon: <ConsoleIcon />,
+        description: 'Centro de control para diseñar experiencias gamificadas',
+        isNew: true
+      },
       {
         path: '/challenges',
         label: 'Desafíos',
