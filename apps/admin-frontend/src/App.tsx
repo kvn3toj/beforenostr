@@ -32,7 +32,23 @@ import { MarketplacePage } from './pages/MarketplacePage'
 import { TransactionsPage } from './pages/TransactionsPage'
 import ConsolePage from './pages/ConsolePage'
 
-const queryClient = new QueryClient()
+// Create a client for React Query with enhanced configuration
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime)
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
+});
+
 const theme = createAppTheme('light');
 
 function App() {
@@ -90,7 +106,10 @@ function App() {
           <Toaster richColors position="top-right" />
         </BrowserRouter>
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* React Query Devtools - only in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </QueryClientProvider>
   )
 }
