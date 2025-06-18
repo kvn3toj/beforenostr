@@ -31,9 +31,19 @@ export { cosmicHomeGradients };
 export { CosmicCard };
 export * from './components/cosmic/CosmicCard';
 
-// 🌟 TEMPLATES REVOLUCIONARIOS
-export * from './templates';
-export { RevolutionaryWidget };
+// 🌟 TEMPLATES REVOLUCIONARIOS - Using import/export pattern to avoid binding conflicts
+export { 
+  RevolutionaryWidget,
+  RevolutionaryWidgetPrimary,
+  RevolutionaryWidgetSecondary,
+  RevolutionaryWidgetAccent,
+  RevolutionaryWidgetElevated,
+  RevolutionaryWidgetFuego,
+  RevolutionaryWidgetAgua,
+  RevolutionaryWidgetTierra,
+  RevolutionaryWidgetAire,
+  RevolutionaryWidgetEspiritu
+} from './templates';
 
 // 📐 TIPOS DEL SISTEMA
 export * from './types';
@@ -65,18 +75,7 @@ import {
 
 // 🎯 VARIANTES PRE-CONFIGURADAS PARA FÁCIL USO
 
-// Widgets revolucionarios
-export {
-  RevolutionaryWidgetPrimary,
-  RevolutionaryWidgetSecondary,
-  RevolutionaryWidgetAccent,
-  RevolutionaryWidgetElevated,
-  RevolutionaryWidgetFuego,
-  RevolutionaryWidgetAgua,
-  RevolutionaryWidgetTierra,
-  RevolutionaryWidgetAire,
-  RevolutionaryWidgetEspiritu
-} from './templates';
+// Widgets revolucionarios - Already exported above to avoid duplication
 
 // Cards cósmicos
 export {

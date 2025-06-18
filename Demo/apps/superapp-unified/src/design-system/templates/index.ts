@@ -8,26 +8,33 @@
  * Fase 2, Semana 1 - Plan Maestro Material UI
  */
 
-// 🌟 TEMPLATE WIDGET REVOLUCIONARIO PRINCIPAL
-export { default as RevolutionaryWidget } from './RevolutionaryWidget';
-export * from './RevolutionaryWidget';
-
-// 🎯 VARIANTES PRE-CONFIGURADAS
-export {
+// 🌟 TEMPLATE WIDGET REVOLUCIONARIO PRINCIPAL - Using import/export pattern to avoid binding conflicts
+import RevolutionaryWidget, {
   RevolutionaryWidgetPrimary,
   RevolutionaryWidgetSecondary,
   RevolutionaryWidgetAccent,
-  RevolutionaryWidgetElevated
-} from './RevolutionaryWidget';
-
-// 🔥 VARIANTES ELEMENTALES
-export {
+  RevolutionaryWidgetElevated,
   RevolutionaryWidgetFuego,
   RevolutionaryWidgetAgua,
   RevolutionaryWidgetTierra,
   RevolutionaryWidgetAire,
   RevolutionaryWidgetEspiritu
 } from './RevolutionaryWidget';
+
+export { 
+  RevolutionaryWidget,
+  RevolutionaryWidgetPrimary,
+  RevolutionaryWidgetSecondary,
+  RevolutionaryWidgetAccent,
+  RevolutionaryWidgetElevated,
+  RevolutionaryWidgetFuego,
+  RevolutionaryWidgetAgua,
+  RevolutionaryWidgetTierra,
+  RevolutionaryWidgetAire,
+  RevolutionaryWidgetEspiritu
+};
+
+// 🔥 VARIANTES ELEMENTALES - Already exported above to avoid duplication
 
 // 🌈 RE-EXPORTS DE TIPOS
 export type {

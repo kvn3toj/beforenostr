@@ -1631,7 +1631,17 @@ Tagify.prototype = {
     }
 
     function animation() {
-      tagElm.style.width = parseFloat(window.getComputedStyle(tagElm).width) + 'px';
+      // 🔧 COOMUNITY FIX: Safe width calculation to prevent NaN CSS errors
+      var computedWidth = window.getComputedStyle(tagElm).width;
+      var width = parseFloat(computedWidth);
+      // Only set width if it's a valid number, otherwise use auto or current offsetWidth
+      if (!isNaN(width) && width > 0) {
+        tagElm.style.width = width + 'px';
+      } else if (tagElm.offsetWidth > 0) {
+        tagElm.style.width = tagElm.offsetWidth + 'px';
+      } else {
+        tagElm.style.width = 'auto';
+      }
       document.body.clientTop; // force repaint for the width to take affect before the "hide" class below
 
       tagElm.classList.add('tagify--hide'); // manual timeout (hack, since transitionend cannot be used because of hover)

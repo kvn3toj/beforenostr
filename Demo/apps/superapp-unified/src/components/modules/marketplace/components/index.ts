@@ -15,7 +15,7 @@ export { ProductCard } from './ProductCard';
 export { EnhancedMarketplaceCard } from './EnhancedMarketplaceCard';
 export { ProductReviews } from './ProductReviews';
 export { SellerInfoCard } from './SellerInfoCard';
-export { ShareProduct } from './ShareProduct';
+// ❌ REMOVIDO: ShareProduct (archivo no existe)
 export { BottomNavigation } from './BottomNavigation';
 export { CategoryCarousel } from './CategoryCarousel';
 export { CategoryChips } from './CategoryChips';

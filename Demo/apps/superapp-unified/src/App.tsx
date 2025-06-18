@@ -27,6 +27,9 @@ import {
   preloadRouteComponents 
 } from './utils/lazyComponents';
 
+// Performance Monitoring (Development Only)
+const PerformanceMonitor = React.lazy(() => import('./components/development/PerformanceMonitor'));
+
 // Styles
 // Importar CSS principal
 import './index.css';
@@ -258,6 +261,13 @@ const App: React.FC = () => {
                 {/* React Query DevTools */}
                 {process.env.NODE_ENV === 'development' && (
                   <ReactQueryDevtools initialIsOpen={false} />
+                )}
+                
+                {/* 🎯 Performance Monitor - Development Only */}
+                {process.env.NODE_ENV === 'development' && (
+                  <React.Suspense fallback={null}>
+                    <PerformanceMonitor />
+                  </React.Suspense>
                 )}
               </Router>
             </LetsEducationProvider>

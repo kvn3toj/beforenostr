@@ -5,59 +5,10 @@ import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // Explicitly define the build input to avoid Vite scanning unwanted HTML files
-  build: {
-    rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html')
-      },
-      output: {
-        // Configuración adicional para producción
-        ...(mode === 'production' && { compact: true }),
-        // Manual chunks para optimizar el code splitting
-        manualChunks(id) {
-          // Agrupar librerías de Material UI en un chunk separado
-          if (id.includes('@mui/material') || id.includes('@mui/icons-material') || id.includes('@mui/lab')) {
-            return 'vendor-mui'
-          }
-          
-          // Agrupar otras librerías UI/UX
-          if (id.includes('react-router') || id.includes('framer-motion') || id.includes('react-spring')) {
-            return 'vendor-ui'
-          }
-          
-          // Agrupar librerías de datos y estado
-          if (id.includes('@tanstack/react-query') || id.includes('zustand') || id.includes('react-hook-form')) {
-            return 'vendor-data'
-          }
-          
-          // Agrupar utilidades y fechas
-          if (id.includes('date-fns') || id.includes('zod') || id.includes('clsx') || id.includes('tailwind-merge')) {
-            return 'vendor-utils'
-          }
-          
-          // Agrupar charts y visualizaciones
-          if (id.includes('recharts') || id.includes('lucide-react')) {
-            return 'vendor-charts'
-          }
-          
-          // Resto de node_modules en vendor general
-          if (id.includes('node_modules')) {
-            return 'vendor'
-          }
-        }
-      }
-    },
-    outDir: 'dist',
-    sourcemap: mode === 'development' ? true : 'hidden', // Sourcemaps ocultos en producción
-    // Configuraciones adicionales para optimización
-    target: 'es2020',
-    cssCodeSplit: true, // Separar CSS por chunks
-    chunkSizeWarningLimit: 1000 // Aumentar el límite de warning a 1MB
-  },
   plugins: [
     react({
       // Disable TypeScript checking in development mode
@@ -156,7 +107,7 @@ export default defineConfig(({ mode }) => ({
   ].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": resolve(__dirname, "./src"),
     },
   },
   server: {
@@ -174,12 +125,19 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
-    }
+    },
+    // Pre-warming de dependencies
+    warmup: {
+      clientFiles: [
+        './src/components/modules/**/*.tsx',
+        './src/pages/**/*.tsx',
+      ],
+    },
   },
   esbuild: {
-    // Ignore TypeScript errors during development builds
-    target: 'es2020',
-    logOverride: mode === 'development' ? { 'this-is-undefined-in-esm': 'silent' } : {}
+    // Optimizar importaciones durante el build
+    treeShaking: true,
+    legalComments: 'none',
   },
   define: {
     // Definir variables de entorno para el build
@@ -188,15 +146,13 @@ export default defineConfig(({ mode }) => ({
   // Optimizaciones adicionales para prevenir errores de importación
   optimizeDeps: {
     include: [
-      'react',
-      'react-dom',
       '@mui/material',
       '@mui/icons-material',
-      'react-router-dom',
-      '@tanstack/react-query'
+      '@tanstack/react-query',
+      'framer-motion',
     ],
-    // Forzar pre-bundling para evitar errores de dynamic imports
-    force: true
+    // Forzar pre-bundling de dependencias específicas
+    force: true,
   },
   // Configuración para manejar dynamic imports de forma robusta
   experimental: {
@@ -215,5 +171,59 @@ export default defineConfig(({ mode }) => ({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+  },
+  // 🎯 OPTIMIZACIONES CRÍTICAS DE BUNDLE
+  build: {
+    // Reducir chunk size límite
+    chunkSizeWarningLimit: 800,
+    
+    rollupOptions: {
+      output: {
+        // 🔥 CHUNKING INTELIGENTE - Separar vendor libraries
+        manualChunks: {
+          // React ecosystem
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          
+          // Material-UI ecosystem (separado por tamaño)
+          'vendor-mui-core': ['@mui/material', '@mui/system'],
+          'vendor-mui-icons': ['@mui/icons-material'],
+          'vendor-mui-extras': ['@mui/lab', '@emotion/react', '@emotion/styled'],
+          
+          // Query and state management
+          'vendor-query': ['@tanstack/react-query', '@tanstack/react-query-devtools'],
+          
+          // Animation and interactions  
+          'vendor-animation': ['framer-motion'],
+          
+          // Utilities
+          'vendor-utils': ['lodash.debounce', 'date-fns'],
+        },
+        
+        // 🎯 NOMBRES DE ARCHIVOS OPTIMIZADOS
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
+          return `js/${facadeModuleId}-[hash].js`;
+        },
+        entryFileNames: 'js/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+      },
+      
+      // 🚀 EXTERNOS (CDN) para librerías pesadas (opcional)
+      // external: ['@mui/icons-material'], // Si usáramos CDN
+    },
+    
+    // 🎯 CONFIGURACIONES ADICIONALES
+    target: 'esnext',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remover console.logs en producción
+        drop_debugger: true,
+        pure_funcs: ['console.log'], // Funciones a eliminar
+      },
+    },
+    
+    // Incrementar límite de assets
+    assetsInlineLimit: 4096,
   },
 }))

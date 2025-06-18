@@ -667,3 +667,5 @@ export function HomePage() {
     </HomePageErrorBoundary>
   );
 }
+
+export default HomePage;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Container, Typography, Card, CardContent, Stack } from '@mui/material';
 import { PlayArrow, AutoAwesome, CheckCircle } from '@mui/icons-material';
-import { OnboardingFlow } from './OnboardingFlow';
+// ❌ REMOVIDO: import { OnboardingFlow } from './OnboardingFlow' (archivo vacío)
 import { OnboardingChecklist } from './OnboardingChecklist';
 import { ProgressiveTooltips, getStageTooltips } from './ProgressiveTooltips';
 
@@ -205,11 +205,14 @@ export const OnboardingDemo: React.FC = () => {
       </Card>
 
       {/* Onboarding Components */}
-      <OnboardingFlow
-        isOpen={showOnboarding}
-        onComplete={handleOnboardingComplete}
-        onSkip={handleOnboardingSkip}
-      />
+      {/* ❌ REMOVIDO: OnboardingFlow component (archivo vacío) */}
+      {showOnboarding && (
+        <Box sx={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1300, p: 3, bgcolor: 'background.paper', borderRadius: 2 }}>
+          OnboardingFlow placeholder - Component needs implementation
+          <Button onClick={handleOnboardingComplete}>Completar</Button>
+          <Button onClick={handleOnboardingSkip}>Saltar</Button>
+        </Box>
+      )}
 
       <OnboardingChecklist
         isVisible={showChecklist}

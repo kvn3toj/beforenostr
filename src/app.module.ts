@@ -17,11 +17,13 @@ import { StudyRoomsModule } from './study-rooms/study-rooms.module';
 import { ConsoleModule } from './console/console.module';
 import { LoggerModule } from './common/logger/logger.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
     LoggerModule, // 📝 Global Logger Module - must be imported first
     AuthModule, // 🔐 Authentication Module - core authentication
+    ConfigModule, // 🔧 Configuration Module - elemental system config
     PrismaModule,
     SubtitleModule,
     VideoItemsModule,

@@ -14,5 +14,7 @@
  * @version 2.0 - Versión CoomÜnity con filosofía ancestral integrada
  */
 
-// Exportar la versión mejorada
-export { default } from './GroupsPageEnhanced';
+// ✅ CORRECCIÓN: Usar import/export separado en lugar de star export
+import GroupsPageEnhanced from './GroupsPageEnhanced';
+
+export default GroupsPageEnhanced;

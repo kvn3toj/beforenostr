@@ -18,4 +18,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId }) => {
       </Box>
     </Container>
   );
-}; 
+};
+
+export default VideoPlayer; 

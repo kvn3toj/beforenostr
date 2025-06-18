@@ -519,10 +519,11 @@ export const VideoDataCache = {
 
 export {
   VideoApiService,
-  VideoDataCache,
   QUERY_KEYS,
   CACHE_CONFIG,
 };
+
+// VideoDataCache ya se exporta arriba como const
 
 export type {
   VideoListParams,

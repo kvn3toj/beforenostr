@@ -123,11 +123,13 @@ class AuthService {
    * Cierra sesión (limpia el token del almacenamiento local)
    */
   logout(): void {
-    // Eliminar token del localStorage
+    // Usar las claves estándar de CoomÜnity
+    localStorage.removeItem('COOMUNITY_AUTH_TOKEN');
+    localStorage.removeItem('COOMUNITY_USER_DATA');
+    
+    // También limpiar las claves anteriores por compatibilidad
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
-    
-    // También limpiar sessionStorage por si acaso
     sessionStorage.removeItem('auth_token');
     sessionStorage.removeItem('auth_user');
     
@@ -138,8 +140,9 @@ class AuthService {
    * Guarda el token y usuario en localStorage
    */
   saveAuthData(authResponse: AuthResponse): void {
-    localStorage.setItem('auth_token', authResponse.access_token);
-    localStorage.setItem('auth_user', JSON.stringify(authResponse.user));
+    // Usar las claves estándar de CoomÜnity
+    localStorage.setItem('COOMUNITY_AUTH_TOKEN', authResponse.access_token);
+    localStorage.setItem('COOMUNITY_USER_DATA', JSON.stringify(authResponse.user));
     console.log('[AuthService] Datos de autenticación guardados');
   }
 
@@ -147,7 +150,7 @@ class AuthService {
    * Obtiene el token guardado en localStorage
    */
   getStoredToken(): string | null {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('COOMUNITY_AUTH_TOKEN');
   }
 
   /**
@@ -155,7 +158,7 @@ class AuthService {
    */
   getStoredUser(): User | null {
     try {
-      const userStr = localStorage.getItem('auth_user');
+      const userStr = localStorage.getItem('COOMUNITY_USER_DATA');
       return userStr ? JSON.parse(userStr) : null;
     } catch (error) {
       console.error('[AuthService] Error al parsear usuario guardado:', error);

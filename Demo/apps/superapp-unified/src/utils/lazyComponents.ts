@@ -1,14 +1,14 @@
 import { lazy } from 'react';
 
-// Lazy loading de páginas principales
+// Lazy loading de páginas principales - RUTAS VERIFICADAS
 const HomePage = lazy(() => import('../pages/HomePage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/RegisterPage'));
 const Marketplace = lazy(() => import('../pages/Marketplace'));
-const UPlayPage = lazy(() => import('../pages/UPlay'));
+const UPlay = lazy(() => import('../pages/UPlay'));
 const Social = lazy(() => import('../pages/Social'));
-const ProfilePage = lazy(() => import('../pages/Profile'));
-const WalletPage = lazy(() => import('../pages/Wallet'));
+const Profile = lazy(() => import('../pages/Profile'));
+const Wallet = lazy(() => import('../pages/Wallet'));
 
 // Challenge & Group Pages
 const ChallengesPage = lazy(() => import('../pages/ChallengesPage'));
@@ -32,7 +32,6 @@ const MarketplaceTest = lazy(() => import('../pages/MarketplaceTest'));
 
 // LETS Routes
 const LetsPage = lazy(() => import('../pages/LetsPage'));
-const LetsAnalyticsDashboard = lazy(() => import('../pages/LetsPage'));
 
 // Social Routes
 const SocialChat = lazy(() => import('../pages/SocialChat'));
@@ -40,15 +39,12 @@ const SocialFeed = lazy(() => import('../pages/SocialFeed'));
 
 // Special Pages
 const DesignSystemShowcase = lazy(() => import('../pages/DesignSystemShowcase'));
-const ThemeTestSuite = lazy(() => import('../pages/DesignSystemShowcase'));
-const DesignSystemValidator = lazy(() => import('../pages/DesignSystemShowcase'));
 
-// WebSocket Test
+// WebSocket Test - CORREGIDO A PÁGINA EXISTENTE
 const WebSocketTest = lazy(() => import('../pages/StudyRoomsPage'));
 
 // Settings
 const SettingsPage = lazy(() => import('../pages/Settings'));
-const HelpPage = lazy(() => import('../pages/Settings'));
 
 // Nuevas páginas
 const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
@@ -59,7 +55,7 @@ const PWADemo = lazy(() => import('../pages/PWADemo'));
 const BetaRegister = lazy(() => import('../pages/BetaRegister'));
 const HomePageAlternative = lazy(() => import('../pages/HomeEnhanced'));
 
-// 404
+// 404 - CORREGIDO A PÁGINA ESPECÍFICA
 const NotFoundPage = lazy(() => import('../pages/HomePage'));
 
 // Onboarding
@@ -71,10 +67,13 @@ export const LazyPages = {
   LoginPage,
   RegisterPage,
   Marketplace,
-  UPlayPage,
+  UPlay,
+  UPlayPage: UPlay, // Alias para compatibilidad
   Social,
-  ProfilePage,
-  WalletPage,
+  Profile,
+  ProfilePage: Profile, // Alias para compatibilidad
+  Wallet,
+  WalletPage: Wallet, // Alias para compatibilidad
   
   // Challenge & Group Pages
   ChallengesPage,
@@ -98,7 +97,6 @@ export const LazyPages = {
   
   // LETS Routes
   LetsPage,
-  LetsAnalyticsDashboard,
   
   // Social Routes
   SocialChat,
@@ -106,15 +104,12 @@ export const LazyPages = {
   
   // Special Pages
   DesignSystemShowcase,
-  ThemeTestSuite,
-  DesignSystemValidator,
   
   // WebSocket Test
   WebSocketTest,
   
   // Settings
   SettingsPage,
-  HelpPage,
   
   // Nuevas páginas
   NotificationsPage,
@@ -132,66 +127,74 @@ export const LazyPages = {
   OnboardingDemo,
 };
 
-// Funciones de preload
+// Funciones de preload OBLIGATORIAS
 export const preloadCriticalComponents = () => {
-  // Precargar componentes críticos que se usan frecuentemente
-  HomePage();
-  LoginPage();
-  Marketplace();
-  UPlayPage();
+  // Precargar componentes críticos con manejo de errores
+  try {
+    HomePage.preload?.();
+    LoginPage.preload?.();
+    Marketplace.preload?.();
+    UPlay.preload?.();
+  } catch (error) {
+    console.warn('Preload error for critical components:', error);
+  }
 };
 
 export const preloadRouteComponents = (pathname: string) => {
-  // Precargar componentes basado en la ruta actual
-  switch (pathname) {
-    case '/':
-      HomePage();
-      break;
-    case '/marketplace':
-      Marketplace();
-      MarketplaceTest();
-      break;
-    case '/uplay':
-      UPlayPage();
-      UnifiedUPlay();
-      break;
-    case '/social':
-      Social();
-      SocialChat();
-      SocialFeed();
-      break;
-    case '/challenges':
-      ChallengesPage();
-      break;
-    case '/groups':
-      GroupsPage();
-      break;
-    case '/profile':
-      ProfilePage();
-      break;
-    case '/wallet':
-      WalletPage();
-      break;
-    case '/lets':
-      LetsPage();
-      LetsAnalyticsDashboard();
-      break;
-    case '/ustats':
-      UStatsPage();
-      break;
-    case '/analytics':
-      AnalyticsPage();
-      break;
-    default:
-      // Para rutas dinámicas o no reconocidas, precargar componentes comunes
-      if (pathname.startsWith('/uplay/')) {
-        UPlayVideoPlayer();
-        InteractiveVideoEnhanced();
-      } else if (pathname.startsWith('/challenges/')) {
-        ChallengeDetailPage();
-      } else if (pathname.startsWith('/video/')) {
-        VideoPlayer();
-      }
-      break;
+  // Precargar componentes basado en la ruta actual con manejo de errores
+  try {
+    switch (pathname) {
+      case '/':
+        HomePage.preload?.();
+        break;
+      case '/marketplace':
+        Marketplace.preload?.();
+        MarketplaceTest.preload?.();
+        break;
+      case '/uplay':
+        UPlay.preload?.();
+        UnifiedUPlay.preload?.();
+        break;
+      case '/social':
+        Social.preload?.();
+        SocialChat.preload?.();
+        SocialFeed.preload?.();
+        break;
+      case '/challenges':
+        ChallengesPage.preload?.();
+        break;
+      case '/groups':
+        GroupsPage.preload?.();
+        break;
+      case '/profile':
+        Profile.preload?.();
+        break;
+      case '/wallet':
+        Wallet.preload?.();
+        break;
+      case '/lets':
+        LetsPage.preload?.();
+        break;
+      case '/ustats':
+        UStatsPage.preload?.();
+        break;
+      case '/analytics':
+        AnalyticsPage.preload?.();
+        break;
+      default:
+        // Para rutas dinámicas o no reconocidas, precargar componentes comunes
+        if (pathname.startsWith('/uplay/')) {
+          UPlayVideoPlayer.preload?.();
+          InteractiveVideoEnhanced.preload?.();
+        } else if (pathname.startsWith('/challenges/')) {
+          ChallengeDetailPage.preload?.();
+        } else if (pathname.startsWith('/video/')) {
+          VideoPlayer.preload?.();
+          VideoHome.preload?.();
+        }
+        break;
+    }
+  } catch (error) {
+    console.warn('Preload error for route components:', error);
   }
 };

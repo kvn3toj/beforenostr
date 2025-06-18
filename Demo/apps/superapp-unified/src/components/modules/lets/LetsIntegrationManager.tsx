@@ -48,7 +48,7 @@ import {
   useLetsRecommendations,
   useAyniBalance,
   useLetsAnalytics
-} from '../../hooks/useLetsIntegration';
+} from '../../../hooks/useLetsIntegration';
 
 interface LetsIntegrationManagerProps {
   userId: string;

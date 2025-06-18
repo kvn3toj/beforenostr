@@ -147,15 +147,34 @@ const checkAuthFromToken = async (): Promise<User | null> => {
   }
 
   try {
-    // Verificar token con el backend
-    const user = await authService.verifyToken();
-    return user;
+    // Verificar si el token es válido
+    const isValid = await authService.validateToken(token);
+    if (!isValid) {
+      throw new Error('Token inválido');
+    }
+
+    // Obtener usuario del localStorage (ya validado) y asegurarse de que tiene token
+    const storedUser = authService.getStoredUser();
+    if (!storedUser) {
+      throw new Error('No hay datos de usuario almacenados');
+    }
+
+    // Retornar usuario con token incluido
+    return {
+      ...storedUser,
+      access_token: token,
+      full_name: storedUser.name,
+      avatar_url: storedUser.avatarUrl,
+      role: storedUser.roles?.includes('admin') ? 'admin' : 'user',
+      created_at: new Date().toISOString(),
+      refresh_token: undefined
+    };
   } catch (error: any) {
     console.error(`${AUTH_CONFIG.LOG_PREFIX} Token validation failed:`, error);
 
     // Limpiar token inválido
     localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
-    localStorage.removeItem(AUTH_STORAGE_KEYS.USER_DATA);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
 
     return null;
   }

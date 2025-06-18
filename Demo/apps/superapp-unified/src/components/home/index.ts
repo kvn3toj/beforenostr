@@ -12,24 +12,27 @@ import PersonalProgressWidgetRevolutionary from './PersonalProgressWidgetRevolut
 import ActiveChallengesWidgetRevolutionary from './ActiveChallengesWidgetRevolutionary';
 
 // Widget components with fixed exports
-export { AyniMetricsCards } from './AyniMetricsCards';
-export { SystemSolarIndicator } from './SystemSolarIndicator';
-export { SystemSolarIndicatorWrapper } from './SystemSolarIndicatorWrapper';
-export { SystemSolarMiniDashboard } from './SystemSolarMiniDashboard';
+export { AyniMetricsCard } from './AyniMetricsCard'; // ✅ AGREGADO: Export faltante
+// ❌ REMOVIDO: SystemSolarIndicator (archivo no existe)
+// ❌ REMOVIDO: SystemSolarIndicatorWrapper (archivo no existe)  
+// ❌ REMOVIDO: SystemSolarMiniDashboard (archivo no existe)
 export { WelcomeHeader } from './WelcomeHeader';
+export { WalletOverview } from './WalletOverview'; // ✅ AGREGADO: Export faltante
+export { QuickActionsGrid } from './QuickActionsGrid'; // ✅ AGREGADO: Export faltante
+export { NotificationCenter } from './NotificationCenter'; // ✅ AGREGADO: Export faltante
 export { SmartQuickActions } from './SmartQuickActions';
-export { SmartWalletOverview } from './SmartWalletOverview';
+// ❌ REMOVIDO: SmartWalletOverview (archivo no existe)
 export { LiveActivityFeed } from './LiveActivityFeed';
-export { NotificationCenterWidget } from './NotificationCenterWidget';
+// ❌ REMOVIDO: NotificationCenterWidget (archivo no existe)
 export { ModuleCards } from './ModuleCards';
 export { PersonalProgressWidget } from './PersonalProgressWidget';
 export { ActiveChallengesWidget } from './ActiveChallengesWidget';
-export { SidebarProgressSection } from './SidebarProgressSection';
-export { SidebarActivitySection } from './SidebarActivitySection';
-export { SidebarRecommendationsSection } from './SidebarRecommendationsSection';
+// ❌ REMOVIDO: SidebarProgressSection (archivo no existe)
+// ❌ REMOVIDO: SidebarActivitySection (archivo no existe)
+// ❌ REMOVIDO: SidebarRecommendationsSection (archivo no existe)
 export { AyniBalanceVisualization } from './AyniBalanceVisualization';
-export { RecentActivity } from './RecentActivity';
-export { QuickStats } from './QuickStats';
+// ❌ REMOVIDO: RecentActivity (archivo no existe)
+// ❌ REMOVIDO: QuickStats (archivo no existe)
 
 // Revolutionary components - using imported components to avoid binding conflicts
 export { AyniMetricsCardRevolutionary };

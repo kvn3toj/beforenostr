@@ -46,7 +46,7 @@ import { EnhancedRewardFeedback, useRewardFeedback } from './components/Enhanced
 import { UnifiedUPlayPlayer } from './UnifiedUPlayPlayer';
 
 // Importar hooks y stores
-import { useOptimizedQuestions } from '../../hooks/interactive-video/useOptimizedQuestions';
+import { useOptimizedQuestions } from '../../../hooks/interactive-video/useOptimizedQuestions';
 import { 
   useUPlayStore, 
   usePlayerMetrics, 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Container, Alert, Snackbar } from '@mui/material';
+import { Box, Container, Alert, Snackbar, TextField, Button, Paper, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import LoginForm from '../components/forms/LoginForm';
+// ❌ REMOVIDO: import LoginForm from '../components/forms/LoginForm' (archivo vacío)
 import { RateLimiter } from '../utils/security';
 import { authService } from '../services/auth.service';
 import { useAuth } from '../contexts/AuthContext';
@@ -20,6 +20,13 @@ const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+    await handleLogin({ email, password });
+  };
 
   const handleLogin = async (data: LoginFormData): Promise<void> => {
     // Check rate limiting
@@ -76,11 +83,51 @@ const LoginPage: React.FC = () => {
       }}
     >
       <Container maxWidth="sm">
-        <LoginForm
-          onSubmit={handleLogin}
-          isLoading={isLoading}
-          error={error}
-        />
+        <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+          <Typography variant="h4" component="h1" gutterBottom align="center">
+            Iniciar Sesión
+          </Typography>
+          
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              margin="normal"
+              required
+              data-testid="login-email-input"
+            />
+            <TextField
+              fullWidth
+              label="Contraseña"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              margin="normal"
+              required
+              data-testid="login-password-input"
+            />
+            
+            {error && (
+              <Alert severity="error" sx={{ mt: 2 }}>
+                {error}
+              </Alert>
+            )}
+            
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
+              data-testid="login-submit-button"
+            >
+              {isLoading ? 'Cargando...' : 'Iniciar Sesión'}
+            </Button>
+          </Box>
+        </Paper>
       </Container>
 
       {/* Success Snackbar */}

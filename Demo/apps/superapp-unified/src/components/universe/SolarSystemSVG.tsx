@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './solar-system-svg.css';
+// ❌ REMOVIDO: import './solar-system-svg.css' (archivo no existe)
 
 // Helpers para aleatoriedad (inspirados en Cloud Four)
 function random(min: number, max: number) {

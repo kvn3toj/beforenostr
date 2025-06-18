@@ -13,8 +13,8 @@ import BuilderIOStatus from './BuilderIOStatus';
 
 // Core Components - Using import/export pattern to avoid binding conflicts
 export { CoomunityButton };
-export { CoomunityCard } from './CoomunityCard';
-export { LoadingSpinner } from './LoadingSpinner';
+export { CoomunityCard };
+export { LoadingSpinner };
 
 // Aliases for backwards compatibility - Using imported components
 export { CoomunityButton as Button };

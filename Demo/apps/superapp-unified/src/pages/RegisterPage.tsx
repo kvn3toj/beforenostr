@@ -209,4 +209,6 @@ export const RegisterPage = () => {
       </Box>
     </Container>
   )
-} 
+}
+
+export default RegisterPage; 

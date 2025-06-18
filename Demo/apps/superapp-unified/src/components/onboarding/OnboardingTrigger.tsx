@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Fab, Tooltip } from '@mui/material';
 import { Help, AutoAwesome, Refresh } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import OnboardingFlow from './OnboardingFlow';
+// ❌ REMOVIDO: import OnboardingFlow from './OnboardingFlow' (archivo vacío)
 
 interface OnboardingTriggerProps {
   userEmail?: string;
@@ -136,11 +136,25 @@ export const OnboardingTrigger: React.FC<OnboardingTriggerProps> = ({
       </AnimatePresence>
 
       {/* Onboarding Modal */}
-      <OnboardingFlow
-        isOpen={showOnboarding}
-        onComplete={handleOnboardingComplete}
-        onSkip={handleSkipOnboarding}
-      />
+      {/* ❌ REMOVIDO: OnboardingFlow component (archivo vacío) */}
+      {showOnboarding && (
+        <Box sx={{ 
+          position: 'fixed', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1300,
+          p: 3,
+          bgcolor: 'background.paper',
+          borderRadius: 2
+        }}>
+          <motion.div>
+            Onboarding placeholder - Component needs implementation
+            <button onClick={handleOnboardingComplete}>Completar</button>
+            <button onClick={handleSkipOnboarding}>Saltar</button>
+          </motion.div>
+        </Box>
+      )}
 
       {/* Welcome Message for Returning Users */}
       <AnimatePresence>
