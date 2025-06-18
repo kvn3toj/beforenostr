@@ -29,13 +29,13 @@ morning_ritual() {
     # Check system vitals
     echo "🔍 Checking system vital signs..."
     
-    # PostgreSQL Health
-    if brew services list | grep postgresql | grep started > /dev/null; then
+    # PostgreSQL Health (adapted for different OS)
+    if command -v brew >/dev/null && brew services list | grep postgresql | grep started > /dev/null; then
+        echo -e "✅ PostgreSQL: ${GREEN}Healthy${NC}"
+    elif systemctl is-active --quiet postgresql 2>/dev/null; then
         echo -e "✅ PostgreSQL: ${GREEN}Healthy${NC}"
     else
-        echo -e "⚠️  PostgreSQL: ${YELLOW}Starting...${NC}"
-        brew services start postgresql@15
-        sleep 3
+        echo -e "⚠️  PostgreSQL: ${YELLOW}May need to be started${NC}"
     fi
     
     # Backend Health Check
@@ -80,7 +80,7 @@ check_extensions_health() {
     missing_extensions=()
     
     for ext in "${critical_extensions[@]}"; do
-        if code --list-extensions | grep -q "$ext"; then
+        if command -v code >/dev/null && code --list-extensions | grep -q "$ext"; then
             echo -e "   ✅ $ext"
         else
             echo -e "   ❌ $ext ${YELLOW}(MISSING)${NC}"
@@ -88,8 +88,8 @@ check_extensions_health() {
         fi
     done
     
-    # Auto-install missing extensions
-    if [ ${#missing_extensions[@]} -gt 0 ]; then
+    # Auto-install missing extensions (only if code command exists)
+    if [ ${#missing_extensions[@]} -gt 0 ] && command -v code >/dev/null; then
         echo ""
         echo -e "${YELLOW}🔧 Auto-installing missing extensions...${NC}"
         for ext in "${missing_extensions[@]}"; do
@@ -97,6 +97,8 @@ check_extensions_health() {
             code --install-extension "$ext"
         done
         echo -e "${GREEN}✅ Extension installation completed${NC}"
+    elif [ ${#missing_extensions[@]} -gt 0 ]; then
+        echo -e "${YELLOW}💡 Install missing extensions manually in VS Code${NC}"
     fi
 }
 
@@ -153,7 +155,7 @@ analyze_productivity() {
     
     # Git activity analysis
     TODAY=$(date +%Y-%m-%d)
-    COMMITS_TODAY=$(git log --since="$TODAY 00:00:00" --oneline | wc -l)
+    COMMITS_TODAY=$(git log --since="$TODAY 00:00:00" --oneline 2>/dev/null | wc -l)
     
     # Calculate CoomÜnity metrics
     calculate_ayni_score
@@ -185,13 +187,18 @@ analyze_productivity() {
 # ================================================================
 calculate_ayni_score() {
     # Ayni: Reciprocity and balanced exchange
-    SHARED_COMPONENTS=$(find Demo/apps/superapp-unified/src/components -name "*.tsx" | grep -i "shared\|common\|reusable" | wc -l)
-    TOTAL_COMPONENTS=$(find Demo/apps/superapp-unified/src/components -name "*.tsx" | wc -l)
+    if [ -d "Demo/apps/superapp-unified/src/components" ]; then
+        SHARED_COMPONENTS=$(find Demo/apps/superapp-unified/src/components -name "*.tsx" 2>/dev/null | grep -i "shared\|common\|reusable" | wc -l)
+        TOTAL_COMPONENTS=$(find Demo/apps/superapp-unified/src/components -name "*.tsx" 2>/dev/null | wc -l)
+    else
+        SHARED_COMPONENTS=0
+        TOTAL_COMPONENTS=0
+    fi
     
     if [ $TOTAL_COMPONENTS -gt 0 ]; then
         AYNI_SCORE=$(( (SHARED_COMPONENTS * 100) / TOTAL_COMPONENTS ))
     else
-        AYNI_SCORE=0
+        AYNI_SCORE=50  # Default score if no components found
     fi
     
     # Adjust based on collaboration metrics
@@ -206,14 +213,19 @@ calculate_merito_score() {
     # Mérito: Quality and contribution
     
     # Check for TypeScript strict mode
-    if grep -q '"strict": true' Demo/apps/superapp-unified/tsconfig.json; then
+    if [ -f "Demo/apps/superapp-unified/tsconfig.json" ] && grep -q '"strict": true' Demo/apps/superapp-unified/tsconfig.json; then
         MERITO_SCORE=80
     else
         MERITO_SCORE=60
     fi
     
     # Check for tests
-    TEST_FILES=$(find Demo/apps/superapp-unified -name "*.test.ts" -o -name "*.spec.ts" | wc -l)
+    if [ -d "Demo/apps/superapp-unified" ]; then
+        TEST_FILES=$(find Demo/apps/superapp-unified -name "*.test.ts" -o -name "*.spec.ts" 2>/dev/null | wc -l)
+    else
+        TEST_FILES=0
+    fi
+    
     if [ $TEST_FILES -gt 10 ]; then
         MERITO_SCORE=$(( MERITO_SCORE + 15 ))
     elif [ $TEST_FILES -gt 5 ]; then
@@ -233,17 +245,17 @@ calculate_bien_comun_score() {
     
     # Check for accessibility features
     ACCESSIBILITY_SCORE=70
-    if grep -r "aria-" Demo/apps/superapp-unified/src/ > /dev/null; then
+    if [ -d "Demo/apps/superapp-unified/src" ] && grep -r "aria-" Demo/apps/superapp-unified/src/ > /dev/null 2>&1; then
         ACCESSIBILITY_SCORE=$(( ACCESSIBILITY_SCORE + 15 ))
     fi
     
     # Check for error handling
-    if grep -r "try.*catch" Demo/apps/superapp-unified/src/ > /dev/null; then
+    if [ -d "Demo/apps/superapp-unified/src" ] && grep -r "try.*catch" Demo/apps/superapp-unified/src/ > /dev/null 2>&1; then
         ACCESSIBILITY_SCORE=$(( ACCESSIBILITY_SCORE + 10 ))
     fi
     
     # Check for performance optimizations
-    if grep -r "useMemo\|useCallback" Demo/apps/superapp-unified/src/ > /dev/null; then
+    if [ -d "Demo/apps/superapp-unified/src" ] && grep -r "useMemo\|useCallback" Demo/apps/superapp-unified/src/ > /dev/null 2>&1; then
         ACCESSIBILITY_SCORE=$(( ACCESSIBILITY_SCORE + 5 ))
     fi
     
@@ -256,10 +268,6 @@ calculate_bien_comun_score() {
 natural_break_reminder() {
     echo -e "${YELLOW}🌱 Natural Break Reminder${NC}"
     echo "─────────────────────────"
-    
-    # Calculate work duration
-    WORK_START_TIME="09:00"
-    CURRENT_TIME=$(date +%H:%M)
     
     echo "🧘 Taking breaks enhances creativity and prevents burnout"
     echo ""
@@ -283,7 +291,7 @@ evening_wrapup() {
     analyze_productivity
     
     # Commit reminders
-    UNCOMMITTED_CHANGES=$(git status --porcelain | wc -l)
+    UNCOMMITTED_CHANGES=$(git status --porcelain 2>/dev/null | wc -l)
     if [ $UNCOMMITTED_CHANGES -gt 0 ]; then
         echo -e "${YELLOW}📝 You have $UNCOMMITTED_CHANGES uncommitted changes${NC}"
         echo "Consider committing your progress before ending the day"
@@ -313,8 +321,11 @@ set_daily_intentions() {
     echo "────────────────────────────────────────────"
     
     # Generate intention based on current project status
-    FEATURE_BRANCHES=$(git branch -r | grep "feature/" | wc -l)
-    OPEN_TODOS=$(grep -r "TODO\|FIXME" Demo/apps/superapp-unified/src/ | wc -l)
+    FEATURE_BRANCHES=$(git branch -r 2>/dev/null | grep "feature/" | wc -l)
+    OPEN_TODOS=0
+    if [ -d "Demo/apps/superapp-unified/src" ]; then
+        OPEN_TODOS=$(grep -r "TODO\|FIXME" Demo/apps/superapp-unified/src/ 2>/dev/null | wc -l)
+    fi
     
     echo "Suggested focus areas:"
     if [ $FEATURE_BRANCHES -gt 2 ]; then
