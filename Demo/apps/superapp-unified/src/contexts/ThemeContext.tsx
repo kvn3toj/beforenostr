@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Theme, PaletteMode } from '@mui/material';
-import { createAppTheme } from '../theme';
+import { createCentralizedTheme } from '../theme-centralized';
 
 interface ThemeContextProps {
   mode: PaletteMode;
@@ -11,13 +11,13 @@ interface ThemeContextProps {
 const ThemeContext = createContext<ThemeContextProps>({
   mode: 'light',
   toggleTheme: () => {},
-  theme: createAppTheme('light'),
+  theme: createCentralizedTheme('light'),
 });
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [mode, setMode] = useState<PaletteMode>('light');
 
-  const theme = createAppTheme(mode);
+  const theme = createCentralizedTheme(mode);
 
   const toggleTheme = () => {
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
