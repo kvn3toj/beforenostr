@@ -178,6 +178,11 @@ export const LazyPages = {
     <SimpleLoader />
   ),
 
+  MarketplaceCreateService: createLazyComponent(
+    () => import('../pages/MarketplaceCreateService'),
+    <SimpleLoader />
+  ),
+
   ProductDetail: createLazyComponent(
     () => import('../pages/ProductDetail'),
     <SimpleLoader />
@@ -196,6 +201,11 @@ export const LazyPages = {
 
   SocialFeed: createLazyComponent(
     () => import('../pages/SocialFeed'),
+    <SimpleLoader />
+  ),
+
+  SocialNotifications: createLazyComponent(
+    () => import('../pages/SocialNotifications'),
     <SimpleLoader />
   ),
 
@@ -362,12 +372,18 @@ export const preloadRouteComponents = (route: string) => {
     case '/marketplace/test':
       import('../pages/MarketplaceTest');
       break;
+    case '/marketplace/create-service':
+      import('../pages/MarketplaceCreateService');
+      break;
     // Social Routes
     case '/social/chat':
       import('../pages/SocialChat');
       break;
     case '/social/feed':
       import('../pages/SocialFeed');
+      break;
+    case '/social/notifications':
+      import('../pages/SocialNotifications');
       break;
     // Special Routes
     case '/beta-register':

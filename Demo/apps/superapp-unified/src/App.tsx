@@ -86,6 +86,7 @@ const AppRoutes: React.FC = () => {
         
         {/* 🏪 Marketplace Routes - Módulo principal de intercambio */}
         <Route path="/marketplace/test" element={<LazyPages.MarketplaceTest />} />
+        <Route path="/marketplace/create-service" element={<LazyPages.MarketplaceCreateService />} />
         
         {/* 🔄 LETS Routes - Módulo independiente de intercambio local */}
         <Route path="/lets" element={<LazyPages.LetsPage />} />
@@ -97,6 +98,7 @@ const AppRoutes: React.FC = () => {
         {/* 👥 Social Routes */}
         <Route path="/social/chat" element={<LazyPages.SocialChat />} />
         <Route path="/social/feed" element={<LazyPages.SocialFeed />} />
+        <Route path="/social/notifications" element={<LazyPages.SocialNotifications />} />
         
         {/* Special Pages */}
         <Route path="/design-system" element={<LazyPages.DesignSystemShowcase />} />
