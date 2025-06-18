@@ -9,9 +9,10 @@ import DesignSystemValidator from './DesignSystemValidator';
 import PerformanceMonitor from './PerformanceMonitor';
 import DesignSystemShowcase from './DesignSystemShowcase';
 import ThemeTestSuite from './ThemeTestSuite';
+import BuilderIOStatus from './BuilderIOStatus';
 
-// Core Components - Fixed exports
-export { default as CoomunityButton } from './CoomunityButton';
+// Core Components - Using import/export pattern to avoid binding conflicts
+export { CoomunityButton };
 export { CoomunityCard } from './CoomunityCard';
 export { LoadingSpinner } from './LoadingSpinner';
 
@@ -21,13 +22,13 @@ export { CoomunityCard as Card };
 export { CoomunityCard as AyniCard };
 export { CoomunityCard as ModuleCard };
 
-// Design System Tools - Fixed pattern for default exports
+// Design System Tools - Using imported components to avoid star export issues
 export { DesignSystemValidator };
 export { PerformanceMonitor };
 export { DesignSystemShowcase };
 export { ThemeTestSuite };
+export { BuilderIOStatus };
 
 // Types
 export type { CoomunityButtonProps } from './CoomunityButton';
-export type { CoomunityCardProps } from './CoomunityCard';
-export { default as BuilderIOStatus } from './BuilderIOStatus'; 
+export type { CoomunityCardProps } from './CoomunityCard'; 

@@ -1,38 +1,54 @@
 // 🏠 Componentes modulares del Home de CoomÜnity SuperApp
 // Exportaciones centralizadas para una mejor organización y mantenimiento
 
+// Import default exports first
+import AyniMetricsCardRevolutionary from './AyniMetricsCardRevolutionary';
+import WelcomeHeaderRevolutionary from './WelcomeHeaderRevolutionary';
+import WalletOverviewRevolutionary from './WalletOverviewRevolutionary';
+import QuickActionsGridRevolutionary from './QuickActionsGridRevolutionary';
+import ModuleCardsRevolutionary from './ModuleCardsRevolutionary';
+import NotificationCenterRevolutionary from './NotificationCenterRevolutionary';
+import PersonalProgressWidgetRevolutionary from './PersonalProgressWidgetRevolutionary';
+import ActiveChallengesWidgetRevolutionary from './ActiveChallengesWidgetRevolutionary';
+
+// Widget components with fixed exports
+export { AyniMetricsCards } from './AyniMetricsCards';
+export { SystemSolarIndicator } from './SystemSolarIndicator';
+export { SystemSolarIndicatorWrapper } from './SystemSolarIndicatorWrapper';
+export { SystemSolarMiniDashboard } from './SystemSolarMiniDashboard';
 export { WelcomeHeader } from './WelcomeHeader';
-export { AyniMetricsCard } from './AyniMetricsCard';
-export { WalletOverview } from './WalletOverview';
-export { QuickActionsGrid } from './QuickActionsGrid';
+export { SmartQuickActions } from './SmartQuickActions';
+export { SmartWalletOverview } from './SmartWalletOverview';
+export { LiveActivityFeed } from './LiveActivityFeed';
+export { NotificationCenterWidget } from './NotificationCenterWidget';
 export { ModuleCards } from './ModuleCards';
-export { NotificationCenter } from './NotificationCenter';
+export { PersonalProgressWidget } from './PersonalProgressWidget';
+export { ActiveChallengesWidget } from './ActiveChallengesWidget';
+export { SidebarProgressSection } from './SidebarProgressSection';
+export { SidebarActivitySection } from './SidebarActivitySection';
+export { SidebarRecommendationsSection } from './SidebarRecommendationsSection';
+export { AyniBalanceVisualization } from './AyniBalanceVisualization';
+export { RecentActivity } from './RecentActivity';
+export { QuickStats } from './QuickStats';
+
+// Revolutionary components - using imported components to avoid binding conflicts
+export { AyniMetricsCardRevolutionary };
+export { WelcomeHeaderRevolutionary };
+export { WalletOverviewRevolutionary };
+export { QuickActionsGridRevolutionary };
+export { ModuleCardsRevolutionary };
+export { NotificationCenterRevolutionary };
+export { PersonalProgressWidgetRevolutionary };
+export { ActiveChallengesWidgetRevolutionary };
 
 // 🚀 Phase 3: Advanced Visual Components
 export { AdvancedInsightsPanel } from './AdvancedInsightsPanel';
-export { AyniBalanceVisualization } from './AyniBalanceVisualization';
 export { PerformanceMonitor } from './PerformanceMonitor';
-export { SmartQuickActions } from './SmartQuickActions';
 export { IntelligentNotificationCenter } from './IntelligentNotificationCenter';
 
 // 🌟 Fase Avanzada: Nuevos componentes 3D y efectos
 export { EnergyWeatherWidget } from './EnergyWeatherWidget';
-export { LiveActivityFeed } from './LiveActivityFeed';
 export { EnhancedParticles } from './EnhancedParticles';
-
-// 🎯 Widgets adicionales gamificados
-export { PersonalProgressWidget } from './PersonalProgressWidget';
-export { ActiveChallengesWidget } from './ActiveChallengesWidget';
-
-// 🚀 Componentes revolucionarios
-export { default as AyniMetricsCardRevolutionary } from './AyniMetricsCardRevolutionary';
-export { default as WelcomeHeaderRevolutionary } from './WelcomeHeaderRevolutionary';
-export { default as WalletOverviewRevolutionary } from './WalletOverviewRevolutionary';
-export { default as QuickActionsGridRevolutionary } from './QuickActionsGridRevolutionary';
-export { default as ModuleCardsRevolutionary } from './ModuleCardsRevolutionary';
-export { default as NotificationCenterRevolutionary } from './NotificationCenterRevolutionary';
-export { default as PersonalProgressWidgetRevolutionary } from './PersonalProgressWidgetRevolutionary';
-export { default as ActiveChallengesWidgetRevolutionary } from './ActiveChallengesWidgetRevolutionary';
 
 // Tipos compartidos entre componentes
 export interface HomeComponentProps {

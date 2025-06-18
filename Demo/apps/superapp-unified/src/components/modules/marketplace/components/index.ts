@@ -1,8 +1,21 @@
+// Import default exports first
+import ProductCardEnhanced from './ProductCardEnhanced';
+import AdvancedSearch from './AdvancedSearch';
+import AdvancedFilters from './AdvancedFilters';
+import FilterStats from './FilterStats';
+
+// Export using imported components to avoid binding conflicts
+export { ProductCardEnhanced };
+export { AdvancedSearch };
+export { AdvancedFilters };
+export { FilterStats };
+
+// Named exports
 export { ProductCard } from './ProductCard';
-export { default as ProductCardEnhanced } from './ProductCardEnhanced';
-export { default as AdvancedSearch } from './AdvancedSearch';
-export { default as AdvancedFilters } from './AdvancedFilters';
-export { default as FilterStats } from './FilterStats';
+export { EnhancedMarketplaceCard } from './EnhancedMarketplaceCard';
+export { ProductReviews } from './ProductReviews';
+export { SellerInfoCard } from './SellerInfoCard';
+export { ShareProduct } from './ShareProduct';
 export { BottomNavigation } from './BottomNavigation';
 export { CategoryCarousel } from './CategoryCarousel';
 export { CategoryChips } from './CategoryChips';
@@ -17,6 +30,4 @@ export { RoleToggle } from './RoleToggle';
 export { ProductDetailView } from './ProductDetailView';
 export { ProductGallery } from './ProductGallery';
 export { ProductActions } from './ProductActions';
-export { SellerInfoCard } from './SellerInfoCard';
-export { ProductReviews } from './ProductReviews';
 export { RelatedProducts } from './RelatedProducts';

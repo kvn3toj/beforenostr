@@ -15,9 +15,13 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
 import { StudyRoomsModule } from './study-rooms/study-rooms.module';
 import { ConsoleModule } from './console/console.module';
+import { LoggerModule } from './common/logger/logger.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    LoggerModule, // 📝 Global Logger Module - must be imported first
+    AuthModule, // 🔐 Authentication Module - core authentication
     PrismaModule,
     SubtitleModule,
     VideoItemsModule,

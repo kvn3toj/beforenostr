@@ -13,21 +13,27 @@
  * - Documentar revolutionary patterns
  */
 
+// Import defaults first
+import patterns from './patterns';
+import cosmicHomeGradients from './styles/gradients/cosmic-home';
+import CosmicCard from './components/cosmic/CosmicCard';
+import RevolutionaryWidget from './templates/RevolutionaryWidget';
+
 // 🎨 PATRONES BASE REVOLUCIONARIOS
 export * from './patterns';
-export { default as patterns } from './patterns';
+export { patterns };
 
 // 🌈 GRADIENTES Y ESTILOS CÓSMICOS
 export * from './styles/gradients/cosmic-home';
-export { default as cosmicHomeGradients } from './styles/gradients/cosmic-home';
+export { cosmicHomeGradients };
 
 // 🎴 COMPONENTES CÓSMICOS
-export { default as CosmicCard } from './components/cosmic/CosmicCard';
+export { CosmicCard };
 export * from './components/cosmic/CosmicCard';
 
 // 🌟 TEMPLATES REVOLUCIONARIOS
 export * from './templates';
-export { default as RevolutionaryWidget } from './templates/RevolutionaryWidget';
+export { RevolutionaryWidget };
 
 // 📐 TIPOS DEL SISTEMA
 export * from './types';
@@ -51,11 +57,7 @@ export {
   responsivePattern
 } from './patterns';
 
-// 🔧 IMPORTS EXPLÍCITOS PARA DEFAULT EXPORT
-import patternsDefault from './patterns';
-import cosmicHomeGradientsDefault from './styles/gradients/cosmic-home';
-import CosmicCardDefault from './components/cosmic/CosmicCard';
-import RevolutionaryWidgetDefault from './templates/RevolutionaryWidget';
+// Note: Default imports moved to top of file to avoid binding conflicts
 import {
   cosmicUtils as cosmicUtilsImport,
   componentVariants as componentVariantsImport,
@@ -248,12 +250,12 @@ export const SOURCE_COMPONENTS = [
 // 🏆 EXPORT POR DEFECTO CON TODA LA FUNCIONALIDAD
 export default {
   // Patrones
-  patterns: patternsDefault,
-  cosmicHomeGradients: cosmicHomeGradientsDefault,
+  patterns,
+  cosmicHomeGradients,
   
   // Componentes
-  CosmicCard: CosmicCardDefault,
-  RevolutionaryWidget: RevolutionaryWidgetDefault,
+  CosmicCard,
+  RevolutionaryWidget,
   
   // Utilidades
   cosmicUtils: cosmicUtilsImport,
