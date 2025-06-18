@@ -1,8 +1,8 @@
 /**
  * 🔔 Notifications Service - Real Backend Integration
  * 
- * Reemplaza todos los datos mock de notificaciones con llamadas reales al backend NestJS
- * Maneja la funcionalidad completa de notificaciones del usuario
+ * Servicio de notificaciones que se conecta exclusivamente al backend NestJS real.
+ * Maneja la funcionalidad completa de notificaciones del usuario con datos reales.
  */
 
 import { apiService } from '../lib/api-service';
@@ -42,10 +42,10 @@ export interface NotificationResponse {
 }
 
 /**
- * 🔔 Servicio de Notificaciones - Solo Backend Real
+ * 🔔 Servicio de Notificaciones - Backend Real
  * 
  * Todas las funciones se conectan directamente al backend NestJS.
- * No hay lógica de mock ni datos hardcodeados.
+ * Implementa gestión completa de notificaciones con datos reales.
  */
 class NotificationsService {
   /**

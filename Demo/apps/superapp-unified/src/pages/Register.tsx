@@ -265,7 +265,7 @@ const Register: React.FC = () => {
                 <Typography variant="caption" color="text.secondary">
                   <strong>Desarrollo:</strong><br/>
                   Backend: {import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}<br/>
-                  Mock Auth: {import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true' ? 'Habilitado' : 'Deshabilitado'}
+                  Authentication: Real backend only
                 </Typography>
               </Box>
             )}

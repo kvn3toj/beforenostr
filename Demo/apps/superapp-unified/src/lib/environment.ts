@@ -9,7 +9,6 @@
 interface EnvironmentConfig {
   apiBaseUrl: string;
   baseUrl: string;
-  enableMockAuth: boolean;
   enableAnalytics: boolean;
   betaTracking: boolean;
   isDevelopment: boolean;
@@ -239,9 +238,8 @@ export const EnvironmentHelpers = {
   getEnvironmentType,
 
   /**
-   * Check if mock auth should be enabled
+   * ❌ ELIMINADO: Mock auth ya no se usa - siempre autenticación real
    */
-  shouldUseMockAuth: () => ENV.enableMockAuth,
 
   /**
    * Get appropriate timeout for API requests based on environment
@@ -339,7 +337,7 @@ if (EnvironmentHelpers.shouldShowDebugInfo()) {
   console.log('🎯 API Base URL:', ENV.apiBaseUrl);
   console.log('🏠 Base URL:', ENV.baseUrl);
   console.log('🌍 Current Origin:', ENV.currentOrigin);
-  console.log('🧪 Mock Auth Enabled:', ENV.enableMockAuth);
+  console.log('🔐 Authentication: Real backend only');
   console.log('📈 Analytics Enabled:', ENV.enableAnalytics);
   console.log('🏥 Backend Health URL:', ENV.backendHealthUrl);
   console.groupEnd();

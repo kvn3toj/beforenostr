@@ -206,7 +206,7 @@ export const queryKeys = {
 export function useBackendHealth() {
   // 🧪 No hacer healthCheck si mock auth está habilitado
   const isMockEnabled =
-    (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
+    false; // Mock auth permanently disabled - using real backend only
 
   return useSemiStaticQuery(
     queryKeys.backendHealth,

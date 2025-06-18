@@ -473,15 +473,9 @@ const Login: React.FC = () => {
                   Backend:{' '}
                   {import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002'}
                   <br />
-                  Mock Auth:{' '}
-                  {import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true'
-                    ? 'Habilitado'
-                    : 'Deshabilitado'}
+                  Authentication: Real backend only
                   <br />
-                  Status:{' '}
-                  {import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true'
-                    ? '🔶 Modo Mock'
-                    : '✅ Backend Real NestJS'}
+                  Status: ✅ Backend Real NestJS
                   <br />
                   Origin: {window.location.origin}
                   <br />

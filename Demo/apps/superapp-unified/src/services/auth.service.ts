@@ -1,8 +1,8 @@
 /**
  * 🔐 Authentication Service - Real Backend Integration
  * 
- * Reemplaza toda la lógica de mock auth con llamadas reales al backend NestJS
- * Elimina dependencias de VITE_ENABLE_MOCK_AUTH y datos hardcodeados
+ * Servicio de autenticación que se conecta exclusivamente al backend NestJS real.
+ * Implementa autenticación JWT, registro de usuarios y gestión de sesiones.
  */
 
 import { apiService } from '../lib/api-service';
@@ -45,10 +45,10 @@ export interface User {
 }
 
 /**
- * 🔐 Servicio de Autenticación - Solo Backend Real
+ * 🔐 Servicio de Autenticación - Backend Real
  * 
  * Todas las funciones se conectan directamente al backend NestJS.
- * No hay lógica de mock ni datos hardcodeados.
+ * Implementa autenticación completa con gestión de tokens JWT.
  */
 class AuthService {
   /**
