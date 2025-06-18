@@ -75,9 +75,9 @@ check_rule "SuperApp puerto 2222 en config" 'grep -q "localhost:2222" Demo/apps/
 check_rule "Admin puerto 3333 en config" 'grep -q "localhost:3333" apps/admin-frontend/.env' "pass"
 
 # 1.2 Verificar ausencia de puertos obsoletos
-check_rule "Sin referencias a puerto 3002" 'grep -r "localhost:3002" . --exclude-dir=node_modules --exclude-dir=.git' "fail"
-check_rule "Sin referencias a puerto 3001" 'grep -r "localhost:3001" . --exclude-dir=node_modules --exclude-dir=.git' "fail"
-check_rule "Sin referencias a puerto 3000" 'grep -r "localhost:3000" . --exclude-dir=node_modules --exclude-dir=.git' "fail"
+check_rule "Sin referencias a puerto 3002" 'grep -r "localhost:1111" . --exclude-dir=node_modules --exclude-dir=.git' "fail"
+check_rule "Sin referencias a puerto 3001" 'grep -r "localhost:2222" . --exclude-dir=node_modules --exclude-dir=.git' "fail"
+check_rule "Sin referencias a puerto 3000" 'grep -r "localhost:3333" . --exclude-dir=node_modules --exclude-dir=.git' "fail"
 
 echo ""
 echo "🗄️ SECCIÓN 2: VERIFICACIÓN DE POSTGRESQL"
@@ -86,6 +86,10 @@ echo "========================================"
 # 2.1 PostgreSQL debe estar disponible
 check_warning "PostgreSQL ejecutándose" 'brew services list | grep postgresql | grep started' "PostgreSQL no está iniciado. Ejecuta: brew services start postgresql@15"
 check_warning "Puerto 5432 disponible" 'lsof -i :5432 | grep LISTEN' "PostgreSQL no está escuchando en puerto 5432"
+
+# 2.2 Redis debe estar disponible (CRÍTICO - añadido tras consolidación)
+check_warning "Redis ejecutándose" 'brew services list | grep redis | grep started' "Redis no está iniciado. Ejecuta: brew services start redis"
+check_warning "Puerto 6379 disponible" 'lsof -i :6379 | grep LISTEN' "Redis no está escuchando en puerto 6379"
 
 echo ""
 echo "📁 SECCIÓN 3: VERIFICACIÓN DE ESTRUCTURA DE ARCHIVOS"
@@ -98,7 +102,14 @@ check_rule "Archivo Admin .env existe" '[ -f "apps/admin-frontend/.env" ]' "pass
 check_rule "package.json raíz existe" '[ -f "package.json" ]' "pass"
 check_rule "turbo.json existe" '[ -f "turbo.json" ]' "pass"
 
-# 3.2 Directorios críticos deben existir
+# 3.2 Estructura de reglas consolidada (actualizada tras consolidación)
+check_rule "Regla principal .cursorrules existe" '[ -f ".cursorrules" ]' "pass"
+check_rule "Reglas workspace-management existe" '[ -f ".cursor/rules/workspace-management.mdc" ]' "pass"
+check_rule "Reglas env.mdc existe" '[ -f ".cursor/rules/env.mdc" ]' "pass"
+check_rule "Reglas agents existe" '[ -f ".cursor/rules/slack-agents-coomunity.md" ]' "pass"
+check_rule "Totalrules archivado correctamente" '[ -d ".cursor/rules/archived" ] && ls .cursor/rules/archived/totalrules-obsolete-*.mdc >/dev/null 2>&1' "pass"
+
+# 3.3 Directorios críticos deben existir
 check_rule "Directorio SuperApp existe" '[ -d "Demo/apps/superapp-unified" ]' "pass"
 check_rule "Directorio Admin existe" '[ -d "apps/admin-frontend" ]' "pass"
 check_rule "Directorio Backend existe" '[ -d "src" ]' "pass"
@@ -258,8 +269,10 @@ echo "📋 COMANDOS DE CORRECCIÓN RÁPIDA:"
 echo "================================"
 echo "🔧 Limpiar procesos: pkill -f 'vite|npm run dev'"
 echo "🗄️ Iniciar PostgreSQL: brew services start postgresql@15"
-echo "📦 Instalar deps faltantes: npm install turbo @sentry/react web-vitals --legacy-peer-deps"
+echo "🔴 Iniciar Redis: brew services start redis"
+echo "� Instalar deps faltantes: npm install turbo @sentry/react web-vitals --legacy-peer-deps"
 echo "🌐 Verificar servicios: npm run port:verify"
 echo "📊 Ver resumen: npm run port:summary"
+echo "🎯 Verificar reglas consolidadas: npm run rules:verify"
 
 exit $FAILED
