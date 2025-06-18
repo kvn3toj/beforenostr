@@ -1,0 +1,127 @@
+# ================================================================
+# COMANDOS GIT DIRECTOS - COPY & PASTE
+# ================================================================
+# Para usar en terminal desde: /Users/kevinp/Movies/GAMIFIER-copy
+
+# ================================================================
+# WORKFLOW COMPLETO EN 6 PASOS
+# ================================================================
+
+# 1. VERIFICAR ESTADO ACTUAL
+git status && git branch -a && git log --oneline -3
+
+# 2. CREAR RAMA DE BACKUP (cambiar gamifier4.0 por el nombre que necesites)
+git checkout -b gamifier4.0 && git checkout gamifier2.0
+
+# 3. AGREGAR TODOS LOS CAMBIOS
+git add . && git status
+
+# 4. COMMIT (personalizar el mensaje)
+git commit -m "feat: [DESCRIPCIÓN] - [DETALLES] - [ARCHIVOS PRINCIPALES]"
+
+# 5. PUSH DE AMBAS RAMAS
+git push origin gamifier4.0 && git push origin gamifier2.0
+
+# 6. VERIFICACIÓN FINAL
+git log --oneline -4 && git status
+
+# ================================================================
+# COMANDOS INDIVIDUALES FRECUENTES
+# ================================================================
+
+# Verificar estado completo
+git status
+
+# Ver ramas
+git branch -a
+
+# Ver últimos commits
+git log --oneline -5
+
+# Agregar archivos específicos
+git add archivo1.txt archivo2.txt
+
+# Agregar todos los archivos
+git add .
+
+# Ver qué está staged
+git diff --staged
+
+# Commit rápido
+git commit -m "mensaje aquí"
+
+# Push rama actual
+git push origin gamifier2.0
+
+# Crear nueva rama
+git checkout -b nueva-rama
+
+# Cambiar de rama
+git checkout gamifier2.0
+
+# ================================================================
+# TEMPLATES DE COMMIT MESSAGES
+# ================================================================
+
+# FEATURES:
+git commit -m "feat: Add new components - Implement CosmicWidget, Dashboard, Analytics - Update theme system and hooks"
+
+# CONFIGURACIÓN:
+git commit -m "chore: Update environment config - Modify .env, add scripts - Optimize development workflow"
+
+# CORRECCIONES:
+git commit -m "fix: Resolve import errors - Fix component exports - Update file paths"
+
+# DOCUMENTACIÓN:
+git commit -m "docs: Add implementation guides - Create reports and documentation - Update README files"
+
+# ================================================================
+# COMANDOS DE EMERGENCIA
+# ================================================================
+
+# Deshacer último commit (mantener cambios)
+git reset --soft HEAD~1
+
+# Quitar archivo del staging
+git restore --staged archivo.txt
+
+# Ver diferencias
+git diff
+
+# Ver log gráfico
+git log --graph --oneline --decorate --all
+
+# ================================================================
+# EJEMPLOS REALES USADOS EN EL PROYECTO
+# ================================================================
+
+# Ejemplo 1: Feature completo
+git commit -m "feat: Implement Cosmic Design System and Ayni Intelligence - Add comprehensive color system integration with Material UI - Implement CosmicProfileWidget, CosmicThemeSwitcher, UniversalAyniDashboard - Add advanced components: CosmicAnalyticsDashboard, ElementalWisdomCircles, MLCollaborationEngine - Create centralized theme system with cosmic color variables - Add useAyniIntelligence hook for philosophical AI integration - Update admin monitoring and notifications pages - Include color system verification scripts and documentation"
+
+# Ejemplo 2: Configuración
+git commit -m "chore: Update environment configuration and add auth testing script - Update .env and .env.backup with latest configuration values - Add scripts/test-auth-flow.sh for authentication flow testing - Environment optimizations for development workflow"
+
+# Ejemplo 3: Fix rápido
+git commit -m "fix: Update test-auth-flow.sh script - Minor adjustments to authentication testing script"
+
+# ================================================================
+# SECUENCIA TÍPICA DE TRABAJO
+# ================================================================
+
+# 1. Al empezar sesión:
+cd /Users/kevinp/Movies/GAMIFIER-copy
+git status
+git pull origin gamifier2.0
+
+# 2. Durante desarrollo:
+git add .
+git status
+git commit -m "mensaje descriptivo"
+
+# 3. Al finalizar sesión:
+git push origin gamifier2.0
+
+# 4. Para crear backup:
+git checkout -b gamifier[X].0
+git push origin gamifier[X].0
+git checkout gamifier2.0 
