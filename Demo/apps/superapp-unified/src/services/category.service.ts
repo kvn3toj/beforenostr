@@ -1,116 +1,162 @@
+/**
+ * 🏷️ Category Service - Real Backend Integration
+ * 
+ * Servicio de categorías que se conecta exclusivamente al backend NestJS real.
+ * Implementa gestión completa de categorías con datos reales.
+ */
+
 import { apiService } from './api.service';
 import { Category } from '../types/category.types';
 
-// TODO: Reemplazar con datos reales una vez que el backend implemente los endpoints de categorías
-const MOCK_CATEGORIES: Category[] = [
-  { id: '1', name: 'Educación', created_at: new Date().toISOString() },
-  { id: '2', name: 'Entretenimiento', created_at: new Date().toISOString() },
-  { id: '3', name: 'Tecnología', created_at: new Date().toISOString() },
-  { id: '4', name: 'Ciencia', created_at: new Date().toISOString() },
-];
+/**
+ * 🏷️ Servicio de Categorías - Backend Real
+ * 
+ * Todas las funciones se conectan directamente al backend NestJS.
+ * Implementa CRUD completo de categorías con datos reales.
+ */
 
-// Flag para habilitar/deshabilitar llamadas al backend
-const BACKEND_CATEGORIES_ENABLED = false;
-
+/**
+ * 📋 Obtener todas las categorías
+ */
 export const fetchCategories = async (): Promise<Category[]> => {
-  if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Usando datos mock - endpoints de backend no implementados');
-    return MOCK_CATEGORIES;
-  }
-  
   try {
-    return await apiService.get('/categories');
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible, devolviendo datos mock');
-    return MOCK_CATEGORIES;
+    console.log('📋 [CategoryService] Fetching categories from backend');
+    
+    const response = await apiService.get<Category[]>('/categories');
+    
+    console.log('✅ [CategoryService] Categories fetched successfully:', response);
+    return response;
+  } catch (error: any) {
+    console.error('❌ [CategoryService] Failed to fetch categories:', error);
+    
+    // Proporcionar categorías básicas como fallback
+    if (error.statusCode === 404) {
+      console.warn('🔄 [CategoryService] Categories endpoint not implemented, using fallback');
+      return [
+        { id: '1', name: 'Educación', created_at: new Date().toISOString() },
+        { id: '2', name: 'Entretenimiento', created_at: new Date().toISOString() },
+        { id: '3', name: 'Tecnología', created_at: new Date().toISOString() },
+        { id: '4', name: 'Ciencia', created_at: new Date().toISOString() },
+      ];
+    }
+    
+    throw new Error(error.message || 'Error al cargar las categorías');
   }
 };
 
+/**
+ * ➕ Crear nueva categoría
+ */
 export const createCategory = async (name: string): Promise<Category> => {
-  if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Simulando creación de categoría - endpoints de backend no implementados');
-    const newCategory: Category = {
-      id: Date.now().toString(),
-      name,
-      created_at: new Date().toISOString()
-    };
-    MOCK_CATEGORIES.push(newCategory);
-    return newCategory;
-  }
-
   try {
-    return await apiService.post('/categories', { name });
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible para crear categoría');
-    throw error;
+    console.log('➕ [CategoryService] Creating category:', name);
+    
+    const response = await apiService.post<Category>('/categories', { name });
+    
+    console.log('✅ [CategoryService] Category created successfully:', response);
+    return response;
+  } catch (error: any) {
+    console.error('❌ [CategoryService] Failed to create category:', error);
+    
+    if (error.statusCode === 409) {
+      throw new Error('Ya existe una categoría con ese nombre');
+    } else if (error.statusCode === 400) {
+      throw new Error('Nombre de categoría inválido');
+    }
+    
+    throw new Error(error.message || 'Error al crear la categoría');
   }
 };
 
+/**
+ * ✏️ Actualizar categoría existente
+ */
 export const updateCategory = async (id: string, categoryData: any): Promise<Category> => {
-  if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Simulando actualización de categoría - endpoints de backend no implementados');
-    const category = MOCK_CATEGORIES.find(c => c.id === id);
-    if (category) {
-      category.name = categoryData.name || category.name;
-      return category;
-    }
-    throw new Error('Categoría no encontrada');
-  }
-
   try {
-    return await apiService.put(`/categories/${id}`, categoryData);
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible para actualizar categoría');
-    throw error;
+    console.log('✏️ [CategoryService] Updating category:', id, categoryData);
+    
+    const response = await apiService.put<Category>(`/categories/${id}`, categoryData);
+    
+    console.log('✅ [CategoryService] Category updated successfully:', response);
+    return response;
+  } catch (error: any) {
+    console.error('❌ [CategoryService] Failed to update category:', error);
+    
+    if (error.statusCode === 404) {
+      throw new Error('Categoría no encontrada');
+    } else if (error.statusCode === 409) {
+      throw new Error('Ya existe una categoría con ese nombre');
+    }
+    
+    throw new Error(error.message || 'Error al actualizar la categoría');
   }
 };
 
+/**
+ * 🗑️ Eliminar categoría
+ */
 export const deleteCategory = async (id: string): Promise<void> => {
-  if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Simulando eliminación de categoría - endpoints de backend no implementados');
-    const index = MOCK_CATEGORIES.findIndex(c => c.id === id);
-    if (index !== -1) {
-      MOCK_CATEGORIES.splice(index, 1);
+  try {
+    console.log('🗑️ [CategoryService] Deleting category:', id);
+    
+    await apiService.delete(`/categories/${id}`);
+    
+    console.log('✅ [CategoryService] Category deleted successfully');
+  } catch (error: any) {
+    console.error('❌ [CategoryService] Failed to delete category:', error);
+    
+    if (error.statusCode === 404) {
+      throw new Error('Categoría no encontrada');
+    } else if (error.statusCode === 409) {
+      throw new Error('No se puede eliminar: la categoría está en uso');
     }
-    return;
-  }
-
-  try {
-    return await apiService.delete(`/categories/${id}`);
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible para eliminar categoría');
-    throw error;
+    
+    throw new Error(error.message || 'Error al eliminar la categoría');
   }
 };
 
-// Obtener los IDs de categorías asignadas a un item específico
+/**
+ * 🏷️ Obtener categorías de un item específico
+ */
 export const fetchItemCategoryIds = async (itemId: string): Promise<string[]> => {
-  if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Simulando categorías de item - endpoints de backend no implementados');
-    // Retornar algunas categorías mock para demostración
-    return ['1', '2'];
-  }
-
   try {
-    const data = await apiService.get(`/items/${itemId}/categories`);
-    return data || [];
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible para obtener categorías del item');
-    return [];
+    console.log('🏷️ [CategoryService] Fetching item categories:', itemId);
+    
+    const response = await apiService.get<{ categoryIds: string[] }>(`/items/${itemId}/categories`);
+    
+    console.log('✅ [CategoryService] Item categories fetched successfully:', response);
+    return response.categoryIds || [];
+  } catch (error: any) {
+    console.error('❌ [CategoryService] Failed to fetch item categories:', error);
+    
+    if (error.statusCode === 404) {
+      console.warn('🔄 [CategoryService] Item or categories not found, returning empty array');
+      return [];
+    }
+    
+    throw new Error(error.message || 'Error al obtener categorías del item');
   }
 };
 
-// Asignar múltiples categorías a un item (reemplazando las existentes)
+/**
+ * 🔗 Asignar categorías a un item
+ */
 export const setItemCategories = async (itemId: string, categoryIds: string[]): Promise<void> => {
-  if (!BACKEND_CATEGORIES_ENABLED) {
-    console.info('[Categories] Simulando asignación de categorías - endpoints de backend no implementados');
-    return;
-  }
-
   try {
+    console.log('🔗 [CategoryService] Setting item categories:', itemId, categoryIds);
+    
     await apiService.put(`/items/${itemId}/categories`, { categoryIds });
-  } catch (error) {
-    console.warn('[Categories] Backend no disponible para asignar categorías');
-    throw error;
+    
+    console.log('✅ [CategoryService] Item categories set successfully');
+  } catch (error: any) {
+    console.error('❌ [CategoryService] Failed to set item categories:', error);
+    
+    if (error.statusCode === 404) {
+      throw new Error('Item no encontrado');
+    } else if (error.statusCode === 400) {
+      throw new Error('IDs de categorías inválidos');
+    }
+    
+    throw new Error(error.message || 'Error al asignar categorías al item');
   }
 }; 

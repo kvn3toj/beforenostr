@@ -555,9 +555,6 @@ export class BiometricDashboardService {
           document.getElementById('oxygen-level').textContent = vitalSigns.respiratory.oxygenSaturation;
           document.getElementById('last-update').textContent = new Date().toLocaleString();
         }
-        
-        // Initialize charts
-        updateDashboard(${JSON.stringify(vitalSigns)});
       </script>
     </body>
     </html>
@@ -649,9 +646,6 @@ echo "🌿 Installing Enhanced Biomimetic Monitoring..."
 # Create new monitoring services
 mkdir -p src/monitoring/biomimetic
 
-# Copy enhanced services
-cp docs/ENHANCED_BACKEND_MONITORING.md ./
-
 # Install additional dependencies
 npm install --save plotly.js-dist ws
 
@@ -663,4 +657,4 @@ echo "🌐 Access dashboard at: http://localhost:3002/monitoring/biometric-dashb
 
 ---
 
-**🎯 Estas mejoras se integran perfectamente con el sistema existente, añadiendo capacidades biomimét(icas avanzadas mientras mantienen la compatibilidad con el monitoreo actual de CoomÜnity.** 
+**🎯 Estas mejoras se integran perfectamente con el sistema existente, añadiendo capacidades biomimé(ticas avanzadas mientras mantienen la compatibilidad con el monitoreo actual de CoomÜnity.** 

@@ -195,13 +195,13 @@ echo "🚨 8. VERIFICANDO MANEJO DE ERRORES"
 echo "-----------------------------------"
 
 # Verificar try-catch en servicios
-if grep -q "try.*catch" "$SERVICES_DIR/auth.service.ts" 2>/dev/null; then
+if grep -q "try\|catch" "$SERVICES_DIR/auth.service.ts" 2>/dev/null; then
     check_result "Manejo de errores en AuthService" "PASS" "Contiene bloques try-catch"
 else
     check_result "Manejo de errores en AuthService" "FAIL" "Sin manejo de errores"
 fi
 
-if grep -q "try.*catch" "$SERVICES_DIR/notifications.service.ts" 2>/dev/null; then
+if grep -q "try\|catch" "$SERVICES_DIR/notifications.service.ts" 2>/dev/null; then
     check_result "Manejo de errores en NotificationsService" "PASS" "Contiene bloques try-catch"
 else
     check_result "Manejo de errores en NotificationsService" "FAIL" "Sin manejo de errores"

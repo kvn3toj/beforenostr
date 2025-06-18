@@ -146,7 +146,7 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
         steps: [
           'Verificar archivo .env en Demo/apps/superapp-unified/',
           `VITE_API_BASE_URL=${baseURL}`,
-          'VITE_ENABLE_MOCK_AUTH=false',
+          'Authentication: Real backend only',
           'Reiniciar frontend después de cambios',
         ],
       },
@@ -336,7 +336,7 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
             >
               {`Backend URL: ${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002'}
 Frontend Origin: ${window.location.origin}
-Mock Auth: ${import.meta.env.VITE_ENABLE_MOCK_AUTH || 'false'}
+Authentication: Real backend only
 Navigator Online: ${navigator.onLine}
 User Agent: ${navigator.userAgent.substring(0, 100)}...
 Timestamp: ${new Date().toISOString()}`}
