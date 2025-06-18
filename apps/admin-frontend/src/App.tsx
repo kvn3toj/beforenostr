@@ -30,6 +30,9 @@ import NostrDemoPage from './pages/NostrDemoPage'
 import { ChallengesPage } from './pages/ChallengesPage'
 import { MarketplacePage } from './pages/MarketplacePage'
 import { TransactionsPage } from './pages/TransactionsPage'
+import { NotificationsPage } from './pages/NotificationsPage'
+import { StudyRoomsPage } from './pages/StudyRoomsPage'
+import { MonitoringPage } from './pages/MonitoringPage'
 
 const queryClient = new QueryClient()
 const theme = createAppTheme('light');
@@ -73,6 +76,9 @@ function App() {
               <Route path="/challenges" element={<ChallengesPage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />
               <Route path="/transactions" element={<TransactionsPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/study-rooms" element={<StudyRoomsPage />} />
+              <Route path="/monitoring" element={<MonitoringPage />} />
               
               {/* Ruta de perfil de usuario */}
               <Route path="/profile" element={<ProfilePage />} />
