@@ -33,7 +33,12 @@ import { AuditLogsModule } from '../admin/audit-logs/audit-logs.module';
     AuthService,
     JwtStrategy,
   ],
-  exports: ['AuthService', AuthService, JwtStrategy],
+  exports: [
+    'AuthService', 
+    AuthService, 
+    JwtStrategy,
+    JwtModule,
+  ],
 })
 export class AuthModule {
   constructor() {

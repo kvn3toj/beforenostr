@@ -18,7 +18,7 @@ interface AuthenticatedSocket extends Socket {
   userId?: string;
   user?: {
     id: string;
-    name: string;
+    name: string | null;
     email: string;
   };
 }
@@ -38,28 +38,74 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly studyRoomsService: StudyRoomsService,
-  ) {}
+  ) {
+    // ✅ DEBUGGING: Verificar que los servicios se inyecten correctamente
+    this.logger.log('>>> StudyRoomsGateway constructor initialized');
+    this.logger.log('>>> JwtService injected:', !!this.jwtService);
+    this.logger.log('>>> PrismaService injected:', !!this.prisma);
+    this.logger.log('>>> StudyRoomsService injected:', !!this.studyRoomsService);
+    
+    if (!this.jwtService) {
+      this.logger.error('>>> CRITICAL: JwtService is undefined - WebSocket auth will fail');
+    }
+    if (!this.jwtService?.verify) {
+      this.logger.error('>>> CRITICAL: JwtService.verify is undefined');
+    }
+  }
 
   async handleConnection(client: AuthenticatedSocket) {
     try {
-      // Extraer token JWT de la query o headers
-      const token = client.handshake.auth?.token || client.handshake.query?.token;
+      this.logger.log('>>> WebSocket connection attempt started');
       
-      if (!token) {
-        this.logger.warn(`WebSocket connection rejected: No token provided`);
+      // ✅ DEBUGGING: Verificar servicios antes de usar
+      if (!this.jwtService) {
+        this.logger.error('>>> CRITICAL: JwtService is undefined during connection');
+        client.disconnect();
+        return;
+      }
+      
+      if (!this.jwtService.verify) {
+        this.logger.error('>>> CRITICAL: JwtService.verify method is undefined');
         client.disconnect();
         return;
       }
 
+      // Extraer token JWT de la query o headers
+      const token = client.handshake.auth?.token || client.handshake.query?.token;
+      
+      this.logger.log('>>> Token extraction attempt:', {
+        hasAuthToken: !!client.handshake.auth?.token,
+        hasQueryToken: !!client.handshake.query?.token,
+        tokenPresent: !!token,
+        tokenLength: token ? token.length : 0
+      });
+      
+      if (!token) {
+        this.logger.warn(`>>> WebSocket connection rejected: No token provided`);
+        client.emit('auth-error', { message: 'Token de autenticación requerido' });
+        client.disconnect();
+        return;
+      }
+
+      this.logger.log('>>> Attempting JWT verification...');
+
       // Verificar y decodificar el token
       const payload = this.jwtService.verify(token);
+      
+      this.logger.log('>>> JWT verification successful:', {
+        userId: payload.sub,
+        email: payload.email,
+        exp: payload.exp
+      });
+
       const user = await this.prisma.user.findUnique({
         where: { id: payload.sub },
         select: { id: true, name: true, email: true, isActive: true },
       });
 
       if (!user || !user.isActive) {
-        this.logger.warn(`WebSocket connection rejected: Invalid user ${payload.sub}`);
+        this.logger.warn(`>>> WebSocket connection rejected: Invalid user ${payload.sub}`);
+        client.emit('auth-error', { message: 'Usuario no válido o inactivo' });
         client.disconnect();
         return;
       }
@@ -67,11 +113,21 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
       client.userId = user.id;
       client.user = user;
 
-      this.logger.log(`User ${user.name} (${user.id}) connected to study rooms WebSocket`);
+      this.logger.log(`>>> User ${user.name} (${user.id}) connected to study rooms WebSocket`);
       client.emit('connection-success', { message: 'Conectado al chat de salas de estudio', user });
 
     } catch (error) {
-      this.logger.error(`WebSocket authentication failed: ${error.message}`);
+      this.logger.error(`>>> WebSocket authentication failed:`, {
+        error: error.message,
+        stack: error.stack,
+        jwtServiceAvailable: !!this.jwtService,
+        verifyMethodAvailable: !!this.jwtService?.verify
+      });
+      
+      client.emit('auth-error', { 
+        message: 'Error de autenticación',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
       client.disconnect();
     }
   }
