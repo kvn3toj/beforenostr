@@ -1,5 +1,5 @@
 {
-  "snapshot": "POPULATED_FROM_SETTINGS",
+  "snapshot": "current",
   "install": "npm install --legacy-peer-deps && cd apps/admin-frontend && npm install --legacy-peer-deps && cd ../../Demo/apps/superapp-unified && npm install --legacy-peer-deps && cd ../../../",
   "start": "echo 'Starting CoomÜnity development environment...' && npm run preflight && npm run dev",
   "terminals": [
@@ -20,73 +20,6 @@
       "command": "echo 'Port Manager Commands Available:' && echo 'npm run port:status - Check port usage' && echo 'npm run port:clean - Clean occupied ports' && echo 'npm run stop:all - Stop all processes' && echo 'npm run preflight - Run pre-flight check' && echo 'Type any command above to execute'"
     }
   ],
-  "backgroundAgent": {
-    "enabled": true,
-    "maxMode": true,
-    "preferredModel": "claude-4-opus",
-    "workspaceAccess": "full",
-    "reportOutputPath": "docs/reports/",
-    "triggerFiles": [
-      ".cursor/background-agent-trigger.md",
-      "docs/reports/BACKGROUND_AGENT_MOCK_ANALYSIS_REPORT.md"
-    ],
-    "focusAreas": [
-      "Demo/apps/superapp-unified/src/components/modules/uplay/",
-      "Demo/apps/superapp-unified/src/components/modules/home/",
-      "Demo/apps/superapp-unified/src/components/modules/marketplace/",
-      "Demo/apps/superapp-unified/src/components/modules/social/",
-      "Demo/apps/superapp-unified/src/components/modules/lets/",
-      "Demo/apps/superapp-unified/src/hooks/",
-      "Demo/apps/superapp-unified/src/stores/",
-      "Demo/apps/superapp-unified/src/data/",
-      "Demo/apps/superapp-unified/src/lib/",
-      "Demo/apps/superapp-unified/src/services/"
-    ],
-    "analysisPatterns": {
-      "mockDataPatterns": [
-        "getMockQuestions",
-        "useMockData", 
-        "simulateData",
-        "mockCategories",
-        "MOCK_ROOMS",
-        "mockQuestions",
-        "marketplaceMockData",
-        "letsMockService",
-        "fallbackData"
-      ],
-      "bypassLogicPatterns": [
-        "isBuilderIoEnv",
-        "fallbackData",
-        "VITE_ENABLE_MOCK",
-        "Builder.io Safe Mode",
-        "mock environment detection",
-        "fallback to mock data"
-      ],
-      "conflictingStylesPatterns": [
-        "display: none",
-        "opacity: 0",
-        "!important"
-      ],
-      "criticalFiles": [
-        "Demo/apps/superapp-unified/src/data/marketplaceMockData.ts",
-        "Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts", 
-        "Demo/apps/superapp-unified/src/lib/lets-mock-service.ts"
-      ]
-    },
-    "cosmicDesignSystemFocus": {
-      "glassmorphism": true,
-      "cosmicGradients": true,
-      "dynamicParticles": true,
-      "revolutionaryAuras": true,
-      "responsiveDepth": true
-    },
-    "taskPriorities": {
-      "mockDataElimination": "HIGH",
-      "visualEffectsRestoration": "HIGH", 
-      "backendIntegration": "MEDIUM",
-      "performanceOptimization": "LOW"
-    }
-  },
   "projectContext": {
     "name": "CoomÜnity SuperApp",
     "branch": "gamifier2.0",
