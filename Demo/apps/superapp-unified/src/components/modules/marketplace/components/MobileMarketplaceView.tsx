@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -175,6 +176,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
   onNotificationsClick,
 }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const theme = useTheme();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -1136,7 +1138,9 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
               variant="contained"
               size="large"
               startIcon={<AddIcon />}
-              onClick={() => console.log('Crear servicio')}
+              onClick={() => {
+                navigate('/marketplace/create-service');
+              }}
               sx={{
                 background: 'linear-gradient(45deg, #4CAF50, #66BB6A)',
                 '&:hover': {
@@ -1216,8 +1220,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           tooltipTitle="Publicar Servicio"
           onClick={() => {
             setShowQuickActions(false);
-            // TODO: Abrir modal de creación cuando se implemente
-            console.log('Publicar servicio');
+            navigate('/marketplace/create-service');
           }}
         />
         <SpeedDialAction
@@ -1228,7 +1231,12 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
         <SpeedDialAction
           icon={<WhatsApp />}
           tooltipTitle="Soporte WhatsApp"
-          onClick={() => console.log('WhatsApp')}
+          onClick={() => {
+            const supportMessage = 'Hola! Necesito ayuda con CoomÜnity Marketplace. ¿Podrían asistirme?';
+            const supportPhone = '573001234567'; // Número de soporte CoomÜnity
+            const whatsappUrl = `https://wa.me/${supportPhone}?text=${encodeURIComponent(supportMessage)}`;
+            window.open(whatsappUrl, '_blank');
+          }}
         />
         <SpeedDialAction
           icon={<Refresh />}

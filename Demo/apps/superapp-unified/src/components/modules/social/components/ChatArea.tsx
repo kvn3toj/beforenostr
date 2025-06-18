@@ -480,7 +480,40 @@ const ChatArea: React.FC<ChatAreaProps> = ({
         <Tooltip title="Reintentar conexión">
           <IconButton
             size="small" 
-            onClick={() => chatWebSocket.current?.connect(matchId, currentUserId, () => {}, () => {})}
+            onClick={() => {
+              const handleMessage = (messageData: any) => {
+                console.log('💬 Nuevo mensaje recibido:', messageData);
+                refetch();
+                
+                // Manejar indicadores de escritura
+                if (messageData.type === 'typing') {
+                  setTypingUsers(prev => {
+                    const filtered = prev.filter(u => u.id !== messageData.userId);
+                    if (messageData.status === 'typing') {
+                      return [...filtered, {
+                        id: messageData.userId,
+                        name: messageData.userName || 'Usuario',
+                        timestamp: Date.now()
+                      }];
+                    }
+                    return filtered;
+                  });
+                }
+                
+                // Actualizar contador de no leídos si el chat no está visible
+                if (!isVisible && messageData.type === 'message') {
+                  setUnreadCount(prev => prev + 1);
+                }
+              };
+
+              const handleStatus = (status: string) => {
+                console.log('📡 Estado de conexión:', status);
+                setConnectionStatus(status as any);
+                setIsConnected(status === 'connected');
+              };
+
+              chatWebSocket.current?.connect(matchId, currentUserId, handleMessage, handleStatus);
+            }}
             sx={{ ml: 1 }}
           >
             <RefreshIcon fontSize="small" />

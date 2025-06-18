@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -137,6 +138,7 @@ interface SocialMainProps {
 const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
   const theme = useTheme();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [animate, setAnimate] = useState(false);
 
@@ -257,7 +259,9 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
                 userLevel={dynamicStats.socialLevel}
                 isBackendConnected={backendAvailability.isAvailable}
                 notificationCount={normalizedNotifications.length}
-                onNotificationClick={() => console.log('Ver notificaciones')}
+                onNotificationClick={() => {
+                  navigate('/social/notifications');
+                }}
                 onSettingsClick={() => console.log('Configuración social')}
               />
             </Box>
