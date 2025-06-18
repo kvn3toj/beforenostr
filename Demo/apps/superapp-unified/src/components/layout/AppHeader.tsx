@@ -30,6 +30,7 @@ import {
   Sync as SyncIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
+import { MainNavigation } from '../navigation/MainNavigation';
 
 interface AppHeaderProps {
   onMenuClick?: () => void;
@@ -438,6 +439,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
           </MenuItem>
         </Menu>
       </Toolbar>
+
+      {/* Enhanced Navigation Section */}
+      <Box sx={{ display: { xs: 'none', md: 'block' }, bgcolor: 'primary.dark' }}>
+        <MainNavigation />
+      </Box>
     </AppBar>
   );
 };

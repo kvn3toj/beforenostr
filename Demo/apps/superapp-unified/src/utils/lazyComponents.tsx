@@ -98,12 +98,12 @@ export const LazyPages = {
   
   // Login and Auth
   LoginPage: createLazyComponent(
-    () => import('../pages/Login'),
+    () => import('../pages/LoginPage'),
     <SimpleLoader />
   ),
   
   RegisterPage: createLazyComponent(
-    () => import('../pages/Register'),
+    () => import('../pages/RegisterPage'),
     <SimpleLoader />
   ),
   
@@ -283,7 +283,7 @@ export const LazyModules = {
 export const preloadCriticalComponents = () => {
   // Preload most commonly used components
   import('../pages/Home');
-  import('../pages/Login');
+  import('../pages/LoginPage');
   import('../components/ui/ThemeTestSuite');
 };
 
