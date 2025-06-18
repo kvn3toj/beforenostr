@@ -1,7 +1,7 @@
 {
   "enabled": true,
-  "maxMode": true,
-  "preferredModel": "claude-4-opus",
+  "maxMode": false,
+  "preferredModel": "claude-sonnet-3.5",
   "workspaceAccess": "full",
   "reportOutputPath": "docs/reports/",
   "triggerFiles": [
@@ -13,11 +13,7 @@
     "Demo/apps/superapp-unified/src/components/modules/home/",
     "Demo/apps/superapp-unified/src/components/modules/marketplace/",
     "Demo/apps/superapp-unified/src/components/modules/social/",
-    "Demo/apps/superapp-unified/src/components/modules/lets/",
     "Demo/apps/superapp-unified/src/hooks/",
-    "Demo/apps/superapp-unified/src/stores/",
-    "Demo/apps/superapp-unified/src/data/",
-    "Demo/apps/superapp-unified/src/lib/",
     "Demo/apps/superapp-unified/src/services/"
   ],
   "analysisPatterns": {
@@ -26,19 +22,14 @@
       "useMockData", 
       "simulateData",
       "mockCategories",
-      "MOCK_ROOMS",
       "mockQuestions",
-      "marketplaceMockData",
-      "letsMockService",
-      "fallbackData"
+      "marketplaceMockData"
     ],
     "bypassLogicPatterns": [
       "isBuilderIoEnv",
       "fallbackData",
       "VITE_ENABLE_MOCK",
-      "Builder.io Safe Mode",
-      "mock environment detection",
-      "fallback to mock data"
+      "Builder.io Safe Mode"
     ],
     "conflictingStylesPatterns": [
       "display: none",
@@ -59,8 +50,7 @@
     "responsiveDepth": true
   },
   "taskPriorities": {
-    "mockDataElimination": "HIGH",
-    "visualEffectsRestoration": "HIGH", 
+    "portMigrationVerification": "HIGH",
     "backendIntegration": "MEDIUM",
     "performanceOptimization": "LOW"
   }
