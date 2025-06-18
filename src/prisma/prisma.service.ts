@@ -4,17 +4,30 @@ import { PrismaClient } from '../generated/prisma';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+  private isMockMode = true; // 🚨 TEMPORAL: Modo mock para testing sin DB
+
   constructor() {
     super();
-    console.log('>>> PrismaService Constructor Executed');
-    console.log('>>> PrismaService Constructor - this.user available:', !!this.user);
-    console.log('>>> PrismaService Constructor - available models:', Object.keys(this).filter(key => typeof this[key] === 'object' && this[key] !== null));
+    console.log('>>> PrismaService Constructor Executed (MOCK MODE)');
+    console.log('>>> PrismaService Constructor - MOCK_MODE:', this.isMockMode);
   }
 
   async onModuleInit() {
+    if (this.isMockMode) {
+      console.log('>>> PrismaService onModuleInit - MOCK MODE: Skipping database connection');
+      console.log('>>> PrismaService onModuleInit - Backend will use mock data');
+      return;
+    }
+    
     console.log('>>> PrismaService onModuleInit - Connecting to database...');
+    try {
     await this.$connect();
     console.log('>>> PrismaService onModuleInit - Database connection established');
+    } catch (error) {
+      console.error('>>> PrismaService onModuleInit - Database connection failed:', error.message);
+      console.log('>>> PrismaService onModuleInit - Falling back to MOCK MODE');
+      this.isMockMode = true;
+    }
   }
 
   async enableShutdownHooks(app: INestApplication) {
