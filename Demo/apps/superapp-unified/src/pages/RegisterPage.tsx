@@ -1,212 +1,151 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
-import { useAuth } from '../hooks/useAuth'
-import { toast } from 'sonner'
+import React, { useState } from 'react';
+import { Box, Container, Alert, Snackbar } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import RegisterForm from '../components/forms/RegisterForm';
+import { RateLimiter } from '../utils/security';
 
-export const RegisterPage = () => {
-  const navigate = useNavigate()
-  const { isAuthenticated, register, isLoading: authLoading } = useAuth()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [name, setName] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+// Rate limiter for registration attempts
+const registrationRateLimiter = new RateLimiter(3, 30 * 60 * 1000); // 3 attempts per 30 minutes
 
-  // Redirigir si ya está autenticado
-  useEffect(() => {
-    if (isAuthenticated && !authLoading) {
-      console.log('[RegisterPage] Usuario autenticado, redirigiendo a /')
-      navigate('/', { replace: true })
-    }
-  }, [isAuthenticated, authLoading, navigate])
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+}
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+const RegisterPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    // Validaciones básicas
-    if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden')
-      return
+  const handleRegister = async (data: RegisterFormData): Promise<void> => {
+    // Check rate limiting
+    if (!registrationRateLimiter.isAllowed(data.email)) {
+      const remainingAttempts = registrationRateLimiter.getRemainingAttempts(data.email);
+      const nextReset = registrationRateLimiter.getNextResetTime(data.email);
+      
+      setError(
+        `Demasiados intentos de registro. Intentos restantes: ${remainingAttempts}. 
+         Próximo reinicio: ${nextReset?.toLocaleTimeString() || 'N/A'}`
+      );
+      return;
     }
 
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres')
-      return
-    }
-
-    setIsLoading(true)
+    setIsLoading(true);
+    setError(null);
 
     try {
-      console.log('[RegisterPage] Intentando registrar usuario con:', { email, name })
+      console.log('📝 Attempting registration with:', { 
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone
+      });
       
-      await register({ 
-        email, 
-        password, 
-        name: name.trim() || undefined 
-      })
-
-      console.log('[RegisterPage] Registro exitoso')
-      toast.success('Registro exitoso. ¡Bienvenido!')
+      // Simulate API call - replace with actual registration logic
+      const response = await simulateRegistrationAPI(data);
       
-      // La navegación se manejará automáticamente por el useEffect
-      
-    } catch (error) {
-      console.error('[RegisterPage] Error de registro:', error)
-      
-      let errorMessage = 'Error al registrar usuario'
-      
-      if (error instanceof Error) {
-        // Personalizar mensajes de error comunes
-        if (error.message.includes('El email ya está registrado') || error.message.includes('already exists')) {
-          errorMessage = 'Este email ya está registrado. Intenta iniciar sesión.'
-        } else if (error.message.includes('Invalid email')) {
-          errorMessage = 'El formato del email no es válido.'
-        } else if (error.message.includes('Password')) {
-          errorMessage = 'La contraseña no cumple con los requisitos mínimos.'
-        } else if (error.message.includes('400')) {
-          errorMessage = 'Datos inválidos. Verifica la información ingresada.'
-        } else if (error.message.includes('500')) {
-          errorMessage = 'Error del servidor. Por favor intenta más tarde.'
-        } else {
-          errorMessage = error.message
-        }
+      if (response.success) {
+        setSuccess(true);
+        setSuccessMessage('¡Registro exitoso! Revisa tu email para activar tu cuenta.');
+        
+        // Show success message for a bit longer since user needs to check email
+        console.log('✅ Registration successful for:', data.email);
+        
+      } else {
+        setError(response.message || 'Error en el registro');
       }
-      
-      setError(errorMessage)
-      toast.error(errorMessage)
+    } catch (error) {
+      console.error('Registration error:', error);
+      setError('Error de conexión. Por favor intenta nuevamente.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  // Mostrar loading mientras se inicializa la autenticación
-  if (authLoading) {
-    return (
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <CircularProgress />
-          <Typography variant="body2" sx={{ mt: 2 }}>
-            Verificando autenticación...
-          </Typography>
-        </Box>
-      </Container>
-    )
-  }
+  // Simulate registration API - replace with actual API integration
+  const simulateRegistrationAPI = async (data: RegisterFormData): Promise<{
+    success: boolean;
+    userId?: string;
+    message?: string;
+  }> => {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Mock registration validation
+    const existingEmails = [
+      'admin@coomunity.com',
+      'test@coomunity.com'
+    ];
+
+    if (existingEmails.includes(data.email)) {
+      return {
+        success: false,
+        message: 'Este email ya está registrado. Intenta con otro email o inicia sesión.'
+      };
+    }
+
+    // Mock phone validation
+    const cleanPhone = data.phone.replace(/[\s\-\(\)]/g, '');
+    if (cleanPhone.length < 10) {
+      return {
+        success: false,
+        message: 'El número de teléfono parece ser inválido.'
+      };
+    }
+
+    // Simulate successful registration
+    return {
+      success: true,
+      userId: 'user_' + Date.now(),
+      message: 'Registro exitoso. Revisa tu email para activar tu cuenta.'
+    };
+  };
+
+  const handleCloseSnackbar = () => {
+    setSuccessMessage(null);
+  };
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h4" gutterBottom>
-          Crear Cuenta
-        </Typography>
-        
-        {error && (
-          <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        py: 4
+      }}
+    >
+      <Container maxWidth="sm">
+        <RegisterForm
+          onSubmit={handleRegister}
+          isLoading={isLoading}
+          error={error}
+          success={success}
+        />
+      </Container>
 
-        <Box component="form" onSubmit={handleRegister} sx={{ mt: 1, width: '100%' }}>
-          <TextField
-            margin="normal"
-            fullWidth
-            id="name"
-            label="Nombre (opcional)"
-            name="name"
-            autoComplete="name"
-            autoFocus
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            disabled={isLoading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Correo Electrónico"
-            name="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Contraseña"
-            type="password"
-            id="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
-            helperText="Mínimo 6 caracteres"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="confirmPassword"
-            label="Confirmar Contraseña"
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            disabled={isLoading}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading || !email || !password || !confirmPassword}
-          >
-            {isLoading ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Creando cuenta...
-              </>
-            ) : (
-              'Crear Cuenta'
-            )}
-          </Button>
-          
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography variant="body2">
-              ¿Ya tienes una cuenta?{' '}
-              <Link to="/login" style={{ textDecoration: 'none' }}>
-                Iniciar Sesión
-              </Link>
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-    </Container>
-  )
-} 
+      {/* Success Snackbar */}
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity="success" 
+          sx={{ width: '100%' }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+};
+
+export default RegisterPage; 

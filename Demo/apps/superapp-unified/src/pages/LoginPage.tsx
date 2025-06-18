@@ -1,188 +1,151 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
-import { useAuth } from '../hooks/useAuth'
-import { BuilderIOHelpers } from '../lib/environment'
-import { toast } from 'sonner'
+import React, { useState } from 'react';
+import { Box, Container, Alert, Snackbar } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import LoginForm from '../components/forms/LoginForm';
+import { RateLimiter } from '../utils/security';
 
-export const LoginPage = () => {
-  const navigate = useNavigate()
-  const { isAuthenticated, login, isLoading: authLoading, isBuilderIOMode } = useAuth()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+// Rate limiter for login attempts
+const loginRateLimiter = new RateLimiter(5, 15 * 60 * 1000); // 5 attempts per 15 minutes
 
-  // Redirigir si ya está autenticado o si está en modo Builder.io
-  useEffect(() => {
-    // 🏗️ **BUILDER.IO: Redirección automática**
-    if (isBuilderIOMode) {
-      console.log('[LoginPage] Builder.io mode detectado - redirigiendo automáticamente')
-      toast.success('Builder.io Mode: Admin auto-autenticado')
-      navigate('/', { replace: true })
-      return
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handleLogin = async (data: LoginFormData): Promise<void> => {
+    // Check rate limiting
+    if (!loginRateLimiter.isAllowed(data.email)) {
+      const remainingAttempts = loginRateLimiter.getRemainingAttempts(data.email);
+      const nextReset = loginRateLimiter.getNextResetTime(data.email);
+      
+      setError(
+        `Demasiados intentos de login. Intentos restantes: ${remainingAttempts}. 
+         Próximo reinicio: ${nextReset?.toLocaleTimeString() || 'N/A'}`
+      );
+      return;
     }
 
-    if (isAuthenticated && !authLoading) {
-      console.log('[LoginPage] Usuario autenticado, redirigiendo a /')
-      navigate('/', { replace: true })
-    }
-  }, [isAuthenticated, authLoading, isBuilderIOMode, navigate])
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    // 🏗️ **BUILDER.IO: No procesar login si está en Builder.io**
-    if (isBuilderIOMode) {
-      console.log('[LoginPage] Builder.io mode - login ignorado')
-      navigate('/', { replace: true })
-      return
-    }
-
-    setError(null)
-    setIsLoading(true)
+    setIsLoading(true);
+    setError(null);
 
     try {
-      console.log('[LoginPage] Intentando iniciar sesión con:', { email })
+      console.log('🔐 Attempting login with:', { email: data.email });
       
-      await login({ email, password })
-
-      console.log('[LoginPage] Inicio de sesión exitoso')
-      toast.success('Inicio de sesión exitoso')
+      // Simulate API call - replace with actual authentication logic
+      const response = await simulateLoginAPI(data);
       
-      // La navegación se manejará automáticamente por el useEffect
-      
-    } catch (error) {
-      console.error('[LoginPage] Error de inicio de sesión:', error)
-      
-      let errorMessage = 'Error al iniciar sesión'
-      
-      if (error instanceof Error) {
-        // Personalizar mensajes de error comunes
-        if (error.message.includes('Credenciales inválidas') || error.message.includes('Invalid')) {
-          errorMessage = 'Credenciales inválidas. Por favor verifica tu email y contraseña.'
-        } else if (error.message.includes('Email not confirmed')) {
-          errorMessage = 'Email no confirmado. Por favor verifica tu bandeja de entrada.'
-        } else if (error.message.includes('401')) {
-          errorMessage = 'Credenciales incorrectas. Verifica tu email y contraseña.'
-        } else if (error.message.includes('500')) {
-          errorMessage = 'Error del servidor. Por favor intenta más tarde.'
-        } else {
-          errorMessage = error.message
+      if (response.success) {
+        // Store authentication token (replace with actual token handling)
+        if (response.token) {
+          localStorage.setItem('authToken', response.token);
         }
+        if (response.user) {
+          localStorage.setItem('user', JSON.stringify(response.user));
+        }
+        
+        setSuccessMessage('¡Login exitoso! Bienvenido a CoomÜnity');
+        
+        // Redirect to home page after short delay
+        setTimeout(() => {
+          navigate('/', { replace: true });
+        }, 1500);
+        
+      } else {
+        setError(response.message || 'Error de autenticación');
       }
-      
-      setError(errorMessage)
-      toast.error(errorMessage)
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Error de conexión. Por favor intenta nuevamente.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  // Mostrar loading mientras se inicializa la autenticación o en Builder.io
-  if (authLoading || isBuilderIOMode) {
-    return (
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <CircularProgress />
-          <Typography variant="body2" sx={{ mt: 2 }}>
-            {isBuilderIOMode 
-              ? 'Builder.io Mode: Redirigiendo automáticamente...'
-              : 'Verificando autenticación...'
-            }
-          </Typography>
-        </Box>
-      </Container>
-    )
-  }
+  // Simulate login API - replace with actual API integration
+  const simulateLoginAPI = async (data: LoginFormData): Promise<{
+    success: boolean;
+    token?: string;
+    user?: any;
+    message?: string;
+  }> => {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Mock authentication logic
+    const validCredentials = [
+      { email: 'test@coomunity.com', password: 'test123' },
+      { email: 'admin@coomunity.com', password: 'admin123' },
+      { email: 'user@coomunity.com', password: 'user123' }
+    ];
+
+    const isValid = validCredentials.some(
+      cred => cred.email === data.email && cred.password === data.password
+    );
+
+    if (isValid) {
+      return {
+        success: true,
+        token: 'mock_jwt_token_' + Date.now(),
+        user: {
+          id: 1,
+          name: 'Usuario CoomÜnity',
+          email: data.email,
+          avatar: null
+        }
+      };
+    } else {
+      return {
+        success: false,
+        message: 'Credenciales inválidas. Verifica tu email y contraseña.'
+      };
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSuccessMessage(null);
+  };
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h4" gutterBottom>
-          Iniciar Sesión
-        </Typography>
-        
-        {error && (
-          <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        py: 4
+      }}
+    >
+      <Container maxWidth="sm">
+        <LoginForm
+          onSubmit={handleLogin}
+          isLoading={isLoading}
+          error={error}
+        />
+      </Container>
 
-        <Box component="form" onSubmit={handleLogin} sx={{ mt: 1, width: '100%' }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Correo Electrónico"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Contraseña"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading || !email || !password}
-          >
-            {isLoading ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Iniciando sesión...
-              </>
-            ) : (
-              'Iniciar Sesión'
-            )}
-          </Button>
-          
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography variant="body2">
-              ¿No tienes una cuenta?{' '}
-              <Link to="/register" style={{ textDecoration: 'none' }}>
-                Crear Cuenta
-              </Link>
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-    </Container>
-  )
-} 
+      {/* Success Snackbar */}
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity="success" 
+          sx={{ width: '100%' }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+};
+
+export default LoginPage; 
