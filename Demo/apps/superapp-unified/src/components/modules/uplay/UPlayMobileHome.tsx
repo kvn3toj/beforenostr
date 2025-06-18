@@ -606,13 +606,27 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   ], []);
 
   // Use enhanced mock data hook para fallback
-  const {
-    isLoading: isMockLoading,
-    continueWatching,
-    formatDuration,
-    getProgressText,
-    isPreviewEnvironment,
+  // const {
+  //   isLoading: isMockLoading,
+  //   continueWatching,
+  //   formatDuration,
+  //   getProgressText,
+  //   isPreviewEnvironment,
   // } = useUPlayMockData();
+
+  // Mock data fallback while mock hook is disabled
+  const isMockLoading = false;
+  const continueWatching = {
+    title: 'Introducción a CoomÜnity',
+    description: 'Conoce los fundamentos de nuestra plataforma colaborativa'
+  };
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+  const getProgressText = (progress: number) => `${progress}% completado`;
+  const isPreviewEnvironment = false;
 
   // 🔥 Usar datos reales del backend (principal)
   const { 
