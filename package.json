@@ -26,6 +26,8 @@
     "port:verify": "./scripts/verify-new-ports.sh",
     "port:migrate": "./scripts/update-ports-migration.sh",
     "port:summary": "./scripts/post-migration-summary.sh",
+    "rules:verify": "./scripts/verify-updated-rules.sh",
+    "rules:cleanup": "./scripts/cleanup-legacy-ports.sh",
     "start:all": "./scripts/start-all.sh",
     "stop:all": "pkill -f 'vite|npm run dev|tsx' 2>/dev/null || true",
     "preflight": "./scripts/pre-flight-check.sh",

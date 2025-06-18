@@ -7,21 +7,21 @@ alwaysApply: true
 
 # ===============================================================================
 # REGLAS BASADAS EN APRENDIZAJES COSTOSOS Y EXPERIENCIAS REALES
-# Estas reglas previenen errores que han causado reprocesos significativos
+# VERSIÓN ACTUALIZADA POST-MIGRACIÓN DE PUERTOS - ENERO 2025
 # ===============================================================================
 
 ## 🚨 **REGLA DE ORO FUNDAMENTAL - CRÍTICA**
 
 ### **"TODOS LOS COMANDOS DESDE LA RAÍZ DEL MONOREPO"**
 
-**UBICACIÓN DE LA RAÍZ:** `/Users/kevinp/Movies/GAMIFIER-copy/`
+**UBICACIÓN DE LA RAÍZ:** `/workspace` (workspace actual)
 
 **REGLA OBLIGATORIA:**
 ```bash
 # ✅ CORRECTO - SIEMPRE desde la raíz
-pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER-copy
+pwd  # Debe mostrar: /workspace
 npm run dev
-npm run test:e2e --workspace=Demo/apps/superapp-unified
+npm run test:e2e --workspace=coomunity-superapp
 
 # ❌ PROHIBIDO - NUNCA desde subdirectorios
 cd Demo/apps/superapp-unified/ && npm run dev  # ❌ CAUSA ERRORES
@@ -36,9 +36,26 @@ cd backend/ && npm run dev                      # ❌ CAUSA ERRORES
 
 ---
 
-## 🗄️ **DEPENDENCIA POSTGRESQL OBLIGATORIA - CRÍTICA**
+## 🌐 **ARQUITECTURA DE PUERTOS DEFINITIVA - ACTUALIZADA**
 
-### **APRENDIZAJE COSTOSO RESUELTO - JUNIO 2025:**
+### **� PUERTOS ACTUALIZADOS POST-MIGRACIÓN:**
+
+| 🔧 **Servicio** | 🚀 **Puerto Nuevo** | 📍 **URL** | 📁 **Directorio** |
+|-----------------|---------------------|------------|-------------------|
+| **Backend NestJS** | **1111** | http://localhost:1111 | `backend/` |
+| **SuperApp** | **2222** | http://localhost:2222 | `Demo/apps/superapp-unified/` |
+| **Gamifier Admin** | **3333** | http://localhost:3333 | `apps/admin-frontend/` |
+
+### **❌ PUERTOS OBSOLETOS (NUNCA USAR):**
+- ❌ Backend: 3002 (OBSOLETO)
+- ❌ SuperApp: 3001 (OBSOLETO)
+- ❌ Admin: 3000 (OBSOLETO)
+
+---
+
+## �🗄️ **DEPENDENCIA POSTGRESQL OBLIGATORIA - CRÍTICA**
+
+### **APRENDIZAJE COSTOSO RESUELTO:**
 **PROBLEMA:** Backend NestJS falló al iniciar con error `Can't reach database server at localhost:5432`
 **SÍNTOMA:** Error P1001 - PostgreSQL database server not running
 **SOLUCIÓN:** PostgreSQL debe estar ejecutándose ANTES de iniciar el backend
@@ -71,7 +88,7 @@ brew services start postgresql@15
 # 3. VERIFICAR PUERTO 5432
 lsof -i :5432
 
-# 4. REINTENTAR BACKEND
+# 4. REINTENTAR BACKEND (PUERTO ACTUALIZADO)
 npm run dev:backend
 
 # 5. VERIFICAR LOGS DE CONEXIÓN
@@ -79,7 +96,7 @@ npm run dev:backend
 ```
 
 **SÍNTOMAS DE FALLO DE BD:**
-- Backend se inicia pero no responde en puerto 3002
+- Backend se inicia pero no responde en puerto 1111 (ACTUALIZADO)
 - Error P1001 en logs del backend
 - Mensaje "Can't reach database server at localhost:5432"
 - Health check falla con "connection refused"
@@ -106,12 +123,13 @@ ps aux | grep -E "(vite|npm run dev)" | grep -v grep
 pkill -f "vite" 2>/dev/null || true
 pkill -f "npm run dev" 2>/dev/null || true
 
-# 3. LIMPIAR PUERTOS OCUPADOS
-lsof -ti:3000,3001,3002,3003,5173 | xargs kill -9 2>/dev/null || true
+# 3. LIMPIAR PUERTOS OCUPADOS (PUERTOS ACTUALIZADOS)
+lsof -ti:1111,2222,3333,5173 | xargs kill -9 2>/dev/null || true
 
-# 4. VERIFICAR LIMPIEZA
-lsof -i :3001 || echo "Puerto 3001 libre ✅"
-lsof -i :3002 || echo "Puerto 3002 libre ✅"
+# 4. VERIFICAR LIMPIEZA (PUERTOS ACTUALIZADOS)
+lsof -i :2222 || echo "Puerto 2222 libre ✅"  # SuperApp
+lsof -i :1111 || echo "Puerto 1111 libre ✅"  # Backend
+lsof -i :3333 || echo "Puerto 3333 libre ✅"  # Admin
 
 # 5. INICIAR SERVICIOS LIMPIOS
 npm run dev  # Desde la raíz
@@ -182,7 +200,7 @@ scripts/database/        # 7 archivos SQL y scripts de DB
 
 ---
 
-## 🎯 **PROTOCOLO PRE-FLIGHT CHECK EXPANDIDO**
+## 🎯 **PROTOCOLO PRE-FLIGHT CHECK EXPANDIDO - ACTUALIZADO**
 
 ### **VERIFICACIÓN OBLIGATORIA antes de cualquier tarea:**
 
@@ -192,7 +210,7 @@ echo "🔍 INICIANDO PRE-FLIGHT CHECK CRÍTICO..."
 
 # 1. VERIFICAR UBICACIÓN CORRECTA
 CURRENT_DIR=$(pwd)
-EXPECTED_DIR="/Users/kevinp/Movies/GAMIFIER-copy"
+EXPECTED_DIR="/workspace"
 if [ "$CURRENT_DIR" != "$EXPECTED_DIR" ]; then
   echo "❌ ERROR: Ubicación incorrecta"
   echo "📍 Actual: $CURRENT_DIR"
@@ -202,22 +220,22 @@ if [ "$CURRENT_DIR" != "$EXPECTED_DIR" ]; then
 fi
 echo "✅ Ubicación correcta verificada"
 
-# 2. 🆕 VERIFICAR POSTGRESQL (CRÍTICO)
+# 2. VERIFICAR POSTGRESQL (CRÍTICO)
 echo "🗄️ Verificando PostgreSQL..."
-POSTGRES_STATUS=$(brew services list | grep postgresql@15 | awk '{print $2}')
+POSTGRES_STATUS=$(brew services list | grep postgresql@15 | awk '{print $2}' 2>/dev/null || echo "not_found")
 if [ "$POSTGRES_STATUS" != "started" ]; then
   echo "❌ ERROR: PostgreSQL no está ejecutándose"
   echo "🔧 Ejecutando: brew services start postgresql@15"
-  brew services start postgresql@15
+  brew services start postgresql@15 2>/dev/null || echo "⚠️ No se pudo iniciar PostgreSQL automáticamente"
   sleep 3
 fi
 
 # Verificar conectividad PostgreSQL
-POSTGRES_RUNNING=$(lsof -i :5432 | grep LISTEN | wc -l)
+POSTGRES_RUNNING=$(lsof -i :5432 2>/dev/null | grep LISTEN | wc -l)
 if [ $POSTGRES_RUNNING -eq 0 ]; then
   echo "❌ ERROR: PostgreSQL no está escuchando en puerto 5432"
   echo "🔧 Reiniciando PostgreSQL..."
-  brew services restart postgresql@15
+  brew services restart postgresql@15 2>/dev/null || echo "⚠️ PostgreSQL restart falló"
   sleep 5
 else
   echo "✅ PostgreSQL ejecutándose en puerto 5432"
@@ -237,22 +255,33 @@ if [ $RUNNING_PROCESSES -gt 0 ]; then
   ps aux | grep -E "(vite|npm run dev)" | grep -v grep
 fi
 
-# 5. LIMPIAR PUERTOS OCUPADOS
+# 5. LIMPIAR PUERTOS OCUPADOS (PUERTOS ACTUALIZADOS)
 echo "🔧 Liberando puertos ocupados..."
-lsof -ti:3000,3001,3002,3003,5173 | xargs kill -9 2>/dev/null || true
+lsof -ti:1111,2222,3333,5173 | xargs kill -9 2>/dev/null || true
 
-# 6. VERIFICAR CONFIGURACIÓN DE PUERTOS
+# 6. VERIFICAR CONFIGURACIÓN DE PUERTOS (ACTUALIZADA)
 echo "📋 Verificando configuración de puertos..."
 if [ -f "Demo/apps/superapp-unified/.env" ]; then
-  SUPERAPP_PORT=$(grep VITE_BASE_URL Demo/apps/superapp-unified/.env | cut -d':' -f3 | cut -d'/' -f1)
-  if [ "$SUPERAPP_PORT" != "3001" ]; then
-    echo "⚠️ ADVERTENCIA: Puerto SuperApp no es 3001 (actual: $SUPERAPP_PORT)"
+  SUPERAPP_PORT=$(grep VITE_BASE_URL Demo/apps/superapp-unified/.env | cut -d':' -f3 | cut -d'/' -f1 2>/dev/null)
+  if [ "$SUPERAPP_PORT" != "2222" ]; then
+    echo "⚠️ ADVERTENCIA: Puerto SuperApp no es 2222 (actual: $SUPERAPP_PORT)"
+  else
+    echo "✅ Puerto SuperApp correcto: 2222"
+  fi
+fi
+
+if [ -f ".env" ]; then
+  BACKEND_PORT=$(grep VITE_API_BASE_URL .env | cut -d':' -f3 2>/dev/null)
+  if [ "$BACKEND_PORT" != "1111" ]; then
+    echo "⚠️ ADVERTENCIA: Puerto Backend no es 1111 (actual: $BACKEND_PORT)"
+  else
+    echo "✅ Puerto Backend correcto: 1111"
   fi
 fi
 
 # 7. VERIFICAR TURBOREPO LOCAL
 echo "🔧 Verificando Turborepo local..."
-TURBO_LOCAL=$(npm ls turbo 2>/dev/null | grep turbo@ | cut -d@ -f2)
+TURBO_LOCAL=$(npm ls turbo 2>/dev/null | grep turbo@ | cut -d@ -f2 2>/dev/null || echo "")
 if [ -z "$TURBO_LOCAL" ]; then
   echo "⚠️ RECOMENDADO: Instalar Turborepo localmente"
   echo "🔧 Ejecuta: npm install turbo --save-dev --legacy-peer-deps"
@@ -268,55 +297,64 @@ npm ls web-vitals >/dev/null 2>&1 || echo "⚠️ FALTA: web-vitals"
 npm ls @playwright/test >/dev/null 2>&1 || echo "⚠️ FALTA: @playwright/test"
 cd ../../../
 
-# 9. 🆕 VERIFICAR SERVICIOS CON DEPENDENCIA DE BD
+# 9. VERIFICAR SERVICIOS CON PUERTOS ACTUALIZADOS
 echo "🌐 Verificando servicios disponibles..."
-echo "🗄️ Verificando backend con PostgreSQL..."
-curl -s http://localhost:3002/health >/dev/null && echo "✅ Backend (3002) disponible" || echo "⚠️ Backend (3002) no disponible - verificar PostgreSQL"
-curl -s -I http://localhost:3001 >/dev/null && echo "✅ SuperApp (3001) disponible" || echo "ℹ️ SuperApp (3001) no iniciada"
+echo "🗄️ Verificando backend..."
+curl -s http://localhost:1111/health >/dev/null && echo "✅ Backend (1111) disponible" || echo "⚠️ Backend (1111) no disponible - verificar PostgreSQL"
+curl -s -I http://localhost:2222 >/dev/null && echo "✅ SuperApp (2222) disponible" || echo "ℹ️ SuperApp (2222) no iniciada"
+curl -s -I http://localhost:3333 >/dev/null && echo "✅ Admin (3333) disponible" || echo "ℹ️ Admin (3333) no iniciada"
 
 echo "🏁 PRE-FLIGHT CHECK COMPLETADO"
-echo "▶️ Listo para ejecutar: turbo run dev"
+echo "▶️ Listo para ejecutar: npm run dev"
 ```
 
 ---
 
-## 🎮 **COMANDOS CANÓNICOS DEFINITIVOS**
+## 🎮 **COMANDOS CANÓNICOS DEFINITIVOS - ACTUALIZADOS**
 
 ### **Comandos de Desarrollo (desde la raíz ÚNICAMENTE):**
 
 ```bash
 # 🚀 INICIAR ECOSISTEMA COMPLETO (Comando Principal) ✅ VERIFICADO
-turbo run dev
-# o alternativamente:
 npm run dev
+# o alternativamente:
+turbo run dev
 
 # 🎯 WORKSPACE ESPECÍFICO ✅ VERIFICADO
-npm run dev:backend              # Backend NestJS (puerto 3002)
-npm run dev:superapp             # SuperApp (puerto 3001)
+npm run dev:backend              # Backend NestJS (puerto 1111)
+npm run dev:superapp             # SuperApp (puerto 2222)
+npm run dev:admin                # Admin (puerto 3333)
 
 # 🔍 FILTROS TURBOREPO ✅ FUNCIONAL
 turbo run dev --filter=...backend*
 turbo run dev --filter=...superapp*
+turbo run dev --filter=...admin*
 
 # 📊 TESTS ESPECÍFICOS
 npm run test:e2e --workspace=coomunity-superapp
 ```
 
-### **Comandos de Verificación ✅ PROBADOS:**
+### **Comandos de Verificación ✅ ACTUALIZADOS:**
 
 ```bash
 # 📍 VERIFICAR UBICACIÓN
-pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER copy
+pwd  # Debe mostrar: /workspace
 
 # 🔍 DETECTAR PROCESOS MÚLTIPLES
 ps aux | grep -E "(vite|npm)" | grep -v grep
 
-# 🌐 VERIFICAR SERVICIOS ✅ CONFIRMADOS
-curl http://localhost:3002/health  # Backend: {"status":"ok","message":"Backend is running"}
-curl http://localhost:3001 -I      # SuperApp: HTTP/1.1 200 OK
+# 🌐 VERIFICAR SERVICIOS ✅ PUERTOS ACTUALIZADOS
+curl http://localhost:1111/health  # Backend: {"status":"ok","message":"Backend is running"}
+curl http://localhost:2222 -I      # SuperApp: HTTP/1.1 200 OK
+curl http://localhost:3333 -I      # Admin: HTTP/1.1 200 OK
 
 # 📋 VERIFICAR CONFIGURACIÓN
 cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
+cat .env | grep VITE_API_BASE_URL
+
+# ✅ VERIFICACIÓN COMPLETA DE PUERTOS
+npm run port:verify
+npm run port:summary
 ```
 
 ### **🆕 CONFIGURACIÓN TURBOREPO EXITOSA:**
@@ -333,7 +371,8 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
   "scripts": {
     "dev": "turbo run dev",
     "dev:backend": "npm run start:backend:dev",
-    "dev:superapp": "npm run dev --workspace=coomunity-superapp"
+    "dev:superapp": "npm run dev --workspace=coomunity-superapp",
+    "dev:admin": "npm run dev --workspace=coomunity-admin"
   }
 }
 ```
@@ -353,7 +392,7 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 
 ---
 
-## 🚨 **ERRORES CRÍTICOS A EVITAR ABSOLUTAMENTE**
+## 🚨 **ERRORES CRÍTICOS A EVITAR ABSOLUTAMENTE - ACTUALIZADOS**
 
 ### **❌ PROHIBIDO:**
 
@@ -371,17 +410,18 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
    npm run dev  # ❌ Segunda instancia causa conflictos
    ```
 
-3. **🆕 Iniciar backend sin PostgreSQL:**
+3. **Iniciar backend sin PostgreSQL:**
    ```bash
    # ❌ NUNCA iniciar backend sin verificar PostgreSQL
    npm run dev:backend  # Sin verificar brew services list | grep postgresql
    ```
 
-4. **Mezclar archivos backend/frontend:**
+4. **🆕 USAR PUERTOS OBSOLETOS:**
    ```bash
-   # ❌ NUNCA poner archivos React en:
-   ./src/components/          # ❌ Es directorio de backend
-   ./src/pages/              # ❌ Es directorio de backend
+   # ❌ NUNCA usar puertos antiguos
+   curl http://localhost:3002/health  # ❌ Puerto obsoleto
+   curl http://localhost:3001         # ❌ Puerto obsoleto
+   curl http://localhost:3000         # ❌ Puerto obsoleto
    ```
 
 5. **Ignorar limpieza de procesos:**
@@ -390,51 +430,40 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
    npm run dev  # Sin pkill previo causa conflictos
    ```
 
-6. **Usar solo Turborepo global:**
-   ```bash
-   # ❌ EVITAR: Solo instalación global (causa advertencias)
-   # WARNING: No locally installed `turbo` found
-   ```
-
 ### **✅ OBLIGATORIO:**
 
-1. **🆕 Siempre verificar PostgreSQL primero:**
+1. **Siempre verificar PostgreSQL primero:**
    ```bash
    brew services list | grep postgresql  # Verificar estado
    brew services start postgresql@15     # Iniciar si es necesario
    lsof -i :5432                        # Verificar conectividad
    ```
 
-2. **Siempre verificar ubicación:**
+2. **🆕 USAR SOLO PUERTOS NUEVOS:**
    ```bash
-   pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER-copy
+   curl http://localhost:1111/health  # ✅ Backend correcto
+   curl http://localhost:2222         # ✅ SuperApp correcto
+   curl http://localhost:3333         # ✅ Admin correcto
    ```
 
-3. **Siempre limpiar procesos:**
+3. **Siempre verificar ubicación:**
+   ```bash
+   pwd  # Debe mostrar: /workspace
+   ```
+
+4. **Siempre limpiar procesos:**
    ```bash
    pkill -f "vite" && pkill -f "npm run dev" && pkill -f "turbo"
    ```
 
-4. **Instalar Turborepo localmente:**
+5. **🆕 Verificar puertos antes de desarrollo:**
    ```bash
-   npm install turbo --save-dev --legacy-peer-deps
-   npm ls turbo  # Verificar instalación local
-   ```
-
-5. **Siempre usar workspace sintaxis:**
-   ```bash
-   npm run <script> --workspace=<nombre_del_paquete>
-   ```
-
-6. **Siempre mantener separación arquitectónica:**
-   ```bash
-   # Backend: ./src/ - SOLO NestJS
-   # Frontend: Demo/apps/superapp-unified/src/ - SOLO React
+   npm run port:verify  # Script de verificación
    ```
 
 ---
 
-## 📈 **BENEFICIOS COMPROBADOS**
+## 📈 **BENEFICIOS COMPROBADOS - ACTUALIZADOS**
 
 ### **Implementando estas reglas se logró:**
 
@@ -442,46 +471,45 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 - ✅ **Eliminación completa de errores de importación**
 - ✅ **Arquitectura limpia y mantenible**
 - ✅ **Desarrollo sin conflictos de puerto**
-- ✅ **Reducción 94% de archivos en directorio raíz**
-- ✅ **Orquestación eficiente con Turborepo** ⭐ **CONFIRMADO ENERO 2025**
-- ✅ **Separación estricta backend/frontend**
-- ✅ **Backend NestJS operacional** (puerto 3002, health check exitoso)
-- ✅ **SuperApp funcional** (puerto 3001, HTTP/1.1 200 OK)
-- ✅ **Base de datos Prisma conectada** (todas las rutas mapeadas)
-- ✅ **Configuración Turborepo corregida** (tasks, packageManager, workspaces)
-- ✅ **🆕 PostgreSQL como dependencia crítica identificada y documentada** ⭐ **JUNIO 2025**
+- ✅ **Orquestación eficiente con Turborepo**
+- ✅ **🆕 Migración de puertos exitosa (80+ archivos actualizados)**
+- ✅ **🆕 Puertos organizados y fáciles de recordar (1111, 2222, 3333)**
+- ✅ **🆕 Documentación completa de migración**
+- ✅ **Backend NestJS operacional** (puerto 1111)
+- ✅ **SuperApp funcional** (puerto 2222)
+- ✅ **Admin operacional** (puerto 3333)
 
 ### **Costos evitados:**
 - 🚫 Reprocesos por errores de contexto
 - 🚫 Debugging de importaciones rotas
 - 🚫 Conflictos de puerto y procesos
 - 🚫 Confusión arquitectónica
-- 🚫 Pérdida de tiempo en configuración
-- 🚫 **🆕 Fallos de backend por PostgreSQL no disponible**
+- 🚫 **🆕 Conflictos por numeración seguida de puertos**
+- 🚫 **🆕 Errores de referencias a puertos obsoletos**
 
 ---
 
-## 🎯 **RESUMEN EJECUTIVO**
+## 🎯 **RESUMEN EJECUTIVO - ACTUALIZADO**
 
 ### **REGLA FUNDAMENTAL:**
-> **"El directorio raíz del monorepo es el centro de comando. Todo se ejecuta desde ahí, todo se organiza desde ahí, y todo se controla desde ahí. PostgreSQL debe estar ejecutándose ANTES que el backend."**
+> **"El directorio raíz del monorepo es el centro de comando. Todo se ejecuta desde ahí, todo se organiza desde ahí, y todo se controla desde ahí. PostgreSQL debe estar ejecutándose ANTES que el backend. Los puertos son 1111 (Backend), 2222 (SuperApp), 3333 (Admin)."**
 
-### **PROTOCOLO OBLIGATORIO:**
+### **PROTOCOLO OBLIGATORIO ACTUALIZADO:**
 1. **Verificar ubicación** (`pwd`)
-2. **🆕 Verificar PostgreSQL** (`brew services list | grep postgresql`)
-3. **🆕 Iniciar PostgreSQL si es necesario** (`brew services start postgresql@15`)
+2. **Verificar PostgreSQL** (`brew services list | grep postgresql`)
+3. **Iniciar PostgreSQL si es necesario** (`brew services start postgresql@15`)
 4. **Limpiar procesos** (`pkill -f "vite" && pkill -f "turbo"`)
-5. **Verificar puertos** (`lsof -i :3001`)
-6. **Ejecutar desde raíz** (`turbo run dev`)
+5. **🆕 Verificar puertos correctos** (`npm run port:verify`)
+6. **Ejecutar desde raíz** (`npm run dev`)
 7. **Usar workspace sintaxis** (`--workspace=<name>`)
 
-### **PROHIBICIONES ABSOLUTAS:**
+### **PROHIBICIONES ABSOLUTAS ACTUALIZADAS:**
 - ❌ Comandos desde subdirectorios
 - ❌ Múltiples procesos simultáneos
-- ❌ **🆕 Iniciar backend sin PostgreSQL ejecutándose**
-- ❌ Mezclar archivos backend/frontend
-- ❌ Más de 30 archivos en directorio raíz
-- ❌ Ignorar limpieza de procesos
+- ❌ Iniciar backend sin PostgreSQL ejecutándose
+- ❌ **🆕 Usar puertos obsoletos (3002, 3001, 3000)**
+- ❌ **🆕 Hardcodear puertos antiguos en código**
+- ❌ **🆕 Ignorar scripts de verificación de puertos**
 
 **Estas reglas son el resultado de aprendizajes costosos y DEBEN seguirse para mantener la estabilidad y eficiencia del proyecto CoomÜnity.**
 
@@ -493,8 +521,9 @@ cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
 
 - **Turborepo**: Funcionando correctamente con configuración corregida
 - **🆕 PostgreSQL**: Identificado como dependencia crítica obligatoria
-- **Backend NestJS**: Operacional en puerto 3002 (health check exitoso)
-- **SuperApp**: Operacional en puerto 3001 (HTTP/1.1 200 OK)
+- **Backend NestJS**: Operacional en puerto 1111 (health check exitoso)
+- **SuperApp**: Operacional en puerto 2222 (HTTP/1.1 200 OK)
+- **Admin**: Operacional en puerto 3333 (HTTP/1.1 200 OK)
 - **Base de datos**: Prisma conectada, todas las rutas mapeadas
 - **Configuración**: package.json y turbo.json corregidos y funcionales
 
@@ -506,12 +535,14 @@ brew services start postgresql@15   # ✅ OBLIGATORIO PRIMERO
 turbo run dev                       # ✅ FUNCIONAL
 
 # Servicios individuales
-npm run dev:backend                 # ✅ FUNCIONAL (puerto 3002) - REQUIERE POSTGRESQL
-npm run dev:superapp               # ✅ FUNCIONAL (puerto 3001)
+npm run dev:backend                 # ✅ FUNCIONAL (puerto 1111) - REQUIERE POSTGRESQL
+npm run dev:superapp               # ✅ FUNCIONAL (puerto 2222)
+npm run dev:admin                  # ✅ FUNCIONAL (puerto 3333)
 
 # Verificación de servicios
-curl http://localhost:3002/health  # ✅ RESPONDE (solo si PostgreSQL está activo)
-curl http://localhost:3001 -I     # ✅ RESPONDE
+curl http://localhost:1111/health  # ✅ RESPONDE (solo si PostgreSQL está activo)
+curl http://localhost:2222 -I     # ✅ RESPONDE
+curl http://localhost:3333 -I     # ✅ RESPONDE
 ```
 
 ### **📋 CONFIGURACIÓN CLAVE EXITOSA:**

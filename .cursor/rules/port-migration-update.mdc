@@ -1,0 +1,340 @@
+# 🚀 REGLAS ACTUALIZADAS POST-MIGRACIÓN DE PUERTOS - PROYECTO COOMUNITY
+
+# ===============================================================================
+# VERSIÓN ACTUALIZADA: ENERO 2025 - POST MIGRACIÓN DE PUERTOS
+# Estas reglas reflejan los NUEVOS PUERTOS y mejores prácticas actualizadas
+# ===============================================================================
+
+## 🎯 **PUERTOS DEFINITIVOS ACTUALIZADOS - CRÍTICO**
+
+### **🔒 REGLA DE BLOQUEO DE PUERTOS**
+**Los siguientes puertos son DEFINITIVOS y NO DEBEN CAMBIARSE:**
+
+| 🔧 **Servicio** | 🌐 **Puerto** | 📍 **URL** | 📋 **Directorio** |
+|-----------------|---------------|------------|-------------------|
+| **Backend NestJS** | **1111** | http://localhost:1111 | `backend/` |
+| **SuperApp Frontend** | **2222** | http://localhost:2222 | `Demo/apps/superapp-unified/` |
+| **Gamifier Admin** | **3333** | http://localhost:3333 | `apps/admin-frontend/` |
+| **API Docs** | **1111/api** | http://localhost:1111/api | Swagger UI |
+
+### **❌ PUERTOS OBSOLETOS (NO USAR NUNCA)**
+- ❌ Backend: 3002 (OBSOLETO)
+- ❌ SuperApp: 3001 (OBSOLETO)  
+- ❌ Admin: 3000 (OBSOLETO)
+
+---
+
+## 🛡️ **REGLAS DE PREVENCIÓN DE ERRORES**
+
+### **1. Verificación de Puertos Obligatoria**
+Antes de cualquier comando, SIEMPRE verificar:
+
+```bash
+# ✅ VERIFICAR PUERTOS CORRECTOS
+npm run port:verify
+
+# ✅ VERIFICAR CONFIGURACIÓN
+cat .env | grep API_BASE_URL
+cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
+```
+
+### **2. Variables de Entorno ACTUALIZADAS**
+
+```bash
+# ✅ .env (Backend)
+VITE_API_BASE_URL=http://localhost:1111
+
+# ✅ Demo/apps/superapp-unified/.env (SuperApp)
+VITE_API_BASE_URL=http://localhost:1111
+VITE_BASE_URL=http://localhost:2222
+
+# ✅ apps/admin-frontend/.env (Admin)
+VITE_API_BASE_URL=http://localhost:1111
+VITE_BASE_URL=http://localhost:3333
+```
+
+### **3. Comandos de Health Check ACTUALIZADOS**
+
+```bash
+# ✅ CORRECTO - Nuevos puertos
+curl http://localhost:1111/health  # Backend
+curl http://localhost:2222         # SuperApp
+curl http://localhost:3333         # Admin
+
+# ❌ INCORRECTO - Puertos obsoletos
+curl http://localhost:3002/health  # NO USAR
+curl http://localhost:3001         # NO USAR
+curl http://localhost:3000         # NO USAR
+```
+
+---
+
+## 🔧 **CONFIGURACIONES CRÍTICAS ACTUALIZADAS**
+
+### **Backend NestJS (Puerto 1111)**
+
+```typescript
+// src/main.ts - CONFIGURACIÓN CORRECTA
+app.enableCors({
+  origin: [
+    'http://localhost:1111',  // Backend
+    'http://localhost:2222',  // SuperApp  
+    'http://localhost:3333',  // Admin
+    'http://localhost:5173'   // Vite dev fallback
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  credentials: true,
+});
+
+const port = process.env.PORT || 1111; // ✅ CORRECTO
+```
+
+### **SuperApp Vite Config (Puerto 2222)**
+
+```typescript
+// Demo/apps/superapp-unified/vite.config.ts
+export default defineConfig({
+  server: {
+    port: 2222, // ✅ CORRECTO
+    proxy: {
+      '/api': {
+        target: 'http://localhost:1111', // ✅ Backend correcto
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  },
+  preview: {
+    port: 2222 // ✅ CORRECTO
+  }
+});
+```
+
+### **Gamifier Admin Vite Config (Puerto 3333)**
+
+```typescript
+// apps/admin-frontend/vite.config.ts
+export default defineConfig({
+  server: {
+    port: 3333 // ✅ CORRECTO
+  },
+  preview: {
+    port: 3333 // ✅ CORRECTO
+  }
+});
+```
+
+---
+
+## 🧪 **TESTING ACTUALIZADO**
+
+### **Playwright Config ACTUALIZADO**
+
+```typescript
+// Demo/apps/superapp-unified/playwright.config.ts
+export default defineConfig({
+  use: {
+    baseURL: 'http://localhost:2222', // ✅ CORRECTO
+  },
+  webServer: {
+    command: 'npm run dev',
+    port: 2222, // ✅ CORRECTO
+    reuseExistingServer: !process.env.CI,
+  }
+});
+```
+
+### **Test Authentication ACTUALIZADO**
+
+```typescript
+// Tests E2E con puertos correctos
+const BACKEND_URL = 'http://localhost:1111'; // ✅ CORRECTO
+const SUPERAPP_URL = 'http://localhost:2222'; // ✅ CORRECTO
+
+// Login test con backend correcto
+const response = await fetch(`${BACKEND_URL}/auth/login`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'admin@gamifier.com',
+    password: 'admin123'
+  })
+});
+```
+
+---
+
+## 🚨 **ERRORES CRÍTICOS A EVITAR**
+
+### **❌ NUNCA USAR PUERTOS OBSOLETOS**
+
+```bash
+# ❌ OBSOLETO - NO USAR
+http://localhost:3002  # Backend antiguo
+http://localhost:3001  # SuperApp antigua
+http://localhost:3000  # Admin antiguo
+
+# ✅ CORRECTO - USAR SIEMPRE
+http://localhost:1111  # Backend NUEVO
+http://localhost:2222  # SuperApp NUEVA  
+http://localhost:3333  # Admin NUEVO
+```
+
+### **❌ NUNCA HARDCODEAR PUERTOS OBSOLETOS**
+
+```typescript
+// ❌ INCORRECTO
+const API_URL = 'http://localhost:3002'; // Puerto obsoleto
+
+// ✅ CORRECTO
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
+```
+
+### **❌ NUNCA SKIP VERIFICACIÓN DE PUERTOS**
+
+```bash
+# ❌ INCORRECTO - Iniciar sin verificar
+npm run dev
+
+# ✅ CORRECTO - Siempre verificar primero
+npm run port:verify && npm run dev
+```
+
+---
+
+## 📋 **PROTOCOLO DE DESARROLLO ACTUALIZADO**
+
+### **1. Pre-Flight Check MEJORADO**
+
+```bash
+#!/bin/bash
+# Protocolo obligatorio antes de cualquier desarrollo
+
+echo "🔍 Pre-Flight Check con puertos actualizados..."
+
+# 1. Verificar ubicación correcta
+pwd  # Debe mostrar raíz del monorepo
+
+# 2. Limpiar procesos anteriores
+pkill -f "vite|npm run dev|tsx" 2>/dev/null || true
+
+# 3. Verificar puertos libres (nuevos puertos)
+echo "📡 Verificando puertos libres..."
+lsof -i :1111 >/dev/null && echo "⚠️  Puerto 1111 ocupado" || echo "✅ Puerto 1111 libre"
+lsof -i :2222 >/dev/null && echo "⚠️  Puerto 2222 ocupado" || echo "✅ Puerto 2222 libre"  
+lsof -i :3333 >/dev/null && echo "⚠️  Puerto 3333 ocupado" || echo "✅ Puerto 3333 libre"
+
+# 4. Verificar configuración de entorno
+echo "📋 Verificando configuración..."
+cat .env | grep "localhost:1111" >/dev/null || echo "❌ Backend config incorrecta"
+cat Demo/apps/superapp-unified/.env | grep "localhost:2222" >/dev/null || echo "❌ SuperApp config incorrecta"
+
+# 5. Verificar PostgreSQL (dependencia crítica)
+brew services list | grep postgresql | grep started >/dev/null || echo "❌ PostgreSQL no iniciado"
+
+echo "✅ Pre-Flight Check completado"
+```
+
+### **2. Comandos de Inicio ACTUALIZADOS**
+
+```bash
+# ✅ ECOSISTEMA COMPLETO (Recomendado)
+npm run dev  # Inicia todo en puertos correctos
+
+# ✅ SERVICIOS INDIVIDUALES (Solo para debug)
+npm run dev:backend   # Backend en puerto 1111
+npm run dev:superapp  # SuperApp en puerto 2222  
+npm run dev:admin     # Admin en puerto 3333
+
+# ✅ VERIFICACIÓN POST-INICIO
+npm run port:verify   # Confirma que todo funciona
+npm run port:summary  # Ver resumen completo
+```
+
+### **3. Troubleshooting ACTUALIZADO**
+
+```bash
+# 🔧 Si hay problemas de puerto
+echo "🚨 Solucionando problemas de puerto..."
+
+# Matar procesos en puertos nuevos
+lsof -ti:1111,2222,3333 | xargs kill -9 2>/dev/null || true
+
+# Verificar que no hay referencias a puertos obsoletos
+grep -r "localhost:3002" . --exclude-dir=node_modules || echo "✅ Sin refs puerto 3002"
+grep -r "localhost:3001" . --exclude-dir=node_modules || echo "✅ Sin refs puerto 3001"  
+grep -r "localhost:3000" . --exclude-dir=node_modules || echo "✅ Sin refs puerto 3000"
+
+# Limpiar caché si es necesario
+rm -rf node_modules/.vite
+rm -rf Demo/apps/superapp-unified/node_modules/.vite
+rm -rf apps/admin-frontend/node_modules/.vite
+```
+
+---
+
+## 📊 **SCRIPTS ACTUALIZADOS**
+
+### **package.json Scripts MEJORADOS**
+
+```json
+{
+  "scripts": {
+    "dev": "turbo run dev",
+    "port:verify": "./scripts/verify-new-ports.sh",
+    "port:summary": "./scripts/post-migration-summary.sh", 
+    "port:clean": "lsof -ti:1111,2222,3333 | xargs kill -9 2>/dev/null || true",
+    "preflight": "./scripts/pre-flight-check.sh && npm run port:verify"
+  }
+}
+```
+
+---
+
+## 🎯 **CREDENCIALES DE DESARROLLO**
+
+### **Backend Auth (Puerto 1111)**
+```bash
+# Test de autenticación con puerto correcto
+curl -X POST "http://localhost:1111/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@gamifier.com", "password": "admin123"}'
+```
+
+### **Credenciales Disponibles (Sin cambios)**
+- `admin@gamifier.com` / `admin123` (admin)
+- `user@gamifier.com` / `123456` (user)
+- `creator@gamifier.com` / `123456` (creator)
+
+---
+
+## 📚 **DOCUMENTACIÓN ACTUALIZADA**
+
+### **URLs de Referencia NUEVAS**
+- 📋 **Migración**: `docs/implementation/PORT_MIGRATION_SUMMARY.md`
+- 🚨 **Troubleshooting**: `docs/troubleshooting/BACKGROUND_AGENT_ERROR_RESOLUTION.md`
+- ✅ **Verificación**: `scripts/verify-new-ports.sh`
+
+### **Links de Acceso ACTUALIZADOS**
+- 🔧 **Admin Panel**: http://localhost:3333  
+- 🎮 **SuperApp**: http://localhost:2222
+- ⚙️ **Backend**: http://localhost:1111
+- 📚 **API Docs**: http://localhost:1111/api
+
+---
+
+## 🎊 **RESUMEN EJECUTIVO**
+
+### **✅ ESTADO POST-MIGRACIÓN**
+- **Migración completada**: 80+ archivos actualizados
+- **Puertos organizados**: 1111, 2222, 3333 (fáciles de recordar)
+- **Documentación completa**: Guías y scripts disponibles
+- **Zero regresiones**: Funcionalidad mantenida 100%
+
+### **🔒 REGLAS CRÍTICAS**
+1. **NUNCA usar puertos obsoletos** (3002, 3001, 3000)
+2. **SIEMPRE verificar puertos** antes de desarrollo
+3. **USAR scripts de verificación** disponibles
+4. **MANTENER configuración actualizada** en .env files
+
+**🚀 ¡El ecosistema CoomÜnity está optimizado y listo para desarrollo eficiente!**
