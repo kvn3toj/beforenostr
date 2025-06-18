@@ -26,13 +26,21 @@
     "preferredModel": "claude-4-opus",
     "workspaceAccess": "full",
     "reportOutputPath": "docs/reports/",
+    "triggerFiles": [
+      ".cursor/background-agent-trigger.md",
+      "docs/reports/BACKGROUND_AGENT_MOCK_ANALYSIS_REPORT.md"
+    ],
     "focusAreas": [
-      "apps/superapp-unified/src/components/modules/uplay/",
-      "apps/superapp-unified/src/components/modules/home/",
-      "apps/superapp-unified/src/components/modules/marketplace/",
-      "apps/superapp-unified/src/components/modules/social/",
-      "apps/superapp-unified/src/hooks/",
-      "apps/superapp-unified/src/stores/"
+      "Demo/apps/superapp-unified/src/components/modules/uplay/",
+      "Demo/apps/superapp-unified/src/components/modules/home/",
+      "Demo/apps/superapp-unified/src/components/modules/marketplace/",
+      "Demo/apps/superapp-unified/src/components/modules/social/",
+      "Demo/apps/superapp-unified/src/components/modules/lets/",
+      "Demo/apps/superapp-unified/src/hooks/",
+      "Demo/apps/superapp-unified/src/stores/",
+      "Demo/apps/superapp-unified/src/data/",
+      "Demo/apps/superapp-unified/src/lib/",
+      "Demo/apps/superapp-unified/src/services/"
     ],
     "analysisPatterns": {
       "mockDataPatterns": [
@@ -41,17 +49,28 @@
         "simulateData",
         "mockCategories",
         "MOCK_ROOMS",
-        "mockQuestions"
+        "mockQuestions",
+        "marketplaceMockData",
+        "letsMockService",
+        "fallbackData"
       ],
       "bypassLogicPatterns": [
         "isBuilderIoEnv",
         "fallbackData",
-        "VITE_ENABLE_MOCK"
+        "VITE_ENABLE_MOCK",
+        "Builder.io Safe Mode",
+        "mock environment detection",
+        "fallback to mock data"
       ],
       "conflictingStylesPatterns": [
         "display: none",
         "opacity: 0",
         "!important"
+      ],
+      "criticalFiles": [
+        "Demo/apps/superapp-unified/src/data/marketplaceMockData.ts",
+        "Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts", 
+        "Demo/apps/superapp-unified/src/lib/lets-mock-service.ts"
       ]
     },
     "cosmicDesignSystemFocus": {
@@ -60,6 +79,12 @@
       "dynamicParticles": true,
       "revolutionaryAuras": true,
       "responsiveDepth": true
+    },
+    "taskPriorities": {
+      "mockDataElimination": "HIGH",
+      "visualEffectsRestoration": "HIGH", 
+      "backendIntegration": "MEDIUM",
+      "performanceOptimization": "LOW"
     }
   },
   "projectContext": {
@@ -68,6 +93,8 @@
     "framework": "React + TypeScript + Vite",
     "backend": "NestJS + PostgreSQL",
     "designSystem": "Cosmic Design System",
+    "mainIssue": "Mock data blocking visual effects manifestation",
+    "lastAnalysis": "Mock data analysis completed - 100+ files identified",
     "mainIssue": "Mock data blocking visual effects manifestation"
   }
 }
