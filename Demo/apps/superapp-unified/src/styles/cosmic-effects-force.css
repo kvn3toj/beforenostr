@@ -1,0 +1,174 @@
+/* 🌌 COSMIC EFFECTS FORCE - MANIFESTATION GUARANTEE
+   =====================================================
+   This file ensures ALL cosmic effects are visible by using
+   maximum CSS specificity and !important declarations
+   Based on troubleshooting best practices from web development */
+
+/* FORCE GLASSMORPHISM EFFECTS TO MANIFEST */
+html body #root .glassmorphism-card,
+html body #root .cosmic-card,
+html body #root [class*="glassmorphism"],
+html body #root [class*="cosmic"] {
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  background: rgba(255, 254, 251, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 16px rgba(102, 187, 106, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(102, 187, 106, 0.1) !important;
+  border-radius: 24px !important;
+  overflow: visible !important;
+  position: relative !important;
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+}
+
+/* FORCE ORBITAL EFFECTS TO MANIFEST */
+html body #root .fibonacci-orb,
+html body #root .orbital-element,
+html body #root .cosmic-center,
+html body #root [class*="orbital"],
+html body #root [class*="fibonacci"] {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 10 !important;
+  transform-style: preserve-3d !important;
+  perspective: 1500px !important;
+  animation-play-state: running !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* FORCE COSMIC PARTICLES TO MANIFEST */
+html body #root .cosmic-particle,
+html body #root .fibonacci-particle,
+html body #root .cosmic-background-svg,
+html body #root [class*="particle"] {
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: 0 !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  animation-play-state: running !important;
+}
+
+/* FORCE COSMIC ANIMATIONS TO RUN */
+html body #root [class*="cosmic-pulse"],
+html body #root [class*="cosmic-glow"],
+html body #root [class*="orbital-rotation"],
+html body #root [class*="gentle-float"] {
+  animation-play-state: running !important;
+  animation-duration: inherit !important;
+  animation-iteration-count: infinite !important;
+  opacity: 1 !important;
+  transform: translateZ(0) !important;
+}
+
+/* FORCE REVOLUTIONARY WIDGET EFFECTS */
+html body #root .revolutionary-widget,
+html body #root .enhanced-cosmic-widget,
+html body #root [class*="revolutionary"] {
+  overflow: visible !important;
+  position: relative !important;
+  transform-style: preserve-3d !important;
+  perspective: 1500px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* FORCE COSMIC GRADIENTS TO DISPLAY */
+html body #root .coomunity-gradient,
+html body #root .coomunity-gradient-gold,
+html body #root .coomunity-gradient-elements,
+html body #root [class*="gradient"] {
+  background-attachment: scroll !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* FORCE ELEMENTAL EFFECTS */
+html body #root [class*="elemental-"],
+html body #root [class*="fuego"],
+html body #root [class*="agua"],
+html body #root [class*="tierra"],
+html body #root [class*="aire"] {
+  filter: brightness(1) saturate(1.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  animation-play-state: running !important;
+}
+
+/* FORCE 3D TRANSFORMS */
+html body #root [style*="transform-style: preserve-3d"],
+html body #root [style*="perspective"] {
+  transform-style: preserve-3d !important;
+  perspective: 1500px !important;
+  overflow: visible !important;
+}
+
+/* FORCE MATERIAL-UI CONTAINERS TO ALLOW COSMIC EFFECTS */
+html body #root .MuiContainer-root,
+html body #root .MuiBox-root,
+html body #root .MuiCard-root,
+html body #root .MuiPaper-root {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* ENSURE COSMIC KEYFRAMES ARE DEFINED */
+@keyframes cosmic-pulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1); 
+    filter: brightness(1); 
+  }
+  50% { 
+    opacity: 0.85; 
+    transform: scale(1.03); 
+    filter: brightness(1.1); 
+  }
+}
+
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0px); }
+  38.2% { transform: translateY(-4px); }
+  61.8% { transform: translateY(-8px); }
+}
+
+@keyframes orbital-rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes cosmic-drift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(10px, -10px) rotate(90deg); }
+  50% { transform: translate(-5px, 10px) rotate(180deg); }
+  75% { transform: translate(-10px, -5px) rotate(270deg); }
+  100% { transform: translate(0, 0) rotate(360deg); }
+}
+
+/* FORCE VISIBILITY FOR ALL COSMIC ELEMENTS */
+html body #root [class*="cosmic"],
+html body #root [class*="fibonacci"],
+html body #root [class*="orbital"],
+html body #root [class*="revolutionary"],
+html body #root [class*="glassmorphism"] {
+  visibility: visible !important;
+  display: block !important;
+  opacity: 1 !important;
+}
+
+/* HIGH SPECIFICITY RESET FOR PROBLEMATIC OVERRIDES */
+html body #root * {
+  animation-play-state: running;
+}
+
+html body #root *[class*="cosmic"],
+html body #root *[class*="glassmorphism"],
+html body #root *[class*="revolutionary"] {
+  overflow: visible !important;
+}

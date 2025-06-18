@@ -1,42 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
   Typography,
   Grid,
   Card,
-  CardMedia,
   CardContent,
+  CardMedia,
   Button,
   Chip,
-  Stack,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
-import {
-  marketplaceMockData,
-  getItemsByCategory,
-  getFeaturedItems,
-  getTrendingItems,
-} from '../data/marketplaceMockData';
+import { useMarketplaceData } from '../hooks/useRealBackendData';
 
 /**
  * 🧪 Página de prueba para verificar que los datos del marketplace funcionen correctamente
  * Esta página muestra una vista previa de todos los datos mock generados
  */
 export const MarketplaceTest: React.FC = () => {
-  const featuredItems = getFeaturedItems();
-  const trendingItems = getTrendingItems();
-  const sustainabilityItems = getItemsByCategory('sostenibilidad');
-  const educationItems = getItemsByCategory('educacion');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Usar datos REALES del backend únicamente
+  const { data: marketplaceData, isLoading, error } = useMarketplaceData();
+  
+  if (isLoading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4, textAlign: 'center' }}>
+        <CircularProgress size={60} />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Cargando productos reales del marketplace...
+        </Typography>
+      </Container>
+    );
+  }
 
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="error">
+          Error cargando productos del marketplace: {error.message}
+        </Alert>
+      </Container>
+    );
+  }
+
+  const items = marketplaceData?.items || [];
+  
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Typography variant="h3" component="h1" gutterBottom>
-        🧪 Test de Datos del Marketplace
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Typography variant="h3" component="h1" gutterBottom align="center">
+        🏪 Marketplace CoomÜnity
+      </Typography>
+      
+      <Typography variant="h6" align="center" color="text.secondary" gutterBottom>
+        {items.length} productos y servicios del bien común
       </Typography>
 
-      <Typography variant="h6" color="text.secondary" paragraph>
-        Esta página muestra todos los datos mock generados para verificar que
-        las imágenes y navegación funcionan correctamente.
+      <Typography variant="subtitle1" align="center" sx={{ mb: 4 }}>
+        Categorías: {new Set(items.map((item) => item.category || item.type)).size} | 
+        Datos: BACKEND REAL ✅
       </Typography>
 
       {/* Estadísticas generales */}
@@ -52,25 +81,25 @@ export const MarketplaceTest: React.FC = () => {
         <Grid container spacing={3}>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {marketplaceMockData.length}
+              {items.length}
             </Typography>
             <Typography variant="body2">Items Totales</Typography>
           </Grid>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {featuredItems.length}
+              {items.filter((item) => item.featured).length}
             </Typography>
             <Typography variant="body2">Items Destacados</Typography>
           </Grid>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {trendingItems.length}
+              {items.filter((item) => item.trending).length}
             </Typography>
             <Typography variant="body2">Items Trending</Typography>
           </Grid>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {new Set(marketplaceMockData.map((item) => item.category)).size}
+              {new Set(items.map((item) => item.category)).size}
             </Typography>
             <Typography variant="body2">Categorías</Typography>
           </Grid>
@@ -82,7 +111,7 @@ export const MarketplaceTest: React.FC = () => {
         🌟 Items Destacados
       </Typography>
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        {featuredItems.map((item) => (
+        {items.filter((item) => item.featured).map((item) => (
           <Grid size={{xs:12,sm:6,md:4}} key={item.id}>
             <Card
               sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
@@ -134,7 +163,7 @@ export const MarketplaceTest: React.FC = () => {
         🔥 Items Trending
       </Typography>
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        {trendingItems.map((item) => (
+        {items.filter((item) => item.trending).map((item) => (
           <Grid size={{xs:12,sm:6,md:4}} key={item.id}>
             <Card
               sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
@@ -195,10 +224,10 @@ export const MarketplaceTest: React.FC = () => {
       </Typography>
 
       <Typography variant="h5" component="h3" gutterBottom sx={{ mt: 3 }}>
-        🌱 Sostenibilidad ({sustainabilityItems.length} items)
+        🌱 Sostenibilidad ({items.filter((item) => item.category === 'sostenibilidad').length} items)
       </Typography>
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        {sustainabilityItems.slice(0, 3).map((item) => (
+        {items.filter((item) => item.category === 'sostenibilidad').slice(0, 3).map((item) => (
           <Grid size={{xs:12,sm:4}} key={item.id}>
             <Card>
               <CardMedia
@@ -222,10 +251,10 @@ export const MarketplaceTest: React.FC = () => {
       </Grid>
 
       <Typography variant="h5" component="h3" gutterBottom sx={{ mt: 3 }}>
-        📚 Educación ({educationItems.length} items)
+        📚 Educación ({items.filter((item) => item.category === 'educacion').length} items)
       </Typography>
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        {educationItems.slice(0, 3).map((item) => (
+        {items.filter((item) => item.category === 'educacion').slice(0, 3).map((item) => (
           <Grid size={{xs:12,sm:4}} key={item.id}>
             <Card>
               <CardMedia
@@ -263,7 +292,7 @@ export const MarketplaceTest: React.FC = () => {
       >
         <pre style={{ fontSize: '12px', margin: 0 }}>
           {JSON.stringify(
-            marketplaceMockData.map((item) => ({
+            items.map((item) => ({
               id: item.id,
               title: item.title,
               price: item.price,

@@ -43,160 +43,31 @@ const queryKeys = {
 export const useWalletData = (enabled: boolean = true) => {
   const { user } = useAuth();
 
-  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
-  const isBuilderEnvironment = typeof window !== 'undefined' && 
-    (window.location.hostname.includes('builder.io') || 
-     window.location.port === '48752' ||
-     window.location.hostname.includes('preview'));
-
-  return useQuery({
-    queryKey: queryKeys.walletData(user?.id || 'anonymous'),
-    queryFn: async (): Promise<WalletData> => {
-      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
-      if (isBuilderEnvironment) {
-        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para WalletIntegration');
-        const mockBalance = 185000;
-        const mockUcoins = 650;
-        
-        return {
-          balance: mockBalance,
-          currency: 'COP',
-          ucoins: mockUcoins,
-          meritos: 485,
-          ondas: 1250,
-          pendingBalance: 25000,
-          monthlyChange: 12.5,
-          ayniLevel: 68,
-          collaborationScore: 8.7,
-          communityRank: '#1,247',
-          accounts: [
-            {
-              id: 'principal',
-              name: 'Cuenta Principal CoomÜnity',
-              type: 'checking',
-              balance: mockBalance,
-              currency: 'COP',
-              primary: true,
-            },
-            {
-              id: 'ucoins',
-              name: 'ÜCoins Wallet',
-              type: 'crypto',
-              balance: mockUcoins,
-              currency: 'UC',
-              primary: false,
-            },
-            {
-              id: 'ahorros',
-              name: 'Ahorros Ayni',
-              type: 'savings',
-              balance: Math.floor(mockBalance * 0.3),
-              currency: 'COP',
-              primary: false,
-            },
-          ],
-          recentTransactions: [
-            {
-              id: '1',
-              type: 'income',
-              amount: 18500,
-              currency: 'COP',
-              description: 'Recompensa por colaboración CoomÜnity',
-              date: new Date(Date.now() - 86400000).toISOString(),
-              status: 'completed',
-              ayniScore: 9,
-              bienComunContribution: true,
-              category: 'reward',
-            },
-            {
-              id: '2',
-              type: 'expense',
-              amount: 9250,
-              currency: 'COP',
-              description: 'Intercambio de servicios',
-              date: new Date(Date.now() - 172800000).toISOString(),
-              status: 'completed',
-              ayniScore: 8,
-              bienComunContribution: true,
-              category: 'exchange',
-            },
-          ],
-          paymentMethods: [
-            {
-              id: '1',
-              name: 'CoomÜnity Card',
-              type: 'credit',
-              lastFour: '4721',
-              primary: true,
-            },
-            {
-              id: '2',
-              name: 'Nequi',
-              type: 'digital',
-              lastFour: '8923',
-              primary: false,
-            },
-          ],
-        };
-      }
-
-      // 🔗 En desarrollo normal, usar el backend real
+  const walletData = useQuery({
+    queryKey: ['wallet-integration', user?.id || 'anonymous'],
+    queryFn: async () => {
+      // 🔗 SIEMPRE intentar llamada API real al backend NestJS
       try {
-        console.log('🔗 [WalletIntegration] Conectando con backend real /wallets/me');
-        
-        // 🎯 Llamar al endpoint real del backend
-        const backendResponse = await walletAPI.getMyWallet();
-        const backendWallet = backendResponse as BackendWalletResponse;
-        
-        console.log('✅ [WalletIntegration] Datos recibidos del backend:', backendWallet);
-        
-        // 🔄 Mapear la respuesta del backend al formato de la SuperApp
-        const walletData = mapBackendWalletToWalletData(backendWallet);
-        
-        console.log('🎯 [WalletIntegration] Datos mapeados para la SuperApp:', walletData);
-        
-        return walletData;
+        const response = await walletAPI.getBalance(user?.id || 'anonymous');
+        console.log('✅ [WalletIntegration] Datos del backend obtenidos exitosamente');
+        return response;
       } catch (error) {
-        console.error('❌ [WalletIntegration] Error conectando con backend:', error);
-        
-        // 🔄 Fallback a datos mock en caso de error
-        console.log('🔄 [WalletIntegration] Usando datos mock como fallback');
-        
-        const fallbackBalance = 0;
-        const fallbackUcoins = 0;
-        
+        // 🔄 Fallback básico en caso de error
+        console.log('🔄 [WalletIntegration] Usando datos básicos como fallback');
         return {
-          balance: fallbackBalance,
-          currency: 'UC',
-          ucoins: fallbackUcoins,
-          meritos: 0,
-          ondas: 0,
-          pendingBalance: 0,
-          monthlyChange: 0,
-          ayniLevel: 0,
-          collaborationScore: 0,
-          communityRank: '#N/A',
-          accounts: [
-            {
-              id: 'principal',
-              name: 'Cuenta Principal CoomÜnity',
-              type: 'checking',
-              balance: fallbackBalance,
-              currency: 'UC',
-              primary: true,
-            },
-          ],
-          recentTransactions: [],
-          paymentMethods: [],
+          balance: 0,
+          currency: 'COP',
+          ucoins: 0,
+          accounts: [],
+          transactions: [],
         };
       }
     },
     enabled: enabled && !!user?.id,
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    cacheTime: 10 * 60 * 1000, // 10 minutos
-    retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 1000 * 60 * 5, // 5 minutos
   });
+
+  return walletData;
 };
 
 // 📊 Hook para historial de transacciones con fallback inteligente

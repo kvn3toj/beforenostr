@@ -40,95 +40,32 @@ import {
   CollaborationHub,
 } from './components/enhanced';
 
-// 🎭 Datos mock con terminología CoomÜnity
-const mockSocialData = {
+// ✅ ELIMINADOS: Datos mock hardcodeados masivos - Usar SOLO datos reales del backend
+// ❌ Datos mock con terminología CoomÜnity
+// const mockSocialData = {
+//   userStats: { /* 100+ líneas de datos hardcodeados */ },
+//   communityMetrics: { /* datos hardcodeados */ },
+//   notifications: [ /* arrays hardcodeados */ ],
+//   quickActions: [ /* acciones hardcodeadas */ ],
+// };
+
+// ✅ DATOS DINÁMICOS REALES ÚNICAMENTE
+const createRealSocialData = (backendData: any) => ({
   userStats: {
-    ayniBalance: 0.82, // Balance de dar/recibir en interacciones sociales
-    socialLevel: 'Tejedor de Redes',
-    nextLevel: 'Guardián de Comunidad',
-    socialProgress: 67,
-    connectionsCount: 34,
-    collaborationsCount: 12,
-    bienComunContributions: 18,
-    socialMeritos: 520,
-    trustScore: 4.8,
-    elementos: {
-      comunicacion: 88, // Elemento aire - comunicación
-      empatia: 94, // Elemento agua - empatía y fluidez
-      confianza: 78, // Elemento tierra - estabilidad y confianza
-      inspiracion: 85, // Elemento fuego - pasión e inspiración
-    },
+    ayniBalance: backendData?.ayniBalance || 0,
+    socialLevel: backendData?.socialLevel || 'Nuevo Miembro',
+    connectionsCount: backendData?.connectionsCount || 0,
+    collaborationsCount: backendData?.collaborationsCount || 0,
+    socialMeritos: backendData?.socialMeritos || 0,
+    trustScore: backendData?.trustScore || 0,
   },
   communityMetrics: {
-    activeConnections: 127,
-    onlineMembers: 45,
-    dailyInteractions: 89,
-    ayniExchanges: 23,
-    activeCircles: 8,
-    weeklyGrowth: 12.5,
+    activeConnections: backendData?.activeConnections || 0,
+    onlineMembers: backendData?.onlineMembers || 0,
+    dailyInteractions: backendData?.dailyInteractions || 0,
   },
-  notifications: [
-    {
-      id: '1',
-      type: 'ayni_completed',
-      title: 'Intercambio Ayni completado',
-      message:
-        'Tu intercambio de conocimiento con Ana María ha sido equilibrado',
-      time: '30min',
-      priority: 'high',
-      category: 'ayni',
-    },
-    {
-      id: '2',
-      type: 'circle_invitation',
-      title: 'Invitación a Círculo',
-      message:
-        'Te invitaron al círculo "Emprendedores Sostenibles de Medellín"',
-      time: '2h',
-      priority: 'medium',
-      category: 'collaboration',
-    },
-    {
-      id: '3',
-      type: 'connection_request',
-      title: 'Nueva conexión',
-      message: 'Carlos Ramírez quiere conectar contigo por intereses comunes',
-      time: '1d',
-      priority: 'medium',
-      category: 'network',
-    },
-  ],
-  quickActions: [
-    {
-      id: 'offer-help',
-      label: 'Ofrecer Ayuda',
-      description: 'Comparte tu conocimiento o servicio',
-      category: 'ayni',
-      path: '/social/offer',
-    },
-    {
-      id: 'request-help',
-      label: 'Pedir Ayuda',
-      description: 'Solicita apoyo de la comunidad',
-      category: 'ayni',
-      path: '/social/request',
-    },
-    {
-      id: 'create-circle',
-      label: 'Formar Círculo',
-      description: 'Inicia un grupo de colaboración',
-      category: 'collaboration',
-      path: '/social/create-circle',
-    },
-    {
-      id: 'share-wisdom',
-      label: 'Compartir Sabiduría',
-      description: 'Publica conocimiento para el Bien Común',
-      category: 'knowledge',
-      path: '/social/share',
-    },
-  ],
-};
+  quickActions: backendData?.quickActions || [],
+});
 
 interface SocialMainProps {
   onNavigate?: (path: string) => void;
@@ -189,15 +126,19 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
     : [];
   const normalizedNotifications = Array.isArray(notificationsData?.data)
     ? notificationsData.data
-    : mockSocialData.notifications;
+    : [];
 
-  // 📊 Calcular métricas dinámicas
+  // 📊 Calcular métricas dinámicas usando datos reales del backend
+  const realSocialData = createRealSocialData(notificationsData);
   const dynamicStats = {
-    ...mockSocialData.userStats,
-    connectionsCount:
-      normalizedMatches.length || mockSocialData.userStats.connectionsCount,
+    ...realSocialData.userStats,
+    socialLevel: realSocialData.userStats.socialLevel,
+    connectionsCount: normalizedMatches.length || realSocialData.userStats.connectionsCount,
     // Agregar más cálculos dinámicos basados en datos reales
   };
+
+  const dynamicCommunityMetrics = realSocialData.communityMetrics;
+  const dynamicQuickActions = realSocialData.quickActions;
 
   return (
     <RevolutionaryWidget
@@ -295,7 +236,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
                   icon={
                     <Badge
                       badgeContent={
-                        mockSocialData.communityMetrics.dailyInteractions
+                        dynamicStats.dailyInteractions
                       }
                       color="secondary"
                     >
@@ -320,7 +261,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
                   label="Círculos de Colaboración"
                   icon={
                     <Badge
-                      badgeContent={mockSocialData.communityMetrics.activeCircles}
+                      badgeContent={dynamicStats.activeCircles}
                       color="warning"
                     >
                       <GroupsIcon />
@@ -346,15 +287,15 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
                   <Grid size={{xs:12,lg:8}}>
                     <CommunityFeed
                       isConnected={backendAvailability.isAvailable}
-                      quickActions={mockSocialData.quickActions}
+                      quickActions={dynamicQuickActions}
                       onQuickAction={handleQuickAction}
-                      communityMetrics={mockSocialData.communityMetrics}
+                      communityMetrics={dynamicCommunityMetrics}
                     />
                   </Grid>
                   <Grid size={{xs:12,lg:4}}>
                     <AyniSocialMetrics
                       userStats={dynamicStats}
-                      communityMetrics={mockSocialData.communityMetrics}
+                      communityMetrics={dynamicCommunityMetrics}
                       notifications={normalizedNotifications}
                       isLoading={notificationsLoading}
                       isConnected={backendAvailability.isAvailable}
@@ -405,7 +346,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
                   <Grid size={{xs:12}}>
                     <AyniSocialMetrics
                       userStats={dynamicStats}
-                      communityMetrics={mockSocialData.communityMetrics}
+                      communityMetrics={dynamicCommunityMetrics}
                       notifications={normalizedNotifications}
                       isLoading={notificationsLoading}
                       isConnected={backendAvailability.isAvailable}

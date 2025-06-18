@@ -26,6 +26,9 @@ import {
   Divider,
   Badge,
   Collapse,
+  Slider,
+  Dialog,
+  DialogContent,
 } from '@mui/material';
 
 // Icons - Import only what we need
@@ -54,10 +57,21 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import {
+  PlayArrow,
+  Pause,
+  VolumeUp,
+  VolumeOff,
+  Fullscreen,
+  FullscreenExit,
+  Replay10,
+  Forward10,
+  ClosedCaption,
+  Speed,
+} from '@mui/icons-material';
 
 // Hooks and services
 import { useVideos } from '../../../hooks/useRealBackendData';
-import { useUPlayMockData } from '../../../hooks/useUPlayMockData';
 import { useVideoAnalytics } from '../../../hooks/analytics/useVideoAnalytics';
 
 // Types
@@ -232,7 +246,6 @@ const UnifiedUPlayPlayer: React.FC<UnifiedUPlayPlayerProps> = ({
 
   // Backend data hooks
   const { data: backendVideos, isLoading: isBackendLoading, isError: isBackendError } = useVideos();
-  const { formatDuration } = useUPlayMockData();
 
   // Video player state
   const [isPlaying, setIsPlaying] = useState(autoPlay);
@@ -279,6 +292,13 @@ const UnifiedUPlayPlayer: React.FC<UnifiedUPlayPlayerProps> = ({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const questionTimerRef = useRef<NodeJS.Timeout | null>(null);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Función local para formatear duración (reemplaza useUPlayMockData)
+  const formatDuration = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
 
   // Safe play function to handle Safari restrictions
   const safePlay = useCallback(async () => {

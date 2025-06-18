@@ -2,13 +2,14 @@
 // Integración con React Query para manejo de estado y cache
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { letsApiService } from '../lib/lets-api-service';
-import { letsMockService } from '../lib/lets-mock-service';
+import letsBackendService from '../lib/lets-backend-service';
 import { apiService } from '../lib/api-service';
 
-// Switch para usar mock o API real
-const USE_MOCK_LETS = false; // ✅ Cambiado a false para usar backend real
-const letsService = USE_MOCK_LETS ? letsMockService : letsApiService;
+// CONFIGURACIÓN: Usar SOLO backend real, sin fallback a mock
+const USE_MOCK_LETS = false;
+
+// Servicio principal: SOLO backend real
+const letsService = letsBackendService;
 
 import {
   UnitsWallet,

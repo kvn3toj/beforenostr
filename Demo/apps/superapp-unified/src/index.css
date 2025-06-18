@@ -30,6 +30,26 @@
 /* Import simple orbital animations - More intuitive approach */
 @import './styles/simple-orbital-animations.css';
 
+/* ✨ COSMIC DESIGN SYSTEM - CRITICAL MISSING IMPORTS */
+/* Import revolutionary system for glassmorphism effects */
+@import './styles/home-revolutionary-system.css';
+
+/* Import advanced effects including glassmorphism cards */
+@import './styles/home-effects-advanced.css';
+
+/* Import golden ratio system for perfect proportions */
+@import './styles/golden-ratio-system.css';
+
+/* Import golden color system for áureo mathematics */
+@import './styles/golden-color-system.css';
+
+/* Import solar system SVG for cosmic backgrounds */
+@import './styles/solar-system-svg.css';
+
+/* ⚡ COSMIC EFFECTS FORCE - MAXIMUM PRIORITY */
+/* Import cosmic effects force at the END for maximum CSS specificity */
+@import './styles/cosmic-effects-force.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -91,6 +111,67 @@ body {
 
 .MuiTypography-root {
   font-family: var(--font-family-primary) !important;
+}
+
+/* ✨ COSMIC EFFECTS - MAXIMUM PRIORITY OVERRIDES */
+/* Ensure cosmic effects are never blocked by other CSS rules */
+
+/* Force glassmorphism visibility */
+.glassmorphism-card,
+.cosmic-card,
+.revolutionary-widget,
+.enhanced-cosmic-widget {
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  background: rgba(255, 254, 251, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Force orbital effects visibility */
+.orbital-element,
+.fibonacci-orb,
+.cosmic-center,
+.orbital-elements-container {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Force particle effects visibility */
+.cosmic-particle,
+.fibonacci-particle,
+.cosmic-background-svg {
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: 0 !important;
+  overflow: visible !important;
+}
+
+/* Force cosmic animations */
+.cosmic-pulse,
+.cosmic-glow,
+.cosmic-text {
+  animation-play-state: running !important;
+  opacity: 1 !important;
+}
+
+/* Ensure RevolutionaryWidget has full cosmic effects */
+.revolutionary-widget-container,
+.revolutionary-widget-content {
+  overflow: visible !important;
+  position: relative !important;
+  transform-style: preserve-3d !important;
+}
+
+/* Force cosmic gradients visibility */
+.coomunity-gradient,
+.coomunity-gradient-gold,
+.coomunity-gradient-elements {
+  background-attachment: fixed !important;
+  background-size: cover !important;
 }
 
 /* === COOMUNITY SPECIFIC CLASSES === */

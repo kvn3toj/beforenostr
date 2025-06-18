@@ -400,9 +400,9 @@ export function useUserActivities(userId?: string, limit: number = 20) {
         const response = await userAPI.getProfile(targetUserId);
         return response.activities || [];
       } catch (error) {
-        console.warn('🔄 Fallback: Actividades mock');
-        // Retornar datos mock si no hay backend disponible
-        return mockUserActivities;
+        console.warn('🔄 Error obteniendo actividades - retornando array vacío');
+        // ✅ ELIMINADO: Fallback a mock - retornar array vacío en lugar de datos mock
+        return [];
       }
     },
     {
@@ -427,9 +427,9 @@ export function useUserAchievements(userId?: string) {
         const response = await userAPI.getProfile(targetUserId);
         return response.achievements || [];
       } catch (error) {
-        console.warn('🔄 Fallback: Logros mock');
-        // Retornar datos mock si no hay backend disponible
-        return mockUserAchievements;
+        console.warn('🔄 Error obteniendo logros - retornando array vacío');
+        // ✅ ELIMINADO: Fallback a mock - retornar array vacío en lugar de datos mock
+        return [];
       }
     },
     {
@@ -521,17 +521,17 @@ export function useGamificationMetrics(userId?: string) {
         const response = await gameAPI.getUserStats(targetUserId);
         return response;
       } catch (error) {
-        console.warn('🔄 Fallback: Métricas mock');
-        // Retornar datos mock si no hay backend disponible
+        console.warn('🔄 Error obteniendo métricas - retornando datos básicos');
+        // ✅ ELIMINADO: Fallback a mock - retornar datos básicos
         return {
-          level: 15,
-          meritos: 2450,
-          ondas: 1875,
-          ayniLevel: 78,
-          completedChallenges: 23,
-          socialConnections: 147,
-          marketplaceRating: 4.8,
-          pilgrimProgress: 65,
+          level: 1,
+          meritos: 0,
+          ondas: 0,
+          ayniLevel: 0,
+          completedChallenges: 0,
+          socialConnections: 0,
+          marketplaceRating: 0,
+          pilgrimProgress: 0,
         };
       }
     },
@@ -559,8 +559,8 @@ export function useSocialConnections(userId?: string) {
         );
         return response.data || [];
       } catch (error) {
-        console.warn('🔄 Fallback: Conexiones mock');
-        // Retornar datos mock si no hay backend disponible
+        console.warn('🔄 Error obteniendo conexiones - retornando array vacío');
+        // ✅ ELIMINADO: Fallback a mock - retornar array vacío
         return [];
       }
     },
