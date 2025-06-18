@@ -106,7 +106,7 @@ class ChatWebSocketService {
 
     try {
       // Conectar al WebSocket del Backend NestJS
-      const wsUrl = `ws://localhost:3002/chat/${matchId}?userId=${userId}`;
+      const wsUrl = `ws://localhost:1111/chat/${matchId}?userId=${userId}`;
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {

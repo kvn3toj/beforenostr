@@ -186,7 +186,7 @@ export const Mundos: React.FC = () => {
         <Box sx={{ mt: 4, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
           <Typography variant="caption" color="text.secondary">
             <strong>Debug Info:</strong><br/>
-            Backend URL: {import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002'}<br/>
+            Backend URL: {import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111'}<br/>
             Mundos cargados: {mundos?.length || 0}<br/>
             Test endpoint: {mundosTest.data?.message || 'No data'}<br/>
             Health status: {backendHealth.isAvailable ? 'OK' : 'Error'}

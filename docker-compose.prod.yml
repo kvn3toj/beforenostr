@@ -1,4 +1,4 @@
-THIS SHOULD BE A LINTER ERROR# ================================================================
+# ================================================================
 # CoomÜnity Monorepo - Docker Compose para Producción
 # Configuración completa del ecosistema en producción
 # ================================================================
@@ -32,7 +32,7 @@ services:
       REDIS_URL: redis://redis:6379
       
       # CORS
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:3001}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3333,http://localhost:2222}
       
       # Otras configuraciones
       BCRYPT_ROUNDS: ${BCRYPT_ROUNDS:-12}

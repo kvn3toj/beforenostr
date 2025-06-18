@@ -107,13 +107,13 @@ const ConnectionDiagnostics: React.FC<ConnectionDiagnosticsProps> = ({
 
     try {
       // Test Backend Health
-      const healthResponse = await fetch('http://localhost:3002/health');
+      const healthResponse = await fetch('http://localhost:1111/health');
       if (healthResponse.ok) {
         results.push({
           service: 'Backend Health',
           status: 'success',
           message: 'Backend NestJS disponible',
-          details: `Puerto 3002 respondiendo correctamente`,
+          details: `Puerto 1111 respondiendo correctamente`,
           timestamp: new Date().toISOString(),
         });
       } else {
@@ -130,7 +130,7 @@ const ConnectionDiagnostics: React.FC<ConnectionDiagnosticsProps> = ({
         service: 'Backend Health',
         status: 'error',
         message: 'Backend no disponible',
-        details: 'No se puede conectar al puerto 3002',
+        details: 'No se puede conectar al puerto 1111',
         timestamp: new Date().toISOString(),
       });
     }

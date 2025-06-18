@@ -75,7 +75,7 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
   const getQuickFixes = (error: any) => {
     const category = getErrorCategory(error);
     const baseURL =
-      import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+      import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 
     switch (category) {
       case 'network':
@@ -111,7 +111,7 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
 
   const getTroubleshootingSteps = () => {
     const baseURL =
-      import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+      import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 
     return [
       {
@@ -334,7 +334,7 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
                 fontSize: '0.8rem',
               }}
             >
-              {`Backend URL: ${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002'}
+              {`Backend URL: ${import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111'}
 Frontend Origin: ${window.location.origin}
 Mock Auth: ${import.meta.env.VITE_ENABLE_MOCK_AUTH || 'false'}
 Navigator Online: ${navigator.onLine}

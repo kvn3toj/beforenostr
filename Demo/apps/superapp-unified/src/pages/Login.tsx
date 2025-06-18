@@ -194,7 +194,7 @@ const Login: React.FC = () => {
 
     try {
       const API_BASE_URL =
-        import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+        import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 
       console.group('🧪 Simple Login Test');
       console.log('📍 API URL:', `${API_BASE_URL}/auth/login`);
@@ -256,7 +256,7 @@ const Login: React.FC = () => {
     // Debug inmediato en consola
     const debugAuth = async () => {
       const API_BASE_URL =
-        import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+        import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111';
 
       console.group('🔍 Auth Connection Debug');
 
@@ -471,7 +471,7 @@ const Login: React.FC = () => {
                   <strong>🔧 Desarrollo:</strong>
                   <br />
                   Backend:{' '}
-                  {import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002'}
+                  {import.meta.env.VITE_API_BASE_URL || 'http://localhost:1111'}
                   <br />
                   Mock Auth:{' '}
                   {import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true'
