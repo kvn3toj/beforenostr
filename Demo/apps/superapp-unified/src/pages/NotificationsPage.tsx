@@ -1,142 +1,44 @@
 import React, { useState } from 'react'
 import {
   Box,
+  Container,
   Typography,
+  Tabs,
+  Tab,
   Card,
   CardContent,
   CardActions,
   Button,
-  Chip,
   IconButton,
-  Avatar,
+  Chip,
   Stack,
-  Divider,
   Badge,
-  Tab,
-  Tabs,
-  Alert,
   CircularProgress,
+  Alert,
 } from '@mui/material'
 import {
   Notifications as NotificationsIcon,
-  NotificationImportant as ImportantIcon,
-  CheckCircle as ReadIcon,
-  Circle as UnreadIcon,
-  Delete as DeleteIcon,
   Star as StarIcon,
-  Campaign as ChallengeIcon,
-  Store as MarketplaceIcon,
+  Delete as DeleteIcon,
+  MarkEmailRead as ReadIcon,
+  MarkEmailUnread as UnreadIcon,
+  Extension as ChallengeIcon,
+  MonetizationOn as MeritIcon,
+  Storefront as MarketplaceIcon,
   Group as GroupIcon,
-  EmojiEvents as MeritIcon,
+  Announcement as ImportantIcon,
 } from '@mui/icons-material'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-// Types
-interface UserNotification {
-  id: string
-  title: string
-  message: string
-  type: 'CHALLENGE_ALERT' | 'MERIT_AWARDED' | 'MARKETPLACE_UPDATE' | 'GROUP_INVITATION' | 'SYSTEM_ANNOUNCEMENT'
-  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
-  isRead: boolean
-  isStarred: boolean
-  createdAt: string
-  actionUrl?: string
-  metadata?: {
-    imageUrl?: string
-    actionText?: string
-    relatedEntityId?: string
-  }
-}
+// ✅ Importar servicio real y tipos
+import { 
+  notificationsService, 
+  type UserNotification,
+  type NotificationResponse 
+} from '../services/notifications.service'
 
-// Mock API functions
-const fetchUserNotifications = async (): Promise<UserNotification[]> => {
-  return [
-    {
-      id: '1',
-      title: '¡Nuevo Desafío Ayni Explorer!',
-      message: 'Un nuevo desafío semanal te invita a explorar el principio de reciprocidad. Participa y gana Méritos por contribuir al Bien Común.',
-      type: 'CHALLENGE_ALERT',
-      priority: 'HIGH',
-      isRead: false,
-      isStarred: true,
-      createdAt: '2024-01-15T10:00:00Z',
-      actionUrl: '/challenges/ayni-explorer',
-      metadata: {
-        actionText: 'Participar Ahora',
-        relatedEntityId: 'challenge_ayni_1'
-      }
-    },
-    {
-      id: '2',
-      title: 'Méritos Recibidos - Huerto Comunitario',
-      message: 'Has recibido 100 Méritos por tu valiosa contribución al proyecto del Huerto Comunitario. ¡Gracias por hacer crecer el Bien Común!',
-      type: 'MERIT_AWARDED',
-      priority: 'MEDIUM',
-      isRead: false,
-      isStarred: false,
-      createdAt: '2024-01-14T16:45:00Z',
-      actionUrl: '/wallet',
-      metadata: {
-        actionText: 'Ver Méritos',
-        relatedEntityId: 'merit_huerto_100'
-      }
-    },
-    {
-      id: '3',
-      title: 'Nuevo Item: Verduras Orgánicas',
-      message: 'El Huerto Comunitario ha agregado verduras frescas cultivadas con principios de permacultura. ¡Intercambio disponible con Lükas!',
-      type: 'MARKETPLACE_UPDATE',
-      priority: 'MEDIUM',
-      isRead: true,
-      isStarred: false,
-      createdAt: '2024-01-13T12:20:00Z',
-      actionUrl: '/marketplace',
-      metadata: {
-        actionText: 'Ver en Marketplace',
-        imageUrl: '/images/verduras-organicas.jpg'
-      }
-    },
-    {
-      id: '4',
-      title: 'Invitación: Círculo de Meditación',
-      message: 'Te han invitado al Círculo de Meditación Matutina. Reconéctate con la naturaleza y la comunidad cada amanecer.',
-      type: 'GROUP_INVITATION',
-      priority: 'MEDIUM',
-      isRead: true,
-      isStarred: false,
-      createdAt: '2024-01-12T08:30:00Z',
-      actionUrl: '/groups/meditacion-matutina',
-      metadata: {
-        actionText: 'Unirse al Círculo'
-      }
-    },
-    {
-      id: '5',
-      title: 'Mantenimiento Programado',
-      message: 'Realizaremos mantenimiento en la plataforma el domingo de 2:00 AM a 4:00 AM. Algunas funciones podrían no estar disponibles.',
-      type: 'SYSTEM_ANNOUNCEMENT',
-      priority: 'HIGH',
-      isRead: true,
-      isStarred: false,
-      createdAt: '2024-01-10T14:30:00Z'
-    }
-  ]
-}
-
-const markAsRead = async (notificationId: string): Promise<void> => {
-  console.log('Marking as read:', notificationId)
-}
-
-const toggleStar = async (notificationId: string): Promise<void> => {
-  console.log('Toggling star:', notificationId)
-}
-
-const deleteNotification = async (notificationId: string): Promise<void> => {
-  console.log('Deleting notification:', notificationId)
-}
-
+// ✅ Usar tipos importados del servicio
 interface TabPanelProps {
   children?: React.ReactNode
   index: number
@@ -153,31 +55,59 @@ const NotificationsPage: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0)
   const queryClient = useQueryClient()
 
-  const { data: notifications = [], isLoading, error } = useQuery({
+  // ✅ Query real al backend para obtener notificaciones
+  const { data: notificationData, isLoading, error } = useQuery({
     queryKey: ['user-notifications'],
-    queryFn: fetchUserNotifications,
+    queryFn: () => notificationsService.getUserNotifications(),
+    staleTime: 30000, // 30 segundos
+    refetchOnWindowFocus: true,
   })
 
+  const notifications = notificationData?.notifications || []
+  const unreadNotifications = notifications.filter(n => !n.isRead)
+  const starredNotifications = notifications.filter(n => n.isStarred)
+
+  // ✅ Mutaciones reales al backend
   const markReadMutation = useMutation({
-    mutationFn: markAsRead,
+    mutationFn: (notificationId: string) => notificationsService.markAsRead(notificationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-notifications'] })
       toast.success('Marcada como leída')
     },
+    onError: (error: any) => {
+      toast.error(error.message || 'Error al marcar como leída')
+    },
   })
 
   const toggleStarMutation = useMutation({
-    mutationFn: toggleStar,
+    mutationFn: (notificationId: string) => notificationsService.toggleStar(notificationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-notifications'] })
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Error al cambiar destacado')
     },
   })
 
   const deleteMutation = useMutation({
-    mutationFn: deleteNotification,
+    mutationFn: (notificationId: string) => notificationsService.deleteNotification(notificationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-notifications'] })
       toast.success('Notificación eliminada')
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Error al eliminar notificación')
+    },
+  })
+
+  const markAllReadMutation = useMutation({
+    mutationFn: () => notificationsService.markAllAsRead(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-notifications'] })
+      toast.success('Todas las notificaciones marcadas como leídas')
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Error al marcar todas como leídas')
     },
   })
 
@@ -213,9 +143,6 @@ const NotificationsPage: React.FC = () => {
     }
   }
 
-  const unreadNotifications = notifications.filter(n => !n.isRead)
-  const starredNotifications = notifications.filter(n => n.isStarred)
-
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -249,6 +176,23 @@ const NotificationsPage: React.FC = () => {
             </Typography>
           </Box>
         </Box>
+        
+        {/* Botón para marcar todas como leídas */}
+        {unreadNotifications.length > 0 && (
+          <Button
+            variant="outlined"
+            startIcon={<ReadIcon />}
+            onClick={() => markAllReadMutation.mutate()}
+            disabled={markAllReadMutation.isPending}
+            sx={{ 
+              borderColor: '#CDAB5A',
+              color: '#CDAB5A',
+              '&:hover': { borderColor: '#B8954A', backgroundColor: 'rgba(205, 171, 90, 0.1)' }
+            }}
+          >
+            Marcar todas como leídas
+          </Button>
+        )}
       </Box>
 
       {/* Tabs */}
@@ -299,119 +243,134 @@ const NotificationsPage: React.FC = () => {
       {/* All Notifications */}
       <TabPanel value={currentTab} index={0}>
         <Stack spacing={2}>
-          {notifications.map((notification) => (
-            <Card 
-              key={notification.id} 
-              sx={{ 
-                borderRadius: 3,
-                border: notification.isRead ? '1px solid rgba(0,0,0,0.1)' : '2px solid #CDAB5A',
-                backgroundColor: notification.isRead ? 'background.paper' : 'rgba(205, 171, 90, 0.05)',
-                '&:hover': {
-                  boxShadow: '0 4px 12px rgba(205, 171, 90, 0.2)',
-                  transform: 'translateY(-1px)',
-                  transition: 'all 0.2s ease-in-out'
-                }
-              }}
-            >
-              <CardContent>
-                <Box display="flex" justifyContent="space-between" alignItems="start" mb={2}>
-                  <Box display="flex" alignItems="center" flex={1}>
-                    {getTypeIcon(notification.type)}
-                    <Box ml={2} flex={1}>
-                      <Box display="flex" alignItems="center" mb={1}>
-                        <Typography variant="h6" fontWeight="bold" sx={{ color: 'text.primary' }}>
-                          {notification.title}
+          {notifications.length === 0 ? (
+            <Box textAlign="center" py={4}>
+              <NotificationsIcon sx={{ fontSize: 64, color: '#CDAB5A', mb: 2 }} />
+              <Typography variant="h6" color="text.secondary">
+                No tienes notificaciones
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Te notificaremos cuando tengas nuevas actualizaciones
+              </Typography>
+            </Box>
+          ) : (
+            notifications.map((notification) => (
+              <Card 
+                key={notification.id} 
+                sx={{ 
+                  borderRadius: 3,
+                  border: notification.isRead ? '1px solid rgba(0,0,0,0.1)' : '2px solid #CDAB5A',
+                  backgroundColor: notification.isRead ? 'background.paper' : 'rgba(205, 171, 90, 0.05)',
+                  '&:hover': {
+                    boxShadow: '0 4px 12px rgba(205, 171, 90, 0.2)',
+                    transform: 'translateY(-1px)',
+                    transition: 'all 0.2s ease-in-out'
+                  }
+                }}
+              >
+                <CardContent>
+                  <Box display="flex" justifyContent="space-between" alignItems="start" mb={2}>
+                    <Box display="flex" alignItems="center" flex={1}>
+                      {getTypeIcon(notification.type)}
+                      <Box ml={2} flex={1}>
+                        <Box display="flex" alignItems="center" mb={1}>
+                          <Typography variant="h6" fontWeight="bold" sx={{ color: 'text.primary' }}>
+                            {notification.title}
+                          </Typography>
+                          {!notification.isRead && (
+                            <Box 
+                              sx={{ 
+                                width: 8, 
+                                height: 8, 
+                                borderRadius: '50%', 
+                                backgroundColor: '#CDAB5A',
+                                ml: 1 
+                              }} 
+                            />
+                          )}
+                        </Box>
+                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
+                          {notification.message}
                         </Typography>
-                        {!notification.isRead && (
-                          <Box 
-                            sx={{ 
-                              width: 8, 
-                              height: 8, 
-                              borderRadius: '50%', 
-                              backgroundColor: '#CDAB5A',
-                              ml: 1 
-                            }} 
-                          />
-                        )}
                       </Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
-                        {notification.message}
+                    </Box>
+                    <Box display="flex" alignItems="center" ml={2}>
+                      <IconButton
+                        size="small"
+                        onClick={() => toggleStarMutation.mutate(notification.id)}
+                        disabled={toggleStarMutation.isPending}
+                        sx={{ color: notification.isStarred ? '#CDAB5A' : 'text.secondary' }}
+                      >
+                        <StarIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => deleteMutation.mutate(notification.id)}
+                        disabled={deleteMutation.isPending}
+                        sx={{ color: 'text.secondary' }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+
+                  <Box display="flex" justify-content="space-between" alignItems="center">
+                    <Box display="flex" gap={1} alignItems="center">
+                      <Chip
+                        label={getTypeLabel(notification.type)}
+                        size="small"
+                        variant="outlined"
+                        sx={{ borderColor: '#CDAB5A', color: '#CDAB5A' }}
+                      />
+                      <Chip
+                        label={notification.priority}
+                        size="small"
+                        sx={{ 
+                          backgroundColor: getPriorityColor(notification.priority),
+                          color: 'white'
+                        }}
+                      />
+                      <Typography variant="caption" color="text.secondary">
+                        {new Date(notification.createdAt).toLocaleDateString()} • {new Date(notification.createdAt).toLocaleTimeString()}
                       </Typography>
                     </Box>
                   </Box>
-                  <Box display="flex" alignItems="center" ml={2}>
-                    <IconButton
-                      size="small"
-                      onClick={() => toggleStarMutation.mutate(notification.id)}
-                      sx={{ color: notification.isStarred ? '#CDAB5A' : 'text.secondary' }}
-                    >
-                      <StarIcon />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => deleteMutation.mutate(notification.id)}
-                      sx={{ color: 'text.secondary' }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
+                </CardContent>
 
-                <Box display="flex" justify-content="space-between" alignItems="center">
-                  <Box display="flex" gap={1} alignItems="center">
-                    <Chip
-                      label={getTypeLabel(notification.type)}
-                      size="small"
-                      variant="outlined"
-                      sx={{ borderColor: '#CDAB5A', color: '#CDAB5A' }}
-                    />
-                    <Chip
-                      label={notification.priority}
-                      size="small"
-                      sx={{ 
-                        backgroundColor: getPriorityColor(notification.priority),
-                        color: 'white'
-                      }}
-                    />
-                    <Typography variant="caption" color="text.secondary">
-                      {new Date(notification.createdAt).toLocaleDateString()} • {new Date(notification.createdAt).toLocaleTimeString()}
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-
-              {(notification.actionUrl || !notification.isRead) && (
-                <CardActions sx={{ px: 2, pb: 2 }}>
-                  {!notification.isRead && (
-                    <Button
-                      size="small"
-                      startIcon={<ReadIcon />}
-                      onClick={() => markReadMutation.mutate(notification.id)}
-                      sx={{ color: '#10B981' }}
-                    >
-                      Marcar como leída
-                    </Button>
-                  )}
-                  {notification.actionUrl && notification.metadata?.actionText && (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      onClick={() => {
-                        // Navigate to action URL
-                        window.location.href = notification.actionUrl!
-                      }}
-                      sx={{ 
-                        backgroundColor: '#CDAB5A',
-                        '&:hover': { backgroundColor: '#B8954A' }
-                      }}
-                    >
-                      {notification.metadata.actionText}
-                    </Button>
-                  )}
-                </CardActions>
-              )}
-            </Card>
-          ))}
+                {(notification.actionUrl || !notification.isRead) && (
+                  <CardActions sx={{ px: 2, pb: 2 }}>
+                    {!notification.isRead && (
+                      <Button
+                        size="small"
+                        startIcon={<ReadIcon />}
+                        onClick={() => markReadMutation.mutate(notification.id)}
+                        disabled={markReadMutation.isPending}
+                        sx={{ color: '#10B981' }}
+                      >
+                        Marcar como leída
+                      </Button>
+                    )}
+                    {notification.actionUrl && notification.metadata?.actionText && (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => {
+                          // Navigate to action URL
+                          window.location.href = notification.actionUrl!
+                        }}
+                        sx={{ 
+                          backgroundColor: '#CDAB5A',
+                          '&:hover': { backgroundColor: '#B8954A' }
+                        }}
+                      >
+                        {notification.metadata.actionText}
+                      </Button>
+                    )}
+                  </CardActions>
+                )}
+              </Card>
+            ))
+          )}
         </Stack>
       </TabPanel>
 
@@ -479,6 +438,7 @@ const NotificationsPage: React.FC = () => {
                     size="small"
                     startIcon={<ReadIcon />}
                     onClick={() => markReadMutation.mutate(notification.id)}
+                    disabled={markReadMutation.isPending}
                     sx={{ color: '#10B981' }}
                   >
                     Marcar como leída

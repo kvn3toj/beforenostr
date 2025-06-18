@@ -3,6 +3,8 @@ import { Box, Container, Alert, Snackbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/forms/LoginForm';
 import { RateLimiter } from '../utils/security';
+import { authService } from '../services/auth.service';
+import { useAuth } from '../contexts/AuthContext';
 
 // Rate limiter for login attempts
 const loginRateLimiter = new RateLimiter(5, 15 * 60 * 1000); // 5 attempts per 15 minutes
@@ -14,6 +16,7 @@ interface LoginFormData {
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -35,75 +38,26 @@ const LoginPage: React.FC = () => {
     setError(null);
 
     try {
-      console.log('🔐 Attempting login with:', { email: data.email });
+      console.log('🔐 Attempting login with real backend:', { email: data.email });
       
-      // Simulate API call - replace with actual authentication logic
-      const response = await simulateLoginAPI(data);
+      // ✅ Usar el AuthContext que maneja la conexión real con el backend
+      await signIn(data.email, data.password);
       
-      if (response.success) {
-        // Store authentication token (replace with actual token handling)
-        if (response.token) {
-          localStorage.setItem('authToken', response.token);
-        }
-        if (response.user) {
-          localStorage.setItem('user', JSON.stringify(response.user));
-        }
-        
-        setSuccessMessage('¡Login exitoso! Bienvenido a CoomÜnity');
-        
-        // Redirect to home page after short delay
-        setTimeout(() => {
-          navigate('/', { replace: true });
-        }, 1500);
-        
-      } else {
-        setError(response.message || 'Error de autenticación');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('Error de conexión. Por favor intenta nuevamente.');
+      setSuccessMessage('¡Login exitoso! Bienvenido a CoomÜnity');
+      
+      // Redirect to home page after short delay
+      setTimeout(() => {
+        navigate('/', { replace: true });
+      }, 1500);
+      
+    } catch (error: any) {
+      console.error('❌ Login error:', error);
+      setError(error.message || 'Error de autenticación. Por favor intenta nuevamente.');
+      
+      // Record failed attempt for rate limiting
+      loginRateLimiter.recordAttempt(data.email);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Simulate login API - replace with actual API integration
-  const simulateLoginAPI = async (data: LoginFormData): Promise<{
-    success: boolean;
-    token?: string;
-    user?: any;
-    message?: string;
-  }> => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Mock authentication logic
-    const validCredentials = [
-      { email: 'test@coomunity.com', password: 'test123' },
-      { email: 'admin@coomunity.com', password: 'admin123' },
-      { email: 'user@coomunity.com', password: 'user123' }
-    ];
-
-    const isValid = validCredentials.some(
-      cred => cred.email === data.email && cred.password === data.password
-    );
-
-    if (isValid) {
-      return {
-        success: true,
-        token: 'mock_jwt_token_' + Date.now(),
-        user: {
-          id: 1,
-          name: 'Usuario CoomÜnity',
-          email: data.email,
-          avatar: null
-        }
-      };
-    } else {
-      return {
-        success: false,
-        message: 'Credenciales inválidas. Verifica tu email y contraseña.'
-      };
     }
   };
 
