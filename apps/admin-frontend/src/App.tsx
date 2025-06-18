@@ -33,6 +33,7 @@ import { TransactionsPage } from './pages/TransactionsPage'
 import { NotificationsPage } from './pages/NotificationsPage'
 import { StudyRoomsPage } from './pages/StudyRoomsPage'
 import { MonitoringPage } from './pages/MonitoringPage'
+import { AIPage } from './pages/AIPage'
 
 const queryClient = new QueryClient()
 const theme = createAppTheme('light');
@@ -86,6 +87,7 @@ function App() {
               {/* Otras rutas */}
               <Route path="/ai-test" element={<AITest />} />
               <Route path="/nostr-demo" element={<NostrDemoPage />} />
+              <Route path="/ai-page" element={<AIPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

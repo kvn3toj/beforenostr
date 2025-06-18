@@ -141,6 +141,17 @@ export const LazyPages = {
   
   // PÁGINAS FALTANTES AÑADIDAS
 
+  // 🆕 NUEVAS PÁGINAS DESARROLLADAS
+  NotificationsPage: createLazyComponent(
+    () => import('../pages/NotificationsPage'),
+    <SimpleLoader />
+  ),
+
+  StudyRoomsPage: createLazyComponent(
+    () => import('../pages/StudyRoomsPage'),
+    <SimpleLoader />
+  ),
+
   // Video/UPlay Pages
   UPlayVideoPlayer: createLazyComponent(
     () => import('../pages/UPlayVideoPlayer'),
@@ -344,6 +355,13 @@ export const preloadRouteComponents = (route: string) => {
       break;
     case '/settings':
       import('../pages/Settings');
+      break;
+    // 🆕 NUEVAS RUTAS DESARROLLADAS
+    case '/notifications':
+      import('../pages/NotificationsPage');
+      break;
+    case '/study-rooms':
+      import('../pages/StudyRoomsPage');
       break;
     // Video/UPlay Routes
     case '/uplay/unified':

@@ -110,6 +110,10 @@ const AppRoutes: React.FC = () => {
         <Route path="/settings" element={<LazyPages.SettingsPage />} />
         <Route path="/help" element={<LazyPages.HelpPage />} />
         
+        {/* 🆕 NUEVAS PÁGINAS DESARROLLADAS */}
+        <Route path="/notifications" element={<LazyPages.NotificationsPage />} />
+        <Route path="/study-rooms" element={<LazyPages.StudyRoomsPage />} />
+        
         {/* PWA Demo */}
         <Route path="/pwa-demo" element={<LazyPages.PWADemo />} />
         <Route path="/beta-register" element={<LazyPages.BetaRegister />} />
