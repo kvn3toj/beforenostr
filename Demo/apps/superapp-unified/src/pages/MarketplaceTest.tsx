@@ -11,22 +11,22 @@ import {
   Chip,
   Stack,
 } from '@mui/material';
-import {
-  marketplaceMockData,
-  getItemsByCategory,
-  getFeaturedItems,
-  getTrendingItems,
-} from '../data/marketplaceMockData';
+// import {
+//   marketplaceMockData,
+//   getItemsByCategory,
+//   getFeaturedItems,
+//   getTrendingItems,
+// } from '../data/marketplaceMockData'; // ELIMINADO EN PHASE 2
 
 /**
  * 🧪 Página de prueba para verificar que los datos del marketplace funcionen correctamente
  * Esta página muestra una vista previa de todos los datos mock generados
  */
 export const MarketplaceTest: React.FC = () => {
-  const featuredItems = getFeaturedItems();
-  const trendingItems = getTrendingItems();
-  const sustainabilityItems = getItemsByCategory('sostenibilidad');
-  const educationItems = getItemsByCategory('educacion');
+  // const featuredItems = getFeaturedItems();
+  // const trendingItems = getTrendingItems();
+  // const sustainabilityItems = getItemsByCategory('sostenibilidad');
+  // const educationItems = getItemsByCategory('educacion');
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -52,7 +52,7 @@ export const MarketplaceTest: React.FC = () => {
         <Grid container spacing={3}>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {marketplaceMockData.length}
+              {0}
             </Typography>
             <Typography variant="body2">Items Totales</Typography>
           </Grid>
@@ -70,7 +70,7 @@ export const MarketplaceTest: React.FC = () => {
           </Grid>
           <Grid size={{xs:12,md:3}}>
             <Typography variant="h4" fontWeight="bold">
-              {new Set(marketplaceMockData.map((item) => item.category)).size}
+              {new Set(// marketplaceMockData.map((item) => item.category)).size}
             </Typography>
             <Typography variant="body2">Categorías</Typography>
           </Grid>
@@ -263,7 +263,7 @@ export const MarketplaceTest: React.FC = () => {
       >
         <pre style={{ fontSize: '12px', margin: 0 }}>
           {JSON.stringify(
-            marketplaceMockData.map((item) => ({
+            // marketplaceMockData.map((item) => ({
               id: item.id,
               title: item.title,
               price: item.price,

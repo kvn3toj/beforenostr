@@ -29,8 +29,7 @@ import { useLetsEducation } from '../contexts/LetsEducationContext';
 import UnitsWallet from '../components/modules/marketplace/components/UnitsWallet';
 import { LetsListings } from '../components/modules/marketplace/components/LetsListings';
 import LetsDashboard from '../components/modules/marketplace/components/LetsDashboard';
-// TODO: [DEUDA-TÉCNICA] Rehabilitar importación cuando se corrija el componente
-// import LetsOnboardingWizard from '../components/modules/marketplace/components/lets-humanized/onboarding/LetsOnboardingWizard';
+import LetsOnboardingWizard from '../components/modules/lets/LetsOnboardingWizard';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -78,14 +77,12 @@ const LetsPage: React.FC = () => {
 
   return (
     <>
-      {/* Wizard de Onboarding LETS */}
-      {/* TODO: [DEUDA-TÉCNICA] Rehabilitar LetsOnboardingWizard después de corregir errores de renderización */}
-      {/* <LetsOnboardingWizard
+      <LetsOnboardingWizard
         open={showOnboarding}
         onClose={() => setShowOnboarding(false)}
         onComplete={() => setShowOnboarding(false)}
         data-testid="lets-onboarding-wizard"
-      /> */}
+      />
 
       <Container maxWidth="xl" sx={{ py: 3 }}>
         {/* Header Hero Section */}

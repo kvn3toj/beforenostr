@@ -3,7 +3,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { letsApiService } from '../lib/lets-api-service';
-import { letsMockService } from '../lib/lets-mock-service';
+// import { letsMockService } from '../lib/lets-mock-service';
 import { apiService } from '../lib/api-service';
 
 // Switch para usar mock o API real

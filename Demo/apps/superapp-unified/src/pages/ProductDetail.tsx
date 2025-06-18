@@ -23,7 +23,7 @@ import {
 import { ProductDetailView } from '../components/modules/marketplace/components/ProductDetailView';
 import { Product } from '../types/marketplace';
 import { useSmartQuery } from '../hooks/useSmartQuery';
-import { getItemById, marketplaceMockData } from '../data/marketplaceMockData';
+// import { getItemById, marketplaceMockData } from '../data/marketplaceMockData';
 
 // Mock database - En producción esto vendría de la API
 const mockProducts: Record<string, Product> = {
@@ -686,9 +686,9 @@ export const ProductDetail: React.FC = () => {
     }
 
     // Generar producto dinámico basado en el ID usando datos del array
-    if (marketplaceMockData.length > 0) {
+    if (false // marketplaceMockData.length > 0) {
       // Usar el primer item como base y modificar
-      const baseItem = marketplaceMockData[0];
+      // const baseItem = marketplaceMockData[0];
       return generateProductFromId(baseItem.id);
     }
 

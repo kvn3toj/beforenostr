@@ -2,11 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI, apiService } from '../lib/api-service';
 import { ENV, EnvironmentHelpers, BuilderIOHelpers } from '../lib/environment';
 import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
-import {
-  checkMockAuthStatus,
-  validateMockUser,
-  logAuthFlowStep,
-} from '../utils/testMockAuth';
+// import {
+//   checkMockAuthStatus,
+//   validateMockUser,
+//   logAuthFlowStep,
+// } from '../utils/testMockAuth';
 
 // User interface - optimizada para backend NestJS
 interface User {

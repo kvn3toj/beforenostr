@@ -778,19 +778,16 @@ export function useMarketplaceData(filters?: any) {
         // Ignorar errores de localStorage en caso de que no esté disponible
       }
 
-      const { marketplaceMockData } = await import(
-        '../data/marketplaceMockData'
-      );
 
       console.info(
-        `✅ Cargados ${marketplaceMockData.length} productos del marketplace`
+        `✅ Cargados ${0} productos del marketplace`
       );
 
       return {
-        items: marketplaceMockData,
-        total: marketplaceMockData.length,
+        items: [],
+        total: 0,
         page: 1,
-        limit: marketplaceMockData.length,
+        limit: 0,
         hasMore: false,
         source: 'mock-rich-data', // Indicador de fuente
       };
@@ -814,15 +811,12 @@ export function useMarketplaceData(filters?: any) {
         if (hasOnlyTestData) {
           console.info('🎨 Backend tiene solo datos de test genéricos, usando datos mock ricos del marketplace');
 
-          const { marketplaceMockData } = await import(
-            '../data/marketplaceMockData'
-          );
 
           return {
-            items: marketplaceMockData,
-            total: marketplaceMockData.length,
+            items: [],
+            total: 0,
             page: 1,
-            limit: marketplaceMockData.length,
+            limit: 0,
             hasMore: false,
             source: 'mock-fallback',
           };
@@ -834,15 +828,12 @@ export function useMarketplaceData(filters?: any) {
         console.warn('Backend no disponible, usando datos mock:', error);
 
         // Fallback a datos mock locales
-        const { marketplaceMockData } = await import(
-          '../data/marketplaceMockData'
-        );
 
         return {
-          items: marketplaceMockData,
-          total: marketplaceMockData.length,
+          items: [],
+          total: 0,
           page: 1,
-          limit: marketplaceMockData.length,
+          limit: 0,
           hasMore: false,
           source: 'mock-error-fallback',
         };

@@ -66,11 +66,29 @@ import {
 } from '@mui/icons-material';
 
 // Import enhanced mock data hook
-import {
-  useUPlayMockData,
-  MockVideo,
-  MockPlaylist,
-} from '../../../hooks/useUPlayMockData';
+// import {
+//   useUPlayMockData,
+//   MockVideo,
+//   MockPlaylist,
+// } from '../../../hooks/useUPlayMockData';
+
+// Types for mock data compatibility
+interface MockVideo {
+  id: number;
+  title: string;
+  thumbnail: string;
+  duration: number;
+  progress?: number;
+  category?: string;
+  description?: string;
+}
+
+interface MockPlaylist {
+  id: number;
+  name: string;
+  description: string;
+  videos: MockVideo[];
+}
 
 // 🔥 Hook para datos reales del backend
 import { useVideos } from '../../../hooks/useRealBackendData';
@@ -594,7 +612,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     formatDuration,
     getProgressText,
     isPreviewEnvironment,
-  } = useUPlayMockData();
+  // } = useUPlayMockData();
 
   // 🔥 Usar datos reales del backend (principal)
   const { 

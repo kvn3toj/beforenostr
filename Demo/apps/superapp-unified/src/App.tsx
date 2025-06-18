@@ -13,7 +13,6 @@ import { LetsEducationProvider } from './contexts/LetsEducationContext';
 // Route Protection
 import { ProtectedRoute } from './components/ProtectedRoute';
 import ErrorBoundary from './components/ui/ErrorBoundary';
-import { BuilderIOStatus } from './components/ui';
 
 // Lazy Components
 import { 
@@ -138,7 +137,6 @@ const App: React.FC = () => {
               <CssBaseline />
               <Router>
                 <RoutePreloader />
-                <BuilderIOStatus />
                 <Box
                   sx={{
                     minHeight: '100vh',
