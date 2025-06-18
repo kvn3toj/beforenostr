@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { CssBaseline, Box } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,8 +7,14 @@ import { Toaster } from 'sonner';
 
 // Contexts
 import { ThemeProvider } from './contexts/ThemeContext';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
+
+// Onboarding Components
+import { OnboardingTrigger } from './components/onboarding/OnboardingTrigger';
+import { OnboardingChecklist } from './components/onboarding/OnboardingChecklist';
+import { ProgressiveTooltips, getStageTooltips } from './components/onboarding/ProgressiveTooltips';
+import OnboardingDemo from './components/onboarding/OnboardingDemo';
 
 // Route Protection
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -113,6 +119,9 @@ const AppRoutes: React.FC = () => {
         <Route path="/notifications" element={<LazyPages.NotificationsPage />} />
         <Route path="/study-rooms" element={<LazyPages.StudyRoomsPage />} />
         
+        {/* 🎮 Onboarding Demo */}
+        <Route path="/onboarding-demo" element={<OnboardingDemo />} />
+        
         {/* PWA Demo */}
         <Route path="/pwa-demo" element={<LazyPages.PWADemo />} />
         <Route path="/beta-register" element={<LazyPages.BetaRegister />} />
@@ -122,6 +131,83 @@ const AppRoutes: React.FC = () => {
       {/* 404 - Debe estar fuera de las rutas protegidas */}
       <Route path="*" element={<LazyPages.NotFoundPage />} />
     </Routes>
+  );
+};
+
+// Onboarding System Wrapper (needs to be inside AuthProvider)
+const OnboardingSystem: React.FC = () => {
+  const { user } = useAuth();
+  const [showChecklist, setShowChecklist] = useState(false);
+  const [showTooltips, setShowTooltips] = useState(false);
+  const [completedOnboardingItems, setCompletedOnboardingItems] = useState<string[]>([]);
+  const [userStage, setUserStage] = useState<'BUYER' | 'SEEKER' | 'SOLVER' | 'PROMOTER'>('BUYER');
+
+  // Load onboarding data from localStorage
+  useEffect(() => {
+    const completedItems = localStorage.getItem('coomunity_completed_checklist_items');
+    if (completedItems) {
+      setCompletedOnboardingItems(JSON.parse(completedItems));
+    }
+
+    const stage = localStorage.getItem('coomunity_user_stage');
+    if (stage) {
+      setUserStage(stage as any);
+    }
+  }, []);
+
+  const handleOnboardingComplete = (data: any) => {
+    console.log('Onboarding completed:', data);
+    
+    // Start progressive tooltips after initial onboarding
+    setTimeout(() => {
+      setShowTooltips(true);
+    }, 2000);
+  };
+
+  const handleChecklistItemComplete = (itemId: string, rewards: { ondas: number; meritos?: number }) => {
+    const updatedItems = [...completedOnboardingItems, itemId];
+    setCompletedOnboardingItems(updatedItems);
+    localStorage.setItem('coomunity_completed_checklist_items', JSON.stringify(updatedItems));
+    
+    console.log(`Completed item ${itemId}:`, rewards);
+    
+    // Here you could integrate with actual rewards system
+    // For now, just show in console
+  };
+
+  const handleTooltipsComplete = () => {
+    setShowTooltips(false);
+    
+    // Show checklist after tooltips
+    setTimeout(() => {
+      setShowChecklist(true);
+    }, 1000);
+  };
+
+  return (
+    <>
+      <OnboardingTrigger
+        userEmail={user?.email}
+        hasCompletedOnboarding={localStorage.getItem('coomunity_onboarding_completed') === 'true'}
+        onOnboardingComplete={handleOnboardingComplete}
+      />
+
+      <OnboardingChecklist
+        isVisible={showChecklist}
+        onClose={() => setShowChecklist(false)}
+        userStage={userStage}
+        completedItems={completedOnboardingItems}
+        onItemComplete={handleChecklistItemComplete}
+      />
+
+      <ProgressiveTooltips
+        isActive={showTooltips}
+        steps={getStageTooltips(userStage)}
+        onComplete={handleTooltipsComplete}
+        onSkip={() => setShowTooltips(false)}
+        userStage={userStage}
+      />
+    </>
   );
 };
 
@@ -152,6 +238,9 @@ const App: React.FC = () => {
                 >
                   <AppRoutes />
                 </Box>
+
+                {/* Onboarding System - Inside AuthProvider */}
+                <OnboardingSystem />
                 
                 {/* Toast Notifications */}
                 <Toaster

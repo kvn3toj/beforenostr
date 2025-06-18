@@ -254,6 +254,12 @@ export const LazyPages = {
     () => import('../components/modules/uplay/WebSocketTest'),
     <SimpleLoader />
   ),
+
+  // 🎮 Onboarding System Demo
+  OnboardingDemo: createLazyComponent(
+    () => import('../components/onboarding/OnboardingDemo'),
+    <SimpleLoader />
+  ),
 };
 
 /**

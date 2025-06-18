@@ -1,17 +1,17 @@
 /**
- * 🎮 Console Page - Enhanced Experience Management
+ * 🎮 Console Page - Enhanced Experience Management with Backend Integration
  * 
- * Página principal de la Consola de Experiencias mejorada
+ * Página principal de la Consola de Experiencias conectada con Backend NestJS
  */
 
 import React from 'react';
 import { Box } from '@mui/material';
-import ExperienceConsoleEnhanced from '../components/features/console/ExperienceConsoleEnhanced';
+import ExperienceConsoleConnected from '../components/features/console/ExperienceConsoleConnected';
 
 const ConsolePage: React.FC = () => {
   return (
     <Box sx={{ width: '100%', height: '100vh', overflow: 'auto' }}>
-      <ExperienceConsoleEnhanced />
+      <ExperienceConsoleConnected />
     </Box>
   );
 };
