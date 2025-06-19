@@ -4,11 +4,11 @@ import { PrismaClient } from '../generated/prisma';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  private isMockMode = true; // 🚨 TEMPORAL: Modo mock para testing sin DB
+  private isMockMode = false; // ✅ REAL DATABASE: Usar base de datos PostgreSQL real
 
   constructor() {
     super();
-    console.log('>>> PrismaService Constructor Executed (MOCK MODE)');
+    console.log('>>> PrismaService Constructor Executed (REAL DATABASE MODE)');
     console.log('>>> PrismaService Constructor - MOCK_MODE:', this.isMockMode);
   }
 
@@ -21,8 +21,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     
     console.log('>>> PrismaService onModuleInit - Connecting to database...');
     try {
-    await this.$connect();
-    console.log('>>> PrismaService onModuleInit - Database connection established');
+      await this.$connect();
+      console.log('>>> PrismaService onModuleInit - Database connection established');
+      console.log('>>> PrismaService onModuleInit - Backend using REAL PostgreSQL database');
     } catch (error) {
       console.error('>>> PrismaService onModuleInit - Database connection failed:', error.message);
       console.log('>>> PrismaService onModuleInit - Falling back to MOCK MODE');
@@ -34,5 +35,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     // Note: beforeExit event is not available in the current Prisma version
     // This method is kept for compatibility but doesn't do anything
     // The connection will be closed when the app shuts down
+  }
+
+  // Getter para verificar el estado desde otros servicios
+  get isUsingMockMode(): boolean {
+    return this.isMockMode;
   }
 } 

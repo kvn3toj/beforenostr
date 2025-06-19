@@ -20,6 +20,33 @@
     "Demo/apps/superapp-unified/src/lib/",
     "Demo/apps/superapp-unified/src/services/"
   ],
+  "realBackendConfig": {
+    "enabled": true,
+    "baseUrl": "http://localhost:3002",
+    "healthEndpoint": "/health",
+    "authEndpoint": "/auth/login",
+    "status": "OPERATIONAL",
+    "lastHealthCheck": "2025-06-19T10:57:28.888Z",
+    "credentials": {
+      "admin": {
+        "email": "admin@gamifier.com",
+        "password": "admin123",
+        "roles": ["admin"],
+        "permissions": ["admin:view_all", "users:write", "users:read", "content:read", "roles:write", "gamification:manage", "analytics:read", "groups:manage", "roles:read", "invitations:send", "wallet:manage", "content:write"]
+      },
+      "user": {
+        "email": "user@gamifier.com", 
+        "password": "123456",
+        "roles": ["user"]
+      }
+    },
+    "database": {
+      "type": "PostgreSQL",
+      "status": "CONNECTED",
+      "mockMode": false,
+      "seedData": "AVAILABLE"
+    }
+  },
   "analysisPatterns": {
     "mockDataPatterns": [
       "getMockQuestions",
@@ -59,9 +86,17 @@
     "responsiveDepth": true
   },
   "taskPriorities": {
+    "realBackendIntegration": "CRITICAL",
     "mockDataElimination": "HIGH",
     "visualEffectsRestoration": "HIGH", 
     "backendIntegration": "MEDIUM",
     "performanceOptimization": "LOW"
+  },
+  "integrationInstructions": {
+    "priority": "Use REAL backend data over mock data in all cases",
+    "authentication": "Always use realBackendConfig.credentials for testing and development",
+    "endpoints": "Connect to http://localhost:3002 for all API calls",
+    "mockElimination": "Remove all mock data references and replace with real backend calls",
+    "testing": "Use admin@gamifier.com/admin123 for administrative operations, user@gamifier.com/123456 for user operations"
   }
 } 
