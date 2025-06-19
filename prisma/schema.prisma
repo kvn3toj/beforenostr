@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -189,6 +188,8 @@ model User {
   wallet                     Wallet?
   createdWorlds              World[]               @relation("WorldCreator")
   marketplaceItems           MarketplaceItem[]
+  userEngagements            UserEngagement[]
+  meritTransactions          MeritTransaction[]
 
   @@index([email])
   @@index([isActive])
@@ -443,14 +444,14 @@ model Token {
 }
 
 model Merit {
-  id              String   @id @default(uuid())
+  id              String    @id @default(uuid())
   userId          String
   amount          Float
-  type            String
+  type            MeritType @default(SYSTEM_REWARD)
   source          String
   relatedEntityId String?
-  createdAt       DateTime @default(now())
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([type])
@@ -576,13 +577,13 @@ model Like {
 }
 
 model Notification {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   userId    String
-  type      String
+  type      NotificationType @default(SYSTEM_ANNOUNCEMENT)
   message   String
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([read])
@@ -777,8 +778,8 @@ model Challenge {
   id             String            @id @default(uuid())
   title          String
   description    String?
-  type           String
-  status         String            @default("ACTIVE")
+  type           ChallengeType     @default(DAILY)
+  status         ChallengeStatus   @default(ACTIVE)
   startDate      DateTime
   endDate        DateTime
   config         String            @default("{}")
@@ -810,16 +811,16 @@ model ChallengeReward {
 }
 
 model UserChallenge {
-  id          String    @id @default(uuid())
+  id          String              @id @default(uuid())
   userId      String
   challengeId String
-  status      String    @default("ACTIVE")
-  progress    Float     @default(0)
-  startedAt   DateTime  @default(now())
+  status      UserChallengeStatus @default(ACTIVE)
+  progress    Float               @default(0)
+  startedAt   DateTime            @default(now())
   completedAt DateTime?
   metadata    String?
-  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge   Challenge           @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, challengeId])
   @@index([userId])
@@ -857,6 +858,48 @@ enum MarketplaceItemStatus {
   SUSPENDED
 }
 
+enum ChallengeStatus {
+  ACTIVE
+  INACTIVE
+  COMPLETED
+  EXPIRED
+}
+
+enum ChallengeType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  SPECIAL
+  UNLIMITED
+}
+
+enum UserChallengeStatus {
+  ACTIVE
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
+enum MeritType {
+  ACTIVITY_COMPLETION
+  CHALLENGE_COMPLETION
+  DAILY_LOGIN
+  STREAK_BONUS
+  SOCIAL_INTERACTION
+  CONTENT_CREATION
+  REFERRAL_BONUS
+  SYSTEM_REWARD
+}
+
+enum NotificationType {
+  SYSTEM_ANNOUNCEMENT
+  CHALLENGE_COMPLETED
+  MERIT_EARNED
+  SOCIAL_INTERACTION
+  CONTENT_UPDATE
+  REMINDER
+}
+
 model MarketplaceItem {
   id          String                @id @default(uuid())
   name        String
@@ -865,31 +908,31 @@ model MarketplaceItem {
   currency    Currency              @default(LUKAS)
   itemType    MarketplaceItemType   @default(SERVICE)
   status      MarketplaceItemStatus @default(ACTIVE)
-  
+
   // Media and content
   images      String[] // Array de URLs de imágenes
   tags        String[]
   location    String?
-  
+
   // Metadata específico del tipo de item
   metadata    String?               @db.Text
-  
+
   // Pricing adicional (sistema dual)
   priceToins  Float?                @default(0)
-  
+
   // Relaciones
   seller      User                  @relation(fields: [sellerId], references: [id])
   sellerId    String
-  
+
   // Timestamps
   createdAt   DateTime              @default(now())
   updatedAt   DateTime              @updatedAt
-  
+
   // Campos de gestión
   isActive    Boolean               @default(true)
   isDeleted   Boolean               @default(false)
   deletedAt   DateTime?
-  
+
   // Estadísticas
   viewCount   Int                   @default(0)
   favoriteCount Int                 @default(0)
@@ -912,7 +955,7 @@ model MarketplaceItem {
 
 enum StudyRoomStatus {
   ACTIVE
-  PAUSED  
+  PAUSED
   ENDED
 }
 
@@ -929,7 +972,7 @@ model StudyRoom {
   isActive           Boolean                 @default(true)
   createdAt          DateTime                @default(now())
   updatedAt          DateTime                @updatedAt
-  
+
   // Relaciones
   video              VideoItem               @relation(fields: [videoId], references: [id])
   host               User                    @relation("StudyRoomHost", fields: [hostId], references: [id])
@@ -952,7 +995,7 @@ model StudyRoomParticipant {
   joinedAt        DateTime  @default(now())
   leftAt          DateTime?
   isActive        Boolean   @default(true)
-  
+
   // Relaciones
   studyRoom       StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -972,7 +1015,7 @@ model StudyRoomMessage {
   messageType     String    @default("CHAT") // CHAT, SYSTEM, VIDEO_EVENT
   metadata        String?   @db.Text
   createdAt       DateTime  @default(now())
-  
+
   // Relaciones
   studyRoom       StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -982,4 +1025,79 @@ model StudyRoomMessage {
   @@index([messageType])
   @@index([createdAt])
   @@map("study_room_messages")
+}
+
+// =====================================================================
+// MISSING MODELS REQUIRED BY THE CODEBASE
+// =====================================================================
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  entityId  String?
+  entityType String?
+  userId    String?
+  metadata  String?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([entityId])
+  @@index([entityType])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model AppConfig {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  type      String   @default("STRING")
+  category  String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([category])
+  @@index([isActive])
+  @@map("app_configs")
+}
+
+model UserEngagement {
+  id          String   @id @default(uuid())
+  userId      String
+  eventType   String
+  entityId    String?
+  entityType  String?
+  metadata    String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([eventType])
+  @@index([entityId])
+  @@index([entityType])
+  @@index([createdAt])
+  @@map("user_engagements")
+}
+
+model MeritTransaction {
+  id          String   @id @default(uuid())
+  userId      String
+  amount      Float
+  type        String
+  source      String
+  sourceId    String?
+  notes       String?
+  eventData   String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([source])
+  @@index([sourceId])
+  @@index([createdAt])
+  @@map("merit_transactions")
 }
