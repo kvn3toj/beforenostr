@@ -139,24 +139,24 @@ const NotificationItem: React.FC<{
       <ListItem
         className={cn(
           "rounded-lg mb-2 transition-all duration-200",
-          notification.read 
-            ? "bg-gray-50 hover:bg-gray-100" 
+          notification.read
+            ? "bg-gray-50 hover:bg-gray-100"
             : "bg-white hover:bg-coomunity-primary-50 border-l-4 border-coomunity-primary-500"
         )}
         sx={{
-          bgcolor: notification.read 
+          bgcolor: notification.read
             ? alpha(theme.palette.grey[100], 0.5)
             : 'background.paper',
           borderRadius: 2,
           mb: 1,
-          border: notification.read 
+          border: notification.read
             ? `1px solid ${alpha(theme.palette.grey[300], 0.5)}`
             : `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-          borderLeft: !notification.read 
+          borderLeft: !notification.read
             ? `4px solid ${theme.palette.primary.main}`
             : undefined,
           '&:hover': {
-            bgcolor: notification.read 
+            bgcolor: notification.read
               ? alpha(theme.palette.grey[100], 0.8)
               : alpha(theme.palette.primary.main, 0.05),
             transform: 'translateX(4px)',
@@ -185,10 +185,10 @@ const NotificationItem: React.FC<{
         <ListItemText
           primary={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography 
-                variant="subtitle2" 
+              <Typography
+                variant="subtitle2"
                 className="coomunity-label font-semibold"
-                sx={{ 
+                sx={{
                   fontWeight: notification.read ? 'normal' : 'bold',
                   color: notification.read ? 'text.secondary' : 'text.primary'
                 }}
@@ -196,59 +196,76 @@ const NotificationItem: React.FC<{
                 {notification.title}
               </Typography>
               {notification.priority === 'high' && (
-                <Chip 
-                  label="Urgente" 
-                  size="small" 
-                  color="error" 
+                <Chip
+                  label="Urgente"
+                  size="small"
+                  color="error"
                   variant="outlined"
                   sx={{ height: 20, fontSize: '0.7rem' }}
                 />
               )}
               {!notification.read && (
-                <Circle 
-                  sx={{ 
-                    fontSize: 8, 
+                <Circle
+                  sx={{
+                    fontSize: 8,
                     color: 'primary.main',
                     ml: 'auto'
-                  }} 
+                  }}
                 />
               )}
             </Box>
           }
           secondary={
-            <Box>
-              <Typography 
-                variant="body2" 
+            <Box component="div">
+              <Typography
+                variant="body2"
+                component="span"
                 className="coomunity-body-sm text-gray-600"
-                sx={{ 
+                sx={{
                   color: 'text.secondary',
                   mb: 0.5,
-                  display: '-webkit-box',
-                  WebkitLineClamp: expanded ? 'none' : 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
+                  display: 'block',
                 }}
               >
                 {notification.message}
               </Typography>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Typography 
-                  variant="caption" 
+              <Box
+                component="span"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  mt: 0.5
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  component="span"
                   className="coomunity-caption text-gray-500"
                   color="text.secondary"
                 >
                   {formatTime(notification.timestamp)}
                 </Typography>
                 {notification.metadata?.amount && (
-                  <Chip 
-                    label={`$${notification.metadata.amount.toLocaleString()}`}
-                    size="small"
-                    color="success"
-                    variant="outlined"
-                    sx={{ height: 18, fontSize: '0.65rem' }}
-                  />
+                  <Box
+                    component="span"
+                    sx={{
+                      display: 'inline-block',
+                      px: 1,
+                      py: 0.25,
+                      backgroundColor: 'success.main',
+                      color: 'success.contrastText',
+                      borderRadius: 1,
+                      fontSize: '0.65rem',
+                      lineHeight: 1.2,
+                      border: 1,
+                      borderColor: 'success.main',
+                    }}
+                  >
+                    ${notification.metadata.amount.toLocaleString()}
+                  </Box>
                 )}
-              </Stack>
+              </Box>
             </Box>
           }
         />
@@ -279,14 +296,14 @@ const NotificationItem: React.FC<{
 
       {/* Expanded content */}
       <Collapse in={expanded}>
-        <Box 
+        <Box
           className="ml-16 mb-2 p-3 bg-gray-50 rounded-lg"
-          sx={{ 
-            ml: 8, 
-            mb: 1, 
-            p: 2, 
+          sx={{
+            ml: 8,
+            mb: 1,
+            p: 2,
             bgcolor: alpha(theme.palette.grey[100], 0.5),
-            borderRadius: 2 
+            borderRadius: 2
           }}
         >
           {notification.actionUrl && (
@@ -323,7 +340,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   const theme = useTheme();
 
   const unreadCount = notifications.filter(n => !n.read).length;
-  const filteredNotifications = filter === 'unread' 
+  const filteredNotifications = filter === 'unread'
     ? notifications.filter(n => !n.read)
     : notifications;
 
@@ -338,13 +355,13 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           onClick={() => setOpen(true)}
           className={cn(
             "relative transition-all duration-200",
-            unreadCount > 0 
-              ? "text-coomunity-primary-600 hover:bg-coomunity-primary-50" 
+            unreadCount > 0
+              ? "text-coomunity-primary-600 hover:bg-coomunity-primary-50"
               : "text-gray-600 hover:bg-gray-100"
           )}
         >
-          <Badge 
-            badgeContent={unreadCount} 
+          <Badge
+            badgeContent={unreadCount}
             color="error"
             className="animate-pulse"
           >
@@ -375,32 +392,32 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           transition={{ duration: 0.3 }}
         >
           {/* Header */}
-          <Box 
+          <Box
             className="p-4 bg-gradient-to-r from-coomunity-primary-500 to-coomunity-secondary-500 text-white"
-            sx={{ 
-              p: 3, 
+            sx={{
+              p: 3,
               background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
               color: 'white'
             }}
           >
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Box>
-                <Typography 
-                  variant="h6" 
+                <Typography
+                  variant="h6"
                   className="coomunity-h3 font-bold"
                   fontWeight="bold"
                 >
                   Notificaciones
                 </Typography>
-                <Typography 
-                  variant="body2" 
+                <Typography
+                  variant="body2"
                   className="coomunity-body-sm opacity-90"
                   sx={{ opacity: 0.9 }}
                 >
                   {unreadCount} sin leer de {notifications.length}
                 </Typography>
               </Box>
-              <IconButton 
+              <IconButton
                 onClick={() => setOpen(false)}
                 sx={{ color: 'white' }}
               >
@@ -414,7 +431,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 size="small"
                 variant={filter === 'all' ? 'contained' : 'outlined'}
                 onClick={() => setFilter('all')}
-                sx={{ 
+                sx={{
                   color: 'white',
                   borderColor: 'white',
                   '&.MuiButton-contained': {
@@ -428,7 +445,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 size="small"
                 variant={filter === 'unread' ? 'contained' : 'outlined'}
                 onClick={() => setFilter('unread')}
-                sx={{ 
+                sx={{
                   color: 'white',
                   borderColor: 'white',
                   '&.MuiButton-contained': {
@@ -474,31 +491,31 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <Box 
+                <Box
                   className="text-center py-12"
                   sx={{ textAlign: 'center', py: 8 }}
                 >
-                  <Notifications 
-                    sx={{ 
-                      fontSize: 64, 
-                      color: 'grey.300', 
-                      mb: 2 
-                    }} 
+                  <Notifications
+                    sx={{
+                      fontSize: 64,
+                      color: 'grey.300',
+                      mb: 2
+                    }}
                   />
-                  <Typography 
-                    variant="h6" 
+                  <Typography
+                    variant="h6"
                     className="coomunity-h3 text-gray-500 mb-2"
-                    color="text.secondary" 
+                    color="text.secondary"
                     gutterBottom
                   >
                     {filter === 'unread' ? 'No hay notificaciones sin leer' : 'No hay notificaciones'}
                   </Typography>
-                  <Typography 
-                    variant="body2" 
+                  <Typography
+                    variant="body2"
                     className="coomunity-body text-gray-400"
                     color="text.secondary"
                   >
-                    {filter === 'unread' 
+                    {filter === 'unread'
                       ? '¡Excelente! Estás al día con todas tus notificaciones.'
                       : 'Las notificaciones aparecerán aquí cuando tengas actividad.'
                     }
@@ -523,13 +540,13 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           </Box>
 
           {/* Footer */}
-          <Box 
+          <Box
             className="p-3 bg-gray-50 border-t"
-            sx={{ 
-              p: 2, 
-              bgcolor: 'grey.50', 
-              borderTop: 1, 
-              borderColor: 'divider' 
+            sx={{
+              p: 2,
+              bgcolor: 'grey.50',
+              borderTop: 1,
+              borderColor: 'divider'
             }}
           >
             <Button
@@ -546,4 +563,4 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       </Drawer>
     </>
   );
-}; 
+};

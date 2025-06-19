@@ -85,7 +85,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
     // Calculate potential rewards
     const ondas = updatedItems.reduce((sum, item) => sum + (item.completed ? 0 : item.ondas), 0);
     const meritos = updatedItems.reduce((sum, item) => sum + (item.completed ? 0 : (item.meritos || 0)), 0);
-    
+
     setTotalOndas(ondas);
     setTotalMeritos(meritos);
   }, [userStage, completedItems]);
@@ -100,16 +100,16 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
     }
 
     // Mark as completed
-    setItems(prev => 
-      prev.map(i => 
+    setItems(prev =>
+      prev.map(i =>
         i.id === itemId ? { ...i, completed: true } : i
       )
     );
 
     // Award rewards
-    onItemComplete(itemId, { 
-      ondas: item.ondas, 
-      meritos: item.meritos 
+    onItemComplete(itemId, {
+      ondas: item.ondas,
+      meritos: item.meritos
     });
   };
 
@@ -128,7 +128,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
     { id: 'growth', title: 'Crecimiento', icon: <TrendingUp />, color: '#9C27B0' }
   ];
 
-  const getItemsByCategory = (category: string) => 
+  const getItemsByCategory = (category: string) =>
     items.filter(item => item.category === category);
 
   if (!isVisible) return null;
@@ -149,8 +149,8 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
           zIndex: 1300
         }}
       >
-        <Card 
-          sx={{ 
+        <Card
+          sx={{
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -176,7 +176,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                   {userStage} Stage
                 </Typography>
               </Box>
-              
+
               <IconButton onClick={onClose} size="small" sx={{ color: 'white' }}>
                 <Close />
               </IconButton>
@@ -192,7 +192,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                   {Math.round(completionPercentage)}%
                 </Typography>
               </Box>
-              
+
               <LinearProgress
                 variant="determinate"
                 value={completionPercentage}
@@ -215,8 +215,8 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                   icon={<AutoAwesome />}
                   label={`${totalOndas} Öndas`}
                   size="small"
-                  sx={{ 
-                    bgcolor: alpha('#fff', 0.2), 
+                  sx={{
+                    bgcolor: alpha('#fff', 0.2),
                     color: 'white',
                     fontWeight: 600
                   }}
@@ -227,8 +227,8 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                   icon={<Celebration />}
                   label={`${totalMeritos} Mëritos`}
                   size="small"
-                  sx={{ 
-                    bgcolor: alpha('#fff', 0.2), 
+                  sx={{
+                    bgcolor: alpha('#fff', 0.2),
                     color: 'white',
                     fontWeight: 600
                   }}
@@ -251,8 +251,8 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                   {/* Category Header */}
                   <ListItemButton
                     onClick={() => handleCategoryToggle(category.id)}
-                    sx={{ 
-                      py: 2, 
+                    sx={{
+                      py: 2,
                       px: 3,
                       borderBottom: `1px solid ${theme.palette.divider}`,
                       background: alpha(category.color, 0.05)
@@ -261,7 +261,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                     <ListItemIcon sx={{ color: category.color }}>
                       {category.icon}
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary={category.title}
                       secondary={`${categoryCompleted}/${categoryItems.length} completadas`}
                     />
@@ -314,8 +314,8 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                             <ListItemText
                               primary={
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                                  <Typography 
-                                    variant="body2" 
+                                  <Typography
+                                    variant="body2"
                                     fontWeight="600"
                                     sx={{
                                       textDecoration: item.completed ? 'line-through' : 'none',
@@ -324,38 +324,50 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                                   >
                                     {item.title}
                                   </Typography>
-                                  
+
                                   <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                    <Chip
-                                      label={`+${item.ondas}`}
-                                      size="small"
-                                      icon={<AutoAwesome />}
-                                      sx={{ 
-                                        height: 20, 
+                                    <Box
+                                      sx={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        px: 1,
+                                        py: 0.25,
+                                        height: 20,
                                         fontSize: '0.75rem',
                                         color: item.completed ? 'text.disabled' : 'primary.main',
-                                        bgcolor: item.completed ? 'grey.100' : alpha(theme.palette.primary.main, 0.1)
+                                        bgcolor: item.completed ? 'grey.100' : alpha(theme.palette.primary.main, 0.1),
+                                        borderRadius: 1,
+                                        gap: 0.5
                                       }}
-                                    />
+                                    >
+                                      <AutoAwesome sx={{ fontSize: 12 }} />
+                                      +{item.ondas}
+                                    </Box>
                                     {item.meritos && (
-                                      <Chip
-                                        label={`+${item.meritos}`}
-                                        size="small"
-                                        icon={<Celebration />}
-                                        sx={{ 
-                                          height: 20, 
+                                      <Box
+                                        sx={{
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          px: 1,
+                                          py: 0.25,
+                                          height: 20,
                                           fontSize: '0.75rem',
                                           color: item.completed ? 'text.disabled' : 'secondary.main',
-                                          bgcolor: item.completed ? 'grey.100' : alpha(theme.palette.secondary.main, 0.1)
+                                          bgcolor: item.completed ? 'grey.100' : alpha(theme.palette.secondary.main, 0.1),
+                                          borderRadius: 1,
+                                          gap: 0.5
                                         }}
-                                      />
+                                      >
+                                        <Celebration sx={{ fontSize: 12 }} />
+                                        +{item.meritos}
+                                      </Box>
                                     )}
                                   </Box>
                                 </Box>
                               }
                               secondary={
-                                <Typography 
-                                  variant="caption" 
+                                <Typography
+                                  variant="caption"
                                   color={item.completed ? 'text.disabled' : 'text.secondary'}
                                 >
                                   {item.description}
@@ -376,7 +388,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                                     handleItemToggle(item.id);
                                   }}
                                   startIcon={<PlayArrow />}
-                                  sx={{ 
+                                  sx={{
                                     minWidth: 'auto',
                                     px: 1,
                                     borderColor: category.color,
@@ -422,7 +434,7 @@ export const OnboardingChecklist: React.FC<OnboardingChecklistProps> = ({
                     ¡Felicitaciones!
                   </Typography>
                   <Typography variant="body2">
-                    Has completado todas las tareas de tu stage actual. 
+                    Has completado todas las tareas de tu stage actual.
                     ¡Es momento de avanzar al siguiente nivel!
                   </Typography>
                 </Box>

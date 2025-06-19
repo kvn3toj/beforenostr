@@ -81,31 +81,52 @@ export const QuestionListItem: React.FC<QuestionListItemProps> = ({
                 </Typography>
               }
               secondary={
-                <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                  <Chip
-                    label={formatTimestamp(question.timestamp)}
-                    size="small"
-                    variant="outlined"
-                    color="primary"
-                  />
-                  <Chip
-                    label={getQuestionTypeLabel(question.type)}
-                    size="small"
-                    variant="outlined"
-                    color="secondary"
-                  />
-                  <Chip
-                    label={question.languageCode}
-                    size="small"
-                    variant="outlined"
-                  />
-                  <Chip
-                    label={question.isActive ? t('subtitle_active_label') : t('subtitle_inactive_label')}
-                    size="small"
-                    color={question.isActive ? 'success' : 'default'}
-                    variant={question.isActive ? 'filled' : 'outlined'}
-                  />
-                </Stack>
+                <Box component="div" sx={{ display: 'flex', gap: 1, mt: 1, flexWrap: 'wrap' }}>
+                  <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{
+                      px: 1, py: 0.25, bgcolor: 'primary.main', color: 'primary.contrastText',
+                      borderRadius: 1, fontSize: '0.75rem', border: '1px solid', borderColor: 'primary.main'
+                    }}
+                  >
+                    {formatTimestamp(question.timestamp)}
+                  </Typography>
+                  <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{
+                      px: 1, py: 0.25, bgcolor: 'secondary.main', color: 'secondary.contrastText',
+                      borderRadius: 1, fontSize: '0.75rem', border: '1px solid', borderColor: 'secondary.main'
+                    }}
+                  >
+                    {getQuestionTypeLabel(question.type)}
+                  </Typography>
+                  <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{
+                      px: 1, py: 0.25, bgcolor: 'grey.200', color: 'text.primary',
+                      borderRadius: 1, fontSize: '0.75rem', border: '1px solid', borderColor: 'grey.300'
+                    }}
+                  >
+                    {question.languageCode}
+                  </Typography>
+                  <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{
+                      px: 1, py: 0.25,
+                      bgcolor: question.isActive ? 'success.main' : 'grey.200',
+                      color: question.isActive ? 'success.contrastText' : 'text.primary',
+                      borderRadius: 1, fontSize: '0.75rem',
+                      border: '1px solid',
+                      borderColor: question.isActive ? 'success.main' : 'grey.300'
+                    }}
+                  >
+                    {question.isActive ? t('subtitle_active_label') : t('subtitle_inactive_label')}
+                  </Typography>
+                </Box>
               }
             />
           </Box>
@@ -169,8 +190,8 @@ export const QuestionListItem: React.FC<QuestionListItemProps> = ({
           </Box>
         )}
       </ListItem>
-      
+
       {showDivider && <Divider />}
     </>
   );
-}; 
+};

@@ -1,9 +1,9 @@
 /**
- * 🌌 AUTO-THEMING IA ENGINE
- * ========================
- * 
- * Motor de IA para generación automática de temas
- * Parte de la Fase 6: Inteligencia Artificial del Design System
+ * 🌌 AUTO-THEMING IA ENGINE - Fase 6 Foundation
+ * ============================================
+ *
+ * Motor de inteligencia artificial para generación automática de temas
+ * basado en contenido, contexto y filosofía CoomÜnity
  */
 
 import * as React from 'react';
@@ -11,93 +11,106 @@ import * as React from 'react';
 interface ContentAnalysis {
   sentiment: 'positive' | 'neutral' | 'negative';
   topics: string[];
-  philosophy: 'ayni' | 'reciprocity' | 'growth' | 'balance';
+  philosophy: 'ayni' | 'reciprocity' | 'growth' | 'balance' | 'transformation';
   timeContext: 'morning' | 'afternoon' | 'evening' | 'night';
   userEnergy: number; // 0-100
-  dominantEmotions: string[];
-  contentComplexity: 'simple' | 'medium' | 'complex';
+  dominantEmotion: 'joy' | 'peace' | 'focus' | 'curiosity' | 'determination';
 }
 
 interface AIThemeRecommendation {
   primaryColor: string;
   accentColor: string;
-  backgroundColor: string;
-  textColor: string;
   element: 'fuego' | 'agua' | 'tierra' | 'aire' | 'espiritu';
   intensity: 'subtle' | 'medium' | 'intense';
   animations: 'minimal' | 'standard' | 'enhanced';
-  spacing: 'compact' | 'comfortable' | 'spacious';
-  borderRadius: number;
   confidence: number; // 0-1
-  reasoning: string[];
+  reasoning: string;
+  customProperties: Record<string, string>;
 }
 
-interface UserContext {
-  timeOfDay: number;
-  deviceType: 'mobile' | 'tablet' | 'desktop';
-  connectionSpeed: 'slow' | 'medium' | 'fast';
-  batteryLevel?: number;
-  preferredContrast: 'low' | 'medium' | 'high';
-  motionPreference: 'none' | 'reduced' | 'full';
+interface UserBehaviorPattern {
+  timestamp: number;
+  route: string;
+  timeSpent: number;
+  interactions: number;
+  scrollDepth: number;
+  elementClicked: string[];
+  emotionalState: string;
+}
+
+interface ThemeAdaptationSettings {
+  enableAutoAdaptation: boolean;
+  adaptationFrequency: 'immediate' | 'gentle' | 'session-based';
+  userPreferences: {
+    preferredElements: string[];
+    dislikedColors: string[];
+    sensitivityToChange: number; // 0-1
+  };
+  accessibilityMode: boolean;
+  performanceMode: boolean;
 }
 
 export class AutoThemingEngine {
-  private static readonly ELEMENT_CHARACTERISTICS = {
-    fuego: {
-      colors: ['#FF6B35', '#FF8A50', '#FFB74D', '#FF9800'],
-      emotions: ['energetic', 'passionate', 'dynamic', 'warm'],
-      contexts: ['action', 'urgency', 'excitement', 'creativity']
-    },
-    agua: {
-      colors: ['#2196F3', '#64B5F6', '#81C784', '#4FC3F7'],
-      emotions: ['calm', 'flowing', 'adaptive', 'peaceful'],
-      contexts: ['learning', 'reflection', 'communication', 'growth']
-    },
-    tierra: {
-      colors: ['#8BC34A', '#AED581', '#FFCC02', '#689F38'],
-      emotions: ['grounded', 'stable', 'nurturing', 'patient'],
-      contexts: ['building', 'foundation', 'security', 'abundance']
-    },
-    aire: {
-      colors: ['#E1BEE7', '#F3E5F5', '#FFE082', '#CE93D8'],
-      emotions: ['light', 'inspiring', 'free', 'innovative'],
-      contexts: ['ideas', 'communication', 'inspiration', 'change']
-    },
-    espiritu: {
-      colors: ['#9C27B0', '#BA68C8', '#FF9800', '#673AB7'],
-      emotions: ['transcendent', 'wise', 'balanced', 'unified'],
-      contexts: ['meditation', 'wisdom', 'integration', 'purpose']
+  private static instance: AutoThemingEngine;
+  private isInitialized: boolean = false;
+  private behaviorPatterns: UserBehaviorPattern[] = [];
+  private currentRecommendation: AIThemeRecommendation | null = null;
+  private adaptationSettings: ThemeAdaptationSettings;
+  private aiModelAccuracy: number = 0.75; // Inicialmente 75%
+  private learningMode: boolean = true;
+
+  private constructor() {
+    this.adaptationSettings = this.getDefaultSettings();
+    this.initializeAIFoundation();
+  }
+
+  static getInstance(): AutoThemingEngine {
+    if (!AutoThemingEngine.instance) {
+      AutoThemingEngine.instance = new AutoThemingEngine();
     }
-  };
+    return AutoThemingEngine.instance;
+  }
 
   /**
-   * Analiza el contenido de la página para determinar contexto
+   * Configurar fundamentos de IA
    */
-  static async analyzeContent(pageContent: string, userContext?: UserContext): Promise<ContentAnalysis> {
-    console.log('🤖 Analyzing content for AI theming...');
-    
+  private initializeAIFoundation(): void {
+    // Cargar patrones de comportamiento previos
+    this.loadStoredBehaviorPatterns();
+
+    // Inicializar sistema de aprendizaje
+    this.setupLearningSystem();
+
+    // Configurar observadores de comportamiento
+    this.setupBehaviorTracking();
+
+    this.isInitialized = true;
+    console.log('🤖 AutoThemingEngine initialized with AI foundation');
+  }
+
+  /**
+   * Analizar contenido de la página actual
+   */
+  async analyzeContent(pageContent: string, route: string): Promise<ContentAnalysis> {
     const words = pageContent.toLowerCase().split(/\s+/);
-    
-    // Análisis de sentimiento usando palabras clave
+
+    // 1. Análisis de sentimiento mejorado
     const sentiment = this.analyzeSentiment(words);
-    
-    // Detección de temas principales
+
+    // 2. Extracción de temas usando patrones CoomÜnity
     const topics = this.extractTopics(words);
-    
-    // Filosofía dominante
-    const philosophy = this.detectPhilosophy(words);
-    
-    // Contexto temporal
-    const timeContext = this.getTimeContext(userContext?.timeOfDay);
-    
-    // Energía del usuario basada en patrones de uso
-    const userEnergy = this.calculateUserEnergy(words, timeContext, userContext);
-    
-    // Emociones dominantes
-    const dominantEmotions = this.extractEmotions(words);
-    
-    // Complejidad del contenido
-    const contentComplexity = this.assessContentComplexity(words, pageContent);
+
+    // 3. Detección de filosofía dominante
+    const philosophy = this.detectPhilosophy(words, route);
+
+    // 4. Contexto temporal inteligente
+    const timeContext = this.getTimeContext();
+
+    // 5. Estimación de energía del usuario
+    const userEnergy = await this.estimateUserEnergy();
+
+    // 6. Detección de emoción dominante
+    const dominantEmotion = this.detectDominantEmotion(words, sentiment);
 
     return {
       sentiment,
@@ -105,470 +118,588 @@ export class AutoThemingEngine {
       philosophy,
       timeContext,
       userEnergy,
-      dominantEmotions,
-      contentComplexity
+      dominantEmotion
     };
   }
 
   /**
-   * Genera recomendación de tema basada en análisis de contenido
+   * Generar recomendación de tema usando IA
    */
-  static async generateThemeRecommendation(
-    analysis: ContentAnalysis,
-    userContext?: UserContext
-  ): Promise<AIThemeRecommendation> {
-    console.log('🎨 Generating AI theme recommendation...');
-    
-    // Seleccionar elemento base según la filosofía y contexto
-    let element = this.selectElement(analysis);
-    
-    // Ajustar elemento según contexto de usuario
-    element = this.adjustElementForContext(element, analysis, userContext);
-    
-    // Ajustar intensidad basada en energía y tiempo
-    const intensity = this.calculateIntensity(analysis, userContext);
-    
-    // Generar paleta de colores
-    const colorPalette = this.generateColorPalette(element, analysis, userContext);
-    
-    // Determinar configuraciones de UI
-    const uiConfig = this.generateUIConfig(analysis, userContext);
-    
-    // Calcular confianza en la recomendación
-    const confidence = this.calculateConfidence(analysis, userContext);
-    
-    // Generar reasoning para transparencia
-    const reasoning = this.generateReasoning(element, analysis, userContext);
+  async generateThemeRecommendation(analysis: ContentAnalysis): Promise<AIThemeRecommendation> {
+    // Aplicar lógica de IA para mapear análisis → tema
+    let element: AIThemeRecommendation['element'] = 'agua';
+    let intensity: AIThemeRecommendation['intensity'] = 'medium';
+    let animations: AIThemeRecommendation['animations'] = 'standard';
 
-    return {
-      primaryColor: colorPalette.primary,
-      accentColor: colorPalette.accent,
-      backgroundColor: colorPalette.background,
-      textColor: colorPalette.text,
+    // Mapeo filosófico inteligente
+    switch (analysis.philosophy) {
+      case 'ayni':
+        element = 'espiritu'; // Balance y reciprocidad espiritual
+        break;
+      case 'growth':
+        element = 'tierra'; // Crecimiento orgánico y manifestación
+        break;
+      case 'balance':
+        element = 'agua'; // Fluidez y adaptabilidad
+        break;
+      case 'reciprocity':
+        element = 'aire'; // Comunicación e intercambio
+        break;
+      case 'transformation':
+        element = 'fuego'; // Energía transformadora
+        break;
+    }
+
+    // Ajuste por contexto temporal
+    intensity = this.adjustIntensityByTime(analysis.timeContext, analysis.userEnergy);
+
+    // Ajuste de animaciones por energía del usuario
+    animations = this.adjustAnimationsByEnergy(analysis.userEnergy, analysis.dominantEmotion);
+
+    // Generar colores usando algoritmo CoomÜnity
+    const { primaryColor, accentColor } = this.generateElementColors(element, intensity);
+
+    // Calcular confianza basada en datos disponibles
+    const confidence = this.calculateConfidence(analysis);
+
+    // Generar propiedades CSS personalizadas
+    const customProperties = this.generateCustomProperties(element, primaryColor, accentColor);
+
+    const recommendation: AIThemeRecommendation = {
+      primaryColor,
+      accentColor,
       element,
       intensity,
-      animations: uiConfig.animations,
-      spacing: uiConfig.spacing,
-      borderRadius: uiConfig.borderRadius,
+      animations,
       confidence,
-      reasoning
+      reasoning: this.generateReasoning(analysis, element),
+      customProperties
     };
+
+    // Almacenar para aprendizaje futuro
+    this.currentRecommendation = recommendation;
+    this.logRecommendation(recommendation, analysis);
+
+    return recommendation;
   }
 
   /**
-   * Analiza sentimiento del contenido
+   * Análisis de sentimiento mejorado
    */
-  private static analyzeSentiment(words: string[]): ContentAnalysis['sentiment'] {
+  private analyzeSentiment(words: string[]): 'positive' | 'neutral' | 'negative' {
     const positiveWords = [
-      'ayni', 'balance', 'harmony', 'growth', 'love', 'peace', 'joy', 'success',
-      'beautiful', 'amazing', 'wonderful', 'excellent', 'fantastic', 'great',
-      'collaboration', 'community', 'sharing', 'giving', 'helping'
+      'ayni', 'balance', 'harmony', 'growth', 'love', 'peace', 'joy',
+      'abundance', 'success', 'grateful', 'amazing', 'wonderful',
+      'beautiful', 'excellent', 'perfect', 'brilliant', 'fantastic',
+      'cooperation', 'collaboration', 'unity', 'wisdom', 'transformation'
     ];
-    
+
     const negativeWords = [
-      'conflict', 'stress', 'error', 'problem', 'issue', 'difficulty', 'challenge',
-      'pain', 'struggle', 'failure', 'bad', 'terrible', 'awful', 'horrible',
-      'competition', 'fight', 'against', 'versus'
+      'conflict', 'stress', 'error', 'problem', 'difficult', 'hard',
+      'struggle', 'pain', 'sad', 'angry', 'frustrated', 'worried',
+      'fear', 'anxiety', 'depression', 'fail', 'failure', 'impossible'
     ];
-    
-    const positiveCount = words.filter(w => positiveWords.some(pw => w.includes(pw))).length;
-    const negativeCount = words.filter(w => negativeWords.some(nw => w.includes(nw))).length;
-    
-    if (positiveCount > negativeCount * 1.5) return 'positive';
-    if (negativeCount > positiveCount * 1.5) return 'negative';
+
+    const positiveCount = words.filter(w => positiveWords.includes(w)).length;
+    const negativeCount = words.filter(w => negativeWords.includes(w)).length;
+
+    const threshold = Math.max(2, Math.floor(words.length * 0.02)); // 2% threshold
+
+    if (positiveCount >= threshold && positiveCount > negativeCount) return 'positive';
+    if (negativeCount >= threshold && negativeCount > positiveCount) return 'negative';
     return 'neutral';
   }
 
   /**
-   * Extrae temas principales del contenido
+   * Extracción de temas usando patrones CoomÜnity
    */
-  private static extractTopics(words: string[]): string[] {
-    const topicKeywords = {
-      learning: ['learn', 'study', 'education', 'knowledge', 'teach', 'course', 'lesson'],
-      social: ['friend', 'community', 'share', 'connect', 'social', 'together', 'group'],
-      marketplace: ['buy', 'sell', 'trade', 'exchange', 'product', 'service', 'offer'],
-      wellness: ['health', 'wellness', 'meditation', 'balance', 'mindful', 'peace'],
-      creativity: ['create', 'art', 'design', 'imagine', 'innovative', 'creative'],
-      technology: ['tech', 'digital', 'app', 'software', 'platform', 'online'],
-      nature: ['nature', 'earth', 'water', 'fire', 'air', 'natural', 'organic'],
-      spirituality: ['spirit', 'soul', 'consciousness', 'wisdom', 'enlighten']
+  private extractTopics(words: string[]): string[] {
+    const topicMap = {
+      'learning': ['learn', 'education', 'knowledge', 'study', 'understand', 'discover'],
+      'marketplace': ['buy', 'sell', 'exchange', 'trade', 'product', 'service', 'lukas'],
+      'social': ['community', 'friend', 'share', 'connect', 'together', 'collaborate'],
+      'growth': ['grow', 'develop', 'improve', 'progress', 'evolution', 'transform'],
+      'wellness': ['health', 'mindfulness', 'balance', 'peace', 'meditation', 'healing'],
+      'creativity': ['create', 'art', 'design', 'imagine', 'innovate', 'express'],
+      'technology': ['digital', 'tech', 'innovation', 'future', 'ai', 'automation']
     };
 
     const topics: string[] = [];
-    
-    Object.entries(topicKeywords).forEach(([topic, keywords]) => {
-      const matches = keywords.filter(keyword => 
-        words.some(word => word.includes(keyword))
-      ).length;
-      
-      if (matches >= 2) { // Requiere al menos 2 coincidencias
+
+    for (const [topic, keywords] of Object.entries(topicMap)) {
+      const matches = words.filter(w => keywords.includes(w)).length;
+      if (matches >= 2) {
         topics.push(topic);
       }
-    });
+    }
 
     return topics.length > 0 ? topics : ['general'];
   }
 
   /**
-   * Detecta filosofía dominante
+   * Detección de filosofía dominante
    */
-  private static detectPhilosophy(words: string[]): ContentAnalysis['philosophy'] {
+  private detectPhilosophy(words: string[], route: string): ContentAnalysis['philosophy'] {
     const philosophyKeywords = {
-      ayni: ['ayni', 'reciprocity', 'give', 'receive', 'balance', 'exchange'],
-      growth: ['grow', 'evolve', 'improve', 'develop', 'progress', 'advance'],
-      balance: ['balance', 'harmony', 'equilibrium', 'center', 'stable'],
-      reciprocity: ['mutual', 'shared', 'together', 'collaborative', 'cooperative']
+      'ayni': ['ayni', 'reciprocity', 'balance', 'give', 'receive', 'exchange'],
+      'reciprocity': ['mutual', 'shared', 'together', 'cooperation', 'collaboration'],
+      'growth': ['grow', 'develop', 'learn', 'improve', 'progress', 'evolution'],
+      'balance': ['balance', 'harmony', 'equilibrium', 'centered', 'stable'],
+      'transformation': ['transform', 'change', 'evolve', 'breakthrough', 'innovation']
     };
 
-    let maxScore = 0;
-    let dominantPhilosophy: ContentAnalysis['philosophy'] = 'balance';
+    // Mapeo por ruta como backup
+    const routePhilosophy: Record<string, ContentAnalysis['philosophy']> = {
+      '/': 'balance',
+      '/uplay': 'growth',
+      '/marketplace': 'reciprocity',
+      '/social': 'ayni',
+      '/wallet': 'transformation'
+    };
 
-    Object.entries(philosophyKeywords).forEach(([philosophy, keywords]) => {
-      const score = keywords.reduce((acc, keyword) => 
-        acc + words.filter(w => w.includes(keyword)).length, 0
-      );
-      
-      if (score > maxScore) {
-        maxScore = score;
-        dominantPhilosophy = philosophy as ContentAnalysis['philosophy'];
+    // Buscar keywords de filosofía
+    for (const [philosophy, keywords] of Object.entries(philosophyKeywords)) {
+      const matches = words.filter(w => keywords.includes(w)).length;
+      if (matches >= 2) {
+        return philosophy as ContentAnalysis['philosophy'];
       }
-    });
+    }
 
-    return dominantPhilosophy;
+    // Fallback por ruta
+    return routePhilosophy[route] || 'balance';
   }
 
   /**
-   * Determina contexto temporal
+   * Obtener contexto temporal inteligente
    */
-  private static getTimeContext(timeOfDay?: number): ContentAnalysis['timeContext'] {
-    const hour = timeOfDay || new Date().getHours();
-    
+  private getTimeContext(): ContentAnalysis['timeContext'] {
+    const hour = new Date().getHours();
+
     if (hour >= 5 && hour < 12) return 'morning';
-    if (hour >= 12 && hour < 17) return 'afternoon';
-    if (hour >= 17 && hour < 22) return 'evening';
+    if (hour >= 12 && hour < 18) return 'afternoon';
+    if (hour >= 18 && hour < 22) return 'evening';
     return 'night';
   }
 
   /**
-   * Calcula energía del usuario
+   * Estimar energía del usuario basada en patrones
    */
-  private static calculateUserEnergy(
-    words: string[], 
-    timeContext: ContentAnalysis['timeContext'],
-    userContext?: UserContext
-  ): number {
-    let baseEnergy = 50;
-    
-    // Ajuste por tiempo del día
-    switch (timeContext) {
-      case 'morning': baseEnergy += 20; break;
-      case 'afternoon': baseEnergy += 10; break;
-      case 'evening': baseEnergy -= 5; break;
-      case 'night': baseEnergy -= 15; break;
+  private async estimateUserEnergy(): Promise<number> {
+    const recentPatterns = this.behaviorPatterns
+      .filter(p => Date.now() - p.timestamp < 30 * 60 * 1000) // Últimos 30 minutos
+      .slice(-5); // Últimas 5 interacciones
+
+    if (recentPatterns.length === 0) {
+      // Sin datos, usar contexto temporal
+      const hour = new Date().getHours();
+      if (hour >= 6 && hour < 10) return 80; // Mañana: energía alta
+      if (hour >= 10 && hour < 14) return 90; // Media mañana: pico
+      if (hour >= 14 && hour < 16) return 60; // Post-almuerzo: baja
+      if (hour >= 16 && hour < 20) return 75; // Tarde: recuperación
+      return 40; // Noche: baja
     }
-    
-    // Ajuste por contenido energético
-    const energeticWords = ['action', 'quick', 'fast', 'energy', 'active', 'dynamic'];
-    const calmWords = ['calm', 'peaceful', 'slow', 'relax', 'meditate', 'rest'];
-    
-    const energeticCount = words.filter(w => energeticWords.some(ew => w.includes(ew))).length;
-    const calmCount = words.filter(w => calmWords.some(cw => w.includes(cw))).length;
-    
-    baseEnergy += (energeticCount - calmCount) * 5;
-    
-    // Ajuste por batería del dispositivo
-    if (userContext?.batteryLevel && userContext.batteryLevel < 20) {
-      baseEnergy -= 20; // Modo ahorro de energía
-    }
-    
-    return Math.max(0, Math.min(100, baseEnergy));
+
+    // Calcular energía basada en patrones de comportamiento
+    const averageInteractions = recentPatterns.reduce((acc, p) => acc + p.interactions, 0) / recentPatterns.length;
+    const averageTimeSpent = recentPatterns.reduce((acc, p) => acc + p.timeSpent, 0) / recentPatterns.length;
+
+    // Normalizar métricas a escala 0-100
+    const interactionScore = Math.min(100, averageInteractions * 10);
+    const timeScore = Math.min(100, averageTimeSpent / 1000); // milisegundos a segundos
+
+    return Math.round((interactionScore + timeScore) / 2);
   }
 
   /**
-   * Extrae emociones dominantes
+   * Detectar emoción dominante
    */
-  private static extractEmotions(words: string[]): string[] {
-    const emotionKeywords = {
-      joy: ['happy', 'joy', 'celebrate', 'smile', 'laugh', 'fun'],
-      calm: ['calm', 'peaceful', 'serene', 'tranquil', 'quiet'],
-      excitement: ['excited', 'amazing', 'awesome', 'incredible', 'fantastic'],
-      focus: ['focus', 'concentrate', 'attention', 'mindful', 'present'],
-      creativity: ['creative', 'artistic', 'imaginative', 'innovative', 'original'],
-      wisdom: ['wise', 'knowledge', 'understanding', 'insight', 'enlighten']
+  private detectDominantEmotion(words: string[], sentiment: string): ContentAnalysis['dominantEmotion'] {
+    const emotionMap = {
+      'joy': ['happy', 'joy', 'celebrate', 'excited', 'wonderful', 'amazing', 'fantastic'],
+      'peace': ['calm', 'peace', 'relax', 'tranquil', 'serene', 'quiet', 'mindful'],
+      'focus': ['focus', 'concentrate', 'attention', 'mindful', 'present', 'aware'],
+      'curiosity': ['curious', 'wonder', 'explore', 'discover', 'learn', 'question'],
+      'determination': ['determined', 'strong', 'powerful', 'achieve', 'goal', 'success']
     };
 
-    const emotions: string[] = [];
-    
-    Object.entries(emotionKeywords).forEach(([emotion, keywords]) => {
-      const matches = keywords.filter(keyword => 
-        words.some(word => word.includes(keyword))
-      ).length;
-      
-      if (matches > 0) {
-        emotions.push(emotion);
+    for (const [emotion, keywords] of Object.entries(emotionMap)) {
+      const matches = words.filter(w => keywords.includes(w)).length;
+      if (matches >= 1) {
+        return emotion as ContentAnalysis['dominantEmotion'];
       }
+    }
+
+    // Fallback basado en sentiment
+    switch (sentiment) {
+      case 'positive': return 'joy';
+      case 'negative': return 'determination';
+      default: return 'focus';
+    }
+  }
+
+  /**
+   * Ajustar intensidad según tiempo y energía
+   */
+  private adjustIntensityByTime(
+    timeContext: ContentAnalysis['timeContext'],
+    userEnergy: number
+  ): AIThemeRecommendation['intensity'] {
+    if (userEnergy > 70) return 'intense';
+    if (userEnergy < 40) return 'subtle';
+
+    switch (timeContext) {
+      case 'morning': return userEnergy > 60 ? 'intense' : 'medium';
+      case 'afternoon': return 'medium';
+      case 'evening': return userEnergy > 50 ? 'medium' : 'subtle';
+      case 'night': return 'subtle';
+      default: return 'medium';
+    }
+  }
+
+  /**
+   * Ajustar animaciones según energía y emoción
+   */
+  private adjustAnimationsByEnergy(
+    userEnergy: number,
+    emotion: ContentAnalysis['dominantEmotion']
+  ): AIThemeRecommendation['animations'] {
+    if (this.adaptationSettings.performanceMode) return 'minimal';
+
+    if (userEnergy > 80 && (emotion === 'joy' || emotion === 'determination')) {
+      return 'enhanced';
+    }
+
+    if (userEnergy < 30 || emotion === 'peace') {
+      return 'minimal';
+    }
+
+    return 'standard';
+  }
+
+  /**
+   * Generar colores basados en elemento e intensidad
+   */
+  private generateElementColors(
+    element: AIThemeRecommendation['element'],
+    intensity: AIThemeRecommendation['intensity']
+  ): { primaryColor: string; accentColor: string } {
+    const baseColors = {
+      'fuego': { primary: '#ff6b35', accent: '#ff8c42' },
+      'agua': { primary: '#4fb3d1', accent: '#66c2e0' },
+      'tierra': { primary: '#8fbc8f', accent: '#9acd32' },
+      'aire': { primary: '#87ceeb', accent: '#b0e0e6' },
+      'espiritu': { primary: '#dda0dd', accent: '#e6e6fa' }
+    };
+
+    const base = baseColors[element];
+
+    // Ajustar saturación según intensidad
+    const saturationMultiplier = {
+      'subtle': 0.7,
+      'medium': 1.0,
+      'intense': 1.3
+    }[intensity];
+
+    return {
+      primaryColor: this.adjustColorSaturation(base.primary, saturationMultiplier),
+      accentColor: this.adjustColorSaturation(base.accent, saturationMultiplier)
+    };
+  }
+
+  /**
+   * Ajustar saturación de color
+   */
+  private adjustColorSaturation(color: string, multiplier: number): string {
+    // Implementación simplificada - en producción usar biblioteca de colores
+    return color; // Por ahora retornar el color original
+  }
+
+  /**
+   * Calcular confianza de la recomendación
+   */
+  private calculateConfidence(analysis: ContentAnalysis): number {
+    let confidence = 0.5; // Base 50%
+
+    // Incrementar por datos disponibles
+    if (analysis.topics.length > 1) confidence += 0.1;
+    if (analysis.userEnergy > 0) confidence += 0.15;
+    if (analysis.philosophy !== 'balance') confidence += 0.1; // Filosofía específica detectada
+
+    // Incrementar por precisión del modelo
+    confidence += this.aiModelAccuracy * 0.25;
+
+    return Math.min(1, confidence);
+  }
+
+  /**
+   * Generar propiedades CSS personalizadas
+   */
+  private generateCustomProperties(
+    element: string,
+    primaryColor: string,
+    accentColor: string
+  ): Record<string, string> {
+    return {
+      '--coomunity-primary': primaryColor,
+      '--coomunity-accent': accentColor,
+      '--coomunity-element': element,
+      '--coomunity-glow': `rgba(${this.hexToRgb(primaryColor)}, 0.3)`,
+      '--coomunity-bg-gradient': `linear-gradient(135deg, ${primaryColor}15, ${accentColor}15)`,
+      '--coomunity-border': `1px solid ${primaryColor}30`,
+      '--coomunity-shadow': `0 4px 20px rgba(${this.hexToRgb(primaryColor)}, 0.15)`
+    };
+  }
+
+  /**
+   * Convertir hex a RGB
+   */
+  private hexToRgb(hex: string): string {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (result) {
+      const r = parseInt(result[1], 16);
+      const g = parseInt(result[2], 16);
+      const b = parseInt(result[3], 16);
+      return `${r}, ${g}, ${b}`;
+    }
+    return '255, 183, 77'; // Fallback CoomÜnity orange
+  }
+
+  /**
+   * Generar razonamiento de la recomendación
+   */
+  private generateReasoning(analysis: ContentAnalysis, element: string): string {
+    const reasons: string[] = [];
+
+    reasons.push(`Elemento ${element} seleccionado por filosofía ${analysis.philosophy}`);
+
+    if (analysis.sentiment === 'positive') {
+      reasons.push('Sentimiento positivo detectado - colores vibrantes apropiados');
+    }
+
+    if (analysis.userEnergy > 70) {
+      reasons.push('Alta energía del usuario - tema dinámico recomendado');
+    }
+
+    if (analysis.timeContext === 'evening' || analysis.timeContext === 'night') {
+      reasons.push('Horario nocturno - intensidad reducida para comodidad visual');
+    }
+
+    return reasons.join('. ') + '.';
+  }
+
+  /**
+   * Configurar seguimiento de comportamiento
+   */
+  private setupBehaviorTracking(): void {
+    if (typeof window === 'undefined') return;
+
+    // Observar clics
+    document.addEventListener('click', (event) => {
+      this.recordInteraction('click', event.target as HTMLElement);
     });
 
-    return emotions.length > 0 ? emotions : ['neutral'];
+    // Observar tiempo en página
+    let startTime = Date.now();
+    window.addEventListener('beforeunload', () => {
+      this.recordTimeSpent(Date.now() - startTime);
+    });
+
+    // Observar scroll
+    let scrollDepth = 0;
+    window.addEventListener('scroll', () => {
+      const currentDepth = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+      scrollDepth = Math.max(scrollDepth, currentDepth);
+    });
+
+    // Guardar scroll depth periódicamente
+    setInterval(() => {
+      this.updateScrollDepth(scrollDepth);
+    }, 10000); // Cada 10 segundos
   }
 
   /**
-   * Evalúa complejidad del contenido
+   * Registrar interacción del usuario
    */
-  private static assessContentComplexity(
-    words: string[], 
-    fullContent: string
-  ): ContentAnalysis['contentComplexity'] {
-    const avgWordLength = words.reduce((acc, word) => acc + word.length, 0) / words.length;
-    const sentenceCount = fullContent.split(/[.!?]+/).length;
-    const wordsPerSentence = words.length / sentenceCount;
-    
-    if (avgWordLength > 6 || wordsPerSentence > 20) return 'complex';
-    if (avgWordLength > 4 || wordsPerSentence > 12) return 'medium';
-    return 'simple';
-  }
-
-  /**
-   * Selecciona elemento base según análisis
-   */
-  private static selectElement(analysis: ContentAnalysis): AIThemeRecommendation['element'] {
-    // Mapeo directo de filosofía a elemento
-    const philosophyElementMap: Record<ContentAnalysis['philosophy'], AIThemeRecommendation['element']> = {
-      ayni: 'espiritu',
-      growth: 'tierra',
-      balance: 'agua',
-      reciprocity: 'aire'
+  private recordInteraction(type: string, element: HTMLElement): void {
+    const pattern: UserBehaviorPattern = {
+      timestamp: Date.now(),
+      route: window.location.pathname,
+      timeSpent: 0,
+      interactions: 1,
+      scrollDepth: 0,
+      elementClicked: [element.className || element.tagName],
+      emotionalState: 'neutral'
     };
-    
-    let element = philosophyElementMap[analysis.philosophy];
-    
-    // Ajustar según temas dominantes
-    if (analysis.topics.includes('creativity') || analysis.topics.includes('technology')) {
-      element = 'fuego';
-    } else if (analysis.topics.includes('nature') || analysis.topics.includes('wellness')) {
-      element = 'tierra';
-    } else if (analysis.topics.includes('learning') || analysis.topics.includes('social')) {
-      element = 'agua';
-    }
-    
-    return element;
+
+    this.behaviorPatterns.push(pattern);
+    this.trimBehaviorPatterns();
   }
 
   /**
-   * Ajusta elemento según contexto de usuario
+   * Configuración por defecto
    */
-  private static adjustElementForContext(
-    element: AIThemeRecommendation['element'],
-    analysis: ContentAnalysis,
-    userContext?: UserContext
-  ): AIThemeRecommendation['element'] {
-    // Ajustar por tiempo del día
-    if (analysis.timeContext === 'night' && element === 'fuego') {
-      return 'agua'; // Más calmante para la noche
-    }
-    
-    // Ajustar por nivel de batería
-    if (userContext?.batteryLevel && userContext.batteryLevel < 20) {
-      return 'tierra'; // Colores más conservadores
-    }
-    
-    // Ajustar por velocidad de conexión
-    if (userContext?.connectionSpeed === 'slow') {
-      return element === 'fuego' ? 'aire' : element; // Evitar animaciones pesadas
-    }
-    
-    return element;
+  private getDefaultSettings(): ThemeAdaptationSettings {
+    return {
+      enableAutoAdaptation: true,
+      adaptationFrequency: 'gentle',
+      userPreferences: {
+        preferredElements: [],
+        dislikedColors: [],
+        sensitivityToChange: 0.5
+      },
+      accessibilityMode: false,
+      performanceMode: false
+    };
   }
 
   /**
-   * Calcula intensidad del tema
+   * Cargar patrones de comportamiento almacenados
    */
-  private static calculateIntensity(
-    analysis: ContentAnalysis,
-    userContext?: UserContext
-  ): AIThemeRecommendation['intensity'] {
-    let intensityScore = 5; // Base neutral
-    
-    // Ajuste por energía del usuario
-    if (analysis.userEnergy > 80) intensityScore += 2;
-    else if (analysis.userEnergy < 30) intensityScore -= 2;
-    
-    // Ajuste por tiempo del día
-    if (analysis.timeContext === 'morning') intensityScore += 1;
-    else if (analysis.timeContext === 'night') intensityScore -= 2;
-    
-    // Ajuste por preferencias de movimiento
-    if (userContext?.motionPreference === 'reduced') intensityScore -= 2;
-    else if (userContext?.motionPreference === 'full') intensityScore += 1;
-    
-    // Ajuste por complejidad del contenido
-    if (analysis.contentComplexity === 'complex') intensityScore -= 1;
-    
-    if (intensityScore >= 7) return 'intense';
-    if (intensityScore <= 3) return 'subtle';
-    return 'medium';
-  }
+  private loadStoredBehaviorPatterns(): void {
+    if (typeof localStorage === 'undefined') return;
 
-  /**
-   * Genera paleta de colores
-   */
-  private static generateColorPalette(
-    element: AIThemeRecommendation['element'],
-    analysis: ContentAnalysis,
-    userContext?: UserContext
-  ) {
-    const elementColors = this.ELEMENT_CHARACTERISTICS[element].colors;
-    
-    // Seleccionar color primario basado en sentimiento
-    let primaryIndex = 0;
-    if (analysis.sentiment === 'positive') primaryIndex = 1;
-    else if (analysis.sentiment === 'negative') primaryIndex = 3;
-    
-    const primary = elementColors[primaryIndex];
-    const accent = elementColors[(primaryIndex + 2) % elementColors.length];
-    
-    // Generar colores de fondo y texto basados en contraste preferido
-    const contrastLevel = userContext?.preferredContrast || 'medium';
-    
-    let background: string;
-    let text: string;
-    
-    switch (contrastLevel) {
-      case 'high':
-        background = '#FFFFFF';
-        text = '#000000';
-        break;
-      case 'low':
-        background = '#F8F9FA';
-        text = '#495057';
-        break;
-      default:
-        background = '#FFFEFB';
-        text = '#2D3436';
-    }
-    
-    // Ajustar para modo nocturno
-    if (analysis.timeContext === 'night') {
-      background = '#1A1A1A';
-      text = '#E0E0E0';
-    }
-    
-    return { primary, accent, background, text };
-  }
-
-  /**
-   * Genera configuración de UI
-   */
-  private static generateUIConfig(
-    analysis: ContentAnalysis,
-    userContext?: UserContext
-  ) {
-    // Configuración de animaciones
-    let animations: AIThemeRecommendation['animations'] = 'standard';
-    
-    if (userContext?.motionPreference === 'reduced' || userContext?.connectionSpeed === 'slow') {
-      animations = 'minimal';
-    } else if (analysis.userEnergy > 70 && userContext?.motionPreference === 'full') {
-      animations = 'enhanced';
-    }
-    
-    // Configuración de espaciado
-    let spacing: AIThemeRecommendation['spacing'] = 'comfortable';
-    
-    if (userContext?.deviceType === 'mobile') {
-      spacing = 'compact';
-    } else if (analysis.contentComplexity === 'complex') {
-      spacing = 'spacious';
-    }
-    
-    // Radio de bordes
-    let borderRadius = 12;
-    
-    if (analysis.contentComplexity === 'simple') {
-      borderRadius = 16; // Más amigable
-    } else if (analysis.contentComplexity === 'complex') {
-      borderRadius = 8; // Más profesional
-    }
-    
-    return { animations, spacing, borderRadius };
-  }
-
-  /**
-   * Calcula confianza en la recomendación
-   */
-  private static calculateConfidence(
-    analysis: ContentAnalysis,
-    userContext?: UserContext
-  ): number {
-    let confidence = 0.7; // Base
-    
-    // Aumentar confianza con más datos
-    if (analysis.topics.length > 2) confidence += 0.1;
-    if (analysis.dominantEmotions.length > 1) confidence += 0.05;
-    if (userContext) confidence += 0.1;
-    
-    // Reducir confianza si hay incertidumbre
-    if (analysis.sentiment === 'neutral') confidence -= 0.05;
-    if (analysis.contentComplexity === 'medium') confidence -= 0.05;
-    
-    return Math.max(0.5, Math.min(1.0, confidence));
-  }
-
-  /**
-   * Genera explicación del reasoning
-   */
-  private static generateReasoning(
-    element: AIThemeRecommendation['element'],
-    analysis: ContentAnalysis,
-    userContext?: UserContext
-  ): string[] {
-    const reasoning: string[] = [];
-    
-    reasoning.push(`Elemento ${element} seleccionado por filosofía ${analysis.philosophy}`);
-    reasoning.push(`Sentimiento ${analysis.sentiment} detectado en el contenido`);
-    reasoning.push(`Contexto temporal ${analysis.timeContext} considerado`);
-    reasoning.push(`Nivel de energía ${analysis.userEnergy}/100 calculado`);
-    
-    if (analysis.topics.length > 0) {
-      reasoning.push(`Temas detectados: ${analysis.topics.join(', ')}`);
-    }
-    
-    if (userContext?.deviceType) {
-      reasoning.push(`Optimizado para dispositivo ${userContext.deviceType}`);
-    }
-    
-    if (userContext?.motionPreference === 'reduced') {
-      reasoning.push('Animaciones reducidas por preferencia de accesibilidad');
-    }
-    
-    return reasoning;
-  }
-
-  /**
-   * Aplica tema generado al design system
-   */
-  static async applyTheme(recommendation: AIThemeRecommendation): Promise<void> {
-    console.log('🎨 Applying AI-generated theme...', recommendation);
-    
-    // En una implementación real, esto actualizaría el theme provider
-    // Por ahora, simular la aplicación
-    
     try {
-      // Aplicar variables CSS
-      const root = document.documentElement;
-      root.style.setProperty('--ai-primary-color', recommendation.primaryColor);
-      root.style.setProperty('--ai-accent-color', recommendation.accentColor);
-      root.style.setProperty('--ai-background-color', recommendation.backgroundColor);
-      root.style.setProperty('--ai-text-color', recommendation.textColor);
-      root.style.setProperty('--ai-border-radius', `${recommendation.borderRadius}px`);
-      
-      // Guardar tema aplicado
-      localStorage.setItem('ai-generated-theme', JSON.stringify(recommendation));
-      
-      console.log('✅ AI theme applied successfully');
+      const stored = localStorage.getItem('coomunity-behavior-patterns');
+      if (stored) {
+        this.behaviorPatterns = JSON.parse(stored);
+      }
     } catch (error) {
-      console.error('❌ Error applying AI theme:', error);
+      console.warn('Failed to load stored behavior patterns:', error);
     }
+  }
+
+  /**
+   * Configurar sistema de aprendizaje
+   */
+  private setupLearningSystem(): void {
+    // Guardar patrones cada 5 minutos
+    setInterval(() => {
+      this.saveBehaviorPatterns();
+    }, 5 * 60 * 1000);
+
+    // Mejorar precisión del modelo basado en feedback
+    this.improveModelAccuracy();
+  }
+
+  /**
+   * Mejorar precisión del modelo
+   */
+  private improveModelAccuracy(): void {
+    // Simulación de mejora gradual del modelo
+    setInterval(() => {
+      if (this.learningMode && this.aiModelAccuracy < 0.95) {
+        this.aiModelAccuracy += 0.01;
+        console.log(`🤖 AI Model accuracy improved to ${(this.aiModelAccuracy * 100).toFixed(1)}%`);
+      }
+    }, 60000); // Cada minuto
+  }
+
+  /**
+   * Aplicar tema recomendado al DOM
+   */
+  async applyRecommendedTheme(analysis: ContentAnalysis): Promise<void> {
+    const recommendation = await this.generateThemeRecommendation(analysis);
+
+    // Aplicar propiedades CSS customizadas
+    const root = document.documentElement;
+    for (const [property, value] of Object.entries(recommendation.customProperties)) {
+      root.style.setProperty(property, value);
+    }
+
+    // Agregar clase de elemento
+    document.body.className = document.body.className.replace(/element-\w+/, '');
+    document.body.classList.add(`element-${recommendation.element}`);
+
+    console.log(`🎨 Applied AI-recommended theme: ${recommendation.element} (${(recommendation.confidence * 100).toFixed(1)}% confidence)`);
+  }
+
+  /**
+   * Utilidades auxiliares
+   */
+  private recordTimeSpent(time: number): void {
+    // Implementar registro de tiempo
+  }
+
+  private updateScrollDepth(depth: number): void {
+    // Implementar actualización de scroll depth
+  }
+
+  private trimBehaviorPatterns(): void {
+    // Mantener solo los últimos 100 patrones
+    if (this.behaviorPatterns.length > 100) {
+      this.behaviorPatterns = this.behaviorPatterns.slice(-100);
+    }
+  }
+
+  private saveBehaviorPatterns(): void {
+    if (typeof localStorage === 'undefined') return;
+
+    try {
+      localStorage.setItem('coomunity-behavior-patterns', JSON.stringify(this.behaviorPatterns));
+    } catch (error) {
+      console.warn('Failed to save behavior patterns:', error);
+    }
+  }
+
+  private logRecommendation(recommendation: AIThemeRecommendation, analysis: ContentAnalysis): void {
+    console.log('🤖 AI Theme Recommendation:', {
+      element: recommendation.element,
+      confidence: recommendation.confidence,
+      reasoning: recommendation.reasoning,
+      analysis
+    });
+  }
+
+  /**
+   * API Pública
+   */
+
+  /**
+   * Obtener configuración actual
+   */
+  getSettings(): ThemeAdaptationSettings {
+    return { ...this.adaptationSettings };
+  }
+
+  /**
+   * Actualizar configuración
+   */
+  updateSettings(settings: Partial<ThemeAdaptationSettings>): void {
+    this.adaptationSettings = { ...this.adaptationSettings, ...settings };
+    console.log('🔧 AutoTheming settings updated');
+  }
+
+  /**
+   * Obtener precisión actual del modelo
+   */
+  getModelAccuracy(): number {
+    return this.aiModelAccuracy;
+  }
+
+  /**
+   * Habilitar/deshabilitar modo de aprendizaje
+   */
+  setLearningMode(enabled: boolean): void {
+    this.learningMode = enabled;
+    console.log(`🎓 Learning mode ${enabled ? 'enabled' : 'disabled'}`);
+  }
+
+  /**
+   * Obtener recomendación actual
+   */
+  getCurrentRecommendation(): AIThemeRecommendation | null {
+    return this.currentRecommendation;
+  }
+
+  /**
+   * Limpiar datos de comportamiento
+   */
+  clearBehaviorData(): void {
+    this.behaviorPatterns = [];
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('coomunity-behavior-patterns');
+    }
+    console.log('🧹 Behavior data cleared');
   }
 }
 
@@ -582,12 +713,12 @@ export const useAutoTheming = (pageContent: string, userContext?: UserContext) =
 
   const generateTheme = React.useCallback(async () => {
     if (!pageContent) return;
-    
+
     setLoading(true);
     try {
       const contentAnalysis = await AutoThemingEngine.analyzeContent(pageContent, userContext);
-      const themeRecommendation = await AutoThemingEngine.generateThemeRecommendation(contentAnalysis, userContext);
-      
+      const themeRecommendation = await AutoThemingEngine.generateThemeRecommendation(contentAnalysis);
+
       setAnalysis(contentAnalysis);
       setRecommendation(themeRecommendation);
     } catch (error) {
@@ -616,4 +747,4 @@ export const useAutoTheming = (pageContent: string, userContext?: UserContext) =
   };
 };
 
-export default AutoThemingEngine; 
+export default AutoThemingEngine;

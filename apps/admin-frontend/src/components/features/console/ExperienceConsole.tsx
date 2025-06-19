@@ -1,9 +1,9 @@
 /**
  * 🎮 Experience Console - CoomÜnity Gamification Management
- * 
+ *
  * Consola principal para diseñar, configurar y gestionar experiencias gamificadas
  * Basada en el Customer Journey Map del tablero de Miro
- * 
+ *
  * Características:
  * - Gestión de 4 STAGES (BUYER → SEEKER → SOLVER → PROMOTER)
  * - Sistema de concursos semanales (Mëritos y Öndas)
@@ -582,9 +582,9 @@ const ExperienceConsole: React.FC = () => {
   };
 
   const handleContestAction = (contestId: string, action: 'start' | 'pause' | 'end') => {
-    setMeritContests(prev => 
-      prev.map(contest => 
-        contest.id === contestId 
+    setMeritContests(prev =>
+      prev.map(contest =>
+        contest.id === contestId
           ? { ...contest, isActive: action === 'start' }
           : contest
       )
@@ -601,11 +601,11 @@ const ExperienceConsole: React.FC = () => {
           Gestiona los 4 stages del customer journey basado en el framework del tablero de Miro
         </Typography>
       </Grid>
-      
+
       {stages.map((stage) => (
         <Grid xs={12} md={6} lg={3} key={stage.id}>
-          <Card 
-            sx={{ 
+          <Card
+            sx={{
               cursor: 'pointer',
               transition: 'all 0.3s ease',
               '&:hover': {
@@ -617,9 +617,9 @@ const ExperienceConsole: React.FC = () => {
           >
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ 
+                <Avatar sx={{
                   bgcolor: stage.isActive ? 'primary.main' : 'grey.400',
-                  mr: 2 
+                  mr: 2
                 }}>
                   {stage.id === 'buyer' && <GroupIcon />}
                   {stage.id === 'seeker' && <TrendingUpIcon />}
@@ -628,29 +628,29 @@ const ExperienceConsole: React.FC = () => {
                 </Avatar>
                 <Box>
                   <Typography variant="h6">{stage.name}</Typography>
-                  <Chip 
-                    label={stage.isActive ? 'Activo' : 'Inactivo'} 
+                  <Chip
+                    label={stage.isActive ? 'Activo' : 'Inactivo'}
                     color={stage.isActive ? 'success' : 'default'}
                     size="small"
                   />
                 </Box>
               </Box>
-              
+
               <Typography variant="body2" color="textSecondary" paragraph>
                 {stage.description}
               </Typography>
-              
+
               <Box sx={{ mb: 2 }}>
                 <Typography variant="body2" gutterBottom>
                   Completación: {stage.completionRate}%
                 </Typography>
-                <LinearProgress 
-                  variant="determinate" 
-                  value={stage.completionRate} 
+                <LinearProgress
+                  variant="determinate"
+                  value={stage.completionRate}
                   sx={{ height: 8, borderRadius: 4 }}
                 />
               </Box>
-              
+
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant="caption" color="textSecondary">
                   {stage.timeframe}
@@ -695,7 +695,7 @@ const ExperienceConsole: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Chip 
+                  <Chip
                     label={contest.isActive ? 'Activo' : 'Pausado'}
                     color={contest.isActive ? 'success' : 'warning'}
                   />
@@ -735,9 +735,9 @@ const ExperienceConsole: React.FC = () => {
                     {contest.leaderboard.slice(0, 3).map((entry) => (
                       <ListItem key={entry.userId}>
                         <ListItemIcon>
-                          <Avatar sx={{ 
-                            bgcolor: entry.position === 1 ? 'gold' : 
-                                   entry.position === 2 ? 'silver' : 
+                          <Avatar sx={{
+                            bgcolor: entry.position === 1 ? 'gold' :
+                                   entry.position === 2 ? 'silver' :
                                    entry.position === 3 ? '#CD7F32' : 'grey.400'
                           }}>
                             {entry.position}
@@ -799,7 +799,7 @@ const ExperienceConsole: React.FC = () => {
             <Typography variant="body2" color="textSecondary" paragraph>
               Coompetencia = (Öndas × 0.1) + (Compras × 0.3) + (Ventas × 0.4) + (Mëritos × 0.2) + (Compras hijos × 0.15)
             </Typography>
-            
+
             <List>
               <ListItem>
                 <ListItemText
@@ -836,7 +836,7 @@ const ExperienceConsole: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               ⚖️ Reglas de Votación
             </Typography>
-            
+
             {trustVoting.votingRules.map((rule) => (
               <Box key={rule.id} sx={{ mb: 2, p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
                 <Typography variant="subtitle1">
@@ -863,7 +863,7 @@ const ExperienceConsole: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               🔄 Workflows de Validación
             </Typography>
-            
+
             {trustVoting.validationWorkflows.map((workflow) => (
               <Accordion key={workflow.id}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -876,7 +876,7 @@ const ExperienceConsole: React.FC = () => {
                     <Grid xs={12} md={4}>
                       <FormControlLabel
                         control={
-                          <Switch 
+                          <Switch
                             checked={workflow.requiresPromoterApproval}
                             disabled
                           />
@@ -922,12 +922,12 @@ const ExperienceConsole: React.FC = () => {
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                 <Box>
                   <Typography variant="h6">{content.name}</Typography>
-                  <Chip 
+                  <Chip
                     label={content.type.toUpperCase()}
                     variant="outlined"
                     sx={{ mr: 1 }}
                   />
-                  <Chip 
+                  <Chip
                     label={content.isActive ? 'Activo' : 'Inactivo'}
                     color={content.isActive ? 'success' : 'default'}
                   />
@@ -950,22 +950,47 @@ const ExperienceConsole: React.FC = () => {
                         <ListItemText
                           primary={video.title}
                           secondary={
-                            <Box>
-                              <Typography variant="caption" display="block">
+                            <Box component="div">
+                              <Typography variant="caption" component="span" sx={{ display: 'block' }}>
                                 Duración: {Math.floor(video.duration / 60)}m {video.duration % 60}s
                               </Typography>
-                              <Typography variant="caption" display="block">
+                              <Typography variant="caption" component="span" sx={{ display: 'block' }}>
                                 Filosofía: {video.philosophyAlignment}
                               </Typography>
                               {video.isEpicContent && (
-                                <Chip label="Contenido Épico" size="small" color="secondary" />
+                                <Box
+                                  component="span"
+                                  sx={{
+                                    display: 'inline-block',
+                                    px: 1,
+                                    py: 0.25,
+                                    backgroundColor: 'secondary.main',
+                                    color: 'secondary.contrastText',
+                                    borderRadius: 1,
+                                    fontSize: '0.75rem',
+                                    mr: 1,
+                                    mt: 0.5
+                                  }}
+                                >
+                                  Contenido Épico
+                                </Box>
                               )}
                               {video.activationTime && (
-                                <Chip 
-                                  label={`Activo: ${video.activationTime.toLocaleString()}`}
-                                  size="small" 
-                                  color="warning" 
-                                />
+                                <Box
+                                  component="span"
+                                  sx={{
+                                    display: 'inline-block',
+                                    px: 1,
+                                    py: 0.25,
+                                    backgroundColor: 'warning.main',
+                                    color: 'warning.contrastText',
+                                    borderRadius: 1,
+                                    fontSize: '0.75rem',
+                                    mt: 0.5
+                                  }}
+                                >
+                                  Activo: {video.activationTime.toLocaleString()}
+                                </Box>
                               )}
                             </Box>
                           }
@@ -995,7 +1020,7 @@ const ExperienceConsole: React.FC = () => {
                         Reward: {question.reward.meritos} Mëritos + {question.reward.ondas} Öndas
                       </Typography>
                       <Typography variant="caption" color="textSecondary">
-                        Consenso comunitario: {question.socialValidation.consensusPercentage}% 
+                        Consenso comunitario: {question.socialValidation.consensusPercentage}%
                         ({question.socialValidation.totalAnswers} respuestas)
                       </Typography>
                     </Box>
@@ -1146,7 +1171,7 @@ const ExperienceConsole: React.FC = () => {
         <Typography variant="subtitle1" color="textSecondary">
           Centro de control para el diseño y gestión de experiencias gamificadas
         </Typography>
-        
+
         <Tabs value={activeTab} onChange={handleTabChange} sx={{ mt: 2 }}>
           <Tab icon={<TimelineIcon />} label="Customer Journey" />
           <Tab icon={<TrophyIcon />} label="Concursos" />
@@ -1167,8 +1192,8 @@ const ExperienceConsole: React.FC = () => {
       </Box>
 
       {/* Stage Configuration Dialog */}
-      <Dialog 
-        open={dialogOpen} 
+      <Dialog
+        open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         maxWidth="md"
         fullWidth
@@ -1182,7 +1207,7 @@ const ExperienceConsole: React.FC = () => {
               <Typography variant="body1" paragraph>
                 {selectedStage.description}
               </Typography>
-              
+
               <Typography variant="h6" gutterBottom>
                 Acciones del Stage
               </Typography>

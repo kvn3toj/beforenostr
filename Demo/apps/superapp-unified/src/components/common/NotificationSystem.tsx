@@ -336,7 +336,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
           const lastLogKey = `notifications-403-${user.id}`;
           const lastLog = sessionStorage.getItem(lastLogKey);
           const now = Date.now();
-          
+
           if (!lastLog || now - parseInt(lastLog) > 300000) { // 5 minutes
             console.info('📊 Notifications require additional permissions - this is expected during development');
             sessionStorage.setItem(lastLogKey, now.toString());
@@ -424,7 +424,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   // Sync with backend notifications
   useEffect(() => {
     console.log('🔄 Syncing notifications - Type:', typeof backendNotifications, 'IsArray:', Array.isArray(backendNotifications), 'Data:', backendNotifications);
-    
+
     // ✅ Validar que backendNotifications sea un array válido
     if (Array.isArray(backendNotifications) && backendNotifications.length > 0) {
       console.log('✅ Dispatching valid notifications array:', backendNotifications);
@@ -717,11 +717,11 @@ const NotificationDisplay: React.FC = () => {
                     <ListItemText
                       primary={notification.title}
                       secondary={
-                        <Box>
-                          <Typography variant="body2" color="text.secondary">
+                        <Box component="div">
+                          <Typography variant="body2" component="span" color="text.secondary" sx={{ display: 'block' }}>
                             {notification.message}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" component="span" color="text.secondary" sx={{ display: 'block' }}>
                             {safeDateFormat(notification.timestamp)}
                           </Typography>
                         </Box>

@@ -92,7 +92,7 @@ let videoPlayerEnvCheckTime = 0;
 // Utility to detect if we're in Builder.io or similar preview environment
 const isPreviewEnvironment = (): boolean => {
   const now = Date.now();
-  
+
   // Use cached result if it's less than 5 seconds old
   if (videoPlayerEnvCheckCache !== null && now - videoPlayerEnvCheckTime < 5000) {
     return videoPlayerEnvCheckCache;
@@ -100,7 +100,7 @@ const isPreviewEnvironment = (): boolean => {
 
   // Check if we're forcing YouTube videos in development
   const forceYouTube = import.meta.env.VITE_FORCE_YOUTUBE_VIDEOS === 'true';
-  
+
   // 🔧 DEBUG: Log completo para debugging
   console.log('🔧 UPlayVideoPlayer isPreviewEnvironment Debug COMPLETO:', {
     forceYouTube,
@@ -109,7 +109,7 @@ const isPreviewEnvironment = (): boolean => {
     search: typeof window !== 'undefined' ? window.location.search : 'undefined',
     cached: videoPlayerEnvCheckCache
   });
-  
+
   // Si VITE_FORCE_YOUTUBE_VIDEOS está activo, SIEMPRE usar YouTube
   if (forceYouTube) {
     console.log('✅ UPlayVideoPlayer: ACTIVANDO modo YouTube por variable de entorno VITE_FORCE_YOUTUBE_VIDEOS=true');
@@ -117,7 +117,7 @@ const isPreviewEnvironment = (): boolean => {
     videoPlayerEnvCheckTime = now;
     return true;
   }
-  
+
   // Check for common preview environment indicators
   const result = (
     typeof window !== 'undefined' && (
@@ -137,7 +137,7 @@ const isPreviewEnvironment = (): boolean => {
 // Direct video data without async loading
 const getVideoData = (videoId: string): VideoData => {
   // console.log('🔍 getVideoData called with videoId:', videoId);
-  
+
   // Use public videos for preview environments like Builder.io
   const isPreview = isPreviewEnvironment();
   const getVideoUrl = (localUrl: string, videoId: string) => {
@@ -148,12 +148,12 @@ const getVideoData = (videoId: string): VideoData => {
         'ayni-deep-dive': 'https://www.youtube.com/embed/5J4UaAskcHg', // What is Reciprocity
         'ondas-energia': 'https://www.youtube.com/embed/EwzWTIdhYRQ', // Towards an ontology of the commons
       };
-      
+
       return youtubeVideoMap[videoId] || 'https://www.youtube.com/embed/gKA4JjkiU4A';
     }
     return localUrl;
   };
-  
+
   const videoDatabase: Record<string, VideoData> = {
     'coomunity-intro': {
       id: 'coomunity-intro',
@@ -208,7 +208,7 @@ const getVideoData = (videoId: string): VideoData => {
     estimatedRewards: { merits: 100, ondas: 40 },
     tags: ['CoomÜnity'],
   };
-  
+
   // console.log('🎯 getVideoData result:', {
   //   inputVideoId: videoId,
   //   foundInDatabase: !!videoDatabase[videoId],
@@ -216,7 +216,7 @@ const getVideoData = (videoId: string): VideoData => {
   //   resultUrl: result.url,
   //   availableKeys: Object.keys(videoDatabase)
   // });
-  
+
   return result;
 };
 
@@ -277,10 +277,10 @@ const UPlayVideoPlayer: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   // 🔥 Usar datos reales del backend
-  const { 
-    data: backendVideos, 
+  const {
+    data: backendVideos,
     isLoading: isBackendLoading,
-    isError: isBackendError 
+    isError: isBackendError
   } = useVideos();
 
   // State para el video actual
@@ -298,7 +298,7 @@ const UPlayVideoPlayer: React.FC = () => {
     console.log('5. isBackendLoading:', isBackendLoading);
     console.log('6. isBackendError:', isBackendError);
     console.log('7. VITE_FORCE_YOUTUBE_VIDEOS:', import.meta.env.VITE_FORCE_YOUTUBE_VIDEOS);
-    
+
     const loadVideoData = () => {
       console.log('🔥 Loading video data for videoId:', videoId);
       console.log('🔥 Location state:', location.state);
@@ -308,39 +308,53 @@ const UPlayVideoPlayer: React.FC = () => {
       if (videoId && backendVideos && backendVideos.length > 0) {
         console.log('✅ Tomando el camino: Búsqueda PRIORITARIA en backendVideos');
         console.log('🔍 Buscando videoId:', videoId, 'en', backendVideos.length, 'videos del backend');
-        
+
         const foundVideo = backendVideos.find((video: any) => {
-          const matches = video.externalId === videoId || 
+          const matches = video.externalId === videoId ||
                          video.id?.toString() === videoId ||
                          video.id === parseInt(videoId, 10);
-          
+
           console.log(`🔍 Checking video ${video.id} (externalId: ${video.externalId}): ${matches ? '✅ MATCH' : '❌ no match'}`);
           console.log('  - video.url:', video.url);
           console.log('  - video.platform:', video.platform);
+          console.log('  - video.thumbnailUrl:', video.thumbnailUrl);
           return matches;
         });
 
         if (foundVideo) {
           console.log('✅ [FORZADO] Video encontrado en backendVideos. Usando datos reales:', foundVideo);
-          
+
+          // 🎯 CORRECCIÓN CRÍTICA: Procesar correctamente datos del backend
+          const videoExternalId = foundVideo.externalId || 'dQw4w9WgXcQ';
+
+          // Parse categories if it's a JSON string
+          let categories = [];
+          try {
+            categories = foundVideo.categories ? JSON.parse(foundVideo.categories) : ['General'];
+          } catch (e) {
+            categories = [foundVideo.category || 'General'];
+          }
+
           // Asegurar que las propiedades existen con fallbacks
           const processedVideo = {
-            id: foundVideo.externalId || foundVideo.id?.toString() || videoId,
+            id: foundVideo.id?.toString() || videoId,
             title: foundVideo.title || 'Video sin título',
             description: foundVideo.description || 'Descripción no disponible',
-            url: foundVideo.url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            url: `https://www.youtube.com/watch?v=${videoExternalId}`, // ✅ Usar externalId para URL
             duration: foundVideo.duration || 0,
             questions: Array.isArray(foundVideo.questions) ? foundVideo.questions : [],
-            thumbnail: foundVideo.thumbnailUrl || '',
-            category: foundVideo.category || 'General',
+            thumbnail: foundVideo.thumbnailUrl || `https://img.youtube.com/vi/${videoExternalId}/maxresdefault.jpg`,
+            category: categories[0] || 'General',
             difficulty: foundVideo.difficulty || 'medium',
             estimatedRewards: {
               merits: 100,
               ondas: 50
             },
-            tags: Array.isArray(foundVideo.tags) ? foundVideo.tags : []
+            tags: Array.isArray(foundVideo.tags) ?
+                  (typeof foundVideo.tags === 'string' ? JSON.parse(foundVideo.tags) : foundVideo.tags) :
+                  []
           };
-          
+
           console.log('🎯 [PRIORITARIO] Processed video data from backend:', processedVideo);
           console.log('🎯 [PRIORITARIO] Final video URL being set:', processedVideo.url);
           setCurrentVideo(processedVideo);
@@ -356,25 +370,25 @@ const UPlayVideoPlayer: React.FC = () => {
         console.log('✅ Tomando el camino: location.state.videoData');
         const stateVideo = location.state.videoData;
         console.log('✅ Using video data from navigation state:', stateVideo);
-        
-        // Asegurar que las propiedades existen con fallbacks
+
+        // 🎯 Usar datos del state que ya vienen procesados desde UPlayInteractiveLibrary
         const processedVideo = {
-          id: stateVideo.externalId || stateVideo.id?.toString() || videoId,
+          id: stateVideo.id?.toString() || videoId,
           title: stateVideo.title || 'Video sin título',
           description: stateVideo.description || 'Descripción no disponible',
-          url: stateVideo.url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // URL real de YouTube del backend
+          url: stateVideo.youtubeUrl || stateVideo.url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
           duration: stateVideo.duration || 0,
           questions: Array.isArray(stateVideo.questions) ? stateVideo.questions : [],
-          thumbnail: stateVideo.thumbnailUrl || '',
+          thumbnail: stateVideo.thumbnailUrl || stateVideo.thumbnail || '',
           category: stateVideo.category || 'General',
           difficulty: stateVideo.difficulty || 'medium',
           estimatedRewards: {
-            merits: 100,
-            ondas: 50
+            merits: stateVideo.rewards?.meritos || 100,
+            ondas: stateVideo.rewards?.ondas || 50
           },
           tags: Array.isArray(stateVideo.tags) ? stateVideo.tags : []
         };
-        
+
         console.log('🎯 Processed video data from location.state:', processedVideo);
         setCurrentVideo(processedVideo);
         setIsLoading(false);
@@ -385,7 +399,7 @@ const UPlayVideoPlayer: React.FC = () => {
       if (!isBackendLoading && !isBackendError) {
         console.log('⚠️ Tomando el camino: Fallback a mock data');
         console.log('🔄 No video found in backend, using fallback mock data for:', videoId);
-        
+
         // Crear video fallback basado en el videoId
         const fallbackVideo = {
           id: videoId || 'fallback-video',
@@ -403,7 +417,7 @@ const UPlayVideoPlayer: React.FC = () => {
           },
           tags: ['demo', 'fallback']
         };
-        
+
         console.log('🎯 Using fallback video data:', fallbackVideo);
         setCurrentVideo(fallbackVideo);
         setIsLoading(false);
@@ -446,13 +460,13 @@ const UPlayVideoPlayer: React.FC = () => {
   const playlistVideos = getPlaylistVideos();
   const userProgress = getUserProgress();
 
-  // console.log('🎬 UPlayVideoPlayer loaded:', { 
-  //   videoId, 
-  //   videoData: videoData?.title, 
+  // console.log('🎬 UPlayVideoPlayer loaded:', {
+  //   videoId,
+  //   videoData: videoData?.title,
   //   locationPathname: location.pathname,
   //   allParams: useParams(),
   //   rawVideoId: videoId,
-  //   videoExists: !!videoData 
+  //   videoExists: !!videoData
   // });
 
   // Handle video completion
@@ -591,10 +605,10 @@ const UPlayVideoPlayer: React.FC = () => {
         {/* Builder.io Preview Indicator */}
         {isPreviewEnvironment() && (
           <Box sx={{ mb: 2 }}>
-            <Alert 
-              severity="info" 
+            <Alert
+              severity="info"
               icon={<VideoLibraryIcon />}
-              sx={{ 
+              sx={{
                 borderRadius: 2,
                 backgroundColor: '#e3f2fd',
                 border: '1px solid #2196f3',
@@ -604,7 +618,7 @@ const UPlayVideoPlayer: React.FC = () => {
               }}
             >
               <Typography variant="body2">
-                <strong>Modo Preview:</strong> Usando videos de YouTube relacionados con los temas. 
+                <strong>Modo Preview:</strong> Usando videos de YouTube relacionados con los temas.
                 En localhost se cargarán los videos locales de CoomÜnity con funcionalidad completa.
               </Typography>
             </Alert>

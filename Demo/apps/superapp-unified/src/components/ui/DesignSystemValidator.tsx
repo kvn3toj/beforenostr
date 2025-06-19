@@ -80,7 +80,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
       },
       {
         name: 'Variables de color semántico',
-        test: () => 
+        test: () =>
           checkCSSVariable('--color-success') &&
           checkCSSVariable('--color-warning') &&
           checkCSSVariable('--color-error'),
@@ -88,7 +88,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
       },
       {
         name: 'Paleta de grises',
-        test: () => 
+        test: () =>
           checkCSSVariable('--color-gray-100') &&
           checkCSSVariable('--color-gray-500') &&
           checkCSSVariable('--color-gray-900'),
@@ -120,7 +120,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
       },
       {
         name: 'Escala tipográfica',
-        test: () => 
+        test: () =>
           checkCSSVariable('--font-size-xs') &&
           checkCSSVariable('--font-size-sm') &&
           checkCSSVariable('--font-size-md') &&
@@ -129,7 +129,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
       },
       {
         name: 'Pesos tipográficos',
-        test: () => 
+        test: () =>
           checkCSSVariable('--font-weight-normal') &&
           checkCSSVariable('--font-weight-medium') &&
           checkCSSVariable('--font-weight-bold'),
@@ -151,7 +151,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
     const spacingTests = [
       {
         name: 'Sistema de espaciado base',
-        test: () => 
+        test: () =>
           checkCSSVariable('--space-xs') &&
           checkCSSVariable('--space-sm') &&
           checkCSSVariable('--space-md') &&
@@ -160,7 +160,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
       },
       {
         name: 'Espaciado de componentes',
-        test: () => 
+        test: () =>
           checkCSSVariable('--space-component-sm') &&
           checkCSSVariable('--space-component-md') &&
           checkCSSVariable('--space-component-lg'),
@@ -182,7 +182,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
     const shadowTests = [
       {
         name: 'Sombras base',
-        test: () => 
+        test: () =>
           checkCSSVariable('--shadow-sm') &&
           checkCSSVariable('--shadow-md') &&
           checkCSSVariable('--shadow-lg'),
@@ -190,7 +190,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
       },
       {
         name: 'Sombras especiales',
-        test: () => 
+        test: () =>
           checkCSSVariable('--shadow-coomunity') &&
           checkCSSVariable('--shadow-glow'),
         message: 'Efectos especiales CoomÜnity',
@@ -345,8 +345,8 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
               <Typography variant="body2" color="text.secondary" mb={1}>
                 Ejecutando validaciones... {progress}%
               </Typography>
-              <LinearProgress 
-                variant="determinate" 
+              <LinearProgress
+                variant="determinate"
                 value={progress}
                 sx={{ height: 8, borderRadius: 4 }}
               />
@@ -401,7 +401,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
 
           {/* Overall Status */}
           {!isValidating && validationResults.length > 0 && (
-            <Alert 
+            <Alert
               severity={successRate >= 90 ? 'success' : successRate >= 70 ? 'warning' : 'error'}
               sx={{ mb: 2 }}
             >
@@ -477,12 +477,12 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
                           <ListItemText
                             primary={test.name}
                             secondary={
-                              <Box>
-                                <Typography variant="body2" color="text.secondary">
+                              <Box component="div">
+                                <Typography variant="body2" component="span" color="text.secondary" sx={{ display: 'block' }}>
                                   {test.message}
                                 </Typography>
                                 {test.details && (
-                                  <Typography variant="caption" color="text.secondary">
+                                  <Typography variant="caption" component="span" color="text.secondary" sx={{ display: 'block' }}>
                                     {test.details}
                                   </Typography>
                                 )}
@@ -503,4 +503,4 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
   );
 };
 
-export default DesignSystemValidator; 
+export default DesignSystemValidator;

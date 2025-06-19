@@ -261,9 +261,9 @@ export function useUserProfile(userId: string) {
 
 // 🎮 Hook para datos de gamificación
 export function useGameData(userId: string) {
-  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno 
-  const isBuilderEnvironment = typeof window !== 'undefined' && 
-    (window.location.hostname.includes('builder.io') || 
+  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno
+  const isBuilderEnvironment = typeof window !== 'undefined' &&
+    (window.location.hostname.includes('builder.io') ||
      window.location.port === '48752' ||
      window.location.hostname.includes('preview'));
 
@@ -326,7 +326,7 @@ export function useGameData(userId: string) {
       // 🔗 En desarrollo normal, intentar llamada API con fallback
       return await gameAPI.getUserStats(userId);
     },
-    enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en 
+    enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en
     silentFail: true, // Don't log errors for missing game endpoint
     fallbackData: {
       id: userId,
@@ -382,9 +382,9 @@ export function useQuests() {
 
 // 💰 Hook para datos del wallet - CACHÉ REAL-TIME
 export function useWalletData(userId: string) {
-  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno 
-  const isBuilderEnvironment = typeof window !== 'undefined' && 
-    (window.location.hostname.includes('builder.io') || 
+  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno
+  const isBuilderEnvironment = typeof window !== 'undefined' &&
+    (window.location.hostname.includes('builder.io') ||
      window.location.port === '48752' ||
      window.location.hostname.includes('preview'));
 
@@ -494,7 +494,7 @@ export function useWalletData(userId: string) {
       }
     },
     {
-      enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en 
+      enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en
       retry: false, // No reintentar para fallback inmediato
     }
   );
@@ -753,92 +753,39 @@ export function useAwardMerit() {
 // 🏪 Hook para datos del marketplace
 // 🏪 Hook para datos del marketplace - CON DATOS MOCK RICOS
 export function useMarketplaceData(filters?: any) {
-  const queryKey = ['marketplace-items', filters, 'v4']; // v4 sin timestamp para evitar refetch constante
+  const queryKey = ['marketplace-items', filters, 'v5']; // v5 - habilitado backend real
 
   return useQuery({
     queryKey,
     queryFn: async () => {
-      // 🎨 CARGAR DATOS MOCK RICOS - Simulando carga realista
-      console.info(
-        '🎨 Cargando datos mock ricos del marketplace con productos diversos'
-      );
-
-      // Simular tiempo de carga optimizado (200-400ms)
-      await new Promise((resolve) =>
-        setTimeout(resolve, Math.random() * 200 + 200)
-      );
-
-      // Limpiar localStorage de caché si existe
       try {
-        const cacheKeys = Object.keys(localStorage).filter((key) =>
-          key.includes('marketplace')
-        );
-        cacheKeys.forEach((key) => localStorage.removeItem(key));
-      } catch (e) {
-        // Ignorar errores de localStorage en caso de que no esté disponible
-      }
+        // ✅ USAR BACKEND REAL - Datos reales del backend NestJS
+        console.info('🔄 Cargando datos reales del backend NestJS marketplace...');
 
-
-      console.info(
-        `✅ Cargados ${0} productos del marketplace`
-      );
-
-      return {
-        items: [],
-        total: 0,
-        page: 1,
-        limit: 0,
-        hasMore: false,
-        source: 'mock-rich-data', // Indicador de fuente
-      };
-      // NOTA: Código comentado para futura implementación cuando el backend tenga datos reales diversos
-      /*
-      try {
-        // Intentar obtener datos del backend real primero
         const response = await marketplaceAPI.getItems(filters);
 
-        // 🔍 Detectar si el backend tiene solo datos de test genéricos
-        const hasOnlyTestData = response?.items?.length === 0 || response?.items?.every((item: any) =>
-          item.title?.includes('Test Item by Admin') ||
-          item.description?.includes('test E2E') ||
-          item.title?.startsWith('Test Item') ||
-          item.description?.includes('Este item fue creado por un test') ||
-          !item.title ||
-          item.title.trim() === ''
-        );
+        console.info(`✅ Cargados ${response?.items?.length || 0} productos del marketplace desde backend NestJS`);
 
-        // Si solo hay datos de test, usar nuestros datos mock ricos
-        if (hasOnlyTestData) {
-          console.info('🎨 Backend tiene solo datos de test genéricos, usando datos mock ricos del marketplace');
-
-
-          return {
-            items: [],
-            total: 0,
-            page: 1,
-            limit: 0,
-            hasMore: false,
-            source: 'mock-fallback',
-          };
-        }
-
-        // Si hay datos reales diversos, usarlos
-        return { ...response, source: 'backend-real' };
+        // Retornar datos del backend con formato consistente
+        return {
+          ...response,
+          source: 'backend-real',
+          lastUpdated: new Date().toISOString(),
+        };
       } catch (error) {
-        console.warn('Backend no disponible, usando datos mock:', error);
+        console.error('Error cargando datos del marketplace desde backend:', error);
 
-        // Fallback a datos mock locales
-
+        // Fallback a datos vacíos en caso de error
         return {
           items: [],
           total: 0,
           page: 1,
-          limit: 0,
+          limit: 20,
           hasMore: false,
-          source: 'mock-error-fallback',
+          source: 'error-fallback',
+          error: error instanceof Error ? error.message : 'Error desconocido',
         };
       }
-      */
     },
     staleTime: 5 * 60 * 1000, // 5 minutos - mantener datos frescos por un tiempo razonable
     gcTime: 10 * 60 * 1000, // 10 minutos en caché

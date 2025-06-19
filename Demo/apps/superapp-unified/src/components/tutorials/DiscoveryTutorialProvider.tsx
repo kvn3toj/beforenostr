@@ -1,14 +1,14 @@
 import React, { useState, useContext, createContext, useCallback, useEffect } from 'react';
-import { 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  Button, 
-  Typography, 
-  Box, 
-  Stepper, 
-  Step, 
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  Box,
+  Stepper,
+  Step,
   StepLabel,
   IconButton,
   Fade,
@@ -23,7 +23,7 @@ import {
   ListItemText,
   Divider
 } from '@mui/material';
-import { 
+import {
   Close as CloseIcon,
   School as SchoolIcon,
   NavigateNext as NextIcon,
@@ -251,18 +251,135 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
   },
   {
     id: 'wallet-discovery',
-    title: '💰 Discovery Wallet',
-    description: 'Gestiona tus Lükas y balance Ayni',
+    title: '💰 Discovery Wallet & TOINS',
+    description: 'Domina el sistema dual de monedas: Lükas y TOINS',
     category: 'wallet',
-    difficulty: 'beginner',
-    estimatedTime: '5-8 minutos',
+    difficulty: 'intermediate',
+    estimatedTime: '12-15 minutos',
+    completionRewards: {
+      ondas: 35,
+      meritos: 8,
+      description: 'Has dominado el sistema monetario dual de CoomÜnity. ¡Ahora puedes usar tanto Lükas como TOINS con confianza!'
+    },
     steps: [
       {
         id: 'wallet-intro',
         title: 'Tu Wallet CoomÜnity',
-        content: 'Aprende a gestionar tus Lükas, Mëritos y balance Ayni.',
+        content: '¡Bienvenido a tu wallet CoomÜnity! Aquí gestionas todos tus recursos: Lükas, TOINS, Mëritos y tu balance Ayni. Es el corazón financiero de tu experiencia en la plataforma.',
+        type: 'info',
         component: 'WalletMain',
+        tips: [
+          'Tu wallet es seguro y está protegido por blockchain',
+          'Todas las transacciones siguen el principio de Ayni (reciprocidad)',
+          'Puedes verificar tu historial completo en cualquier momento'
+        ]
       },
+      {
+        id: 'lukas-explanation',
+        title: '🌟 Lükas: La Moneda Principal',
+        content: 'Los Lükas son la moneda principal de CoomÜnity, inspirada en la filosofía del Bien Común. Se ganan contribuyendo valor a la comunidad y se usan para intercambios cotidianos.',
+        type: 'success',
+        tips: [
+          'Ganas Lükas completando videos interactivos en ÜPlay',
+          'Recibes Lükas por ayudar a otros miembros de la comunidad',
+          'Los Lükas representan tu contribución al Bien Común',
+          'Se pueden usar en el Marketplace para productos y servicios'
+        ],
+        actionButton: {
+          text: '💰 Ver Balance de Lükas',
+          action: () => console.log('Navegando a balance de Lükas')
+        }
+      },
+      {
+        id: 'toins-introduction',
+        title: '🪙 TOINS: La Moneda Complementaria',
+        content: 'Las TOINS son la moneda complementaria que enriquece el ecosistema económico de CoomÜnity. Funcionan junto a los Lükas para crear un sistema monetario más resiliente y justo.',
+        type: 'tip',
+        tips: [
+          'TOINS significa "Tokens de Intercambio Nutritivo Sostenible"',
+          'Se obtienen a través de intercambios especiales y colaboraciones profundas',
+          'Representan valor agregado y contribuciones extraordinarias',
+          'Permiten acceso a experiencias y productos premium'
+        ]
+      },
+      {
+        id: 'dual-currency-system',
+        title: '⚖️ Sistema Dual: Lükas + TOINS',
+        content: 'El sistema dual de monedas crea un ecosistema económico más robusto. Mientras los Lükas cubren intercambios cotidianos, las TOINS facilitan transacciones especiales y colaboraciones profundas.',
+        type: 'info',
+        tips: [
+          'Algunos productos aceptan solo Lükas, otros solo TOINS, algunos ambos',
+          'Las TOINS tienen mayor valor para experiencias transformadoras',
+          'El ratio Lükas:TOINS puede variar según la oferta y demanda',
+          'Ambas monedas siguen los principios de economía colaborativa'
+        ],
+        actionButton: {
+          text: '📊 Ver Conversión Lükas/TOINS',
+          action: () => console.log('Mostrando tabla de conversión')
+        }
+      },
+      {
+        id: 'earning-toins',
+        title: '🌱 Cómo Ganar TOINS',
+        content: 'Las TOINS se ganan a través de contribuciones especiales que van más allá de lo cotidiano. Son recompensas por impacto extraordinario en la comunidad.',
+        type: 'interactive',
+        tips: [
+          'Facilitar conexiones entre miembros (matchmaking consciente)',
+          'Crear contenido educativo que transforme vidas',
+          'Liderar proyectos colaborativos del Bien Común',
+          'Mentorear a nuevos miembros durante su onboarding',
+          'Resolver conflictos comunitarios con sabiduría',
+          'Innovar en soluciones para la plataforma'
+        ]
+      },
+      {
+        id: 'using-toins',
+        title: '✨ Usando TOINS Sabiamente',
+        content: 'Las TOINS te dan acceso a experiencias transformadoras, productos premium y oportunidades de crecimiento personal y comunitario que van más allá del intercambio cotidiano.',
+        type: 'success',
+        tips: [
+          'Retiros de mindfulness y crecimiento personal',
+          'Sesiones de coaching uno-a-uno con mentores',
+          'Acceso anticipado a nuevas funcionalidades',
+          'Productos artesanales únicos de la comunidad',
+          'Experiencias inmersivas en la naturaleza',
+          'Cursos avanzados de desarrollo personal'
+        ],
+        actionButton: {
+          text: '🛒 Explorar Productos Premium',
+          action: () => console.log('Navegando a marketplace premium')
+        }
+      },
+      {
+        id: 'ayni-integration',
+        title: '🔄 TOINS y el Principio Ayni',
+        content: 'Las TOINS están profundamente integradas con el principio Ayni de reciprocidad. Cada TOIN representa un compromiso con dar y recibir en equilibrio consciente.',
+        type: 'tip',
+        tips: [
+          'Al gastar TOINS, considera cómo estás contribuyendo al ecosistema',
+          'Al recibir TOINS, reflexiona sobre el valor que has aportado',
+          'El flujo de TOINS debe mantener el equilibrio Ayni',
+          'Las TOINS conectan tu prosperidad con la del colectivo'
+        ]
+      },
+      {
+        id: 'wallet-mastery',
+        title: '🎓 Maestría del Wallet',
+        content: '¡Felicitaciones! Ahora comprendes el sistema monetario dual de CoomÜnity. Usar Lükas y TOINS conscientemente te convierte en un participante avanzado del ecosistema.',
+        type: 'success',
+        component: 'WalletMain',
+        tips: [
+          'Revisa regularmente tus balances y transacciones',
+          'Planifica tus intercambios considerando ambas monedas',
+          'Usa TOINS para experiencias que generen crecimiento',
+          'Mantén el equilibrio Ayni en todas tus transacciones',
+          'Comparte tu conocimiento con nuevos miembros'
+        ],
+        actionButton: {
+          text: '🎯 Completar Tutorial',
+          action: () => console.log('Tutorial de TOINS completado exitosamente')
+        }
+      }
     ],
   },
 ];
@@ -290,11 +407,11 @@ const renderStepContent = (step: TutorialStep) => {
 
   return (
     <Box>
-      <Alert 
-        severity={getAlertSeverity()} 
+      <Alert
+        severity={getAlertSeverity()}
         icon={getStepIcon()}
-        sx={{ 
-          mb: 2, 
+        sx={{
+          mb: 2,
           '& .MuiAlert-message': { width: '100%' },
           background: 'rgba(255,255,255,0.1)',
           border: '1px solid rgba(255,255,255,0.2)',
@@ -348,12 +465,12 @@ const renderStepContent = (step: TutorialStep) => {
       )}
 
       {step.component && (
-        <Chip 
+        <Chip
           label={`🎯 Enfoque: ${step.component}`}
           size="small"
-          sx={{ 
-            mt: 2, 
-            color: 'white', 
+          sx={{
+            mt: 2,
+            color: 'white',
             borderColor: 'white',
             background: 'rgba(255,255,255,0.1)'
           }}
@@ -375,7 +492,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
       setCurrentTutorial(tutorial);
       setCurrentStep(0);
       setIsActive(true);
-      
+
       // Guardar progreso en localStorage
       localStorage.setItem('coomunity-last-tutorial', tutorialId);
       localStorage.setItem(`coomunity-tutorial-${tutorialId}-started`, new Date().toISOString());
@@ -398,13 +515,13 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
     if (currentTutorial && currentStep === currentTutorial.steps.length - 1) {
       // Tutorial completado
       localStorage.setItem(`coomunity-tutorial-${currentTutorial.id}-completed`, new Date().toISOString());
-      
+
       // Simular recompensa (en implementación real, esto sería una llamada API)
       if (currentTutorial.completionRewards) {
         console.log('🎉 Tutorial completado!', currentTutorial.completionRewards);
       }
     }
-    
+
     setIsActive(false);
     setCurrentTutorial(null);
     setCurrentStep(0);
@@ -419,7 +536,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
         startTutorial('marketplace-discovery');
         localStorage.setItem('coomunity-tutorials-seen', 'true');
       }, 3000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [startTutorial]);
@@ -441,7 +558,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
   return (
     <TutorialContext.Provider value={contextValue}>
       {children}
-      
+
       {/* Dialog del Tutorial Expandido */}
       {currentTutorial && (
         <Dialog
@@ -460,9 +577,9 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
             }
           }}
         >
-          <DialogTitle sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          <DialogTitle sx={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             pb: 2,
             borderBottom: '1px solid rgba(255,255,255,0.2)'
@@ -477,19 +594,19 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                   {currentTutorial.description}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                  <Chip 
-                    label={currentTutorial.difficulty} 
-                    size="small" 
-                    sx={{ 
-                      background: currentTutorial.difficulty === 'beginner' ? '#4caf50' : 
+                  <Chip
+                    label={currentTutorial.difficulty}
+                    size="small"
+                    sx={{
+                      background: currentTutorial.difficulty === 'beginner' ? '#4caf50' :
                                  currentTutorial.difficulty === 'intermediate' ? '#ff9800' : '#f44336',
                       color: 'white',
                       fontWeight: 600
                     }}
                   />
-                  <Chip 
-                    label={currentTutorial.estimatedTime} 
-                    size="small" 
+                  <Chip
+                    label={currentTutorial.estimatedTime}
+                    size="small"
                     sx={{ background: 'rgba(255,255,255,0.2)', color: 'white' }}
                   />
                 </Box>
@@ -505,8 +622,8 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
               <Stepper activeStep={currentStep} sx={{ mb: 4 }}>
                 {currentTutorial.steps.map((step, index) => (
                   <Step key={step.id}>
-                    <StepLabel sx={{ 
-                      '& .MuiStepLabel-label': { 
+                    <StepLabel sx={{
+                      '& .MuiStepLabel-label': {
                         color: 'white !important',
                         fontSize: '0.9rem',
                         fontWeight: index === currentStep ? 600 : 400
@@ -528,8 +645,8 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
               </Stepper>
 
               <Fade in key={currentStep}>
-                <Card sx={{ 
-                  background: 'rgba(255,255,255,0.05)', 
+                <Card sx={{
+                  background: 'rgba(255,255,255,0.05)',
                   backdropFilter: 'blur(10px)',
                   border: '1px solid rgba(255,255,255,0.1)'
                 }}>
@@ -541,7 +658,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
 
               {/* Información de recompensas en el último paso */}
               {isLastStep && currentTutorial.completionRewards && (
-                <Card sx={{ 
+                <Card sx={{
                   mt: 3,
                   background: 'linear-gradient(45deg, #4caf50, #8bc34a)',
                   color: 'white'
@@ -551,11 +668,11 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                       🎉 ¡Recompensas por Completar!
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                      <Chip 
+                      <Chip
                         label={`+${currentTutorial.completionRewards.ondas} Öndas`}
                         sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', fontWeight: 600 }}
                       />
-                      <Chip 
+                      <Chip
                         label={`+${currentTutorial.completionRewards.meritos} Mëritos`}
                         sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', fontWeight: 600 }}
                       />
@@ -569,9 +686,9 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
             </Box>
           </DialogContent>
 
-          <DialogActions sx={{ 
-            justifyContent: 'space-between', 
-            p: 3, 
+          <DialogActions sx={{
+            justifyContent: 'space-between',
+            p: 3,
             borderTop: '1px solid rgba(255,255,255,0.2)',
             background: 'rgba(0,0,0,0.1)'
           }}>
@@ -583,15 +700,15 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
             >
               Anterior
             </Button>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
                 Paso {currentStep + 1} de {currentTutorial.steps.length}
               </Typography>
-              <Box sx={{ 
-                width: 100, 
-                height: 4, 
-                background: 'rgba(255,255,255,0.2)', 
+              <Box sx={{
+                width: 100,
+                height: 4,
+                background: 'rgba(255,255,255,0.2)',
                 borderRadius: 2,
                 overflow: 'hidden'
               }}>
@@ -603,17 +720,17 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                 }} />
               </Box>
             </Box>
-            
+
             {!isLastStep ? (
               <Button
                 onClick={nextStep}
                 endIcon={<NextIcon />}
                 variant="contained"
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #ffd700, #ffeb3b)',
                   color: '#000',
                   fontWeight: 600,
-                  '&:hover': { 
+                  '&:hover': {
                     background: 'linear-gradient(45deg, #ffc107, #ffeb3b)',
                     transform: 'translateY(-1px)'
                   },
@@ -627,11 +744,11 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                 onClick={closeTutorial}
                 variant="contained"
                 startIcon={<CheckIcon />}
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #4caf50, #8bc34a)',
                   color: 'white',
                   fontWeight: 600,
-                  '&:hover': { 
+                  '&:hover': {
                     background: 'linear-gradient(45deg, #45a049, #7cb342)',
                     transform: 'translateY(-1px)'
                   },

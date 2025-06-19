@@ -421,16 +421,17 @@ const ActivityTimeline: React.FC<{ activities: ActivityItem[] }> = ({
               </Box>
             }
             secondary={
-              <Box>
+              <Box component="div">
                 <Typography
                   variant="body2"
+                  component="span"
                   color="text.secondary"
-                  sx={{ mb: 0.5 }}
+                  sx={{ mb: 0.5, display: 'block' }}
                 >
                   {activity.description}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography variant="caption" color="text.secondary">
+                <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="caption" component="span" color="text.secondary">
                     {formatSafeDate(activity.timestamp, {
                       month: 'short',
                       day: 'numeric',
@@ -439,12 +440,23 @@ const ActivityTimeline: React.FC<{ activities: ActivityItem[] }> = ({
                     })}
                   </Typography>
                   {activity.category && (
-                    <Chip
-                      label={activity.category}
-                      size="small"
-                      variant="outlined"
-                      sx={{ height: 20, fontSize: '0.7rem' }}
-                    />
+                    <Box
+                      component="span"
+                      sx={{
+                        display: 'inline-block',
+                        px: 1,
+                        py: 0.25,
+                        border: 1,
+                        borderColor: 'divider',
+                        borderRadius: 1,
+                        fontSize: '0.7rem',
+                        lineHeight: 1.2,
+                        height: 20,
+                        textAlign: 'center'
+                      }}
+                    >
+                      {activity.category}
+                    </Box>
                   )}
                 </Box>
               </Box>
@@ -521,7 +533,7 @@ const Profile: React.FC = () => {
     if (gamificationMetrics) {
       return gamificationMetrics;
     }
-    
+
 //     // Fallback básico (NO mock) - valores realistas para un usuario nuevo
     return {
       level: 1,

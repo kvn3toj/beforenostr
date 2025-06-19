@@ -3,13 +3,16 @@
  *
  * Maneja todas las llamadas HTTP al backend de CoomÜnity de manera consistente,
  * incluyendo autenticación JWT, manejo de errores, y configuración centralizada.
+ *
+ * 🔄 NETWORK AUTO-DETECTION: Detecta automáticamente si se ejecuta en localhost o red
  */
 
 import { ENV, EnvironmentHelpers } from './environment';
 import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
+import { getApiUrl } from '../hooks/useNetworkDetection';
 
-// 🔧 Configuración de la API - usando configuración inteligente de entorno
-const API_BASE_URL = ENV.apiBaseUrl;
+// 🔧 Configuración de la API - usando detección automática de red
+const API_BASE_URL = getApiUrl(); // 🌐 DETECCIÓN AUTOMÁTICA
 const API_TIMEOUT = 30000; // 30 segundos
 
 // 🏷️ Tipos de respuesta de la API
@@ -43,7 +46,7 @@ class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
     this.timeout = API_TIMEOUT;
-    
+
     console.log('🔧 ApiService initialized with baseURL:', this.baseURL);
   }
 
@@ -67,7 +70,7 @@ class ApiService {
   private getAuthToken(): string | null {
     try {
       const token = localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
-      
+
       // 📊 Debug logging mejorado
       if (!token) {
         console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔑 No token found in localStorage`);
@@ -78,13 +81,13 @@ class ApiService {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const now = Date.now() / 1000;
-        
+
         if (payload.exp && payload.exp < now) {
           console.warn(`${AUTH_CONFIG.LOG_PREFIX} 🔒 Token expired, clearing auth tokens`);
           this.clearAuthTokens();
           return null;
         }
-        
+
         console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔑 Valid token found: ${token.substring(0, 20)}...`);
         return token;
       } catch (parseError) {
@@ -133,7 +136,7 @@ class ApiService {
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         errorData = await response.json();
-        
+
         // Handle different error response formats
         if (errorData.message) {
           if (Array.isArray(errorData.message)) {
@@ -225,8 +228,8 @@ class ApiService {
   private isRetriableError(category: string, statusCode: number): boolean {
     const retriableCategories = ['server_error', 'network_error', 'rate_limit'];
     const retriableStatusCodes = [408, 429, 500, 502, 503, 504];
-    
-    return retriableCategories.includes(category) || 
+
+    return retriableCategories.includes(category) ||
            retriableStatusCodes.includes(statusCode);
   }
 
@@ -235,14 +238,14 @@ class ApiService {
    */
   private isUserFriendlyError(category: string, statusCode: number): boolean {
     const userFriendlyCategories = [
-      'validation_error', 
-      'duplicate_error', 
-      'not_found', 
+      'validation_error',
+      'duplicate_error',
+      'not_found',
       'forbidden'
     ];
     const userFriendlyStatusCodes = [400, 403, 404, 409];
-    
-    return userFriendlyCategories.includes(category) || 
+
+    return userFriendlyCategories.includes(category) ||
            userFriendlyStatusCodes.includes(statusCode);
   }
 
@@ -340,7 +343,7 @@ class ApiService {
   private handleUnauthorized(): void {
     console.warn('🔒 Unauthorized access detected, clearing auth tokens');
     this.clearAuthTokens();
-    
+
     // Redirect to login page
     if (typeof window !== 'undefined') {
       const currentPath = window.location.pathname;
@@ -364,7 +367,7 @@ class ApiService {
 
     try {
       const url = `${this.baseURL}${endpoint}`;
-      
+
       // 🔑 SIEMPRE incluir autenticación por defecto, a menos que se especifique lo contrario
       const includeAuth = (options as any).includeAuth !== false;
       const headers = this.createHeaders(includeAuth);
@@ -381,12 +384,12 @@ class ApiService {
       };
 
       console.log(`🌐 API Request: ${options.method || 'GET'} ${url}`);
-      
+
       const response = await fetch(url, config);
 
       if (!response.ok) {
         const error = await this.handleErrorResponse(response);
-        
+
         // Retry logic for retriable errors
         if ((error as any).isRetriable && retryCount < maxRetries) {
           console.log(`🔄 Retrying request (${retryCount + 1}/${maxRetries}) after ${retryDelay}ms`);
@@ -418,13 +421,13 @@ class ApiService {
         const timeoutError = new Error(`Request timeout after ${this.timeout}ms`);
         (timeoutError as any).category = 'timeout';
         (timeoutError as any).isRetriable = true;
-        
+
         if (retryCount < maxRetries) {
           console.log(`⏱️ Request timeout, retrying (${retryCount + 1}/${maxRetries})`);
           await new Promise(resolve => setTimeout(resolve, retryDelay));
           return this.request<T>(endpoint, options, retryCount + 1);
         }
-        
+
         throw timeoutError;
       }
 
@@ -552,9 +555,9 @@ class ApiService {
     options: RequestInit = {}
   ): Promise<T> {
     // 🔑 Usar el método request principal con autenticación deshabilitada
-    return this.request<T>(endpoint, { 
-      ...options, 
-      includeAuth: false 
+    return this.request<T>(endpoint, {
+      ...options,
+      includeAuth: false
     } as any);
   }
 }
@@ -569,17 +572,17 @@ export const authAPI = {
       method: 'POST',
       body: JSON.stringify(credentials),
     }),
-  
+
   register: (email: string, password: string, fullName?: string) =>
     apiService.requestWithoutAuth<AuthUser>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, name: fullName }),
     }),
-  
+
   logout: () => apiService.post('/auth/logout'),
-  
+
   getCurrentUser: () => apiService.get<AuthUser>('/auth/me'),
-  
+
   updateProfile: (updates: Partial<AuthUser>) =>
     apiService.patch<AuthUser>('/auth/profile', updates),
 };
@@ -589,28 +592,28 @@ export const walletAPI = {
   // 🆕 NUEVO: Obtener mi wallet completo desde el backend
   getMyWallet: () =>
     apiService.get('/wallets/me'),
-  
+
   getBalance: (userId: string) =>
     apiService.get(`/wallets/user/${userId}`),
-  
+
   getTransactions: (userId: string) =>
     apiService.get(`/wallets/user/${userId}`), // Usa mismo endpoint que balance por ahora
-  
+
   getMerits: (userId: string) =>
     apiService.get(`/wallets/user/${userId}`), // Usa mismo endpoint que balance por ahora
-  
+
   getAllMerits: () =>
     apiService.get('/wallets/admin/all'), // Endpoint administrativo
-  
+
   getMeritsLeaderboard: (limit = 10) =>
     apiService.get(`/wallets/admin/all?limit=${limit}`), // Endpoint administrativo con límite
-  
+
   getMeritHistory: (userId: string, page = 0, limit = 20) =>
     apiService.get(`/wallets/user/${userId}?page=${page}&limit=${limit}`), // Agregar params
-  
+
   awardMerit: (userId: string, meritType: string, amount: number, description?: string) =>
     apiService.post('/wallets/admin/award', { userId, meritType, amount, description }),
-  
+
   transfer: (fromUserId: string, toUserId: string, amount: number, description?: string) =>
     apiService.post('/wallets/transfer', { fromUserId, toUserId, amount, description }),
 };
@@ -619,10 +622,10 @@ export const walletAPI = {
 export const userAPI = {
   getProfile: (userId: string) =>
     apiService.get(`/users/${userId}`),
-  
+
   updateProfile: (userId: string, updates: any) =>
     apiService.patch(`/users/${userId}`, updates),
-  
+
   getUsers: () =>
     apiService.get('/users'),
 };
@@ -631,10 +634,10 @@ export const userAPI = {
 export const gameAPI = {
   getGameData: (userId: string) =>
     apiService.get(`/game/data/${userId}`),
-  
+
   updateProgress: (userId: string, progress: any) =>
     apiService.post(`/game/progress/${userId}`, progress),
-  
+
   getQuests: () =>
     apiService.get('/game/quests'),
 };
@@ -643,22 +646,22 @@ export const gameAPI = {
 export const marketplaceAPI = {
   getItems: (filters?: any) =>
     apiService.get('/marketplace/items', { params: filters }),
-  
+
   createItem: (itemData: any) =>
     apiService.post('/marketplace/items', itemData),
-  
+
   updateItem: (itemId: string, updates: any) =>
     apiService.patch(`/marketplace/items/${itemId}`, updates),
-  
+
   deleteItem: (itemId: string) =>
     apiService.delete(`/marketplace/items/${itemId}`),
-  
+
   searchItems: (searchTerm: string, filters?: any) =>
     apiService.get(`/marketplace/search?q=${encodeURIComponent(searchTerm)}`, { params: filters }),
-  
+
   getCategories: () =>
     apiService.get('/marketplace/categories'),
-  
+
   getTrending: (limit = 6) =>
     apiService.get(`/marketplace/trending?limit=${limit}`),
 };
@@ -667,20 +670,20 @@ export const marketplaceAPI = {
 export const videosAPI = {
   getCategories: () =>
     apiService.get('/video-items/categories'),
-  
+
   getVideos: (category?: string) =>
     apiService.get(`/video-items${category ? `?category=${category}` : ''}`),
-  
+
   getPlaylists: async () => {
     // ✅ SOLUCIÓN: Extraer playlists únicos de los videos ya que no existe endpoint directo
     const videos = await apiService.get('/video-items');
     const playlistIds = [...new Set(videos.map((video: any) => video.playlistId).filter(Boolean))];
-    
+
     // Crear objetos de playlist básicos basados en los videos
     return playlistIds.map((playlistId: string) => {
       const playlistVideos = videos.filter((video: any) => video.playlistId === playlistId);
       const firstVideo = playlistVideos[0];
-      
+
       return {
         id: playlistId,
         name: `Ruta de Aprendizaje ${playlistId.slice(0, 8)}...`,
@@ -698,10 +701,10 @@ export const videosAPI = {
 export const statsAPI = {
   getGeneral: () =>
     apiService.get('/stats/general'),
-  
+
   getSearch: () =>
     apiService.get('/stats/search'),
-  
+
   getUser: (userId: string) =>
     apiService.get(`/stats/user/${userId}`),
 };
@@ -716,13 +719,13 @@ export const formsAPI = {
 export const mundosAPI = {
   getMundos: () =>
     apiService.get('/mundos'),
-  
+
   getMundo: (mundoId: string) =>
     apiService.get(`/mundos/${mundoId}`),
-  
+
   getMundoBySlug: (slug: string) =>
     apiService.get(`/mundos/slug/${slug}`),
-  
+
   getMundoPlaylists: (mundoId: string) =>
     apiService.get(`/mundos/${mundoId}/playlists`),
 };
@@ -732,100 +735,100 @@ export const socialAPI = {
   // ❌ ENDPOINTS NO IMPLEMENTADOS EN EL BACKEND - Comentados temporalmente
   // getMatches: () =>
   //   apiService.get('/social/matches'),
-  
+
   // getMatch: (matchId: string) =>
   //   apiService.get(`/social/matches/${matchId}`),
-  
+
   // getMessages: (matchId: string, page = 0, limit = 50) =>
   //   apiService.get(`/social/matches/${matchId}/messages?page=${page}&limit=${limit}`),
-  
+
   // sendMessage: (matchId: string, message: string) =>
   //   apiService.post(`/social/matches/${matchId}/messages`, { message }),
-  
+
   // updateUserStatus: (status: string) =>
   //   apiService.patch('/social/status', { status }),
-  
+
   // ✅ ENDPOINTS CORREGIDOS - Usar las rutas correctas del backend
-  
+
   // Notificaciones - usar el endpoint correcto
   getNotifications: (userId: string) =>
     apiService.get(`/notifications/user/${userId}`),
-  
+
   markNotificationAsRead: (notificationId: string, userId: string) =>
     apiService.patch(`/notifications/${notificationId}/read?userId=${userId}`),
-  
+
   markAllNotificationsAsRead: (userId: string) =>
     apiService.patch(`/notifications/user/${userId}/mark-all-read`),
-  
+
   getUnreadNotificationsCount: (userId: string) =>
     apiService.get(`/notifications/user/${userId}/unread-count`),
-  
+
   // Estadísticas sociales - usar endpoint disponible
   getSocialStats: () =>
     apiService.get('/social/stats'),
-  
+
   getRecentActivity: () =>
     apiService.get('/social/activity/recent'),
-  
+
   // Posts/Publicaciones - usar endpoints disponibles
   getPosts: (page = 0, limit = 20) =>
     apiService.get(`/social/publications?page=${page}&limit=${limit}`),
-  
+
   getPost: (postId: string) =>
     apiService.get(`/social/publications/${postId}`),
-  
+
   createPost: (postData: any) =>
     apiService.post('/social/publications', postData),
-  
+
   deletePost: (postId: string) =>
     apiService.delete(`/social/publications/${postId}`),
-  
+
   likePost: (postId: string) =>
     apiService.post(`/social/publications/${postId}/like`),
-  
+
   unlikePost: (postId: string) =>
     apiService.delete(`/social/publications/${postId}/like`),
-  
+
   getPostLikes: (postId: string) =>
     apiService.get(`/social/publications/${postId}/likes`),
-  
+
   getPostComments: (postId: string, page = 0, limit = 10) =>
     apiService.get(`/social/publications/${postId}/comments?page=${page}&limit=${limit}`),
-  
+
   createComment: (postId: string, commentData: any) =>
     apiService.post(`/social/publications/${postId}/comments`, commentData),
-  
+
   deleteComment: (commentId: string) =>
     apiService.delete(`/social/comments/${commentId}`),
-  
+
   likeComment: (commentId: string) =>
     apiService.post(`/social/comments/${commentId}/like`),
-  
+
   unlikeComment: (commentId: string) =>
     apiService.delete(`/social/comments/${commentId}/like`),
-  
+
   // 🚧 FUNCIONALIDADES FUTURAS - Endpoints que se implementarán más adelante
   // Matches/Coincidencias - Funcionalidad futura
   getMatches: () => {
     console.warn('🚧 Matches functionality not yet implemented in backend');
     return Promise.resolve([]);
   },
-  
+
   getMatch: (matchId: string) => {
     console.warn('🚧 Match details functionality not yet implemented in backend');
     return Promise.resolve(null);
   },
-  
+
   getMessages: (matchId: string, page = 0, limit = 50) => {
     console.warn('🚧 Messages functionality not yet implemented in backend');
     return Promise.resolve([]);
   },
-  
+
   sendMessage: (matchId: string, message: string) => {
     console.warn('🚧 Send message functionality not yet implemented in backend');
     return Promise.resolve({ success: false, message: 'Not implemented yet' });
   },
-  
+
   updateUserStatus: (status: string) => {
     console.warn('🚧 User status functionality not yet implemented in backend');
     return Promise.resolve({ success: false, message: 'Not implemented yet' });

@@ -190,18 +190,26 @@ const TaskItem: React.FC<{
           </Typography>
         }
         secondary={
-          <Box>
-            <Typography variant="body2" color="text.secondary" paragraph>
+          <Box component="div">
+            <Typography variant="body2" component="span" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
               {task.description}
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Chip
-                size="small"
-                label={task.type}
-                color={task.isRequired ? 'error' : 'default'}
-                variant="outlined"
-              />
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Typography
+                component="span"
+                variant="caption"
+                sx={{
+                  px: 1,
+                  py: 0.25,
+                  bgcolor: task.isRequired ? 'error.main' : 'grey.300',
+                  color: task.isRequired ? 'error.contrastText' : 'text.primary',
+                  borderRadius: 1,
+                  fontSize: '0.75rem'
+                }}
+              >
+                {task.type}
+              </Typography>
+              <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <Star sx={{ fontSize: 16, color: 'warning.main' }} />
                 <Typography variant="caption">{task.points} pts</Typography>
               </Box>

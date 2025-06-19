@@ -217,7 +217,7 @@ export const AdminNavigation: React.FC<AdminNavigationProps> = ({
           Panel de Administración
         </Typography>
       </Box>
-      
+
       <Divider />
 
       <Box sx={{ overflow: 'auto', flex: 1 }}>
@@ -228,7 +228,7 @@ export const AdminNavigation: React.FC<AdminNavigationProps> = ({
                 {section.title}
               </Typography>
             </Box>
-            
+
             <List dense>
               {section.items.map((item) => (
                 <ListItem key={item.path} disablePadding>
@@ -260,20 +260,38 @@ export const AdminNavigation: React.FC<AdminNavigationProps> = ({
                             {item.label}
                           </Typography>
                           {item.isNew && (
-                            <Chip
-                              label="NUEVO"
-                              size="small"
-                              color="success"
-                              sx={{ height: 16, fontSize: '0.6rem' }}
-                            />
+                            <Box
+                              sx={{
+                                display: 'inline-block',
+                                px: 0.5,
+                                py: 0.125,
+                                backgroundColor: 'success.main',
+                                color: 'success.contrastText',
+                                borderRadius: 1,
+                                height: 16,
+                                fontSize: '0.6rem',
+                                lineHeight: 1.2
+                              }}
+                            >
+                              NUEVO
+                            </Box>
                           )}
                           {item.badge && (
-                            <Chip
-                              label={item.badge}
-                              size="small"
-                              color="primary"
-                              sx={{ height: 16, fontSize: '0.6rem' }}
-                            />
+                            <Box
+                              sx={{
+                                display: 'inline-block',
+                                px: 0.5,
+                                py: 0.125,
+                                backgroundColor: 'primary.main',
+                                color: 'primary.contrastText',
+                                borderRadius: 1,
+                                height: 16,
+                                fontSize: '0.6rem',
+                                lineHeight: 1.2
+                              }}
+                            >
+                              {item.badge}
+                            </Box>
                           )}
                         </Box>
                       }
@@ -298,7 +316,7 @@ export const AdminNavigation: React.FC<AdminNavigationProps> = ({
                 </ListItem>
               ))}
             </List>
-            
+
             {sectionIndex < navigationSections.length - 1 && (
               <Divider sx={{ my: 1 }} />
             )}
@@ -307,7 +325,7 @@ export const AdminNavigation: React.FC<AdminNavigationProps> = ({
       </Box>
 
       <Divider />
-      
+
       <Box sx={{ p: 2 }}>
         <Typography variant="caption" color="text.secondary">
           Backend: NestJS (Puerto 3002)
@@ -325,4 +343,4 @@ export const AdminNavigation: React.FC<AdminNavigationProps> = ({
   )
 }
 
-export default AdminNavigation 
+export default AdminNavigation

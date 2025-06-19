@@ -491,8 +491,8 @@ const PostCard: React.FC<PostCardProps> = ({
                       </Box>
                     }
                     secondary={
-                      <Box>
-                        <Typography variant="body2" sx={{ mt: 0.5, mb: 1 }}>
+                      <Box component="div">
+                        <Typography variant="body2" component="span" sx={{ mt: 0.5, mb: 1, display: 'block' }}>
                           {comment.content}
                         </Typography>
                         <Box

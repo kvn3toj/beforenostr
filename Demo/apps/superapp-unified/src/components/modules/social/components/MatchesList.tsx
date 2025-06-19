@@ -93,7 +93,7 @@ const MatchesList: React.FC<MatchesListProps> = ({
               </Alert>
             ) : (
               <Alert severity="info">
-                No tienes conversaciones activas aún. 
+                No tienes conversaciones activas aún.
                 ¡Haz un match en el marketplace para comenzar a chatear!
               </Alert>
             )}
@@ -139,22 +139,22 @@ const MatchesList: React.FC<MatchesListProps> = ({
                     </Avatar>
                   </Badge>
                 </ListItemAvatar>
-                
+
                 <ListItemText
                   primary={
                     <Box display="flex" justifyContent="space-between" alignItems="center">
-                      <Typography 
-                        variant="subtitle2" 
-                        noWrap 
-                        sx={{ 
+                      <Typography
+                        variant="subtitle2"
+                        noWrap
+                        sx={{
                           fontWeight: match.unread > 0 ? 'bold' : 'normal',
                           color: selectedMatch === match.id ? 'primary.contrastText' : 'inherit'
                         }}
                       >
                         {match.name}
                       </Typography>
-                      <Typography 
-                        variant="caption" 
+                      <Typography
+                        variant="caption"
                         color={selectedMatch === match.id ? 'primary.contrastText' : 'text.secondary'}
                       >
                         {formatTime(match.timestamp)}
@@ -162,12 +162,13 @@ const MatchesList: React.FC<MatchesListProps> = ({
                     </Box>
                   }
                   secondary={
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                      <Typography 
-                        variant="body2" 
-                        color={selectedMatch === match.id ? 'primary.contrastText' : 'text.secondary'} 
-                        noWrap 
-                        sx={{ 
+                    <Box component="div" display="flex" justifyContent="space-between" alignItems="center">
+                      <Typography
+                        variant="body2"
+                        component="span"
+                        color={selectedMatch === match.id ? 'primary.contrastText' : 'text.secondary'}
+                        noWrap
+                        sx={{
                           flex: 1,
                           fontWeight: match.unread > 0 ? 'bold' : 'normal'
                         }}
@@ -175,17 +176,25 @@ const MatchesList: React.FC<MatchesListProps> = ({
                         {match.lastMessage}
                       </Typography>
                       {match.unread > 0 && (
-                        <Chip
-                          label={match.unread}
-                          size="small"
-                          sx={{ 
-                            bgcolor: selectedMatch === match.id ? 'primary.dark' : 'primary.main', 
-                            color: 'white', 
+                        <Box
+                          component="span"
+                          sx={{
+                            display: 'inline-block',
+                            px: 1,
+                            py: 0.25,
+                            backgroundColor: selectedMatch === match.id ? 'primary.dark' : 'primary.main',
+                            color: 'white',
+                            borderRadius: 1,
+                            fontSize: '0.75rem',
+                            lineHeight: 1.2,
                             ml: 1,
                             minWidth: '20px',
-                            height: '20px'
+                            height: '20px',
+                            textAlign: 'center'
                           }}
-                        />
+                        >
+                          {match.unread}
+                        </Box>
                       )}
                     </Box>
                   }
@@ -199,4 +208,4 @@ const MatchesList: React.FC<MatchesListProps> = ({
   );
 };
 
-export default MatchesList; 
+export default MatchesList;

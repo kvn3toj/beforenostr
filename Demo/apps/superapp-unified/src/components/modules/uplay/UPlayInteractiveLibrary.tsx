@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // 🎯 Material UI Imports
 import Grid from '@mui/material/Grid';
@@ -71,6 +72,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // 🎨 Animación de entrada
   useEffect(() => {
@@ -86,20 +88,32 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     const duration = backendVideo.duration || 0;
     const questionCount = backendVideo.questions?.length || 0;
 
+    // 🎯 CORRECCIÓN CRÍTICA: Usar externalId del backend (no youtubeVideoId)
+    const videoId = backendVideo.externalId || 'dQw4w9WgXcQ';
+
+    // Parse categories if it's a JSON string
+    let categories = [];
+    try {
+      categories = backendVideo.categories ? JSON.parse(backendVideo.categories) : ['Educación'];
+    } catch (e) {
+      categories = [backendVideo.category || 'Educación'];
+    }
+    const mainCategory = categories[0] || 'Educación';
+
     // Fórmulas de recompensas CoomÜnity dinámicas
     const baseMeritos = Math.floor(duration / 60) * 10;
     const questionBonus = questionCount * 15;
-    const difficultyMultiplier = backendVideo.category?.includes('Avanzado') ? 1.5 :
-                                backendVideo.category?.includes('Intermedio') ? 1.2 : 1.0;
+    const difficultyMultiplier = mainCategory?.includes('Avanzado') ? 1.5 :
+                                mainCategory?.includes('Intermedio') ? 1.2 : 1.0;
 
     return {
-      id: backendVideo.id,
+      id: backendVideo.id.toString(), // Asegurar que sea string para navegación
       title: backendVideo.title || 'Video Sin Título',
       description: backendVideo.description || 'Explora este contenido educativo interactivo.',
       duration: duration,
-      thumbnailUrl: `https://img.youtube.com/vi/${backendVideo.youtubeVideoId || 'dQw4w9WgXcQ'}/maxresdefault.jpg`,
-      youtubeUrl: `https://www.youtube.com/watch?v=${backendVideo.youtubeVideoId || 'dQw4w9WgXcQ'}`,
-      category: backendVideo.category || 'Educación',
+      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+      youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
+      category: mainCategory,
       difficulty: duration > 300 ? 'Avanzado' : duration > 180 ? 'Intermedio' : 'Principiante',
       rewards: {
         meritos: Math.floor((baseMeritos + questionBonus) * difficultyMultiplier),
@@ -162,8 +176,30 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   };
 
   const handleVideoClick = (videoId: string) => {
-    console.log('🎬 Video seleccionado:', videoId);
-    // Aquí iría la navegación al reproductor
+    console.log('�� Video seleccionado:', videoId);
+
+    // Buscar el video en los datos procesados
+    const videoData = processedVideos.find(video => video.id === videoId);
+
+    if (videoData) {
+      console.log('🎬 Datos del video encontrados:', videoData);
+
+      // Navegar al reproductor con los datos del video
+      navigate(`/uplay/video/${videoId}`, {
+        state: {
+          from: '/uplay',
+          videoData: videoData
+        }
+      });
+    } else {
+      console.error('❌ Video no encontrado:', videoId);
+      // Navegar de todas formas, el reproductor manejará la carga
+      navigate(`/uplay/video/${videoId}`, {
+        state: {
+          from: '/uplay'
+        }
+      });
+    }
   };
 
   // 🎨 Header de búsqueda mejorado
