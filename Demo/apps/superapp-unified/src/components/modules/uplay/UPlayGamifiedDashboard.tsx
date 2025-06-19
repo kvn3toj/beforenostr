@@ -55,6 +55,11 @@ import {
   useUnlockedAchievements 
 } from '../../../stores/uplayStore';
 
+// [NUEVO] Integración real de rutas de aprendizaje (playlists) y videos
+import { useQuery } from '@tanstack/react-query';
+import { videosAPI } from '../../../lib/api-service';
+import { useVideos } from '../../../hooks/data/useVideoData';
+
 // ============================================================================
 // INTERFACES
 // ============================================================================
@@ -327,164 +332,42 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   // Hook de feedback de recompensas
   const { showReward, hideReward } = useRewardFeedback();
 
-  // ========================================================================
-  // DATOS MOCK MEJORADOS
-  // ========================================================================
+  // Fetch playlists (rutas de aprendizaje)
+  const {
+    data: playlists,
+    isLoading: isLoadingPlaylists,
+    isError: isErrorPlaylists,
+    error: errorPlaylists,
+  } = useQuery(['playlists'], videosAPI.getPlaylists);
 
-  const mockCategories: CategoryData[] = [
-    {
-      id: 'filosofia',
-      name: 'Filosofía CoomÜnity',
-      description: 'Aprende los principios fundamentales de Ayni y Bien Común',
-      icon: <AutoAwesome />,
-      color: '#9c27b0',
-      totalRewards: { meritos: 500, ondas: 250 },
-      videos: [
-        {
-          id: 'ayni-intro',
-          title: 'Introducción al Ayni',
-          description: 'Descubre el principio de reciprocidad que guía nuestra comunidad',
-          thumbnail: '🌱',
-          duration: 180,
-          difficulty: 'easy' as const,
-          category: 'Filosofía',
-          rewards: { meritos: 100, ondas: 50 },
-          isCompleted: false,
-          progress: 0,
-          questionsCount: 3,
-        },
-        {
-          id: 'bien-comun',
-          title: 'El Bien Común',
-          description: 'Cómo priorizamos el bienestar colectivo sobre el individual',
-          thumbnail: '🤝',
-          duration: 240,
-          difficulty: 'medium' as const,
-          category: 'Filosofía',
-          rewards: { meritos: 150, ondas: 75 },
-          isCompleted: true,
-          progress: 100,
-          questionsCount: 4,
-        },
-        {
-          id: 'ondas-energia',
-          title: 'Öndas: Energía Vibracional',
-          description: 'Comprende cómo generar y compartir energía positiva',
-          thumbnail: '⚡',
-          duration: 300,
-          difficulty: 'hard' as const,
-          category: 'Filosofía',
-          rewards: { meritos: 200, ondas: 100 },
-          isCompleted: false,
-          progress: 25,
-          questionsCount: 5,
-        },
-      ],
-    },
-    {
-      id: 'gamificacion',
-      name: 'Sistema de Gamificación',
-      description: 'Domina las mecánicas de juego y progresión',
-      icon: <EmojiEvents />,
-      color: '#ff9800',
-      totalRewards: { meritos: 750, ondas: 400 },
-      videos: [
-        {
-          id: 'meritos-sistema',
-          title: 'Sistema de Mëritos',
-          description: 'Aprende cómo ganar y usar Mëritos efectivamente',
-          thumbnail: '💎',
-          duration: 200,
-          difficulty: 'easy' as const,
-          category: 'Gamificación',
-          rewards: { meritos: 120, ondas: 60 },
-          isCompleted: false,
-          progress: 0,
-          questionsCount: 3,
-        },
-        {
-          id: 'niveles-progresion',
-          title: 'Niveles y Progresión',
-          description: 'Entiende cómo avanzar en tu viaje de aprendizaje',
-          thumbnail: '📈',
-          duration: 220,
-          difficulty: 'medium' as const,
-          category: 'Gamificación',
-          rewards: { meritos: 180, ondas: 90 },
-          isCompleted: false,
-          progress: 60,
-          questionsCount: 4,
-        },
-        {
-          id: 'logros-avanzados',
-          title: 'Logros Avanzados',
-          description: 'Desbloquea los logros más desafiantes de CoomÜnity',
-          thumbnail: '🏆',
-          duration: 350,
-          difficulty: 'hard' as const,
-          category: 'Gamificación',
-          rewards: { meritos: 300, ondas: 150 },
-          isCompleted: false,
-          progress: 0,
-          questionsCount: 6,
-        },
-      ],
-    },
-    {
-      id: 'colaboracion',
-      name: 'Colaboración y Comunidad',
-      description: 'Aprende a colaborar efectivamente en el ecosistema',
-      icon: <Celebration />,
-      color: '#4caf50',
-      totalRewards: { meritos: 600, ondas: 350 },
-      videos: [
-        {
-          id: 'trabajo-equipo',
-          title: 'Trabajo en Equipo',
-          description: 'Estrategias para colaborar efectivamente',
-          thumbnail: '👥',
-          duration: 190,
-          difficulty: 'easy' as const,
-          category: 'Colaboración',
-          rewards: { meritos: 110, ondas: 70 },
-          isCompleted: false,
-          progress: 0,
-          questionsCount: 3,
-        },
-        {
-          id: 'liderazgo-consciente',
-          title: 'Liderazgo Consciente',
-          description: 'Desarrolla habilidades de liderazgo alineadas con Ayni',
-          thumbnail: '🌟',
-          duration: 280,
-          difficulty: 'medium' as const,
-          category: 'Colaboración',
-          rewards: { meritos: 200, ondas: 120 },
-          isCompleted: false,
-          progress: 40,
-          questionsCount: 5,
-        },
-        {
-          id: 'resolucion-conflictos',
-          title: 'Resolución de Conflictos',
-          description: 'Maneja desacuerdos manteniendo la armonía comunitaria',
-          thumbnail: '🕊️',
-          duration: 320,
-          difficulty: 'hard' as const,
-          category: 'Colaboración',
-          rewards: { meritos: 250, ondas: 140 },
-          isCompleted: false,
-          progress: 0,
-          questionsCount: 6,
-        },
-      ],
-    },
-  ];
+  // Fetch videos
+  const {
+    data: videos,
+    isLoading: isLoadingVideos,
+    isError: isErrorVideos,
+    error: errorVideos,
+  } = useVideos();
 
-  // ========================================================================
-  // HANDLERS
-  // ========================================================================
+  // Agrupar videos por playlistId
+  const videosByPlaylist = React.useMemo(() => {
+    if (!videos) return {};
+    const grouped: Record<string, any[]> = {};
+    videos.forEach((video: any) => {
+      const pid = video.playlistId || 'unassigned';
+      if (!grouped[pid]) grouped[pid] = [];
+      grouped[pid].push(video);
+    });
+    return grouped;
+  }, [videos]);
 
+  // Helper para obtener nombre de playlist
+  const getPlaylistName = (playlistId: string) => {
+    if (playlistId === 'unassigned') return 'Sin ruta asignada';
+    const pl = playlists?.find((p: any) => p.id === playlistId);
+    return pl?.name || 'Ruta desconocida';
+  };
+
+  // HANDLERS (mover aquí todos los useCallback)
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   }, []);
@@ -499,6 +382,21 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   const handleCloseSidebar = useCallback(() => {
     setSidebarOpen(false);
   }, []);
+
+  // Loading state
+  if (isLoadingPlaylists || isLoadingVideos) {
+    return <Box sx={{ p: 4 }}><LinearProgress /><Typography sx={{ mt: 2 }}>Cargando rutas de aprendizaje...</Typography></Box>;
+  }
+
+  // Error state
+  if (isErrorPlaylists || isErrorVideos) {
+    return <Box sx={{ p: 4 }}><Typography color="error">Error al cargar rutas o videos: {errorPlaylists?.message || errorVideos?.message}</Typography></Box>;
+  }
+
+  // Empty state
+  if (!playlists?.length && !Object.keys(videosByPlaylist).length) {
+    return <Box sx={{ p: 4 }}><Typography>No hay rutas de aprendizaje ni videos disponibles.</Typography></Box>;
+  }
 
   // ========================================================================
   // RENDER HELPERS
@@ -613,56 +511,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
   const renderVideoLibrary = () => (
     <Container maxWidth="xl">
-      {mockCategories.map((category) => (
-        <Box key={category.id} mb={4}>
-          {/* Header de categoría */}
-          <Card sx={{ mb: 2, bgcolor: `${category.color}10` }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Avatar sx={{ bgcolor: category.color }}>
-                  {category.icon}
-                </Avatar>
-                <Box flexGrow={1}>
-                  <Typography variant="h5" fontWeight="bold" gutterBottom>
-                    {category.name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {category.description}
-                  </Typography>
-                </Box>
-                <Box textAlign="right">
-                  <Typography variant="caption" color="text.secondary" display="block">
-                    Recompensas totales
-                  </Typography>
-                  <Box display="flex" gap={1}>
-                    <Chip
-                      icon={<Diamond />}
-                      label={category.totalRewards.meritos}
-                      size="small"
-                      sx={{ color: '#9c27b0' }}
-                    />
-                    <Chip
-                      icon={<Bolt />}
-                      label={category.totalRewards.ondas}
-                      size="small"
-                      sx={{ color: '#ff9800' }}
-                    />
-                  </Box>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-
-          {/* Grid de videos */}
-          <Grid container spacing={3}>
-            {category.videos.map((video) => (
-              <Grid size={{xs:12,sm:6,md:4,lg:3}} key={video.id}>
-                <VideoCard video={video} onPlay={handleVideoPlay} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      ))}
+      {/* Render video library content here */}
     </Container>
   );
 
@@ -776,13 +625,46 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       {renderTabs()}
       {renderSidebar()}
 
-      {/* Contenido principal */}
-      <TabPanel value={tabValue} index={0}>
-        <PlayerMetricsDashboard />
+      <TabPanel value={tabValue} index={1}>
+        {playlists?.map((playlist: any) => (
+          <Box key={playlist.id} sx={{ mb: 6 }}>
+            <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
+              {playlist.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              {playlist.description}
+            </Typography>
+            <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
+              {(videosByPlaylist[playlist.id] || []).map((video: any) => (
+                <Grid item key={video.id} xs={12} sm={6} md={4} lg={3}>
+                  <VideoCard video={video} onPlay={handleVideoPlay} />
+                </Grid>
+              ))}
+              {!(videosByPlaylist[playlist.id]?.length) && (
+                <Grid item xs={12}><Typography color="text.secondary">No hay videos en esta ruta.</Typography></Grid>
+              )}
+            </Grid>
+          </Box>
+        ))}
+        {/* Sección para videos sin playlist */}
+        {videosByPlaylist['unassigned'] && (
+          <Box sx={{ mb: 6 }}>
+            <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
+              Sin ruta asignada
+            </Typography>
+            <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
+              {videosByPlaylist['unassigned'].map((video: any) => (
+                <Grid item key={video.id} xs={12} sm={6} md={4} lg={3}>
+                  <VideoCard video={video} onPlay={handleVideoPlay} />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
       </TabPanel>
 
-      <TabPanel value={tabValue} index={1}>
-        {renderVideoLibrary()}
+      <TabPanel value={tabValue} index={0}>
+        <PlayerMetricsDashboard />
       </TabPanel>
 
       <TabPanel value={tabValue} index={2}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Container,
   Typography,
@@ -95,6 +95,7 @@ import {
   useUpdateUserProfile,
   profileValidation,
   UpdateProfileData,
+  useGamificationMetrics,
 } from '../hooks/useUserProfile';
 import '../styles/profile-enhanced.css';
 import { safeToLocaleString } from '../utils/numberUtils';
@@ -164,8 +165,6 @@ interface Achievement {
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
 }
 
-
-
 // 🎨 Utilidades para temas y colores CoomÜnity
 const coomunityColors = {
   merito: '#FFD700', // Dorado para Mëritos
@@ -193,18 +192,6 @@ const calculateLevelProgress = (level: number, points: number): number => {
   const currentProgress = points - basePoints;
   const totalNeeded = nextLevelPoints - basePoints;
   return Math.min(Math.max((currentProgress / totalNeeded) * 100, 0), 100);
-};
-
-// 📊 Datos mock para demostración (reemplazar con datos reales del backend)
-const mockMetrics: ProfileMetrics = {
-  level: 15,
-  meritos: 2450,
-  ondas: 1875,
-  ayniLevel: 78,
-  completedChallenges: 23,
-  socialConnections: 147,
-  marketplaceRating: 4.8,
-  pilgrimProgress: 65,
 };
 
 const mockActivities: ActivityItem[] = [
@@ -565,6 +552,13 @@ const Profile: React.FC = () => {
     error: profileError,
   } = useCurrentUserProfile();
 
+  // 🎮 Hook para métricas de gamificación REALES del backend
+  const {
+    data: gamificationMetrics,
+    isLoading: metricsLoading,
+    error: metricsError,
+  } = useGamificationMetrics();
+
   const updateProfileMutation = useUpdateUserProfile();
 
   // 🎯 Estados locales
@@ -604,6 +598,28 @@ const Profile: React.FC = () => {
       });
     }
   }, [profileData]);
+
+  // 🎯 Datos de métricas - usar datos reales del backend o fallback básico
+  const metrics = useMemo(() => {
+    if (gamificationMetrics) {
+      return gamificationMetrics;
+    }
+    
+    // Fallback básico (NO mock) - valores realistas para un usuario nuevo
+    return {
+      level: 1,
+      meritos: 0,
+      ondas: 0,
+      ayniLevel: 0,
+      completedChallenges: 0,
+      socialConnections: 0,
+      marketplaceRating: 0,
+      pilgrimProgress: 0,
+    };
+  }, [gamificationMetrics]);
+
+  // 🎯 Loading state combinado
+  const isLoading = profileLoading || metricsLoading;
 
   // 🎯 Manejadores de eventos
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -797,8 +813,8 @@ const Profile: React.FC = () => {
     'Usuario';
   const memberSince = formatSafeDate(profileData.created_at);
   const levelProgress = calculateLevelProgress(
-    mockMetrics.level,
-    mockMetrics.meritos
+    metrics.level,
+    metrics.meritos
   );
 
   return (
@@ -1015,13 +1031,18 @@ const Profile: React.FC = () => {
           </Box>
         </Box>
 
-        {/* Métricas CoomÜnity Mejoradas */}
+        {/* Métricas CoomÜnity Mejoradas - USANDO DATOS REALES */}
         <CardContent sx={{ p: 4 }}>
+          {metricsLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
           <Grid container spacing={3}>
             <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Nivel"
-                value={mockMetrics.level}
+                  value={metrics.level}
                 icon={<TrendingUp />}
                 color={coomunityColors.ayni}
                 subtitle="Siguiente: +250 puntos"
@@ -1031,7 +1052,7 @@ const Profile: React.FC = () => {
             <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Mëritos"
-                value={safeToLocaleString(mockMetrics.meritos)}
+                  value={safeToLocaleString(metrics.meritos)}
                 icon={<Stars />}
                 color={coomunityColors.merito}
                 subtitle="Bien Común"
@@ -1040,7 +1061,7 @@ const Profile: React.FC = () => {
             <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Öndas"
-                value={safeToLocaleString(mockMetrics.ondas)}
+                  value={safeToLocaleString(metrics.ondas)}
                 icon={<WaterDrop />}
                 color={coomunityColors.onda}
                 subtitle="Energía Vibracional"
@@ -1049,16 +1070,16 @@ const Profile: React.FC = () => {
             <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Ayni"
-                value={`${mockMetrics.ayniLevel}%`}
+                  value={`${metrics.ayniLevel}%`}
                 icon={<Balance />}
-                color={getAyniColor(mockMetrics.ayniLevel)}
+                  color={getAyniColor(metrics.ayniLevel)}
                 subtitle="Reciprocidad"
               />
             </Grid>
             <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Conexiones"
-                value={safeToLocaleString(mockMetrics.socialConnections)}
+                  value={safeToLocaleString(metrics.socialConnections)}
                 icon={<Group />}
                 color={coomunityColors.social}
                 subtitle="Red CoomÜnity"
@@ -1067,13 +1088,14 @@ const Profile: React.FC = () => {
             <Grid size={{xs:6,sm:4,md:2}}>
               <MetricCard
                 title="Rating"
-                value={mockMetrics.marketplaceRating}
+                  value={metrics.marketplaceRating || 0}
                 icon={<Star />}
                 color={coomunityColors.marketplace}
                 subtitle="Marketplace"
               />
             </Grid>
           </Grid>
+          )}
         </CardContent>
       </Card>
 
@@ -1271,6 +1293,11 @@ const Profile: React.FC = () => {
                 subheader="Tu progreso en la plataforma CoomÜnity"
               />
               <CardContent>
+                {metricsLoading ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
                 <Grid container spacing={3}>
                   <Grid size={{xs:12,sm:6,md:3}}>
                     <Box sx={{ textAlign: 'center' }}>
@@ -1279,7 +1306,7 @@ const Profile: React.FC = () => {
                         color={coomunityColors.merito}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        {safeToLocaleString(mockMetrics.completedChallenges)}
+                          {safeToLocaleString(metrics.completedChallenges)}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Desafíos Completados
@@ -1290,13 +1317,13 @@ const Profile: React.FC = () => {
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
-                        color={coomunityColors.pilgrim}
+                          color={coomunityColors.social}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        {safeToLocaleString(mockMetrics.pilgrimProgress)}%
+                          {safeToLocaleString(metrics.socialConnections)}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Progreso Pilgrim
+                          Conexiones
                       </Typography>
                     </Box>
                   </Grid>
@@ -1307,7 +1334,7 @@ const Profile: React.FC = () => {
                         color={coomunityColors.marketplace}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        {safeToLocaleString(mockMetrics.marketplaceRating)}
+                          {metrics.marketplaceRating?.toFixed(1) || '0.0'}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Rating Marketplace
@@ -1318,17 +1345,18 @@ const Profile: React.FC = () => {
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
-                        color={coomunityColors.social}
+                          color={coomunityColors.ayni}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        {safeToLocaleString(mockMetrics.socialConnections)}
+                          {metrics.pilgrimProgress}%
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Conexiones
+                          Progreso Peregrino
                       </Typography>
                     </Box>
                   </Grid>
                 </Grid>
+                )}
               </CardContent>
             </Card>
           </Grid>

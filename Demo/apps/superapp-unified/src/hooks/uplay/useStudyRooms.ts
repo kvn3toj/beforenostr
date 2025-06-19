@@ -48,146 +48,6 @@ interface UseStudyRoomsReturn {
   clearError: () => void;
 }
 
-// Mock data para desarrollo - Será reemplazado por llamadas reales al backend
-const MOCK_ROOMS: StudyRoom[] = [
-  {
-    id: '1',
-    name: 'Filosofía Ayni - Sesión Matutina',
-    hostId: 'user1',
-    host: {
-      id: 'user1',
-      name: 'María González',
-      email: 'maria@coomunity.com',
-      avatarUrl: 'https://i.pravatar.cc/150?img=1',
-      level: 5,
-      meritos: 1250,
-      ondas: 890,
-    },
-    participants: [
-      {
-        id: 'user1',
-        name: 'María González',
-        email: 'maria@coomunity.com',
-        avatarUrl: 'https://i.pravatar.cc/150?img=1',
-        level: 5,
-        meritos: 1250,
-        ondas: 890,
-      },
-      {
-        id: 'user2',
-        name: 'Carlos Ruiz',
-        email: 'carlos@coomunity.com',
-        avatarUrl: 'https://i.pravatar.cc/150?img=2',
-        level: 3,
-        meritos: 750,
-        ondas: 520,
-      },
-    ],
-    syncedTimestamp: 120,
-    chatEnabled: true,
-    maxParticipants: 8,
-    isPrivate: false,
-    studyFocus: 'ayni',
-    status: 'active',
-    createdAt: new Date(),
-    totalMeritosEarned: 45,
-    totalOndasEarned: 32,
-    questionsAnswered: 12,
-    averageAccuracy: 0.85,
-  },
-  {
-    id: '2',
-    name: 'Gamificación Avanzada - Nivel Intermedio',
-    hostId: 'user3',
-    host: {
-      id: 'user3',
-      name: 'Ana López',
-      email: 'ana@coomunity.com',
-      avatarUrl: 'https://i.pravatar.cc/150?img=3',
-      level: 7,
-      meritos: 2100,
-      ondas: 1450,
-    },
-    participants: [
-      {
-        id: 'user3',
-        name: 'Ana López',
-        email: 'ana@coomunity.com',
-        avatarUrl: 'https://i.pravatar.cc/150?img=3',
-        level: 7,
-        meritos: 2100,
-        ondas: 1450,
-      },
-    ],
-    syncedTimestamp: 0,
-    chatEnabled: true,
-    maxParticipants: 12,
-    isPrivate: false,
-    studyFocus: 'gamificacion',
-    status: 'waiting',
-    createdAt: new Date(),
-    scheduledStartTime: new Date(Date.now() + 30 * 60 * 1000), // En 30 minutos
-    totalMeritosEarned: 0,
-    totalOndasEarned: 0,
-    questionsAnswered: 0,
-    averageAccuracy: 0,
-  },
-  {
-    id: '3',
-    name: 'Colaboración y Bien Común',
-    hostId: 'user4',
-    host: {
-      id: 'user4',
-      name: 'Diego Morales',
-      email: 'diego@coomunity.com',
-      avatarUrl: 'https://i.pravatar.cc/150?img=4',
-      level: 4,
-      meritos: 950,
-      ondas: 680,
-    },
-    participants: [
-      {
-        id: 'user4',
-        name: 'Diego Morales',
-        email: 'diego@coomunity.com',
-        avatarUrl: 'https://i.pravatar.cc/150?img=4',
-        level: 4,
-        meritos: 950,
-        ondas: 680,
-      },
-      {
-        id: 'user5',
-        name: 'Laura Vega',
-        email: 'laura@coomunity.com',
-        avatarUrl: 'https://i.pravatar.cc/150?img=5',
-        level: 6,
-        meritos: 1800,
-        ondas: 1200,
-      },
-      {
-        id: 'user6',
-        name: 'Roberto Silva',
-        email: 'roberto@coomunity.com',
-        avatarUrl: 'https://i.pravatar.cc/150?img=6',
-        level: 2,
-        meritos: 400,
-        ondas: 280,
-      },
-    ],
-    syncedTimestamp: 300,
-    chatEnabled: true,
-    maxParticipants: 15,
-    isPrivate: false,
-    studyFocus: 'bien-común',
-    status: 'active',
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // Hace 2 horas
-    totalMeritosEarned: 78,
-    totalOndasEarned: 56,
-    questionsAnswered: 23,
-    averageAccuracy: 0.92,
-  },
-];
-
 export const useStudyRooms = (options: UseStudyRoomsOptions = {}): UseStudyRoomsReturn => {
   const { roomId, enableRealtime = true, autoRefresh = false, refreshInterval = 30000 } = options;
   const { user, isAuthenticated } = useAuth();
@@ -378,33 +238,10 @@ export const useStudyRooms = (options: UseStudyRoomsOptions = {}): UseStudyRooms
     try {
       console.log('🏫 [useStudyRooms] Loading rooms with filters:', filters);
       
-      // TODO: En producción, reemplazar con llamada real al backend
-      // const response = await apiService.get('/study-rooms', { params: filters });
-      // setRooms(response.data.rooms);
+      const response = await apiService.get('/study-rooms', { params: filters });
+      setRooms(response.data.rooms);
       
-      // Simular llamada al backend con delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Aplicar filtros a los datos mock
-      let filteredRooms = [...MOCK_ROOMS];
-      
-      if (filters) {
-        if (filters.studyFocus) {
-          filteredRooms = filteredRooms.filter(room => room.studyFocus === filters.studyFocus);
-        }
-        if (filters.isPrivate !== undefined) {
-          filteredRooms = filteredRooms.filter(room => room.isPrivate === filters.isPrivate);
-        }
-        if (filters.hasSpace) {
-          filteredRooms = filteredRooms.filter(room => room.participants.length < room.maxParticipants);
-        }
-        if (filters.status) {
-          filteredRooms = filteredRooms.filter(room => room.status === filters.status);
-        }
-      }
-      
-      setRooms(filteredRooms);
-      console.log('✅ [useStudyRooms] Loaded', filteredRooms.length, 'rooms');
+      console.log('✅ [useStudyRooms] Loaded', response.data.rooms.length, 'rooms');
       
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error loading study rooms';
@@ -422,48 +259,9 @@ export const useStudyRooms = (options: UseStudyRoomsOptions = {}): UseStudyRooms
     try {
       console.log('🎨 [useStudyRooms] Creating room:', roomData);
       
-      // TODO: En producción, reemplazar con llamada real al backend
-      // const response = await apiService.post('/study-rooms', roomData);
-      // const newRoom = response.data;
+      const response = await apiService.post('/study-rooms', roomData);
+      const newRoom = response.data;
       
-      // Simular creación de sala
-      const newRoom: StudyRoom = {
-        id: `room-${Date.now()}`,
-        name: roomData.name || 'Nueva Sala',
-        hostId: user?.id || 'user1',
-        host: {
-          id: user?.id || 'user1',
-          name: 'Usuario Actual',
-          email: 'usuario@coomunity.com',
-          avatarUrl: 'https://i.pravatar.cc/150?img=99',
-          level: 1,
-          meritos: 0,
-          ondas: 0,
-        },
-        participants: [{
-          id: user?.id || 'user1',
-          name: 'Usuario Actual',
-          email: 'usuario@coomunity.com',
-          avatarUrl: 'https://i.pravatar.cc/150?img=99',
-          level: 1,
-          meritos: 0,
-          ondas: 0,
-        }],
-        syncedTimestamp: 0,
-        chatEnabled: roomData.chatEnabled ?? true,
-        maxParticipants: roomData.maxParticipants ?? 10,
-        isPrivate: roomData.isPrivate ?? false,
-        studyFocus: roomData.studyFocus ?? 'filosofia',
-        status: 'waiting',
-        createdAt: new Date(),
-        scheduledStartTime: roomData.scheduledStartTime,
-        totalMeritosEarned: 0,
-        totalOndasEarned: 0,
-        questionsAnswered: 0,
-        averageAccuracy: 0,
-      };
-      
-      // Agregar a la lista local
       setRooms(prev => [newRoom, ...prev]);
       setCurrentRoom(newRoom);
       
@@ -476,7 +274,7 @@ export const useStudyRooms = (options: UseStudyRoomsOptions = {}): UseStudyRooms
       console.error('❌ [useStudyRooms] Error creating room:', err);
       throw err;
     }
-  }, [user?.id]);
+  }, []);
 
   // 🎯 Enviar mensaje de chat con WebSocket real
   const sendMessage = useCallback(async (text: string) => {
@@ -686,16 +484,7 @@ export const useStudyRooms = (options: UseStudyRoomsOptions = {}): UseStudyRooms
       try {
         console.log('🗑️ [useStudyRooms] Deleting room:', roomId);
         
-        // TODO: En producción, reemplazar con llamada real al backend
-        // await apiService.delete(`/study-rooms/${roomId}`);
-        
-        // Simular eliminación localmente
-        setRooms(prev => prev.filter(room => room.id !== roomId));
-        
-        // Si es la sala actual, limpiarla
-        if (currentRoom?.id === roomId) {
-          setCurrentRoom(null);
-        }
+        await apiService.delete(`/study-rooms/${roomId}`);
         
         console.log('✅ [useStudyRooms] Deleted room:', roomId);
         

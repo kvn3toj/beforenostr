@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useGamificationMetrics } from '../../hooks/useUserProfile';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
 import Box from '@mui/material/Box';
@@ -102,24 +103,6 @@ const mockAchievements: Achievement[] = [
   },
 ];
 
-// 📊 Datos de progreso del usuario
-const mockUserProgress = {
-  currentLevel: 12,
-  currentXP: 3450,
-  nextLevelXP: 4000,
-  totalXP: 15650,
-  weeklyGoals: {
-    completed: 4,
-    total: 7,
-    streak: 3,
-  },
-  monthlyStats: {
-    achievements: 8,
-    hoursActive: 24.5,
-    contributions: 15,
-  },
-};
-
 const PersonalProgressWidgetRevolutionary: React.FC<
   PersonalProgressWidgetRevolutionaryProps
 > = ({ onAchievementClick, onViewAll }) => {
@@ -130,6 +113,53 @@ const PersonalProgressWidgetRevolutionary: React.FC<
   const [particles, setParticles] = useState<
     Array<{ id: string; x: number; y: number; element: string }>
   >([]);
+
+  // 🎮 Hook para métricas de gamificación REALES del backend
+  const {
+    data: gamificationMetrics,
+    isLoading: metricsLoading,
+    error: metricsError,
+  } = useGamificationMetrics();
+
+  // 🎯 Datos de progreso - usar datos reales del backend o fallback básico
+  const userProgress = useMemo(() => {
+    if (gamificationMetrics) {
+      return {
+        currentLevel: gamificationMetrics.level,
+        currentXP: gamificationMetrics.meritos,
+        nextLevelXP: (gamificationMetrics.level + 1) * 1000, // Cálculo básico
+        totalXP: gamificationMetrics.meritos * 10, // Estimación
+        weeklyGoals: {
+          completed: gamificationMetrics.completedChallenges || 0,
+          total: 7,
+          streak: Math.min(gamificationMetrics.completedChallenges || 0, 7),
+        },
+        monthlyStats: {
+          achievements: gamificationMetrics.completedChallenges || 0,
+          hoursActive: Math.floor((gamificationMetrics.meritos || 0) / 100), // Estimación
+          contributions: gamificationMetrics.socialConnections || 0,
+        },
+      };
+    }
+    
+    // Fallback básico (NO mock) - valores realistas para un usuario nuevo
+    return {
+      currentLevel: 1,
+      currentXP: 0,
+      nextLevelXP: 1000,
+      totalXP: 0,
+      weeklyGoals: {
+        completed: 0,
+        total: 7,
+        streak: 0,
+      },
+      monthlyStats: {
+        achievements: 0,
+        hoursActive: 0,
+        contributions: 0,
+      },
+    };
+  }, [gamificationMetrics]);
 
   // 🎨 Configuración de rareza
   const rarityConfig = {
@@ -179,18 +209,18 @@ const PersonalProgressWidgetRevolutionary: React.FC<
 
   // 📈 Cálculos de progreso
   const levelProgress = useMemo(() => {
-    const progressInLevel = mockUserProgress.currentXP;
-    const totalForLevel = mockUserProgress.nextLevelXP;
+    const progressInLevel = userProgress.currentXP;
+    const totalForLevel = userProgress.nextLevelXP;
     return (progressInLevel / totalForLevel) * 100;
-  }, []);
+  }, [userProgress]);
 
   const weeklyProgress = useMemo(() => {
     return (
-      (mockUserProgress.weeklyGoals.completed /
-        mockUserProgress.weeklyGoals.total) *
+      (userProgress.weeklyGoals.completed /
+        userProgress.weeklyGoals.total) *
       100
     );
-  }, []);
+  }, [userProgress]);
 
   const handleAchievementClick = (achievement: Achievement) => {
     if (onAchievementClick) {
@@ -311,7 +341,7 @@ const PersonalProgressWidgetRevolutionary: React.FC<
                 variant="h6"
                 sx={{ color: 'white', fontWeight: 700, fontSize: '1.1rem' }}
               >
-                {mockUserProgress.currentLevel}
+                {userProgress.currentLevel}
               </Typography>
             </Box>
           </Box>
@@ -334,8 +364,8 @@ const PersonalProgressWidgetRevolutionary: React.FC<
                 fontSize: '0.9rem',
               }}
             >
-              XP: {mockUserProgress.currentXP.toLocaleString()} /{' '}
-              {mockUserProgress.nextLevelXP.toLocaleString()}
+              XP: {userProgress.currentXP.toLocaleString()} /{' '}
+              {userProgress.nextLevelXP.toLocaleString()}
             </Typography>
           </Box>
         </Box>
@@ -380,7 +410,7 @@ const PersonalProgressWidgetRevolutionary: React.FC<
             variant="body2"
             sx={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem' }}
           >
-            Progreso al Nivel {mockUserProgress.currentLevel + 1}
+            Progreso al Nivel {userProgress.currentLevel + 1}
           </Typography>
           <Typography
             variant="body2"
@@ -441,7 +471,7 @@ const PersonalProgressWidgetRevolutionary: React.FC<
             display: 'block',
           }}
         >
-          {mockUserProgress.nextLevelXP - mockUserProgress.currentXP} XP
+          {userProgress.nextLevelXP - userProgress.currentXP} XP
           restante para el siguiente nivel
         </Typography>
       </Box>
@@ -541,7 +571,7 @@ const PersonalProgressWidgetRevolutionary: React.FC<
                 Objetivos Semanales
               </Typography>
               <Chip
-                label={`Racha: ${mockUserProgress.weeklyGoals.streak} días`}
+                label={`Racha: ${userProgress.weeklyGoals.streak} días`}
                 size="small"
                 sx={{
                   background: 'linear-gradient(135deg, #FF6B35, #FF8A50)',
@@ -571,8 +601,8 @@ const PersonalProgressWidgetRevolutionary: React.FC<
               variant="body2"
               sx={{ color: 'rgba(255, 255, 255, 0.8)', textAlign: 'center' }}
             >
-              {mockUserProgress.weeklyGoals.completed} de{' '}
-              {mockUserProgress.weeklyGoals.total} objetivos completados
+              {userProgress.weeklyGoals.completed} de{' '}
+              {userProgress.weeklyGoals.total} objetivos completados
             </Typography>
           </Box>
         )}
@@ -584,7 +614,7 @@ const PersonalProgressWidgetRevolutionary: React.FC<
                 variant="h6"
                 sx={{ color: '#FFD700', fontWeight: 700 }}
               >
-                {mockUserProgress.monthlyStats.achievements}
+                {userProgress.monthlyStats.achievements}
               </Typography>
               <Typography
                 variant="caption"
@@ -598,7 +628,7 @@ const PersonalProgressWidgetRevolutionary: React.FC<
                 variant="h6"
                 sx={{ color: '#E91E63', fontWeight: 700 }}
               >
-                {mockUserProgress.monthlyStats.hoursActive}h
+                {userProgress.monthlyStats.hoursActive}h
               </Typography>
               <Typography
                 variant="caption"
@@ -612,7 +642,7 @@ const PersonalProgressWidgetRevolutionary: React.FC<
                 variant="h6"
                 sx={{ color: '#9C27B0', fontWeight: 700 }}
               >
-                {mockUserProgress.monthlyStats.contributions}
+                {userProgress.monthlyStats.contributions}
               </Typography>
               <Typography
                 variant="caption"

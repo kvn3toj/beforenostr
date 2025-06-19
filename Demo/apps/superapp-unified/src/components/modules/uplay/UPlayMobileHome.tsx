@@ -92,6 +92,7 @@ interface MockPlaylist {
 
 // 🔥 Hook para datos reales del backend
 import { useVideos } from '../../../hooks/useRealBackendData';
+import { useGamificationMetrics } from '../../../hooks/useUserProfile';
 
 // 🌌 IMPORT DEL NUEVO DESIGN SYSTEM CÓSMICO
 import { CosmicCard } from '../../../design-system/components/cosmic/CosmicCard';
@@ -565,23 +566,52 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   // 🏫 Estado para el panel de funcionalidades sociales
   const [showSocialPanel, setShowSocialPanel] = useState(false);
 
-  // Enhanced mock user stats - stable reference to prevent re-renders
-  const enhancedUserStats: EnhancedMockUserStats = React.useMemo(() => ({
-    name: 'Lucía',
-    activePlayers: 150,
-    burnedPlayers: 50,
-    level: 12,
-    merits: 2350,
-    ondas: 1680,
-    experience: 3750,
-    experienceToNext: 1250,
-    weeklyGoal: 7,
-    currentStreak: 3,
-    completedVideos: 28,
-    totalWatchTime: 45600, // seconds
-    achievements: 15,
-    ranking: 47,
-  }), []);
+  // 🎮 Hook para métricas de gamificación REALES del backend
+  const {
+    data: gamificationMetrics,
+    isLoading: metricsLoading,
+    error: metricsError,
+  } = useGamificationMetrics();
+
+  // 🎯 Datos de estadísticas - usar datos reales del backend o fallback básico
+  const userStats = React.useMemo(() => {
+    if (gamificationMetrics) {
+      return {
+        name: 'Usuario', // Obtener del contexto de auth si está disponible
+        activePlayers: 150, // Estos datos pueden venir de otro endpoint
+        burnedPlayers: 50,
+        level: gamificationMetrics.level,
+        merits: gamificationMetrics.meritos,
+        ondas: gamificationMetrics.ondas,
+        experience: gamificationMetrics.meritos * 10, // Cálculo basado en méritos
+        experienceToNext: ((gamificationMetrics.level + 1) * 1000) - (gamificationMetrics.meritos * 10),
+        weeklyGoal: 7,
+        currentStreak: gamificationMetrics.completedChallenges || 0,
+        completedVideos: gamificationMetrics.completedChallenges || 0,
+        totalWatchTime: 45600, // Esto puede venir de otro endpoint
+        achievements: gamificationMetrics.completedChallenges || 0,
+        ranking: 47, // Esto puede venir de otro endpoint
+      };
+    }
+    
+    // Fallback básico (NO mock) - valores realistas para un usuario nuevo
+    return {
+      name: 'Usuario',
+      activePlayers: 150,
+      burnedPlayers: 50,
+      level: 1,
+      merits: 0,
+      ondas: 0,
+      experience: 0,
+      experienceToNext: 1000,
+      weeklyGoal: 7,
+      currentStreak: 0,
+      completedVideos: 0,
+      totalWatchTime: 0,
+      achievements: 0,
+      ranking: 999,
+    };
+  }, [gamificationMetrics]);
 
   // Enhanced mock data with progress - stable reference
   const mockVideoProgress: VideoProgress[] = React.useMemo(() => [
@@ -981,13 +1011,13 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
           <EnhancedStatusChip
             icon={<PersonIcon sx={{ fontSize: 12 }} />}
             label="Activos"
-            value={enhancedUserStats.activePlayers}
+            value={userStats.activePlayers}
             color="success"
           />
           <EnhancedStatusChip
             icon={<FireIcon sx={{ fontSize: 12 }} />}
             label="Quemados"
-            value={enhancedUserStats.burnedPlayers}
+            value={userStats.burnedPlayers}
             color="error"
           />
           <EnhancedStatusChip
@@ -1088,7 +1118,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     <Grid size={{xs:6}}>
                       <Box textAlign="center">
                         <Typography variant="h3" sx={{ fontWeight: 800 }}>
-                          {enhancedUserStats.completedVideos}
+                          {userStats.completedVideos}
                         </Typography>
                         <Typography variant="body2" sx={{ opacity: 0.9 }}>
                           Videos Completados
@@ -1098,7 +1128,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     <Grid size={{xs:6}}>
                       <Box textAlign="center">
                         <Typography variant="h3" sx={{ fontWeight: 800 }}>
-                          {Math.floor(enhancedUserStats.totalWatchTime / 3600)}h
+                          {Math.floor(userStats.totalWatchTime / 3600)}h
                         </Typography>
                         <Typography variant="body2" sx={{ opacity: 0.9 }}>
                           Tiempo Total
@@ -1115,15 +1145,15 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                   <Box sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                       <Typography variant="body2">
-                        {enhancedUserStats.weeklyGoal} videos
+                        {userStats.weeklyGoal} videos
                       </Typography>
                       <Typography variant="body2" color="primary">
-                        {currentStreak}/{enhancedUserStats.weeklyGoal}
+                        {currentStreak}/{userStats.weeklyGoal}
                       </Typography>
                     </Box>
                     <LinearProgress
                       variant="determinate"
-                      value={(currentStreak / enhancedUserStats.weeklyGoal) * 100}
+                      value={(currentStreak / userStats.weeklyGoal) * 100}
                       sx={{
                         height: 8,
                         borderRadius: 4,
@@ -1363,7 +1393,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color="primary"
                       sx={{ fontWeight: 800 }}
                     >
-                      {enhancedUserStats.completedVideos}
+                      {userStats.completedVideos}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
                       Videos Completados
@@ -1377,7 +1407,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color="success.main"
                       sx={{ fontWeight: 800 }}
                     >
-                      {Math.floor(enhancedUserStats.totalWatchTime / 3600)}h
+                      {Math.floor(userStats.totalWatchTime / 3600)}h
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
                       Tiempo Total
@@ -1391,7 +1421,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color="warning.main"
                       sx={{ fontWeight: 800 }}
                     >
-                      {enhancedUserStats.merits}
+                      {userStats.merits}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
                       Mëritos
@@ -1405,7 +1435,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color="secondary.main"
                       sx={{ fontWeight: 800 }}
                     >
-                      {enhancedUserStats.ondas}
+                      {userStats.ondas}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 600 }}>
                       Öndas
@@ -1428,15 +1458,15 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                   }}
                 >
                   <Typography variant="body2">
-                    Meta semanal: {enhancedUserStats.weeklyGoal} videos
+                    Meta semanal: {userStats.weeklyGoal} videos
                   </Typography>
                   <Typography variant="body2" color="primary">
-                    {currentStreak}/{enhancedUserStats.weeklyGoal}
+                    {currentStreak}/{userStats.weeklyGoal}
                   </Typography>
                 </Box>
                 <LinearProgress
                   variant="determinate"
-                  value={(currentStreak / enhancedUserStats.weeklyGoal) * 100}
+                  value={(currentStreak / userStats.weeklyGoal) * 100}
                   sx={{
                     height: 8,
                     borderRadius: 4,

@@ -37,9 +37,9 @@
     "db:seed": "ts-node prisma/seed.ts",
     "db:reset": "npx prisma migrate reset",
     "start:backend": "node dist/main.js",
-    "start:backend:dev": "tsx watch --no-cache --clear-screen=false --tsconfig tsconfig.backend.json src/main.ts",
+    "start:backend:dev": "tsx watch --no-cache --clear-screen=false --tsconfig tsconfig.backend.json backend/src/main.ts",
     "start:backend:prod": "npm run clean:backend && npm run build:backend && node dist/main.js",
-    "start:backend:compiled": "npm run build:backend && cp -r src/generated dist/ && node dist/main.js",
+    "start:backend:compiled": "npm run build:backend && cp -r backend/src/generated dist/ && node dist/main.js",
     "build:backend": "tsc -p tsconfig.backend.json",
     "mock-cleanup-agent": "node scripts/mock-cleanup-background-agent.js",
     "mock-cleanup-dispatch": "node scripts/slack-mock-cleanup-dispatcher.js"

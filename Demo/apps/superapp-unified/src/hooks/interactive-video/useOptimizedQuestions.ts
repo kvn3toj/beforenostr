@@ -98,92 +98,8 @@ export const useOptimizedQuestions = (videoId: string) => {
   // DATOS MOCK DE PREGUNTAS (En producción vendrían del backend)
   // ========================================================================
 
-  const mockQuestions: InteractiveQuestion[] = useMemo(() => [
-    {
-      id: 'q1',
-      videoId,
-      timestamp: 30,
-      type: 'multiple-choice',
-      title: 'Principios de Ayni',
-      question: '¿Cuál es el principio fundamental del Ayni en CoomÜnity?',
-      options: [
-        { id: 'a', text: 'Competencia individual', isCorrect: false },
-        { id: 'b', text: 'Reciprocidad equilibrada', isCorrect: true, points: 10 },
-        { id: 'c', text: 'Acumulación de recursos', isCorrect: false },
-        { id: 'd', text: 'Jerarquía social', isCorrect: false },
-      ],
-      timeLimit: 30,
-      difficulty: 'easy',
-      category: 'Filosofía CoomÜnity',
-      hints: [
-        'Piensa en el equilibrio natural',
-        'Se relaciona con dar y recibir',
-      ],
-      feedback: {
-        correct: '¡Excelente! El Ayni se basa en la reciprocidad equilibrada, donde dar y recibir están en armonía.',
-        incorrect: 'El Ayni es sobre reciprocidad, no competencia. Intenta de nuevo.',
-      },
-      rewards: {
-        meritos: 50,
-        ondas: 25,
-        bonus: 10,
-      },
-    },
-    {
-      id: 'q2',
-      videoId,
-      timestamp: 120,
-      type: 'true-false',
-      title: 'Bien Común',
-      question: 'En CoomÜnity, el Bien Común siempre prevalece sobre el bien individual.',
-      options: [
-        { id: 'true', text: 'Verdadero', isCorrect: true, points: 15 },
-        { id: 'false', text: 'Falso', isCorrect: false },
-      ],
-      timeLimit: 20,
-      difficulty: 'medium',
-      category: 'Valores CoomÜnity',
-      feedback: {
-        correct: '¡Correcto! El Bien Común es un pilar fundamental de nuestra filosofía.',
-        incorrect: 'Recuerda que en CoomÜnity priorizamos el bienestar colectivo.',
-      },
-      rewards: {
-        meritos: 75,
-        ondas: 40,
-      },
-    },
-    {
-      id: 'q3',
-      videoId,
-      timestamp: 240,
-      type: 'multiple-choice',
-      title: 'Öndas Vibracionales',
-      question: '¿Qué representan las Öndas en el ecosistema CoomÜnity?',
-      options: [
-        { id: 'a', text: 'Moneda digital', isCorrect: false },
-        { id: 'b', text: 'Energía vibracional positiva', isCorrect: true, points: 20 },
-        { id: 'c', text: 'Puntos de experiencia', isCorrect: false },
-        { id: 'd', text: 'Nivel de usuario', isCorrect: false },
-      ],
-      timeLimit: 25,
-      difficulty: 'hard',
-      category: 'Gamificación',
-      hints: [
-        'Piensa en energía y vibración',
-        'Se relaciona con contribuciones positivas',
-        'No es solo una métrica, es energía real',
-      ],
-      feedback: {
-        correct: '¡Perfecto! Las Öndas representan la energía vibracional positiva que generas con tus contribuciones.',
-        incorrect: 'Las Öndas son más que puntos, son energía vibracional. ¡Sigue intentando!',
-      },
-      rewards: {
-        meritos: 100,
-        ondas: 60,
-        bonus: 25,
-      },
-    },
-  ], [videoId]);
+  // Eliminar mockQuestions y toda la lógica mock
+  // Si el archivo no es usado, eliminarlo. Si es usado, migrar a useVideoQuestions.
 
   // ========================================================================
   // EFECTOS Y TIMERS
@@ -209,7 +125,7 @@ export const useOptimizedQuestions = (videoId: string) => {
   const initializeSession = useCallback(() => {
     const session: QuestionSession = {
       videoId,
-      questions: mockQuestions,
+      questions: [],
       currentQuestionIndex: 0,
       attempts: [],
       startTime: new Date(),
@@ -220,7 +136,7 @@ export const useOptimizedQuestions = (videoId: string) => {
     
     setCurrentSession(session);
     return session;
-  }, [videoId, mockQuestions]);
+  }, [videoId]);
 
   const getQuestionAtTimestamp = useCallback((timestamp: number): InteractiveQuestion | null => {
     if (!currentSession) return null;
