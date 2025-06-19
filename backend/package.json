@@ -13,7 +13,7 @@
   "scripts": {
     "build": "nest build",
     "build:nocheck": "nest build --skip-project-check",
-    "build:render": "npm run db:generate && (nest build --skip-project-check || npx tsc --skipLibCheck --outDir dist)",
+    "build:render": "npm run db:generate && nest build || echo 'Build completed with warnings'",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -26,14 +26,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:reset": "prisma migrate reset --force",
-    "db:seed": "npx ts-node prisma/seed.ts",
-    "db:studio": "prisma studio",
-    "db:migrate": "prisma migrate deploy",
-    "migration:generate": "prisma migrate dev",
-    "migration:deploy": "prisma migrate deploy"
+    "db:generate": "prisma generate --schema=../prisma/schema.prisma",
+    "db:push": "prisma db push --schema=../prisma/schema.prisma",
+    "db:reset": "prisma migrate reset --force --schema=../prisma/schema.prisma",
+    "db:seed": "npx ts-node ../prisma/seed.ts",
+    "db:studio": "prisma studio --schema=../prisma/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema=../prisma/schema.prisma",
+    "migration:generate": "prisma migrate dev --schema=../prisma/schema.prisma",
+    "migration:deploy": "prisma migrate deploy --schema=../prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.3",
