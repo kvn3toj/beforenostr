@@ -411,7 +411,7 @@ export const AyniBalanceVisualization: React.FC<AyniBalanceVisualizationProps> =
     if (enhancedData?.historicalData) return enhancedData.historicalData;
     
     // Generar datos simulados para demostración
-    const mockData: HistoricalDataPoint[] = [];
+    const historicalData: HistoricalDataPoint[] = [];
     const now = new Date();
     
     for (let i = 30; i >= 0; i--) {
@@ -419,7 +419,7 @@ export const AyniBalanceVisualization: React.FC<AyniBalanceVisualizationProps> =
       const baseBalance = balanceAyni;
       const variation = (Math.random() - 0.5) * 0.2; // ±10% variación
       
-      mockData.push({
+      historicalData.push({
         date,
         balance: Math.max(0, Math.min(1, baseBalance + variation)),
         elements: {
@@ -431,7 +431,7 @@ export const AyniBalanceVisualization: React.FC<AyniBalanceVisualizationProps> =
       });
     }
     
-    return mockData;
+    return historicalData;
   }, [enhancedData?.historicalData, balanceAyni, elementos]);
 
   // 🆕 PHASE 2: Métricas comunitarias simuladas

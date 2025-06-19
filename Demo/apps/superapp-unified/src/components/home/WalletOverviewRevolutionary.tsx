@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-
-// 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
-import LinearProgress from '@mui/material/LinearProgress';
+import { 
+  Box, 
+  Typography,
+  IconButton,
+  Tooltip,
+  Button,
+  Divider,
+  Chip,
+  LinearProgress 
+} from '@mui/material';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -26,6 +26,9 @@ import AirIcon from '@mui/icons-material/Air';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
+// 🔗 Import del hook de wallet (si existe, sino usar datos locales)
+// import { useWallet } from '../../hooks/useWallet';
+
 interface WalletOverviewRevolutionaryProps {
   onAddFunds?: () => void;
   onSend?: () => void;
@@ -33,55 +36,47 @@ interface WalletOverviewRevolutionaryProps {
   onViewTransactions?: () => void;
 }
 
-// 💰 Datos simulados de la cartera
+// 💰 Datos locales temporales de la cartera (reemplazar con useWallet cuando esté disponible)
 const mockWalletData = {
-  totalBalance: 2847.5,
+  totalBalance: 2847.52,
   currencies: [
     {
-      name: 'Öndas',
-      symbol: 'ÖND',
-      balance: 1250.0,
-      change: 12.5,
-      trend: 'up',
+      symbol: 'LÜKAS',
+      balance: 1250,
+      change: 8.5,
+      trend: 'up' as const,
       color: '#00BCD4',
-      icon: WaterDropIcon,
-      element: 'water',
+      icon: WaterDropIcon, // Agua - Fluidez
     },
     {
-      name: 'Mëritos',
-      symbol: 'MËR',
-      balance: 890.25,
-      change: 8.3,
-      trend: 'up',
-      color: '#66BB6A',
-      icon: TerrainIcon,
-      element: 'earth',
+      symbol: 'ÖNDAS', 
+      balance: 890,
+      change: -2.3,
+      trend: 'down' as const,
+      color: '#E1F5FE',
+      icon: AirIcon, // Aire - Vibración
     },
     {
-      name: 'Bien Común',
-      symbol: 'BCM',
-      balance: 567.25,
-      change: -2.1,
-      trend: 'down',
-      color: '#E91E63',
-      icon: LocalFireDepartmentIcon,
-      element: 'fire',
+      symbol: 'MËRITOS',
+      balance: 340,
+      change: 12.7,
+      trend: 'up' as const,
+      color: '#4CAF50',
+      icon: TerrainIcon, // Tierra - Solidez
     },
     {
-      name: 'Poder Elemental',
-      symbol: 'PWR',
-      balance: 140.0,
-      change: 15.7,
-      trend: 'up',
-      color: '#9C27B0',
-      icon: DiamondIcon,
-      element: 'power',
+      symbol: 'RESPLANDOR',
+      balance: 180,
+      change: 5.2,
+      trend: 'up' as const,
+      color: '#FF5722',
+      icon: LocalFireDepartmentIcon, // Fuego - Energía
     },
   ],
   recentActivity: {
-    transactions: 12,
-    lastTransaction: '2 horas',
-    weeklyGrowth: 8.4,
+    transactions: 23,
+    weeklyGrowth: 15.8,
+    lastTransaction: 'hace 2h',
   },
 };
 
@@ -93,6 +88,10 @@ const WalletOverviewRevolutionary: React.FC<
   const [particles, setParticles] = useState<
     Array<{ id: string; x: number; y: number; color: string }>
   >([]);
+
+  // 🔗 Usar datos reales del backend cuando esté disponible
+  // const { walletData } = useWallet();
+  // const currentWalletData = walletData || mockWalletData; // Fallback a datos mock
 
   // 🎨 Gradiente principal de la cartera
   const walletGradient = useMemo(

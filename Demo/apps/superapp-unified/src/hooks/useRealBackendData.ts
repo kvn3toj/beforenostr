@@ -261,7 +261,7 @@ export function useUserProfile(userId: string) {
 
 // 🎮 Hook para datos de gamificación
 export function useGameData(userId: string) {
-  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
+  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno 
   const isBuilderEnvironment = typeof window !== 'undefined' && 
     (window.location.hostname.includes('builder.io') || 
      window.location.port === '48752' ||
@@ -270,9 +270,9 @@ export function useGameData(userId: string) {
   return useOptionalQuery({
     queryKey: queryKeys.gameData(userId),
     queryFn: async () => {
-      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
+      // 🛡️ En Builder.io safe mode
       if (isBuilderEnvironment) {
-        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para gameData');
+        console.log('🎭 [BUILDER.IO] Usando datos mock para demo');
         return {
           id: userId,
           name: 'Usuario CoomÜnity Demo',
@@ -326,7 +326,7 @@ export function useGameData(userId: string) {
       // 🔗 En desarrollo normal, intentar llamada API con fallback
       return await gameAPI.getUserStats(userId);
     },
-    enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en Builder.io
+    enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en 
     silentFail: true, // Don't log errors for missing game endpoint
     fallbackData: {
       id: userId,
@@ -382,7 +382,7 @@ export function useQuests() {
 
 // 💰 Hook para datos del wallet - CACHÉ REAL-TIME
 export function useWalletData(userId: string) {
-  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
+  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno 
   const isBuilderEnvironment = typeof window !== 'undefined' && 
     (window.location.hostname.includes('builder.io') || 
      window.location.port === '48752' ||
@@ -391,9 +391,9 @@ export function useWalletData(userId: string) {
   return useRealTimeQuery(
     queryKeys.walletData(userId),
     async () => {
-      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
+      // 🛡️ En Builder.io safe mode
       if (isBuilderEnvironment) {
-        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para walletData');
+        console.log('🎭 [BUILDER.IO] Usando datos mock de wallet');
         const mockBalance = 185000; // Balance fijo para demo
         const mockUcoins = 650; // UCoins fijos para demo
         return {
@@ -494,7 +494,7 @@ export function useWalletData(userId: string) {
       }
     },
     {
-      enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en Builder.io
+      enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en 
       retry: false, // No reintentar para fallback inmediato
     }
   );
@@ -1365,7 +1365,6 @@ export function useDashboardData(userId: string) {
 // 🔧 Hook para configuración híbrida (mock + real)
 export function useHybridData<T>(
   realDataHook: () => any,
-  mockData: T,
   fallbackToMock: boolean = true
 ) {
   const backendAvailability = useBackendAvailability();
@@ -1377,7 +1376,6 @@ export function useHybridData<T>(
     (backendAvailability.shouldUseMock || realDataQuery.isError);
 
   return {
-    data: shouldUseMock ? mockData : realDataQuery.data,
     isLoading: backendAvailability.isLoading || realDataQuery.isLoading,
     isError: !shouldUseMock && realDataQuery.isError,
     isUsingMock: shouldUseMock,

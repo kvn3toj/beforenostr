@@ -51,68 +51,8 @@ interface NotificationCenterProps {
   onClearAll?: () => void;
 }
 
-const mockNotifications: Notification[] = [
-  {
-    id: '1',
-    type: 'ayni',
-    title: 'Ayni completado',
-    message:
-      'Has completado un intercambio equilibrado con María. Tu balance Ayni ha mejorado.',
-    time: '2h',
-    icon: <AutoAwesome />,
-    color: 'success',
-    priority: 'high',
-    actionLabel: 'Ver detalles',
-  },
-  {
-    id: '2',
-    type: 'meritos',
-    title: 'Nuevos Mëritos ganados',
-    message:
-      'Has ganado 50 Mëritos por tu contribución al proyecto "Huerta Comunitaria"',
-    time: '4h',
-    icon: <EmojiEvents />,
-    color: 'warning',
-    priority: 'high',
-    actionLabel: 'Ver logros',
-  },
-  {
-    id: '3',
-    type: 'social',
-    title: 'Invitación a Comunidad',
-    message:
-      'Te han invitado a unirte al círculo "Emprendedores Confiables de Medellín"',
-    time: '1d',
-    icon: <Groups />,
-    color: 'primary',
-    priority: 'medium',
-    actionLabel: 'Responder',
-  },
-  {
-    id: '4',
-    type: 'marketplace',
-    title: 'Producto vendido',
-    message:
-      'Tu servicio "Diseño gráfico ecológico" ha sido adquirido por Juan Carlos',
-    time: '2d',
-    icon: <Store />,
-    color: 'info',
-    priority: 'medium',
-    isRead: true,
-  },
-  {
-    id: '5',
-    type: 'social',
-    title: 'Nueva conexión',
-    message: 'Ana Sofía quiere conectar contigo basándose en intereses comunes',
-    time: '3d',
-    icon: <People />,
-    color: 'secondary',
-    priority: 'low',
-    isRead: true,
-  },
-];
-
+  // 🔗 Usando datos reales del backend
+  const { data: notifications = [] } = useNotifications();
 const NotificationItem: React.FC<{
   notification: Notification;
   onClick?: (notification: Notification) => void;

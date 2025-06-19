@@ -200,6 +200,12 @@ export const findWorkingVideoUrl = async (videoSources: string[]): Promise<strin
  */
 export const checkVideoAvailability = async (url: string): Promise<boolean> => {
   try {
+    // Validar que url existe y no es null/undefined
+    if (!url || typeof url !== 'string') {
+      console.warn('checkVideoAvailability: URL is null, undefined, or not a string:', url);
+      return false;
+    }
+
     // For YouTube videos, we can check if the URL is valid
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
       const videoId = extractYouTubeVideoId(url);

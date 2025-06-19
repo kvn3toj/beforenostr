@@ -5,16 +5,24 @@
       "origin": "http://localhost:3001",
       "localStorage": [
         {
-          "name": "COOMUNITY_AUTH_TOKEN",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOlsiYWRtaW46dmlld19hbGwiLCJ1c2Vyczp3cml0ZSIsInVzZXJzOnJlYWQiLCJjb250ZW50OnJlYWQiLCJyb2xlczp3cml0ZSIsImdhbWlmaWNhdGlvbjptYW5hZ2UiLCJhbmFseXRpY3M6cmVhZCIsImdyb3VwczptYW5hZ2UiLCJyb2xlczpyZWFkIiwiaW52aXRhdGlvbnM6c2VuZCIsIndhbGxldDptYW5hZ2UiLCJjb250ZW50OndyaXRlIl0sImlhdCI6MTc1MDMzMjQ1OSwiZXhwIjoxNzUwOTM3MjU5fQ.EsUzVgKQ8Ez5pAWBX7A2HFECCVD6mazEJeJVQDhJiiI"
-        },
-        {
-          "name": "lets_education_state",
-          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-19T11:27:37.749Z\"}}"
+          "name": "coomunity-tutorials-seen",
+          "value": "true"
         },
         {
           "name": "COOMUNITY_USER_DATA",
-          "value": "{\"id\":\"00000000-0000-0000-0000-000000000001\",\"email\":\"admin@gamifier.com\",\"full_name\":\"Administrator\",\"role\":\"admin\",\"created_at\":\"2025-06-19T11:27:39.664Z\",\"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOlsiYWRtaW46dmlld19hbGwiLCJ1c2Vyczp3cml0ZSIsInVzZXJzOnJlYWQiLCJjb250ZW50OnJlYWQiLCJyb2xlczp3cml0ZSIsImdhbWlmaWNhdGlvbjptYW5hZ2UiLCJhbmFseXRpY3M6cmVhZCIsImdyb3VwczptYW5hZ2UiLCJyb2xlczpyZWFkIiwiaW52aXRhdGlvbnM6c2VuZCIsIndhbGxldDptYW5hZ2UiLCJjb250ZW50OndyaXRlIl0sImlhdCI6MTc1MDMzMjQ1OSwiZXhwIjoxNzUwOTM3MjU5fQ.EsUzVgKQ8Ez5pAWBX7A2HFECCVD6mazEJeJVQDhJiiI\"}"
+          "value": "{\"id\":\"00000000-0000-0000-0000-000000000001\",\"email\":\"admin@gamifier.com\",\"full_name\":\"Administrator\",\"role\":\"admin\",\"created_at\":\"2025-06-19T13:02:07.862Z\",\"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOlsiYWRtaW46dmlld19hbGwiLCJ1c2VyczpyZWFkIiwicm9sZXM6d3JpdGUiLCJhbmFseXRpY3M6cmVhZCIsImNvbnRlbnQ6d3JpdGUiLCJ1c2Vyczp3cml0ZSIsInJvbGVzOnJlYWQiLCJnYW1pZmljYXRpb246bWFuYWdlIiwiaW52aXRhdGlvbnM6c2VuZCIsIndhbGxldDptYW5hZ2UiLCJjb250ZW50OnJlYWQiLCJncm91cHM6bWFuYWdlIl0sImlhdCI6MTc1MDMzODEyNywiZXhwIjoxNzUwOTQyOTI3fQ.1K_boHwoJe8RSohkFXUiS2S9z_3lwuxZej5pISwIJh8\"}"
+        },
+        {
+          "name": "COOMUNITY_AUTH_TOKEN",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOlsiYWRtaW46dmlld19hbGwiLCJ1c2VyczpyZWFkIiwicm9sZXM6d3JpdGUiLCJhbmFseXRpY3M6cmVhZCIsImNvbnRlbnQ6d3JpdGUiLCJ1c2Vyczp3cml0ZSIsInJvbGVzOnJlYWQiLCJnYW1pZmljYXRpb246bWFuYWdlIiwiaW52aXRhdGlvbnM6c2VuZCIsIndhbGxldDptYW5hZ2UiLCJjb250ZW50OnJlYWQiLCJncm91cHM6bWFuYWdlIl0sImlhdCI6MTc1MDMzODEyNywiZXhwIjoxNzUwOTQyOTI3fQ.1K_boHwoJe8RSohkFXUiS2S9z_3lwuxZej5pISwIJh8"
+        },
+        {
+          "name": "lets_education_state",
+          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-19T13:02:05.794Z\"}}"
+        },
+        {
+          "name": "coomunity-last-tutorial",
+          "value": "marketplace-discovery"
         }
       ]
     }

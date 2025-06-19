@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { GetAuditLogsDto } from './dto/get-audit-logs.dto';
-import { AuditLog, Prisma } from '@prisma/client';
+// import { AuditLog, Prisma } from '@prisma/client';
 
 // Types for oldValue and newValue in AuditLog
 // These fields store snapshots of data before and after an action.

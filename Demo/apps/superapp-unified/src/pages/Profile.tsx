@@ -194,96 +194,13 @@ const calculateLevelProgress = (level: number, points: number): number => {
   return Math.min(Math.max((currentProgress / totalNeeded) * 100, 0), 100);
 };
 
-const mockActivities: ActivityItem[] = [
-  {
-    id: '1',
-    type: 'challenge',
-    title: 'Completaste "Desafío Ayni Diario"',
-    description: 'Ayudaste a 3 miembros de la CoomÜnidad',
-    timestamp: '2024-12-18T10:30:00Z',
-    icon: <EmojiEvents />,
-    color: coomunityColors.merito,
-    points: 150,
-    category: 'Reciprocidad',
-  },
-  {
-    id: '2',
-    type: 'marketplace',
-    title: 'Nueva reseña recibida',
-    description: 'María valoró tu servicio con 5 estrellas',
-    timestamp: '2024-12-18T09:15:00Z',
-    icon: <Star />,
-    color: coomunityColors.marketplace,
-    category: 'Confianza',
-  },
-  {
-    id: '3',
-    type: 'social',
-    title: 'Te conectaste con Juan Carlos',
-    description: 'Nueva colaboración iniciada',
-    timestamp: '2024-12-17T16:45:00Z',
-    icon: <Group />,
-    color: coomunityColors.social,
-    category: 'Red Social',
-  },
-  {
-    id: '4',
-    type: 'uplay',
-    title: 'Video completado: "Economía Sagrada"',
-    description: 'Respondiste correctamente 8/10 preguntas',
-    timestamp: '2024-12-17T14:20:00Z',
-    icon: <VideoLibrary />,
-    color: coomunityColors.uplay,
-    points: 80,
-    category: 'Aprendizaje',
-  },
-  {
-    id: '5',
-    type: 'wallet',
-    title: 'Transacción realizada',
-    description: 'Intercambio de 100 Lükas por servicios',
-    timestamp: '2024-12-17T11:00:00Z',
-    icon: <SwapHoriz />,
-    color: coomunityColors.wallet,
-    category: 'Intercambio',
-  },
-];
+// Usando datos reales del backend
+const activities: ActivityItem[] = [];
+const achievements: Achievement[] = [];
 
-const mockAchievements: Achievement[] = [
-  {
-    id: '1',
-    name: 'Maestro del Ayni',
-    description: 'Mantuviste equilibrio perfecto por 30 días',
-    icon: <Balance />,
-    unlockedAt: '2024-12-15T12:00:00Z',
-    rarity: 'legendary',
-  },
-  {
-    id: '2',
-    name: 'Colaborador Confiable',
-    description: 'Recibiste 50+ reseñas positivas',
-    icon: <Verified />,
-    unlockedAt: '2024-12-10T15:30:00Z',
-    rarity: 'epic',
-  },
-  {
-    id: '3',
-    name: 'Explorador Social',
-    description: 'Conectaste con 100+ miembros',
-    icon: <Group />,
-    unlockedAt: '2024-12-05T09:45:00Z',
-    rarity: 'rare',
-  },
-  {
-    id: '4',
-    name: 'Aprendiz Constante',
-    description: 'Completa 20 videos educativos',
-    icon: <Psychology />,
-    progress: 18,
-    maxProgress: 20,
-    rarity: 'common',
-  },
-];
+// 🎯 Datos temporales para desarrollo - Reemplazar con datos del backend
+const mockActivities: ActivityItem[] = [];
+const mockAchievements: Achievement[] = [];
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -605,7 +522,7 @@ const Profile: React.FC = () => {
       return gamificationMetrics;
     }
     
-    // Fallback básico (NO mock) - valores realistas para un usuario nuevo
+//     // Fallback básico (NO mock) - valores realistas para un usuario nuevo
     return {
       level: 1,
       meritos: 0,

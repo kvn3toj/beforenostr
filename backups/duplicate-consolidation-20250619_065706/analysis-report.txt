@@ -1,0 +1,27 @@
+REPORTE DE ANÁLISIS DE DUPLICADOS
+Fecha: Thu Jun 19 06:57:06 -05 2025
+===============================
+
+ARCHIVOS ANALIZADOS:
+✅ Demo/apps/superapp-unified/src/pages/Home.tsx (      11 líneas)
+✅ Demo/apps/superapp-unified/src/pages/HomeEnhanced.tsx (    1104 líneas)
+✅ Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx (     855 líneas)
+❌ Demo/apps/superapp-unified/src/components/home/HomePage.tsx (no existe)
+❌ Demo/apps/superapp-unified/src/components/modules/home/HomePage.tsx (no existe)
+✅ Demo/apps/superapp-unified/src/pages/Marketplace.tsx (       7 líneas)
+❌ Demo/apps/superapp-unified/src/pages/MarketplaceMain.tsx (no existe)
+❌ Demo/apps/superapp-unified/src/pages/MarketplaceEnhanced.tsx (no existe)
+❌ Demo/apps/superapp-unified/src/components/marketplace/MarketplaceMain.tsx (no existe)
+✅ Demo/apps/superapp-unified/src/components/modules/marketplace/MarketplaceMain.tsx (    1628 líneas)
+✅ Demo/apps/superapp-unified/src/pages/Social.tsx (       7 líneas)
+❌ Demo/apps/superapp-unified/src/pages/SocialMain.tsx (no existe)
+❌ Demo/apps/superapp-unified/src/components/social/SocialMain.tsx (no existe)
+✅ Demo/apps/superapp-unified/src/components/modules/social/SocialMain.tsx (     400 líneas)
+✅ Demo/apps/superapp-unified/src/pages/UPlay.tsx (     183 líneas)
+❌ Demo/apps/superapp-unified/src/pages/UPlayMain.tsx (no existe)
+❌ Demo/apps/superapp-unified/src/components/uplay/UPlayMain.tsx (no existe)
+✅ Demo/apps/superapp-unified/src/components/modules/uplay/UPlayMain.tsx (      47 líneas)
+✅ Demo/apps/superapp-unified/src/pages/Wallet.tsx (     454 líneas)
+❌ Demo/apps/superapp-unified/src/pages/WalletMain.tsx (no existe)
+❌ Demo/apps/superapp-unified/src/components/wallet/WalletMain.tsx (no existe)
+❌ Demo/apps/superapp-unified/src/components/modules/wallet/WalletMain.tsx (no existe)

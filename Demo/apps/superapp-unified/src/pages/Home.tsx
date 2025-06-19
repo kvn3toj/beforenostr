@@ -1,11 +1,11 @@
 import React from 'react';
 
-// 🚀 IMPORTAR LA NUEVA ESTRUCTURA SEMÁNTICA
-import { HomePage } from './HomePage';
+// 🚀 IMPORTAR LA IMPLEMENTACIÓN COMPLETA DEL HOME
+import { HomeEnhanced } from './HomeEnhanced';
 
-// 🎯 Home principal que utiliza la nueva estructura semántica por capas
+// 🎯 Home principal que utiliza la implementación completa y optimizada
 const Home: React.FC = () => {
-  return <HomePage />;
+  return <HomeEnhanced />;
 };
 
 export default Home;

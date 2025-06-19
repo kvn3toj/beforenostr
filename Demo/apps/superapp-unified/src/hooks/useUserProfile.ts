@@ -401,7 +401,7 @@ export function useUserActivities(userId?: string, limit: number = 20) {
         return response.activities || [];
       } catch (error) {
         console.warn('🔄 Error obteniendo actividades - retornando array vacío');
-        // ✅ ELIMINADO: Fallback a mock - retornar array vacío en lugar de datos mock
+//         // ✅ ELIMINADO: Fallback a mock - retornar array vacío en lugar de datos mock
         return [];
       }
     },
@@ -428,7 +428,7 @@ export function useUserAchievements(userId?: string) {
         return response.achievements || [];
       } catch (error) {
         console.warn('🔄 Error obteniendo logros - retornando array vacío');
-        // ✅ ELIMINADO: Fallback a mock - retornar array vacío en lugar de datos mock
+//         // ✅ ELIMINADO: Fallback a mock - retornar array vacío en lugar de datos mock
         return [];
       }
     },
@@ -522,7 +522,7 @@ export function useGamificationMetrics(userId?: string) {
         return response;
       } catch (error) {
         console.warn('🔄 Error obteniendo métricas - retornando datos básicos');
-        // ✅ ELIMINADO: Fallback a mock - retornar datos básicos
+//         // ✅ ELIMINADO: Fallback a mock - retornar datos básicos
         return {
           level: 1,
           meritos: 0,
@@ -560,7 +560,7 @@ export function useSocialConnections(userId?: string) {
         return response.data || [];
       } catch (error) {
         console.warn('🔄 Error obteniendo conexiones - retornando array vacío');
-        // ✅ ELIMINADO: Fallback a mock - retornar array vacío
+//         // ✅ ELIMINADO: Fallback a mock - retornar array vacío
         return [];
       }
     },
@@ -624,58 +624,58 @@ export const profileValidation = {
   },
 };
 
-// 📊 Datos mock para desarrollo (remover cuando el backend esté listo)
-const mockUserActivities: UserActivity[] = [
-  {
-    id: '1',
-    type: 'challenge',
-    title: 'Completaste "Desafío Ayni Diario"',
-    description: 'Ayudaste a 3 miembros de la CoomÜnidad',
-    timestamp: '2024-12-18T10:30:00Z',
-    points: 150,
-    category: 'Reciprocidad',
-  },
-  {
-    id: '2',
-    type: 'marketplace',
-    title: 'Nueva reseña recibida',
-    description: 'María valoró tu servicio con 5 estrellas',
-    timestamp: '2024-12-18T09:15:00Z',
-    category: 'Confianza',
-  },
-  {
-    id: '3',
-    type: 'social',
-    title: 'Te conectaste con Juan Carlos',
-    description: 'Nueva colaboración iniciada',
-    timestamp: '2024-12-17T16:45:00Z',
-    category: 'Red Social',
-  },
-];
+// // 📊 Datos mock para desarrollo (remover cuando el backend esté listo)
+// const mockUserActivities: UserActivity[] = [
+//   {
+//     id: '1',
+//     type: 'challenge',
+//     title: 'Completaste "Desafío Ayni Diario"',
+//     description: 'Ayudaste a 3 miembros de la CoomÜnidad',
+//     timestamp: '2024-12-18T10:30:00Z',
+//     points: 150,
+//     category: 'Reciprocidad',
+//   },
+//   {
+//     id: '2',
+//     type: 'marketplace',
+//     title: 'Nueva reseña recibida',
+//     description: 'María valoró tu servicio con 5 estrellas',
+//     timestamp: '2024-12-18T09:15:00Z',
+//     category: 'Confianza',
+//   },
+//   {
+//     id: '3',
+//     type: 'social',
+//     title: 'Te conectaste con Juan Carlos',
+//     description: 'Nueva colaboración iniciada',
+//     timestamp: '2024-12-17T16:45:00Z',
+//     category: 'Red Social',
+//   },
+// ];
 
-const mockUserAchievements: UserAchievement[] = [
-  {
-    id: '1',
-    name: 'Maestro del Ayni',
-    description: 'Mantuviste equilibrio perfecto por 30 días',
-    unlockedAt: '2024-12-15T12:00:00Z',
-    rarity: 'legendary',
-    category: 'Reciprocidad',
-  },
-  {
-    id: '2',
-    name: 'Colaborador Confiable',
-    description: 'Recibiste 50+ reseñas positivas',
-    unlockedAt: '2024-12-10T15:30:00Z',
-    rarity: 'epic',
-    category: 'Marketplace',
-  },
-  {
-    id: '3',
-    name: 'Explorador Social',
-    description: 'Conectaste con 100+ miembros',
-    unlockedAt: '2024-12-05T09:45:00Z',
-    rarity: 'rare',
-    category: 'Social',
-  },
-];
+// const mockUserAchievements: UserAchievement[] = [
+//   {
+//     id: '1',
+//     name: 'Maestro del Ayni',
+//     description: 'Mantuviste equilibrio perfecto por 30 días',
+//     unlockedAt: '2024-12-15T12:00:00Z',
+//     rarity: 'legendary',
+//     category: 'Reciprocidad',
+//   },
+//   {
+//     id: '2',
+//     name: 'Colaborador Confiable',
+//     description: 'Recibiste 50+ reseñas positivas',
+//     unlockedAt: '2024-12-10T15:30:00Z',
+//     rarity: 'epic',
+//     category: 'Marketplace',
+//   },
+//   {
+//     id: '3',
+//     name: 'Explorador Social',
+//     description: 'Conectaste con 100+ miembros',
+//     unlockedAt: '2024-12-05T09:45:00Z',
+//     rarity: 'rare',
+//     category: 'Social',
+//   },
+// ];

@@ -43,8 +43,9 @@ import {
 } from '@mui/icons-material';
 
 // Import components and hooks
-import EnhancedInteractiveVideoPlayer from '../components/modules/uplay/components/EnhancedInteractiveVideoPlayer';
+import InteractiveVideoPlayerOverlay from '../components/modules/uplay/components/InteractiveVideoPlayerOverlay';
 import { useVideos } from '../hooks/useRealBackendData'; // Hook del backend real
+import { apiService } from '../lib/api-service'; // Para analytics
 
 // Types
 interface VideoData {
@@ -255,6 +256,18 @@ const getUserProgress = (): UserProgress => ({
   level: 4,
   accuracyRate: 87,
 });
+
+// Utility to convert YouTube URLs to a format our enhanced player can use
+const convertToVideoPlayerUrl = (url: string): string => {
+  // For YouTube URLs, we'll use a demo video URL since our enhanced player uses HTML5 video
+  // This is temporary until we implement YouTube iframe integration in InteractiveVideoPlayerOverlay
+  if (url && (url.includes('youtube.com') || url.includes('youtu.be'))) {
+    console.log('🎬 YouTube URL detected, using demo video for enhanced player:', url);
+    // Return a demo video URL that works with HTML5 video element (Big Buck Bunny sample)
+    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+  }
+  return url;
+};
 
 const UPlayVideoPlayer: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -723,15 +736,21 @@ const UPlayVideoPlayer: React.FC = () => {
               }}
             >
               {currentVideo ? (
-                <EnhancedInteractiveVideoPlayer
-                  videoData={currentVideo}
-                  onBack={handleBack}
+                <InteractiveVideoPlayerOverlay
+                  videoUrl={convertToVideoPlayerUrl(currentVideo.url)}
+                  videoId={currentVideo.id}
+                  questions={currentVideo.questions}
                   onVideoComplete={handleVideoComplete}
-                  onVideoChange={handleVideoChange}
                   userId="demo-user"
                   autoplay={false}
                   enableAnalytics={true}
-                  showBackButton={isMobile}
+                  isLandscape={false}
+                  onRewardEarned={(reward) => {
+                    console.log('🎉 Recompensa ganada:', reward);
+                  }}
+                  onQuestionAnswer={(questionId, answerId, isCorrect) => {
+                    console.log('📝 Respuesta:', { questionId, answerId, isCorrect });
+                  }}
                 />
               ) : (
                 <Box

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useGamificationMetrics } from '../../hooks/useUserProfile';
+import { useTheme } from '@mui/material/styles';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
 import Box from '@mui/material/Box';
@@ -52,66 +53,18 @@ interface PersonalProgressWidgetRevolutionaryProps {
 }
 
 // 🎯 Achievements simulados
-const mockAchievements: Achievement[] = [
-  {
-    id: '1',
-    title: 'Maestro del Equilibrio',
-    description: 'Mantén balance elemental por 7 días consecutivos',
-    progress: 5,
-    maxProgress: 7,
-    icon: '⚖️',
-    category: 'Balance',
-    rarity: 'epic',
-    element: 'water',
-    reward: { type: 'xp', amount: 500 },
-  },
-  {
-    id: '2',
-    title: 'Colaborador Comunitario',
-    description: 'Completa 10 acciones de bien común',
-    progress: 7,
-    maxProgress: 10,
-    icon: '🤝',
-    category: 'Social',
-    rarity: 'rare',
-    element: 'earth',
-    reward: { type: 'currency', amount: 200, currency: 'BCM' },
-  },
-  {
-    id: '3',
-    title: 'Explorador UPlay',
-    description: 'Ve 25 videos interactivos completos',
-    progress: 18,
-    maxProgress: 25,
-    icon: '🎮',
-    category: 'Entretenimiento',
-    rarity: 'common',
-    element: 'fire',
-    reward: { type: 'xp', amount: 250 },
-  },
-  {
-    id: '4',
-    title: 'Sabio del Conocimiento',
-    description: 'Completa 3 cursos certificados',
-    progress: 2,
-    maxProgress: 3,
-    icon: '🧠',
-    category: 'Educación',
-    rarity: 'legendary',
-    element: 'air',
-    reward: { type: 'badge', amount: 1 },
-  },
-];
-
+  // 🔗 Usando datos reales del backend
+  const { data: achievements = [] } = useAchievements();
 const PersonalProgressWidgetRevolutionary: React.FC<
   PersonalProgressWidgetRevolutionaryProps
 > = ({ onAchievementClick, onViewAll }) => {
+  const theme = useTheme();
   const [timeframe, setTimeframe] = useState<'daily' | 'weekly' | 'monthly'>(
     'weekly'
   );
   const [selectedTab, setSelectedTab] = useState(0);
   const [particles, setParticles] = useState<
-    Array<{ id: string; x: number; y: number; element: string }>
+    Array<{ id: string; x: number; y: number; opacity: number }>
   >([]);
 
   // 🎮 Hook para métricas de gamificación REALES del backend
@@ -120,6 +73,46 @@ const PersonalProgressWidgetRevolutionary: React.FC<
     isLoading: metricsLoading,
     error: metricsError,
   } = useGamificationMetrics();
+
+  // 🎯 Datos temporales para desarrollo - Reemplazar con datos del backend
+  const mockAchievements: Achievement[] = [
+    {
+      id: '1',
+      title: 'Explorador CoomÜnity',
+      description: 'Explora 5 módulos diferentes',
+      progress: 3,
+      maxProgress: 5,
+      icon: '🧭',
+      category: 'exploration',
+      rarity: 'common',
+      element: 'air',
+      reward: { type: 'xp', amount: 100 }
+    },
+    {
+      id: '2', 
+      title: 'Colaborador Activo',
+      description: 'Participa en 10 intercambios Ayni',
+      progress: 7,
+      maxProgress: 10,
+      icon: '🤝',
+      category: 'social',
+      rarity: 'rare',
+      element: 'water',
+      reward: { type: 'xp', amount: 250 }
+    },
+    {
+      id: '3',
+      title: 'Aprendiz Constante', 
+      description: 'Completa 20 videos educativos',
+      progress: 15,
+      maxProgress: 20,
+      icon: '📚',
+      category: 'education',
+      rarity: 'epic',
+      element: 'earth',
+      reward: { type: 'xp', amount: 500 }
+    }
+  ];
 
   // 🎯 Datos de progreso - usar datos reales del backend o fallback básico
   const userProgress = useMemo(() => {

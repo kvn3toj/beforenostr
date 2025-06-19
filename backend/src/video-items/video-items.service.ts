@@ -1036,19 +1036,39 @@ export class VideoItemsService {
   /**
    * Encuentra todas las preguntas asociadas a un video específico
    * Incluye las opciones de respuesta para cada pregunta
+   * @param videoId Puede ser el ID numérico del sistema o el externalId (YouTube ID)
    */
   async findQuestionsByVideoId(videoId: string) {
     console.log(`>>> VideoItemsService.findQuestionsByVideoId: Finding questions for video ID: ${videoId}`);
     
     try {
-      // Convertir videoId string a entero
+      let videoItemId: number;
+
+      // Primero intentar convertir a entero (ID del sistema)
       const videoIdInt = parseInt(videoId);
-      if (isNaN(videoIdInt)) {
-        throw new Error(`Invalid video ID format: ${videoId}`);
+      if (!isNaN(videoIdInt)) {
+        // Es un ID numérico del sistema, usarlo directamente
+        videoItemId = videoIdInt;
+        console.log(`>>> VideoItemsService.findQuestionsByVideoId: Using numeric system ID: ${videoItemId}`);
+      } else {
+        // Es un externalId (YouTube ID), buscar el video correspondiente
+        console.log(`>>> VideoItemsService.findQuestionsByVideoId: Searching by externalId: ${videoId}`);
+        const videoItem = await this.prisma.videoItem.findFirst({
+          where: { externalId: videoId },
+          select: { id: true }
+        });
+
+        if (!videoItem) {
+          console.log(`>>> VideoItemsService.findQuestionsByVideoId: No video found with externalId: ${videoId}`);
+          return []; // Retornar array vacío en lugar de error para evitar 500
+        }
+
+        videoItemId = videoItem.id;
+        console.log(`>>> VideoItemsService.findQuestionsByVideoId: Found video with system ID: ${videoItemId} for externalId: ${videoId}`);
       }
 
       const questions = await this.prisma.question.findMany({
-        where: { videoItemId: videoIdInt },
+        where: { videoItemId: videoItemId },
         include: {
           answerOptions: true, // CRÍTICO: Incluir las opciones de respuesta
         },

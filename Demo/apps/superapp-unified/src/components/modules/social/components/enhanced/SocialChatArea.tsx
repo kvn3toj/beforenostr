@@ -63,6 +63,7 @@ interface SocialChatAreaProps {
   isConnected: boolean;
 }
 
+/*
 // 🎭 Datos mock de mensajes
 const mockMessages: ChatMessage[] = [
   {
@@ -129,6 +130,7 @@ const mockSelectedConnection: Connection = {
   trustScore: 4.9,
   isOnline: true,
 };
+*/
 
 const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
   const theme = useTheme();
@@ -294,9 +296,8 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
   isConnected,
 }) => {
   const theme = useTheme();
-  const [selectedConnection, setSelectedConnection] =
-    useState<Connection | null>(mockSelectedConnection);
-  const [messages, setMessages] = useState<ChatMessage[]>(mockMessages);
+  const [selectedConnection, setSelectedConnection] = useState<Connection | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 

@@ -128,21 +128,8 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
   } = useAyniIntelligence(userId);
 
   // Mock data para usuario (en producción viene del backend)
-  const mockUser = {
-    id: userId,
-    name: 'Explorador Cósmico',
-    avatar: 'https://via.placeholder.com/150/9C27B0/FFFFFF?text=EC',
-    level: 5,
-    meritos: 2847,
-    ondas: 3156,
-    lukas: 1234,
-    ayniScore: 78,
-    currentStreak: 12,
-    nextLevelProgress: 65,
-    etherEnergy: 85,
-    cosmicAlignment: 'transcendent' as const
-  };
-
+  // 🔗 Usando datos reales del backend via AuthContext
+  const { user } = useAuth();
   // Métricas cross-module en tiempo real
   const crossModuleMetrics = useMemo(() => {
     if (!ayniData) return null;

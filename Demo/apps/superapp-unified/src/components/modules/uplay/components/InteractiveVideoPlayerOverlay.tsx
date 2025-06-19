@@ -26,6 +26,7 @@ import {
   Alert,
   Stack,
   Tooltip,
+  Avatar,
 } from '@mui/material';
 import {
   PlayArrow as PlayIcon,
@@ -47,6 +48,8 @@ import {
   Speed as SpeedIcon,
   Close as CloseIcon,
   Refresh as RefreshIcon,
+  Quiz as QuizIcon,
+  Check as CheckIcon,
 } from '@mui/icons-material';
 
 // Importar servicios para integración con backend
@@ -120,8 +123,8 @@ interface InteractiveVideoPlayerOverlayProps {
 const mockQuestions: QuestionOverlay[] = [
   {
     id: 1,
-    timestamp: 15,
-    endTimestamp: 45,
+    timestamp: 5, // Pregunta muy temprana para testing
+    endTimestamp: 35,
     type: 'multiple-choice',
     question: '¿Cuál es el principio fundamental de Ayni en CoomÜnity?',
     timeLimit: 20,
@@ -146,11 +149,10 @@ const mockQuestions: QuestionOverlay[] = [
   },
   {
     id: 2,
-    timestamp: 120,
-    endTimestamp: 140,
+    timestamp: 15, // Segunda pregunta temprana
+    endTimestamp: 40,
     type: 'true-false',
-    question:
-      '¿Las Öndas representan energía vibracional positiva en el ecosistema?',
+    question: '¿Las Öndas representan energía vibracional positiva en el ecosistema?',
     timeLimit: 15,
     difficulty: 'easy',
     reward: { merits: 10, ondas: 8 },
@@ -161,32 +163,18 @@ const mockQuestions: QuestionOverlay[] = [
   },
   {
     id: 3,
-    timestamp: 200,
-    endTimestamp: 215,
-    type: 'quick-response',
-    question: '¿Qué significa "Bien Común" en la filosofía CoomÜnity?',
-    timeLimit: 10,
+    timestamp: 30, // Tercera pregunta
+    endTimestamp: 60,
+    type: 'multiple-choice',
+    question: '¿Cuál de estos elementos representa mejor el Bien Común?',
+    timeLimit: 25,
     difficulty: 'hard',
     reward: { merits: 25, ondas: 12 },
     options: [
-      {
-        id: 'a',
-        label: 'A',
-        text: 'Beneficio colectivo sobre individual',
-        isCorrect: true,
-      },
-      {
-        id: 'b',
-        label: 'B',
-        text: 'Ganancia personal máxima',
-        isCorrect: false,
-      },
-      {
-        id: 'c',
-        label: 'C',
-        text: 'Neutralidad en decisiones',
-        isCorrect: false,
-      },
+      { id: 'a', label: 'A', text: 'Colaboración y reciprocidad', isCorrect: true },
+      { id: 'b', label: 'B', text: 'Competencia por recursos', isCorrect: false },
+      { id: 'c', label: 'C', text: 'Individualismo extremo', isCorrect: false },
+      { id: 'd', label: 'D', text: 'Acumulación personal', isCorrect: false },
     ],
   },
 ];
@@ -211,7 +199,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
 > = ({
   videoUrl,
   videoId = 'default-video',
-  questions = mockQuestions,
+  questions = [],
   onQuestionAnswer,
   onVideoComplete,
   onMetricsUpdate,
@@ -228,6 +216,9 @@ const InteractiveVideoPlayerOverlay: React.FC<
   const containerRef = useRef<HTMLDivElement>(null);
   const questionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Use mock questions if none provided for better testing
+  const effectiveQuestions = questions.length > 0 ? questions : mockQuestions;
+
   // Video state
   const [isPlaying, setIsPlaying] = useState(autoplay);
   const [currentTime, setCurrentTime] = useState(0);
@@ -237,6 +228,9 @@ const InteractiveVideoPlayerOverlay: React.FC<
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+
+  // Debug state
+  const [showDebugControls, setShowDebugControls] = useState(process.env.NODE_ENV === 'development');
 
   // Question overlay state
   const [activeQuestion, setActiveQuestion] = useState<QuestionOverlay | null>(
@@ -264,8 +258,21 @@ const InteractiveVideoPlayerOverlay: React.FC<
     reward: { merits: 0, ondas: 0 },
   });
 
-  // Player metrics state
-  const [metrics, setMetrics] = useState<VideoPlayerMetrics>(mockMetrics);
+  // Player metrics state - usando valores iniciales por defecto
+  const [metrics, setMetrics] = useState<VideoPlayerMetrics>({
+    merits: 0,
+    ondas: 0,
+    level: 1,
+    experience: 0,
+    questionsAnswered: 0,
+    correctAnswers: 0,
+    currentStreak: 0,
+    maxStreak: 0,
+    sessionScore: 0,
+    engagementLevel: 0,
+    timeSpent: 0,
+    videosCompleted: 0,
+  });
   const [sessionStartTime] = useState<Date>(new Date());
 
   // Analytics state
@@ -339,7 +346,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
     }
 
     // Check for questions that should be shown
-    const currentQuestion = questions.find(
+    const currentQuestion = effectiveQuestions.find(
       (q) =>
         time >= q.timestamp &&
         time <= q.endTimestamp &&
@@ -366,7 +373,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
       setShowQuestionHint(false);
     }
   }, [
-    questions,
+    effectiveQuestions,
     answeredQuestions,
     activeQuestion,
     lastAnalyticsUpdate,
@@ -422,7 +429,9 @@ const InteractiveVideoPlayerOverlay: React.FC<
 
     clearQuestionTimer();
 
-    const selectedOption = activeQuestion.options.find(
+    const selectedOption = effectiveQuestions.find(
+      (q) => q.id === activeQuestion.id
+    )?.options.find(
       (opt) => opt.id === selectedAnswer
     );
     const isCorrect = selectedOption?.isCorrect || false;
@@ -484,7 +493,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
       isCorrect,
       message: isCorrect
         ? `¡Correcto! ${finalReward.merits > 0 ? `+${finalReward.merits} Mëritos, +${finalReward.ondas} Öndas` : ''}`
-        : `Incorrecto. La respuesta correcta era: ${activeQuestion.options.find((opt) => opt.isCorrect)?.text}`,
+        : `Incorrecto. La respuesta correcta era: ${effectiveQuestions.find((q) => q.id === activeQuestion.id)?.options.find((opt) => opt.isCorrect)?.text}`,
       reward: finalReward,
     });
 
@@ -562,6 +571,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
     userId,
     videoId,
     clearQuestionTimer,
+    effectiveQuestions,
   ]);
 
   const handleSkipQuestion = useCallback(() => {
@@ -820,58 +830,69 @@ const InteractiveVideoPlayerOverlay: React.FC<
         </Typography>
 
         {/* Enhanced Metrics display */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Tooltip title="Mëritos ganados">
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontFamily: 'Roboto',
-                  fontWeight: 500,
-                  fontSize: '20px',
-                  color: '#fbbf24',
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            padding: '8px 12px',
+            borderRadius: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <DiamondIcon sx={{ color: '#fbbf24', fontSize: 16 }} />
+            <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>
+              {metrics.merits}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <BoltIcon sx={{ color: '#10b981', fontSize: 16 }} />
+            <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>
+              {metrics.ondas}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <StarIcon sx={{ color: '#6366f1', fontSize: 16 }} />
+            <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>
+              Nivel {metrics.level}
+            </Typography>
+          </Box>
+          
+          {/* Debug Controls */}
+          {showDebugControls && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 1 }}>
+              <IconButton
+                size="small"
+                sx={{ 
+                  color: 'white',
+                  backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                  '&:hover': { backgroundColor: 'rgba(99, 102, 241, 0.9)' },
+                  width: 28,
+                  height: 28
                 }}
-              >
-                {metrics.merits}
-              </Typography>
-              <DiamondIcon sx={{ color: '#fbbf24', fontSize: 16 }} />
-            </Box>
-          </Tooltip>
-
-          <Tooltip title="Öndas de energía positiva">
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontFamily: 'Roboto',
-                  fontWeight: 500,
-                  fontSize: '20px',
-                  color: '#10b981',
+                onClick={() => {
+                  // Activar primera pregunta disponible para testing
+                  const testQuestion = effectiveQuestions.find(q => !answeredQuestions.has(q.id));
+                  if (testQuestion && !activeQuestion) {
+                    setActiveQuestion(testQuestion);
+                    if (videoRef.current) {
+                      videoRef.current.pause();
+                      setIsPlaying(false);
+                    }
+                    if (testQuestion.timeLimit) {
+                      startQuestionTimer(testQuestion.timeLimit);
+                    }
+                  }
                 }}
+                title="Activar pregunta de prueba"
               >
-                {metrics.ondas}
+                <QuizIcon sx={{ fontSize: 16 }} />
+              </IconButton>
+              <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '10px' }}>
+                Debug
               </Typography>
-              <BoltIcon sx={{ color: '#10b981', fontSize: 16 }} />
             </Box>
-          </Tooltip>
-
-          {metrics.currentStreak > 0 && (
-            <Tooltip title={`Racha actual: ${metrics.currentStreak}`}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontFamily: 'Roboto',
-                    fontWeight: 500,
-                    fontSize: '18px',
-                    color: '#ef4444',
-                  }}
-                >
-                  {metrics.currentStreak}
-                </Typography>
-                <Box sx={{ fontSize: 16 }}>🔥</Box>
-              </Box>
-            </Tooltip>
           )}
         </Box>
       </Box>
@@ -925,9 +946,9 @@ const InteractiveVideoPlayerOverlay: React.FC<
         <Box
           sx={{
             position: 'absolute',
-            top: '50%',
+            bottom: 120,
             left: '50%',
-            transform: 'translate(-50%, -50%)',
+            transform: 'translateX(-50%)',
             width: '90%',
             maxWidth: 700,
             zIndex: 20,
@@ -935,253 +956,234 @@ const InteractiveVideoPlayerOverlay: React.FC<
           }}
         >
           {activeQuestion && (
-            <Box>
-              {/* Question Header */}
-              <Box
-                sx={{
-                  textAlign: 'center',
-                  mb: 3,
-                  p: 2,
-                  backgroundColor: 'rgba(0,0,0,0.8)',
-                  borderRadius: 2,
-                  backdropFilter: 'blur(10px)',
-                }}
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  mb={1}
-                >
-                  <Chip
-                    label={
-                      activeQuestion.type === 'quick-response'
-                        ? 'Respuesta Rápida'
-                        : activeQuestion.type === 'true-false'
-                          ? 'Verdadero/Falso'
-                          : 'Opción Múltiple'
-                    }
-                    size="small"
+            <Card
+              sx={{
+                borderRadius: 4,
+                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(139, 92, 246, 0.95) 100%)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4)',
+                overflow: 'hidden',
+                position: 'relative',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)',
+                  pointerEvents: 'none',
+                }
+              }}
+            >
+              <CardContent sx={{ p: 4, position: 'relative', zIndex: 2 }}>
+                {/* Question Header */}
+                <Box sx={{ textAlign: 'center', mb: 4 }}>
+                  <Typography
+                    variant="h5"
                     sx={{
-                      backgroundColor:
-                        activeQuestion.difficulty === 'hard'
-                          ? '#ef4444'
-                          : activeQuestion.difficulty === 'medium'
-                            ? '#f59e0b'
-                            : '#10b981',
+                      color: 'white',
+                      fontWeight: 700,
+                      textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                      mb: 1,
+                    }}
+                  >
+                    🤔 Pregunta Interactiva
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: 'white',
+                      fontWeight: 500,
+                      textShadow: '0 1px 4px rgba(0,0,0,0.2)',
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {activeQuestion.question}
+                  </Typography>
+                </Box>
+
+                {/* Question Options */}
+                <Stack spacing={2} sx={{ mb: 3 }}>
+                  {activeQuestion.options.map((option) => (
+                    <Button
+                      key={option.id}
+                      variant={selectedAnswer === option.id ? 'contained' : 'outlined'}
+                      onClick={() => setSelectedAnswer(option.id)}
+                      disabled={!!selectedAnswer}
+                      sx={{
+                        borderRadius: 3,
+                        py: 2,
+                        px: 3,
+                        textAlign: 'left',
+                        justifyContent: 'flex-start',
+                        background: selectedAnswer === option.id 
+                          ? 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
+                          : 'rgba(255, 255, 255, 0.15)',
+                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                        color: 'white',
+                        textTransform: 'none',
+                        fontSize: '16px',
+                        fontWeight: 500,
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                          background: selectedAnswer === option.id 
+                            ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)'
+                            : 'rgba(255, 255, 255, 0.25)',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
+                        },
+                        '&:disabled': {
+                          opacity: selectedAnswer === option.id ? 1 : 0.6,
+                        }
+                      }}
+                    >
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        width: '100%',
+                        gap: 2 
+                      }}>
+                        <Avatar sx={{ 
+                          width: 36, 
+                          height: 36, 
+                          bgcolor: selectedAnswer === option.id ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.2)',
+                          color: selectedAnswer === option.id ? '#10b981' : 'white',
+                          fontSize: '16px',
+                          fontWeight: 800,
+                          transition: 'all 0.3s ease',
+                        }}>
+                          {option.label}
+                        </Avatar>
+                        <Typography variant="body1" sx={{ fontWeight: 500, flex: 1 }}>
+                          {option.text}
+                        </Typography>
+                        {selectedAnswer === option.id && (
+                          <CheckIcon sx={{ color: 'white', fontSize: 24 }} />
+                        )}
+                      </Box>
+                    </Button>
+                  ))}
+                </Stack>
+
+                {/* Action Buttons */}
+                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+                  <Button
+                    variant="contained"
+                    onClick={handleAnswerSubmit}
+                    disabled={!selectedAnswer}
+                    sx={{
+                      borderRadius: 3,
+                      py: 1.5,
+                      px: 4,
+                      background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                      boxShadow: '0 8px 25px rgba(16, 185, 129, 0.3)',
+                      fontWeight: 700,
+                      fontSize: '16px',
+                      textTransform: 'none',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                        boxShadow: '0 12px 35px rgba(16, 185, 129, 0.4)',
+                        transform: 'translateY(-2px)',
+                      },
+                      '&:disabled': {
+                        background: 'rgba(255, 255, 255, 0.2)',
+                        color: 'rgba(255, 255, 255, 0.5)',
+                      }
+                    }}
+                  >
+                    ✅ Confirmar Respuesta
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={handleSkipQuestion}
+                    sx={{
+                      borderRadius: 3,
+                      py: 1.5,
+                      px: 3,
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
                       color: 'white',
                       fontWeight: 600,
+                      textTransform: 'none',
+                      '&:hover': {
+                        borderColor: 'rgba(255, 255, 255, 0.5)',
+                        background: 'rgba(255, 255, 255, 0.1)',
+                      }
                     }}
-                  />
+                  >
+                    ⏭️ Omitir
+                  </Button>
+                </Box>
 
-                  {activeQuestion.reward && (
-                    <Box sx={{ display: 'flex', gap: 1 }}>
+                {/* Question Timer Progress */}
+                {isQuestionTimerActive && (
+                  <Box sx={{ mt: 3 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 500 }}>
+                        ⏱️ Tiempo restante
+                      </Typography>
+                      <Typography variant="body1" sx={{ color: 'white', fontWeight: 700 }}>
+                        {questionTimeRemaining}s
+                      </Typography>
+                    </Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={questionProgress}
+                      sx={{
+                        height: 8,
+                        borderRadius: 4,
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 4,
+                          background: questionProgress > 30 
+                            ? 'linear-gradient(90deg, #10b981 0%, #34d399 100%)'
+                            : 'linear-gradient(90deg, #ef4444 0%, #f87171 100%)',
+                          transition: 'background 0.3s ease',
+                        },
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {/* Reward Preview */}
+                {activeQuestion.reward && (
+                  <Box sx={{ 
+                    mt: 3, 
+                    p: 2, 
+                    background: 'rgba(255, 255, 255, 0.1)', 
+                    borderRadius: 2,
+                    textAlign: 'center'
+                  }}>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)', mb: 1 }}>
+                      🎁 Recompensa por respuesta correcta:
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                       <Chip
                         icon={<DiamondIcon />}
-                        label={`+${activeQuestion.reward.merits}`}
-                        size="small"
+                        label={`+${activeQuestion.reward.merits} Mëritos`}
                         sx={{
-                          backgroundColor: '#fbbf24',
-                          color: 'white',
+                          bgcolor: 'rgba(251, 191, 36, 0.2)',
+                          color: '#fbbf24',
                           fontWeight: 600,
+                          border: '1px solid rgba(251, 191, 36, 0.3)',
                         }}
                       />
                       <Chip
                         icon={<BoltIcon />}
-                        label={`+${activeQuestion.reward.ondas}`}
-                        size="small"
+                        label={`+${activeQuestion.reward.ondas} Öndas`}
                         sx={{
-                          backgroundColor: '#10b981',
-                          color: 'white',
+                          bgcolor: 'rgba(16, 185, 129, 0.2)',
+                          color: '#10b981',
                           fontWeight: 600,
+                          border: '1px solid rgba(16, 185, 129, 0.3)',
                         }}
                       />
                     </Box>
-                  )}
-                </Stack>
-
-                <Typography
-                  variant="h5"
-                  sx={{
-                    color: 'white',
-                    fontFamily: 'Roboto',
-                    fontSize: '20px',
-                    fontWeight: 500,
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {activeQuestion.question}
-                </Typography>
-              </Box>
-
-              {/* Answer options */}
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: 2,
-                  justifyContent: 'center',
-                  flexWrap: 'wrap',
-                  px: 1,
-                }}
-              >
-                {activeQuestion.options.map((option) => (
-                  <Card
-                    key={option.id}
-                    sx={{
-                      minWidth:
-                        activeQuestion.type === 'true-false' ? 200 : 240,
-                      maxWidth:
-                        activeQuestion.type === 'true-false' ? 250 : 320,
-                      cursor: 'pointer',
-                      borderRadius: '16px',
-                      backgroundColor:
-                        selectedAnswer === option.id
-                          ? 'rgba(103, 80, 164, 0.95)'
-                          : 'rgba(255, 255, 255, 0.95)',
-                      color:
-                        selectedAnswer === option.id
-                          ? 'white'
-                          : 'rgba(66, 65, 65, 0.87)',
-                      transform:
-                        selectedAnswer === option.id
-                          ? 'scale(1.05)'
-                          : 'scale(1)',
-                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                      boxShadow:
-                        selectedAnswer === option.id
-                          ? '0px 8px 32px rgba(103, 80, 164, 0.5)'
-                          : '0px 4px 16px rgba(0, 0, 0, 0.2)',
-                      border:
-                        selectedAnswer === option.id
-                          ? '3px solid rgba(103, 80, 164, 0.8)'
-                          : '2px solid rgba(255, 255, 255, 0.3)',
-                      backdropFilter: 'blur(12px)',
-                      '&:hover': {
-                        transform: 'scale(1.03)',
-                        backgroundColor:
-                          selectedAnswer === option.id
-                            ? 'rgba(103, 80, 164, 1)'
-                            : 'rgba(255, 255, 255, 1)',
-                        boxShadow:
-                          selectedAnswer === option.id
-                            ? '0px 12px 40px rgba(103, 80, 164, 0.6)'
-                            : '0px 6px 20px rgba(0, 0, 0, 0.25)',
-                      },
-                    }}
-                    onClick={() => handleAnswerSelect(option.id)}
-                  >
-                    <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
-                      <Typography
-                        variant="h4"
-                        sx={{
-                          fontFamily: 'Roboto',
-                          fontSize: '24px',
-                          fontWeight: 700,
-                          textAlign: 'center',
-                          mb: 1.5,
-                          letterSpacing: '1px',
-                        }}
-                      >
-                        {option.label}
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          fontFamily: 'Roboto',
-                          fontSize: '15px',
-                          fontWeight: 400,
-                          lineHeight: 1.4,
-                          textAlign: 'center',
-                        }}
-                      >
-                        {option.text}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                ))}
-              </Box>
-
-              {/* Action buttons */}
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  gap: 2,
-                  mt: 3,
-                }}
-              >
-                {selectedAnswer && (
-                  <Button
-                    variant="contained"
-                    onClick={handleAnswerSubmit}
-                    startIcon={<CheckCircleIcon />}
-                    sx={{
-                      backgroundColor: '#10b981',
-                      color: 'white',
-                      borderRadius: '24px',
-                      px: 4,
-                      py: 1.5,
-                      fontFamily: 'Roboto',
-                      fontSize: '16px',
-                      fontWeight: 600,
-                      textTransform: 'none',
-                      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
-                      '&:hover': {
-                        backgroundColor: '#059669',
-                        boxShadow: '0 6px 20px rgba(16, 185, 129, 0.5)',
-                        transform: 'translateY(-2px)',
-                      },
-                    }}
-                  >
-                    Confirmar Respuesta
-                  </Button>
-                )}
-
-                <Button
-                  variant="outlined"
-                  onClick={handleSkipQuestion}
-                  startIcon={<CancelIcon />}
-                  sx={{
-                    borderColor: 'rgba(255,255,255,0.5)',
-                    color: 'white',
-                    borderRadius: '24px',
-                    px: 3,
-                    py: 1.5,
-                    fontFamily: 'Roboto',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    textTransform: 'none',
-                    '&:hover': {
-                      borderColor: 'white',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                    },
-                  }}
-                >
-                  Omitir
-                </Button>
-              </Box>
-
-              {/* Hint display */}
-              {showQuestionHint && questionTimeRemaining > 5 && (
-                <Fade in={true}>
-                  <Box
-                    sx={{
-                      textAlign: 'center',
-                      mt: 2,
-                      p: 1.5,
-                      backgroundColor: 'rgba(245, 158, 11, 0.9)',
-                      borderRadius: 2,
-                      color: 'white',
-                    }}
-                  >
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      💡 Recuerda: En CoomÜnity valoramos la reciprocidad y el
-                      bien común
-                    </Typography>
                   </Box>
-                </Fade>
-              )}
-            </Box>
+                )}
+              </CardContent>
+            </Card>
           )}
         </Box>
       </Fade>

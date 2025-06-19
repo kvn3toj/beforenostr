@@ -236,34 +236,44 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
     const resolveVideoUrl = async () => {
       console.log('🎬 Resolving video URL for:', videoData.id);
 
-      // Check video availability first
-      await checkVideoAvailability();
-
-      // 🎯 PRIORIDAD MÁXIMA: Si VITE_FORCE_YOUTUBE_VIDEOS está habilitado Y la URL es de YouTube, usarla directamente
-      const forceYouTube = import.meta.env.VITE_FORCE_YOUTUBE_VIDEOS === 'true';
+      // 🎯 PRIORIDAD MÁXIMA: Si la URL es de YouTube, usarla directamente con embed format
       const isYouTubeUrl = videoData.url && (
         videoData.url.includes('youtube.com') || 
         videoData.url.includes('youtu.be')
       );
 
-      if (forceYouTube && isYouTubeUrl) {
-        console.log('🎯 [FORZADO YOUTUBE] Using YouTube URL directly:', videoData.url);
-        setActualVideoUrl(videoData.url);
+      if (isYouTubeUrl) {
+        console.log('🎯 [YOUTUBE] Detected YouTube URL, using embed format:', videoData.url);
+        
+        // Validate YouTube URL first
+        const isValidYouTubeUrl = await checkVideoAvailability(videoData.url);
+        
+        if (isValidYouTubeUrl) {
+          console.log('✅ YouTube URL is valid, setting as actual URL');
+          setActualVideoUrl(videoData.url);
+        } else {
+          console.warn('⚠️ YouTube URL validation failed, but proceeding anyway:', videoData.url);
+          setActualVideoUrl(videoData.url);
+        }
         return;
       }
 
-      // Try to find a working video URL solo si NO es YouTube forzado
-      const workingUrl = await findWorkingVideoUrl(videoData.id);
-
-      if (workingUrl) {
-        console.log('✅ Using working video URL:', workingUrl);
-        setActualVideoUrl(workingUrl);
+      // For non-YouTube videos, check if the direct URL works
+      if (videoData.url) {
+        console.log('🔍 Checking non-YouTube video URL availability:', videoData.url);
+        
+        const isAvailable = await checkVideoAvailability(videoData.url);
+        
+        if (isAvailable) {
+          console.log('✅ Direct video URL is available:', videoData.url);
+          setActualVideoUrl(videoData.url);
+        } else {
+          console.error('🚫 Direct video URL is not available, using anyway:', videoData.url);
+          setActualVideoUrl(videoData.url);
+        }
       } else {
-        console.error(
-          '🚫 No working video URL found, using original:',
-          videoData.url
-        );
-        setActualVideoUrl(videoData.url);
+        console.error('🚫 No video URL provided for videoData.id:', videoData.id);
+        setActualVideoUrl('');
       }
     };
 
@@ -770,18 +780,35 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
             trackVideoInteraction('pause');
           }}
           onProgress={(state) => {
-            setCurrentTime(state.playedSeconds);
-            updateWatchTime(state.playedSeconds);
+            const currentTime = state.playedSeconds;
+            setCurrentTime(currentTime);
+            updateWatchTime(currentTime);
             
-            // Manejar preguntas
+            // 🎯 [CORREGIDO] Manejar preguntas con la lógica correcta
             if (questionsData.length > 0) {
-              const activeQuestion = questionsData.find(
-                (q) => Math.abs(q.time - state.playedSeconds) < 1 && !answeredQuestions.includes(q.id)
+              const candidateQuestion = questionsData.find(
+                (q) => {
+                  const isInTimeRange = currentTime >= q.timestamp && currentTime <= q.endTimestamp;
+                  const notAnswered = !answeredQuestions.has(q.id);
+                  const noActiveQuestion = !activeQuestion;
+                  
+                  return isInTimeRange && notAnswered && noActiveQuestion;
+                }
               );
-                             if (activeQuestion) {
-                 setCurrentQuestion(activeQuestion);
-                 setIsPlaying(false);
-               }
+
+              if (candidateQuestion) {
+                console.log('🚀 [ReactPlayer] ACTIVATING QUESTION:', {
+                  questionId: candidateQuestion.id,
+                  question: candidateQuestion.question.substring(0, 50) + '...',
+                  timestamp: candidateQuestion.timestamp,
+                  currentTime: currentTime.toFixed(2),
+                });
+                
+                setActiveQuestion(candidateQuestion);
+                setSelectedAnswer(null);
+                setIsPlaying(false);
+                startQuestionTimer(candidateQuestion.timeLimit || 20);
+              }
             }
           }}
           onDuration={(duration) => {
@@ -789,8 +816,12 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
             setIsLoading(false);
           }}
           onError={(error) => {
-            console.error('ReactPlayer error:', error);
-            setVideoError(`Error loading YouTube video: ${error}`);
+            console.error('ReactPlayer YouTube error:', error);
+            setVideoError(`Error loading YouTube video. Please check the video URL: ${actualVideoUrl}`);
+            setIsLoading(false);
+          }}
+          onReady={() => {
+            console.log('✅ ReactPlayer YouTube video ready');
             setIsLoading(false);
           }}
           onEnded={handleVideoEnd}
@@ -800,6 +831,23 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
             position: 'absolute',
             top: 0,
             left: 0,
+          }}
+          config={{
+            youtube: {
+              playerVars: {
+                showinfo: 0,
+                controls: 0,
+                disablekb: 1,
+                rel: 0,
+                modestbranding: 1,
+                iv_load_policy: 3,
+                fs: 1,
+                cc_load_policy: 0,
+                enablejsapi: 1,
+                origin: window.location.origin,
+                autoplay: autoplay ? 1 : 0,
+              },
+            },
           }}
         />
       ) : (

@@ -26,6 +26,7 @@ import { useSmartQuery } from '../hooks/useSmartQuery';
 // import { getItemById, marketplaceMockData } from '../data/marketplaceMockData';
 
 // Mock database - En producción esto vendría de la API
+/*
 const mockProducts: Record<string, Product> = {
   'blockchain-consulting-001': {
     id: 'blockchain-consulting-001',
@@ -499,6 +500,7 @@ const mockProducts: Record<string, Product> = {
     },
   },
 };
+*/
 
 export const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -507,197 +509,194 @@ export const ProductDetail: React.FC = () => {
 
   // Función para generar producto dinámico basado en ID
   const generateProductFromId = (productId: string): Product => {
-    // Primero buscar en los datos mock nuevos del marketplace
-    // Mock function disabled during Phase 2 elimination
-    // const mockItem = getItemById(productId);
-    const mockItem = null;
-    if (mockItem) {
-      // Convertir formato de mock a formato Product esperado por ProductDetailView
-      return {
-        id: mockItem.id,
-        title: mockItem.title,
-        description: mockItem.description,
-        fullDescription: mockItem.fullDescription || mockItem.description,
-        price: mockItem.price,
-        originalPrice: mockItem.originalPrice,
-        currency: mockItem.currency === 'LUKAS' ? 'ü' : mockItem.currency,
-        category: mockItem.category,
-        subcategory: mockItem.type,
-        tags: mockItem.tags,
-        images: mockItem.images,
-        mainImage: mockItem.images[0],
-        seller: {
-          id: mockItem.seller.id,
-          name: `${mockItem.seller.firstName} ${mockItem.seller.lastName}`,
-          username: mockItem.seller.username,
-          avatar: mockItem.seller.avatarUrl,
-          coverImage:
-            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=400&fit=crop',
-          bio: mockItem.seller.bio || 'Emprendedor Confiable de CoomÜnity',
-          location: mockItem.seller.location || mockItem.location,
-          verified: mockItem.seller.verified || true,
-          badges: [
-            {
-              id: 'coomunity-verified',
-              name: 'Emprendedor Confiable',
-              description: 'Verificado por la comunidad CoomÜnity',
-              icon: 'verified',
-              color: '#4CAF50',
-              earnedAt: new Date('2023-01-15'),
-              category: 'verification',
-            },
-          ],
-          rating: mockItem.seller.rating || mockItem.rating,
-          reviewCount: mockItem.seller.reviewCount || mockItem.reviewCount,
-          responseTime: mockItem.seller.responseTime || '2 horas',
-          responseRate: 98,
-          completionRate: 100,
-          isOnline: mockItem.seller.isOnline || false,
-          lastSeen: new Date(),
-          isActive: true,
-          contactMethods: [
-            {
-              type: 'message',
-              label: 'Mensaje directo',
-              available: true,
-              preferred: true,
-            },
-            {
-              type: 'video',
-              label: 'Videollamada',
-              available: true,
-            },
-          ],
-          salesCount: Math.floor(Math.random() * 200) + 50,
-          yearsActive: 3,
-          languagesSpoken: ['Español'],
-          allowMessages: true,
-          memberSince: new Date(mockItem.seller.memberSince || '2021-01-01'),
-          availability: {
-            timezone: 'America/Lima',
-            schedule: {
-              monday: { available: true, start: '09:00', end: '18:00' },
-              tuesday: { available: true, start: '09:00', end: '18:00' },
-              wednesday: { available: true, start: '09:00', end: '18:00' },
-              thursday: { available: true, start: '09:00', end: '18:00' },
-              friday: { available: true, start: '09:00', end: '17:00' },
-              saturday: { available: false },
-              sunday: { available: false },
-            },
-          },
-        },
-        features: [
-          'Servicio personalizado',
-          'Garantía de calidad',
-          'Soporte post-entrega',
-          'Metodología probada',
-          'Enfoque en el bien común',
-          'Impacto social medible',
-        ],
-        specifications: {
-          Tipo: mockItem.type,
-          Categoría: mockItem.category,
-          'Nivel de Impacto': mockItem.impactLevel,
-          'Score de Sostenibilidad': `${mockItem.sustainabilityScore}/100`,
-          'Categoría Ayni': mockItem.ayniCategory,
-        },
-        includes: [
-          'Consulta inicial',
-          'Desarrollo del servicio/producto',
-          'Documentación completa',
-          'Soporte técnico',
-          'Garantía de satisfacción',
-        ],
-        requirements: [
-          'Reunión inicial para definir objetivos',
-          'Comunicación fluida durante el proceso',
-          'Feedback constructivo',
-        ],
-        rating: mockItem.rating,
-        reviewCount: mockItem.reviewCount,
-        reviews: [
+    // Producto genérico por defecto como último recurso
+    return {
+      id: productId,
+      title: 'Servicio de Desarrollo Web',
+      description:
+        'Desarrollo de aplicaciones web modernas con React y Node.js. Incluye diseño responsive y SEO optimizado.',
+      fullDescription: `
+        Ofrecemos servicios completos de desarrollo web utilizando las últimas tecnologías y mejores prácticas de la industria.
+
+        **Nuestros servicios incluyen:**
+        - Desarrollo frontend con React/Vue.js
+        - Backend con Node.js/Python
+        - Bases de datos SQL y NoSQL
+        - Integración de APIs REST
+        - Diseño responsive
+        - Optimización SEO
+
+        **Proceso de trabajo:**
+        1. Análisis de requisitos
+        2. Diseño y prototipado
+        3. Desarrollo iterativo
+        4. Testing y QA
+        5. Deployment
+        6. Soporte y mantenimiento
+      `,
+      price: 450,
+      originalPrice: 650,
+      currency: 'ü',
+      category: 'Tecnología',
+      subcategory: 'Desarrollo Web',
+      tags: ['React', 'Node.js', 'JavaScript', 'Web Development', 'SEO'],
+      images: [
+        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop',
+      ],
+      mainImage:
+        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop',
+      seller: {
+        id: 'seller-002',
+        name: 'Ana López',
+        username: '@analopez',
+        avatar:
+          'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop&crop=face',
+        coverImage:
+          'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=400&fit=crop',
+        bio: 'Full Stack Developer con experiencia en React, Node.js y tecnologías modernas. Apasionada por crear experiencias web excepcionales.',
+        location: 'Barcelona, España',
+        verified: true,
+        badges: [
           {
-            id: 'review-mock-1',
-            productId: mockItem.id,
-            reviewerId: 'user-mock-1',
-            reviewer: {
-              name: 'Usuario Satisfecho',
-              avatar:
-                'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=50&h=50&fit=crop&crop=face',
-              verified: true,
-            },
-            rating: 5,
-            title: 'Excelente servicio',
-            comment:
-              'Muy profesional y con gran impacto social. Lo recomiendo totalmente.',
-            helpful: 12,
-            notHelpful: 0,
-            createdAt: new Date('2024-01-10'),
-            verifiedPurchase: true,
-            aspects: {
-              communication: 5,
-              quality: 5,
-              delivery: 5,
-              value: 5,
-            },
+            id: 'pro-dev',
+            name: 'Desarrollador Pro',
+            description: 'Desarrollador certificado',
+            icon: 'code',
+            color: '#10b981',
+            earnedAt: new Date('2023-05-10'),
+            category: 'verification',
           },
         ],
-        location: mockItem.location,
-        deliveryOptions: [
+        rating: 4.8,
+        reviewCount: 56,
+        responseTime: '1 hora',
+        responseRate: 100,
+        completionRate: 95,
+        isOnline: false,
+        lastSeen: new Date(),
+        isActive: true,
+        contactMethods: [
           {
-            id: 'standard',
-            name: 'Entrega Estándar',
-            description: 'Modalidad de entrega estándar',
-            price: 0,
-            estimatedTime: '2-4 semanas',
-            type: 'standard',
+            type: 'message',
+            label: 'Mensaje directo',
+            available: true,
+            preferred: true,
+          },
+          {
+            type: 'video',
+            label: 'Videollamada',
             available: true,
           },
         ],
-        status: 'active',
-        featured: mockItem.featured,
-        trending: mockItem.trending,
-        urgent: false,
-        is24Hours: false,
-        hasVideo: false,
-        viewCount: mockItem.viewCount,
-        favoriteCount: mockItem.favoriteCount,
-        shareCount: 0,
-        discount: mockItem.originalPrice
-          ? Math.round(
-              ((mockItem.originalPrice - mockItem.price) /
-                mockItem.originalPrice) *
-                100
-            )
-          : undefined,
-        createdAt: new Date(mockItem.createdAt),
-        updatedAt: new Date(),
-        publishedAt: new Date(mockItem.createdAt),
-        type: mockItem.type.toLowerCase() as 'product' | 'service',
-        serviceType: 'hybrid',
+        salesCount: 78,
+        yearsActive: 2,
+        languagesSpoken: ['Español', 'Inglés'],
+        allowMessages: true,
+        memberSince: new Date('2022-03-15'),
         availability: {
-          available: true,
-          nextAvailable: new Date('2024-02-01'),
+          timezone: 'Europe/Madrid',
+          schedule: {
+            monday: { available: true, start: '10:00', end: '19:00' },
+            tuesday: { available: true, start: '10:00', end: '19:00' },
+            wednesday: { available: true, start: '10:00', end: '19:00' },
+            thursday: { available: true, start: '10:00', end: '19:00' },
+            friday: { available: true, start: '10:00', end: '18:00' },
+            saturday: { available: false },
+            sunday: { available: false },
+          },
         },
-      };
-    }
-
-    // Si existe en la base de datos mock legacy, usar eso
-    if (mockProducts[productId]) {
-      return mockProducts[productId];
-    }
-
-    // Generar producto dinámico basado en el ID usando datos del array
-    // Mock data disabled during Phase 2 elimination
-    // if (marketplaceMockData.length > 0) {
-    //   const baseItem = marketplaceMockData[0];
-    //   return generateProductFromId(baseItem.id);
-    // }
-
-    // Producto genérico por defecto como último recurso
-    return {
-      ...mockProducts['default-product'],
-      id: productId,
+      },
+      features: [
+        'Desarrollo responsive',
+        'Optimización SEO',
+        'Integración de APIs',
+        'Panel de administración',
+        'Soporte técnico 60 días',
+        'Código fuente incluido',
+      ],
+      specifications: {
+        Duración: '2-4 semanas',
+        Tecnologías: 'React, Node.js, MongoDB',
+        Entregables: 'Aplicación + Documentación',
+        Garantía: '60 días',
+        Revisiones: '3 incluidas',
+        Hosting: 'Configurable',
+      },
+      includes: [
+        'Análisis de requisitos',
+        'Diseño de interfaz',
+        'Desarrollo completo',
+        'Testing integral',
+        'Documentación técnica',
+        'Capacitación básica',
+      ],
+      requirements: [
+        'Brief detallado del proyecto',
+        'Contenido y recursos gráficos',
+        'Acceso a hosting (si aplica)',
+      ],
+      rating: 4.8,
+      reviewCount: 56,
+      reviews: [
+        {
+          id: 'review-003',
+          productId: productId,
+          reviewerId: 'user-003',
+          reviewer: {
+            name: 'Carlos Ruiz',
+            avatar:
+              'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face',
+            verified: true,
+          },
+          rating: 5,
+          title: 'Trabajo excepcional',
+          comment:
+            'Ana desarrolló nuestra aplicación web exactamente como la imaginamos. Muy profesional y cumplió con todos los plazos.',
+          helpful: 8,
+          notHelpful: 0,
+          createdAt: new Date('2024-01-08'),
+          verifiedPurchase: true,
+          aspects: {
+            communication: 5,
+            quality: 5,
+            delivery: 4,
+            value: 5,
+          },
+        },
+      ],
+      location: 'Barcelona, España',
+      deliveryOptions: [
+        {
+          id: 'remote',
+          name: 'Desarrollo Remoto',
+          description: 'Trabajo completamente online',
+          price: 0,
+          estimatedTime: '2-4 semanas',
+          type: 'digital',
+          available: true,
+        },
+      ],
+      status: 'active',
+      featured: false,
+      trending: true,
+      urgent: false,
+      is24Hours: false,
+      hasVideo: false,
+      viewCount: 856,
+      favoriteCount: 45,
+      shareCount: 12,
+      discount: 31,
+      createdAt: new Date('2023-11-15'),
+      updatedAt: new Date('2024-01-18'),
+      publishedAt: new Date('2023-11-16'),
+      type: 'service',
+      serviceType: 'online',
+      availability: {
+        available: true,
+        nextAvailable: new Date('2024-02-01'),
+      },
     };
   };
 
