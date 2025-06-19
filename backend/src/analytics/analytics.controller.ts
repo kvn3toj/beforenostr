@@ -8,6 +8,11 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
 import { Roles } from '../rbac/decorators/roles.decorator';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  TimeSeriesDataPoint,
+  ContentViewMetric,
+  ContentInteractionMetric
+} from './types/analytics.types';
 
 @ApiTags('analytics')
 @ApiBearerAuth()
@@ -15,7 +20,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiQuery } from '@ne
 @Controller('analytics')
 export class AnalyticsController {
   constructor(@Inject(AnalyticsService) private readonly analyticsService: AnalyticsService) {
-// //     console.log('>>> AnalyticsController CONSTRUCTOR: this.analyticsService IS', this.analyticsService ? 'DEFINED' : 'UNDEFINED');
+    // console.log('>>> AnalyticsController CONSTRUCTOR: this.analyticsService IS', this.analyticsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   // Endpoints de engagement de usuarios (ya implementados)
@@ -84,7 +89,7 @@ export class AnalyticsController {
     @Query('interval') interval?: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-  ) {
+  ): Promise<TimeSeriesDataPoint[]> {
     return this.analyticsService.getUsersCreatedOverTime({ interval, startDate, endDate });
   }
 
@@ -99,7 +104,7 @@ export class AnalyticsController {
     @Query('interval') interval?: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-  ) {
+  ): Promise<TimeSeriesDataPoint[]> {
     return this.analyticsService.getPlaylistsCreatedOverTime({ interval, startDate, endDate });
   }
 
@@ -114,7 +119,7 @@ export class AnalyticsController {
     @Query('interval') interval?: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-  ) {
+  ): Promise<TimeSeriesDataPoint[]> {
     return this.analyticsService.getMundosCreatedOverTime({ interval, startDate, endDate });
   }
 
@@ -122,7 +127,7 @@ export class AnalyticsController {
   @UseGuards(RolesGuard)
   @Roles('admin')
   @ApiOperation({ summary: 'Get top viewed playlists' })
-  async getTopViewedPlaylists() {
+  async getTopViewedPlaylists(): Promise<ContentViewMetric[]> {
     return this.analyticsService.getTopViewedPlaylists();
   }
 
@@ -130,7 +135,7 @@ export class AnalyticsController {
   @UseGuards(RolesGuard)
   @Roles('admin')
   @ApiOperation({ summary: 'Get top viewed mundos' })
-  async getTopViewedMundos() {
+  async getTopViewedMundos(): Promise<ContentViewMetric[]> {
     return this.analyticsService.getTopViewedMundos();
   }
 
@@ -145,7 +150,7 @@ export class AnalyticsController {
     @Query('interval') interval?: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-  ) {
+  ): Promise<TimeSeriesDataPoint[]> {
     return this.analyticsService.getActiveUsersOverTime({ interval, startDate, endDate });
   }
 
@@ -153,7 +158,7 @@ export class AnalyticsController {
   @UseGuards(RolesGuard)
   @Roles('admin')
   @ApiOperation({ summary: 'Get top interacted content' })
-  async getTopInteractedContent() {
+  async getTopInteractedContent(): Promise<ContentInteractionMetric[]> {
     return this.analyticsService.getTopInteractedContent();
   }
 
@@ -161,7 +166,7 @@ export class AnalyticsController {
   @UseGuards(RolesGuard)
   @Roles('admin')
   @ApiOperation({ summary: 'Get least viewed playlists' })
-  async getLeastViewedPlaylists() {
+  async getLeastViewedPlaylists(): Promise<ContentViewMetric[]> {
     return this.analyticsService.getLeastViewedPlaylists();
   }
 
@@ -169,7 +174,7 @@ export class AnalyticsController {
   @UseGuards(RolesGuard)
   @Roles('admin')
   @ApiOperation({ summary: 'Get least viewed mundos' })
-  async getLeastViewedMundos() {
+  async getLeastViewedMundos(): Promise<ContentViewMetric[]> {
     return this.analyticsService.getLeastViewedMundos();
   }
 
@@ -177,7 +182,7 @@ export class AnalyticsController {
   @UseGuards(RolesGuard)
   @Roles('admin')
   @ApiOperation({ summary: 'Get least interacted playlists' })
-  async getLeastInteractedPlaylists() {
+  async getLeastInteractedPlaylists(): Promise<ContentInteractionMetric[]> {
     return this.analyticsService.getLeastInteractedPlaylists();
   }
 
@@ -185,7 +190,7 @@ export class AnalyticsController {
   @UseGuards(RolesGuard)
   @Roles('admin')
   @ApiOperation({ summary: 'Get least interacted mundos' })
-  async getLeastInteractedMundos() {
+  async getLeastInteractedMundos(): Promise<ContentInteractionMetric[]> {
     return this.analyticsService.getLeastInteractedMundos();
   }
 
@@ -217,8 +222,8 @@ export class AnalyticsController {
   @UseGuards(RolesGuard)
   @Roles('admin')
   @ApiOperation({ summary: 'Get video analytics summary' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Video analytics data retrieved successfully',
     schema: {
       type: 'object',
@@ -260,8 +265,8 @@ export class AnalyticsController {
   // Nuevos endpoints requeridos por el reporte de integración
   @Get('/dashboard-metrics')
   @ApiOperation({ summary: 'Get comprehensive dashboard metrics for SuperApp' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Dashboard metrics retrieved successfully',
     schema: {
       type: 'object',
@@ -281,8 +286,8 @@ export class AnalyticsController {
 
   @Get('/system-health')
   @ApiOperation({ summary: 'Get system health status and metrics' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'System health retrieved successfully',
     schema: {
       type: 'object',
@@ -299,4 +304,4 @@ export class AnalyticsController {
   async getSystemHealth() {
     return this.analyticsService.getSystemHealth();
   }
-} 
+}

@@ -2,32 +2,12 @@ import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserEngagementDto } from './dto/create-user-engagement.dto';
 import { UserEngagement } from '@prisma/client'; // Import UserEngagement type from Prisma client
-
-interface TimeRangeParams {
-  interval?: string;
-  startDate?: string;
-  endDate?: string;
-}
-
-interface TimeSeriesDataPoint {
-  time_period: string;
-  count: number;
-}
-
-interface ContentViewMetric {
-  id: string;
-  name: string;
-  view_count: number;
-  thumbnail_url?: string;
-}
-
-interface ContentInteractionMetric {
-  id: string;
-  name: string;
-  interaction_count: number;
-  content_type: 'playlist' | 'mundo';
-  thumbnail_url?: string;
-}
+import {
+  TimeRangeParams,
+  TimeSeriesDataPoint,
+  ContentViewMetric,
+  ContentInteractionMetric
+} from './types/analytics.types';
 
 @Injectable()
 export class AnalyticsService {
@@ -383,7 +363,7 @@ export class AnalyticsService {
     try {
       // TODO: Implementar lógica real con agregaciones de Prisma
       // Por ahora devolvemos datos simulados con la estructura correcta
-      
+
       // Intentar obtener el conteo real de videos
       let totalVideos = 42; // Valor por defecto
       try {
@@ -411,7 +391,7 @@ export class AnalyticsService {
             duration: 300
           },
           {
-            id: '2', 
+            id: '2',
             title: 'Principios de Ayni',
             views: 1800,
             duration: 240
@@ -449,7 +429,7 @@ export class AnalyticsService {
   async getDashboardMetrics() {
     try {
       console.log('[AnalyticsService] Getting dashboard metrics...');
-      
+
       // Obtener métricas básicas del sistema
       const [totalUsers, totalPlaylists, totalMundos, totalContentItems, recentEngagement] = await Promise.all([
         this.prisma.user.count(),
@@ -548,7 +528,7 @@ export class AnalyticsService {
   async getSystemHealth() {
     try {
       console.log('[AnalyticsService] Checking system health...');
-      
+
       const startTime = Date.now();
       let databaseStatus = 'healthy';
       let dbResponseTime = 0;
@@ -558,7 +538,7 @@ export class AnalyticsService {
         const dbStart = Date.now();
         await this.prisma.$queryRaw`SELECT 1`;
         dbResponseTime = Date.now() - dbStart;
-        
+
         if (dbResponseTime > 1000) {
           databaseStatus = 'warning';
         } else if (dbResponseTime > 2000) {
@@ -646,4 +626,4 @@ export class AnalyticsService {
       };
     }
   }
-} 
+}
