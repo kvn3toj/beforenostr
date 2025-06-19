@@ -1,0 +1,17 @@
+[phases.setup]
+nixPkgs = ["nodejs_18", "npm"]
+
+[phases.install]
+cmds = [
+  "npm ci",
+  "npx prisma generate"
+]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "node dist/main.js"
+
+[variables]
+NODE_ENV = "production"
