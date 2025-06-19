@@ -1,0 +1,421 @@
+/* ===============================================================================
+   🎮 UPLAY MODULE - ADVANCED VISUAL EFFECTS
+   Basado en los efectos visuales del Home de CoomÜnity SuperApp
+   =============================================================================== */
+
+/* ===== VARIABLES DE TEMA UPLAY ===== */
+:root {
+  /* 🎮 Colores Primarios UPlay */
+  --uplay-primary: #6366f1;
+  --uplay-primary-light: #818cf8;
+  --uplay-primary-dark: #4f46e5;
+  --uplay-secondary: #a855f7;
+  --uplay-secondary-light: #c084fc;
+  --uplay-secondary-dark: #9333ea;
+  
+  /* 🏆 Colores de Gamificación */
+  --uplay-meritos: #7c3aed;
+  --uplay-ondas: #f59e0b;
+  --uplay-achievement: #10b981;
+  --uplay-legendary: #fbbf24;
+  --uplay-rare: #8b5cf6;
+  --uplay-common: #6b7280;
+  
+  /* 🌟 Efectos Visuales */
+  --uplay-glow-primary: 0 0 20px rgba(99, 102, 241, 0.4);
+  --uplay-glow-secondary: 0 0 20px rgba(168, 85, 247, 0.4);
+  --uplay-glow-achievement: 0 0 25px rgba(16, 185, 129, 0.5);
+  --uplay-glow-legendary: 0 0 30px rgba(251, 191, 36, 0.6);
+  
+  /* 📏 Dimensiones */
+  --uplay-border-radius: 16px;
+  --uplay-card-spacing: 24px;
+  --uplay-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== ANIMACIONES UPLAY ===== */
+
+@keyframes uplay-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes uplay-sparkle {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: rotate(90deg) scale(1.1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(180deg) scale(1);
+    opacity: 1;
+  }
+  75% {
+    transform: rotate(270deg) scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes uplay-achievement-glow {
+  0%, 100% {
+    box-shadow: var(--uplay-glow-achievement);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: var(--uplay-glow-legendary);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes uplay-floating {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes uplay-celebration {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.2) rotate(5deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.1) rotate(-5deg);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(1.15) rotate(3deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes uplay-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes uplay-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ===== GLASSMORPHISM UPLAY ===== */
+
+.uplay-glassmorphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--uplay-border-radius);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.uplay-glassmorphism-primary {
+  background: rgba(99, 102, 241, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(99, 102, 241, 0.2),
+    inset 0 1px 0 rgba(99, 102, 241, 0.3);
+}
+
+/* ===== CARDS INTERACTIVOS UPLAY ===== */
+
+.uplay-card-enhanced {
+  position: relative;
+  overflow: hidden;
+  transition: var(--uplay-transition);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.uplay-card-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: 1;
+}
+
+.uplay-card-enhanced:hover::before {
+  left: 100%;
+}
+
+.uplay-card-enhanced:hover {
+  transform: translateY(-8px) rotateX(5deg);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    var(--uplay-glow-primary);
+}
+
+/* ===== VIDEO CARDS UPLAY ===== */
+
+.uplay-video-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--uplay-border-radius);
+  transition: var(--uplay-transition);
+}
+
+.uplay-video-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(168, 85, 247, 0.1) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.uplay-video-card:hover::after {
+  opacity: 1;
+}
+
+.uplay-video-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.15),
+    var(--uplay-glow-primary);
+}
+
+/* ===== ACHIEVEMENT SYSTEM ===== */
+
+.uplay-achievement-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--uplay-border-radius);
+  transition: var(--uplay-transition);
+}
+
+.uplay-achievement-card.unlocked {
+  animation: uplay-achievement-glow 2s ease-in-out infinite;
+}
+
+.uplay-achievement-card.legendary {
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.2) 0%,
+    rgba(245, 158, 11, 0.1) 100%
+  );
+  border: 2px solid rgba(251, 191, 36, 0.5);
+}
+
+.uplay-achievement-card.epic {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.2) 0%,
+    rgba(124, 58, 237, 0.1) 100%
+  );
+  border: 2px solid rgba(139, 92, 246, 0.5);
+}
+
+/* ===== PROGRESS BARS UPLAY ===== */
+
+.uplay-progress-container {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.uplay-progress-bar {
+  height: 8px;
+  background: linear-gradient(
+    90deg,
+    var(--uplay-primary) 0%,
+    var(--uplay-secondary) 100%
+  );
+  border-radius: 8px;
+  transition: width 1s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.uplay-progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: uplay-shimmer 2s ease-in-out infinite;
+}
+
+/* ===== DASHBOARD METRICS ===== */
+
+.uplay-metric-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--uplay-border-radius);
+  padding: 24px;
+  transition: var(--uplay-transition);
+  overflow: hidden;
+}
+
+.uplay-metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--uplay-primary) 0%,
+    var(--uplay-secondary) 100%
+  );
+}
+
+.uplay-metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 12px 28px rgba(0, 0, 0, 0.15),
+    var(--uplay-glow-primary);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.uplay-metric-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--uplay-primary) 0%,
+    var(--uplay-secondary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== FLOATING ELEMENTS ===== */
+
+.uplay-floating-action {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(
+    135deg,
+    var(--uplay-primary) 0%,
+    var(--uplay-secondary) 100%
+  );
+  border-radius: 50%;
+  box-shadow: 
+    0 8px 24px rgba(99, 102, 241, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--uplay-transition);
+  animation: uplay-floating 3s ease-in-out infinite;
+  z-index: 1000;
+}
+
+.uplay-floating-action:hover {
+  transform: scale(1.1);
+  box-shadow: 
+    0 12px 32px rgba(99, 102, 241, 0.6),
+    0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+  :root {
+    --uplay-card-spacing: 16px;
+    --uplay-border-radius: 12px;
+  }
+  
+  .uplay-card-enhanced:hover {
+    transform: translateY(-4px);
+  }
+  
+  .uplay-floating-action {
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .uplay-card-enhanced,
+  .uplay-video-card,
+  .uplay-achievement-card,
+  .uplay-floating-action {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .uplay-card-enhanced:hover,
+  .uplay-video-card:hover {
+    transform: none !important;
+  }
+} 
