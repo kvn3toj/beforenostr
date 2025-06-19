@@ -1,0 +1,55 @@
+// 🔍 ICONOS DETECTADOS EN EL CÓDIGO
+// Agrega estos al iconRegistry.ts si no están presentes
+
+Add as AddIcon
+Air
+Analytics
+ArrowBack
+AutoAwesome
+BarChart
+Brush
+BugReport
+Chat
+CheckCircle
+Circle as CircleIcon
+Close
+Close as CloseIcon
+ComputerIcon
+Delete as DeleteIcon
+Edit as EditIcon
+Error
+ErrorOutline
+ExpandMore
+ExpandMore as ExpandMoreIcon
+Fullscreen
+Group
+Groups
+Help
+Home
+Home as HomeIcon
+Info
+Menu
+Mic
+MoreVert
+Notifications
+Opacity
+Place as PlaceIcon
+PlayArrow
+Public
+Refresh
+Refresh as RefreshIcon
+School
+Search
+Search as SearchIcon
+Settings
+ShoppingCart
+Speed
+Star
+SwapHoriz
+Terrain
+TrendingDown
+TrendingUp
+Visibility
+Warning
+Whatshot
+WifiIcon
