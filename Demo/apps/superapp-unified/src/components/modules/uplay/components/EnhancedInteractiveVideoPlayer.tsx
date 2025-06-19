@@ -1251,7 +1251,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
 
               {/* 🎯 [MEJORADO] Answer Options con diseño A/B centrado según Figma */}
               <Stack spacing={3}> {/* Más espaciado entre opciones */}
-                {activeQuestion.options.map((option) => (
+                {(activeQuestion?.options || []).map((option) => (
                   <Button
                     key={option.id}
                     variant={

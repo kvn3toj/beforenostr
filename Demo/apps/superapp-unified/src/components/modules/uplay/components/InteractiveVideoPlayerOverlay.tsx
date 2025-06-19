@@ -1006,7 +1006,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
 
                 {/* Question Options */}
                 <Stack spacing={2} sx={{ mb: 3 }}>
-                  {activeQuestion.options.map((option) => (
+                  {(activeQuestion?.options || []).map((option) => (
                     <Button
                       key={option.id}
                       variant={selectedAnswer === option.id ? 'contained' : 'outlined'}

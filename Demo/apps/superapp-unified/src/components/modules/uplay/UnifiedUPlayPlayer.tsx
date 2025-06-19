@@ -901,7 +901,7 @@ const UnifiedUPlayPlayer: React.FC<UnifiedUPlayPlayerProps> = ({
                     alignItems: 'center',
                   }}
                 >
-                  {activeQuestion.options.map((option) => (
+                  {(activeQuestion?.options || []).map((option) => (
                     <Card
                       key={option.id}
                       sx={{
