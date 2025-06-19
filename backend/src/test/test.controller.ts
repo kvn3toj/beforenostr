@@ -4,13 +4,13 @@ import { TestService } from './test.service';
 @Controller('test')
 export class TestController {
   constructor(private readonly testService: TestService) {
-    console.log('>>> TestController CONSTRUCTOR: Initializing...');
-    console.log('>>> TestController CONSTRUCTOR: service:', !!this.testService);
+// // //     console.log('>>> TestController CONSTRUCTOR: Initializing...');
+// //     console.log('>>> TestController CONSTRUCTOR: service:', !!this.testService);
   }
 
   @Get('ping')
   ping() {
-    console.log('>>> TestController.ping called');
+//     console.log('>>> TestController.ping called');
     return { 
       message: 'Test controller is working!', 
       timestamp: new Date().toISOString(),
@@ -21,8 +21,8 @@ export class TestController {
   @Get('db')
   async testDatabase() {
     try {
-      console.log('>>> TestController.testDatabase called');
-      console.log('>>> TestController.testDatabase - service check:', !!this.testService);
+//       console.log('>>> TestController.testDatabase called');
+//       console.log('>>> TestController.testDatabase - service check:', !!this.testService);
       
       if (!this.testService) {
         return { 
@@ -34,7 +34,7 @@ export class TestController {
       }
       
       const result = await this.testService.testDatabase();
-      console.log('>>> TestController.testDatabase - success:', result);
+//       console.log('>>> TestController.testDatabase - success:', result);
       
       return { 
         message: 'Test DB endpoint working!', 
@@ -43,7 +43,7 @@ export class TestController {
         result
       };
     } catch (error) {
-      console.log('>>> TestController.testDatabase - Error:', error);
+//       console.log('>>> TestController.testDatabase - Error:', error);
       return { 
         message: 'Test DB endpoint working!', 
         timestamp: new Date().toISOString(),

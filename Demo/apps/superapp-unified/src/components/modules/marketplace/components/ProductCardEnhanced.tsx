@@ -44,6 +44,7 @@ import {
   useUpdateMarketplaceItem,
   useDeleteMarketplaceItem,
 } from '../../../../hooks/useRealBackendData';
+import { formatPrice, safeToLocaleString } from '../../../../utils/numberUtils';
 
 // 🌌 COSMIC DESIGN SYSTEM IMPORT
 import { CosmicCard } from '../../../../design-system/components/cosmic/CosmicCard';
@@ -593,7 +594,7 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography variant="h6" color="primary" fontWeight="bold">
                 {currency === 'ü' || currency === 'Lükas' ? 'ü' : '$'}{' '}
-                {price.toLocaleString()}
+                {safeToLocaleString(price)}
               </Typography>
               {originalPrice && originalPrice > price && (
                 <Typography
@@ -602,7 +603,7 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
                   sx={{ textDecoration: 'line-through' }}
                 >
                   {currency === 'ü' || currency === 'Lükas' ? 'ü' : '$'}{' '}
-                  {originalPrice.toLocaleString()}
+                  {safeToLocaleString(originalPrice)}
                 </Typography>
               )}
             </Box>
@@ -753,7 +754,7 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
                 sx={{ mb: 2 }}
               >
                 {currency === 'ü' || currency === 'Lükas' ? 'ü' : '$'}{' '}
-                {price.toLocaleString()}
+                {safeToLocaleString(price)}
               </Typography>
 
               <Box

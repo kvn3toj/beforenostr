@@ -38,23 +38,73 @@ class AuthService {
    * Inicia sesión con email y contraseña
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await fetch(`${AUTH_ENDPOINT}/login`, {
+    // 🔍 DEBUGGING: Log exact request details
+    const requestPayload = JSON.stringify(credentials);
+    const requestUrl = `${AUTH_ENDPOINT}/login`;
+
+    console.log('🔍 [AuthService] DEBUGGING REQUEST:', {
+      url: requestUrl,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(credentials),
+      payload: requestPayload,
+      payloadParsed: credentials
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage = errorData.message || `Error ${response.status}: ${response.statusText}`;
-      throw new Error(errorMessage);
-    }
+    try {
+      const response = await fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestPayload,
+      });
 
-    const data: AuthResponse = await response.json();
-    console.log('[AuthService] Login exitoso con backend real para:', credentials.email);
-    return data;
+      // 🔍 DEBUGGING: Log exact response details
+      console.log('🔍 [AuthService] RESPONSE DETAILS:', {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        url: response.url
+      });
+
+      if (!response.ok) {
+        // 🔍 DEBUGGING: Capture raw response text first
+        const responseText = await response.text();
+        console.log('🔍 [AuthService] RAW ERROR RESPONSE:', responseText);
+
+        // Try to parse as JSON if possible
+        let errorData;
+        try {
+          errorData = JSON.parse(responseText);
+        } catch (parseError) {
+          console.log('🔍 [AuthService] ERROR RESPONSE NOT JSON:', parseError);
+          errorData = { message: responseText };
+        }
+
+        const errorMessage = errorData.message || `Error ${response.status}: ${response.statusText}`;
+        throw new Error(errorMessage);
+      }
+
+      // 🔍 DEBUGGING: Capture raw success response text first
+      const responseText = await response.text();
+      console.log('🔍 [AuthService] RAW SUCCESS RESPONSE:', responseText);
+
+      // Parse as JSON
+      const data: AuthResponse = JSON.parse(responseText);
+      console.log('[AuthService] Login exitoso con backend real para:', credentials.email);
+      return data;
+    } catch (error: any) {
+      console.error('🔍 [AuthService] COMPLETE ERROR DETAILS:', {
+        error: error,
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name
+      });
+      throw error;
+    }
   }
 
   /**
@@ -126,13 +176,13 @@ class AuthService {
     // Usar las claves estándar de CoomÜnity
     localStorage.removeItem('COOMUNITY_AUTH_TOKEN');
     localStorage.removeItem('COOMUNITY_USER_DATA');
-    
+
     // También limpiar las claves anteriores por compatibilidad
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
     sessionStorage.removeItem('auth_token');
     sessionStorage.removeItem('auth_user');
-    
+
     console.log('[AuthService] Sesión cerrada, tokens eliminados');
   }
 
@@ -172,10 +222,10 @@ class AuthService {
   async hasValidSession(): Promise<boolean> {
     const token = this.getStoredToken();
     if (!token) return false;
-    
+
     return await this.validateToken(token);
   }
 }
 
 // Exportar una instancia singleton del servicio
-export const authService = new AuthService(); 
+export const authService = new AuthService();

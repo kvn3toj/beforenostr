@@ -6,7 +6,7 @@ import type { Merit } from '../generated/prisma';
 @Injectable()
 export class MeritsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> MeritsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> MeritsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(createMeritDto: CreateMeritDto): Promise<Merit> {
@@ -42,10 +42,10 @@ export class MeritsService {
         },
       });
 
-      console.log(`>>> MeritsService: Created merit ${merit.id} for user ${createMeritDto.userId}`);
+//       console.log(`>>> MeritsService: Created merit ${merit.id} for user ${createMeritDto.userId}`);
       return merit;
     } catch (error) {
-      console.error('>>> MeritsService create error:', error);
+//       console.error('>>> MeritsService create error:', error);
       throw error;
     }
   }
@@ -68,7 +68,7 @@ export class MeritsService {
         }
       });
     } catch (error) {
-      console.error('>>> MeritsService findAll error:', error);
+//       console.error('>>> MeritsService findAll error:', error);
       throw error;
     }
   }
@@ -82,7 +82,7 @@ export class MeritsService {
         }
       });
     } catch (error) {
-      console.error('>>> MeritsService findByUserId error:', error);
+//       console.error('>>> MeritsService findByUserId error:', error);
       throw error;
     }
   }
@@ -109,7 +109,7 @@ export class MeritsService {
 
       return merit;
     } catch (error) {
-      console.error('>>> MeritsService findOne error:', error);
+//       console.error('>>> MeritsService findOne error:', error);
       throw error;
     }
   }
@@ -143,7 +143,7 @@ export class MeritsService {
         totalAmount
       }));
     } catch (error) {
-      console.error('>>> MeritsService getUserMeritBalance error:', error);
+//       console.error('>>> MeritsService getUserMeritBalance error:', error);
       throw error;
     }
   }
@@ -160,7 +160,7 @@ export class MeritsService {
 
       return await this.create(createMeritDto);
     } catch (error) {
-      console.error('>>> MeritsService awardMerit error:', error);
+//       console.error('>>> MeritsService awardMerit error:', error);
       throw error;
     }
   }
@@ -208,7 +208,7 @@ export class MeritsService {
 
       return leaderboard;
     } catch (error) {
-      console.error('>>> MeritsService getMeritLeaderboard error:', error);
+//       console.error('>>> MeritsService getMeritLeaderboard error:', error);
       throw error;
     }
   }

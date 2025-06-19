@@ -13,7 +13,7 @@ type QuestionWithAnswers = Question & {
 @Injectable()
 export class QuestionService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> QuestionService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> QuestionService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   // Helper method for validating answer options for multiple-choice
@@ -28,8 +28,8 @@ export class QuestionService {
   }
 
   async create(createQuestionDto: CreateQuestionDto): Promise<QuestionWithAnswers> {
-    console.log('>>> QuestionService.create: Starting with data:', createQuestionDto);
-    console.log('>>> QuestionService.create: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> QuestionService.create: Starting with data:', createQuestionDto);
+//     console.log('>>> QuestionService.create: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const { answerOptions, ...questionData } = createQuestionDto;
@@ -41,7 +41,7 @@ export class QuestionService {
          throw new BadRequestException('Multiple-choice questions must have answer options.');
       }
 
-      console.log('>>> QuestionService.create: About to call prisma.question.create');
+//       console.log('>>> QuestionService.create: About to call prisma.question.create');
       const result = await this.prisma.question.create({
         data: {
           ...questionData,
@@ -57,17 +57,17 @@ export class QuestionService {
           answerOptions: true, // Include options in the response
         },
       });
-      console.log('>>> QuestionService.create: SUCCESS, result:', result);
+//       console.log('>>> QuestionService.create: SUCCESS, result:', result);
       return result;
     } catch (error) {
-      console.error('>>> QuestionService.create: ERROR:', error);
+//       console.error('>>> QuestionService.create: ERROR:', error);
       throw error;
     }
   }
 
   async findAll(findAllDto: FindAllQuestionsDto): Promise<Question[]> {
-    console.log('>>> QuestionService.findAll: Starting with params:', findAllDto);
-    console.log('>>> QuestionService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> QuestionService.findAll: Starting with params:', findAllDto);
+//     console.log('>>> QuestionService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       if (!findAllDto.videoItemId) {
@@ -83,7 +83,7 @@ export class QuestionService {
         throw new BadRequestException('videoItemId must be a valid number.');
       }
 
-      console.log('>>> QuestionService.findAll: About to call prisma.question.findMany with videoItemId:', videoItemId);
+//       console.log('>>> QuestionService.findAll: About to call prisma.question.findMany with videoItemId:', videoItemId);
       // Note: In a real app, you might want pagination here
       const result = await this.prisma.question.findMany({
         where: {
@@ -100,20 +100,20 @@ export class QuestionService {
             timestamp: 'asc', // Order by timestamp by default
         }
       });
-      console.log('>>> QuestionService.findAll: SUCCESS, found', result.length, 'questions');
+//       console.log('>>> QuestionService.findAll: SUCCESS, found', result.length, 'questions');
       return result;
     } catch (error) {
-      console.error('>>> QuestionService.findAll: ERROR:', error);
+//       console.error('>>> QuestionService.findAll: ERROR:', error);
       throw error;
     }
   }
 
   async findOne(id: number): Promise<Question> {
-    console.log('>>> QuestionService.findOne: Starting with id:', id);
-    console.log('>>> QuestionService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> QuestionService.findOne: Starting with id:', id);
+//     console.log('>>> QuestionService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
-      console.log('>>> QuestionService.findOne: About to call prisma.question.findUnique');
+//       console.log('>>> QuestionService.findOne: About to call prisma.question.findUnique');
       const question = await this.prisma.question.findUnique({
         where: { id },
         include: {
@@ -122,21 +122,21 @@ export class QuestionService {
       });
       
       if (!question) {
-        console.log('>>> QuestionService.findOne: Question not found');
+//         console.log('>>> QuestionService.findOne: Question not found');
         throw new NotFoundException(`Question with ID ${id} not found.`);
       }
       
-      console.log('>>> QuestionService.findOne: SUCCESS, found question:', question);
+//       console.log('>>> QuestionService.findOne: SUCCESS, found question:', question);
       return question;
     } catch (error) {
-      console.error('>>> QuestionService.findOne: ERROR:', error);
+//       console.error('>>> QuestionService.findOne: ERROR:', error);
       throw error;
     }
   }
 
   async update(id: number, updateQuestionDto: UpdateQuestionDto): Promise<Question> {
-    console.log('>>> QuestionService.update: Starting with id:', id, 'data:', updateQuestionDto);
-    console.log('>>> QuestionService.update: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> QuestionService.update: Starting with id:', id, 'data:', updateQuestionDto);
+//     console.log('>>> QuestionService.update: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const { answerOptions, ...questionData } = updateQuestionDto;
@@ -148,7 +148,7 @@ export class QuestionService {
 
       // Handle updating answer options: delete removed, create new, update existing
       if (answerOptions !== undefined) {
-          console.log('>>> QuestionService.update: Handling answer options update');
+//           console.log('>>> QuestionService.update: Handling answer options update');
           const existingOptions = await this.prisma.answerOption.findMany({
               where: { questionId: id }
           });
@@ -183,7 +183,7 @@ export class QuestionService {
            }));
 
           // Use a transaction to ensure atomicity of question update + option changes
-          console.log('>>> QuestionService.update: About to call prisma.$transaction');
+//           console.log('>>> QuestionService.update: About to call prisma.$transaction');
            const result = await this.prisma.$transaction(async (prisma) => {
                // Update the question itself
                const updatedQuestion = await prisma.question.update({
@@ -209,45 +209,45 @@ export class QuestionService {
                     include: { answerOptions: true }
                 });
            });
-           console.log('>>> QuestionService.update: SUCCESS, result:', result);
+//            console.log('>>> QuestionService.update: SUCCESS, result:', result);
            return result;
 
       } else {
           // If answerOptions is not provided in the update DTO, just update the question data
-          console.log('>>> QuestionService.update: About to call prisma.question.update (no options)');
+//           console.log('>>> QuestionService.update: About to call prisma.question.update (no options)');
           const result = await this.prisma.question.update({
             where: { id },
             data: questionData,
              include: { answerOptions: true } // Still include options in response
           });
-          console.log('>>> QuestionService.update: SUCCESS, result:', result);
+//           console.log('>>> QuestionService.update: SUCCESS, result:', result);
           return result;
       }
     } catch (error) {
-      console.error('>>> QuestionService.update: ERROR:', error);
+//       console.error('>>> QuestionService.update: ERROR:', error);
       throw error;
     }
   }
 
   async remove(id: number): Promise<void> {
-    console.log('>>> QuestionService.remove: Starting with id:', id);
-    console.log('>>> QuestionService.remove: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> QuestionService.remove: Starting with id:', id);
+//     console.log('>>> QuestionService.remove: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
-      console.log('>>> QuestionService.remove: About to check if question exists');
+//       console.log('>>> QuestionService.remove: About to check if question exists');
       const question = await this.prisma.question.findUnique({ where: { id } });
       if (!question) {
         throw new NotFoundException(`Question with ID ${id} not found.`);
       }
 
-      console.log('>>> QuestionService.remove: About to call prisma.question.delete');
+//       console.log('>>> QuestionService.remove: About to call prisma.question.delete');
       // Prisma will handle cascading delete for AnswerOptions because of onDelete: Cascade in schema.prisma
       await this.prisma.question.delete({
         where: { id },
       });
-      console.log('>>> QuestionService.remove: SUCCESS');
+//       console.log('>>> QuestionService.remove: SUCCESS');
     } catch (error) {
-      console.error('>>> QuestionService.remove: ERROR:', error);
+//       console.error('>>> QuestionService.remove: ERROR:', error);
       throw error;
     }
   }

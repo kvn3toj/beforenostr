@@ -8,7 +8,7 @@ import { Roles } from '../rbac/decorators/roles.decorator';
 @Controller('marketplace')
 export class MarketplaceController {
   constructor(@Inject(MarketplaceService) private readonly marketplaceService: MarketplaceService) {
-    console.log('>>> MarketplaceController CONSTRUCTOR: this.marketplaceService IS', this.marketplaceService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> MarketplaceController CONSTRUCTOR: this.marketplaceService IS', this.marketplaceService ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
@@ -18,7 +18,7 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async createItem(@Body() dto: CreateMarketplaceItemDto, @Req() req: any) {
-    console.log('>>> MarketplaceController.createItem: Creating marketplace item', dto);
+//     console.log('>>> MarketplaceController.createItem: Creating marketplace item', dto);
     
     // Obtener el userId del token JWT
     const userId = req.user?.id;
@@ -47,7 +47,7 @@ export class MarketplaceController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string
   ) {
-    console.log('>>> MarketplaceController.searchItems: Searching marketplace items');
+//     console.log('>>> MarketplaceController.searchItems: Searching marketplace items');
     
     const searchDto: MarketplaceSearchDto = {
       query,
@@ -71,7 +71,7 @@ export class MarketplaceController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string
   ) {
-    console.log('>>> MarketplaceController.getAllItems: Getting all marketplace items (PUBLIC)');
+//     console.log('>>> MarketplaceController.getAllItems: Getting all marketplace items (PUBLIC)');
     
     const searchDto: MarketplaceSearchDto = { limit, offset };
     return await this.marketplaceService.findAllActiveItems(searchDto);
@@ -84,7 +84,7 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async getItem(@Param('itemId') itemId: string) {
-    console.log('>>> MarketplaceController.getItem: Getting marketplace item', itemId);
+//     console.log('>>> MarketplaceController.getItem: Getting marketplace item', itemId);
     return await this.marketplaceService.getItem(itemId);
   }
 
@@ -99,7 +99,7 @@ export class MarketplaceController {
     @Body() dto: UpdateMarketplaceItemDto,
     @Req() req: any
   ) {
-    console.log('>>> MarketplaceController.updateItem: Updating marketplace item', itemId);
+//     console.log('>>> MarketplaceController.updateItem: Updating marketplace item', itemId);
     
     // Obtener el userId del token JWT
     const userId = req.user?.id;
@@ -120,7 +120,7 @@ export class MarketplaceController {
     @Param('itemId') itemId: string,
     @Req() req: any
   ) {
-    console.log('>>> MarketplaceController.deleteItem: Deleting marketplace item', itemId);
+//     console.log('>>> MarketplaceController.deleteItem: Deleting marketplace item', itemId);
     
     // Obtener el userId del token JWT
     const userId = req.user?.id;
@@ -138,7 +138,7 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async getSellerItems(@Param('sellerId') sellerId: string) {
-    console.log('>>> MarketplaceController.getSellerItems: Getting items for seller', sellerId);
+//     console.log('>>> MarketplaceController.getSellerItems: Getting items for seller', sellerId);
     return await this.marketplaceService.getSellerItems(sellerId);
   }
 
@@ -149,7 +149,7 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async getUserFavorites(@Req() req: any) {
-    console.log('>>> MarketplaceController.getUserFavorites: Getting favorite items for authenticated user');
+//     console.log('>>> MarketplaceController.getUserFavorites: Getting favorite items for authenticated user');
     
     // Obtener el userId del token JWT
     const userId = req.user?.id;
@@ -167,7 +167,7 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async getMyItems(@Req() req: any) {
-    console.log('>>> MarketplaceController.getMyItems: Getting items for authenticated user');
+//     console.log('>>> MarketplaceController.getMyItems: Getting items for authenticated user');
     
     // Obtener el userId del token JWT
     const userId = req.user?.id;
@@ -185,7 +185,7 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   async getMarketplaceStats() {
-    console.log('>>> MarketplaceController.getMarketplaceStats: Getting marketplace statistics');
+//     console.log('>>> MarketplaceController.getMarketplaceStats: Getting marketplace statistics');
     return await this.marketplaceService.getMarketplaceStats();
   }
 
@@ -194,7 +194,7 @@ export class MarketplaceController {
    */
   @Get('ping')
   async ping() {
-    console.log('>>> MarketplaceController.ping: Marketplace module is working');
+//     console.log('>>> MarketplaceController.ping: Marketplace module is working');
     return { 
       message: 'Marketplace module is working', 
       timestamp: new Date().toISOString(),

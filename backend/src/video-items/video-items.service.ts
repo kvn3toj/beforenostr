@@ -12,14 +12,14 @@ export class VideoItemsService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService
   ) {
-    console.log('>>> VideoItemsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> VideoItemsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
    * Encuentra un video item por ID
    */
   async findOne(id: number) {
-    console.log(`>>> VideoItemsService.findOne: Finding video item with ID: ${id}`);
+//     console.log(`>>> VideoItemsService.findOne: Finding video item with ID: ${id}`);
     
     const videoItem = await this.prisma.videoItem.findFirst({
       where: { id },
@@ -47,7 +47,7 @@ export class VideoItemsService {
           },
         });
         
-        console.log(`>>> VideoItemsService.findOne: Updated platform metadata for video ${id}: ${detectedPlatform}`);
+//         console.log(`>>> VideoItemsService.findOne: Updated platform metadata for video ${id}: ${detectedPlatform}`);
         
         return { ...updatedItem, playlist: videoItem.playlist, questions: videoItem.questions };
       }
@@ -60,10 +60,10 @@ export class VideoItemsService {
    * Encuentra todos los video items
    */
   async findAll() {
-    console.log('>>> VideoItemsService.findAll: ENTERING METHOD');
+//     console.log('>>> VideoItemsService.findAll: ENTERING METHOD');
     try {
-      console.log('>>> VideoItemsService.findAll: Finding all video items');
-      console.log('>>> VideoItemsService.findAll: About to call prisma.videoItem.findMany');
+//       console.log('>>> VideoItemsService.findAll: Finding all video items');
+//       console.log('>>> VideoItemsService.findAll: About to call prisma.videoItem.findMany');
       
       const result = await this.prisma.videoItem.findMany({
         include: {
@@ -72,10 +72,10 @@ export class VideoItemsService {
         },
       });
       
-      console.log('>>> VideoItemsService.findAll: Prisma call successful, found', result.length, 'items');
+//       console.log('>>> VideoItemsService.findAll: Prisma call successful, found', result.length, 'items');
       return result;
     } catch (error) {
-      console.error('>>> VideoItemsService.findAll: ERROR CAUGHT:', error);
+//       console.error('>>> VideoItemsService.findAll: ERROR CAUGHT:', error);
       throw error;
     }
   }
@@ -84,7 +84,7 @@ export class VideoItemsService {
    * Crea un nuevo video item
    */
   async create(data: any) {
-    console.log('>>> VideoItemsService.create: Creating new video item');
+//     console.log('>>> VideoItemsService.create: Creating new video item');
     
     return this.prisma.videoItem.create({
       data,
@@ -95,7 +95,7 @@ export class VideoItemsService {
    * Actualiza un video item
    */
   async update(id: number, data: any) {
-    console.log(`>>> VideoItemsService.update: Updating video item with ID: ${id}`);
+//     console.log(`>>> VideoItemsService.update: Updating video item with ID: ${id}`);
     
     return this.prisma.videoItem.update({
       where: { id },
@@ -107,7 +107,7 @@ export class VideoItemsService {
    * Elimina un video item
    */
   async remove(id: number) {
-    console.log(`>>> VideoItemsService.remove: Removing video item with ID: ${id}`);
+//     console.log(`>>> VideoItemsService.remove: Removing video item with ID: ${id}`);
     
     return this.prisma.videoItem.delete({
       where: { id },
@@ -1039,7 +1039,7 @@ export class VideoItemsService {
    * @param videoId Puede ser el ID numérico del sistema o el externalId (YouTube ID)
    */
   async findQuestionsByVideoId(videoId: string) {
-    console.log(`>>> VideoItemsService.findQuestionsByVideoId: Finding questions for video ID: ${videoId}`);
+//     console.log(`>>> VideoItemsService.findQuestionsByVideoId: Finding questions for video ID: ${videoId}`);
     
     try {
       let videoItemId: number;
@@ -1049,22 +1049,22 @@ export class VideoItemsService {
       if (!isNaN(videoIdInt)) {
         // Es un ID numérico del sistema, usarlo directamente
         videoItemId = videoIdInt;
-        console.log(`>>> VideoItemsService.findQuestionsByVideoId: Using numeric system ID: ${videoItemId}`);
+//         console.log(`>>> VideoItemsService.findQuestionsByVideoId: Using numeric system ID: ${videoItemId}`);
       } else {
         // Es un externalId (YouTube ID), buscar el video correspondiente
-        console.log(`>>> VideoItemsService.findQuestionsByVideoId: Searching by externalId: ${videoId}`);
+//         console.log(`>>> VideoItemsService.findQuestionsByVideoId: Searching by externalId: ${videoId}`);
         const videoItem = await this.prisma.videoItem.findFirst({
           where: { externalId: videoId },
           select: { id: true }
         });
 
         if (!videoItem) {
-          console.log(`>>> VideoItemsService.findQuestionsByVideoId: No video found with externalId: ${videoId}`);
+//           console.log(`>>> VideoItemsService.findQuestionsByVideoId: No video found with externalId: ${videoId}`);
           return []; // Retornar array vacío en lugar de error para evitar 500
         }
 
         videoItemId = videoItem.id;
-        console.log(`>>> VideoItemsService.findQuestionsByVideoId: Found video with system ID: ${videoItemId} for externalId: ${videoId}`);
+//         console.log(`>>> VideoItemsService.findQuestionsByVideoId: Found video with system ID: ${videoItemId} for externalId: ${videoId}`);
       }
 
       const questions = await this.prisma.question.findMany({
@@ -1075,7 +1075,7 @@ export class VideoItemsService {
         orderBy: { timestamp: 'asc' }, // Ordenar por tiempo de aparición en el video
       });
 
-      console.log(`>>> VideoItemsService.findQuestionsByVideoId: Found ${questions.length} questions for video ${videoId}`);
+//       console.log(`>>> VideoItemsService.findQuestionsByVideoId: Found ${questions.length} questions for video ${videoId}`);
 
       // Mapear para que coincida con la estructura esperada por el frontend (QuestionOverlay)
       return questions.map(q => ({
@@ -1099,7 +1099,7 @@ export class VideoItemsService {
       }));
 
     } catch (error) {
-      console.error(`>>> VideoItemsService.findQuestionsByVideoId: Error finding questions for video ${videoId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+//       console.error(`>>> VideoItemsService.findQuestionsByVideoId: Error finding questions for video ${videoId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
       throw error;
     }
   }

@@ -7,7 +7,7 @@ import type { Token } from '../generated/prisma';
 @Injectable()
 export class TokensService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> TokensService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> TokensService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(createTokenDto: CreateTokenDto): Promise<Token> {
@@ -44,10 +44,10 @@ export class TokensService {
         },
       });
 
-      console.log(`>>> TokensService: Created token ${token.id} for user ${createTokenDto.userId}`);
+//       console.log(`>>> TokensService: Created token ${token.id} for user ${createTokenDto.userId}`);
       return token;
     } catch (error) {
-      console.error('>>> TokensService create error:', error);
+//       console.error('>>> TokensService create error:', error);
       throw error;
     }
   }
@@ -70,7 +70,7 @@ export class TokensService {
         }
       });
     } catch (error) {
-      console.error('>>> TokensService findAll error:', error);
+//       console.error('>>> TokensService findAll error:', error);
       throw error;
     }
   }
@@ -84,7 +84,7 @@ export class TokensService {
         }
       });
     } catch (error) {
-      console.error('>>> TokensService findByUserId error:', error);
+//       console.error('>>> TokensService findByUserId error:', error);
       throw error;
     }
   }
@@ -111,7 +111,7 @@ export class TokensService {
 
       return token;
     } catch (error) {
-      console.error('>>> TokensService findOne error:', error);
+//       console.error('>>> TokensService findOne error:', error);
       throw error;
     }
   }
@@ -129,10 +129,10 @@ export class TokensService {
         },
       });
 
-      console.log(`>>> TokensService: Updated token ${id}`);
+//       console.log(`>>> TokensService: Updated token ${id}`);
       return token;
     } catch (error) {
-      console.error('>>> TokensService update error:', error);
+//       console.error('>>> TokensService update error:', error);
       throw error;
     }
   }
@@ -146,10 +146,10 @@ export class TokensService {
         where: { id },
       });
 
-      console.log(`>>> TokensService: Deleted token ${id}`);
+//       console.log(`>>> TokensService: Deleted token ${id}`);
       return token;
     } catch (error) {
-      console.error('>>> TokensService remove error:', error);
+//       console.error('>>> TokensService remove error:', error);
       throw error;
     }
   }
@@ -184,7 +184,7 @@ export class TokensService {
         totalAmount
       }));
     } catch (error) {
-      console.error('>>> TokensService getUserTokenBalance error:', error);
+//       console.error('>>> TokensService getUserTokenBalance error:', error);
       throw error;
     }
   }
@@ -205,10 +205,10 @@ export class TokensService {
         }
       });
 
-      console.log(`>>> TokensService: Expired ${result.count} tokens`);
+//       console.log(`>>> TokensService: Expired ${result.count} tokens`);
       return result.count;
     } catch (error) {
-      console.error('>>> TokensService expireTokens error:', error);
+//       console.error('>>> TokensService expireTokens error:', error);
       throw error;
     }
   }

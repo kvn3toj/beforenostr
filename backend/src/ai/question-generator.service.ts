@@ -26,21 +26,21 @@ export class QuestionGeneratorService {
   private genAI: GoogleGenerativeAI;
 
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> QuestionGeneratorService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> QuestionGeneratorService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const apiKey = process.env.VITE_GOOGLE_AI_API_KEY;
-      console.log('>>> QuestionGeneratorService CONSTRUCTOR: API key exists:', !!apiKey);
-      console.log('>>> QuestionGeneratorService CONSTRUCTOR: API key length:', apiKey?.length || 0);
+// //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: API key exists:', !!apiKey);
+// //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: API key length:', apiKey?.length || 0);
       
       if (!apiKey) {
         throw new Error('Google AI API key not found in environment variables');
       }
       
       this.genAI = new GoogleGenerativeAI(apiKey);
-      console.log('>>> QuestionGeneratorService CONSTRUCTOR: Google AI initialized successfully');
+// // //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: Google AI initialized successfully');
     } catch (error) {
-      console.error('>>> QuestionGeneratorService CONSTRUCTOR: ERROR initializing Google AI:', error);
+//       console.error('>>> QuestionGeneratorService CONSTRUCTOR: ERROR initializing Google AI:', error);
       throw error;
     }
   }
@@ -49,53 +49,53 @@ export class QuestionGeneratorService {
     videoItemId: number,
     config: QuestionGenerationConfig
   ): Promise<GeneratedQuestion[]> {
-    console.log('>>> QuestionGeneratorService.generateAttentionQuestions: Starting with videoItemId:', videoItemId);
-    console.log('>>> QuestionGeneratorService.generateAttentionQuestions: Config:', JSON.stringify(config, null, 2));
+//     console.log('>>> QuestionGeneratorService.generateAttentionQuestions: Starting with videoItemId:', videoItemId);
+//     console.log('>>> QuestionGeneratorService.generateAttentionQuestions: Config:', JSON.stringify(config, null, 2));
 
     try {
       // 1. Obtener información del video y subtítulos
-      console.log('>>> QuestionGeneratorService: Step 1 - Getting video data...');
+//       console.log('>>> QuestionGeneratorService: Step 1 - Getting video data...');
       const videoData = await this.getVideoData(videoItemId);
-      console.log('>>> QuestionGeneratorService: Video data retrieved:', !!videoData);
-      console.log('>>> QuestionGeneratorService: Video title:', videoData?.title);
-      console.log('>>> QuestionGeneratorService: Video subtitles count:', videoData?.subtitles?.length || 0);
+//       console.log('>>> QuestionGeneratorService: Video data retrieved:', !!videoData);
+//       console.log('>>> QuestionGeneratorService: Video title:', videoData?.title);
+//       console.log('>>> QuestionGeneratorService: Video subtitles count:', videoData?.subtitles?.length || 0);
       
       if (!videoData) {
         throw new Error(`Video with ID ${videoItemId} not found`);
       }
 
       // 2. Construir el prompt especializado
-      console.log('>>> QuestionGeneratorService: Step 2 - Building prompt...');
+//       console.log('>>> QuestionGeneratorService: Step 2 - Building prompt...');
       const prompt = this.buildAttentionQuestionsPrompt(videoData, config);
-      console.log('>>> QuestionGeneratorService: Prompt length:', prompt.length);
-      console.log('>>> QuestionGeneratorService: Prompt preview:', prompt.substring(0, 200) + '...');
+//       console.log('>>> QuestionGeneratorService: Prompt length:', prompt.length);
+//       console.log('>>> QuestionGeneratorService: Prompt preview:', prompt.substring(0, 200) + '...');
 
       // 3. Llamar a Google AI
-      console.log('>>> QuestionGeneratorService: Step 3 - Calling Google AI...');
+//       console.log('>>> QuestionGeneratorService: Step 3 - Calling Google AI...');
       const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      console.log('>>> QuestionGeneratorService: Model created successfully');
+//       console.log('>>> QuestionGeneratorService: Model created successfully');
       
       const result = await model.generateContent(prompt);
-      console.log('>>> QuestionGeneratorService: AI call completed');
+//       console.log('>>> QuestionGeneratorService: AI call completed');
       
       const response = await result.response;
-      console.log('>>> QuestionGeneratorService: Response received');
+//       console.log('>>> QuestionGeneratorService: Response received');
       
       const text = response.text();
-      console.log('>>> QuestionGeneratorService: Response text length:', text.length);
-      console.log('>>> QuestionGeneratorService: Response text preview:', text.substring(0, 300) + '...');
+//       console.log('>>> QuestionGeneratorService: Response text length:', text.length);
+//       console.log('>>> QuestionGeneratorService: Response text preview:', text.substring(0, 300) + '...');
 
       // 4. Parsear la respuesta JSON
-      console.log('>>> QuestionGeneratorService: Step 4 - Parsing AI response...');
+//       console.log('>>> QuestionGeneratorService: Step 4 - Parsing AI response...');
       const questions = this.parseAIResponse(text);
 
-      console.log('>>> QuestionGeneratorService: Generated', questions.length, 'questions');
-      console.log('>>> QuestionGeneratorService: Questions preview:', JSON.stringify(questions, null, 2));
+//       console.log('>>> QuestionGeneratorService: Generated', questions.length, 'questions');
+//       console.log('>>> QuestionGeneratorService: Questions preview:', JSON.stringify(questions, null, 2));
       return questions;
 
     } catch (error) {
-      console.error('>>> QuestionGeneratorService.generateAttentionQuestions: ERROR:', error);
-      console.error('>>> QuestionGeneratorService.generateAttentionQuestions: Error stack:', error.stack);
+//       console.error('>>> QuestionGeneratorService.generateAttentionQuestions: ERROR:', error);
+//       console.error('>>> QuestionGeneratorService.generateAttentionQuestions: Error stack:', error.stack);
       throw error;
     }
   }
@@ -203,7 +203,7 @@ IMPORTANTE:
 
       return null;
     } catch (error) {
-      console.log('>>> QuestionGeneratorService: Error extracting video URL:', error);
+//       console.log('>>> QuestionGeneratorService: Error extracting video URL:', error);
       return null;
     }
   }
@@ -388,8 +388,8 @@ EJEMPLOS DE PREGUNTAS APROPIADAS:
       const parsed = JSON.parse(jsonMatch[0]);
       return parsed.questions || [];
     } catch (error) {
-      console.error('>>> QuestionGeneratorService.parseAIResponse: Error parsing AI response:', error);
-      console.error('>>> AI Response text:', text);
+//       console.error('>>> QuestionGeneratorService.parseAIResponse: Error parsing AI response:', error);
+//       console.error('>>> AI Response text:', text);
       throw new Error('Failed to parse AI response');
     }
   }
@@ -399,7 +399,7 @@ EJEMPLOS DE PREGUNTAS APROPIADAS:
     questions: GeneratedQuestion[],
     languageCode: string
   ): Promise<any[]> {
-    console.log('>>> QuestionGeneratorService.saveGeneratedQuestions: Saving', questions.length, 'questions');
+//     console.log('>>> QuestionGeneratorService.saveGeneratedQuestions: Saving', questions.length, 'questions');
 
     const savedQuestions = [];
 
@@ -441,12 +441,12 @@ EJEMPLOS DE PREGUNTAS APROPIADAS:
         }
 
       } catch (error) {
-        console.error('>>> QuestionGeneratorService.saveGeneratedQuestions: Error saving question:', error);
+//         console.error('>>> QuestionGeneratorService.saveGeneratedQuestions: Error saving question:', error);
         // Continuar con las siguientes preguntas
       }
     }
 
-    console.log('>>> QuestionGeneratorService: Successfully saved', savedQuestions.length, 'questions');
+//     console.log('>>> QuestionGeneratorService: Successfully saved', savedQuestions.length, 'questions');
     return savedQuestions;
   }
 } 

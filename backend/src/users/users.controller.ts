@@ -15,8 +15,8 @@ import { Roles } from '../rbac/decorators/roles.decorator';
 @Controller('users')
 export class UsersController {
   constructor(@Inject(UsersService) private readonly usersService: UsersService) {
-    console.log('>>> UsersController CONSTRUCTOR: Initializing...');
-    console.log('>>> UsersController CONSTRUCTOR: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
+// // //     console.log('>>> UsersController CONSTRUCTOR: Initializing...');
+// //     console.log('>>> UsersController CONSTRUCTOR: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
     console.log('UsersController constructor - service:', this.usersService ? 'available' : 'undefined');
     console.log('UsersController constructor - service type:', typeof this.usersService);
     console.log('UsersController constructor - service constructor:', this.usersService?.constructor?.name);
@@ -41,8 +41,8 @@ export class UsersController {
     @Query('role_id') roleId?: string,
     @Query('is_active') isActive?: string,
   ) {
-    console.log('>>> UsersController.findAll: Starting...');
-    console.log('>>> UsersController.findAll: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> UsersController.findAll: Starting...');
+//     console.log('>>> UsersController.findAll: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const params = {
@@ -57,12 +57,12 @@ export class UsersController {
         },
       };
 
-      console.log('>>> UsersController.findAll: Calling service with params:', params);
+//       console.log('>>> UsersController.findAll: Calling service with params:', params);
       const result = await this.usersService.findAllPaginated(params);
-      console.log('>>> UsersController.findAll: SUCCESS, returning result');
+//       console.log('>>> UsersController.findAll: SUCCESS, returning result');
       return result;
     } catch (error) {
-      console.error('>>> UsersController.findAll: ERROR:', error);
+//       console.error('>>> UsersController.findAll: ERROR:', error);
       throw error;
     }
   }
@@ -88,16 +88,16 @@ export class UsersController {
   @Roles('admin')
   @ApiOperation({ summary: 'Simple endpoint para obtener usuarios sin paginación' })
   async findAllSimple() {
-    console.log('>>> UsersController.findAllSimple: Starting...');
-    console.log('>>> UsersController.findAllSimple: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> UsersController.findAllSimple: Starting...');
+//     console.log('>>> UsersController.findAllSimple: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
     
     try {
-      console.log('>>> UsersController.findAllSimple: Calling service.findAll()...');
+//       console.log('>>> UsersController.findAllSimple: Calling service.findAll()...');
       const result = await this.usersService.findAll();
-      console.log('>>> UsersController.findAllSimple: SUCCESS, returning result');
+//       console.log('>>> UsersController.findAllSimple: SUCCESS, returning result');
       return result;
     } catch (error) {
-      console.error('>>> UsersController.findAllSimple: ERROR:', error);
+//       console.error('>>> UsersController.findAllSimple: ERROR:', error);
       throw error;
     }
   }

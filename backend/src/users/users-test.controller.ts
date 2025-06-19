@@ -48,9 +48,9 @@ export class UsersTestController {
   @Roles('admin')
   @ApiBearerAuth()
   async testDebugRoles(@Req() req) {
-    console.log('>>> DEBUG ROLES ENDPOINT: req.user:', req.user);
-    console.log('>>> DEBUG ROLES ENDPOINT: req.user.roles:', req.user?.roles);
-    console.log('>>> DEBUG ROLES ENDPOINT: typeof req.user.roles:', typeof req.user?.roles);
+//     console.log('>>> DEBUG ROLES ENDPOINT: req.user:', req.user);
+//     console.log('>>> DEBUG ROLES ENDPOINT: req.user.roles:', req.user?.roles);
+//     console.log('>>> DEBUG ROLES ENDPOINT: typeof req.user.roles:', typeof req.user?.roles);
     return { 
       message: 'Debug roles test - only JWT auth, with @Roles decorator!', 
       user: req.user,
@@ -65,7 +65,7 @@ export class UsersTestController {
   @Roles('admin')
   @ApiBearerAuth()
   async testMethodLevelGuards(@Req() req) {
-    console.log('>>> METHOD LEVEL GUARDS ENDPOINT: req.user:', req.user);
+//     console.log('>>> METHOD LEVEL GUARDS ENDPOINT: req.user:', req.user);
     return { 
       message: 'Method level guards test working!', 
       user: req.user,
@@ -79,15 +79,15 @@ export class UsersTestController {
   @Roles('admin')
   @ApiBearerAuth()
   async testManualGuard(@Req() req) {
-    console.log('>>> MANUAL GUARD TEST: Starting...');
+//     console.log('>>> MANUAL GUARD TEST: Starting...');
     
     // Manually test the guard logic
     const guard = new RolesGuard(this.reflector);
-    console.log('>>> MANUAL GUARD TEST: Guard created:', !!guard);
+//     console.log('>>> MANUAL GUARD TEST: Guard created:', !!guard);
     
     // Test if we can access the roles metadata
     const requiredRoles = this.reflector.get(Roles, UsersTestController.prototype.testManualGuard);
-    console.log('>>> MANUAL GUARD TEST: Required roles from reflector:', requiredRoles);
+//     console.log('>>> MANUAL GUARD TEST: Required roles from reflector:', requiredRoles);
     
     return { 
       message: 'Manual guard test!', 

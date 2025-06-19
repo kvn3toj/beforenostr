@@ -20,15 +20,15 @@ export class InvitationsService {
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(NotificationsService) private readonly notificationsService: NotificationsService
   ) {
-    console.log('>>> InvitationsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-    console.log('>>> InvitationsService CONSTRUCTOR: this.notificationsService IS', this.notificationsService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> InvitationsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> InvitationsService CONSTRUCTOR: this.notificationsService IS', this.notificationsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
    * Crear una gift card de invitación
    */
   async createGiftCard(dto: CreateGiftCardDto) {
-    console.log('>>> InvitationsService.createGiftCard: Creating gift card', dto);
+//     console.log('>>> InvitationsService.createGiftCard: Creating gift card', dto);
 
     // Verificar que el invitador existe y tiene suficientes Ünits
     const inviter = await this.prisma.user.findUnique({
@@ -108,7 +108,7 @@ export class InvitationsService {
    * Canjear una gift card
    */
   async redeemGiftCard(dto: RedeemGiftCardDto) {
-    console.log('>>> InvitationsService.redeemGiftCard: Redeeming gift card', { token: dto.token, email: dto.invitedEmail });
+//     console.log('>>> InvitationsService.redeemGiftCard: Redeeming gift card', { token: dto.token, email: dto.invitedEmail });
 
     // Buscar la gift card por token
     const giftCardPublication = await this.prisma.publication.findFirst({
@@ -238,7 +238,7 @@ export class InvitationsService {
    * Obtener gift cards de un usuario
    */
   async getUserGiftCards(userId: string) {
-    console.log('>>> InvitationsService.getUserGiftCards: Getting gift cards for user', userId);
+//     console.log('>>> InvitationsService.getUserGiftCards: Getting gift cards for user', userId);
 
     const giftCards = await this.prisma.publication.findMany({
       where: {
@@ -263,7 +263,7 @@ export class InvitationsService {
    * Actualizar gift card
    */
   async updateGiftCard(giftCardId: string, dto: UpdateGiftCardDto, userId: string) {
-    console.log('>>> InvitationsService.updateGiftCard: Updating gift card', giftCardId);
+//     console.log('>>> InvitationsService.updateGiftCard: Updating gift card', giftCardId);
 
     const giftCard = await this.prisma.publication.findFirst({
       where: {
@@ -299,7 +299,7 @@ export class InvitationsService {
    * Obtener estadísticas de invitaciones
    */
   async getInvitationStats(dto: InvitationStatsDto) {
-    console.log('>>> InvitationsService.getInvitationStats: Getting invitation statistics', dto);
+//     console.log('>>> InvitationsService.getInvitationStats: Getting invitation statistics', dto);
 
     const where: any = { type: 'GIFT_CARD' };
     
@@ -360,7 +360,7 @@ export class InvitationsService {
    * Cancelar gift card
    */
   async cancelGiftCard(giftCardId: string, userId: string) {
-    console.log('>>> InvitationsService.cancelGiftCard: Cancelling gift card', giftCardId);
+//     console.log('>>> InvitationsService.cancelGiftCard: Cancelling gift card', giftCardId);
 
     const giftCard = await this.prisma.publication.findFirst({
       where: {

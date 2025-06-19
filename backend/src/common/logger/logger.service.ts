@@ -1,182 +1,253 @@
-import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
-import * as winston from 'winston';
+import { Injectable, LoggerService } from '@nestjs/common';
+
+export enum LogLevel {
+  ERROR = 0,
+  WARN = 1,
+  INFO = 2,
+  DEBUG = 3,
+  VERBOSE = 4,
+}
 
 export interface LogContext {
-  userId?: string;
-  videoId?: string;
-  endpoint?: string;
+  module?: string;
   method?: string;
-  duration?: number;
-  error?: string;
-  stackTrace?: string;
-  requestPayload?: any;
+  userId?: string;
+  requestId?: string;
   [key: string]: any;
 }
 
 @Injectable()
-export class LoggerService implements NestLoggerService {
-  private readonly logger: winston.Logger;
+export class CoomUnityLoggerService implements LoggerService {
+  private readonly logLevel: LogLevel;
+  private readonly enabledModules: Set<string>;
+  private readonly colors = {
+    reset: '\x1b[0m',
+    error: '\x1b[31m',
+    warn: '\x1b[33m',
+    info: '\x1b[36m',
+    debug: '\x1b[32m',
+    verbose: '\x1b[35m',
+    bold: '\x1b[1m',
+    dim: '\x1b[2m',
+  };
 
-  constructor() {
-    // Configurar formatos
-    const logFormat = winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.errors({ stack: true }),
-      winston.format.json(),
-      winston.format.printf(({ timestamp, level, message, context, ...meta }) => {
-        return JSON.stringify({
-          timestamp,
-          level,
-          message,
-          context,
-          ...meta,
-        });
-      })
-    );
+    constructor() {
+    // Configurar nivel de log desde ENV (default: INFO en development, ERROR en production)
+    const logLevelString = process.env.LOG_LEVEL ||
+      (process.env.NODE_ENV === 'production' ? 'ERROR' : 'INFO');
+    this.logLevel = LogLevel[logLevelString.toUpperCase() as keyof typeof LogLevel] ?? LogLevel.INFO;
 
-    // Configurar transports según el entorno
-    const transports: winston.transport[] = [
-      // Console transport para desarrollo
-      new winston.transports.Console({
-        format: winston.format.combine(
-          winston.format.colorize(),
-          winston.format.simple(),
-          winston.format.printf(({ timestamp, level, message, context, ...meta }) => {
-            const metaStr = Object.keys(meta).length ? JSON.stringify(meta, null, 2) : '';
-            return `${timestamp} [${level}] ${context ? `[${context}] ` : ''}${message} ${metaStr}`;
-          })
-        ),
-      }),
-    ];
+    // Configurar módulos habilitados desde ENV
+    const enabledModulesString = process.env.LOG_MODULES || 'ALL';
+    this.enabledModules = enabledModulesString === 'ALL'
+      ? new Set(['ALL'])
+      : new Set(enabledModulesString.split(',').map(m => m.trim()));
+  }
 
-    // En producción, agregar file transport
-    if (process.env.NODE_ENV === 'production') {
-      transports.push(
-        new winston.transports.File({
-          filename: 'logs/error.log',
-          level: 'error',
-          format: logFormat,
-        }),
-        new winston.transports.File({
-          filename: 'logs/combined.log',
-          format: logFormat,
-        })
+  /**
+   * Log de error - Siempre se muestra
+   */
+  error(message: string, trace?: string, context?: LogContext) {
+    if (this.shouldLog(LogLevel.ERROR, context?.module)) {
+      this.writeLog('ERROR', message, { trace, ...context });
+    }
+  }
+
+  /**
+   * Log de advertencia
+   */
+  warn(message: string, context?: LogContext) {
+    if (this.shouldLog(LogLevel.WARN, context?.module)) {
+      this.writeLog('WARN', message, context);
+    }
+  }
+
+  /**
+   * Log de información - Para eventos importantes
+   */
+  log(message: string, context?: LogContext) {
+    this.info(message, context);
+  }
+
+  info(message: string, context?: LogContext) {
+    if (this.shouldLog(LogLevel.INFO, context?.module)) {
+      this.writeLog('INFO', message, context);
+    }
+  }
+
+  /**
+   * Log de debug - Para desarrollo detallado
+   */
+  debug(message: string, context?: LogContext) {
+    if (this.shouldLog(LogLevel.DEBUG, context?.module)) {
+      this.writeLog('DEBUG', message, context);
+    }
+  }
+
+  /**
+   * Log verbose - Para máximo detalle
+   */
+  verbose(message: string, context?: LogContext) {
+    if (this.shouldLog(LogLevel.VERBOSE, context?.module)) {
+      this.writeLog('VERBOSE', message, context);
+    }
+  }
+
+  /**
+   * Métodos específicos del dominio CoomÜnity
+   */
+  auth(message: string, context?: LogContext) {
+    this.debug(`🔐 AUTH: ${message}`, { module: 'AuthService', ...context });
+  }
+
+  rbac(message: string, context?: LogContext) {
+    this.debug(`🛡️ RBAC: ${message}`, { module: 'RolesGuard', ...context });
+  }
+
+  database(message: string, context?: LogContext) {
+    this.debug(`🗄️ DB: ${message}`, { module: 'PrismaService', ...context });
+  }
+
+  social(message: string, context?: LogContext) {
+    this.debug(`👥 SOCIAL: ${message}`, { module: 'SocialService', ...context });
+  }
+
+  marketplace(message: string, context?: LogContext) {
+    this.debug(`🛒 MARKETPLACE: ${message}`, { module: 'MarketplaceService', ...context });
+  }
+
+  uplay(message: string, context?: LogContext) {
+    this.debug(`🎮 ÜPLAY: ${message}`, { module: 'UPlayService', ...context });
+  }
+
+  wallet(message: string, context?: LogContext) {
+    this.debug(`💰 WALLET: ${message}`, { module: 'WalletService', ...context });
+  }
+
+  ayni(message: string, context?: LogContext) {
+    this.info(`🌿 AYNI: ${message}`, { module: 'AyniService', ...context });
+  }
+
+  /**
+   * Log de performance para medir tiempos
+   */
+  performance(operation: string, duration: number, context?: LogContext) {
+    const color = duration > 1000 ? 'warn' : duration > 500 ? 'info' : 'debug';
+    const level = duration > 1000 ? LogLevel.WARN : duration > 500 ? LogLevel.INFO : LogLevel.DEBUG;
+
+    if (this.shouldLog(level, context?.module)) {
+      this.writeLog(level === LogLevel.WARN ? 'WARN' : level === LogLevel.INFO ? 'INFO' : 'DEBUG',
+        `⚡ PERF: ${operation} took ${duration}ms`, context);
+    }
+  }
+
+  /**
+   * Log estructurado para eventos de negocio
+   */
+  business(event: string, data: any, context?: LogContext) {
+    this.info(`📊 BUSINESS: ${event}`, {
+      module: 'BusinessEvents',
+      event,
+      data: this.sanitizeData(data),
+      ...context
+    });
+  }
+
+  /**
+   * Log de usuario para tracking de acciones
+   */
+  userAction(userId: string, action: string, details?: any, context?: LogContext) {
+    this.info(`👤 USER: ${action}`, {
+      module: 'UserActions',
+      userId,
+      action,
+      details: this.sanitizeData(details),
+      ...context
+    });
+  }
+
+  private shouldLog(level: LogLevel, module?: string): boolean {
+    // Verificar nivel de log
+    if (level > this.logLevel) {
+      return false;
+    }
+
+    // Verificar módulo habilitado
+    if (module && !this.enabledModules.has('ALL') && !this.enabledModules.has(module)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private writeLog(level: string, message: string, context?: LogContext) {
+    const timestamp = new Date().toISOString();
+    const color = this.colors[level.toLowerCase() as keyof typeof this.colors] || this.colors.reset;
+    const reset = this.colors.reset;
+
+    // Formatear contexto
+    const contextStr = context ? this.formatContext(context) : '';
+
+    // Log colorizado para desarrollo
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(
+        `${this.colors.dim}${timestamp}${reset} ` +
+        `${color}${this.colors.bold}[${level}]${reset} ` +
+        `${message}${contextStr}`
       );
+    } else {
+      // Log JSON estructurado para producción
+      const logEntry = {
+        timestamp,
+        level,
+        message,
+        ...context
+      };
+      console.log(JSON.stringify(logEntry));
     }
-
-    this.logger = winston.createLogger({
-      level: process.env.LOG_LEVEL || 'info',
-      format: logFormat,
-      transports,
-      // Evitar que Winston maneje excepciones no capturadas (NestJS lo hace)
-      exitOnError: false,
-    });
   }
 
-  log(message: string, context?: string, meta?: LogContext) {
-    this.logger.info(message, { context, ...meta });
+  private formatContext(context: LogContext): string {
+    const entries = Object.entries(context).filter(([key, value]) => value !== undefined);
+    if (entries.length === 0) return '';
+
+    const formatted = entries
+      .map(([key, value]) => `${key}=${this.formatValue(value)}`)
+      .join(' ');
+
+    return ` ${this.colors.dim}(${formatted})${this.colors.reset}`;
   }
 
-  error(message: string, trace?: string, context?: string, meta?: LogContext) {
-    this.logger.error(message, { 
-      context, 
-      stackTrace: trace,
-      ...meta 
-    });
+  private formatValue(value: any): string {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number') return value.toString();
+    if (typeof value === 'boolean') return value.toString();
+    if (value === null) return 'null';
+    if (value === undefined) return 'undefined';
+    return JSON.stringify(value);
   }
 
-  warn(message: string, context?: string, meta?: LogContext) {
-    this.logger.warn(message, { context, ...meta });
-  }
+  private sanitizeData(data: any): any {
+    if (!data) return data;
 
-  debug(message: string, context?: string, meta?: LogContext) {
-    this.logger.debug(message, { context, ...meta });
-  }
+    // Clonar para evitar mutaciones
+    const sanitized = JSON.parse(JSON.stringify(data));
 
-  verbose(message: string, context?: string, meta?: LogContext) {
-    this.logger.verbose(message, { context, ...meta });
-  }
+    // Eliminar campos sensibles
+    const sensitiveFields = ['password', 'token', 'secret', 'key', 'authorization'];
+    const sanitizeObject = (obj: any) => {
+      if (typeof obj !== 'object' || obj === null) return obj;
 
-  // Métodos específicos para métricas de performance
-  logPerformance(operation: string, duration: number, context?: string, meta?: LogContext) {
-    this.logger.info(`Performance: ${operation}`, {
-      context: context || 'Performance',
-      operation,
-      duration,
-      ...meta,
-    });
-  }
-
-  logVideoCalculation(
-    videoId: string,
-    method: string,
-    duration: number,
-    calculatedDuration?: number,
-    success: boolean = true,
-    error?: string,
-    meta?: LogContext
-  ) {
-    const logData = {
-      context: 'VideoCalculation',
-      videoId,
-      method,
-      executionDuration: duration,
-      calculatedDuration,
-      success,
-      error,
-      ...meta,
+      for (const key in obj) {
+        if (sensitiveFields.some(field => key.toLowerCase().includes(field))) {
+          obj[key] = '[REDACTED]';
+        } else if (typeof obj[key] === 'object') {
+          sanitizeObject(obj[key]);
+        }
+      }
+      return obj;
     };
 
-    if (success) {
-      this.logger.info(`Video duration calculated: ${method}`, logData);
-    } else {
-      this.logger.error(`Video duration calculation failed: ${method}`, logData);
-    }
+    return sanitizeObject(sanitized);
   }
-
-  logCacheOperation(operation: 'hit' | 'miss' | 'set' | 'delete', key: string, meta?: LogContext) {
-    this.logger.info(`Cache ${operation}: ${key}`, {
-      context: 'Cache',
-      operation,
-      key,
-      ...meta,
-    });
-  }
-
-  logApiCall(
-    endpoint: string,
-    method: string,
-    statusCode: number,
-    duration: number,
-    meta?: LogContext
-  ) {
-    const logData = {
-      context: 'API',
-      endpoint,
-      method,
-      statusCode,
-      duration,
-      ...meta,
-    };
-
-    if (statusCode >= 400) {
-      this.logger.error(`API Error: ${method} ${endpoint}`, logData);
-    } else {
-      this.logger.info(`API Call: ${method} ${endpoint}`, logData);
-    }
-  }
-
-  // Método para logging de errores con contexto completo
-  logErrorWithContext(
-    error: Error,
-    context: string,
-    additionalContext?: LogContext
-  ) {
-    this.logger.error(error.message, {
-      context,
-      error: error.name,
-      stackTrace: error.stack,
-      ...additionalContext,
-    });
-  }
-} 
+}

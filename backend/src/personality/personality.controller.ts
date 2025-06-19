@@ -30,7 +30,7 @@ import {
 @Controller('personality')
 export class PersonalityController {
   constructor(@Inject(PersonalityService) private readonly personalityService: PersonalityService) {
-    console.log('>>> PersonalityController CONSTRUCTOR: this.personalityService IS', this.personalityService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> PersonalityController CONSTRUCTOR: this.personalityService IS', this.personalityService ? 'DEFINED' : 'UNDEFINED');
   }
 
   @Post()

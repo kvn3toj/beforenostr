@@ -29,6 +29,6 @@ import { ValidationModule } from '../common/validation/validation.module';
 })
 export class MonitoringModule {
   constructor() {
-    console.log('>>> MonitoringModule CONSTRUCTOR: Initializing monitoring system...');
+// //     console.log('>>> MonitoringModule CONSTRUCTOR: Initializing monitoring system...');
   }
 } 

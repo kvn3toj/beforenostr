@@ -69,7 +69,7 @@ const backendSignIn = async (
       href: window.location.href
     });
 
-    const response = await authService.login(email, password);
+    const response = await authService.login({ email, password });
     console.log(`${AUTH_CONFIG.LOG_PREFIX} ✅ Login response received:`, {
       hasUser: !!response.user,
       hasData: !!response.data,
@@ -213,7 +213,7 @@ const backendSignUp = async (
   fullName?: string
 ): Promise<User> => {
   try {
-    const response = await authService.register(email, password, fullName);
+    const response = await authService.register({ email, password, name: fullName });
 
     // El backend puede devolver diferentes estructuras, adaptamos
     const userData = response.user || response.data || response;

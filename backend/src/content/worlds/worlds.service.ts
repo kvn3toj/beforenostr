@@ -7,7 +7,7 @@ import type { World } from '../../generated/prisma';
 @Injectable()
 export class WorldsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> WorldsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> WorldsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(createWorldDto: CreateWorldDto): Promise<World> {
@@ -67,10 +67,10 @@ export class WorldsService {
         }
       });
 
-      console.log(`>>> WorldsService: Created world ${world.id} by user ${createWorldDto.creatorId}`);
+//       console.log(`>>> WorldsService: Created world ${world.id} by user ${createWorldDto.creatorId}`);
       return world;
     } catch (error) {
-      console.error('>>> WorldsService create error:', error);
+//       console.error('>>> WorldsService create error:', error);
       throw error;
     }
   }
@@ -99,7 +99,7 @@ export class WorldsService {
         }
       });
     } catch (error) {
-      console.error('>>> WorldsService findAll error:', error);
+//       console.error('>>> WorldsService findAll error:', error);
       throw error;
     }
   }
@@ -129,7 +129,7 @@ export class WorldsService {
         }
       });
     } catch (error) {
-      console.error('>>> WorldsService findByCreatorId error:', error);
+//       console.error('>>> WorldsService findByCreatorId error:', error);
       throw error;
     }
   }
@@ -169,7 +169,7 @@ export class WorldsService {
 
       return world;
     } catch (error) {
-      console.error('>>> WorldsService findOne error:', error);
+//       console.error('>>> WorldsService findOne error:', error);
       throw error;
     }
   }
@@ -211,10 +211,10 @@ export class WorldsService {
         }
       });
 
-      console.log(`>>> WorldsService: Updated world ${id}`);
+//       console.log(`>>> WorldsService: Updated world ${id}`);
       return world;
     } catch (error) {
-      console.error('>>> WorldsService update error:', error);
+//       console.error('>>> WorldsService update error:', error);
       throw error;
     }
   }
@@ -228,10 +228,10 @@ export class WorldsService {
         where: { id },
       });
 
-      console.log(`>>> WorldsService: Deleted world ${id}`);
+//       console.log(`>>> WorldsService: Deleted world ${id}`);
       return world;
     } catch (error) {
-      console.error('>>> WorldsService remove error:', error);
+//       console.error('>>> WorldsService remove error:', error);
       throw error;
     }
   }
@@ -264,7 +264,7 @@ export class WorldsService {
         }
       });
     } catch (error) {
-      console.error('>>> WorldsService getWorldsByStatus error:', error);
+//       console.error('>>> WorldsService getWorldsByStatus error:', error);
       throw error;
     }
   }
@@ -295,7 +295,7 @@ export class WorldsService {
         }
       });
     } catch (error) {
-      console.error('>>> WorldsService getWorldsByType error:', error);
+//       console.error('>>> WorldsService getWorldsByType error:', error);
       throw error;
     }
   }

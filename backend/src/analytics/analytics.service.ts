@@ -32,7 +32,7 @@ interface ContentInteractionMetric {
 @Injectable()
 export class AnalyticsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> AnalyticsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> AnalyticsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async recordEngagement(data: CreateUserEngagementDto, userId: string): Promise<UserEngagement> {

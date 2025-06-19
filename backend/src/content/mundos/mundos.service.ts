@@ -7,8 +7,8 @@ import { Mundo } from '../../generated/prisma';
 @Injectable()
 export class MundosService {
   constructor(@Inject(PrismaService) private prisma: PrismaService) {
-    console.log('>>> MundosService CONSTRUCTOR: Initializing...');
-    console.log('>>> MundosService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// // //     console.log('>>> MundosService CONSTRUCTOR: Initializing...');
+// //     console.log('>>> MundosService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async testConnection() {

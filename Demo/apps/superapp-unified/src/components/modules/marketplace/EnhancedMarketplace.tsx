@@ -18,16 +18,17 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 // 🌌 COSMIC DESIGN SYSTEM IMPORTS
 import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
 import { useTheme as useCoomunityTheme } from '../../../contexts/ThemeContext';
+import { formatPrice, safeToLocaleString } from '../../../utils/numberUtils';
 
 // 🎯 PERFORMANCE OPTIMIZED COMPONENTS
 import { memo } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 // 🎮 ENHANCED FEATURES
-import { 
-  SearchIcon, 
-  FilterIcon, 
-  TrendingUpIcon, 
+import {
+  SearchIcon,
+  FilterIcon,
+  TrendingUpIcon,
   StarIcon,
   VerifiedIcon,
   LocalOfferIcon,
@@ -74,8 +75,8 @@ interface EnhancedMarketplaceProps {
 }
 
 // 🎭 COMPONENTE ITEM OPTIMIZADO CON MEMO
-const MarketplaceItemCard = memo<{ 
-  item: MarketplaceItem; 
+const MarketplaceItemCard = memo<{
+  item: MarketplaceItem;
   onItemClick: (item: MarketplaceItem) => void;
   cosmicEffectsEnabled: boolean;
 }>(({ item, onItemClick, cosmicEffectsEnabled }) => {
@@ -95,7 +96,7 @@ const MarketplaceItemCard = memo<{
   const getCurrencyIcon = (currency: string) => {
     const icons = {
       lukas: '🌟',
-      ondas: '🌊', 
+      ondas: '🌊',
       meritos: '🏆'
     };
     return icons[currency as keyof typeof icons] || '💰';
@@ -107,11 +108,11 @@ const MarketplaceItemCard = memo<{
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      whileHover={{ 
-        scale: 1.03, 
-        boxShadow: cosmicEffectsEnabled 
-          ? '0 8px 32px rgba(139, 69, 219, 0.3)' 
-          : '0 4px 20px rgba(0, 0, 0, 0.1)' 
+      whileHover={{
+        scale: 1.03,
+        boxShadow: cosmicEffectsEnabled
+          ? '0 8px 32px rgba(139, 69, 219, 0.3)'
+          : '0 4px 20px rgba(0, 0, 0, 0.1)'
       }}
       transition={{ duration: 0.3 }}
       style={{
@@ -122,8 +123,8 @@ const MarketplaceItemCard = memo<{
           ? 'linear-gradient(145deg, rgba(45, 27, 105, 0.8), rgba(17, 153, 142, 0.6))'
           : 'linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 255, 0.8))',
         backdropFilter: 'blur(20px)',
-        border: cosmicEffectsEnabled 
-          ? '1px solid rgba(139, 69, 219, 0.3)' 
+        border: cosmicEffectsEnabled
+          ? '1px solid rgba(139, 69, 219, 0.3)'
           : '1px solid rgba(0, 0, 0, 0.1)',
       }}
       onClick={() => onItemClick(item)}
@@ -133,11 +134,11 @@ const MarketplaceItemCard = memo<{
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             {item.featured && (
-              <Chip 
+              <Chip
                 icon={<StarIcon sx={{ fontSize: '16px' }} />}
-                label="Destacado" 
+                label="Destacado"
                 size="small"
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #FF6B6B, #FFE66D)',
                   color: 'white',
                   fontWeight: 600
@@ -145,22 +146,22 @@ const MarketplaceItemCard = memo<{
               />
             )}
             {item.trending && (
-              <Chip 
+              <Chip
                 icon={<TrendingUpIcon sx={{ fontSize: '16px' }} />}
-                label="Tendencia" 
+                label="Tendencia"
                 size="small"
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #4ECDC4, #44A08D)',
                   color: 'white',
                   fontWeight: 600
                 }}
               />
             )}
-            <Chip 
+            <Chip
               label={item.type}
               size="small"
-              sx={{ 
-                background: item.type === 'product' 
+              sx={{
+                background: item.type === 'product'
                   ? 'linear-gradient(45deg, #667eea, #764ba2)'
                   : item.type === 'service'
                   ? 'linear-gradient(45deg, #f093fb, #f5576c)'
@@ -170,7 +171,7 @@ const MarketplaceItemCard = memo<{
               }}
             />
           </Box>
-          
+
           {/* 🎖️ TRUST LEVEL BADGE */}
           <Tooltip title={`Nivel de Confianza: ${item.seller.trustLevel.toUpperCase()}`}>
             <Chip
@@ -191,11 +192,11 @@ const MarketplaceItemCard = memo<{
         <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, color: 'text.primary' }}>
           {item.title}
         </Typography>
-        
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            color: 'text.secondary', 
+
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
             mb: 2,
             display: '-webkit-box',
             WebkitLineClamp: 2,
@@ -210,20 +211,20 @@ const MarketplaceItemCard = memo<{
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>
-              {getCurrencyIcon(item.currency)} {item.price.toLocaleString()}
+              {getCurrencyIcon(item.currency)} {safeToLocaleString(item.price)}
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase' }}>
               {item.currency}
             </Typography>
           </Box>
-          
+
           {/* 🌱 SCORES DE AYNI Y BIEN COMÚN */}
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Tooltip title={`Ayni Score: ${item.ayniScore}/100`}>
-              <Chip 
+              <Chip
                 label={`A:${item.ayniScore}`}
                 size="small"
-                sx={{ 
+                sx={{
                   backgroundColor: `rgba(76, 175, 80, ${item.ayniScore / 100})`,
                   color: 'white',
                   fontSize: '11px'
@@ -231,10 +232,10 @@ const MarketplaceItemCard = memo<{
               />
             </Tooltip>
             <Tooltip title={`Bien Común Score: ${item.bienComunScore}/100`}>
-              <Chip 
+              <Chip
                 label={`BC:${item.bienComunScore}`}
                 size="small"
-                sx={{ 
+                sx={{
                   backgroundColor: `rgba(33, 150, 243, ${item.bienComunScore / 100})`,
                   color: 'white',
                   fontSize: '11px'
@@ -257,7 +258,7 @@ const MarketplaceItemCard = memo<{
               <VerifiedIcon sx={{ fontSize: '16px', color: 'success.main' }} />
             )}
           </Box>
-          
+
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
             🏆 {item.seller.meritos} mëritos
           </Typography>
@@ -271,7 +272,7 @@ const MarketplaceItemCard = memo<{
               label={tag}
               size="small"
               variant="outlined"
-              sx={{ 
+              sx={{
                 fontSize: '10px',
                 height: '20px',
                 borderColor: 'primary.main',
@@ -284,7 +285,7 @@ const MarketplaceItemCard = memo<{
               label={`+${item.tags.length - 3}`}
               size="small"
               variant="outlined"
-              sx={{ 
+              sx={{
                 fontSize: '10px',
                 height: '20px',
                 borderColor: 'text.secondary',
@@ -309,7 +310,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
   const theme = useTheme();
   const { isDark } = useCoomunityTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   // 🎯 ESTADO LOCAL OPTIMIZADO
   const [filters, setFilters] = useState(initialFilters);
   const [searchTerm, setSearchTerm] = useState('');
@@ -396,7 +397,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
       if (filters.type && filters.type !== 'all' && item.type !== filters.type) {
         return false;
       }
-      
+
       // Filtro por búsqueda
       if (searchTerm) {
         const searchLower = searchTerm.toLowerCase();
@@ -407,7 +408,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
           item.seller.name.toLowerCase().includes(searchLower)
         );
       }
-      
+
       return true;
     }).sort((a, b) => {
       switch (sortBy) {
@@ -473,10 +474,10 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
             <Grid container spacing={2} alignItems="center">
               <Grid size={{xs: 12, md: 6}}>
                 <Box sx={{ position: 'relative' }}>
-                  <SearchIcon sx={{ 
-                    position: 'absolute', 
-                    left: 12, 
-                    top: '50%', 
+                  <SearchIcon sx={{
+                    position: 'absolute',
+                    left: 12,
+                    top: '50%',
                     transform: 'translateY(-50%)',
                     color: 'text.secondary'
                   }} />
@@ -487,8 +488,8 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className={`
                       w-full pl-12 pr-4 py-3 rounded-lg border transition-all duration-200
-                      ${isDark 
-                        ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-green-400' 
+                      ${isDark
+                        ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-green-400'
                         : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-green-500'
                       }
                       focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-20
@@ -496,14 +497,14 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
                   />
                 </Box>
               </Grid>
-              
+
               <Grid size={{xs: 12, md: 6}}>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                   {/* 🏷️ FILTROS RÁPIDOS */}
                   {['all', 'product', 'service', 'collaboration'].map((type) => (
                     <Chip
                       key={type}
-                      label={type === 'all' ? 'Todos' : 
+                      label={type === 'all' ? 'Todos' :
                              type === 'product' ? 'Productos' :
                              type === 'service' ? 'Servicios' : 'Colaboraciones'}
                       onClick={() => setFilters(prev => ({ ...prev, type: type as any }))}
@@ -528,15 +529,15 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
             <Typography variant="body2" color="text.secondary">
               {filteredItems.length} elementos encontrados
             </Typography>
-            
+
             <Box sx={{ display: 'flex', gap: 1 }}>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className={`
                   px-3 py-1 rounded border text-sm transition-all duration-200
-                  ${isDark 
-                    ? 'bg-gray-800 border-gray-600 text-white' 
+                  ${isDark
+                    ? 'bg-gray-800 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-gray-900'
                   }
                   focus:outline-none focus:border-primary-500
@@ -604,8 +605,8 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
           style={{ marginTop: '3rem' }}
         >
           <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-            En el Marketplace CoomÜnity, cada intercambio fortalece los lazos de <strong>Ayni</strong> (reciprocidad equilibrada) 
-            y contribuye al <strong>Bien Común</strong>. Los <strong>Lükas</strong>, <strong>Öndas</strong> y <strong>Mëritos</strong> 
+            En el Marketplace CoomÜnity, cada intercambio fortalece los lazos de <strong>Ayni</strong> (reciprocidad equilibrada)
+            y contribuye al <strong>Bien Común</strong>. Los <strong>Lükas</strong>, <strong>Öndas</strong> y <strong>Mëritos</strong>
             no son solo monedas, sino manifestaciones de valor regenerativo que nutren nuestra comunidad.
           </Typography>
         </RevolutionaryWidget>
@@ -614,4 +615,4 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
   );
 };
 
-export default EnhancedMarketplace; 
+export default EnhancedMarketplace;

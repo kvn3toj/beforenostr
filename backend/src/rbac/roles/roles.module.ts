@@ -13,6 +13,6 @@ import { PrismaModule } from '../../prisma/prisma.module';
 })
 export class RolesModule {
   constructor() {
-    console.log('>>> RolesModule CONSTRUCTOR: Initializing...');
+// // //     console.log('>>> RolesModule CONSTRUCTOR: Initializing...');
   }
 } 

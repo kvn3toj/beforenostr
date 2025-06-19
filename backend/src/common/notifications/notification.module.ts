@@ -7,6 +7,6 @@ import { NotificationService } from './notification.service';
 })
 export class NotificationModule {
   constructor() {
-    console.log('>>> NotificationModule CONSTRUCTOR: Initializing notification system...');
+// //     console.log('>>> NotificationModule CONSTRUCTOR: Initializing notification system...');
   }
 } 

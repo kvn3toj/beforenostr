@@ -23,22 +23,22 @@ export class UsersService {
     @Inject(PrismaService) private readonly prisma: PrismaService,
     // private readonly auditLogsService: AuditLogsService, // Temporarily commented
   ) {
-    console.log('>>> UsersService CONSTRUCTOR: Initializing...');
-    console.log('>>> UsersService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-    console.log('>>> UsersService CONSTRUCTOR: this instance is', this);
-    console.log('>>> UsersService CONSTRUCTOR: constructor name is', this.constructor.name);
+// // //     console.log('>>> UsersService CONSTRUCTOR: Initializing...');
+// //     console.log('>>> UsersService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> UsersService CONSTRUCTOR: this instance is', this);
+// //     console.log('>>> UsersService CONSTRUCTOR: constructor name is', this.constructor.name);
   }
 
   async findAll() {
-    console.log('>>> UsersService.findAll: Starting...');
-    console.log('>>> UsersService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> UsersService.findAll: Starting...');
+//     console.log('>>> UsersService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const result = await this.prisma.user.findMany();
-      console.log('>>> UsersService.findAll: SUCCESS, found', result.length, 'users');
+//       console.log('>>> UsersService.findAll: SUCCESS, found', result.length, 'users');
       return result;
     } catch (error) {
-      console.error('>>> UsersService.findAll: ERROR:', error);
+//       console.error('>>> UsersService.findAll: ERROR:', error);
       throw error;
     }
   }
@@ -105,16 +105,16 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    console.log('>>> UsersService.findOne: Starting with id:', id);
-    console.log('>>> UsersService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> UsersService.findOne: Starting with id:', id);
+//     console.log('>>> UsersService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const user = await this.prisma.user.findUnique({ where: { id } });
-      console.log('>>> UsersService.findOne: Query result:', user ? 'FOUND' : 'NOT FOUND');
+//       console.log('>>> UsersService.findOne: Query result:', user ? 'FOUND' : 'NOT FOUND');
       if (!user) throw new NotFoundException('Usuario no encontrado');
       return user;
     } catch (error) {
-      console.error('>>> UsersService.findOne: ERROR:', error);
+//       console.error('>>> UsersService.findOne: ERROR:', error);
       throw error;
     }
   }
@@ -225,7 +225,7 @@ export class UsersService {
   }
 
   async getAyniMetrics(userId: string) {
-    console.log('>>> UsersService.getAyniMetrics: Starting for user:', userId);
+//     console.log('>>> UsersService.getAyniMetrics: Starting for user:', userId);
     
     try {
       // Verificar que el usuario existe
@@ -256,11 +256,11 @@ export class UsersService {
         joinedDate: user.createdAt.toISOString()
       };
 
-      console.log('>>> UsersService.getAyniMetrics: Generated metrics for user:', user.email);
+//       console.log('>>> UsersService.getAyniMetrics: Generated metrics for user:', user.email);
       return baseMetrics;
       
     } catch (error) {
-      console.error('>>> UsersService.getAyniMetrics: ERROR:', error);
+//       console.error('>>> UsersService.getAyniMetrics: ERROR:', error);
       throw error;
     }
   }

@@ -8,7 +8,7 @@ import type { Personality } from '../generated/prisma';
 @Injectable()
 export class PersonalityService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> PersonalityService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> PersonalityService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(createPersonalityDto: CreatePersonalityDto): Promise<Personality> {

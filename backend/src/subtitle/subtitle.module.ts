@@ -11,6 +11,6 @@ import { PrismaModule } from '../prisma/prisma.module';
 })
 export class SubtitleModule {
   constructor() {
-    console.log('>>> SubtitleModule constructor called');
+//     console.log('>>> SubtitleModule constructor called');
   }
 } 

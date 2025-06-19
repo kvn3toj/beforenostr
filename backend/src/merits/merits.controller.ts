@@ -5,24 +5,24 @@ import { CreateMeritDto } from './dto/create-merit.dto';
 @Controller('merits')
 export class MeritsController {
   constructor(@Inject(MeritsService) private readonly meritsService: MeritsService) {
-    console.log('>>> MeritsController CONSTRUCTOR: this.meritsService IS', this.meritsService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> MeritsController CONSTRUCTOR: this.meritsService IS', this.meritsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   @Post()
   create(@Body() createMeritDto: CreateMeritDto) {
-    console.log('>>> MeritsController: POST /merits', createMeritDto);
+//     console.log('>>> MeritsController: POST /merits', createMeritDto);
     return this.meritsService.create(createMeritDto);
   }
 
   @Get()
   findAll() {
-    console.log('>>> MeritsController: GET /merits');
+//     console.log('>>> MeritsController: GET /merits');
     return this.meritsService.findAll();
   }
 
   @Get('user/:userId')
   findByUserId(@Param('userId') userId: string) {
-    console.log('>>> MeritsController: GET /merits/user/:userId', userId);
+//     console.log('>>> MeritsController: GET /merits/user/:userId', userId);
     return this.meritsService.findByUserId(userId);
   }
 
@@ -31,7 +31,7 @@ export class MeritsController {
     @Param('userId') userId: string,
     @Query('type') meritType?: string
   ) {
-    console.log('>>> MeritsController: GET /merits/user/:userId/balance', { userId, meritType });
+//     console.log('>>> MeritsController: GET /merits/user/:userId/balance', { userId, meritType });
     return this.meritsService.getUserMeritBalance(userId, meritType);
   }
 
@@ -41,7 +41,7 @@ export class MeritsController {
     @Query('limit') limit?: string
   ) {
     const limitNumber = limit ? parseInt(limit, 10) : 10;
-    console.log('>>> MeritsController: GET /merits/leaderboard', { meritType, limit: limitNumber });
+//     console.log('>>> MeritsController: GET /merits/leaderboard', { meritType, limit: limitNumber });
     return this.meritsService.getMeritLeaderboard(meritType, limitNumber);
   }
 
@@ -53,7 +53,7 @@ export class MeritsController {
     source: string;
     relatedEntityId?: string;
   }) {
-    console.log('>>> MeritsController: POST /merits/award', body);
+//     console.log('>>> MeritsController: POST /merits/award', body);
     return this.meritsService.awardMerit(
       body.userId,
       body.type,
@@ -65,7 +65,7 @@ export class MeritsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    console.log('>>> MeritsController: GET /merits/:id', id);
+//     console.log('>>> MeritsController: GET /merits/:id', id);
     return this.meritsService.findOne(id);
   }
 } 

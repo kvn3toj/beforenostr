@@ -25,6 +25,7 @@ import {
   Nature,
 } from '@mui/icons-material';
 import { cn, animations, gradients, focus } from '../../../../utils/styles';
+import { formatPrice, safeToLocaleString } from '../../../../utils/numberUtils';
 import { Card as CoomunityCard, Button as CoomunityButton } from '../../../ui';
 
 // 🎯 Types
@@ -71,13 +72,13 @@ interface EnhancedMarketplaceCardProps {
 
 // 🎨 Animation Variants
 const cardVariants = {
-  hidden: { 
-    opacity: 0, 
+  hidden: {
+    opacity: 0,
     y: 20,
-    scale: 0.95 
+    scale: 0.95
   },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     scale: 1,
     transition: {
@@ -113,8 +114,8 @@ const imageVariants = {
 
 const badgeVariants = {
   hidden: { scale: 0, opacity: 0 },
-  visible: { 
-    scale: 1, 
+  visible: {
+    scale: 1,
     opacity: 1,
     transition: {
       type: 'spring',
@@ -198,7 +199,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
                 />
               </motion.div>
             )}
-            
+
             {item.stats.isSustainable && (
               <motion.div
                 variants={badgeVariants}
@@ -279,7 +280,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
             animate={isHovered ? 'hover' : 'initial'}
             onLoad={() => setImageLoaded(true)}
           />
-          
+
           {/* Loading skeleton */}
           {!imageLoaded && (
             <Box className={cn(
@@ -343,7 +344,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
                   </Tooltip>
                 )}
               </Box>
-              
+
               {/* Ayni Score */}
               <Box className="flex items-center gap-1">
                 <Typography variant="caption" className="text-gray-500">
@@ -372,7 +373,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
                 ({item.stats.reviewCount})
               </Typography>
             </Box>
-            
+
             <Typography variant="caption" className="text-gray-500">
               {item.stats.views} vistas
             </Typography>
@@ -385,7 +386,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
                 variant="h6"
                 className="font-bold text-coomunity-600"
               >
-                ${item.price.toLocaleString()}
+                ${safeToLocaleString(item.price)}
               </Typography>
               <Typography
                 variant="caption"
@@ -420,7 +421,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
           >
             Ver detalles
           </CoomunityButton>
-          
+
           <CoomunityButton
             variant="primary"
             size="sm"
@@ -455,4 +456,4 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
   );
 };
 
-export default EnhancedMarketplaceCard; 
+export default EnhancedMarketplaceCard;

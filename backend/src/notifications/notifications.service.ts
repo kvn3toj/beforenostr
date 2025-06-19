@@ -6,14 +6,14 @@ import type { Notification } from '../generated/prisma';
 @Injectable()
 export class NotificationsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> NotificationsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> NotificationsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
    * Crear una notificación individual
    */
   async createNotification(dto: CreateNotificationDto): Promise<Notification> {
-    console.log('>>> NotificationsService.createNotification: Creating notification', dto);
+//     console.log('>>> NotificationsService.createNotification: Creating notification', dto);
 
     // Verificar que el usuario existe
     const user = await this.prisma.user.findUnique({
@@ -43,7 +43,7 @@ export class NotificationsService {
    * Crear notificaciones en lote para múltiples usuarios
    */
   async createBulkNotifications(dto: CreateBulkNotificationDto) {
-    console.log('>>> NotificationsService.createBulkNotifications: Creating bulk notifications', dto);
+//     console.log('>>> NotificationsService.createBulkNotifications: Creating bulk notifications', dto);
 
     // Verificar que todos los usuarios existen
     const users = await this.prisma.user.findMany({
@@ -74,7 +74,7 @@ export class NotificationsService {
       take: dto.userIds.length
     });
 
-    await Promise.all(createdNotifications.map(notification => 
+    await Promise.all(createdNotifications.map(notification =>
       this.sendPushNotification(notification)
     ));
 
@@ -88,7 +88,7 @@ export class NotificationsService {
    * Obtener notificaciones de un usuario con filtros
    */
   async getUserNotifications(userId: string, filters: NotificationFilterDto) {
-    console.log('>>> NotificationsService.getUserNotifications: Getting notifications for user', userId);
+//     console.log('>>> NotificationsService.getUserNotifications: Getting notifications for user', userId);
 
     const limit = filters.limit ? parseInt(filters.limit, 10) : 50;
     const offset = filters.offset ? parseInt(filters.offset, 10) : 0;
@@ -126,7 +126,7 @@ export class NotificationsService {
    * Marcar notificación como leída
    */
   async markAsRead(notificationId: string, userId: string) {
-    console.log('>>> NotificationsService.markAsRead: Marking notification as read', notificationId);
+//     console.log('>>> NotificationsService.markAsRead: Marking notification as read', notificationId);
 
     const notification = await this.prisma.notification.findFirst({
       where: { id: notificationId, userId }
@@ -146,7 +146,7 @@ export class NotificationsService {
    * Marcar todas las notificaciones de un usuario como leídas
    */
   async markAllAsRead(userId: string) {
-    console.log('>>> NotificationsService.markAllAsRead: Marking all notifications as read for user', userId);
+//     console.log('>>> NotificationsService.markAllAsRead: Marking all notifications as read for user', userId);
 
     const result = await this.prisma.notification.updateMany({
       where: { userId, read: false },
@@ -163,7 +163,7 @@ export class NotificationsService {
    * Obtener conteo de notificaciones no leídas
    */
   async getUnreadCount(userId: string) {
-    console.log('>>> NotificationsService.getUnreadCount: Getting unread count for user', userId);
+//     console.log('>>> NotificationsService.getUnreadCount: Getting unread count for user', userId);
 
     const count = await this.prisma.notification.count({
       where: { userId, read: false }
@@ -176,7 +176,7 @@ export class NotificationsService {
    * Eliminar notificación
    */
   async deleteNotification(notificationId: string, userId: string) {
-    console.log('>>> NotificationsService.deleteNotification: Deleting notification', notificationId);
+//     console.log('>>> NotificationsService.deleteNotification: Deleting notification', notificationId);
 
     const notification = await this.prisma.notification.findFirst({
       where: { id: notificationId, userId }
@@ -197,10 +197,10 @@ export class NotificationsService {
    * Crear notificación automática para méritos otorgados
    */
   async notifyMeritAwarded(userId: string, meritType: string, amount: number, source: string) {
-    console.log('>>> NotificationsService.notifyMeritAwarded: Creating merit notification', { userId, meritType, amount });
+//     console.log('>>> NotificationsService.notifyMeritAwarded: Creating merit notification', { userId, meritType, amount });
 
     const message = `¡Has recibido ${amount} ${meritType}! Fuente: ${source}`;
-    
+
     return await this.createNotification({
       userId,
       type: NotificationType.MERIT_AWARDED,
@@ -213,11 +213,11 @@ export class NotificationsService {
    * Crear notificación automática para transacciones completadas
    */
   async notifyTransactionCompleted(userId: string, transactionType: string, amount: number, isIncoming: boolean) {
-    console.log('>>> NotificationsService.notifyTransactionCompleted: Creating transaction notification', { userId, transactionType, amount });
+//     console.log('>>> NotificationsService.notifyTransactionCompleted: Creating transaction notification', { userId, transactionType, amount });
 
     const direction = isIncoming ? 'recibido' : 'enviado';
     const message = `Transacción completada: ${direction} ${amount} ${transactionType}`;
-    
+
     return await this.createNotification({
       userId,
       type: NotificationType.TRANSACTION_COMPLETED,
@@ -230,10 +230,10 @@ export class NotificationsService {
    * Crear notificación automática para tokens próximos a caducar
    */
   async notifyTokenExpiry(userId: string, tokenType: string, amount: number, daysToExpiry: number) {
-    console.log('>>> NotificationsService.notifyTokenExpiry: Creating token expiry notification', { userId, tokenType, amount });
+//     console.log('>>> NotificationsService.notifyTokenExpiry: Creating token expiry notification', { userId, tokenType, amount });
 
     const message = `¡Atención! Tienes ${amount} ${tokenType} que caducarán en ${daysToExpiry} días`;
-    
+
     return await this.createNotification({
       userId,
       type: NotificationType.TOKEN_EXPIRY_WARNING,
@@ -246,10 +246,10 @@ export class NotificationsService {
    * Crear notificación automática para invitaciones a grupos
    */
   async notifyGroupInvitation(userId: string, groupName: string, inviterName: string) {
-    console.log('>>> NotificationsService.notifyGroupInvitation: Creating group invitation notification', { userId, groupName });
+//     console.log('>>> NotificationsService.notifyGroupInvitation: Creating group invitation notification', { userId, groupName });
 
     const message = `${inviterName} te ha invitado a unirte al grupo "${groupName}"`;
-    
+
     return await this.createNotification({
       userId,
       type: NotificationType.GROUP_INVITATION,
@@ -262,11 +262,11 @@ export class NotificationsService {
    * Simular envío de push notification (aquí se integraría con un servicio real)
    */
   private async sendPushNotification(notification: Notification) {
-    console.log('>>> NotificationsService.sendPushNotification: Sending push notification', {
-      userId: notification.userId,
-      type: notification.type,
-      message: notification.message
-    });
+    // console.log('>>> NotificationsService.sendPushNotification: Sending push notification', {
+    //   userId: notification.userId,
+    //   type: notification.type,
+    //   message: notification.message
+    // });
 
     // Aquí se integraría con servicios como:
     // - Firebase Cloud Messaging (FCM)
@@ -283,7 +283,7 @@ export class NotificationsService {
    * Limpiar notificaciones antiguas (más de 30 días)
    */
   async cleanupOldNotifications() {
-    console.log('>>> NotificationsService.cleanupOldNotifications: Cleaning up old notifications');
+//     console.log('>>> NotificationsService.cleanupOldNotifications: Cleaning up old notifications');
 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -300,4 +300,4 @@ export class NotificationsService {
       count: result.count
     };
   }
-} 
+}

@@ -8,25 +8,25 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
   constructor() {
     super();
-    console.log('>>> PrismaService Constructor Executed (REAL DATABASE MODE)');
-    console.log('>>> PrismaService Constructor - MOCK_MODE:', this.isMockMode);
+//     console.log('>>> PrismaService Constructor Executed (REAL DATABASE MODE)');
+//     console.log('>>> PrismaService Constructor - MOCK_MODE:', this.isMockMode);
   }
 
   async onModuleInit() {
     if (this.isMockMode) {
-      console.log('>>> PrismaService onModuleInit - MOCK MODE: Skipping database connection');
-      console.log('>>> PrismaService onModuleInit - Backend will use mock data');
+//       console.log('>>> PrismaService onModuleInit - MOCK MODE: Skipping database connection');
+//       console.log('>>> PrismaService onModuleInit - Backend will use mock data');
       return;
     }
     
-    console.log('>>> PrismaService onModuleInit - Connecting to database...');
+//     console.log('>>> PrismaService onModuleInit - Connecting to database...');
     try {
       await this.$connect();
-      console.log('>>> PrismaService onModuleInit - Database connection established');
-      console.log('>>> PrismaService onModuleInit - Backend using REAL PostgreSQL database');
+//       console.log('>>> PrismaService onModuleInit - Database connection established');
+//       console.log('>>> PrismaService onModuleInit - Backend using REAL PostgreSQL database');
     } catch (error) {
-      console.error('>>> PrismaService onModuleInit - Database connection failed:', error.message);
-      console.log('>>> PrismaService onModuleInit - Falling back to MOCK MODE');
+//       console.error('>>> PrismaService onModuleInit - Database connection failed:', error.message);
+//       console.log('>>> PrismaService onModuleInit - Falling back to MOCK MODE');
       this.isMockMode = true;
     }
   }

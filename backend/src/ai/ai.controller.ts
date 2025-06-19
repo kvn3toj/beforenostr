@@ -9,13 +9,13 @@ export class AiController {
     @Inject(QuestionGeneratorService)
     private readonly questionGeneratorService: QuestionGeneratorService
   ) {
-    console.log('>>> AiController CONSTRUCTOR: questionGeneratorService IS', 
+// //     console.log('>>> AiController CONSTRUCTOR: questionGeneratorService IS', 
       this.questionGeneratorService ? 'DEFINED' : 'UNDEFINED');
   }
 
   @Post('generate-questions')
   async generateQuestions(@Body() body: any) {
-    console.log('>>> AiController.generateQuestions: Starting with body:', body);
+//     console.log('>>> AiController.generateQuestions: Starting with body:', body);
 
     try {
       // Validación básica
@@ -33,7 +33,7 @@ export class AiController {
         languageCode: body.languageCode || 'es-ES',
       };
 
-      console.log('>>> AiController: Calling questionGeneratorService.generateAttentionQuestions');
+//       console.log('>>> AiController: Calling questionGeneratorService.generateAttentionQuestions');
       const questions = await this.questionGeneratorService.generateAttentionQuestions(
         parseInt(body.videoItemId),
         config
@@ -42,7 +42,7 @@ export class AiController {
       // Auto-guardar si se solicita
       let savedQuestions = null;
       if (body.autoSave) {
-        console.log('>>> AiController: Auto-saving questions to database');
+//         console.log('>>> AiController: Auto-saving questions to database');
         savedQuestions = await this.questionGeneratorService.saveGeneratedQuestions(
           parseInt(body.videoItemId),
           questions,
@@ -62,18 +62,18 @@ export class AiController {
         }
       };
 
-      console.log('>>> AiController.generateQuestions: SUCCESS');
+//       console.log('>>> AiController.generateQuestions: SUCCESS');
       return response;
 
     } catch (error) {
-      console.error('>>> AiController.generateQuestions: ERROR:', error);
+//       console.error('>>> AiController.generateQuestions: ERROR:', error);
       throw error;
     }
   }
 
   @Post('save-questions')
   async saveQuestions(@Body() body: any) {
-    console.log('>>> AiController.saveQuestions: Starting with body:', body);
+//     console.log('>>> AiController.saveQuestions: Starting with body:', body);
 
     try {
       if (!body.videoItemId || !body.questions || !body.languageCode) {
@@ -86,7 +86,7 @@ export class AiController {
         body.languageCode
       );
 
-      console.log('>>> AiController.saveQuestions: SUCCESS');
+//       console.log('>>> AiController.saveQuestions: SUCCESS');
       return {
         success: true,
         message: `Saved ${savedQuestions.length} questions successfully`,
@@ -94,7 +94,7 @@ export class AiController {
       };
 
     } catch (error) {
-      console.error('>>> AiController.saveQuestions: ERROR:', error);
+//       console.error('>>> AiController.saveQuestions: ERROR:', error);
       throw error;
     }
   }

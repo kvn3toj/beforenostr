@@ -8,7 +8,7 @@ import type { Subtitle } from '../generated/prisma';
 @Injectable()
 export class SubtitleService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> SubtitleService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> SubtitleService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   // Helper method for validating content or contentUrl
@@ -26,27 +26,27 @@ export class SubtitleService {
   }
 
   async create(createSubtitleDto: CreateSubtitleDto): Promise<Subtitle> {
-    console.log('>>> SubtitleService.create: Starting with data:', createSubtitleDto);
-    console.log('>>> SubtitleService.create: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> SubtitleService.create: Starting with data:', createSubtitleDto);
+//     console.log('>>> SubtitleService.create: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       this.validateContentOrUrl(createSubtitleDto);
       
-      console.log('>>> SubtitleService.create: About to call prisma.subtitle.create');
+//       console.log('>>> SubtitleService.create: About to call prisma.subtitle.create');
       const result = await this.prisma.subtitle.create({ 
         data: createSubtitleDto 
       });
-      console.log('>>> SubtitleService.create: SUCCESS, result:', result);
+//       console.log('>>> SubtitleService.create: SUCCESS, result:', result);
       return result;
     } catch (error) {
-      console.error('>>> SubtitleService.create: ERROR:', error);
+//       console.error('>>> SubtitleService.create: ERROR:', error);
       throw error;
     }
   }
 
   async findAll(findAllDto: FindAllSubtitlesDto): Promise<Subtitle[]> {
-    console.log('>>> SubtitleService.findAll: Starting with params:', findAllDto);
-    console.log('>>> SubtitleService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> SubtitleService.findAll: Starting with params:', findAllDto);
+//     console.log('>>> SubtitleService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       if (!findAllDto.videoItemId) {
@@ -62,7 +62,7 @@ export class SubtitleService {
         throw new BadRequestException('videoItemId must be a valid number.');
       }
 
-      console.log('>>> SubtitleService.findAll: About to call prisma.subtitle.findMany with videoItemId:', videoItemId);
+//       console.log('>>> SubtitleService.findAll: About to call prisma.subtitle.findMany with videoItemId:', videoItemId);
       const result = await this.prisma.subtitle.findMany({
         where: {
           videoItemId: videoItemId,
@@ -72,41 +72,41 @@ export class SubtitleService {
         },
         orderBy: { createdAt: 'asc' },
       });
-      console.log('>>> SubtitleService.findAll: SUCCESS, found', result.length, 'subtitles');
+//       console.log('>>> SubtitleService.findAll: SUCCESS, found', result.length, 'subtitles');
       return result;
     } catch (error) {
-      console.error('>>> SubtitleService.findAll: ERROR:', error);
+//       console.error('>>> SubtitleService.findAll: ERROR:', error);
       throw error;
     }
   }
 
   async findOne(id: number): Promise<Subtitle> {
-    console.log('>>> SubtitleService.findOne: Starting with id:', id);
-    console.log('>>> SubtitleService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> SubtitleService.findOne: Starting with id:', id);
+//     console.log('>>> SubtitleService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
-      console.log('>>> SubtitleService.findOne: About to call prisma.subtitle.findUnique');
+//       console.log('>>> SubtitleService.findOne: About to call prisma.subtitle.findUnique');
       const subtitle = await this.prisma.subtitle.findUnique({ where: { id } });
       
       if (!subtitle) {
-        console.log('>>> SubtitleService.findOne: Subtitle not found');
+//         console.log('>>> SubtitleService.findOne: Subtitle not found');
         throw new NotFoundException(`Subtitle with ID ${id} not found.`);
       }
       
-      console.log('>>> SubtitleService.findOne: SUCCESS, found subtitle:', subtitle);
+//       console.log('>>> SubtitleService.findOne: SUCCESS, found subtitle:', subtitle);
       return subtitle;
     } catch (error) {
-      console.error('>>> SubtitleService.findOne: ERROR:', error);
+//       console.error('>>> SubtitleService.findOne: ERROR:', error);
       throw error;
     }
   }
 
   async update(id: number, updateSubtitleDto: UpdateSubtitleDto): Promise<Subtitle> {
-    console.log('>>> SubtitleService.update: Starting with id:', id, 'data:', updateSubtitleDto);
-    console.log('>>> SubtitleService.update: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> SubtitleService.update: Starting with id:', id, 'data:', updateSubtitleDto);
+//     console.log('>>> SubtitleService.update: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
-      console.log('>>> SubtitleService.update: About to check if subtitle exists');
+//       console.log('>>> SubtitleService.update: About to check if subtitle exists');
       const existingSubtitle = await this.prisma.subtitle.findUnique({ where: { id } });
       if (!existingSubtitle) {
         throw new NotFoundException(`Subtitle with ID ${id} not found.`);
@@ -119,35 +119,35 @@ export class SubtitleService {
       };
       this.validateContentOrUrl(combinedDto, true);
 
-      console.log('>>> SubtitleService.update: About to call prisma.subtitle.update');
+//       console.log('>>> SubtitleService.update: About to call prisma.subtitle.update');
       const result = await this.prisma.subtitle.update({
         where: { id },
         data: updateSubtitleDto,
       });
-      console.log('>>> SubtitleService.update: SUCCESS, result:', result);
+//       console.log('>>> SubtitleService.update: SUCCESS, result:', result);
       return result;
     } catch (error) {
-      console.error('>>> SubtitleService.update: ERROR:', error);
+//       console.error('>>> SubtitleService.update: ERROR:', error);
       throw error;
     }
   }
 
   async remove(id: number): Promise<void> {
-    console.log('>>> SubtitleService.remove: Starting with id:', id);
-    console.log('>>> SubtitleService.remove: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> SubtitleService.remove: Starting with id:', id);
+//     console.log('>>> SubtitleService.remove: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
-      console.log('>>> SubtitleService.remove: About to check if subtitle exists');
+//       console.log('>>> SubtitleService.remove: About to check if subtitle exists');
       const existingSubtitle = await this.prisma.subtitle.findUnique({ where: { id } });
       if (!existingSubtitle) {
         throw new NotFoundException(`Subtitle with ID ${id} not found.`);
       }
 
-      console.log('>>> SubtitleService.remove: About to call prisma.subtitle.delete');
+//       console.log('>>> SubtitleService.remove: About to call prisma.subtitle.delete');
       await this.prisma.subtitle.delete({ where: { id } });
-      console.log('>>> SubtitleService.remove: SUCCESS');
+//       console.log('>>> SubtitleService.remove: SUCCESS');
     } catch (error) {
-      console.error('>>> SubtitleService.remove: ERROR:', error);
+//       console.error('>>> SubtitleService.remove: ERROR:', error);
       throw error;
     }
   }

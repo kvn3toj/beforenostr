@@ -17,10 +17,10 @@ import { Roles } from '../decorators/roles.decorator';
 @Controller('roles')
 export class RolesController {
   constructor(@Inject(RolesService) private readonly rolesService: RolesService) {
-    console.log('>>> RolesController CONSTRUCTOR: Initializing...');
-    console.log('>>> RolesController CONSTRUCTOR: this.rolesService IS', this.rolesService ? 'DEFINED' : 'UNDEFINED');
-    console.log('>>> RolesController CONSTRUCTOR: service type:', typeof this.rolesService);
-    console.log('>>> RolesController CONSTRUCTOR: service constructor:', this.rolesService?.constructor?.name);
+// // //     console.log('>>> RolesController CONSTRUCTOR: Initializing...');
+// //     console.log('>>> RolesController CONSTRUCTOR: this.rolesService IS', this.rolesService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> RolesController CONSTRUCTOR: service type:', typeof this.rolesService);
+// //     console.log('>>> RolesController CONSTRUCTOR: service constructor:', this.rolesService?.constructor?.name);
   }
 
   @Post()
@@ -33,16 +33,16 @@ export class RolesController {
   @Get()
   @ApiOperation({ summary: 'Get all roles' })
   findAll() {
-    console.log('>>> RolesController.findAll: Starting...');
-    console.log('>>> RolesController.findAll: this.rolesService IS', this.rolesService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> RolesController.findAll: Starting...');
+//     console.log('>>> RolesController.findAll: this.rolesService IS', this.rolesService ? 'DEFINED' : 'UNDEFINED');
     
     try {
-      console.log('>>> RolesController.findAll: Calling service.findAll()...');
+//       console.log('>>> RolesController.findAll: Calling service.findAll()...');
       const result = this.rolesService.findAll();
-      console.log('>>> RolesController.findAll: SUCCESS, returning result');
+//       console.log('>>> RolesController.findAll: SUCCESS, returning result');
       return result;
     } catch (error) {
-      console.error('>>> RolesController.findAll: ERROR:', error);
+//       console.error('>>> RolesController.findAll: ERROR:', error);
       throw error;
     }
   }

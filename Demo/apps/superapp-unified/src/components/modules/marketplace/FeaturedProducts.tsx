@@ -1,22 +1,23 @@
 import React from 'react';
-import { 
-  Box, 
-  Typography, 
-  Card, 
-  CardContent, 
-  CardMedia, 
-  Grid, 
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
   Chip,
   IconButton,
   Rating
 } from '@mui/material';
-import { 
+import {
   FavoriteIcon,
   ShareIcon,
   AttachMoneyIcon,
   VerifiedIcon
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { formatPrice, safeToLocaleString } from '../../../utils/numberUtils';
 
 interface Product {
   id: string;
@@ -71,18 +72,18 @@ const sampleProducts: Product[] = [
   }
 ];
 
-const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ 
-  products = sampleProducts, 
-  maxItems = 6 
+const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
+  products = sampleProducts,
+  maxItems = 6
 }) => {
   const featuredProducts = products.filter(p => p.featured).slice(0, maxItems);
 
   return (
     <Box sx={{ py: 3 }}>
-      <Typography 
-        variant="h5" 
-        gutterBottom 
-        sx={{ 
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
           mb: 3,
           fontWeight: 'bold',
           background: 'linear-gradient(45deg, #667eea, #764ba2)',
@@ -102,8 +103,8 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card 
-                sx={{ 
+              <Card
+                sx={{
                   height: '100%',
                   background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
                   backdropFilter: 'blur(10px)',
@@ -122,7 +123,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                     height="200"
                     image={product.image}
                     alt={product.title}
-                    sx={{ 
+                    sx={{
                       objectFit: 'cover',
                       background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)'
                     }}
@@ -131,7 +132,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                       target.style.display = 'none';
                     }}
                   />
-                  
+
                   <Chip
                     icon={<VerifiedIcon />}
                     label="Destacado"
@@ -146,9 +147,9 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                     }}
                   />
 
-                  <Box sx={{ 
-                    position: 'absolute', 
-                    top: 8, 
+                  <Box sx={{
+                    position: 'absolute',
+                    top: 8,
                     left: 8,
                     display: 'flex',
                     gap: 1
@@ -166,21 +167,21 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                     {product.title}
                   </Typography>
-                  
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary" 
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
                     sx={{ mb: 2, minHeight: 40 }}
                   >
                     {product.description}
                   </Typography>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Rating 
-                      value={product.ayniRating} 
-                      precision={0.1} 
-                      readOnly 
-                      size="small" 
+                    <Rating
+                      value={product.ayniRating}
+                      precision={0.1}
+                      readOnly
+                      size="small"
                     />
                     <Typography variant="caption" sx={{ ml: 1, fontWeight: 'bold' }}>
                       {product.ayniRating} Ayni
@@ -188,9 +189,9 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
+                    <Typography
+                      variant="h6"
+                      sx={{
                         fontWeight: 'bold',
                         color: 'primary.main',
                         display: 'flex',
@@ -199,10 +200,10 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                       }}
                     >
                       <AttachMoneyIcon fontSize="small" />
-                      {product.price.toLocaleString('es-CO')}
+                      {safeToLocaleString(product.price, 0, 'es-CO')}
                     </Typography>
-                    
-                    <Chip 
+
+                    <Chip
                       label={product.category}
                       size="small"
                       variant="outlined"
@@ -210,9 +211,9 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                     />
                   </Box>
 
-                  <Typography 
-                    variant="caption" 
-                    color="text.secondary" 
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
                     sx={{ mt: 1, display: 'block' }}
                   >
                     Por: {product.seller}
@@ -227,4 +228,4 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
   );
 };
 
-export default FeaturedProducts; 
+export default FeaturedProducts;

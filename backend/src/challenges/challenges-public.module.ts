@@ -11,6 +11,6 @@ import { PrismaModule } from '../prisma/prisma.module';
 })
 export class ChallengesPublicModule {
   constructor() {
-    console.log('[ChallengesPublicModule] Module initialized with PrismaModule - full version');
+//     console.log('[ChallengesPublicModule] Module initialized with PrismaModule - full version');
   }
 } 

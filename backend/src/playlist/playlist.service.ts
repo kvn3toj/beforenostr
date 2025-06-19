@@ -7,31 +7,31 @@ import { FindAllPlaylistsDto } from './dto/find-all-playlists.dto';
 @Injectable()
 export class PlaylistService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> PlaylistService CONSTRUCTOR: Initializing...');
-    console.log('>>> PlaylistService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// // //     console.log('>>> PlaylistService CONSTRUCTOR: Initializing...');
+// //     console.log('>>> PlaylistService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   // Minimal implementations to satisfy controller
   async create(createPlaylistDto: CreatePlaylistDto) {
-    console.log('>>> PlaylistService.create called with data:', createPlaylistDto);
-    console.log('>>> PlaylistService.create - mundoId value:', createPlaylistDto.mundoId);
-    console.log('>>> PlaylistService.create - mundoId type:', typeof createPlaylistDto.mundoId);
+//     console.log('>>> PlaylistService.create called with data:', createPlaylistDto);
+//     console.log('>>> PlaylistService.create - mundoId value:', createPlaylistDto.mundoId);
+//     console.log('>>> PlaylistService.create - mundoId type:', typeof createPlaylistDto.mundoId);
     
     try {
       // Verificar que el mundo existe
-      console.log('>>> PlaylistService.create - About to query mundo with id:', createPlaylistDto.mundoId);
+//       console.log('>>> PlaylistService.create - About to query mundo with id:', createPlaylistDto.mundoId);
       
       const mundo = await this.prisma.mundo.findUnique({
         where: { id: createPlaylistDto.mundoId }
       });
       
-      console.log('>>> PlaylistService.create - Mundo query result:', mundo);
+//       console.log('>>> PlaylistService.create - Mundo query result:', mundo);
       
       if (!mundo) {
         throw new Error(`Mundo with ID ${createPlaylistDto.mundoId} not found`);
       }
       
-      console.log('>>> PlaylistService.create - Mundo found:', mundo.name);
+//       console.log('>>> PlaylistService.create - Mundo found:', mundo.name);
       
       // Obtener el siguiente orderInMundo si no se especifica
       let orderInMundo = createPlaylistDto.orderInMundo;
@@ -43,7 +43,7 @@ export class PlaylistService {
         orderInMundo = (lastPlaylist?.orderInMundo || 0) + 1;
       }
       
-      console.log('>>> PlaylistService.create - About to create playlist with orderInMundo:', orderInMundo);
+//       console.log('>>> PlaylistService.create - About to create playlist with orderInMundo:', orderInMundo);
       
       // Crear la playlist en la base de datos
       const newPlaylist = await this.prisma.playlist.create({
@@ -62,17 +62,17 @@ export class PlaylistService {
         }
       });
       
-      console.log('>>> PlaylistService.create - Playlist created successfully:', newPlaylist.id);
+//       console.log('>>> PlaylistService.create - Playlist created successfully:', newPlaylist.id);
       
       return newPlaylist;
     } catch (error) {
-      console.error('>>> PlaylistService.create - Error:', error);
+//       console.error('>>> PlaylistService.create - Error:', error);
       throw error;
     }
   }
 
   async findAll(findAllDto?: FindAllPlaylistsDto) {
-    console.log('>>> PlaylistService.findAll called with filters:', findAllDto);
+//     console.log('>>> PlaylistService.findAll called with filters:', findAllDto);
     
     try {
       // Establecer valores por defecto
@@ -135,9 +135,9 @@ export class PlaylistService {
       const orderByClause: any = {};
       orderByClause[orderBy] = orderDirection;
 
-      console.log('>>> PlaylistService.findAll - Where clause:', JSON.stringify(where, null, 2));
-      console.log('>>> PlaylistService.findAll - Include clause:', JSON.stringify(include, null, 2));
-      console.log('>>> PlaylistService.findAll - OrderBy clause:', JSON.stringify(orderByClause, null, 2));
+//       console.log('>>> PlaylistService.findAll - Where clause:', JSON.stringify(where, null, 2));
+//       console.log('>>> PlaylistService.findAll - Include clause:', JSON.stringify(include, null, 2));
+//       console.log('>>> PlaylistService.findAll - OrderBy clause:', JSON.stringify(orderByClause, null, 2));
 
       // Ejecutar consultas en paralelo
       const [playlists, totalCount] = await Promise.all([
@@ -153,8 +153,8 @@ export class PlaylistService {
         }),
       ]);
 
-      console.log('>>> PlaylistService.findAll - Found playlists:', playlists.length);
-      console.log('>>> PlaylistService.findAll - Total count:', totalCount);
+//       console.log('>>> PlaylistService.findAll - Found playlists:', playlists.length);
+//       console.log('>>> PlaylistService.findAll - Total count:', totalCount);
 
       return {
         data: playlists,
@@ -168,23 +168,23 @@ export class PlaylistService {
         },
       };
     } catch (error) {
-      console.error('>>> PlaylistService.findAll - Error:', error);
+//       console.error('>>> PlaylistService.findAll - Error:', error);
       throw error;
     }
   }
 
   async findOne(id: string) {
-    console.log('>>> PlaylistService.findOne called with id:', id);
+//     console.log('>>> PlaylistService.findOne called with id:', id);
     return { message: 'FindOne method called', id };
   }
 
   async update(id: string, updatePlaylistDto: UpdatePlaylistDto) {
-    console.log('>>> PlaylistService.update called with id:', id);
+//     console.log('>>> PlaylistService.update called with id:', id);
     return { message: 'Update method called', id, data: updatePlaylistDto };
   }
 
   async remove(id: string) {
-    console.log('>>> PlaylistService.remove called with id:', id);
+//     console.log('>>> PlaylistService.remove called with id:', id);
     return { message: 'Remove method called', id };
   }
 } 

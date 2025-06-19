@@ -15,7 +15,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiQuery } from '@ne
 @Controller('analytics')
 export class AnalyticsController {
   constructor(@Inject(AnalyticsService) private readonly analyticsService: AnalyticsService) {
-    console.log('>>> AnalyticsController CONSTRUCTOR: this.analyticsService IS', this.analyticsService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> AnalyticsController CONSTRUCTOR: this.analyticsService IS', this.analyticsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   // Endpoints de engagement de usuarios (ya implementados)

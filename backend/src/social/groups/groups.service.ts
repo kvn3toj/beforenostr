@@ -8,7 +8,7 @@ import type { Group, UserGroup } from '../../generated/prisma';
 @Injectable()
 export class GroupsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> GroupsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> GroupsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
@@ -59,10 +59,10 @@ export class GroupsService {
         }
       });
 
-      console.log(`>>> GroupsService: Created group ${group.id} by user ${createGroupDto.ownerId}`);
+//       console.log(`>>> GroupsService: Created group ${group.id} by user ${createGroupDto.ownerId}`);
       return group;
     } catch (error) {
-      console.error('>>> GroupsService create error:', error);
+//       console.error('>>> GroupsService create error:', error);
       throw error;
     }
   }
@@ -97,7 +97,7 @@ export class GroupsService {
         }
       });
     } catch (error) {
-      console.error('>>> GroupsService findAll error:', error);
+//       console.error('>>> GroupsService findAll error:', error);
       throw error;
     }
   }
@@ -136,7 +136,7 @@ export class GroupsService {
 
       return group;
     } catch (error) {
-      console.error('>>> GroupsService findOne error:', error);
+//       console.error('>>> GroupsService findOne error:', error);
       throw error;
     }
   }
@@ -206,10 +206,10 @@ export class GroupsService {
         }
       });
 
-      console.log(`>>> GroupsService: User ${joinGroupDto.userId} joined group ${joinGroupDto.groupId} as ${roleInGroup}`);
+//       console.log(`>>> GroupsService: User ${joinGroupDto.userId} joined group ${joinGroupDto.groupId} as ${roleInGroup}`);
       return userGroup;
     } catch (error) {
-      console.error('>>> GroupsService joinGroup error:', error);
+//       console.error('>>> GroupsService joinGroup error:', error);
       throw error;
     }
   }

@@ -4,13 +4,13 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class TestService {
   constructor(private readonly prisma: PrismaService) {
-    console.log('>>> TestService CONSTRUCTOR: Initializing...');
-    console.log('>>> TestService CONSTRUCTOR: prisma:', !!this.prisma);
-    console.log('>>> TestService CONSTRUCTOR: prisma.user:', !!this.prisma?.user);
+// // //     console.log('>>> TestService CONSTRUCTOR: Initializing...');
+// //     console.log('>>> TestService CONSTRUCTOR: prisma:', !!this.prisma);
+// //     console.log('>>> TestService CONSTRUCTOR: prisma.user:', !!this.prisma?.user);
   }
 
   async testDatabase() {
-    console.log('>>> TestService.testDatabase called');
+//     console.log('>>> TestService.testDatabase called');
     
     if (!this.prisma) {
       throw new Error('PrismaService is not available');

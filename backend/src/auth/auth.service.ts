@@ -13,13 +13,13 @@ export class AuthService {
     @Inject(JwtService) private readonly jwtService: JwtService,
     @Inject(AuditLogsService) private readonly auditLogsService: AuditLogsService,
   ) {
-    console.log('>>> AuthService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-    console.log('>>> AuthService CONSTRUCTOR: this.jwtService IS', this.jwtService ? 'DEFINED' : 'UNDEFINED');
-    console.log('>>> AuthService CONSTRUCTOR: this.auditLogsService IS', this.auditLogsService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> AuthService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> AuthService CONSTRUCTOR: this.jwtService IS', this.jwtService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> AuthService CONSTRUCTOR: this.auditLogsService IS', this.auditLogsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   async validateUser(email: string, password: string) {
-    console.log('>>> AuthService validateUser called for:', email);
+// //     console.log('>>> AuthService validateUser called for:', email);
     
     try {
       // Find user in database by email
@@ -43,7 +43,7 @@ export class AuthService {
       });
 
       if (!user) {
-        console.log('>>> AuthService validateUser: User not found');
+// //         console.log('>>> AuthService validateUser: User not found');
         return null;
       }
 
@@ -51,23 +51,23 @@ export class AuthService {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       
       if (!isPasswordValid) {
-        console.log('>>> AuthService validateUser: Invalid password');
+// //         console.log('>>> AuthService validateUser: Invalid password');
         return null;
       }
 
-      console.log('>>> AuthService validateUser: User authenticated successfully');
+// //       console.log('>>> AuthService validateUser: User authenticated successfully');
       
       // Remove password from returned user object
       const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } catch (error) {
-      console.error('>>> AuthService validateUser error:', error);
+//       console.error('>>> AuthService validateUser error:', error);
       return null;
     }
   }
 
   async login(dto: LoginDto) {
-    console.log('>>> AuthService login called with:', dto.email);
+// //     console.log('>>> AuthService login called with:', dto.email);
     
     try {
       const user = await this.validateUser(dto.email, dto.password);
@@ -81,8 +81,8 @@ export class AuthService {
         userRole.role.rolePermissions?.map(rolePermission => rolePermission.permission.name) || []
       ) || [];
 
-      console.log('>>> AuthService login: User roles:', roles);
-      console.log('>>> AuthService login: User permissions:', permissions);
+// //       console.log('>>> AuthService login: User roles:', roles);
+// //       console.log('>>> AuthService login: User permissions:', permissions);
 
       // Create JWT payload
       const payload = { 
@@ -94,11 +94,11 @@ export class AuthService {
         iat: Math.floor(Date.now() / 1000)
       };
       
-      console.log('>>> AuthService login: Creating JWT with payload:', payload);
+// //       console.log('>>> AuthService login: Creating JWT with payload:', payload);
       
       const access_token = this.jwtService.sign(payload);
       
-      console.log('>>> AuthService login: JWT created successfully');
+// //       console.log('>>> AuthService login: JWT created successfully');
 
       // Log audit entry - TEMPORARILY DISABLED FOR TESTING
       // await this.auditLogsService.createLog({
@@ -121,13 +121,13 @@ export class AuthService {
         },
       };
     } catch (error) {
-      console.error('>>> AuthService login error:', error);
+//       console.error('>>> AuthService login error:', error);
       throw error;
     }
   }
 
   async register(dto: RegisterDto) {
-    console.log('>>> AuthService register called with:', dto.email);
+//     console.log('>>> AuthService register called with:', dto.email);
     
     try {
       // Check if user already exists
@@ -173,8 +173,8 @@ export class AuthService {
         userRole.role.rolePermissions?.map(rolePermission => rolePermission.permission.name) || []
       ) || [];
 
-      console.log('>>> AuthService register: User roles:', roles);
-      console.log('>>> AuthService register: User permissions:', permissions);
+//       console.log('>>> AuthService register: User roles:', roles);
+//       console.log('>>> AuthService register: User permissions:', permissions);
 
       // Create JWT payload
       const payload = { 
@@ -209,13 +209,13 @@ export class AuthService {
         },
       };
     } catch (error) {
-      console.error('>>> AuthService register error:', error);
+//       console.error('>>> AuthService register error:', error);
       throw error;
     }
   }
 
   async getCurrentUser() {
-    console.log('>>> AuthService getCurrentUser called');
+//     console.log('>>> AuthService getCurrentUser called');
     // For now, return a mock current user
     // In a real implementation, this would get the user from the JWT payload
     return {

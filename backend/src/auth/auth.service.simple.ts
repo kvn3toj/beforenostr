@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class SimpleAuthService {
   constructor() {
-    console.log('>>> SimpleAuthService initialized');
-    console.log('>>> SimpleAuthService constructor complete');
+// //     console.log('>>> SimpleAuthService initialized');
+//     console.log('>>> SimpleAuthService constructor complete');
   }
 
   test() {

@@ -220,18 +220,136 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
   },
   {
     id: 'social-discovery',
-    title: '👥 Discovery Social',
-    description: 'Explora las funcionalidades sociales y de comunidad',
+    title: '👥 Discovery Social & Comunidad',
+    description: 'Descubre la filosofía comunitaria de CoomÜnity y los círculos de confianza',
     category: 'social',
-    difficulty: 'beginner',
-    estimatedTime: '6-10 minutos',
+    difficulty: 'intermediate',
+    estimatedTime: '12-15 minutos',
+    completionRewards: {
+      ondas: 30,
+      meritos: 6,
+      description: 'Has aprendido los fundamentos de la comunidad CoomÜnity. ¡Ahora puedes construir círculos de confianza!'
+    },
     steps: [
       {
-        id: 'social-intro',
-        title: 'Comunidad CoomÜnity',
-        content: 'Descubre cómo conectar con otros miembros y formar círculos de confianza.',
+        id: 'social-bien-comun',
+        title: '🌍 Filosofía del Bien Común',
+        content: 'En CoomÜnity, el Bien Común es nuestro norte. Cada acción social debe beneficiar no solo a los individuos, sino a toda la comunidad. Esto significa priorizar la colaboración sobre la competencia.',
+        type: 'info',
         component: 'SocialMain',
+        tips: [
+          'El Bien Común se manifiesta cuando ayudamos a otros sin esperar nada a cambio',
+          'Cada interacción social debe nutrir la abundancia colectiva',
+          'La prosperidad individual está conectada con la prosperidad comunitaria',
+          'Practicamos la escucha empática y la comunicación no violenta'
+        ],
+        actionButton: {
+          text: '🤝 Explorar Comunidad',
+          url: '/social'
+        }
       },
+      {
+        id: 'social-circulos-confianza',
+        title: '🔗 Círculos de Confianza',
+        content: 'Los círculos de confianza son la base de la comunidad CoomÜnity. Se forman a través de interacciones genuinas, validaciones mutuas y contribuciones consistentes al Bien Común.',
+        type: 'success',
+        tips: [
+          'La confianza se construye con acciones pequeñas y consistentes',
+          'Cada miembro puede validar a otros a través del Trust Voting',
+          'Los círculos se expanden orgánicamente basados en afinidad y valores',
+          'La confianza se mide en Mëritos ganados por contribuciones reales'
+        ],
+        actionButton: {
+          text: '🗳️ Explorar Trust Voting',
+          action: () => console.log('Navegando a sistema de Trust Voting')
+        }
+      },
+      {
+        id: 'social-comunicacion-consciente',
+        title: '💬 Comunicación Consciente',
+        content: 'En CoomÜnity practicamos la comunicación consciente: escucha empática, expresión auténtica, y construcción de puentes en lugar de muros. Cada conversación es una oportunidad de co-crear.',
+        type: 'interactive',
+        tips: [
+          'Escuchamos para comprender, no para responder o juzgar',
+          'Expresamos nuestras necesidades sin atacar a otros',
+          'Buscamos puntos de conexión antes que diferencias',
+          'Celebramos la diversidad de perspectivas como riqueza colectiva',
+          'Usamos "yo" en lugar de "tú" para expresar nuestros sentimientos'
+        ],
+        actionButton: {
+          text: '💬 Iniciar Conversación',
+          url: '/social?tab=messages'
+        }
+      },
+      {
+        id: 'social-trust-voting',
+        title: '🗳️ Trust Voting y Mëritos Sociales',
+        content: 'El Trust Voting es nuestro sistema de validación peer-to-peer. Los miembros se validan mutuamente basándose en contribuciones reales al Bien Común, generando Mëritos que reflejan la confianza de la comunidad.',
+        type: 'tip',
+        tips: [
+          'Votas por miembros que han contribuido genuinamente al Bien Común',
+          'Cada voto otorga Mëritos al receptor y al votante',
+          'Los Mëritos reflejan tu reputación y confiabilidad en la comunidad',
+          'El sistema previene manipulación a través de algoritmos de consenso',
+          'La validación debe basarse en evidencia concreta, no en popularidad'
+        ],
+        actionButton: {
+          text: '⚖️ Participar en Votación',
+          action: () => console.log('Abriendo sistema de Trust Voting')
+        }
+      },
+      {
+        id: 'social-colaboracion-proyectos',
+        title: '🤝 Colaboración en Proyectos',
+        content: 'Los proyectos colaborativos son el corazón de CoomÜnity. Desde proyectos locales hasta iniciativas globales, cada colaboración fortalece el tejido comunitario y genera valor para el Bien Común.',
+        type: 'success',
+        tips: [
+          'Únete a proyectos que resuenen con tu propósito y habilidades',
+          'Inicia proyectos que aborden necesidades reales de tu comunidad',
+          'La diversidad de talentos enriquece cada proyecto colaborativo',
+          'Cada proyecto exitoso genera Mëritos para todos los participantes',
+          'Documenta y comparte los aprendizajes para futuras colaboraciones'
+        ],
+        actionButton: {
+          text: '🚀 Ver Proyectos Activos',
+          url: '/social?tab=projects'
+        }
+      },
+      {
+        id: 'social-construccion-local',
+        title: '🏘️ Construcción de Comunidad Local',
+        content: 'CoomÜnity se manifiesta también en lo local. Facilitamos la conexión entre vecinos, la creación de redes de apoyo mutuo, y el fortalecimiento de las economías locales a través de intercambios justos.',
+        type: 'info',
+        tips: [
+          'Conecta con miembros de tu área geográfica',
+          'Organiza encuentros locales y eventos comunitarios',
+          'Apoya negocios y emprendimientos de tu zona',
+          'Crea redes de intercambio de recursos y conocimientos',
+          'Participa en iniciativas de mejoramiento del espacio común'
+        ],
+        actionButton: {
+          text: '📍 Encontrar Comunidad Local',
+          url: '/social?filter=local'
+        }
+      },
+      {
+        id: 'social-impacto-transformacion',
+        title: '🌟 Impacto Social y Transformación',
+        content: '¡Felicitaciones! Ahora comprendes cómo CoomÜnity transforma las relaciones humanas. Al practicar estos principios, contribuyes a crear un mundo más colaborativo, justo y abundante para todos.',
+        type: 'success',
+        component: 'SocialMain',
+        tips: [
+          'Cada acción social consciente crea ondas de transformación',
+          'Tu crecimiento personal es inseparable del crecimiento comunitario',
+          'Los principios que aprendes aquí se extienden a toda tu vida',
+          'Eres parte de un movimiento global hacia la cooperación consciente',
+          'Comparte estos aprendizajes con otros para multiplicar el impacto'
+        ],
+        actionButton: {
+          text: '🎯 Completar Tutorial',
+          action: () => console.log('Tutorial Social Discovery completado exitosamente')
+        }
+      }
     ],
   },
   {

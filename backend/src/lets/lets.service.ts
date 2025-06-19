@@ -6,14 +6,14 @@ import type { Token, Transaction, User, Wallet } from '../generated/prisma';
 @Injectable()
 export class LetsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> LetsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> LetsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
    * Obtener balance de Ünits de un usuario con información de caducidad
    */
   async getUserBalance(dto: LetsBalanceDto) {
-    console.log('>>> LetsService.getUserBalance: Getting balance for user', dto.userId);
+//     console.log('>>> LetsService.getUserBalance: Getting balance for user', dto.userId);
 
     const user = await this.prisma.user.findUnique({
       where: { id: dto.userId },
@@ -73,7 +73,7 @@ export class LetsService {
    * Realizar intercambio de Ünits entre usuarios
    */
   async exchangeUnits(dto: CreateLetsTransactionDto) {
-    console.log('>>> LetsService.exchangeUnits: Processing exchange', dto);
+//     console.log('>>> LetsService.exchangeUnits: Processing exchange', dto);
 
     // Verificar que los usuarios existen y tienen wallets
     const [fromUser, toUser] = await Promise.all([
@@ -179,7 +179,7 @@ export class LetsService {
    * Verificar y procesar tokens caducados
    */
   async processExpiredTokens(dto: LetsExpiryCheckDto) {
-    console.log('>>> LetsService.processExpiredTokens: Processing expired tokens for user', dto.userId);
+//     console.log('>>> LetsService.processExpiredTokens: Processing expired tokens for user', dto.userId);
 
     const expiredTokens = await this.prisma.token.findMany({
       where: {
@@ -238,7 +238,7 @@ export class LetsService {
    * Obtener historial de transacciones LETS de un usuario
    */
   async getUserLetsHistory(userId: string, limit: number = 50) {
-    console.log('>>> LetsService.getUserLetsHistory: Getting LETS history for user', userId);
+//     console.log('>>> LetsService.getUserLetsHistory: Getting LETS history for user', userId);
 
     const transactions = await this.prisma.transaction.findMany({
       where: {
@@ -266,7 +266,7 @@ export class LetsService {
    * Verificar si un usuario puede realizar saldos negativos (según reglas LETS)
    */
   async checkNegativeBalanceEligibility(userId: string) {
-    console.log('>>> LetsService.checkNegativeBalanceEligibility: Checking eligibility for user', userId);
+//     console.log('>>> LetsService.checkNegativeBalanceEligibility: Checking eligibility for user', userId);
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -310,7 +310,7 @@ export class LetsService {
    * Obtener calificaciones de confianza de un usuario
    */
   async getTrustRatings(userId: string) {
-    console.log('>>> LetsService.getTrustRatings: Getting trust ratings for user', userId);
+//     console.log('>>> LetsService.getTrustRatings: Getting trust ratings for user', userId);
 
     try {
       // Por ahora devolvemos datos simulados hasta implementar el modelo TrustRating en Prisma
@@ -379,7 +379,7 @@ export class LetsService {
     qualityRating?: number;
     comments?: string;
   }) {
-    console.log('>>> LetsService.createTrustRating: Creating trust rating', ratingData);
+//     console.log('>>> LetsService.createTrustRating: Creating trust rating', ratingData);
 
     try {
       // Validaciones básicas
@@ -420,7 +420,7 @@ export class LetsService {
    * Obtener intercambios de conocimiento disponibles
    */
   async getKnowledgeExchanges(filters: { copId?: string; category?: string } = {}) {
-    console.log('>>> LetsService.getKnowledgeExchanges: Getting knowledge exchanges', filters);
+//     console.log('>>> LetsService.getKnowledgeExchanges: Getting knowledge exchanges', filters);
 
     try {
       // Por ahora devolvemos datos simulados hasta implementar el modelo KnowledgeExchange
@@ -507,7 +507,7 @@ export class LetsService {
     maxParticipants: number;
     scheduledAt: string;
   }) {
-    console.log('>>> LetsService.createKnowledgeExchange: Creating knowledge exchange', exchangeData);
+//     console.log('>>> LetsService.createKnowledgeExchange: Creating knowledge exchange', exchangeData);
 
     try {
       // Validaciones básicas
@@ -549,7 +549,7 @@ export class LetsService {
    * Obtener recomendaciones personalizadas para un usuario
    */
   async getRecommendations(userId: string) {
-    console.log('>>> LetsService.getRecommendations: Getting recommendations for user', userId);
+//     console.log('>>> LetsService.getRecommendations: Getting recommendations for user', userId);
 
     try {
       // Obtener datos del usuario para personalizar recomendaciones
@@ -665,7 +665,7 @@ export class LetsService {
    * Obtener notificaciones LETS para un usuario
    */
   async getNotifications(userId: string) {
-    console.log('>>> LetsService.getNotifications: Getting notifications for user', userId);
+//     console.log('>>> LetsService.getNotifications: Getting notifications for user', userId);
 
     try {
       // Por ahora devolvemos notificaciones simuladas hasta implementar el modelo Notification

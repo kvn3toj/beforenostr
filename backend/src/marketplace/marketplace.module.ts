@@ -17,6 +17,6 @@ import { RbacModule } from '../rbac/rbac.module';
 })
 export class MarketplaceModule {
   constructor() {
-    console.log('>>> MarketplaceModule CONSTRUCTOR: Initializing marketplace system with Auth/RBAC enabled...');
+// //     console.log('>>> MarketplaceModule CONSTRUCTOR: Initializing marketplace system with Auth/RBAC enabled...');
   }
 } 

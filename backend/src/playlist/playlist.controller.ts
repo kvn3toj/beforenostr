@@ -31,8 +31,8 @@ import { PrismaService } from '../prisma/prisma.service';
 @Controller('playlists')
 export class PlaylistController {
   constructor(@Inject(PlaylistService) private readonly playlistService: PlaylistService) {
-    console.log('>>> PlaylistController CONSTRUCTOR: Initializing...');
-    console.log('>>> PlaylistController CONSTRUCTOR: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
+// // //     console.log('>>> PlaylistController CONSTRUCTOR: Initializing...');
+// //     console.log('>>> PlaylistController CONSTRUCTOR: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
   }
 
   // Rutas específicas PRIMERO
@@ -46,8 +46,8 @@ export class PlaylistController {
     description: 'Test exitoso'
   })
   test() {
-    console.log('>>> PlaylistController.test: Endpoint de prueba ejecutado');
-    console.log('>>> PlaylistController.test - playlistService available:', !!this.playlistService);
+//     console.log('>>> PlaylistController.test: Endpoint de prueba ejecutado');
+//     console.log('>>> PlaylistController.test - playlistService available:', !!this.playlistService);
     return { 
       message: 'Test endpoint working', 
       timestamp: new Date().toISOString(),
@@ -65,13 +65,13 @@ export class PlaylistController {
     description: 'Test exitoso'
   })
   async simple() {
-    console.log('>>> PlaylistController.simple: Endpoint simple ejecutado');
+//     console.log('>>> PlaylistController.simple: Endpoint simple ejecutado');
     try {
       // Probar el servicio con parámetros mínimos
       const result = await this.playlistService.findAll({});
       return { success: true, result };
     } catch (error) {
-      console.error('>>> PlaylistController.simple error:', error);
+//       console.error('>>> PlaylistController.simple error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -95,10 +95,10 @@ export class PlaylistController {
       const dbPath = path.resolve(cwd, 'prisma/dev.db');
       const dbExists = fs.existsSync(dbPath);
       
-      console.log('>>> testDb: CWD:', cwd);
-      console.log('>>> testDb: DATABASE_URL:', databaseUrl);
-      console.log('>>> testDb: DB Path:', dbPath);
-      console.log('>>> testDb: DB Exists:', dbExists);
+//       console.log('>>> testDb: CWD:', cwd);
+//       console.log('>>> testDb: DATABASE_URL:', databaseUrl);
+//       console.log('>>> testDb: DB Path:', dbPath);
+//       console.log('>>> testDb: DB Exists:', dbExists);
       
       return { 
         success: true, 
@@ -109,7 +109,7 @@ export class PlaylistController {
         playlistService: !!this.playlistService
       };
     } catch (error) {
-      console.error('>>> testDb: Error:', error);
+//       console.error('>>> testDb: Error:', error);
       return { 
         success: false, 
         error: error.message
@@ -128,10 +128,10 @@ export class PlaylistController {
   })
   @UsePipes(new ValidationPipe({ transform: true }))
   testCreate(@Body() createPlaylistDto: CreatePlaylistDto) {
-    console.log('>>> PlaylistController.testCreate: Called with data:', createPlaylistDto);
-    console.log('>>> PlaylistController.testCreate: Raw body:', JSON.stringify(createPlaylistDto, null, 2));
-    console.log('>>> PlaylistController.testCreate: mundoId value:', createPlaylistDto.mundoId);
-    console.log('>>> PlaylistController.testCreate: mundoId type:', typeof createPlaylistDto.mundoId);
+//     console.log('>>> PlaylistController.testCreate: Called with data:', createPlaylistDto);
+//     console.log('>>> PlaylistController.testCreate: Raw body:', JSON.stringify(createPlaylistDto, null, 2));
+//     console.log('>>> PlaylistController.testCreate: mundoId value:', createPlaylistDto.mundoId);
+//     console.log('>>> PlaylistController.testCreate: mundoId type:', typeof createPlaylistDto.mundoId);
     
     return { 
       success: true, 
@@ -151,7 +151,7 @@ export class PlaylistController {
     description: 'Test exitoso'
   })
   testSimplePost(@Body() body: any) {
-    console.log('>>> PlaylistController.testSimplePost: Called with body:', body);
+//     console.log('>>> PlaylistController.testSimplePost: Called with body:', body);
     return { 
       success: true, 
       message: 'Simple POST test working',
@@ -170,8 +170,8 @@ export class PlaylistController {
     description: 'Test exitoso'
   })
   async testService(@Body() body: any) {
-    console.log('>>> PlaylistController.testService: Called with body:', body);
-    console.log('>>> PlaylistController.testService: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> PlaylistController.testService: Called with body:', body);
+//     console.log('>>> PlaylistController.testService: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
     
     try {
       // Probar con findAll que sabemos que funciona
@@ -183,7 +183,7 @@ export class PlaylistController {
         receivedBody: body
       };
     } catch (error) {
-      console.error('>>> PlaylistController.testService: Error:', error);
+//       console.error('>>> PlaylistController.testService: Error:', error);
       return { 
         success: false, 
         error: error.message,
@@ -202,8 +202,8 @@ export class PlaylistController {
     description: 'Test exitoso'
   })
   async testCreateService(@Body() body: any) {
-    console.log('>>> PlaylistController.testCreateService: Called with body:', body);
-    console.log('>>> PlaylistController.testCreateService: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> PlaylistController.testCreateService: Called with body:', body);
+//     console.log('>>> PlaylistController.testCreateService: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
     
     try {
       // Crear datos hardcodeados que sabemos que son válidos
@@ -214,11 +214,11 @@ export class PlaylistController {
         isActive: true
       };
       
-      console.log('>>> PlaylistController.testCreateService: About to call create with:', hardcodedDto);
+//       console.log('>>> PlaylistController.testCreateService: About to call create with:', hardcodedDto);
       
       const result = await this.playlistService.create(hardcodedDto as any);
       
-      console.log('>>> PlaylistController.testCreateService: Create result:', result);
+//       console.log('>>> PlaylistController.testCreateService: Create result:', result);
       
       return { 
         success: true, 
@@ -228,7 +228,7 @@ export class PlaylistController {
         receivedBody: body
       };
     } catch (error) {
-      console.error('>>> PlaylistController.testCreateService: Error:', error);
+//       console.error('>>> PlaylistController.testCreateService: Error:', error);
       return { 
         success: false, 
         error: error.message,
@@ -280,21 +280,21 @@ export class PlaylistController {
   // @ApiBearerAuth()
   @UsePipes(new ValidationPipe({ transform: true }))
   create(@Body() createPlaylistDto: CreatePlaylistDto) {
-    console.log('>>> PlaylistController.create: Called with data:', createPlaylistDto);
-    console.log('>>> PlaylistController.create: Raw body type:', typeof createPlaylistDto);
-    console.log('>>> PlaylistController.create: Raw body JSON:', JSON.stringify(createPlaylistDto, null, 2));
-    console.log('>>> PlaylistController.create: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> PlaylistController.create: Called with data:', createPlaylistDto);
+//     console.log('>>> PlaylistController.create: Raw body type:', typeof createPlaylistDto);
+//     console.log('>>> PlaylistController.create: Raw body JSON:', JSON.stringify(createPlaylistDto, null, 2));
+//     console.log('>>> PlaylistController.create: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
     
     // Mapear mundo_id a mundoId si es necesario
     if ((createPlaylistDto as any).mundo_id && !createPlaylistDto.mundoId) {
       createPlaylistDto.mundoId = (createPlaylistDto as any).mundo_id;
-      console.log('>>> PlaylistController.create: Mapped mundo_id to mundoId:', createPlaylistDto.mundoId);
+//       console.log('>>> PlaylistController.create: Mapped mundo_id to mundoId:', createPlaylistDto.mundoId);
     }
     
     try {
       return this.playlistService.create(createPlaylistDto);
     } catch (error) {
-      console.error('>>> PlaylistController.create: Error:', error);
+//       console.error('>>> PlaylistController.create: Error:', error);
       throw error;
     }
   }
@@ -309,19 +309,19 @@ export class PlaylistController {
     description: 'Lista de playlists obtenida exitosamente'
   })
   async findAll(@Query(new ValidationPipe({ transform: true })) findAllDto: any) {
-    console.log('>>> PlaylistController findAll: Called');
-    console.log('>>> PlaylistController findAll: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> PlaylistController findAll: Called');
+//     console.log('>>> PlaylistController findAll: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
     if (!this.playlistService) {
-      console.error('>>> PlaylistController findAll: ERROR! playlistService is undefined!');
+//       console.error('>>> PlaylistController findAll: ERROR! playlistService is undefined!');
       throw new Error('Playlist service is not available.');
     }
     
     try {
       const result = await this.playlistService.findAll(findAllDto);
-      console.log('>>> PlaylistController.findAll result:', result);
+//       console.log('>>> PlaylistController.findAll result:', result);
       return result;
     } catch (error) {
-      console.error('>>> PlaylistController.findAll error:', error);
+//       console.error('>>> PlaylistController.findAll error:', error);
       throw error;
     }
   }

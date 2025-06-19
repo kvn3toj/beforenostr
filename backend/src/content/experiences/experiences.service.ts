@@ -7,7 +7,7 @@ import type { Experience } from '../../generated/prisma';
 @Injectable()
 export class ExperiencesService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> ExperiencesService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> ExperiencesService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(createExperienceDto: CreateExperienceDto): Promise<Experience> {
@@ -63,10 +63,10 @@ export class ExperiencesService {
         }
       });
 
-      console.log(`>>> ExperiencesService: Created experience ${experience.id} by user ${createExperienceDto.creatorId}`);
+//       console.log(`>>> ExperiencesService: Created experience ${experience.id} by user ${createExperienceDto.creatorId}`);
       return experience;
     } catch (error) {
-      console.error('>>> ExperiencesService create error:', error);
+//       console.error('>>> ExperiencesService create error:', error);
       throw error;
     }
   }
@@ -99,7 +99,7 @@ export class ExperiencesService {
         }
       });
     } catch (error) {
-      console.error('>>> ExperiencesService findAll error:', error);
+//       console.error('>>> ExperiencesService findAll error:', error);
       throw error;
     }
   }
@@ -133,7 +133,7 @@ export class ExperiencesService {
         }
       });
     } catch (error) {
-      console.error('>>> ExperiencesService findByStageId error:', error);
+//       console.error('>>> ExperiencesService findByStageId error:', error);
       throw error;
     }
   }
@@ -167,7 +167,7 @@ export class ExperiencesService {
         }
       });
     } catch (error) {
-      console.error('>>> ExperiencesService findByCreatorId error:', error);
+//       console.error('>>> ExperiencesService findByCreatorId error:', error);
       throw error;
     }
   }
@@ -220,7 +220,7 @@ export class ExperiencesService {
 
       return experience;
     } catch (error) {
-      console.error('>>> ExperiencesService findOne error:', error);
+//       console.error('>>> ExperiencesService findOne error:', error);
       throw error;
     }
   }
@@ -269,10 +269,10 @@ export class ExperiencesService {
         }
       });
 
-      console.log(`>>> ExperiencesService: Updated experience ${id}`);
+//       console.log(`>>> ExperiencesService: Updated experience ${id}`);
       return experience;
     } catch (error) {
-      console.error('>>> ExperiencesService update error:', error);
+//       console.error('>>> ExperiencesService update error:', error);
       throw error;
     }
   }
@@ -286,10 +286,10 @@ export class ExperiencesService {
         where: { id },
       });
 
-      console.log(`>>> ExperiencesService: Deleted experience ${id}`);
+//       console.log(`>>> ExperiencesService: Deleted experience ${id}`);
       return experience;
     } catch (error) {
-      console.error('>>> ExperiencesService remove error:', error);
+//       console.error('>>> ExperiencesService remove error:', error);
       throw error;
     }
   }
@@ -326,7 +326,7 @@ export class ExperiencesService {
         }
       });
     } catch (error) {
-      console.error('>>> ExperiencesService getExperiencesByType error:', error);
+//       console.error('>>> ExperiencesService getExperiencesByType error:', error);
       throw error;
     }
   }
@@ -356,7 +356,7 @@ export class ExperiencesService {
         }
       });
     } catch (error) {
-      console.error('>>> ExperiencesService getExperiencesByFramework error:', error);
+//       console.error('>>> ExperiencesService getExperiencesByFramework error:', error);
       throw error;
     }
   }

@@ -13,15 +13,15 @@ export class RolesService {
     @Inject(PrismaService) private readonly prisma: PrismaService,
     // private readonly auditLogsService: AuditLogsService, // Temporarily commented
   ) {
-    console.log('>>> RolesService CONSTRUCTOR: Initializing...');
-    console.log('>>> RolesService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-    console.log('>>> RolesService CONSTRUCTOR: this instance is', this);
-    console.log('>>> RolesService CONSTRUCTOR: constructor name is', this.constructor.name);
+// // //     console.log('>>> RolesService CONSTRUCTOR: Initializing...');
+// //     console.log('>>> RolesService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> RolesService CONSTRUCTOR: this instance is', this);
+// //     console.log('>>> RolesService CONSTRUCTOR: constructor name is', this.constructor.name);
   }
 
   async create(dto: CreateRoleDto, user: any): Promise<Role> {
-    console.log('>>> RolesService.create: Starting...');
-    console.log('>>> RolesService.create: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> RolesService.create: Starting...');
+//     console.log('>>> RolesService.create: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const newRole = await this.prisma.role.create({ data: dto });
@@ -34,17 +34,17 @@ export class RolesService {
       //     newValue: newRole,
       // });
 
-      console.log('>>> RolesService.create: SUCCESS, created role with id:', newRole.id);
+//       console.log('>>> RolesService.create: SUCCESS, created role with id:', newRole.id);
       return newRole;
     } catch (error) {
-      console.error('>>> RolesService.create: ERROR:', error);
+//       console.error('>>> RolesService.create: ERROR:', error);
       throw error;
     }
   }
 
   async findAll(): Promise<Role[]> {
-    console.log('>>> RolesService.findAll: Starting...');
-    console.log('>>> RolesService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> RolesService.findAll: Starting...');
+//     console.log('>>> RolesService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const result = await this.prisma.role.findMany({
@@ -61,10 +61,10 @@ export class RolesService {
           } 
         },
       });
-      console.log('>>> RolesService.findAll: SUCCESS, found', result.length, 'roles');
+//       console.log('>>> RolesService.findAll: SUCCESS, found', result.length, 'roles');
       return result;
     } catch (error) {
-      console.error('>>> RolesService.findAll: ERROR:', error);
+//       console.error('>>> RolesService.findAll: ERROR:', error);
       throw error;
     }
   }

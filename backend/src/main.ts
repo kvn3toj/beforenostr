@@ -7,31 +7,42 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  console.log('>>> Bootstrap: Starting application...');
-  console.log('>>> Bootstrap: Creating NestFactory...');
+//   console.log('>>> Bootstrap: Starting application...');
+//   console.log('>>> Bootstrap: Creating NestFactory...');
 
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   });
 
-  console.log('>>> Bootstrap: NestFactory created successfully');
+//   console.log('>>> Bootstrap: NestFactory created successfully');
 
   // Enable CORS for frontend communication
   app.enableCors({
     origin: [
+      // Localhost origins
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:3002',
       'http://localhost:3003',
       'http://localhost:5173',
-      // 🌐 NETWORK ACCESS - Permitir acceso desde cualquier IP de red local
+
+      // 🌐 NETWORK ACCESS - Red local completa
       'http://192.168.1.37:3001',
-      /^http:\/\/192\.168\.1\.\d+:3001$/,  // Cualquier IP 192.168.1.x:3001
-      /^http:\/\/10\.\d+\.\d+\.\d+:3001$/, // Redes 10.x.x.x:3001
-      /^http:\/\/172\.(1[6-9]|2\d|3[01])\.\d+\.\d+:3001$/ // Redes 172.16-31.x.x:3001
+      'http://192.168.1.37:3000',
+      'http://192.168.1.37:5173',
+
+      // Regex patterns para todas las redes locales privadas
+      /^http:\/\/192\.168\.\d+\.\d+:\d+$/,     // 192.168.x.x:any_port
+      /^http:\/\/10\.\d+\.\d+\.\d+:\d+$/,      // 10.x.x.x:any_port
+      /^http:\/\/172\.(1[6-9]|2\d|3[01])\.\d+\.\d+:\d+$/, // 172.16-31.x.x:any_port
+
+      // Para desarrollo con Vite en red
+      /^http:\/\/\d+\.\d+\.\d+\.\d+:\d+$/     // Cualquier IP:puerto para desarrollo
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+    exposedHeaders: ['Authorization'],
   });
 
   // Global validation pipe

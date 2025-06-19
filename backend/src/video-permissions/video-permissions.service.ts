@@ -7,11 +7,11 @@ import type { VideoPermissions } from '../generated/prisma';
 @Injectable()
 export class VideoPermissionsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> VideoPermissionsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> VideoPermissionsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(videoItemId: number, createDto: CreateVideoPermissionsDto): Promise<VideoPermissions> {
-    console.log('>>> VideoPermissionsService.create called with:', { videoItemId, createDto });
+//     console.log('>>> VideoPermissionsService.create called with:', { videoItemId, createDto });
 
     // Verificar que el video item existe
     const videoItem = await this.prisma.videoItem.findUnique({
@@ -54,12 +54,12 @@ export class VideoPermissionsService {
       },
     });
 
-    console.log('>>> VideoPermissionsService.create result:', permissions);
+//     console.log('>>> VideoPermissionsService.create result:', permissions);
     return permissions;
   }
 
   async findByVideoItemId(videoItemId: number): Promise<VideoPermissions | null> {
-    console.log('>>> VideoPermissionsService.findByVideoItemId called with:', videoItemId);
+//     console.log('>>> VideoPermissionsService.findByVideoItemId called with:', videoItemId);
 
     const permissions = await this.prisma.videoPermissions.findUnique({
       where: { videoItemId },
@@ -80,12 +80,12 @@ export class VideoPermissionsService {
       },
     });
 
-    console.log('>>> VideoPermissionsService.findByVideoItemId result:', permissions);
+//     console.log('>>> VideoPermissionsService.findByVideoItemId result:', permissions);
     return permissions;
   }
 
   async update(videoItemId: number, updateDto: UpdateVideoPermissionsDto): Promise<VideoPermissions> {
-    console.log('>>> VideoPermissionsService.update called with:', { videoItemId, updateDto });
+//     console.log('>>> VideoPermissionsService.update called with:', { videoItemId, updateDto });
 
     // Verificar que existen permisos para este video
     const existingPermissions = await this.prisma.videoPermissions.findUnique({
@@ -120,12 +120,12 @@ export class VideoPermissionsService {
       },
     });
 
-    console.log('>>> VideoPermissionsService.update result:', permissions);
+//     console.log('>>> VideoPermissionsService.update result:', permissions);
     return permissions;
   }
 
   async upsert(videoItemId: number, data: CreateVideoPermissionsDto): Promise<VideoPermissions> {
-    console.log('>>> VideoPermissionsService.upsert called with:', { videoItemId, data });
+//     console.log('>>> VideoPermissionsService.upsert called with:', { videoItemId, data });
 
     // Verificar que el video item existe
     const videoItem = await this.prisma.videoItem.findUnique({
@@ -164,12 +164,12 @@ export class VideoPermissionsService {
       },
     });
 
-    console.log('>>> VideoPermissionsService.upsert result:', permissions);
+//     console.log('>>> VideoPermissionsService.upsert result:', permissions);
     return permissions;
   }
 
   async delete(videoItemId: number): Promise<void> {
-    console.log('>>> VideoPermissionsService.delete called with:', videoItemId);
+//     console.log('>>> VideoPermissionsService.delete called with:', videoItemId);
 
     // Verificar que existen permisos para este video
     const existingPermissions = await this.prisma.videoPermissions.findUnique({
@@ -185,11 +185,11 @@ export class VideoPermissionsService {
       where: { videoItemId },
     });
 
-    console.log('>>> VideoPermissionsService.delete completed');
+//     console.log('>>> VideoPermissionsService.delete completed');
   }
 
   async findDrafts(userId?: string): Promise<VideoPermissions[]> {
-    console.log('>>> VideoPermissionsService.findDrafts called with userId:', userId);
+//     console.log('>>> VideoPermissionsService.findDrafts called with userId:', userId);
 
     const where: any = { isDraft: true };
     if (userId) {
@@ -218,12 +218,12 @@ export class VideoPermissionsService {
       },
     });
 
-    console.log('>>> VideoPermissionsService.findDrafts result:', drafts.length, 'drafts found');
+//     console.log('>>> VideoPermissionsService.findDrafts result:', drafts.length, 'drafts found');
     return drafts;
   }
 
   async publishDraft(videoItemId: number): Promise<VideoPermissions> {
-    console.log('>>> VideoPermissionsService.publishDraft called with:', videoItemId);
+//     console.log('>>> VideoPermissionsService.publishDraft called with:', videoItemId);
 
     // Verificar que existen permisos en borrador para este video
     const existingPermissions = await this.prisma.videoPermissions.findUnique({
@@ -262,7 +262,7 @@ export class VideoPermissionsService {
       },
     });
 
-    console.log('>>> VideoPermissionsService.publishDraft result:', permissions);
+//     console.log('>>> VideoPermissionsService.publishDraft result:', permissions);
     return permissions;
   }
 } 

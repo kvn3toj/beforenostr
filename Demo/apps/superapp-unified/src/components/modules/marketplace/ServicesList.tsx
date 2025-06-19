@@ -37,6 +37,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../../../contexts/AuthContext';
 import { Product } from '../../../types/marketplace';
+import { formatPrice, safeToLocaleString } from '../../../utils/numberUtils';
 
 interface Service extends Omit<Product, 'type'> {
   type: 'service';
@@ -356,7 +357,7 @@ export const ServicesList: React.FC<ServicesListProps> = ({
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box>
                     <Typography variant="h6" color="primary" fontWeight="bold">
-                      {service.currency === 'ü' ? `${service.price} Lükas` : `$${service.price.toLocaleString()}`}
+                      {service.currency === 'ü' ? `${service.price} Lükas` : `$${safeToLocaleString(service.price)}`}
                     </Typography>
                     {service.duration && (
                       <Typography variant="caption" color="text.secondary">
@@ -391,4 +392,4 @@ export const ServicesList: React.FC<ServicesListProps> = ({
   );
 };
 
-export default ServicesList; 
+export default ServicesList;

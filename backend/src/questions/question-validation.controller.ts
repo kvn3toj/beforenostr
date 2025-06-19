@@ -8,7 +8,7 @@ export class QuestionValidationController {
   constructor(
     @Inject(QuestionValidationService) private readonly questionValidationService: QuestionValidationService,
   ) {
-    console.log('>>> QuestionValidationController CONSTRUCTOR: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> QuestionValidationController CONSTRUCTOR: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
   }
 
   @Get('stats')
@@ -28,12 +28,12 @@ export class QuestionValidationController {
     }
   })
   async getValidationStats() {
-    console.log('>>> QuestionValidationController.getValidationStats: Starting');
-    console.log('>>> QuestionValidationController.getValidationStats: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> QuestionValidationController.getValidationStats: Starting');
+//     console.log('>>> QuestionValidationController.getValidationStats: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const stats = await this.questionValidationService.getValidationStats();
-      console.log('>>> QuestionValidationController.getValidationStats: SUCCESS, stats:', stats);
+//       console.log('>>> QuestionValidationController.getValidationStats: SUCCESS, stats:', stats);
       
       return {
         success: true,
@@ -42,7 +42,7 @@ export class QuestionValidationController {
         timestamp: new Date().toISOString()
       };
     } catch (error) {
-      console.error('>>> QuestionValidationController.getValidationStats: ERROR:', error);
+//       console.error('>>> QuestionValidationController.getValidationStats: ERROR:', error);
       throw error;
     }
   }
@@ -72,8 +72,8 @@ export class QuestionValidationController {
     }
   })
   async validateVideoQuestions(@Param('videoId', ParseIntPipe) videoId: number) {
-    console.log(`>>> QuestionValidationController.validateVideoQuestions: Starting validation for video ${videoId}`);
-    console.log('>>> QuestionValidationController.validateVideoQuestions: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
+//     console.log(`>>> QuestionValidationController.validateVideoQuestions: Starting validation for video ${videoId}`);
+//     console.log('>>> QuestionValidationController.validateVideoQuestions: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const validationResults = await this.questionValidationService.validateQuestionTimestamps(videoId);
@@ -86,7 +86,7 @@ export class QuestionValidationController {
         validationResults
       };
 
-      console.log(`>>> QuestionValidationController.validateVideoQuestions: SUCCESS, validated ${summary.totalQuestions} questions`);
+//       console.log(`>>> QuestionValidationController.validateVideoQuestions: SUCCESS, validated ${summary.totalQuestions} questions`);
       
       return {
         success: true,
@@ -95,7 +95,7 @@ export class QuestionValidationController {
         timestamp: new Date().toISOString()
       };
     } catch (error) {
-      console.error(`>>> QuestionValidationController.validateVideoQuestions: ERROR for video ${videoId}:`, error);
+//       console.error(`>>> QuestionValidationController.validateVideoQuestions: ERROR for video ${videoId}:`, error);
       throw error;
     }
   }
@@ -126,13 +126,13 @@ export class QuestionValidationController {
     }
   })
   async runGlobalValidation() {
-    console.log('>>> QuestionValidationController.runGlobalValidation: Starting global validation');
-    console.log('>>> QuestionValidationController.runGlobalValidation: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
+//     console.log('>>> QuestionValidationController.runGlobalValidation: Starting global validation');
+//     console.log('>>> QuestionValidationController.runGlobalValidation: this.questionValidationService IS', this.questionValidationService ? 'DEFINED' : 'UNDEFINED');
     
     try {
       const validationSummary = await this.questionValidationService.validateAllQuestionTimestamps();
       
-      console.log(`>>> QuestionValidationController.runGlobalValidation: SUCCESS, validated ${validationSummary.totalQuestionsChecked} questions`);
+//       console.log(`>>> QuestionValidationController.runGlobalValidation: SUCCESS, validated ${validationSummary.totalQuestionsChecked} questions`);
       
       return {
         success: true,
@@ -144,7 +144,7 @@ export class QuestionValidationController {
         timestamp: new Date().toISOString()
       };
     } catch (error) {
-      console.error('>>> QuestionValidationController.runGlobalValidation: ERROR:', error);
+//       console.error('>>> QuestionValidationController.runGlobalValidation: ERROR:', error);
       throw error;
     }
   }
@@ -153,7 +153,7 @@ export class QuestionValidationController {
   @ApiOperation({ summary: 'Test question validation service connectivity' })
   @ApiResponse({ status: 200, description: 'Question validation service test completed' })
   async testValidationService() {
-    console.log('>>> QuestionValidationController.testValidationService: Testing service connectivity');
+//     console.log('>>> QuestionValidationController.testValidationService: Testing service connectivity');
     
     try {
       const stats = await this.questionValidationService.getValidationStats();
@@ -169,7 +169,7 @@ export class QuestionValidationController {
         timestamp: new Date().toISOString()
       };
     } catch (error) {
-      console.error('>>> QuestionValidationController.testValidationService: ERROR:', error);
+//       console.error('>>> QuestionValidationController.testValidationService: ERROR:', error);
       return {
         success: false,
         message: 'Question validation service test failed',

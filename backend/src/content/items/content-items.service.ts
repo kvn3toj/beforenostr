@@ -6,10 +6,10 @@ import { UpdateContentItemDto } from './dto/update-content-item.dto';
 @Injectable()
 export class ContentItemsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    console.log('>>> ContentItemsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> ContentItemsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
     if (this.prisma) {
-      console.log('>>> ContentItemsService CONSTRUCTOR: this.prisma.videoItem IS', this.prisma.videoItem ? 'DEFINED' : 'UNDEFINED');
-      console.log('>>> ContentItemsService CONSTRUCTOR: Available prisma properties:', Object.keys(this.prisma).filter(key => typeof this.prisma[key] === 'object' && this.prisma[key] !== null));
+// //       console.log('>>> ContentItemsService CONSTRUCTOR: this.prisma.videoItem IS', this.prisma.videoItem ? 'DEFINED' : 'UNDEFINED');
+// //       console.log('>>> ContentItemsService CONSTRUCTOR: Available prisma properties:', Object.keys(this.prisma).filter(key => typeof this.prisma[key] === 'object' && this.prisma[key] !== null));
     }
   }
 
@@ -28,7 +28,7 @@ export class ContentItemsService {
   }
 
   async findAll(isAdmin = false) {
-    console.log('>>> ContentItemsService.findAll: Called with isAdmin =', isAdmin);
+//     console.log('>>> ContentItemsService.findAll: Called with isAdmin =', isAdmin);
     try {
       const result = await this.prisma.videoItem.findMany({
         where: isAdmin ? {} : { isActive: true },
@@ -37,10 +37,10 @@ export class ContentItemsService {
         },
         orderBy: { order: 'asc' }
       });
-      console.log('>>> ContentItemsService.findAll: Found', result.length, 'items');
+//       console.log('>>> ContentItemsService.findAll: Found', result.length, 'items');
       return result;
     } catch (error) {
-      console.error('>>> ContentItemsService.findAll: Error:', error);
+//       console.error('>>> ContentItemsService.findAll: Error:', error);
       throw error;
     }
   }
@@ -101,7 +101,7 @@ export class ContentItemsService {
   async findVersionsByItemId(contentItemId: string) {
     // This method might not be applicable for VideoItem
     // Return empty array for now
-    console.log('>>> ContentItemsService.findVersionsByItemId: Not implemented for VideoItem');
+//     console.log('>>> ContentItemsService.findVersionsByItemId: Not implemented for VideoItem');
     return [];
   }
 } 

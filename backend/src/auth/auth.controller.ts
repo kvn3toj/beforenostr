@@ -8,10 +8,10 @@ import { LoginDto } from './dto/login.dto';
 @Controller('auth')
 export class AuthController {
   constructor(@Inject('AuthService') private readonly authService: any) {
-    console.log('>>> AuthController initialized');
-    console.log('>>> AuthController - this.authService:', this.authService);
+// //     console.log('>>> AuthController initialized');
+//     console.log('>>> AuthController - this.authService:', this.authService);
     if (this.authService === undefined) {
-      console.error('>>> AuthController - ERROR: AuthService is undefined!');
+//       console.error('>>> AuthController - ERROR: AuthService is undefined!');
     }
   }
 

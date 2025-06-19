@@ -46,6 +46,6 @@ import { ChallengesModule } from './challenges/challenges.module';
 })
 export class AppModule {
   constructor() {
-    console.log('>>> AppModule CONSTRUCTOR: Initializing...');
+// // //     console.log('>>> AppModule CONSTRUCTOR: Initializing...');
   }
 } 

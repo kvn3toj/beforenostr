@@ -12,7 +12,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagg
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class LetsController {
   constructor(@Inject(LetsService) private readonly letsService: LetsService) {
-    console.log('>>> LetsController CONSTRUCTOR: this.letsService IS', this.letsService ? 'DEFINED' : 'UNDEFINED');
+// //     console.log('>>> LetsController CONSTRUCTOR: this.letsService IS', this.letsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
@@ -25,7 +25,7 @@ export class LetsController {
     @Param('userId') userId: string,
     @Query('tokenType') tokenType?: string
   ) {
-    console.log('>>> LetsController.getUserBalance: Getting balance for user', userId);
+//     console.log('>>> LetsController.getUserBalance: Getting balance for user', userId);
     
     const dto: LetsBalanceDto = { userId, tokenType };
     return await this.letsService.getUserBalance(dto);
@@ -38,7 +38,7 @@ export class LetsController {
   @Roles('admin', 'user')
   @ApiOperation({ summary: 'Exchange Units between users' })
   async exchangeUnits(@Body() dto: CreateLetsTransactionDto) {
-    console.log('>>> LetsController.exchangeUnits: Processing exchange', dto);
+//     console.log('>>> LetsController.exchangeUnits: Processing exchange', dto);
     return await this.letsService.exchangeUnits(dto);
   }
 
@@ -52,7 +52,7 @@ export class LetsController {
     @Param('userId') userId: string,
     @Query('tokenType') tokenType?: string
   ) {
-    console.log('>>> LetsController.processExpiredTokens: Processing expired tokens for user', userId);
+//     console.log('>>> LetsController.processExpiredTokens: Processing expired tokens for user', userId);
     
     const dto: LetsExpiryCheckDto = { userId, tokenType };
     return await this.letsService.processExpiredTokens(dto);
@@ -68,7 +68,7 @@ export class LetsController {
     @Param('userId') userId: string,
     @Query('limit') limit?: string
   ) {
-    console.log('>>> LetsController.getUserLetsHistory: Getting LETS history for user', userId);
+//     console.log('>>> LetsController.getUserLetsHistory: Getting LETS history for user', userId);
     
     const limitNumber = limit ? parseInt(limit, 10) : 50;
     return await this.letsService.getUserLetsHistory(userId, limitNumber);
@@ -81,7 +81,7 @@ export class LetsController {
   @Roles('admin', 'user')
   @ApiOperation({ summary: 'Check negative balance eligibility' })
   async checkNegativeBalanceEligibility(@Param('userId') userId: string) {
-    console.log('>>> LetsController.checkNegativeBalanceEligibility: Checking eligibility for user', userId);
+//     console.log('>>> LetsController.checkNegativeBalanceEligibility: Checking eligibility for user', userId);
     return await this.letsService.checkNegativeBalanceEligibility(userId);
   }
 
@@ -108,7 +108,7 @@ export class LetsController {
     }
   })
   async getTrustRatings(@Param('userId') userId: string) {
-    console.log('>>> LetsController.getTrustRatings: Getting trust ratings for user', userId);
+//     console.log('>>> LetsController.getTrustRatings: Getting trust ratings for user', userId);
     return await this.letsService.getTrustRatings(userId);
   }
 
@@ -127,7 +127,7 @@ export class LetsController {
     qualityRating?: number;
     comments?: string;
   }) {
-    console.log('>>> LetsController.createTrustRating: Creating trust rating', ratingData);
+//     console.log('>>> LetsController.createTrustRating: Creating trust rating', ratingData);
     return await this.letsService.createTrustRating(ratingData);
   }
 
@@ -160,7 +160,7 @@ export class LetsController {
     @Query('copId') copId?: string,
     @Query('category') category?: string
   ) {
-    console.log('>>> LetsController.getKnowledgeExchanges: Getting knowledge exchanges', { copId, category });
+//     console.log('>>> LetsController.getKnowledgeExchanges: Getting knowledge exchanges', { copId, category });
     return await this.letsService.getKnowledgeExchanges({ copId, category });
   }
 
@@ -182,7 +182,7 @@ export class LetsController {
     maxParticipants: number;
     scheduledAt: string;
   }) {
-    console.log('>>> LetsController.createKnowledgeExchange: Creating knowledge exchange', exchangeData);
+//     console.log('>>> LetsController.createKnowledgeExchange: Creating knowledge exchange', exchangeData);
     return await this.letsService.createKnowledgeExchange(exchangeData);
   }
 
@@ -206,7 +206,7 @@ export class LetsController {
     }
   })
   async getRecommendations(@Param('userId') userId: string) {
-    console.log('>>> LetsController.getRecommendations: Getting recommendations for user', userId);
+//     console.log('>>> LetsController.getRecommendations: Getting recommendations for user', userId);
     return await this.letsService.getRecommendations(userId);
   }
 
@@ -235,7 +235,7 @@ export class LetsController {
     }
   })
   async getNotifications(@Param('userId') userId: string) {
-    console.log('>>> LetsController.getNotifications: Getting notifications for user', userId);
+//     console.log('>>> LetsController.getNotifications: Getting notifications for user', userId);
     return await this.letsService.getNotifications(userId);
   }
 
@@ -245,7 +245,7 @@ export class LetsController {
   @Get('ping')
   @ApiOperation({ summary: 'Test LETS module connectivity' })
   async ping() {
-    console.log('>>> LetsController.ping: LETS module is working');
+//     console.log('>>> LetsController.ping: LETS module is working');
     return { 
       message: 'LETS module is working', 
       timestamp: new Date().toISOString(),
