@@ -13,11 +13,14 @@ import {
   Alert,
   Chip,
   IconButton,
+  Snackbar,
 } from '@mui/material';
 import {
   PlayArrow as PlayIcon,
   Quiz as QuizIcon,
   AccessTime as TimeIcon,
+  Computer as DemoIcon,
+  CloudOff as OfflineIcon,
 } from '@mui/icons-material';
 import { backendApi } from '../../services/backend-api.service';
 
@@ -119,6 +122,8 @@ export const UPlayDashboard: React.FC = () => {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [showDemoNotice, setShowDemoNotice] = useState(false);
 
   useEffect(() => {
     loadVideos();
@@ -130,7 +135,26 @@ export const UPlayDashboard: React.FC = () => {
       setError(null);
       
       console.log('🎬 Cargando videos desde backend NestJS...');
+      
+      // Detectar si estamos en modo demo viendo la respuesta
+      const originalConsoleWarn = console.warn;
+      let isDemoDetected = false;
+      
+      console.warn = (...args) => {
+        if (args[0]?.includes('🎭 Backend no disponible')) {
+          isDemoDetected = true;
+        }
+        originalConsoleWarn(...args);
+      };
+      
       const videoItems = await backendApi.getVideoItems();
+      
+      console.warn = originalConsoleWarn; // Restaurar console.warn
+      
+      setIsDemoMode(isDemoDetected);
+      if (isDemoDetected) {
+        setShowDemoNotice(true);
+      }
       
       console.log('🎬 Videos recibidos:', videoItems.length);
       
@@ -143,18 +167,18 @@ export const UPlayDashboard: React.FC = () => {
               const questions = await backendApi.getQuestionsForVideo(video.id.toString());
               return {
                 ...video,
-                questionCount: questions?.length || 0,
+                questionCount: questions?.length || video.questionCount || 0,
               };
             }
             return {
               ...video,
-              questionCount: 0,
+              questionCount: video.questionCount || 0,
             };
           } catch (questionError) {
             console.warn(`Error cargando preguntas para video ${video.id}:`, questionError);
             return {
               ...video,
-              questionCount: 0,
+              questionCount: video.questionCount || 0,
             };
           }
         })
@@ -171,9 +195,13 @@ export const UPlayDashboard: React.FC = () => {
 
   const handlePlayVideo = (video: VideoItem) => {
     console.log('▶️ Reproducir video:', video);
-    // TODO: Navegar al reproductor de video o abrir modal
+    
+    // Abrir video de YouTube en nueva pestaña como demo
+    const youtubeUrl = `https://www.youtube.com/watch?v=${video.youtubeId}`;
+    window.open(youtubeUrl, '_blank');
+    
+    // TODO: Implementar reproductor interno con preguntas interactivas
     // navigate(`/uplay/video/${video.id}`);
-    alert(`Reproduciendo: ${video.title}\nYouTube ID: ${video.youtubeId}`);
   };
 
   if (loading) {
@@ -205,6 +233,28 @@ export const UPlayDashboard: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Box py={4}>
+        {/* Banner de modo demo */}
+        {isDemoMode && (
+          <Alert 
+            severity="info" 
+            icon={<DemoIcon />}
+            sx={{ mb: 3 }}
+            action={
+              <Button color="inherit" onClick={loadVideos}>
+                🔄 Reintentar Backend
+              </Button>
+            }
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              🎭 Modo Demostración Activado
+            </Typography>
+            <Typography variant="body2">
+              Backend NestJS no disponible. Mostrando 6 videos de ejemplo con datos reales. 
+              Los videos se abrirán en YouTube como demostración.
+            </Typography>
+          </Alert>
+        )}
+
         <Typography variant="h3" component="h1" gutterBottom>
           🎮 ÜPlay Dashboard
         </Typography>
@@ -218,9 +268,20 @@ export const UPlayDashboard: React.FC = () => {
           </Alert>
         ) : (
           <>
-            <Typography variant="h5" sx={{ mb: 3 }}>
-              📹 Videos Disponibles ({videos.length})
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h5">
+                📹 Videos Disponibles ({videos.length})
+              </Typography>
+              {isDemoMode && (
+                <Chip
+                  icon={<OfflineIcon />}
+                  label="DEMO"
+                  color="warning"
+                  size="small"
+                  sx={{ ml: 2 }}
+                />
+              )}
+            </Box>
             <Grid container spacing={3}>
               {videos.map((video) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={video.id}>
@@ -231,6 +292,14 @@ export const UPlayDashboard: React.FC = () => {
           </>
         )}
       </Box>
+
+      {/* Snackbar de notificación de demo */}
+      <Snackbar
+        open={showDemoNotice}
+        autoHideDuration={6000}
+        onClose={() => setShowDemoNotice(false)}
+        message="🎭 Modo demo activado - Los videos se abrirán en YouTube"
+      />
     </Container>
   );
 };
