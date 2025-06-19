@@ -11,6 +11,7 @@ import { MundoContentPage } from './pages/MundoContentPage'
 import { PlaylistDetailPage } from './pages/PlaylistDetailPage'
 import { VideoConfigPage } from './pages/VideoConfigPage'
 import { GamifiedPlaylistsPage } from './pages/GamifiedPlaylistsPage'
+import { UPlayPage } from './pages/UPlayPage'
 import { Toaster } from 'sonner'
 import { useAuthInitializer } from './hooks/useAuthInitializer'
 import { theme } from './theme'
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/mundos/:mundoId/contenido" element={<MundoContentPage />} />
                 <Route path="/playlists" element={<GamifiedPlaylistsPage />} />
                 <Route path="/playlists/:playlistId" element={<PlaylistDetailPage />} />
+                <Route path="/uplay" element={<UPlayPage />} />
                 <Route path="/items/:itemId/config" element={<VideoConfigPage />} />
                 <Route path="/settings" element={<div>Página de Configuración (Placeholder)</div>} />
               </Route>

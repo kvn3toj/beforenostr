@@ -138,6 +138,29 @@ export const MainLayout = () => {
               <List component="div" disablePadding>
                 <ListItem disablePadding>
                   <ListItemButton 
+                    onClick={() => navigate('/uplay')}
+                    selected={location.pathname.startsWith('/uplay')}
+                    sx={{ 
+                      pl: 6,
+                      '&.Mui-selected': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                        },
+                      },
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: 'inherit' }}>
+                      <PlayCircleOutlineIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Videos Interactivos" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton 
                     onClick={() => navigate('/playlists')}
                     selected={location.pathname.startsWith('/playlists')}
                     sx={{ 
@@ -154,7 +177,7 @@ export const MainLayout = () => {
                     }}
                   >
                     <ListItemIcon sx={{ color: 'inherit' }}>
-                      <PlayCircleOutlineIcon />
+                      <ListAltIcon />
                     </ListItemIcon>
                     <ListItemText primary="Gamified Playlists" />
                   </ListItemButton>
