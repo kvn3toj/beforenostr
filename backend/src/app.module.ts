@@ -18,6 +18,7 @@ import { ConsoleModule } from './console/console.module';
 import { LoggerModule } from './common/logger/logger.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
+import { ChallengesModule } from './challenges/challenges.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ConfigModule } from './config/config.module';
     NotificationsModule,
     MarketplaceModule,
     StudyRoomsModule,
+    ChallengesModule, // 🏆 Challenges Module - gamified challenges and tasks
     ConsoleModule, // 🎮 Módulo de la Consola de Experiencias
   ],
   controllers: [AppController],

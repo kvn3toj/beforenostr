@@ -4,7 +4,6 @@ import { SimpleUsersService } from './users.service.simple';
 import { MinimalUsersService } from './users.service.minimal';
 import { UsersController } from './users.controller';
 import { SimpleUsersController } from './users.controller.simple';
-import { DebugUsersController } from './users.controller.debug';
 import { MinimalUsersController } from './users.controller.minimal';
 import { UsersTestController } from './users-test.controller';
 import { PrismaModule } from '../prisma/prisma.module';
@@ -14,7 +13,7 @@ import { RbacModule } from '../rbac/rbac.module';
 
 @Module({
   imports: [PrismaModule, RbacModule], // Added RbacModule for RolesGuard
-  controllers: [UsersController, SimpleUsersController, DebugUsersController, MinimalUsersController, UsersTestController],
+  controllers: [UsersController, SimpleUsersController, MinimalUsersController, UsersTestController],
   providers: [
     UsersService,
     SimpleUsersService,
