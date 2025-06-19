@@ -47,7 +47,7 @@ import {
 
 // Importar componentes mejorados
 import { PlayerMetricsDashboard } from './components/PlayerMetricsDashboard';
-import { DynamicMetricsDashboard } from './components/DynamicMetricsDashboard';
+import DynamicMetricsDashboard from './components/DynamicMetricsDashboard';
 import { EnhancedRewardFeedback, useRewardFeedback } from './components/EnhancedRewardFeedback';
 import { UnifiedUPlayPlayer } from './UnifiedUPlayPlayer';
 
@@ -453,70 +453,6 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     error: errorVideos,
   } = useVideos();
 
-  // NUEVO: Preparar datos para DynamicMetricsDashboard con validaciones defensivas
-  const dynamicMetricsData = React.useMemo(() => {
-    // Datos de métricas actuales con validaciones para evitar NaN
-    const metricsData = {
-      meritos: Number(playerMetrics?.meritos) || 340, // fallback para demo
-      ondas: Number(playerMetrics?.ondas) || 125, // fallback para demo  
-      nivel: Number(playerMetrics?.level) || 1,
-      precision: Number(playerMetrics?.accuracy) || 87, // porcentaje de precisión
-      racha: Number(playerMetrics?.streak) || 5, // días consecutivos
-      videosCompletados: Number(playerMetrics?.completedVideos) || 2,
-      tiempoTotal: Number(playerMetrics?.totalWatchTime) || 95, // minutos
-      preguntasRespondidas: Number(playerMetrics?.questionsAnswered) || 18,
-      logrosDesbloqueados: Number(unlockedAchievements?.length) || 4,
-      rankingComunidad: Number(playerMetrics?.communityRank) || 42, // posición en la comunidad
-    };
-
-    // Historial de progreso (simulado para demo, en producción vendría del backend)
-    const progressHistory = [
-      { date: '15/06', meritos: 200, ondas: 80, precision: 85 },
-      { date: '16/06', meritos: 245, ondas: 95, precision: 89 },
-      { date: '17/06', meritos: 280, ondas: 105, precision: 86 },
-      { date: '18/06', meritos: 320, ondas: 118, precision: 91 },
-      { date: '19/06', meritos: 340, ondas: 125, precision: 87 },
-    ];
-
-    // Distribución por categorías basada en videos disponibles
-    const categoryProgress = React.useMemo(() => {
-      if (!adaptedVideos?.length) {
-        // Datos de fallback para demo
-        return [
-          { name: 'Gamificación', value: 35, color: '#2563eb' },
-          { name: 'Narrativa', value: 25, color: '#10b981' },
-          { name: 'Evaluación', value: 20, color: '#f59e0b' },
-          { name: 'Mecánicas', value: 15, color: '#ef4444' },
-          { name: 'Otros', value: 5, color: '#8b5cf6' },
-        ];
-      }
-
-      // Calcular distribución real basada en videos
-      const categoryCount: Record<string, number> = {};
-      adaptedVideos.forEach(video => {
-        const category = video.category || 'Otros';
-        categoryCount[category] = (categoryCount[category] || 0) + 1;
-      });
-
-      const total = adaptedVideos.length;
-      const categoryColors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
-      
-      return Object.entries(categoryCount).map(([name, count], index) => ({
-        name,
-        value: Math.round((count / total) * 100),
-        color: categoryColors[index % categoryColors.length],
-      }));
-    }, [adaptedVideos]);
-
-    return {
-      metrics: metricsData,
-      progressHistory,
-      categoryProgress,
-      isLoading: isLoadingVideos || isLoadingPlaylists,
-      showAnimations: true,
-    };
-  }, [playerMetrics, unlockedAchievements, adaptedVideos, isLoadingVideos, isLoadingPlaylists]);
-
   // NUEVO: Adaptar videos del backend al formato VideoItem
   const adaptedVideos = React.useMemo(() => {
     console.log('🔄 Adaptando videos del backend al formato VideoItem...');
@@ -554,6 +490,70 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     console.log('🔄 Videos adaptados finales:', adapted);
     return adapted;
   }, [videos]);
+
+  // NUEVO: Preparar datos para DynamicMetricsDashboard con validaciones defensivas
+  const dynamicMetricsData = React.useMemo(() => {
+    // Datos de métricas actuales con validaciones para evitar NaN
+    const metricsData = {
+      meritos: Number(playerMetrics?.meritos) || 340, // fallback para demo
+      ondas: Number(playerMetrics?.ondas) || 125, // fallback para demo  
+      nivel: Number(playerMetrics?.level) || 1,
+      precision: Number(playerMetrics?.accuracy) || 87, // porcentaje de precisión
+      racha: Number(playerMetrics?.streak) || 5, // días consecutivos
+      videosCompletados: Number(playerMetrics?.completedVideos) || 2,
+      tiempoTotal: Number(playerMetrics?.totalWatchTime) || 95, // minutos
+      preguntasRespondidas: Number(playerMetrics?.questionsAnswered) || 18,
+      logrosDesbloqueados: Number(unlockedAchievements?.length) || 4,
+      rankingComunidad: Number(playerMetrics?.communityRank) || 42, // posición en la comunidad
+    };
+
+    // Historial de progreso (simulado para demo, en producción vendría del backend)
+    const progressHistory = [
+      { date: '15/06', meritos: 200, ondas: 80, precision: 85 },
+      { date: '16/06', meritos: 245, ondas: 95, precision: 89 },
+      { date: '17/06', meritos: 280, ondas: 105, precision: 86 },
+      { date: '18/06', meritos: 320, ondas: 118, precision: 91 },
+      { date: '19/06', meritos: 340, ondas: 125, precision: 87 },
+    ];
+
+    // Distribución por categorías basada en videos disponibles
+    const categoryProgress = (() => {
+      if (!adaptedVideos?.length) {
+        // Datos de fallback para demo
+        return [
+          { name: 'Gamificación', value: 35, color: '#2563eb' },
+          { name: 'Narrativa', value: 25, color: '#10b981' },
+          { name: 'Evaluación', value: 20, color: '#f59e0b' },
+          { name: 'Mecánicas', value: 15, color: '#ef4444' },
+          { name: 'Otros', value: 5, color: '#8b5cf6' },
+        ];
+      }
+
+      // Calcular distribución real basada en videos
+      const categoryCount: Record<string, number> = {};
+      adaptedVideos.forEach(video => {
+        const category = video.category || 'Otros';
+        categoryCount[category] = (categoryCount[category] || 0) + 1;
+      });
+
+      const total = adaptedVideos.length;
+      const categoryColors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
+      
+      return Object.entries(categoryCount).map(([name, count], index) => ({
+        name,
+        value: Math.round((count / total) * 100),
+        color: categoryColors[index % categoryColors.length],
+      }));
+    })();
+
+    return {
+      metrics: metricsData,
+      progressHistory,
+      categoryProgress,
+      isLoading: isLoadingVideos || isLoadingPlaylists,
+      showAnimations: true,
+    };
+  }, [playerMetrics, unlockedAchievements, adaptedVideos, isLoadingVideos, isLoadingPlaylists]);
 
   // Agrupar videos adaptados por playlistId
   const videosByPlaylist = React.useMemo(() => {
