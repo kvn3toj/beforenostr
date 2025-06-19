@@ -14,14 +14,25 @@ import {
   Fade,
   Card,
   CardContent,
-  Chip
+  Chip,
+  Alert,
+  Link,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider
 } from '@mui/material';
 import { 
   Close as CloseIcon,
   School as SchoolIcon,
   NavigateNext as NextIcon,
   NavigateBefore as BackIcon,
-  PlayArrow as StartIcon
+  PlayArrow as StartIcon,
+  CheckCircle as CheckIcon,
+  Lightbulb as TipIcon,
+  Warning as WarningIcon,
+  Info as InfoIcon
 } from '@mui/icons-material';
 
 // 🎓 Tipos para los tutoriales
@@ -32,6 +43,13 @@ interface TutorialStep {
   component?: string;
   action?: string;
   highlightSelector?: string;
+  type?: 'info' | 'warning' | 'success' | 'tip' | 'interactive';
+  tips?: string[];
+  actionButton?: {
+    text: string;
+    url?: string;
+    action?: () => void;
+  };
 }
 
 interface Tutorial {
@@ -43,6 +61,11 @@ interface Tutorial {
   estimatedTime: string;
   steps: TutorialStep[];
   prerequisites?: string[];
+  completionRewards?: {
+    ondas: number;
+    meritos: number;
+    description: string;
+  };
 }
 
 interface TutorialContextType {
@@ -58,8 +81,120 @@ interface TutorialContextType {
 
 const TutorialContext = createContext<TutorialContextType | null>(null);
 
-// 🎯 TUTORIALES DISCOVERY PREDEFINIDOS
+// 🎯 TUTORIALES DISCOVERY EXPANDIDOS PROFUNDAMENTE
 const DISCOVERY_TUTORIALS: Tutorial[] = [
+  {
+    id: 'marketplace-discovery',
+    title: '🛒 Discovery Marketplace (GMP)',
+    description: 'Descubre el Gamified Match Place: tu espacio de intercambio basado en Ayni',
+    category: 'marketplace',
+    difficulty: 'beginner',
+    estimatedTime: '12-15 minutos',
+    completionRewards: {
+      ondas: 25,
+      meritos: 5,
+      description: 'Has completado tu primer paso hacia convertirte en Emprendedor Confiable'
+    },
+    steps: [
+      {
+        id: 'marketplace-philosophy',
+        title: '🌟 Filosofía del Marketplace',
+        content: 'El Marketplace de CoomÜnity no es como cualquier tienda online. Está basado en el principio andino de AYNI (reciprocidad balanceada), donde cada intercambio debe beneficiar a ambas partes y al Bien Común.',
+        type: 'info',
+        tips: [
+          'Ayni significa "hoy por ti, mañana por mí" - reciprocidad perfecta',
+          'Cada transacción genera Mëritos para ambas partes',
+          'Los precios se miden en Lükas, no en dinero tradicional'
+        ]
+      },
+      {
+        id: 'marketplace-types',
+        title: '🏪 Tipos de Intercambio',
+        content: 'En el GMP puedes intercambiar: PRODUCTOS físicos (artesanías, orgánicos, arte), SERVICIOS profesionales (consultoría, diseño, desarrollo), EXPERIENCIAS transformacionales (talleres, retiros, mentorías) y CONOCIMIENTO especializado (cursos, coaching, healing).',
+        type: 'success',
+        tips: [
+          'Productos: Items tangibles que puedes tocar y enviar',
+          'Servicios: Tu tiempo y habilidades aplicadas',
+          'Experiencias: Momentos únicos de transformación',
+          'Conocimiento: Sabiduría que puede cambiar vidas'
+        ]
+      },
+      {
+        id: 'marketplace-navigation',
+        title: '🧭 Navegación Inteligente',
+        content: 'Aprende a navegar el marketplace de manera eficiente usando filtros por categoría, rango de Lükas, nivel de confianza del vendedor, y proximidad geográfica.',
+        highlightSelector: '.marketplace-nav',
+        type: 'interactive',
+        actionButton: {
+          text: 'Explorar Categorías',
+          url: '/marketplace'
+        }
+      },
+      {
+        id: 'marketplace-trust-system',
+        title: '🤝 Sistema de Confianza',
+        content: 'La confianza en CoomÜnity se construye through: Mëritos acumulados, validaciones de otros miembros, historial de transacciones exitosas, y status de "Emprendedor Confiable" otorgado por la comunidad.',
+        type: 'warning',
+        tips: [
+          'Revisa SIEMPRE los Mëritos del vendedor antes de comprar',
+          'Lee los comentarios de otros compradores',
+          'Los Emprendedores Confiables tienen un sello especial',
+          'Tu primera compra genera más Mëritos si es exitosa'
+        ]
+      },
+      {
+        id: 'marketplace-lukas-economy',
+        title: '💰 Economía de Lükas',
+        content: 'Los Lükas son la moneda de CoomÜnity. Los ganas completando videos en ÜPlay (10-50 por video), participando en Trust Voting (5 por voto), haciendo transacciones exitosas (2-5% de comisión), y contribuyendo a la comunidad.',
+        type: 'tip',
+        tips: [
+          'Empieza con videos ÜPlay para ganar tus primeros Lükas',
+          'Los precios van desde 10 Lükas (items pequeños) hasta 1000+ (servicios premium)',
+          'Cada Lüka gastado debe generar valor real en tu vida',
+          'Reinvierte tus ganancias para hacer crecer el ecosistema'
+        ]
+      },
+      {
+        id: 'marketplace-first-purchase',
+        title: '🛍️ Tu Primera Compra',
+        content: 'Para tu primera compra, busca productos de bajo riesgo (10-50 Lükas) de vendedores con buenos Mëritos. Lee las descripciones cuidadosamente, verifica la política de Ayni del vendedor, y no olvides calificar después de recibir.',
+        type: 'interactive',
+        actionButton: {
+          text: 'Ver Productos Recomendados'
+        },
+        tips: [
+          'Comienza con productos digitales para entrega inmediata',
+          'Pregunta al vendedor si tienes dudas ANTES de comprar',
+          'Guarda evidencia de la transacción',
+          'Califica honestamente para ayudar a otros'
+        ]
+      },
+      {
+        id: 'marketplace-becoming-seller',
+        title: '🚀 Convertirse en Vendedor',
+        content: 'Para vender necesitas: completar tu perfil con skills y experiencia, subir tu primer producto/servicio con fotos y descripción detallada, solicitar validación inicial de 3 miembros, y mantener un ratio Ayni balanceado.',
+        type: 'success',
+        tips: [
+          'Tu primer producto debe resolver un problema real',
+          'Fotografías de calidad aumentan la confianza',
+          'Describe BENEFICIOS, no solo características',
+          'Responde preguntas rápidamente para generar confianza'
+        ]
+      },
+      {
+        id: 'marketplace-community-impact',
+        title: '🌍 Impacto en la Comunidad',
+        content: 'Cada intercambio en el marketplace contribuye al Bien Común: genera empleos dignos, reduce la dependencia del sistema económico tradicional, fortalece comunidades locales, y creates círculos virtuosos de abundancia.',
+        type: 'info',
+        tips: [
+          'Prioriza vendedores de tu región cuando sea posible',
+          'Comparte productos que te gustaron en redes sociales',
+          'Invita artesanos locales a unirse al marketplace',
+          'Participa en ferias y eventos de intercambio'
+        ]
+      }
+    ]
+  },
   {
     id: 'console-discovery',
     title: '🎛️ Discovery Console CoomÜnity',
@@ -79,28 +214,6 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
         title: 'Comandos Básicos',
         content: 'Aprende los comandos esenciales para navegar y obtener información del sistema.',
         action: 'open-console',
-      },
-    ],
-  },
-  {
-    id: 'marketplace-discovery',
-    title: '🛒 Discovery Marketplace',
-    description: 'Descubre cómo funciona el marketplace colaborativo de CoomÜnity',
-    category: 'marketplace',
-    difficulty: 'beginner',
-    estimatedTime: '8-12 minutos',
-    steps: [
-      {
-        id: 'marketplace-intro',
-        title: 'Bienvenido al Marketplace',
-        content: 'El Marketplace de CoomÜnity es un espacio de intercambio basado en principios de Ayni.',
-        component: 'MarketplaceMain',
-      },
-      {
-        id: 'marketplace-navigation',
-        title: 'Navegación',
-        content: 'Aprende a navegar entre productos y servicios de manera eficiente.',
-        highlightSelector: '.marketplace-nav',
       },
     ],
   },
@@ -154,6 +267,103 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
   },
 ];
 
+// Función helper para renderizar contenido con mejor formato
+const renderStepContent = (step: TutorialStep) => {
+  const getStepIcon = () => {
+    switch (step.type) {
+      case 'warning': return <WarningIcon sx={{ color: '#ff9800', mr: 1 }} />;
+      case 'success': return <CheckIcon sx={{ color: '#4caf50', mr: 1 }} />;
+      case 'tip': return <TipIcon sx={{ color: '#2196f3', mr: 1 }} />;
+      case 'interactive': return <StartIcon sx={{ color: '#9c27b0', mr: 1 }} />;
+      default: return <InfoIcon sx={{ color: '#ffffff', mr: 1 }} />;
+    }
+  };
+
+  const getAlertSeverity = () => {
+    switch (step.type) {
+      case 'warning': return 'warning';
+      case 'success': return 'success';
+      case 'tip': return 'info';
+      default: return 'info';
+    }
+  };
+
+  return (
+    <Box>
+      <Alert 
+        severity={getAlertSeverity()} 
+        icon={getStepIcon()}
+        sx={{ 
+          mb: 2, 
+          '& .MuiAlert-message': { width: '100%' },
+          background: 'rgba(255,255,255,0.1)',
+          border: '1px solid rgba(255,255,255,0.2)',
+          color: 'white'
+        }}
+      >
+        <Typography variant="body1" sx={{ mb: 1 }}>
+          {step.content}
+        </Typography>
+      </Alert>
+
+      {step.tips && step.tips.length > 0 && (
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="subtitle2" sx={{ color: 'rgba(255,255,255,0.9)', mb: 1, fontWeight: 600 }}>
+            💡 Tips Clave:
+          </Typography>
+          <List dense>
+            {step.tips.map((tip, index) => (
+              <ListItem key={index} sx={{ py: 0.5, pl: 2 }}>
+                <ListItemIcon sx={{ minWidth: 24 }}>
+                  <Typography sx={{ color: '#ffd700', fontSize: '12px' }}>•</Typography>
+                </ListItemIcon>
+                <ListItemText>
+                  <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>
+                    {tip}
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      )}
+
+      {step.actionButton && (
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
+          <Button
+            variant="contained"
+            startIcon={<StartIcon />}
+            sx={{
+              background: 'linear-gradient(45deg, #ff6b6b, #ffd93d)',
+              color: '#000',
+              fontWeight: 600,
+              '&:hover': {
+                background: 'linear-gradient(45deg, #ff5252, #ffeb3b)',
+              }
+            }}
+          >
+            {step.actionButton.text}
+          </Button>
+        </Box>
+      )}
+
+      {step.component && (
+        <Chip 
+          label={`🎯 Enfoque: ${step.component}`}
+          size="small"
+          sx={{ 
+            mt: 2, 
+            color: 'white', 
+            borderColor: 'white',
+            background: 'rgba(255,255,255,0.1)'
+          }}
+          variant="outlined"
+        />
+      )}
+    </Box>
+  );
+};
+
 export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentTutorial, setCurrentTutorial] = useState<Tutorial | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
@@ -168,6 +378,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
       
       // Guardar progreso en localStorage
       localStorage.setItem('coomunity-last-tutorial', tutorialId);
+      localStorage.setItem(`coomunity-tutorial-${tutorialId}-started`, new Date().toISOString());
     }
   }, []);
 
@@ -184,20 +395,30 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
   }, [currentStep]);
 
   const closeTutorial = useCallback(() => {
+    if (currentTutorial && currentStep === currentTutorial.steps.length - 1) {
+      // Tutorial completado
+      localStorage.setItem(`coomunity-tutorial-${currentTutorial.id}-completed`, new Date().toISOString());
+      
+      // Simular recompensa (en implementación real, esto sería una llamada API)
+      if (currentTutorial.completionRewards) {
+        console.log('🎉 Tutorial completado!', currentTutorial.completionRewards);
+      }
+    }
+    
     setIsActive(false);
     setCurrentTutorial(null);
     setCurrentStep(0);
-  }, []);
+  }, [currentTutorial, currentStep]);
 
   // Auto-mostrar tutorial de onboarding para nuevos usuarios
   useEffect(() => {
     const hasSeenTutorials = localStorage.getItem('coomunity-tutorials-seen');
     if (!hasSeenTutorials) {
-      // Mostrar tutorial después de 2 segundos
+      // Mostrar tutorial después de 3 segundos
       const timer = setTimeout(() => {
         startTutorial('marketplace-discovery');
         localStorage.setItem('coomunity-tutorials-seen', 'true');
-      }, 2000);
+      }, 3000);
       
       return () => clearTimeout(timer);
     }
@@ -214,16 +435,19 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
     availableTutorials: DISCOVERY_TUTORIALS,
   };
 
+  const currentStepData = currentTutorial?.steps[currentStep];
+  const isLastStep = currentTutorial && currentStep === currentTutorial.steps.length - 1;
+
   return (
     <TutorialContext.Provider value={contextValue}>
       {children}
       
-      {/* Dialog del Tutorial */}
+      {/* Dialog del Tutorial Expandido */}
       {currentTutorial && (
         <Dialog
           open={isActive}
           onClose={closeTutorial}
-          maxWidth="md"
+          maxWidth="lg"
           fullWidth
           PaperProps={{
             sx: {
@@ -231,7 +455,8 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
               color: 'white',
               borderRadius: 3,
               position: 'relative',
-              overflow: 'visible'
+              overflow: 'visible',
+              minHeight: '70vh'
             }
           }}
         >
@@ -239,25 +464,63 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            pb: 1
+            pb: 2,
+            borderBottom: '1px solid rgba(255,255,255,0.2)'
           }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <SchoolIcon />
-              <Typography variant="h6" component="span">
-                {currentTutorial.title}
-              </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <SchoolIcon sx={{ fontSize: 32 }} />
+              <Box>
+                <Typography variant="h5" component="div" sx={{ fontWeight: 600 }}>
+                  {currentTutorial.title}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)', mt: 0.5 }}>
+                  {currentTutorial.description}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                  <Chip 
+                    label={currentTutorial.difficulty} 
+                    size="small" 
+                    sx={{ 
+                      background: currentTutorial.difficulty === 'beginner' ? '#4caf50' : 
+                                 currentTutorial.difficulty === 'intermediate' ? '#ff9800' : '#f44336',
+                      color: 'white',
+                      fontWeight: 600
+                    }}
+                  />
+                  <Chip 
+                    label={currentTutorial.estimatedTime} 
+                    size="small" 
+                    sx={{ background: 'rgba(255,255,255,0.2)', color: 'white' }}
+                  />
+                </Box>
+              </Box>
             </Box>
             <IconButton onClick={closeTutorial} sx={{ color: 'white' }}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
 
-          <DialogContent>
-            <Box sx={{ mb: 3 }}>
-              <Stepper activeStep={currentStep} sx={{ mb: 3 }}>
+          <DialogContent sx={{ py: 3 }}>
+            <Box sx={{ mb: 4 }}>
+              <Stepper activeStep={currentStep} sx={{ mb: 4 }}>
                 {currentTutorial.steps.map((step, index) => (
                   <Step key={step.id}>
-                    <StepLabel sx={{ '& .MuiStepLabel-label': { color: 'white !important' } }}>
+                    <StepLabel sx={{ 
+                      '& .MuiStepLabel-label': { 
+                        color: 'white !important',
+                        fontSize: '0.9rem',
+                        fontWeight: index === currentStep ? 600 : 400
+                      },
+                      '& .MuiStepIcon-root': {
+                        color: 'rgba(255,255,255,0.5)',
+                        '&.Mui-active': {
+                          color: '#ffd700'
+                        },
+                        '&.Mui-completed': {
+                          color: '#4caf50'
+                        }
+                      }
+                    }}>
                       {step.title}
                     </StepLabel>
                   </Step>
@@ -265,52 +528,96 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
               </Stepper>
 
               <Fade in key={currentStep}>
-                <Card sx={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
-                      {currentTutorial.steps[currentStep]?.title}
-                    </Typography>
-                    <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.9)' }}>
-                      {currentTutorial.steps[currentStep]?.content}
-                    </Typography>
-                    
-                    {currentTutorial.steps[currentStep]?.component && (
-                      <Chip 
-                        label={`Componente: ${currentTutorial.steps[currentStep].component}`}
-                        size="small"
-                        sx={{ mt: 2, color: 'white', borderColor: 'white' }}
-                        variant="outlined"
-                      />
-                    )}
+                <Card sx={{ 
+                  background: 'rgba(255,255,255,0.05)', 
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                  <CardContent sx={{ p: 3 }}>
+                    {currentStepData && renderStepContent(currentStepData)}
                   </CardContent>
                 </Card>
               </Fade>
+
+              {/* Información de recompensas en el último paso */}
+              {isLastStep && currentTutorial.completionRewards && (
+                <Card sx={{ 
+                  mt: 3,
+                  background: 'linear-gradient(45deg, #4caf50, #8bc34a)',
+                  color: 'white'
+                }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                      🎉 ¡Recompensas por Completar!
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                      <Chip 
+                        label={`+${currentTutorial.completionRewards.ondas} Öndas`}
+                        sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', fontWeight: 600 }}
+                      />
+                      <Chip 
+                        label={`+${currentTutorial.completionRewards.meritos} Mëritos`}
+                        sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', fontWeight: 600 }}
+                      />
+                    </Box>
+                    <Typography variant="body2">
+                      {currentTutorial.completionRewards.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              )}
             </Box>
           </DialogContent>
 
-          <DialogActions sx={{ justifyContent: 'space-between', p: 3 }}>
+          <DialogActions sx={{ 
+            justifyContent: 'space-between', 
+            p: 3, 
+            borderTop: '1px solid rgba(255,255,255,0.2)',
+            background: 'rgba(0,0,0,0.1)'
+          }}>
             <Button
               onClick={previousStep}
               disabled={currentStep === 0}
               startIcon={<BackIcon />}
-              sx={{ color: 'white' }}
+              sx={{ color: 'white', opacity: currentStep === 0 ? 0.5 : 1 }}
             >
               Anterior
             </Button>
             
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
-              {currentStep + 1} de {currentTutorial.steps.length}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+                Paso {currentStep + 1} de {currentTutorial.steps.length}
+              </Typography>
+              <Box sx={{ 
+                width: 100, 
+                height: 4, 
+                background: 'rgba(255,255,255,0.2)', 
+                borderRadius: 2,
+                overflow: 'hidden'
+              }}>
+                <Box sx={{
+                  width: `${((currentStep + 1) / currentTutorial.steps.length) * 100}%`,
+                  height: '100%',
+                  background: '#ffd700',
+                  transition: 'width 0.3s ease'
+                }} />
+              </Box>
+            </Box>
             
-            {currentStep < currentTutorial.steps.length - 1 ? (
+            {!isLastStep ? (
               <Button
                 onClick={nextStep}
                 endIcon={<NextIcon />}
                 variant="contained"
                 sx={{ 
-                  background: 'rgba(255,255,255,0.2)',
-                  color: 'white',
-                  '&:hover': { background: 'rgba(255,255,255,0.3)' }
+                  background: 'linear-gradient(45deg, #ffd700, #ffeb3b)',
+                  color: '#000',
+                  fontWeight: 600,
+                  '&:hover': { 
+                    background: 'linear-gradient(45deg, #ffc107, #ffeb3b)',
+                    transform: 'translateY(-1px)'
+                  },
+                  transition: 'all 0.2s ease'
                 }}
               >
                 Siguiente
@@ -319,13 +626,19 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
               <Button
                 onClick={closeTutorial}
                 variant="contained"
+                startIcon={<CheckIcon />}
                 sx={{ 
-                  background: '#4caf50',
+                  background: 'linear-gradient(45deg, #4caf50, #8bc34a)',
                   color: 'white',
-                  '&:hover': { background: '#45a049' }
+                  fontWeight: 600,
+                  '&:hover': { 
+                    background: 'linear-gradient(45deg, #45a049, #7cb342)',
+                    transform: 'translateY(-1px)'
+                  },
+                  transition: 'all 0.2s ease'
                 }}
               >
-                ¡Completado!
+                ¡Completar Tutorial!
               </Button>
             )}
           </DialogActions>

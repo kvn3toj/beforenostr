@@ -1,843 +1,635 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-  TextField,
-  InputAdornment,
-  Chip,
-  Avatar,
-  Button,
-  IconButton,
-  Fab,
-  Divider,
-  Skeleton,
-  useTheme,
-  useMediaQuery,
-  alpha,
-  keyframes,
-  Collapse,
-  LinearProgress,
-} from '@mui/material';
-import {
-  Search,
-  FilterList,
-  Sort,
-  PlayArrow,
-  Star,
-  Diamond,
-  Bolt,
-  Schedule,
-  Visibility,
-  CheckCircle,
-  TrendingUp,
-  School,
-  AutoAwesome,
-  Celebration,
-  ExpandMore,
-  ExpandLess,
-  Category,
-  VideoLibrary,
-} from '@mui/icons-material';
 
-// Animaciones keyframes
-const shimmerAnimation = keyframes`
-  0% { background-position: -200px 0; }
-  100% { background-position: calc(200px + 100%) 0; }
-`;
+// 🎯 Material UI Imports
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Fade from '@mui/material/Fade';
+import Zoom from '@mui/material/Zoom';
+import { useTheme, alpha } from '@mui/material';
 
-const cardHoverAnimation = keyframes`
-  0% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-8px) scale(1.02); }
-  100% { transform: translateY(-4px) scale(1.01); }
-`;
+// 🎯 Iconos
+import SearchIcon from '@mui/icons-material/Search';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import DiamondIcon from '@mui/icons-material/Diamond';
+import BoltIcon from '@mui/icons-material/Bolt';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import StarIcon from '@mui/icons-material/Star';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
-const sparkleEffect = keyframes`
-  0%, 100% { opacity: 0; transform: scale(0.8) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
-`;
+// 🎨 Revolutionary Widget
+import { RevolutionaryWidget } from '../../../design-system/templates';
 
-/**
- * UPlayInteractiveLibrary Component
- * 
- * Biblioteca interactiva de videos con:
- * ✨ Efectos visuales avanzados y glassmorphism
- * 🔍 Búsqueda inteligente y filtros dinámicos
- * 📱 Diseño responsive con animaciones fluidas
- * 🎮 Sistema de progreso y recompensas
- * 🏆 Categorización por dificultad y temas
- * 🌟 Efectos de hover y transiciones suaves
- */
+// 🎯 Hook para datos reales del backend
+import { useVideos } from '../../../hooks/uplay/useVideos';
 
+// 🎯 Tipos
 interface VideoItem {
   id: string;
   title: string;
   description: string;
-  thumbnail: string;
   duration: number;
-  difficulty: 'easy' | 'medium' | 'hard';
+  thumbnailUrl?: string;
+  youtubeUrl: string;
   category: string;
+  difficulty: 'Principiante' | 'Intermedio' | 'Avanzado';
   rewards: {
     meritos: number;
     ondas: number;
   };
-  isCompleted: boolean;
-  progress: number;
-  questionsCount?: number;
-  views?: number;
-  rating?: number;
+  questions: Array<{
+    id: string;
+    question: string;
+    options: string[];
+    correctAnswer: number;
+  }>;
+  progress?: number;
+  isCompleted?: boolean;
+  isFavorite?: boolean;
+  rating: number;
+  views: number;
 }
 
-interface UPlayInteractiveLibraryProps {
-  videos: any[];
-  loading: boolean;
-  onVideoSelect: (videoId: string) => void;
-}
-
-interface FilterState {
-  difficulty: string[];
-  category: string[];
-  completed: boolean | null;
-  sortBy: 'title' | 'duration' | 'difficulty' | 'rewards' | 'recent';
-  sortOrder: 'asc' | 'desc';
-}
-
-const UPlayInteractiveLibrary: React.FC<UPlayInteractiveLibraryProps> = ({
-  videos,
-  loading,
-  onVideoSelect,
-}) => {
+export const UPlayInteractiveLibrary: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  // Estados locales
+  const [animate, setAnimate] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [filters, setFilters] = useState<FilterState>({
-    difficulty: [],
-    category: [],
-    completed: null,
-    sortBy: 'recent',
-    sortOrder: 'desc',
-  });
+  const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
+  const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
 
-  // Adaptador: convertir videos del backend al formato VideoItem
-  const adaptedVideos = useMemo(() => {
-    if (!videos) return [];
+  // 🎨 Animación de entrada
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimate(true), 400);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 🎯 Datos de videos del backend
+  const { data: backendVideos, isLoading, error } = useVideos();
+
+  // 🎯 Adaptador Backend → Frontend mejorado
+  const adaptBackendVideo = (backendVideo: any): VideoItem => {
+    const duration = backendVideo.duration || 0;
+    const questionCount = backendVideo.questions?.length || 0;
     
-    return videos.map((backendVideo: any): VideoItem => {
-      const questionsCount = backendVideo.questions?.length || 0;
-      const durationMinutes = Math.ceil((backendVideo.duration || 0) / 60);
-      
-      // Calcular recompensas basadas en duración y preguntas
-      const meritosBase = 20 + (questionsCount * 5) + Math.min(durationMinutes * 2, 50);
-      const ondasBase = 10 + (questionsCount * 3) + Math.min(durationMinutes * 1, 30);
+    // Fórmulas de recompensas CoomÜnity dinámicas
+    const baseMeritos = Math.floor(duration / 60) * 10;
+    const questionBonus = questionCount * 15;
+    const difficultyMultiplier = backendVideo.category?.includes('Avanzado') ? 1.5 : 
+                                backendVideo.category?.includes('Intermedio') ? 1.2 : 1.0;
+    
+    return {
+      id: backendVideo.id,
+      title: backendVideo.title || 'Video Sin Título',
+      description: backendVideo.description || 'Explora este contenido educativo interactivo.',
+      duration: duration,
+      thumbnailUrl: `https://img.youtube.com/vi/${backendVideo.youtubeVideoId || 'dQw4w9WgXcQ'}/maxresdefault.jpg`,
+      youtubeUrl: `https://www.youtube.com/watch?v=${backendVideo.youtubeVideoId || 'dQw4w9WgXcQ'}`,
+      category: backendVideo.category || 'Educación',
+      difficulty: duration > 300 ? 'Avanzado' : duration > 180 ? 'Intermedio' : 'Principiante',
+      rewards: {
+        meritos: Math.floor((baseMeritos + questionBonus) * difficultyMultiplier),
+        ondas: Math.floor(duration / 30) * 5 + questionCount * 8
+      },
+      questions: backendVideo.questions || [],
+      progress: Math.random() * 100,
+      isCompleted: Math.random() > 0.7,
+      isFavorite: Math.random() > 0.8,
+      rating: 4 + Math.random(),
+      views: Math.floor(Math.random() * 1000) + 50
+    };
+  };
 
-      // Determinar dificultad
-      let difficulty: 'easy' | 'medium' | 'hard' = 'easy';
-      if (questionsCount >= 5 || durationMinutes > 30) difficulty = 'medium';
-      if (questionsCount >= 10 || durationMinutes > 60) difficulty = 'hard';
+  // 🎯 Videos procesados
+  const processedVideos = useMemo(() => {
+    if (!backendVideos || backendVideos.length === 0) {
+      return [];
+    }
+    
+    return backendVideos.map(adaptBackendVideo);
+  }, [backendVideos]);
 
-      // Thumbnail emoji basado en contenido
-      let thumbnail = '🎬';
-      const titleLower = (backendVideo.title || '').toLowerCase();
-      if (titleLower.includes('gamific')) thumbnail = '🎮';
-      else if (titleLower.includes('narrat')) thumbnail = '📖';
-      else if (titleLower.includes('mecán')) thumbnail = '⚙️';
-      else if (titleLower.includes('evalua')) thumbnail = '📊';
-
-      return {
-        id: backendVideo.id?.toString() || 'unknown',
-        title: backendVideo.title || 'Video sin título',
-        description: backendVideo.description || 'Sin descripción disponible',
-        thumbnail,
-        duration: backendVideo.duration || 0,
-        difficulty,
-        category: backendVideo.categories?.[0] || 'General',
-        rewards: { meritos: meritosBase, ondas: ondasBase },
-        isCompleted: Math.random() > 0.7, // Simulando estado de completado
-        progress: Math.floor(Math.random() * 100),
-        questionsCount,
-        views: Math.floor(Math.random() * 1000) + 100,
-        rating: 4 + Math.random(),
-      };
-    });
-  }, [videos]);
-
-  // Obtener categorías únicas
+  // 🎯 Categorías dinámicas
   const categories = useMemo(() => {
-    const cats = ['all', ...new Set(adaptedVideos.map(video => video.category))];
-    return cats;
-  }, [adaptedVideos]);
+    const uniqueCategories = ['all', ...new Set(processedVideos.map(v => v.category))];
+    return uniqueCategories;
+  }, [processedVideos]);
 
-  // Filtrar y ordenar videos
+  // 🎯 Videos filtrados
   const filteredVideos = useMemo(() => {
-    let filtered = adaptedVideos.filter(video => {
-      // Filtro de búsqueda
-      if (searchTerm && !video.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          !video.description.toLowerCase().includes(searchTerm.toLowerCase())) {
-        return false;
-      }
-
-      // Filtro de categoría
-      if (selectedCategory !== 'all' && video.category !== selectedCategory) {
-        return false;
-      }
-
-      // Filtros avanzados
-      if (filters.difficulty.length > 0 && !filters.difficulty.includes(video.difficulty)) {
-        return false;
-      }
-
-      if (filters.completed !== null && video.isCompleted !== filters.completed) {
-        return false;
-      }
-
-      return true;
-    });
-
-    // Ordenar
-    filtered.sort((a, b) => {
-      const order = filters.sortOrder === 'asc' ? 1 : -1;
+    return processedVideos.filter(video => {
+      const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           video.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || video.category === selectedCategory;
       
-      switch (filters.sortBy) {
-        case 'title':
-          return order * a.title.localeCompare(b.title);
-        case 'duration':
-          return order * (a.duration - b.duration);
-        case 'difficulty':
-          const difficultyOrder = { easy: 1, medium: 2, hard: 3 };
-          return order * (difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]);
-        case 'rewards':
-          return order * (a.rewards.meritos - b.rewards.meritos);
-        default:
-          return order * (a.views! - b.views!);
-      }
+      return matchesSearch && matchesCategory;
     });
+  }, [processedVideos, searchTerm, selectedCategory]);
 
-    return filtered;
-  }, [adaptedVideos, searchTerm, selectedCategory, filters]);
+  // 🎯 Formatear duración
+  const formatDuration = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
-  // Componente VideoCard mejorado
-  const VideoCard: React.FC<{ video: VideoItem; index: number }> = ({ video, index }) => {
-    const [isHovered, setIsHovered] = useState(false);
+  // 🎯 Handlers
+  const handleFilterClick = (event: React.MouseEvent<HTMLElement>) => {
+    setFilterAnchorEl(event.currentTarget);
+  };
 
-    const getDifficultyColor = (difficulty: string) => {
-      switch (difficulty) {
-        case 'easy': return '#4caf50';
-        case 'medium': return '#ff9800';
-        case 'hard': return '#f44336';
-        default: return '#757575';
-      }
-    };
+  const handleFilterClose = () => {
+    setFilterAnchorEl(null);
+  };
 
-    const getDifficultyLabel = (difficulty: string) => {
-      switch (difficulty) {
-        case 'easy': return 'Fácil';
-        case 'medium': return 'Medio';
-        case 'hard': return 'Difícil';
-        default: return difficulty;
-      }
-    };
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    handleFilterClose();
+  };
 
-    return (
-      <Card
-        sx={{
-          height: '100%',
-          background: alpha('#ffffff', 0.05),
-          backdropFilter: 'blur(20px)',
-          border: `1px solid ${alpha('#ffffff', 0.1)}`,
-          borderRadius: 4,
-          overflow: 'hidden',
-          position: 'relative',
-          cursor: 'pointer',
-          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          transformOrigin: 'center',
-          '&:hover': {
-            transform: 'translateY(-12px) scale(1.02)',
-            boxShadow: `0 20px 60px ${alpha(getDifficultyColor(video.difficulty), 0.4)}`,
-            border: `1px solid ${alpha(getDifficultyColor(video.difficulty), 0.3)}`,
-            '& .video-overlay': {
-              opacity: 1,
-            },
-            '& .sparkle-effect': {
-              opacity: 1,
-            }
-          },
-          // Efecto de delay staggered
-          animationDelay: `${index * 0.1}s`,
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onClick={() => onVideoSelect(video.id)}
-      >
-        {/* Efectos de partículas */}
-        <Box
-          className="sparkle-effect"
-          sx={{
-            position: 'absolute',
-            top: '10%',
-            right: '10%',
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            background: getDifficultyColor(video.difficulty),
-            opacity: 0,
-            zIndex: 3,
-            animation: `${sparkleEffect} 2s ease-in-out infinite`,
-          }}
-        />
+  const handleVideoClick = (videoId: string) => {
+    console.log('🎬 Video seleccionado:', videoId);
+    // Aquí iría la navegación al reproductor
+  };
 
-        {/* Thumbnail mejorado */}
-        <Box
-          sx={{
-            height: 200,
-            background: `linear-gradient(135deg, ${alpha(getDifficultyColor(video.difficulty), 0.2)}, ${alpha(getDifficultyColor(video.difficulty), 0.1)})`,
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
-          }}
-        >
-          {/* Fondo animado */}
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: `
-                radial-gradient(circle at 30% 30%, ${alpha(getDifficultyColor(video.difficulty), 0.3)} 0%, transparent 50%),
-                radial-gradient(circle at 70% 70%, ${alpha(theme.palette.secondary.main, 0.2)} 0%, transparent 50%)
-              `,
-              transition: 'all 0.6s ease',
-            }}
-          />
-
-          {/* Emoji thumbnail */}
+  // 🎨 Header de búsqueda mejorado
+  const renderSearchHeader = () => (
+    <Fade in={animate} timeout={600}>
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
           <Typography
-            variant="h1"
+            variant="h4"
             sx={{
-              fontSize: '4.5rem',
-              position: 'relative',
-              zIndex: 2,
-              transition: 'all 0.3s ease',
-              transform: isHovered ? 'scale(1.1) rotate(5deg)' : 'scale(1)',
+              fontWeight: 700,
+              background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              mb: 2
             }}
           >
-            {video.thumbnail}
+            Biblioteca Interactiva
           </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Explora {processedVideos.length} videos gamificados diseñados para maximizar tu aprendizaje
+          </Typography>
+        </Box>
 
-          {/* Overlay de play */}
-          <Box
-            className="video-overlay"
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'rgba(0,0,0,0.7)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: 0,
-              transition: 'opacity 0.3s ease',
-              zIndex: 3,
-            }}
-          >
-            <Fab
-              size="large"
-              sx={{
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                color: 'white',
-                boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
-                '&:hover': {
-                  transform: 'scale(1.1)',
-                  boxShadow: `0 12px 40px ${alpha(theme.palette.primary.main, 0.6)}`,
-                },
-              }}
-            >
-              <PlayArrow sx={{ fontSize: '2rem' }} />
-            </Fab>
-          </Box>
-
-          {/* Badges */}
-          <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 4 }}>
-            <Chip
-              label={getDifficultyLabel(video.difficulty)}
-              size="small"
-              sx={{
-                bgcolor: getDifficultyColor(video.difficulty),
-                color: 'white',
-                fontWeight: 'bold',
-                boxShadow: `0 4px 15px ${alpha(getDifficultyColor(video.difficulty), 0.4)}`,
+        {/* Barra de búsqueda y filtros */}
+        <Grid container spacing={2} alignItems="center">
+          <Grid size={{ xs: 12, md: 8 }}>
+            <TextField
+              fullWidth
+              placeholder="Buscar videos por título o contenido..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ color: '#6366f1' }} />
+                  </InputAdornment>
+                ),
+                sx: {
+                  background: alpha('#ffffff', 0.05),
+                  backdropFilter: 'blur(20px)',
+                  border: `1px solid ${alpha('#6366f1', 0.2)}`,
+                  borderRadius: 3,
+                  '&:hover': {
+                    border: `1px solid ${alpha('#6366f1', 0.4)}`
+                  },
+                  '&.Mui-focused': {
+                    border: `2px solid #6366f1`,
+                    boxShadow: '0 0 20px rgba(99, 102, 241, 0.3)'
+                  }
+                }
               }}
             />
-          </Box>
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              startIcon={<FilterListIcon />}
+              onClick={handleFilterClick}
+              sx={{
+                borderColor: alpha('#6366f1', 0.3),
+                color: '#6366f1',
+                borderRadius: 3,
+                py: 1.5,
+                '&:hover': {
+                  borderColor: '#6366f1',
+                  background: alpha('#6366f1', 0.1)
+                }
+              }}
+            >
+              Filtrar ({selectedCategory === 'all' ? 'Todos' : selectedCategory})
+            </Button>
+            <Menu
+              anchorEl={filterAnchorEl}
+              open={Boolean(filterAnchorEl)}
+              onClose={handleFilterClose}
+              PaperProps={{
+                sx: {
+                  background: alpha('#ffffff', 0.1),
+                  backdropFilter: 'blur(20px)',
+                  border: `1px solid ${alpha('#ffffff', 0.2)}`,
+                  borderRadius: 2
+                }
+              }}
+            >
+              {categories.map((category) => (
+                <MenuItem
+                  key={category}
+                  onClick={() => handleCategorySelect(category)}
+                  selected={selectedCategory === category}
+                >
+                  {category === 'all' ? 'Todas las categorías' : category}
+                </MenuItem>
+              ))}
+            </Menu>
+          </Grid>
+        </Grid>
+      </Box>
+    </Fade>
+  );
 
-          {/* Badge de completado */}
-          {video.isCompleted && (
-            <Box sx={{ position: 'absolute', top: 12, right: 12, zIndex: 4 }}>
+  // 🎨 Card de video mejorada
+  const renderVideoCard = (video: VideoItem, index: number) => (
+    <Grid key={video.id} size={{ xs: 12, sm: 6, md: 4 }}>
+      <Zoom in={animate} timeout={800 + index * 100}>
+        <Card
+          className="uplay-video-card"
+          onMouseEnter={() => setHoveredVideo(video.id)}
+          onMouseLeave={() => setHoveredVideo(null)}
+          onClick={() => handleVideoClick(video.id)}
+          sx={{
+            cursor: 'pointer',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            overflow: 'hidden',
+            transform: hoveredVideo === video.id ? 'translateY(-8px) scale(1.02)' : 'translateY(0)',
+            transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            '&:hover': {
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
+            }
+          }}
+        >
+          {/* Thumbnail con overlay */}
+          <Box sx={{ position: 'relative' }}>
+            <CardMedia
+              component="img"
+              height="200"
+              image={video.thumbnailUrl}
+              alt={video.title}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://via.placeholder.com/320x180/6366f1/ffffff?text=Video';
+              }}
+            />
+            
+            {/* Overlay con información */}
+            <Box
+              className="uplay-video-overlay"
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: hoveredVideo === video.id ? 1 : 0,
+                transition: 'opacity 0.3s ease'
+              }}
+            >
+              <IconButton
+                className="uplay-play-button"
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  color: '#6366f1',
+                  width: 60,
+                  height: 60,
+                  '&:hover': {
+                    background: 'white',
+                    transform: 'scale(1.1)'
+                  }
+                }}
+              >
+                <PlayArrowIcon sx={{ fontSize: 32 }} />
+              </IconButton>
+            </Box>
+
+            {/* Badges informativos */}
+            <Box sx={{ position: 'absolute', top: 12, left: 12 }}>
               <Chip
-                icon={<CheckCircle sx={{ fontSize: '16px !important' }} />}
-                label="Completado"
+                label={video.difficulty}
                 size="small"
                 sx={{
-                  bgcolor: '#4caf50',
+                  background: video.difficulty === 'Avanzado' ? 'linear-gradient(135deg, #ef4444, #dc2626)' :
+                             video.difficulty === 'Intermedio' ? 'linear-gradient(135deg, #f59e0b, #d97706)' :
+                             'linear-gradient(135deg, #10b981, #059669)',
                   color: 'white',
-                  fontWeight: 'bold',
-                  boxShadow: '0 4px 15px rgba(76, 175, 80, 0.4)',
+                  fontWeight: 600,
+                  fontSize: '0.7rem'
                 }}
               />
             </Box>
-          )}
 
-          {/* Información de duración */}
-          <Box sx={{ position: 'absolute', bottom: 12, right: 12, zIndex: 4 }}>
-            <Chip
-              icon={<Schedule sx={{ fontSize: '14px !important' }} />}
-              label={`${Math.floor(video.duration / 60)}:${(video.duration % 60).toString().padStart(2, '0')}`}
-              size="small"
+            <Box sx={{ position: 'absolute', top: 12, right: 12 }}>
+              {video.isFavorite && (
+                <IconButton
+                  size="small"
+                  sx={{
+                    background: alpha('#fbbf24', 0.9),
+                    color: 'white',
+                    width: 32,
+                    height: 32,
+                    '&:hover': {
+                      background: '#fbbf24'
+                    }
+                  }}
+                >
+                  <BookmarkIcon sx={{ fontSize: 16 }} />
+                </IconButton>
+              )}
+            </Box>
+
+            {/* Duración */}
+            <Box
               sx={{
-                bgcolor: alpha('#000', 0.7),
+                position: 'absolute',
+                bottom: 12,
+                right: 12,
+                background: 'rgba(0, 0, 0, 0.8)',
                 color: 'white',
+                px: 1,
+                py: 0.5,
+                borderRadius: 1,
                 fontSize: '0.75rem',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5
               }}
-            />
-          </Box>
-        </Box>
+            >
+              <AccessTimeIcon sx={{ fontSize: 14 }} />
+              {formatDuration(video.duration)}
+            </Box>
 
-        {/* Contenido de la tarjeta */}
-        <CardContent sx={{ p: 3 }}>
-          {/* Título y rating */}
-          <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+            {/* Sparkle effect para videos completados */}
+            {video.isCompleted && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 16,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: 24,
+                  height: 24,
+                  background: 'radial-gradient(circle, #10b981, #059669)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  animation: 'uplay-sparkle 3s ease-in-out infinite'
+                }}
+              >
+                <CheckCircleIcon sx={{ color: 'white', fontSize: 16 }} />
+              </Box>
+            )}
+          </Box>
+
+          {/* Contenido de la tarjeta */}
+          <CardContent sx={{ flex: 1, p: 3 }}>
             <Typography
               variant="h6"
-              component="h3"
               sx={{
-                fontWeight: 'bold',
-                flex: 1,
-                pr: 1,
+                fontWeight: 600,
+                mb: 1,
                 lineHeight: 1.3,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}
             >
               {video.title}
             </Typography>
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <Star sx={{ color: '#ffc107', fontSize: 16 }} />
-              <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                {video.rating?.toFixed(1)}
-              </Typography>
-            </Box>
-          </Box>
 
-          {/* Descripción */}
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{
-              mb: 2,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              minHeight: 40,
-            }}
-          >
-            {video.description}
-          </Typography>
-
-          {/* Metadatos */}
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Box display="flex" gap={1} alignItems="center">
-              <Visibility sx={{ fontSize: 16, color: 'text.secondary' }} />
-              <Typography variant="caption" color="text.secondary">
-                {video.views?.toLocaleString()} vistas
-              </Typography>
-            </Box>
-            <Typography variant="caption" color="text.secondary">
-              {video.questionsCount} preguntas
-            </Typography>
-          </Box>
-
-          {/* Recompensas */}
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Chip
-              icon={<Diamond sx={{ fontSize: '16px !important' }} />}
-              label={`${video.rewards.meritos} Mëritos`}
-              size="small"
-              variant="outlined"
+            <Typography
+              variant="body2"
+              color="text.secondary"
               sx={{
-                color: '#9c27b0',
-                borderColor: alpha('#9c27b0', 0.5),
-                bgcolor: alpha('#9c27b0', 0.1),
-                '& .MuiChip-icon': { color: '#9c27b0' },
-              }}
-            />
-            <Chip
-              icon={<Bolt sx={{ fontSize: '16px !important' }} />}
-              label={`${video.rewards.ondas} Öndas`}
-              size="small"
-              variant="outlined"
-              sx={{
-                color: '#ff9800',
-                borderColor: alpha('#ff9800', 0.5),
-                bgcolor: alpha('#ff9800', 0.1),
-                '& .MuiChip-icon': { color: '#ff9800' },
-              }}
-            />
-          </Box>
-
-          {/* Barra de progreso */}
-          {video.progress > 0 && (
-            <Box>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                <Typography variant="caption" color="text.secondary">
-                  Progreso
-                </Typography>
-                <Typography variant="caption" sx={{ fontWeight: 'bold', color: getDifficultyColor(video.difficulty) }}>
-                  {video.progress}%
-                </Typography>
-              </Box>
-              <LinearProgress
-                variant="determinate"
-                value={video.progress}
-                sx={{
-                  height: 6,
-                  borderRadius: 3,
-                  bgcolor: alpha(getDifficultyColor(video.difficulty), 0.2),
-                  '& .MuiLinearProgress-bar': {
-                    borderRadius: 3,
-                    background: `linear-gradient(90deg, ${getDifficultyColor(video.difficulty)}, ${alpha(getDifficultyColor(video.difficulty), 0.8)})`,
-                    boxShadow: `0 0 8px ${alpha(getDifficultyColor(video.difficulty), 0.5)}`,
-                  },
-                }}
-              />
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-    );
-  };
-
-  // Componente de skeleton mejorado
-  const VideoCardSkeleton: React.FC = () => (
-    <Card
-      sx={{
-        height: '100%',
-        background: alpha('#ffffff', 0.05),
-        backdropFilter: 'blur(20px)',
-        border: `1px solid ${alpha('#ffffff', 0.1)}`,
-        borderRadius: 4,
-        overflow: 'hidden',
-      }}
-    >
-      <Skeleton
-        variant="rectangular"
-        height={200}
-        sx={{
-          background: `linear-gradient(90deg, ${alpha('#ffffff', 0.1)} 0%, ${alpha('#ffffff', 0.2)} 50%, ${alpha('#ffffff', 0.1)} 100%)`,
-          backgroundSize: '200px 100%',
-          animation: `${shimmerAnimation} 1.5s ease-in-out infinite`,
-        }}
-      />
-      <CardContent sx={{ p: 3 }}>
-        <Skeleton variant="text" height={28} sx={{ mb: 1 }} />
-        <Skeleton variant="text" height={20} width="80%" sx={{ mb: 2 }} />
-        <Skeleton variant="text" height={16} sx={{ mb: 1 }} />
-        <Skeleton variant="text" height={16} width="60%" sx={{ mb: 2 }} />
-        <Box display="flex" gap={1}>
-          <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 1 }} />
-          <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 1 }} />
-        </Box>
-      </CardContent>
-    </Card>
-  );
-
-  return (
-    <Box sx={{ position: 'relative' }}>
-      {/* Header con controles */}
-      <Card
-        sx={{
-          background: alpha('#ffffff', 0.05),
-          backdropFilter: 'blur(20px)',
-          border: `1px solid ${alpha('#ffffff', 0.1)}`,
-          borderRadius: 4,
-          p: 3,
-          mb: 3,
-        }}
-      >
-        {/* Barra de búsqueda */}
-        <Box display="flex" gap={2} mb={3} flexWrap="wrap">
-          <TextField
-            fullWidth
-            placeholder="Buscar videos por título o descripción..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search sx={{ color: 'text.secondary' }} />
-                </InputAdornment>
-              ),
-              sx: {
-                background: alpha('#ffffff', 0.05),
-                borderRadius: 3,
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: alpha('#ffffff', 0.2),
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: alpha('#ffffff', 0.3),
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: theme.palette.primary.main,
-                },
-              }
-            }}
-          />
-          <Button
-            variant="outlined"
-            startIcon={<FilterList />}
-            onClick={() => setShowFilters(!showFilters)}
-            sx={{
-              minWidth: 120,
-              borderColor: alpha('#ffffff', 0.2),
-              color: 'text.primary',
-              '&:hover': {
-                borderColor: alpha('#ffffff', 0.4),
-                background: alpha('#ffffff', 0.05),
-              }
-            }}
-          >
-            Filtros
-          </Button>
-        </Box>
-
-        {/* Filtros expandibles */}
-        <Collapse in={showFilters}>
-          <Box sx={{ pt: 2, borderTop: `1px solid ${alpha('#ffffff', 0.1)}` }}>
-            <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
-              Filtros Avanzados
-            </Typography>
-            
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={3}>
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                  Dificultad
-                </Typography>
-                <Box display="flex" gap={1} flexWrap="wrap">
-                  {['easy', 'medium', 'hard'].map((diff) => (
-                    <Chip
-                      key={diff}
-                      label={diff === 'easy' ? 'Fácil' : diff === 'medium' ? 'Medio' : 'Difícil'}
-                      variant={filters.difficulty.includes(diff) ? 'filled' : 'outlined'}
-                      size="small"
-                      onClick={() => {
-                        setFilters(prev => ({
-                          ...prev,
-                          difficulty: prev.difficulty.includes(diff)
-                            ? prev.difficulty.filter(d => d !== diff)
-                            : [...prev.difficulty, diff]
-                        }));
-                      }}
-                      sx={{
-                        borderColor: alpha('#ffffff', 0.3),
-                        '&.MuiChip-filled': {
-                          bgcolor: theme.palette.primary.main,
-                          color: 'white',
-                        }
-                      }}
-                    />
-                  ))}
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3}>
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                  Estado
-                </Typography>
-                <Box display="flex" gap={1}>
-                  <Chip
-                    label="Completados"
-                    variant={filters.completed === true ? 'filled' : 'outlined'}
-                    size="small"
-                    onClick={() => setFilters(prev => ({ ...prev, completed: prev.completed === true ? null : true }))}
-                    sx={{
-                      borderColor: alpha('#ffffff', 0.3),
-                      '&.MuiChip-filled': {
-                        bgcolor: '#4caf50',
-                        color: 'white',
-                      }
-                    }}
-                  />
-                  <Chip
-                    label="Pendientes"
-                    variant={filters.completed === false ? 'filled' : 'outlined'}
-                    size="small"
-                    onClick={() => setFilters(prev => ({ ...prev, completed: prev.completed === false ? null : false }))}
-                    sx={{
-                      borderColor: alpha('#ffffff', 0.3),
-                      '&.MuiChip-filled': {
-                        bgcolor: '#ff9800',
-                        color: 'white',
-                      }
-                    }}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        </Collapse>
-
-        {/* Categorías */}
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Categorías
-          </Typography>
-          <Box display="flex" gap={1} flexWrap="wrap">
-            {categories.map((category) => (
-              <Chip
-                key={category}
-                label={category === 'all' ? 'Todas' : category}
-                variant={selectedCategory === category ? 'filled' : 'outlined'}
-                onClick={() => setSelectedCategory(category)}
-                sx={{
-                  borderColor: alpha('#ffffff', 0.3),
-                  '&.MuiChip-filled': {
-                    bgcolor: theme.palette.secondary.main,
-                    color: 'white',
-                  },
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
-                    boxShadow: `0 4px 15px ${alpha(theme.palette.secondary.main, 0.3)}`,
-                  }
-                }}
-              />
-            ))}
-          </Box>
-        </Box>
-
-        {/* Estadísticas */}
-        <Box display="flex" justifyContent="space-between" alignItems="center" mt={3} pt={2} borderTop={`1px solid ${alpha('#ffffff', 0.1)}`}>
-          <Typography variant="body2" color="text.secondary">
-            Mostrando {filteredVideos.length} de {adaptedVideos.length} videos
-          </Typography>
-          <Box display="flex" gap={2} alignItems="center">
-            <Typography variant="caption" color="text.secondary">
-              Ordenar por:
-            </Typography>
-            <Chip
-              label="Recientes"
-              variant={filters.sortBy === 'recent' ? 'filled' : 'outlined'}
-              size="small"
-              onClick={() => setFilters(prev => ({ ...prev, sortBy: 'recent' }))}
-            />
-            <Chip
-              label="Recompensas"
-              variant={filters.sortBy === 'rewards' ? 'filled' : 'outlined'}
-              size="small"
-              onClick={() => setFilters(prev => ({ ...prev, sortBy: 'rewards' }))}
-            />
-          </Box>
-        </Box>
-      </Card>
-
-      {/* Grid de videos */}
-      <Grid container spacing={3}>
-        {loading ? (
-          // Skeletons mientras carga
-          Array.from({ length: 8 }, (_, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-              <VideoCardSkeleton />
-            </Grid>
-          ))
-        ) : filteredVideos.length > 0 ? (
-          // Videos filtrados
-          filteredVideos.map((video, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
-              <VideoCard video={video} index={index} />
-            </Grid>
-          ))
-        ) : (
-          // Estado vacío
-          <Grid item xs={12}>
-            <Card
-              sx={{
-                background: alpha('#ffffff', 0.05),
-                backdropFilter: 'blur(20px)',
-                border: `1px solid ${alpha('#ffffff', 0.1)}`,
-                borderRadius: 4,
-                p: 6,
-                textAlign: 'center',
+                mb: 2,
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                lineHeight: 1.4
               }}
             >
-              <VideoLibrary sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-              <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-                No se encontraron videos
-              </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-                Intenta ajustar los filtros de búsqueda o explorar diferentes categorías
-              </Typography>
-              <Button
-                variant="outlined"
-                startIcon={<Search />}
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('all');
-                  setFilters({
-                    difficulty: [],
-                    category: [],
-                    completed: null,
-                    sortBy: 'recent',
-                    sortOrder: 'desc',
-                  });
-                }}
+              {video.description}
+            </Typography>
+
+            {/* Progreso */}
+            {video.progress && video.progress > 0 && (
+              <Box sx={{ mb: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Progreso
+                  </Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                    {Math.round(video.progress)}%
+                  </Typography>
+                </Box>
+                <Box className="uplay-progress-container" sx={{ height: 6 }}>
+                  <Box
+                    className="uplay-progress-bar"
+                    sx={{
+                      width: `${video.progress}%`,
+                      height: '100%'
+                    }}
+                  />
+                </Box>
+              </Box>
+            )}
+
+            {/* Recompensas */}
+            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+              <Chip
+                icon={<DiamondIcon />}
+                label={`${video.rewards.meritos} Mëritos`}
+                size="small"
                 sx={{
-                  borderColor: alpha('#ffffff', 0.3),
-                  color: 'text.primary',
-                  '&:hover': {
-                    borderColor: alpha('#ffffff', 0.5),
-                    background: alpha('#ffffff', 0.05),
+                  background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
+                  color: 'white',
+                  fontSize: '0.7rem',
+                  '& .MuiChip-icon': {
+                    color: 'white',
+                    fontSize: 14
                   }
                 }}
-              >
-                Limpiar filtros
-              </Button>
-            </Card>
+              />
+              <Chip
+                icon={<BoltIcon />}
+                label={`${video.rewards.ondas} Öndas`}
+                size="small"
+                sx={{
+                  background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                  color: 'white',
+                  fontSize: '0.7rem',
+                  '& .MuiChip-icon': {
+                    color: 'white',
+                    fontSize: 14
+                  }
+                }}
+              />
+            </Box>
+
+            {/* Footer de la tarjeta */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <StarIcon sx={{ color: '#fbbf24', fontSize: 16 }} />
+                <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                  {video.rating.toFixed(1)}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  ({video.views} vistas)
+                </Typography>
+              </Box>
+              
+              {video.questions.length > 0 && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <QuestionAnswerIcon sx={{ color: '#6366f1', fontSize: 16 }} />
+                  <Typography variant="caption" sx={{ fontWeight: 600, color: '#6366f1' }}>
+                    {video.questions.length} preguntas
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </CardContent>
+        </Card>
+      </Zoom>
+    </Grid>
+  );
+
+  // 🎨 Loading state mejorado
+  if (isLoading) {
+    return (
+      <Box sx={{ textAlign: 'center', py: 8 }}>
+        <RevolutionaryWidget variant="cosmic" intensity="medium" />
+        <Typography variant="h6" sx={{ mt: 2, color: 'text.secondary' }}>
+          Cargando biblioteca de videos...
+        </Typography>
+      </Box>
+    );
+  }
+
+  // 🎨 Error state mejorado
+  if (error) {
+    return (
+      <Box sx={{ textAlign: 'center', py: 8 }}>
+        <AutoAwesomeIcon sx={{ fontSize: 64, color: 'error.main', mb: 2 }} />
+        <Typography variant="h6" color="error" sx={{ mb: 1 }}>
+          Error al cargar los videos
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Por favor, verifica tu conexión e intenta nuevamente
+        </Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ position: 'relative', minHeight: '100vh' }}>
+      {/* Efectos de fondo */}
+      <RevolutionaryWidget
+        variant="subtle"
+        intensity="low"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: -1,
+          opacity: 0.2
+        }}
+      />
+
+      {/* Partículas flotantes */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflow: 'hidden',
+          pointerEvents: 'none',
+          zIndex: 0
+        }}
+      >
+        {[...Array(10)].map((_, i) => (
+          <Box
+            key={i}
+            className="uplay-particle sparkle"
+            sx={{
+              width: Math.random() * 6 + 3,
+              height: Math.random() * 6 + 3,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: `${3 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </Box>
+
+      {/* Contenido principal */}
+      <Box sx={{ position: 'relative', zIndex: 1, pb: 4 }}>
+        {/* Header de búsqueda */}
+        {renderSearchHeader()}
+
+        {/* Grid de videos */}
+        {filteredVideos.length === 0 ? (
+          <Fade in={animate} timeout={1000}>
+            <Box sx={{ textAlign: 'center', py: 8 }}>
+              <SearchIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                No se encontraron videos
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Intenta ajustar tu búsqueda o filtros
+              </Typography>
+            </Box>
+          </Fade>
+        ) : (
+          <Grid container spacing={3} sx={{ px: 3 }}>
+            {filteredVideos.map((video, index) => renderVideoCard(video, index))}
           </Grid>
         )}
-      </Grid>
-
-      {/* FAB para acciones rápidas */}
-      <Fab
-        sx={{
-          position: 'fixed',
-          bottom: 24,
-          left: 24,
-          background: `linear-gradient(135deg, ${theme.palette.secondary.main}, ${theme.palette.secondary.dark})`,
-          color: 'white',
-          boxShadow: `0 8px 32px ${alpha(theme.palette.secondary.main, 0.4)}`,
-          '&:hover': {
-            background: `linear-gradient(135deg, ${theme.palette.secondary.dark}, ${theme.palette.secondary.main})`,
-            transform: 'scale(1.1)',
-          },
-        }}
-        onClick={() => setShowFilters(!showFilters)}
-      >
-        {showFilters ? <ExpandLess /> : <FilterList />}
-      </Fab>
+      </Box>
     </Box>
   );
 };

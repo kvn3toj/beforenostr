@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Box,
   Card,
@@ -16,6 +16,14 @@ import {
   useMediaQuery,
   alpha,
   keyframes,
+  Container,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Fade,
+  Zoom,
+  Slide,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -33,7 +41,12 @@ import {
   VideoLibrary,
   Schedule,
   CheckCircle,
+  LocalFireDepartment,
+  QuestionAnswer,
 } from '@mui/icons-material';
+
+// Importar Revolutionary Widget
+import { RevolutionaryWidget } from '../../../design-system/templates';
 
 // Importar hooks y servicios
 import { useVideos } from '../../../hooks/data/useVideoData';
@@ -322,9 +335,505 @@ const UPlayEnhancedDashboard: React.FC = () => {
     );
   };
 
+  // 🎯 Datos mejorados con métricas gamificadas
+  const dashboardData = useMemo(() => ({
+    userStats: {
+      meritos: 485,
+      ondas: 1250,
+      ayniLevel: 'Colaborador Equilibrado',
+      nextLevel: 'Guardián del Bien Común',
+      progress: 78,
+      streak: 12,
+      weeklyGoal: 85,
+      completedToday: 3,
+      totalVideos: 47,
+      studyHours: 128
+    },
+    weeklyProgress: [
+      { day: 'Lun', completed: 2, goal: 3 },
+      { day: 'Mar', completed: 4, goal: 3 },
+      { day: 'Mié', completed: 3, goal: 3 },
+      { day: 'Jue', completed: 5, goal: 3 },
+      { day: 'Vie', completed: 2, goal: 3 },
+      { day: 'Sáb', completed: 1, goal: 2 },
+      { day: 'Dom', completed: 0, goal: 2 }
+    ],
+    recentActivity: [
+      {
+        id: '1',
+        type: 'video_completed',
+        title: 'Introducción a la Gamificación',
+        points: 50,
+        time: '2h',
+        icon: <PlayArrow />
+      },
+      {
+        id: '2',
+        type: 'achievement_unlocked',
+        title: 'Desbloqueaste: Maestro del Conocimiento',
+        points: 100,
+        time: '3h',
+        icon: <EmojiEvents />
+      },
+      {
+        id: '3',
+        type: 'social_interaction',
+        title: 'Respondiste 5 preguntas correctamente',
+        points: 25,
+        time: '5h',
+        icon: <QuestionAnswer />
+      },
+      {
+        id: '4',
+        type: 'study_session',
+        title: 'Completaste sesión de estudio grupal',
+        points: 75,
+        time: '1d',
+        icon: <Group />
+      }
+    ],
+    quickActions: [
+      { 
+        label: 'Continuar Video', 
+        icon: <PlayArrow />, 
+        color: '#6366f1',
+        description: 'Mecánicas de Recompensa - 15:30 min' 
+      },
+      { 
+        label: 'Ver Logros', 
+        icon: <EmojiEvents />, 
+        color: '#fbbf24',
+        description: '3 logros por desbloquear' 
+      },
+      { 
+        label: 'Unirse a Sala', 
+        icon: <Group />, 
+        color: '#10b981',
+        description: '5 compañeros conectados' 
+      },
+      { 
+        label: 'Practicar', 
+        icon: <AutoAwesome />, 
+        color: '#a855f7',
+        description: 'Preguntas interactivas' 
+      }
+    ]
+  }), []);
+
+  // 🎨 Métricas principales mejoradas
+  const renderEnhancedMetrics = () => (
+    <Grid container spacing={3} sx={{ mb: 4 }}>
+      {[
+        {
+          title: 'Mëritos Totales',
+          value: dashboardData.userStats.meritos,
+          icon: <Diamond />,
+          color: '#7c3aed',
+          change: '+23 esta semana',
+          key: 'meritos'
+        },
+        {
+          title: 'Öndas Acumuladas',
+          value: dashboardData.userStats.ondas,
+          icon: <Bolt />,
+          color: '#f59e0b',
+          change: '+156 hoy',
+          key: 'ondas'
+        },
+        {
+          title: 'Racha Actual',
+          value: `${dashboardData.userStats.streak} días`,
+          icon: <LocalFireDepartment />,
+          color: '#ef4444',
+          change: 'Tu mejor racha',
+          key: 'streak'
+        },
+        {
+          title: 'Progreso Semanal',
+          value: `${dashboardData.userStats.weeklyGoal}%`,
+          icon: <TrendingUp />,
+          color: '#10b981',
+          change: '+15% vs semana pasada',
+          key: 'progress'
+        }
+      ].map((metric, index) => (
+        <Grid key={metric.key} size={{ xs: 12, sm: 6, md: 3 }}>
+          <Zoom in={animate} timeout={800 + index * 150}>
+            <Card
+              className="uplay-metric-card"
+              onMouseEnter={() => setHoveredCard(metric.key)}
+              onMouseLeave={() => setHoveredCard(null)}
+              sx={{
+                position: 'relative',
+                cursor: 'pointer',
+                transform: hoveredCard === metric.key ? 'translateY(-8px)' : 'translateY(0)',
+                transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                '&:hover': {
+                  boxShadow: `0 20px 40px ${alpha(metric.color, 0.3)}`
+                }
+              }}
+            >
+              {/* Gradiente superior */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 3,
+                  background: `linear-gradient(90deg, ${metric.color}, ${alpha(metric.color, 0.6)})`
+                }}
+              />
+              
+              <CardContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Box
+                    sx={{
+                      p: 1.5,
+                      borderRadius: 2,
+                      background: `linear-gradient(135deg, ${alpha(metric.color, 0.2)}, ${alpha(metric.color, 0.1)})`,
+                      color: metric.color,
+                      mr: 2,
+                      boxShadow: `0 8px 16px ${alpha(metric.color, 0.2)}`
+                    }}
+                  >
+                    {metric.icon}
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="h4" className="uplay-metric-value" sx={{ mb: 0.5 }}>
+                      {metric.value}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {metric.title}
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: metric.color,
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5
+                  }}
+                >
+                  <TrendingUp />
+                  {metric.change}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Zoom>
+        </Grid>
+      ))}
+    </Grid>
+  );
+
+  // 🎨 Progreso semanal visual mejorado
+  const renderWeeklyProgress = () => (
+    <Fade in={animate} timeout={1200}>
+      <Card className="uplay-glassmorphism" sx={{ mb: 4 }}>
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <Schedule />
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Progreso de la Semana
+            </Typography>
+            <Chip
+              label={`${dashboardData.userStats.weeklyGoal}% completado`}
+              size="small"
+              sx={{
+                ml: 'auto',
+                background: 'linear-gradient(135deg, #10b981, #059669)',
+                color: 'white',
+                fontWeight: 600
+              }}
+            />
+          </Box>
+
+          <Grid container spacing={2}>
+            {dashboardData.weeklyProgress.map((day, index) => (
+              <Grid key={day.day} size={{ xs: 1.714 }}>
+                <Slide in={animate} timeout={1000 + index * 100} direction="up">
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                      {day.day}
+                    </Typography>
+                    <Box
+                      sx={{
+                        height: 60,
+                        width: '100%',
+                        background: alpha('#6366f1', 0.1),
+                        borderRadius: 2,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        border: `1px solid ${alpha('#6366f1', 0.2)}`
+                      }}
+                    >
+                      <Box
+                        className="uplay-progress-bar"
+                        sx={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          height: `${Math.min((day.completed / day.goal) * 100, 100)}%`,
+                          background: day.completed >= day.goal 
+                            ? 'linear-gradient(180deg, #10b981, #059669)'
+                            : 'linear-gradient(180deg, #6366f1, #4f46e5)',
+                          borderRadius: '0 0 8px 8px',
+                          transition: 'height 1s ease-out',
+                          minHeight: day.completed > 0 ? '8px' : '0px'
+                        }}
+                      />
+                      {day.completed >= day.goal && (
+                        <CheckCircle
+                          sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            color: 'white',
+                            fontSize: 20,
+                            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+                          }}
+                        />
+                      )}
+                    </Box>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        mt: 1,
+                        display: 'block',
+                        fontWeight: 600,
+                        color: day.completed >= day.goal ? '#10b981' : 'text.secondary'
+                      }}
+                    >
+                      {day.completed}/{day.goal}
+                    </Typography>
+                  </Box>
+                </Slide>
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Meta semanal */}
+          <Box sx={{ mt: 3, p: 2, borderRadius: 2, background: alpha('#6366f1', 0.05) }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              Meta Semanal: 20 videos completados
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={dashboardData.userStats.weeklyGoal}
+              sx={{
+                height: 8,
+                borderRadius: 4,
+                '& .MuiLinearProgress-bar': {
+                  background: 'linear-gradient(90deg, #6366f1, #a855f7)',
+                  borderRadius: 4
+                }
+              }}
+            />
+            <Typography variant="caption" sx={{ mt: 1, display: 'block', textAlign: 'center' }}>
+              ¡Solo 3 videos más para completar tu meta! 🎯
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+    </Fade>
+  );
+
+  // 🎨 Actividad reciente mejorada
+  const renderRecentActivity = () => (
+    <Fade in={animate} timeout={1400}>
+      <Card className="uplay-glassmorphism">
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <AutoAwesome />
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Actividad Reciente
+            </Typography>
+            <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: '#10b981',
+                  animation: 'uplay-pulse 1.5s ease-in-out infinite'
+                }}
+              />
+              <Typography variant="caption" color="text.secondary">
+                En vivo
+              </Typography>
+            </Box>
+          </Box>
+
+          <List sx={{ p: 0 }}>
+            {dashboardData.recentActivity.map((activity, index) => (
+              <React.Fragment key={activity.id}>
+                <Slide in={animate} timeout={1200 + index * 150} direction="left">
+                  <ListItem
+                    sx={{
+                      p: 2,
+                      borderRadius: 2,
+                      mb: 1,
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        background: alpha('#6366f1', 0.05),
+                        transform: 'translateX(8px)'
+                      }
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Avatar
+                        sx={{
+                          background: 'transparent',
+                          border: `2px solid ${alpha('#6366f1', 0.2)}`,
+                          '& .MuiSvgIcon-root': {
+                            fontSize: 20
+                          }
+                        }}
+                      >
+                        {activity.icon}
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body2" sx={{ fontWeight: 500, mb: 0.5 }}>
+                          {activity.title}
+                        </Typography>
+                      }
+                      secondary={
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Chip
+                            label={`+${activity.points} Mëritos`}
+                            size="small"
+                            sx={{
+                              background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
+                              color: 'white',
+                              fontSize: '0.7rem',
+                              height: 20
+                            }}
+                          />
+                          <Typography 
+                            variant="caption" 
+                            color="text.secondary"
+                            component="span"
+                            sx={{ display: 'inline' }}
+                          >
+                            hace {activity.time}
+                          </Typography>
+                        </span>
+                      }
+                    />
+                  </ListItem>
+                </Slide>
+                {index < dashboardData.recentActivity.length - 1 && (
+                  <Divider sx={{ opacity: 0.3 }} />
+                )}
+              </React.Fragment>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+    </Fade>
+  );
+
+  // 🎨 Acciones rápidas mejoradas
+  const renderQuickActions = () => (
+    <Fade in={animate} timeout={1600}>
+      <Card className="uplay-glassmorphism">
+        <CardContent sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+            Acciones Rápidas
+          </Typography>
+          
+          <Grid container spacing={2}>
+            {dashboardData.quickActions.map((action, index) => (
+              <Grid key={action.label} size={{ xs: 12, sm: 6 }}>
+                <Zoom in={animate} timeout={1400 + index * 100}>
+                  <Button
+                    className="uplay-card-enhanced"
+                    fullWidth
+                    sx={{
+                      p: 3,
+                      borderRadius: 3,
+                      textAlign: 'left',
+                      textTransform: 'none',
+                      background: `linear-gradient(135deg, ${alpha(action.color, 0.1)}, ${alpha(action.color, 0.05)})`,
+                      border: `1px solid ${alpha(action.color, 0.2)}`,
+                      color: 'inherit',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      '&:hover': {
+                        background: `linear-gradient(135deg, ${alpha(action.color, 0.2)}, ${alpha(action.color, 0.1)})`,
+                        border: `1px solid ${alpha(action.color, 0.4)}`
+                      }
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, width: '100%' }}>
+                      <Box
+                        sx={{
+                          p: 1,
+                          borderRadius: 2,
+                          background: alpha(action.color, 0.2),
+                          color: action.color,
+                          mr: 2
+                        }}
+                      >
+                        {action.icon}
+                      </Box>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                        {action.label}
+                      </Typography>
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {action.description}
+                    </Typography>
+                  </Button>
+                </Zoom>
+              </Grid>
+            ))}
+          </Grid>
+        </CardContent>
+      </Card>
+    </Fade>
+  );
+
+  const [animate, setAnimate] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+
+  // 🎨 Animación de entrada
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimate(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Box sx={{ position: 'relative' }}>
-      {/* Efectos de partículas flotantes */}
+      {/* Efectos de fondo */}
+      <RevolutionaryWidget
+        variant="secondary"
+        cosmicIntensity="low"
+        cosmicEffects={{
+          enableGlow: false,
+          enableParticles: false,
+          enableAnimations: false
+        }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: -1,
+          opacity: 0.3
+        }}
+      />
+
+      {/* Partículas flotantes */}
       <Box
         sx={{
           position: 'absolute',
@@ -332,337 +841,70 @@ const UPlayEnhancedDashboard: React.FC = () => {
           left: 0,
           right: 0,
           bottom: 0,
+          overflow: 'hidden',
           pointerEvents: 'none',
-          zIndex: 0,
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: '10%',
-            left: '5%',
-            width: '6px',
-            height: '6px',
-            borderRadius: '50%',
-            background: theme.palette.primary.main,
-            animation: `${sparkleAnimation} 2s ease-in-out infinite`,
-          },
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: '60%',
-            right: '10%',
-            width: '4px',
-            height: '4px',
-            borderRadius: '50%',
-            background: theme.palette.secondary.main,
-            animation: `${sparkleAnimation} 3s ease-in-out infinite 1s`,
-          }
+          zIndex: 0
         }}
-      />
-
-      <Grid container spacing={3} sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Métricas principales */}
-        <Grid item xs={12} sm={6} lg={3}>
-          <MetricCard
-            title="Mëritos Totales"
-            value={metrics.totalMeritos}
-            subtitle="Recompensas ganadas"
-            icon={<Diamond />}
-            color="#9c27b0"
-            animated
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={3}>
-          <MetricCard
-            title="Öndas Activas"
-            value={metrics.totalOndas}
-            subtitle="Energía acumulada"
-            icon={<Bolt />}
-            color="#ff9800"
-            animated
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={3}>
-          <MetricCard
-            title="Videos Completados"
-            value={`${metrics.completedVideos}/${metrics.totalVideos}`}
-            subtitle="Progreso de aprendizaje"
-            icon={<VideoLibrary />}
-            color="#4caf50"
-            progress={Math.round((metrics.completedVideos / metrics.totalVideos) * 100)}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={3}>
-          <MetricCard
-            title="Nivel Actual"
-            value={metrics.level}
-            subtitle="Progreso al siguiente nivel"
-            icon={<TrendingUp />}
-            color="#2196f3"
-            progress={metrics.nextLevelProgress}
-          />
-        </Grid>
-
-        {/* Progreso semanal */}
-        <Grid item xs={12} lg={8}>
-          <Card
+      >
+        {[...Array(6)].map((_, i) => (
+          <Box
+            key={i}
+            className="uplay-particle glow"
             sx={{
-              background: alpha('#ffffff', 0.05),
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${alpha('#ffffff', 0.1)}`,
-              borderRadius: 4,
-              p: 3,
-              height: '100%',
+              width: Math.random() * 8 + 4,
+              height: Math.random() * 8 + 4,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: `${4 + Math.random() * 3}s`
             }}
-          >
-            <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
-              <Box>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-                  Meta Semanal de Aprendizaje
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {metrics.weeklyProgress} de {metrics.weeklyGoal} videos completados esta semana
-                </Typography>
-              </Box>
-              <Avatar
-                sx={{
-                  bgcolor: alpha('#4caf50', 0.2),
-                  color: '#4caf50',
-                  width: 48,
-                  height: 48,
-                }}
-              >
-                <Schedule />
-              </Avatar>
-            </Box>
+          />
+        ))}
+      </Box>
 
-            <Box mb={3}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                <Typography variant="body2" color="text.secondary">
-                  Progreso Semanal
-                </Typography>
-                <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
-                  {Math.round((metrics.weeklyProgress / metrics.weeklyGoal) * 100)}%
-                </Typography>
-              </Box>
-              <LinearProgress
-                variant="determinate"
-                value={(metrics.weeklyProgress / metrics.weeklyGoal) * 100}
-                sx={{
-                  height: 12,
-                  borderRadius: 6,
-                  bgcolor: alpha('#4caf50', 0.1),
-                  '& .MuiLinearProgress-bar': {
-                    borderRadius: 6,
-                    background: 'linear-gradient(90deg, #4caf50, #81c784)',
-                    boxShadow: '0 0 15px rgba(76, 175, 80, 0.5)',
-                  },
-                }}
-              />
-            </Box>
-
-            <Grid container spacing={2}>
-              {Array.from({ length: 7 }, (_, i) => {
-                const dayNames = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-                const isCompleted = i < metrics.weeklyProgress;
-                const isToday = i === 2; // Simulando que hoy es miércoles
-                
-                return (
-                  <Grid item key={i}>
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: isCompleted 
-                          ? `linear-gradient(135deg, #4caf50, #81c784)`
-                          : isToday
-                          ? alpha('#2196f3', 0.2)
-                          : alpha('#ffffff', 0.1),
-                        border: isToday ? `2px solid #2196f3` : 'none',
-                        color: isCompleted ? 'white' : 'text.secondary',
-                        fontWeight: 'bold',
-                        fontSize: '0.875rem',
-                        transition: 'all 0.3s ease',
-                        boxShadow: isCompleted ? '0 4px 15px rgba(76, 175, 80, 0.4)' : 'none',
-                        animation: isToday ? `${pulseGlow} 2s ease-in-out infinite` : 'none',
-                      }}
-                    >
-                      {isCompleted ? <CheckCircle sx={{ fontSize: 20 }} /> : dayNames[i]}
-                    </Box>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Card>
-        </Grid>
-
-        {/* Actividad reciente */}
-        <Grid item xs={12} lg={4}>
-          <Card
-            sx={{
-              background: alpha('#ffffff', 0.05),
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${alpha('#ffffff', 0.1)}`,
-              borderRadius: 4,
-              p: 3,
-              height: '100%',
-            }}
-          >
-            <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                Actividad Reciente
-              </Typography>
-              <Avatar
-                sx={{
-                  bgcolor: alpha('#ff9800', 0.2),
-                  color: '#ff9800',
-                  width: 40,
-                  height: 40,
-                }}
-              >
-                <Whatshot />
-              </Avatar>
-            </Box>
-
-            <Box display="flex" flexDirection="column" gap={2}>
-              {recentActivity.map((activity) => (
-                <ActivityItem key={activity.id} activity={activity} />
-              ))}
-            </Box>
-
-            <Button
-              fullWidth
-              variant="outlined"
+      {/* Contenido principal */}
+      <Box sx={{ position: 'relative', zIndex: 1 }}>
+        {/* Header del Dashboard */}
+        <Fade in={animate} timeout={600}>
+          <Box sx={{ mb: 4, textAlign: 'center' }}>
+            <Typography
+              variant="h4"
               sx={{
-                mt: 2,
-                borderColor: alpha('#ffffff', 0.2),
-                color: 'text.secondary',
-                '&:hover': {
-                  borderColor: alpha('#ffffff', 0.4),
-                  background: alpha('#ffffff', 0.05),
-                }
+                fontWeight: 700,
+                background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                mb: 1
               }}
             >
-              Ver toda la actividad
-            </Button>
-          </Card>
+              Tu Dashboard de Aprendizaje
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Nivel actual: <strong>{dashboardData.userStats.ayniLevel}</strong> • 
+              Próximo: <strong>{dashboardData.userStats.nextLevel}</strong>
+            </Typography>
+          </Box>
+        </Fade>
+
+        {/* Métricas principales */}
+        {renderEnhancedMetrics()}
+
+        {/* Grid de contenido */}
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 12, lg: 7 }}>
+            {renderWeeklyProgress()}
+          </Grid>
+          <Grid size={{ xs: 12, lg: 5 }}>
+            {renderRecentActivity()}
+          </Grid>
         </Grid>
 
         {/* Acciones rápidas */}
-        <Grid item xs={12}>
-          <Card
-            sx={{
-              background: alpha('#ffffff', 0.05),
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${alpha('#ffffff', 0.1)}`,
-              borderRadius: 4,
-              p: 3,
-            }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
-              Acciones Rápidas
-            </Typography>
-
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={3}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  startIcon={<PlayArrow />}
-                  sx={{
-                    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-                    py: 2,
-                    borderRadius: 3,
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
-                      boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.4)}`,
-                    }
-                  }}
-                >
-                  Continuar Aprendiendo
-                </Button>
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  startIcon={<EmojiEvents />}
-                  sx={{
-                    py: 2,
-                    borderRadius: 3,
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    borderColor: alpha('#ff9800', 0.5),
-                    color: '#ff9800',
-                    '&:hover': {
-                      borderColor: '#ff9800',
-                      background: alpha('#ff9800', 0.1),
-                      transform: 'translateY(-2px)',
-                    }
-                  }}
-                >
-                  Ver Logros
-                </Button>
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  startIcon={<Group />}
-                  sx={{
-                    py: 2,
-                    borderRadius: 3,
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    borderColor: alpha('#9c27b0', 0.5),
-                    color: '#9c27b0',
-                    '&:hover': {
-                      borderColor: '#9c27b0',
-                      background: alpha('#9c27b0', 0.1),
-                      transform: 'translateY(-2px)',
-                    }
-                  }}
-                >
-                  Salas de Estudio
-                </Button>
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  startIcon={<AutoAwesome />}
-                  sx={{
-                    py: 2,
-                    borderRadius: 3,
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    borderColor: alpha('#2196f3', 0.5),
-                    color: '#2196f3',
-                    '&:hover': {
-                      borderColor: '#2196f3',
-                      background: alpha('#2196f3', 0.1),
-                      transform: 'translateY(-2px)',
-                    }
-                  }}
-                >
-                  Descubrir Contenido
-                </Button>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      </Grid>
+        <Box sx={{ mt: 3 }}>
+          {renderQuickActions()}
+        </Box>
+      </Box>
     </Box>
   );
 };
