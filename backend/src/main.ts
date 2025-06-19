@@ -67,7 +67,12 @@ async function bootstrap() {
 
   // Start server on port 10000 for Render deployment (or PORT env var)
   const port = process.env.PORT || 10000;
-  await app.listen(port, '0.0.0.0'); // 🌐 ESCUCHAR EN TODAS LAS INTERFACES DE RED
+  const server = await app.listen(port, '0.0.0.0'); // 🌐 ESCUCHAR EN TODAS LAS INTERFACES DE RED
+
+  // 🔧 RENDER DEPLOYMENT FIX: Configure timeouts to prevent "Connection reset by peer" errors
+  // Based on: https://render.com/docs/troubleshooting-deploys
+  server.keepAliveTimeout = 120000; // 120 seconds
+  server.headersTimeout = 120000; // 120 seconds
 
   console.log(`🚀 Gamifier API is running on: http://localhost:${port}`);
   console.log(`🌐 Network access: http://192.168.1.37:${port}`);
