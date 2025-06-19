@@ -1,4 +1,5 @@
 import React, { useState, useContext, createContext, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogTitle,
@@ -272,7 +273,11 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
           'Tu wallet es seguro y está protegido por blockchain',
           'Todas las transacciones siguen el principio de Ayni (reciprocidad)',
           'Puedes verificar tu historial completo en cualquier momento'
-        ]
+        ],
+        actionButton: {
+          text: '👀 Abrir Mi Wallet',
+          url: '/wallet'
+        }
       },
       {
         id: 'lukas-explanation',
@@ -300,7 +305,11 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
           'Se obtienen a través de intercambios especiales y colaboraciones profundas',
           'Representan valor agregado y contribuciones extraordinarias',
           'Permiten acceso a experiencias y productos premium'
-        ]
+        ],
+        actionButton: {
+          text: '📊 Ver Balance TOINS',
+          action: () => console.log('Mostrando balance específico de TOINS')
+        }
       },
       {
         id: 'dual-currency-system',
@@ -330,7 +339,11 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
           'Mentorear a nuevos miembros durante su onboarding',
           'Resolver conflictos comunitarios con sabiduría',
           'Innovar en soluciones para la plataforma'
-        ]
+        ],
+        actionButton: {
+          text: '🚀 Explorar Oportunidades',
+          url: '/social'
+        }
       },
       {
         id: 'using-toins',
@@ -360,7 +373,11 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
           'Al recibir TOINS, reflexiona sobre el valor que has aportado',
           'El flujo de TOINS debe mantener el equilibrio Ayni',
           'Las TOINS conectan tu prosperidad con la del colectivo'
-        ]
+        ],
+        actionButton: {
+          text: '⚖️ Evaluar Mi Balance Ayni',
+          action: () => console.log('Evaluando balance personal de Ayni')
+        }
       },
       {
         id: 'wallet-mastery',
@@ -385,7 +402,7 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
 ];
 
 // Función helper para renderizar contenido con mejor formato
-const renderStepContent = (step: TutorialStep) => {
+const renderStepContent = (step: TutorialStep, navigate: ReturnType<typeof useNavigate>) => {
   const getStepIcon = () => {
     switch (step.type) {
       case 'warning': return <WarningIcon sx={{ color: '#ff9800', mr: 1 }} />;
@@ -402,6 +419,18 @@ const renderStepContent = (step: TutorialStep) => {
       case 'success': return 'success';
       case 'tip': return 'info';
       default: return 'info';
+    }
+  };
+
+  const handleActionButtonClick = () => {
+    if (step.actionButton) {
+      if (step.actionButton.url) {
+        // Navegar a URL
+        navigate(step.actionButton.url);
+      } else if (step.actionButton.action) {
+        // Ejecutar función
+        step.actionButton.action();
+      }
     }
   };
 
@@ -450,6 +479,7 @@ const renderStepContent = (step: TutorialStep) => {
           <Button
             variant="contained"
             startIcon={<StartIcon />}
+            onClick={handleActionButtonClick}
             sx={{
               background: 'linear-gradient(45deg, #ff6b6b, #ffd93d)',
               color: '#000',
@@ -485,6 +515,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
   const [currentTutorial, setCurrentTutorial] = useState<Tutorial | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const navigate = useNavigate();
 
   const startTutorial = useCallback((tutorialId: string) => {
     const tutorial = DISCOVERY_TUTORIALS.find(t => t.id === tutorialId);
@@ -651,7 +682,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                   border: '1px solid rgba(255,255,255,0.1)'
                 }}>
                   <CardContent sx={{ p: 3 }}>
-                    {currentStepData && renderStepContent(currentStepData)}
+                    {currentStepData && renderStepContent(currentStepData, navigate)}
                   </CardContent>
                 </Card>
               </Fade>

@@ -260,25 +260,6 @@ export class RateLimiter {
     const oldestAttempt = Math.min(...attempts);
     return new Date(oldestAttempt + this.windowMs);
   }
-
-
-  /**
-   * Records a failed attempt for rate limiting
-   * @param identifier - Usually email or IP address
-   */
-  recordAttempt(identifier: string): void {
-    const now = Date.now();
-    const attempts = this.attempts.get(identifier) || [];
-    
-    // Remove expired attempts
-    const validAttempts = attempts.filter(attempt => now - attempt < this.windowMs);
-    
-    // Add this failed attempt
-    validAttempts.push(now);
-    this.attempts.set(identifier, validAttempts);
-    
-    console.log(`🚫 [RateLimiter] Failed attempt recorded for: ${identifier}. Total attempts: ${validAttempts.length}/${this.maxAttempts}`);
-  }
 }
 
 // Security headers helper for client-side verification

@@ -114,7 +114,7 @@ export const useAyniIntelligence = (userId: string) => {
         const response = await apiService.get(`/ayni-intelligence/${userId}?${queryParams.toString()}`);
         return (response as any).data || response;
       } catch (error) {
-//         console.warn('🧠 [AyniIntelligence] Backend not available, using intelligent mock data');
+        console.warn('🧠 [AyniIntelligence] Backend not available, using intelligent mock data');
         return generateIntelligentMockData(userId, preferences);
       }
     },
@@ -177,7 +177,7 @@ export const useAyniIntelligence = (userId: string) => {
       };
     }
 
-    const recent = actions.filter(a => 
+    const recent = actions.filter(a =>
       Date.now() - new Date(a.timestamp).getTime() < 30 * 24 * 60 * 60 * 1000 // Last 30 days
     );
 
@@ -207,7 +207,7 @@ export const useAyniIntelligence = (userId: string) => {
     });
 
     const overall = Math.round(ayniBalance * 100);
-    
+
     return {
       overall,
       elements: elementScores,
@@ -218,7 +218,7 @@ export const useAyniIntelligence = (userId: string) => {
 
   // Generar recomendaciones inteligentes
   const generateRecommendations = useCallback((
-    balance: AyniBalance, 
+    balance: AyniBalance,
     userPreferences: typeof preferences
   ): SmartRecommendation[] => {
     const recommendations: SmartRecommendation[] = [];
@@ -227,8 +227,8 @@ export const useAyniIntelligence = (userId: string) => {
     Object.entries(balance.elements).forEach(([element, score]) => {
       if (score < 60) {
         const recommendation = generateElementBoostRecommendation(
-          element as keyof AyniBalance['elements'], 
-          score, 
+          element as keyof AyniBalance['elements'],
+          score,
           userPreferences
         );
         if (recommendation) recommendations.push(recommendation);
@@ -305,7 +305,7 @@ export const useAyniIntelligence = (userId: string) => {
     // Acciones
     recordAction: recordActionMutation.mutate,
     applyRecommendation: applyRecommendationMutation.mutate,
-    
+
     // Estado de mutaciones
     isRecordingAction: recordActionMutation.isPending,
     isApplyingRecommendation: applyRecommendationMutation.isPending,
@@ -378,15 +378,15 @@ const generateElementBoostRecommendation = (
   };
 };
 
-// // Función para generar datos mock inteligentes
+// Función para generar datos mock inteligentes
 const generateIntelligentMockData = (
-  userId: string, 
+  userId: string,
   preferences: any
 ): AyniIntelligenceData => {
   // Simular datos basados en preferencias del usuario
   const baseBalance = 45 + Math.random() * 30; // 45-75 range
-  
-//   const mockBalance: AyniBalance = {
+
+  const mockBalance: AyniBalance = {
     overall: Math.round(baseBalance),
     elements: {
       fuego: Math.round(baseBalance + (Math.random() - 0.5) * 20),
@@ -400,13 +400,13 @@ const generateIntelligentMockData = (
   };
 
   // Normalizar elementos a 0-100
-//   Object.keys(mockBalance.elements).forEach(key => {
+  Object.keys(mockBalance.elements).forEach(key => {
     const element = key as keyof AyniBalance['elements'];
-//     mockBalance.elements[element] = Math.min(100, Math.max(0, mockBalance.elements[element]));
+    mockBalance.elements[element] = Math.min(100, Math.max(0, mockBalance.elements[element]));
   });
 
-//   const mockData: AyniIntelligenceData = {
-//     ayniBalance: mockBalance,
+  const mockData: AyniIntelligenceData = {
+    ayniBalance: mockBalance,
     recommendations: [
       {
         id: 'rec_1',
@@ -458,14 +458,14 @@ const generateIntelligentMockData = (
       }
     ],
     personalizedInsights: {
-//       strengthElement: Object.entries(mockBalance.elements)
+      strengthElement: Object.entries(mockBalance.elements)
         .sort(([,a], [,b]) => b - a)[0][0] as keyof AyniBalance['elements'],
-//       growthOpportunity: Object.entries(mockBalance.elements)
+      growthOpportunity: Object.entries(mockBalance.elements)
         .sort(([,a], [,b]) => a - b)[0][0] as keyof AyniBalance['elements'],
       nextMilestone: 'Alcanzar 80% de Balance Ayni',
-//       communityRole: mockBalance.overall > 70 ? 'catalyst' : 
-//                     mockBalance.overall > 60 ? 'balancer' : 
-//                     mockBalance.overall > 40 ? 'giver' : 'receiver'
+      communityRole: mockBalance.overall > 70 ? 'catalyst' :
+                    mockBalance.overall > 60 ? 'balancer' :
+                    mockBalance.overall > 40 ? 'giver' : 'receiver'
     },
     communityImpact: {
       currentContributions: Math.round(baseBalance * 0.8),
@@ -475,7 +475,7 @@ const generateIntelligentMockData = (
     }
   };
 
-//   return mockData;
+  return mockData;
 };
 
 export default useAyniIntelligence;

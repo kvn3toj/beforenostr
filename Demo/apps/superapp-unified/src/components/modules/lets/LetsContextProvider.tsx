@@ -7,23 +7,23 @@ interface LetsContextData {
   // User experience level
   userLevel: UserExperience;
   setUserLevel: (level: UserExperience) => void;
-  
+
   // UI preferences
   showSimplifiedUI: boolean;
   setShowSimplifiedUI: (show: boolean) => void;
-  
+
   preferredExplanationStyle: ExplanationStyle;
   setPreferredExplanationStyle: (style: ExplanationStyle) => void;
-  
+
   // Onboarding status
   hasCompletedOnboarding: boolean;
   setHasCompletedOnboarding: (completed: boolean) => void;
-  
+
   // Feature discovery
   discoveredFeatures: Set<string>;
   markFeatureAsDiscovered: (feature: string) => void;
   isFeatureDiscovered: (feature: string) => boolean;
-  
+
   // Helper methods
   shouldShowTooltip: (concept: string) => boolean;
   getComplexityLevel: () => number;
@@ -55,30 +55,30 @@ const determineUserLevel = (userStats?: {
   if (!userStats || userStats.totalExchanges === 0) {
     return 'newcomer';
   }
-  
+
   const { totalExchanges, totalUnitsTransferred, trustScore, daysActive } = userStats;
-  
+
   // Algoritmo de scoring para determinar nivel
   let score = 0;
-  
+
   // Experiencia en intercambios
   if (totalExchanges >= 1) score += 1;
   if (totalExchanges >= 5) score += 1;
   if (totalExchanges >= 20) score += 1;
   if (totalExchanges >= 50) score += 1;
-  
+
   // Volumen de transacciones
   if (totalUnitsTransferred >= 10) score += 1;
   if (totalUnitsTransferred >= 100) score += 1;
-  
+
   // Confianza comunitaria
   if (trustScore >= 70) score += 1;
   if (trustScore >= 90) score += 1;
-  
+
   // Tiempo en la plataforma
   if (daysActive >= 7) score += 1;
   if (daysActive >= 30) score += 1;
-  
+
   // Mapear score a nivel
   if (score <= 2) return 'beginner';
   if (score <= 5) return 'intermediate';
@@ -94,25 +94,53 @@ export const LetsContextProvider: React.FC<LetsContextProviderProps> = ({
     const stored = localStorage.getItem(STORAGE_KEYS.userLevel);
     return (stored as UserExperience) || 'newcomer';
   });
-  
+
   const [showSimplifiedUI, setShowSimplifiedUI] = useState<boolean>(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.simplifiedUI);
-    return stored ? JSON.parse(stored) : true;
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (error) {
+        console.error('Error parsing simplifiedUI preference:', error);
+        localStorage.removeItem(STORAGE_KEYS.simplifiedUI);
+        return true;
+      }
+    }
+    return true;
   });
-  
+
   const [preferredExplanationStyle, setPreferredExplanationStyle] = useState<ExplanationStyle>(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.explanationStyle);
     return (stored as ExplanationStyle) || 'visual';
   });
-  
+
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.onboardingCompleted);
-    return stored ? JSON.parse(stored) : false;
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (error) {
+        console.error('Error parsing onboarding completion status:', error);
+        localStorage.removeItem(STORAGE_KEYS.onboardingCompleted);
+        return false;
+      }
+    }
+    return false;
   });
-  
+
   const [discoveredFeatures, setDiscoveredFeatures] = useState<Set<string>>(() => {
     const stored = localStorage.getItem(STORAGE_KEYS.discoveredFeatures);
-    return stored ? new Set(JSON.parse(stored)) : new Set();
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        return Array.isArray(parsed) ? new Set(parsed) : new Set();
+      } catch (error) {
+        console.error('Error parsing discovered features:', error);
+        localStorage.removeItem(STORAGE_KEYS.discoveredFeatures);
+        return new Set();
+      }
+    }
+    return new Set();
   });
 
   // Persistir cambios en localStorage
@@ -134,7 +162,7 @@ export const LetsContextProvider: React.FC<LetsContextProviderProps> = ({
 
   useEffect(() => {
     localStorage.setItem(
-      STORAGE_KEYS.discoveredFeatures, 
+      STORAGE_KEYS.discoveredFeatures,
       JSON.stringify([...discoveredFeatures])
     );
   }, [discoveredFeatures]);
@@ -212,16 +240,16 @@ export const useLetsContext = (): LetsContextData => {
 // Hook para auto-adaptación de UI
 export const useLetsAdaptiveUI = () => {
   const context = useLetsContext();
-  
+
   return {
     // Componentes adaptativos
     WalletComponent: context.shouldUseHumanizedUI() ? 'UnitsWalletHumanized' : 'UnitsWallet',
-    
+
     // Configuraciones de UI
     showAdvancedFeatures: context.userLevel !== 'newcomer',
     showDetailedMetrics: ['intermediate', 'advanced'].includes(context.userLevel),
     autoShowTooltips: context.userLevel === 'newcomer',
-    
+
     // Mensajes contextuales
     getLoadingMessage: (action: string) => {
       const messages = {
@@ -232,7 +260,7 @@ export const useLetsAdaptiveUI = () => {
       };
       return messages[context.userLevel];
     },
-    
+
     // Configuración de explicaciones
     explanationDepth: context.getComplexityLevel(),
     useEmojis: ['newcomer', 'beginner'].includes(context.userLevel),
@@ -272,4 +300,4 @@ export const LEVEL_CONFIGURATIONS = {
   },
 } as const;
 
-export default LetsContextProvider; 
+export default LetsContextProvider;

@@ -56,10 +56,5 @@
     "**/video_data/**",
     "**/metadata/**",
     "**/analysis/**"
-  ],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
   ]
 }

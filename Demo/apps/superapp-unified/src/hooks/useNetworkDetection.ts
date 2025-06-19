@@ -22,69 +22,61 @@ export const useNetworkDetection = () => {
       const currentHost = window.location.hostname;
       const currentOrigin = window.location.origin;
 
-      // Detectar si estamos en acceso de red (no localhost)
+      // Detectar si estamos en acceso de red
       const isNetworkAccess = currentHost !== 'localhost' && currentHost !== '127.0.0.1';
 
+      // Determinar URL del API según el entorno
       let apiBaseUrl: string;
-      let displayUrl: string;
 
       if (isNetworkAccess) {
-        // 🌐 ACCESO DE RED: usar la IP de red para el backend
-        const networkIP = currentHost; // 192.168.1.37
-        apiBaseUrl = `http://${networkIP}:3002`;
-        displayUrl = `${networkIP}:3001`;
-
-        console.log('🌐 Network Access Detected:', {
-          frontend: currentOrigin,
-          backend: apiBaseUrl,
-          networkIP
-        });
+        // Usar la URL de red configurada o construir dinámicamente
+        const networkApiUrl = import.meta.env.VITE_NETWORK_API_URL;
+        if (networkApiUrl) {
+          apiBaseUrl = networkApiUrl;
+        } else {
+          // Construir URL usando la misma IP pero puerto 3002
+          apiBaseUrl = `http://${currentHost}:3002`;
+        }
       } else {
-        // 🏠 LOCALHOST: usar configuración local
+        // Usar localhost para desarrollo local
         apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
-        displayUrl = 'localhost:3001';
-
-        console.log('🏠 Localhost Access Detected:', {
-          frontend: currentOrigin,
-          backend: apiBaseUrl
-        });
       }
+
+      console.log('🌐 Network Detection:', {
+        currentHost,
+        currentOrigin,
+        isNetworkAccess,
+        apiBaseUrl,
+        envVars: {
+          VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+          VITE_NETWORK_API_URL: import.meta.env.VITE_NETWORK_API_URL
+        }
+      });
 
       setEnvironment({
         isNetworkAccess,
         currentHost,
         apiBaseUrl,
-        displayUrl
+        displayUrl: isNetworkAccess ? currentHost : 'localhost'
       });
     };
 
+    // Ejecutar inmediatamente
     detectEnvironment();
 
-    // Re-detectar si cambia la URL (por si acaso)
-    window.addEventListener('hashchange', detectEnvironment);
-    window.addEventListener('popstate', detectEnvironment);
+    // También escuchar cambios en la URL (por si cambia dinámicamente)
+    const handleLocationChange = () => {
+      setTimeout(detectEnvironment, 100); // Pequeño delay para asegurar que location esté actualizado
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
 
     return () => {
-      window.removeEventListener('hashchange', detectEnvironment);
-      window.removeEventListener('popstate', detectEnvironment);
+      window.removeEventListener('popstate', handleLocationChange);
     };
   }, []);
 
   return environment;
-};
-
-/**
- * 🔧 Utilidad para obtener la URL del API según el entorno
- */
-export const getApiUrl = (): string => {
-  const currentHost = window.location.hostname;
-  const isNetworkAccess = currentHost !== 'localhost' && currentHost !== '127.0.0.1';
-
-  if (isNetworkAccess) {
-    return `http://${currentHost}:3002`;
-  }
-
-  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
 };
 
 /**

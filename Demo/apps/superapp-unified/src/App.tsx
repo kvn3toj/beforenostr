@@ -24,10 +24,10 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 
 // Lazy Components
-import { 
-  LazyPages, 
-  preloadCriticalComponents, 
-  preloadRouteComponents 
+import {
+  LazyPages,
+  preloadCriticalComponents,
+  preloadRouteComponents
 } from './utils/lazyComponents';
 
 // Performance Monitoring (Development Only)
@@ -68,7 +68,7 @@ const AppRoutes: React.FC = () => {
       {/* 🔓 Rutas Públicas - No requieren autenticación */}
       <Route path="/login" element={<LazyPages.LoginPage />} />
       <Route path="/register" element={<LazyPages.RegisterPage />} />
-      
+
       {/* 🔒 Rutas Protegidas - Requieren autenticación y usan AppLayout */}
       <Route element={<ProtectedRoute />}>
         {/* Main Pages */}
@@ -78,15 +78,15 @@ const AppRoutes: React.FC = () => {
         <Route path="/social" element={<LazyPages.Social />} />
         <Route path="/profile" element={<LazyPages.ProfilePage />} />
         <Route path="/wallet" element={<LazyPages.WalletPage />} />
-        
+
         {/* 🎯 Challenge & Group Pages */}
         <Route path="/challenges" element={<LazyPages.ChallengesPage />} />
         <Route path="/groups" element={<LazyPages.GroupsPage />} />
-        
+
         {/* 📊 UStats - Estadísticas y Analytics */}
         <Route path="/ustats" element={<LazyPages.UStatsPage />} />
         <Route path="/analytics" element={<LazyPages.AnalyticsPage />} />
-        
+
         {/* 🎥 Video/UPlay Routes */}
         <Route path="/uplay/video/:videoId" element={<LazyPages.UPlayVideoPlayer />} />
         <Route path="/uplay/unified" element={<LazyPages.UnifiedUPlay />} />
@@ -94,46 +94,46 @@ const AppRoutes: React.FC = () => {
         <Route path="/uplay/demo" element={<LazyPages.InteractiveVideoDemo />} />
         <Route path="/videos" element={<LazyPages.VideoHome />} />
         <Route path="/video/:videoId" element={<LazyPages.VideoPlayer />} />
-        
+
         {/* 🏪 Marketplace Routes - Módulo principal de intercambio */}
         <Route path="/marketplace/test" element={<LazyPages.MarketplaceTest />} />
-        
+
         {/* 🔄 LETS Routes - Módulo independiente de intercambio local */}
         <Route path="/lets" element={<LazyPages.LetsPage />} />
         <Route path="/lets/analytics" element={<LazyPages.LetsAnalyticsDashboard />} />
-        
+
         {/* 🎯 Challenge Routes */}
         <Route path="/challenges/:challengeId" element={<LazyPages.ChallengeDetailPage />} />
-        
+
         {/* 👥 Social Routes */}
         <Route path="/social/chat" element={<LazyPages.SocialChat />} />
         <Route path="/social/feed" element={<LazyPages.SocialFeed />} />
-        
+
         {/* Special Pages */}
         <Route path="/design-system" element={<LazyPages.DesignSystemShowcase />} />
         <Route path="/theme-test" element={<LazyPages.ThemeTestSuite />} />
         <Route path="/design-validator" element={<LazyPages.DesignSystemValidator />} />
-        
+
         {/* 🔧 WebSocket Test - Temporal para pruebas */}
         <Route path="/websocket-test" element={<LazyPages.WebSocketTest />} />
-        
+
         {/* Settings */}
         <Route path="/settings" element={<LazyPages.SettingsPage />} />
         <Route path="/help" element={<LazyPages.HelpPage />} />
-        
+
         {/* 🆕 NUEVAS PÁGINAS DESARROLLADAS */}
         <Route path="/notifications" element={<LazyPages.NotificationsPage />} />
         <Route path="/study-rooms" element={<LazyPages.StudyRoomsPage />} />
-        
+
         {/* 🎮 Onboarding Demo */}
         <Route path="/onboarding-demo" element={<OnboardingDemo />} />
-        
+
         {/* PWA Demo */}
         <Route path="/pwa-demo" element={<LazyPages.PWADemo />} />
         <Route path="/beta-register" element={<LazyPages.BetaRegister />} />
         <Route path="/home-alt" element={<LazyPages.HomePageAlternative />} />
       </Route>
-      
+
       {/* 404 - Debe estar fuera de las rutas protegidas */}
       <Route path="*" element={<LazyPages.NotFoundPage />} />
     </Routes>
@@ -152,7 +152,20 @@ const OnboardingSystem: React.FC = () => {
   useEffect(() => {
     const completedItems = localStorage.getItem('coomunity_completed_checklist_items');
     if (completedItems) {
-      setCompletedOnboardingItems(JSON.parse(completedItems));
+      try {
+        const parsed = JSON.parse(completedItems);
+        // Verificar que sea un array válido
+        if (Array.isArray(parsed)) {
+          setCompletedOnboardingItems(parsed);
+        } else {
+          console.warn('Invalid completed items format, resetting:', completedItems);
+          localStorage.removeItem('coomunity_completed_checklist_items');
+        }
+      } catch (error) {
+        console.error('Error parsing completed onboarding items:', error);
+        console.warn('Corrupted data:', completedItems);
+        localStorage.removeItem('coomunity_completed_checklist_items');
+      }
     }
 
     const stage = localStorage.getItem('coomunity_user_stage');
@@ -163,7 +176,7 @@ const OnboardingSystem: React.FC = () => {
 
   const handleOnboardingComplete = (data: any) => {
     console.log('Onboarding completed:', data);
-    
+
     // Start progressive tooltips after initial onboarding
     setTimeout(() => {
       setShowTooltips(true);
@@ -174,16 +187,16 @@ const OnboardingSystem: React.FC = () => {
     const updatedItems = [...completedOnboardingItems, itemId];
     setCompletedOnboardingItems(updatedItems);
     localStorage.setItem('coomunity_completed_checklist_items', JSON.stringify(updatedItems));
-    
+
     console.log(`Completed item ${itemId}:`, rewards);
-    
+
     // Here you could integrate with actual rewards system
     // For now, just show in console
   };
 
   const handleTooltipsComplete = () => {
     setShowTooltips(false);
-    
+
     // Show checklist after tooltips
     setTimeout(() => {
       setShowChecklist(true);
@@ -230,9 +243,9 @@ const App: React.FC = () => {
         <ThemeProvider>
           <AuthProvider>
             <LetsEducationProvider>
-              <DiscoveryTutorialProvider>
-                <CssBaseline />
-                <Router>
+              <CssBaseline />
+              <Router>
+                <DiscoveryTutorialProvider>
                   <RoutePreloader />
                   <Box
                     sx={{
@@ -251,7 +264,7 @@ const App: React.FC = () => {
 
                   {/* 🎓 Tutorial Discovery Floating Button */}
                   <TutorialFloatingButton />
-                  
+
                   {/* Toast Notifications */}
                   <Toaster
                     position="top-right"
@@ -264,20 +277,20 @@ const App: React.FC = () => {
                       },
                     }}
                   />
-                  
+
                   {/* React Query DevTools */}
                   {process.env.NODE_ENV === 'development' && (
                     <ReactQueryDevtools initialIsOpen={false} />
                   )}
-                  
+
                   {/* 🎯 Performance Monitor - Development Only - Temporalmente deshabilitado */}
                   {/* {process.env.NODE_ENV === 'development' && (
                     <React.Suspense fallback={null}>
                       <PerformanceMonitor />
                     </React.Suspense>
                   )} */}
-                </Router>
-              </DiscoveryTutorialProvider>
+                </DiscoveryTutorialProvider>
+              </Router>
             </LetsEducationProvider>
           </AuthProvider>
         </ThemeProvider>

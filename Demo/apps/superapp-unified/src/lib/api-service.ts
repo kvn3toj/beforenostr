@@ -9,10 +9,33 @@
 
 import { ENV, EnvironmentHelpers } from './environment';
 import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
-import { getApiUrl } from '../hooks/useNetworkDetection';
+
+// 🔧 Función para detectar URL del API dinámicamente
+const getApiUrl = (): string => {
+  // Verificar si estamos en entorno del navegador
+  if (typeof window === 'undefined') {
+    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+  }
+
+  const currentHost = window.location.hostname;
+  const isNetworkAccess = currentHost !== 'localhost' && currentHost !== '127.0.0.1';
+
+  if (isNetworkAccess) {
+    // Usar la URL de red configurada o construir dinámicamente
+    const networkApiUrl = import.meta.env.VITE_NETWORK_API_URL;
+    if (networkApiUrl) {
+      return networkApiUrl;
+    } else {
+      // Construir URL usando la misma IP pero puerto 3002
+      return `http://${currentHost}:3002`;
+    }
+  } else {
+    // Usar localhost para desarrollo local
+    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+  }
+};
 
 // 🔧 Configuración de la API - usando detección automática de red
-const API_BASE_URL = getApiUrl(); // 🌐 DETECCIÓN AUTOMÁTICA
 const API_TIMEOUT = 30000; // 30 segundos
 
 // 🏷️ Tipos de respuesta de la API
@@ -40,14 +63,21 @@ interface RequestHeaders {
 }
 
 class ApiService {
-  private baseURL: string;
   private timeout: number;
 
   constructor() {
-    this.baseURL = API_BASE_URL;
     this.timeout = API_TIMEOUT;
 
-    console.log('🔧 ApiService initialized with baseURL:', this.baseURL);
+    console.log('🔧 ApiService initialized');
+  }
+
+  /**
+   * 🌐 Obtener URL base del API dinámicamente
+   */
+  private getBaseURL(): string {
+    const url = getApiUrl();
+    console.log('🔧 ApiService using baseURL:', url);
+    return url;
   }
 
   /**
@@ -366,7 +396,7 @@ class ApiService {
     const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
 
     try {
-      const url = `${this.baseURL}${endpoint}`;
+      const url = `${this.getBaseURL()}${endpoint}`;
 
       // 🔑 SIEMPRE incluir autenticación por defecto, a menos que se especifique lo contrario
       const includeAuth = (options as any).includeAuth !== false;

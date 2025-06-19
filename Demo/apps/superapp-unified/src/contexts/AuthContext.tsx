@@ -52,7 +52,30 @@ const backendSignIn = async (
   password: string
 ): Promise<User> => {
   try {
-    const response = await authService.login({ email, password });
+    console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔐 Attempting login:`, { email });
+
+    // 🌐 NETWORK DIAGNOSTICS: Log current environment details
+    const currentHost = window.location.hostname;
+    const isNetworkAccess = currentHost !== 'localhost' && currentHost !== '127.0.0.1';
+    const apiUrl = isNetworkAccess
+      ? `http://${currentHost}:3002`
+      : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002');
+
+    console.log(`${AUTH_CONFIG.LOG_PREFIX} 🌐 Environment:`, {
+      currentHost,
+      isNetworkAccess,
+      apiUrl,
+      origin: window.location.origin,
+      href: window.location.href
+    });
+
+    const response = await authService.login(email, password);
+    console.log(`${AUTH_CONFIG.LOG_PREFIX} ✅ Login response received:`, {
+      hasUser: !!response.user,
+      hasData: !!response.data,
+      hasToken: !!(response.access_token || response.token || response.accessToken),
+      responseKeys: Object.keys(response)
+    });
 
     // El backend puede devolver diferentes estructuras, adaptamos
     const userData = response.user || response.data || response;
@@ -60,35 +83,126 @@ const backendSignIn = async (
       response.access_token || response.token || response.accessToken;
 
     if (!userData || !token) {
+      console.error(`${AUTH_CONFIG.LOG_PREFIX} ❌ Invalid response structure:`, response);
       throw new Error('Respuesta de login inválida del servidor');
     }
 
+    console.log(`${AUTH_CONFIG.LOG_PREFIX} 🎉 Login successful for:`, userData.email);
     return mapBackendUserToFrontend(userData, token);
   } catch (error: any) {
-    console.error('[Auth] Error en login:', error);
+    console.error(`${AUTH_CONFIG.LOG_PREFIX} ❌ Login error:`, error);
 
-    // Mejorar mensajes de error para el usuario
+    // 🔍 ENHANCED ERROR DIAGNOSTICS
+    const errorDetails = {
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+      cause: error.cause,
+      response: error.response,
+      status: error.status,
+      config: error.config,
+      timestamp: new Date().toISOString(),
+      environment: {
+        hostname: window.location.hostname,
+        origin: window.location.origin,
+        userAgent: navigator.userAgent
+      }
+    };
+
+    console.group(`${AUTH_CONFIG.LOG_PREFIX} 🚨 DETAILED ERROR ANALYSIS`);
+    console.error('Full Error Details:', errorDetails);
+    console.groupEnd();
+
+    // Categorizar errores para mejor manejo en UI
+    let errorCategory = 'unknown';
+    let enhancedMessage = error.message || 'Error desconocido';
+
+    // Network/Connection errors
     if (
+      error.name === 'TypeError' &&
+      (error.message?.includes('fetch') || error.message?.includes('Failed to fetch'))
+    ) {
+      errorCategory = 'network';
+      enhancedMessage = `Error de conexión: No se puede conectar al servidor en ${window.location.hostname}:3002. Verifica que el backend esté ejecutándose.`;
+    } else if (error.message?.includes('CORS')) {
+      errorCategory = 'cors';
+      enhancedMessage = 'Error CORS: El servidor no permite conexiones desde este origen.';
+    } else if (error.name === 'AbortError' || error.message?.includes('timeout')) {
+      errorCategory = 'timeout';
+      enhancedMessage = 'Timeout: El servidor tardó demasiado en responder.';
+    }
+    // Authentication errors
+    else if (
+      error.message?.includes('Credenciales incorrectas') ||
       error.message?.includes('401') ||
-      error.message?.includes('Unauthorized')
+      error.status === 401
     ) {
-      throw new Error(
-        'Credenciales incorrectas. Verifica tu email y contraseña.'
-      );
-    } else if (
-      error.message?.includes('Network') ||
-      error.message?.includes('fetch')
-    ) {
-      throw new Error(
-        'Error de conexión. Verifica que el servidor esté disponible.'
-      );
-    } else if (error.message?.includes('400')) {
-      throw new Error(
-        'Datos de login inválidos. Verifica el formato de tu email.'
-      );
+      errorCategory = 'auth';
+      enhancedMessage = 'Credenciales incorrectas: Email o contraseña inválidos.';
+    } else if (error.message?.includes('400') || error.status === 400) {
+      errorCategory = 'validation';
+      enhancedMessage = 'Datos inválidos: Verifica el formato del email y contraseña.';
+    } else if (error.message?.includes('500') || error.status === 500) {
+      errorCategory = 'server';
+      enhancedMessage = 'Error del servidor: Problema interno del backend.';
     }
 
-    throw new Error(error.message || 'Error inesperado durante el login');
+    // Create enhanced error with debugging info
+    const enhancedError = new Error(enhancedMessage);
+    (enhancedError as any).category = errorCategory;
+    (enhancedError as any).originalError = error;
+    (enhancedError as any).diagnostics = errorDetails;
+
+    // Recalcular isNetworkAccess para el objeto troubleshooting
+    const currentHost = window.location.hostname;
+    const isNetworkAccessForTroubleshooting = currentHost !== 'localhost' && currentHost !== '127.0.0.1';
+
+    (enhancedError as any).troubleshooting = {
+      category: errorCategory,
+      suggestions: getSuggestionsByCategory(errorCategory),
+      apiUrl: isNetworkAccessForTroubleshooting
+        ? `http://${window.location.hostname}:3002`
+        : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002')
+    };
+
+    throw enhancedError;
+  }
+};
+
+// Helper function to provide troubleshooting suggestions
+const getSuggestionsByCategory = (category: string): string[] => {
+  switch (category) {
+    case 'network':
+      return [
+        'Verifica que el backend esté ejecutándose en puerto 3002',
+        'Confirma que no hay firewall bloqueando las conexiones',
+        'Prueba acceder directamente a la URL del backend en el navegador',
+        'Verifica la conectividad de red entre dispositivos'
+      ];
+    case 'cors':
+      return [
+        'Verifica la configuración CORS del backend',
+        'Confirma que el origen está permitido en el backend',
+        'Revisa los headers de las peticiones'
+      ];
+    case 'timeout':
+      return [
+        'Verifica la velocidad de la conexión de red',
+        'Confirma que el servidor no esté sobrecargado',
+        'Intenta nuevamente en unos momentos'
+      ];
+    case 'auth':
+      return [
+        'Verifica que las credenciales sean correctas',
+        'Confirma que el usuario existe en la base de datos',
+        'Prueba con las credenciales por defecto: admin@gamifier.com / admin123'
+      ];
+    default:
+      return [
+        'Revisa la consola del navegador para más detalles',
+        'Verifica el estado del backend',
+        'Intenta refrescar la página'
+      ];
   }
 };
 
@@ -271,7 +385,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Limpiar estado local del contexto
       setUser(null);
-      
+
       // Limpiar tokens usando el método del api-service
       apiService.clearAuthTokens();
 
