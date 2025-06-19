@@ -22,6 +22,7 @@ import {
   LinearProgress,
   Button,
   Divider,
+  CircularProgress,
 } from '@mui/material';
 import {
   PlayArrow,
@@ -932,7 +933,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       </TabPanel>
 
       <TabPanel value={tabValue} index={0}>
-        {dynamicMetricsData?.metrics && (
+        {dynamicMetricsData?.metrics ? (
           <DynamicMetricsDashboard 
             metrics={dynamicMetricsData.metrics}
             progressHistory={dynamicMetricsData.progressHistory || []}
@@ -940,6 +941,18 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             isLoading={dynamicMetricsData.isLoading || false}
             showAnimations={dynamicMetricsData.showAnimations || true}
           />
+        ) : (
+          <Container maxWidth="xl" sx={{ py: 4 }}>
+            <Card sx={{ textAlign: 'center', p: 4 }}>
+              <CircularProgress size={60} />
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Cargando Dashboard Dinámico...
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                Preparando las métricas de tu progreso en ÜPlay
+              </Typography>
+            </Card>
+          </Container>
         )}
         
         {/* [NUEVO] FASE 3: Sistema de Misiones Avanzado según recomendaciones del review */}
@@ -1055,7 +1068,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       </TabPanel>
 
       <TabPanel value={tabValue} index={2}>
-        {dynamicMetricsData?.metrics && (
+        {dynamicMetricsData?.metrics ? (
           <DynamicMetricsDashboard 
             metrics={dynamicMetricsData.metrics}
             progressHistory={dynamicMetricsData.progressHistory || []}
@@ -1063,6 +1076,18 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             isLoading={dynamicMetricsData.isLoading || false}
             showAnimations={dynamicMetricsData.showAnimations || true}
           />
+        ) : (
+          <Container maxWidth="xl" sx={{ py: 4 }}>
+            <Card sx={{ textAlign: 'center', p: 4 }}>
+              <CircularProgress size={60} />
+              <Typography variant="h6" sx={{ mt: 2 }}>
+                Cargando Métricas Avanzadas...
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                Analizando tu rendimiento de aprendizaje
+              </Typography>
+            </Card>
+          </Container>
         )}
       </TabPanel>
 
