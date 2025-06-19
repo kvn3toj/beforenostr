@@ -35,7 +35,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { RevolutionaryWidget } from '../../../design-system/templates';
 
 // 🎯 Hook para datos reales del backend
-import { useVideos } from '../../../hooks/uplay/useVideos';
+import { useVideos } from '../../../hooks/data/useVideoData';
 
 // 🎯 Tipos
 interface VideoItem {
@@ -85,13 +85,13 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   const adaptBackendVideo = (backendVideo: any): VideoItem => {
     const duration = backendVideo.duration || 0;
     const questionCount = backendVideo.questions?.length || 0;
-    
+
     // Fórmulas de recompensas CoomÜnity dinámicas
     const baseMeritos = Math.floor(duration / 60) * 10;
     const questionBonus = questionCount * 15;
-    const difficultyMultiplier = backendVideo.category?.includes('Avanzado') ? 1.5 : 
+    const difficultyMultiplier = backendVideo.category?.includes('Avanzado') ? 1.5 :
                                 backendVideo.category?.includes('Intermedio') ? 1.2 : 1.0;
-    
+
     return {
       id: backendVideo.id,
       title: backendVideo.title || 'Video Sin Título',
@@ -119,7 +119,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     if (!backendVideos || backendVideos.length === 0) {
       return [];
     }
-    
+
     return backendVideos.map(adaptBackendVideo);
   }, [backendVideos]);
 
@@ -135,7 +135,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
       const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            video.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = selectedCategory === 'all' || video.category === selectedCategory;
-      
+
       return matchesSearch && matchesCategory;
     });
   }, [processedVideos, searchTerm, selectedCategory]);
@@ -302,7 +302,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 target.src = 'https://via.placeholder.com/320x180/6366f1/ffffff?text=Video';
               }}
             />
-            
+
             {/* Overlay con información */}
             <Box
               className="uplay-video-overlay"
@@ -517,7 +517,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                   ({video.views} vistas)
                 </Typography>
               </Box>
-              
+
               {video.questions.length > 0 && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <QuestionAnswerIcon sx={{ color: '#6366f1', fontSize: 16 }} />
@@ -634,4 +634,4 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   );
 };
 
-export default UPlayInteractiveLibrary; 
+export default UPlayInteractiveLibrary;

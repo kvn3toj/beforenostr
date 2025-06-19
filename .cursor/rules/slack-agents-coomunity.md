@@ -55,6 +55,11 @@
 - **Testing**: Playwright 1.53.0, Jest, Vitest
 - **Build**: Vite, Turborepo, npm workspaces
 
+### **🆕 DEPENDENCIAS CRÍTICAS DEL BACKEND**
+- **PostgreSQL@15**: Puerto 5432 (obligatorio antes de iniciar backend)
+- **Redis**: Puerto 6379 (obligatorio antes de iniciar backend)
+- **Verificación**: `brew services list | grep postgresql && brew services list | grep redis`
+
 ---
 
 ## 🎮 **COMANDOS DE DESARROLLO CANÓNICOS**
@@ -115,13 +120,19 @@
 # 1. Verificar ubicación (debe ser raíz del monorepo)
 pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER copy
 
-# 2. Limpiar procesos múltiples
+# 2. 🆕 Verificar dependencias críticas del backend
+brew services list | grep postgresql
+brew services list | grep redis
+brew services start postgresql@15   # Si no está activo
+brew services start redis          # Si no está activo
+
+# 3. Limpiar procesos múltiples
 pkill -f "vite" && pkill -f "npm run dev" && pkill -f "turbo"
 
-# 3. Verificar puertos libres
+# 4. Verificar puertos libres
 lsof -i :3001,3002 || echo "Puertos disponibles ✅"
 
-# 4. Verificar servicios
+# 5. Verificar servicios
 curl http://localhost:3002/health  # Backend
 curl http://localhost:3001 -I      # SuperApp
 ```
@@ -144,8 +155,10 @@ Incluye tests E2E con Playwright.
 ```
 @Cursor [branch=gamifier2.0]
 Debug el error [descripción] en [SuperApp/Backend].
+Verifica que PostgreSQL y Redis estén ejecutándose antes del backend.
 Verifica que los servicios estén ejecutándose en puertos correctos (3001/3002).
 Limpia procesos múltiples si es necesario.
+Para errores de importación lazy loading, verificar archivos reales en src/pages/.
 Usa las credenciales admin@gamifier.com/admin123 para testing.
 ```
 

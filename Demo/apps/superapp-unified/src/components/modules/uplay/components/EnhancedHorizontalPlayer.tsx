@@ -5,12 +5,12 @@ import AchievementNotifications from './AchievementNotifications';
 import { useVideoAnalytics } from '../../../../hooks/analytics/useVideoAnalytics';
 import { useAdvancedAchievements } from '../../../../hooks/gamification/useAdvancedAchievements';
 import { useLocalProgress } from '../../../../hooks/data/useLocalProgress';
-import { useVideoData } from '../../../../hooks/data/useVideoData';
-import { 
-  VideoData, 
-  PlayerMetrics, 
+import { useVideoDetail } from '../../../../hooks/data/useVideoData';
+import {
+  VideoData,
+  PlayerMetrics,
   Achievement,
-  EngagementMetrics 
+  EngagementMetrics
 } from '../../../../types/video-player.schemas';
 
 // ============================================================================
@@ -61,10 +61,8 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
     isLoading: videoLoading,
     error: videoError,
     refetch: refetchVideo,
-  } = useVideoData({
-    videoId,
-    enableCache: true,
-    enableRealTimeUpdates: false,
+  } = useVideoDetail(videoId, {
+    enabled: !!videoId,
   });
 
   // Persistencia local del progreso
@@ -119,7 +117,7 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
       console.log('Achievement unlocked:', achievement.name);
       setShowSuccessMessage(true);
       onAchievementUnlocked?.(achievement);
-      
+
       // Track achievement unlock
       analytics.trackAchievementUnlocked(achievement.id, achievement.name);
     },
@@ -139,7 +137,7 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
 
   const handleVideoStart = useCallback(() => {
     analytics.trackVideoStart();
-    
+
     // Actualizar progreso de achievements
     achievements.updateProgress({
       videosIniciados: (localProgress?.playerMetrics?.videosIniciados || 0) + 1,
@@ -148,7 +146,7 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
 
   const handleVideoComplete = useCallback((metrics: PlayerMetrics) => {
     analytics.trackVideoComplete();
-    
+
     // Guardar progreso local
     updateVideoProgress(videoId, {
       completed: true,
@@ -175,11 +173,11 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
     timeSpent: number
   ) => {
     analytics.trackQuestionAnswered(questionId, selectedOption, isCorrect, timeSpent);
-    
+
     // Actualizar métricas de achievements
     const currentCorrect = localProgress?.playerMetrics?.preguntasCorrectas || 0;
     const currentAttempted = localProgress?.playerMetrics?.preguntasRespondidas || 0;
-    
+
     achievements.updateProgress({
       preguntasRespondidas: currentAttempted + 1,
       preguntasCorrectas: isCorrect ? currentCorrect + 1 : currentCorrect,
@@ -190,7 +188,7 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
       const baseReward = 10;
       const speedBonus = timeSpent < 5 ? 1.5 : 1.0;
       const finalReward = Math.floor(baseReward * speedBonus);
-      
+
       analytics.trackRewardEarned('question_correct', finalReward, {
         speedBonus,
         timeSpent,
@@ -278,7 +276,7 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
 
   const handleVideoSeek = useCallback((fromTime: number, toTime: number) => {
     analytics.trackVideoSeek(fromTime, toTime);
-    
+
     // Actualizar contador de seeks en achievements
     achievements.updateProgress({
       totalSeeks: (localProgress?.playerMetrics?.totalSeeks || 0) + 1,
@@ -399,9 +397,9 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
         onClose={() => setError(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert 
-          onClose={() => setError(null)} 
-          severity="error" 
+        <Alert
+          onClose={() => setError(null)}
+          severity="error"
           sx={{ width: '100%' }}
         >
           {error}
@@ -415,9 +413,9 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
         onClose={() => setShowSuccessMessage(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert 
-          onClose={() => setShowSuccessMessage(false)} 
-          severity="success" 
+        <Alert
+          onClose={() => setShowSuccessMessage(false)}
+          severity="success"
           sx={{ width: '100%' }}
         >
           ¡Nuevo logro desbloqueado! 🎉
@@ -455,4 +453,4 @@ const EnhancedHorizontalPlayer: React.FC<EnhancedHorizontalPlayerProps> = ({
   );
 };
 
-export default EnhancedHorizontalPlayer; 
+export default EnhancedHorizontalPlayer;
