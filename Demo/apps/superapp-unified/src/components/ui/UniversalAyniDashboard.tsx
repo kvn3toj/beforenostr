@@ -432,7 +432,7 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
                       color: 'white'
                     }}
                   >
-                    <COSMIC_ELEMENTS[module.cosmicElement].icon sx={{ fontSize: 16 }} />
+                    {React.createElement(COSMIC_ELEMENTS[module.cosmicElement].icon, { sx: { fontSize: 16 } })}
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={2} mb={2}>

@@ -1,0 +1,8 @@
+Demo/apps/superapp-unified/src/lib/analytics.ts
+Demo/apps/superapp-unified/src/lib/api-service.ts
+Demo/apps/superapp-unified/src/lib/feature-flags.tsx
+Demo/apps/superapp-unified/src/lib/websocket-service.ts
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx
+Demo/apps/superapp-unified/src/contexts/NostrContext.tsx
+Demo/apps/superapp-unified/src/contexts/NostrProvider.tsx
+Demo/apps/superapp-unified/src/contexts/ThemeContext.tsx
