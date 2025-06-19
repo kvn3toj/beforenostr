@@ -13,13 +13,13 @@
   "scripts": {
     "build": "nest build",
     "build:nocheck": "nest build --skip-project-check",
-    "build:render": "nest build --skip-project-check || npx tsc --skipLibCheck --outDir dist",
+    "build:render": "npm run db:generate && (nest build --skip-project-check || npx tsc --skipLibCheck --outDir dist)",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "start:render": "npm run db:migrate && npm run start:prod",
+    "start:render": "npm run db:generate && npm run db:migrate && npm run start:prod",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -66,7 +66,8 @@
     "swagger-ui-express": "^5.0.1",
     "typescript": "^5.7.2",
     "winston": "^3.15.0",
-    "@nestjs/cli": "^11.0.7"
+    "@nestjs/cli": "^11.0.7",
+    "prisma": "^5.22.0"
   },
   "devDependencies": {
     "@nestjs/schematics": "^11.0.5",
@@ -83,7 +84,6 @@
     "eslint": "^9.15.0",
     "jest": "^29.7.0",
     "prettier": "^3.4.2",
-    "prisma": "^5.22.0",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.1",

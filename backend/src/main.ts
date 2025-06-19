@@ -65,8 +65,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  // Start server on port 3002 to match user's configuration and avoid conflicts
-  const port = process.env.PORT || 3002;
+  // Start server on port 10000 for Render deployment (or PORT env var)
+  const port = process.env.PORT || 10000;
   await app.listen(port, '0.0.0.0'); // 🌐 ESCUCHAR EN TODAS LAS INTERFACES DE RED
 
   console.log(`🚀 Gamifier API is running on: http://localhost:${port}`);
