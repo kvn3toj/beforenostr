@@ -338,7 +338,10 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     isLoading: isLoadingPlaylists,
     isError: isErrorPlaylists,
     error: errorPlaylists,
-  } = useQuery(['playlists'], videosAPI.getPlaylists);
+  } = useQuery({
+    queryKey: ['playlists'],
+    queryFn: videosAPI.getPlaylists,
+  });
 
   // Fetch videos
   const {

@@ -671,8 +671,27 @@ export const videosAPI = {
   getVideos: (category?: string) =>
     apiService.get(`/video-items${category ? `?category=${category}` : ''}`),
   
-  getPlaylists: () =>
-    apiService.get('/video-items/playlists'),
+  getPlaylists: async () => {
+    // ✅ SOLUCIÓN: Extraer playlists únicos de los videos ya que no existe endpoint directo
+    const videos = await apiService.get('/video-items');
+    const playlistIds = [...new Set(videos.map((video: any) => video.playlistId).filter(Boolean))];
+    
+    // Crear objetos de playlist básicos basados en los videos
+    return playlistIds.map((playlistId: string) => {
+      const playlistVideos = videos.filter((video: any) => video.playlistId === playlistId);
+      const firstVideo = playlistVideos[0];
+      
+      return {
+        id: playlistId,
+        name: `Ruta de Aprendizaje ${playlistId.slice(0, 8)}...`,
+        description: `Ruta con ${playlistVideos.length} videos`,
+        videoCount: playlistVideos.length,
+        totalDuration: playlistVideos.reduce((sum: number, video: any) => sum + (video.duration || 0), 0),
+        category: firstVideo?.categories ? JSON.parse(firstVideo.categories)[0] : 'General',
+        videos: playlistVideos,
+      };
+    });
+  },
 };
 
 // Export the stats API methods

@@ -28,9 +28,10 @@ if (typeof window !== 'undefined') {
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // Temporalmente deshabilitado para debugging de errores React DOM
+  // <React.StrictMode>
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

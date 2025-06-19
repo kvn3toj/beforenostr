@@ -2,7 +2,7 @@
 // ====================================================
 // Monitor de rendimiento para identificar cuellos de botella
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Box,
   Card,
@@ -62,6 +62,10 @@ const PerformanceMonitor: React.FC = () => {
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [components, setComponents] = useState<ComponentMetric[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // 🔥 REFS para evitar memory leaks
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isMountedRef = useRef(true);
 
   // 🎯 MÉTRICAS DE BUNDLE SIZE ESTIMADO
   const estimatedBundleSizes = useMemo(() => ({
@@ -89,28 +93,52 @@ const PerformanceMonitor: React.FC = () => {
     }
   }), []);
 
-  // 🔥 CALCULAR MÉTRICAS DE PERFORMANCE
+  // 🔥 CALCULAR MÉTRICAS DE PERFORMANCE con protecciones
   const calculateMetrics = useCallback(async () => {
+    if (!isMountedRef.current || isLoading) return;
+    
     setIsLoading(true);
     
     try {
       const startTime = performance.now();
       
-      // Simular análisis de bundle
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Protección contra APIs no disponibles
+      let navigation: PerformanceNavigationTiming | null = null;
+      let memory: any = null;
+      let resourceEntries: PerformanceResourceTiming[] = [];
+      
+      try {
+        const entries = performance.getEntriesByType('navigation');
+        navigation = entries[0] as PerformanceNavigationTiming;
+      } catch (error) {
+        console.warn('Navigation timing not available:', error);
+      }
+      
+      try {
+        memory = (performance as any).memory;
+      } catch (error) {
+        console.warn('Memory API not available:', error);
+      }
+      
+      try {
+        resourceEntries = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+      } catch (error) {
+        console.warn('Resource timing not available:', error);
+      }
+      
+      // Simular análisis de bundle con timeout
+      await new Promise(resolve => setTimeout(resolve, 100));
       
       const endTime = performance.now();
       
-      // Métricas reales del navegador
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      const memory = (performance as any).memory;
+      if (!isMountedRef.current) return;
       
       const newMetrics: PerformanceMetrics = {
         bundleSize: estimatedBundleSizes.total,
         loadTime: navigation ? navigation.loadEventEnd - navigation.navigationStart : 0,
         renderTime: endTime - startTime,
         memoryUsage: memory ? memory.usedJSHeapSize / 1024 / 1024 : 0, // MB
-        networkRequests: performance.getEntriesByType('resource').length,
+        networkRequests: resourceEntries.length,
         cacheHitRate: Math.random() * 100, // Simulado
         errorCount: 0, // Se actualizaría con error tracking real
         fps: 60, // Se actualizaría con FPS tracking real
@@ -127,24 +155,52 @@ const PerformanceMonitor: React.FC = () => {
         { name: 'EnhancedMarketplace', loadTime: 52, renderTime: 7, memoryUsage: 1.1, isLazy: true },
       ];
       
-      setComponents(componentMetrics);
+      if (isMountedRef.current) {
+        setComponents(componentMetrics);
+      }
       
     } catch (error) {
       console.error('Error calculating metrics:', error);
     } finally {
-      setIsLoading(false);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
     }
   }, [estimatedBundleSizes]);
 
+  // 🔥 EFFECT con cleanup mejorado
   useEffect(() => {
+    isMountedRef.current = true;
+    
     if (isEnabled) {
       calculateMetrics();
       
-      // Auto-refresh cada 30 segundos
-      const interval = setInterval(calculateMetrics, 30000);
-      return () => clearInterval(interval);
+      // Auto-refresh cada 30 segundos con protección
+      intervalRef.current = setInterval(() => {
+        if (isMountedRef.current) {
+          calculateMetrics();
+        }
+      }, 30000);
     }
+    
+    return () => {
+      isMountedRef.current = false;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [isEnabled, calculateMetrics]);
+
+  // 🔥 Cleanup al desmontarse
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   // 🎯 FUNCIÓN PARA FORMATEAR TAMAÑOS
   const formatSize = (kb: number): string => {

@@ -39,7 +39,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime in v5)
       retry: 2,
       refetchOnWindowFocus: false,
     },
@@ -263,12 +263,12 @@ const App: React.FC = () => {
                   <ReactQueryDevtools initialIsOpen={false} />
                 )}
                 
-                {/* 🎯 Performance Monitor - Development Only */}
-                {process.env.NODE_ENV === 'development' && (
+                {/* 🎯 Performance Monitor - Development Only - Temporalmente deshabilitado */}
+                {/* {process.env.NODE_ENV === 'development' && (
                   <React.Suspense fallback={null}>
                     <PerformanceMonitor />
                   </React.Suspense>
-                )}
+                )} */}
               </Router>
             </LetsEducationProvider>
           </AuthProvider>

@@ -841,7 +841,7 @@ export function useMarketplaceData(filters?: any) {
       */
     },
     staleTime: 5 * 60 * 1000, // 5 minutos - mantener datos frescos por un tiempo razonable
-    cacheTime: 10 * 60 * 1000, // 10 minutos en caché
+    gcTime: 10 * 60 * 1000, // 10 minutos en caché
     retry: 2, // Reintentar hasta 2 veces en caso de error
     retryDelay: 1000, // 1 segundo entre reintentos
     refetchOnMount: false, // No refetch automático al montar (usar caché si está disponible)
@@ -1061,7 +1061,7 @@ export function useMarketplaceSearch(searchTerm: string, filters: any = {}) {
     },
     enabled: searchTerm.length >= 2,
     staleTime: 1000 * 30, // 30 segundos para búsquedas
-    cacheTime: 1000 * 60 * 5, // 5 minutos en caché
+    gcTime: 1000 * 60 * 5, // 5 minutos en caché
   });
 }
 

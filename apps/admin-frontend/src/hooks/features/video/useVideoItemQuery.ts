@@ -7,6 +7,6 @@ export const useVideoItemQuery = (videoItemId?: number) => {
     queryFn: () => videoItemId ? fetchVideoItemById(videoItemId.toString()) : Promise.resolve(null),
     enabled: !!videoItemId && videoItemId > 0,
     staleTime: 5 * 60 * 1000, // 5 minutos
-    cacheTime: 10 * 60 * 1000, // 10 minutos
+    gcTime: 10 * 60 * 1000, // 10 minutos
   });
 }; 
