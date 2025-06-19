@@ -1,0 +1,87 @@
+# Build directories
+dist/
+build/
+.next/
+.nuxt/
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output
+test-results/
+playwright-report/
+
+# Documentation (no necesario para deployment)
+docs/
+
+# Scripts (no necesarios para production)
+scripts/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Git
+.git/
+.gitignore
+
+# Cached data
+.cache/
+.parcel-cache/
+
+# Temporary files
+tmp/
+temp/
+
+# Backend files (solo deployamos frontend)
+backend/
+prisma/
+
+# Admin frontend (solo deployamos superapp)
+admin-frontend/
+apps/admin-frontend/
+
+# Demos y ejemplos
+Demo/tools/
+Demo/node_modules/
+Demo/package*.json
+
+# Monorepo files no necesarios
+packages/
+shared/
+
+# Large files
+*.zip
+*.tar
+*.tar.gz
+*.rar

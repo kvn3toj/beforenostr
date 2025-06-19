@@ -26,7 +26,23 @@ export class LetsController {
     @Query('tokenType') tokenType?: string
   ) {
 //     console.log('>>> LetsController.getUserBalance: Getting balance for user', userId);
-    
+
+    const dto: LetsBalanceDto = { userId, tokenType };
+    return await this.letsService.getUserBalance(dto);
+  }
+
+  /**
+   * Obtener wallet (alias para balance) - endpoint esperado por frontend
+   */
+  @Get('wallet/:userId')
+  @Roles('admin', 'user')
+  @ApiOperation({ summary: 'Get user wallet (alias for balance)' })
+  async getUserWallet(
+    @Param('userId') userId: string,
+    @Query('tokenType') tokenType?: string
+  ) {
+//     console.log('>>> LetsController.getUserWallet: Getting wallet for user', userId);
+
     const dto: LetsBalanceDto = { userId, tokenType };
     return await this.letsService.getUserBalance(dto);
   }
@@ -53,7 +69,7 @@ export class LetsController {
     @Query('tokenType') tokenType?: string
   ) {
 //     console.log('>>> LetsController.processExpiredTokens: Processing expired tokens for user', userId);
-    
+
     const dto: LetsExpiryCheckDto = { userId, tokenType };
     return await this.letsService.processExpiredTokens(dto);
   }
@@ -69,7 +85,7 @@ export class LetsController {
     @Query('limit') limit?: string
   ) {
 //     console.log('>>> LetsController.getUserLetsHistory: Getting LETS history for user', userId);
-    
+
     const limitNumber = limit ? parseInt(limit, 10) : 50;
     return await this.letsService.getUserLetsHistory(userId, limitNumber);
   }
@@ -93,8 +109,8 @@ export class LetsController {
   @Get('trust-ratings/:userId')
   @Roles('admin', 'user')
   @ApiOperation({ summary: 'Get trust ratings for a user' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Trust ratings retrieved successfully',
     schema: {
       type: 'object',
@@ -137,8 +153,8 @@ export class LetsController {
   @Get('knowledge-exchanges')
   @Roles('admin', 'user')
   @ApiOperation({ summary: 'Get available knowledge exchanges' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Knowledge exchanges retrieved successfully',
     schema: {
       type: 'array',
@@ -192,8 +208,8 @@ export class LetsController {
   @Get('recommendations/:userId')
   @Roles('admin', 'user')
   @ApiOperation({ summary: 'Get personalized recommendations for user' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Recommendations retrieved successfully',
     schema: {
       type: 'object',
@@ -216,8 +232,8 @@ export class LetsController {
   @Get('notifications/:userId')
   @Roles('admin', 'user')
   @ApiOperation({ summary: 'Get LETS notifications for user' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Notifications retrieved successfully',
     schema: {
       type: 'array',
@@ -246,10 +262,10 @@ export class LetsController {
   @ApiOperation({ summary: 'Test LETS module connectivity' })
   async ping() {
 //     console.log('>>> LetsController.ping: LETS module is working');
-    return { 
-      message: 'LETS module is working', 
+    return {
+      message: 'LETS module is working',
       timestamp: new Date().toISOString(),
       module: 'Local Exchange Trading System'
     };
   }
-} 
+}

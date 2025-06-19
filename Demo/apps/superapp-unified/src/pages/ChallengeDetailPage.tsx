@@ -236,3 +236,6 @@ export const ChallengeDetailPage: React.FC = () => {
     />
   );
 };
+
+// Export default para compatibilidad con lazy loading
+export default ChallengeDetailPage;

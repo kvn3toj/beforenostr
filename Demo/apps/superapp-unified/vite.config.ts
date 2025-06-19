@@ -10,10 +10,7 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [
-    react({
-      // Disable TypeScript checking in development mode
-      typescript: mode === 'development' ? false : true
-    }),
+    react(),
     // Plugin visualizador para analizar el bundle
     mode === 'development' && visualizer({
       filename: 'dist/stats.html',
@@ -35,75 +32,7 @@ export default defineConfig(({ mode }) => ({
     //     name: process.env.VITE_APP_VERSION || '1.0.0'
     //   }
     // }),
-    ...(process.env.NODE_ENV === 'production' ? [
-      VitePWA({
-        registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'icon-*.png', 'screenshot-*.png'],
-        workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10MB
-          runtimeCaching: [
-            {
-              urlPattern: /^https:\/\/api\.coomunity\.com\/.*/i,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'api-cache',
-                expiration: {
-                  maxEntries: 100,
-                  maxAgeSeconds: 60 * 60 * 24 // 24 horas
-                }
-              }
-            },
-            {
-              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'google-fonts-stylesheets',
-              }
-            },
-            {
-              urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-              handler: 'CacheFirst',
-              options: {
-                cacheName: 'google-fonts-webfonts',
-                expiration: {
-                  maxEntries: 30,
-                  maxAgeSeconds: 60 * 60 * 24 * 365 // 1 año
-                }
-              }
-            }
-          ]
-        },
-        manifest: {
-          name: 'CoomÜnity SuperApp',
-          short_name: 'CoomÜnity',
-          description: 'SuperApp de CoomÜnity - Economía colaborativa, gamificación y desarrollo personal integrados',
-          theme_color: '#E91E63',
-          background_color: '#ffffff',
-          display: 'standalone',
-          scope: '/',
-          start_url: '/',
-          icons: [
-            {
-              src: 'icon-192x192.png',
-              sizes: '192x192',
-              type: 'image/png'
-            },
-            {
-              src: 'icon-512x512.png',
-              sizes: '512x512',
-              type: 'image/png'
-            },
-            {
-              src: 'icon-512x512.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'any maskable'
-            }
-          ]
-        }
-      })
-    ] : [])
+    // PWA Plugin temporalmente deshabilitado para resolver EMFILE error
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -147,9 +76,11 @@ export default defineConfig(({ mode }) => ({
   optimizeDeps: {
     include: [
       '@mui/material',
-      '@mui/icons-material',
       '@tanstack/react-query',
       'framer-motion',
+    ],
+    exclude: [
+      '@mui/icons-material'
     ],
     // Forzar pre-bundling de dependencias específicas
     force: true,
@@ -176,29 +107,43 @@ export default defineConfig(({ mode }) => ({
   build: {
     // Reducir chunk size límite
     chunkSizeWarningLimit: 800,
-    
+
     rollupOptions: {
       output: {
-        // 🔥 CHUNKING INTELIGENTE - Separar vendor libraries
-        manualChunks: {
+                // 🔥 CHUNKING INTELIGENTE - Separar vendor libraries
+        manualChunks: (id) => {
           // React ecosystem
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          
-          // Material-UI ecosystem (separado por tamaño)
-          'vendor-mui-core': ['@mui/material', '@mui/system'],
-          'vendor-mui-icons': ['@mui/icons-material'],
-          'vendor-mui-extras': ['@mui/lab', '@emotion/react', '@emotion/styled'],
-          
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+            return 'vendor-react';
+          }
+
+          // Material-UI core (sin iconos para evitar EMFILE)
+          if (id.includes('@mui/material') || id.includes('@mui/system') || id.includes('@emotion')) {
+            return 'vendor-mui-core';
+          }
+
           // Query and state management
-          'vendor-query': ['@tanstack/react-query', '@tanstack/react-query-devtools'],
-          
-          // Animation and interactions  
-          'vendor-animation': ['framer-motion'],
-          
+          if (id.includes('@tanstack/react-query')) {
+            return 'vendor-query';
+          }
+
+          // Animation
+          if (id.includes('framer-motion')) {
+            return 'vendor-animation';
+          }
+
           // Utilities
-          'vendor-utils': ['lodash.debounce', 'date-fns'],
+          if (id.includes('lodash') || id.includes('date-fns')) {
+            return 'vendor-utils';
+          }
+
+          // Iconos MUI como chunks individuales para evitar EMFILE
+          if (id.includes('@mui/icons-material')) {
+            const iconName = id.split('/').pop()?.replace('.js', '');
+            return `icon-${iconName?.slice(0, 10) || 'misc'}`;
+          }
         },
-        
+
         // 🎯 NOMBRES DE ARCHIVOS OPTIMIZADOS
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
@@ -207,11 +152,11 @@ export default defineConfig(({ mode }) => ({
         entryFileNames: 'js/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
-      
+
       // 🚀 EXTERNOS (CDN) para librerías pesadas (opcional)
       // external: ['@mui/icons-material'], // Si usáramos CDN
     },
-    
+
     // 🎯 CONFIGURACIONES ADICIONALES
     target: 'esnext',
     minify: 'terser',
@@ -222,7 +167,7 @@ export default defineConfig(({ mode }) => ({
         pure_funcs: ['console.log'], // Funciones a eliminar
       },
     },
-    
+
     // Incrementar límite de assets
     assetsInlineLimit: 4096,
   },

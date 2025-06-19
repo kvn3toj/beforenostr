@@ -715,3 +715,6 @@ export const ChallengesPage: React.FC = () => {
     </Container>
   );
 };
+
+// Export default para compatibilidad con lazy loading
+export default ChallengesPage;

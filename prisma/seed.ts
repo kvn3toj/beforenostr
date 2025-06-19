@@ -11,130 +11,130 @@ async function main() {
   // STEP 1: Clean existing data (in correct order)
   // ========================================
   console.log('🧹 Cleaning existing data...');
-  
+
   try {
     // Clean child entities first to avoid foreign key constraint violations
     await prisma.answerOption.deleteMany();
     console.log('  ✓ Deleted all answer options');
-    
+
     await prisma.userAnswer.deleteMany();
     console.log('  ✓ Deleted all user answers');
-    
+
     await prisma.activityQuestion.deleteMany();
     console.log('  ✓ Deleted all activity questions');
-    
+
     await prisma.question.deleteMany();
     console.log('  ✓ Deleted all questions');
-    
+
     await prisma.subtitle.deleteMany();
     console.log('  ✓ Deleted all subtitles');
-    
+
     await prisma.videoPermissions.deleteMany();
     console.log('  ✓ Deleted all video permissions');
-    
+
     await prisma.videoItem.deleteMany();
     console.log('  ✓ Deleted all video items');
-    
+
     // Clean gamification entities
     await prisma.transaction.deleteMany();
     console.log('  ✓ Deleted all transactions');
-    
+
     await prisma.wallet.deleteMany();
     console.log('  ✓ Deleted all wallets');
-    
+
     await prisma.merit.deleteMany();
     console.log('  ✓ Deleted all merits');
-    
+
     await prisma.token.deleteMany();
     console.log('  ✓ Deleted all tokens');
-    
+
     await prisma.userInvitation.deleteMany();
     console.log('  ✓ Deleted all user invitations');
-    
+
     await prisma.giftCard.deleteMany();
     console.log('  ✓ Deleted all gift cards');
-    
+
     await prisma.invitationTemplate.deleteMany();
     console.log('  ✓ Deleted all invitation templates');
-    
+
     await prisma.like.deleteMany();
     console.log('  ✓ Deleted all likes');
-    
+
     await prisma.comment.deleteMany();
     console.log('  ✓ Deleted all comments');
-    
+
     await prisma.publication.deleteMany();
     console.log('  ✓ Deleted all publications');
-    
+
     await prisma.userGroup.deleteMany();
     console.log('  ✓ Deleted all user groups');
-    
+
     await prisma.group.deleteMany();
     console.log('  ✓ Deleted all groups');
-    
+
     await prisma.notification.deleteMany();
     console.log('  ✓ Deleted all notifications');
-    
+
     await prisma.report.deleteMany();
     console.log('  ✓ Deleted all reports');
-    
+
     await prisma.ranking.deleteMany();
     console.log('  ✓ Deleted all rankings');
-    
+
     await prisma.analyticsData.deleteMany();
     console.log('  ✓ Deleted all analytics data');
-    
+
     await prisma.log.deleteMany();
     console.log('  ✓ Deleted all logs');
-    
+
     await prisma.configuration.deleteMany();
     console.log('  ✓ Deleted all configurations');
-    
+
     await prisma.uIComponentTemplate.deleteMany();
     console.log('  ✓ Deleted all UI component templates');
-    
+
     // Clean marketplace entities
     await prisma.marketplaceItem.deleteMany();
     console.log('  ✓ Deleted all marketplace items');
-    
+
     // Clean challenge entities
     await prisma.userChallenge.deleteMany();
     console.log('  ✓ Deleted all user challenges');
-    
+
     await prisma.challengeReward.deleteMany();
     console.log('  ✓ Deleted all challenge rewards');
-    
+
     await prisma.challenge.deleteMany();
     console.log('  ✓ Deleted all challenges');
-    
+
     // Clean content entities
     await prisma.contentItem.deleteMany();
     console.log('  ✓ Deleted all content items');
-    
+
     await prisma.itemType.deleteMany();
     console.log('  ✓ Deleted all item types');
-    
+
     await prisma.gamifiedPlaylist.deleteMany();
     console.log('  ✓ Deleted all gamified playlists');
-    
+
     await prisma.activity.deleteMany();
     console.log('  ✓ Deleted all activities');
-    
+
     await prisma.experience.deleteMany();
     console.log('  ✓ Deleted all experiences');
-    
+
     await prisma.stage.deleteMany();
     console.log('  ✓ Deleted all stages');
-    
+
     await prisma.world.deleteMany();
     console.log('  ✓ Deleted all worlds');
-    
+
     await prisma.playlist.deleteMany();
     console.log('  ✓ Deleted all playlists');
-    
+
     await prisma.mundo.deleteMany();
     console.log('  ✓ Deleted all mundos');
-    
+
     // Clean user and role entities
     await prisma.userRole.deleteMany();
     await prisma.rolePermission.deleteMany();
@@ -142,7 +142,7 @@ async function main() {
     await prisma.role.deleteMany();
     await prisma.personality.deleteMany();
     await prisma.user.deleteMany();
-    
+
     console.log('✅ Database cleaned successfully');
   } catch (error) {
     console.log('⚠️  Some tables might not exist yet, continuing with seeding...');
@@ -151,7 +151,7 @@ async function main() {
   // ========================================
   // STEP 2: Create base data for existing entities
   // ========================================
-  
+
   // Generate UUIDs for related entities
   const adminUserId = '00000000-0000-0000-0000-000000000001';
   const regularUserId = '00000000-0000-0000-0000-000000000002';
@@ -162,21 +162,21 @@ async function main() {
   const testUserId2 = '00000000-0000-0000-0000-000000000007';
   const testUserId3 = '00000000-0000-0000-0000-000000000008';
   const e2eTestUserId = '00000000-0000-0000-0000-000000000009';
-  
+
   const mundo1Id = '11111111-1111-1111-1111-111111111111';
   const mundo2Id = '22222222-2222-2222-2222-222222222222';
   const mundo3Id = '33333333-3333-3333-3333-333333333333';
-  
+
   const playlist1Id = '44444444-4444-4444-4444-444444444444';
   const playlist2Id = '55555555-5555-5555-5555-555555555555';
   const playlist3Id = '66666666-6666-6666-6666-666666666666';
   const playlist4Id = '77777777-7777-7777-7777-777777777777';
-  
+
   // ========================================
   // STEP 2.1: Create Personalities
   // ========================================
   console.log('🎭 Creating personalities...');
-  
+
   const personalities = await Promise.all([
     // Analistas (NT)
     prisma.personality.create({
@@ -239,7 +239,7 @@ async function main() {
         })
       }
     }),
-    
+
     // Diplomáticos (NF)
     prisma.personality.create({
       data: {
@@ -301,7 +301,7 @@ async function main() {
         })
       }
     }),
-    
+
     // Centinelas (SJ)
     prisma.personality.create({
       data: {
@@ -363,7 +363,7 @@ async function main() {
         })
       }
     }),
-    
+
     // Exploradores (SP)
     prisma.personality.create({
       data: {
@@ -426,19 +426,19 @@ async function main() {
       }
     })
   ]);
-  
+
   console.log(`  ✓ Created ${personalities.length} personalities`);
 
   // ========================================
   // STEP 2.2: Create Users
   // ========================================
   console.log('👥 Creating users...');
-  
+
   // Hash default passwords
   const defaultPassword = await bcrypt.hash('123456', 12);
   const adminPassword = await bcrypt.hash('admin123', 12);
   const e2eTestPassword = await bcrypt.hash('test123', 12);
-  
+
   const users = await Promise.all([
     prisma.user.create({
       data: {
@@ -460,7 +460,7 @@ async function main() {
         address: 'Calle 123 #45-67'
       },
     }),
-    
+
     prisma.user.create({
       data: {
         id: regularUserId,
@@ -481,7 +481,7 @@ async function main() {
         address: '123 Main St'
       },
     }),
-    
+
     prisma.user.create({
       data: {
         id: moderatorUserId,
@@ -502,7 +502,7 @@ async function main() {
         address: 'Plaza Mayor 1'
       },
     }),
-    
+
     prisma.user.create({
       data: {
         id: premiumUserId,
@@ -524,7 +524,7 @@ async function main() {
         address: 'Av. Reforma 222'
       },
     }),
-    
+
     prisma.user.create({
       data: {
         id: contentCreatorUserId,
@@ -546,7 +546,7 @@ async function main() {
         address: '456 Maple Ave'
       },
     }),
-    
+
     // Additional test users
     prisma.user.create({
       data: {
@@ -562,7 +562,7 @@ async function main() {
         personalityId: personalities[1].id
       },
     }),
-    
+
     prisma.user.create({
       data: {
         id: testUserId2,
@@ -577,7 +577,7 @@ async function main() {
         personalityId: personalities[2].id
       },
     }),
-    
+
     prisma.user.create({
       data: {
         id: testUserId3,
@@ -592,7 +592,7 @@ async function main() {
         personalityId: personalities[0].id
       },
     }),
-    
+
     // E2E Testing User - Utilizado por tests de Playwright
     prisma.user.create({
       data: {
@@ -615,7 +615,7 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${users.length} users with hashed passwords`);
   console.log('  🧪 E2E Test user created: test@coomunity.com / test123');
 
@@ -623,7 +623,7 @@ async function main() {
   // STEP 2.3: Create Roles
   // ========================================
   console.log('🔐 Creating roles...');
-  
+
   const roles = await Promise.all([
     prisma.role.create({
       data: {
@@ -716,14 +716,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${roles.length} roles`);
 
   // ========================================
   // STEP 2.4: Create Permissions
   // ========================================
   console.log('🔑 Creating permissions...');
-  
+
   const permissions = await Promise.all([
     // Admin permissions
     prisma.permission.create({
@@ -811,19 +811,19 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${permissions.length} permissions`);
 
   // ========================================
   // STEP 2.5: Assign Permissions to Roles
   // ========================================
   console.log('🔗 Assigning permissions to roles...');
-  
+
   const adminRole = roles.find(r => r.name === 'admin')!;
   const superAdminRole = roles.find(r => r.name === 'SUPER_ADMIN')!;
   const userRole = roles.find(r => r.name === 'USER')!;
   const moderatorRole = roles.find(r => r.name === 'MODERATOR')!;
-  
+
   // Super Admin gets all permissions
   await Promise.all(
     permissions.map(permission =>
@@ -836,7 +836,7 @@ async function main() {
       })
     )
   );
-  
+
   // Admin gets most permissions
   await Promise.all(
     permissions.filter(p => !p.name.includes('delete')).map(permission =>
@@ -849,7 +849,7 @@ async function main() {
       })
     )
   );
-  
+
   // User role gets basic read permissions
   await Promise.all([
     prisma.rolePermission.create({
@@ -860,7 +860,7 @@ async function main() {
       },
     }),
   ]);
-  
+
   // Moderator role gets content management permissions
   const moderatorPermissions = ['content:read', 'content:write', 'users:read', 'analytics:read'];
   await Promise.all(
@@ -874,14 +874,14 @@ async function main() {
       })
     )
   );
-  
+
   console.log('  ✓ Assigned permissions to roles');
 
   // ========================================
   // STEP 2.6: Assign Roles to Users
   // ========================================
   console.log('👤 Assigning roles to users...');
-  
+
   await Promise.all([
     // Admin user gets ADMIN role
     prisma.userRole.create({
@@ -960,14 +960,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log('  ✓ Assigned roles to users');
 
   // ========================================
   // STEP 3: Create Mundos (Worlds)
   // ========================================
   console.log('🌍 Creating mundos...');
-  
+
   const mundos = await Promise.all([
     prisma.mundo.create({
       data: {
@@ -979,7 +979,7 @@ async function main() {
         createdById: adminUserId,
       },
     }),
-    
+
     prisma.mundo.create({
       data: {
         id: mundo2Id,
@@ -990,7 +990,7 @@ async function main() {
         createdById: adminUserId,
       },
     }),
-    
+
     prisma.mundo.create({
       data: {
         id: mundo3Id,
@@ -1002,14 +1002,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${mundos.length} mundos`);
 
   // ========================================
   // STEP 4: Create Playlists
   // ========================================
   console.log('📂 Creating playlists...');
-  
+
   const playlists = await Promise.all([
     prisma.playlist.create({
       data: {
@@ -1023,7 +1023,7 @@ async function main() {
         createdById: adminUserId,
       },
     }),
-    
+
     prisma.playlist.create({
       data: {
         id: playlist2Id,
@@ -1036,7 +1036,7 @@ async function main() {
         createdById: adminUserId,
       },
     }),
-    
+
     prisma.playlist.create({
       data: {
         id: playlist3Id,
@@ -1049,7 +1049,7 @@ async function main() {
         createdById: contentCreatorUserId,
       },
     }),
-    
+
     prisma.playlist.create({
       data: {
         id: playlist4Id,
@@ -1063,14 +1063,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${playlists.length} playlists`);
 
   // ========================================
   // STEP 5: Create ItemTypes
   // ========================================
   console.log('📋 Creating item types...');
-  
+
   const itemTypes = await Promise.all([
     prisma.itemType.create({
       data: {
@@ -1101,17 +1101,17 @@ async function main() {
       },
     }),
   ]);
-  
+
   const videoItemType = itemTypes.find(it => it.name === 'video')!;
   const articleItemType = itemTypes.find(it => it.name === 'article')!;
-  
+
   console.log(`  ✓ Created ${itemTypes.length} item types`);
 
   // ========================================
   // STEP 6: Create VideoItems with real YouTube videos
   // ========================================
   console.log('📹 Creating video items...');
-  
+
   const videoItems = await Promise.all([
     prisma.videoItem.create({
       data: {
@@ -1132,7 +1132,7 @@ async function main() {
         categories: JSON.stringify(['Educación', 'Tecnología']),
       },
     }),
-    
+
     prisma.videoItem.create({
       data: {
         title: 'Elementos de Juego en Educación',
@@ -1152,7 +1152,7 @@ async function main() {
         categories: JSON.stringify(['Educación']),
       },
     }),
-    
+
     prisma.videoItem.create({
       data: {
         title: 'Mecánicas de Recompensa',
@@ -1172,7 +1172,7 @@ async function main() {
         categories: JSON.stringify(['Educación', 'Psicología']),
       },
     }),
-    
+
     prisma.videoItem.create({
       data: {
         title: 'Narrativa y Storytelling',
@@ -1192,7 +1192,7 @@ async function main() {
         categories: JSON.stringify(['Educación', 'Comunicación']),
       },
     }),
-    
+
     prisma.videoItem.create({
       data: {
         title: 'Evaluación Gamificada',
@@ -1212,7 +1212,7 @@ async function main() {
         categories: JSON.stringify(['Educación', 'Evaluación']),
       },
     }),
-    
+
     prisma.videoItem.create({
       data: {
         title: 'Caso de Estudio: Gamificación en Universidad',
@@ -1233,14 +1233,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${videoItems.length} video items`);
 
   // ========================================
   // STEP 7: Create Video Permissions
   // ========================================
   console.log('🔒 Creating video permissions...');
-  
+
   await Promise.all(
     videoItems.map((video, index) =>
       prisma.videoPermissions.create({
@@ -1266,16 +1266,16 @@ async function main() {
       })
     )
   );
-  
+
   console.log('  ✓ Created video permissions for all videos');
 
   // ========================================
   // STEP 7.5: Create Interactive Video Questions and Answer Options
   // ========================================
   console.log('❓ Creating interactive video questions...');
-  
+
   const videoQuestions = [];
-  
+
   // Questions for "Introducción a la Gamificación" (videoItems[0])
   const introGamificationQuestions = await Promise.all([
     prisma.question.create({
@@ -1558,7 +1558,7 @@ async function main() {
   // STEP 8: Create Wallets
   // ========================================
   console.log('💰 Creating wallets...');
-  
+
   const wallets = await Promise.all([
     prisma.wallet.create({
       data: {
@@ -1597,14 +1597,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${wallets.length} wallets`);
 
   // ========================================
   // STEP 9: Create Tokens
   // ========================================
   console.log('🪙 Creating tokens...');
-  
+
   const tokens = await Promise.all([
     // Admin tokens
     prisma.token.create({
@@ -1625,7 +1625,7 @@ async function main() {
         source: 'INITIAL_GRANT',
       },
     }),
-    
+
     // Regular user tokens
     prisma.token.create({
       data: {
@@ -1637,7 +1637,7 @@ async function main() {
         source: 'GIFT_CARD',
       },
     }),
-    
+
     // Premium user tokens
     prisma.token.create({
       data: {
@@ -1666,7 +1666,7 @@ async function main() {
         source: 'CONVERSION',
       },
     }),
-    
+
     // Content creator tokens
     prisma.token.create({
       data: {
@@ -1686,7 +1686,7 @@ async function main() {
         source: 'REWARD',
       },
     }),
-    
+
     // Some expired tokens for testing
     prisma.token.create({
       data: {
@@ -1699,14 +1699,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${tokens.length} tokens`);
 
   // ========================================
   // STEP 10: Create Merits
   // ========================================
   console.log('🏆 Creating merits...');
-  
+
   const merits = await Promise.all([
     // Admin merits
     prisma.merit.create({
@@ -1726,7 +1726,7 @@ async function main() {
         source: 'COMMUNITY_PARTICIPATION',
       },
     }),
-    
+
     // Premium user merits
     prisma.merit.create({
       data: {
@@ -1752,7 +1752,7 @@ async function main() {
         source: 'INVITATION_PERFORMANCE',
       },
     }),
-    
+
     // Content creator merits
     prisma.merit.create({
       data: {
@@ -1771,7 +1771,7 @@ async function main() {
         source: 'COMMUNITY_PARTICIPATION',
       },
     }),
-    
+
     // Regular user merits
     prisma.merit.create({
       data: {
@@ -1782,14 +1782,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${merits.length} merits`);
 
   // ========================================
   // STEP 11: Create Transactions
   // ========================================
   console.log('💸 Creating transactions...');
-  
+
   const transactions = await Promise.all([
     // Admin to regular user
     prisma.transaction.create({
@@ -1803,7 +1803,7 @@ async function main() {
         description: 'Welcome bonus',
       },
     }),
-    
+
     // Premium user purchases
     prisma.transaction.create({
       data: {
@@ -1816,7 +1816,7 @@ async function main() {
         description: 'Purchase of circulating units',
       },
     }),
-    
+
     // Premium to content creator
     prisma.transaction.create({
       data: {
@@ -1829,7 +1829,7 @@ async function main() {
         description: 'Payment for premium content',
       },
     }),
-    
+
     // Token conversion
     prisma.transaction.create({
       data: {
@@ -1842,7 +1842,7 @@ async function main() {
         description: 'Convert units to TOINs',
       },
     }),
-    
+
     // Failed transaction
     prisma.transaction.create({
       data: {
@@ -1855,7 +1855,7 @@ async function main() {
         description: 'Insufficient balance',
       },
     }),
-    
+
     // Pending transaction
     prisma.transaction.create({
       data: {
@@ -1869,14 +1869,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${transactions.length} transactions`);
 
   // ========================================
   // STEP 12: Create Groups
   // ========================================
   console.log('👥 Creating groups...');
-  
+
   const groups = await Promise.all([
     prisma.group.create({
       data: {
@@ -1911,14 +1911,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${groups.length} groups`);
 
   // ========================================
   // STEP 13: Create UserGroups
   // ========================================
   console.log('🔗 Adding users to groups...');
-  
+
   const userGroups = await Promise.all([
     // Innovadores Educativos members
     prisma.userGroup.create({
@@ -1942,7 +1942,7 @@ async function main() {
         roleInGroup: 'MODERATOR',
       },
     }),
-    
+
     // Clan Gamificadores members
     prisma.userGroup.create({
       data: {
@@ -1958,7 +1958,7 @@ async function main() {
         roleInGroup: 'MEMBER',
       },
     }),
-    
+
     // Consejo de Gobierno members
     prisma.userGroup.create({
       data: {
@@ -1981,7 +1981,7 @@ async function main() {
         roleInGroup: 'ARBITRATOR',
       },
     }),
-    
+
     // Amigos del Aprendizaje members
     prisma.userGroup.create({
       data: {
@@ -1998,14 +1998,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Added ${userGroups.length} users to groups`);
 
   // ========================================
   // STEP 14: Create Invitation Templates
   // ========================================
   console.log('💌 Creating invitation templates...');
-  
+
   const invitationTemplates = await Promise.all([
     prisma.invitationTemplate.create({
       data: {
@@ -2033,14 +2033,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${invitationTemplates.length} invitation templates`);
 
   // ========================================
   // STEP 15: Create Gift Cards
   // ========================================
   console.log('🎁 Creating gift cards...');
-  
+
   const giftCards = await Promise.all([
     prisma.giftCard.create({
       data: {
@@ -2075,29 +2075,29 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${giftCards.length} gift cards`);
 
   // ========================================
   // STEP 16: Create Analytics Data
   // ========================================
   console.log('📊 Creating analytics data...');
-  
+
   // Generate analytics data for the last 30 days
   const analyticsData: Promise<any>[] = [];
   const now = new Date();
-  
+
   // Video view events
   for (let i = 0; i < 30; i++) {
     const date = new Date(now);
     date.setDate(date.getDate() - i);
-    
+
     // Random video views per day
     const viewsPerDay = Math.floor(Math.random() * 50) + 10;
     for (let j = 0; j < viewsPerDay; j++) {
       const randomVideo = videoItems[Math.floor(Math.random() * videoItems.length)];
       const randomUser = users[Math.floor(Math.random() * users.length)];
-      
+
       analyticsData.push(
         prisma.analyticsData.create({
           data: {
@@ -2122,12 +2122,12 @@ async function main() {
       );
     }
   }
-  
+
   // User creation events
   for (const user of users) {
     const creationDate = new Date(now);
     creationDate.setDate(creationDate.getDate() - Math.floor(Math.random() * 60)); // Random date in last 60 days
-    
+
     analyticsData.push(
       prisma.analyticsData.create({
         data: {
@@ -2143,12 +2143,12 @@ async function main() {
       })
     );
   }
-  
+
   // Playlist creation events
   for (const playlist of playlists) {
     const creationDate = new Date(now);
     creationDate.setDate(creationDate.getDate() - Math.floor(Math.random() * 45)); // Random date in last 45 days
-    
+
     analyticsData.push(
       prisma.analyticsData.create({
         data: {
@@ -2162,12 +2162,12 @@ async function main() {
       })
     );
   }
-  
+
   // Mundo creation events
   for (const mundo of mundos) {
     const creationDate = new Date(now);
     creationDate.setDate(creationDate.getDate() - Math.floor(Math.random() * 50)); // Random date in last 50 days
-    
+
     analyticsData.push(
       prisma.analyticsData.create({
         data: {
@@ -2180,16 +2180,16 @@ async function main() {
       })
     );
   }
-  
+
   await Promise.all(analyticsData);
-  
+
   console.log(`  ✓ Created ${analyticsData.length} analytics events`);
 
   // ========================================
   // STEP 17: Create Marketplace Items (CoomÜnity GMP - Gamified Match Place)
   // ========================================
   console.log('🛒 Creating marketplace items...');
-  
+
   const marketplaceItems = await Promise.all([
     // Service items from different users
     prisma.marketplaceItem.create({
@@ -2201,7 +2201,7 @@ async function main() {
         priceToins: 25,
         currency: 'LUKAS',
         status: 'ACTIVE',
-        images: ['https://example.com/images/javascript-course.jpg'],
+        images: ['https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop&crop=center'],
         tags: ['javascript', 'programación', 'educación', 'desarrollo web'],
         location: 'Online',
         sellerId: contentCreatorUserId,
@@ -2217,7 +2217,7 @@ async function main() {
         favoriteCount: 12
       },
     }),
-    
+
     prisma.marketplaceItem.create({
       data: {
         name: 'Diseño Gráfico Personalizado',
@@ -2227,7 +2227,7 @@ async function main() {
         priceToins: 30,
         currency: 'LUKAS',
         status: 'ACTIVE',
-        images: ['https://example.com/images/graphic-design.jpg', 'https://example.com/images/portfolio1.jpg'],
+        images: ['https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=300&fit=crop&crop=center', 'https://images.unsplash.com/photo-1558655146-9f40138eeb17?w=400&h=300&fit=crop&crop=center'],
         tags: ['diseño gráfico', 'logos', 'identidad visual', 'branding', 'ayni'],
         location: 'Medellín, Colombia',
         sellerId: premiumUserId,
@@ -2243,7 +2243,7 @@ async function main() {
         favoriteCount: 8
       },
     }),
-    
+
     // Product items
     prisma.marketplaceItem.create({
       data: {
@@ -2254,7 +2254,7 @@ async function main() {
         priceToins: 60,
         currency: 'LUKAS',
         status: 'ACTIVE',
-        images: ['https://example.com/images/gamification-course.jpg'],
+        images: ['https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&h=300&fit=crop&crop=center'],
         tags: ['gamificación', 'educación', 'curso digital', 'pedagogía', 'innovación'],
         location: 'Digital',
         sellerId: moderatorUserId,
@@ -2272,7 +2272,7 @@ async function main() {
         favoriteCount: 18
       },
     }),
-    
+
     prisma.marketplaceItem.create({
       data: {
         name: 'Plantas Medicinales Orgánicas',
@@ -2282,7 +2282,7 @@ async function main() {
         priceToins: 10,
         currency: 'LUKAS',
         status: 'ACTIVE',
-        images: ['https://example.com/images/medicinal-plants.jpg'],
+        images: ['https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=400&h=300&fit=crop&crop=center'],
         tags: ['plantas medicinales', 'orgánico', 'salud natural', 'agricultura regenerativa'],
         location: 'Bogotá, Colombia',
         sellerId: testUserId1,
@@ -2298,7 +2298,7 @@ async function main() {
         favoriteCount: 5
       },
     }),
-    
+
     // Experience items
     prisma.marketplaceItem.create({
       data: {
@@ -2309,7 +2309,7 @@ async function main() {
         priceToins: 100,
         currency: 'LUKAS',
         status: 'ACTIVE',
-        images: ['https://example.com/images/mindfulness-retreat.jpg'],
+        images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&crop=center'],
         tags: ['mindfulness', 'tecnología consciente', 'retiro', 'bienestar', 'desarrolladores'],
         location: 'Villa de Leyva, Colombia',
         sellerId: regularUserId,
@@ -2326,7 +2326,7 @@ async function main() {
         favoriteCount: 15
       },
     }),
-    
+
     // Skill exchange
     prisma.marketplaceItem.create({
       data: {
@@ -2337,7 +2337,7 @@ async function main() {
         priceToins: 0,
         currency: 'LUKAS',
         status: 'ACTIVE',
-        images: ['https://example.com/images/skill-exchange.jpg'],
+        images: ['https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop&crop=center'],
         tags: ['intercambio de habilidades', 'python', 'marketing digital', 'ayni', 'colaboración'],
         location: 'Online',
         sellerId: testUserId2,
@@ -2361,7 +2361,7 @@ async function main() {
         favoriteCount: 7
       },
     }),
-    
+
     // Draft item (not visible in public listings)
     prisma.marketplaceItem.create({
       data: {
@@ -2386,7 +2386,7 @@ async function main() {
         favoriteCount: 0
       },
     }),
-    
+
     // Sold item (for historical data)
     prisma.marketplaceItem.create({
       data: {
@@ -2397,7 +2397,7 @@ async function main() {
         priceToins: 40,
         currency: 'LUKAS',
         status: 'SOLD',
-        images: ['https://example.com/images/collaborative-economy.jpg'],
+        images: ['https://images.unsplash.com/photo-1556761175-b413da4baf72?w=400&h=300&fit=crop&crop=center'],
         tags: ['economía colaborativa', 'workshop', 'presencial', 'educación'],
         location: 'Medellín, Colombia',
         sellerId: contentCreatorUserId,
@@ -2413,7 +2413,7 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${marketplaceItems.length} marketplace items`);
   console.log('    - Services: 2');
   console.log('    - Digital Content: 1');
@@ -2429,7 +2429,7 @@ async function main() {
   // STEP 18: Create CoomÜnity Entities (Worlds, Stages, Experiences, Activities)
   // ========================================
   console.log('🌐 Creating CoomÜnity worlds...');
-  
+
   const worlds = await Promise.all([
     prisma.world.create({
       data: {
@@ -2462,15 +2462,15 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${worlds.length} CoomÜnity worlds`);
 
   // Create stages for each world
   console.log('📍 Creating stages...');
-  
+
   const stageNames = ['BUYER', 'SEEKER', 'SOLVER', 'PROMOTER', 'PERFORMER', 'SUPPORTER', 'VALIDATOR'];
   const stages: any[] = [];
-  
+
   for (const world of worlds) {
     for (let i = 0; i < stageNames.length; i++) {
       const stage = await prisma.stage.create({
@@ -2484,12 +2484,12 @@ async function main() {
       stages.push(stage);
     }
   }
-  
+
   console.log(`  ✓ Created ${stages.length} stages`);
 
   // Create experiences for some stages
   console.log('🎯 Creating experiences...');
-  
+
   const experiences = await Promise.all([
     prisma.experience.create({
       data: {
@@ -2522,12 +2522,12 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${experiences.length} experiences`);
 
   // Create activities for experiences
   console.log('🎮 Creating activities...');
-  
+
   const activities = await Promise.all([
     prisma.activity.create({
       data: {
@@ -2570,12 +2570,12 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${activities.length} activities`);
 
   // Create activity questions
   console.log('❔ Creating activity questions...');
-  
+
   const activityQuestions = await Promise.all([
     prisma.activityQuestion.create({
       data: {
@@ -2605,16 +2605,16 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${activityQuestions.length} activity questions`);
 
   // ========================================
   // STEP 19: Create Additional Data
   // ========================================
-  
+
   // Create some publications
   console.log('📢 Creating publications...');
-  
+
   const publications = await Promise.all([
     prisma.publication.create({
       data: {
@@ -2631,12 +2631,12 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${publications.length} publications`);
 
   // Create some comments
   console.log('💬 Creating comments...');
-  
+
   const comments = await Promise.all([
     prisma.comment.create({
       data: {
@@ -2653,12 +2653,12 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${comments.length} comments`);
 
   // Create likes for publications
   console.log('❤️ Creating likes...');
-  
+
   const likes = await Promise.all([
     // Likes on first publication (content creator's gamification course)
     prisma.like.create({
@@ -2679,7 +2679,7 @@ async function main() {
         publicationId: publications[0].id,
       },
     }),
-    
+
     // Likes on second publication (premium user's experience)
     prisma.like.create({
       data: {
@@ -2694,12 +2694,12 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${likes.length} likes`);
 
   // Create notifications
   console.log('🔔 Creating notifications...');
-  
+
   const notifications = await Promise.all([
     prisma.notification.create({
       data: {
@@ -2726,12 +2726,12 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${notifications.length} notifications`);
 
   // Create rankings
   console.log('🏅 Creating rankings...');
-  
+
   const rankings = await Promise.all([
     prisma.ranking.create({
       data: {
@@ -2758,12 +2758,12 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${rankings.length} rankings`);
 
   // Create configurations
   console.log('⚙️ Creating configurations...');
-  
+
   const configurations = await Promise.all([
     prisma.configuration.create({
       data: {
@@ -2787,14 +2787,14 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${configurations.length} configurations`);
 
   // ========================================
   // STEP 3: Create Challenges (Desafíos) with CoomÜnity Philosophy
   // ========================================
   console.log('🏆 Creating challenges aligned with CoomÜnity philosophy...');
-  
+
   // Define challenge data with CoomÜnity concepts
   const challengesToCreate = [
     {
@@ -2881,20 +2881,20 @@ async function main() {
 
   // Create challenges using simple create (seed script cleans data first, so no duplicates)
   const challenges = await Promise.all(
-    challengesToCreate.map(challengeData => 
+    challengesToCreate.map(challengeData =>
       prisma.challenge.create({ data: challengeData })
     )
   );
-  
+
   console.log(`  ✓ Created ${challenges.length} challenges`);
 
   // ========================================
   // STEP 3.1: Create Challenge Rewards
   // ========================================
   console.log('🎁 Creating challenge rewards...');
-  
+
   const challengeRewards = [];
-  
+
   // Rewards for "Iniciación al Ayni"
   const ayniRewards = await Promise.all([
     prisma.challengeReward.create({
@@ -2911,7 +2911,7 @@ async function main() {
         challengeId: challenges[0].id,
         type: 'BADGE',
         description: 'Insignia de Iniciado en Ayni',
-        metadata: JSON.stringify({ 
+        metadata: JSON.stringify({
           badge_name: 'Ayni Novice',
           icon: 'ayni-symbol',
           rarity: 'COMMON'
@@ -2950,7 +2950,7 @@ async function main() {
       type: 'MERITS',
       amount: 500,
       description: '500 Mëritos por innovar para el Bien Común',
-      metadata: JSON.stringify({ 
+      metadata: JSON.stringify({
         category: 'INNOVATION_REWARD',
         recognition: 'COMMUNITY_IMPACT'
       }),
@@ -2965,7 +2965,7 @@ async function main() {
       type: 'MERITS',
       amount: 300,
       description: '300 Mëritos por guiar procesos de Metanöia',
-      metadata: JSON.stringify({ 
+      metadata: JSON.stringify({
         category: 'MENTORSHIP_REWARD',
         impact: 'TRANSFORMATION_GUIDE'
       }),
@@ -3007,21 +3007,21 @@ async function main() {
       type: 'MERITS',
       amount: 200,
       description: '200 Mëritos por contribuir al orden y armonía',
-      metadata: JSON.stringify({ 
+      metadata: JSON.stringify({
         category: 'ORGANIZATION_REWARD',
         impact: 'HARMONY_BUILDER'
       }),
     },
   });
   challengeRewards.push(neguentropyReward);
-  
+
   console.log(`  ✓ Created ${challengeRewards.length} challenge rewards`);
 
   // ========================================
   // STEP 3.2: Create User Challenges (Sample participations)
   // ========================================
   console.log('👥 Creating user challenge participations...');
-  
+
   const userChallenges = await Promise.all([
     // Regular user participates in Ayni challenge (in progress)
     prisma.userChallenge.create({
@@ -3037,7 +3037,7 @@ async function main() {
         }),
       },
     }),
-    
+
     // Premium user completed Ayni and is working on Collaboration
     prisma.userChallenge.create({
       data: {
@@ -3066,7 +3066,7 @@ async function main() {
         }),
       },
     }),
-    
+
     // Content creator working on Innovation challenge
     prisma.userChallenge.create({
       data: {
@@ -3081,7 +3081,7 @@ async function main() {
         }),
       },
     }),
-    
+
     // Test user working towards Emprendedor Confiable
     prisma.userChallenge.create({
       data: {
@@ -3097,7 +3097,7 @@ async function main() {
       },
     }),
   ]);
-  
+
   console.log(`  ✓ Created ${userChallenges.length} user challenge participations`);
 
   // ========================================
@@ -3105,7 +3105,7 @@ async function main() {
   // ========================================
   console.log('\n🎉 Database seeding completed successfully!');
   console.log('\n📈 Summary of created data:');
-  
+
   const counts = await Promise.all([
     prisma.user.count(),
     prisma.role.count(),
@@ -3138,7 +3138,7 @@ async function main() {
     prisma.like.count(),
     prisma.marketplaceItem.count(),
   ]);
-  
+
   const [
     userCount, roleCount, permissionCount, userRoleCount, rolePermissionCount,
     mundoCount, playlistCount, videoItemCount, subtitleCount, questionCount,
@@ -3147,7 +3147,7 @@ async function main() {
     stageCount, experienceCount, activityCount, challengeCount, challengeRewardCount,
     userChallengeCount, publicationCount, commentCount, likeCount, marketplaceItemCount
   ] = counts;
-  
+
   console.log(`  👥 Users: ${userCount}`);
   console.log(`  🔐 Roles: ${roleCount}`);
   console.log(`  🔑 Permissions: ${permissionCount}`);
@@ -3178,14 +3178,14 @@ async function main() {
   console.log(`  💬 Comments: ${commentCount}`);
   console.log(`  ❤️ Likes: ${likeCount}`);
   console.log(`  🛒 Marketplace Items: ${marketplaceItemCount}`);
-  
+
   console.log('\n🔗 Login Credentials:');
   console.log('  Admin: admin@gamifier.com / admin123');
   console.log('  User: user@gamifier.com / 123456');
   console.log('  Moderator: moderator@gamifier.com / 123456');
   console.log('  Premium: premium@gamifier.com / 123456');
   console.log('  Creator: creator@gamifier.com / 123456');
-  
+
   console.log('\n✨ The Gamifier Admin is now fully populated with test data!');
 }
 
