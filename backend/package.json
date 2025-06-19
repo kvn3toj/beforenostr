@@ -9,6 +9,7 @@
   "scripts": {
     "build": "nest build",
     "build:nocheck": "nest build --skip-project-check",
+    "build:render": "npx tsc --skipLibCheck --outDir dist",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
