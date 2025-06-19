@@ -59,6 +59,83 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { videosAPI } from '../../../lib/api-service';
 import { useVideos } from '../../../hooks/data/useVideoData';
+import { usePlaylists } from '../../../hooks/data/usePlaylistData';
+
+// ============================================================================
+// ADAPTADORES Y HELPERS
+// ============================================================================
+
+// Adaptador: convierte video del backend al formato VideoItem esperado por VideoCard
+const adaptBackendVideoToVideoItem = (backendVideo: any): VideoItem => {
+  // Calcular recompensas basadas en la duración y número de preguntas
+  const questionsCount = backendVideo.questions?.length || 0;
+  const durationMinutes = Math.ceil((backendVideo.duration || 0) / 60);
+  
+  // Fórmulas de recompensas CoomÜnity:
+  // - Mëritos: base 20 + 5 por pregunta + bonus por duración
+  // - Öndas: base 10 + 3 por pregunta + bonus por duración
+  const meritosBase = 20 + (questionsCount * 5) + Math.min(durationMinutes * 2, 50);
+  const ondasBase = 10 + (questionsCount * 3) + Math.min(durationMinutes * 1, 30);
+
+  // Determinar dificultad basada en preguntas y duración
+  let difficulty: 'easy' | 'medium' | 'hard' = 'easy';
+  if (questionsCount >= 5 || durationMinutes > 30) {
+    difficulty = 'medium';
+  }
+  if (questionsCount >= 10 || durationMinutes > 60) {
+    difficulty = 'hard';
+  }
+
+  // Determinar thumbnail emoji basado en categorías o título
+  let thumbnail = '🎬'; // default
+  const titleLower = (backendVideo.title || '').toLowerCase();
+  const categoriesArray = Array.isArray(backendVideo.categories) 
+    ? backendVideo.categories 
+    : JSON.parse(backendVideo.categories || '[]');
+  
+  if (titleLower.includes('gamific') || categoriesArray.includes('Gamificación')) {
+    thumbnail = '🎮';
+  } else if (titleLower.includes('narrat') || titleLower.includes('story')) {
+    thumbnail = '📖';
+  } else if (titleLower.includes('mecán') || titleLower.includes('recompensa')) {
+    thumbnail = '⚙️';
+  } else if (titleLower.includes('evalua') || titleLower.includes('assess')) {
+    thumbnail = '📊';
+  } else if (categoriesArray.includes('Educación')) {
+    thumbnail = '🎓';
+  } else if (categoriesArray.includes('Tecnología')) {
+    thumbnail = '💻';
+  }
+
+  return {
+    id: backendVideo.id?.toString() || 'unknown',
+    title: backendVideo.title || 'Video sin título',
+    description: backendVideo.description || 'Sin descripción disponible',
+    thumbnail,
+    duration: backendVideo.duration || 0,
+    difficulty,
+    category: categoriesArray[0] || 'General',
+    rewards: {
+      meritos: meritosBase,
+      ondas: ondasBase,
+    },
+    isCompleted: false, // TODO: integrar con progreso del usuario
+    progress: 0, // TODO: integrar con progreso del usuario
+    questionsCount,
+  };
+};
+
+// Función defensiva para validar si un video tiene la estructura correcta
+const isValidVideoItem = (video: any): video is VideoItem => {
+  return (
+    video &&
+    typeof video.id !== 'undefined' &&
+    typeof video.title === 'string' &&
+    typeof video.rewards === 'object' &&
+    typeof video.rewards.meritos === 'number' &&
+    typeof video.rewards.ondas === 'number'
+  );
+};
 
 // ============================================================================
 // INTERFACES
@@ -122,6 +199,23 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
   video, 
   onPlay 
 }) => {
+  // Validación defensiva adicional
+  if (!isValidVideoItem(video)) {
+    console.error('❌ VideoCard recibió un video con estructura inválida:', video);
+    return (
+      <Card sx={{ height: '100%', opacity: 0.5 }}>
+        <CardContent>
+          <Typography variant="h6" color="error">
+            Video no disponible
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Error en la estructura de datos
+          </Typography>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'easy': return '#4caf50';
@@ -250,12 +344,12 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
           </Typography>
         </Box>
         
-        {/* Recompensas */}
+        {/* Recompensas - VALIDACIÓN DEFENSIVA */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Box display="flex" gap={1}>
             <Chip
               icon={<Diamond sx={{ fontSize: '16px !important' }} />}
-              label={`${video.rewards.meritos} Mëritos`}
+              label={`${video.rewards?.meritos || 0} Mëritos`}
               size="small"
               variant="outlined"
               sx={{ 
@@ -266,7 +360,7 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
             />
             <Chip
               icon={<Bolt sx={{ fontSize: '16px !important' }} />}
-              label={`${video.rewards.ondas} Öndas`}
+              label={`${video.rewards?.ondas || 0} Öndas`}
               size="small"
               variant="outlined"
               sx={{ 
@@ -338,10 +432,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     isLoading: isLoadingPlaylists,
     isError: isErrorPlaylists,
     error: errorPlaylists,
-  } = useQuery({
-    queryKey: ['playlists'],
-    queryFn: videosAPI.getPlaylists,
-  });
+  } = usePlaylists();
 
   // Fetch videos
   const {
@@ -351,17 +442,68 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     error: errorVideos,
   } = useVideos();
 
-  // Agrupar videos por playlistId
-  const videosByPlaylist = React.useMemo(() => {
-    if (!videos) return {};
-    const grouped: Record<string, any[]> = {};
-    videos.forEach((video: any) => {
-      const pid = video.playlistId || 'unassigned';
-      if (!grouped[pid]) grouped[pid] = [];
-      grouped[pid].push(video);
+  // NUEVO: Adaptar videos del backend al formato VideoItem
+  const adaptedVideos = React.useMemo(() => {
+    console.log('🔄 Adaptando videos del backend al formato VideoItem...');
+    console.log('🔄 Videos crudos del backend:', videos);
+    
+    if (!videos) return [];
+    
+    const adapted = videos.map((backendVideo: any) => {
+      try {
+        const adaptedVideo = adaptBackendVideoToVideoItem(backendVideo);
+        console.log(`✅ Video "${backendVideo.title}" adaptado exitosamente:`, {
+          original: { id: backendVideo.id, title: backendVideo.title, hasRewards: !!backendVideo.rewards },
+          adapted: { id: adaptedVideo.id, title: adaptedVideo.title, rewards: adaptedVideo.rewards }
+        });
+        return adaptedVideo;
+      } catch (error) {
+        console.error(`❌ Error adaptando video "${backendVideo.title}":`, error);
+        // Retornar video con estructura mínima válida
+        return {
+          id: backendVideo.id?.toString() || 'error',
+          title: backendVideo.title || 'Video con error',
+          description: 'Error al procesar este video',
+          thumbnail: '⚠️',
+          duration: 0,
+          difficulty: 'easy' as const,
+          category: 'Error',
+          rewards: { meritos: 0, ondas: 0 },
+          isCompleted: false,
+          progress: 0,
+          questionsCount: 0,
+        };
+      }
     });
-    return grouped;
+    
+    console.log('🔄 Videos adaptados finales:', adapted);
+    return adapted;
   }, [videos]);
+
+  // Agrupar videos adaptados por playlistId
+  const videosByPlaylist = React.useMemo(() => {
+    console.log('🎪 Agrupando videos adaptados por playlist...');
+    console.log('🎪 Videos adaptados recibidos para agrupar:', adaptedVideos);
+    console.log('🎪 Videos originales para referencia:', videos);
+    
+    if (!adaptedVideos || !videos) return {};
+    const grouped: Record<string, VideoItem[]> = {};
+    
+    // Usar índice para mapear videos adaptados con originales
+    videos.forEach((originalVideo: any, index: number) => {
+      const adaptedVideo = adaptedVideos[index];
+      if (!adaptedVideo) return;
+      
+      const pid = originalVideo.playlistId || 'unassigned';
+      console.log(`🎪 Video ${index + 1} "${adaptedVideo.title}" → playlist: "${pid}"`);
+      if (!grouped[pid]) grouped[pid] = [];
+      grouped[pid].push(adaptedVideo);
+    });
+    
+    console.log('🎪 Resultado del agrupamiento:', grouped);
+    console.log('🎪 Playlists con videos:', Object.keys(grouped));
+    return grouped;
+  }, [adaptedVideos, videos]);
 
   // Helper para obtener nombre de playlist
   const getPlaylistName = (playlistId: string) => {
@@ -396,9 +538,25 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     return <Box sx={{ p: 4 }}><Typography color="error">Error al cargar rutas o videos: {errorPlaylists?.message || errorVideos?.message}</Typography></Box>;
   }
 
+  // Debug logs (temporal)
+  console.log('🔍 DEBUG Dashboard State:', {
+    playlists: playlists,
+    playlistsLength: playlists?.length,
+    videos: videos,
+    videosLength: videos?.length,
+    adaptedVideos: adaptedVideos,
+    adaptedVideosLength: adaptedVideos?.length,
+    videosByPlaylist: videosByPlaylist,
+    videosByPlaylistKeys: Object.keys(videosByPlaylist),
+    isLoadingPlaylists,
+    isLoadingVideos,
+    isErrorPlaylists,
+    isErrorVideos
+  });
+
   // Empty state
   if (!playlists?.length && !Object.keys(videosByPlaylist).length) {
-    return <Box sx={{ p: 4 }}><Typography>No hay rutas de aprendizaje ni videos disponibles.</Typography></Box>;
+    return <Box sx={{ p: 4 }}><Typography>No hay rutas de aprendizaje ni videos disponibles. (playlists: {playlists?.length}, videos: {Object.keys(videosByPlaylist).length})</Typography></Box>;
   }
 
   // ========================================================================
@@ -639,12 +797,12 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
               {(videosByPlaylist[playlist.id] || []).map((video: any) => (
-                <Grid item key={video.id} xs={12} sm={6} md={4} lg={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={video.id}>
                   <VideoCard video={video} onPlay={handleVideoPlay} />
                 </Grid>
               ))}
               {!(videosByPlaylist[playlist.id]?.length) && (
-                <Grid item xs={12}><Typography color="text.secondary">No hay videos en esta ruta.</Typography></Grid>
+                <Grid size={{ xs: 12 }}><Typography color="text.secondary">No hay videos en esta ruta.</Typography></Grid>
               )}
             </Grid>
           </Box>
@@ -657,7 +815,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
               {videosByPlaylist['unassigned'].map((video: any) => (
-                <Grid item key={video.id} xs={12} sm={6} md={4} lg={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={video.id}>
                   <VideoCard video={video} onPlay={handleVideoPlay} />
                 </Grid>
               ))}

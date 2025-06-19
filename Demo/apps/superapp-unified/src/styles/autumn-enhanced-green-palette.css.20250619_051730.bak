@@ -118,12 +118,12 @@
 
 /* ===== CARDS DE MÉTRICAS PRINCIPALES (10+, 8, 2.4K, 47) ===== */
 /* Targeting específico de las cards de métricas principales */
-/* COMMENTED FOR VISUAL FIXES: div[style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: div[style*='background-color: rgb(41, 37, 36)'], */
+div[style*='backgroundColor: rgb(41, 37, 36)'],
+div[style*='background-color: rgb(41, 37, 36)'],
 div[style*='backgroundColor:rgb(41,37,36)'],
 div[style*='background-color:rgb(41,37,36)'],
-/* COMMENTED FOR VISUAL FIXES: *[style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: *[style*='background-color: rgb(41, 37, 36)'] { */
+*[style*='backgroundColor: rgb(41, 37, 36)'],
+*[style*='background-color: rgb(41, 37, 36)'] {
   background-color: #ffffff !important;
   background: #ffffff !important;
   color: #1f2937 !important;
@@ -149,8 +149,8 @@ div[style*='background-color: rgb(17, 24, 39)'] {
 
 /* ===== TEXTOS EN CARDS CORREGIDAS ===== */
 /* Textos que eran claros en fondos oscuros ahora deben ser oscuros */
-/* COMMENTED FOR VISUAL FIXES: div[style*='backgroundColor: rgb(41, 37, 36)'] *, */
-/* COMMENTED FOR VISUAL FIXES: div[style*='background-color: rgb(41, 37, 36)'] *, */
+div[style*='backgroundColor: rgb(41, 37, 36)'] *,
+div[style*='background-color: rgb(41, 37, 36)'] *,
 div[style*='backgroundColor: rgb(55, 65, 81)'] *,
 div[style*='background-color: rgb(55, 65, 81)'] *,
 div[style*='backgroundColor: rgb(31, 41, 55)'] *,
@@ -159,22 +159,22 @@ div[style*='background-color: rgb(31, 41, 55)'] * {
 }
 
 /* Números grandes en métricas */
-/* COMMENTED FOR VISUAL FIXES: div[style*='backgroundColor: rgb(41, 37, 36)'] span[style*='fontSize'], */
-/* COMMENTED FOR VISUAL FIXES: div[style*='background-color: rgb(41, 37, 36)'] span[style*='fontSize'] { */
+div[style*='backgroundColor: rgb(41, 37, 36)'] span[style*='fontSize'],
+div[style*='background-color: rgb(41, 37, 36)'] span[style*='fontSize'] {
   color: #111827 !important;
   font-weight: 700 !important;
 }
 
 /* Labels en métricas */
-/* COMMENTED FOR VISUAL FIXES: div[style*='backgroundColor: rgb(41, 37, 36)'] span:not([style*='fontSize']), */
-/* COMMENTED FOR VISUAL FIXES: div[style*='background-color: rgb(41, 37, 36)'] span:not([style*='fontSize']) { */
+div[style*='backgroundColor: rgb(41, 37, 36)'] span:not([style*='fontSize']),
+div[style*='background-color: rgb(41, 37, 36)'] span:not([style*='fontSize']) {
   color: #6b7280 !important;
   font-weight: 500 !important;
 }
 
 /* ===== ICONOS EN CARDS CORREGIDAS ===== */
-/* COMMENTED FOR VISUAL FIXES: div[style*='backgroundColor: rgb(41, 37, 36)'] svg, */
-/* COMMENTED FOR VISUAL FIXES: div[style*='background-color: rgb(41, 37, 36)'] svg, */
+div[style*='backgroundColor: rgb(41, 37, 36)'] svg,
+div[style*='background-color: rgb(41, 37, 36)'] svg,
 div[style*='backgroundColor: rgb(55, 65, 81)'] svg,
 div[style*='background-color: rgb(55, 65, 81)'] svg {
   color: var(--autumn-forest-600) !important;
@@ -396,10 +396,10 @@ html body * {
 html
   body
   div[data-builder-component]
-/* COMMENTED FOR VISUAL FIXES:   div[style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: html body div[data-testid] div[style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: html body main div[style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: html body section div[style*='backgroundColor: rgb(41, 37, 36)'] { */
+  div[style*='backgroundColor: rgb(41, 37, 36)'],
+html body div[data-testid] div[style*='backgroundColor: rgb(41, 37, 36)'],
+html body main div[style*='backgroundColor: rgb(41, 37, 36)'],
+html body section div[style*='backgroundColor: rgb(41, 37, 36)'] {
   background-color: #ffffff !important;
   background: #ffffff !important;
   color: #1f2937 !important;
@@ -409,8 +409,8 @@ html
 }
 
 /* Para elementos inline con estilos específicos */
-/* COMMENTED FOR VISUAL FIXES: [style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: [style*='background-color: rgb(41, 37, 36)'] { */
+[style*='backgroundColor: rgb(41, 37, 36)'],
+[style*='background-color: rgb(41, 37, 36)'] {
   background-color: #ffffff !important;
   background: #ffffff !important;
   color: #374151 !important;

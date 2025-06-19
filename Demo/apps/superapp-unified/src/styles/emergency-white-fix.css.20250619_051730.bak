@@ -11,8 +11,8 @@ html body * {
 }
 
 /* Resetear específicamente los colores problemáticos */
-/* COMMENTED FOR VISUAL FIXES: *[style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: *[style*='background-color: rgb(41, 37, 36)'], */
+*[style*='backgroundColor: rgb(41, 37, 36)'],
+*[style*='background-color: rgb(41, 37, 36)'],
 *[style*='backgroundColor:rgb(41,37,36)'],
 *[style*='background-color:rgb(41,37,36)'] {
   background-color: #ffffff !important;
@@ -37,15 +37,15 @@ html body * {
 }
 
 /* ===== TEXTOS EN ELEMENTOS CORREGIDOS ===== */
-/* COMMENTED FOR VISUAL FIXES: *[style*='backgroundColor: rgb(41, 37, 36)'] *, */
-/* COMMENTED FOR VISUAL FIXES: *[style*='background-color: rgb(41, 37, 36)'] *, */
+*[style*='backgroundColor: rgb(41, 37, 36)'] *,
+*[style*='background-color: rgb(41, 37, 36)'] *,
 *[style*='backgroundColor: rgb(55, 65, 81)'] *,
 *[style*='background-color: rgb(55, 65, 81)'] * {
   color: #1f2937 !important;
 }
 
 /* ===== FORZAR NÚMEROS Y LABELS ===== */
-/* COMMENTED FOR VISUAL FIXES: *[style*='backgroundColor: rgb(41, 37, 36)'] span { */
+*[style*='backgroundColor: rgb(41, 37, 36)'] span {
   color: #15803d !important;
   font-weight: 700 !important;
 }

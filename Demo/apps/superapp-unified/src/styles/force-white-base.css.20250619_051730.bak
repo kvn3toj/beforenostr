@@ -6,8 +6,8 @@
 /* ===== MÁXIMA ESPECIFICIDAD PARA ELEMENTOS PERSISTENTES ===== */
 
 /* Forzar cualquier elemento con fondo negro específico */
-/* COMMENTED FOR VISUAL FIXES: html body div[style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: html body div[style*='background-color: rgb(41, 37, 36)'] { */
+html body div[style*='backgroundColor: rgb(41, 37, 36)'],
+html body div[style*='background-color: rgb(41, 37, 36)'] {
   background-color: #ffffff !important;
   color: #1f2937 !important;
   border: 1px solid #f1f5f9 !important;
@@ -64,8 +64,8 @@ html body div[style*='background-color: rgb(55, 65, 81)'] {
 }
 
 /* Cards de Builder.io específicas */
-/* COMMENTED FOR VISUAL FIXES: [data-builder-component] div[style*='backgroundColor: rgb(41, 37, 36)'], */
-/* COMMENTED FOR VISUAL FIXES: [data-builder-component] div[style*='background-color: rgb(41, 37, 36)'] { */
+[data-builder-component] div[style*='backgroundColor: rgb(41, 37, 36)'],
+[data-builder-component] div[style*='background-color: rgb(41, 37, 36)'] {
   background-color: #ffffff !important;
   color: #1f2937 !important;
 }
@@ -115,7 +115,7 @@ html body div.MuiDrawer-root div.MuiPaper-root li:hover {
 
 /* ===== ÚLTIMO RECURSO - ESPECIFICIDAD MÁXIMA ===== */
 /* Para elementos que absolutamente no quieren cambiar */
-/* COMMENTED FOR VISUAL FIXES: html body.MuiCssBaseline-root div[style*='backgroundColor: rgb(41, 37, 36)'] { */
+html body.MuiCssBaseline-root div[style*='backgroundColor: rgb(41, 37, 36)'] {
   background-color: #ffffff !important;
   color: #374151 !important;
   border: 1px solid #f1f5f9 !important;

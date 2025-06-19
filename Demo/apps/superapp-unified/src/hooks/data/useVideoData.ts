@@ -9,6 +9,7 @@ import {
   validatePlayerMetrics
 } from '../../types/video-player.schemas';
 import { apiService } from '../../lib/api-service';
+import { z } from 'zod';
 
 // ============================================================================
 // CONSTANTES Y CONFIGURACIÓN
@@ -29,6 +30,118 @@ const CACHE_CONFIG = {
   RETRY_COUNT: 3,
   RETRY_DELAY: 1000,
 } as const;
+
+// ============================================================================
+// ADAPTADOR PARA DATOS DEL BACKEND
+// ============================================================================
+
+/**
+ * Adapta los datos del backend al formato esperado por VideoDataSchema
+ */
+const adaptBackendVideoData = (backendVideo: any): any => {
+  console.log('🔧 Adaptando video del backend:', backendVideo);
+  
+  try {
+    // Parsear arrays JSON si son strings
+    let categories = [];
+    let tags = [];
+    
+    if (typeof backendVideo.categories === 'string') {
+      try {
+        categories = JSON.parse(backendVideo.categories);
+      } catch {
+        categories = [backendVideo.categories];
+      }
+    } else if (Array.isArray(backendVideo.categories)) {
+      categories = backendVideo.categories;
+    }
+
+    if (typeof backendVideo.tags === 'string') {
+      try {
+        tags = JSON.parse(backendVideo.tags);
+      } catch {
+        tags = [backendVideo.tags];
+      }
+    } else if (Array.isArray(backendVideo.tags)) {
+      tags = backendVideo.tags;
+    }
+
+    // Adaptar preguntas al formato esperado
+    const adaptedQuestions = (backendVideo.questions || []).map((q: any) => ({
+      id: String(q.id),
+      timestamp: q.timestamp || 0,
+      question: q.text || q.question || '',
+      options: (q.answerOptions || []).map((opt: any) => ({
+        id: String(opt.id),
+        text: opt.text || '',
+        isCorrect: opt.isCorrect || false,
+      })),
+      difficulty: 'medium', // Default ya que el backend no tiene este campo
+      timeLimit: 15, // Default
+      points: 10, // Default
+      category: categories[0] || 'General',
+      explanation: '', // El backend no tiene este campo
+    }));
+
+    // Construir objeto adaptado
+    const adaptedVideo = {
+      id: String(backendVideo.id), // Convertir número a string
+      title: backendVideo.title || '',
+      description: backendVideo.description || '',
+      url: backendVideo.url || '',
+      thumbnail: backendVideo.thumbnailUrl || backendVideo.thumbnail || '🎬', // Emoji por defecto
+      duration: backendVideo.duration || 0,
+      questions: adaptedQuestions,
+      category: categories[0] || 'General', // Tomar la primera categoría
+      difficulty: 'beginner', // Default ya que el backend no mapea difficulty
+      tags: tags,
+      createdAt: backendVideo.createdAt ? new Date(backendVideo.createdAt) : undefined,
+      updatedAt: backendVideo.updatedAt ? new Date(backendVideo.updatedAt) : undefined,
+      
+      // Campos requeridos por la interfaz VideoItem del dashboard
+      rewards: {
+        meritos: Math.floor(Math.random() * 100) + 50, // Mëritos aleatorios entre 50-150
+        ondas: Math.floor(Math.random() * 50) + 25,    // Öndas aleatorias entre 25-75
+      },
+      isCompleted: false, // Por defecto no completado
+      progress: 0, // Progreso inicial 0%
+      questionsCount: adaptedQuestions.length,
+      
+      // Campos adicionales del backend que podemos preservar
+      playlistId: backendVideo.playlistId,
+      platform: backendVideo.platform,
+      externalId: backendVideo.externalId,
+      order: backendVideo.order,
+      isActive: backendVideo.isActive,
+    };
+
+    console.log('✅ Video adaptado exitosamente:', adaptedVideo);
+    return adaptedVideo;
+  } catch (error) {
+    console.error('Error adaptando datos del video:', error, backendVideo);
+    // Retornar formato mínimo válido en caso de error
+    return {
+      id: String(backendVideo.id || 'unknown'),
+      title: backendVideo.title || 'Video sin título',
+      description: backendVideo.description || '',
+      url: backendVideo.url || '',
+      thumbnail: backendVideo.thumbnailUrl || '🎬',
+      duration: backendVideo.duration || 0,
+      questions: [],
+      category: 'General',
+      difficulty: 'beginner',
+      tags: [],
+      rewards: {
+        meritos: 50,
+        ondas: 25,
+      },
+      isCompleted: false,
+      progress: 0,
+      questionsCount: 0,
+      playlistId: backendVideo.playlistId,
+    };
+  }
+};
 
 // ============================================================================
 // TIPOS Y INTERFACES
@@ -92,11 +205,27 @@ const VideoApiService = {
     if (params.offset) queryParams.append('offset', params.offset.toString());
     if (params.search) queryParams.append('search', params.search);
 
+    console.log('🎬 Obteniendo videos del backend...');
     const response = await apiService.get(`/video-items?${queryParams.toString()}`);
+    console.log('🎬 Respuesta completa del backend:', response);
     
-    // Validar cada video en la respuesta
-    if (Array.isArray(response.data)) {
-      return response.data.map((video: unknown) => validateVideoData(video));
+    // La respuesta directa ya es el array de videos
+    const videosArray = response;
+    console.log('🎬 Videos array:', videosArray);
+    console.log('🎬 Es array?', Array.isArray(videosArray));
+    
+    // Adaptar y validar cada video en la respuesta
+    if (Array.isArray(videosArray)) {
+      console.log('🎥 Procesando videos del backend:', videosArray.length, 'videos');
+      const processedVideos = videosArray.map((video: unknown, index: number) => {
+        console.log(`📹 Procesando video ${index + 1}:`, video);
+        const adaptedVideo = adaptBackendVideoData(video);
+        const validatedVideo = validateVideoData(adaptedVideo);
+        console.log(`✅ Video ${index + 1} validado:`, validatedVideo);
+        return validatedVideo;
+      });
+      console.log('🎬 Videos finales procesados:', processedVideos);
+      return processedVideos;
     }
     
     return [];
@@ -105,7 +234,8 @@ const VideoApiService = {
   // Obtener detalle de un video específico
   async getVideoById(videoId: string): Promise<VideoData> {
     const response = await apiService.get(`/video-items/${videoId}`);
-    return validateVideoData(response.data);
+    const adaptedVideo = adaptBackendVideoData(response.data);
+    return validateVideoData(adaptedVideo);
   },
 
   // Obtener progreso de un video
@@ -145,7 +275,10 @@ const VideoApiService = {
     const response = await apiService.get(`/video-items/recommended?limit=${limit}`);
     
     if (Array.isArray(response.data)) {
-      return response.data.map((video: unknown) => validateVideoData(video));
+      return response.data.map((video: unknown) => {
+        const adaptedVideo = adaptBackendVideoData(video);
+        return validateVideoData(adaptedVideo);
+      });
     }
     
     return [];

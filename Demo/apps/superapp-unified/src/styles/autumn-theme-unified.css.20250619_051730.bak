@@ -129,8 +129,8 @@ body {
 /* ===== ESTADOS ESPECÍFICOS ===== */
 
 /* Elementos con fondos inline problemáticos */
-/* COMMENTED FOR VISUAL FIXES: [style*="background-color: rgb(41, 37, 36)"], */
-/* COMMENTED FOR VISUAL FIXES: [style*="backgroundColor: rgb(41, 37, 36)"] { */
+[style*="background-color: rgb(41, 37, 36)"],
+[style*="backgroundColor: rgb(41, 37, 36)"] {
   background: var(--autumn-bg-primary) !important;
   color: var(--autumn-text-primary) !important;
   border: 1px solid var(--autumn-border) !important;
