@@ -39,12 +39,21 @@ import {
   Star,
   AutoAwesome,
   Celebration,
+  Groups,
+  PartyMode,
+  School,
+  LiveTv,
 } from '@mui/icons-material';
 
 // Importar componentes mejorados
 import { PlayerMetricsDashboard } from './components/PlayerMetricsDashboard';
+import { DynamicMetricsDashboard } from './components/DynamicMetricsDashboard';
 import { EnhancedRewardFeedback, useRewardFeedback } from './components/EnhancedRewardFeedback';
 import { UnifiedUPlayPlayer } from './UnifiedUPlayPlayer';
+
+// [NUEVO] Funcionalidades Sociales según recomendaciones del review
+import { StudyRoomList } from './components/StudyRoomList';
+import { ChatBox } from './components/ChatBox';
 
 // Importar hooks y stores
 import { useOptimizedQuestions } from '../../../hooks/interactive-video/useOptimizedQuestions';
@@ -444,6 +453,70 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     error: errorVideos,
   } = useVideos();
 
+  // NUEVO: Preparar datos para DynamicMetricsDashboard con validaciones defensivas
+  const dynamicMetricsData = React.useMemo(() => {
+    // Datos de métricas actuales con validaciones para evitar NaN
+    const metricsData = {
+      meritos: Number(playerMetrics?.meritos) || 340, // fallback para demo
+      ondas: Number(playerMetrics?.ondas) || 125, // fallback para demo  
+      nivel: Number(playerMetrics?.level) || 1,
+      precision: Number(playerMetrics?.accuracy) || 87, // porcentaje de precisión
+      racha: Number(playerMetrics?.streak) || 5, // días consecutivos
+      videosCompletados: Number(playerMetrics?.completedVideos) || 2,
+      tiempoTotal: Number(playerMetrics?.totalWatchTime) || 95, // minutos
+      preguntasRespondidas: Number(playerMetrics?.questionsAnswered) || 18,
+      logrosDesbloqueados: Number(unlockedAchievements?.length) || 4,
+      rankingComunidad: Number(playerMetrics?.communityRank) || 42, // posición en la comunidad
+    };
+
+    // Historial de progreso (simulado para demo, en producción vendría del backend)
+    const progressHistory = [
+      { date: '15/06', meritos: 200, ondas: 80, precision: 85 },
+      { date: '16/06', meritos: 245, ondas: 95, precision: 89 },
+      { date: '17/06', meritos: 280, ondas: 105, precision: 86 },
+      { date: '18/06', meritos: 320, ondas: 118, precision: 91 },
+      { date: '19/06', meritos: 340, ondas: 125, precision: 87 },
+    ];
+
+    // Distribución por categorías basada en videos disponibles
+    const categoryProgress = React.useMemo(() => {
+      if (!adaptedVideos?.length) {
+        // Datos de fallback para demo
+        return [
+          { name: 'Gamificación', value: 35, color: '#2563eb' },
+          { name: 'Narrativa', value: 25, color: '#10b981' },
+          { name: 'Evaluación', value: 20, color: '#f59e0b' },
+          { name: 'Mecánicas', value: 15, color: '#ef4444' },
+          { name: 'Otros', value: 5, color: '#8b5cf6' },
+        ];
+      }
+
+      // Calcular distribución real basada en videos
+      const categoryCount: Record<string, number> = {};
+      adaptedVideos.forEach(video => {
+        const category = video.category || 'Otros';
+        categoryCount[category] = (categoryCount[category] || 0) + 1;
+      });
+
+      const total = adaptedVideos.length;
+      const categoryColors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
+      
+      return Object.entries(categoryCount).map(([name, count], index) => ({
+        name,
+        value: Math.round((count / total) * 100),
+        color: categoryColors[index % categoryColors.length],
+      }));
+    }, [adaptedVideos]);
+
+    return {
+      metrics: metricsData,
+      progressHistory,
+      categoryProgress,
+      isLoading: isLoadingVideos || isLoadingPlaylists,
+      showAnimations: true,
+    };
+  }, [playerMetrics, unlockedAchievements, adaptedVideos, isLoadingVideos, isLoadingPlaylists]);
+
   // NUEVO: Adaptar videos del backend al formato VideoItem
   const adaptedVideos = React.useMemo(() => {
     console.log('🔄 Adaptando videos del backend al formato VideoItem...');
@@ -690,6 +763,16 @@ export const UPlayGamifiedDashboard: React.FC = () => {
           label="Logros" 
           iconPosition="start"
         />
+        <Tab 
+          icon={<Groups />} 
+          label="Salas de Estudio" 
+          iconPosition="start"
+        />
+        <Tab 
+          icon={<LiveTv />} 
+          label="Video Parties" 
+          iconPosition="start"
+        />
       </Tabs>
     </Box>
   );
@@ -849,15 +932,222 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       </TabPanel>
 
       <TabPanel value={tabValue} index={0}>
-        <PlayerMetricsDashboard />
+        {dynamicMetricsData?.metrics && (
+          <DynamicMetricsDashboard 
+            metrics={dynamicMetricsData.metrics}
+            progressHistory={dynamicMetricsData.progressHistory || []}
+            categoryProgress={dynamicMetricsData.categoryProgress || []}
+            isLoading={dynamicMetricsData.isLoading || false}
+            showAnimations={dynamicMetricsData.showAnimations || true}
+          />
+        )}
+        
+        {/* [NUEVO] FASE 3: Sistema de Misiones Avanzado según recomendaciones del review */}
+        <Container maxWidth="xl" sx={{ mt: 4 }}>
+          <Card sx={{ mb: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
+            <CardContent>
+              <Typography variant="h5" fontWeight="bold" mb={2}>
+                🎯 Misiones Colaborativas Activas
+              </Typography>
+              <Typography variant="body1" sx={{ opacity: 0.9 }}>
+                Conecta con otros jugadores para completar desafíos únicos y ganar recompensas exclusivas
+              </Typography>
+            </CardContent>
+          </Card>
+
+          <Grid container spacing={3}>
+            {/* Misión Individual */}
+            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+              <Card sx={{ height: '100%', border: '2px solid', borderColor: 'primary.main' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <Star sx={{ color: 'primary.main', mr: 1 }} />
+                    <Typography variant="h6" fontWeight="bold">
+                      Explorador Curioso
+                    </Typography>
+                    <Chip label="Individual" size="small" sx={{ ml: 'auto' }} />
+                  </Box>
+                  <Typography variant="body2" color="text.secondary" mb={3}>
+                    Completa videos de 3 categorías diferentes en un solo día
+                  </Typography>
+                  <Box mb={2}>
+                    <Box display="flex" justifyContent="space-between" mb={1}>
+                      <Typography variant="caption">Progreso</Typography>
+                      <Typography variant="caption">2/3 categorías</Typography>
+                    </Box>
+                    <LinearProgress variant="determinate" value={67} sx={{ height: 6, borderRadius: 3 }} />
+                  </Box>
+                  <Box display="flex" gap={1}>
+                    <Chip icon={<Diamond />} label="+50 Mëritos" size="small" color="primary" />
+                    <Chip icon={<Bolt />} label="+25 Öndas" size="small" color="secondary" />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Misión Colaborativa */}
+            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+              <Card sx={{ height: '100%', border: '2px solid', borderColor: 'success.main' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <Groups sx={{ color: 'success.main', mr: 1 }} />
+                    <Typography variant="h6" fontWeight="bold">
+                      Círculo de Ayni
+                    </Typography>
+                    <Chip label="Colaborativa" size="small" color="success" sx={{ ml: 'auto' }} />
+                  </Box>
+                  <Typography variant="body2" color="text.secondary" mb={3}>
+                    Formar un grupo de estudio de 5 personas y completar una sesión juntos
+                  </Typography>
+                  <Box mb={2}>
+                    <Box display="flex" justifyContent="space-between" mb={1}>
+                      <Typography variant="caption">Participantes</Typography>
+                      <Typography variant="caption">3/5 unidos</Typography>
+                    </Box>
+                    <LinearProgress variant="determinate" value={60} sx={{ height: 6, borderRadius: 3 }} />
+                  </Box>
+                  <Box display="flex" gap={1} mb={2}>
+                    <Chip icon={<Diamond />} label="+200 Mëritos" size="small" color="primary" />
+                    <Chip icon={<Bolt />} label="+100 Öndas" size="small" color="secondary" />
+                  </Box>
+                  <Button variant="outlined" color="success" size="small" fullWidth>
+                    Invitar Amigos
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Misión Temporal */}
+            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+              <Card sx={{ height: '100%', border: '2px solid', borderColor: 'warning.main' }}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <Whatshot sx={{ color: 'warning.main', mr: 1 }} />
+                    <Typography variant="h6" fontWeight="bold">
+                      Evento Solsticio
+                    </Typography>
+                    <Chip label="Temporal" size="small" color="warning" sx={{ ml: 'auto' }} />
+                  </Box>
+                  <Typography variant="body2" color="text.secondary" mb={3}>
+                    Evento especial: Participar en 3 Video Parties durante el fin de semana
+                  </Typography>
+                  <Box mb={2}>
+                    <Box display="flex" justifyContent="space-between" mb={1}>
+                      <Typography variant="caption">Tiempo restante</Typography>
+                      <Typography variant="caption" color="warning.main" fontWeight="bold">
+                        2 días 14h
+                      </Typography>
+                    </Box>
+                    <LinearProgress variant="determinate" value={33} sx={{ height: 6, borderRadius: 3 }} />
+                  </Box>
+                  <Box display="flex" gap={1} mb={2}>
+                    <Chip icon={<Diamond />} label="+500 Mëritos" size="small" color="primary" />
+                    <Chip icon={<AutoAwesome />} label="Logro Exclusivo" size="small" color="warning" />
+                  </Box>
+                  <Button variant="outlined" color="warning" size="small" fullWidth disabled>
+                    Requiere Video Parties
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
       </TabPanel>
 
       <TabPanel value={tabValue} index={2}>
-        <PlayerMetricsDashboard />
+        {dynamicMetricsData?.metrics && (
+          <DynamicMetricsDashboard 
+            metrics={dynamicMetricsData.metrics}
+            progressHistory={dynamicMetricsData.progressHistory || []}
+            categoryProgress={dynamicMetricsData.categoryProgress || []}
+            isLoading={dynamicMetricsData.isLoading || false}
+            showAnimations={dynamicMetricsData.showAnimations || true}
+          />
+        )}
       </TabPanel>
 
       <TabPanel value={tabValue} index={3}>
         {renderAchievements()}
+      </TabPanel>
+
+      {/* [NUEVO] FASE 2: Funcionalidades Sociales según recomendaciones del review */}
+      <TabPanel value={tabValue} index={4}>
+        <Container maxWidth="xl">
+          <StudyRoomList 
+            onJoinRoom={async (roomId) => {
+              console.log('Joining study room:', roomId);
+              // TODO: Implementar lógica de unirse a sala
+            }}
+            onCreateRoom={async (roomData) => {
+              console.log('Creating study room:', roomData);
+              // TODO: Implementar lógica de crear sala
+            }}
+            currentVideoId={selectedVideo}
+          />
+        </Container>
+      </TabPanel>
+
+      <TabPanel value={tabValue} index={5}>
+        <Container maxWidth="xl">
+          <Box textAlign="center" py={8}>
+            <LiveTv sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+            <Typography variant="h4" fontWeight="bold" mb={2}>
+              Video Parties 🎉
+            </Typography>
+            <Typography variant="h6" color="text.secondary" mb={3}>
+              Próximamente: Sesiones sincronizadas con activación temporal
+            </Typography>
+            <Typography variant="body1" color="text.secondary" mb={4} maxWidth="600px" mx="auto">
+              Únete a eventos especiales donde videos se activan solo cuando hay suficientes participantes. 
+              Experiencia colaborativa única con recompensas exclusivas y efectos de celebración sincronizados.
+            </Typography>
+            
+            {/* Preview de funcionalidades que vendrán */}
+            <Grid container spacing={3} maxWidth="800px" mx="auto">
+                             <Grid size={{ xs: 12, md: 4 }}>
+                 <Card sx={{ textAlign: 'center', p: 3 }}>
+                   <PartyMode sx={{ fontSize: 40, color: 'primary.main', mb: 2 }} />
+                   <Typography variant="h6" mb={1}>Activación por Usuarios</Typography>
+                   <Typography variant="body2" color="text.secondary">
+                     Videos especiales que se activan cuando 10+ usuarios se conectan simultáneamente
+                   </Typography>
+                 </Card>
+               </Grid>
+              <Grid size={{ xs: 12, md: 4 }}>
+                <Card sx={{ textAlign: 'center', p: 3 }}>
+                  <Celebration sx={{ fontSize: 40, color: 'secondary.main', mb: 2 }} />
+                  <Typography variant="h6" mb={1}>Recompensas Exclusivas</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Mëritos y Öndas especiales solo disponibles en eventos colaborativos
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid size={{ xs: 12, md: 4 }}>
+                <Card sx={{ textAlign: 'center', p: 3 }}>
+                  <AutoAwesome sx={{ fontSize: 40, color: 'warning.main', mb: 2 }} />
+                  <Typography variant="h6" mb={1}>Efectos Sincronizados</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Animaciones y celebraciones que ocurren al mismo tiempo para todos
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+
+            <Button
+              variant="contained"
+              size="large"
+              sx={{ 
+                mt: 4,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                px: 4,
+                py: 1.5,
+              }}
+              disabled
+            >
+              Activar Notificaciones de Video Parties
+            </Button>
+          </Box>
+        </Container>
       </TabPanel>
 
       {/* Sistema de feedback de recompensas */}

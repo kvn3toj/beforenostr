@@ -97,20 +97,33 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
     setAnimationKey(prev => prev + 1);
   }, [metrics]);
 
-  // Calculate derived metrics
+  // Calculate derived metrics with defensive programming
   const derivedMetrics = useMemo(() => {
-    const avgPrecision = progressHistory.reduce((acc, curr) => acc + curr.precision, 0) / progressHistory.length || 0;
-    const totalRewards = metrics.meritos + metrics.ondas;
-    const efficiencyScore = (metrics.precision * metrics.racha) / 100;
-    const growthRate = progressHistory.length > 1 
-      ? ((progressHistory[progressHistory.length - 1].meritos - progressHistory[0].meritos) / progressHistory[0].meritos) * 100 
+    // Validate progressHistory
+    const validProgressHistory = Array.isArray(progressHistory) ? progressHistory : [];
+    
+    // Calculate with fallbacks to prevent NaN
+    const avgPrecision = validProgressHistory.length > 0 
+      ? validProgressHistory.reduce((acc, curr) => acc + (curr?.precision || 0), 0) / validProgressHistory.length 
       : 0;
+    
+    const totalRewards = (metrics?.meritos || 0) + (metrics?.ondas || 0);
+    const efficiencyScore = ((metrics?.precision || 0) * (metrics?.racha || 0)) / 100;
+    
+    let growthRate = 0;
+    if (validProgressHistory.length > 1) {
+      const firstValue = validProgressHistory[0]?.meritos || 0;
+      const lastValue = validProgressHistory[validProgressHistory.length - 1]?.meritos || 0;
+      if (firstValue > 0) {
+        growthRate = ((lastValue - firstValue) / firstValue) * 100;
+      }
+    }
 
     return {
-      avgPrecision: Math.round(avgPrecision),
-      totalRewards,
-      efficiencyScore: Math.round(efficiencyScore),
-      growthRate: Math.round(growthRate),
+      avgPrecision: Math.round(isNaN(avgPrecision) ? 0 : avgPrecision),
+      totalRewards: isNaN(totalRewards) ? 0 : totalRewards,
+      efficiencyScore: Math.round(isNaN(efficiencyScore) ? 0 : efficiencyScore),
+      growthRate: Math.round(isNaN(growthRate) ? 0 : growthRate),
     };
   }, [metrics, progressHistory]);
 
