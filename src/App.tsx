@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
+import { UPlayPage } from './pages/UPlayPage'
 import { ProtectedRoute } from './router/ProtectedRoute'
 import { MainLayout } from './layouts/MainLayout'
 import { MundosPage } from './pages/MundosPage'
@@ -43,6 +44,8 @@ function App() {
                 <Route path="/playlists" element={<GamifiedPlaylistsPage />} />
                 <Route path="/playlists/:playlistId" element={<PlaylistDetailPage />} />
                 <Route path="/items/:itemId/config" element={<VideoConfigPage />} />
+                <Route path="/uplay" element={<UPlayPage />} />
+                <Route path="/uplay/video/:videoId" element={<UPlayPage />} />
                 <Route path="/settings" element={<div>Página de Configuración (Placeholder)</div>} />
               </Route>
             </Route>
