@@ -450,7 +450,7 @@ export const useStudyRooms = (options: UseStudyRoomsOptions = {}): UseStudyRooms
   // Cleanup al desmontar
   useEffect(() => {
     return () => {
-      console.log('🧹 [useStudyRooms] Cleaning up...');
+      // Cleanup study rooms resources
       disconnectWebSocket();
       if (refreshTimeoutRef.current) {
         clearTimeout(refreshTimeoutRef.current);

@@ -52,13 +52,16 @@ export const useIntuitiveBehavior = (config: IntuitiveConfig = {}) => {
 
     observerRef.current = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !state.hasAnimated) {
-          setState((prev) => ({
-            ...prev,
-            isVisible: true,
-            hasAnimated: true,
-          }));
-        }
+        setState((prev) => {
+          if (entry.isIntersecting && !prev.hasAnimated) {
+            return {
+              ...prev,
+              isVisible: true,
+              hasAnimated: true,
+            };
+          }
+          return prev;
+        });
       },
       {
         threshold: revealThreshold,
@@ -73,7 +76,7 @@ export const useIntuitiveBehavior = (config: IntuitiveConfig = {}) => {
         observerRef.current.disconnect();
       }
     };
-  }, [enableProgressiveReveal, revealThreshold, state.hasAnimated]);
+  }, [enableProgressiveReveal, revealThreshold]);
 
   // 🖱️ Handlers de hover inteligente
   const handleMouseEnter = useCallback(

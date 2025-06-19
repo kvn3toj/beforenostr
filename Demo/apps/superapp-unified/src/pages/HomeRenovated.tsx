@@ -314,7 +314,7 @@ export const HomeRenovated: React.FC = () => {
   // 🧹 CLEANUP OBLIGATORIO según Builder.io
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up HomeRenovated');
+      // Cleanup resources
     };
   }, []);
 

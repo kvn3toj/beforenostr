@@ -459,8 +459,6 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
       }
     };
 
-    console.log('🌌 Balance Universal:', universalBalance);
-    
     return universalBalance;
   }, [calculateDynamicDistribution]);
 
@@ -483,11 +481,6 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
       const universalBalance = calculateUniversalBalance(unifiedElementConfig);
       
       if (universalBalance.score < 75) {
-        console.log('🔄 Aplicando auto-optimización de distribución...', {
-          scoreActual: universalBalance.score,
-          recomendación: universalBalance.recommendations.suggestedAction
-        });
-        
         setDistributionOptimization(prev => ({
           ...prev,
           lastOptimization: Date.now(),
@@ -541,7 +534,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   // 🧹 CLEANUP OBLIGATORIO
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up AyniMetricsCardRevolutionary');
+      // Cleanup resources if needed
     };
   }, []);
 
@@ -615,22 +608,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
     // 🆕 CALCULAR BALANCE UNIVERSAL EN TIEMPO REAL
     const universalBalance = calculateUniversalBalance(unifiedElementConfig);
 
-    console.log('🌌 Sistema orbital dinámico con distribución optimizada:', {
-      animationPhase,
-      orbitRadius,
-      elementConfigCount: Object.keys(unifiedElementConfig).length,
-      universalBalance: universalBalance.score,
-      distributionLevel: universalBalance.level,
-      autoOptimization: distributionOptimization.autoOptimize,
-      // 🆕 DEBUG: Información de planetas orbitales
-      elementalSpheres: Object.keys(unifiedElementConfig).map(key => ({
-        element: key,
-        config: unifiedElementConfig[key],
-        hasIcon: !!unifiedElementConfig[key].icon,
-        color: unifiedElementConfig[key].visuals?.primaryColor || unifiedElementConfig[key].color,
-      })),
-      overflowFixed: 'VISIBLE - Los planetas orbitales deberían ser visibles ahora',
-    });
+    // Datos del sistema orbital dinámico disponibles para debug si es necesario
 
     return (
       <Box

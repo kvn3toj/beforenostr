@@ -219,7 +219,7 @@ export const ActiveChallengesWidget: React.FC<ActiveChallengesWidgetProps> = ({
   // 🧹 CLEANUP OBLIGATORIO según Builder.io
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up ActiveChallengesWidget');
+      // Cleanup widget resources
     };
   }, []);
 

@@ -243,7 +243,7 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
   // 🧹 CLEANUP OBLIGATORIO según Builder.io
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up EnergyWeatherWidget');
+      // Cleanup weather widget resources
     };
   }, []);
 

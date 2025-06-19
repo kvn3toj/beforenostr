@@ -386,7 +386,7 @@ export const HomeEnhanced: React.FC = () => {
   // 🧹 CLEANUP OBLIGATORIO
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up HomeEnhanced');
+      // Cleanup resources
     };
   }, []);
 

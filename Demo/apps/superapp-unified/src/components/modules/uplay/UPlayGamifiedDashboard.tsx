@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -410,6 +411,7 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
 export const UPlayGamifiedDashboard: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
   
   // Estados locales
   const [tabValue, setTabValue] = useState(0);
@@ -518,11 +520,33 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   }, []);
 
   const handleVideoPlay = useCallback((videoId: string) => {
+    console.log('🎬 Playing video:', videoId);
+    
+    // Buscar el video completo en los datos del backend
+    const videoData = videos?.find((v: any) => v.id.toString() === videoId);
+    console.log('🎬 Found video data:', videoData);
+    
+    if (videoData) {
+      // Navegar al reproductor con los datos del video
+      navigate(`/uplay/video/${videoId}`, {
+        state: {
+          from: '/uplay',
+          videoData: videoData
+        }
+      });
+    } else {
+      console.error('❌ Video not found:', videoId);
+      // Navegar de todas formas, el UPlayVideoPlayer manejará la carga
+      navigate(`/uplay/video/${videoId}`, {
+        state: {
+          from: '/uplay'
+        }
+      });
+    }
+    
     setSelectedVideo(videoId);
     setCurrentVideo(videoId);
-    // Aquí podrías navegar a la página del reproductor
-    console.log('Playing video:', videoId);
-  }, [setCurrentVideo]);
+  }, [setCurrentVideo, videos, navigate]);
 
   const handleCloseSidebar = useCallback(() => {
     setSidebarOpen(false);

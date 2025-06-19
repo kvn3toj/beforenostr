@@ -352,7 +352,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
   // 🧹 CLEANUP OBLIGATORIO según Builder.io
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up LiveActivityFeed');
+      // Cleanup activity feed resources
     };
   }, []);
 

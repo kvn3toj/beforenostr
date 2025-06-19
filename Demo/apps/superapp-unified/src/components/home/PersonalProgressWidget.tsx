@@ -120,7 +120,7 @@ export const PersonalProgressWidget: React.FC<PersonalProgressWidgetProps> = ({
   // 🧹 CLEANUP OBLIGATORIO según Builder.io
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up PersonalProgressWidget');
+      // Cleanup widget resources
     };
   }, []);
 

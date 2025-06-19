@@ -384,7 +384,7 @@ export const AyniBalanceVisualization: React.FC<AyniBalanceVisualizationProps> =
   // 🧹 CLEANUP OBLIGATORIO según Builder.io
   useEffect(() => {
     return () => {
-      console.log('🧹 Cleaning up AyniBalanceVisualization - Sistema Solar 3D');
+      // Cleanup Sistema Solar 3D resources
       // Limpiar intervals de rotación
       if (typeof window !== 'undefined') {
         console.log('🧹 Limpiando animaciones del sistema solar');

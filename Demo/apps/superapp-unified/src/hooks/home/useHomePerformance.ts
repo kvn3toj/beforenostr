@@ -51,14 +51,7 @@ export const useHomePerformance = () => {
       lastUpdateTime: Date.now(),
     }));
 
-    // Log performance en desarrollo
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎯 Home render time:', renderTime, 'ms');
-
-      if (renderTime > 100) {
-        console.warn('⚠️ Slow render detected:', renderTime, 'ms');
-      }
-    }
+    // Performance metrics recorded silently
   }, []);
 
   // 🎯 Monitor de scroll para prefetch inteligente
@@ -101,10 +94,7 @@ export const useHomePerformance = () => {
       lastUpdateTime: Date.now(),
     }));
 
-    // Log visibility changes en desarrollo
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 Home visibility changed:', visibilityState);
-    }
+    // Visibility changes tracked silently
   }, []);
 
   // 🎯 Prefetch inteligente de rutas
@@ -259,18 +249,9 @@ export const useComponentPerformance = (componentName: string) => {
     // Detectar re-renders excesivos
     if (renderCount.current > 10) {
       setIsOptimized(false);
-      console.warn(
-        `⚠️ Component ${componentName} has re-rendered ${renderCount.current} times`
-      );
     }
 
-    // Log en desarrollo
-    if (process.env.NODE_ENV === 'development') {
-      const timeFromMount = Date.now() - mountTime.current;
-      console.log(
-        `🎯 ${componentName} render #${renderCount.current} at ${timeFromMount}ms`
-      );
-    }
+    // Component performance tracked silently
   });
 
   const resetRenderCount = useCallback(() => {
