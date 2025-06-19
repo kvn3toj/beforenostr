@@ -7,6 +7,7 @@ interface ApiError {
 }
 
 // Mock data que simula exactamente la respuesta del backend NestJS
+// Solo se usa como ÚLTIMO RECURSO si el backend no está disponible
 const MOCK_VIDEO_ITEMS = [
   {
     id: 7,
@@ -81,6 +82,7 @@ class BackendApiService {
     };
 
     try {
+      console.log(`🔗 API Request: ${endpoint}`);
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
       
       if (!response.ok) {
@@ -91,27 +93,73 @@ class BackendApiService {
         throw new Error(errorData.message || `Error ${response.status}`);
       }
 
+      console.log(`✅ API Success: ${endpoint}`);
       return await response.json();
     } catch (error) {
-      console.error(`API Error on ${endpoint}:`, error);
+      console.error(`❌ API Error on ${endpoint}:`, error);
       throw error;
     }
+  }
+
+  // Authentication endpoints
+  async login(email: string, password: string): Promise<any> {
+    return this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  async logout(): Promise<void> {
+    await this.request('/auth/logout', { method: 'POST' });
+    localStorage.removeItem('COOMUNITY_AUTH_TOKEN');
+    localStorage.removeItem('COOMUNITY_USER_DATA');
+  }
+
+  async getMe(): Promise<any> {
+    return this.request('/auth/me');
   }
 
   // Videos/VideoItems endpoints
   async getVideoItems(): Promise<any[]> {
     try {
-      // Intentar conectar con el backend real
-      return await this.request('/video-items');
+      console.log('🎬 Conectando con backend NestJS REAL...');
+      
+      // Intentar autenticación automática si no hay token
+      const token = localStorage.getItem('COOMUNITY_AUTH_TOKEN');
+      if (!token) {
+        console.log('🔐 No hay token, intentando autenticación automática...');
+        try {
+          const authResponse = await this.login('admin@gamifier.com', 'admin123');
+          localStorage.setItem('COOMUNITY_AUTH_TOKEN', authResponse.access_token);
+          localStorage.setItem('COOMUNITY_USER_DATA', JSON.stringify(authResponse.user));
+          console.log('✅ Autenticación automática exitosa');
+        } catch (authError) {
+          console.warn('⚠️ Autenticación automática falló:', authError);
+        }
+      }
+
+      // Intentar obtener datos reales del backend
+      const videos = await this.request<any[]>('/video-items');
+      console.log('🎉 Videos obtenidos del backend REAL:', videos.length);
+      return videos;
+      
     } catch (error) {
-      // Si falla, usar modo demo
-      console.warn('🎭 Backend no disponible, usando modo DEMO de ÜPlay');
-      console.log('📹 Mostrando 6 videos de demostración con datos reales');
+      console.warn('⚠️ Backend no disponible, intentando reconexión...');
       
-      // Simular delay de red para realismo
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      return MOCK_VIDEO_ITEMS;
+      // Segundo intento con delay
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const videos = await this.request<any[]>('/video-items');
+        console.log('🎉 Reconexión exitosa, videos del backend REAL:', videos.length);
+        return videos;
+      } catch (retryError) {
+        // Solo como último recurso usar modo demo
+        console.warn('🎭 ÚLTIMO RECURSO: Usando modo demo');
+        console.log('📹 Mostrando 6 videos de demostración');
+        
+        await new Promise(resolve => setTimeout(resolve, 800));
+        return MOCK_VIDEO_ITEMS;
+      }
     }
   }
 
@@ -128,14 +176,15 @@ class BackendApiService {
 
   async getQuestionsForVideo(videoId: string): Promise<any[]> {
     // Validar que videoId sea un número antes de hacer la petición
-    // para evitar el error "Invalid video ID format"
     if (!/^\d+$/.test(videoId)) {
       console.warn(`Skipping questions for invalid videoId format: ${videoId}`);
       return [];
     }
     
     try {
-      return await this.request(`/video-items/${videoId}/questions`);
+      const questions = await this.request<any[]>(`/video-items/${videoId}/questions`);
+      console.log(`📝 Preguntas obtenidas del backend REAL para video ${videoId}:`, questions.length);
+      return questions;
     } catch (error) {
       console.warn(`🎭 Usando preguntas mock para video ${videoId}`);
       
@@ -143,11 +192,10 @@ class BackendApiService {
       const video = MOCK_VIDEO_ITEMS.find(v => v.id.toString() === videoId);
       if (!video) return [];
       
-      // Generar preguntas mock basadas en questionCount
       const questions = Array.from({ length: video.questionCount || 0 }, (_, i) => ({
         id: `q${videoId}_${i + 1}`,
         question: `Pregunta ${i + 1} sobre ${video.title}`,
-        timestamp: (i + 1) * 30, // Una pregunta cada 30 segundos
+        timestamp: (i + 1) * 30,
         options: ['Opción A', 'Opción B', 'Opción C', 'Opción D'],
         correctAnswer: 0
       }));
@@ -156,10 +204,12 @@ class BackendApiService {
     }
   }
 
-  // Playlists endpoints
+  // Playlists endpoints  
   async getPlaylists(): Promise<any> {
     try {
-      return await this.request('/playlists');
+      const playlists = await this.request('/playlists');
+      console.log('📋 Playlists obtenidas del backend REAL');
+      return playlists;
     } catch (error) {
       console.warn('🎭 Usando playlists mock');
       return {
@@ -171,15 +221,41 @@ class BackendApiService {
   }
 
   async getPlaylistById(id: string): Promise<any> {
-    try {
-      return await this.request(`/playlists/${id}`);
-    } catch (error) {
-      throw new Error(`Playlist ${id} no encontrada`);
-    }
+    return this.request(`/playlists/${id}`);
   }
 
   async createPlaylist(data: { name: string; description?: string }): Promise<any> {
     return this.request('/playlists', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Users endpoints
+  async getUsers(): Promise<any[]> {
+    return this.request('/users');
+  }
+
+  async getUserById(id: string): Promise<any> {
+    return this.request(`/users/${id}`);
+  }
+
+  // Marketplace endpoints
+  async getMarketplaceItems(): Promise<any[]> {
+    return this.request('/marketplace/items');
+  }
+
+  async getMarketplaceItemById(id: string): Promise<any> {
+    return this.request(`/marketplace/items/${id}`);
+  }
+
+  // Social endpoints
+  async getSocialPublications(): Promise<any[]> {
+    return this.request('/social/publications');
+  }
+
+  async createSocialPublication(data: any): Promise<any> {
+    return this.request('/social/publications', {
       method: 'POST',
       body: JSON.stringify(data),
     });
