@@ -4,9 +4,9 @@
   "buildCommand": "npm run vercel-build",
   "outputDirectory": "dist",
   "installCommand": "npm install --legacy-peer-deps",
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!api).*)",
       "destination": "/index.html"
     }
   ],
