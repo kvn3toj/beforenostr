@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // 🎯 IMPORTS ESPECÍFICOS DE MATERIAL UI (OPTIMIZADOS)
@@ -30,6 +30,8 @@ import {
   getSemanticGradient,
   getPrimaryColor,
   getSemanticColor,
+  createGradient,
+  COOMUNITY_ELEMENTS 
 } from '../design-system/color-system';
 
 import { useAuth } from '../contexts/AuthContext';
@@ -46,19 +48,15 @@ import { MainModulesWidget } from '../components/home/widgets/MainModulesWidget'
 // 🌌 FONDO UNIVERSAL CÓSMICO
 import UniversalCosmicBackground from '../components/home/UniversalCosmicBackground';
 
-// 🎨 CSS CONSOLIDADO (OPTIMIZADO - SOLO LOS ESENCIALES)
-import '../styles/home-optimized-consolidated.css';
+// 🎨 CSS CONSOLIDADO (SOLO LOS ESENCIALES)
+import '../styles/home-revolutionary-system.css';
+import '../styles/cosmic-ayni-effects.css';
+import '../styles/performance-optimizations.css';
 
-// 🏷️ Tipos para las notificaciones
+// 🏷️ TIPOS OPTIMIZADOS
 interface Notification {
   id: string;
-  type:
-    | 'ayni'
-    | 'achievement'
-    | 'social'
-    | 'marketplace'
-    | 'system'
-    | 'education';
+  type: 'ayni' | 'achievement' | 'social' | 'marketplace' | 'system' | 'education';
   title: string;
   message: string;
   timestamp: Date;
@@ -69,61 +67,271 @@ interface Notification {
 }
 
 // 🚨 ERROR BOUNDARY OPTIMIZADO
-class HomePageErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean; error?: Error }
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false };
+const OptimizedErrorBoundary = memo(({ children }: { children: React.ReactNode }) => {
+  const [hasError, setHasError] = useState(false);
+  
+  useEffect(() => {
+    const handleError = (error: ErrorEvent) => {
+      console.error('🚨 HomePage Error:', error.message);
+      setHasError(true);
+    };
+    
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  if (hasError) {
+    return (
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Alert severity="error" sx={{ mb: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            🚨 Error en el Dashboard
+          </Typography>
+          <Button
+            onClick={() => window.location.reload()}
+            variant="contained"
+            size="small"
+            sx={{ 
+              background: getPrimaryGradient(),
+              color: 'white' 
+            }}
+          >
+            Recargar Dashboard
+          </Button>
+        </Alert>
+      </Container>
+    );
   }
 
-  static getDerivedStateFromError(error: Error) {
-    console.error('🚨 HomePage Error:', error.message);
-    return { hasError: true, error };
-  }
+  return <>{children}</>;
+});
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('🚨 HomePage Error Stack:', {
-      error: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
-    });
-  }
+// 💀 COMPONENTE DE LOADING OPTIMIZADO
+const OptimizedLoader = memo(() => (
+  <Container maxWidth="xl" className="revolutionary-container">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '80vh',
+        gap: 3,
+      }}
+    >
+      <Box
+        sx={{
+          width: 120,
+          height: 120,
+          borderRadius: '50%',
+          background: `conic-gradient(from 0deg, ${getPrimaryColor(500 as any)}, ${getSemanticColor('info', 'main')}, ${getSemanticColor('success', 'main')}, ${getSemanticColor('warning', 'main')}, ${getPrimaryColor(500 as any)})`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          animation: 'revolutionary-rotate-continuous 2s linear infinite',
+        }}
+      >
+        <CircularProgress size={80} thickness={2} sx={{ color: 'white' }} />
+      </Box>
 
-  render() {
-    if (this.state.hasError) {
-      return (
-        <Container maxWidth="xl" sx={{ py: 4 }}>
-          <Alert severity="error" sx={{ mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              🚨 Error en el Dashboard
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              Error detectado:{' '}
-              {this.state.error?.message || 'Error desconocido'}
-            </Typography>
-            <Button
-              onClick={() => window.location.reload()}
-              variant="contained"
-              size="small"
-              sx={{ 
-                background: getPrimaryGradient(),
-                color: 'white' 
+      <Typography
+        variant="h5"
+        sx={{
+          background: getPrimaryGradient(),
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontWeight: 700,
+          textAlign: 'center',
+        }}
+      >
+        ✨ Cargando Dashboard Semántico
+      </Typography>
+
+      <Typography
+        variant="body1"
+        sx={{
+          color: 'rgba(255, 255, 255, 0.8)',
+          textAlign: 'center',
+          fontStyle: 'italic',
+        }}
+      >
+        "Preparando la experiencia más intuitiva de CoomÜnity..."
+      </Typography>
+    </Box>
+  </Container>
+));
+
+// 🎛️ PANEL DE CONTROL OPTIMIZADO
+const DashboardControls = memo(({ 
+  onRefresh, 
+  refreshing, 
+  unreadCount 
+}: { 
+  onRefresh: () => void; 
+  refreshing: boolean; 
+  unreadCount: number; 
+}) => {
+  const navigate = useNavigate();
+  
+  return (
+    <Fade in timeout={600}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: { xs: 2, sm: 3, md: 4 },
+          flexWrap: 'wrap',
+          gap: 2,
+        }}
+      >
+        <Typography
+          variant="h3"
+          sx={{
+            fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' },
+            fontWeight: 800,
+            background: getPrimaryGradient(),
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
+          🚀 Dashboard Semántico
+        </Typography>
+
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Tooltip title="Actualizar Dashboard">
+            <IconButton
+              onClick={onRefresh}
+              disabled={refreshing}
+              sx={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                '&:hover': { 
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  transform: 'scale(1.05)',
+                },
+                transition: 'all 0.2s ease'
               }}
             >
-              Recargar Dashboard
-            </Button>
-          </Alert>
-        </Container>
-      );
-    }
+              {refreshing ? (
+                <CircularProgress size={20} sx={{ color: 'white' }} />
+              ) : (
+                <RefreshIcon />
+              )}
+            </IconButton>
+          </Tooltip>
 
-    return this.props.children;
-  }
-}
+          <Tooltip title={`Notificaciones (${unreadCount})`}>
+            <IconButton
+              onClick={() => navigate('/notifications')}
+              sx={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                '&:hover': { 
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  transform: 'scale(1.05)',
+                },
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Badge badgeContent={unreadCount} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          </Tooltip>
 
-export function HomePage() {
+          <Tooltip title="Configuración">
+            <IconButton
+              onClick={() => navigate('/settings')}
+              sx={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                '&:hover': { 
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  transform: 'scale(1.05)',
+                },
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <SettingsIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+    </Fade>
+  );
+});
+
+// 📱 BOTÓN FLOTANTE OPTIMIZADO
+const ScrollToTopFab = memo(({ 
+  visible, 
+  onClick 
+}: { 
+  visible: boolean; 
+  onClick: () => void; 
+}) => (
+  <Fade in={visible} timeout={300} appear={false}>
+    <Box>
+      <Fab
+        onClick={onClick}
+        sx={{
+          position: 'fixed',
+          bottom: { xs: 20, sm: 32 },
+          right: { xs: 20, sm: 32 },
+          background: `conic-gradient(from 0deg, ${getPrimaryColor(500 as any)}, ${getSemanticColor('info', 'main')}, ${getSemanticColor('success', 'main')}, ${getSemanticColor('warning', 'main')}, ${getPrimaryColor(500 as any)})`,
+          width: 56,
+          height: 56,
+          zIndex: 1000,
+          '&:hover': {
+            transform: 'scale(1.1)',
+            boxShadow: `0 12px 40px ${getPrimaryColor(500 as any)}40`,
+          },
+          transition: 'all 0.3s ease',
+        }}
+      >
+        <KeyboardArrowUpIcon
+          sx={{ color: 'white', fontSize: '1.8rem' }}
+        />
+      </Fab>
+    </Box>
+  </Fade>
+));
+
+// 🎊 SNACKBAR OPTIMIZADO
+const OptimizedSnackbar = memo(({ 
+  open, 
+  message, 
+  onClose 
+}: { 
+  open: boolean; 
+  message: string; 
+  onClose: () => void; 
+}) => (
+  <Snackbar
+    open={open}
+    autoHideDuration={4000}
+    onClose={onClose}
+    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+  >
+    <Alert
+      onClose={onClose}
+      severity="success"
+      sx={{
+        background: getSemanticGradient('success'),
+        color: 'white',
+        '& .MuiAlert-icon': { color: 'white' },
+        fontWeight: 600,
+      }}
+    >
+      {message}
+    </Alert>
+  </Snackbar>
+));
+
+// 🏠 COMPONENTE PRINCIPAL OPTIMIZADO
+export function HomePageOptimized() {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const theme = useTheme();
@@ -136,7 +344,7 @@ export function HomePage() {
     revealThreshold: 0.1,
   });
 
-  // 🎛️ Estados básicos
+  // 🎛️ Estados optimizados
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -144,7 +352,7 @@ export function HomePage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  // 🎯 Inicialización
+  // 🎯 Inicialización optimizada
   useEffect(() => {
     const initializeDashboard = async () => {
       try {
@@ -176,7 +384,7 @@ export function HomePage() {
     initializeDashboard();
   }, []);
 
-  // 📜 Scroll handler optimizado con throttling
+  // 📜 Scroll handler optimizado
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     
@@ -235,6 +443,16 @@ export function HomePage() {
     );
   }, []);
 
+  const handleActionClick = useCallback((action: string) => {
+    setSnackbarMessage(`🚀 Navegando a ${action.toUpperCase()}`);
+    setSnackbarOpen(true);
+  }, []);
+
+  const handleModuleClick = useCallback((moduleId: string) => {
+    setSnackbarMessage(`🚀 Abriendo módulo: ${moduleId.toUpperCase()}`);
+    setSnackbarOpen(true);
+  }, []);
+
   // 🔒 Verificación de autenticación optimizada
   if (!isAuthenticated) {
     return (
@@ -265,68 +483,15 @@ export function HomePage() {
     );
   }
 
-  // 💀 Loading optimizado con sistema de colores centralizado
+  // 💀 Loading optimizado
   if (isLoading) {
-    return (
-      <Container maxWidth="xl" className="revolutionary-container">
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '80vh',
-            gap: 3,
-          }}
-        >
-          <Box
-            sx={{
-              width: 120,
-              height: 120,
-              borderRadius: '50%',
-              background: `conic-gradient(from 0deg, ${getPrimaryColor(500 as any)}, ${getSemanticColor('info', 'main')}, ${getSemanticColor('success', 'main')}, ${getSemanticColor('warning', 'main')}, ${getPrimaryColor(500 as any)})`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              animation: 'revolutionary-rotate-continuous 2s linear infinite',
-            }}
-          >
-            <CircularProgress size={80} thickness={2} sx={{ color: 'white' }} />
-          </Box>
-
-          <Typography
-            variant="h5"
-            sx={{
-              background: getPrimaryGradient(),
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontWeight: 700,
-              textAlign: 'center',
-            }}
-          >
-            ✨ Cargando Dashboard Semántico
-          </Typography>
-
-          <Typography
-            variant="body1"
-            sx={{
-              color: 'rgba(255, 255, 255, 0.8)',
-              textAlign: 'center',
-              fontStyle: 'italic',
-            }}
-          >
-            "Preparando la experiencia más intuitiva de CoomÜnity..."
-          </Typography>
-        </Box>
-      </Container>
-    );
+    return <OptimizedLoader />;
   }
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
-    <HomePageErrorBoundary>
+    <OptimizedErrorBoundary>
       {/* 🌌 FONDO UNIVERSAL CÓSMICO */}
       <UniversalCosmicBackground />
 
@@ -343,96 +508,14 @@ export function HomePage() {
             flexDirection: 'column',
           }}
         >
-          {/* 🎛️ Panel de Control del Dashboard */}
-          <Fade in timeout={600}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                mb: { xs: 2, sm: 3, md: 4 },
-                flexWrap: 'wrap',
-                gap: 2,
-              }}
-            >
-              <Typography
-                variant="h3"
-                sx={{
-                  fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' },
-                  fontWeight: 800,
-                  background: getPrimaryGradient(),
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                🚀 Dashboard Semántico
-              </Typography>
+          {/* 🎛️ Panel de Control */}
+          <DashboardControls 
+            onRefresh={handleRefreshDashboard}
+            refreshing={refreshing}
+            unreadCount={unreadCount}
+          />
 
-              {/* 🎯 Controles optimizados */}
-              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                <Tooltip title="Actualizar Dashboard">
-                  <IconButton
-                    onClick={handleRefreshDashboard}
-                    disabled={refreshing}
-                    sx={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      color: 'white',
-                      '&:hover': { 
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        transform: 'scale(1.05)',
-                      },
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {refreshing ? (
-                      <CircularProgress size={20} sx={{ color: 'white' }} />
-                    ) : (
-                      <RefreshIcon />
-                    )}
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title={`Notificaciones (${unreadCount})`}>
-                  <IconButton
-                    onClick={() => navigate('/notifications')}
-                    sx={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      color: 'white',
-                      '&:hover': { 
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        transform: 'scale(1.05)',
-                      },
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <Badge badgeContent={unreadCount} color="error">
-                      <NotificationsIcon />
-                    </Badge>
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title="Configuración">
-                  <IconButton
-                    onClick={() => navigate('/settings')}
-                    sx={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      color: 'white',
-                      '&:hover': { 
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        transform: 'scale(1.05)',
-                      },
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <SettingsIcon />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Box>
-          </Fade>
-
-          {/* 🎯 ESTRUCTURA SEMÁNTICA OPTIMIZADA */}
+          {/* 🎯 ESTRUCTURA OPTIMIZADA */}
           <Box sx={{ flex: 1, overflow: 'visible', position: 'relative' }}>
             <Grid
               container
@@ -464,12 +547,7 @@ export function HomePage() {
                   <Box
                     sx={{
                       position: 'relative',
-                      minHeight: {
-                        xs: '500px',
-                        sm: '600px',
-                        md: '700px',
-                        lg: '800px',
-                      },
+                      minHeight: { xs: '500px', sm: '600px', md: '700px', lg: '800px' },
                       mb: { xs: 2, sm: 3, md: 4 },
                       display: 'flex',
                       alignItems: 'center',
@@ -481,23 +559,15 @@ export function HomePage() {
                 </Fade>
               </Grid>
 
-              {/* === ACCIONES Y MÓDULOS === */}
+              {/* === ACCIONES Y NOTIFICACIONES === */}
               <Grid size={{ xs: 12, lg: 8 }}>
                 <Fade in timeout={1000}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
-                    <QuickActionsWidget
-                      onActionClick={(action) => {
-                        setSnackbarMessage(
-                          `🚀 Navegando a ${action.toUpperCase()}`
-                        );
-                        setSnackbarOpen(true);
-                      }}
-                    />
+                    <QuickActionsWidget onActionClick={handleActionClick} />
                   </Box>
                 </Fade>
               </Grid>
 
-              {/* === NOTIFICACIONES === */}
               <Grid size={{ xs: 12, lg: 4 }}>
                 <Fade in timeout={1200}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
@@ -507,9 +577,7 @@ export function HomePage() {
                         setNotifications((prev) =>
                           prev.map((n) => ({ ...n, isRead: true }))
                         );
-                        setSnackbarMessage(
-                          '✅ Notificaciones marcadas como leídas'
-                        );
+                        setSnackbarMessage('✅ Notificaciones marcadas como leídas');
                         setSnackbarOpen(true);
                       }}
                       onViewAll={() => navigate('/notifications')}
@@ -522,14 +590,7 @@ export function HomePage() {
               <Grid size={12}>
                 <Fade in timeout={1400}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
-                    <MainModulesWidget
-                      onModuleClick={(moduleId) => {
-                        setSnackbarMessage(
-                          `🚀 Abriendo módulo: ${moduleId.toUpperCase()}`
-                        );
-                        setSnackbarOpen(true);
-                      }}
-                    />
+                    <MainModulesWidget onModuleClick={handleModuleClick} />
                   </Box>
                 </Fade>
               </Grid>
@@ -542,9 +603,7 @@ export function HomePage() {
                       onAddFunds={() => navigate('/wallet/add')}
                       onSend={() => navigate('/wallet/send')}
                       onExchange={() => navigate('/wallet/exchange')}
-                      onViewTransactions={() =>
-                        navigate('/wallet/transactions')
-                      }
+                      onViewTransactions={() => navigate('/wallet/transactions')}
                     />
                   </Box>
                 </Fade>
@@ -578,8 +637,7 @@ export function HomePage() {
                       }}
                     >
                       <AutoAwesomeIcon sx={{ color: getSemanticColor('warning', 'main'), mr: 1 }} />
-                      "El equilibrio Ayni transforma cada interacción en un paso
-                      hacia el bien común"
+                      "El equilibrio Ayni transforma cada interacción en un paso hacia el bien común"
                       <AutoAwesomeIcon sx={{ color: getSemanticColor('warning', 'main'), ml: 1 }} />
                     </Typography>
                   </Box>
@@ -589,56 +647,18 @@ export function HomePage() {
           </Box>
         </Container>
 
-        {/* 🎪 BOTÓN FLOTANTE DE SCROLL OPTIMIZADO */}
-        <Fade in={showScrollTop} timeout={300} appear={false}>
-          <Box>
-            <Fab
-              onClick={handleScrollToTop}
-              sx={{
-                position: 'fixed',
-                bottom: { xs: 20, sm: 32 },
-                right: { xs: 20, sm: 32 },
-                background: `conic-gradient(from 0deg, ${getPrimaryColor(500 as any)}, ${getSemanticColor('info', 'main')}, ${getSemanticColor('success', 'main')}, ${getSemanticColor('warning', 'main')}, ${getPrimaryColor(500 as any)})`,
-                width: 56,
-                height: 56,
-                zIndex: 1000,
-                '&:hover': {
-                  transform: 'scale(1.1)',
-                  boxShadow: `0 12px 40px ${getPrimaryColor(500 as any)}40`,
-                },
-                transition: 'all 0.3s ease',
-              }}
-            >
-              <KeyboardArrowUpIcon
-                sx={{ color: 'white', fontSize: '1.8rem' }}
-              />
-            </Fab>
-          </Box>
-        </Fade>
+        {/* 🎪 BOTÓN FLOTANTE OPTIMIZADO */}
+        <ScrollToTopFab visible={showScrollTop} onClick={handleScrollToTop} />
 
         {/* 🎊 SNACKBAR OPTIMIZADO */}
-        <Snackbar
+        <OptimizedSnackbar
           open={snackbarOpen}
-          autoHideDuration={4000}
+          message={snackbarMessage}
           onClose={() => setSnackbarOpen(false)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        >
-          <Alert
-            onClose={() => setSnackbarOpen(false)}
-            severity="success"
-            sx={{
-              background: getSemanticGradient('success'),
-              color: 'white',
-              '& .MuiAlert-icon': { color: 'white' },
-              fontWeight: 600,
-            }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
+        />
       </Box>
-    </HomePageErrorBoundary>
+    </OptimizedErrorBoundary>
   );
 }
 
-export default HomePage;
+export default HomePageOptimized;

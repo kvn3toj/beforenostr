@@ -1,0 +1,528 @@
+/* 🚀 HOME OPTIMIZED CONSOLIDATED CSS - COOMUNITY SUPERAPP
+   ================================================================
+   Archivo consolidado que reemplaza múltiples imports CSS
+   Optimizado para performance y efectos visuales excepcionales
+   ================================================================ */
+
+/* 🎨 VARIABLES OPTIMIZADAS - Sistema Centralizado */
+:root {
+  /* 🔥 Colores Principales Optimizados */
+  --home-primary: #f97316;        /* Autumn 500 */
+  --home-primary-light: #fed7aa;  /* Autumn 200 */
+  --home-primary-dark: #c2410c;   /* Autumn 700 */
+  
+  /* 🌈 Gradientes Principales */
+  --home-gradient-primary: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  --home-gradient-secondary: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  --home-gradient-success: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  --home-gradient-conic: conic-gradient(from 0deg, #f97316, #16a34a, #0ea5e9, #f59e0b, #f97316);
+  
+  /* ✨ Efectos Glassmorphism Optimizados */
+  --home-glass-light: rgba(255, 255, 255, 0.12);
+  --home-glass-medium: rgba(255, 255, 255, 0.18);
+  --home-glass-strong: rgba(255, 255, 255, 0.25);
+  --home-blur: blur(12px);
+  --home-blur-strong: blur(20px);
+  
+  /* 🎯 Sombras Optimizadas */
+  --home-shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --home-shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --home-shadow-strong: 0 16px 48px rgba(0, 0, 0, 0.16);
+  --home-shadow-glow: 0 0 32px rgba(249, 115, 22, 0.2);
+  
+  /* 📐 Espaciado Sistema 8px */
+  --home-spacing-xs: 4px;
+  --home-spacing-sm: 8px;
+  --home-spacing-md: 16px;
+  --home-spacing-lg: 24px;
+  --home-spacing-xl: 32px;
+  
+  /* 🔄 Timing Optimizado */
+  --home-transition-fast: 0.2s ease;
+  --home-transition-medium: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --home-transition-slow: 0.8s ease-out;
+}
+
+/* ================================================================
+   🎨 CLASES BASE OPTIMIZADAS
+   ================================================================ */
+
+/* 🌌 Container Principal Revolutionary */
+.revolutionary-container {
+  position: relative;
+  width: 100%;
+  background: 
+    radial-gradient(circle at 15% 25%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 85% 75%, rgba(220, 38, 38, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(22, 163, 74, 0.04) 0%, transparent 50%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ✨ Efectos de Partículas Optimizadas */
+.revolutionary-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(249, 115, 22, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(22, 163, 74, 0.02) 1px, transparent 1px),
+    radial-gradient(circle at 40% 60%, rgba(14, 165, 233, 0.02) 1px, transparent 1px);
+  background-size: 180px 180px, 220px 220px, 160px 160px;
+  animation: cosmic-drift 120s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+/* ================================================================
+   🎬 ANIMACIONES OPTIMIZADAS - GPU Accelerated
+   ================================================================ */
+
+@keyframes revolutionary-rotate-continuous {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cosmic-drift {
+  0% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(-20px) translateY(-10px); }
+  50% { transform: translateX(10px) translateY(-20px); }
+  75% { transform: translateX(-10px) translateY(10px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+
+@keyframes shimmer-effect {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { filter: brightness(1) saturate(1); }
+  50% { filter: brightness(1.15) saturate(1.2); }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ================================================================
+   🎯 COMPONENTES OPTIMIZADOS
+   ================================================================ */
+
+/* 🎨 Cards Revolutionarias Optimizadas */
+.home-card-revolutionary {
+  position: relative;
+  background: var(--home-glass-light);
+  backdrop-filter: var(--home-blur);
+  border: 1px solid var(--home-glass-medium);
+  border-radius: 16px;
+  box-shadow: var(--home-shadow-medium);
+  transition: var(--home-transition-medium);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.home-card-revolutionary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--home-gradient-conic);
+  opacity: 0.7;
+}
+
+.home-card-revolutionary:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--home-shadow-strong), var(--home-shadow-glow);
+  border-color: var(--home-glass-strong);
+}
+
+/* 🌟 Hero Cards Especiales */
+.home-card-hero {
+  background: var(--home-glass-medium);
+  backdrop-filter: var(--home-blur-strong);
+  border: 2px solid var(--home-glass-strong);
+  box-shadow: var(--home-shadow-strong), var(--home-shadow-glow);
+  min-height: 320px;
+}
+
+.home-card-hero::before {
+  height: 2px;
+  background: var(--home-gradient-conic);
+  opacity: 0.9;
+}
+
+/* 🔮 Orb Central Optimizado */
+.home-orb-central {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--home-gradient-conic);
+  animation: revolutionary-rotate-continuous 3s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 
+    0 0 40px rgba(249, 115, 22, 0.25),
+    0 0 80px rgba(14, 165, 233, 0.15),
+    inset 0 0 40px rgba(255, 255, 255, 0.1);
+  will-change: transform;
+}
+
+.home-orb-central::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: var(--home-glass-medium);
+  backdrop-filter: var(--home-blur);
+  z-index: 1;
+}
+
+.home-orb-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  font-weight: 700;
+}
+
+/* ⚡ Métricas Optimizadas */
+.home-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--home-spacing-md);
+  margin-top: var(--home-spacing-lg);
+}
+
+.home-metric-card {
+  background: var(--home-glass-light);
+  backdrop-filter: var(--home-blur);
+  border-radius: 12px;
+  padding: var(--home-spacing-md);
+  text-align: center;
+  border: 1px solid var(--home-glass-medium);
+  transition: var(--home-transition-fast);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.home-metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.6s ease;
+}
+
+.home-metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--home-shadow-medium);
+  border-color: var(--home-glass-strong);
+}
+
+.home-metric-card:hover::before {
+  left: 100%;
+}
+
+/* 🌊 Barras de Progreso Optimizadas */
+.home-progress-bar {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: var(--home-glass-light);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: var(--home-spacing-sm) 0;
+}
+
+.home-progress-fill {
+  height: 100%;
+  background: var(--home-gradient-primary);
+  border-radius: 3px;
+  position: relative;
+  animation: glow-pulse 2s ease-in-out infinite alternate;
+  transition: width 0.8s ease-out;
+}
+
+.home-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  animation: shimmer-effect 2s ease-in-out infinite;
+}
+
+/* 🎪 Elementos Flotantes Optimizados */
+.home-floating-elements {
+  position: fixed;
+  bottom: var(--home-spacing-xl);
+  right: var(--home-spacing-xl);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--home-spacing-md);
+}
+
+.home-fab-optimized {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--home-gradient-conic);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--home-shadow-medium);
+  transition: var(--home-transition-medium);
+  animation: float-gentle 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.home-fab-optimized:hover {
+  transform: scale(1.12);
+  box-shadow: var(--home-shadow-strong), var(--home-shadow-glow);
+  animation-play-state: paused;
+}
+
+/* ================================================================
+   📱 RESPONSIVE OPTIMIZADO
+   ================================================================ */
+
+/* 📱 Mobile First - Optimizado */
+@media (max-width: 640px) {
+  .home-orb-central {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .home-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--home-spacing-sm);
+  }
+  
+  .home-floating-elements {
+    bottom: var(--home-spacing-lg);
+    right: var(--home-spacing-lg);
+  }
+  
+  .revolutionary-container::before {
+    background-size: 120px 120px, 140px 140px, 100px 100px;
+  }
+}
+
+/* 💻 Tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .home-orb-central {
+    width: 170px;
+    height: 170px;
+  }
+  
+  .home-metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 🖥️ Desktop */
+@media (min-width: 1025px) {
+  .home-card-revolutionary:hover {
+    transform: translateY(-8px) scale(1.03);
+  }
+  
+  .home-metrics-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ================================================================
+   🌙 MODO OSCURO Y ACCESIBILIDAD
+   ================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --home-glass-light: rgba(255, 255, 255, 0.06);
+    --home-glass-medium: rgba(255, 255, 255, 0.12);
+    --home-glass-strong: rgba(255, 255, 255, 0.18);
+  }
+  
+  .revolutionary-container {
+    background: 
+      radial-gradient(circle at 15% 25%, rgba(249, 115, 22, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 85% 75%, rgba(220, 38, 38, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(22, 163, 74, 0.06) 0%, transparent 50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-orb-central,
+  .revolutionary-container::before,
+  .home-fab-optimized {
+    animation: none;
+  }
+  
+  .home-progress-fill,
+  .home-card-revolutionary {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .home-card-revolutionary {
+    border-width: 2px;
+    border-color: var(--home-primary);
+  }
+  
+  .home-orb-central {
+    box-shadow: 0 0 0 3px var(--home-primary);
+  }
+}
+
+/* ================================================================
+   🎯 UTILIDADES ESPECÍFICAS
+   ================================================================ */
+
+/* 🔄 Elementos Rotativos */
+.home-rotate-slow {
+  animation: revolutionary-rotate-continuous 6s linear infinite;
+}
+
+.home-rotate-medium {
+  animation: revolutionary-rotate-continuous 3s linear infinite;
+}
+
+.home-rotate-fast {
+  animation: revolutionary-rotate-continuous 1.5s linear infinite;
+}
+
+/* ✨ Efectos Especiales */
+.home-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.home-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer-effect 2s ease-in-out infinite;
+}
+
+.home-glow {
+  animation: glow-pulse 2s ease-in-out infinite alternate;
+}
+
+.home-float {
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+/* 🎨 Estados Interactivos */
+.home-interactive {
+  cursor: pointer;
+  transition: var(--home-transition-fast);
+}
+
+.home-interactive:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: var(--home-shadow-medium);
+}
+
+.home-interactive:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: 0.1s;
+}
+
+/* 📊 Texto Gradiente */
+.home-text-gradient {
+  background: var(--home-gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+/* ================================================================
+   🚀 PERFORMANCE OPTIMIZATIONS
+   ================================================================ */
+
+/* GPU Acceleration para elementos animados */
+.home-orb-central,
+.home-card-revolutionary,
+.home-fab-optimized,
+.revolutionary-container::before {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimización de repaint */
+.home-card-revolutionary,
+.home-metric-card {
+  contain: layout style paint;
+}
+
+/* Lazy loading para elementos no críticos */
+.home-floating-elements {
+  contain: strict;
+}
+
+/* ================================================================
+   🎉 EFECTOS ESPECIALES FINALES
+   ================================================================ */
+
+/* 🌟 Partículas de Éxito */
+.home-success-particles {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--home-gradient-success);
+  border-radius: 50%;
+  animation: 
+    float-gentle 2s ease-in-out infinite,
+    glow-pulse 1.5s ease-in-out infinite alternate;
+}
+
+/* 💫 Estrellas Decorativas */
+.home-star-decoration {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #fbbf24, #f59e0b);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: 
+    revolutionary-rotate-continuous 4s linear infinite,
+    glow-pulse 2s ease-in-out infinite alternate;
+}
+
+/* 🌊 Ondas Energéticas */
+.home-energy-wave {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: var(--home-gradient-primary);
+  opacity: 0.6;
+  animation: shimmer-effect 3s ease-in-out infinite;
+}
+
+/* ================================================================
+   FIN DEL ARCHIVO CSS CONSOLIDADO OPTIMIZADO
+   ================================================================ */
