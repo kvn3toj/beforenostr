@@ -566,11 +566,20 @@ const Login: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      {typeof window !== 'undefined' &&
-        import.meta.env?.DEV === true &&
-        import.meta.env?.MODE === 'development' &&
-        process.env.NODE_ENV !== 'test' &&
-        !process.env.CI && <NetworkDebugger />}
+      {(() => {
+        try {
+          return (
+            typeof window !== 'undefined' &&
+            import.meta.env?.DEV === true &&
+            import.meta.env?.MODE === 'development' &&
+            (typeof process === 'undefined' ||
+              process.env?.NODE_ENV !== 'test') &&
+            (typeof process === 'undefined' || !process.env?.CI)
+          );
+        } catch {
+          return false;
+        }
+      })() && <NetworkDebugger />}
     </Container>
   );
 };
