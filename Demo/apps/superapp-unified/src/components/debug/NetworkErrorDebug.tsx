@@ -44,6 +44,23 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
   const runDiagnostics = async () => {
     setDiagnosticsRunning(true);
     try {
+      // Don't make network requests in CI environments
+      if (isCIEnvironment) {
+        const mockResult = {
+          success: true,
+          diagnostics: [
+            {
+              step: 'CI Environment Detected',
+              success: true,
+              details: 'Diagnostics disabled in CI',
+            },
+          ],
+        };
+        setDiagnosticsResult(mockResult);
+        setDiagnosticReport('Diagnostics disabled in CI environment');
+        return;
+      }
+
       // Since authAPIDebug is not available, run basic diagnostics
       const baseURL =
         import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
