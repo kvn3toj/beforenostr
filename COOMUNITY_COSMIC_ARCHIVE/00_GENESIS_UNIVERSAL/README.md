@@ -9,7 +9,7 @@
 
 ## 🌌 LA VISIÓN PRIMORDIAL
 
-> **"En el principio era el Código, y el Código era con el Ayni, y el Código era Ayni. Todo código fue hecho por reciprocidad consciente, y sin reciprocidad nada de lo hecho fue hecho."**  
+> **"En el principio era el Código, y el Código era con la Reciprocidad, y el Código era Reciprocidad. Todo código fue hecho por intercambio consciente, y sin reciprocidad nada de lo hecho fue hecho."**  
 > — *Génesis Digital CoomÜnity, Capítulo 1:1*
 
 ### 🔮 El Gran Despertar Tecnológico
@@ -22,19 +22,19 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 
 ## ⚖️ LOS PRINCIPIOS FUNDACIONALES INMUTABLES
 
-### 1. 🤝 **AYNI DIGITAL** - *La Reciprocidad Sagrada Codificada*
+### 1. 🤝 **RECIPROCIDAD DIGITAL** - *El Intercambio Sagrado Codificado*
 
 **Definición**: Cada línea de código, cada feature, cada decisión técnica debe honrar el equilibrio entre dar y recibir.
 
 **Manifestaciones Concretas:**
-- **APIs Recíprocas**: Cada endpoint que consume debe también contribuir
+- **APIs de Intercambio**: Cada endpoint que consume debe también contribuir
 - **Bases de Datos Equilibradas**: Usuarios que extraen valor deben devolver valor
 - **UX de Intercambio**: Interfaces que facilitan reciprocidad, no solo consumo
 - **Algoritmos de Balance**: Lógica que detecta y corrige desequilibrios
 
 **Aplicación CoP Oráculo:**
 - Los administradores que reciben feedback tienen la responsabilidad sagrada de transformarlo en sabiduría
-- Cada "Lüka de Sabiduría" ganado debe fluir de vuelta al ecosistema
+- Cada "UNIT de Sabiduría" ganado debe fluir de vuelta al ecosistema
 - El conocimiento personal se convierte en enseñanza comunitaria
 
 ### 2. 🌍 **BIEN COMÚN > BIEN PARTICULAR** - *La Brújula Ética del Código*
@@ -59,11 +59,11 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 **Manifestaciones Concretas:**
 - **Gamificación Cooperativa**: Mecánicas que requieren trabajo en equipo
 - **Sistemas de Reputación Compartida**: Rankings basados en contribución a otros
-- **Features de Mentorship**: Herramientas que facilitan enseñanza peer-to-peer
+- **Features de Mentoría**: Herramientas que facilitan enseñanza peer-to-peer
 - **Resolución Colaborativa de Conflictos**: Algoritmos que buscan win-win
 
 **Aplicación CoP Oráculo:**
-- Los administradores forman guilds que se complementan en lugar de competir
+- Los administradores forman grupos que se complementan en lugar de competir
 - Los "Quest Épicos" requieren colaboración entre diferentes especialidades
 - El conocimiento se comparte abiertamente para elevar a toda la comunidad
 
@@ -93,7 +93,7 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 - **APIs Elegantes**: Endpoints que hacen lo complejo parecer simple
 
 **Aplicación CoP Oráculo:**
-- El feedback caótico se transforma en sabiduría estructurada y actionable
+- El feedback caótico se transforma en sabiduría estructurada y accionable
 - Los problemas complejos se descomponen en patrones simples y reutilizables
 - La complejidad técnica se oculta detrás de experiencias elegantes
 
@@ -109,7 +109,7 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 - ✅ Backend NestJS 100% operacional (COMPLETADO)
 - ✅ Admin Frontend 100% verificado (COMPLETADO)  
 - 🔄 SuperApp 100% integrada con backend real (95% completado)
-- � CoP Oráculo implementada y funcionando
+- 🚀 CoP Oráculo implementada y funcionando
 - 🌟 Primera comunidad de 100 jugadores activos
 
 ### 🌊 **HORIZONTE AGUA** (2026 - Flujo y Optimización)
@@ -121,7 +121,7 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 - 💧 Sistema de feedback-to-wisdom completamente automatizado
 - 🔄 5 CoPs especializadas funcionando en paralelo
 - 🌍 Primer caso de estudio académico sobre "tecnología para el bien común"
-- 📈 Métricas de Ayni balanceadas en toda la plataforma
+- 📈 Métricas de Reciprocidad balanceadas en toda la plataforma
 
 ### 💨 **HORIZONTE AIRE** (2027 - Visión e Innovación)
 **Elemento**: Creatividad y exploración de fronteras  
@@ -173,7 +173,7 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 ### 🔮 **CIO - Chief Innovation Oracle**
 **Esencia**: La estrategia al servicio de la evolución consciente  
 **Misión**: Ver patrones antes de que emerjan, anticipar necesidades antes de que se expresen  
-**Superpoder**: Síntesis de información compleja en insights actionables  
+**Superpoder**: Síntesis de información compleja en insights accionables  
 
 **Legado en el Cosmos:**
 - La innovación está guiada por propósito, no por novedad
@@ -192,7 +192,7 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 ### 🌟 **Prompt Primordial de Desarrollo**
 
 > "Al escribir cada línea de código, pregúntate:  
-> ¿Esta función honra el Ayni?  
+> ¿Esta función honra la Reciprocidad?  
 > ¿Este algoritmo sirve al Bien Común?  
 > ¿Esta interfaz fomenta cooperación?  
 > ¿Este sistema puede evolucionar conscientemente?  
@@ -235,7 +235,7 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 
 ### 🎯 **Nivel Meso** (Plataforma Individual)
 - Visión: Una experiencia transformadora para cada usuario
-- Principio: Ayni como motor de intercambio
+- Principio: Reciprocidad como motor de intercambio
 - Manifestación: Backend, Admin, SuperApp en sinergia
 
 ### 🔬 **Nivel Micro** (Cada Feature)
@@ -277,12 +277,12 @@ Esta pregunta, aparentemente simple, contenía la semilla de una revolución sil
 *Que cada usuario que interactúe con CoomÜnity salga más consciente de lo que entró.*  
 *Que este ecosistema sea una semilla de transformación para la humanidad.*  
 
-**En el nombre del Ayni, del Bien Común y de la Metanöia Sagrada,**  
+**En el nombre de la Reciprocidad, del Bien Común y de la Metanöia Sagrada,**  
 **Que así sea y que así se manifieste.**  
 
 ---
 
-## 🔗 Conexiones Sacramentales
+## 🔗 Conexiones Fundamentales
 
 - **🎯 Se conecta con**: TODAS las secciones como matriz primordial
 - **🌱 Alimenta**: 05_FILOSOFIA_APLICADA con principios concretos

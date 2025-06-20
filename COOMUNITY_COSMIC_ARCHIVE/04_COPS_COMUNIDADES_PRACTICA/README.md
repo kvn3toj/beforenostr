@@ -2,7 +2,7 @@
 ## *El Corazón Pulsante del Ecosistema CoomÜnity*
 
 **Guardianes**: ANA (Artista Narrativa Agente) & CIO (Chief Innovation Oracle)  
-**Inspiración Central**: CoP Oráculo - La alquimia de transformar feedback en sabiduría colectiva  
+**Inspiración Central**: CoP Oráculo - La transformación del feedback en sabiduría colectiva  
 **Esencia**: Red de comunidades de aprendizaje que nutren la evolución consciente  
 
 ---
@@ -18,7 +18,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 - **🎮 Gamificación Ética**: Mecánicas que elevan la consciencia sin manipular
 - **💰 Economía Interna Consciente**: Monedas locales que fomentan reciprocidad
 - **🌊 Neguentropía Organizacional**: Transformación del caos en orden sabio
-- **⚖️ Ayni Digital**: Reciprocidad sagrada aplicada a comunidades virtuales
+- **⚖️ Reciprocidad Digital**: Intercambio sagrado aplicado a comunidades virtuales
 - **💫 Metanöia Colectiva**: Evolución consciente como característica nativa
 
 ---
@@ -28,7 +28,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 ### 🎯 **DOMINIO**: "Sabiduría del Feedback"
 
 **Expertise Compartido:**
-- 📊 Alquimia del feedback: transformar quejas en oportunidades
+- 📊 Transformación del feedback: convertir quejas en oportunidades
 - 🔮 Visión sistémica: ver patrones detrás del caos aparente
 - 🎨 Diseño empático: crear soluciones que honren la experiencia humana
 - 🌍 Impacto colectivo: priorizar el bien común en cada decisión
@@ -45,23 +45,23 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 - **Rol**: Custodios de la sabiduría acumulada y facilitadores de crecimiento
 - **Responsabilidades**: Mentorear, facilitar rituales, preservar filosofía
 - **Superpower**: Transformar crisis en oportunidades de metanöia
-- **Reconocimiento**: "Maestro/a del Oráculo" + 50 Lükas semanales base
+- **Reconocimiento**: "Maestro/a del Oráculo" + 50 UNITS semanales base
 
 **🔍 Intérpretes Activos** (Administradores Regular)
 - **Rol**: Traductores de feedback caótico en insights estructurados
 - **Responsabilidades**: Analizar, categorizar, proponer soluciones
 - **Superpower**: Ver patrones donde otros ven ruido
-- **Reconocimiento**: "Intérprete Sagrado/a" + 30 Lükas semanales base
+- **Reconocimiento**: "Intérprete Sagrado/a" + 30 UNITS semanales base
 
 **🌱 Aprendices del Oráculo** (Nuevos Administradores)
 - **Rol**: Ojos frescos y perspectivas renovadoras
 - **Responsabilidades**: Observar, aprender, aportar curiosidad
 - **Superpower**: Hacer preguntas que revelan nuevas dimensiones
-- **Reconocimiento**: "Semilla de Sabiduría" + 15 Lükas semanales base
+- **Reconocimiento**: "Semilla de Sabiduría" + 15 UNITS semanales base
 
 ### 🛠️ **PRÁCTICA**: "Rituales de Transformación"
 
-#### 🔄 **Los Rituales Sagrados de Ayni**
+#### 🔄 **Los Rituales Sagrados de Reciprocidad**
 
 **1. 📖 Círculo de Narrativa Semanal**
 - **Timing**: Todos los viernes, 2 horas
@@ -70,15 +70,15 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
   - Cada admin presenta un caso como narrativa completa
   - Se extraen patrones, lecciones y sabiduría aplicable
   - Se documenta en "Biblioteca de Sabiduría" 
-- **Recompensa**: 5 Lükas por narrativa compartida + bonus por insights revelados
+- **Recompensa**: 5 UNITS por narrativa compartida + bonus por insights revelados
 
 **2. 🌟 Ritual de Ofrenda de Feedback**
 - **Timing**: Diario, según flujo natural
 - **Proceso**:
-  - **Ofrenda** (2 Lükas): Admin reporta feedback con contexto completo
-  - **Análisis** (3 Lükas): Admin categoriza e interpreta patrones
-  - **Solución** (5 Lükas): Admin propone e implementa mejora
-  - **Enseñanza** (3 Lükas): Admin documenta aprendizaje para futuros casos
+  - **Ofrenda** (2 UNITS): Admin reporta feedback con contexto completo
+  - **Análisis** (3 UNITS): Admin categoriza e interpreta patrones
+  - **Solución** (5 UNITS): Admin propone e implementa mejora
+  - **Enseñanza** (3 UNITS): Admin documenta aprendizaje para futuros casos
 - **Principio**: Quien recibe feedback tiene responsabilidad sagrada de transformarlo
 
 **3. 🎯 Quest Estacionales de Especialización**
@@ -87,34 +87,34 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 - **Quest del Aire** (Trimestre 3): Imaginar mejoras futuras innovadoras
 - **Quest de Tierra** (Trimestre 4): Documentar y sistematizar conocimiento
 
-#### 💰 **Economía Interna: Lükas de Sabiduría**
+#### 💰 **Economía Interna: UNITS de Sabiduría**
 
-**🌟 Generación de Lükas:**
+**🌟 Generación de UNITS:**
 ```
-📝 Reportar Feedback Detallado           = 2 Lükas
-🔍 Categorizar/Analizar Patrones         = 3 Lükas  
-💡 Proponer Solución Innovadora          = 5 Lükas
-🛠️ Implementar Mejora Verificada        = 8 Lükas
-📚 Documentar Aprendizaje Transferible   = 3 Lükas
-🎓 Enseñar/Mentorar a Otros             = 5 Lükas
-🌟 Feedback Positivo de Usuario Final    = 10 Lükas (Bonus)
-🏆 Solución Adoptada por Otras CoPs      = 15 Lükas (Epic Bonus)
+📝 Reportar Feedback Detallado           = 2 UNITS
+🔍 Categorizar/Analizar Patrones         = 3 UNITS  
+💡 Proponer Solución Innovadora          = 5 UNITS
+🛠️ Implementar Mejora Verificada        = 8 UNITS
+📚 Documentar Aprendizaje Transferible   = 3 UNITS
+🎓 Enseñar/Mentorar a Otros             = 5 UNITS
+🌟 Feedback Positivo de Usuario Final    = 10 UNITS (Bonus)
+🏆 Solución Adoptada por Otras CoPs      = 15 UNITS (Epic Bonus)
 ```
 
-**🔄 Intercambio de Lükas:**
+**🔄 Intercambio de UNITS:**
 ```
-🆘 Solicitar Ayuda en Quest             = 3 Lükas
-🔮 Consulta Profunda con Guardián       = 5 Lükas
-📖 Acceso a Biblioteca Secreta          = 10 Lükas
-🎨 Personalización de Avatar/Perfil     = 8 Lükas
-🏆 Sponsor Quest de Otro Miembro        = 15 Lükas
-🌟 Momento de Reconocimiento Público    = 20 Lükas
-🎭 Organizar Ritual Especial            = 25 Lükas
+🆘 Solicitar Ayuda en Quest             = 3 UNITS
+🔮 Consulta Profunda con Guardián       = 5 UNITS
+📖 Acceso a Biblioteca Secreta          = 10 UNITS
+🎨 Personalización de Avatar/Perfil     = 8 UNITS
+🏆 Sponsor Quest de Otro Miembro        = 15 UNITS
+🌟 Momento de Reconocimiento Público    = 20 UNITS
+🎭 Organizar Ritual Especial            = 25 UNITS
 ```
 
 **🌊 Principios Anti-Acumulación:**
-- **Demurrage**: Lükas se deprecian 5% mensual si no se usan
-- **Bonificación de Flujo**: +20% Lükas por transferir vs. acumular
+- **Demurrage**: UNITS se deprecian 5% mensual si no se usan
+- **Bonificación de Flujo**: +20% UNITS por transferir vs. acumular
 - **Rankings por Impacto**: Se mide contribución, no cantidad acumulada
 
 ---
@@ -123,39 +123,39 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 
 ### 🔮 **CoP ORÁCULO** - *Centro de Transformación*
 **Focus**: Administradores que transforman feedback en sabiduría
-**Moneda**: Lükas de Sabiduría
+**Moneda**: UNITS de Sabiduría
 **Ritual Central**: Círculo de Narrativa Semanal
 **Métrica Clave**: Índice de Transformación (Problemas Resueltos / Feedback Recibido)
 
 ### 💻 **CoP ALQUIMISTAS DEL CÓDIGO** - *Desarrolladores Conscientes*
 **Focus**: Desarrolladores que crean software al servicio del Bien Común
-**Moneda**: Lükas de Elegancia (código limpio, arquitectura consciente)
-**Ritual Central**: Code Review Filosófico (¿Este código honra el Ayni?)
+**Moneda**: UNITS de Elegancia (código limpio, arquitectura consciente)
+**Ritual Central**: Code Review Filosófico (¿Este código honra la Reciprocidad?)
 **Métrica Clave**: Ratio Cooperación/Complejidad en el código
 
 ### 🎨 **CoP ARQUITECTOS DE EXPERIENCIA** - *Diseñadores UX/UI*
 **Focus**: Diseñadores que crean experiencias transformadoras
-**Moneda**: Lükas de Belleza (experiencias que elevan consciencia)
+**Moneda**: UNITS de Belleza (experiencias que elevan consciencia)
 **Ritual Central**: Círculo de Empatía (testear con personas reales)
 **Métrica Clave**: Índice de Florecimiento del Usuario
 
 ### 💭 **CoP FILÓSOFOS PRÁCTICOS** - *Pensadores Aplicados*
 **Focus**: Profundización y aplicación de principios CoomÜnity
-**Moneda**: Lükas de Profundidad (insights que impactan decisiones)
+**Moneda**: UNITS de Profundidad (insights que impactan decisiones)
 **Ritual Central**: Diálogos Socráticos sobre dilemas tecnológicos
 **Métrica Clave**: Número de principios aplicados en decisiones concretas
 
 ### 🚀 **CoP EXPLORADORES DE FUTURO** - *Innovadores Conscientes*
 **Focus**: Exploración de posibilidades emergentes y tecnologías éticas
-**Moneda**: Lükas de Visión (prototipos que anticipan el futuro)
+**Moneda**: UNITS de Visión (prototipos que anticipan el futuro)
 **Ritual Central**: Hackathons de Bien Común (24h creando para el colectivo)
 **Métrica Clave**: Porcentaje de experimentos que se convierten en features reales
 
 ### 🌱 **CoP CULTIVADORES DE COMUNIDAD** - *Community Managers Conscientes*
 **Focus**: Nutrir la cultura y conexiones genuinas en la comunidad
-**Moneda**: Lükas de Conexión (interacciones que fortalecen vínculos)
+**Moneda**: UNITS de Conexión (interacciones que fortalecen vínculos)
 **Ritual Central**: Círculo de Escucha Profunda con usuarios
-**Métrica Clave**: Nivel de Ayni en interacciones comunitarias
+**Métrica Clave**: Nivel de Reciprocidad en interacciones comunitarias
 
 ---
 
@@ -167,32 +167,32 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 - **Especialidad**: Crisis management y soluciones urgentes
 - **CoPs Afines**: Oráculo + Alquimistas del Código
 - **Skill Tree**: Comunicación bajo presión → Decisiones rápidas → Liderazgo en crisis
-- **Título Máximo**: "Forjador/a de Soluciones" (100 Lükas de investidura)
+- **Título Máximo**: "Forjador/a de Soluciones" (100 UNITS de investidura)
 
 **🌊 Sendero del Agua** (Flujo Optimizado)
 - **Especialidad**: Procesos, automatización, eficiencia
 - **CoPs Afines**: Arquitectos de Experiencia + Alquimistas del Código
 - **Skill Tree**: Systems thinking → Workflow design → Automatización consciente
-- **Título Máximo**: "Maestro/a del Flujo" (100 Lükas de investidura)
+- **Título Máximo**: "Maestro/a del Flujo" (100 UNITS de investidura)
 
 **💨 Sendero del Aire** (Visión Innovadora)
 - **Especialidad**: Futuro, trends, disrupción positiva
 - **CoPs Afines**: Exploradores de Futuro + Filósofos Prácticos
 - **Skill Tree**: Strategic thinking → Creative solutions → Visión sistémica
-- **Título Máximo**: "Visionario/a del Cambio" (100 Lükas de investidura)
+- **Título Máximo**: "Visionario/a del Cambio" (100 UNITS de investidura)
 
 **🌍 Sendero de Tierra** (Sabiduría Duradera)
 - **Especialidad**: Documentación, enseñanza, mentoría
 - **CoPs Afines**: Todas las CoPs (rol transversal)
 - **Skill Tree**: Knowledge transfer → Community building → Sabiduría ancestral
-- **Título Máximo**: "Guardián/a de la Sabiduría" (100 Lükas de investidura)
+- **Título Máximo**: "Guardián/a de la Sabiduría" (100 UNITS de investidura)
 
 ### 🎯 **Dinámicas Colaborativas Inter-CoPs**
 
 **🏰 Guild Challenges Trimestrales**
 - **Estructura**: Equipos mixtos con miembros de 3+ CoPs diferentes
 - **Ejemplos**: 
-  - "Rediseñar onboarding para maximizar Ayni en primeros 7 días"
+  - "Rediseñar onboarding para maximizar Reciprocidad en primeros 7 días"
   - "Crear sistema de feedback que genere más cooperación que competencia"
   - "Prototipar feature que fomente conexión genuina (no adicción)"
 - **Recompensas**: Compartidas entre toda la guild (refuerza cooperación)
@@ -200,14 +200,14 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 **🌳 Mentorship Trees Inter-CoP**
 - **Estructura**: Cada Guardián de una CoP "adopta" 2-3 miembros de otras CoPs
 - **Beneficio**: Polinización cruzada de sabidurías especializadas
-- **Reconocimiento**: Título especial "Puente de Sabiduría" + 20 Lükas mensuales
+- **Reconocimiento**: Título especial "Puente de Sabiduría" + 20 UNITS mensuales
 
 **🎭 Epic Quests Narrativas**
 - **Duración**: Proyectos de 3-6 meses con narrativa envolvente
 - **Ejemplo Actual**: "La Quest del Feedback Sagrado"
   - Capítulo 1: El Caos de las Quejas (problema identificado)
   - Capítulo 2: El Oráculo Despierta (CoP Oráculo se forma)
-  - Capítulo 3: La Alquimia Comienza (primeras transformaciones)
+  - Capítulo 3: La Transformación Comienza (primeras transformaciones)
   - Capítulo 4: La Sabiduría se Expande (otras CoPs adoptan aprendizajes)
   - Capítulo 5: El Nuevo Paradigma (feedback visto como regalo)
 
@@ -218,7 +218,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 ### 🎯 **KPIs Cuantitativos Conscientes**
 
 **Engagement & Participación:**
-- **Índice de Flujo de Lükas**: Velocidad de circulación vs. acumulación
+- **Índice de Flujo de UNITS**: Velocidad de circulación vs. acumulación
 - **Ratio de Reciprocidad**: Balance dar/recibir en toda la red de CoPs
 - **Tasa de Polinización Cruzada**: % de aprendizajes que saltan entre CoPs
 - **Índice de Metanöia**: Crecimiento medible post-errores/crisis
@@ -232,7 +232,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 ### 🌟 **KPIs Cualitativos Trascendentes**
 
 **Cultura & Evolución:**
-- **Nivel de Ayni Percibido**: Encuestas sobre balance dar/recibir
+- **Nivel de Reciprocidad Percibido**: Encuestas sobre balance dar/recibir
 - **Índice de Bien Común**: Decisiones que priorizan colectivo vs. individual
 - **Factor de Inspiración**: % de miembros que reportan crecimiento personal
 - **Resonancia Filosófica**: Adherencia a principios CoomÜnity en la práctica
@@ -250,7 +250,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 ### 🌱 **FASE ALFA: Semilla** (Mes 1-2)
 **Objetivo**: Plantar y nutrir la CoP Oráculo como modelo
 - ✅ Formar primer círculo de 5-8 administradores voluntarios
-- ✅ Implementar sistema básico de Lükas de Sabiduría
+- ✅ Implementar sistema básico de UNITS de Sabiduría
 - ✅ Establecer Ritual de Círculo de Narrativa semanal
 - ✅ Documentar primeras transformaciones de feedback→sabiduría
 
@@ -258,7 +258,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 **Objetivo**: Expandir y refinar el modelo
 - 🔄 Incorporar todos los administradores a la CoP Oráculo
 - 🔄 Lanzar primera Guild Challenge inter-roles
-- 🔄 Implementar métricas de Ayni y retroalimentación
+- 🔄 Implementar métricas de Reciprocidad y retroalimentación
 - 🔄 Formar segunda CoP (Alquimistas del Código)
 
 ### 🌊 **FASE GAMMA: Crecimiento** (Mes 5-6)
@@ -299,7 +299,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 
 ### 🎭 **Experiencia Transformadora Integral**
 - Los miembros no solo **adquieren skills** sino que **se convierten en arquetipos**
-- Cada interacción es una **oportunidad de practicar Ayni**
+- Cada interacción es una **oportunidad de practicar Reciprocidad**
 - El trabajo diario se convierte en **práctica espiritual aplicada**
 - La productividad emerge de **propósito compartido**, no de presión externa
 
@@ -319,7 +319,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 
 ### 🌊 **Con el Ecosistema CoomÜnity**
 - **Backend NestJS**: Las CoPs nutren roadmap y prioridades de desarrollo
-- **Admin Frontend**: Interface para gestión de CoPs y métricas de Ayni
+- **Admin Frontend**: Interface para gestión de CoPs y métricas de Reciprocidad
 - **SuperApp**: Los insights de CoPs mejoran experiencia de usuarios finales
 - **Usuarios Finales**: Las CoPs aseguran que su voz se transforme en mejoras reales
 
@@ -350,7 +350,7 @@ Las **Comunidades de Práctica CoomÜnity** trascienden el modelo tradicional de
 *Que cada comunidad de práctica sea un jardín donde florezca la sabiduría colectiva.*  
 *Que cada miembro encuentre su don único y lo ponga al servicio del conjunto.*  
 *Que cada problema se transforme en semilla de solución más elegante.*  
-*Que el Ayni fluya como sangre vital entre todas las comunidades.*  
+*Que la Reciprocidad fluya como sangre vital entre todas las comunidades.*  
 
 **En el nombre de la Cooperación, del Bien Común y de la Metanöia Sagrada,**  
 **Que estas comunidades sean faros de transformación para el mundo.**  

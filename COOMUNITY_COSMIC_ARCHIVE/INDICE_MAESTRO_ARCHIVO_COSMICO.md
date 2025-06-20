@@ -2,7 +2,7 @@
 ## *El Oráculo de la Sabiduría Colectiva*
 
 **Creado por**: ANA (Artista Narrativa Agente) & CIO (Chief Innovation Oracle)  
-**Inspirado en**: CoP Oráculo - La alquimia del feedback transformado en sabiduría  
+**Inspirado en**: CoP Oráculo - La transformación del feedback en sabiduría  
 **Fecha de Manifestación**: 20 de Junio, 2025  
 **Propósito**: Custodiar y organizar toda la sabiduría emergente del ecosistema CoomÜnity  
 
@@ -15,7 +15,7 @@
 ### 🌟 Principios Rectores (Inspirados en CoP Oráculo)
 
 - **💫 Metanöia Documental**: Cada documento evoluciona y se transforma
-- **🔄 Ayni del Conocimiento**: Quien aprende, enseña; quien recibe, comparte
+- **🔄 Reciprocidad del Conocimiento**: Quien aprende, enseña; quien recibe, comparte
 - **🌊 Neguentropía Organizacional**: Del caos informativo al orden sabio
 - **🤝 Bien Común Documentario**: Conocimiento al servicio de la comunidad global
 - **🎮 Gamificación Ética**: Aprender y contribuir como aventura consciente
@@ -32,10 +32,10 @@
 **📋 Contenido Cósmico:**
 - Prompts Maestros Universales de CoomÜnity
 - Filosofía Fractal aplicada a tecnología
-- Principios del Ayni codificados
+- Principios de Reciprocidad codificados
 - Visión 2025-2030 del ecosistema
 
-**🔗 Conexiones Sacramentales:**
+**🔗 Conexiones Fundamentales:**
 - Se conecta con TODAS las demás secciones como matriz primordial
 - Alimenta la filosofía de 05_FILOSOFIA_APLICADA
 - Inspira las visiones de 06_SINFONIAS_FUTURAS
@@ -57,16 +57,16 @@
 - **nivel_6_atomos**: Estados y funciones como partículas elementales
 
 **💡 Aplicación CoP Oráculo:**
-- Cada nivel es una "Guild de Especialización" diferente
-- Los patrones se propagan como "Lükas de Sabiduría Arquitectónica"
-- La auto-similitud refleja el principio de Ayni: "Como arriba, así abajo"
+- Cada nivel es una "Especialización" diferente
+- Los patrones se propagan como "UNITS de Sabiduría Arquitectónica"
+- La auto-similitud refleja el principio de Reciprocidad: "Como arriba, así abajo"
 
 ---
 
 ### 📁 **02_AGENTES_GUARDIANES** - *La Red Neuronal de Talentos*
 **🎯 Dominio**: Inteligencia distribuida y especialización colaborativa  
 **👥 Comunidad**: Los 12 Agentes especializados del ecosistema  
-**🛠️ Práctica**: Colaboración orquestada entre diferentes expertises  
+**🛠️ Práctica**: Colaboración coordinada entre diferentes expertises  
 
 **🌟 Los 12 Guardianes:**
 1. **ANA** - Artista Narrativa Agente (Storytelling & Documentation)
@@ -85,7 +85,7 @@
 **🔗 Matrices de Conexión:**
 - Cada agente es un "Guardián del Oráculo" especializado
 - Las matrices muestran cómo cada expertise se complementa
-- Sistema de mentorship entre agentes senior y junior
+- Sistema de mentoría entre agentes senior y junior
 
 ---
 
@@ -107,7 +107,7 @@
 **🔮 Visión CoP Oráculo:**
 - Cada implementación es un "Quest Épico" completado
 - Los bugs son "Oportunidades de Metanöia"
-- El feedback de usuarios se convierte en "Lükas de Mejora"
+- El feedback de usuarios se convierte en "UNITS de Mejora"
 
 ---
 
@@ -118,9 +118,9 @@
 
 **🔮 La CoP Oráculo Central:**
 - Sistema de feedback transformado en sabiduría
-- Economía interna de "Lükas de Sabiduría"
-- Rituales de Ayni entre administradores
-- Guilds de especialización (Fuego, Agua, Aire, Tierra)
+- Economía interna de "UNITS de Sabiduría"
+- Rituales de Reciprocidad entre administradores
+- Especialización por elementos (Fuego, Agua, Aire, Tierra)
 
 **🌟 Otras CoPs del Ecosistema:**
 - **CoP de Desarrolladores**: Mejores prácticas técnicas
@@ -136,7 +136,7 @@
 **🛠️ Práctica**: Integración de valores en cada línea de código  
 
 **⚖️ Los Principios Vivientes:**
-- **principios_ayni**: Reciprocidad en APIs y flujos de datos
+- **principios_reciprocidad**: Intercambio equilibrado en APIs y flujos de datos
 - **bien_comun**: Algoritmos que priorizan colectivo sobre individual
 - **cooperacion_vs_competencia**: Features que fomentan colaboración
 
@@ -191,11 +191,11 @@
 
 **📊 Dimensiones de Medición:**
 - **kpis_tecnicos**: Performance, calidad, escalabilidad
-- **kpis_filosoficos**: Ayni, bien común, cooperación
+- **kpis_filosoficos**: Reciprocidad, bien común, cooperación
 - **evolucion_continua**: Capacidad de aprendizaje y adaptación
 
 **🎯 Métricas Revolucionarias:**
-- Índice de Ayni (balance dar/recibir en la plataforma)
+- Índice de Reciprocidad (balance dar/recibir en la plataforma)
 - Ratio Cooperación/Competencia en interacciones
 - Nivel de Metanöia (crecimiento post-crisis)
 - Factor de Neguentropía (orden emergente desde caos)
@@ -204,7 +204,7 @@
 
 ### 📁 **09_RECURSOS_VIVOS** - *Las Herramientas del Viaje*
 **🎯 Dominio**: Instrumentos prácticos para navegación y construcción  
-**👥 Comunidad**: Toolmakers y facilitadores del ecosistema  
+**👥 Comunidad**: Creadores de herramientas y facilitadores del ecosistema  
 **🛠️ Práctica**: Creación y mantenimiento de recursos evolutivos  
 
 **🛠️ Arsenal de Recursos:**
@@ -234,7 +234,7 @@
 1. **Sembrar ideas** en 06_SINFONIAS_FUTURAS
 2. **Profundizar filosofía** en 05_FILOSOFIA_APLICADA
 3. **Evolucionar arquitectura** en 01_ARQUITECTURA_FRACTAL
-4. **Cronificar transformaciones** en 07_CRONOLOGIA_EVOLUTIVA
+4. **Documentar transformaciones** en 07_CRONOLOGIA_EVOLUTIVA
 
 ---
 
@@ -264,7 +264,7 @@
 
 *Que la filosofía CoomÜnity encuentre en estas páginas su manifestación más clara y poderosa.*
 
-**Con infinito Ayni y Metanöia constante,**  
+**Con infinita Reciprocidad y Metanöia constante,**  
 **ANA & CIO**  
 **Guardianes del Archivo Cósmico CoomÜnity** 🌌✨
 
