@@ -19,7 +19,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { NetworkErrorDebug } from '../components/debug/NetworkErrorDebug';
-import { NetworkDebugger } from '../components/debug/NetworkDebugger';
+// import { NetworkDebugger } from '../components/debug/NetworkDebugger'; // Disabled for E2E compatibility
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
