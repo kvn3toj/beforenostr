@@ -9,8 +9,8 @@ export class AiController {
     @Inject(QuestionGeneratorService)
     private readonly questionGeneratorService: QuestionGeneratorService
   ) {
-// //     console.log('>>> AiController CONSTRUCTOR: questionGeneratorService IS', 
-      this.questionGeneratorService ? 'DEFINED' : 'UNDEFINED');
+    // console.log('>>> AiController CONSTRUCTOR: questionGeneratorService IS',
+    //   this.questionGeneratorService ? 'DEFINED' : 'UNDEFINED');
   }
 
   @Post('generate-questions')
@@ -98,4 +98,4 @@ export class AiController {
       throw error;
     }
   }
-} 
+}
