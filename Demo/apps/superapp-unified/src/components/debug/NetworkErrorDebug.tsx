@@ -30,14 +30,14 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
   onRetry,
   onClose,
 }) => {
-  // Don't run diagnostics in CI environments
-  const isCIEnvironment =
-    process.env.NODE_ENV === 'test' ||
-    process.env.CI === 'true' ||
-    process.env.CI === true ||
-    typeof window === 'undefined' ||
-    typeof import.meta === 'undefined' ||
-    !import.meta.env?.DEV;
+  // Only run diagnostics in very specific development conditions
+  const shouldRunDiagnostics =
+    typeof window !== 'undefined' &&
+    typeof import.meta !== 'undefined' &&
+    import.meta.env?.DEV === true &&
+    import.meta.env?.MODE === 'development' &&
+    process.env.NODE_ENV !== 'test' &&
+    !process.env.CI;
 
   const [diagnosticsRunning, setDiagnosticsRunning] = useState(false);
   const [diagnosticsResult, setDiagnosticsResult] = useState<any>(null);
