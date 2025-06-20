@@ -31,13 +31,18 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
   onClose,
 }) => {
   // Only run diagnostics in very specific development conditions
-  const shouldRunDiagnostics =
-    typeof window !== 'undefined' &&
-    typeof import.meta !== 'undefined' &&
-    import.meta.env?.DEV === true &&
-    import.meta.env?.MODE === 'development' &&
-    process.env.NODE_ENV !== 'test' &&
-    !process.env.CI;
+  let shouldRunDiagnostics = false;
+  try {
+    shouldRunDiagnostics =
+      typeof window !== 'undefined' &&
+      typeof import.meta !== 'undefined' &&
+      import.meta.env?.DEV === true &&
+      import.meta.env?.MODE === 'development' &&
+      (typeof process === 'undefined' || process.env?.NODE_ENV !== 'test') &&
+      (typeof process === 'undefined' || !process.env?.CI);
+  } catch {
+    shouldRunDiagnostics = false;
+  }
 
   const [diagnosticsRunning, setDiagnosticsRunning] = useState(false);
   const [diagnosticsResult, setDiagnosticsResult] = useState<any>(null);
