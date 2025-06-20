@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, startTransition } from 'react'
 import {
   Box,
   AppBar,
@@ -101,7 +101,7 @@ const UnifiedNavigation: React.FC = () => {
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [expandedMenus, setExpandedMenus] = useState<string[]>([])
-  
+
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -225,7 +225,7 @@ const UnifiedNavigation: React.FC = () => {
   const generateBreadcrumbs = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean)
     const breadcrumbs = [{ label: 'Inicio', path: '/' }]
-    
+
     let currentPath = ''
     pathSegments.forEach((segment, index) => {
       currentPath += `/${segment}`
@@ -237,7 +237,7 @@ const UnifiedNavigation: React.FC = () => {
         })
       }
     })
-    
+
     return breadcrumbs
   }
 
@@ -285,7 +285,7 @@ const UnifiedNavigation: React.FC = () => {
         path: '/social/groups/3',
         icon: <PeopleIcon />
       }
-    ].filter(result => 
+    ].filter(result =>
       result.title.toLowerCase().includes(query.toLowerCase()) ||
       result.description.toLowerCase().includes(query.toLowerCase())
     )
@@ -295,13 +295,17 @@ const UnifiedNavigation: React.FC = () => {
 
   const handleNavigationClick = (path: string) => {
     triggerHapticFeedback('light')
-    navigate(path)
-    setMobileMenuOpen(false)
+    startTransition(() => {
+      navigate(path)
+    })
+    if (mobileMenuOpen) {
+      setMobileMenuOpen(false)
+    }
   }
 
   const toggleSubmenu = (menuId: string) => {
-    setExpandedMenus(prev => 
-      prev.includes(menuId) 
+    setExpandedMenus(prev =>
+      prev.includes(menuId)
         ? prev.filter(id => id !== menuId)
         : [...prev, menuId]
     )
@@ -313,10 +317,10 @@ const UnifiedNavigation: React.FC = () => {
   return (
     <>
       {/* Main App Bar */}
-      <AppBar 
-        position="sticky" 
+      <AppBar
+        position="sticky"
         elevation={1}
-        sx={{ 
+        sx={{
           backgroundColor: 'white',
           color: 'text.primary',
           borderBottom: '1px solid',
@@ -332,8 +336,8 @@ const UnifiedNavigation: React.FC = () => {
             >
               <MenuIcon />
             </IconButton>
-            
-            <Box 
+
+            <Box
               sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
               onClick={() => handleNavigationClick('/')}
             >
@@ -372,7 +376,7 @@ const UnifiedNavigation: React.FC = () => {
                     }
                   }}
                 />
-                
+
                 {/* Search Results Dropdown */}
                 {showSearchResults && searchResults.length > 0 && (
                   <Paper
@@ -405,8 +409,8 @@ const UnifiedNavigation: React.FC = () => {
                           primary={result.title}
                           secondary={result.description}
                         />
-                        <Chip 
-                          size="small" 
+                        <Chip
+                          size="small"
                           label={result.category}
                           color="primary"
                           variant="outlined"
@@ -456,7 +460,7 @@ const UnifiedNavigation: React.FC = () => {
                     e.preventDefault()
                     handleNavigationClick(crumb.path)
                   }}
-                  sx={{ 
+                  sx={{
                     textDecoration: 'none',
                     '&:hover': { textDecoration: 'underline' },
                     fontWeight: index === breadcrumbs.length - 1 ? 'bold' : 'normal'
@@ -486,7 +490,7 @@ const UnifiedNavigation: React.FC = () => {
               Navegación Principal
             </Typography>
           </Box>
-          
+
           <List>
             {navigationItems.map((item) => (
               <React.Fragment key={item.id}>
@@ -512,7 +516,7 @@ const UnifiedNavigation: React.FC = () => {
                     )}
                   </ListItemButton>
                 </ListItem>
-                
+
                 {item.submenu && (
                   <Collapse in={expandedMenus.includes(item.id)} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
@@ -557,7 +561,7 @@ const UnifiedNavigation: React.FC = () => {
             </Typography>
           )}
         </Box>
-        
+
         {notifications.map((notification) => (
           <MenuItem
             key={notification.id}
@@ -583,7 +587,7 @@ const UnifiedNavigation: React.FC = () => {
             />
           </MenuItem>
         ))}
-        
+
         <Divider />
         <MenuItem onClick={() => handleNavigationClick('/notifications')}>
           <Typography variant="body2" color="primary" textAlign="center" width="100%">
@@ -607,16 +611,16 @@ const UnifiedNavigation: React.FC = () => {
           </ListItemIcon>
           <ListItemText primary="Mi Perfil" />
         </MenuItem>
-        
+
         <MenuItem onClick={() => handleNavigationClick('/settings')}>
           <ListItemIcon>
             <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary="Configuración" />
         </MenuItem>
-        
+
         <Divider />
-        
+
         <MenuItem onClick={() => handleNavigationClick('/logout')}>
           <ListItemIcon>
             <LogoutIcon />
