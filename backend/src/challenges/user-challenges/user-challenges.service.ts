@@ -1,12 +1,11 @@
 import { Injectable, ConflictException, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { TransactionsService } from '../../merits-and-wallet/transactions/transactions.service';
-import { UserChallengeStatus, User, Challenge, ChallengeReward, UserChallenge, ChallengeType } from '@prisma/client'; // Assuming enums and models are generated
+import { User, Challenge, ChallengeReward, UserChallenge } from '../../generated/prisma';
 import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto';
-import { UserChallengeProgress } from './types/user-challenge-progress.interface'; // Import the interface
-import { ChallengeConfig } from '../types/challenge-config.interface'; // Import the interface
-import { AuditLogsService } from '../../admin/audit-logs/audit-logs.service'; // Import AuditLogsService
-import { AuthenticatedUser } from '../../types/auth.types'; // Import AuthenticatedUser type
+import { ChallengeConfig } from '../types/challenge-config.interface';
+import { AuditLogsService } from '../../admin/audit-logs/audit-logs.service';
+import { AuthenticatedUser } from '../../types/auth.types';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUserInternal = { id: string; roles: string[]; /* other properties */ };
@@ -48,8 +47,8 @@ export class UserChallengesService {
       data: {
         userId: userId,
         challengeId: challengeId,
-        status: UserChallengeStatus.STARTED,
-        progress: {} as any,
+        status: 'STARTED',
+        progress: 0,
       },
     });
 
@@ -85,11 +84,11 @@ export class UserChallengesService {
     }
 
     // Capture old progress before update
-    const oldProgress: UserChallengeProgress = userChallenge.progress;
+    const oldProgress: number = userChallenge.progress;
 
     // Ensure the updated progress conforms to the type if possible, or add validation here
-    if (updateData.progress && typeof updateData.progress !== 'object') {
-        throw new BadRequestException('Progress data must be a valid object.');
+    if (updateData.progress && typeof updateData.progress !== 'number') {
+        throw new BadRequestException('Progress data must be a valid number.');
     }
 
     const updatedUserChallenge = await this.prisma.userChallenge.update({
@@ -101,7 +100,7 @@ export class UserChallengesService {
     });
 
     // Capture new progress after update
-    const newProgress: UserChallengeProgress = updatedUserChallenge.progress;
+    const newProgress: number = updatedUserChallenge.progress;
 
     // Log user updating challenge progress
     await this.auditLogsService.createLog({
@@ -139,39 +138,31 @@ export class UserChallengesService {
         throw new ForbiddenException('You do not have permission to complete this user challenge.');
     }
 
-    if (userChallenge.status === UserChallengeStatus.COMPLETED) {
+    if (userChallenge.status === 'COMPLETED') {
         throw new ConflictException('Challenge is already completed.');
     }
 
     // --- Refactored Completion Logic ---
     const challenge = userChallenge.challenge;
-    const progress: UserChallengeProgress = userChallenge.progress;
-    const config: ChallengeConfig = challenge.config;
+    const progress = userChallenge.progress;
+    const config: ChallengeConfig = challenge.config as any;
 
     let isCompleted = false;
+    const requiredCompletions = config.requiredCompletions || 100;
 
     // Implement completion logic based on challenge type
     switch (challenge.type) {
-        case ChallengeType.AUTOMATED:
-            // Example: Check if target content item is completed required number of times
-            if (config.targetContentItemId && config.requiredCompletions !== undefined) {
-                // This is a placeholder. Actual check would involve looking at user's interactions/ completions
-                // For demonstration, let's assume progress.completedSteps tracks this
-                if (progress.completedSteps && progress.completedSteps >= config.requiredCompletions) {
-                    isCompleted = true;
-                }
-            } else {
-                // Automated challenge with no specific config - perhaps always completable by admin?
-                 if (user.roles.includes('admin')) isCompleted = true;
+        case 'AUTOMATED':
+            if (progress >= requiredCompletions) {
+                isCompleted = true;
             }
             break;
-        case ChallengeType.CUSTOM:
-            // Custom challenges are typically completed manually or via specific triggers not defined in a generic config
-            // For now, assume custom challenges can only be completed by admin or specific manual action not covered here.
-            if (user.roles.includes('admin')) isCompleted = true; // Admins can force complete custom challenges
+        case 'CUSTOM':
+            if (user.roles.includes('admin')) {
+                isCompleted = true;
+            }
             break;
         default:
-            // Unknown type, cannot complete automatically
             isCompleted = false;
     }
 
@@ -186,10 +177,12 @@ export class UserChallengesService {
             // Assuming TransactionsService.createTransaction exists and handles merit awarding
             await this.transactionsService.createTransaction({
                 userId: userChallenge.userId,
-                amount: reward.meritAmount,
+                meritId: 'placeholder_merit_id', // FIXME: This needs a real meritId
+                amount: reward.amount,
                 type: 'MERIT',
-                description: `Reward for completing challenge "${challenge.name}": ${reward.description || ''}`,
-                // Add other necessary transaction fields
+                source: 'CHALLENGE',
+                notes: `Reward for completing challenge "${challenge.title}": ${reward.description || ''}`,
+                sourceId: challenge.id,
             });
         }
     }
@@ -198,7 +191,7 @@ export class UserChallengesService {
     const completedUserChallenge = await this.prisma.userChallenge.update({
       where: { id: userChallengeId },
       data: {
-        status: UserChallengeStatus.COMPLETED,
+        status: 'COMPLETED',
         completedAt: new Date(),
         progress: progress,
       },
@@ -222,7 +215,7 @@ export class UserChallengesService {
     return completedUserChallenge;
   }
 
-  async findUserChallenges(userId: string, status?: UserChallengeStatus): Promise<UserChallenge[]> {
+  async findUserChallenges(userId: string, status?: string): Promise<UserChallenge[]> {
     // This method already filters by userId, so it's safe for non-admin users
     return this.prisma.userChallenge.findMany({
       where: {
@@ -255,7 +248,7 @@ export class UserChallengesService {
   }
 
   // Admin method to find any user challenges (no ownership check)
-  async findAllUserChallengesAdmin(status?: UserChallengeStatus): Promise<UserChallenge[]> {
+  async findAllUserChallengesAdmin(status?: string): Promise<UserChallenge[]> {
       return this.prisma.userChallenge.findMany({
           where: {
               status: status
@@ -285,4 +278,4 @@ export class UserChallengesService {
       });
       return userChallenge?.userId === userId;
   }
-} 
+}

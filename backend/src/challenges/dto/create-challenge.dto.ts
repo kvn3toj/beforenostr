@@ -37,7 +37,7 @@ export class CreateChallengeDto {
   @IsNotEmpty()
   type: ChallengeType;
 
-  @ApiProperty({ description: 'Configuration data for the challenge (JSONB)', type: 'object' })
+  @ApiProperty({ description: 'Configuration data for the challenge (JSONB)', type: 'object', additionalProperties: true })
   @IsOptional()
   config?: ChallengeConfig;
 
@@ -69,4 +69,4 @@ export class CreateChallengeDto {
   @ValidateNested({ each: true })
   @Type(() => CreateChallengeRewardDto)
   rewards?: CreateChallengeRewardDto[];
-} 
+}

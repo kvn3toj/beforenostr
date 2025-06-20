@@ -1,426 +1,214 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { FeedbackType } from '../components/feedback/FeedbackFloatingButton';
-import { FeedbackData } from '../components/feedback/FeedbackCaptureModal';
-import { useAuth } from './AuthContext';
 
-interface SelectedElement {
-  tagName: string;
+// Tipos para el sistema de feedback
+export interface FeedbackData {
   id?: string;
-  className?: string;
-  text?: string;
-  position: { x: number; y: number };
+  feedbackType: 'bug' | 'improvement' | 'missing-feature' | 'other';
+  pageUrl: string;
+  componentContext?: string;
+  feedbackText: string;
+  timestamp: Date;
+  userAgent?: string;
+  screenResolution?: string;
+  additionalData?: Record<string, any>;
 }
 
-interface FeedbackContextValue {
-  // Estado del Agente
+export interface FeedbackContextType {
+  // Estado
   isFeedbackModeActive: boolean;
-  isSelectingElement: boolean;
-  selectedFeedbackType: FeedbackType | null;
-  selectedElement: SelectedElement | null;
   isModalOpen: boolean;
-  canUseAgent: boolean;
+  currentFeedback: Partial<FeedbackData>;
 
-  // Acciones principales
-  toggleFeedbackMode: (enabled?: boolean) => void;
-  startFeedbackCapture: (type: FeedbackType, buttonPosition: { x: number; y: number }) => void;
+  // Acciones
+  toggleFeedbackMode: () => void;
+  openFeedbackModal: () => void;
+  closeFeedbackModal: () => void;
+  updateFeedback: (field: keyof FeedbackData, value: any) => void;
   submitFeedback: (feedbackData: FeedbackData) => Promise<void>;
-  closeModal: () => void;
-
-  // Utilidades
-  resetFeedbackState: () => void;
+  clearFeedbackData: () => void;
 }
 
-const FeedbackContext = createContext<FeedbackContextValue | undefined>(undefined);
+// Contexto por defecto
+const defaultContext: FeedbackContextType = {
+  isFeedbackModeActive: false,
+  isModalOpen: false,
+  currentFeedback: {},
+  toggleFeedbackMode: () => {},
+  openFeedbackModal: () => {},
+  closeFeedbackModal: () => {},
+  updateFeedback: () => {},
+  submitFeedback: async () => {},
+  clearFeedbackData: () => {},
+};
 
+// Crear el contexto
+const FeedbackContext = createContext<FeedbackContextType>(defaultContext);
+
+// Hook personalizado para usar el contexto
+export const useFeedback = () => {
+  const context = useContext(FeedbackContext);
+  if (!context) {
+    throw new Error('useFeedback debe ser usado dentro de un FeedbackProvider');
+  }
+  return context;
+};
+
+// Props del provider
 interface FeedbackProviderProps {
   children: ReactNode;
 }
 
-interface CodeAnalysisResult {
-  scriptName: string;
-  success: boolean;
-  results: any;
-  warnings: string[];
-  suggestions: string[];
-  executionTime: number;
-}
-
-interface FeedbackSubmissionResponse {
-  id: string;
-  status: 'submitted' | 'analyzing' | 'completed';
-  codeAnalysis?: CodeAnalysisResult[];
-  aiSuggestions?: string[];
-}
-
+// Provider del contexto
 export const FeedbackProvider: React.FC<FeedbackProviderProps> = ({ children }) => {
-  const { user } = useAuth();
+  // Estado del modo feedback
+  const [isFeedbackModeActive, setIsFeedbackModeActive] = useState<boolean>(() => {
+    // Cargar estado desde localStorage
+    const saved = localStorage.getItem('coomunity_feedback_mode_active');
+    return saved === 'true';
+  });
 
-  // Estado central del agente
-  const [isFeedbackModeActive, setIsFeedbackModeActive] = useState(false);
-  const [isSelectingElement, setIsSelectingElement] = useState(false);
-  const [selectedFeedbackType, setSelectedFeedbackType] = useState<FeedbackType | null>(null);
-  const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Estado del modal
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  // Solo administradores pueden usar el agente
-  const canUseAgent = user?.roles?.includes('admin') || false;
+  // Estado del feedback actual
+  const [currentFeedback, setCurrentFeedback] = useState<Partial<FeedbackData>>({
+    feedbackType: 'other',
+    pageUrl: window.location.href,
+    feedbackText: '',
+    timestamp: new Date(),
+  });
 
-  // Función para activar/desactivar el modo agente
-  const toggleFeedbackMode = useCallback((enabled?: boolean) => {
-    if (!canUseAgent) {
-      console.warn('🚫 Solo los administradores pueden activar el modo feedback');
-      return;
-    }
-
-    const newState = enabled !== undefined ? enabled : !isFeedbackModeActive;
+  // Toggle del modo feedback
+  const toggleFeedbackMode = useCallback(() => {
+    const newState = !isFeedbackModeActive;
     setIsFeedbackModeActive(newState);
+    localStorage.setItem('coomunity_feedback_mode_active', newState.toString());
 
-    // Limpiar estado cuando se desactiva
-    if (!newState) {
-      resetFeedbackState();
-      removeElementSelectionListeners();
-    }
+    console.log(`🎯 Feedback Mode ${newState ? 'ACTIVADO' : 'DESACTIVADO'}`);
+  }, [isFeedbackModeActive]);
 
-    console.log(newState ? '🤖 Modo Agente Activado - Oráculo de CoomÜnity' : '💤 Modo Agente Desactivado');
+  // Abrir modal de feedback
+  const openFeedbackModal = useCallback(() => {
+    // Actualizar URL actual y timestamp
+    setCurrentFeedback(prev => ({
+      ...prev,
+      pageUrl: window.location.href,
+      timestamp: new Date(),
+      userAgent: navigator.userAgent,
+      screenResolution: `${window.screen.width}x${window.screen.height}`,
+    }));
 
-    // Persistir estado en localStorage
-    localStorage.setItem('COOMUNITY_FEEDBACK_MODE', JSON.stringify(newState));
-  }, [canUseAgent, isFeedbackModeActive]);
-
-  // Función para iniciar captura de feedback
-  const startFeedbackCapture = useCallback((type: FeedbackType, buttonPosition: { x: number; y: number }) => {
-    setSelectedFeedbackType(type);
-    setIsSelectingElement(true);
-
-    console.log(`🎯 Iniciando captura de feedback: ${type}`);
-    enableElementSelection();
+    setIsModalOpen(true);
+    console.log('📝 Modal de Feedback ABIERTO');
   }, []);
 
-  // Función para habilitar selección de elementos
-  const enableElementSelection = useCallback(() => {
-    // Crear overlay para capturar clics
-    const overlay = document.createElement('div');
-    overlay.id = 'feedback-selection-overlay';
-    overlay.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 9999;
-      cursor: crosshair;
-      background: rgba(0, 123, 255, 0.1);
-      backdrop-filter: blur(1px);
-      border: 2px dashed rgba(0, 123, 255, 0.5);
-    `;
-
-    // Agregar indicador visual
-    const indicator = document.createElement('div');
-    indicator.style.cssText = `
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10000;
-      background: rgba(0, 123, 255, 0.9);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-family: system-ui;
-      font-size: 14px;
-      pointer-events: none;
-    `;
-    indicator.textContent = 'Haz clic en el elemento para reportar feedback • ESC para cancelar';
-    document.body.appendChild(indicator);
-
-    // Event listener para capturar el clic
-    const handleElementClick = (event: MouseEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      // Obtener el elemento debajo del overlay
-      overlay.style.pointerEvents = 'none';
-      const targetElement = document.elementFromPoint(event.clientX, event.clientY);
-      overlay.style.pointerEvents = 'auto';
-
-      if (targetElement && targetElement !== overlay) {
-        const elementInfo: SelectedElement = {
-          tagName: targetElement.tagName,
-          id: targetElement.id || undefined,
-          className: targetElement.className || undefined,
-          text: targetElement.textContent?.trim().substring(0, 200) || undefined,
-          position: { x: event.clientX, y: event.clientY }
-        };
-
-        setSelectedElement(elementInfo);
-        setIsSelectingElement(false);
-        setIsModalOpen(true);
-
-        console.log('📍 Elemento seleccionado:', elementInfo);
-        removeElementSelectionListeners();
-      }
-    };
-
-    // Event listener para cancelar con ESC
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        console.log('❌ Selección cancelada por el usuario');
-        setIsSelectingElement(false);
-        setSelectedFeedbackType(null);
-        removeElementSelectionListeners();
-      }
-    };
-
-    overlay.addEventListener('click', handleElementClick);
-    document.addEventListener('keydown', handleKeyDown);
-    document.body.appendChild(overlay);
-
-    // Almacenar función de limpieza globalmente
-    (window as any).removeElementSelectionListeners = () => {
-      overlay.removeEventListener('click', handleElementClick);
-      document.removeEventListener('keydown', handleKeyDown);
-      if (document.body.contains(overlay)) {
-        document.body.removeChild(overlay);
-      }
-      if (document.body.contains(indicator)) {
-        document.body.removeChild(indicator);
-      }
-    };
+  // Cerrar modal de feedback
+  const closeFeedbackModal = useCallback(() => {
+    setIsModalOpen(false);
+    console.log('📝 Modal de Feedback CERRADO');
   }, []);
 
-  // Función para limpiar listeners de selección
-  const removeElementSelectionListeners = useCallback(() => {
-    if ((window as any).removeElementSelectionListeners) {
-      (window as any).removeElementSelectionListeners();
-    }
+  // Actualizar campos del feedback
+  const updateFeedback = useCallback((field: keyof FeedbackData, value: any) => {
+    setCurrentFeedback(prev => ({
+      ...prev,
+      [field]: value,
+    }));
   }, []);
 
-  // Función principal para enviar feedback
-  const submitFeedback = useCallback(async (feedbackData: FeedbackData): Promise<void> => {
+  // Enviar feedback
+  const submitFeedback = useCallback(async (feedbackData: FeedbackData) => {
     try {
-      console.log('📤 Enviando feedback al Oráculo de CoomÜnity...', feedbackData);
-
-      // 1. Preparar datos técnicos contextuales
-      const enhancedFeedbackData = {
+      // Generar ID único
+      const feedbackWithId = {
         ...feedbackData,
-        technicalContext: {
-          url: window.location.href,
-          pathname: window.location.pathname,
-          userAgent: navigator.userAgent,
-          viewport: {
-            width: window.innerWidth,
-            height: window.innerHeight
-          },
-          timestamp: new Date().toISOString(),
-          sessionId: sessionStorage.getItem('COOMUNITY_SESSION_ID') || 'anonymous',
-          buildVersion: process.env.VITE_APP_VERSION || 'dev',
-          userId: user?.id,
-          userRoles: user?.roles || []
-        },
-        selectedElement,
-        feedbackType: selectedFeedbackType
+        id: `feedback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       };
 
-      // 2. Intentar envío al backend real
-      try {
-        const response = await fetch('/api/feedback', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('COOMUNITY_AUTH_TOKEN')}`
-          },
-          body: JSON.stringify(enhancedFeedbackData)
-        });
+      console.log('📤 Enviando Feedback:', feedbackWithId);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+      // Simular envío al backend (por ahora)
+      // TODO: Integrar con Backend NestJS en puerto 3002
+      const response = await simulateBackendSubmission(feedbackWithId);
 
-        const result: FeedbackSubmissionResponse = await response.json();
-        console.log('✅ Feedback enviado exitosamente al backend:', result);
+      // Guardar en localStorage como backup
+      const savedFeedbacks = JSON.parse(localStorage.getItem('coomunity_feedbacks') || '[]');
+      savedFeedbacks.push(feedbackWithId);
+      localStorage.setItem('coomunity_feedbacks', JSON.stringify(savedFeedbacks));
 
-        // 3. Ejecutar análisis de código si se solicita
-        if (feedbackData.requestCodeAnalysis) {
-          await triggerCodeAnalysis(result.id, enhancedFeedbackData);
-        }
-
-      } catch (backendError) {
-        console.warn('⚠️ Backend no disponible, almacenando feedback localmente:', backendError);
-
-        // Fallback: almacenar localmente
-        const localFeedback = {
-          id: `feedback_${Date.now()}`,
-          ...enhancedFeedbackData,
-          status: 'pending_backend',
-          createdAt: new Date().toISOString()
-        };
-
-        const existingFeedback = JSON.parse(localStorage.getItem('COOMUNITY_PENDING_FEEDBACK') || '[]');
-        existingFeedback.push(localFeedback);
-        localStorage.setItem('COOMUNITY_PENDING_FEEDBACK', JSON.stringify(existingFeedback));
-
-        console.log('💾 Feedback almacenado localmente, se enviará cuando el backend esté disponible');
-      }
-
-      // 4. Mostrar notificación de éxito
-      showFeedbackNotification('✅ Feedback enviado al Oráculo de CoomÜnity', 'success');
-
-      // 5. Resetear estado
-      resetFeedbackState();
-
-    } catch (error) {
-      console.error('❌ Error enviando feedback:', error);
-      showFeedbackNotification('❌ Error enviando feedback. Inténtalo de nuevo.', 'error');
-      throw error;
-    }
-  }, [user, selectedElement, selectedFeedbackType]);
-
-  // Función para mostrar notificaciones
-  const showFeedbackNotification = (message: string, type: 'success' | 'error') => {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      z-index: 10001;
-      background: ${type === 'success' ? '#4CAF50' : '#f44336'};
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-family: system-ui;
-      font-size: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      animation: slideIn 0.3s ease-out;
-    `;
-    notification.textContent = message;
-
-    // Agregar animación CSS
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideIn {
-        from { opacity: 0; transform: translateX(100%); }
-        to { opacity: 1; transform: translateX(0); }
-      }
-    `;
-    document.head.appendChild(style);
-
-    document.body.appendChild(notification);
-
-    // Remover después de 4 segundos
-    setTimeout(() => {
-      if (document.body.contains(notification)) {
-        notification.style.animation = 'slideIn 0.3s ease-out reverse';
-        setTimeout(() => {
-          if (document.body.contains(notification)) {
-            document.body.removeChild(notification);
-          }
-          if (document.head.contains(style)) {
-            document.head.removeChild(style);
-          }
-        }, 300);
-      }
-    }, 4000);
-  };
-
-  // Función para ejecutar análisis de código
-  const triggerCodeAnalysis = useCallback(async (feedbackId: string, feedbackData: any) => {
-    console.log('🤖 Ejecutando análisis de código automático...');
-
-    try {
-      const analysisRequest = {
-        feedbackId,
-        feedbackType: feedbackData.feedbackType,
-        pageUrl: feedbackData.technicalContext.url,
-        selectedElement: feedbackData.selectedElement,
-        requestedScripts: [
-          'frontend-backend-integration-test.sh',
-          'responsive-design-test.sh',
-          'accessibility-test.sh',
-          'performance-test.sh'
-        ]
-      };
-
-      const response = await fetch('/api/feedback/analyze-code', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('COOMUNITY_AUTH_TOKEN')}`
-        },
-        body: JSON.stringify(analysisRequest)
+      // Limpiar formulario
+      setCurrentFeedback({
+        feedbackType: 'other',
+        pageUrl: window.location.href,
+        feedbackText: '',
+        timestamp: new Date(),
       });
 
-      if (!response.ok) {
-        throw new Error(`Análisis falló: ${response.status}`);
-      }
+      // Cerrar modal
+      setIsModalOpen(false);
 
-      const analysisResult = await response.json();
-      console.log('🔍 Análisis de código completado:', analysisResult);
+      console.log('✅ Feedback enviado exitosamente:', response);
+
+      // Mostrar notificación de éxito
+      if (typeof window !== 'undefined' && window.alert) {
+        alert('🎉 ¡Feedback enviado exitosamente! Gracias por tu contribución al Bien Común.');
+      }
 
     } catch (error) {
-      console.warn('⚠️ Análisis de código no disponible:', error);
-    }
-  }, []);
+      console.error('❌ Error al enviar feedback:', error);
 
-  // Función para cerrar modal
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    setSelectedFeedbackType(null);
-    setSelectedElement(null);
-  }, []);
-
-  // Función para resetear estado
-  const resetFeedbackState = useCallback(() => {
-    setIsSelectingElement(false);
-    setSelectedFeedbackType(null);
-    setSelectedElement(null);
-    setIsModalOpen(false);
-  }, []);
-
-  // Cargar estado persistido al montar el componente
-  React.useEffect(() => {
-    if (canUseAgent) {
-      const savedMode = localStorage.getItem('COOMUNITY_FEEDBACK_MODE');
-      if (savedMode) {
-        try {
-          const isActive = JSON.parse(savedMode);
-          setIsFeedbackModeActive(isActive);
-        } catch (error) {
-          console.warn('Error cargando estado del modo feedback:', error);
-        }
+      // Mostrar notificación de error
+      if (typeof window !== 'undefined' && window.alert) {
+        alert('❌ Error al enviar feedback. Por favor, inténtalo de nuevo.');
       }
     }
-  }, [canUseAgent]);
+  }, []);
 
-  const value: FeedbackContextValue = {
-    // Estado
+  // Limpiar datos de feedback
+  const clearFeedbackData = useCallback(() => {
+    setCurrentFeedback({
+      feedbackType: 'other',
+      pageUrl: window.location.href,
+      feedbackText: '',
+      timestamp: new Date(),
+    });
+    console.log('🧹 Datos de feedback limpiados');
+  }, []);
+
+  // Valor del contexto
+  const contextValue: FeedbackContextType = {
     isFeedbackModeActive,
-    isSelectingElement,
-    selectedFeedbackType,
-    selectedElement,
     isModalOpen,
-    canUseAgent,
-
-    // Acciones
+    currentFeedback,
     toggleFeedbackMode,
-    startFeedbackCapture,
+    openFeedbackModal,
+    closeFeedbackModal,
+    updateFeedback,
     submitFeedback,
-    closeModal,
-    resetFeedbackState
+    clearFeedbackData,
   };
 
   return (
-    <FeedbackContext.Provider value={value}>
+    <FeedbackContext.Provider value={contextValue}>
       {children}
     </FeedbackContext.Provider>
   );
 };
 
-export const useFeedbackContext = (): FeedbackContextValue => {
-  const context = useContext(FeedbackContext);
-  if (context === undefined) {
-    throw new Error('useFeedbackContext debe ser usado dentro de un FeedbackProvider');
-  }
-  return context;
+// Función para simular envío al backend
+const simulateBackendSubmission = async (feedbackData: FeedbackData): Promise<any> => {
+  // Simular delay de red
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Simular respuesta del backend
+  return {
+    success: true,
+    message: 'Feedback recibido y procesado',
+    feedbackId: feedbackData.id,
+    timestamp: new Date().toISOString(),
+    // TODO: Integrar con endpoint real del Backend NestJS
+    // POST http://localhost:3002/api/feedback
+  };
 };
 
 export default FeedbackContext;

@@ -6,11 +6,11 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Adjust path 
 import { RolesGuard } from '../../rbac/guards/roles.guard'; // Adjust path as necessary
 import { Roles } from '../../rbac/decorators/roles.decorator'; // Adjust path as necessary
 import { Request } from 'express';
-import { UserChallengeStatus } from '@prisma/client'; // Assuming UserChallengeStatus enum
+import { AuthenticatedUser } from 'src/types/auth.types';
 
-// Define a basic type for the authenticated user
+// Updated interface to include email
 interface AuthenticatedRequest extends Request {
-    user: { id: string; roles: string[]; /* other user properties */ };
+    user: { id: string; roles: string[]; email: string; };
 }
 
 @ApiTags('user-challenges')
@@ -27,8 +27,8 @@ export class UserChallengesController {
   @ApiResponse({ status: 404, description: 'Challenge not found.' })
   @ApiBody({ schema: { type: 'object', properties: { challengeId: { type: 'string' } } } })
   async startChallenge(@Req() req: AuthenticatedRequest, @Body('challengeId') challengeId: string) {
-    // TODO: Add RBAC or logic to ensure user can start this specific challenge type/status
-    return this.userChallengesService.startChallenge(req.user.id, challengeId);
+    const user: AuthenticatedUser = req.user;
+    return this.userChallengesService.startChallenge(user.id, challengeId, user);
   }
 
   @Patch(':userChallengeId/progress')
@@ -42,8 +42,8 @@ export class UserChallengesController {
     @Param('userChallengeId') userChallengeId: string,
     @Body() updateUserChallengeDto: UpdateUserChallengeDto,
   ) {
-      // Ownership check is now handled within the service method
-    return this.userChallengesService.updateProgress(req.user, userChallengeId, updateUserChallengeDto);
+    const user: AuthenticatedUser = req.user;
+    return this.userChallengesService.updateProgress(user, userChallengeId, updateUserChallengeDto);
   }
 
   @Post(':userChallengeId/complete')
@@ -57,8 +57,8 @@ export class UserChallengesController {
     @Req() req: AuthenticatedRequest,
     @Param('userChallengeId') userChallengeId: string,
   ) {
-      // Ownership check is now handled within the service method
-    return this.userChallengesService.completeChallenge(req.user, userChallengeId);
+    const user: AuthenticatedUser = req.user;
+    return this.userChallengesService.completeChallenge(user, userChallengeId);
   }
 
   @Get('me')
@@ -76,8 +76,8 @@ export class UserChallengesController {
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
    @ApiParam({ name: 'userChallengeId', description: 'ID of the user challenge instance' })
   async findOneUserChallenge(@Req() req: AuthenticatedRequest, @Param('userChallengeId') userChallengeId: string) {
-      // Ownership check is now handled within the service method
-      return this.userChallengesService.findOneUserChallenge(req.user, userChallengeId);
+    const user: AuthenticatedUser = req.user;
+    return this.userChallengesService.findOneUserChallenge(user, userChallengeId);
   }
 
   // Admin Endpoints
@@ -87,8 +87,8 @@ export class UserChallengesController {
   @ApiOperation({ summary: '[ADMIN] Get all user challenges' })
   @ApiResponse({ status: 200, description: 'List of all user challenges (Admin only).' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
-  @ApiQuery({ name: 'status', required: false, enum: UserChallengeStatus })
-  findAllAdmin(@Query('status') status?: UserChallengeStatus) {
+  @ApiQuery({ name: 'status', required: false, type: 'string' }) // Use string type for query param
+  findAllAdmin(@Query('status') status?: string) {
       return this.userChallengesService.findAllUserChallengesAdmin(status);
   }
 
@@ -116,11 +116,7 @@ export class UserChallengesController {
      @Param('userChallengeId') userChallengeId: string,
      @Body() updateUserChallengeDto: UpdateUserChallengeDto,
    ) {
-       // No ownership check needed for admin routes, pass a dummy user or a specific flag if service requires it
-       // Assuming service methods are overloaded or can handle a flag, or we call specific admin service methods
-       // As per service modifications, using specific admin methods where provided
-       // If no specific admin update method, can pass a user object indicating admin role
-        const adminUser = { id: 'admin', roles: ['admin'] }; // Dummy admin user representation
+        const adminUser: AuthenticatedUser = { id: 'admin', roles: ['admin'], email: 'admin@gamifier.com' };
         return this.userChallengesService.updateProgress(adminUser, userChallengeId, updateUserChallengeDto);
    }
 
@@ -136,8 +132,7 @@ export class UserChallengesController {
    completeChallengeAdmin(
      @Param('userChallengeId') userChallengeId: string,
    ) {
-       // No ownership check needed for admin routes
-        const adminUser = { id: 'admin', roles: ['admin'] }; // Dummy admin user representation
+       const adminUser: AuthenticatedUser = { id: 'admin', roles: ['admin'], email: 'admin@gamifier.com' };
        return this.userChallengesService.completeChallenge(adminUser, userChallengeId);
    }
-} 
+}

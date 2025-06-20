@@ -13,6 +13,8 @@ const app_service_1 = require("./app.service");
 const prisma_module_1 = require("./prisma/prisma.module");
 const playlist_module_1 = require("./playlist/playlist.module");
 // import { SubtitleModule } from './subtitle/subtitle.module'; // Comentado temporalmente para depuración
+import { ContentModule } from './content/content.module';
+import { RbacModule } from './rbac/rbac.module';
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
