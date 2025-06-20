@@ -5,7 +5,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 // import { AuditLogsService } from '../admin/audit-logs/audit-logs.service'; // Temporarily commented
 // import { AuthenticatedUser } from '../types/auth.types'; // Temporarily commented
 // import { UserAuditSnapshot } from '../types/user.types'; // Temporarily commented
-import { User } from '@prisma/client';
+import { User } from '../generated/prisma';
+import * as bcrypt from 'bcryptjs';
 
 // Tipo explícito para snapshots de usuario en logs de auditoría
 // export interface UserAuditSnapshot {
@@ -32,7 +33,7 @@ export class UsersService {
   async findAll() {
 //     console.log('>>> UsersService.findAll: Starting...');
 //     console.log('>>> UsersService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-    
+
     try {
       const result = await this.prisma.user.findMany();
 //       console.log('>>> UsersService.findAll: SUCCESS, found', result.length, 'users');
@@ -55,23 +56,23 @@ export class UsersService {
     };
   }) {
     const { page, pageSize, sortBy, sortDirection, filters } = params;
-    
+
     // Construir el objeto where para filtros
     const where: any = {};
-    
+
     if (filters?.email) {
       where.email = {
         contains: filters.email,
         mode: 'insensitive',
       };
     }
-    
+
     if (filters?.is_active !== undefined) {
       where.isActive = filters.is_active;
     }
-    
+
     // TODO: Implementar filtro por role_id cuando tengamos la relación con roles
-    
+
     // Construir el objeto orderBy para ordenamiento
     const orderBy: any = {};
     if (sortBy) {
@@ -79,7 +80,7 @@ export class UsersService {
     } else {
       orderBy.createdAt = 'desc'; // Ordenamiento por defecto
     }
-    
+
     // Ejecutar consultas en paralelo
     const [users, total] = await Promise.all([
       this.prisma.user.findMany({
@@ -94,7 +95,7 @@ export class UsersService {
       }),
       this.prisma.user.count({ where }),
     ]);
-    
+
     return {
       data: users,
       count: users.length,
@@ -107,7 +108,7 @@ export class UsersService {
   async findOne(id: string) {
 //     console.log('>>> UsersService.findOne: Starting with id:', id);
 //     console.log('>>> UsersService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-    
+
     try {
       const user = await this.prisma.user.findUnique({ where: { id } });
 //       console.log('>>> UsersService.findOne: Query result:', user ? 'FOUND' : 'NOT FOUND');
@@ -120,7 +121,14 @@ export class UsersService {
   }
 
   async create(data: CreateUserDto, user: any): Promise<User> {
-    const newUser = await this.prisma.user.create({ data });
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const createData = {
+      ...data,
+      password: hashedPassword,
+    };
+
+    const newUser = await this.prisma.user.create({ data: createData });
 
     // const newValue: UserAuditSnapshot = {
     //   id: newUser.id,
@@ -226,7 +234,7 @@ export class UsersService {
 
   async getAyniMetrics(userId: string) {
 //     console.log('>>> UsersService.getAyniMetrics: Starting for user:', userId);
-    
+
     try {
       // Verificar que el usuario existe
       const user = await this.prisma.user.findUnique({ where: { id: userId } });
@@ -237,7 +245,7 @@ export class UsersService {
       // 🌟 GENERAR MÉTRICAS AYNI DINÁMICAS BASADAS EN DATOS REALES
       // Por ahora, generamos métricas realistas basadas en el usuario
       // En el futuro, estas se calcularán desde transacciones, actividades, etc.
-      
+
       const baseMetrics = {
         ondas: 1000 + (user.id.length * 47), // Base de 1000 + variación por usuario
         meritos: 50 + (user.id.length * 7),  // Base de 50 + variación
@@ -258,7 +266,7 @@ export class UsersService {
 
 //       console.log('>>> UsersService.getAyniMetrics: Generated metrics for user:', user.email);
       return baseMetrics;
-      
+
     } catch (error) {
 //       console.error('>>> UsersService.getAyniMetrics: ERROR:', error);
       throw error;
@@ -268,7 +276,7 @@ export class UsersService {
   private calculateAyniLevel(user: User): string {
     // Calcular nivel basado en características del usuario
     const userScore = user.id.length + (user.email.length * 2);
-    
+
     if (userScore > 60) return 'Guardián del Bien Común';
     if (userScore > 50) return 'Emprendedor Confiable';
     if (userScore > 40) return 'Colaborador Activo';
@@ -278,7 +286,7 @@ export class UsersService {
 
   private getNextAyniLevel(user: User): string {
     const currentLevel = this.calculateAyniLevel(user);
-    
+
     const levelProgression = {
       'Iniciado en CoomÜnity': 'Aprendiz del Ayni',
       'Aprendiz del Ayni': 'Colaborador Activo',
@@ -286,7 +294,7 @@ export class UsersService {
       'Emprendedor Confiable': 'Guardián del Bien Común',
       'Guardián del Bien Común': 'Maestro Cósmico'
     };
-    
+
     return levelProgression[currentLevel] || 'Maestro Cósmico';
   }
 
@@ -294,14 +302,14 @@ export class UsersService {
     // Progreso basado en el tiempo desde creación y características del usuario
     const daysSinceJoined = Math.floor((Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24));
     const baseProgress = Math.min(90, daysSinceJoined * 2 + (user.id.length * 3));
-    
+
     return Math.max(10, baseProgress); // Mínimo 10%, máximo calculado
   }
 
   private calculateElementalBalance(user: User) {
     // Generar balance elemental único para cada usuario
     const seed = user.id.length + user.email.length;
-    
+
     return {
       fuego: 200 + (seed * 7) + Math.floor(Math.sin(seed) * 50),      // Acciones/Energía
       agua: 150 + (seed * 5) + Math.floor(Math.cos(seed) * 40),       // Adaptabilidad/Emociones
@@ -309,4 +317,4 @@ export class UsersService {
       aire: 120 + (seed * 4) + Math.floor(Math.cos(seed * 1.5) * 35)  // Visión/Claridad mental
     };
   }
-} 
+}

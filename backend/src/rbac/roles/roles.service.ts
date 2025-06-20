@@ -5,7 +5,7 @@ import { AssignPermissionsDto } from './dto/assign-permissions.dto';
 import { AssignRoleDto } from './dto/assign-role.dto';
 // import { AuditLogsService } from '../../admin/audit-logs/audit-logs.service'; // Temporarily commented
 // import { AuthenticatedUser } from '../../types/auth.types'; // Temporarily commented
-import { Role, Permission, UserRole } from '@prisma/client';
+import { Role, Permission, UserRole } from '../../generated/prisma';
 
 @Injectable()
 export class RolesService {
@@ -22,7 +22,7 @@ export class RolesService {
   async create(dto: CreateRoleDto, user: any): Promise<Role> {
 //     console.log('>>> RolesService.create: Starting...');
 //     console.log('>>> RolesService.create: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-    
+
     try {
       const newRole = await this.prisma.role.create({ data: dto });
 
@@ -45,20 +45,20 @@ export class RolesService {
   async findAll(): Promise<Role[]> {
 //     console.log('>>> RolesService.findAll: Starting...');
 //     console.log('>>> RolesService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-    
+
     try {
       const result = await this.prisma.role.findMany({
-        include: { 
+        include: {
           rolePermissions: {
             include: {
               permission: true
             }
-          }, 
+          },
           userRoles: {
             include: {
               user: true
             }
-          } 
+          }
         },
       });
 //       console.log('>>> RolesService.findAll: SUCCESS, found', result.length, 'roles');
@@ -72,17 +72,17 @@ export class RolesService {
   async findOne(id: string): Promise<Role | null> {
     const role = await this.prisma.role.findUnique({
       where: { id },
-      include: { 
+      include: {
         rolePermissions: {
           include: {
             permission: true
           }
-        }, 
+        },
         userRoles: {
           include: {
             user: true
           }
-        } 
+        }
       },
     });
     if (!role) throw new NotFoundException('Role not found');
@@ -91,7 +91,7 @@ export class RolesService {
 
   // Temporarily commented methods that use AuthenticatedUser and auditLogsService
   // TODO: Uncomment when AuthenticatedUser type and AuditLogsService are available
-  
+
   /*
   async update(id: string, dto: UpdateRoleDto, user: AuthenticatedUser): Promise<Role> {
     const existingRole = await this.prisma.role.findUnique({ where: { id } });
@@ -227,4 +227,4 @@ export class RolesService {
     });
   }
   */
-} 
+}

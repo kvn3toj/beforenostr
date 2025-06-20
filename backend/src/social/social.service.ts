@@ -57,33 +57,24 @@ export class SocialService {
 
   async getRecentActivity() {
     try {
-      // Obtener actividad reciente basada en datos existentes
+      // TODO: Add a creator/user relation to VideoItem in schema.prisma to correctly attribute activities.
+      // The current implementation is a placeholder to avoid breaking the social feed.
       const recentVideos = await this.prisma.videoItem.findMany({
         take: 5,
         orderBy: { createdAt: 'desc' },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              username: true
-            }
-          }
-        }
       });
 
       // Convertir a formato de actividad social
       const activities = recentVideos.map((video, index) => ({
         id: `activity_${video.id}`,
-        userId: video.creator?.id || 'unknown',
+        userId: 'unknown-user', // Placeholder
         type: index % 3 === 0 ? 'share' : index % 3 === 1 ? 'like' : 'comment',
         content: video.title,
         createdAt: video.createdAt.toISOString(),
         user: {
-          name: video.creator?.name || video.creator?.username || '',
-          email: video.creator?.email || '',
-          username: video.creator?.username || ''
+          name: 'Unknown User', // Placeholder
+          email: '',
+          username: 'unknown'
         }
       }));
 

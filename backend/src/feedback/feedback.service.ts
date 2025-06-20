@@ -1,29 +1,37 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { UpdateFeedbackDto } from './dto/update-feedback.dto';
-import { FeedbackReport, FeedbackStatus, FeedbackType } from '../generated/prisma';
 
 @Injectable()
 export class FeedbackService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(FeedbackService.name);
+
+  constructor(private prisma: PrismaService) {}
 
   /**
-   * Crear un nuevo reporte de feedback
+   * Crea un nuevo feedback reportado por el Oráculo de CoomÜnity
+   * @param dto - Datos del feedback
+   * @param userId - ID del usuario administrador que reporta el feedback
+   * @returns El feedback creado
    */
-  async create(dto: CreateFeedbackDto, userId: string): Promise<FeedbackReport> {
+  async create(dto: CreateFeedbackDto, userId: string) {
     try {
-      const feedbackReport = await this.prisma.feedbackReport.create({
+      this.logger.log(`📝 [ORÁCULO] Creando feedback para usuario ${userId}`);
+      this.logger.log(`📍 [ORÁCULO] URL: ${dto.pageUrl}`);
+      this.logger.log(`🔍 [ORÁCULO] Tipo: ${dto.feedbackType}`);
+
+      // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
+      /*
+      const feedback = await this.prisma.feedback.create({
         data: {
           userId,
-          type: dto.type,
-          title: dto.title,
-          description: dto.description,
-          priority: dto.priority,
-          category: dto.category,
-          elementContext: dto.elementContext as any,
-          technicalContext: dto.technicalContext as any,
-          status: FeedbackStatus.SUBMITTED,
+          pageUrl: dto.pageUrl,
+          feedbackText: dto.feedbackText,
+          feedbackType: dto.feedbackType,
+          componentContext: dto.componentContext,
+          technicalContext: dto.technicalContext || {},
+          priority: dto.priority || 0,
+          tags: dto.tags || [],
         },
         include: {
           user: {
@@ -31,45 +39,75 @@ export class FeedbackService {
               id: true,
               email: true,
               name: true,
-              avatarUrl: true,
+              username: true,
             },
           },
         },
       });
+      */
 
-      // Si se solicita análisis de código, procesarlo de forma asíncrona
-      if (dto.requestCodeAnalysis) {
-        this.processCodeAnalysis(feedbackReport.id, dto).catch((error) => {
-          console.error('Error processing code analysis:', error);
-        });
-      }
+      // Mock temporal para desarrollo sin PostgreSQL
+      const mockFeedback = {
+        id: `mock_${Date.now()}`,
+        userId,
+        pageUrl: dto.pageUrl,
+        feedbackText: dto.feedbackText,
+        feedbackType: dto.feedbackType,
+        componentContext: dto.componentContext,
+        technicalContext: dto.technicalContext || {},
+        priority: dto.priority || 0,
+        tags: dto.tags || [],
+        status: 'PENDING',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        user: {
+          id: userId,
+          email: 'admin@coomunity.com',
+          name: 'Administrador Oráculo',
+          username: 'oraculo_admin',
+        },
+      };
 
-      return feedbackReport;
+      this.logger.log(`✅ [ORÁCULO] Feedback creado exitosamente (MOCK): ${mockFeedback.id}`);
+
+      // Aquí se podría agregar lógica para:
+      // - Notificar a la CoP Oráculo sobre el nuevo feedback
+      // - Asignar automáticamente basado en prioridad/tags
+      // - Crear métricas para gamificación
+
+      return mockFeedback;
     } catch (error) {
-      console.error('Error creating feedback report:', error);
+      this.logger.error(`❌ [ORÁCULO] Error creando feedback: ${error.message}`, error.stack);
       throw error;
     }
   }
 
   /**
-   * Obtener todos los reportes de feedback con filtros opcionales
+   * Obtiene todos los feedbacks con filtros opcionales
+   * @param filters - Filtros opcionales para la consulta
+   * @returns Lista de feedbacks
    */
-  async findAll(query: {
-    status?: FeedbackStatus;
-    type?: FeedbackType;
+  async findAll(filters?: {
+    status?: string;
+    feedbackType?: string;
     userId?: string;
+    priority?: number;
     limit?: number;
     offset?: number;
-  } = {}) {
-    const { status, type, userId, limit = 50, offset = 0 } = query;
+  }) {
+    try {
+      this.logger.log(`🔍 [ORÁCULO] Obteniendo feedbacks con filtros:`, filters);
 
-    const where: any = {};
-    if (status) where.status = status;
-    if (type) where.type = type;
-    if (userId) where.userId = userId;
+      // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
+      /*
+      const where: any = {};
 
-    const [reports, total] = await Promise.all([
-      this.prisma.feedbackReport.findMany({
+      if (filters?.status) where.status = filters.status;
+      if (filters?.feedbackType) where.feedbackType = filters.feedbackType;
+      if (filters?.userId) where.userId = filters.userId;
+      if (filters?.priority !== undefined) where.priority = filters.priority;
+
+      const feedbacks = await this.prisma.feedback.findMany({
         where,
         include: {
           user: {
@@ -77,232 +115,206 @@ export class FeedbackService {
               id: true,
               email: true,
               name: true,
-              avatarUrl: true,
+              username: true,
             },
           },
-          adminUser: {
+        },
+        orderBy: [
+          { priority: 'desc' },
+          { createdAt: 'desc' },
+        ],
+        take: filters?.limit || 50,
+        skip: filters?.offset || 0,
+      });
+      */
+
+      // Mock temporal para desarrollo
+      const mockFeedbacks = [
+        {
+          id: 'mock_1',
+          pageUrl: 'http://localhost:3001/uplay',
+          feedbackText: 'El reproductor de video no responde correctamente',
+          feedbackType: 'BUG',
+          status: 'PENDING',
+          priority: 3,
+          createdAt: new Date(),
+          user: { id: '1', email: 'admin@coomunity.com', name: 'Admin', username: 'admin' }
+        }
+      ];
+
+      this.logger.log(`📊 [ORÁCULO] Encontrados ${mockFeedbacks.length} feedbacks (MOCK)`);
+      return mockFeedbacks;
+    } catch (error) {
+      this.logger.error(`❌ [ORÁCULO] Error obteniendo feedbacks: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene un feedback específico por ID
+   * @param id - ID del feedback
+   * @returns El feedback encontrado
+   */
+  async findOne(id: string) {
+    try {
+      this.logger.log(`🔍 [ORÁCULO] Obteniendo feedback: ${id}`);
+
+      // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
+      /*
+      const feedback = await this.prisma.feedback.findUnique({
+        where: { id },
+        include: {
+          user: {
             select: {
               id: true,
               email: true,
               name: true,
+              username: true,
             },
           },
         },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: limit,
-        skip: offset,
-      }),
-      this.prisma.feedbackReport.count({ where }),
-    ]);
+      });
+      */
 
-    return {
-      reports,
-      total,
-      hasMore: offset + limit < total,
-    };
+      // Mock temporal para desarrollo
+      const mockFeedback = {
+        id,
+        pageUrl: 'http://localhost:3001/uplay',
+        feedbackText: 'Feedback de ejemplo',
+        feedbackType: 'BUG',
+        status: 'PENDING',
+        priority: 2,
+        createdAt: new Date(),
+        user: { id: '1', email: 'admin@coomunity.com', name: 'Admin', username: 'admin' }
+      };
+
+      this.logger.log(`✅ [ORÁCULO] Feedback encontrado (MOCK): ${mockFeedback.id}`);
+      return mockFeedback;
+    } catch (error) {
+      this.logger.error(`❌ [ORÁCULO] Error obteniendo feedback: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   /**
-   * Obtener un reporte específico por ID
+   * Actualiza el estado de un feedback
+   * @param id - ID del feedback
+   * @param status - Nuevo estado
+   * @returns El feedback actualizado
    */
-  async findOne(id: string): Promise<FeedbackReport> {
-    const report = await this.prisma.feedbackReport.findUnique({
-      where: { id },
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            avatarUrl: true,
-          },
-        },
-        adminUser: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-          },
-        },
-      },
-    });
+  async updateStatus(id: string, status: string) {
+    try {
+      this.logger.log(`🔄 [ORÁCULO] Actualizando status de feedback ${id} a: ${status}`);
 
-    if (!report) {
-      throw new NotFoundException(`Feedback report with ID ${id} not found`);
-    }
-
-    return report;
-  }
-
-  /**
-   * Actualizar un reporte de feedback (solo administradores)
-   */
-  async update(
-    id: string,
-    dto: UpdateFeedbackDto,
-    adminUserId: string,
-  ): Promise<FeedbackReport> {
-    // Verificar que el reporte existe
-    const existingReport = await this.findOne(id);
-
-    const updateData: any = {
-      ...dto,
-      updatedAt: new Date(),
-    };
-
-    // Si se está resolviendo, añadir timestamp y admin
-    if (dto.status === FeedbackStatus.RESOLVED) {
-      updateData.resolvedAt = new Date();
-      updateData.adminUserId = adminUserId;
-    }
-
-    // Si se añade respuesta de admin, asignar el administrador
-    if (dto.adminResponse) {
-      updateData.adminUserId = adminUserId;
-    }
-
-    return this.prisma.feedbackReport.update({
-      where: { id },
-      data: updateData,
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            avatarUrl: true,
-          },
-        },
-        adminUser: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-          },
-        },
-      },
-    });
-  }
-
-  /**
-   * Eliminar un reporte de feedback
-   */
-  async remove(id: string, userId: string, isAdmin: boolean = false): Promise<void> {
-    const report = await this.findOne(id);
-
-    // Solo el autor o un admin pueden eliminar
-    if (!isAdmin && report.userId !== userId) {
-      throw new ForbiddenException('You can only delete your own feedback reports');
-    }
-
-    await this.prisma.feedbackReport.delete({
-      where: { id },
-    });
-  }
-
-  /**
-   * Obtener estadísticas de feedback
-   */
-  async getStats() {
-    const [
-      totalReports,
-      byStatus,
-      byType,
-      byPriority,
-      recentActivity,
-    ] = await Promise.all([
-      this.prisma.feedbackReport.count(),
-      this.prisma.feedbackReport.groupBy({
-        by: ['status'],
-        _count: true,
-      }),
-      this.prisma.feedbackReport.groupBy({
-        by: ['type'],
-        _count: true,
-      }),
-      this.prisma.feedbackReport.groupBy({
-        by: ['priority'],
-        _count: true,
-      }),
-      this.prisma.feedbackReport.findMany({
-        take: 10,
-        orderBy: { createdAt: 'desc' },
+      // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
+      /*
+      const feedback = await this.prisma.feedback.update({
+        where: { id },
+        data: { status },
         include: {
           user: {
             select: {
+              id: true,
               email: true,
               name: true,
+              username: true,
             },
           },
         },
-      }),
-    ]);
+      });
+      */
 
-    return {
-      totalReports,
-      byStatus: byStatus.reduce((acc, item) => {
-        acc[item.status] = item._count;
-        return acc;
-      }, {}),
-      byType: byType.reduce((acc, item) => {
-        acc[item.type] = item._count;
-        return acc;
-      }, {}),
-      byPriority: byPriority.reduce((acc, item) => {
-        acc[item.priority] = item._count;
-        return acc;
-      }, {}),
-      recentActivity,
-    };
+      // Mock temporal para desarrollo
+      const mockFeedback = {
+        id,
+        status,
+        updatedAt: new Date(),
+        user: { id: '1', email: 'admin@coomunity.com', name: 'Admin', username: 'admin' }
+      };
+
+      this.logger.log(`✅ [ORÁCULO] Status actualizado exitosamente (MOCK): ${mockFeedback.id}`);
+      return mockFeedback;
+    } catch (error) {
+      this.logger.error(`❌ [ORÁCULO] Error actualizando status: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   /**
-   * Procesar análisis de código de forma asíncrona
+   * Obtiene estadísticas de feedbacks para la CoP Oráculo
+   * @returns Estadísticas agregadas
    */
-  private async processCodeAnalysis(
-    feedbackId: string,
-    feedbackData: CreateFeedbackDto,
-  ): Promise<void> {
+  async getStats() {
     try {
-      // Simular análisis de código (aquí se integrarían los scripts reales)
-      const mockAnalysis = {
-        scriptName: 'feedback-context-analyzer',
-        executedAt: new Date().toISOString(),
-        results: {
-          elementAnalysis: {
-            tagName: feedbackData.elementContext.tagName,
-            hasId: !!feedbackData.elementContext.id,
-            hasClass: !!feedbackData.elementContext.className,
-            textLength: feedbackData.elementContext.text?.length || 0,
-          },
-          routeAnalysis: {
-            route: feedbackData.technicalContext.route,
-            isProtected: feedbackData.technicalContext.userRoles.length > 0,
-            userRoles: feedbackData.technicalContext.userRoles,
-          },
-          contextSuggestions: [
-            'Element is properly identified',
-            'Route context captured correctly',
-            'User session is valid',
-          ],
+      this.logger.log(`📊 [ORÁCULO] Generando estadísticas de feedbacks`);
+
+      // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
+      /*
+      const [totalCount, statusStats, typeStats, priorityStats] = await Promise.all([
+        this.prisma.feedback.count(),
+        this.prisma.feedback.groupBy({
+          by: ['status'],
+          _count: true,
+        }),
+        this.prisma.feedback.groupBy({
+          by: ['feedbackType'],
+          _count: true,
+        }),
+        this.prisma.feedback.groupBy({
+          by: ['priority'],
+          _count: true,
+          orderBy: { priority: 'desc' },
+        }),
+      ]);
+
+      const stats = {
+        total: totalCount,
+        byStatus: statusStats.reduce((acc, item) => {
+          acc[item.status] = item._count;
+          return acc;
+        }, {}),
+        byType: typeStats.reduce((acc, item) => {
+          acc[item.feedbackType] = item._count;
+          return acc;
+        }, {}),
+        byPriority: priorityStats.reduce((acc, item) => {
+          acc[`priority_${item.priority}`] = item._count;
+          return acc;
+        }, {}),
+      };
+      */
+
+      // Mock temporal para desarrollo
+      const stats = {
+        total: 12,
+        byStatus: {
+          PENDING: 8,
+          INVESTIGATING: 2,
+          RESOLVED: 2,
+          WONT_FIX: 0,
         },
-        executionTime: Math.random() * 1000 + 500, // Mock execution time
+        byType: {
+          BUG: 5,
+          IMPROVEMENT: 3,
+          UI_UX: 2,
+          PERFORMANCE: 1,
+          OTHER: 1,
+        },
+        byPriority: {
+          priority_0: 2,
+          priority_1: 3,
+          priority_2: 4,
+          priority_3: 2,
+          priority_4: 1,
+          priority_5: 0,
+        },
       };
 
-      // Actualizar el reporte con el análisis
-      await this.prisma.feedbackReport.update({
-        where: { id: feedbackId },
-        data: {
-          codeAnalysis: mockAnalysis,
-          status: FeedbackStatus.REVIEWING,
-        },
-      });
-
-      console.log(`✅ Code analysis completed for feedback ${feedbackId}`);
+      this.logger.log(`📈 [ORÁCULO] Estadísticas generadas (MOCK): ${JSON.stringify(stats, null, 2)}`);
+      return stats;
     } catch (error) {
-      console.error(`❌ Code analysis failed for feedback ${feedbackId}:`, error);
+      this.logger.error(`❌ [ORÁCULO] Error generando estadísticas: ${error.message}`, error.stack);
+      throw error;
     }
   }
 }

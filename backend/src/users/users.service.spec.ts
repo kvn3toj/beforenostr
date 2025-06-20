@@ -1,13 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { PrismaService } from '../../prisma/prisma.service';
-import { User } from '@prisma/client'; // Assuming Prisma generates types here
-import { CreateUserDto } from '../admin/users/dto/create-user.dto'; // Assuming DTO location
-import { UpdateUserDto } from '../admin/users/dto/update-user.dto'; // Assuming DTO location
+import { PrismaService } from '../prisma/prisma.service';
+import { User } from '../generated/prisma';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let service: UsersService;
   let prisma: PrismaService;
+  const mockUser = { id: 'auth-user-id', email: 'auth@user.com' }; // Mock authenticated user
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -15,13 +17,12 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: PrismaService,
-          useValue: { // Mock PrismaService methods used by UsersService
+          useValue: {
             user: {
               findMany: jest.fn(),
               findUnique: jest.fn(),
               create: jest.fn(),
               update: jest.fn(),
-              delete: jest.fn(), // Assuming hard delete might be used internally sometimes
             },
           },
         },
@@ -39,80 +40,70 @@ describe('UsersService', () => {
   describe('create', () => {
     it('should create a new user', async () => {
       const createUserDto: CreateUserDto = { email: 'test@example.com', password: 'password123' };
-      const createdUser: Partial<User> = { id: 'user-id', email: 'test@example.com' }; // Mock return value
-      
-      // Mock prisma.user.create
-      jest.spyOn(prisma.user, 'create').mockResolvedValue(createdUser as User); // Cast to User as mockResolvedValue expects the full type
+      const createdUser: Partial<User> = { id: 'user-id', email: 'test@example.com', password: 'hashedpassword' };
 
-      const result = await service.create(createUserDto);
+      jest.spyOn(prisma.user, 'create').mockResolvedValue(createdUser as User);
+
+      const result = await service.create(createUserDto, mockUser);
 
       expect(result).toEqual(createdUser);
       expect(prisma.user.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ email: createUserDto.email }), // Check if email is passed
+        data: expect.objectContaining({
+          email: createUserDto.email,
+          password: expect.any(String) // Password should be hashed
+        }),
       });
-      // Add check for password hashing if done in service, requires mocking bcrypt
     });
   });
 
   describe('findOne', () => {
     it('should return a user by ID', async () => {
       const userId = 'user-id';
-      const mockUser: Partial<User> = { id: userId, email: 'test@example.com' };
+      const mockUserResult: Partial<User> = { id: userId, email: 'test@example.com' };
 
-      // Mock prisma.user.findUnique
-      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockUser as User); // Cast to User
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockUserResult as User);
 
       const result = await service.findOne(userId);
 
-      expect(result).toEqual(mockUser);
+      expect(result).toEqual(mockUserResult);
       expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { id: userId } });
     });
 
-    it('should return null if user not found', async () => {
+    it('should throw NotFoundException if user not found', async () => {
       const userId = 'nonexistent-id';
 
-      // Mock prisma.user.findUnique to return null
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
 
-      const result = await service.findOne(userId);
-
-      expect(result).toBeNull();
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { id: userId } });
+      await expect(service.findOne(userId)).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('remove', () => {
     it('should soft delete a user by ID', async () => {
       const userId = 'user-id';
-      const deletedUser: Partial<User> = { id: userId, deletedAt: new Date() }; // Mock return value for soft delete
+      const mockExistingUser: Partial<User> = { id: userId, isActive: true };
+      const softDeletedUser: Partial<User> = { id: userId, isActive: false };
 
-      // Mock prisma.user.update for soft delete (assuming soft delete updates a deletedAt field)
-      jest.spyOn(prisma.user, 'update').mockResolvedValue(deletedUser as User); // Cast to User
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockExistingUser as User);
+      jest.spyOn(prisma.user, 'update').mockResolvedValue(softDeletedUser as User);
 
-      const result = await service.remove(userId);
+      const result = await service.remove(userId, mockUser);
 
-      expect(result).toEqual(deletedUser);
+      expect(result).toEqual(softDeletedUser);
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: userId },
-        data: { deletedAt: expect.any(Date) },
+        data: { isActive: false },
       });
     });
 
-    it('should return null or throw if user not found for removal', async () => {
+    it('should throw NotFoundException if user not found for removal', async () => {
         const userId = 'nonexistent-id';
 
-        // Mock prisma.user.update to return null or throw (depending on Prisma behavior when ID not found)
-        // Prisma update throws if not found by default, need to handle that or mock to return null.
-        // Let's assume it throws for this test.
-        jest.spyOn(prisma.user, 'update').mockRejectedValue(new Error('User not found')); // Simulate Prisma throwing
+        jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
 
-        await expect(service.remove(userId)).rejects.toThrow('User not found'); // Expect the service to handle/rethrow
-        expect(prisma.user.update).toHaveBeenCalledWith({
-            where: { id: userId },
-            data: { deletedAt: expect.any(Date) },
-          });
+        await expect(service.remove(userId, mockUser)).rejects.toThrow(NotFoundException);
     });
   });
 
   // Add tests for findAll, update, and findOneByEmail (if applicable)
-}); 
+});

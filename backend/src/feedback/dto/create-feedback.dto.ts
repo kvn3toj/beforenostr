@@ -1,83 +1,78 @@
-import { IsString, IsEnum, IsNotEmpty, IsOptional, IsObject, ValidateNested, IsBoolean } from 'class-validator';
-import { Type } from 'class-transformer';
-import { FeedbackType, FeedbackPriority } from '../../generated/prisma';
+import { IsString, IsEnum, IsUrl, IsOptional, IsObject, IsArray, IsInt, Min, Max } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class ElementContextDto {
-  @IsString()
-  tagName: string;
-
-  @IsOptional()
-  @IsString()
-  id?: string;
-
-  @IsOptional()
-  @IsString()
-  className?: string;
-
-  @IsOptional()
-  @IsString()
-  text?: string;
-
-  @IsObject()
-  position: { x: number; y: number };
-
-  @IsString()
-  url: string;
-
-  @IsString()
-  userAgent: string;
-
-  @IsObject()
-  viewport: { width: number; height: number };
-
-  @IsString()
-  timestamp: string;
-}
-
-export class TechnicalContextDto {
-  @IsString()
-  route: string;
-
-  @IsString()
-  userId: string;
-
-  @IsString({ each: true })
-  userRoles: string[];
-
-  @IsString()
-  sessionId: string;
-
-  @IsString()
-  buildVersion: string;
+// Enum local hasta que se genere el cliente de Prisma con la nueva migración
+export enum FeedbackType {
+  BUG = 'BUG',
+  IMPROVEMENT = 'IMPROVEMENT',
+  MISSING_FEATURE = 'MISSING_FEATURE',
+  UI_UX = 'UI_UX',
+  PERFORMANCE = 'PERFORMANCE',
+  OTHER = 'OTHER'
 }
 
 export class CreateFeedbackDto {
-  @IsEnum(FeedbackType)
-  type: FeedbackType;
+  @ApiProperty({
+    description: 'URL de la página donde se detectó el feedback',
+    example: 'http://localhost:3001/uplay/video/123'
+  })
+  @IsUrl({}, { message: 'pageUrl debe ser una URL válida' })
+  pageUrl: string;
 
+  @ApiProperty({
+    description: 'Texto del feedback capturado por el Oráculo',
+    example: 'El botón de play no responde cuando el video ya está cargado'
+  })
+  @IsString({ message: 'feedbackText debe ser un string' })
+  feedbackText: string;
+
+  @ApiProperty({
+    description: 'Tipo de feedback identificado por el Oráculo',
+    enum: FeedbackType,
+    example: FeedbackType.BUG
+  })
+  @IsEnum(FeedbackType, { message: 'feedbackType debe ser un valor válido del enum FeedbackType' })
+  feedbackType: FeedbackType;
+
+  @ApiPropertyOptional({
+    description: 'Contexto del componente React donde se detectó el feedback',
+    example: 'VideoPlayer -> PlayButton component'
+  })
   @IsString()
-  @IsNotEmpty()
-  title: string;
-
-  @IsString()
-  @IsNotEmpty()
-  description: string;
-
-  @IsEnum(FeedbackPriority)
-  priority: FeedbackPriority;
-
-  @IsString()
-  category: string;
-
-  @ValidateNested()
-  @Type(() => ElementContextDto)
-  elementContext: ElementContextDto;
-
-  @ValidateNested()
-  @Type(() => TechnicalContextDto)
-  technicalContext: TechnicalContextDto;
-
   @IsOptional()
-  @IsBoolean()
-  requestCodeAnalysis?: boolean;
+  componentContext?: string;
+
+  @ApiPropertyOptional({
+    description: 'Contexto técnico capturado por el Oráculo (userAgent, resolución, etc.)',
+    example: {
+      userAgent: 'Mozilla/5.0...',
+      screenResolution: '1920x1080',
+      viewport: '1600x900',
+      timestamp: '2025-06-20T12:35:00Z'
+    }
+  })
+  @IsObject()
+  @IsOptional()
+  technicalContext?: any;
+
+  @ApiPropertyOptional({
+    description: 'Nivel de prioridad del feedback (0-5)',
+    minimum: 0,
+    maximum: 5,
+    example: 3
+  })
+  @IsInt()
+  @Min(0)
+  @Max(5)
+  @IsOptional()
+  priority?: number;
+
+  @ApiPropertyOptional({
+    description: 'Tags para categorización avanzada del feedback',
+    example: ['video-player', 'user-experience', 'critical']
+  })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  tags?: string[];
 }

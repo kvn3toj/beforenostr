@@ -1,149 +1,279 @@
 import {
   Controller,
-  Get,
   Post,
-  Body,
+  Get,
   Patch,
+  Body,
   Param,
-  Delete,
   Query,
   UseGuards,
-  Request,
+  Req,
   HttpCode,
   HttpStatus,
+  Logger
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiParam,
+  ApiQuery
+} from '@nestjs/swagger';
+import { FeedbackService } from './feedback.service';
+import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
 import { Roles } from '../rbac/decorators/roles.decorator';
-import { FeedbackService } from './feedback.service';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { UpdateFeedbackDto } from './dto/update-feedback.dto';
-import { FeedbackStatus, FeedbackType } from '../generated/prisma';
 
+@ApiTags('🔮 Feedback - Oráculo de CoomÜnity')
+@ApiBearerAuth()
 @Controller('feedback')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class FeedbackController {
+  private readonly logger = new Logger(FeedbackController.name);
+
   constructor(private readonly feedbackService: FeedbackService) {}
 
-  /**
-   * Crear un nuevo reporte de feedback
-   * POST /feedback
-   */
   @Post()
+  @Roles('admin') // Solo los administradores pueden usar el Oráculo
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createFeedbackDto: CreateFeedbackDto, @Request() req) {
-    try {
-      console.log('🤖 Feedback creation request received:', {
-        dto: createFeedbackDto,
-        user: req.user
-      });
-
-      const userId = req.user.sub || req.user.id;
-      console.log('🔑 Extracted userId:', userId);
-
-      const result = await this.feedbackService.create(createFeedbackDto, userId);
-      console.log('✅ Feedback created successfully:', result.id);
-
-      return result;
-    } catch (error) {
-      console.error('❌ Error in feedback creation:', error);
-      throw error;
+  @ApiOperation({
+    summary: 'Enviar feedback desde el Oráculo de CoomÜnity',
+    description: 'Endpoint exclusivo para que el agente Oráculo reporte feedback detectado automáticamente en la plataforma'
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Feedback enviado exitosamente al sistema de la CoP Oráculo.',
+    schema: {
+      example: {
+        id: 'cuid_123456789',
+        userId: 'admin_user_id',
+        pageUrl: 'http://localhost:3001/uplay/video/123',
+        feedbackText: 'El reproductor de video presenta latencia en la carga',
+        feedbackType: 'PERFORMANCE',
+        status: 'PENDING',
+        priority: 3,
+        tags: ['video-player', 'performance'],
+        createdAt: '2025-06-20T12:35:00Z',
+        user: {
+          id: 'admin_user_id',
+          email: 'admin@coomunity.com',
+          name: 'Administrador Oráculo'
+        }
+      }
     }
-  }
-
-  /**
-   * Obtener todos los reportes de feedback (con filtros)
-   * GET /feedback?status=SUBMITTED&type=BUG&limit=20&offset=0
-   */
-  @Get()
-  async findAll(
-    @Query('status') status?: FeedbackStatus,
-    @Query('type') type?: FeedbackType,
-    @Query('userId') userId?: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
+  })
+  @ApiResponse({ status: 401, description: 'No autorizado - Token JWT inválido' })
+  @ApiResponse({ status: 403, description: 'Prohibido - Solo administradores pueden usar el Oráculo' })
+  async submitFeedback(
+    @Body() createFeedbackDto: CreateFeedbackDto,
+    @Req() req: any
   ) {
-    return this.feedbackService.findAll({
-      status,
-      type,
-      userId,
-      limit: limit ? parseInt(limit, 10) : undefined,
-      offset: offset ? parseInt(offset, 10) : undefined,
-    });
+    this.logger.log(`🔮 [ORÁCULO-CONTROLLER] Recibiendo feedback de admin: ${req.user.email}`);
+    this.logger.log(`🔮 [ORÁCULO-CONTROLLER] Tipo: ${createFeedbackDto.feedbackType} | URL: ${createFeedbackDto.pageUrl}`);
+
+    const adminUserId = req.user.id;
+    const feedback = await this.feedbackService.create(createFeedbackDto, adminUserId);
+
+    this.logger.log(`✅ [ORÁCULO-CONTROLLER] Feedback procesado exitosamente: ${feedback.id}`);
+    return feedback;
   }
 
-  /**
-   * Endpoint de ping para verificar que el módulo funciona
-   * GET /feedback/ping
-   */
-  @Get('ping')
-  @HttpCode(HttpStatus.OK)
-  ping() {
+  @Get()
+  @Roles('admin') // Solo administradores pueden ver todos los feedbacks
+  @ApiOperation({
+    summary: 'Obtener todos los feedbacks de la CoP Oráculo',
+    description: 'Lista paginada de feedbacks con filtros opcionales para la gestión en la CoP'
+  })
+  @ApiQuery({ name: 'status', required: false, description: 'Filtrar por estado del feedback' })
+  @ApiQuery({ name: 'feedbackType', required: false, description: 'Filtrar por tipo de feedback' })
+  @ApiQuery({ name: 'priority', required: false, type: Number, description: 'Filtrar por prioridad (0-5)' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Límite de resultados (default: 50)' })
+  @ApiQuery({ name: 'offset', required: false, type: Number, description: 'Offset para paginación (default: 0)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de feedbacks obtenida exitosamente',
+    schema: {
+      type: 'array',
+      items: {
+        example: {
+          id: 'cuid_123456789',
+          pageUrl: 'http://localhost:3001/uplay',
+          feedbackText: 'Problema detectado',
+          feedbackType: 'BUG',
+          status: 'PENDING',
+          priority: 2,
+          createdAt: '2025-06-20T12:35:00Z',
+          user: { email: 'admin@coomunity.com' }
+        }
+      }
+    }
+  })
+  async getAllFeedbacks(
+    @Query('status') status?: string,
+    @Query('feedbackType') feedbackType?: string,
+    @Query('priority') priority?: number,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    this.logger.log(`🔍 [ORÁCULO-CONTROLLER] Obteniendo feedbacks con filtros`);
+
+    const filters = {
+      status,
+      feedbackType,
+      priority,
+      limit,
+      offset,
+    };
+
+    const feedbacks = await this.feedbackService.findAll(filters);
+
+    this.logger.log(`📋 [ORÁCULO-CONTROLLER] Devolviendo ${feedbacks.length} feedbacks`);
+    return feedbacks;
+  }
+
+  @Get('stats')
+  @Roles('admin')
+  @ApiOperation({
+    summary: 'Obtener estadísticas de feedbacks para la CoP Oráculo',
+    description: 'Métricas agregadas para gamificación y dashboards de la CoP'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Estadísticas de feedbacks obtenidas exitosamente',
+    schema: {
+      example: {
+        total: 25,
+        byStatus: {
+          PENDING: 15,
+          INVESTIGATING: 5,
+          RESOLVED: 5
+        },
+        byType: {
+          BUG: 10,
+          IMPROVEMENT: 8,
+          UI_UX: 5,
+          PERFORMANCE: 2
+        },
+        byPriority: {
+          priority_0: 3,
+          priority_1: 5,
+          priority_2: 8,
+          priority_3: 6,
+          priority_4: 2,
+          priority_5: 1
+        }
+      }
+    }
+  })
+  async getFeedbackStats() {
+    this.logger.log(`📊 [ORÁCULO-CONTROLLER] Generando estadísticas para CoP`);
+
+    const stats = await this.feedbackService.getStats();
+
+    this.logger.log(`📈 [ORÁCULO-CONTROLLER] Estadísticas generadas exitosamente`);
+    return stats;
+  }
+
+  @Get(':id')
+  @Roles('admin')
+  @ApiOperation({
+    summary: 'Obtener un feedback específico por ID',
+    description: 'Detalles completos de un feedback para gestión en la CoP'
+  })
+  @ApiParam({ name: 'id', description: 'ID único del feedback' })
+  @ApiResponse({
+    status: 200,
+    description: 'Feedback encontrado exitosamente',
+    schema: {
+      example: {
+        id: 'cuid_123456789',
+        pageUrl: 'http://localhost:3001/uplay/video/123',
+        feedbackText: 'Descripción detallada del feedback',
+        feedbackType: 'BUG',
+        status: 'PENDING',
+        priority: 3,
+        componentContext: 'VideoPlayer -> PlayButton',
+        technicalContext: {
+          userAgent: 'Mozilla/5.0...',
+          screenResolution: '1920x1080'
+        },
+        tags: ['video-player', 'critical'],
+        createdAt: '2025-06-20T12:35:00Z',
+        user: {
+          email: 'admin@coomunity.com',
+          name: 'Administrador'
+        }
+      }
+    }
+  })
+  @ApiResponse({ status: 404, description: 'Feedback no encontrado' })
+  async getFeedbackById(@Param('id') id: string) {
+    this.logger.log(`🔍 [ORÁCULO-CONTROLLER] Obteniendo feedback: ${id}`);
+
+    const feedback = await this.feedbackService.findOne(id);
+
+    if (!feedback) {
+      this.logger.warn(`⚠️ [ORÁCULO-CONTROLLER] Feedback no encontrado: ${id}`);
+      return { message: 'Feedback no encontrado' };
+    }
+
+    this.logger.log(`✅ [ORÁCULO-CONTROLLER] Feedback encontrado: ${feedback.id}`);
+    return feedback;
+  }
+
+  @Patch(':id/status')
+  @Roles('admin')
+  @ApiOperation({
+    summary: 'Actualizar el estado de un feedback',
+    description: 'Cambiar el estado de un feedback para gestión del flujo en la CoP'
+  })
+  @ApiParam({ name: 'id', description: 'ID único del feedback' })
+  @ApiResponse({
+    status: 200,
+    description: 'Estado del feedback actualizado exitosamente',
+  })
+  @ApiResponse({ status: 404, description: 'Feedback no encontrado' })
+  async updateFeedbackStatus(
+    @Param('id') id: string,
+    @Body('status') status: string,
+    @Req() req: any
+  ) {
+    this.logger.log(`🔄 [ORÁCULO-CONTROLLER] Admin ${req.user.email} actualizando status de ${id} a: ${status}`);
+
+    const updatedFeedback = await this.feedbackService.updateStatus(id, status);
+
+    this.logger.log(`✅ [ORÁCULO-CONTROLLER] Status actualizado exitosamente: ${updatedFeedback.id}`);
+    return updatedFeedback;
+  }
+
+  @Get('health/check')
+  @ApiOperation({
+    summary: 'Health check del módulo feedback',
+    description: 'Endpoint para verificar que el módulo de feedback está funcionando correctamente'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Módulo funcionando correctamente',
+    schema: {
+      example: {
+        status: 'ok',
+        module: 'feedback',
+        message: 'Oráculo de CoomÜnity operacional',
+        timestamp: '2025-06-20T12:35:00Z'
+      }
+    }
+  })
+  healthCheck() {
+    this.logger.log(`💚 [ORÁCULO-CONTROLLER] Health check ejecutado`);
+
     return {
-      message: '🤖 Feedback Agent Module is running',
+      status: 'ok',
+      module: 'feedback',
+      message: 'Oráculo de CoomÜnity operacional ✨',
       timestamp: new Date().toISOString(),
-      status: 'operational',
+      version: '1.0.0'
     };
   }
-
-  /**
-   * Obtener estadísticas de feedback (solo admins)
-   * GET /feedback/stats
-   */
-  @Get('stats')
-  @UseGuards(RolesGuard)
-  @Roles('admin')
-  async getStats() {
-    return this.feedbackService.getStats();
-  }
-
-  /**
-   * Obtener reportes del usuario actual
-   * GET /feedback/me
-   */
-  @Get('me')
-  async findMyReports(@Request() req) {
-    const userId = req.user.sub || req.user.id;
-    return this.feedbackService.findAll({ userId });
-  }
-
-  /**
-   * Obtener un reporte específico por ID
-   * GET /feedback/:id
-   */
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.feedbackService.findOne(id);
-  }
-
-  /**
-   * Actualizar un reporte de feedback (solo admins)
-   * PATCH /feedback/:id
-   */
-  @Patch(':id')
-  @UseGuards(RolesGuard)
-  @Roles('admin')
-  async update(
-    @Param('id') id: string,
-    @Body() updateFeedbackDto: UpdateFeedbackDto,
-    @Request() req,
-  ) {
-    const adminUserId = req.user.sub || req.user.id;
-    return this.feedbackService.update(id, updateFeedbackDto, adminUserId);
-  }
-
-  /**
-   * Eliminar un reporte de feedback
-   * DELETE /feedback/:id
-   */
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string, @Request() req) {
-    const userId = req.user.sub || req.user.id;
-    const userRoles = req.user.roles || [];
-    const isAdmin = userRoles.includes('admin');
-
-    await this.feedbackService.remove(id, userId, isAdmin);
-  }
-
 }

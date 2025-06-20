@@ -1,31 +1,75 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CacheService } from '../cache/cache.service';
-import { LoggerService } from '../common/logger';
 import { MetricsService } from '../common/metrics/metrics.service';
 import { VideoPlatform } from '../common/constants/platform.enum';
 import { VideoQuality, VideoMetadata } from '../common/interfaces/video-metadata.interface';
 import fetch from 'node-fetch';
+import { AbortController } from 'node-abort-controller';
+
+// Minimal interfaces for API responses
+interface YouTubeApiResponse {
+  items: {
+    contentDetails: {
+      duration: string;
+    };
+  }[];
+}
+
+interface YouTubeOembedResponse {
+  title?: string;
+}
+
+interface VimeoApiResponse {
+  duration?: number;
+  title?: string;
+  thumbnail_url?: string;
+  tags?: string;
+  description?: string;
+}
+
+// More specific type for enrichment from YouTube Data API v3
+interface YouTubeVideoListResponse {
+  items: {
+    snippet: {
+      title: string;
+      description: string;
+      tags: string[];
+    };
+    contentDetails: {
+      duration: string;
+    };
+    statistics: any; // Keep it simple for now
+  }[];
+}
 
 @Injectable()
 export class VideoItemsService {
+  private readonly logger = new Logger(VideoItemsService.name);
+
   constructor(
-    @Inject(PrismaService) private readonly prisma: PrismaService
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    private readonly cacheService: CacheService,
+    private readonly metricsService: MetricsService,
   ) {
-// //     console.log('>>> VideoItemsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    this.logger.log('VideoItemsService initialized');
   }
 
   /**
    * Encuentra un video item por ID
    */
   async findOne(id: number) {
-//     console.log(`>>> VideoItemsService.findOne: Finding video item with ID: ${id}`);
-    
+    //     console.log(`>>> VideoItemsService.findOne: Finding video item with ID: ${id}`);
+
     const videoItem = await this.prisma.videoItem.findFirst({
       where: { id },
       include: {
         playlist: true,
-        questions: true,
+        questions: {
+          include: {
+            answerOptions: true,
+          }
+        },
       },
     });
 
@@ -37,7 +81,7 @@ export class VideoItemsService {
     if (!videoItem.platform || !videoItem.externalId) {
       const detectedPlatform = this.detectVideoPlatform(videoItem.content);
       const extractedId = this.extractPlatformId(videoItem.content, detectedPlatform);
-      
+
       if (detectedPlatform !== VideoPlatform.UNKNOWN) {
         const updatedItem = await this.prisma.videoItem.update({
           where: { id },
@@ -45,11 +89,19 @@ export class VideoItemsService {
             platform: detectedPlatform,
             externalId: extractedId,
           },
+           include: {
+            playlist: true,
+            questions: {
+              include: {
+                answerOptions: true,
+              }
+            },
+          }
         });
-        
-//         console.log(`>>> VideoItemsService.findOne: Updated platform metadata for video ${id}: ${detectedPlatform}`);
-        
-        return { ...updatedItem, playlist: videoItem.playlist, questions: videoItem.questions };
+
+        //         console.log(`>>> VideoItemsService.findOne: Updated platform metadata for video ${id}: ${detectedPlatform}`);
+
+        return { ...videoItem, ...updatedItem };
       }
     }
 
@@ -60,22 +112,26 @@ export class VideoItemsService {
    * Encuentra todos los video items
    */
   async findAll() {
-//     console.log('>>> VideoItemsService.findAll: ENTERING METHOD');
+    //     console.log('>>> VideoItemsService.findAll: ENTERING METHOD');
     try {
-//       console.log('>>> VideoItemsService.findAll: Finding all video items');
-//       console.log('>>> VideoItemsService.findAll: About to call prisma.videoItem.findMany');
-      
+      //       console.log('>>> VideoItemsService.findAll: Finding all video items');
+      //       console.log('>>> VideoItemsService.findAll: About to call prisma.videoItem.findMany');
+
       const result = await this.prisma.videoItem.findMany({
         include: {
           playlist: true,
-          questions: true,
+          questions: {
+            include: {
+              answerOptions: true,
+            }
+          },
         },
       });
-      
-//       console.log('>>> VideoItemsService.findAll: Prisma call successful, found', result.length, 'items');
+
+      //       console.log('>>> VideoItemsService.findAll: Prisma call successful, found', result.length, 'items');
       return result;
     } catch (error) {
-//       console.error('>>> VideoItemsService.findAll: ERROR CAUGHT:', error);
+      //       console.error('>>> VideoItemsService.findAll: ERROR CAUGHT:', error);
       throw error;
     }
   }
@@ -84,8 +140,8 @@ export class VideoItemsService {
    * Crea un nuevo video item
    */
   async create(data: any) {
-//     console.log('>>> VideoItemsService.create: Creating new video item');
-    
+    //     console.log('>>> VideoItemsService.create: Creating new video item');
+
     return this.prisma.videoItem.create({
       data,
     });
@@ -95,8 +151,8 @@ export class VideoItemsService {
    * Actualiza un video item
    */
   async update(id: number, data: any) {
-//     console.log(`>>> VideoItemsService.update: Updating video item with ID: ${id}`);
-    
+    //     console.log(`>>> VideoItemsService.update: Updating video item with ID: ${id}`);
+
     return this.prisma.videoItem.update({
       where: { id },
       data,
@@ -107,8 +163,8 @@ export class VideoItemsService {
    * Elimina un video item
    */
   async remove(id: number) {
-//     console.log(`>>> VideoItemsService.remove: Removing video item with ID: ${id}`);
-    
+    //     console.log(`>>> VideoItemsService.remove: Removing video item with ID: ${id}`);
+
     return this.prisma.videoItem.delete({
       where: { id },
     });
@@ -125,11 +181,11 @@ export class VideoItemsService {
     if (contentLower.includes('youtube.com') || contentLower.includes('youtu.be')) {
       return VideoPlatform.YOUTUBE;
     }
-    
+
     if (contentLower.includes('vimeo.com')) {
       return VideoPlatform.VIMEO;
     }
-    
+
     if (contentLower.includes('localhost') || contentLower.includes('gamifier')) {
       return VideoPlatform.LOCAL;
     }
@@ -219,65 +275,63 @@ export class VideoItemsService {
       switch (platform) {
         case VideoPlatform.YOUTUBE:
           duration = await this.getYouTubeDuration(content);
-          if (duration) {
-            this.metricsService.incrementVideoDurationMethods('estimation', true);
-          }
+          // if (duration) {
+          //   this.metricsService.incrementVideoDurationMethods('estimation', true);
+          // }
           break;
-        
+
         case VideoPlatform.VIMEO:
           duration = await this.getVimeoDuration(content);
-          if (duration) {
-            this.metricsService.incrementVideoDurationMethods('estimation', true);
-          }
+          // if (duration) {
+          //   this.metricsService.incrementVideoDurationMethods('estimation', true);
+          // }
           break;
-        
+
         default:
-          this.logger.warn(`Unknown platform for content: ${content}`);
+          // this.logger.warn(`Unknown platform for content: ${content}`);
           break;
       }
 
       // Fallback a estimación
       if (!duration || duration <= 0) {
         duration = this.getEstimatedDuration(content);
-        this.metricsService.incrementVideoDurationMethods('estimation', true);
-        this.logger.log(`Using estimated duration: ${duration}s`);
+        // this.metricsService.incrementVideoDurationMethods('estimation', true);
+        // this.logger.log(`Using estimated duration: ${duration}s`);
       }
 
       // Cachear resultado
-      if (duration > 0) {
-        await this.cacheService.setDuration(content, duration);
-        this.metricsService.incrementCacheOperations('set', 'success');
-      }
+      // if (duration > 0) {
+      //   await this.cacheService.setDuration(content, duration);
+      //   this.metricsService.incrementCacheOperations('set', 'success');
+      // }
 
-      // Log de métricas
-      const executionTime = Date.now() - startTime;
-      this.logger.logVideoCalculation(
-        this.extractPlatformId(content, platform) || 'unknown',
-        platform,
-        executionTime,
-        duration,
-        true
-      );
+      const endTime = Date.now();
+      const executionTime = endTime - startTime;
+
+      // this.logger.logVideoCalculation(
+      //   content,
+      //   duration,
+      //   platform,
+      //   executionTime
+      // );
 
       return duration;
-
     } catch (error) {
-      const executionTime = Date.now() - startTime;
-      this.metricsService.incrementApiErrors('video_duration', 'calculate_duration');
-      
-      this.logger.logVideoCalculation(
-        'unknown',
-        'error',
-        executionTime,
-        undefined,
-        false,
-        error instanceof Error ? error.message : 'Unknown error'
-      );
+      const endTime = Date.now();
+      const executionTime = endTime - startTime;
 
-      // Retornar estimación como fallback
+      // this.metricsService.incrementApiErrors('video_duration', 'calculate_duration');
+
+      // this.logger.logVideoCalculation(
+      //   content,
+      //   -1,
+      //   VideoPlatform.UNKNOWN,
+      //   executionTime,
+      //   error
+      // );
+
       const fallbackDuration = this.getEstimatedDuration(content);
-      this.logger.warn(`Error calculating duration, using fallback: ${fallbackDuration}s`);
-      
+      // this.logger.warn(`Error calculating duration, using fallback: ${fallbackDuration}s`);
       return fallbackDuration;
     }
   }
@@ -287,99 +341,66 @@ export class VideoItemsService {
    */
   private async getYouTubeDuration(content: string): Promise<number | null> {
     const videoId = this.extractYouTubeVideoId(content);
-    if (!videoId) return null;
+    if (!videoId) {
+      this.logger.warn(`Could not extract YouTube video ID from: ${content}`);
+      return null;
+    }
+
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) {
+      this.logger.error('YOUTUBE_API_KEY not found in environment variables.');
+      // Fallback to oEmbed
+      try {
+        const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+          this.logger.error(`YouTube oEmbed API request failed with status ${response.status} for video ID: ${videoId}`);
+          return null;
+        }
+        const data = await response.json() as YouTubeOembedResponse;
+        if (data && data.title) {
+          return this.extractDurationFromTitle(data.title);
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          this.logger.error('YouTube oEmbed API request timed out.');
+        } else {
+          this.logger.error(`Error fetching from YouTube oEmbed API: ${error.message}`);
+        }
+        return null;
+      }
+      return null;
+    }
 
     try {
-      // Intentar con YouTube API si está disponible
-      if (process.env.YOUTUBE_API_KEY) {
-        const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${process.env.YOUTUBE_API_KEY}`;
-        const response = await fetch(apiUrl, { timeout: 10000 });
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data.items && data.items.length > 0) {
-            const duration = this.parseISO8601Duration(data.items[0].contentDetails.duration);
-            if (duration > 0) {
-              this.logger.log(`YouTube API duration: ${duration}s for video ${videoId}`);
-              return duration;
-            }
-          }
-        } else {
-          this.logger.warn(`YouTube API failed with status ${response.status} for video ${videoId}`);
-        }
+      const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${apiKey}`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        this.logger.error(`YouTube Data API request failed with status ${response.status} for video ID: ${videoId}`);
+        return null;
       }
-
-      // Fallback 1: oEmbed
-      const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-      const oembedResponse = await fetch(oembedUrl, { 
-        timeout: 10000,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; Gamifier-Bot/1.0)',
-        }
-      });
-
-      if (oembedResponse.ok) {
-        const data = await oembedResponse.json();
-        if (data.title) {
-          const duration = this.extractDurationFromTitle(data.title);
-          if (duration > 0) {
-            this.logger.log(`YouTube oEmbed duration from title: ${duration}s for video ${videoId}`);
-            return duration;
-          }
-        }
+      const data = await response.json() as YouTubeApiResponse;
+      if (data && data.items && data.items.length > 0) {
+        const duration = this.parseISO8601Duration(data.items[0].contentDetails.duration);
+        return duration;
       }
-
-      // Fallback 2: Scraping de la página de YouTube
-      this.logger.log(`Attempting YouTube page scraping for video ${videoId}`);
-      const pageUrl = `https://www.youtube.com/watch?v=${videoId}`;
-      const pageResponse = await fetch(pageUrl, {
-        timeout: 15000,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
-      });
-
-      if (pageResponse.ok) {
-        const html = await pageResponse.text();
-        
-        // Buscar duración en el HTML
-        const durationPatterns = [
-          /"lengthSeconds":"(\d+)"/,
-          /"approxDurationMs":"(\d+)"/,
-          /lengthSeconds":"(\d+)"/,
-          /"duration":{"simpleText":"(\d+:\d+)"/,
-        ];
-        
-        for (const pattern of durationPatterns) {
-          const match = html.match(pattern);
-          if (match) {
-            let duration: number;
-            
-            if (pattern.source.includes('lengthSeconds')) {
-              duration = parseInt(match[1]);
-            } else if (pattern.source.includes('approxDurationMs')) {
-              duration = Math.round(parseInt(match[1]) / 1000);
-            } else if (pattern.source.includes('simpleText')) {
-              const [minutes, seconds] = match[1].split(':').map(Number);
-              duration = minutes * 60 + seconds;
-            } else {
-              continue;
-            }
-            
-            if (duration > 0) {
-              this.logger.log(`✅ YouTube scraping duration: ${duration}s for video ${videoId}`);
-              return duration;
-            }
-          }
-        }
-        
-        this.logger.warn(`No duration pattern found in YouTube page for video ${videoId}`);
-      } else {
-        this.logger.warn(`Failed to fetch YouTube page: ${pageResponse.status} for video ${videoId}`);
-      }
-
     } catch (error) {
-      this.logger.error(`Error getting YouTube duration for ${videoId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      if (error.name === 'AbortError') {
+        this.logger.error('YouTube Data API request timed out.');
+      } else {
+        this.logger.error(`Error fetching from YouTube Data API: ${error.message}`);
+      }
+      return null;
     }
 
     return null;
@@ -390,22 +411,34 @@ export class VideoItemsService {
    */
   private async getVimeoDuration(content: string): Promise<number | null> {
     const videoId = this.extractVimeoVideoId(content);
-    if (!videoId) return null;
+    if (!videoId) {
+      this.logger.warn(`Could not extract Vimeo video ID from: ${content}`);
+      return null;
+    }
 
     try {
-      const apiUrl = `https://vimeo.com/api/v2/video/${videoId}.json`;
-      const response = await fetch(apiUrl, { timeout: 10000 });
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data && data.length > 0 && data[0].duration) {
-          const duration = data[0].duration;
-          this.logger.log(`Vimeo API duration: ${duration}s for video ${videoId}`);
-          return duration;
-        }
+      const url = `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        this.logger.error(`Vimeo API request failed with status ${response.status} for video ID: ${videoId}`);
+        return null;
+      }
+      const data = await response.json() as VimeoApiResponse;
+      if (data && data.duration) {
+        return data.duration;
       }
     } catch (error) {
-      this.logger.error(`Error getting Vimeo duration for ${videoId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      if (error.name === 'AbortError') {
+        this.logger.error('Vimeo API request timed out.');
+      } else {
+        this.logger.error(`Error fetching from Vimeo API: ${error.message}`);
+      }
+      return null;
     }
 
     return null;
@@ -437,7 +470,7 @@ export class VideoItemsService {
       /(\d+):(\d+):(\d+)/, // HH:MM:SS
       /(\d+):(\d+)/, // MM:SS
     ];
-    
+
     for (const pattern of durationPatterns) {
       const match = title.match(pattern);
       if (match) {
@@ -449,7 +482,7 @@ export class VideoItemsService {
         }
       }
     }
-    
+
     return 0;
   }
 
@@ -459,13 +492,13 @@ export class VideoItemsService {
   getEstimatedDuration(content: string, title?: string): number {
     const titleToAnalyze = title || content;
     const titleLower = titleToAnalyze.toLowerCase();
-    
+
     // 🎯 PRIORIDAD 1: Mapeo específico de videos conocidos por contenido/ID
     const videoId = this.extractYouTubeVideoId(content);
     if (videoId) {
       const knownDurations: Record<string, number> = {
         'EEZkQv25uEs': 729,  // Sacred Economics with Charles Eisenstein - A Short Film
-        'ScMzIvxBSi4': 94,   // Elementos de Juego en Educación  
+        'ScMzIvxBSi4': 94,   // Elementos de Juego en Educación
         'ZXsQAXx_ao0': 64,   // Narrativa y Storytelling
         '9bZkp7q19f0': 252,  // Mecánicas de Recompensa
         'kJQP7kiw5Fk': 282,  // Evaluación Gamificada
@@ -478,7 +511,7 @@ export class VideoItemsService {
         return knownDurations[videoId];
       }
     }
-    
+
     // 🎯 PRIORIDAD 2: Patrones de duración explícitos en el título
     const durationPatterns = [
       /\[(\d+):(\d+):(\d+)\]/, // [HH:MM:SS]
@@ -488,7 +521,7 @@ export class VideoItemsService {
       /(\d+):(\d+):(\d+)/, // HH:MM:SS anywhere
       /(\d+):(\d+)/, // MM:SS anywhere
     ];
-    
+
     for (const pattern of durationPatterns) {
       const match = titleToAnalyze.match(pattern);
       if (match) {
@@ -505,7 +538,7 @@ export class VideoItemsService {
         }
       }
     }
-    
+
     // 🎯 PRIORIDAD 3: Patrones de texto que indican duración
     const textPatterns = [
       { pattern: /(\d+)\s*hours?/i, multiplier: 3600 },
@@ -514,92 +547,92 @@ export class VideoItemsService {
       { pattern: /(\d+)\s*mins?/i, multiplier: 60 },
       { pattern: /(\d+)\s*min\b/i, multiplier: 60 }, // "min" followed by word boundary
     ];
-    
+
     for (const { pattern, multiplier } of textPatterns) {
       const match = titleLower.match(pattern);
       if (match) {
-        const duration = parseInt(match[1]) * multiplier;
+        const duration = parseInt(match[1], 10) * multiplier;
         if (duration > 0 && duration < 36000) { // Máximo 10 horas
           this.logger.log(`✅ Text pattern duration found: ${duration}s`);
           return duration;
         }
       }
     }
-    
+
     // 🎯 PRIORIDAD 4: Estimaciones por tipo de contenido
     if (titleLower.includes('short') || titleLower.includes('shorts')) {
       this.logger.log(`📱 Short content detected: 60s`);
       return 60; // 1 minuto
     }
-    
+
     if (titleLower.includes('trailer') || titleLower.includes('teaser')) {
       this.logger.log(`🎬 Trailer detected: 120s`);
       return 120; // 2 minutos
     }
-    
+
     if (titleLower.includes('tutorial') || titleLower.includes('how to') || titleLower.includes('cómo')) {
       this.logger.log(`📚 Tutorial detected: 600s`);
       return 600; // 10 minutos
     }
-    
+
     if (titleLower.includes('podcast') || titleLower.includes('interview') || titleLower.includes('entrevista')) {
       this.logger.log(`🎙️ Podcast/Interview detected: 2400s`);
       return 2400; // 40 minutos
     }
-    
+
     if (titleLower.includes('live') || titleLower.includes('stream') || titleLower.includes('en vivo')) {
       this.logger.log(`📺 Live stream detected: 3600s`);
       return 3600; // 1 hora
     }
-    
+
     if (titleLower.includes('full movie') || titleLower.includes('película completa') || titleLower.includes('film')) {
       this.logger.log(`🎞️ Full movie detected: 6000s`);
       return 6000; // 100 minutos
     }
-    
+
     // TED talks tienen típicamente 18 minutos
     if (titleLower.includes('ted') || titleLower.includes('tedx')) {
       this.logger.log(`🎤 TED talk detected: 1080s`);
       return 1080; // 18 minutos
     }
-    
+
     // 🎯 PRIORIDAD 5: Estimaciones específicas por palabras clave de gamificación
     if (titleLower.includes('gamificación') || titleLower.includes('gamification')) {
       this.logger.log(`🎮 Gamification content detected: 720s`);
       return 720; // 12 minutos (contenido educativo de gamificación)
     }
-    
+
     if (titleLower.includes('elementos de juego') || titleLower.includes('game elements')) {
       this.logger.log(`🎯 Game elements content detected: 480s`);
       return 480; // 8 minutos
     }
-    
+
     if (titleLower.includes('narrativa') || titleLower.includes('storytelling')) {
       this.logger.log(`📖 Storytelling content detected: 360s`);
       return 360; // 6 minutos
     }
-    
+
     if (titleLower.includes('mecánica') || titleLower.includes('recompensa') || titleLower.includes('reward')) {
       this.logger.log(`🏆 Mechanics/Reward content detected: 420s`);
       return 420; // 7 minutos
     }
-    
+
     if (titleLower.includes('evaluación') || titleLower.includes('assessment')) {
       this.logger.log(`📊 Assessment content detected: 360s`);
       return 360; // 6 minutos
     }
-    
+
     // 🎯 PRIORIDAD 6: Estimaciones por palabras clave educativas
     if (titleLower.includes('curso') || titleLower.includes('course') || titleLower.includes('clase') || titleLower.includes('lesson')) {
       this.logger.log(`🎓 Educational course content: 900s`);
       return 900; // 15 minutos
     }
-    
+
     if (titleLower.includes('introducción') || titleLower.includes('introduction') || titleLower.includes('intro')) {
       this.logger.log(`👋 Introduction content: 480s`);
       return 480; // 8 minutos
     }
-    
+
     // 🎯 FALLBACK FINAL: Duración por defecto más inteligente
     this.logger.log(`🔄 Using smart default for educational content: 480s`);
     return 480; // 8 minutos (más realista que 5 minutos para contenido educativo)
@@ -609,11 +642,10 @@ export class VideoItemsService {
    * Extrae metadatos avanzados del video
    */
   async extractVideoMetadata(content: string): Promise<VideoMetadata> {
-    this.logger.log(`Extracting video metadata for content: ${content.substring(0, 100)}...`);
-
+    // this.logger.log(`Extracting video metadata for content: ${content.substring(0, 100)}...`);
     const platform = this.detectVideoPlatform(content);
     const externalId = this.extractPlatformId(content, platform);
-    
+
     const metadata: VideoMetadata = {
       platform: platform,
       externalId: externalId || undefined,
@@ -626,14 +658,14 @@ export class VideoItemsService {
       } else if (platform === VideoPlatform.VIMEO && externalId) {
         await this.enrichVimeoMetadata(metadata, externalId);
       }
-      
+
       // Calcular duración si no se obtuvo de los metadatos
       if (!metadata.duration) {
         metadata.duration = await this.calculateVideoDuration(content);
       }
-      
+
     } catch (error) {
-      this.logger.error(`Error extracting video metadata: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // this.logger.error(`Error extracting video metadata: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 
     return metadata;
@@ -643,28 +675,39 @@ export class VideoItemsService {
    * Enriquece metadatos de YouTube
    */
   private async enrichYouTubeMetadata(metadata: VideoMetadata, videoId: string): Promise<void> {
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) {
+      this.logger.warn('YOUTUBE_API_KEY not found. Skipping metadata enrichment for YouTube.');
+      return;
+    }
+
     try {
-      // Thumbnail URL
-      metadata.thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-      
-      // Intentar obtener más información con oEmbed
-      const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-      const response = await fetch(oembedUrl, { timeout: 10000 });
-      
-      if (response.ok) {
-        const data = await response.json();
-        metadata.title = data.title;
-        
-        // Extraer duración del título si está presente
-        if (data.title) {
-          const durationFromTitle = this.extractDurationFromTitle(data.title);
-          if (durationFromTitle > 0) {
-            metadata.duration = durationFromTitle;
-          }
-        }
+      const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,contentDetails,statistics&key=${apiKey}`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        this.logger.error(`YouTube metadata request failed with status ${response.status} for video ID: ${videoId}`);
+        return;
+      }
+      const data = (await response.json()) as YouTubeVideoListResponse;
+      if (data && data.items && data.items.length > 0) {
+        const videoData = data.items[0];
+        metadata.title = videoData.snippet.title;
+        metadata.description = videoData.snippet.description;
+        metadata.duration = this.parseISO8601Duration(videoData.contentDetails.duration);
+        metadata.thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        metadata.tags = videoData.snippet.tags || [];
       }
     } catch (error) {
-      this.logger.warn(`Could not enrich YouTube metadata for ${videoId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      if (error.name === 'AbortError') {
+        this.logger.error('YouTube metadata enrichment request timed out.');
+      } else {
+        this.logger.error(`Error enriching YouTube metadata: ${error.message}`);
+      }
     }
   }
 
@@ -673,22 +716,32 @@ export class VideoItemsService {
    */
   private async enrichVimeoMetadata(metadata: VideoMetadata, videoId: string): Promise<void> {
     try {
-      const apiUrl = `https://vimeo.com/api/v2/video/${videoId}.json`;
-      const response = await fetch(apiUrl, { timeout: 10000 });
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data && data.length > 0) {
-          const videoData = data[0];
-          metadata.title = videoData.title;
-          metadata.description = videoData.description;
-          metadata.duration = videoData.duration;
-          metadata.thumbnailUrl = videoData.thumbnail_large;
-          metadata.tags = videoData.tags ? videoData.tags.split(', ') : [];
-        }
+      const url = `https://vimeo.com/api/v2/video/${videoId}.json`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        this.logger.error(`Vimeo metadata request failed with status ${response.status} for video ID: ${videoId}`);
+        return;
+      }
+      const data = (await response.json()) as VimeoApiResponse[];
+      if (data && data.length > 0) {
+        const videoData = data[0];
+        metadata.title = videoData.title;
+        metadata.description = videoData.description;
+        metadata.duration = videoData.duration;
+        metadata.thumbnailUrl = videoData.thumbnail_url;
+        metadata.tags = videoData.tags ? videoData.tags.split(', ') : [];
       }
     } catch (error) {
-      this.logger.warn(`Could not enrich Vimeo metadata for ${videoId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      if (error.name === 'AbortError') {
+        this.logger.error('Vimeo metadata enrichment request timed out.');
+      } else {
+        this.logger.error(`Error enriching Vimeo metadata: ${error.message}`);
+      }
     }
   }
 
@@ -696,26 +749,25 @@ export class VideoItemsService {
    * Actualiza metadatos de un video existente
    */
   async updateVideoMetadata(id: number): Promise<any> {
-    this.logger.log(`Updating metadata for video item ${id}`);
+    // this.logger.log(`Updating metadata for video item ${id}`);
+    const videoItem = await this.prisma.videoItem.findUnique({ where: { id } });
 
-    const videoItem = await this.findOne(id);
-    
     if (!videoItem.content) {
       throw new Error(`Video item ${id} has no content to extract metadata from`);
     }
 
     const metadata = await this.extractVideoMetadata(videoItem.content);
-    
+
     const updateData: any = {};
-    
+
     if (metadata.duration && metadata.duration !== videoItem.duration) {
       updateData.duration = metadata.duration;
     }
-    
+
     if (metadata.platform && metadata.platform !== videoItem.platform) {
       updateData.platform = metadata.platform;
     }
-    
+
     if (metadata.externalId && metadata.externalId !== videoItem.externalId) {
       updateData.externalId = metadata.externalId;
     }
@@ -725,13 +777,13 @@ export class VideoItemsService {
         where: { id },
         data: updateData,
       });
-      
+
       this.logger.log(`Updated metadata for video item ${id} - fields: ${Object.keys(updateData).join(', ')}`);
-      
+
       return { ...updatedItem, metadata };
     } else {
       this.logger.log(`No metadata updates needed for video item ${id}`);
-      
+
       return { ...videoItem, metadata };
     }
   }
@@ -740,9 +792,7 @@ export class VideoItemsService {
    * Recalcula las duraciones de todos los videos que tienen duration: null
    */
   async recalculateAllDurations(): Promise<{ updated: number; errors: number; results: any[] }> {
-    this.logger.log('Starting bulk duration recalculation for videos with null duration');
-
-    // Obtener todos los videos con duration null
+    // this.logger.log('Starting bulk duration recalculation for videos with null duration');
     const videosWithNullDuration = await this.prisma.videoItem.findMany({
       where: {
         duration: null
@@ -754,24 +804,22 @@ export class VideoItemsService {
       }
     });
 
-    this.logger.log(`Found ${videosWithNullDuration.length} videos with null duration`);
-
+    // this.logger.log(`Found ${videosWithNullDuration.length} videos with null duration`);
     let updated = 0;
     let errors = 0;
     const results: any[] = [];
 
     for (const video of videosWithNullDuration) {
       try {
-        this.logger.log(`Processing video ${video.id}: ${video.title}`);
-
+        // this.logger.log(`Processing video ${video.id}: ${video.title}`);
         const duration = await this.calculateVideoDuration(video.content);
-        
+
         if (duration && duration > 0) {
           await this.prisma.videoItem.update({
             where: { id: video.id },
             data: { duration }
           });
-          
+
           updated++;
           results.push({
             id: video.id,
@@ -779,7 +827,7 @@ export class VideoItemsService {
             duration,
             status: 'updated'
           });
-          
+
           this.logger.log(`Successfully updated duration for video ${video.id}: ${duration}s`);
         } else {
           errors++;
@@ -789,7 +837,7 @@ export class VideoItemsService {
             status: 'error',
             error: 'Could not calculate duration'
           });
-          
+
           this.logger.warn(`Could not calculate duration for video ${video.id}`);
         }
       } catch (error) {
@@ -800,13 +848,12 @@ export class VideoItemsService {
           status: 'error',
           error: error instanceof Error ? error.message : 'Unknown error'
         });
-        
+
         this.logger.error(`Error processing video ${video.id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
 
-    this.logger.log(`Bulk duration recalculation completed - Total: ${videosWithNullDuration.length}, Updated: ${updated}, Errors: ${errors}`);
-
+    // this.logger.log(`Bulk duration recalculation completed - Total: ${videosWithNullDuration.length}, Updated: ${updated}, Errors: ${errors}`);
     return { updated, errors, results };
   }
 
@@ -815,22 +862,19 @@ export class VideoItemsService {
    * ⚠️  VERSIÓN MEJORADA CON PROTECCIÓN DE DATOS
    */
   async forceRecalculateAllDurations(): Promise<{ total: number; updated: number; errors: number; verified: number; protectedCount: number; results: any[] }> {
-    this.logger.log('🔄 Starting FORCE bulk duration recalculation for ALL videos (WITH DATA PROTECTION)');
+    // this.logger.log('🔄 Starting FORCE bulk duration recalculation for ALL videos (WITH DATA PROTECTION)');
 
-    // Obtener TODOS los videos (no solo los que tienen duration null)
     const allVideos = await this.prisma.videoItem.findMany({
-      where: {
-        isDeleted: { not: true } // Solo videos activos
-      },
       select: {
         id: true,
         content: true,
         title: true,
-        duration: true // Incluir duración actual para comparación
+        duration: true, // Incluir duración actual para comparación
+        tags: true
       }
     });
 
-    this.logger.log(`📊 Found ${allVideos.length} total videos to recalculate`);
+    // this.logger.log(`📊 Found ${allVideos.length} total videos to recalculate`);
 
     let updated = 0;
     let errors = 0;
@@ -849,12 +893,12 @@ export class VideoItemsService {
 
     for (const video of allVideos) {
       try {
-        this.logger.log(`🔍 Processing video ${video.id}: ${video.title}`);
+        // this.logger.log(`🔍 Processing video ${video.id}: ${video.title}`);
 
         // 🛡️ PROTECCIÓN: Verificar si este video tiene una duración manualmente verificada
         if (manuallyVerifiedDurations[video.id]) {
           const verifiedDuration = manuallyVerifiedDurations[video.id];
-          
+
           if (video.duration === verifiedDuration) {
             // La duración ya es correcta y está verificada
             protectedCount++;
@@ -865,7 +909,7 @@ export class VideoItemsService {
               status: 'protected',
               message: 'Manually verified duration - protected from overwrite'
             });
-            
+
             this.logger.log(`🛡️  PROTECTED video ${video.id}: ${verifiedDuration}s (manually verified)`);
             continue;
           } else {
@@ -874,7 +918,7 @@ export class VideoItemsService {
               where: { id: video.id },
               data: { duration: verifiedDuration }
             });
-            
+
             updated++;
             results.push({
               id: video.id,
@@ -885,7 +929,7 @@ export class VideoItemsService {
               message: 'Restored to manually verified duration',
               change: verifiedDuration - (video.duration || 0)
             });
-            
+
             this.logger.log(`🔧 RESTORED video ${video.id}: ${video.duration}s → ${verifiedDuration}s (manually verified)`);
             continue;
           }
@@ -893,8 +937,8 @@ export class VideoItemsService {
 
         // Para videos no verificados manualmente, proceder con cálculo normal
         const calculatedDuration = await this.calculateVideoDuration(video.content);
-        
-        if (calculatedDuration && calculatedDuration > 0) {
+
+        if (calculatedDuration > 0) {
           // 🛡️ PROTECCIÓN ADICIONAL: No sobrescribir si la diferencia es mínima (±10s)
           if (video.duration && Math.abs(video.duration - calculatedDuration) <= 10) {
             verified++;
@@ -906,7 +950,7 @@ export class VideoItemsService {
               status: 'verified',
               message: `Duration within acceptable range (±10s) - no change needed`
             });
-            
+
             this.logger.log(`✅ VERIFIED video ${video.id}: ${video.duration}s (calculated: ${calculatedDuration}s, diff: ${Math.abs(video.duration - calculatedDuration)}s)`);
             continue;
           }
@@ -914,14 +958,14 @@ export class VideoItemsService {
           // Comparar con la duración actual
           if (video.duration !== calculatedDuration) {
             // 🛡️ PROTECCIÓN: Solo actualizar si la nueva duración parece más confiable
-            const shouldUpdate = this.shouldUpdateDuration(video.duration, calculatedDuration, video.title);
-            
+            const shouldUpdate = this.shouldUpdateDuration(video.duration, calculatedDuration, video.title || '');
+
             if (shouldUpdate) {
               await this.prisma.videoItem.update({
                 where: { id: video.id },
                 data: { duration: calculatedDuration }
               });
-              
+
               updated++;
               results.push({
                 id: video.id,
@@ -931,7 +975,7 @@ export class VideoItemsService {
                 status: 'updated',
                 change: calculatedDuration - (video.duration || 0)
               });
-              
+
               this.logger.log(`✅ UPDATED duration for video ${video.id}: ${video.duration}s → ${calculatedDuration}s`);
             } else {
               protectedCount++;
@@ -943,7 +987,7 @@ export class VideoItemsService {
                 status: 'protected',
                 message: 'Current duration seems more reliable - protected from overwrite'
               });
-              
+
               this.logger.log(`🛡️  PROTECTED video ${video.id}: keeping ${video.duration}s (calculated: ${calculatedDuration}s deemed less reliable)`);
             }
           } else {
@@ -956,7 +1000,7 @@ export class VideoItemsService {
               status: 'verified',
               message: 'Duration already correct'
             });
-            
+
             this.logger.log(`✅ VERIFIED duration for video ${video.id}: ${calculatedDuration}s (no change needed)`);
           }
         } else {
@@ -968,7 +1012,7 @@ export class VideoItemsService {
             status: 'error',
             error: 'Could not calculate duration'
           });
-          
+
           this.logger.warn(`❌ Could not calculate duration for video ${video.id}`);
         }
       } catch (error) {
@@ -980,7 +1024,7 @@ export class VideoItemsService {
           status: 'error',
           error: error instanceof Error ? error.message : 'Unknown error'
         });
-        
+
         this.logger.error(`❌ Error processing video ${video.id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -1002,35 +1046,31 @@ export class VideoItemsService {
    * 🛡️ Determina si una duración debe ser actualizada basándose en criterios de confiabilidad
    */
   private shouldUpdateDuration(currentDuration: number | null, calculatedDuration: number, title: string): boolean {
-    // Si no hay duración actual, siempre actualizar
-    if (!currentDuration) return true;
-    
-    // Si la duración calculada es exactamente 300s (fallback genérico), ser muy cauteloso
+    if (!currentDuration || currentDuration <= 0) return true; // Siempre actualizar si no hay duración o es inválida
+
+    // Proteger si la duración calculada es un fallback genérico
     if (calculatedDuration === 300) {
-      this.logger.warn(`⚠️  Calculated duration is generic fallback (300s) - protecting current duration ${currentDuration}s`);
+      // this.logger.warn(`⚠️  Calculated duration is generic fallback (300s) - protecting current duration ${currentDuration}s`);
       return false;
     }
-    
-    // Si la duración calculada es exactamente 480s (nuevo fallback), ser cauteloso
-    if (calculatedDuration === 480) {
-      // Solo actualizar si la duración actual es claramente incorrecta (muy pequeña o también un fallback)
-      if (currentDuration <= 60 || currentDuration === 300) {
-        this.logger.log(`⚠️  Current duration seems incorrect (${currentDuration}s), accepting new fallback (480s)`);
+
+    if (calculatedDuration === 480) { // Smart fallback
+      // Permitir actualización si la duración actual es un valor por defecto conocido y probablemente incorrecto
+      if ([300, 600, 900].includes(currentDuration)) {
+        // this.logger.log(`⚠️  Current duration seems incorrect (${currentDuration}s), accepting new fallback (480s)`);
         return true;
       }
-      this.logger.warn(`⚠️  Calculated duration is fallback (480s) - protecting current duration ${currentDuration}s`);
+      // this.logger.warn(`⚠️  Calculated duration is fallback (480s) - protecting current duration ${currentDuration}s`);
       return false;
     }
-    
-    // Si la diferencia es muy grande (>50% de la duración actual), ser cauteloso
-    const percentageDiff = Math.abs(calculatedDuration - currentDuration) / currentDuration;
-    if (percentageDiff > 0.5) {
-      this.logger.warn(`⚠️  Large duration difference (${(percentageDiff * 100).toFixed(1)}%) - protecting current duration`);
+
+    const percentageDiff = Math.abs((currentDuration - calculatedDuration) / currentDuration);
+    if (percentageDiff > 0.5) { // Si la diferencia es mayor al 50%
+      // this.logger.warn(`⚠️  Large duration difference (${(percentageDiff * 100).toFixed(1)}%) - protecting current duration`);
       return false;
     }
-    
-    // Si la duración calculada parece más confiable (no es un fallback obvio), actualizar
-    return true;
+
+    return true; // En otros casos, actualizar
   }
 
   /**
@@ -1039,68 +1079,32 @@ export class VideoItemsService {
    * @param videoId Puede ser el ID numérico del sistema o el externalId (YouTube ID)
    */
   async findQuestionsByVideoId(videoId: string) {
-//     console.log(`>>> VideoItemsService.findQuestionsByVideoId: Finding questions for video ID: ${videoId}`);
-    
-    try {
-      let videoItemId: number;
-
-      // Primero intentar convertir a entero (ID del sistema)
-      const videoIdInt = parseInt(videoId);
-      if (!isNaN(videoIdInt)) {
-        // Es un ID numérico del sistema, usarlo directamente
-        videoItemId = videoIdInt;
-//         console.log(`>>> VideoItemsService.findQuestionsByVideoId: Using numeric system ID: ${videoItemId}`);
-      } else {
-        // Es un externalId (YouTube ID), buscar el video correspondiente
-//         console.log(`>>> VideoItemsService.findQuestionsByVideoId: Searching by externalId: ${videoId}`);
-        const videoItem = await this.prisma.videoItem.findFirst({
-          where: { externalId: videoId },
-          select: { id: true }
-        });
-
-        if (!videoItem) {
-//           console.log(`>>> VideoItemsService.findQuestionsByVideoId: No video found with externalId: ${videoId}`);
-          return []; // Retornar array vacío en lugar de error para evitar 500
-        }
-
-        videoItemId = videoItem.id;
-//         console.log(`>>> VideoItemsService.findQuestionsByVideoId: Found video with system ID: ${videoItemId} for externalId: ${videoId}`);
-      }
-
-      const questions = await this.prisma.question.findMany({
-        where: { videoItemId: videoItemId },
-        include: {
-          answerOptions: true, // CRÍTICO: Incluir las opciones de respuesta
-        },
-        orderBy: { timestamp: 'asc' }, // Ordenar por tiempo de aparición en el video
-      });
-
-//       console.log(`>>> VideoItemsService.findQuestionsByVideoId: Found ${questions.length} questions for video ${videoId}`);
-
-      // Mapear para que coincida con la estructura esperada por el frontend (QuestionOverlay)
-      return questions.map(q => ({
-        id: q.id,
-        timestamp: q.timestamp,
-        endTimestamp: q.endTimestamp,
-        type: q.type,
-        question: q.text, // Mapear 'text' a 'question'
-        timeLimit: q.timeLimit,
-        difficulty: q.difficulty,
-        reward: { 
-          merits: q.meritsReward || 0, 
-          ondas: q.ondasReward || 0 
-        },
-        options: q.answerOptions.map(opt => ({
-          id: opt.id,
-          label: opt.label,
-          text: opt.text,
-          isCorrect: opt.isCorrect,
-        })),
-      }));
-
-    } catch (error) {
-//       console.error(`>>> VideoItemsService.findQuestionsByVideoId: Error finding questions for video ${videoId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      throw error;
+    this.logger.log(`Finding questions for video ID: ${videoId}`);
+    const videoNumericId = parseInt(videoId, 10);
+    if (isNaN(videoNumericId)) {
+      throw new NotFoundException(`Invalid video ID format: ${videoId}`);
     }
+
+    const videoItem = await this.prisma.videoItem.findUnique({
+      where: { id: videoNumericId },
+      include: {
+        questions: {
+          include: {
+            answerOptions: true,
+          },
+          orderBy: {
+            timestamp: 'asc',
+          },
+        },
+      },
+    });
+
+    if (!videoItem) {
+      this.logger.warn(`Video item with ID ${videoNumericId} not found.`);
+      throw new NotFoundException(`Video item with ID ${videoNumericId} not found`);
+    }
+
+    this.logger.log(`Found ${videoItem.questions.length} questions for video ID: ${videoNumericId}`);
+    return videoItem.questions;
   }
-} 
+}
