@@ -5,7 +5,8 @@ import { Sidebar } from './Sidebar';
 import { BottomNavigation } from './BottomNavigation';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
-import { CosmicBackground } from '../ui/CosmicBackground';
+import { UniversalCosmicBackground } from '../home/UniversalCosmicBackground';
+import { FeedbackAgent } from '../feedback/FeedbackAgent';
 import { useLoadingStates } from '../../hooks/useLoadingStates';
 import { preloadCriticalResources, setupResourceCache, useLazyImage, monitorResourcePerformance } from '../../utils/resourceOptimization';
 
@@ -49,7 +50,7 @@ export const AppLayout: React.FC = () => {
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      <CosmicBackground />
+      <UniversalCosmicBackground />
       {!isMobile && <Sidebar />}
       <Box
         sx={{
@@ -83,6 +84,9 @@ export const AppLayout: React.FC = () => {
           onClose={handleDrawerToggle}
         />
       )}
+
+      {/* Agente de Feedback - Solo para administradores en modo prelanzamiento */}
+      <FeedbackAgent />
     </Box>
   );
 };

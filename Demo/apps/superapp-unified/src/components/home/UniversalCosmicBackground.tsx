@@ -104,4 +104,5 @@ const UniversalCosmicBackground: React.FC = () => {
   );
 };
 
+export { UniversalCosmicBackground };
 export default UniversalCosmicBackground;

@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useMemo, useCallback } from 'react';
+import React, { Suspense, useState, useMemo, useCallback, startTransition } from 'react';
 import {
   Box,
   Container,
@@ -15,10 +15,10 @@ import { useTheme as useCoomunityTheme } from '../contexts/ThemeContext';
 import { CoomunityCard } from '../components/ui';
 import CoomunityButton from '../components/ui/CoomunityButton';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
-import { 
-  SearchIcon, 
-  FilterIcon, 
-  GridIcon, 
+import {
+  SearchIcon,
+  FilterIcon,
+  GridIcon,
   ListIcon,
   TrendingUpIcon,
   StarIcon,
@@ -40,7 +40,7 @@ const MarketplacePage: React.FC = () => {
   const theme = useTheme();
   const { isDark } = useCoomunityTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'products' | 'services' | 'collaborations'>('products');
   const [showFilters, setShowFilters] = useState(false);
@@ -58,11 +58,33 @@ const MarketplacePage: React.FC = () => {
 
   // 🎬 PERFORMANCE: Callback optimization
   const handleSearch = useCallback((term: string) => {
-    setSearchTerm(term);
+    startTransition(() => {
+      setSearchTerm(term);
+    });
   }, []);
 
   const handleTabChange = useCallback((tab: 'products' | 'services' | 'collaborations') => {
-    setActiveTab(tab);
+    startTransition(() => {
+      setActiveTab(tab);
+    });
+  }, []);
+
+  const handleViewModeChange = useCallback((mode: 'grid' | 'list') => {
+    startTransition(() => {
+      setViewMode(mode);
+    });
+  }, []);
+
+  const handleSortChange = useCallback((sort: 'newest' | 'price' | 'ayni' | 'popular') => {
+    startTransition(() => {
+      setSortBy(sort);
+    });
+  }, []);
+
+  const handleFiltersToggle = useCallback(() => {
+    startTransition(() => {
+      setShowFilters(prev => !prev);
+    });
   }, []);
 
   const containerVariants = {
@@ -130,27 +152,27 @@ const MarketplacePage: React.FC = () => {
           >
             {/* 📊 ENHANCED STATS ROW */}
             <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Chip 
+              <Chip
                 icon={<AttachMoneyIcon />}
                 label={`${filterStats.products} Productos`}
                 sx={{ background: 'linear-gradient(45deg, #667eea, #764ba2)', color: 'white' }}
               />
-              <Chip 
+              <Chip
                 icon={<GroupIcon />}
                 label={`${filterStats.services} Servicios`}
                 sx={{ background: 'linear-gradient(45deg, #f093fb, #f5576c)', color: 'white' }}
               />
-              <Chip 
+              <Chip
                 icon={<VerifiedIcon />}
                 label={`${filterStats.collaborations} Colaboraciones`}
                 sx={{ background: 'linear-gradient(45deg, #4facfe, #00f2fe)', color: 'white' }}
               />
-              <Chip 
+              <Chip
                 icon={<TrendingUpIcon />}
                 label={`${filterStats.trending} Trending`}
                 sx={{ background: 'linear-gradient(45deg, #43e97b, #38f9d7)', color: 'white' }}
               />
-              <Chip 
+              <Chip
                 icon={<StarIcon />}
                 label={`${filterStats.featured} Destacados`}
                 sx={{ background: 'linear-gradient(45deg, #fa709a, #fee140)', color: 'white' }}
@@ -160,17 +182,17 @@ const MarketplacePage: React.FC = () => {
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
               <Box sx={{ flex: 1 }}>
                 <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '600px' }}>
-                  Descubre productos, servicios y proyectos colaborativos que fortalecen 
+                  Descubre productos, servicios y proyectos colaborativos que fortalecen
                   los principios de <strong>Ayni</strong> y contribuyen al <strong>Bien Común</strong> de nuestra comunidad.
                 </Typography>
               </Box>
-              
+
               {!isMobile && (
                 <Box display="flex" gap={1}>
                   <CoomunityButton
                     variant={viewMode === 'grid' ? 'primary' : 'outline'}
                     size="sm"
-                    onClick={() => setViewMode('grid')}
+                    onClick={() => handleViewModeChange('grid')}
                     startIcon={<GridIcon />}
                   >
                     Cuadrícula
@@ -178,7 +200,7 @@ const MarketplacePage: React.FC = () => {
                   <CoomunityButton
                     variant={viewMode === 'list' ? 'primary' : 'outline'}
                     size="sm"
-                    onClick={() => setViewMode('list')}
+                    onClick={() => handleViewModeChange('list')}
                     startIcon={<ListIcon />}
                   >
                     Lista
@@ -218,10 +240,10 @@ const MarketplacePage: React.FC = () => {
             {/* 🔍 ENHANCED SEARCH AND FILTERS */}
             <Box display="flex" gap={2} alignItems="center" mb={2}>
               <Box flex={1} sx={{ position: 'relative' }}>
-                <SearchIcon sx={{ 
-                  position: 'absolute', 
-                  left: 12, 
-                  top: '50%', 
+                <SearchIcon sx={{
+                  position: 'absolute',
+                  left: 12,
+                  top: '50%',
                   transform: 'translateY(-50%)',
                   color: 'text.secondary'
                 }} />
@@ -232,8 +254,8 @@ const MarketplacePage: React.FC = () => {
                   onChange={(e) => handleSearch(e.target.value)}
                   className={`
                     w-full pl-12 pr-4 py-3 rounded-lg border transition-all duration-200
-                    ${isDark 
-                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-green-400' 
+                    ${isDark
+                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-green-400'
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-green-500'
                     }
                     focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-20
@@ -243,7 +265,7 @@ const MarketplacePage: React.FC = () => {
               <CoomunityButton
                 variant="outline"
                 size="md"
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={handleFiltersToggle}
                 startIcon={<FilterIcon />}
               >
                 Filtros
@@ -255,28 +277,28 @@ const MarketplacePage: React.FC = () => {
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                 <Chip
                   label="Más recientes"
-                  onClick={() => setSortBy('newest')}
+                  onClick={() => handleSortChange('newest')}
                   variant={sortBy === 'newest' ? 'filled' : 'outlined'}
                   size="small"
                   sx={{ backgroundColor: sortBy === 'newest' ? 'primary.main' : 'transparent' }}
                 />
                 <Chip
                   label="Mejor precio"
-                  onClick={() => setSortBy('price')}
+                  onClick={() => handleSortChange('price')}
                   variant={sortBy === 'price' ? 'filled' : 'outlined'}
                   size="small"
                   sx={{ backgroundColor: sortBy === 'price' ? 'primary.main' : 'transparent' }}
                 />
                 <Chip
                   label="Mayor Ayni"
-                  onClick={() => setSortBy('ayni')}
+                  onClick={() => handleSortChange('ayni')}
                   variant={sortBy === 'ayni' ? 'filled' : 'outlined'}
                   size="small"
                   sx={{ backgroundColor: sortBy === 'ayni' ? 'primary.main' : 'transparent' }}
                 />
                 <Chip
                   label="Más populares"
-                  onClick={() => setSortBy('popular')}
+                  onClick={() => handleSortChange('popular')}
                   variant={sortBy === 'popular' ? 'filled' : 'outlined'}
                   size="small"
                   sx={{ backgroundColor: sortBy === 'popular' ? 'primary.main' : 'transparent' }}
@@ -288,7 +310,7 @@ const MarketplacePage: React.FC = () => {
                   <CoomunityButton
                     variant={viewMode === 'grid' ? 'primary' : 'outline'}
                     size="sm"
-                    onClick={() => setViewMode('grid')}
+                    onClick={() => handleViewModeChange('grid')}
                     startIcon={<GridIcon />}
                   >
                     Cuadrícula
@@ -296,7 +318,7 @@ const MarketplacePage: React.FC = () => {
                   <CoomunityButton
                     variant={viewMode === 'list' ? 'primary' : 'outline'}
                     size="sm"
-                    onClick={() => setViewMode('list')}
+                    onClick={() => handleViewModeChange('list')}
                     startIcon={<ListIcon />}
                   >
                     Lista
@@ -434,11 +456,11 @@ const MarketplacePage: React.FC = () => {
           >
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body1" color="text.secondary" paragraph sx={{ maxWidth: '600px', mx: 'auto' }}>
-                Comparte tu conocimiento, productos y servicios con una comunidad que valora 
-                la <strong>reciprocidad</strong>, la <strong>calidad</strong> y el <strong>Bien Común</strong>. 
+                Comparte tu conocimiento, productos y servicios con una comunidad que valora
+                la <strong>reciprocidad</strong>, la <strong>calidad</strong> y el <strong>Bien Común</strong>.
                 Cada contribución fortalece nuestro ecosistema colaborativo.
               </Typography>
-              
+
               <Box display="flex" gap={2} justifyContent="center" flexWrap="wrap" sx={{ mt: 3 }}>
                 <CoomunityButton variant="primary" size="lg" startIcon={<AttachMoneyIcon />}>
                   Publicar Producto
@@ -486,4 +508,4 @@ const MarketplacePage: React.FC = () => {
   );
 };
 
-export default MarketplacePage; 
+export default MarketplacePage;

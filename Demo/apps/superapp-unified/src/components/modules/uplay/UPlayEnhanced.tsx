@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, lazy, Suspense } from 'react';
+import React, { useState, useMemo, useCallback, lazy, Suspense, startTransition } from 'react';
 import {
   Box,
   Container,
@@ -16,8 +16,8 @@ import {
   Badge,
 } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  PlayArrowIcon, 
+import {
+  PlayArrowIcon,
   PauseIcon,
   BookmarkIcon,
   ShareIcon,
@@ -103,7 +103,7 @@ const VideoCard = React.memo<{
   const getDifficultyColor = (difficulty: string) => {
     const colors = {
       beginner: '#4CAF50',
-      intermediate: '#FF9800', 
+      intermediate: '#FF9800',
       advanced: '#F44336'
     };
     return colors[difficulty as keyof typeof colors] || colors.beginner;
@@ -124,11 +124,11 @@ const VideoCard = React.memo<{
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      whileHover={{ 
+      whileHover={{
         scale: 1.03,
-        boxShadow: cosmicEffectsEnabled 
-          ? '0 8px 32px rgba(33, 150, 243, 0.3)' 
-          : '0 4px 20px rgba(0, 0, 0, 0.1)' 
+        boxShadow: cosmicEffectsEnabled
+          ? '0 8px 32px rgba(33, 150, 243, 0.3)'
+          : '0 4px 20px rgba(0, 0, 0, 0.1)'
       }}
       transition={{ duration: 0.3 }}
     >
@@ -140,8 +140,8 @@ const VideoCard = React.memo<{
             ? 'linear-gradient(145deg, rgba(33, 150, 243, 0.1), rgba(3, 169, 244, 0.05))'
             : 'linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.8))',
           backdropFilter: 'blur(20px)',
-          border: cosmicEffectsEnabled 
-            ? '1px solid rgba(33, 150, 243, 0.3)' 
+          border: cosmicEffectsEnabled
+            ? '1px solid rgba(33, 150, 243, 0.3)'
             : '1px solid rgba(0, 0, 0, 0.1)',
           borderRadius: '16px',
           overflow: 'hidden',
@@ -161,7 +161,7 @@ const VideoCard = React.memo<{
             alt={video.title}
             sx={{ objectFit: 'cover' }}
           />
-          
+
           {/* 🎬 PLAY OVERLAY */}
           <Box
             sx={{
@@ -192,11 +192,11 @@ const VideoCard = React.memo<{
           {/* 🏷️ BADGES */}
           <Box sx={{ position: 'absolute', top: 8, left: 8, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             {video.featured && (
-              <Chip 
+              <Chip
                 icon={<StarIcon sx={{ fontSize: '14px' }} />}
-                label="Destacado" 
+                label="Destacado"
                 size="small"
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #FFD700, #FFA500)',
                   color: 'white',
                   fontWeight: 600,
@@ -205,11 +205,11 @@ const VideoCard = React.memo<{
               />
             )}
             {video.trending && (
-              <Chip 
+              <Chip
                 icon={<TrendingUpIcon sx={{ fontSize: '14px' }} />}
-                label="Tendencia" 
+                label="Tendencia"
                 size="small"
-                sx={{ 
+                sx={{
                   background: 'linear-gradient(45deg, #FF6B6B, #FF8E53)',
                   color: 'white',
                   fontWeight: 600,
@@ -273,11 +273,11 @@ const VideoCard = React.memo<{
           </Box>
 
           {/* 📖 TÍTULO */}
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              fontWeight: 700, 
-              mb: 1, 
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              mb: 1,
               fontSize: '1rem',
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -366,10 +366,10 @@ const VideoCard = React.memo<{
             {/* 🌱 SCORES DE AYNI Y BIEN COMÚN */}
             <Box sx={{ display: 'flex', gap: 0.5 }}>
               <Tooltip title={`Ayni Score: ${video.ayniScore}/100`}>
-                <Chip 
+                <Chip
                   label={`A:${video.ayniScore}`}
                   size="small"
-                  sx={{ 
+                  sx={{
                     backgroundColor: `rgba(76, 175, 80, ${video.ayniScore / 100})`,
                     color: 'white',
                     fontSize: '9px',
@@ -378,10 +378,10 @@ const VideoCard = React.memo<{
                 />
               </Tooltip>
               <Tooltip title={`Bien Común Score: ${video.bienComunScore}/100`}>
-                <Chip 
+                <Chip
                   label={`BC:${video.bienComunScore}`}
                   size="small"
-                  sx={{ 
+                  sx={{
                     backgroundColor: `rgba(33, 150, 243, ${video.bienComunScore / 100})`,
                     color: 'white',
                     fontSize: '9px',
@@ -537,7 +537,7 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
       if (selectedCategory !== 'all' && video.category !== selectedCategory) {
         return false;
       }
-      
+
       // Filtro por búsqueda
       if (searchTerm) {
         const searchLower = searchTerm.toLowerCase();
@@ -548,7 +548,7 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
           video.instructor.name.toLowerCase().includes(searchLower)
         );
       }
-      
+
       return true;
     }).sort((a, b) => {
       switch (sortBy) {
@@ -575,6 +575,24 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
 
   const handleCloseVideo = useCallback(() => {
     setSelectedVideo(null);
+  }, []);
+
+  const handleCategoryChange = useCallback((category: string) => {
+    startTransition(() => {
+      setSelectedCategory(category);
+    });
+  }, []);
+
+  const handleSearchChange = useCallback((term: string) => {
+    startTransition(() => {
+      setSearchTerm(term);
+    });
+  }, []);
+
+  const handleSortChange = useCallback((sort: 'newest' | 'popular' | 'trending' | 'progress') => {
+    startTransition(() => {
+      setSortBy(sort);
+    });
   }, []);
 
   const categories = useMemo(() => [
@@ -620,15 +638,15 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={`
                   w-full px-4 py-3 rounded-lg border transition-all duration-200
-                  ${isDark 
-                    ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400' 
+                  ${isDark
+                    ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400'
                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-cyan-500'
                   }
                   focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-20
                 `}
               />
             </Grid>
-            
+
             <Grid size={{xs: 12, md: 6}}>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                 {categories.map((category) => (
@@ -657,7 +675,7 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
           <Typography variant="body2" color="text.secondary">
             {filteredVideos.length} videos disponibles
           </Typography>
-          
+
           <Box sx={{ display: 'flex', gap: 1 }}>
             {['newest', 'popular', 'trending', 'progress'].map((sort) => (
               <Chip
@@ -718,4 +736,4 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
   );
 };
 
-export default UPlayEnhanced; 
+export default UPlayEnhanced;

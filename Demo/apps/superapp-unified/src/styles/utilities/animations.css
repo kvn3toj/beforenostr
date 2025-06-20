@@ -290,10 +290,10 @@
 }
 
 .coomunity-ayni-flow {
-  background: linear-gradient(-45deg, 
-    var(--coomunity-primary-400), 
-    var(--coomunity-primary-500), 
-    var(--coomunity-primary-600), 
+  background: linear-gradient(-45deg,
+    var(--coomunity-primary-400),
+    var(--coomunity-primary-500),
+    var(--coomunity-primary-600),
     var(--coomunity-primary-500)
   );
   background-size: 400% 400%;
@@ -315,7 +315,7 @@
 }
 
 .coomunity-transition-colors {
-  transition: 
+  transition:
     color var(--duration-normal) var(--ease-coomunity),
     background-color var(--duration-normal) var(--ease-coomunity),
     border-color var(--duration-normal) var(--ease-coomunity);
@@ -344,7 +344,7 @@
 /* === HOVER EFFECTS === */
 
 .coomunity-hover-lift {
-  transition: 
+  transition:
     transform var(--duration-normal) var(--ease-coomunity),
     box-shadow var(--duration-normal) var(--ease-coomunity);
 }
@@ -355,7 +355,7 @@
 }
 
 .coomunity-hover-lift-sm {
-  transition: 
+  transition:
     transform var(--duration-fast) var(--ease-coomunity),
     box-shadow var(--duration-fast) var(--ease-coomunity);
 }
@@ -366,7 +366,7 @@
 }
 
 .coomunity-hover-lift-lg {
-  transition: 
+  transition:
     transform var(--duration-normal) var(--ease-coomunity),
     box-shadow var(--duration-normal) var(--ease-coomunity);
 }
@@ -524,7 +524,7 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   .coomunity-pulse,
   .coomunity-spin,
   .coomunity-bounce,
@@ -889,8 +889,54 @@
   .animate-wiggle {
     animation: none;
   }
-  
+
   .coomunity-hover-lift {
     transition: none;
   }
-} 
+}
+
+/* === ANIMACIONES CÓSMICAS UNIVERSALES === */
+
+@keyframes universal-cosmic-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes universal-twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes universal-nebula-drift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  33% {
+    transform: translate(20px, -15px) scale(1.1);
+    opacity: 0.8;
+  }
+  66% {
+    transform: translate(-15px, 20px) scale(0.9);
+    opacity: 0.4;
+  }
+}
+
+@keyframes universal-cosmic-waves {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
