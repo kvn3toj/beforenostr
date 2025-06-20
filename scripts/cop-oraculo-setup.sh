@@ -281,6 +281,36 @@ for endpoint in "${FEEDBACK_ENDPOINTS[@]}"; do
     fi
 done
 
+# Verificar endpoints de feedback multi-agente
+log "🔍 Verificando endpoints del sistema multi-agente..."
+FEEDBACK_ENDPOINTS=(
+    "http://localhost:3002/feedback"
+    "http://localhost:3002/cop-oraculo/agents/dashboard/metrics"
+    "http://localhost:3002/cop-oraculo/agents/wisdom/insights"
+    "http://localhost:3002/api-json"
+)
+
+for endpoint in "${FEEDBACK_ENDPOINTS[@]}"; do
+    if curl -s "$endpoint" > /dev/null 2>&1; then
+        success "✅ Endpoint $endpoint accesible"
+    else
+        warning "⚠️ Endpoint $endpoint no accesible"
+    fi
+done
+
+# Test de sistema multi-agente
+log "🤖 Probando sistema multi-agente..."
+AGENT_TEST_RESPONSE=$(curl -s -X POST http://localhost:3002/cop-oraculo/agents/analyze/test-feedback-123 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer fake-jwt-for-testing" \
+  -d '{}' 2>/dev/null || echo "ERROR")
+
+if [[ "$AGENT_TEST_RESPONSE" != "ERROR" && "$AGENT_TEST_RESPONSE" != *"error"* ]]; then
+    success "✅ Sistema multi-agente funcional"
+else
+    warning "⚠️ Test de sistema multi-agente falló (esperado sin autenticación real)"
+fi
+
 # ============================================================================
 # FASE 6: CONFIGURACIÓN FRONTEND
 # ============================================================================
