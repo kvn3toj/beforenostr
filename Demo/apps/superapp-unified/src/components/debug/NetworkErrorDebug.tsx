@@ -122,15 +122,12 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
 
       const report = `Network Diagnostics Report
 Generated: ${new Date().toISOString()}
-Backend URL: ${baseURL}
-Frontend Origin: ${window.location.origin}
 
 Test Results:
 ${diagnostics.map((d) => `${d.success ? '✅' : '❌'} ${d.step}: ${d.details || d.error || 'OK'}`).join('\n')}
 
 Environment:
 - Navigator Online: ${navigator.onLine}
-- User Agent: ${navigator.userAgent}
 `;
       setDiagnosticReport(report);
     } catch {
@@ -442,7 +439,7 @@ Timestamp: ${new Date().toISOString()}`}
           sx={{ mt: 2, p: 2, backgroundColor: 'info.light', borderRadius: 1 }}
         >
           <Typography variant="body2" color="info.contrastText">
-            💡 <strong>Tip:</strong> Si el problema persiste después de seguir
+            💡 <strong>Tip:</strong> Si el problema persiste despu��s de seguir
             estos pasos, copia el reporte de diagnósticos y compártelo con el
             equipo de desarrollo.
           </Typography>
