@@ -19,6 +19,7 @@ services:
   #--------------------------------
   - type: web
     name: coomunity-backend
+    plan: free
     runtime: docker
     repo: https://github.com/kvn3toj/beforenostr
     branch: gamifier3.5
@@ -47,6 +48,7 @@ services:
   #--------------------------------
   - type: web
     name: coomunity-superapp
+    plan: free
     runtime: node
     repo: https://github.com/kvn3toj/beforenostr
     branch: gamifier3.5
