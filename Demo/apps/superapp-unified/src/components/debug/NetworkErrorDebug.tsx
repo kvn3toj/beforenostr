@@ -46,8 +46,8 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
   const runDiagnostics = async () => {
     setDiagnosticsRunning(true);
     try {
-      // Don't make network requests in CI environments
-      if (isCIEnvironment) {
+      // Don't make network requests unless in development
+      if (!shouldRunDiagnostics) {
         const mockResult = {
           success: true,
           diagnostics: [
