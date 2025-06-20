@@ -44,6 +44,22 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
     shouldRunDiagnostics = false;
   }
 
+  // E2E-safe fallback mode
+  if (!shouldRunDiagnostics) {
+    return (
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Typography variant="body2" color="text.secondary">
+          Diagnostics disabled in test environment
+        </Typography>
+        {onRetry && (
+          <Button onClick={onRetry} sx={{ mt: 1 }}>
+            Retry
+          </Button>
+        )}
+      </Box>
+    );
+  }
+
   const [diagnosticsRunning, setDiagnosticsRunning] = useState(false);
   const [diagnosticsResult, setDiagnosticsResult] = useState<any>(null);
   const [diagnosticReport, setDiagnosticReport] = useState<string>('');
