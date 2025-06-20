@@ -4,7 +4,7 @@ services:
     name: coomunity-superapp
     runtime: node
     plan: free
-    buildCommand: npm install --legacy-peer-deps && npx turbo run build --filter=coomunity-superapp
+    buildCommand: npm install --legacy-peer-deps --production=false && npx turbo run build --filter=coomunity-superapp
     startCommand: npx turbo run preview --filter=coomunity-superapp
     healthCheckPath: /
     envVars:
