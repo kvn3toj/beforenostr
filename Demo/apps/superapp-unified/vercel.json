@@ -44,12 +44,5 @@
     "app/**": {
       "maxDuration": 30
     }
-  },
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/home",
-      "statusCode": 307
-    }
-  ]
+  }
 }
