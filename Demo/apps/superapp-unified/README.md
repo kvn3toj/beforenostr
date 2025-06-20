@@ -57,3 +57,18 @@ Esta SuperApp encarna los valores fundamentales:
 ---
 
 **Generado automáticamente por CoomÜnity SuperApp Unifier**
+
+Esta es la aplicación principal de CoomÜnity para usuarios finales.
+
+## Deployment Status
+✅ GitHub Actions + Vercel configurado correctamente
+
+## Features
+- Módulos principales: ÜPlay, Marketplace, Social, UStats
+- Diseño responsivo con Material UI
+- Integración con backend NestJS
+
+## Development
+```bash
+npm run dev
+```
