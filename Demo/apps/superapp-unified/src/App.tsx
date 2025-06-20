@@ -9,6 +9,7 @@ import { Toaster } from 'sonner';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
+import { FeedbackProvider } from './contexts/FeedbackContext';
 
 // 🎓 Tutorial Discovery System
 import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';
@@ -245,56 +246,58 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthProvider>
-            <LetsEducationProvider>
-              <CssBaseline />
-              <Router>
-                <DiscoveryTutorialProvider>
-                  <RoutePreloader />
-                  <Box
-                    sx={{
-                      minHeight: '100vh',
-                      background: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)'
-                          : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
-                    }}
-                  >
-                    <AppRoutes />
-                  </Box>
+            <FeedbackProvider>
+              <LetsEducationProvider>
+                <CssBaseline />
+                <Router>
+                  <DiscoveryTutorialProvider>
+                    <RoutePreloader />
+                    <Box
+                      sx={{
+                        minHeight: '100vh',
+                        background: (theme) =>
+                          theme.palette.mode === 'dark'
+                            ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)'
+                            : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
+                      }}
+                    >
+                      <AppRoutes />
+                    </Box>
 
-                  {/* Onboarding System - Inside AuthProvider */}
-                  <OnboardingSystem />
+                    {/* Onboarding System - Inside AuthProvider */}
+                    <OnboardingSystem />
 
-                  {/* 🎓 Tutorial Discovery Floating Button */}
-                  <TutorialFloatingButton />
+                    {/* 🎓 Tutorial Discovery Floating Button */}
+                    <TutorialFloatingButton />
 
-                  {/* Toast Notifications */}
-                  <Toaster
-                    position="top-right"
-                    toastOptions={{
-                      duration: 4000,
-                      style: {
-                        background: 'var(--coomunity-card-bg)',
-                        color: 'var(--coomunity-text-primary)',
-                        border: '1px solid var(--coomunity-border)',
-                      },
-                    }}
-                  />
+                    {/* Toast Notifications */}
+                    <Toaster
+                      position="top-right"
+                      toastOptions={{
+                        duration: 4000,
+                        style: {
+                          background: 'var(--coomunity-card-bg)',
+                          color: 'var(--coomunity-text-primary)',
+                          border: '1px solid var(--coomunity-border)',
+                        },
+                      }}
+                    />
 
-                  {/* React Query DevTools */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <ReactQueryDevtools initialIsOpen={false} />
-                  )}
+                    {/* React Query DevTools */}
+                    {process.env.NODE_ENV === 'development' && (
+                      <ReactQueryDevtools initialIsOpen={false} />
+                    )}
 
-                  {/* 🎯 Performance Monitor - Development Only - Temporalmente deshabilitado */}
-                  {/* {process.env.NODE_ENV === 'development' && (
-                    <React.Suspense fallback={null}>
-                      <PerformanceMonitor />
-                    </React.Suspense>
-                  )} */}
-                </DiscoveryTutorialProvider>
-              </Router>
-            </LetsEducationProvider>
+                    {/* 🎯 Performance Monitor - Development Only - Temporalmente deshabilitado */}
+                    {/* {process.env.NODE_ENV === 'development' && (
+                      <React.Suspense fallback={null}>
+                        <PerformanceMonitor />
+                      </React.Suspense>
+                    )} */}
+                  </DiscoveryTutorialProvider>
+                </Router>
+              </LetsEducationProvider>
+            </FeedbackProvider>
           </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>
