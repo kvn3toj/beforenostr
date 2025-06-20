@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+// /// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 // import { sentryVitePlugin } from '@sentry/vite-plugin'
@@ -10,10 +10,7 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [
-    react({
-      // Disable TypeScript checking in development mode
-      typescript: mode === 'development' ? false : true
-    }),
+    react(),
     // Plugin visualizador para analizar el bundle
     mode === 'development' && visualizer({
       filename: 'dist/stats.html',
@@ -151,6 +148,16 @@ export default defineConfig(({ mode }) => ({
       '@tanstack/react-query',
       'framer-motion',
     ],
+    // Excluir Vitest y sus dependencias del bundle del cliente
+    exclude: [
+      'vitest',
+      '@vitest/expect',
+      '@vitest/snapshot',
+      '@vitest/utils',
+      '@vitest/pretty-format',
+      'expect-type',
+      'tinyrainbow'
+    ],
     // Forzar pre-bundling de dependencias específicas
     force: true,
   },
@@ -171,34 +178,45 @@ export default defineConfig(({ mode }) => ({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    // Excluir archivos E2E que usan Playwright
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/e2e/**',
+      '**/playwright-report/**',
+      '**/test-results/**'
+    ],
+    // Configuración para evitar conflictos con Playwright
+    testTimeout: 10000,
+    hookTimeout: 10000,
   },
   // 🎯 OPTIMIZACIONES CRÍTICAS DE BUNDLE
   build: {
     // Reducir chunk size límite
     chunkSizeWarningLimit: 800,
-    
+
     rollupOptions: {
       output: {
         // 🔥 CHUNKING INTELIGENTE - Separar vendor libraries
         manualChunks: {
           // React ecosystem
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          
+
           // Material-UI ecosystem (separado por tamaño)
           'vendor-mui-core': ['@mui/material', '@mui/system'],
           'vendor-mui-icons': ['@mui/icons-material'],
           'vendor-mui-extras': ['@mui/lab', '@emotion/react', '@emotion/styled'],
-          
+
           // Query and state management
           'vendor-query': ['@tanstack/react-query', '@tanstack/react-query-devtools'],
-          
-          // Animation and interactions  
+
+          // Animation and interactions
           'vendor-animation': ['framer-motion'],
-          
+
           // Utilities
           'vendor-utils': ['lodash.debounce', 'date-fns'],
         },
-        
+
         // 🎯 NOMBRES DE ARCHIVOS OPTIMIZADOS
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
@@ -207,11 +225,11 @@ export default defineConfig(({ mode }) => ({
         entryFileNames: 'js/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
-      
+
       // 🚀 EXTERNOS (CDN) para librerías pesadas (opcional)
       // external: ['@mui/icons-material'], // Si usáramos CDN
     },
-    
+
     // 🎯 CONFIGURACIONES ADICIONALES
     target: 'esnext',
     minify: 'terser',
@@ -222,7 +240,7 @@ export default defineConfig(({ mode }) => ({
         pure_funcs: ['console.log'], // Funciones a eliminar
       },
     },
-    
+
     // Incrementar límite de assets
     assetsInlineLimit: 4096,
   },
