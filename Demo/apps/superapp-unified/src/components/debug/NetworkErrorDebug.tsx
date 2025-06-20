@@ -110,7 +110,7 @@ Environment:
 `;
       setDiagnosticReport(report);
     } catch (err) {
-      console.error('Failed to run diagnostics:', err);
+      // Silently handle diagnostic errors
     } finally {
       setDiagnosticsRunning(false);
     }
