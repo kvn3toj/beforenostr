@@ -93,7 +93,7 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
         const corsResponse = await fetch(`${baseURL}/auth/login`, {
           method: 'OPTIONS',
           headers: {
-            Origin: 'https://localhost:3001',
+            Origin: 'https://frontend:3001',
             'Access-Control-Request-Method': 'POST',
             'Access-Control-Request-Headers': 'Content-Type',
           },
