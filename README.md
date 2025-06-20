@@ -18,14 +18,14 @@
 - [🔧 Configuración](#-configuración)
 - [📖 Documentación](#-documentación)
 
-## 🎯 Descripción del Proyecto
+## 🎯 Descripción del Proyecto:
 
 CoomÜnity es una plataforma revolucionaria que implementa los principios del **Bien Común** y la **reciprocidad (Ayni)** a través de una experiencia gamificada. Combina un marketplace colaborativo, un sistema de video interactivo, funcionalidades sociales y una economía interna basada en **Lükas** y **Mëritos**.
 
 ### 🌟 Módulos Principales
 
 - **🎮 ÜPlay (GPL)** - Video player gamificado interactivo
-- **🛒 Marketplace (GMP)** - Intercambio de productos y servicios 
+- **🛒 Marketplace (GMP)** - Intercambio de productos y servicios
 - **👥 Social** - Comunidad y colaboración
 - **💰 Wallet** - Gestión de Lükas (moneda interna)
 - **📊 Analytics** - Métricas y seguimiento de progreso
@@ -56,18 +56,21 @@ El proyecto utiliza una arquitectura de **monorepo** con separación clara de re
 ### 🛠️ Stack Tecnológico
 
 **Frontend (SuperApp)**:
+
 - React 19.1.0 + TypeScript 5.7.2
 - Material UI 7.0.1 + Tailwind CSS
 - Vite 6.3.5 + React Query + Zustand
 - Playwright (Testing E2E)
 
 **Backend**:
+
 - NestJS 11.1.1 + TypeScript
 - Prisma ORM + PostgreSQL + Redis
 - JWT Authentication + WebSocket
 - Swagger API Documentation
 
 **DevOps**:
+
 - Turborepo (Monorepo Management)
 - Docker + Prometheus + Grafana
 - GitHub Actions (CI/CD)
@@ -79,24 +82,27 @@ El proyecto utiliza una arquitectura de **monorepo** con separación clara de re
 Asegúrate de tener instalado:
 
 - **Node.js** >= 18.0.0
-- **npm** >= 9.0.0  
+- **npm** >= 9.0.0
 - **PostgreSQL** >= 14.0
 - **Redis** >= 6.0
 
 ### ⚡ Instalación
 
 1. **Clonar el repositorio**:
+
 ```bash
 git clone https://github.com/tu-usuario/coomunity.git
 cd GAMIFIER-copy
 ```
 
 2. **Instalar dependencias**:
+
 ```bash
 npm install
 ```
 
 3. **Configurar variables de entorno**:
+
 ```bash
 # Crear archivo .env para la SuperApp
 cp Demo/apps/superapp-unified/env.example Demo/apps/superapp-unified/.env
@@ -106,12 +112,14 @@ cp Demo/apps/superapp-unified/env.example Demo/apps/superapp-unified/.env
 ```
 
 4. **Inicializar base de datos**:
+
 ```bash
 npm run db:reset
 npm run db:seed
 ```
 
 5. **Iniciar servicios**:
+
 ```bash
 # Iniciar todo el ecosistema
 npm run dev
@@ -180,6 +188,7 @@ El proyecto incluye +50 tests E2E que cubren:
 - ✅ Wallet y transacciones
 
 **Ejecutar tests**:
+
 ```bash
 # Todos los tests
 npm run test:e2e
@@ -210,6 +219,7 @@ moderator@gamifier.com / 123456    // Moderador
 ### 🌐 Variables de Entorno
 
 **SuperApp** (`Demo/apps/superapp-unified/.env`):
+
 ```env
 VITE_API_BASE_URL=http://localhost:3002
 VITE_BASE_URL=http://localhost:3001
@@ -218,6 +228,7 @@ VITE_APP_ENV=development
 ```
 
 **Backend** (`backend/.env`):
+
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/coomunity"
 REDIS_URL="redis://localhost:6379"
@@ -242,7 +253,7 @@ docker-compose -f docker-compose.prod.yml up
 - [📋 Guía de Desarrollo](docs/guides/DEVELOPMENT_GUIDE.md)
 - [🏗️ Arquitectura Detallada](docs/architecture/ARCHITECTURE.md)
 - [🧪 Guía de Testing](docs/testing/TESTING_GUIDE.md)
-- [🚀 Deploy & CI/CD](docs/deployment/DEPLOYMENT.md)
+- [🚀 Deploy &amp; CI/CD](docs/deployment/DEPLOYMENT.md)
 - [🎨 Design System](docs/design/DESIGN_SYSTEM.md)
 
 ### 🔗 Enlaces Útiles
@@ -254,7 +265,7 @@ docker-compose -f docker-compose.prod.yml up
 ## 🏆 Estado del Proyecto
 
 - ✅ **SuperApp**: 95% completado
-- ✅ **Backend**: 100% funcional  
+- ✅ **Backend**: 100% funcional
 - ✅ **Testing**: Cobertura E2E extensa
 - ✅ **Integración**: Frontend-Backend conectado
 - ✅ **Arquitectura**: Limpia y escalable
