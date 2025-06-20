@@ -8,7 +8,7 @@ import {
   ConnectedSocket,
   WsException,
 } from '@nestjs/websockets';
-import { Logger, UseGuards } from '@nestjs/common';
+import { Logger, UseGuards, Inject } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -35,7 +35,7 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
   private readonly logger = new Logger(StudyRoomsGateway.name);
 
   constructor(
-    private readonly jwtService: JwtService,
+    @Inject(JwtService) private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly studyRoomsService: StudyRoomsService,
   ) {
@@ -44,7 +44,7 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
     this.logger.log('>>> JwtService injected:', !!this.jwtService);
     this.logger.log('>>> PrismaService injected:', !!this.prisma);
     this.logger.log('>>> StudyRoomsService injected:', !!this.studyRoomsService);
-    
+
     if (!this.jwtService) {
       this.logger.error('>>> CRITICAL: JwtService is undefined - WebSocket auth will fail');
     }
@@ -56,14 +56,14 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
   async handleConnection(client: AuthenticatedSocket) {
     try {
       this.logger.log('>>> WebSocket connection attempt started');
-      
+
       // ✅ DEBUGGING: Verificar servicios antes de usar
       if (!this.jwtService) {
         this.logger.error('>>> CRITICAL: JwtService is undefined during connection');
         client.disconnect();
         return;
       }
-      
+
       if (!this.jwtService.verify) {
         this.logger.error('>>> CRITICAL: JwtService.verify method is undefined');
         client.disconnect();
@@ -72,14 +72,14 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
 
       // Extraer token JWT de la query o headers
       const token = client.handshake.auth?.token || client.handshake.query?.token;
-      
+
       this.logger.log('>>> Token extraction attempt:', {
         hasAuthToken: !!client.handshake.auth?.token,
         hasQueryToken: !!client.handshake.query?.token,
         tokenPresent: !!token,
         tokenLength: token ? token.length : 0
       });
-      
+
       if (!token) {
         this.logger.warn(`>>> WebSocket connection rejected: No token provided`);
         client.emit('auth-error', { message: 'Token de autenticación requerido' });
@@ -91,7 +91,7 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
 
       // Verificar y decodificar el token
       const payload = this.jwtService.verify(token);
-      
+
       this.logger.log('>>> JWT verification successful:', {
         userId: payload.sub,
         email: payload.email,
@@ -123,8 +123,8 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
         jwtServiceAvailable: !!this.jwtService,
         verifyMethodAvailable: !!this.jwtService?.verify
       });
-      
-      client.emit('auth-error', { 
+
+      client.emit('auth-error', {
         message: 'Error de autenticación',
         details: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
@@ -166,7 +166,7 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
 
       // Unirse al room de Socket.IO
       await client.join(roomId);
-      
+
       this.logger.log(`User ${client.user?.name} joined room ${roomId} via WebSocket`);
 
       // Notificar a otros participantes
@@ -197,7 +197,7 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
       const { roomId } = data;
 
       await client.leave(roomId);
-      
+
       this.logger.log(`User ${client.user?.name} left room ${roomId} via WebSocket`);
 
       // Notificar a otros participantes
@@ -402,4 +402,4 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
     this.server.to(roomId).emit(event, data);
     this.logger.log(`Notified room ${roomId} with event: ${event}`);
   }
-} 
+}

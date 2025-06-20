@@ -1,35 +1,46 @@
 {
-  "version": 2,
-  "framework": "vite",
-  "buildCommand": "npm run vercel-build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm install --legacy-peer-deps",
-  "nodeVersion": "18.x",
-  "functions": {
-    "app/api/**/*.js": {
-      "maxDuration": 30
-    }
-  },
+  "framework": "vite",
   "rewrites": [
     {
-      "source": "/((?!api).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
     {
-      "source": "/sw.js",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }
   ],
   "env": {
-    "NODE_ENV": "production",
-    "VITE_APP_ENV": "production",
-    "NODE_OPTIONS": "--max-old-space-size=4096"
+    "NODE_ENV": "production"
   }
 }

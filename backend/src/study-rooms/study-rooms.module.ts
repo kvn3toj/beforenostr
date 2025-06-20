@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { StudyRoomsController } from './study-rooms.controller';
 import { StudyRoomsService } from './study-rooms.service';
 import { StudyRoomsGateway } from './study-rooms.gateway';
@@ -8,7 +8,7 @@ import { AuthModule } from '../auth/auth.module';
 @Module({
   imports: [
     PrismaModule,
-    AuthModule,
+    forwardRef(() => AuthModule),
   ],
   controllers: [StudyRoomsController],
   providers: [StudyRoomsService, StudyRoomsGateway],
