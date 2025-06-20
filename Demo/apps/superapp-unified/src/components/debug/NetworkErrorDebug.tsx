@@ -177,7 +177,7 @@ Environment:
       case 'cors':
         return [
           'Verificar configuración CORS del backend',
-          `Asegurar que ${window.location.origin} esté permitido`,
+          'Asegurar que el frontend esté permitido en CORS',
           'Revisar headers Access-Control-Allow-Origin',
           'Verificar que credentials estén configurados correctamente',
         ];
