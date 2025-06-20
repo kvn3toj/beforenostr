@@ -90,18 +90,3 @@ services:
         value: "G-XXXXXXXXXX"
       - key: VITE_HOTJAR_ID
         value: "0000000"
-
-# 🗄️ Database (PostgreSQL)
-databases:
-  - name: coomunity-db
-    databaseName: coomunity
-    user: coomunity_user
-    plan: free
-
-# 🔄 Background Workers (si necesario)
-# workers:
-#   - name: coomunity-worker
-#     runtime: node
-#     buildCommand: npm install --legacy-peer-deps
-#     startCommand: npm run worker
-#     plan: free
