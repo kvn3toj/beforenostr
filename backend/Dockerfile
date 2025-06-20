@@ -43,7 +43,7 @@ RUN npm ci --only=production && npm cache clean --force
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
-COPY backend/prisma ./prisma
+COPY --from=builder /usr/src/app/prisma ./prisma
 
 # Exponer el puerto
 EXPOSE 3002
