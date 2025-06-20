@@ -46,17 +46,17 @@ services:
   #--------------------------------
   # Frontend - SuperApp (Vite)
   #--------------------------------
-  - type: static
+  - type: web
     name: coomunity-superapp
+    runtime: node
     repo: https://github.com/kvn3toj/beforenostr
     branch: gamifier3.5
     rootDir: Demo/apps/superapp-unified
     buildCommand: "npm install --legacy-peer-deps && npm run build"
-    publishDir: "dist"
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    startCommand: "npx serve -s dist"
+    healthCheck:
+      path: /
+      initialDelaySeconds: 60
     envVars:
       - key: NODE_ENV
         value: production
@@ -67,7 +67,7 @@ services:
           property: url
       - key: VITE_BASE_URL
         fromService:
-          type: static
+          type: web
           name: coomunity-superapp
           property: url
       - key: VITE_NETWORK_API_URL
@@ -77,7 +77,7 @@ services:
           property: url
       - key: VITE_NETWORK_BASE_URL
         fromService:
-          type: static
+          type: web
           name: coomunity-superapp
           property: url
       - key: VITE_ENABLE_MOCK_AUTH
