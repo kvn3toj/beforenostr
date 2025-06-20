@@ -1,0 +1,168 @@
+# 🤖 REGLAS CONSOLIDADAS PARA EL AGENTE IA - PROYECTO COOMUNITY
+# =====================================================================
+# VERSIÓN CONSOLIDADA - JUNIO 2025
+# Estas reglas referencian y complementan workspace-management.mdc
+# =====================================================================
+
+> **Contexto**: Reglas principales para el desarrollo del proyecto CoomÜnity SuperApp. 
+> **REGLA PRINCIPAL**: Ver `workspace-management.mdc` para protocolo completo de desarrollo.
+
+## 🎯 CONTEXTO Y ARQUITECTURA ACTUAL
+
+**CoomÜnity Global** es una plataforma gamificada para economía colaborativa basada en filosofía de Bien Común y reciprocidad (Ayni).
+
+### **Arquitectura Real Confirmada:**
+- **Backend NestJS**: Puerto 3002 (FUNCIONAL - requiere PostgreSQL + Redis)
+- **SuperApp Frontend**: Puerto 3001 en `Demo/apps/superapp-unified/` (EN DESARROLLO ACTIVO)
+- **Stack Principal**: React, TypeScript, Material UI, Tailwind CSS, Vite, React Query
+
+### **🆕 DEPENDENCIAS CRÍTICAS DEL BACKEND:**
+- **PostgreSQL@15**: Puerto 5432 (obligatorio)
+- **Redis**: Puerto 6379 (obligatorio)
+- **Verificación**: `brew services list | grep postgresql && brew services list | grep redis`
+
+---
+
+## 📋 REGLAS ESENCIALES (CONSOLIDADAS)
+
+### 1. **PROTOCOLO PRE-FLIGHT OBLIGATORIO**
+**Referencia**: Ver `workspace-management.mdc` sección "PROTOCOLO PRE-FLIGHT CHECK EXPANDIDO"
+```bash
+# Verificar ubicación (raíz del monorepo)
+pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER-copy
+
+# Verificar dependencias críticas
+brew services list | grep postgresql
+brew services list | grep redis
+
+# Limpiar procesos múltiples
+pkill -f "vite" && pkill -f "npm run dev" && pkill -f "turbo"
+
+# Verificar servicios
+curl http://localhost:3002/health  # Backend
+curl http://localhost:3001 -I      # SuperApp
+```
+
+### 2. **MANEJO DE ARCHIVOS SENSIBLES**
+- **NUNCA** leer/escribir archivos `.env` directamente
+- **SIEMPRE** usar comandos de terminal: `cat .env`, `ls -la .env`
+
+### 3. **ERRORES DE IMPORTACIONES LAZY LOADING**
+**🆕 CRÍTICO**: Problema resuelto en sesión de junio 2025
+- Verificar que importaciones coincidan con archivos reales: `ls Demo/apps/superapp-unified/src/pages/`
+- Mapeo correcto: `UPlay.tsx` → `import('../pages/UPlay')`
+- Funciones obligatorias: `preloadCriticalComponents`, `preloadRouteComponents`
+
+### 4. **ARQUITECTURA REACT OBLIGATORIA**
+- Componentes funcionales únicamente
+- Hooks personalizados para lógica reutilizable 
+- React Query para todas las llamadas API
+- Context API para estado global (NO prop drilling)
+- Memoización con `useMemo`/`useCallback`
+
+### 5. **INTEGRACIÓN CON BACKEND**
+- Backend NestJS en puerto 3002 (requiere PostgreSQL + Redis activos)
+- SuperApp se conecta a `http://localhost:3002` vía `VITE_API_BASE_URL`
+- Usar JWT del Backend NestJS para autenticación
+- Credenciales de desarrollo: `admin@gamifier.com / admin123`
+
+### 6. **TESTING CON PLAYWRIGHT**
+- **Versión confirmada**: `@playwright/test@1.53.0` 🆕 ACTUALIZADO
+- **CRÍTICO**: Una sola instalación en `Demo/apps/superapp-unified/` (NO en directorio padre)
+- Usar `baseURL` relativo en `page.goto()` (ej. `/login`)
+- Selectores semánticos preferidos sobre text-based
+- Configuración: `VITE_ENABLE_MOCK_AUTH=false`
+
+### 7. **GESTIÓN DE DEPENDENCIAS**
+- **Material UI**: Resolver conflictos con `npm install --legacy-peer-deps`
+- **React**: 18+ (compatible con MUI v7 y Playwright 1.53.0)
+- **Playwright**: Detectar conflictos con `find . -name "@playwright" -type d`
+
+### 8. **PATRONES UI/UX OBLIGATORIOS**
+- MUI components con `sx` prop (NO styled-components)
+- Loading, Error y Empty states OBLIGATORIOS
+- Accesibilidad con aria-labels apropiados
+- Responsive design por defecto
+
+### 9. **PROTOCOLO DE COMUNICACIÓN**
+Usar prefijos para claridad:
+- `[BACKEND]` - Backend NestJS (puerto 3002, requiere PostgreSQL + Redis)
+- `[SUPERAPP]` - Frontend SuperApp (puerto 3001)
+- `[GLOBAL]` - Afecta múltiples componentes
+
+### 10. **ALINEACIÓN FILOSÓFICA**
+- Evaluar cómo las implementaciones se alinean con CoomÜnity (Bien Común, Ayni, Reciprocidad)
+- Evitar diseños que fomenten adicción o rompan principios de reciprocidad
+
+---
+
+## 🚨 ERRORES CRÍTICOS A EVITAR (ACTUALIZADOS)
+
+### ❌ NO Hagas:
+1. **🆕 Iniciar backend sin PostgreSQL Y Redis ejecutándose**
+2. **🆕 Importaciones lazy loading incorrectas** (verificar archivos reales primero)
+3. Instalar Playwright en múltiples directorios (solo en SuperApp)
+4. Leer archivos `.env` directamente con herramientas de archivo
+5. Hardcodear URLs completas en tests de Playwright
+6. Múltiples procesos simultáneos (causa conflictos)
+
+### ✅ SÍ Haz:
+1. **🆕 Verificar PostgreSQL + Redis antes de iniciar backend**
+2. **🆕 Mapear importaciones lazy loading a archivos reales**
+3. Conectar con Backend NestJS en puerto 3002
+4. Trabajar en el directorio correcto (`Demo/apps/superapp-unified/`)
+5. Usar comandos de terminal para archivos sensibles
+6. Limpiar procesos múltiples antes de desarrollo
+
+---
+
+## 🔧 COMANDOS CLAVE ACTUALIZADOS
+
+### **Pre-flight Check Completo:**
+```bash
+# Ubicación correcta
+pwd  # /Users/kevinp/Movies/GAMIFIER-copy
+
+# Dependencias críticas (NUEVAS)
+brew services start postgresql@15   # OBLIGATORIO
+brew services start redis          # OBLIGATORIO
+
+# Verificar conectividad
+lsof -i :5432  # PostgreSQL
+lsof -i :6379  # Redis
+
+# Limpiar procesos múltiples
+pkill -f "vite" && pkill -f "npm run dev"
+
+# Verificar servicios
+curl http://localhost:3002/health  # Backend
+curl http://localhost:3001 -I      # SuperApp
+```
+
+### **Desarrollo:**
+```bash
+# Desde la raíz del monorepo
+npm run dev:backend              # Backend (requiere PostgreSQL + Redis)
+npm run dev:superapp            # SuperApp
+
+# Tests E2E
+npm run test:e2e --workspace=coomunity-superapp
+```
+
+---
+
+## 📚 **REFERENCIAS A REGLAS COMPLEMENTARIAS**
+
+1. **`workspace-management.mdc`** - 🎯 **REGLA PRINCIPAL**
+   - Protocolo completo de desarrollo
+   - Pre-flight check expandido
+   - Gestión de procesos múltiples
+   - Dependencias críticas (PostgreSQL + Redis)
+
+2. **`slack-agents-coomunity.md`** - Configuración para Background Agents
+3. **`env.mdc`** - Manejo específico de archivos .env
+
+---
+
+**🔄 VERSIÓN**: Consolidada Junio 2025 - Incluye aprendizajes de Redis y lazy loading
+**📋 ESTADO**: Reglas activas y verificadas contra experiencia real de desarrollo 

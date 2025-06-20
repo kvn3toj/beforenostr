@@ -1,0 +1,1403 @@
+/* ========================================================================
+   🧠 HEURÍSTICA UX 16: ADAPTIVE & CONTEXTUAL EXPERIENCE
+   ========================================================================
+   
+   Principios Clave:
+   - Personalización inteligente de la interfaz
+   - Adaptación contextual según el comportamiento del usuario
+   - Interfaces que aprenden y evolucionan
+   - Contenido dinámico y relevante
+   - Experiencias multi-dispositivo coherentes
+   - Adaptación a condiciones ambientales
+   - Inteligencia artificial aplicada a UX
+   
+   ======================================================================== */
+
+/* =====================================
+   🔧 CSS CUSTOM PROPERTIES - ADAPTIVE
+   ===================================== */
+
+:root {
+  /* Adaptive Color Schemes */
+  --adaptive-primary: #3b82f6;
+  --adaptive-secondary: #64748b;
+  --adaptive-accent: #10b981;
+  --adaptive-warning: #f59e0b;
+  --adaptive-error: #ef4444;
+  --adaptive-neutral: #6b7280;
+  
+  /* Context-aware Colors */
+  --context-focus: #2563eb;
+  --context-active: #1d4ed8;
+  --context-hover: #60a5fa;
+  --context-visited: #7c3aed;
+  --context-new: #10b981;
+  
+  /* Personalization Levels */
+  --personalization-none: 0;
+  --personalization-basic: 1;
+  --personalization-moderate: 2;
+  --personalization-advanced: 3;
+  --personalization-expert: 4;
+  
+  /* Adaptive Spacing */
+  --adaptive-density-compact: 0.75;
+  --adaptive-density-normal: 1;
+  --adaptive-density-comfortable: 1.25;
+  --adaptive-density-spacious: 1.5;
+  
+  /* Context Indicators */
+  --context-indicator-size: 8px;
+  --context-indicator-opacity: 0.8;
+  
+  /* Adaptive Animations */
+  --adaptive-duration-instant: 0ms;
+  --adaptive-duration-fast: 150ms;
+  --adaptive-duration-normal: 300ms;
+  --adaptive-duration-slow: 500ms;
+
+  /* Variables base para densidad */
+  --spacing-base: 16px;
+  --density-factor: var(--current-density, 1);
+  --computed-spacing: calc(var(--spacing-base) * var(--density-factor));
+  
+  /* Variables específicas para navegación móvil - FIREFOX/SAFARI COMPATIBILITY */
+  --primary-color: #007bff;
+  --overlay-background: rgba(0, 0, 0, 0.8);
+  --background-primary: #ffffff;
+  --border-color: #e5e7eb;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+}
+
+/* =====================================
+   🎯 PERSONALIZATION LEVELS
+   ===================================== */
+
+/* Level 0: No Personalization */
+.personalization-none {
+  --current-density: var(--adaptive-density-normal);
+  --current-animations: var(--adaptive-duration-normal);
+}
+
+/* Level 1: Basic Personalization */
+.personalization-basic {
+  --current-density: var(--adaptive-density-normal);
+  --current-animations: var(--adaptive-duration-normal);
+}
+
+.personalization-basic .adaptive-content {
+  transition: all var(--current-animations) ease;
+}
+
+/* Level 2: Moderate Personalization */
+.personalization-moderate {
+  --current-density: var(--adaptive-density-comfortable);
+  --current-animations: var(--adaptive-duration-fast);
+}
+
+.personalization-moderate .adaptive-content {
+  padding: calc(var(--spacing-md) * var(--current-density));
+  transition: all var(--current-animations) ease;
+}
+
+.personalization-moderate .contextual-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Level 3: Advanced Personalization */
+.personalization-advanced {
+  --current-density: var(--adaptive-density-comfortable);
+  --current-animations: var(--adaptive-duration-fast);
+}
+
+.personalization-advanced .adaptive-layout {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: calc(var(--spacing-lg) * var(--current-density));
+}
+
+.personalization-advanced .smart-suggestions {
+  display: block;
+  opacity: 1;
+}
+
+.personalization-advanced .contextual-actions {
+  position: sticky;
+  top: 20px;
+}
+
+/* Level 4: Expert Personalization */
+.personalization-expert {
+  --current-density: var(--adaptive-density-compact);
+  --current-animations: var(--adaptive-duration-instant);
+}
+
+.personalization-expert .power-user-features {
+  display: flex;
+  opacity: 1;
+}
+
+.personalization-expert .keyboard-shortcuts {
+  display: inline-block;
+}
+
+.personalization-expert .advanced-controls {
+  visibility: visible;
+}
+
+/* =====================================
+   📱 DEVICE & CONTEXT ADAPTATION
+   ===================================== */
+
+/* Mobile-First Adaptive Design */
+.adaptive-container {
+  width: 100%;
+  padding: var(--spacing-md);
+  transition: all var(--adaptive-duration-fast) ease;
+}
+
+.adaptive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+  transition: all var(--adaptive-duration-normal) ease;
+}
+
+/* Tablet Adaptations */
+@media (min-width: 768px) {
+  .adaptive-container {
+    padding: calc(var(--spacing-lg) * var(--current-density, 1));
+  }
+  
+  .adaptive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: calc(var(--spacing-lg) * var(--current-density, 1));
+  }
+  
+  .adaptive-sidebar {
+    display: block;
+    transform: translateX(0);
+  }
+}
+
+/* Desktop Adaptations */
+@media (min-width: 1024px) {
+  .adaptive-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(var(--spacing-xl) * var(--current-density, 1));
+  }
+  
+  .adaptive-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: calc(var(--spacing-xl) * var(--current-density, 1));
+  }
+  
+  .adaptive-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+/* Large Screen Adaptations */
+@media (min-width: 1440px) {
+  .adaptive-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .adaptive-container {
+    max-width: 1400px;
+  }
+}
+
+/* =====================================
+   🌓 ENVIRONMENTAL ADAPTATIONS
+   ===================================== */
+
+/* Time-based Adaptations */
+.time-morning {
+  --adaptive-primary: #fbbf24; /* Warm morning colors */
+  --adaptive-accent: #f59e0b;
+}
+
+.time-afternoon {
+  --adaptive-primary: #3b82f6; /* Bright afternoon colors */
+  --adaptive-accent: #10b981;
+}
+
+.time-evening {
+  --adaptive-primary: #6366f1; /* Calm evening colors */
+  --adaptive-accent: #8b5cf6;
+}
+
+.time-night {
+  --adaptive-primary: #374151; /* Dark night colors */
+  --adaptive-accent: #6b7280;
+}
+
+/* Light Conditions */
+.light-bright {
+  --adaptive-contrast: 1.2;
+  filter: contrast(var(--adaptive-contrast));
+}
+
+.light-dim {
+  --adaptive-brightness: 0.9;
+  filter: brightness(var(--adaptive-brightness));
+}
+
+/* Battery Level Adaptations */
+.battery-low {
+  /* Reduce animations and effects */
+  --current-animations: var(--adaptive-duration-instant);
+}
+
+.battery-low * {
+  animation-play-state: paused !important;
+  transition-duration: 0ms !important;
+}
+
+.battery-low .non-essential {
+  display: none !important;
+}
+
+/* Network Speed Adaptations */
+.connection-slow {
+  /* Simplified interfaces for slow connections */
+}
+
+.connection-slow .heavy-graphics {
+  display: none;
+}
+
+.connection-slow .text-alternative {
+  display: block;
+}
+
+/* =====================================
+   🎨 CONTEXTUAL INTERFACE ELEMENTS
+   ===================================== */
+
+.contextual-card {
+  position: relative;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: calc(var(--spacing-lg) * var(--current-density, 1));
+  box-shadow: var(--shadow-sm);
+  transition: all var(--current-animations, 300ms) ease;
+  border: 1px solid transparent;
+}
+
+.contextual-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.contextual-card.priority-high {
+  border-color: var(--adaptive-error);
+  background: linear-gradient(135deg, #fef2f2, var(--color-white));
+}
+
+.contextual-card.priority-medium {
+  border-color: var(--adaptive-warning);
+  background: linear-gradient(135deg, #fffbeb, var(--color-white));
+}
+
+.contextual-card.priority-low {
+  border-color: var(--adaptive-neutral);
+}
+
+.contextual-card.recently-viewed {
+  border-color: var(--context-visited);
+}
+
+.contextual-card.frequently-used {
+  border-color: var(--adaptive-accent);
+  background: linear-gradient(135deg, #f0fdf4, var(--color-white));
+}
+
+/* Context Indicators */
+.context-indicator {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  width: var(--context-indicator-size);
+  height: var(--context-indicator-size);
+  border-radius: 50%;
+  opacity: var(--context-indicator-opacity);
+}
+
+.context-indicator.new {
+  background: var(--context-new);
+  animation: contextPulse 2s infinite ease-in-out;
+}
+
+.context-indicator.updated {
+  background: var(--adaptive-warning);
+}
+
+.context-indicator.important {
+  background: var(--adaptive-error);
+  animation: contextUrgent 1s infinite ease-in-out;
+}
+
+@keyframes contextPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes contextUrgent {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* =====================================
+   🧭 SMART NAVIGATION
+   ===================================== */
+
+.adaptive-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+}
+
+.adaptive-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--adaptive-secondary);
+  transition: all var(--current-animations, 200ms) ease;
+  position: relative;
+}
+
+.adaptive-nav-item:hover {
+  background: var(--color-neutral-100);
+  color: var(--adaptive-primary);
+}
+
+.adaptive-nav-item.frequently-used {
+  background: linear-gradient(90deg, var(--adaptive-accent), transparent);
+  background-size: 3px 100%;
+  background-repeat: no-repeat;
+  padding-left: calc(var(--spacing-md) + 3px);
+}
+
+.adaptive-nav-item.recently-used {
+  color: var(--context-visited);
+}
+
+.adaptive-nav-item.recommended {
+  background: var(--color-neutral-50);
+  border: 1px dashed var(--adaptive-accent);
+}
+
+.adaptive-nav-item.recommended::after {
+  content: '✨';
+  margin-left: auto;
+  font-size: 0.875rem;
+}
+
+/* Usage Frequency Indicators */
+.usage-indicator {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.usage-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--adaptive-neutral);
+  opacity: 0.3;
+}
+
+.usage-dot.active {
+  background: var(--adaptive-accent);
+  opacity: 1;
+}
+
+/* =====================================
+   💡 SMART SUGGESTIONS
+   ===================================== */
+
+.smart-suggestions {
+  display: none; /* Show only for moderate+ personalization */
+  background: var(--color-neutral-50);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+  border-left: 3px solid var(--adaptive-accent);
+}
+
+.suggestion-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+  color: var(--adaptive-primary);
+  font-size: 0.875rem;
+}
+
+.suggestion-header::before {
+  content: '🎯';
+  font-size: 1rem;
+}
+
+.suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  text-decoration: none;
+  color: var(--adaptive-secondary);
+  font-size: 0.875rem;
+  transition: all var(--current-animations, 150ms) ease;
+}
+
+.suggestion-item:hover {
+  background: var(--adaptive-accent);
+  color: var(--color-white);
+  transform: translateX(4px);
+}
+
+.suggestion-item::before {
+  content: '→';
+  color: var(--adaptive-accent);
+  font-weight: bold;
+}
+
+.suggestion-item:hover::before {
+  color: var(--color-white);
+}
+
+/* =====================================
+   📊 CONTEXTUAL CONTENT
+   ===================================== */
+
+.contextual-content {
+  position: relative;
+  transition: all var(--current-animations, 300ms) ease;
+}
+
+.contextual-content.user-focused {
+  transform: scale(1.02);
+  z-index: 10;
+  box-shadow: var(--shadow-lg);
+}
+
+.contextual-content.relevant-high {
+  border: 2px solid var(--adaptive-accent);
+  background: linear-gradient(135deg, var(--color-neutral-50), var(--color-white));
+}
+
+.contextual-content.relevant-medium {
+  border: 1px solid var(--adaptive-neutral);
+}
+
+.contextual-content.relevant-low {
+  opacity: 0.7;
+}
+
+/* Relevance Score Indicator */
+.relevance-indicator {
+  position: absolute;
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+  display: flex;
+  gap: 2px;
+}
+
+.relevance-star {
+  width: 8px;
+  height: 8px;
+  background: var(--adaptive-neutral);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  opacity: 0.3;
+}
+
+.relevance-star.filled {
+  background: var(--adaptive-accent);
+  opacity: 1;
+}
+
+/* =====================================
+   🎛️ ADAPTIVE CONTROLS
+   ===================================== */
+
+.adaptive-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-sm);
+  display: flex;
+  gap: var(--spacing-xs);
+  z-index: 1000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.adaptive-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all var(--adaptive-duration-fast) ease;
+  position: relative;
+}
+
+.adaptive-control:hover {
+  background: rgba(59, 130, 246, 0.1);
+  transform: scale(1.05);
+}
+
+.adaptive-control:focus {
+  outline: 2px solid var(--context-focus);
+  outline-offset: 2px;
+}
+
+.adaptive-control[data-adaptive-control="density"] {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+}
+
+.adaptive-control[data-adaptive-control="density"]:hover {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+/* Indicadores de densidad */
+.adaptive-control[data-adaptive-control="density"]::after {
+  content: attr(data-current-density);
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--adaptive-duration-fast) ease;
+}
+
+.adaptive-control[data-adaptive-control="density"]:hover::after {
+  opacity: 1;
+}
+
+/* =====================================
+   📏 DENSITY LEVEL APPLICATIONS
+   ===================================== */
+
+/* Densidad Compacta */
+.density-compact {
+  --current-density: 0.75;
+}
+
+.density-compact .adaptive-container {
+  padding: calc(var(--spacing-sm) * 0.75);
+}
+
+.density-compact .adaptive-grid {
+  gap: calc(var(--spacing-sm) * 0.75);
+}
+
+.density-compact .contextual-card {
+  padding: calc(var(--spacing-md) * 0.75);
+  margin-bottom: calc(var(--spacing-sm) * 0.75);
+}
+
+.density-compact .enhanced-nav-item {
+  padding: calc(var(--spacing-xs) * 0.75) calc(var(--spacing-sm) * 0.75);
+}
+
+.density-compact .minimalist-card {
+  padding: calc(var(--spacing-md) * 0.75);
+}
+
+/* Densidad Normal */
+.density-normal {
+  --current-density: 1;
+}
+
+.density-normal .adaptive-container {
+  padding: var(--spacing-md);
+}
+
+.density-normal .adaptive-grid {
+  gap: var(--spacing-md);
+}
+
+.density-normal .contextual-card {
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Densidad Cómoda */
+.density-comfortable {
+  --current-density: 1.25;
+}
+
+.density-comfortable .adaptive-container {
+  padding: calc(var(--spacing-lg) * 1.25);
+}
+
+.density-comfortable .adaptive-grid {
+  gap: calc(var(--spacing-lg) * 1.25);
+}
+
+.density-comfortable .contextual-card {
+  padding: calc(var(--spacing-lg) * 1.25);
+  margin-bottom: calc(var(--spacing-md) * 1.25);
+}
+
+.density-comfortable .enhanced-nav-item {
+  padding: calc(var(--spacing-sm) * 1.25) calc(var(--spacing-md) * 1.25);
+}
+
+/* Densidad Espaciosa */
+.density-spacious {
+  --current-density: 1.5;
+}
+
+.density-spacious .adaptive-container {
+  padding: calc(var(--spacing-xl) * 1.5);
+}
+
+.density-spacious .adaptive-grid {
+  gap: calc(var(--spacing-xl) * 1.5);
+}
+
+.density-spacious .contextual-card {
+  padding: calc(var(--spacing-xl) * 1.5);
+  margin-bottom: calc(var(--spacing-lg) * 1.5);
+}
+
+.density-spacious .enhanced-nav-item {
+  padding: calc(var(--spacing-md) * 1.5) calc(var(--spacing-lg) * 1.5);
+}
+
+/* Aplicar densidad a elementos específicos */
+.adaptive-container,
+.adaptive-grid,
+.contextual-card,
+.minimalist-card,
+.enhanced-nav-item {
+  transition: padding var(--adaptive-duration-normal) ease,
+              margin var(--adaptive-duration-normal) ease,
+              gap var(--adaptive-duration-normal) ease;
+}
+
+/* =====================================
+   🔄 ADAPTIVE TRANSITIONS
+   ===================================== */
+
+.adaptive-transition {
+  transition: all var(--current-animations, 300ms) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.adaptive-slide-in {
+  animation: adaptiveSlideIn var(--current-animations, 400ms) ease-out;
+}
+
+.adaptive-fade-in {
+  animation: adaptiveFadeIn var(--current-animations, 300ms) ease-out;
+}
+
+.adaptive-scale-in {
+  animation: adaptiveScaleIn var(--current-animations, 250ms) ease-out;
+}
+
+@keyframes adaptiveSlideIn {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes adaptiveFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes adaptiveScaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =====================================
+   📈 LEARNING INDICATORS
+   ===================================== */
+
+.learning-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--adaptive-accent);
+  color: var(--color-white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.learning-badge::before {
+  content: '🧠';
+  font-size: 0.875rem;
+}
+
+.adaptation-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--color-neutral-100);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+}
+
+.adaptation-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--color-neutral-300);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.adaptation-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--adaptive-primary), var(--adaptive-accent));
+  border-radius: inherit;
+  transition: width var(--current-animations, 500ms) ease;
+}
+
+/* =====================================
+   🎯 CONTEXTUAL ACTIONS
+   ===================================== */
+
+.contextual-actions {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  display: flex;
+  gap: var(--spacing-xs);
+  opacity: 0;
+  transition: opacity var(--current-animations, 200ms) ease;
+}
+
+.contextual-card:hover .contextual-actions {
+  opacity: 1;
+}
+
+.contextual-action {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  border: 1px solid var(--adaptive-neutral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all var(--current-animations, 150ms) ease;
+}
+
+.contextual-action:hover {
+  background: var(--adaptive-primary);
+  color: var(--color-white);
+  transform: scale(1.1);
+}
+
+.contextual-action.bookmark::after { content: '🔖'; }
+.contextual-action.share::after { content: '📤'; }
+.contextual-action.hide::after { content: '👁️'; }
+.contextual-action.star::after { content: '⭐'; }
+
+/* =====================================
+   📱 RESPONSIVE ADAPTATIONS
+   ===================================== */
+
+@media (max-width: 768px) {
+  .adaptive-controls {
+    position: fixed;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    top: auto;
+    transform: none;
+    flex-direction: row;
+  }
+  
+  .adaptive-control {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .smart-suggestions {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-sm);
+  }
+  
+  .contextual-actions {
+    position: static;
+    opacity: 1;
+    margin-top: var(--spacing-sm);
+  }
+  
+  .contextual-card {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .adaptive-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .adaptive-container {
+    padding: var(--spacing-sm);
+  }
+  
+  .learning-badge {
+    font-size: 0.7rem;
+    padding: var(--spacing-xs);
+  }
+  
+  .suggestion-item {
+    font-size: 0.8rem;
+  }
+}
+
+/* =====================================
+   ♿ ACCESSIBILITY ADAPTATIONS
+   ===================================== */
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .contextual-card {
+    border-width: 2px;
+  }
+  
+  .adaptive-nav-item:hover {
+    background: var(--adaptive-primary);
+    color: var(--color-white);
+  }
+  
+  .contextual-action {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .adaptive-transition,
+  .contextual-card,
+  .adaptive-nav-item,
+  .suggestion-item,
+  .contextual-action {
+    transition: none;
+  }
+  
+  .adaptive-slide-in,
+  .adaptive-fade-in,
+  .adaptive-scale-in {
+    animation: none;
+  }
+  
+  .context-indicator.new,
+  .context-indicator.important {
+    animation: none;
+  }
+}
+
+/* Focus Management */
+.adaptive-nav-item:focus,
+.suggestion-item:focus,
+.contextual-action:focus,
+.adaptive-control:focus {
+  outline: 2px solid var(--adaptive-primary);
+  outline-offset: 2px;
+}
+
+/* =====================================
+   🌍 MULTI-LANGUAGE ADAPTATIONS
+   ===================================== */
+
+/* RTL Language Support */
+[dir="rtl"] .adaptive-navigation {
+  direction: rtl;
+}
+
+[dir="rtl"] .suggestion-item {
+  transform: translateX(-4px);
+}
+
+[dir="rtl"] .suggestion-item:hover {
+  transform: translateX(-4px);
+}
+
+[dir="rtl"] .contextual-actions {
+  right: auto;
+  left: var(--spacing-sm);
+}
+
+[dir="rtl"] .adaptive-controls {
+  right: auto;
+  left: var(--spacing-md);
+}
+
+/* Language-specific Typography */
+.lang-en { font-family: 'Inter', sans-serif; }
+.lang-es { font-family: 'Inter', sans-serif; }
+.lang-fr { font-family: 'Inter', sans-serif; }
+.lang-de { font-family: 'Inter', sans-serif; }
+.lang-ja { font-family: 'Noto Sans JP', sans-serif; }
+.lang-zh { font-family: 'Noto Sans SC', sans-serif; }
+.lang-ar { font-family: 'Noto Sans Arabic', sans-serif; }
+
+/* =====================================
+   🎨 THEME ADAPTATIONS
+   ===================================== */
+
+/* Dark Mode Adaptations */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --adaptive-primary: #60a5fa;
+    --adaptive-secondary: #e5e7eb;
+    --adaptive-accent: #34d399;
+    --adaptive-neutral: #9ca3af;
+  }
+  
+  .contextual-card {
+    background: var(--color-neutral-800);
+    border-color: var(--color-neutral-700);
+  }
+  
+  .smart-suggestions {
+    background: var(--color-neutral-800);
+    border-color: var(--adaptive-accent);
+  }
+  
+  .adaptive-control {
+    background: var(--color-neutral-800);
+    border-color: var(--color-neutral-600);
+  }
+}
+
+/* Auto Dark Mode based on time */
+.auto-dark-mode.time-night,
+.auto-dark-mode.time-late-evening {
+  color-scheme: dark;
+}
+
+/* =====================================
+   📱 ENHANCED MOBILE NAVIGATION - FIREFOX/SAFARI OPTIMIZED
+   ===================================== */
+
+/* Asegurar que el botón hamburguesa sea visible y clickeable en móvil */
+.enhanced-mobile-toggle {
+    display: block; /* Asegurarse de que esté visible por defecto en mobile */
+    position: fixed; /* O absolute, dependiendo del layout */
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Asegurar que esté por encima de todo */
+    background-color: var(--primary-color, #007bff);
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 44px; /* Tamaño mínimo touch target */
+    height: 44px;
+    /* Añadir prefijos de vendor para mayor compatibilidad */
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    /* Flexbox para centrar el contenido */
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-justify-content: space-around;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    /* Safari iOS fix */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Firefox mobile fix */
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.enhanced-mobile-toggle:hover {
+    background-color: var(--context-hover, rgba(96, 165, 250, 0.9));
+    /* Fallback para navegadores sin soporte de variables CSS */
+    background-color: rgba(0, 123, 255, 0.9);
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+.enhanced-mobile-toggle:focus {
+    outline: 2px solid var(--context-focus, #2563eb);
+    outline: 2px solid #2563eb; /* Fallback */
+    outline-offset: 2px;
+}
+
+/* Ocultar el botón hamburguesa en viewports más grandes */
+@media (min-width: 769px) {
+    .enhanced-mobile-toggle {
+        display: none !important; /* Forzar ocultamiento en desktop */
+    }
+}
+
+.hamburger-line {
+    width: 28px;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
+    -webkit-transition: all var(--adaptive-duration-normal) ease;
+    -moz-transition: all var(--adaptive-duration-normal) ease;
+    -o-transition: all var(--adaptive-duration-normal) ease;
+    transition: all var(--adaptive-duration-normal) ease;
+    /* Fallback */
+    -webkit-transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+    -webkit-transform-origin: center;
+    -moz-transform-origin: center;
+    -ms-transform-origin: center;
+    -o-transform-origin: center;
+    transform-origin: center;
+}
+
+/* Animación del hamburger al abrir - MEJORADA PARA FIREFOX/SAFARI */
+.enhanced-mobile-toggle[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    -webkit-transform: translateY(8px) rotate(45deg);
+    -moz-transform: translateY(8px) rotate(45deg);
+    -ms-transform: translateY(8px) rotate(45deg);
+    -o-transform: translateY(8px) rotate(45deg);
+    transform: translateY(8px) rotate(45deg);
+}
+
+.enhanced-mobile-toggle[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+    -webkit-transform: scaleX(0);
+    -moz-transform: scaleX(0);
+    -ms-transform: scaleX(0);
+    -o-transform: scaleX(0);
+    transform: scaleX(0);
+}
+
+.enhanced-mobile-toggle[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    -webkit-transform: translateY(-8px) rotate(-45deg);
+    -moz-transform: translateY(-8px) rotate(-45deg);
+    -ms-transform: translateY(-8px) rotate(-45deg);
+    -o-transform: translateY(-8px) rotate(-45deg);
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Mobile Navigation Links - Mejorar visibilidad y accesibilidad */
+.enhanced-nav-links {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    gap: var(--spacing-md);
+    gap: 1rem; /* Fallback */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    -webkit-transition: all var(--adaptive-duration-normal) ease;
+    -moz-transition: all var(--adaptive-duration-normal) ease;
+    -o-transition: all var(--adaptive-duration-normal) ease;
+    transition: all var(--adaptive-duration-normal) ease;
+    /* Fallback */
+    -webkit-transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+}
+
+/* Estilos del menú móvil cuando está abierto */
+.mobile-menu-open {
+    /* Asegurar que el menú se superponga y sea visible */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-background, rgba(0, 0, 0, 0.8));
+    z-index: 999; /* Ligeramente por debajo del botón si es necesario */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Añadir transiciones para la apertura/cierre */
+    -webkit-transition: transform 0.3s ease-out;
+    -moz-transition: transform 0.3s ease-out;
+    -o-transition: transform 0.3s ease-out;
+    transition: transform 0.3s ease-out;
+    transform: translateX(100%); /* Inicialmente fuera de la pantalla */
+}
+
+/* Estado del menú cuando está visible */
+.mobile-menu-open.is-active {
+    transform: translateX(0%); /* Entra en la pantalla */
+}
+
+/* Ocultar el menú móvil en desktop, si se usa la misma clase */
+@media (min-width: 769px) {
+    .mobile-menu-open {
+        display: none !important; /* Asegurar que no interfiera en desktop */
+    }
+}
+
+/* =====================================
+   📱 RESPONSIVE BREAKPOINTS - CROSS BROWSER FIXES
+   ===================================== */
+
+/* Tablet y móviles - Mostrar hamburger - FIREFOX/SAFARI FIXES */
+@media screen and (max-width: 768px) {
+    /* Asegurar compatibilidad total con Firefox y Safari */
+    .enhanced-mobile-toggle {
+        display: -webkit-flex !important;
+        display: -ms-flexbox !important;
+        display: flex !important; /* Forzar visibilidad */
+    }
+    
+    .enhanced-nav-links {
+        display: none !important; /* Forzar ocultamiento inicial */
+        position: fixed;
+        top: 70px; /* Altura del header */
+        left: 0;
+        right: 0;
+        background: var(--background-primary, #ffffff);
+        background: #ffffff; /* Fallback */
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        padding: var(--spacing-lg);
+        padding: 1.5rem; /* Fallback */
+        -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        -moz-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-top: 1px solid var(--border-color, #e5e7eb);
+        border-top: 1px solid #e5e7eb; /* Fallback */
+        z-index: 999;
+        max-height: calc(100vh - 70px);
+        max-height: -webkit-calc(100vh - 70px); /* Safari */
+        max-height: -moz-calc(100vh - 70px); /* Firefox */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+    }
+    
+    /* CLAVE: Selector específico para el estado abierto */
+    .enhanced-nav-links.mobile-menu-open,
+    nav .enhanced-nav-links.mobile-menu-open,
+    .enhanced-navbar .enhanced-nav-links.mobile-menu-open {
+        display: -webkit-flex !important;
+        display: -ms-flexbox !important;
+        display: flex !important;
+        -webkit-animation: slideDownFade var(--adaptive-duration-normal) ease-out;
+        -moz-animation: slideDownFade var(--adaptive-duration-normal) ease-out;
+        animation: slideDownFade var(--adaptive-duration-normal) ease-out;
+        /* Fallback */
+        -webkit-animation: slideDownFade 0.25s ease-out;
+        -moz-animation: slideDownFade 0.25s ease-out;
+        animation: slideDownFade 0.25s ease-out;
+        /* Forzar visibilidad en Firefox/Safari */
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .enhanced-nav-item {
+        padding: var(--spacing-md) var(--spacing-lg);
+        padding: 1rem 1.5rem; /* Fallback */
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--text-primary, #1f2937);
+        color: #1f2937; /* Fallback */
+        -webkit-transition: all var(--adaptive-duration-fast) ease;
+        -moz-transition: all var(--adaptive-duration-fast) ease;
+        -o-transition: all var(--adaptive-duration-fast) ease;
+        transition: all var(--adaptive-duration-fast) ease;
+        /* Fallback */
+        -webkit-transition: all 0.15s ease;
+        -moz-transition: all 0.15s ease;
+        -o-transition: all 0.15s ease;
+        transition: all 0.15s ease;
+        min-height: 44px; /* Touch target mínimo */
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+        gap: var(--spacing-sm);
+        gap: 0.5rem; /* Fallback */
+    }
+    
+    .enhanced-nav-item:hover,
+    .enhanced-nav-item:focus {
+        background-color: var(--context-hover, rgba(96, 165, 250, 0.1));
+        background-color: rgba(96, 165, 250, 0.1); /* Fallback */
+        -webkit-transform: translateX(4px);
+        -moz-transform: translateX(4px);
+        -ms-transform: translateX(4px);
+        -o-transform: translateX(4px);
+        transform: translateX(4px);
+    }
+    
+    .nav-description {
+        display: block;
+        font-size: 0.875rem;
+        color: var(--text-secondary, #6b7280);
+        color: #6b7280; /* Fallback */
+        margin-top: 2px;
+    }
+}
+
+/* Móviles pequeños - CROSS BROWSER */
+@media screen and (max-width: 480px) {
+    .enhanced-mobile-toggle {
+        width: 48px; /* Aumentar tamaño para pantallas muy pequeñas */
+        height: 48px;
+        top: 15px;
+        right: 15px;
+    }
+    
+    .enhanced-nav-links {
+        top: 60px; /* Ajustar para headers más compactos */
+        padding: var(--spacing-md);
+        padding: 1rem; /* Fallback */
+    }
+    
+    .enhanced-nav-item {
+        padding: var(--spacing-sm) var(--spacing-md);
+        padding: 0.5rem 1rem; /* Fallback */
+        font-size: 0.95rem;
+    }
+}
+
+/* Desktop - Ocultar hamburger - CROSS BROWSER */
+@media screen and (min-width: 769px) {
+    .enhanced-mobile-toggle {
+        display: none !important;
+    }
+    
+    .enhanced-nav-links {
+        display: -webkit-flex !important;
+        display: -ms-flexbox !important;
+        display: flex !important;
+        position: static !important;
+        background: transparent !important;
+        -webkit-flex-direction: row !important;
+        -ms-flex-direction: row !important;
+        flex-direction: row !important;
+        padding: 0 !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+/* Animación para el menú móvil - CROSS BROWSER */
+@-webkit-keyframes slideDownFade {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(-20px);
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+@-moz-keyframes slideDownFade {
+    from {
+        opacity: 0;
+        -moz-transform: translateY(-20px);
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        -moz-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDownFade {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(-20px);
+        -moz-transform: translateY(-20px);
+        -ms-transform: translateY(-20px);
+        -o-transform: translateY(-20px);
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        -moz-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -o-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+/* End of Heuristic 16: Adaptive & Contextual Experience CSS */ 

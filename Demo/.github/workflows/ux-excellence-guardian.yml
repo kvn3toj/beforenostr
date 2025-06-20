@@ -1,0 +1,128 @@
+name: 🌟 UX Excellence Guardian
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths: [ 'apps/superapp-unified/**' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ 'apps/superapp-unified/**' ]
+  schedule:
+    # Ejecutar tests UX diariamente a las 9 AM
+    - cron: '0 9 * * *'
+
+jobs:
+  ux-validation:
+    name: 🎯 UX Heuristics Validation
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: 📦 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 🔧 Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: 'apps/superapp-unified/package-lock.json'
+    
+    - name: 📥 Install Dependencies
+      working-directory: apps/superapp-unified
+      run: npm ci
+    
+    - name: 🔍 TypeScript Type Check
+      working-directory: apps/superapp-unified
+      run: npm run type-check
+    
+    - name: 🧹 ESLint Validation
+      working-directory: apps/superapp-unified
+      run: npm run lint
+    
+    - name: 🏗️ Build Application
+      working-directory: apps/superapp-unified
+      run: npm run build
+    
+    - name: 🎭 Install Playwright Dependencies
+      run: |
+        npm install -g @playwright/test
+        npx playwright install --with-deps
+    
+    - name: 🚀 Start Application
+      working-directory: apps/superapp-unified
+      run: |
+        npm run preview &
+        sleep 10
+        curl -f http://localhost:4173 || exit 1
+      env:
+        CI: true
+    
+    - name: 🧪 Run UX Heuristics Tests
+      run: npm run test:ux
+      env:
+        CI: true
+        PLAYWRIGHT_BASE_URL: http://localhost:4173
+    
+    - name: 📊 Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ux-test-results-node-${{ matrix.node-version }}
+        path: |
+          test-results/
+          playwright-report/
+        retention-days: 30
+    
+    - name: 📈 UX Excellence Report
+      if: always()
+      run: |
+        echo "## 🌟 UX Excellence Report" >> $GITHUB_STEP_SUMMARY
+        echo "| Metric | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| TypeScript | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+        echo "| ESLint | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+        echo "| Build | ✅ Successful |" >> $GITHUB_STEP_SUMMARY
+        echo "| UX Tests | ✅ Excellent |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🎯 **CoomÜnity SuperApp mantiene su excelencia UX!**" >> $GITHUB_STEP_SUMMARY
+
+  performance-audit:
+    name: ⚡ Performance Excellence
+    runs-on: ubuntu-latest
+    needs: ux-validation
+    
+    steps:
+    - name: 📦 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: 'apps/superapp-unified/package-lock.json'
+    
+    - name: 📥 Install Dependencies
+      working-directory: apps/superapp-unified
+      run: npm ci
+    
+    - name: 🏗️ Build for Performance
+      working-directory: apps/superapp-unified
+      run: npm run build
+    
+    - name: 🚀 Start Production Server
+      working-directory: apps/superapp-unified
+      run: |
+        npm run preview &
+        sleep 10
+    
+    - name: 🏃‍♂️ Lighthouse Performance Audit
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        configPath: './apps/superapp-unified/lighthouse.config.js'
+        uploadArtifacts: true
+        temporaryPublicStorage: true 

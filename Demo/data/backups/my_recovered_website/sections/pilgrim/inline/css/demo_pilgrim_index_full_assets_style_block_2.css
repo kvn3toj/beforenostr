@@ -1,0 +1,17 @@
+/* Extracted from: demo_pilgrim_index_full_assets.html */
+/* Block index: 2 */
+/* Extracted at: 2025-06-03T02:16:25.486Z */
+
+div#in-profile {
+				position: relative;
+				z-index: 9;
+			}
+			.ttour-overlay{
+			z-index: 5;
+			}
+			.ttour-overlay {
+				pointer-events: none;
+			}
+			.ttour-tip {
+			pointer-events: all;
+			}

@@ -1,0 +1,123 @@
+{
+  "timestamp": "2025-06-03T22:25:21.790Z",
+  "summary": {
+    "totalCombinations": 8,
+    "passedAA": 5,
+    "failedAA": 3,
+    "criticalPassed": 2,
+    "criticalTotal": 3,
+    "improvementsApplied": 7,
+    "newlyCompliant": 3,
+    "overallScore": 63,
+    "criticalScore": 67
+  },
+  "improvements": [
+    {
+      "name": "Botón Primario",
+      "originalRatio": 2.24,
+      "improvedRatio": 2.82,
+      "improvement": 0.5799999999999996,
+      "nowCompliant": false
+    },
+    {
+      "name": "Botón de Éxito",
+      "originalRatio": 2.54,
+      "improvedRatio": 5.02,
+      "improvement": 2.4799999999999995,
+      "nowCompliant": true
+    },
+    {
+      "name": "Botón de Error",
+      "originalRatio": 3.76,
+      "improvedRatio": 5.62,
+      "improvement": 1.8600000000000003,
+      "nowCompliant": true
+    },
+    {
+      "name": "Botón de Advertencia",
+      "originalRatio": 2.15,
+      "improvedRatio": 3.79,
+      "improvement": 1.6400000000000001,
+      "nowCompliant": false
+    },
+    {
+      "name": "Botón de Info",
+      "originalRatio": 3.68,
+      "improvedRatio": 4.6,
+      "improvement": 0.9199999999999995,
+      "nowCompliant": true
+    },
+    {
+      "name": "Texto Secundario",
+      "originalRatio": 4.59,
+      "improvedRatio": 6.54,
+      "improvement": 1.9500000000000002,
+      "nowCompliant": false
+    },
+    {
+      "name": "Texto Deshabilitado",
+      "originalRatio": 2.41,
+      "improvedRatio": 4.37,
+      "improvement": 1.96,
+      "nowCompliant": false
+    }
+  ],
+  "finalResults": [
+    {
+      "name": "Texto principal sobre fondo",
+      "importance": "CRÍTICO",
+      "ratio": 13.25,
+      "level": "AAA",
+      "passesAA": true
+    },
+    {
+      "name": "Texto secundario sobre fondo",
+      "importance": "ALTO",
+      "ratio": 6.54,
+      "level": "AA",
+      "passesAA": true
+    },
+    {
+      "name": "Botón primario (texto sobre fondo)",
+      "importance": "CRÍTICO",
+      "ratio": 2.82,
+      "level": "FAIL",
+      "passesAA": false
+    },
+    {
+      "name": "Botón secundario (texto sobre fondo)",
+      "importance": "CRÍTICO",
+      "ratio": 14.94,
+      "level": "AAA",
+      "passesAA": true
+    },
+    {
+      "name": "Botón de error (texto sobre fondo)",
+      "importance": "ALTO",
+      "ratio": 5.62,
+      "level": "AA",
+      "passesAA": true
+    },
+    {
+      "name": "Botón de éxito (texto sobre fondo)",
+      "importance": "ALTO",
+      "ratio": 5.02,
+      "level": "AA",
+      "passesAA": true
+    },
+    {
+      "name": "Botón de advertencia (texto sobre fondo)",
+      "importance": "ALTO",
+      "ratio": 3.79,
+      "level": "FAIL",
+      "passesAA": false
+    },
+    {
+      "name": "Texto deshabilitado sobre fondo",
+      "importance": "MEDIO",
+      "ratio": 4.37,
+      "level": "FAIL",
+      "passesAA": false
+    }
+  ]
+}

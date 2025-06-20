@@ -1,0 +1,293 @@
+{
+  "title": "Cöomunity Player",
+  "metaTags": [
+    {
+      "name": null,
+      "property": null,
+      "content": null,
+      "charset": "utf-8"
+    },
+    {
+      "name": "viewport",
+      "property": null,
+      "content": "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0",
+      "charset": null
+    },
+    {
+      "name": null,
+      "property": null,
+      "content": "IE=edge,chrome=1",
+      "charset": null
+    },
+    {
+      "name": "description",
+      "property": null,
+      "content": "",
+      "charset": null
+    }
+  ],
+  "videoFeatures": {
+    "videoPlayer": {
+      "container": {
+        "id": "coomunity-player",
+        "className": "iframe-container",
+        "hasIframe": true,
+        "iframeSrc": "https://player.vimeo.com/video/383005433?app_id=122963"
+      },
+      "playerType": "Vimeo",
+      "hasOverlay": false
+    },
+    "floatingButtons": [
+      {
+        "id": "primary-float",
+        "className": "btn-hexa btn-hexa-color btn-hexa-big",
+        "text": "",
+        "hasImage": true,
+        "imageSrc": "/assets/img/btn/oo.png",
+        "position": {
+          "isFixed": true,
+          "bottom": "20px",
+          "right": "3px"
+        },
+        "isPrimary": true,
+        "isChild": false
+      },
+      {
+        "id": "",
+        "className": "btn-hexa btn-mid btn-cinema",
+        "text": "",
+        "hasImage": true,
+        "imageSrc": "/assets/img/btn/cam-gris.png",
+        "position": {
+          "isFixed": true,
+          "bottom": "auto",
+          "right": "8px"
+        },
+        "isPrimary": false,
+        "isChild": true
+      },
+      {
+        "id": "",
+        "className": "btn-hexa btn-mid btn-plaza",
+        "text": "",
+        "hasImage": true,
+        "imageSrc": "/assets/img/btn/cart-gris.png",
+        "position": {
+          "isFixed": true,
+          "bottom": "auto",
+          "right": "8px"
+        },
+        "isPrimary": false,
+        "isChild": true
+      },
+      {
+        "id": "",
+        "className": "btn-hexa btn-mid btn-aldea",
+        "text": "",
+        "hasImage": true,
+        "imageSrc": "/assets/img/btn/user-gris.png",
+        "position": {
+          "isFixed": true,
+          "bottom": "auto",
+          "right": "8px"
+        },
+        "isPrimary": false,
+        "isChild": true
+      }
+    ],
+    "buttonFunctionality": [
+      {
+        "className": "btn-hexa btn-mid btn-cinema",
+        "type": "Cinema",
+        "imageSrc": "/assets/img/btn/cam-gris.png",
+        "hasClickHandler": false
+      },
+      {
+        "className": "btn-hexa btn-mid btn-plaza",
+        "type": "Plaza",
+        "imageSrc": "/assets/img/btn/cart-gris.png",
+        "hasClickHandler": false
+      },
+      {
+        "className": "btn-hexa btn-mid btn-aldea",
+        "type": "Aldea",
+        "imageSrc": "/assets/img/btn/user-gris.png",
+        "hasClickHandler": false
+      }
+    ],
+    "overlayElements": [
+      {
+        "className": "",
+        "id": "in-profile",
+        "isVisible": true,
+        "position": "relative",
+        "zIndex": "9",
+        "hasIframe": true,
+        "iframeSrc": "https://demo.coomunity.co/profile/640baa58?survey=0"
+      },
+      {
+        "className": "iprofile",
+        "id": "iprofile",
+        "isVisible": false,
+        "position": "fixed",
+        "zIndex": "auto",
+        "hasIframe": false,
+        "iframeSrc": "No iframe"
+      }
+    ],
+    "interactiveElements": [
+      {
+        "tagName": "BUTTON",
+        "className": "btn-hexa btn-hexa-color btn-hexa-big",
+        "id": "primary-float",
+        "text": "",
+        "hasOnClick": false,
+        "isFloatingButton": true,
+        "buttonType": "Hexagonal"
+      },
+      {
+        "tagName": "BUTTON",
+        "className": "btn-hexa btn-mid btn-cinema",
+        "id": "",
+        "text": "",
+        "hasOnClick": false,
+        "isFloatingButton": true,
+        "buttonType": "Hexagonal"
+      },
+      {
+        "tagName": "BUTTON",
+        "className": "btn-hexa btn-mid btn-plaza",
+        "id": "",
+        "text": "",
+        "hasOnClick": false,
+        "isFloatingButton": true,
+        "buttonType": "Hexagonal"
+      },
+      {
+        "tagName": "BUTTON",
+        "className": "btn-hexa btn-mid btn-aldea",
+        "id": "",
+        "text": "",
+        "hasOnClick": false,
+        "isFloatingButton": true,
+        "buttonType": "Hexagonal"
+      },
+      {
+        "tagName": "BUTTON",
+        "className": "next",
+        "id": "",
+        "text": "Avanzar",
+        "hasOnClick": false,
+        "isFloatingButton": false,
+        "buttonType": "Standard"
+      }
+    ]
+  },
+  "scriptTags": [
+    {
+      "src": "",
+      "content": "\n\t\t(function(h,o,t,j,a,r){\n\t\t\th.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};\n\t\t\th._hjSettings={hjid:1689339,hjsv:6};\n\t\t\ta=o.getElementsByTagName('head')[0];\n\t\t\tr=o.createElement('script')",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://static.hotjar.com/c/hotjar-1689339.js?sv=6",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://demo.coomunity.co/assets/plugins/percircle/percircle.js?v=0.0.0.2",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://demo.coomunity.co/assets/js/core/jquery.min.js",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://demo.coomunity.co/assets/js/core/popper.min.js",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://demo.coomunity.co/assets/js/core/bootstrap-material-design.min.js",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://demo.coomunity.co/assets/js/material-kit.js?v=2.2.0",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://player.vimeo.com/api/player.js",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://demo.coomunity.co/assets/js/coomunity-player.js?v=0.0.0.1",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://demo.coomunity.co/assets/js/javascript-1.js?v=1748926452",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "https://demo.coomunity.co/assets/js/tour.min.js",
+      "content": "",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "",
+      "content": "\n   \n    /* var miObjeto = JSON.parse(localStorage.getItem('datos'));\n    var url = window.top.location.href.split (\"/\")[4];\n    if(verifyStateUrl(url, miObjeto)==false){        \n        createWizard(",
+      "hasConfig": false,
+      "hasPlayerInit": false
+    },
+    {
+      "src": "",
+      "content": "\n\n\t\tvar configCP = {\"id\":\"6\",\"pool\":\"pilgrim_demo\",\"source_id\":\"383005433\",\"auth_code\":\"\",\"thumbnail\":\"https:\\/\\/cdn.coomunity.co\\/miniaturas\\/014-el-valor-de-la-libertad-jose-pepe-mujica.png\",\"friend",
+      "hasConfig": true,
+      "hasPlayerInit": true
+    }
+  ],
+  "hasVideoConfig": true,
+  "hasVimeoPlayer": true,
+  "hasCustomPlayer": true,
+  "bodyHTML": "\n\n\n\t<div class=\"main\">\n\t<div class=\"container-fluid\">\n\n\t\t<style>\n\t\t\t.bg-black { background-color: #000; }\n\t\t\t.border-bottom-red { border-bottom: 8px #ed1846 solid; }\n\t\t\t.iframe-container {\n\t\t\t\toverflow: hidden;\n\t\t\t\tpadding-top: 56.25%;\n\t\t\t\tposition: relative;\n\t\t\t}\n\t\t\t\t\n\t\t\t.iframe-container iframe {\n\t\t\t\tborder: 0;\n\t\t\t\theight: 100%;\n\t\t\t\tleft: 0;\n\t\t\t\tposition: absolute;\n\t\t\t\ttop: 0;\n\t\t\t\twidth: 100%;\n\t\t\t\t\n\t\t\t}\n\t\t\t.iframe-container .blurrr{\n\t\t\t\tfilter: blur(3px);\n    \t\t\t-webkit-filter: blur(3px);\n\t\t\t}\n\t\t\t.container-fw {\n\t\t\t\tmargin-left: -15px;\n\t\t\t\tmargin-right: -15px;\n\t\t\t\tposition: relative;\n\t\t\t}\n\t\t\t.icon-image{\n\t\t\t\tmax-width: 24px;\n\t\t\t}\n\t\t\t.card-sign-in{\n\t\t\t\tbackground: #fff !important;\n\t\t\t\tbackground-color: #fff !important;\n\t\t\t\tbox-shadow: none;\n\t\t\t}\n\t\t\t.card-sign-in .card-body{\n\t\t\t\tbackground: #000;\n\t\t\t\tborder-radius: 30px !important;\n\t\t\t\tpadding-top: 10px;\n\t\t\t\tpadding-bottom: 10px;\n\t\t\t}\n\t\t\t.card-sign-in .card-body .author{\n\t\t\t\tmargin: 0 auto;\n\t\t\t}\n\t\t\t.card-sign-in .card-body .author span{\n\t\t\t\tmargin: 0 auto;\n\t\t\t}\n\t\t\t.card-sign-in .card-body .author img{\n\t\t\t\tmax-width: 24px;\n\t\t\t\tmax-height: 24px;\n\t\t\t}\n\t\t\t.logo{\n\t\t\t\tmax-width: 200px;\n\t\t\t}\n\t\t\t.overlay-play {\n\t\t\t\tposition: absolute;\n\t\t\t\ttop: 0;\n\t\t\t\tleft: 0;\n\t\t\t\twidth: 100%;\n\t\t\t\tdisplay: flex;\n\t\t\t\theight: 100%;\n\t\t\t\tjustify-content: center;\n\t\t\t\talign-items: center;\n\n\t\t\t}\n\t\t\t.custom_blur {\n\t\t\t\tfilter: blur(5px);\n\t\t\t\t-webkit-filter: blur(14px);\n\t\t\t}\n\t\t\t/* .overlay-play:before{\n\t\t\t\tcontent: \"\";\n\t\t\t\tposition: absolute;\n\t\t\t\twidth: 100%;\n\t\t\t\theight: 100%;\n\t\t\t} */\n\t\t\t.btn-whatsapp{\n\t\t\t\tpadding: 6px 18px !important;\n\t\t\t\tcolor: #3C4858;\n\t\t\t\tbackground: transparent;\n\t\t\t\tborder: #e91e63 1px solid;\n\t\t\t\tfont-size: 18px !important;\n    \t\t\tbox-shadow: 0 2px 2px 0 rgba(233, 30, 99, 0.14), 0 3px 1px -2px rgba(233, 30, 99, 0.2), 0 1px 5px 0 rgba(233, 30, 99, 0.12);\n\t\t\t}\n\t\t\t.btn-whatsapp:hover, \n\t\t\t.btn-whatsapp:focus,\n\t\t\t.btn-whatsapp:active{\n\t\t\t\tcolor: #3C4858 !important;\n\t\t\t\tbackground-color: transparent !important;\n\t\t\t\tborder: #e91e63 1px solid !important;\n\t\t\t\tbox-shadow: 0 14px 26px -12px rgba(233, 30, 99, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(233, 30, 99, 0.2) !important;\n\t\t\t}\n\t\t\t.btn-whatsapp img{\n\t\t\t\twidth: 50px;\n\t\t\t}\n\t\t</style>\n\n\n\t\t<style>\n\t\t\t\n\t\t\tdiv#in-profile {\n\t\t\t\tposition: relative;\n\t\t\t\tz-index: 9;\n\t\t\t}\n\t\t\t.ttour-overlay{\n\t\t\tz-index: 5;\n\t\t\t}\n\t\t\t.ttour-overlay {\n\t\t\t\tpointer-events: none;\n\t\t\t}\n\t\t\t.ttour-tip {\n\t\t\tpointer-events: all;\n\t\t\t}\n\t\t</style>\n\n\t\t<!-- video -->\n\t\t<div class=\"container-fw bg-black\">\n\t\t\t<div class=\"\">\n\t\t\t\t<div class=\"iframe-container\" id=\"coomunity-player\" data-vimeo-initialized=\"true\">\n\t\t\t\t\t<!-- <iframe id=\"coomunity-player\" class=\"embed-responsive-item \" src=\"https://player.vimeo.com/video/367807616?api=1\" frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe> -->\n\t\t\t\t<iframe src=\"https://player.vimeo.com/video/383005433?app_id=122963\" width=\"426\" height=\"240\" frameborder=\"0\" allow=\"autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media\"></iframe></div>\n\n\t\t\t</div>\n\t\t</div>\n\n    </div>\n\t</div>\n\t\n\t<script type=\"text/javascript\" src=\"/assets/js/core/jquery.min.js\"></script>\n\t<script type=\"text/javascript\" src=\"/assets/js/core/popper.min.js\"></script>\n\t<script type=\"text/javascript\" src=\"/assets/js/core/bootstrap-material-design.min.js\"></script>\n\n\t<script type=\"text/javascript\" src=\"/assets/js/material-kit.js?v=2.2.0\"></script>\n\t<script type=\"text/javascript\" src=\"https://player.vimeo.com/api/player.js\"></script>\n\t<script type=\"text/javascript\" src=\"/assets/js/coomunity-player.js?v=0.0.0.1\"></script>\n\t<script type=\"text/javascript\" src=\"/assets/js/javascript-1.js?v=1748926452\"></script>\n\n\t \n<link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/tour.min.css?v=1748926452\">\n<div id=\"in-profile\">\n    <iframe class=\"iprofile\" id=\"iprofile\" src=\"about:blank\" data-src=\"https://demo.coomunity.co/profile/640baa58?survey=0\"></iframe>\n    <div class=\"floating-buttons\">\n        <button id=\"primary-float\" class=\"btn-hexa btn-hexa-color btn-hexa-big\">\n            <img src=\"/assets/img/btn/oo.png\">\n        </button>\n        <div class=\"child-buttons\" style=\"display: none;\">\n            <button class=\"btn-hexa btn-mid btn-cinema\">\n                <img src=\"/assets/img/btn/cam-gris.png\">            </button>\n            <button class=\"btn-hexa btn-mid btn-plaza\">\n                <img src=\"/assets/img/btn/cart-gris.png\">            </button>\n            <button class=\"btn-hexa btn-mid btn-aldea\">\n                <img src=\"/assets/img/btn/user-gris.png\">            </button>\n        </div>\n    </div>\n</div>\n<style>\n    .not-counter {\n        position: absolute;\n        top: -2px;\n        right: 10px;\n        background: #fff;\n        line-height: 20px;\n        font-size: 11px;\n        width: 20px;\n        height: 20px;\n        border-radius: 50%;\n        color: #dc1a5b;\n        font-weight: bold;\n    }\n    .iprofile {\n        display: none;\n        position: fixed;\n        top: 0;\n        left: 0;\n        width: 100%;\n        height: 100%;\n        background: transparent;\n        border: 0;\n    }\n    /*\n    * Floating buttons\n    */\n    .floating-buttons {\n        text-align: center;\n        position: fixed;\n        bottom: 20px;\n        right: 3px;\n        width: 70px;\n    }\n    .float-btn {\n        padding: 0;\n        background: transparent;\n        border: none;\n        display: block;\n        margin: auto;;\n    }\n    .float-btn img {\n        max-width: 100%;\n    }\n    .btn-mid img {\n        width: 90%;\n    }\n\n    .child-buttons .btn-hexa {\n        margin-bottom: 15px;\n        transform: scale(0.5) translateY(50px);\n        transition: all 0.1s linear;\n        opacity: 0;\n    }\n    .child-buttons.active .btn-hexa {\n        transform: scale(1) translateY(0px);\n        opacity: 1;\n    }\n    .child-buttons {\n        position: fixed;\n        right: 8px;\n        top: 47%;\n        transform: translate(-50%, -50%);\n        -webkit-transform: translate(0%, -50%);\n        width: 63px;\n    }\n    /*\n    *   Hexa button\n    */\n    .btn-hexa {\n        border: 0;\n        background: transparent;\n        /* width: 60px;\n        height: 60px; */\n        padding: 10px;\n        position: relative;\n        cursor: pointer;\n    }\n    .btn-hexa:before {\n        content: \"\";\n        position: absolute;\n        top: 0;\n        left: 0;\n        width: 100%;\n        height: 100%;\n        background-image: url(/assets/img/btn/rombo.png);\n        background-size: cover;\n        background-repeat: no-repeat;\n        background-position: center;\n        display: block;\n        z-index: 0;\n        filter: drop-shadow(2px 3px 5px rgba(0, 0, 0, 0.5));\n        transition: all 0.15s linear;\n        /* filter: drop-shadow(2px 3px 4px rgba(0, 0, 0, 0.5)); */\n    }\n    .btn-hexa:hover:before {\n        filter: drop-shadow(3px 4px 7px rgba(0, 0, 0, 0.7));\n    }\n    .btn-hexa-big {\n        width: 70px;\n        height: 70px;\n    }\n    .btn-hexa-color:before{\n        background-image: url(/assets/img/btn/rombo-color.png);\n    }\n    .btn-hexa img{\n        max-width: 100%;;\n        height: auto;\n        z-index: 1;\n        position: relative;\n    }\n\n    .with-notification {\n        -webkit-animation: bounce 2s infinite;\n        animation: bounce 2s infinite;\n    }\n    @-webkit-keyframes bounce {\n        0%, 20%, 50%, 80%, 100% {\n            -webkit-transform: translateY(0); }\n        40% {\n            -webkit-transform: translateY(-30px); }\n        60% {\n            -webkit-transform: translateY(-15px); } }\n    @-moz-keyframes bounce {\n        0%, 20%, 50%, 80%, 100% {\n            -moz-transform: translateY(0); }\n        40% {\n            -moz-transform: translateY(-30px); }\n        60% {\n            -moz-transform: translateY(-15px); } }\n    @keyframes bounce {\n        0%, 20%, 50%, 80%, 100% {\n            -webkit-transform: translateY(0);\n            -moz-transform: translateY(0);\n            -ms-transform: translateY(0);\n            -o-transform: translateY(0);\n            transform: translateY(0); }\n        40% {\n            -webkit-transform: translateY(-30px);\n            -moz-transform: translateY(-30px);\n            -ms-transform: translateY(-30px);\n            -o-transform: translateY(-30px);\n            transform: translateY(-30px); }\n        60% {\n            -webkit-transform: translateY(-15px);\n            -moz-transform: translateY(-15px);\n            -ms-transform: translateY(-15px);\n            -o-transform: translateY(-15px);\n            transform: translateY(-15px); } \n    }\n\n    .ttour-shadow {\n        z-index: 999;\n    }\n\n</style>\n<!-- <script type=\"text/javascript\" src=\"/assets/js/core/jquery.min.js\"></script> -->\n<script type=\"text/javascript\" src=\"/assets/js/tour.min.js\"></script>\n<!-- <script type=\"text/javascript\" src=\"/assets/js/javascript-1.js?v=1748926452\"></script> -->\n<script>\n   \n    /* var miObjeto = JSON.parse(localStorage.getItem('datos'));\n    var url = window.top.location.href.split (\"/\")[4];\n    if(verifyStateUrl(url, miObjeto)==false){        \n        createWizard(settingsViewsWizard[url][\"tutorial-1\"], \"tutorial-1\" );\n    } */\n\n    jQuery(document).ready(function(){\n\n        //console.log(\"URL MENÚ: \", window.top.location.href);\n\n        jQuery.fn.animateRotate = function( angle, duration, easing, complete ) {\n            var $elem = this;\n            $( { deg: 0 } ).animate( { deg: angle }, {\n                duration: duration,\n                easing: 'swing',\n                step: function( now ) {\n                    $elem.css( {\n                        transform: 'rotate(' + now + 'deg)'\n                    } );\n                },\n                complete: complete || $.noop\n            });\n        }\n    });\n\n    var iframeurl = \"\";\n    function iframeURLChange(iframe, callback) {\n        var unloadHandler = function () {\n            // Timeout needed because the URL changes immediately after\n            // the `unload` event is dispatched.\n            setTimeout(function () {\n                callback(iframe.contentWindow.location.href);\n            }, 0);\n        };\n\n        function attachUnload() {\n            // Remove the unloadHandler in case it was already attached.\n            // Otherwise, the change will be dispatched twice.\n            iframe.contentWindow.removeEventListener(\"unload\", unloadHandler);\n            iframe.contentWindow.addEventListener(\"unload\", unloadHandler);\n        }\n\n        iframe.addEventListener(\"load\", attachUnload);\n        attachUnload();\n    }\n\n    iframeURLChange(document.getElementById(\"iprofile\"), function (newURL) {\n        console.log(\"URL changed:\", newURL);\n        iframeurl = newURL;\n\n        if(newURL == \"about:blank\"){\n            return;\n        }\n\n        if(newURL != \"https://demo.coomunity.co/profile\"){\n            $('#overlays').addClass('other-url');\n        }else{\n            $('#overlays').removeClass('other-url');\n        }\n    });\n\n    $( '#primary-float').click( function(){\n\n\n\n        var time = 1000;\n        var $iframe=$('#iprofile');\n\n        if($(\"#primary-float\").hasClass(\"with-notification\")){\n            $('#primary-float').removeClass('with-notification').html('<img src=\"/assets/img/btn/oo.png\">');\n        }\n        \n        if(iframeurl != $iframe.data('src') && $iframe.data('load') == \"loaded\"){\n            time = 300;\n            setTimeout(() => {\n                $iframe.prop('src', $iframe.data('src'));\t\t\t\t\t\t\n            }, 300);\n        }else\n        if (iframeurl != $iframe.data('src') || ($iframe.data('src') && $iframe.data('load') != \"loaded\")){ // only do it once per iframe\n            //console.warn(iframeurl, $iframe.data('src'));\n            $iframe.prop('src', $iframe.data('src')); //.data('src', false);\n            $iframe.data('load', \"loaded\");\n        }else{\n            time = 500;\n            setTimeout(() => {\n                $iframe[0].contentWindow.resizeTable();                \n            }, 1000);\n            console.log(\"Abierto\")\n        }\n\n        $( this ).removeClass('with-notification');\n        $( this ).children('.not-counter').remove();\n        $el = $(this);\n        $( this ).animateRotate( 360, time, 'swing', function(){\n\n            var child_buttons = $el.parent('.floating-buttons').children('.child-buttons');\n            var child = child_buttons.children('.btn-hexa');\n            \n            child_buttons.toggleClass('active');\n\n            // llamamos el tutorial del menú\n            showTourBySlug(\"tutorial-menu\");\n\n            if( $( '#iprofile' ).is( ':hidden' ) )\n            {\n                $('#in-profile').css('z-index', 101);\n                $('.child-buttons').show();\n                \n                $( '#iprofile' ).fadeIn( 500, function(){\n                    $( this ).show();\n                });\n            }\n            else\n            {\n                $( '#iprofile' ).fadeOut( 500, function(){\n                    $( this ).hide();\n                    $('#in-profile').css('z-index', 99);\n                    $('.child-buttons').hide();\n                });\n            }\n\n        });\n\n    });\n</script>\t<script>\n\n\t\tvar configCP = {\"id\":\"6\",\"pool\":\"pilgrim_demo\",\"source_id\":\"383005433\",\"auth_code\":\"\",\"thumbnail\":\"https:\\/\\/cdn.coomunity.co\\/miniaturas\\/014-el-valor-de-la-libertad-jose-pepe-mujica.png\",\"friendly_name\":\"El Valor de la Libertad - Jose Pepe Mujica\",\"skippable\":\"1\",\"reloadable\":null,\"closing_summary\":\"586\",\"ordinal\":\"60\",\"__table\":\"videos\",\"__id\":\"6\",\"rewards\":[{\"reward_token\":\"onda\",\"reward_value\":\"15\"}],\"trailers\":[{\"id\":\"4\",\"video_id\":\"6\",\"title\":\"El Valor de la Libertad - Jose Pepe Mujica\",\"subtitle\":\"Clip\",\"duration\":\"9min 47seg\",\"pop_time\":\"3\",\"starting_time\":\"40\",\"skippable\":\"1\",\"__table\":\"videos_trailers\",\"__id\":\"4\"}],\"questions\":[{\"id\":\"33\",\"video_id\":\"6\",\"pop_time\":\"61\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Dinero\",\"option_b\":\"Tiempo\",\"correct\":\"option_b\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"34\",\"video_id\":\"6\",\"pop_time\":\"82\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"La vida\",\"option_b\":\"La muerte\",\"correct\":\"option_a\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"35\",\"video_id\":\"6\",\"pop_time\":\"114\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Amistades\",\"option_b\":\"Enemigos\",\"correct\":\"option_a\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"36\",\"video_id\":\"6\",\"pop_time\":\"154\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"La tristeza\",\"option_b\":\"La felicidad\",\"correct\":\"option_b\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"37\",\"video_id\":\"6\",\"pop_time\":\"196\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Libre\",\"option_b\":\"Condenados\",\"correct\":\"option_a\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"38\",\"video_id\":\"6\",\"pop_time\":\"261\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Milagro\",\"option_b\":\"Suerte\",\"correct\":\"option_a\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"39\",\"video_id\":\"6\",\"pop_time\":\"307\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Triste\",\"option_b\":\"Feliz\",\"correct\":\"option_b\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"40\",\"video_id\":\"6\",\"pop_time\":\"307\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Triste\",\"option_b\":\"Feliz\",\"correct\":\"option_b\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"41\",\"video_id\":\"6\",\"pop_time\":\"357\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Mil veces\",\"option_b\":\"Nunca\",\"correct\":\"option_a\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"42\",\"video_id\":\"6\",\"pop_time\":\"391\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Dormir\",\"option_b\":\"Luchar\",\"correct\":\"option_b\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"43\",\"video_id\":\"6\",\"pop_time\":\"416\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Adulta\",\"option_b\":\"Joven\",\"correct\":\"option_b\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"44\",\"video_id\":\"6\",\"pop_time\":\"453\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Autor\",\"option_b\":\"Fundador\",\"correct\":\"option_a\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"45\",\"video_id\":\"6\",\"pop_time\":\"495\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Solidaridad\",\"option_b\":\"Ego\\u00edsmo\",\"correct\":\"option_a\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"46\",\"video_id\":\"6\",\"pop_time\":\"543\",\"waiting_time\":\"3\",\"statement\":null,\"option_a\":\"Pared\",\"option_b\":\"Espejo\",\"correct\":\"option_b\",\"reward_token\":\"onda\",\"reward_value\":\"1\"},{\"id\":\"47\",\"video_id\":\"6\",\"pop_time\":\"584\",\"waiting_time\":\"0\",\"statement\":\"\\u00bfC\\u00f3mo interpretas la sobriedad como manera de vivir?\",\"option_a\":\"Tener m\\u00e1s tiempo para vivir la vida de acuerdo a las cosas que a ti te motivan\",\"option_b\":\"Vivir la vida con tranquilidad, sin importar qu\\u00e9 pasa alrededor, pues t\\u00fa eres el actor principal\",\"correct\":\"option_a\",\"reward_token\":\"onda\",\"reward_value\":\"1\"}]};\n\t\tvar uid = '640baa58';\n\t\tvar cp = null;\n\t\tjQuery( document ).ready( function($) {\n\n\t\t\tcp = $('#coomunity-player').CoomUnityPlayer({...configCP, debug: false, uid: uid});\n\t\t\t\n\t\t});\n\n\t</script>\n\n\t\n\n\n<div class=\"cp-overlays hide-ios-landscape\">\t\t\t\t\t<div class=\"coo-overlay portrait\">\t\t\t\t\t\t<div class=\"coo-top-screen\">\t\t\t\t\t\t\t<img src=\"/assets/img/go/icon-turn-h.png\">\t\t\t\t\t\t</div>\t\t\t\t\t\t<div class=\"coo-mid-screen text-center\">\t\t\t\t\t\t\t<h2 class=\"text-rose mt-0\">Gira tu teléfono</h2>\t\t\t\t\t\t\t<p>Confía en nosotros, tendrás una<br>mejor experiencia</p>\t\t\t\t\t\t\t<p class=\"mt-2 p-4\" style=\"font-size: 16px; font-weight: 400;\">Verifica que tengas esta opción <span> <br><img style=\"max-width:24px\" src=\"/assets/img/rotate.png\" alt=\"\"></span> habilitada en tu celular.</p>\t\t\t\t\t\t\t<!-- <button onclick=\"setFullScreen();\" id=\"sender-submit-button\" type=\"submit\" class=\"btn btn-rose btn-round btn-lg mt-4 hide-ios\">Gö!</button> -->\t\t\t\t\t\t</div>\t\t\t\t\t\t<div class=\"coo-bottom-screen pb-5\">\t\t\t\t\t\t\t<img src=\"/assets/img/logo-simbolo.png\">\t\t\t\t\t\t</div>\t\t\t\t\t</div>\t\t\t\t</div><div class=\"ttour-shadow ttour-shadow-778\"><div class=\"ttour-overlay\" style=\"left: 1207px; top: 630px; width: 70px; height: 70px;\"><div class=\"ttour-wrapper\"><div class=\"ttour-tip tip-0 bottom-left\" style=\"\"><div class=\"ttour-header\"><h1>Menú Perfil</h1></div><div class=\"ttour-body\">User name, este es el botón más importante de tu experiencia. ¡Toca aquí y encuentra para qué sirve!</div><div class=\"ttour-footer\"><div class=\"ttour-bullets\"><div class=\"ttour-bullet active\"></div></div><button class=\"next\">Avanzar</button></div><div class=\"ttour-arrow\"></div></div></div></div></div>",
+  "headHTML": "\n\n\t<meta charset=\"utf-8\">\n\t<meta content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0\" name=\"viewport\">\n\n\t<link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/assets/img/icons/apple-touch-icon.png\">\n\t<link rel=\"icon\" type=\"image/png\" href=\"/assets/img/icons/blanco/favicon.png\">\n\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n\t<title>Cöomunity Player</title>\n\t<meta name=\"description\" content=\"\">\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fonts.googleapis.com/css?family=Poppins:300,400,500,600|Montserrat:400,500,600|Material+Icons\">\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css\">\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/material-kit.css?v=2.2.0\">\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/custom.css?v=1.0\">\n\n\n\t<!-- Hotjar Tracking Code for https://coomunity.co/ -->\n\t\t<script>\n\t\t(function(h,o,t,j,a,r){\n\t\t\th.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};\n\t\t\th._hjSettings={hjid:1689339,hjsv:6};\n\t\t\ta=o.getElementsByTagName('head')[0];\n\t\t\tr=o.createElement('script');r.async=1;\n\t\t\tr.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;\n\t\t\ta.appendChild(r);\n\t\t})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');\n\t</script><script async=\"\" src=\"https://static.hotjar.com/c/hotjar-1689339.js?sv=6\"></script>\n<link href=\"/assets/css/coomunity-player.css?v=0.0.0.2\" type=\"text/css\" rel=\"stylesheet\" media=\"screen,print\"><script type=\"text/javascript\" src=\"/assets/plugins/percircle/percircle.js?v=0.0.0.2\"></script><link href=\"/assets/plugins/percircle/percircle.css?v=0.0.0.2\" type=\"text/css\" rel=\"stylesheet\" media=\"screen,print\">",
+  "url": "https://demo.coomunity.co/pilgrim/640baa58",
+  "pathname": "/pilgrim/640baa58",
+  "fullText": "\n\n\n\t\n\t\n\n\t\t\n\t\t\t.bg-black { background-color: #000; }\n\t\t\t.border-bottom-red { border-bottom: 8px #ed1846 solid; }\n\t\t\t.iframe-container {\n\t\t\t\toverflow: hidden;\n\t\t\t\tpadding-top: 56.25%;\n\t\t\t\tposition: relative;\n\t\t\t}\n\t\t\t\t\n\t\t\t.iframe-container iframe {\n\t\t\t\tborder: 0;\n\t\t\t\theight: 100%;\n\t\t\t\tleft: 0;\n\t\t\t\tposition: absolute;\n\t\t\t\ttop: 0;\n\t\t\t\twidth: 100%;\n\t\t\t\t\n\t\t\t}\n\t\t\t.iframe-container .blurrr{\n\t\t\t\tfilter: blur(3px);\n    \t\t\t-webkit-filter: blur(3px);\n\t\t\t}\n\t\t\t.container-fw {\n\t\t\t\tmargin-left: -15px;\n\t\t\t\tmargin-right: -15px;\n\t\t\t\tposition: relative;\n\t\t\t}\n\t\t\t.icon-image{\n\t\t\t\tmax-width: 24px;\n\t\t\t}\n\t\t\t.card-sign-in{\n\t\t\t\tbackground: #fff !important;\n\t\t\t\tbackground-color: #fff !important;\n\t\t\t\tbox-shadow: none;\n\t\t\t}\n\t\t\t.card-sign-in .card-body{\n\t\t\t\tbackground: #000;\n\t\t\t\tborder-radius: 30px !important;\n\t\t\t\tpadding-top: 10px;\n\t\t\t\tpadding-bottom: 10px;\n\t\t\t}\n\t\t\t.card-sign-in .card-body .author{\n\t\t\t\tmargin: 0 auto;\n\t\t\t}\n\t\t\t.card-sign-in .card-body .author span{\n\t\t\t\tmargin: 0 auto;\n\t\t\t}\n\t\t\t.card-sign-in .card-body .author img{\n\t\t\t\tmax-width: 24px;\n\t\t\t\tmax-height: 24px;\n\t\t\t}\n\t\t\t.logo{\n\t\t\t\tmax-width: 200px;\n\t\t\t}\n\t\t\t.overlay-play {\n\t\t\t\tposition: absolute;\n\t\t\t\ttop: 0;\n\t\t\t\tleft: 0;\n\t\t\t\twidth: 100%;\n\t\t\t\tdisplay: flex;\n\t\t\t\theight: 100%;\n\t\t\t\tjustify-content: center;\n\t\t\t\talign-items: center;\n\n\t\t\t}\n\t\t\t.custom_blur {\n\t\t\t\tfilter: blur(5px);\n\t\t\t\t-webkit-filter: blur(14px);\n\t\t\t}\n\t\t\t/* .overlay-play:before{\n\t\t\t\tcontent: \"\";\n\t\t\t\tposition: absolute;\n\t\t\t\twidth: 100%;\n\t\t\t\theight: 100%;\n\t\t\t} */\n\t\t\t.btn-whatsapp{\n\t\t\t\tpadding: 6px 18px !important;\n\t\t\t\tcolor: #3C4858;\n\t\t\t\tbackground: transparent;\n\t\t\t\tborder: #e91e63 1px solid;\n\t\t\t\tfont-size: 18px !important;\n    \t\t\tbox-shadow: 0 2px 2px 0 rgba(233, 30, 99, 0.14), 0 3px 1px -2px rgba(233, 30, 99, 0.2), 0 1px 5px 0 rgba(233, 30, 99, 0.12);\n\t\t\t}\n\t\t\t.btn-whatsapp:hover, \n\t\t\t.btn-whatsapp:focus,\n\t\t\t.btn-whatsapp:active{\n\t\t\t\tcolor: #3C4858 !important;\n\t\t\t\tbackground-color: transparent !important;\n\t\t\t\tborder: #e91e63 1px solid !important;\n\t\t\t\tbox-shadow: 0 14px 26px -12px r",
+  "elementCounts": {
+    "floatingButtons": 4,
+    "overlays": 1,
+    "scripts": 13,
+    "iframes": 2,
+    "buttons": 5,
+    "images": 7,
+    "videos": 1
+  },
+  "postInteractionData": {
+    "childButtonsVisible": false,
+    "iframeVisible": true,
+    "activeClasses": [
+      {
+        "className": "ttour-bullet active",
+        "id": ""
+      }
+    ]
+  }
+}

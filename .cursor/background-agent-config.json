@@ -1,0 +1,102 @@
+{
+  "enabled": true,
+  "maxMode": true,
+  "preferredModel": "claude-4-opus",
+  "workspaceAccess": "full",
+  "reportOutputPath": "docs/reports/",
+  "triggerFiles": [
+    ".cursor/background-agent-trigger.md",
+    "docs/reports/BACKGROUND_AGENT_MOCK_ANALYSIS_REPORT.md"
+  ],
+  "focusAreas": [
+    "Demo/apps/superapp-unified/src/components/modules/uplay/",
+    "Demo/apps/superapp-unified/src/components/modules/home/",
+    "Demo/apps/superapp-unified/src/components/modules/marketplace/",
+    "Demo/apps/superapp-unified/src/components/modules/social/",
+    "Demo/apps/superapp-unified/src/components/modules/lets/",
+    "Demo/apps/superapp-unified/src/hooks/",
+    "Demo/apps/superapp-unified/src/stores/",
+    "Demo/apps/superapp-unified/src/data/",
+    "Demo/apps/superapp-unified/src/lib/",
+    "Demo/apps/superapp-unified/src/services/"
+  ],
+  "realBackendConfig": {
+    "enabled": true,
+    "baseUrl": "http://localhost:3002",
+    "healthEndpoint": "/health",
+    "authEndpoint": "/auth/login",
+    "status": "OPERATIONAL",
+    "lastHealthCheck": "2025-06-19T10:57:28.888Z",
+    "credentials": {
+      "admin": {
+        "email": "admin@gamifier.com",
+        "password": "admin123",
+        "roles": ["admin"],
+        "permissions": ["admin:view_all", "users:write", "users:read", "content:read", "roles:write", "gamification:manage", "analytics:read", "groups:manage", "roles:read", "invitations:send", "wallet:manage", "content:write"]
+      },
+      "user": {
+        "email": "user@gamifier.com", 
+        "password": "123456",
+        "roles": ["user"]
+      }
+    },
+    "database": {
+      "type": "PostgreSQL",
+      "status": "CONNECTED",
+      "mockMode": false,
+      "seedData": "AVAILABLE"
+    }
+  },
+  "analysisPatterns": {
+    "mockDataPatterns": [
+      "getMockQuestions",
+      "useMockData", 
+      "simulateData",
+      "mockCategories",
+      "MOCK_ROOMS",
+      "mockQuestions",
+      "marketplaceMockData",
+      "letsMockService",
+      "fallbackData"
+    ],
+    "bypassLogicPatterns": [
+      "isBuilderIoEnv",
+      "fallbackData",
+      "VITE_ENABLE_MOCK",
+      "Builder.io Safe Mode",
+      "mock environment detection",
+      "fallback to mock data"
+    ],
+    "conflictingStylesPatterns": [
+      "display: none",
+      "opacity: 0",
+      "!important"
+    ],
+    "criticalFiles": [
+      "Demo/apps/superapp-unified/src/data/marketplaceMockData.ts",
+      "Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts", 
+      "Demo/apps/superapp-unified/src/lib/lets-mock-service.ts"
+    ]
+  },
+  "cosmicDesignSystemFocus": {
+    "glassmorphism": true,
+    "cosmicGradients": true,
+    "dynamicParticles": true,
+    "revolutionaryAuras": true,
+    "responsiveDepth": true
+  },
+  "taskPriorities": {
+    "realBackendIntegration": "CRITICAL",
+    "mockDataElimination": "HIGH",
+    "visualEffectsRestoration": "HIGH", 
+    "backendIntegration": "MEDIUM",
+    "performanceOptimization": "LOW"
+  },
+  "integrationInstructions": {
+    "priority": "Use REAL backend data over mock data in all cases",
+    "authentication": "Always use realBackendConfig.credentials for testing and development",
+    "endpoints": "Connect to http://localhost:3002 for all API calls",
+    "mockElimination": "Remove all mock data references and replace with real backend calls",
+    "testing": "Use admin@gamifier.com/admin123 for administrative operations, user@gamifier.com/123456 for user operations"
+  }
+} 

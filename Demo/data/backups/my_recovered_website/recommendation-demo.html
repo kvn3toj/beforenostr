@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Enhanced Recommendation System - Demo CoomÜnity</title>
+    
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="./shared/css/enhanced-recommendations.css">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Demostración del sistema de recomendaciones avanzado con Machine Learning para CoomÜnity">
+    <meta name="keywords" content="recommendation system, machine learning, personalization, AI, CoomUnity">
+    <meta name="author" content="CoomÜnity Team">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Enhanced Recommendation System Demo">
+    <meta property="og:description" content="Sistema de recomendaciones inteligente con capacidades de Machine Learning">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://demo.coomunity.com/recommendation-demo">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./assets/img/favicon.ico">
+    
+    <style>
+        /* Estilos adicionales para la demo */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-section h1 {
+            font-size: 3rem;
+            margin: 0 0 1rem 0;
+            font-weight: 700;
+        }
+        
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .feature-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .start-demo-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .start-demo-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .loading-progress {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .demo-container {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .demo-container.visible {
+            opacity: 1;
+        }
+        
+        .info-section {
+            background: white;
+            margin: 2rem auto;
+            max-width: 1200px;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-section h2 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 0.5rem;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Inicializando Sistema de Recomendaciones...</div>
+        <div class="loading-progress" id="loadingProgress">Cargando componentes...</div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1>🤖 Enhanced Recommendation System</h1>
+        <p>
+            Sistema de recomendaciones inteligente con capacidades avanzadas de Machine Learning, 
+            personalización adaptativa y analytics en tiempo real.
+        </p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🧠 ML Ready</h3>
+                <p>Vector de características de 12 dimensiones preparado para entrenamiento</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎯 Personalización</h3>
+                <p>5 niveles adaptativos que evolucionan con el comportamiento del usuario</p>
+            </div>
+            <div class="feature-card">
+                <h3>🧪 A/B Testing</h3>
+                <p>Sistema integrado de experimentación con 4 variantes</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Analytics</h3>
+                <p>Métricas avanzadas: precisión, diversidad, novedad y serendipity</p>
+            </div>
+        </div>
+        
+        <button class="start-demo-btn" onclick="startDemo()">
+            🚀 Iniciar Demostración Interactiva
+        </button>
+    </section>
+
+    <!-- Demo Container -->
+    <div id="demoContainer" class="demo-container">
+        <!-- El contenido será generado dinámicamente por el sistema -->
+    </div>
+
+    <!-- Information Sections -->
+    <div id="infoSections" style="display: none;">
+        <section class="info-section">
+            <h2>🔧 Arquitectura del Sistema</h2>
+            <p>
+                El Enhanced Recommendation Manager está construido con una arquitectura modular que separa claramente 
+                las responsabilidades entre el tracking de comportamiento, el motor de scoring, los algoritmos de ML 
+                y la interfaz de usuario.
+            </p>
+            
+            <h3>Componentes Principales:</h3>
+            <ul>
+                <li><strong>Core Manager:</strong> Lógica principal y coordinación de componentes</li>
+                <li><strong>Helpers:</strong> Métodos auxiliares para tracking y utilidades</li>
+                <li><strong>Optimizations:</strong> A/B testing, métricas de calidad y feedback implícito</li>
+                <li><strong>Demo System:</strong> Herramientas de demostración e integración</li>
+            </ul>
+        </section>
+
+        <section class="info-section">
+            <h2>📈 Métricas de Machine Learning</h2>
+            <p>
+                El sistema recopila automáticamente métricas avanzadas para evaluar la calidad de las recomendaciones:
+            </p>
+            
+            <div class="code-block">
+qualityMetrics = {
+    precision: 0,       // Recomendaciones clickeadas / total mostradas
+    diversity: 0,       // Variedad de categorías
+    novelty: 0,         // Contenido nuevo para el usuario
+    serendipity: 0,     // Sorpresas positivas inesperadas
+    temporalAccuracy: 0 // Relevancia temporal
+}
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>🎯 Algoritmos de Recomendación</h2>
+            <p>
+                Implementamos múltiples algoritmos que se pueden combinar dinámicamente:
+            </p>
+            
+            <h3>Content-Based (60%)</h3>
+            <p>Analiza las características del contenido y las preferencias del usuario</p>
+            
+            <h3>Collaborative Filtering (40%)</h3>
+            <p>Encuentra patrones entre usuarios similares (preparado para implementación futura)</p>
+            
+            <h3>Hybrid Approach</h3>
+            <p>Combina ambos métodos para optimizar precisión y diversidad</p>
+            
+            <h3>Contextual</h3>
+            <p>Considera el contexto temporal, dispositivo y patrones de uso</p>
+        </section>
+
+        <section class="info-section">
+            <h2>🔮 Roadmap y Próximas Características</h2>
+            <ul>
+                <li><strong>Deep Learning Models:</strong> Implementación de redes neuronales para patrones complejos</li>
+                <li><strong>Real-time Learning:</strong> Actualización en tiempo real de los modelos</li>
+                <li><strong>Social Signals:</strong> Integración de datos sociales y compartidos</li>
+                <li><strong>Cross-platform Tracking:</strong> Seguimiento entre dispositivos</li>
+                <li><strong>Explainable AI:</strong> Explicaciones detalladas de por qué se recomienda contenido</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="./shared/js/enhanced-recommendation-manager.js"></script>
+    <script src="./shared/js/enhanced-recommendation-manager-helpers.js"></script>
+    <script src="./shared/js/enhanced-recommendation-manager-optimizations.js"></script>
+    <script src="./shared/js/enhanced-recommendation-demo.js"></script>
+
+    <script>
+        // Estado global de la demo
+        let demoStarted = false;
+        let loadingSteps = [
+            'Inicializando Enhanced Recommendation Manager...',
+            'Cargando datos de entrenamiento ML...',
+            'Configurando algoritmos de personalización...',
+            'Estableciendo métricas de calidad...',
+            'Preparando interfaz interactiva...',
+            'Sistema listo para uso!'
+        ];
+
+        // Función para iniciar la demo
+        function startDemo() {
+            if (demoStarted) return;
+            
+            demoStarted = true;
+            
+            // Mostrar loading screen
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingProgress = document.getElementById('loadingProgress');
+            
+            loadingScreen.classList.remove('hidden');
+            
+            // Simular carga con pasos
+            let currentStep = 0;
+            const stepInterval = setInterval(() => {
+                if (currentStep < loadingSteps.length) {
+                    loadingProgress.textContent = loadingSteps[currentStep];
+                    currentStep++;
+                } else {
+                    clearInterval(stepInterval);
+                    
+                    // Inicializar sistema
+                    setTimeout(() => {
+                        initializeRecommendationSystem();
+                    }, 1000);
+                }
+            }, 800);
+        }
+
+        function initializeRecommendationSystem() {
+            // Ocultar hero section
+            document.querySelector('.hero-section').style.display = 'none';
+            
+            // Mostrar información
+            document.getElementById('infoSections').style.display = 'block';
+            
+            // Inicializar demo
+            const demoContainer = document.getElementById('demoContainer');
+            demoContainer.innerHTML = ''; // Limpiar contenido previo
+            
+            // Crear instancia de demo
+            const demo = new RecommendationDemo();
+            
+            // Ocultar loading screen
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                demoContainer.classList.add('visible');
+            }, 1000);
+        }
+
+        // Configuración adicional de eventos
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎪 Recommendation Demo Page loaded');
+            
+            // Detectar si se debe iniciar automáticamente
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('autostart') === 'true') {
+                setTimeout(startDemo, 1000);
+            }
+            
+            // Configurar tracking de interacciones de página
+            setupPageTracking();
+        });
+
+        function setupPageTracking() {
+            // Track de tiempo en página
+            let startTime = Date.now();
+            
+            // Track de scroll
+            let maxScroll = 0;
+            window.addEventListener('scroll', () => {
+                const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                maxScroll = Math.max(maxScroll, scrollPercent);
+            });
+            
+            // Track al salir de la página
+            window.addEventListener('beforeunload', () => {
+                const timeSpent = Date.now() - startTime;
+                console.log('📊 Page analytics:', {
+                    timeSpent: timeSpent,
+                    maxScroll: maxScroll,
+                    demoStarted: demoStarted
+                });
+                
+                // Guardar analytics si el sistema está disponible
+                if (window.enhancedRecommendationManager) {
+                    window.enhancedRecommendationManager.trackMLInteraction('page_exit', {
+                        timeSpent: timeSpent,
+                        maxScroll: maxScroll,
+                        demoStarted: demoStarted,
+                        timestamp: Date.now()
+                    });
+                }
+            });
+        }
+
+        // Configuración de service worker para cache (opcional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // Funciones de utilidad global
+        window.RecommendationDemoUtils = {
+            exportDemoData: function() {
+                if (window.enhancedRecommendationManager) {
+                    return window.enhancedRecommendationManager.exportMLData();
+                }
+                return null;
+            },
+            
+            resetDemo: function() {
+                if (window.enhancedRecommendationManager) {
+                    window.enhancedRecommendationManager.userProfile.preferences.categories.clear();
+                    window.enhancedRecommendationManager.mlMetrics.interactions = [];
+                    localStorage.clear();
+                    location.reload();
+                }
+            },
+            
+            simulateUser: function(type = 'returning_user') {
+                if (window.recommendationDemo) {
+                    window.recommendationDemo.switchScenario(type);
+                    window.recommendationDemo.simulateUserBehavior();
+                }
+            }
+        };
+    </script>
+
+    <!-- Analytics (Google Analytics 4 - opcional) -->
+    <!-- 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    -->
+</body>
+</html> 

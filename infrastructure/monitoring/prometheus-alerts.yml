@@ -1,0 +1,391 @@
+# Prometheus Alerting Rules for CoomÜnity Platform
+# File: infrastructure/monitoring/prometheus-alerts.yml
+
+groups:
+# =============================================================================
+# CRITICAL SYSTEM ALERTS
+# =============================================================================
+- name: coomunity-critical-system
+  interval: 30s
+  rules:
+  
+  # High Error Rate Alert
+  - alert: CoomUnityHighErrorRate
+    expr: rate(http_requests_total{job="coomunity-backend",status=~"5.."}[5m]) > 0.05
+    for: 2m
+    labels:
+      severity: critical
+      component: backend
+      team: platform
+    annotations:
+      summary: "CoomÜnity Backend: High error rate detected"
+      description: "Error rate is {{ $value | humanizePercentage }} for the last 5 minutes"
+      runbook_url: "https://docs.coomunity.global/runbooks/high-error-rate"
+      dashboard_url: "https://grafana.coomunity.global/d/backend-overview"
+  
+  # Service Down Alert
+  - alert: CoomUnityServiceDown
+    expr: up{job="coomunity-backend"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      component: backend
+      team: platform
+    annotations:
+      summary: "CoomÜnity Backend: Service is down"
+      description: "Backend service {{ $labels.instance }} has been down for more than 1 minute"
+      runbook_url: "https://docs.coomunity.global/runbooks/service-down"
+  
+  # Database Connection Issues
+  - alert: CoomUnityDatabaseConnectionsHigh
+    expr: postgresql_connections{job="postgresql"} > 80
+    for: 1m
+    labels:
+      severity: critical
+      component: database
+      team: platform
+    annotations:
+      summary: "CoomÜnity Database: High connection count"
+      description: "PostgreSQL connections are at {{ $value }}, approaching limit"
+      runbook_url: "https://docs.coomunity.global/runbooks/database-connections"
+  
+  # Memory Usage Critical
+  - alert: CoomUnityHighMemoryUsage
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.9
+    for: 5m
+    labels:
+      severity: critical
+      component: infrastructure
+      team: platform
+    annotations:
+      summary: "CoomÜnity Infrastructure: High memory usage"
+      description: "Memory usage is above 90% for 5 minutes on {{ $labels.instance }}"
+      runbook_url: "https://docs.coomunity.global/runbooks/high-memory"
+
+# =============================================================================
+# BUSINESS METRICS ALERTS
+# =============================================================================
+- name: coomunity-business-metrics
+  interval: 60s
+  rules:
+  
+  # Low Ayni Transactions Alert
+  - alert: CoomUnityLowAyniTransactions
+    expr: rate(coomunity_ayni_transactions_total[5m]) * 60 < 10
+    for: 5m
+    labels:
+      severity: warning
+      component: business
+      team: product
+      philosophy: ayni
+    annotations:
+      summary: "CoomÜnity Business: Low Ayni transactions"
+      description: "Ayni transactions per minute ({{ $value }}) below threshold of 10"
+      runbook_url: "https://docs.coomunity.global/runbooks/low-ayni-transactions"
+      dashboard_url: "https://grafana.coomunity.global/d/ayni-dashboard"
+  
+  # Méritos Generation Anomaly
+  - alert: CoomUnityMeritosGenerationAnomaly
+    expr: |
+      (
+        rate(coomunity_meritos_earned_total[1h]) - 
+        rate(coomunity_meritos_earned_total[1h] offset 24h)
+      ) / rate(coomunity_meritos_earned_total[1h] offset 24h) < -0.5
+    for: 30m
+    labels:
+      severity: warning
+      component: business
+      team: product
+      philosophy: meritos
+    annotations:
+      summary: "CoomÜnity Business: Méritos generation significantly down"
+      description: "Méritos generation is 50% lower than same time yesterday"
+      runbook_url: "https://docs.coomunity.global/runbooks/meritos-anomaly"
+  
+  # User Engagement Drop
+  - alert: CoomUnityUserEngagementDrop
+    expr: coomunity_daily_active_users < coomunity_daily_active_users offset 7d * 0.8
+    for: 2h
+    labels:
+      severity: warning
+      component: business
+      team: product
+    annotations:
+      summary: "CoomÜnity Business: User engagement drop"
+      description: "Daily active users ({{ $value }}) down 20% from last week"
+      runbook_url: "https://docs.coomunity.global/runbooks/engagement-drop"
+  
+  # Bien Común Contributions Low
+  - alert: CoomUnityBienComunContributionsLow
+    expr: rate(coomunity_bien_comun_contributions_total[1h]) < 5
+    for: 1h
+    labels:
+      severity: info
+      component: business
+      team: product
+      philosophy: bien-comun
+    annotations:
+      summary: "CoomÜnity Philosophy: Low Bien Común contributions"
+      description: "Bien Común contributions per hour ({{ $value }}) below expected threshold"
+      dashboard_url: "https://grafana.coomunity.global/d/bien-comun-dashboard"
+
+# =============================================================================
+# PERFORMANCE ALERTS
+# =============================================================================
+- name: coomunity-performance
+  interval: 30s
+  rules:
+  
+  # High Response Time
+  - alert: CoomUnityHighResponseTime
+    expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="coomunity-backend"}[5m])) > 2
+    for: 5m
+    labels:
+      severity: warning
+      component: performance
+      team: platform
+    annotations:
+      summary: "CoomÜnity Performance: High response time"
+      description: "95th percentile response time is {{ $value }}s"
+      runbook_url: "https://docs.coomunity.global/runbooks/high-response-time"
+  
+  # High CPU Usage
+  - alert: CoomUnityHighCPUUsage
+    expr: rate(process_cpu_seconds_total{job="coomunity-backend"}[5m]) * 100 > 80
+    for: 10m
+    labels:
+      severity: warning
+      component: performance
+      team: platform
+    annotations:
+      summary: "CoomÜnity Performance: High CPU usage"
+      description: "CPU usage is {{ $value }}% for backend service"
+      runbook_url: "https://docs.coomunity.global/runbooks/high-cpu"
+  
+  # Redis High Memory Usage
+  - alert: CoomUnityRedisHighMemory
+    expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.8
+    for: 5m
+    labels:
+      severity: warning
+      component: cache
+      team: platform
+    annotations:
+      summary: "CoomÜnity Cache: Redis high memory usage"
+      description: "Redis memory usage is {{ $value | humanizePercentage }}"
+      runbook_url: "https://docs.coomunity.global/runbooks/redis-memory"
+
+# =============================================================================
+# SECURITY ALERTS
+# =============================================================================
+- name: coomunity-security
+  interval: 60s
+  rules:
+  
+  # Suspicious Login Activity
+  - alert: CoomUnitySuspiciousLoginActivity
+    expr: rate(coomunity_failed_login_attempts_total[5m]) > 10
+    for: 2m
+    labels:
+      severity: warning
+      component: security
+      team: security
+    annotations:
+      summary: "CoomÜnity Security: High failed login attempts"
+      description: "Failed login attempts rate is {{ $value }} per second"
+      runbook_url: "https://docs.coomunity.global/runbooks/suspicious-logins"
+  
+  # Rate Limiting Triggered
+  - alert: CoomUnityRateLimitingTriggered
+    expr: rate(coomunity_rate_limit_exceeded_total[5m]) > 5
+    for: 1m
+    labels:
+      severity: info
+      component: security
+      team: platform
+    annotations:
+      summary: "CoomÜnity Security: Rate limiting frequently triggered"
+      description: "Rate limiting triggered {{ $value }} times per second"
+      dashboard_url: "https://grafana.coomunity.global/d/security-dashboard"
+  
+  # JWT Token Validation Failures
+  - alert: CoomUnityJWTValidationFailures
+    expr: rate(coomunity_jwt_validation_failures_total[5m]) > 1
+    for: 5m
+    labels:
+      severity: warning
+      component: security
+      team: security
+    annotations:
+      summary: "CoomÜnity Security: High JWT validation failures"
+      description: "JWT validation failures rate is {{ $value }} per second"
+      runbook_url: "https://docs.coomunity.global/runbooks/jwt-failures"
+
+# =============================================================================
+# INFRASTRUCTURE ALERTS
+# =============================================================================
+- name: coomunity-infrastructure
+  interval: 60s
+  rules:
+  
+  # Disk Space Low
+  - alert: CoomUnityDiskSpaceLow
+    expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+    for: 5m
+    labels:
+      severity: warning
+      component: infrastructure
+      team: platform
+    annotations:
+      summary: "CoomÜnity Infrastructure: Low disk space"
+      description: "Disk space is below 10% on {{ $labels.instance }}"
+      runbook_url: "https://docs.coomunity.global/runbooks/disk-space"
+  
+  # Load Balancer Health
+  - alert: CoomUnityLoadBalancerUnhealthy
+    expr: nginx_up{job="nginx"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      component: infrastructure
+      team: platform
+    annotations:
+      summary: "CoomÜnity Infrastructure: Load balancer unhealthy"
+      description: "Nginx load balancer {{ $labels.instance }} is down"
+      runbook_url: "https://docs.coomunity.global/runbooks/load-balancer"
+  
+  # Kubernetes Pod Restarts
+  - alert: CoomUnityPodRestarts
+    expr: rate(kube_pod_container_status_restarts_total{namespace="coomunity-production"}[15m]) > 0
+    for: 5m
+    labels:
+      severity: warning
+      component: kubernetes
+      team: platform
+    annotations:
+      summary: "CoomÜnity K8s: Pod restarting frequently"
+      description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is restarting"
+      runbook_url: "https://docs.coomunity.global/runbooks/pod-restarts"
+
+# =============================================================================
+# PHILOSOPHICAL ALIGNMENT ALERTS
+# =============================================================================
+- name: coomunity-philosophical-alignment
+  interval: 300s  # Check every 5 minutes
+  rules:
+  
+  # Ayni Balance Disruption
+  - alert: CoomUnityAyniImbalance
+    expr: |
+      abs(
+        coomunity_ayni_given_total - coomunity_ayni_received_total
+      ) / (coomunity_ayni_given_total + coomunity_ayni_received_total) > 0.3
+    for: 1h
+    labels:
+      severity: info
+      component: philosophy
+      team: product
+      philosophy: ayni
+    annotations:
+      summary: "CoomÜnity Philosophy: Ayni imbalance detected"
+      description: "Ayni balance is off by more than 30% - reciprocity principle at risk"
+      dashboard_url: "https://grafana.coomunity.global/d/ayni-balance"
+      action_required: "Review Ayni mechanisms and user education"
+  
+  # Vocational Alignment Decline
+  - alert: CoomUnityVocationalAlignmentDecline
+    expr: coomunity_vocational_alignment_score < 0.7
+    for: 24h
+    labels:
+      severity: info
+      component: philosophy
+      team: product
+      philosophy: vocacion
+    annotations:
+      summary: "CoomÜnity Philosophy: Vocational alignment declining"
+      description: "Average vocational alignment score ({{ $value }}) below 70%"
+      dashboard_url: "https://grafana.coomunity.global/d/vocational-alignment"
+      action_required: "Review vocational guidance algorithms"
+  
+  # Community Collaboration Index Low
+  - alert: CoomUnityCommunityCollaborationLow
+    expr: coomunity_collaboration_index < 0.6
+    for: 12h
+    labels:
+      severity: info
+      component: philosophy
+      team: product
+      philosophy: bien-comun
+    annotations:
+      summary: "CoomÜnity Philosophy: Low community collaboration"
+      description: "Community collaboration index ({{ $value }}) below healthy threshold"
+      dashboard_url: "https://grafana.coomunity.global/d/collaboration-index"
+
+# =============================================================================
+# PREDICTIVE ALERTS
+# =============================================================================
+- name: coomunity-predictive
+  interval: 300s
+  rules:
+  
+  # Predicted User Churn Risk
+  - alert: CoomUnityPredictedChurnRisk
+    expr: coomunity_predicted_churn_risk > 0.15
+    for: 1h
+    labels:
+      severity: info
+      component: predictive
+      team: product
+    annotations:
+      summary: "CoomÜnity Predictive: High churn risk predicted"
+      description: "ML model predicts {{ $value | humanizePercentage }} churn risk"
+      dashboard_url: "https://grafana.coomunity.global/d/churn-prediction"
+      action_required: "Activate user retention campaigns"
+  
+  # Capacity Planning Alert
+  - alert: CoomUnityCapacityPlanningAlert
+    expr: predict_linear(coomunity_daily_active_users[7d], 30 * 24 * 3600) > coomunity_max_capacity
+    for: 1h
+    labels:
+      severity: info
+      component: predictive
+      team: platform
+    annotations:
+      summary: "CoomÜnity Predictive: Capacity limit approaching"
+      description: "Predicted to reach capacity limit in 30 days based on current growth"
+      dashboard_url: "https://grafana.coomunity.global/d/capacity-planning"
+      action_required: "Plan infrastructure scaling"
+
+# =============================================================================
+# CUSTOM WEBHOOK ALERTS
+# =============================================================================
+- name: coomunity-webhooks
+  interval: 60s
+  rules:
+  
+  # Slack Integration for Critical Alerts
+  - alert: CoomUnityCriticalAlertSlack
+    expr: ALERTS{severity="critical",alertname=~"CoomUnity.*"}
+    for: 0s
+    labels:
+      severity: critical
+      webhook: slack
+    annotations:
+      summary: "🚨 CRITICAL: {{ $labels.alertname }}"
+      description: "{{ $labels.description }}"
+      slack_channel: "#coomunity-alerts"
+      slack_username: "CoomÜnity Monitor"
+      slack_icon_emoji: ":warning:"
+  
+  # Discord Integration for Business Metrics
+  - alert: CoomUnityBusinessMetricsDiscord
+    expr: ALERTS{component="business",alertname=~"CoomUnity.*"}
+    for: 0s
+    labels:
+      severity: info
+      webhook: discord
+    annotations:
+      summary: "📊 Business Alert: {{ $labels.alertname }}"
+      description: "{{ $labels.description }}"
+      discord_channel: "business-metrics"
+      discord_username: "CoomÜnity Analytics" 

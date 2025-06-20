@@ -1,0 +1,67 @@
+/* Extracted from: merchant_home_09_final_state_2025-06-03T02-13-20-890Z.html */
+/* Block index: 3 */
+/* Extracted at: 2025-06-03T02:16:25.483Z */
+
+.navbar-custom {
+			position: sticky;
+			width: 100%;
+			top: -1px;
+			z-index: 99;
+		}
+		.navbar-custom-menu {
+			display: flex !important;
+			justify-content: space-between;
+			align-items: center;
+		}
+		.navbar-custom-menu .title {
+			margin-bottom: 0px;
+		}
+		.hidden {
+			display: none;
+		}
+		.w-100{
+			max-width: 230px;
+			min-width: 230px;
+		}
+		.navbar.is-role{
+			background-color: #DC1A5B !important;
+			box-shadow: none;
+			border-radius: 0;
+		}
+		img.icono{
+			max-width: 130px;
+		}
+		.seccion-buscar .input-group{
+			background: #fff;
+			border-radius: 23px;
+			-webkit-box-shadow: 0px 4px 9px -1px rgba(0,0,0,0.5);
+			-moz-box-shadow: 0px 4px 9px -1px rgba(0,0,0,0.5);
+			box-shadow: 0px 4px 9px -1px rgba(0,0,0,0.5);
+			overflow: hidden;
+		}
+		.seccion-buscar .input-group input{
+			padding: 0 12px;
+		}
+		.white{
+			color: #fff;
+		}
+		.seccion-buscar .form-control,
+		.seccion-buscar .is-focused .form-control{
+			background-image: none;
+		}
+		.content-search{
+			background: #DC1A5B;
+		}
+		button.text-white{
+			background: transparent;
+    		border: none;
+		}
+		.navbar-item .btn-icon-navbar{
+			padding: 0px 7px;
+		}
+		.btn-right-nav .ripple-container{
+			display: none;
+		}
+		.navbar-end .navbar-item, .navbar-link{
+			padding: .5rem .1rem;
+		}

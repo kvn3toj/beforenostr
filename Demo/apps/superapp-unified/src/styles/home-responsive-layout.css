@@ -1,0 +1,306 @@
+/* ===== HOME RESPONSIVE LAYOUT - DISTRIBUCIÓN OPTIMIZADA ===== */
+
+/* Base: Mobile First Approach */
+.home-responsive-container {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* Grid responsivo optimizado */
+.home-grid-optimized {
+  display: grid;
+  width: 100%;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* Mobile: 320px - 599px */
+@media (max-width: 599px) {
+  .home-grid-optimized {
+    gap: 12px;
+    padding: 12px;
+    grid-template-areas:
+      'welcome'
+      'balance'
+      'actions'
+      'notifications'
+      'modules'
+      'wallet'
+      'reflection';
+  }
+
+  .home-welcome {
+    grid-area: welcome;
+  }
+  .home-balance {
+    grid-area: balance;
+    min-height: 400px;
+  }
+  .home-actions {
+    grid-area: actions;
+    min-height: 200px;
+  }
+  .home-notifications {
+    grid-area: notifications;
+    min-height: 200px;
+  }
+  .home-modules {
+    grid-area: modules;
+    min-height: 400px;
+  }
+  .home-wallet {
+    grid-area: wallet;
+    min-height: 200px;
+  }
+  .home-reflection {
+    grid-area: reflection;
+    min-height: 150px;
+  }
+}
+
+/* Tablet: 600px - 899px */
+@media (min-width: 600px) and (max-width: 899px) {
+  .home-grid-optimized {
+    gap: 20px;
+    padding: 20px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'welcome welcome'
+      'balance balance'
+      'actions notifications'
+      'modules modules'
+      'wallet reflection';
+  }
+
+  .home-welcome {
+    grid-area: welcome;
+  }
+  .home-balance {
+    grid-area: balance;
+    min-height: 500px;
+  }
+  .home-actions {
+    grid-area: actions;
+    min-height: 250px;
+  }
+  .home-notifications {
+    grid-area: notifications;
+    min-height: 250px;
+  }
+  .home-modules {
+    grid-area: modules;
+    min-height: 500px;
+  }
+  .home-wallet {
+    grid-area: wallet;
+    min-height: 250px;
+  }
+  .home-reflection {
+    grid-area: reflection;
+    min-height: 250px;
+  }
+}
+
+/* Desktop: 900px - 1199px */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .home-grid-optimized {
+    gap: 24px;
+    padding: 24px;
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      'welcome welcome'
+      'balance balance'
+      'actions notifications'
+      'modules modules'
+      'wallet reflection';
+  }
+
+  .home-welcome {
+    grid-area: welcome;
+  }
+  .home-balance {
+    grid-area: balance;
+    min-height: 600px;
+  }
+  .home-actions {
+    grid-area: actions;
+    min-height: 300px;
+  }
+  .home-notifications {
+    grid-area: notifications;
+    min-height: 300px;
+  }
+  .home-modules {
+    grid-area: modules;
+    min-height: 600px;
+  }
+  .home-wallet {
+    grid-area: wallet;
+    min-height: 300px;
+  }
+  .home-reflection {
+    grid-area: reflection;
+    min-height: 300px;
+  }
+}
+
+/* Large Desktop: 1200px+ */
+@media (min-width: 1200px) {
+  .home-grid-optimized {
+    gap: 32px;
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      'welcome welcome'
+      'balance balance'
+      'actions notifications'
+      'modules modules'
+      'wallet reflection';
+  }
+
+  .home-welcome {
+    grid-area: welcome;
+  }
+  .home-balance {
+    grid-area: balance;
+    min-height: 700px;
+  }
+  .home-actions {
+    grid-area: actions;
+    min-height: 350px;
+  }
+  .home-notifications {
+    grid-area: notifications;
+    min-height: 350px;
+  }
+  .home-modules {
+    grid-area: modules;
+    min-height: 700px;
+  }
+  .home-wallet {
+    grid-area: wallet;
+    min-height: 350px;
+  }
+  .home-reflection {
+    grid-area: reflection;
+    min-height: 350px;
+  }
+}
+
+/* Espaciado consistente para widgets */
+.home-widget {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Optimizaciones de rendimiento */
+.home-widget {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Estados de loading responsivos */
+@media (max-width: 599px) {
+  .home-widget-loading {
+    min-height: 200px;
+  }
+}
+
+@media (min-width: 600px) {
+  .home-widget-loading {
+    min-height: 250px;
+  }
+}
+
+@media (min-width: 900px) {
+  .home-widget-loading {
+    min-height: 300px;
+  }
+}
+
+/* Transiciones suaves para cambios de layout */
+.home-widget {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Prevenir overflow en móviles */
+@media (max-width: 599px) {
+  .home-responsive-container {
+    overflow-x: hidden;
+  }
+
+  .home-widget {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
+/* Aspectos ratio para mantener proporciones */
+.home-balance {
+  aspect-ratio: 16 / 9;
+}
+
+@media (max-width: 599px) {
+  .home-balance {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (min-width: 1200px) {
+  .home-balance {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+/* Z-index management para evitar conflictos */
+.home-welcome {
+  z-index: 10;
+}
+.home-balance {
+  z-index: 100;
+} /* Protagonista */
+.home-actions {
+  z-index: 5;
+}
+.home-notifications {
+  z-index: 5;
+}
+.home-modules {
+  z-index: 3;
+}
+.home-wallet {
+  z-index: 3;
+}
+.home-reflection {
+  z-index: 1;
+}
+
+/* Gap responsive para evitar sobrelapamiento */
+@media (max-width: 599px) {
+  .home-grid-optimized > * {
+    margin-bottom: 8px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+  .home-grid-optimized > * {
+    margin-bottom: 12px;
+  }
+}
+
+@media (min-width: 900px) {
+  .home-grid-optimized > * {
+    margin-bottom: 16px;
+  }
+}

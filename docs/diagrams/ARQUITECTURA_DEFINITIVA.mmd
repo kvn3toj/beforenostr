@@ -1,0 +1,120 @@
+%% ARQUITECTURA DEFINITIVA COOMUNITY GLOBAL
+%% Versión: v2.0 - FINAL Y DEFINITIVA
+%% Fecha: 2025-01-19
+%% Estado: Backend NestJS 100% + Admin 100% + SuperApp 95%
+
+graph TB
+    subgraph "🌟 ARQUITECTURA COOMUNITY GLOBAL - DEFINITIVA"
+        direction TB
+        
+        subgraph "💻 BACKEND (COMPLETADO 100%)"
+            direction TB
+            B1["🚀 Backend NestJS<br/>Puerto: 3002<br/>Estado: ✅ FUNCIONAL<br/>Stack: NestJS + TypeScript<br/>DB: PostgreSQL + Prisma"]
+            B2["🗄️ Base de Datos<br/>PostgreSQL + Prisma<br/>Estado: ✅ OPERATIVA<br/>RLS: ✅ IMPLEMENTADO"]
+            B3["⚡ Cache & Performance<br/>Redis Cache<br/>Estado: ✅ ACTIVA<br/>Monitoring: Prometheus"]
+            B4["🔐 Autenticación<br/>JWT + RBAC<br/>Estado: ✅ IMPLEMENTADO<br/>Guards: ✅ FUNCIONALES"]
+            
+            B1 --- B2
+            B1 --- B3
+            B1 --- B4
+        end
+        
+        subgraph "🎛️ FRONTEND ADMIN (COMPLETADO 100%)"
+            direction TB
+            A1["🎮 Gamifier Admin<br/>Puerto: 3000<br/>Estado: ✅ FUNCIONAL<br/>Integración: ✅ BACKEND"]
+            A2["🎨 UI Framework<br/>React + Material-UI<br/>Estado: ✅ IMPLEMENTADO<br/>Design System: ✅ ACTIVO"]
+            A3["📊 Funcionalidades<br/>CRUD Completo<br/>Estado: ✅ VERIFICADO<br/>Tests: ✅ PASANDO"]
+            
+            A1 --- A2
+            A1 --- A3
+        end
+        
+        subgraph "📱 FRONTEND SUPERAPP (95% COMPLETADO)"
+            direction TB
+            S1["🌍 SuperApp CoomÜnity<br/>Puerto: 3001<br/>Estado: 🔄 DESARROLLO<br/>Directorio: apps/superapp-unified/"]
+            S2["⚛️ Core Framework<br/>React 18 + TypeScript<br/>Estado: ✅ CONFIGURADO<br/>Build: Vite 6.2.5"]
+            S3["🎨 UI Components<br/>Material-UI v7 + Tailwind<br/>Estado: ✅ INSTALADO<br/>Conflicts: ✅ RESUELTOS"]
+            S4["🔗 State Management<br/>React Query + Zustand<br/>Estado: ✅ CONFIGURADO<br/>Router: React Router v6"]
+            
+            S1 --- S2
+            S1 --- S3
+            S1 --- S4
+        end
+        
+        subgraph "🧪 TESTING (90% COMPLETADO)"
+            direction TB
+            T1["🎭 E2E Testing<br/>Playwright 1.52.0<br/>Estado: ✅ FUNCIONAL<br/>Ubicación: SuperApp únicamente"]
+            T2["⚡ Unit Testing<br/>Vitest + Jest<br/>Estado: ✅ CONFIGURADO<br/>Coverage: 🔄 EN PROGRESO"]
+            T3["🔍 Quality Assurance<br/>ESLint + Prettier<br/>Estado: ✅ CONFIGURADO<br/>CI/CD: 🔄 PENDIENTE"]
+            
+            T1 --- T2
+            T1 --- T3
+        end
+        
+        subgraph "📁 WORKSPACE ESTRUCTURA"
+            direction TB
+            W1["📂 Directorio Principal<br/>apps/superapp-unified/<br/>Estado: ✅ ACTIVO<br/>Tipo: Monorepo"]
+            W2["📋 Configuración IA<br/>Reglas Actualizadas<br/>Estado: ✅ DEFINIDAS<br/>Prompt: ACTUALIZADO"]
+            W3["📚 Documentación<br/>Arquitectura + Guías<br/>Estado: ✅ ACTUALIZADA<br/>Diagramas: ✅ SINCRONIZADOS"]
+            
+            W1 --- W2
+            W1 --- W3
+        end
+    end
+    
+    subgraph "🔗 INTEGRACIONES ACTIVAS"
+        direction LR
+        API1["🔌 API REST Calls<br/>Método: HTTP/HTTPS<br/>Formato: JSON"]
+        API2["🎫 Autenticación<br/>JWT Tokens<br/>Refresh: Automático"]
+        API3["📡 Comunicación<br/>Port 3002 → 3000/3001<br/>CORS: Configurado"]
+        
+        API1 --- API2
+        API2 --- API3
+    end
+    
+    subgraph "❌ COMPONENTES DEPRECATED"
+        direction TB
+        X1["❌ Supabase Integration<br/>Razón: Era mock temporal<br/>Reemplazo: Backend NestJS"]
+        X2["❌ Express Backend Mock<br/>Razón: Era temporal<br/>Puerto: 3000 (conflicto)"]
+        X3["❌ Dependencias Temporales<br/>@supabase/supabase-js<br/>Estado: A ELIMINAR"]
+        
+        X1 -.-> X2
+        X2 -.-> X3
+    end
+    
+    subgraph "🎯 PRÓXIMOS PASOS"
+        direction TB
+        N1["🔄 Integración Final<br/>SuperApp ↔ Backend NestJS<br/>Prioridad: ALTA"]
+        N2["🧹 Limpieza Código<br/>Eliminar mocks temporales<br/>Prioridad: MEDIA"]
+        N3["🚀 Deployment<br/>Configurar producción<br/>Prioridad: BAJA"]
+        
+        N1 --> N2
+        N2 --> N3
+    end
+    
+    %% Conexiones principales ACTUALES
+    A1 -.->|"🔗 API Integrada"| B1
+    S1 -.->|"🔄 A INTEGRAR"| B1
+    T1 -.->|"🧪 Tests SuperApp"| S1
+    T1 -.->|"🧪 Tests Admin"| A1
+    
+    %% Flujo de desarrollo
+    B1 -.->|"✅ 100% FUNCIONAL"| A1
+    S1 -.->|"🔄 95% - INTEGRACIÓN PENDIENTE"| B1
+    W2 -.->|"📋 GUÍA DESARROLLO"| S1
+    
+    %% Conexiones futuras
+    N1 -.->|"🎯 OBJETIVO"| S1
+    N2 -.->|"🧹 LIMPIEZA"| S1
+    
+    classDef completed fill:#4CAF50,stroke:#2E7D32,color:#fff,stroke-width:3px
+    classDef inprogress fill:#FF9800,stroke:#F57C00,color:#fff,stroke-width:2px
+    classDef deprecated fill:#f44336,stroke:#c62828,color:#fff,stroke-width:2px
+    classDef connection fill:#2196F3,stroke:#1976D2,color:#fff,stroke-width:2px
+    classDef nextSteps fill:#9C27B0,stroke:#6A1B9A,color:#fff,stroke-width:2px
+    
+    class B1,B2,B3,B4,A1,A2,A3,T1,T2,W1,W2,W3 completed
+    class S1,S2,S3,S4,T3 inprogress
+    class X1,X2,X3 deprecated
+    class API1,API2,API3 connection
+    class N1,N2,N3 nextSteps 

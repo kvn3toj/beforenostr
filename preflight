@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# 🚀 ACCESO RÁPIDO AL PRE-FLIGHT CHECK
+# ===================================
+# Script de conveniencia para ejecutar el pre-flight check desde cualquier ubicación
+# Actualizado: JUNIO 2025
+
+# Colores
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+echo -e "${BLUE}🚀 CoomÜnity Pre-Flight Check${NC}"
+echo "Ejecutando verificación completa del workspace..."
+echo ""
+
+# Ejecutar el script principal
+exec ./scripts/pre-flight-check.sh "$@" 

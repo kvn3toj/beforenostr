@@ -1,0 +1,324 @@
+<!-- ================================================
+     COOMUNITY - NAVEGACIÓN UNIFICADA
+     Template para reemplazar en todas las páginas
+     ================================================ -->
+
+<!-- 1. NAVEGACIÓN PRINCIPAL -->
+<nav class="unified-navbar">
+    <div class="container">
+        <div class="navbar-container">
+            <!-- Logo -->
+            <a href="/public/" class="navbar-brand">
+                <img src="/shared/images/logo.png" alt="CoomÜnity" class="logo">
+            </a>
+            
+            <!-- Enlaces de navegación -->
+            <ul class="nav-links" id="navLinks">
+                <li>
+                    <a href="/public/" class="nav-link" data-section="home">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">Inicio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/sections/pilgrim/" class="nav-link" data-section="pilgrim">
+                        <span class="nav-icon">🚀</span>
+                        <span class="nav-text">Pilgrim</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/sections/merchant/" class="nav-link" data-section="merchant">
+                        <span class="nav-icon">🏪</span>
+                        <span class="nav-text">Merchant</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/sections/red-pill/" class="nav-link" data-section="red-pill">
+                        <span class="nav-icon">💊</span>
+                        <span class="nav-text">Red Pill</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/docs/" class="nav-link" data-section="docs">
+                        <span class="nav-icon">📚</span>
+                        <span class="nav-text">Docs</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Botón menú móvil -->
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- 2. BREADCRUMBS -->
+<div class="breadcrumbs" id="breadcrumbs">
+    <!-- Se generan dinámicamente con JavaScript -->
+</div>
+
+<!-- 3. ESTILOS ADICIONALES PARA LA NAVEGACIÓN -->
+<style>
+/* Mejoras específicas para iconos en navegación */
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-icon {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.breadcrumb-icon {
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Animaciones suaves para hover */
+.nav-link:hover .nav-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.breadcrumb-link:hover .breadcrumb-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Indicador de página activa más prominente */
+.nav-link.active {
+    font-weight: 700;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.3);
+}
+
+/* Responsive mejoras */
+@media (max-width: 768px) {
+    .nav-text {
+        font-size: 1.1rem;
+    }
+    
+    .nav-icon {
+        font-size: 1.3rem;
+    }
+    
+    .breadcrumb-list {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+    
+    .breadcrumb-item {
+        font-size: 0.8rem;
+    }
+}
+
+/* Estados de focus para accesibilidad */
+.nav-link:focus,
+.breadcrumb-link:focus,
+.mobile-toggle:focus {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* Animación de carga para la navegación */
+.unified-navbar {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mejora visual del mobile toggle */
+.mobile-toggle {
+    position: relative;
+    overflow: hidden;
+}
+
+.mobile-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+
+.mobile-toggle:hover::before,
+.mobile-toggle:focus::before {
+    width: 100%;
+    height: 100%;
+}
+</style>
+
+<!-- ================================================
+     INSTRUCCIONES DE IMPLEMENTACIÓN
+     ================================================ -->
+
+<!-- 
+PASO 1: REEMPLAZAR NAVEGACIÓN EXISTENTE
+========================================
+1. Localizar la navegación actual en cada archivo HTML
+2. Reemplazar completamente con este template
+3. Ajustar las rutas de logo si es necesario
+
+EJEMPLO DE REEMPLAZO EN PILGRIM:
+ANTES:
+<nav class="navbar navbar-expand-lg bg-primary">
+    <!-- navegación antigua -->
+</nav>
+
+DESPUÉS:
+<!-- Pegar aquí el contenido de este template -->
+
+PASO 2: AJUSTAR RUTAS
+=====================
+- Logo: Asegurar que /shared/images/logo.png existe
+- Enlaces: Verificar que las rutas son correctas para cada sección
+- Base href: Considerar si hay <base href="..."> que afecte las rutas
+
+PASO 3: AGREGAR AL <head>
+==========================
+<link rel="stylesheet" href="/shared/css/unified-styles.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+PASO 4: AGREGAR ANTES DE </body>
+=================================
+<script src="/shared/js/ux-enhancements.js"></script>
+
+PASO 5: OPCIONAL - AGREGAR BOTÓN DE REGRESO
+============================================
+Para páginas internas, agregar después de breadcrumbs:
+<a href="#" class="back-button">Volver</a>
+
+PASO 6: TESTING
+================
+1. Verificar navegación entre secciones
+2. Probar menú móvil
+3. Comprobar breadcrumbs
+4. Validar estados activos
+5. Testear en diferentes dispositivos
+-->
+
+<!-- ================================================
+     PERSONALIZACIÓN POR SECCIÓN
+     ================================================ -->
+
+<!-- 
+PILGRIM - Agregar clase específica:
+<nav class="unified-navbar pilgrim-nav">
+
+MERCHANT - Agregar clase específica:
+<nav class="unified-navbar merchant-nav">
+
+RED-PILL - Agregar clase específica:
+<nav class="unified-navbar red-pill-nav">
+
+Luego crear estilos específicos si es necesario:
+.pilgrim-nav { --primary-color: #4CAF50; }
+.merchant-nav { --primary-color: #FF9800; }
+.red-pill-nav { --primary-color: #F44336; }
+-->
+
+<!-- ================================================
+     EJEMPLO DE FORMULARIO MEJORADO
+     ================================================ -->
+
+<!-- Template para formularios con validación mejorada -->
+<form class="enhanced-form" method="post" novalidate>
+    <div class="form-field">
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" required>
+        <div class="form-feedback success">✓ Email válido</div>
+        <div class="form-feedback error">⚠ Email inválido</div>
+    </div>
+
+    <div class="form-field">
+        <label for="message">Mensaje</label>
+        <textarea id="message" name="message" rows="4" minlength="10" maxlength="500"></textarea>
+        <div class="form-feedback success">✓ Mensaje válido</div>
+        <div class="form-feedback error">⚠ Mensaje debe tener entre 10 y 500 caracteres</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Enviar Mensaje
+    </button>
+</form>
+
+<!-- ================================================
+     EJEMPLO DE CONTENIDO CON MEJORAS RESPONSIVE
+     ================================================ -->
+
+<main class="main-content">
+    <div class="container">
+        <!-- Botón de regreso automático para subpáginas -->
+        
+        <section class="hero-section">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <h1>Título de la Sección</h1>
+                    <p>Contenido principal que se adapta responsivamente.</p>
+                    <a href="#" class="btn btn-primary btn-block-mobile">Acción Principal</a>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="video-container">
+                        <iframe src="https://player.vimeo.com/video/12345" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="row">
+                <div class="col-12">
+                    <h2>Contenido Adicional</h2>
+                    <img src="/assets/images/ejemplo.jpg" alt="Ejemplo" class="responsive-media">
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- ================================================
+     NOTIFICACIONES DE EJEMPLO
+     ================================================ -->
+
+<script>
+// Ejemplos de uso del sistema de notificaciones
+document.addEventListener('DOMContentLoaded', function() {
+    // Ejemplo de notificación de éxito
+    setTimeout(() => {
+        if (window.notificationSystem) {
+            window.notificationSystem.success('¡Página cargada exitosamente!');
+        }
+    }, 1000);
+    
+    // Ejemplo de validación de formulario
+    const form = document.querySelector('.enhanced-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            window.notificationSystem.info('Procesando formulario...');
+            
+            // Simular envío
+            setTimeout(() => {
+                window.notificationSystem.success('Formulario enviado correctamente');
+            }, 2000);
+        });
+    }
+});
+</script> 

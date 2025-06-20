@@ -1,0 +1,723 @@
+/* 🌟 SISTEMA DE PROPORCIONES ÁUREAS - COOMUNITY DASHBOARD
+   Implementa la proporción áurea (φ = 1.618) para crear distribuciones armoniosas
+   Basado en la secuencia de Fibonacci y ratios matemáticamente perfectos */
+
+:root {
+  /* ========================
+     🔢 CONSTANTES ÁUREAS FUNDAMENTALES REFINADAS
+     ======================== */
+
+  /* Proporción áurea base con máxima precisión */
+  --golden-ratio: 1.6180339887; /* φ = (1 + √5) / 2 */
+  --golden-ratio-inverse: 0.6180339887; /* 1/φ */
+  --golden-ratio-squared: 2.6180339887; /* φ² */
+  --golden-ratio-cubed: 4.2360679775; /* φ³ */
+
+  /* Ratios áureos derivados para composición avanzada */
+  --golden-minor-second: 1.067; /* φ^(1/12) - Intervalo musical áureo */
+  --golden-major-second: 1.125; /* φ^(1/8) */
+  --golden-minor-third: 1.236; /* φ^(1/6) */
+  --golden-major-third: 1.382; /* φ^(1/4) */
+  --golden-perfect-fourth: 1.5; /* φ^(1/3) */
+  --golden-perfect-fifth: 1.681; /* φ^(2/3) */
+
+  /* ========================
+     📐 SECUENCIA DE FIBONACCI ESPACIAL ULTRA-REFINADA
+     ======================== */
+
+  /* Espaciado base Fibonacci con sub-divisiones áureas */
+  --golden-space-1: 1px;
+  --golden-space-2: 2px;
+  --golden-space-3: 3px;
+  --golden-space-5: 5px;
+  --golden-space-8: 8px;
+  --golden-space-13: 13px;
+  --golden-space-21: 21px;
+  --golden-space-34: 34px;
+  --golden-space-55: 55px;
+  --golden-space-89: 89px;
+  --golden-space-144: 144px;
+  --golden-space-233: 233px;
+  --golden-space-377: 377px;
+
+  /* Sub-espaciado áureo para precisión extrema */
+  --golden-micro-1: calc(
+    var(--golden-space-1) * var(--golden-ratio-inverse)
+  ); /* 0.618px */
+  --golden-micro-2: calc(
+    var(--golden-space-2) * var(--golden-ratio-inverse)
+  ); /* 1.236px */
+  --golden-micro-3: calc(
+    var(--golden-space-3) * var(--golden-ratio-inverse)
+  ); /* 1.854px */
+  --golden-micro-5: calc(
+    var(--golden-space-5) * var(--golden-ratio-inverse)
+  ); /* 3.09px */
+  --golden-micro-8: calc(
+    var(--golden-space-8) * var(--golden-ratio-inverse)
+  ); /* 4.944px */
+
+  /* Espaciado áureo expandido */
+  --golden-mega-13: calc(
+    var(--golden-space-13) * var(--golden-ratio)
+  ); /* 21.03px */
+  --golden-mega-21: calc(
+    var(--golden-space-21) * var(--golden-ratio)
+  ); /* 33.98px */
+  --golden-mega-34: calc(
+    var(--golden-space-34) * var(--golden-ratio)
+  ); /* 55.01px */
+
+  /* Espaciado en rem para escalabilidad */
+  --golden-rem-1: 0.0625rem; /* 1px */
+  --golden-rem-2: 0.125rem; /* 2px */
+  --golden-rem-3: 0.1875rem; /* 3px */
+  --golden-rem-5: 0.3125rem; /* 5px */
+  --golden-rem-8: 0.5rem; /* 8px */
+  --golden-rem-13: 0.8125rem; /* 13px */
+  --golden-rem-21: 1.3125rem; /* 21px */
+  --golden-rem-34: 2.125rem; /* 34px */
+  --golden-rem-55: 3.4375rem; /* 55px */
+  --golden-rem-89: 5.5625rem; /* 89px */
+
+  /* ========================
+     📏 TAMAÑOS ÁUREOS PARA WIDGETS
+     ======================== */
+
+  /* Tamaños base para diferentes tipos de widgets */
+  --golden-widget-small: 144px; /* Fibonacci 144 */
+  --golden-widget-medium: 233px; /* Fibonacci 233 */
+  --golden-widget-large: 377px; /* Fibonacci 377 */
+  --golden-widget-xlarge: 610px; /* Fibonacci 610 */
+
+  /* Alturas áureas */
+  --golden-height-compact: 89px; /* Fibonacci 89 */
+  --golden-height-normal: 144px; /* Fibonacci 144 */
+  --golden-height-extended: 233px; /* Fibonacci 233 */
+  --golden-height-hero: 377px; /* Fibonacci 377 */
+
+  /* ========================
+     🎯 GRID ÁUREO ULTRA-REFINADO CON PROPORCIONES PERFECTAS
+     ======================== */
+
+  /* Columnas principales basadas en φ con máxima precisión */
+  --golden-col-minor: 38.196601125%; /* 100% / φ exacto */
+  --golden-col-major: 61.803398875%; /* 100% - (100% / φ) */
+
+  /* Sub-divisiones áureas para layouts complejos */
+  --golden-col-quarter: 23.60679775%; /* φ⁻² * 100% */
+  --golden-col-third: 38.196601125%; /* φ⁻¹ * 100% */
+  --golden-col-half: 50%; /* Balance perfecto */
+  --golden-col-two-thirds: 61.803398875%; /* (1 - φ⁻¹) * 100% */
+  --golden-col-three-quarters: 76.39320225%; /* (1 - φ⁻²) * 100% */
+
+  /* Grid gaps con progresión áurea refinada */
+  --golden-gap-micro: var(--golden-micro-3); /* ~1.854px */
+  --golden-gap-xs: var(--golden-space-5); /* 5px */
+  --golden-gap-sm: var(--golden-space-8); /* 8px */
+  --golden-gap-md: var(--golden-space-13); /* 13px */
+  --golden-gap-lg: var(--golden-space-21); /* 21px */
+  --golden-gap-xl: var(--golden-space-34); /* 34px */
+  --golden-gap-xxl: var(--golden-space-55); /* 55px */
+  --golden-gap-mega: var(--golden-space-89); /* 89px */
+
+  /* ========================
+     🌈 RADIOS ÁUREOS MATEMÁTICAMENTE PERFECTOS
+     ======================== */
+
+  /* Radios base usando secuencia Fibonacci pura */
+  --golden-radius-xs: calc(var(--golden-space-3) * 1px); /* 3px */
+  --golden-radius-sm: calc(var(--golden-space-5) * 1px); /* 5px */
+  --golden-radius-md: calc(var(--golden-space-8) * 1px); /* 8px */
+  --golden-radius-lg: calc(var(--golden-space-13) * 1px); /* 13px */
+  --golden-radius-xl: calc(var(--golden-space-21) * 1px); /* 21px */
+  --golden-radius-xxl: calc(var(--golden-space-34) * 1px); /* 34px */
+  --golden-radius-mega: calc(var(--golden-space-55) * 1px); /* 55px */
+
+  /* Radios áureos fraccionarios para elementos sutiles */
+  --golden-radius-micro: calc(var(--golden-micro-2) * 1px); /* ~1.236px */
+  --golden-radius-tiny: calc(var(--golden-micro-3) * 1px); /* ~1.854px */
+  --golden-radius-mini: calc(var(--golden-micro-5) * 1px); /* ~3.09px */
+
+  /* Radios especiales para elementos circulares */
+  --golden-radius-orb: calc(var(--golden-space-89) * 1px); /* 89px para orbs */
+  --golden-radius-avatar: calc(
+    var(--golden-space-34) * 1px
+  ); /* 34px para avatars */
+  --golden-radius-chip: calc(
+    var(--golden-space-13) * 1px
+  ); /* 13px para chips */
+
+  /* ========================
+     📱 BREAKPOINTS ÁUREOS
+     ======================== */
+
+  --golden-mobile: 377px; /* Fibonacci 377 */
+  --golden-tablet: 610px; /* Fibonacci 610 */
+  --golden-desktop: 987px; /* Fibonacci 987 */
+  --golden-large: 1597px; /* Fibonacci 1597 */
+
+  /* ========================
+     🎭 TIPOGRAFÍA ÁUREA CON ESCALA MUSICAL MATEMÁTICA
+     ======================== */
+
+  /* Escala tipográfica basada en progresión áurea perfecta */
+  --golden-text-micro: 0.472rem; /* φ⁻² = 0.472 */
+  --golden-text-xs: 0.618rem; /* φ⁻¹ = 0.618 */
+  --golden-text-sm: 0.764rem; /* φ⁻¹ * 1.236 */
+  --golden-text-base: 1rem; /* Base de referencia */
+  --golden-text-md: 1.236rem; /* √φ = 1.272 ≈ 1.236 */
+  --golden-text-lg: 1.618rem; /* φ = 1.618 */
+  --golden-text-xl: 2rem; /* φ * 1.236 ≈ 2 */
+  --golden-text-2xl: 2.618rem; /* φ² = 2.618 */
+  --golden-text-3xl: 4.236rem; /* φ³ = 4.236 */
+  --golden-text-4xl: 6.854rem; /* φ⁴ = 6.854 */
+  --golden-text-5xl: 11.09rem; /* φ⁵ = 11.090 */
+
+  /* Line heights áureos para cada tamaño */
+  --golden-line-micro: calc(var(--golden-text-micro) * var(--golden-ratio));
+  --golden-line-xs: calc(var(--golden-text-xs) * var(--golden-ratio));
+  --golden-line-sm: calc(var(--golden-text-sm) * var(--golden-ratio));
+  --golden-line-base: calc(var(--golden-text-base) * var(--golden-ratio));
+  --golden-line-md: calc(var(--golden-text-md) * var(--golden-ratio));
+  --golden-line-lg: calc(var(--golden-text-lg) * var(--golden-ratio));
+  --golden-line-xl: calc(var(--golden-text-xl) * var(--golden-ratio));
+  --golden-line-2xl: calc(var(--golden-text-2xl) * var(--golden-ratio));
+  --golden-line-3xl: calc(var(--golden-text-3xl) * var(--golden-ratio));
+
+  /* ========================
+     ⚡ VELOCIDADES DE ANIMACIÓN ÁUREAS REFINADAS
+     ======================== */
+
+  /* Timing basado en progresión áurea natural */
+  --golden-duration-instant: 0.146s; /* φ⁻² * 0.382 ≈ 0.146s */
+  --golden-duration-fast: 0.236s; /* φ⁻¹ * 0.382 ≈ 0.236s */
+  --golden-duration-normal: 0.382s; /* φ⁻¹ * 0.618 ≈ 0.382s */
+  --golden-duration-slow: 0.618s; /* φ⁻¹ ≈ 0.618s */
+  --golden-duration-slower: 1s; /* φ⁻¹ * φ ≈ 1s */
+  --golden-duration-slowest: 1.618s; /* φ ≈ 1.618s */
+  --golden-duration-epic: 2.618s; /* φ² ≈ 2.618s */
+
+  /* Easing curves basadas en proporciones áureas */
+  --golden-ease-in: cubic-bezier(0.618, 0, 1, 0.382);
+  --golden-ease-out: cubic-bezier(0, 0.618, 0.382, 1);
+  --golden-ease-in-out: cubic-bezier(0.618, 0, 0.382, 1);
+  --golden-ease-natural: cubic-bezier(
+    0.236,
+    0.618,
+    0.382,
+    0.764
+  ); /* Curva áurea natural */
+}
+
+/* ========================
+   🏗️ CLASES UTILITARIAS ÁUREAS
+   ======================== */
+
+/* Espaciado áureo */
+.golden-p-1 {
+  padding: var(--golden-space-1);
+}
+.golden-p-2 {
+  padding: var(--golden-space-2);
+}
+.golden-p-3 {
+  padding: var(--golden-space-3);
+}
+.golden-p-5 {
+  padding: var(--golden-space-5);
+}
+.golden-p-8 {
+  padding: var(--golden-space-8);
+}
+.golden-p-13 {
+  padding: var(--golden-space-13);
+}
+.golden-p-21 {
+  padding: var(--golden-space-21);
+}
+.golden-p-34 {
+  padding: var(--golden-space-34);
+}
+
+.golden-m-1 {
+  margin: var(--golden-space-1);
+}
+.golden-m-2 {
+  margin: var(--golden-space-2);
+}
+.golden-m-3 {
+  margin: var(--golden-space-3);
+}
+.golden-m-5 {
+  margin: var(--golden-space-5);
+}
+.golden-m-8 {
+  margin: var(--golden-space-8);
+}
+.golden-m-13 {
+  margin: var(--golden-space-13);
+}
+.golden-m-21 {
+  margin: var(--golden-space-21);
+}
+.golden-m-34 {
+  margin: var(--golden-space-34);
+}
+
+.golden-gap-xs {
+  gap: var(--golden-gap-xs);
+}
+.golden-gap-sm {
+  gap: var(--golden-gap-sm);
+}
+.golden-gap-md {
+  gap: var(--golden-gap-md);
+}
+.golden-gap-lg {
+  gap: var(--golden-gap-lg);
+}
+.golden-gap-xl {
+  gap: var(--golden-gap-xl);
+}
+
+/* ========================
+   🎯 GRID ÁUREO PRINCIPAL
+   ======================== */
+
+.golden-grid-container {
+  display: grid;
+  gap: var(--golden-gap-md);
+  width: 100%;
+  padding: var(--golden-space-21);
+}
+
+/* Layout áureo 2-columnas (38.2% / 61.8%) */
+.golden-grid-2col {
+  grid-template-columns: var(--golden-col-minor) var(--golden-col-major);
+}
+
+/* Layout áureo 3-columnas con proporción central */
+.golden-grid-3col {
+  grid-template-columns:
+    var(--golden-col-minor)
+    1fr
+    var(--golden-col-minor);
+}
+
+/* ========================
+   📱 RESPONSIVE ÁUREO
+   ======================== */
+
+/* Mobile: Stack vertical con espaciado Fibonacci */
+@media (max-width: 377px) {
+  .golden-grid-container {
+    grid-template-columns: 1fr;
+    gap: var(--golden-gap-sm);
+    padding: var(--golden-space-13);
+  }
+
+  .golden-grid-2col,
+  .golden-grid-3col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet: Proporción áurea reducida */
+@media (min-width: 378px) and (max-width: 610px) {
+  .golden-grid-container {
+    gap: var(--golden-gap-md);
+    padding: var(--golden-space-21);
+  }
+
+  .golden-grid-3col {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--golden-gap-sm);
+  }
+}
+
+/* Desktop: Proporción áurea completa */
+@media (min-width: 611px) and (max-width: 987px) {
+  .golden-grid-container {
+    gap: var(--golden-gap-lg);
+    padding: var(--golden-space-34);
+  }
+}
+
+/* Large Desktop: Máxima expresión áurea */
+@media (min-width: 988px) {
+  .golden-grid-container {
+    gap: var(--golden-gap-xl);
+    padding: var(--golden-space-55);
+    max-width: 1597px; /* Fibonacci 1597 */
+    margin: 0 auto;
+  }
+}
+
+/* ========================
+   🎨 WIDGETS ÁUREOS
+   ======================== */
+
+.golden-widget {
+  border-radius: var(--golden-radius-md);
+  transition: all var(--golden-duration-normal) ease;
+}
+
+.golden-widget-small {
+  min-height: var(--golden-widget-small);
+  padding: var(--golden-space-13);
+}
+
+.golden-widget-medium {
+  min-height: var(--golden-widget-medium);
+  padding: var(--golden-space-21);
+}
+
+.golden-widget-large {
+  min-height: var(--golden-widget-large);
+  padding: var(--golden-space-34);
+}
+
+.golden-widget-hero {
+  min-height: var(--golden-height-hero);
+  padding: var(--golden-space-55);
+}
+
+/* ========================
+   🌟 ELEMENTOS ESPECIALES ÁUREOS ULTRA-REFINADOS
+   ======================== */
+
+/* Orb central con proporción áurea perfecta */
+.golden-orb {
+  width: var(--golden-widget-medium);
+  height: var(--golden-widget-medium);
+  border-radius: 50%;
+  position: relative;
+  /* Radio orbital basado en proporción áurea del diámetro */
+  --orb-radius: calc(var(--golden-widget-medium) / 2);
+  --orbital-distance: calc(
+    var(--orb-radius) * var(--golden-ratio)
+  ); /* φ * radio */
+}
+
+/* Elementos orbitales con proporciones celestiales */
+.golden-orbital {
+  width: var(--golden-space-55);
+  height: var(--golden-space-55);
+  border-radius: 50%;
+  position: absolute;
+  /* Tamaño basado en proporción áurea del orb central */
+  width: calc(
+    var(--golden-widget-medium) / var(--golden-ratio-squared)
+  ); /* Orb / φ² */
+  height: calc(var(--golden-widget-medium) / var(--golden-ratio-squared));
+}
+
+/* Orbitales por elemento con proporciones específicas */
+.golden-orbital-major {
+  width: calc(
+    var(--golden-space-55) * var(--golden-ratio-inverse)
+  ); /* 55px / φ = ~34px */
+  height: calc(var(--golden-space-55) * var(--golden-ratio-inverse));
+}
+
+.golden-orbital-minor {
+  width: calc(
+    var(--golden-space-34) * var(--golden-ratio-inverse)
+  ); /* 34px / φ = ~21px */
+  height: calc(var(--golden-space-34) * var(--golden-ratio-inverse));
+}
+
+/* Distancias orbitales basadas en series áureas */
+.golden-orbit-inner {
+  /* Primera órbita: radio del orb * φ⁻¹ */
+  transform: translateX(
+    calc(var(--orbital-distance) * var(--golden-ratio-inverse))
+  );
+}
+
+.golden-orbit-middle {
+  /* Segunda órbita: radio del orb * φ */
+  transform: translateX(var(--orbital-distance));
+}
+
+.golden-orbit-outer {
+  /* Tercera órbita: radio del orb * φ² */
+  transform: translateX(
+    calc(var(--orbital-distance) * var(--golden-ratio-squared))
+  );
+}
+
+/* Cards con proporciones áureas perfectas */
+.golden-card {
+  border-radius: var(--golden-radius-lg);
+  padding: var(--golden-space-21);
+  min-height: var(--golden-height-normal);
+  /* Aspect ratio áureo para cards rectangulares */
+  aspect-ratio: var(--golden-ratio); /* 1.618:1 */
+  transition: all var(--golden-duration-normal) cubic-bezier(0.618, 0, 0.382, 1);
+  /* Espaciado interno basado en proporciones áureas */
+  --card-inner-gap: calc(var(--golden-space-21) * var(--golden-ratio-inverse));
+}
+
+.golden-card:hover {
+  /* Elevación basada en proporción áurea */
+  transform: translateY(calc(-1 * var(--golden-micro-8))); /* ~-4.944px */
+  transition-duration: var(--golden-duration-fast);
+  /* Sombra áurea expandida */
+  box-shadow:
+    0 calc(var(--golden-space-8) * var(--golden-ratio))
+      calc(var(--golden-space-34) * var(--golden-ratio)) rgba(0, 0, 0, 0.1),
+    0 var(--golden-space-5) var(--golden-space-21) rgba(0, 0, 0, 0.06);
+}
+
+/* Variantes de cards con diferentes ratios áureos */
+.golden-card-square {
+  aspect-ratio: 1; /* 1:1 para elementos cuadrados */
+}
+
+.golden-card-wide {
+  aspect-ratio: var(--golden-ratio-squared); /* φ²:1 = 2.618:1 */
+}
+
+.golden-card-tall {
+  aspect-ratio: var(--golden-ratio-inverse); /* 1:φ = 1:1.618 */
+}
+
+/* Cards de métricas con proporciones específicas */
+.golden-metric-card {
+  aspect-ratio: var(
+    --golden-ratio-inverse
+  ); /* Proporción áurea inversa para métricas */
+  padding: var(--golden-space-13);
+  border-radius: var(--golden-radius-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* Gradiente de fondo sutil basado en proporciones áureas */
+  background: linear-gradient(
+    calc(var(--golden-ratio) * 100deg),
+    /* Ángulo áureo */ rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) calc(var(--golden-ratio-inverse) * 100%),
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
+
+/* ========================
+   📊 MÉTRICAS ÁUREAS
+   ======================== */
+
+.golden-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(var(--golden-widget-small), 1fr)
+  );
+  gap: var(--golden-gap-md);
+}
+
+.golden-metric-card {
+  aspect-ratio: var(--golden-ratio-inverse); /* Proporción áurea inversa */
+  padding: var(--golden-space-13);
+  border-radius: var(--golden-radius-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* ========================
+   🎭 TIPOGRAFÍA ÁUREA
+   ======================== */
+
+.golden-text-xs {
+  font-size: var(--golden-text-xs);
+}
+.golden-text-sm {
+  font-size: var(--golden-text-sm);
+}
+.golden-text-base {
+  font-size: var(--golden-text-base);
+}
+.golden-text-md {
+  font-size: var(--golden-text-md);
+}
+.golden-text-lg {
+  font-size: var(--golden-text-lg);
+}
+.golden-text-xl {
+  font-size: var(--golden-text-xl);
+}
+.golden-text-2xl {
+  font-size: var(--golden-text-2xl);
+}
+.golden-text-3xl {
+  font-size: var(--golden-text-3xl);
+}
+
+/* ========================
+   ⚡ ANIMACIONES ÁUREAS
+   ======================== */
+
+.golden-fade-in {
+  animation: goldenFadeIn var(--golden-duration-normal) ease-out;
+}
+
+.golden-scale-in {
+  animation: goldenScaleIn var(--golden-duration-slow)
+    cubic-bezier(0.618, 0, 0.382, 1);
+}
+
+.golden-slide-up {
+  animation: goldenSlideUp var(--golden-duration-normal)
+    cubic-bezier(0.618, 0, 0.382, 1);
+}
+
+@keyframes goldenFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(var(--golden-space-21));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes goldenScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.618);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes goldenSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(var(--golden-space-34));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================
+   🌈 EFECTOS VISUALES ÁUREOS
+   ======================== */
+
+.golden-glow {
+  box-shadow: 0 var(--golden-space-5) var(--golden-space-34)
+    rgba(255, 107, 53, 0.238);
+}
+
+.golden-elevation-1 {
+  box-shadow:
+    0 var(--golden-space-2) var(--golden-space-8) rgba(0, 0, 0, 0.1),
+    0 var(--golden-space-1) var(--golden-space-3) rgba(0, 0, 0, 0.06);
+}
+
+.golden-elevation-2 {
+  box-shadow:
+    0 var(--golden-space-5) var(--golden-space-21) rgba(0, 0, 0, 0.1),
+    0 var(--golden-space-2) var(--golden-space-8) rgba(0, 0, 0, 0.06);
+}
+
+.golden-elevation-3 {
+  box-shadow:
+    0 var(--golden-space-13) var(--golden-space-55) rgba(0, 0, 0, 0.1),
+    0 var(--golden-space-5) var(--golden-space-21) rgba(0, 0, 0, 0.06);
+}
+
+/* ========================
+   🎯 CLASES DE COMPOSICIÓN ÁUREA
+   ======================== */
+
+/* Sección principal con hero áureo */
+.golden-hero-section {
+  padding: var(--golden-space-89) var(--golden-space-34);
+  min-height: var(--golden-height-hero);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Layout de dashboard áureo */
+.golden-dashboard-layout {
+  display: grid;
+  grid-template-areas:
+    'hero hero'
+    'main sidebar'
+    'modules modules';
+  grid-template-columns: var(--golden-col-major) var(--golden-col-minor);
+  grid-template-rows: auto 1fr auto;
+  gap: var(--golden-gap-lg);
+  min-height: 100vh;
+  padding: var(--golden-space-34);
+}
+
+.golden-hero {
+  grid-area: hero;
+}
+.golden-main {
+  grid-area: main;
+}
+.golden-sidebar {
+  grid-area: sidebar;
+}
+.golden-modules {
+  grid-area: modules;
+}
+
+/* Responsive para el layout principal */
+@media (max-width: 610px) {
+  .golden-dashboard-layout {
+    grid-template-areas:
+      'hero'
+      'main'
+      'sidebar'
+      'modules';
+    grid-template-columns: 1fr;
+    gap: var(--golden-gap-md);
+    padding: var(--golden-space-21);
+  }
+}
+
+/* ========================
+   🌟 UTILIDADES FINALES
+   ======================== */
+
+/* Centrado áureo */
+.golden-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Espaciado áureo automático */
+.golden-auto-space > * + * {
+  margin-top: var(--golden-space-21);
+}
+
+/* Contenedor con max-width áureo */
+.golden-container {
+  max-width: var(--golden-large);
+  margin: 0 auto;
+  padding: 0 var(--golden-space-34);
+}
+
+/* Aspect ratio áureo */
+.golden-aspect {
+  aspect-ratio: var(--golden-ratio);
+}
+
+.golden-aspect-inverse {
+  aspect-ratio: var(--golden-ratio-inverse);
+}

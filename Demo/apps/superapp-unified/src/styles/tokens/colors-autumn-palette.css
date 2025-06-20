@@ -1,0 +1,482 @@
+/* ===============================================================================
+   🍂 PALETA DE OTOÑO VERDADERO - COOMUNITY SUPERAPP
+   Colores cálidos, terrosos y acogedores inspirados en el otoño
+   =============================================================================== */
+
+:root {
+  /* ===== OTOÑO PRINCIPAL - Naranjas Cálidos ===== */
+  --autumn-primary-50: #fff7ed;
+  --autumn-primary-100: #ffedd5;
+  --autumn-primary-200: #fed7aa;
+  --autumn-primary-300: #fdba74;
+  --autumn-primary-400: #fb923c;
+  --autumn-primary-500: #f97316; /* Naranja otoñal principal */
+  --autumn-primary-600: #ea580c;
+  --autumn-primary-700: #c2410c;
+  --autumn-primary-800: #9a3412;
+  --autumn-primary-900: #7c2d12;
+
+  /* ===== OTOÑO SECUNDARIO - Rojos Profundos ===== */
+  --autumn-secondary-50: #fef2f2;
+  --autumn-secondary-100: #fee2e2;
+  --autumn-secondary-200: #fecaca;
+  --autumn-secondary-300: #fca5a5;
+  --autumn-secondary-400: #f87171;
+  --autumn-secondary-500: #dc2626; /* Rojo otoñal equilibrado */
+  --autumn-secondary-600: #b91c1c;
+  --autumn-secondary-700: #991b1b;
+  --autumn-secondary-800: #7f1d1d;
+  --autumn-secondary-900: #450a0a;
+
+  /* ===== DORADO OTOÑAL - Amarillos Cálidos ===== */
+  --autumn-gold-50: #fffbeb;
+  --autumn-gold-100: #fef3c7;
+  --autumn-gold-200: #fde68a;
+  --autumn-gold-300: #fcd34d;
+  --autumn-gold-400: #fbbf24;
+  --autumn-gold-500: #f59e0b; /* Dorado principal */
+  --autumn-gold-600: #d97706;
+  --autumn-gold-700: #b45309;
+  --autumn-gold-800: #92400e;
+  --autumn-gold-900: #78350f;
+
+  /* ===== TIERRA OTOÑAL - Marrones Terrosos ===== */
+  --autumn-earth-50: #fafaf9;
+  --autumn-earth-100: #f5f5f4;
+  --autumn-earth-200: #e7e5e4;
+  --autumn-earth-300: #d6d3d1;
+  --autumn-earth-400: #a8a29e;
+  --autumn-earth-500: #78716c; /* Marrón tierra equilibrado */
+  --autumn-earth-600: #57534e;
+  --autumn-earth-700: #44403c;
+  --autumn-earth-800: #292524;
+  --autumn-earth-900: #1c1917;
+
+  /* ===== VERDE OLIVA OTOÑAL ===== */
+  --autumn-olive-50: #f7f8f8;
+  --autumn-olive-100: #eaebe8;
+  --autumn-olive-200: #d5d7d1;
+  --autumn-olive-300: #b8bbb3;
+  --autumn-olive-400: #999c91;
+  --autumn-olive-500: #6b7168; /* Verde oliva principal */
+  --autumn-olive-600: #555b52;
+  --autumn-olive-700: #464a43;
+  --autumn-olive-800: #3a3d37;
+  --autumn-olive-900: #32342f;
+
+  /* ===== BURGUNDY OTOÑAL - Granates Profundos ===== */
+  --autumn-burgundy-50: #fdf2f8;
+  --autumn-burgundy-100: #fce7f3;
+  --autumn-burgundy-200: #fbcfe8;
+  --autumn-burgundy-300: #f9a8d4;
+  --autumn-burgundy-400: #f472b6;
+  --autumn-burgundy-500: #8b1538; /* Burgundy principal */
+  --autumn-burgundy-600: #7e1834;
+  --autumn-burgundy-700: #701a75;
+  --autumn-burgundy-800: #581c87;
+  --autumn-burgundy-900: #3c1361;
+
+  /* ===== COLORES SEMÁNTICOS OTOÑALES ===== */
+  --autumn-success: #16a34a; /* Verde oliva para éxito */
+  --autumn-success-light: #dcfce7;
+  --autumn-success-dark: #15803d;
+
+  --autumn-warning: var(--autumn-gold-500); /* Dorado para advertencias */
+  --autumn-warning-light: var(--autumn-gold-100);
+  --autumn-warning-dark: var(--autumn-gold-700);
+
+  --autumn-error: var(--autumn-secondary-500); /* Rojo otoñal para errores */
+  --autumn-error-light: var(--autumn-secondary-100);
+  --autumn-error-dark: var(--autumn-secondary-700);
+
+  --autumn-info: #8b5a2b; /* Marrón cálido para información */
+  --autumn-info-light: #fed7aa;
+  --autumn-info-dark: #92400e;
+
+  /* ===== ESCALA DE GRISES CÁLIDA ===== */
+  --warm-neutral-50: #fafaf9; /* Blanco cálido */
+  --warm-neutral-100: #f5f5f4; /* Casi blanco cálido */
+  --warm-neutral-200: #e7e5e4; /* Gris muy claro cálido */
+  --warm-neutral-300: #d6d3d1; /* Gris claro cálido */
+  --warm-neutral-400: #a8a29e; /* Gris medio cálido */
+  --warm-neutral-500: #78716c; /* Gris medio */
+  --warm-neutral-600: #57534e; /* Gris oscuro cálido */
+  --warm-neutral-700: #44403c; /* Gris muy oscuro cálido */
+  --warm-neutral-800: #292524; /* Casi negro cálido */
+  --warm-neutral-900: #1c1917; /* Negro cálido */
+
+  /* ===== ELEMENTOS OTOÑALES NATURALES ===== */
+  --element-fuego-autumn: var(
+    --autumn-primary-500
+  ); /* Naranja otoñal como fuego */
+  --element-fuego-autumn-light: var(--autumn-primary-100);
+
+  --element-agua-autumn: #0f766e; /* Verde azulado como agua de río otoñal */
+  --element-agua-autumn-light: #ccfbf1;
+
+  --element-tierra-autumn: var(--autumn-earth-500); /* Marrón tierra otoñal */
+  --element-tierra-autumn-light: var(--autumn-earth-100);
+
+  --element-aire-autumn: var(
+    --autumn-olive-500
+  ); /* Verde oliva como aire fresco */
+  --element-aire-autumn-light: var(--autumn-olive-100);
+
+  /* ===== TEXTOS CON TONOS CÁLIDOS ===== */
+  --text-primary-autumn: var(--warm-neutral-800); /* 12:1 contraste */
+  --text-secondary-autumn: var(--warm-neutral-600); /* 7.5:1 contraste */
+  --text-tertiary-autumn: var(--warm-neutral-500); /* 4.8:1 contraste */
+  --text-disabled-autumn: var(--warm-neutral-400); /* 3.2:1 contraste */
+  --text-accent-autumn: var(--autumn-primary-600); /* Naranja para acentos */
+
+  /* ===== BACKGROUNDS CÁLIDOS ===== */
+  --bg-primary-autumn: #fffefb; /* Blanco muy cálido */
+  --bg-secondary-autumn: var(--warm-neutral-50);
+  --bg-tertiary-autumn: var(--warm-neutral-100);
+  --bg-muted-autumn: var(--warm-neutral-200);
+
+  /* ===== BORDERS CÁLIDOS ===== */
+  --border-subtle-autumn: var(--warm-neutral-200);
+  --border-normal-autumn: var(--warm-neutral-300);
+  --border-strong-autumn: var(--warm-neutral-400);
+  --border-accent-autumn: var(--autumn-primary-300);
+
+  /* ===== CARDS OTOÑALES ===== */
+  --card-bg-autumn: var(--bg-primary-autumn);
+  --card-bg-soft-autumn: var(--warm-neutral-50);
+  --card-border-autumn: var(--border-subtle-autumn);
+  --card-shadow-autumn:
+    0 2px 4px rgba(124, 45, 18, 0.1), 0 1px 2px rgba(124, 45, 18, 0.06);
+  --card-shadow-hover-autumn:
+    0 8px 16px rgba(124, 45, 18, 0.15), 0 4px 8px rgba(124, 45, 18, 0.08);
+
+  /* ===== GRADIENTES OTOÑALES ===== */
+  --gradient-autumn-primary: linear-gradient(
+    135deg,
+    var(--autumn-primary-500) 0%,
+    var(--autumn-gold-500) 50%,
+    var(--autumn-secondary-500) 100%
+  );
+
+  --gradient-autumn-soft: linear-gradient(
+    135deg,
+    var(--autumn-primary-100) 0%,
+    var(--autumn-gold-100) 50%,
+    var(--autumn-secondary-100) 100%
+  );
+
+  --gradient-autumn-card: linear-gradient(
+    135deg,
+    var(--bg-primary-autumn) 0%,
+    var(--warm-neutral-50) 100%
+  );
+
+  --gradient-autumn-warm: linear-gradient(
+    45deg,
+    var(--autumn-gold-200) 0%,
+    var(--autumn-primary-200) 100%
+  );
+
+  /* ===== MÉTRICAS OTOÑALES ===== */
+  --metric-ondas-autumn: var(--autumn-gold-600); /* Dorado para Öndas */
+  --metric-meritos-autumn: var(--autumn-primary-600); /* Naranja para Mëritos */
+  --metric-ayni-autumn: var(
+    --autumn-olive-600
+  ); /* Verde oliva para balance Ayni */
+  --metric-balance-autumn: var(
+    --autumn-burgundy-500
+  ); /* Burgundy para balance */
+
+  /* ===== ESTADOS INTERACTIVOS OTOÑALES ===== */
+  --interactive-default-autumn: var(--autumn-primary-600);
+  --interactive-hover-autumn: var(--autumn-primary-700);
+  --interactive-active-autumn: var(--autumn-primary-800);
+  --interactive-focus-autumn: var(--autumn-primary-500);
+  --interactive-disabled-autumn: var(--warm-neutral-400);
+
+  /* ===== COLORES ESPECÍFICOS HOME OTOÑAL ===== */
+  --home-heading-primary-autumn: var(--text-primary-autumn);
+  --home-heading-secondary-autumn: var(--warm-neutral-700);
+  --home-text-primary-autumn: var(--text-secondary-autumn);
+  --home-text-secondary-autumn: var(--text-tertiary-autumn);
+  --home-text-accent-autumn: var(--text-accent-autumn);
+
+  /* ===== TRANSICIONES Y ANIMACIONES ===== */
+  --transition-autumn-fast: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-autumn-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-autumn-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== MODO OSCURO OTOÑAL ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Invertir pero mantener calidez otoñal */
+    --warm-neutral-50: #292524;
+    --warm-neutral-100: #44403c;
+    --warm-neutral-200: #57534e;
+    --warm-neutral-300: #78716c;
+    --warm-neutral-400: #a8a29e;
+    --warm-neutral-500: #d6d3d1;
+    --warm-neutral-600: #e7e5e4;
+    --warm-neutral-700: #f5f5f4;
+    --warm-neutral-800: #fafaf9;
+    --warm-neutral-900: #ffffff;
+
+    /* Backgrounds otoñales en modo oscuro */
+    --bg-primary-autumn: #1c1917;
+    --bg-secondary-autumn: var(--warm-neutral-50);
+    --bg-tertiary-autumn: var(--warm-neutral-100);
+
+    /* Colores otoñales más vibrantes para modo oscuro */
+    --autumn-primary-500: #fb923c;
+    --autumn-gold-500: #fbbf24;
+    --autumn-secondary-500: #f87171;
+    --autumn-olive-500: #84cc16;
+
+    /* Cards en modo oscuro otoñal */
+    --card-bg-autumn: var(--warm-neutral-50);
+    --card-shadow-autumn:
+      0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ===== UTILIDADES OTOÑALES ===== */
+.autumn-text-primary {
+  color: var(--text-primary-autumn);
+}
+
+.autumn-text-secondary {
+  color: var(--text-secondary-autumn);
+}
+
+.autumn-text-accent {
+  color: var(--text-accent-autumn);
+}
+
+.autumn-bg-card {
+  background: var(--card-bg-autumn);
+  border: 1px solid var(--card-border-autumn);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow-autumn);
+  transition: var(--transition-autumn-normal);
+}
+
+.autumn-bg-card:hover {
+  box-shadow: var(--card-shadow-hover-autumn);
+  transform: translateY(-2px);
+}
+
+.autumn-gradient-text {
+  background: var(--gradient-autumn-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Fallback para navegadores sin soporte */
+  color: var(--autumn-primary-600);
+}
+
+.autumn-interactive-element {
+  color: var(--interactive-default-autumn);
+  transition: var(--transition-autumn-fast);
+  cursor: pointer;
+}
+
+.autumn-interactive-element:hover {
+  color: var(--interactive-hover-autumn);
+  transform: translateY(-1px);
+}
+
+.autumn-interactive-element:focus-visible {
+  outline: 2px solid var(--interactive-focus-autumn);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ===== ELEMENTOS OTOÑALES ===== */
+.autumn-element-fuego {
+  color: var(--element-fuego-autumn);
+}
+
+.autumn-element-agua {
+  color: var(--element-agua-autumn);
+}
+
+.autumn-element-tierra {
+  color: var(--element-tierra-autumn);
+}
+
+.autumn-element-aire {
+  color: var(--element-aire-autumn);
+}
+
+/* ===== MÉTRICAS OTOÑALES ===== */
+.autumn-metric-ondas {
+  color: var(--metric-ondas-autumn);
+  font-weight: 700;
+}
+
+.autumn-metric-meritos {
+  color: var(--metric-meritos-autumn);
+  font-weight: 700;
+}
+
+.autumn-metric-ayni {
+  color: var(--metric-ayni-autumn);
+  font-weight: 700;
+}
+
+.autumn-metric-balance {
+  color: var(--metric-balance-autumn);
+  font-weight: 700;
+}
+
+/* ===== COMPONENTES ESPECÍFICOS OTOÑALES ===== */
+.autumn-welcome-header {
+  background: var(--gradient-autumn-card);
+  border: 1px solid var(--card-border-autumn);
+  box-shadow: var(--card-shadow-autumn);
+  position: relative;
+  overflow: hidden;
+}
+
+.autumn-welcome-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-autumn-primary);
+  border-radius: 20px 20px 0 0;
+}
+
+.autumn-metrics-card {
+  background: var(--card-bg-autumn);
+  border: 1px solid var(--card-border-autumn);
+  box-shadow: var(--card-shadow-autumn);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.autumn-metrics-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-autumn-primary);
+  opacity: 0.8;
+}
+
+.autumn-progress-bar {
+  background-color: var(--warm-neutral-200);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.autumn-progress-fill {
+  background: var(--gradient-autumn-primary);
+  transition: var(--transition-autumn-normal);
+  border-radius: 9999px;
+}
+
+/* ===== BOTONES OTOÑALES ===== */
+.autumn-button-primary {
+  background: var(--gradient-autumn-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 28px;
+  font-weight: 600;
+  box-shadow: var(--card-shadow-autumn);
+  transition: var(--transition-autumn-normal);
+}
+
+.autumn-button-primary:hover {
+  background: var(--gradient-autumn-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover-autumn);
+  filter: brightness(1.1);
+}
+
+.autumn-button-secondary {
+  background: transparent;
+  color: var(--autumn-primary-600);
+  border: 2px solid var(--autumn-primary-300);
+  border-radius: 14px;
+  padding: 12px 26px;
+  font-weight: 600;
+  transition: var(--transition-autumn-fast);
+}
+
+.autumn-button-secondary:hover {
+  background: var(--autumn-primary-50);
+  border-color: var(--autumn-primary-500);
+  color: var(--autumn-primary-700);
+}
+
+/* ===== ALTO CONTRASTE OTOÑAL ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary-autumn: #000000;
+    --text-secondary-autumn: #000000;
+    --home-heading-primary-autumn: #000000;
+    --card-border-autumn: #000000;
+    --interactive-focus-autumn: #000000;
+  }
+
+  .autumn-gradient-text {
+    color: #000000 !important;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
+  }
+}
+
+/* ===== PRINT STYLES OTOÑALES ===== */
+@media print {
+  * {
+    color: #000000 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  .autumn-bg-card {
+    border: 1px solid #8b4513 !important;
+  }
+}
+
+/* ===== ANIMACIONES OTOÑALES ===== */
+@keyframes autumn-leaf-fall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(5px) rotate(5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes autumn-warm-glow {
+  0%,
+  100% {
+    box-shadow: var(--card-shadow-autumn);
+  }
+  50% {
+    box-shadow: var(--card-shadow-hover-autumn);
+  }
+}
+
+.autumn-leaf-animation {
+  animation: autumn-leaf-fall 0.6s ease-out;
+}
+
+.autumn-warm-glow:hover {
+  animation: autumn-warm-glow 2s ease-in-out infinite;
+}

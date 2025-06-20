@@ -1,0 +1,20 @@
+# MIGRACIÓN useRealBackendData.ts
+# DE: Safe Mode y Builder.io detection
+# A: Backend NestJS directo
+
+ELIMINAR:
+- isBuilderIoMode checks
+- Safe Mode logic
+- Mock data fallbacks
+
+MANTENER:
+- Error handling real
+- Loading states
+- Data transformation
+- Cache logic
+
+ENDPOINTS PRIORITARIOS:
+- GET /users/profile → userData
+- GET /wallet/balance → walletData  
+- GET /gamification/stats → gameData
+- GET /notifications → notificationsData

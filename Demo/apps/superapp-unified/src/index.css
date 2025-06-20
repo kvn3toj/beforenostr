@@ -1,0 +1,314 @@
+/* ===== COOMUNITY SUPERAPP - DESIGN SYSTEM ===== */
+
+/* Import Design Tokens */
+@import './styles/tokens/colors.css';
+@import './styles/tokens/typography.css';
+@import './styles/tokens/spacing.css';
+@import './styles/tokens/shadows.css';
+
+/* Import Utilities */
+@import './styles/utilities/animations.css';
+
+/* Import responsive and contextual classes for Playwright detection */
+@import './styles/responsive-contextual.css';
+
+/* Import minimal dashboard styles for ÜStats */
+@import './styles/ustats-minimal.css';
+
+/* Import enhanced challenges module styles */
+@import './styles/challenges-enhanced.css';
+
+/* Import enhanced home module styles */
+@import './styles/home-enhanced.css';
+
+/* Import cosmic effects for Ayni Balance planetary system */
+@import './styles/cosmic-ayni-effects.css';
+
+/* Import orbital harmony animations for Ayni Revolutionary Widget */
+@import './styles/orbital-harmony-animations.css';
+
+/* Import simple orbital animations - More intuitive approach */
+@import './styles/simple-orbital-animations.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === BASE STYLES === */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* === COMPONENT-SPECIFIC STYLES === */
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-background-primary);
+}
+
+/* === SCROLLBAR STYLES === */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray-400);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-500);
+}
+
+/* === MATERIAL-UI OVERRIDES === */
+.MuiButton-root {
+  text-transform: none !important;
+  font-family: var(--font-family-primary) !important;
+}
+
+.MuiTypography-root {
+  font-family: var(--font-family-primary) !important;
+}
+
+/* === COOMUNITY SPECIFIC CLASSES === */
+
+/* Gradientes actualizados */
+.coomunity-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--coomunity-primary-500) 0%,
+    var(--coomunity-primary-400) 100%
+  );
+}
+
+.coomunity-gradient-gold {
+  background: linear-gradient(
+    135deg,
+    var(--coomunity-gold-500) 0%,
+    var(--coomunity-gold-400) 100%
+  );
+}
+
+.coomunity-gradient-elements {
+  background: linear-gradient(
+    135deg,
+    var(--coomunity-earth-500) 0%,
+    var(--coomunity-water-500) 25%,
+    var(--coomunity-fire-500) 50%,
+    var(--coomunity-air-500) 75%,
+    var(--coomunity-primary-500) 100%
+  );
+}
+
+/* Texto con gradiente actualizado */
+.coomunity-text-gradient {
+  background: linear-gradient(
+    45deg,
+    var(--coomunity-primary-500) 30%,
+    var(--coomunity-primary-400) 90%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* === LAYOUT HELPERS === */
+.coomunity-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-component-md);
+}
+
+.coomunity-container-sm {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 var(--space-component-md);
+}
+
+.coomunity-container-lg {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--space-component-md);
+}
+
+/* === RESPONSIVE DESIGN HELPERS === */
+@media (max-width: 768px) {
+  .coomunity-container,
+  .coomunity-container-sm,
+  .coomunity-container-lg {
+    padding: 0 var(--space-mobile-md);
+  }
+
+  .mobile-padding {
+    padding: var(--space-mobile-md);
+  }
+
+  .mobile-hidden {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-hidden {
+    display: none;
+  }
+}
+
+/* === ACCESSIBILITY IMPROVEMENTS === */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--coomunity-primary-500);
+  color: var(--color-text-inverse);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  z-index: 1000;
+  transition: top var(--duration-fast) var(--ease-coomunity);
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* === FOCUS MANAGEMENT === */
+.focus-visible {
+  outline: 2px solid var(--coomunity-primary-500);
+  outline-offset: 2px;
+}
+
+/* === PRINT STYLES === */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]:after {
+    content: ' (' attr(href) ')';
+  }
+
+  abbr[title]:after {
+    content: ' (' attr(title) ')';
+  }
+
+  .ir a:after,
+  a[href^='javascript:']:after,
+  a[href^='#']:after {
+    content: '';
+  }
+
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
+
+/* === LEGACY ANIMATION CLASSES (DEPRECATED - USE NEW SYSTEM) === */
+/* Mantenemos temporalmente para compatibilidad */
+.fade-in {
+  animation: fadeIn var(--duration-normal) var(--ease-out);
+}
+
+.slide-up {
+  animation: slideUp var(--duration-slow) var(--ease-coomunity);
+}
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-strict {
+  contain: strict;
+}

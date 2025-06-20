@@ -1,0 +1,93 @@
+Demo/apps/superapp-unified/src/main.tsx:// Desregistrar service workers en Builder.io para evitar interceptación de peticiones
+Demo/apps/superapp-unified/src/main.tsx:  const isBuilderIo = currentPort !== 3001; // Si no estamos en puerto nativo, es Builder.io
+Demo/apps/superapp-unified/src/main.tsx:    console.log('🧹 Builder.io detected, unregistering service workers...');
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:  // 🏗️ **BUILDER.IO: Si estamos en Builder.io, devolver admin directamente**
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:    console.log('[Auth Builder.io] Modo admin forzado - saltando autenticación');
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:  // 🏗️ **BUILDER.IO: Si estamos en Builder.io, devolver admin directamente**
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:    console.log('[Auth Builder.io] Modo admin forzado - saltando registro');
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:  // 🏗️ **BUILDER.IO: Si estamos en Builder.io, devolver admin directamente**
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:      `${AUTH_CONFIG.LOG_PREFIX} Builder.io mode - auto-autenticando admin`
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:        // 🏗️ **BUILDER.IO: Si estamos en Builder.io, auto-autenticar admin**
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:          console.log('[Auth Builder.io] Auto-autenticando admin para Builder.io');
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:    // 🏗️ **BUILDER.IO: Si estamos en Builder.io, no hacer nada (ya está autenticado)**
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:      console.log('[Auth Builder.io] Login ignorado - admin ya autenticado');
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:    // 🏗️ **BUILDER.IO: Si estamos en Builder.io, no hacer nada (ya está autenticado)**
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:      console.log('[Auth Builder.io] Registro ignorado - admin ya autenticado');
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:    // 🏗️ **BUILDER.IO: Si estamos en Builder.io, no hacer logout (mantener admin)**
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:      console.log('[Auth Builder.io] Logout ignorado - manteniendo admin activo');
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:      // 🏗️ **BUILDER.IO: Si estamos en Builder.io, simular actualización local**
+Demo/apps/superapp-unified/src/contexts/AuthContext.tsx:        console.log('[Auth Builder.io] Update profile - actualizando admin localmente');
+Demo/apps/superapp-unified/src/utils/testMockAuth.ts:  const isMockEnabled = (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
+Demo/apps/superapp-unified/src/utils/testMockAuth.ts:  console.log('Environment variable VITE_ENABLE_MOCK_AUTH:', (import.meta as any).env.VITE_ENABLE_MOCK_AUTH);
+Demo/apps/superapp-unified/src/components/ui/BuilderIOStatus.tsx: * 🏗️ Builder.io Status Component
+Demo/apps/superapp-unified/src/components/ui/BuilderIOStatus.tsx: * Muestra información útil cuando la app está ejecutándose en Builder.io
+Demo/apps/superapp-unified/src/components/ui/BuilderIOStatus.tsx: * Solo visible en modo desarrollo y Builder.io
+Demo/apps/superapp-unified/src/components/ui/BuilderIOStatus.tsx:  // Solo mostrar en Builder.io y desarrollo
+Demo/apps/superapp-unified/src/components/ui/BuilderIOStatus.tsx:          label="Builder.io Mode"
+Demo/apps/superapp-unified/src/components/ui/BuilderIOStatus.tsx:        🏗️ <strong>Builder.io Development Mode</strong>
+Demo/apps/superapp-unified/src/components/home/AyniBalanceVisualization.tsx:  // 🧹 CLEANUP OBLIGATORIO según Builder.io
+Demo/apps/superapp-unified/src/components/home/SmartActions.tsx:// Imports específicos siguiendo reglas Builder.io
+Demo/apps/superapp-unified/src/components/home/SmartActions.tsx:// Imports específicos de iconos siguiendo reglas Builder.io
+Demo/apps/superapp-unified/src/components/home/LiveActivityFeed.tsx:  // 🧹 CLEANUP OBLIGATORIO según Builder.io
+Demo/apps/superapp-unified/src/components/home/AyniMetricsCardRevolutionary.tsx:        console.error('🚨 Builder.io Error detectado:', {
+Demo/apps/superapp-unified/src/components/home/ModuleFocus.tsx:// Imports específicos siguiendo reglas Builder.io
+Demo/apps/superapp-unified/src/components/home/ModuleFocus.tsx:// Imports específicos de iconos siguiendo reglas Builder.io
+Demo/apps/superapp-unified/src/components/home/EnergyWeatherWidget.tsx:  // 🧹 CLEANUP OBLIGATORIO según Builder.io
+Demo/apps/superapp-unified/src/components/home/SmartHeader.tsx:// Imports específicos siguiendo reglas Builder.io
+Demo/apps/superapp-unified/src/components/home/SmartHeader.tsx:// Imports específicos de iconos siguiendo reglas Builder.io
+Demo/apps/superapp-unified/src/components/home/EnhancedParticles.tsx:  // 🧹 CLEANUP OBLIGATORIO según Builder.io
+Demo/apps/superapp-unified/src/components/home/PersonalProgressWidget.tsx:  // 🧹 CLEANUP OBLIGATORIO según Builder.io
+Demo/apps/superapp-unified/src/components/home/ActiveChallengesWidget.tsx:  // 🧹 CLEANUP OBLIGATORIO según Builder.io
+Demo/apps/superapp-unified/src/components/home/PrimaryDashboard.tsx:// Imports específicos de iconos siguiendo reglas Builder.io
+Demo/apps/superapp-unified/src/components/common/NotificationSystem.tsx:    (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
+Demo/apps/superapp-unified/src/components/DevMockBanner.tsx: * Solo se muestra cuando VITE_ENABLE_MOCK_AUTH=true
+Demo/apps/superapp-unified/src/components/DevMockBanner.tsx:  if ((import.meta as any).env.VITE_ENABLE_MOCK_AUTH !== 'true') {
+Demo/apps/superapp-unified/src/components/debug/NetworkErrorDebug.tsx:          'VITE_ENABLE_MOCK_AUTH=false',
+Demo/apps/superapp-unified/src/components/debug/NetworkErrorDebug.tsx:Mock Auth: ${import.meta.env.VITE_ENABLE_MOCK_AUTH || 'false'}
+Demo/apps/superapp-unified/src/components/debug/ConnectionDiagnostics.tsx:  // 🚨 BUILDER.IO SAFE MODE: Memoizar detección de entorno Builder.io
+Demo/apps/superapp-unified/src/components/debug/ConnectionDiagnostics.tsx:      service: 'Builder.io Environment',
+Demo/apps/superapp-unified/src/components/debug/ConnectionDiagnostics.tsx:      message: 'Ejecutándose en entorno Builder.io',
+Demo/apps/superapp-unified/src/components/debug/ConnectionDiagnostics.tsx:      details: 'Todos los hooks están configurados para usar datos seguros en Builder.io',
+Demo/apps/superapp-unified/src/components/debug/ConnectionDiagnostics.tsx:              {isBuilderEnvironment ? '🎭 Builder.io Diagnostics' : '🔧 Connection Diagnostics'}
+Demo/apps/superapp-unified/src/components/debug/ConnectionDiagnostics.tsx:              <strong>Modo Builder.io Detectado:</strong> Las llamadas API están deshabilitadas para prevenir errores. 
+Demo/apps/superapp-unified/src/components/debug/ConnectionDiagnostics.tsx:                  🛡️ Protecciones Activas en Builder.io:
+Demo/apps/superapp-unified/src/vite-env.d.ts:  readonly VITE_ENABLE_MOCK_AUTH: string;
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:    (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para gameData');
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:    enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en Builder.io
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para walletData');
+Demo/apps/superapp-unified/src/hooks/useRealBackendData.ts:      enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en Builder.io
+Demo/apps/superapp-unified/src/hooks/useWalletIntegration.ts:  // 🚨 BUILDER.IO SAFE MODE: Detectar entorno Builder.io y usar datos mock
+Demo/apps/superapp-unified/src/hooks/useWalletIntegration.ts:      // 🛡️ En Builder.io, usar datos mock directamente sin llamadas API
+Demo/apps/superapp-unified/src/hooks/useWalletIntegration.ts:        console.log('🎭 [Builder.io Safe Mode] Usando datos mock para WalletIntegration');
+Demo/apps/superapp-unified/src/lib/environment.ts: * 🏗️ Detect Builder.io environment
+Demo/apps/superapp-unified/src/lib/environment.ts:  // Builder.io typically uses ports in the 48000+ range
+Demo/apps/superapp-unified/src/lib/environment.ts:  // Check for Builder.io specific indicators
+Demo/apps/superapp-unified/src/lib/environment.ts:    console.log('🏗️ Builder.io environment detected:', {
+Demo/apps/superapp-unified/src/lib/environment.ts: * - Builder.io proxy detection
+Demo/apps/superapp-unified/src/lib/environment.ts:    enableMockAuth: parseBoolean(import.meta.env.VITE_ENABLE_MOCK_AUTH),
+Demo/apps/superapp-unified/src/lib/environment.ts:   * Check if we're in Builder.io
+Demo/apps/superapp-unified/src/lib/environment.ts:    if (ENV.isBuilderIO) return 10000; // 10s for Builder.io (puede ser más lento)
+Demo/apps/superapp-unified/src/lib/environment.ts:// 🏗️ Builder.io specific helpers
+Demo/apps/superapp-unified/src/lib/environment.ts:   * Get mock admin user for Builder.io
+Demo/apps/superapp-unified/src/lib/environment.ts:   * Get mock admin token for Builder.io
+Demo/apps/superapp-unified/src/lib/environment.ts:    console.log('🏗️ Builder.io environment detected - Admin mode activated');
+Demo/apps/superapp-unified/src/pages/LoginPage.tsx:  // Redirigir si ya está autenticado o si está en modo Builder.io
+Demo/apps/superapp-unified/src/pages/LoginPage.tsx:      console.log('[LoginPage] Builder.io mode detectado - redirigiendo automáticamente')
+Demo/apps/superapp-unified/src/pages/LoginPage.tsx:      toast.success('Builder.io Mode: Admin auto-autenticado')
+Demo/apps/superapp-unified/src/pages/LoginPage.tsx:    // 🏗️ **BUILDER.IO: No procesar login si está en Builder.io**
+Demo/apps/superapp-unified/src/pages/LoginPage.tsx:      console.log('[LoginPage] Builder.io mode - login ignorado')
+Demo/apps/superapp-unified/src/pages/LoginPage.tsx:  // Mostrar loading mientras se inicializa la autenticación o en Builder.io
+Demo/apps/superapp-unified/src/pages/LoginPage.tsx:              ? 'Builder.io Mode: Redirigiendo automáticamente...'
+Demo/apps/superapp-unified/src/pages/HomeEnhanced.tsx:        console.error('🚨 Builder.io Error detectado en HomeEnhanced:', {
+Demo/apps/superapp-unified/src/pages/Login.tsx:                  {import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true'
+Demo/apps/superapp-unified/src/pages/Login.tsx:                  {import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true'
+Demo/apps/superapp-unified/src/pages/UPlayVideoPlayer.tsx:// Utility to detect if we're in Builder.io or similar preview environment
+Demo/apps/superapp-unified/src/pages/UPlayVideoPlayer.tsx:  // Use public videos for preview environments like Builder.io
+Demo/apps/superapp-unified/src/pages/UPlayVideoPlayer.tsx:        {/* Builder.io Preview Indicator */}
+Demo/apps/superapp-unified/src/pages/Register.tsx:                  Mock Auth: {import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true' ? 'Habilitado' : 'Deshabilitado'}
+Demo/apps/superapp-unified/src/pages/HomeRenovated.tsx:  // 🧹 CLEANUP OBLIGATORIO según Builder.io

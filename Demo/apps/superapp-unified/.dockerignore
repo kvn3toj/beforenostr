@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build artifacts
+dist/
+build/
+.output/
+.vite/
+
+# Environment files
+.env*
+*.env
+
+# Logs
+*.log
+
+# Testing
+test-results/
+playwright-report/
+e2e-results/
+coverage/
+
+# Cache
+.cache
+.eslintcache
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+
+# Documentation
+*.md
+debug-*.png
+
+# Development
+scripts/
+*.spec.*
+*.test.* 

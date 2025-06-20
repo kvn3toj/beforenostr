@@ -1,0 +1,34 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3001",
+      "localStorage": [
+        {
+          "name": "coomunity-tutorials-seen",
+          "value": "true"
+        },
+        {
+          "name": "COOMUNITY_USER_DATA",
+          "value": "{\"id\":\"00000000-0000-0000-0000-000000000001\",\"email\":\"admin@gamifier.com\",\"full_name\":\"Administrator\",\"role\":\"admin\",\"created_at\":\"2025-06-20T09:09:36.784Z\",\"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOlsidXNlcnM6d3JpdGUiLCJyb2xlczp3cml0ZSIsInJvbGVzOnJlYWQiLCJjb250ZW50OndyaXRlIiwiY29udGVudDpyZWFkIiwiYWRtaW46dmlld19hbGwiLCJhbmFseXRpY3M6cmVhZCIsIndhbGxldDptYW5hZ2UiLCJnYW1pZmljYXRpb246bWFuYWdlIiwiaW52aXRhdGlvbnM6c2VuZCIsInVzZXJzOnJlYWQiLCJncm91cHM6bWFuYWdlIl0sImlhdCI6MTc1MDQxMDU3NiwiZXhwIjoxNzUxMDE1Mzc2fQ.U3oVSxfT-xcYjZQb5k70aK280fEVXOvH9cJADtDurZY\"}"
+        },
+        {
+          "name": "coomunity-tutorial-marketplace-discovery-started",
+          "value": "2025-06-20T09:09:37.288Z"
+        },
+        {
+          "name": "COOMUNITY_AUTH_TOKEN",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbmlzdHJhdG9yIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOlsidXNlcnM6d3JpdGUiLCJyb2xlczp3cml0ZSIsInJvbGVzOnJlYWQiLCJjb250ZW50OndyaXRlIiwiY29udGVudDpyZWFkIiwiYWRtaW46dmlld19hbGwiLCJhbmFseXRpY3M6cmVhZCIsIndhbGxldDptYW5hZ2UiLCJnYW1pZmljYXRpb246bWFuYWdlIiwiaW52aXRhdGlvbnM6c2VuZCIsInVzZXJzOnJlYWQiLCJncm91cHM6bWFuYWdlIl0sImlhdCI6MTc1MDQxMDU3NiwiZXhwIjoxNzUxMDE1Mzc2fQ.U3oVSxfT-xcYjZQb5k70aK280fEVXOvH9cJADtDurZY"
+        },
+        {
+          "name": "lets_education_state",
+          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-20T09:09:33.965Z\"}}"
+        },
+        {
+          "name": "coomunity-last-tutorial",
+          "value": "marketplace-discovery"
+        }
+      ]
+    }
+  ]
+}

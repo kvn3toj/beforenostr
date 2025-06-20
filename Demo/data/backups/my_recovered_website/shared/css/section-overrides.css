@@ -1,0 +1,443 @@
+/* ================================================
+   SECTION-SPECIFIC OVERRIDES
+   Estilos específicos para cada sección de CoomÜnity
+   ================================================ */
+
+/* ================================================
+   RED PILL SECTION OVERRIDES
+   ================================================ */
+
+body.section-red-pill {
+    --section-primary: #ed1846;
+}
+
+body.section-red-pill .btn-red {
+    background-color: #ed1846 !important;
+    border-color: #ed1846 !important;
+}
+
+body.section-red-pill .border-bottom-red {
+    border-bottom: 8px #ed1846 solid;
+}
+
+body.section-red-pill .slider-blue-red {
+    background: #DC195B;
+}
+
+body.section-red-pill .slider-blue-red .noUi-connect {
+    background-color: #090909;
+}
+
+body.section-red-pill .slider-blue-red .noUi-handle {
+    border-color: #DC195B;
+    background: #DC195B;
+}
+
+/* Red Pill specific styles moved from embedded CSS */
+body.section-red-pill .custom_blur {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+body.section-red-pill .custom_blur:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    width: 100%;
+    height: 100%;
+}
+
+body.section-red-pill .custom_blur.disable_blur {
+    filter: blur(0px);
+    -webkit-filter: blur(0px);
+}
+
+body.section-red-pill .custom_blur.disable_blur:after {
+    display: none;
+}
+
+body.section-red-pill #options {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+}
+
+body.section-red-pill #left-option {
+    display: inline-block;
+    height: 100%;
+    width: 50%;
+    left: 0%;
+    position: relative;
+    z-index: 1;
+}
+
+body.section-red-pill #right-option {
+    display: inline-block;
+    float: right;
+    height: 100%;
+    width: 50%;
+    left: 50%;
+    position: absolute;
+    z-index: 1;
+}
+
+body.section-red-pill .container-fw {
+    margin-left: -15px;
+    margin-right: -15px;
+    position: relative;
+    z-index: 1;
+}
+
+body.section-red-pill .noUi-horizontal {
+    height: 4px;
+}
+
+body.section-red-pill .noUi-horizontal .noUi-handle {
+    width: 19px;
+    height: 19px;
+}
+
+body.section-red-pill #options video {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+body.section-red-pill #in-profile {
+    z-index: 1;
+    position: relative;
+}
+
+body.section-red-pill .information {
+    padding: 22px !important;
+    align-items: center;
+}
+
+/* ================================================
+   MERCHANT SECTION OVERRIDES
+   ================================================ */
+
+body.section-merchant {
+    --section-primary: #DC1A5B;
+    line-height: 1.1;
+}
+
+body.section-merchant,
+body.section-merchant button,
+body.section-merchant input,
+body.section-merchant select,
+body.section-merchant textarea {
+    font-family: 'Poppins', sans-serif;
+}
+
+body.section-merchant html,
+body.section-merchant body {
+    background-size: contain;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+body.section-merchant .footer.is-role,
+body.section-merchant .navbar.is-role,
+body.section-merchant .bg-search {
+    background-color: #DC1A5B !important;
+}
+
+body.section-merchant .is-borderless {
+    border: 0px;
+}
+
+body.section-merchant .section {
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+/* Merchant navbar styles */
+body.section-merchant .navbar-custom {
+    position: sticky;
+    width: 100%;
+    top: -1px;
+    z-index: 99;
+}
+
+body.section-merchant .navbar-custom-menu {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body.section-merchant .navbar-custom-menu .title {
+    margin-bottom: 0px;
+}
+
+body.section-merchant .hidden {
+    display: none;
+}
+
+body.section-merchant .w-100 {
+    max-width: 230px;
+    min-width: 230px;
+}
+
+body.section-merchant .navbar.is-role {
+    background-color: #DC1A5B !important;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+body.section-merchant img.icono {
+    max-width: 130px;
+}
+
+body.section-merchant .seccion-buscar .input-group {
+    background: #fff;
+    border-radius: 23px;
+    -webkit-box-shadow: 0px 4px 9px -1px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 4px 9px -1px rgba(0,0,0,0.5);
+    box-shadow: 0px 4px 9px -1px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+body.section-merchant .seccion-buscar .input-group input {
+    padding: 0 12px;
+}
+
+body.section-merchant .white {
+    color: #fff;
+}
+
+body.section-merchant .seccion-buscar .form-control,
+body.section-merchant .seccion-buscar .is-focused .form-control {
+    background-image: none;
+}
+
+body.section-merchant .content-search {
+    background: #DC1A5B;
+}
+
+body.section-merchant button.text-white {
+    background: transparent;
+    border: none;
+}
+
+body.section-merchant .navbar-item .btn-icon-navbar {
+    padding: 0px 7px;
+}
+
+body.section-merchant .btn-right-nav .ripple-container {
+    display: none;
+}
+
+body.section-merchant .navbar-end .navbar-item,
+body.section-merchant .navbar-link {
+    padding: .5rem .1rem;
+}
+
+/* ================================================
+   PILGRIM SECTION OVERRIDES
+   ================================================ */
+
+body.section-pilgrim {
+    --section-primary: #e91e63;
+}
+
+body.section-pilgrim .border-bottom-red {
+    border-bottom: 8px #ed1846 solid;
+}
+
+body.section-pilgrim .iframe-container .blurrr {
+    filter: blur(3px);
+    -webkit-filter: blur(3px);
+}
+
+body.section-pilgrim .container-fw {
+    margin-left: -15px;
+    margin-right: -15px;
+    position: relative;
+}
+
+body.section-pilgrim .icon-image {
+    max-width: 24px;
+}
+
+body.section-pilgrim .card-sign-in {
+    background: #fff !important;
+    background-color: #fff !important;
+    box-shadow: none;
+}
+
+body.section-pilgrim .card-sign-in .card-body {
+    background: #000;
+    border-radius: 30px !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+body.section-pilgrim .card-sign-in .card-body .author {
+    margin: 0 auto;
+}
+
+body.section-pilgrim .card-sign-in .card-body .author span {
+    margin: 0 auto;
+}
+
+body.section-pilgrim .card-sign-in .card-body .author img {
+    max-width: 24px;
+    max-height: 24px;
+}
+
+body.section-pilgrim .logo {
+    max-width: 200px;
+}
+
+body.section-pilgrim .overlay-play {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+body.section-pilgrim .custom_blur {
+    filter: blur(5px);
+    -webkit-filter: blur(14px);
+}
+
+body.section-pilgrim .btn-whatsapp {
+    padding: 6px 18px !important;
+    color: #3C4858;
+    background: transparent;
+    border: #e91e63 1px solid;
+    font-size: 18px !important;
+    box-shadow: 0 2px 2px 0 rgba(233, 30, 99, 0.14), 0 3px 1px -2px rgba(233, 30, 99, 0.2), 0 1px 5px 0 rgba(233, 30, 99, 0.12);
+}
+
+body.section-pilgrim .btn-whatsapp:hover,
+body.section-pilgrim .btn-whatsapp:focus,
+body.section-pilgrim .btn-whatsapp:active {
+    color: #3C4858 !important;
+    background-color: transparent !important;
+    border: #e91e63 1px solid !important;
+    box-shadow: 0 14px 26px -12px rgba(233, 30, 99, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(233, 30, 99, 0.2) !important;
+}
+
+body.section-pilgrim .btn-whatsapp img {
+    width: 50px;
+}
+
+body.section-pilgrim div#in-profile {
+    position: relative;
+    z-index: 9;
+}
+
+/* ================================================
+   SHARED OVERRIDES FOR ALL SECTIONS
+   ================================================ */
+
+/* Common background utilities */
+.bg-black {
+    background-color: #000;
+}
+
+/* Common iframe styles */
+.iframe-container {
+    overflow: hidden;
+    padding-top: 56.25%;
+    position: relative;
+}
+
+.iframe-container iframe {
+    border: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.iframe4-3 {
+    padding-top: 75%;
+}
+
+/* Common slider styles */
+.slider.inverted {
+    background: #090909;
+}
+
+.slider.inverted .noUi-connect {
+    background-color: var(--section-primary);
+}
+
+/* Common logo styles */
+.logo {
+    max-width: 150px;
+}
+
+/* Common icon styles */
+.img-match {
+    max-width: 24px;
+}
+
+/* ================================================
+   RESPONSIVE OVERRIDES
+   ================================================ */
+@media (max-width: 768px) {
+    .section-merchant .w-100 {
+        max-width: 100%;
+        min-width: auto;
+    }
+    
+    .section-pilgrim .logo {
+        max-width: 150px;
+    }
+    
+    .unified-footer .footer-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .breadcrumb-list {
+        flex-wrap: wrap;
+    }
+}
+
+/* ================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .section-red-pill .custom_blur,
+    .section-pilgrim .custom_blur {
+        transition: none;
+    }
+    
+    .unified-navbar .navbar-logo {
+        transition: none;
+    }
+    
+    .unified-navbar .navbar-logo:hover {
+        transform: none;
+    }
+}
+
+/* Focus states mejorados */
+.unified-navbar .nav-link:focus,
+.breadcrumb-link:focus,
+.unified-footer .footer-links a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-sm);
+} 

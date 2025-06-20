@@ -1,0 +1,500 @@
+/* 🧠 SISTEMA DE MICRO-INTERACCIONES INTUITIVAS
+   Mejoras UX para hacer el dashboard más intuitivo y natural */
+
+:root {
+  /* ========================
+     🎯 TIMING PERFECTO PARA FEEDBACK
+     ======================== */
+
+  /* Feedback inmediato para interacciones críticas */
+  --intuitive-immediate: 0.146s; /* φ⁻² * 0.382 - Respuesta instantánea */
+  --intuitive-feedback: 0.236s; /* φ⁻¹ * 0.382 - Feedback visual */
+  --intuitive-transition: 0.382s; /* φ⁻¹ * 0.618 - Transiciones suaves */
+  --intuitive-reveal: 0.618s; /* φ⁻¹ - Revelado de contenido */
+
+  /* Curvas de easing naturales */
+  --intuitive-ease-out: cubic-bezier(0.25, 0.8, 0.25, 1); /* Material Design */
+  --intuitive-ease-bounce: cubic-bezier(
+    0.68,
+    -0.55,
+    0.265,
+    1.55
+  ); /* Bounce suave */
+  --intuitive-ease-elastic: cubic-bezier(
+    0.175,
+    0.885,
+    0.32,
+    1.275
+  ); /* Elástico */
+
+  /* ========================
+     🎨 FEEDBACK VISUAL DINÁMICO
+     ======================== */
+
+  /* Estados de hover progresivos */
+  --hover-scale-subtle: 1.03; /* Escala sutil para elementos pequeños */
+  --hover-scale-medium: 1.05; /* Escala media para cards */
+  --hover-scale-prominent: 1.08; /* Escala prominente para CTAs */
+
+  /* Elevaciones intuitivas */
+  --elevation-resting: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  --elevation-hover: 0px 8px 24px rgba(0, 0, 0, 0.15);
+  --elevation-active: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  --elevation-focus: 0px 0px 0px 3px rgba(0, 188, 212, 0.3);
+
+  /* ========================
+     🌊 ONDAS DE INTERACCIÓN (RIPPLE EFFECT)
+     ======================== */
+
+  /* Ondas concéntricas para feedback táctil */
+  --ripple-duration: var(--intuitive-feedback);
+  --ripple-scale: 2.5;
+  --ripple-opacity: 0.3;
+}
+
+/* ========================
+   🎯 INTERACCIONES INTUITIVAS PRINCIPALES
+   ======================== */
+
+/* Botones y elementos clickeables con feedback inmediato */
+.intuitive-clickable {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--intuitive-immediate) var(--intuitive-ease-out);
+  cursor: pointer;
+  user-select: none;
+}
+
+.intuitive-clickable:hover {
+  transform: translateY(-1px) scale(var(--hover-scale-subtle));
+  box-shadow: var(--elevation-hover);
+  transition-duration: var(--intuitive-feedback);
+}
+
+.intuitive-clickable:active {
+  transform: translateY(0px) scale(0.98);
+  box-shadow: var(--elevation-active);
+  transition-duration: var(--intuitive-immediate);
+}
+
+.intuitive-clickable:focus-visible {
+  outline: none;
+  box-shadow: var(--elevation-focus);
+}
+
+/* ========================
+   🌟 CARDS INTELIGENTES CON MICRO-ANIMACIONES
+   ======================== */
+
+.intuitive-card {
+  transition: all var(--intuitive-transition) var(--intuitive-ease-out);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow;
+}
+
+.intuitive-card:hover {
+  transform: translateY(-8px) scale(var(--hover-scale-medium));
+  box-shadow: var(--elevation-hover);
+  transition-duration: var(--intuitive-feedback);
+}
+
+.intuitive-card:hover .intuitive-card-content {
+  transform: translateZ(10px);
+}
+
+.intuitive-card-content {
+  transition: transform var(--intuitive-transition) var(--intuitive-ease-out);
+  transform-style: preserve-3d;
+}
+
+/* ========================
+   ⚡ ELEMENTOS ORBITALES INTERACTIVOS
+   ======================== */
+
+.intuitive-orbital {
+  transition: all var(--intuitive-transition) var(--intuitive-ease-elastic);
+  transform-origin: center;
+  will-change: transform, filter;
+}
+
+.intuitive-orbital:hover {
+  transform: scale(var(--hover-scale-prominent));
+  filter: brightness(1.2) saturate(1.3);
+  z-index: 10;
+  transition-duration: var(--intuitive-feedback);
+}
+
+/* Pulso suave para elementos importantes */
+.intuitive-orbital.pulsing {
+  animation: orbitalPulse 2s ease-in-out infinite;
+}
+
+@keyframes orbitalPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* ========================
+   🎭 REVELAR PROGRESIVO DE CONTENIDO
+   ======================== */
+
+.intuitive-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all var(--intuitive-reveal) var(--intuitive-ease-out);
+}
+
+.intuitive-reveal.visible {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+/* Revelar escalonado para múltiples elementos */
+.intuitive-reveal:nth-child(1) {
+  transition-delay: 0ms;
+}
+.intuitive-reveal:nth-child(2) {
+  transition-delay: 100ms;
+}
+.intuitive-reveal:nth-child(3) {
+  transition-delay: 200ms;
+}
+.intuitive-reveal:nth-child(4) {
+  transition-delay: 300ms;
+}
+.intuitive-reveal:nth-child(5) {
+  transition-delay: 400ms;
+}
+.intuitive-reveal:nth-child(6) {
+  transition-delay: 500ms;
+}
+
+/* ========================
+   🔄 LOADING STATES ELEGANTES
+   ======================== */
+
+.intuitive-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.intuitive-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: shimmerEffect 1.5s infinite;
+}
+
+@keyframes shimmerEffect {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* ========================
+   🎨 GRADIENTES INTELIGENTES DE HOVER
+   ======================== */
+
+.intuitive-gradient-hover {
+  background-size: 200% 200%;
+  transition: all var(--intuitive-transition) var(--intuitive-ease-out);
+}
+
+.intuitive-gradient-hover:hover {
+  background-position: 100% 0;
+  transition-duration: var(--intuitive-feedback);
+}
+
+/* ========================
+   📱 FEEDBACK TÁCTIL PARA MÓVILES
+   ======================== */
+
+@media (hover: none) and (pointer: coarse) {
+  /* En dispositivos táctiles, usar tap highlight en lugar de hover */
+  .intuitive-clickable:hover {
+    transform: none;
+  }
+
+  .intuitive-clickable:active {
+    transform: scale(0.95);
+    transition-duration: var(--intuitive-immediate);
+  }
+
+  /* Ripple effect para dispositivos táctiles */
+  .intuitive-clickable::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, var(--ripple-opacity));
+    transform: translate(-50%, -50%);
+    transition:
+      width var(--ripple-duration) ease-out,
+      height var(--ripple-duration) ease-out;
+  }
+
+  .intuitive-clickable:active::after {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+/* ========================
+   🌈 ESTADOS DE FOCO ACCESIBLES
+   ======================== */
+
+.intuitive-focus {
+  transition: all var(--intuitive-feedback) var(--intuitive-ease-out);
+}
+
+.intuitive-focus:focus-visible {
+  outline: 3px solid rgba(0, 188, 212, 0.5);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(0, 188, 212, 0.1);
+}
+
+/* ========================
+   🎯 TOOLTIPS INTELIGENTES
+   ======================== */
+
+.intuitive-tooltip {
+  position: relative;
+}
+
+.intuitive-tooltip::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all var(--intuitive-feedback) var(--intuitive-ease-out);
+  z-index: 1000;
+}
+
+.intuitive-tooltip:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* ========================
+   ⚡ ACELERACIONES HARDWARE
+   ======================== */
+
+.intuitive-gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+/* ========================
+   🎪 ANIMACIONES DE ENTRADA ESPECIALES
+   ======================== */
+
+.intuitive-slide-up {
+  transform: translateY(30px);
+  opacity: 0;
+  transition: all var(--intuitive-reveal) var(--intuitive-ease-bounce);
+}
+
+.intuitive-slide-up.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.intuitive-scale-in {
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all var(--intuitive-reveal) var(--intuitive-ease-elastic);
+}
+
+.intuitive-scale-in.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.intuitive-rotate-in {
+  transform: rotate(-10deg) scale(0.8);
+  opacity: 0;
+  transition: all var(--intuitive-reveal) var(--intuitive-ease-bounce);
+}
+
+.intuitive-rotate-in.visible {
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+}
+
+/* ========================
+   🎨 COLORES DINÁMICOS INTELIGENTES
+   ======================== */
+
+.intuitive-color-shift {
+  transition: all var(--intuitive-transition) var(--intuitive-ease-out);
+}
+
+.intuitive-color-shift:hover {
+  filter: hue-rotate(10deg) brightness(1.1) saturate(1.2);
+}
+
+/* ========================
+   📊 PROGRESS INDICATORS SUAVES
+   ======================== */
+
+.intuitive-progress {
+  overflow: hidden;
+  position: relative;
+}
+
+.intuitive-progress-bar {
+  transition: width var(--intuitive-reveal) var(--intuitive-ease-out);
+  position: relative;
+}
+
+.intuitive-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: progressShimmer 2s infinite;
+}
+
+@keyframes progressShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ========================
+   🌟 MICRO-INTERACCIONES ESPECIALES
+   ======================== */
+
+/* Efecto "breathing" para elementos importantes */
+.intuitive-breathing {
+  animation: gentleBreathing 4s ease-in-out infinite;
+}
+
+@keyframes gentleBreathing {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.95;
+  }
+}
+
+/* Efecto "magnetic" para elementos interactivos */
+.intuitive-magnetic {
+  transition: all var(--intuitive-feedback) var(--intuitive-ease-out);
+}
+
+.intuitive-magnetic:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================
+   🎯 UTILIDADES RESPONSIVE INTUITIVAS
+   ======================== */
+
+/* En móviles, hacer las áreas de toque más grandes */
+@media (max-width: 768px) {
+  .intuitive-clickable {
+    min-height: 44px; /* Recomendación de Apple para touch targets */
+    min-width: 44px;
+  }
+
+  .intuitive-card {
+    margin-bottom: 16px; /* Más espacio entre cards en móvil */
+  }
+}
+
+/* En desktop, permitir interacciones más sutiles */
+@media (min-width: 1024px) {
+  .intuitive-clickable:hover {
+    transform: translateY(-2px) scale(var(--hover-scale-subtle));
+  }
+
+  .intuitive-card:hover {
+    transform: translateY(-12px) scale(var(--hover-scale-medium));
+  }
+}
+
+/* ========================
+   🎪 CLASES UTILITARIAS FINALES
+   ======================== */
+
+.intuitive-smooth {
+  transition: all var(--intuitive-transition) ease-out;
+}
+.intuitive-fast {
+  transition: all var(--intuitive-feedback) ease-out;
+}
+.intuitive-instant {
+  transition: all var(--intuitive-immediate) ease-out;
+}
+
+.intuitive-hover-lift:hover {
+  transform: translateY(-4px);
+}
+.intuitive-hover-scale:hover {
+  transform: scale(var(--hover-scale-medium));
+}
+.intuitive-hover-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
+}
+
+.intuitive-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.intuitive-loading-state {
+  cursor: wait;
+  opacity: 0.8;
+}

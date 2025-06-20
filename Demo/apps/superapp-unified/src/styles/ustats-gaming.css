@@ -1,0 +1,609 @@
+/* Gaming Dashboard Styles for ÜStats */
+
+/* Global Gaming Theme Variables */
+:root {
+  --gaming-primary: #00ff88;
+  --gaming-secondary: #ff0088;
+  --gaming-accent: #ffaa00;
+  --gaming-neon: #00ffff;
+  --gaming-bg: #0a0a0a;
+  --gaming-card-bg: #1a1a1a;
+  --gaming-success: #00ff88;
+  --gaming-warning: #ffaa00;
+  --gaming-error: #ff4444;
+}
+
+/* Keyframe Animations */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+  }
+}
+
+@keyframes neonGlow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 5px var(--gaming-primary),
+      0 0 10px var(--gaming-primary),
+      0 0 15px var(--gaming-primary),
+      0 0 20px var(--gaming-primary);
+  }
+  50% {
+    text-shadow:
+      0 0 2px var(--gaming-primary),
+      0 0 5px var(--gaming-primary),
+      0 0 8px var(--gaming-primary),
+      0 0 12px var(--gaming-primary);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-180deg) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Gaming Dashboard Specific Styles */
+.gaming-dashboard {
+  background: linear-gradient(135deg, var(--gaming-bg) 0%, #1a1a1a 100%);
+  min-height: 100vh;
+  color: #fff;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.gaming-dashboard::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gaming-primary),
+    transparent
+  );
+  animation: scanline 3s infinite;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Gaming Card Styles */
+.gaming-card {
+  background: linear-gradient(135deg, var(--gaming-card-bg) 0%, #2a2a2a 100%);
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.gaming-card:hover {
+  border-color: rgba(0, 255, 136, 0.8);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+  transform: translateY(-5px);
+}
+
+.gaming-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.gaming-card:hover::before {
+  left: 100%;
+}
+
+/* Neon Text Effects */
+.neon-text {
+  animation: neonGlow 2s ease-in-out infinite alternate;
+}
+
+.neon-primary {
+  color: var(--gaming-primary);
+  text-shadow: 0 0 10px var(--gaming-primary);
+}
+
+.neon-secondary {
+  color: var(--gaming-secondary);
+  text-shadow: 0 0 10px var(--gaming-secondary);
+}
+
+.neon-accent {
+  color: var(--gaming-accent);
+  text-shadow: 0 0 10px var(--gaming-accent);
+}
+
+/* Progress Animations */
+.gaming-progress {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.gaming-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  animation: slideIn 2s infinite;
+}
+
+.gaming-progress-bar {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--gaming-primary) 0%,
+    rgba(0, 255, 136, 0.8) 100%
+  );
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+  transition: width 0.5s ease-out;
+}
+
+/* Button Styles */
+.gaming-button {
+  background: linear-gradient(
+    45deg,
+    var(--gaming-primary) 0%,
+    rgba(0, 255, 136, 0.8) 100%
+  );
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-weight: bold;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.gaming-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+}
+
+.gaming-button:active {
+  transform: translateY(0);
+}
+
+.gaming-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
+}
+
+.gaming-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Chart Container Styles */
+.gaming-chart-container {
+  background: linear-gradient(135deg, var(--gaming-card-bg) 0%, #2a2a2a 100%);
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gaming-chart-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at top right,
+    rgba(0, 255, 136, 0.1) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Metric Card Animations */
+.metric-card-enter {
+  animation: bounceIn 0.6s ease-out;
+}
+
+.metric-card-update {
+  animation: pulse 0.5s ease-out;
+}
+
+/* Status Indicators */
+.status-optimal {
+  color: var(--gaming-success);
+  animation: pulse 2s infinite;
+}
+
+.status-warning {
+  color: var(--gaming-warning);
+  animation: pulse 1.5s infinite;
+}
+
+.status-critical {
+  color: var(--gaming-error);
+  animation: pulse 1s infinite;
+}
+
+/* Loading Animations */
+.gaming-loader {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0, 255, 136, 0.3);
+  border-top: 3px solid var(--gaming-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Grid Background Effect */
+.gaming-grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+}
+
+/* Corner Accents */
+.corner-accent-tl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(
+    45deg,
+    var(--gaming-primary) 0%,
+    transparent 100%
+  );
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  opacity: 0.6;
+}
+
+.corner-accent-tr {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(
+    135deg,
+    var(--gaming-primary) 0%,
+    transparent 100%
+  );
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+  opacity: 0.6;
+}
+
+.corner-accent-bl {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(
+    315deg,
+    var(--gaming-primary) 0%,
+    transparent 100%
+  );
+  clip-path: polygon(0 100%, 100% 100%, 0 0);
+  opacity: 0.6;
+}
+
+.corner-accent-br {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(
+    225deg,
+    var(--gaming-primary) 0%,
+    transparent 100%
+  );
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  opacity: 0.6;
+}
+
+/* Floating Elements */
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Screen Flicker Effect */
+.screen-flicker {
+  animation: flicker 0.1s infinite linear alternate;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.95;
+  }
+}
+
+/* Responsive Gaming Design */
+@media (max-width: 768px) {
+  .gaming-card {
+    margin-bottom: 16px;
+  }
+
+  .gaming-chart-container {
+    padding: 16px;
+  }
+
+  .neon-text {
+    font-size: 1.5rem;
+  }
+}
+
+/* Custom Scrollbar */
+.gaming-dashboard::-webkit-scrollbar {
+  width: 8px;
+}
+
+.gaming-dashboard::-webkit-scrollbar-track {
+  background: var(--gaming-bg);
+}
+
+.gaming-dashboard::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    var(--gaming-primary),
+    var(--gaming-secondary)
+  );
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.gaming-dashboard::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    var(--gaming-secondary),
+    var(--gaming-primary)
+  );
+}
+
+/* Tab Styles */
+.gaming-tab {
+  color: #666;
+  font-weight: bold;
+  text-transform: none;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.gaming-tab.active {
+  color: var(--gaming-primary);
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+}
+
+.gaming-tab:hover {
+  color: var(--gaming-accent);
+  transform: translateY(-2px);
+}
+
+.gaming-tab-indicator {
+  background-color: var(--gaming-primary);
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+}
+
+/* Achievement Styles */
+.achievement-unlocked {
+  background: linear-gradient(45deg, #ffd700, #ffa500);
+  color: #000;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 20px;
+  animation: bounceIn 0.8s ease-out;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+/* Real-time Pulse Effect */
+.realtime-pulse {
+  position: relative;
+}
+
+.realtime-pulse::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: var(--gaming-success);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 2s infinite;
+}
+
+/* Interactive Hover Effects */
+.interactive-element {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-element:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.1);
+}
+
+/* Glitch Effect for Critical States */
+.glitch-effect {
+  animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+/* Data Stream Effect */
+.data-stream {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-stream::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 136, 0.2),
+    transparent
+  );
+  animation: dataFlow 3s infinite;
+}
+
+@keyframes dataFlow {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}

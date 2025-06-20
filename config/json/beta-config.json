@@ -1,0 +1,35 @@
+{
+  "program": {
+    "name": "CoomÜnity Beta Program",
+    "version": "1.0",
+    "startDate": "2025-06-07T08:23:11-05:00",
+    "targetUsers": 100,
+    "phase": "initial_beta",
+    "duration": "3_months"
+  },
+  "criteria": {
+    "philosophicalAlignment": true,
+    "cooperativeExperience": "preferred",
+    "feedbackCapacity": true,
+    "geographicDiversity": true,
+    "minAge": 18
+  },
+  "channels": {
+    "cooperativeNetworks": 40,
+    "collaborativeEconomyCommunities": 30,
+    "socialImpactPlatforms": 20,
+    "personalReferrals": 10
+  },
+  "onboarding": {
+    "welcomeSequence": true,
+    "philosophyIntroduction": true,
+    "platformTour": true,
+    "firstActions": ["profile_setup", "philosophy_quiz", "first_mundo_exploration"]
+  },
+  "engagement": {
+    "weeklyCheckins": true,
+    "feedbackSessions": "bi_weekly",
+    "communityEvents": "monthly",
+    "ambassadorIdentification": true
+  }
+}

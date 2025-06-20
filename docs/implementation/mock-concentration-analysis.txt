@@ -1,0 +1,4 @@
+# ARCHIVOS CON MAYOR CONCENTRACIÓN DE MOCKS
+# Generado: Tue Jun 17 19:29:45 -05 2025
+
+📄 useRealBackendData.ts:     2604 líneas, 22 con mocks (0%)

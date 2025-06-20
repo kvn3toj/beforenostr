@@ -1,0 +1,72 @@
+{
+  "timestamp": "2025-06-03T03:35:24.224Z",
+  "url": "https://demo.coomunity.co/go/c8862dd1",
+  "videoState": {
+    "playing": false,
+    "currentTime": 0,
+    "duration": 0,
+    "buffering": false,
+    "hasControls": false,
+    "isFullscreen": false,
+    "hasInteractionPoints": false
+  },
+  "interactiveElements": [
+    {
+      "type": "button",
+      "id": "",
+      "className": "btn btn-lg btn-round btn-whatsapp mt-3",
+      "text": "Continuar",
+      "position": {
+        "x": 895.953125,
+        "y": 870.5,
+        "width": 128.0859375,
+        "height": 37.9921875
+      },
+      "visible": true,
+      "clickable": true,
+      "timeAppeared": 133529,
+      "attributes": {
+        "href": "https://demo.coomunity.co/starter/c8862dd1",
+        "class": "btn btn-lg btn-round btn-whatsapp mt-3"
+      },
+      "selector": ".btn"
+    },
+    {
+      "type": "unknown",
+      "id": "vimeo",
+      "className": "",
+      "text": "",
+      "position": {
+        "x": 0,
+        "y": -374,
+        "width": 1920,
+        "height": 1080
+      },
+      "visible": true,
+      "clickable": true,
+      "timeAppeared": 133538,
+      "attributes": {
+        "id": "vimeo",
+        "src": "https://player.vimeo.com/video/408458426?title=0&byline=0&portrait=0",
+        "width": "640",
+        "height": "360",
+        "frameborder": "0",
+        "allow": "autoplay; fullscreen",
+        "allowfullscreen": "",
+        "data-ready": "true"
+      },
+      "selector": "iframe[src*=\"vimeo\"]"
+    }
+  ],
+  "screenshots": [
+    "interactive_session_1748921660675_start_2025-06-03T03-34-22-319Z.png",
+    "interactive_session_1748921660675_scan_1_2025-06-03T03-34-22-519Z.png",
+    "interactive_session_1748921660675_scan_5_2025-06-03T03-34-34-801Z.png",
+    "interactive_session_1748921660675_scan_10_2025-06-03T03-34-50-147Z.png",
+    "interactive_session_1748921660675_scan_15_2025-06-03T03-35-05-496Z.png",
+    "interactive_session_1748921660675_scan_20_2025-06-03T03-35-20-867Z.png",
+    "interactive_session_1748921660675_end_2025-06-03T03-35-24-010Z.png"
+  ],
+  "totalElementsDetected": 2,
+  "sessionDuration": 60
+}

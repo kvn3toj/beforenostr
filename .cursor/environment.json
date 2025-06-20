@@ -1,0 +1,22 @@
+{
+  "install": "npm install --legacy-peer-deps",
+  "start": "npm run dev",
+  "terminals": [
+    {
+      "name": "Backend NestJS",
+      "command": "npm run dev:backend"
+    },
+    {
+      "name": "SuperApp Frontend", 
+      "command": "npm run dev:superapp"
+    }
+  ],
+  "projectContext": {
+    "name": "CoomÜnity SuperApp",
+    "branch": "gamifier2.0",
+    "framework": "React + TypeScript + Vite",
+    "backend": "NestJS + PostgreSQL",
+    "designSystem": "Cosmic Design System",
+    "mainIssue": "Mock data blocking visual effects manifestation"
+  }
+}

@@ -1,0 +1,124 @@
+/* Extracted from: merchant_home_09_final_state_2025-06-03T02-13-20-890Z.html */
+/* Block index: 4 */
+/* Extracted at: 2025-06-03T02:16:25.483Z */
+
+.gig-image { 
+			height: 150px;
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position-y: top;
+			margin: 0;
+		}		
+	
+		p.h4{
+			line-height: 16px;
+		}
+		h4{
+			width: 100%;
+		}
+		p.h4 a{
+			font-size: 14px;
+		}
+		.card-body span img{
+			max-height: 24px;
+			width: auto;
+		}
+		.card-body{
+			padding: 14px !important;
+		}
+		.card-body .col-3 div{
+			font-size: 12px;
+		}
+		.orange{
+			color: #DC1A5B;
+		}
+		.card-blog{
+			margin-top: 0;
+		}
+		.list-inline-item{
+			margin-right: 0 !important;
+		}
+		
+		.text-white{
+			color: #fff;
+		}		
+		
+		.text-orange{
+			color: #DC1A5B;
+		}
+		.content-bars-categories{			
+			background-color: #EEEEEE;
+		}
+		.content-bars-categories p|{			
+			line-height: 1.3;
+			font-family: 'Montserrat';
+			font-weight: 600;
+			color: #000;
+		}
+		.content-bars-categories small{
+			font-family: 'Montserrat';
+			color: #000;
+			font-weight: 600;
+		}
+		.progress {
+			height: 15px;
+			border-radius: 23px;
+			background: #fff;
+			margin-bottom: 6px;
+		}
+		
+		.progress .progress-bar{
+			background-color: #DC1A5B;
+			border-radius: 23px;
+			text-align: left;
+			padding-left: 12px;
+			font-weight: 200;
+			-webkit-transition: none !important;
+			transition: none !important;
+			padding-right: 6px;
+	}
+		.col-content-bars{
+			height: 130px;
+			overflow: scroll;
+		}
+		a.button{
+			background-color: #DC1A5B;
+			color: #fff;
+			padding: 6px 18px;
+			font-size: 0.8em;
+			font-weight: 100;
+			margin: 0 auto;
+			border-radius: 23px;
+		}
+		.numberGift{
+			font-size: 6em;
+			margin: 0;
+			line-height: 95px;
+			color: #000;
+		}
+		.modal .modal-header .close span{
+			color: #DC1A5B !important;		
+		}
+		.btn-orange{
+			background-color: #DC1A5B !important; 
+			color: #fff !important;
+			border-radius: 23px;
+			padding: 12px 30px !important;
+		}
+		.w-300{
+			font-weight: 300 !important;
+		}
+		.modal .btn-orange{
+			width: 80% !important;
+		}
+		body .modal span{
+			color: #0184ff;
+		}
+		body #infoGifCardModalP button.close{
+			opacity: 0.7;
+			width: 30px;
+			height: 30px;
+			border: solid 1px #E4E4E4;
+			border-radius: 50%;
+			padding: 2px !important;
+		}

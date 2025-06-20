@@ -1,0 +1,150 @@
+{
+  "timestamp": "2025-06-03T22:24:05.021Z",
+  "summary": {
+    "total": 8,
+    "passed": 3,
+    "failed": 5,
+    "criticalPassed": 2,
+    "criticalTotal": 3,
+    "overallScore": 38,
+    "criticalScore": 67
+  },
+  "results": [
+    {
+      "name": "Texto principal sobre fondo",
+      "importance": "CRÍTICO",
+      "foreground": "#2C2C2C",
+      "background": "#F8F9FA",
+      "ratio": 13.25,
+      "level": "AAA",
+      "passesAA": true,
+      "passesAAA": true
+    },
+    {
+      "name": "Texto secundario sobre fondo",
+      "importance": "ALTO",
+      "foreground": "#6B7280",
+      "background": "#F8F9FA",
+      "ratio": 4.59,
+      "level": "AA",
+      "passesAA": true,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón primario (texto sobre fondo)",
+      "importance": "CRÍTICO",
+      "foreground": "#FFFFFF",
+      "background": "#CEA93A",
+      "ratio": 2.24,
+      "level": "FAIL",
+      "passesAA": false,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón secundario (texto sobre fondo)",
+      "importance": "CRÍTICO",
+      "foreground": "#FFFFFF",
+      "background": "#272727",
+      "ratio": 14.94,
+      "level": "AAA",
+      "passesAA": true,
+      "passesAAA": true
+    },
+    {
+      "name": "Botón de error (texto sobre fondo)",
+      "importance": "ALTO",
+      "foreground": "#FFFFFF",
+      "background": "#EF4444",
+      "ratio": 3.76,
+      "level": "FAIL",
+      "passesAA": false,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón de éxito (texto sobre fondo)",
+      "importance": "ALTO",
+      "foreground": "#FFFFFF",
+      "background": "#10B981",
+      "ratio": 2.54,
+      "level": "FAIL",
+      "passesAA": false,
+      "passesAAA": false
+    },
+    {
+      "name": "Botón de advertencia (texto sobre fondo)",
+      "importance": "ALTO",
+      "foreground": "#FFFFFF",
+      "background": "#F59E0B",
+      "ratio": 2.15,
+      "level": "FAIL",
+      "passesAA": false,
+      "passesAAA": false
+    },
+    {
+      "name": "Texto deshabilitado sobre fondo",
+      "importance": "MEDIO",
+      "foreground": "#9CA3AF",
+      "background": "#F8F9FA",
+      "ratio": 2.41,
+      "level": "FAIL",
+      "passesAA": false,
+      "passesAAA": false
+    }
+  ],
+  "recommendations": {
+    "critical": [
+      {
+        "name": "Botón primario (texto sobre fondo)",
+        "importance": "CRÍTICO",
+        "foreground": "#FFFFFF",
+        "background": "#CEA93A",
+        "ratio": 2.24,
+        "level": "FAIL",
+        "passesAA": false,
+        "passesAAA": false
+      }
+    ],
+    "secondary": [
+      {
+        "name": "Botón de error (texto sobre fondo)",
+        "importance": "ALTO",
+        "foreground": "#FFFFFF",
+        "background": "#EF4444",
+        "ratio": 3.76,
+        "level": "FAIL",
+        "passesAA": false,
+        "passesAAA": false
+      },
+      {
+        "name": "Botón de éxito (texto sobre fondo)",
+        "importance": "ALTO",
+        "foreground": "#FFFFFF",
+        "background": "#10B981",
+        "ratio": 2.54,
+        "level": "FAIL",
+        "passesAA": false,
+        "passesAAA": false
+      },
+      {
+        "name": "Botón de advertencia (texto sobre fondo)",
+        "importance": "ALTO",
+        "foreground": "#FFFFFF",
+        "background": "#F59E0B",
+        "ratio": 2.15,
+        "level": "FAIL",
+        "passesAA": false,
+        "passesAAA": false
+      },
+      {
+        "name": "Texto deshabilitado sobre fondo",
+        "importance": "MEDIO",
+        "foreground": "#9CA3AF",
+        "background": "#F8F9FA",
+        "ratio": 2.41,
+        "level": "FAIL",
+        "passesAA": false,
+        "passesAAA": false
+      }
+    ]
+  }
+}

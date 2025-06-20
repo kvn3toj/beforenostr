@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <!-- Favicon unificado -->
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/assets/img/icons/blanco/favicon.png">
+    
+    <!-- CSS Unificado - UNA SOLA REFERENCIA -->
+    <link rel="stylesheet" href="shared/css/unified-styles-fix.css">
+    <link rel="stylesheet" href="shared/css/section-overrides.css">
+    
+    <!-- Fuentes consistentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Meta tags dinámicos (se completarán por sección) -->
+    <title>{{PAGE_TITLE}} | CoomÜnity</title>
+    <meta name="description" content="{{PAGE_DESCRIPTION}}">
+    
+    <!-- Open Graph tags unificados -->
+    <meta property="og:title" content="{{PAGE_TITLE}} | CoomÜnity">
+    <meta property="og:description" content="{{PAGE_DESCRIPTION}}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{PAGE_URL}}">
+    <meta property="og:image" content="{{PAGE_IMAGE}}">
+    <meta property="og:site_name" content="CoomÜnity">
+    
+    <!-- Analytics unificado -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-COOMUNITY123"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-COOMUNITY123', {
+            page_title: document.title,
+            page_location: window.location.href,
+            custom_map: {
+                'custom_parameter_1': 'section_name',
+                'custom_parameter_2': 'ux_heuristic',
+                'custom_parameter_3': 'user_journey_step'
+            },
+            anonymize_ip: true,
+            allow_google_signals: false,
+            cookie_expires: 63072000,
+            send_page_view: true
+        });
+        
+        // Función helper para tracking UX consistente
+        window.trackUXEvent = function(eventName, parameters) {
+            gtag('event', eventName, {
+                event_category: 'UX_Heuristics',
+                event_label: parameters.section || 'unknown',
+                value: parameters.value || 1,
+                ...parameters
+            });
+        };
+        
+        // Track inicial de la sección
+        gtag('event', 'page_view_enhanced', {
+            page_title: document.title,
+            page_location: window.location.href,
+            content_group1: window.location.pathname.split('/')[1] || 'home',
+            section_name: '{{SECTION_NAME}}',
+            timestamp: new Date().toISOString()
+        });
+    </script>
+    
+    <!-- Hotjar unificado -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:1689339,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+    
+    <!-- CSS específico de sección (opcional) -->
+    {{SECTION_SPECIFIC_CSS}}
+</head>
+<body class="section-{{SECTION_NAME}}">
+    
+    <!-- Navegación unificada -->
+    <nav class="unified-navbar" role="navigation" aria-label="Navegación principal">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <a href="/" class="navbar-brand" aria-label="Ir a inicio de CoomÜnity">
+                    <img src="{{LOGO_URL}}" alt="CoomÜnity" class="navbar-logo">
+                </a>
+            </div>
+            
+            <ul class="navbar-nav" role="menubar">
+                <li role="none">
+                    <a href="/" class="nav-link {{HOME_ACTIVE}}" role="menuitem">
+                        Inicio
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="/sections/red-pill/" class="nav-link {{RED_PILL_ACTIVE}}" role="menuitem">
+                        Red Pill
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="/sections/merchant/" class="nav-link {{MERCHANT_ACTIVE}}" role="menuitem">
+                        Merchant
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="/sections/pilgrim/" class="nav-link {{PILGRIM_ACTIVE}}" role="menuitem">
+                        Pilgrim
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Botón de menú móvil -->
+            <button class="navbar-toggle d-md-none" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <span class="sr-only">Abrir menú</span>
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Breadcrumbs unificados -->
+    <nav class="breadcrumbs" aria-label="Navegación de migas de pan">
+        <div class="container-unified">
+            <ol class="breadcrumb-list">
+                <li class="breadcrumb-item">
+                    <a href="/" class="breadcrumb-link">Inicio</a>
+                </li>
+                <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+                    {{SECTION_TITLE}}
+                </li>
+            </ol>
+        </div>
+    </nav>
+    
+    <!-- Contenido principal -->
+    <main class="main-content" role="main">
+        <div class="container-unified">
+            <!-- El contenido específico de cada sección se insertará aquí -->
+            {{SECTION_CONTENT}}
+        </div>
+    </main>
+    
+    <!-- Footer unificado -->
+    <footer class="unified-footer" role="contentinfo">
+        <div class="container-unified">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">CoomÜnity</h3>
+                    <p class="footer-description">
+                        Plataforma de conexión y colaboración comunitaria.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Secciones</h4>
+                    <ul class="footer-links">
+                        <li><a href="/sections/red-pill/">Red Pill</a></li>
+                        <li><a href="/sections/merchant/">Merchant</a></li>
+                        <li><a href="/sections/pilgrim/">Pilgrim</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Soporte</h4>
+                    <ul class="footer-links">
+                        <li><a href="/help">Ayuda</a></li>
+                        <li><a href="/contact">Contacto</a></li>
+                        <li><a href="/privacy">Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 CoomÜnity. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts unificados -->
+    <script src="/shared/js/unified-scripts.js"></script>
+    {{SECTION_SPECIFIC_JS}}
+    
+</body>
+</html> 

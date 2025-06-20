@@ -1,0 +1,30 @@
+
+# Directorios de documentación técnica y reportes
+docs/reports/
+docs/implementation/
+docs/testing/
+docs/tutorials/
+Demo/docs/
+Demo/tests/
+Demo/apps/superapp-unified/src/modules/*/
+
+# Archivos de resumen y reportes automáticos
+*_report.md
+*_SUMMARY.md
+*_VERIFICATION*.md
+*_IMPLEMENTATION*.md
+*_ANALYSIS*.md
+*_REVIEW*.md
+
+# Directorios temporales y de backup
+_temp_*/
+*backup*/
+*restored-chats*/
+
+# Archivos README específicos de módulos
+src/*/README.md
+apps/*/src/*/README.md
+
+# Archivos de estructura de proyecto
+PROJECT_STRUCTURE.md
+CHANGELOG.md 

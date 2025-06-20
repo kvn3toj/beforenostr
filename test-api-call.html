@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test Debug</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        const results = document.getElementById('results');
+        
+        function log(message) {
+            console.log(message);
+            results.innerHTML += `<p>${message}</p>`;
+        }
+
+        // Test environment variables
+        log('🔍 Testing environment variables...');
+        log(`VITE_BACKEND_URL: ${import.meta.env.VITE_BACKEND_URL}`);
+        log(`MODE: ${import.meta.env.MODE}`);
+        log(`DEV: ${import.meta.env.DEV}`);
+
+        // Test API base URL
+        const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002';
+        log(`API_BASE_URL resolved to: ${API_BASE_URL}`);
+
+        // Test direct fetch
+        async function testDirectFetch() {
+            log('\n🌐 Testing direct fetch...');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/mundos`);
+                log(`Response status: ${response.status}`);
+                log(`Response ok: ${response.ok}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Data received: ${JSON.stringify(data, null, 2)}`);
+                } else {
+                    const errorText = await response.text();
+                    log(`Error response: ${errorText}`);
+                }
+            } catch (error) {
+                log(`❌ Fetch error: ${error.message}`);
+                log(`Error details: ${JSON.stringify(error, null, 2)}`);
+            }
+        }
+
+        // Test with auth headers
+        async function testWithAuthHeaders() {
+            log('\n🔐 Testing with auth headers...');
+            
+            try {
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                
+                const token = localStorage.getItem('auth_token');
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                    log(`Using token: ${token.substring(0, 20)}...`);
+                } else {
+                    log('No auth token found');
+                }
+
+                const response = await fetch(`${API_BASE_URL}/mundos`, {
+                    method: 'GET',
+                    headers: headers
+                });
+                
+                log(`Response status: ${response.status}`);
+                log(`Response ok: ${response.ok}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Data received: ${JSON.stringify(data, null, 2)}`);
+                } else {
+                    const errorText = await response.text();
+                    log(`Error response: ${errorText}`);
+                }
+            } catch (error) {
+                log(`❌ Auth fetch error: ${error.message}`);
+                log(`Error details: ${JSON.stringify(error, null, 2)}`);
+            }
+        }
+
+        // Run tests
+        testDirectFetch().then(() => {
+            return testWithAuthHeaders();
+        });
+    </script>
+</body>
+</html> 

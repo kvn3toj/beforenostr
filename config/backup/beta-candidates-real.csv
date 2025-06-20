@@ -1,0 +1,36 @@
+nombre,email,origen,experiencia_cooperativa,region,idioma,codigo_invitacion,fecha_invitacion,estado
+# CANDIDATOS BETA PROGRAMA COOMÜNITY - CÍRCULO INTERNO (Primeros 5)
+María Elena Rodríguez,maria.rodriguez@coopmex.org,Red Cooperativas México,8_años,LATAM,ES,BETA-MR7X9K2L,2025-06-07,pendiente
+Dr. Carlos Sánchez,carlos@impacto.social,Impact Hub Buenos Aires,6_años,LATAM,ES,BETA-CS4N8M1P,2025-06-07,pendiente
+Ana Paula Silva,anapaula@coopeducativa.br,Cooperativa Educativa Brasil,4_años,LATAM,PT,BETA-AP9Z3X7S,2025-06-07,pendiente
+Jennifer Williams,jennifer@solidarityeconomy.org,Solidarity Economy Network,10_años,NORTE_AMERICA,EN,BETA-JW2K5B8F,2025-06-07,pendiente
+Pierre Dubois,pierre@cooperativeeurope.coop,European Cooperative Alliance,12_años,EUROPA,FR,BETA-PD6M9L4Q,2025-06-07,pendiente
+
+# CÍRCULO EXPANDIDO (Siguientes 20)
+Isabella García,isabella@ecoaldea.com,EcoAldea Costa Rica,3_años,LATAM,ES,BETA-IG8X2N7R,2025-06-08,pendiente
+Roberto Mendoza,roberto@cooperagraria.pe,Cooperativa Agraria Perú,7_años,LATAM,ES,BETA-RM5Q9K3T,2025-06-08,pendiente
+Sophia Chen,sophia@sustainablefutures.org,Sustainable Futures Network,5_años,ASIA,EN,BETA-SC7F4M8W,2025-06-08,pendiente
+Ahmed Hassan,ahmed@cooperatives.eg,Egyptian Cooperative Union,9_años,AFRICA,AR,BETA-AH3L6P1Y,2025-06-08,pendiente
+Laura Thompson,laura@creditunion.ca,Canadian Credit Union,11_años,NORTE_AMERICA,EN,BETA-LT9R5N2K,2025-06-08,pendiente
+Miguel Santos,miguel@economiasolidaria.pt,Economia Solidária Portugal,4_años,EUROPA,PT,BETA-MS2W8F7B,2025-06-08,pendiente
+Fatima Al-Zahra,fatima@social.enterprise.jo,Social Enterprise Jordan,6_años,MEDIO_ORIENTE,AR,BETA-FA4T9X1M,2025-06-08,pendiente
+David Kim,david@cooperativeseoul.kr,Seoul Cooperative Network,3_años,ASIA,KO,BETA-DK7P2L5Q,2025-06-08,pendiente
+Elena Petrov,elena@cooperativa.bg,Bulgarian Cooperative Federation,8_años,EUROPA,BG,BETA-EP1M6N9S,2025-06-08,pendiente
+James Martinez,james@community.wealth.us,Community Wealth Building US,5_años,NORTE_AMERICA,EN,BETA-JM3F8K4T,2025-06-08,pendiente
+Camila Flores,camila@cooperativismo.cl,Federación Cooperativas Chile,7_años,LATAM,ES,BETA-CF6R1L8W,2025-06-09,pendiente
+Francesco Rossi,francesco@cooperitalia.it,Cooperative Italia Network,10_años,EUROPA,IT,BETA-FR9Q5M2Y,2025-06-09,pendiente
+Priya Sharma,priya@cooperativeindia.org,All India Cooperative Society,6_años,ASIA,HI,BETA-PS2K7N4B,2025-06-09,pendiente
+Sarah Johnson,sarah@timebanking.org,Community Time Banking,4_años,NORTE_AMERICA,EN,BETA-SJ8F3P1M,2025-06-09,pendiente
+Omar Abdalla,omar@cooperatives.ma,Moroccan Cooperative Alliance,9_años,AFRICA,AR,BETA-OA5W6L9Q,2025-06-09,pendiente
+Lisa Andersson,lisa@cooperativ.se,Swedish Cooperative Centre,8_años,EUROPA,SV,BETA-LA1T4R7S,2025-06-09,pendiente
+Gabriel Morales,gabriel@economia.popular.ar,Economía Popular Argentina,5_años,LATAM,ES,BETA-GM9X2F5K,2025-06-09,pendiente
+Yuki Tanaka,yuki@kyodo.jp,Japan Cooperative Alliance,7_años,ASIA,JP,BETA-YT3L8M1P,2025-06-09,pendiente
+Rachel Green,rachel@transition.town.uk,Transition Towns UK,6_años,EUROPA,EN,BETA-RG7N4Q9T,2025-06-09,pendiente
+Paulo Oliveira,paulo@autogestao.br,Autogestão Brasil,11_años,LATAM,PT,BETA-PO2B5X8W,2025-06-09,pendiente
+
+# RESERVA (Para expansión rápida si es necesario)
+Amina Kone,amina@cooperatives.sn,Senegal Cooperative Network,4_años,AFRICA,FR,BETA-AK6M3L1Y,2025-06-10,reserva
+Thomas Mueller,thomas@genossenschaft.de,German Cooperative Federation,9_años,EUROPA,DE,BETA-TM4P7R2B,2025-06-10,reserva
+Valentina Rosales,valentina@cooperativas.ec,Cooperativas Ecuador,3_años,LATAM,ES,BETA-VR8F1N5M,2025-06-10,reserva
+Michael O'Brien,michael@cooperative.ie,Irish Cooperative Society,7_años,EUROPA,EN,BETA-MO2Q6K9T,2025-06-10,reserva
+Leila Nascimento,leila@coopsocial.br,Cooperativismo Social Brasil,5_años,LATAM,PT,BETA-LN1W4X7S,2025-06-10,reserva 

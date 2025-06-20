@@ -1,0 +1,52 @@
+# ================================================================
+# CoomÜnity Backend NestJS - Multi-stage Dockerfile
+# Optimizado para producción con build separado
+# ================================================================
+
+# ================================================================
+# Etapa 1: Builder - Construir la aplicación
+# ================================================================
+FROM node:20-alpine AS builder
+
+WORKDIR /usr/src/app
+
+# Copiar archivos de dependencias
+COPY backend/package*.json ./
+
+# Instalar TODAS las dependencias (incluyendo devDependencies para el build)
+RUN npm install
+
+# Copiar todo el código fuente del backend
+COPY backend/ ./
+
+# Compilar la aplicación TypeScript a JavaScript
+RUN npm run build
+
+# ================================================================
+# Etapa 2: Production - Crear la imagen final y ligera
+# ================================================================
+FROM node:20-alpine AS production
+
+# Argumento para el usuario de la aplicación
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
+# Copiar archivos de dependencias
+COPY backend/package*.json ./
+
+# Instalar SOLO las dependencias de producción
+RUN npm ci --only=production && npm cache clean --force
+
+# Copiar aplicación compilada desde la etapa de builder
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /usr/src/app/prisma ./prisma
+
+# Exponer el puerto
+EXPOSE 3002
+
+# Comando para iniciar la aplicación (sin migraciones aquí, se maneja en render.yaml)
+CMD ["node", "dist/main"]

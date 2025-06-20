@@ -1,0 +1,529 @@
+/* 🎯 SISTEMA DE DISTRIBUCIÓN INTELIGENTE Y CONTEXTUAL
+   Layout que se adapta al contexto y prioridades del usuario */
+
+:root {
+  /* ========================
+     📐 JERARQUÍA VISUAL INTELIGENTE
+     ======================== */
+
+  /* Tamaños contextuales basados en importancia */
+  --hero-section-height: 377px; /* Fibonacci - Sección principal */
+  --primary-widget-height: 610px; /* φ² * 233px - Widget principal */
+  --secondary-widget-height: 377px; /* Fibonacci - Widgets secundarios */
+  --compact-widget-height: 233px; /* Fibonacci - Widgets compactos */
+  --micro-widget-height: 144px; /* Fibonacci - Micro widgets */
+
+  /* Anchos contextuales */
+  --main-content-width: 61.8%; /* Proporción áurea - Contenido principal */
+  --sidebar-width: 38.2%; /* Proporción áurea - Sidebar */
+  --full-width: 100%; /* Secciones completas */
+
+  /* ========================
+     🎨 ESPACIADO CONTEXTUAL
+     ======================== */
+
+  /* Espaciado que responde al contenido */
+  --context-gap-tight: 8px; /* Para contenido denso */
+  --context-gap-normal: 13px; /* Para contenido estándar */
+  --context-gap-comfortable: 21px; /* Para contenido espacioso */
+  --context-gap-loose: 34px; /* Para secciones separadas */
+
+  /* Padding adaptativo */
+  --context-padding-compact: 13px; /* Móvil/compacto */
+  --context-padding-normal: 21px; /* Tablet/normal */
+  --context-padding-spacious: 34px; /* Desktop/espacioso */
+  --context-padding-luxury: 55px; /* Large screens/lujo */
+
+  /* ========================
+     🧠 PRIORIDADES VISUALES
+     ======================== */
+
+  /* Z-index contextual */
+  --priority-background: 1;
+  --priority-content: 10;
+  --priority-interactive: 20;
+  --priority-overlay: 30;
+  --priority-modal: 40;
+  --priority-tooltip: 50;
+
+  /* Opacity para jerarquía */
+  --importance-primary: 1; /* Contenido principal */
+  --importance-secondary: 0.9; /* Contenido secundario */
+  --importance-tertiary: 0.7; /* Contenido de apoyo */
+  --importance-background: 0.5; /* Elementos de fondo */
+
+  /* ========================
+     🌊 FLUJO DE LECTURA NATURAL
+     ======================== */
+
+  /* Curvas para guiar la vista */
+  --reading-flow-primary: cubic-bezier(0.4, 0, 0.2, 1); /* Suave inicio */
+  --reading-flow-secondary: cubic-bezier(0.25, 0.8, 0.25, 1); /* Enfoque */
+  --reading-flow-tertiary: cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Rebote */
+}
+
+/* ========================
+   📱 DISTRIBUCIÓN RESPONSIVE CONTEXTUAL
+   ======================== */
+
+/* Mobile First - Stack vertical intuitivo */
+.smart-layout-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--context-gap-comfortable);
+  padding: var(--context-padding-compact);
+  max-width: 100%;
+}
+
+/* Tablet - Introducir columnas */
+.smart-layout-tablet {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--context-gap-comfortable);
+  padding: var(--context-padding-normal);
+  max-width: 610px; /* Fibonacci breakpoint */
+  margin: 0 auto;
+}
+
+/* Desktop - Layout áureo completo */
+.smart-layout-desktop {
+  display: grid;
+  grid-template-columns: var(--main-content-width) var(--sidebar-width);
+  grid-template-rows: auto 1fr auto;
+  gap: var(--context-gap-loose);
+  padding: var(--context-padding-spacious);
+  max-width: 987px; /* Fibonacci breakpoint */
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* Large Desktop - Máxima expresión */
+.smart-layout-large {
+  max-width: 1597px; /* Fibonacci breakpoint */
+  padding: var(--context-padding-luxury);
+  gap: var(--context-gap-loose);
+}
+
+/* ========================
+   🎯 ÁREAS DE CONTENIDO INTELIGENTES
+   ======================== */
+
+/* Hero Section - Punto focal principal */
+.smart-hero {
+  grid-area: hero;
+  min-height: var(--hero-section-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: var(--priority-content);
+}
+
+/* Main Content - Contenido principal */
+.smart-main {
+  grid-area: main;
+  position: relative;
+  z-index: var(--priority-content);
+  opacity: var(--importance-primary);
+}
+
+/* Sidebar - Contenido secundario */
+.smart-sidebar {
+  grid-area: sidebar;
+  position: relative;
+  z-index: calc(var(--priority-content) - 1);
+  opacity: var(--importance-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--context-gap-comfortable);
+}
+
+/* Footer Actions - Acciones secundarias */
+.smart-actions {
+  grid-area: actions;
+  position: relative;
+  z-index: var(--priority-interactive);
+  opacity: var(--importance-tertiary);
+}
+
+/* ========================
+   🎨 WIDGETS CONTEXTUALES
+   ======================== */
+
+/* Widget Principal - Máxima atención */
+.smart-widget-primary {
+  height: var(--primary-widget-height);
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 21px; /* Fibonacci */
+  overflow: hidden;
+  transition: all 0.382s var(--reading-flow-primary);
+}
+
+.smart-widget-primary:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  border-color: rgba(0, 188, 212, 0.3);
+}
+
+/* Widget Secundario - Atención moderada */
+.smart-widget-secondary {
+  height: var(--secondary-widget-height);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px; /* Fibonacci */
+  transition: all 0.382s var(--reading-flow-secondary);
+}
+
+.smart-widget-secondary:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Widget Compacto - Información de apoyo */
+.smart-widget-compact {
+  height: var(--compact-widget-height);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px; /* Fibonacci */
+  transition: all 0.236s var(--reading-flow-tertiary);
+}
+
+.smart-widget-compact:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ========================
+   🌊 FLUJO DE NAVEGACIÓN VISUAL
+   ======================== */
+
+/* Guías visuales sutiles */
+.smart-flow-guide {
+  position: relative;
+}
+
+.smart-flow-guide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 188, 212, 0.3) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.382s ease;
+}
+
+.smart-flow-guide:hover::before {
+  opacity: 1;
+}
+
+/* ========================
+   📊 DENSIDAD ADAPTATIVA
+   ======================== */
+
+/* Modo Compacto - Máxima información */
+.smart-density-compact {
+  --context-gap-normal: 8px;
+  --context-padding-normal: 13px;
+}
+
+.smart-density-compact .smart-widget-secondary {
+  height: var(--compact-widget-height);
+}
+
+.smart-density-compact .smart-widget-compact {
+  height: var(--micro-widget-height);
+}
+
+/* Modo Comfortable - Balance */
+.smart-density-comfortable {
+  --context-gap-normal: 21px;
+  --context-padding-normal: 34px;
+}
+
+/* Modo Spacious - Máxima claridad */
+.smart-density-spacious {
+  --context-gap-normal: 34px;
+  --context-padding-normal: 55px;
+}
+
+.smart-density-spacious .smart-widget-primary {
+  height: calc(var(--primary-widget-height) * 1.2);
+}
+
+/* ========================
+   🎯 PUNTOS DE ATENCIÓN INTELIGENTES
+   ======================== */
+
+/* Spotlight para elemento activo */
+.smart-spotlight {
+  position: relative;
+  z-index: var(--priority-interactive);
+}
+
+.smart-spotlight::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 188, 212, 0.1),
+    rgba(255, 107, 53, 0.1),
+    rgba(102, 187, 106, 0.1),
+    rgba(255, 213, 79, 0.1)
+  );
+  border-radius: inherit;
+  opacity: 0;
+  animation: spotlightPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes spotlightPulse {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.02);
+  }
+}
+
+/* ========================
+   🔍 ZOOM CONTEXTUAL
+   ======================== */
+
+/* Estados de zoom inteligente */
+.smart-zoom-normal {
+  transform: scale(1);
+  transition: transform 0.382s var(--reading-flow-primary);
+}
+
+.smart-zoom-focus {
+  transform: scale(1.05);
+  z-index: var(--priority-interactive);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+.smart-zoom-detail {
+  transform: scale(1.1);
+  z-index: calc(var(--priority-interactive) + 5);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================
+   📱 RESPONSIVE BREAKPOINTS INTELIGENTES
+   ======================== */
+
+/* Ultra Mobile (< 377px) */
+@media (max-width: 376px) {
+  .smart-layout-desktop {
+    grid-template-columns: 1fr;
+    gap: var(--context-gap-normal);
+    padding: var(--context-padding-compact);
+  }
+
+  .smart-widget-primary {
+    height: var(--secondary-widget-height);
+  }
+
+  .smart-sidebar {
+    gap: var(--context-gap-normal);
+  }
+}
+
+/* Mobile (377px - 610px) */
+@media (min-width: 377px) and (max-width: 609px) {
+  .smart-layout-desktop {
+    grid-template-columns: 1fr;
+    max-width: 377px;
+    margin: 0 auto;
+  }
+
+  .smart-hero {
+    min-height: var(--compact-widget-height);
+  }
+}
+
+/* Tablet (610px - 987px) */
+@media (min-width: 610px) and (max-width: 986px) {
+  .smart-layout-desktop {
+    grid-template-columns: 1fr 1fr;
+    max-width: 610px;
+    gap: var(--context-gap-comfortable);
+  }
+
+  .smart-main {
+    grid-column: 1 / -1;
+  }
+
+  .smart-sidebar {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--context-gap-comfortable);
+  }
+}
+
+/* Desktop (987px - 1597px) */
+@media (min-width: 987px) and (max-width: 1596px) {
+  .smart-layout-desktop {
+    grid-template-columns: var(--main-content-width) var(--sidebar-width);
+    grid-template-areas:
+      'hero hero'
+      'main sidebar'
+      'actions actions';
+  }
+}
+
+/* Large Desktop (> 1597px) */
+@media (min-width: 1597px) {
+  .smart-layout-desktop {
+    grid-template-columns: 1fr var(--main-content-width) var(
+        --sidebar-width
+      ) 1fr;
+    grid-template-areas:
+      '. hero hero .'
+      '. main sidebar .'
+      '. actions actions .';
+    gap: var(--context-gap-loose);
+    padding: var(--context-padding-luxury);
+  }
+}
+
+/* ========================
+   🎨 TEMA CONTEXTUAL
+   ======================== */
+
+/* Modo día - Mayor contraste */
+@media (prefers-color-scheme: light) {
+  .smart-widget-primary {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.7) 100%
+    );
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a1a;
+  }
+}
+
+/* Modo noche - Menor fatiga visual */
+@media (prefers-color-scheme: dark) {
+  .smart-widget-primary {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+  }
+}
+
+/* Reducir movimiento para accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .smart-widget-primary,
+  .smart-widget-secondary,
+  .smart-widget-compact {
+    transition: none;
+  }
+
+  .smart-spotlight::after {
+    animation: none;
+  }
+}
+
+/* ========================
+   🎯 UTILIDADES INTELIGENTES
+   ======================== */
+
+.smart-fade-in {
+  opacity: 0;
+  animation: smartFadeIn 0.618s var(--reading-flow-primary) forwards;
+}
+
+@keyframes smartFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.smart-slide-up {
+  transform: translateY(20px);
+  opacity: 0;
+  animation: smartSlideUp 0.618s var(--reading-flow-secondary) forwards;
+}
+
+@keyframes smartSlideUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.smart-scale-in {
+  transform: scale(0.9);
+  opacity: 0;
+  animation: smartScaleIn 0.618s var(--reading-flow-tertiary) forwards;
+}
+
+@keyframes smartScaleIn {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Espaciado inteligente automático */
+.smart-auto-spacing > * + * {
+  margin-top: var(--context-gap-comfortable);
+}
+
+/* Grid inteligente */
+.smart-auto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(233px, 1fr));
+  gap: var(--context-gap-comfortable);
+}
+
+/* Scroll suave en contenedores */
+.smart-scroll {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 188, 212, 0.3) transparent;
+}
+
+.smart-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.smart-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.smart-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 188, 212, 0.3);
+  border-radius: 3px;
+}
+
+.smart-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 188, 212, 0.5);
+}

@@ -1,0 +1,260 @@
+{
+  "project": "merchant_dev",
+  "timestamp": "2025-06-03T02:16:25.484Z",
+  "processedFiles": 9,
+  "totalExtractedFiles": {
+    "css": 55,
+    "js": 50
+  },
+  "reports": [
+    {
+      "htmlFile": "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z.html",
+      "timestamp": "2025-06-03T02:16:25.342Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_style_block_1.css",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_style_block_2.css",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_style_block_3.css",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_style_block_4.css",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_style_block_5.css",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_style_block_6.css"
+        ],
+        "js": [
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_script_block_3.js",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_script_block_8.js",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_script_block_11.js",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_script_block_26.js",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_script_block_27.js",
+          "merchant_home_01_initial_load_2025-06-03T02-11-13-867Z_script_block_28.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 6,
+        "totalJsBlocks": 6,
+        "cssFilesSize": 14947,
+        "jsFilesSize": 7667
+      }
+    },
+    {
+      "htmlFile": "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z.html",
+      "timestamp": "2025-06-03T02:16:25.357Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_style_block_1.css",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_style_block_2.css",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_style_block_3.css",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_style_block_4.css",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_style_block_5.css",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_style_block_6.css"
+        ],
+        "js": [
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_script_block_3.js",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_script_block_8.js",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_script_block_11.js",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_script_block_26.js",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_script_block_27.js",
+          "merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z_script_block_28.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 6,
+        "totalJsBlocks": 6,
+        "cssFilesSize": 14947,
+        "jsFilesSize": 7667
+      }
+    },
+    {
+      "htmlFile": "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z.html",
+      "timestamp": "2025-06-03T02:16:25.368Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_style_block_1.css",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_style_block_2.css",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_style_block_3.css",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_style_block_4.css",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_style_block_5.css",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_style_block_6.css"
+        ],
+        "js": [
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_script_block_3.js",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_script_block_8.js",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_script_block_11.js",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_script_block_26.js",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_script_block_27.js",
+          "merchant_home_03_click_button_not__disabled___1_2025-06-03T02-11-31-051Z_script_block_28.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 6,
+        "totalJsBlocks": 6,
+        "cssFilesSize": 15055,
+        "jsFilesSize": 7775
+      }
+    },
+    {
+      "htmlFile": "merchant_home_04_internal_link__place_matches_view_cfc946fd4c7d1c74_2025-06-03T02-12-53-470Z.html",
+      "timestamp": "2025-06-03T02:16:25.375Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_04_internal_link__place_matches_view_cfc946fd4c7d1c74_2025-06-03T02-12-53-470Z_style_block_1.css",
+          "merchant_home_04_internal_link__place_matches_view_cfc946fd4c7d1c74_2025-06-03T02-12-53-470Z_style_block_2.css",
+          "merchant_home_04_internal_link__place_matches_view_cfc946fd4c7d1c74_2025-06-03T02-12-53-470Z_style_block_3.css"
+        ],
+        "js": [
+          "merchant_home_04_internal_link__place_matches_view_cfc946fd4c7d1c74_2025-06-03T02-12-53-470Z_script_block_4.js",
+          "merchant_home_04_internal_link__place_matches_view_cfc946fd4c7d1c74_2025-06-03T02-12-53-470Z_script_block_7.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 3,
+        "totalJsBlocks": 2,
+        "cssFilesSize": 6985,
+        "jsFilesSize": 773
+      }
+    },
+    {
+      "htmlFile": "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z.html",
+      "timestamp": "2025-06-03T02:16:25.445Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_style_block_1.css",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_style_block_2.css",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_style_block_3.css",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_style_block_4.css",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_style_block_5.css",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_style_block_6.css",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_style_block_7.css"
+        ],
+        "js": [
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_script_block_4.js",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_script_block_8.js",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_script_block_9.js",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_script_block_10.js",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_script_block_18.js",
+          "merchant_home_05_internal_link__place_matches_view_38000e9aad777d56_2025-06-03T02-12-59-333Z_script_block_19.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 7,
+        "totalJsBlocks": 6,
+        "cssFilesSize": 17424,
+        "jsFilesSize": 6025
+      }
+    },
+    {
+      "htmlFile": "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z.html",
+      "timestamp": "2025-06-03T02:16:25.452Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_style_block_1.css",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_style_block_2.css",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_style_block_3.css",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_style_block_4.css",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_style_block_5.css",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_style_block_6.css",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_style_block_7.css"
+        ],
+        "js": [
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_script_block_4.js",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_script_block_7.js",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_script_block_8.js",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_script_block_9.js",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_script_block_17.js",
+          "merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z_script_block_18.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 7,
+        "totalJsBlocks": 6,
+        "cssFilesSize": 17424,
+        "jsFilesSize": 6024
+      }
+    },
+    {
+      "htmlFile": "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z.html",
+      "timestamp": "2025-06-03T02:16:25.471Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_style_block_1.css",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_style_block_2.css",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_style_block_3.css",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_style_block_4.css",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_style_block_5.css",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_style_block_6.css",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_style_block_7.css"
+        ],
+        "js": [
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_script_block_4.js",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_script_block_7.js",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_script_block_8.js",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_script_block_9.js",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_script_block_17.js",
+          "merchant_home_07_internal_link__place_matches_view_39fec052dc194c31_2025-06-03T02-13-11-069Z_script_block_18.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 7,
+        "totalJsBlocks": 6,
+        "cssFilesSize": 17424,
+        "jsFilesSize": 6024
+      }
+    },
+    {
+      "htmlFile": "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z.html",
+      "timestamp": "2025-06-03T02:16:25.475Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_style_block_1.css",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_style_block_2.css",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_style_block_3.css",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_style_block_4.css",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_style_block_5.css",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_style_block_6.css",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_style_block_7.css"
+        ],
+        "js": [
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_script_block_4.js",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_script_block_8.js",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_script_block_9.js",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_script_block_10.js",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_script_block_18.js",
+          "merchant_home_08_internal_link__place_matches_view_90ab85b5c77c25a1_2025-06-03T02-13-16-934Z_script_block_19.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 7,
+        "totalJsBlocks": 6,
+        "cssFilesSize": 17424,
+        "jsFilesSize": 6025
+      }
+    },
+    {
+      "htmlFile": "merchant_home_09_final_state_2025-06-03T02-13-20-890Z.html",
+      "timestamp": "2025-06-03T02:16:25.483Z",
+      "extractedFiles": {
+        "css": [
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_style_block_1.css",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_style_block_2.css",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_style_block_3.css",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_style_block_4.css",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_style_block_5.css",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_style_block_6.css"
+        ],
+        "js": [
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_script_block_3.js",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_script_block_6.js",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_script_block_9.js",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_script_block_24.js",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_script_block_25.js",
+          "merchant_home_09_final_state_2025-06-03T02-13-20-890Z_script_block_26.js"
+        ]
+      },
+      "summary": {
+        "totalCssBlocks": 6,
+        "totalJsBlocks": 6,
+        "cssFilesSize": 14941,
+        "jsFilesSize": 7660
+      }
+    }
+  ]
+}

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de Uso Seguro de Managers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .example-section {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .status-panel {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        button {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #3182ce;
+        }
+        .success { color: #38a169; }
+        .error { color: #e53e3e; }
+        .warning { color: #d69e2e; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Sistema de Inicialización Segura de Managers</h1>
+    
+    <div class="example-section">
+        <h2>📋 Estado del Sistema</h2>
+        <div id="status-panel" class="status-panel">
+            <p>Cargando estado...</p>
+        </div>
+        <button onclick="updateStatus()">🔄 Actualizar Estado</button>
+        <button onclick="showDiagnostics()">🔍 Mostrar Diagnósticos</button>
+    </div>
+
+    <div class="example-section">
+        <h2>1. ❌ Forma INCORRECTA (puede fallar)</h2>
+        <div class="code-block">
+// Esto puede fallar si el manager no está listo:
+window.errorPreventionManager.enableAutoSave();
+window.helpDocumentationManager.showBasicHints();
+        </div>
+        <button onclick="unsafeCall()">❌ Probar Llamada No Segura</button>
+    </div>
+
+    <div class="example-section">
+        <h2>2. ✅ Forma CORRECTA usando safeCall() - Con Promise</h2>
+        <div class="code-block">
+// Forma segura con Promise:
+safeCall('errorPreventionManager', 'enableAutoSave', {
+    interval: 15000,
+    debugMode: true
+}).then(result => {
+    console.log('Auto-save enabled:', result);
+}).catch(error => {
+    console.error('Error:', error);
+});
+        </div>
+        <button onclick="safeCallWithPromise()">✅ Probar Llamada Segura (Promise)</button>
+    </div>
+
+    <div class="example-section">
+        <h2>3. ✅ Forma CORRECTA usando safeTryCall() - Directo</h2>
+        <div class="code-block">
+// Forma segura directa (silenciosa si no está listo):
+safeTryCall('helpDocumentationManager', 'showBasicHints');
+safeTryCall('visualHierarchyManager', 'updateHierarchyUI');
+        </div>
+        <button onclick="safeTryCallDirect()">✅ Probar Llamada Directa Segura</button>
+    </div>
+
+    <div class="example-section">
+        <h2>4. ✅ Usando onReady callback</h2>
+        <div class="code-block">
+// Ejecutar cuando todos los managers estén listos:
+window.managerInit.onReady(() => {
+    console.log('Todos los managers están listos!');
+    // Realizar inicialización segura aquí
+});
+        </div>
+        <button onclick="setupOnReadyCallback()">✅ Configurar Callback OnReady</button>
+    </div>
+
+    <div class="example-section">
+        <h2>5. 🔧 Ejemplo de Configuración Avanzada</h2>
+        <div class="code-block">
+// Configuración avanzada del autoguardado:
+const autoSaveConfig = {
+    interval: 20000,        // 20 segundos
+    includeAllForms: true,  // Incluir todos los formularios
+    showIndicator: true,    // Mostrar indicador
+    excludeSelectors: ['.no-autosave'], // Excluir formularios
+    debugMode: true,        // Modo debug
+    onAutoSave: (data) => {
+        console.log('Form auto-saved:', data);
+    }
+};
+
+safeCall('errorPreventionManager', 'enableAutoSave', autoSaveConfig);
+        </div>
+        <button onclick="advancedAutoSaveConfig()">🔧 Configurar AutoSave Avanzado</button>
+    </div>
+
+    <div class="example-section">
+        <h2>6. 📊 Monitoreo y Diagnósticos</h2>
+        <div id="diagnostics-panel" class="status-panel">
+            <p>Haz clic en "Mostrar Diagnósticos" para ver el estado detallado.</p>
+        </div>
+    </div>
+
+    <!-- Simulador de formulario para pruebas -->
+    <div class="example-section">
+        <h2>🧪 Formulario de Prueba</h2>
+        <form id="test-form" data-autosave>
+            <div>
+                <label for="test-input">Campo de prueba:</label>
+                <input type="text" id="test-input" name="testField" placeholder="Escribe algo aquí...">
+            </div>
+            <div>
+                <label for="test-textarea">Área de texto:</label>
+                <textarea id="test-textarea" name="testTextarea" placeholder="Más contenido..."></textarea>
+            </div>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <!-- Scripts del sistema -->
+    <script src="../shared/js/manager-initialization.js"></script>
+    <script src="../shared/js/error-prevention-manager.js"></script>
+    <script src="../shared/js/help-documentation-manager.js"></script>
+    
+    <script>
+        // ================================================
+        // FUNCIONES DE DEMOSTRACIÓN
+        // ================================================
+
+        function updateStatus() {
+            const statusPanel = document.getElementById('status-panel');
+            
+            if (window.managerInit) {
+                const status = window.managerInit.getStatus();
+                let html = `
+                    <h4>Estado del Sistema:</h4>
+                    <p><strong>Sistema Listo:</strong> <span class="${status.isReady ? 'success' : 'warning'}">${status.isReady ? '✅ Sí' : '⏳ No'}</span></p>
+                    <p><strong>Llamadas Pendientes:</strong> ${status.pendingCalls}</p>
+                    <h5>Managers:</h5>
+                    <ul>
+                `;
+                
+                Object.entries(status.managers).forEach(([name, info]) => {
+                    html += `
+                        <li>
+                            <strong>${name}:</strong> 
+                            <span class="${info.isReady ? 'success' : 'warning'}">
+                                ${info.isReady ? '✅ Listo' : '⏳ Esperando'}
+                            </span>
+                            ${info.hasInstance ? '(Instancia disponible)' : ''}
+                        </li>
+                    `;
+                });
+                
+                html += '</ul>';
+                statusPanel.innerHTML = html;
+            } else {
+                statusPanel.innerHTML = '<p class="error">❌ Sistema de inicialización no disponible</p>';
+            }
+        }
+
+        function showDiagnostics() {
+            const diagnosticsPanel = document.getElementById('diagnostics-panel');
+            
+            if (window.managerInit) {
+                const status = window.managerInit.getStatus();
+                diagnosticsPanel.innerHTML = `
+                    <h4>🔍 Diagnósticos Detallados:</h4>
+                    <div class="code-block">
+                        ${JSON.stringify(status, null, 2)}
+                    </div>
+                `;
+            } else {
+                diagnosticsPanel.innerHTML = '<p class="error">❌ Sistema no disponible para diagnósticos</p>';
+            }
+        }
+
+        function unsafeCall() {
+            try {
+                // Intento directo - puede fallar
+                if (window.errorPreventionManager && window.errorPreventionManager.enableAutoSave) {
+                    window.errorPreventionManager.enableAutoSave();
+                    console.log('✅ Llamada directa exitosa');
+                } else {
+                    throw new Error('Manager o método no disponible');
+                }
+            } catch (error) {
+                console.error('❌ Error en llamada directa:', error.message);
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        function safeCallWithPromise() {
+            safeCall('errorPreventionManager', 'enableAutoSave', {
+                interval: 15000,
+                debugMode: true,
+                showIndicator: true
+            }).then(result => {
+                console.log('✅ Auto-save habilitado de forma segura:', result);
+                alert('✅ Auto-save habilitado exitosamente!');
+            }).catch(error => {
+                console.error('❌ Error en llamada segura:', error);
+                alert('❌ Error: ' + error.message);
+            });
+        }
+
+        function safeTryCallDirect() {
+            // Llamadas directas que fallan silenciosamente si no están listas
+            const result1 = safeTryCall('helpDocumentationManager', 'showBasicHints');
+            const result2 = safeTryCall('visualHierarchyManager', 'updateHierarchyUI');
+            
+            console.log('🔄 Intentos de llamadas directas completados');
+            console.log('Resultado showBasicHints:', result1);
+            console.log('Resultado updateHierarchyUI:', result2);
+            
+            alert('🔄 Llamadas directas intentadas (revisa la consola)');
+        }
+
+        function setupOnReadyCallback() {
+            window.managerInit.onReady(() => {
+                console.log('🎉 Callback OnReady ejecutado - Todos los managers están listos!');
+                
+                // Ahora podemos hacer llamadas seguras
+                safeTryCall('helpDocumentationManager', 'showBasicHints');
+                
+                alert('🎉 Callback OnReady configurado y ejecutado!');
+            });
+            
+            console.log('⏳ Callback OnReady registrado');
+        }
+
+        function advancedAutoSaveConfig() {
+            const config = {
+                interval: 20000,
+                includeAllForms: true,
+                showIndicator: true,
+                excludeSelectors: ['.no-autosave'],
+                debugMode: true,
+                onAutoSave: (data) => {
+                    console.log('📝 Form auto-saved:', data);
+                }
+            };
+
+            safeCall('errorPreventionManager', 'enableAutoSave', config)
+                .then(result => {
+                    console.log('🔧 Configuración avanzada aplicada:', result);
+                    alert('🔧 Configuración avanzada aplicada exitosamente!');
+                })
+                .catch(error => {
+                    console.error('❌ Error en configuración avanzada:', error);
+                    alert('❌ Error: ' + error.message);
+                });
+        }
+
+        // ================================================
+        // INICIALIZACIÓN
+        // ================================================
+
+        // Actualizar estado cada 2 segundos
+        setInterval(updateStatus, 2000);
+        
+        // Actualización inicial
+        setTimeout(updateStatus, 500);
+        
+        // Escuchar evento de managers listos
+        window.addEventListener('managersReady', (event) => {
+            console.log('🎉 Evento managersReady recibido:', event.detail);
+            updateStatus();
+        });
+
+        // Log de inicio
+        console.log('📱 Página de ejemplo cargada');
+        console.log('💡 Abre la consola del navegador para ver los logs detallados');
+    </script>
+</body>
+</html> 
