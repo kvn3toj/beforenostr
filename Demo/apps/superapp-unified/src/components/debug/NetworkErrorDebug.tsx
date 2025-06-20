@@ -164,8 +164,7 @@ Environment:
 
   const getQuickFixes = (error: any) => {
     const category = getErrorCategory(error);
-    const baseURL =
-      import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+    const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://backend:3002';
 
     switch (category) {
       case 'network':
