@@ -142,7 +142,6 @@
     "glob": "^7.2.3",
     "globals": "^16.2.0",
     "jsdom": "^24.1.3",
-    "rollup-plugin-visualizer": "^5.12.0",
     "tailwindcss-animate": "^1.0.7",
     "tinyrainbow": "^1.2.0",
     "workbox-window": "^7.3.0"
