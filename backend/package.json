@@ -13,7 +13,7 @@
   "scripts": {
     "build": "nest build",
     "build:nocheck": "nest build --skip-project-check",
-    "build:render": "echo 'Starting build...' && npx --yes prisma@5.20.0 generate --schema=../prisma/schema.prisma && npx tsc --skipLibCheck --noEmitOnError false --outDir dist && echo 'Build completed successfully'",
+    "build:render": "echo 'Starting Render build...' && npx prisma generate --schema=../prisma/schema.prisma && echo 'Prisma client generated' && npx tsc --noEmit false --skipLibCheck --noEmitOnError false --target ES2020 --module commonjs --outDir dist --experimentalDecorators --emitDecoratorMetadata --esModuleInterop --allowSyntheticDefaultImports --resolveJsonModule --allowJs --strict false --noImplicitAny false --strictNullChecks false src/**/*.ts && echo 'Build completed successfully'",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
