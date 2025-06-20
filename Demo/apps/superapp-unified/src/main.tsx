@@ -12,14 +12,15 @@ initMonitoring();
 
 // Desregistrar service workers en Builder.io para evitar interceptación de peticiones
 if (typeof window !== 'undefined') {
-  const currentPort = parseInt(window.location.port);
-  const isBuilderIo = currentPort !== 3001; // Si no estamos en puerto nativo, es Builder.io
+  // 🐛 CORRECCIÓN CRÍTICA: La detección por puerto es frágil.
+  // La forma robusta es verificar el hostname.
+  const isBuilderIo = window.location.hostname.includes('builder.io');
 
   if (isBuilderIo && 'serviceWorker' in navigator) {
     console.log('🧹 Builder.io detected, unregistering service workers...');
-    navigator.serviceWorker.getRegistrations().then(function (registrations) {
-      for (let registration of registrations) {
-        registration.unregister().then(function (boolean) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister().then((boolean) => {
           console.log('✅ Service worker unregistered:', boolean);
         });
       }
