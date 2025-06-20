@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Container,
@@ -8,34 +8,25 @@ import {
   CardContent,
   Button,
   Fab,
-  Dialog,
   Alert,
   Chip,
   Avatar,
-  IconButton,
-  Tooltip,
-  Badge,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Handshake as HandshakeIcon,
   School as LearnIcon,
-  Work as WorkIcon,
-  TrendingUp as GrowthIcon,
-  Help as HelpIcon,
   Star as StarIcon,
   AccessTime as TimeIcon,
   LocationOn as LocationIcon,
 } from '@mui/icons-material';
 
-// Import our new LETS components
 import LetsOnboardingWizard from './LetsOnboardingWizard';
 import { UnitsWalletHumanized } from './UnitsWalletHumanized';
 import LetsAssistant from './LetsAssistant';
-import { useLetsContext, LetsContextProvider } from './LetsContextProvider';
+import { useLetsEducation, LetsEducationProvider } from '../../../contexts/LetsEducationContext';
 
-// Import existing hooks
-import { useLetsListings, useCreateLetsListing } from '../../../hooks/useLetsIntegration';
+import { useLetsListings } from '../../../hooks/useLetsIntegration';
 import { useAuth } from '../../../hooks/useAuth';
 
 interface LetsListingCardProps {
@@ -44,16 +35,16 @@ interface LetsListingCardProps {
   onInterest: (listingId: string) => void;
 }
 
-const LetsListingCard: React.FC<LetsListingCardProps> = ({ 
-  listing, 
-  userLevel, 
-  onInterest 
+const LetsListingCard: React.FC<LetsListingCardProps> = ({
+  listing,
+  userLevel,
+  onInterest
 }) => {
   const isNewcomer = userLevel === 'newcomer';
-  
+
   return (
-    <Card 
-      sx={{ 
+    <Card
+      sx={{
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -66,7 +57,6 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
       }}
     >
       <CardContent sx={{ flexGrow: 1 }}>
-        {/* Header with user info */}
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Avatar sx={{ mr: 2 }}>
             {listing.providerName?.[0] || '👤'}
@@ -76,7 +66,6 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
               {listing.providerName || 'Miembro de la comunidad'}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {/* Trust visualization for newcomers */}
               {isNewcomer ? (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   {[...Array(5)].map((_, i) => (
@@ -84,8 +73,8 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
                       key={i}
                       sx={{
                         fontSize: 16,
-                        color: i < Math.floor((listing.trustScore || 75) / 20) 
-                          ? 'warning.main' 
+                        color: i < Math.floor((listing.trustScore || 75) / 20)
+                          ? 'warning.main'
                           : 'grey.300',
                       }}
                     />
@@ -101,22 +90,21 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
               )}
             </Box>
           </Box>
-          
+
           {listing.priority === 'high' && (
-            <Chip 
-              size="small" 
-              label="Urgent" 
+            <Chip
+              size="small"
+              label="Urgent"
               color="warning"
               sx={{ fontSize: '10px' }}
             />
           )}
         </Box>
 
-        {/* Title and description */}
         <Typography variant="h6" gutterBottom fontWeight="bold">
           {listing.title}
         </Typography>
-        
+
         <Typography variant="body2" color="text.secondary" paragraph>
           {isNewcomer && listing.description.length > 100
             ? `${listing.description.substring(0, 100)}...`
@@ -124,7 +112,6 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
           }
         </Typography>
 
-        {/* Details */}
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
           <Chip
             size="small"
@@ -132,14 +119,14 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
             label={`${listing.unitsCost || 15} Ünits`}
             color="primary"
           />
-          
+
           <Chip
             size="small"
             icon={<TimeIcon />}
             label={`${listing.duration || 60} min`}
             variant="outlined"
           />
-          
+
           {listing.location && (
             <Chip
               size="small"
@@ -150,14 +137,13 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
           )}
         </Box>
 
-        {/* Category badge */}
         <Box sx={{ mb: 2 }}>
           <Chip
             size="small"
             label={listing.category || 'Servicios'}
             sx={{
-              bgcolor: listing.category === 'Enseñanza' 
-                ? 'success.light' 
+              bgcolor: listing.category === 'Enseñanza'
+                ? 'success.light'
                 : listing.category === 'Tecnología'
                 ? 'info.light'
                 : 'secondary.light',
@@ -166,7 +152,6 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
           />
         </Box>
 
-        {/* For newcomers, explain the exchange */}
         {isNewcomer && (
           <Alert severity="info" sx={{ mb: 2, fontSize: '12px' }}>
             <Typography variant="caption">
@@ -177,7 +162,6 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
         )}
       </CardContent>
 
-      {/* Action button */}
       <Box sx={{ p: 2, pt: 0 }}>
         <Button
           fullWidth
@@ -200,25 +184,17 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
 
 const LetsMarketplaceContent: React.FC = () => {
   const { user } = useAuth();
-  const { 
-    userLevel, 
-    hasCompletedOnboarding, 
-    setHasCompletedOnboarding,
-    shouldUseHumanizedUI,
-  } = useLetsContext();
-  
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showAssistant, setShowAssistant] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const { state: educationState, completeOnboarding } = useLetsEducation();
 
-  // Mock data for demonstration - replace with real data
-  const { data: listings = [], isLoading } = useLetsListings();
-  
+  const [showAssistant, setShowAssistant] = useState(true);
+
+  const { data: listings = [] } = useLetsListings();
+
   const mockListings = [
     {
       id: '1',
       title: 'Clases de Guitarra para Principiantes',
-      description: 'Te enseño los básicos de guitarra en ambiente relajado. Incluye teoría musical básica y canciones populares.',
+      description: 'Te enseño los básicos de guitarra en ambiente relajado.',
       providerName: 'María González',
       category: 'Enseñanza',
       unitsCost: 20,
@@ -230,7 +206,7 @@ const LetsMarketplaceContent: React.FC = () => {
     {
       id: '2',
       title: 'Ayuda con Jardín Urbano',
-      description: 'Necesito ayuda para plantar vegetales en mi huerto comunitario. Aprenderás sobre cultivo orgánico.',
+      description: 'Necesito ayuda para plantar vegetales en mi huerto comunitario.',
       providerName: 'Carlos Mendoza',
       category: 'Jardinería',
       unitsCost: 15,
@@ -239,91 +215,55 @@ const LetsMarketplaceContent: React.FC = () => {
       trustScore: 88,
       priority: 'high',
     },
-    {
-      id: '3',
-      title: 'Reparación de Bicicletas',
-      description: 'Servicio completo de mantenimiento de bicicletas. Incluye ajustes y reparaciones menores.',
-      providerName: 'Ana Ruiz',
-      category: 'Reparaciones',
-      unitsCost: 25,
-      duration: 60,
-      location: 'Sur',
-      trustScore: 95,
-      priority: 'normal',
-    },
   ];
 
-  const displayListings = listings.length > 0 ? listings : mockListings;
-
-  useEffect(() => {
-    // Show onboarding for newcomers who haven't completed it
-    if (userLevel === 'newcomer' && !hasCompletedOnboarding) {
-      setShowOnboarding(true);
-    }
-  }, [userLevel, hasCompletedOnboarding]);
-
   const handleOnboardingComplete = () => {
-    setHasCompletedOnboarding(true);
-    setShowOnboarding(false);
-    setShowAssistant(true);
+    completeOnboarding();
   };
 
   const handleInterest = (listingId: string) => {
-    // Handle interest in a listing
-    console.log('Interest in listing:', listingId);
-    // Here you would typically open a contact dialog or redirect to details
+    console.log(`Interesado en el listing: ${listingId}`);
   };
 
-  const categories = [
-    { id: 'all', label: 'Todas', icon: '🌍' },
-    { id: 'teaching', label: 'Enseñanza', icon: '📚' },
-    { id: 'technology', label: 'Tecnología', icon: '💻' },
-    { id: 'gardening', label: 'Jardinería', icon: '🌱' },
-    { id: 'repairs', label: 'Reparaciones', icon: '🔧' },
-    { id: 'cooking', label: 'Cocina', icon: '👨‍🍳' },
-  ];
+  const displayListings = listings.length > 0 ? listings : mockListings;
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
-      {/* Header */}
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {!educationState.hasCompletedOnboarding && (
+        <LetsOnboardingWizard
+          open={!educationState.hasCompletedOnboarding}
+          onClose={handleOnboardingComplete}
+          onComplete={handleOnboardingComplete}
+        />
+      )}
+
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" fontWeight="bold" gutterBottom>
-          {userLevel === 'newcomer' 
+          {educationState.userLevel === 'newcomer'
             ? '¡Bienvenido al Intercambio CoomÜnity! 🌟'
             : 'Marketplace LETS'
           }
         </Typography>
-        
-        {userLevel === 'newcomer' ? (
+
+        {educationState.userLevel === 'newcomer' && (
           <Typography variant="body1" color="text.secondary" paragraph>
-            Aquí puedes intercambiar habilidades, tiempo y conocimientos con otros miembros 
-            de la comunidad. Cada intercambio fortalece nuestra red de reciprocidad.
-          </Typography>
-        ) : (
-          <Typography variant="body1" color="text.secondary">
-            Encuentra servicios, comparte habilidades y contribuye al Bien Común
+            Aquí puedes intercambiar habilidades, tiempo y conocimientos con otros miembros de la comunidad.
           </Typography>
         )}
       </Box>
 
-      {/* Wallet Section */}
       <Box sx={{ mb: 4 }}>
         <UnitsWalletHumanized
           userId={user?.id || ''}
-          userExperience={userLevel}
-          onStartOnboarding={() => setShowOnboarding(true)}
+          userExperience={educationState.userLevel}
+          onStartOnboarding={handleOnboardingComplete}
           onExploreOpportunities={() => {
-            // Scroll to listings or highlight them
-            document.getElementById('marketplace-listings')?.scrollIntoView({ 
-              behavior: 'smooth' 
-            });
+            document.getElementById('marketplace-listings')?.scrollIntoView({ behavior: 'smooth' });
           }}
-          simplified={shouldUseHumanizedUI()}
         />
       </Box>
 
-      {/* Quick actions for newcomers */}
-      {userLevel === 'newcomer' && (
+      {educationState.userLevel === 'newcomer' && (
         <Box sx={{ mb: 4 }}>
           <Alert severity="info" icon={<LearnIcon />}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -333,7 +273,7 @@ const LetsMarketplaceContent: React.FC = () => {
               <Button
                 size="small"
                 variant="outlined"
-                onClick={() => setShowOnboarding(true)}
+                onClick={handleOnboardingComplete}
                 sx={{ ml: 2 }}
               >
                 Aprender LETS
@@ -343,81 +283,36 @@ const LetsMarketplaceContent: React.FC = () => {
         </Box>
       )}
 
-      {/* Category filters */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h6" gutterBottom>
-          Categorías
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-          {categories.map((category) => (
-            <Chip
-              key={category.id}
-              label={`${category.icon} ${category.label}`}
-              onClick={() => setSelectedCategory(category.id)}
-              variant={selectedCategory === category.id ? 'filled' : 'outlined'}
-              color={selectedCategory === category.id ? 'primary' : 'default'}
-              sx={{ mb: 1 }}
-            />
-          ))}
-        </Box>
-      </Box>
-
-      {/* Listings Grid */}
       <Box id="marketplace-listings" sx={{ mb: 4 }}>
         <Typography variant="h6" gutterBottom>
-          Oportunidades de Intercambio
+          Explorar Oportunidades
         </Typography>
-        
-        {isLoading ? (
-          <Typography>Cargando oportunidades...</Typography>
-        ) : (
-          <Grid container spacing={3}>
-            {displayListings.map((listing) => (
-              <Grid item xs={12} sm={6} md={4} key={listing.id}>
-                <LetsListingCard
-                  listing={listing}
-                  userLevel={userLevel}
-                  onInterest={handleInterest}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        )}
+        <Grid container spacing={3}>
+          {displayListings.map((listing) => (
+            <Grid item xs={12} sm={6} md={4} key={listing.id}>
+              <LetsListingCard
+                listing={listing}
+                userLevel={educationState.userLevel}
+                onInterest={handleInterest}
+              />
+            </Grid>
+          ))}
+        </Grid>
       </Box>
 
-      {/* Floating Action Button */}
       <Fab
         color="primary"
-        aria-label="Crear oferta"
-        sx={{
-          position: 'fixed',
-          bottom: 16,
-          left: 16,
-          background: 'linear-gradient(45deg, #4caf50 30%, #8bc34a 90%)',
-        }}
-        onClick={() => {
-          // Handle create listing
-          console.log('Create new listing');
-        }}
+        aria-label="add"
+        sx={{ position: 'fixed', bottom: 24, right: 24 }}
       >
         <AddIcon />
       </Fab>
 
-      {/* Onboarding Dialog */}
-      <LetsOnboardingWizard
-        open={showOnboarding}
-        onClose={() => setShowOnboarding(false)}
-        onComplete={handleOnboardingComplete}
-      />
-
-      {/* Smart Assistant */}
-      {showAssistant && userLevel === 'newcomer' && (
+      {showAssistant && educationState.userLevel === 'newcomer' && (
         <LetsAssistant
           context="marketplace"
-          visible={showAssistant}
+          userName={user?.name || 'explorador'}
           onDismiss={() => setShowAssistant(false)}
-          userBalance={0} // Get from wallet data
-          userTrustScore={75} // Get from user data
         />
       )}
     </Container>
@@ -426,10 +321,10 @@ const LetsMarketplaceContent: React.FC = () => {
 
 export const LetsMarketplaceHumanized: React.FC = () => {
   return (
-    <LetsContextProvider>
+    <LetsEducationProvider>
       <LetsMarketplaceContent />
-    </LetsContextProvider>
+    </LetsEducationProvider>
   );
 };
 
-export default LetsMarketplaceHumanized; 
+export default LetsMarketplaceHumanized;

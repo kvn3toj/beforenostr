@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, startTransition } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -20,6 +20,7 @@ import {
   Avatar,
   Stack,
   Divider,
+  SvgIcon,
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -55,7 +56,7 @@ interface OnboardingStep {
   explanation: string;
   example: string;
   visualDemo: React.ComponentType;
-  icon: React.ComponentType;
+  icon: typeof SvgIcon;
   color: string;
   achievement?: string;
 }
@@ -348,41 +349,45 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   const theme = useTheme();
   const { completeOnboarding, addAchievement } = useLetsEducation();
   const [currentStep, setCurrentStep] = useState(0);
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>(
-    'left'
-  );
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('left');
 
   const currentStepData = ONBOARDING_STEPS[currentStep];
-  const isLastStep = currentStep === ONBOARDING_STEPS.length - 1;
   const isFirstStep = currentStep === 0;
+  const isLastStep = currentStep === ONBOARDING_STEPS.length - 1;
 
   // ============================================================================
   // HANDLERS
   // ============================================================================
 
   const handleNext = () => {
-    if (isLastStep) {
-      handleComplete();
-    } else {
-      setSlideDirection('left');
-      setCurrentStep((prev) => prev + 1);
+    startTransition(() => {
+      if (isLastStep) {
+        handleComplete();
+      } else {
+        setSlideDirection('left');
+        setCurrentStep((prev) => prev + 1);
 
-      // Agregar logro del paso actual
-      if (currentStepData.achievement) {
-        addAchievement(currentStepData.achievement);
+        // Agregar logro del paso actual
+        if (currentStepData.achievement) {
+          addAchievement(currentStepData.achievement);
+        }
       }
-    }
+    });
   };
 
   const handleBack = () => {
-    if (!isFirstStep) {
-      setSlideDirection('right');
-      setCurrentStep((prev) => prev - 1);
-    }
+    startTransition(() => {
+      if (!isFirstStep) {
+        setSlideDirection('right');
+        setCurrentStep((prev) => prev - 1);
+      }
+    });
   };
 
   const handleSkip = () => {
-    handleComplete();
+    startTransition(() => {
+      handleComplete();
+    });
   };
 
   const handleComplete = () => {
@@ -402,8 +407,14 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   };
 
   const handleStepClick = (stepIndex: number) => {
-    setSlideDirection(stepIndex > currentStep ? 'left' : 'right');
-    setCurrentStep(stepIndex);
+    startTransition(() => {
+      if (stepIndex > currentStep) {
+        setSlideDirection('left');
+      } else {
+        setSlideDirection('right');
+      }
+      setCurrentStep(stepIndex);
+    });
   };
 
   // ============================================================================
@@ -411,6 +422,10 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   // ============================================================================
 
   const VisualDemoComponent = currentStepData?.visualDemo;
+
+  if (!open) {
+    return null;
+  }
 
   return (
     <Dialog

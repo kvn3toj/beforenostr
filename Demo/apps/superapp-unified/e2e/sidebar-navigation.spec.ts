@@ -50,11 +50,11 @@ test.describe('Sidebar Navigation Tests', () => {
     await page.waitForURL('**/uplay', { timeout: 10000 });
     console.log('✅ Navegación a /uplay exitosa');
 
-    // Verificar que la página ÜPlay se carga
-    await page.waitForSelector('#root', { timeout: 10000 });
+    // 💡 SOLUCIÓN FINAL: Esperar que el header (con animación) sea visible
+    await expect(page.locator('[data-testid="uplay-cosmic-header"]')).toBeVisible({ timeout: 15000 });
 
-    // Verificar contenido específico de ÜPlay - CORREGIDO
-    await expect(page.getByRole('heading', { name: 'Bienvenido a ÜPlay' })).toBeVisible();
+    // Verificar contenido específico de ÜPlay
+    await expect(page.getByRole('heading', { name: 'ÜPlay - GPL Gamified Play List' })).toBeVisible();
     await expect(page.locator('[data-testid="video-card"]').first()).toBeVisible();
     await expect(page.getByText('Activos: 150')).toBeVisible();
     console.log('✅ Página ÜPlay cargada y contenido verificado correctamente');

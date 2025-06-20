@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Tabs, 
-  Tab, 
-  Card, 
+import {
+  Box,
+  Container,
+  Typography,
+  Tabs,
+  Tab,
+  Card,
   CardContent,
   Grid,
   Button,
@@ -20,6 +20,7 @@ import {
   Fade,
   Zoom,
   Badge,
+  CircularProgress,
 } from '@mui/material';
 import {
   PlayArrow,
@@ -53,7 +54,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 /**
  * UPlay Page Component - Version 2.0
- * 
+ *
  * 🌟 CARACTERÍSTICAS AVANZADAS IMPLEMENTADAS:
  * ✨ Glassmorphism y efectos visuales cósmicos
  * 🎮 Sistema de gamificación completo con Mëritos y Öndas
@@ -62,7 +63,7 @@ import { useAuth } from '../contexts/AuthContext';
  * 🏆 Sistema de logros y progreso visual
  * 👥 Salas de estudio colaborativas
  * 🔄 Integración completa con backend NestJS
- * 
+ *
  * Filosofía CoomÜnity integrada:
  * - Ayni: Reciprocidad en el aprendizaje colaborativo
  * - Bien Común: Conocimiento compartido para todos
@@ -94,16 +95,16 @@ const UPlay: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
   const { user } = useAuth();
-  
+
   // Estados locales
   const [currentTab, setCurrentTab] = useState(0);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
   const [animate, setAnimate] = useState(false);
   const [hoveredMetric, setHoveredMetric] = useState<string | null>(null);
-  
+
   // Datos de videos desde el backend
-  const { data: videos, isLoading: videosLoading } = useVideos();
-  
+  const { data: videos, isLoading: videosLoading, error: videosError } = useVideos();
+
   // Manejar cambio de pestañas
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
@@ -130,15 +131,38 @@ const UPlay: React.FC = () => {
     socialInteractions: 156
   }), []);
 
+  // 🌀 ESTADO DE CARGA: Mostrar un spinner mientras se cargan los datos de los videos
+  if (videosLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <CircularProgress />
+        <Typography sx={{ ml: 2 }}>Cargando Universo ÜPlay...</Typography>
+      </Box>
+    );
+  }
+
+  // ❌ ESTADO DE ERROR: Mostrar un mensaje si falla la carga de videos
+  if (videosError) {
+    return (
+      <Box sx={{ textAlign: 'center', mt: 8 }}>
+        <Typography variant="h5" color="error">Error al Cargar Contenido</Typography>
+        <Typography color="text.secondary">
+          No pudimos conectar con el universo ÜPlay. Por favor, intenta de nuevo más tarde.
+        </Typography>
+      </Box>
+    );
+  }
+
   // Renderizar header principal con efectos cósmicos
   const renderCosmicHeader = () => (
     <Fade in={animate} timeout={800}>
       <Box
+        data-testid="uplay-cosmic-header"
         sx={{
           position: 'relative',
-          background: `linear-gradient(135deg, 
-            ${alpha('#6366f1', 0.1)} 0%, 
-            ${alpha('#a855f7', 0.08)} 50%, 
+          background: `linear-gradient(135deg,
+            ${alpha('#6366f1', 0.1)} 0%,
+            ${alpha('#a855f7', 0.08)} 50%,
             ${alpha('#10b981', 0.06)} 100%)`,
           borderRadius: 4,
           overflow: 'hidden',
@@ -157,7 +181,7 @@ const UPlay: React.FC = () => {
           }
         }}
       >
-        <RevolutionaryWidget 
+        <RevolutionaryWidget
           variant="cosmic"
           intensity="medium"
           style={{
@@ -169,7 +193,7 @@ const UPlay: React.FC = () => {
             zIndex: 0
           }}
         />
-        
+
         <Box
           className="uplay-glassmorphism"
           sx={{
@@ -181,13 +205,13 @@ const UPlay: React.FC = () => {
         >
           <Zoom in={animate} timeout={1000}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-              <AutoAwesome 
-                sx={{ 
-                  fontSize: 40, 
-                  color: '#6366f1', 
+              <AutoAwesome
+                sx={{
+                  fontSize: 40,
+                  color: '#6366f1',
                   mr: 2,
                   filter: 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.4))'
-                }} 
+                }}
               />
               <Typography
                 variant="h3"
@@ -204,7 +228,7 @@ const UPlay: React.FC = () => {
               </Typography>
             </Box>
           </Zoom>
-          
+
           <Typography
             variant="h6"
             sx={{
@@ -219,24 +243,24 @@ const UPlay: React.FC = () => {
           {/* Métricas principales mejoradas */}
           <Grid container spacing={3} sx={{ mb: 3 }}>
             {[
-              { 
-                label: 'Mëritos Totales', 
-                value: userStats.meritos, 
-                icon: <Diamond />, 
+              {
+                label: 'Mëritos Totales',
+                value: userStats.meritos,
+                icon: <Diamond />,
                 color: '#7c3aed',
                 key: 'meritos'
               },
-              { 
-                label: 'Öndas Activas', 
-                value: userStats.ondas, 
-                icon: <Bolt />, 
+              {
+                label: 'Öndas Activas',
+                value: userStats.ondas,
+                icon: <Bolt />,
                 color: '#f59e0b',
                 key: 'ondas'
               },
-              { 
-                label: 'Logros Desbloqueados', 
-                value: userStats.logrosDesbloqueados, 
-                icon: <EmojiEvents />, 
+              {
+                label: 'Logros Desbloqueados',
+                value: userStats.logrosDesbloqueados,
+                icon: <EmojiEvents />,
                 color: '#10b981',
                 key: 'logros'
               }
@@ -271,10 +295,10 @@ const UPlay: React.FC = () => {
                       >
                         {metric.icon}
                       </Box>
-                      <Typography 
-                        variant="h4" 
+                      <Typography
+                        variant="h4"
                         className="uplay-metric-value"
-                        sx={{ 
+                        sx={{
                           mb: 1,
                           background: `linear-gradient(135deg, ${metric.color}, ${alpha(metric.color, 0.7)})`,
                           backgroundClip: 'text',
@@ -299,8 +323,8 @@ const UPlay: React.FC = () => {
             sx={{
               p: 3,
               borderRadius: 3,
-              background: `linear-gradient(135deg, 
-                ${alpha('#6366f1', 0.1)} 0%, 
+              background: `linear-gradient(135deg,
+                ${alpha('#6366f1', 0.1)} 0%,
                 ${alpha('#a855f7', 0.08)} 100%)`,
               border: `1px solid ${alpha('#6366f1', 0.2)}`,
               backdropFilter: 'blur(10px)',
@@ -315,13 +339,13 @@ const UPlay: React.FC = () => {
                 lineHeight: 1.6
               }}
             >
-              Sumérgete en una experiencia de aprendizaje revolucionaria donde cada video es una 
+              Sumérgete en una experiencia de aprendizaje revolucionaria donde cada video es una
               aventura interactiva. Gana <strong style={{ color: '#7c3aed' }}>Mëritos</strong> y{' '}
               <strong style={{ color: '#f59e0b' }}>Öndas</strong> mientras contribuyes al{' '}
-              <strong style={{ color: '#10b981' }}>Bien Común</strong> de nuestra 
+              <strong style={{ color: '#10b981' }}>Bien Común</strong> de nuestra
               comunidad a través del <strong style={{ color: '#6366f1' }}>Ayni</strong> del conocimiento.
             </Typography>
-            
+
             <Button
               variant="contained"
               size="large"
@@ -441,91 +465,37 @@ const UPlay: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3, position: 'relative' }}>
-      {/* Efectos de fondo cósmicos */}
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `
-            radial-gradient(circle at 20% 20%, ${alpha(theme.palette.primary.main, 0.1)} 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, ${alpha(theme.palette.secondary.main, 0.1)} 0%, transparent 50%),
-            radial-gradient(circle at 40% 70%, ${alpha(theme.palette.info.main, 0.05)} 0%, transparent 50%)
-          `,
-          zIndex: -2,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Header principal */}
+    <Container maxWidth="xl" sx={{ py: 4 }}>
       {renderCosmicHeader()}
-
-      {/* Navegación por pestañas */}
       {renderNavigationTabs()}
 
-      {/* Contenido de las pestañas */}
-      <Fade in={animate} timeout={1200}>
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
-          <TabPanel value={currentTab} index={0}>
-            <UPlayEnhancedDashboard />
-          </TabPanel>
+      <Box sx={{ mt: 2 }}>
+        <TabPanel value={currentTab} index={0}>
+          <UPlayEnhancedDashboard />
+        </TabPanel>
+        <TabPanel value={currentTab} index={1}>
+          <UPlayInteractiveLibrary
+            videos={videos || []}
+            onVideoSelect={setSelectedVideoId}
+            loading={videosLoading}
+          />
+        </TabPanel>
+        <TabPanel value={currentTab} index={2}>
+          <UPlayAchievementSystem />
+        </TabPanel>
+        <TabPanel value={currentTab} index={3}>
+          <UPlayStudyRooms />
+        </TabPanel>
+      </Box>
 
-          <TabPanel value={currentTab} index={1}>
-            <UPlayInteractiveLibrary 
-              onVideoSelect={setSelectedVideoId}
-              videos={videos || []}
-              loading={videosLoading}
-            />
-          </TabPanel>
-
-          <TabPanel value={currentTab} index={2}>
-            <UPlayAchievementSystem />
-          </TabPanel>
-
-          <TabPanel value={currentTab} index={3}>
-            <UPlayStudyRooms />
-          </TabPanel>
-        </Box>
-      </Fade>
-
-      {/* Reproductor de video modal */}
       {selectedVideoId && (
         <UPlayAdvancedVideoPlayer
           videoId={selectedVideoId}
-          open={!!selectedVideoId}
           onClose={() => setSelectedVideoId(null)}
         />
       )}
-
-      {/* FAB flotante para acciones rápidas */}
-      <Fade in={animate} timeout={1500}>
-        <Fab
-          sx={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
-            background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-            color: 'white',
-            boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
-            backdropFilter: 'blur(20px)',
-            border: `1px solid ${alpha('#ffffff', 0.2)}`,
-            '&:hover': {
-              background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
-              transform: 'scale(1.1)',
-              boxShadow: `0 12px 40px ${alpha(theme.palette.primary.main, 0.6)}`,
-            },
-            transition: 'all 0.3s ease',
-          }}
-          onClick={() => setCurrentTab(1)}
-        >
-          <AutoAwesome />
-        </Fab>
-      </Fade>
     </Container>
   );
-}; 
+};
 
-export default UPlay; 
+export default UPlay;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 import { AppHeader } from './AppHeader';
 import { BottomNavigation } from './BottomNavigation';
@@ -11,7 +11,11 @@ import { useLoadingStates } from '../../hooks/useLoadingStates';
 // ⚡ OPTIMIZACIONES DE PERFORMANCE
 import { preloadCriticalResources, setupResourceCache, useLazyImage, monitorResourcePerformance } from '../../utils/resourceOptimization';
 
-export const AppLayout: React.FC = () => {
+interface AppLayoutProps {
+  children?: ReactNode;
+}
+
+export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { loading } = useAuth();
@@ -20,13 +24,16 @@ export const AppLayout: React.FC = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [performanceInitialized, setPerformanceInitialized] = useState(false);
 
+  // ⚡ Corrección del hook: Llamar en el nivel superior del componente
+  const { setupLazyLoading } = useLazyImage();
+
   // ⚡ Inicializar optimizaciones de performance
   useEffect(() => {
     const initializePerformanceOptimizations = async () => {
       if (performanceInitialized) return;
 
       console.log('🚀 Initializing performance optimizations...');
-      
+
       try {
         // 1. Preload de recursos críticos
         const { preloadCriticalAssets } = preloadCriticalResources();
@@ -37,7 +44,6 @@ export const AppLayout: React.FC = () => {
         await cacheResources();
 
         // 3. Configurar lazy loading de imágenes
-        const { setupLazyLoading } = useLazyImage();
         setupLazyLoading();
 
         // 4. Inicializar monitor de performance (en desarrollo)
@@ -58,7 +64,7 @@ export const AppLayout: React.FC = () => {
     };
 
     initializePerformanceOptimizations();
-  }, [performanceInitialized]);
+  }, [performanceInitialized, setupLazyLoading]);
 
   // Handle mobile drawer toggle
   const handleMobileMenuToggle = () => {
@@ -89,16 +95,16 @@ export const AppLayout: React.FC = () => {
   }, [loading, addLoadingState, removeLoadingState]);
 
   return (
-    <Box 
+    <Box
       data-testid="app-layout"
       className="app-layout responsive-container"
       data-responsive="adaptive-layout"
       data-breakpoint-detection={isMobile ? 'mobile' : 'desktop'}
-      sx={{ 
-        display: 'flex', 
+      sx={{
+        display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        backgroundColor: 'background.default' 
+        backgroundColor: 'background.default'
       }}
     >
       {/* Top Loading Bar */}
@@ -110,8 +116,8 @@ export const AppLayout: React.FC = () => {
           data-context-type="sync-indicator"
           sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999 }}
         >
-          <LinearProgress 
-            className="loader loading contextual-progress" 
+          <LinearProgress
+            className="loader loading contextual-progress"
             sx={{ height: 3 }}
           />
         </Box>
@@ -129,7 +135,7 @@ export const AppLayout: React.FC = () => {
 
       {/* Header */}
       <AppHeader onMenuClick={handleMobileMenuToggle} />
-      
+
       {/* Mobile Navigation Drawer */}
       <Drawer
         variant="temporary"
@@ -168,13 +174,13 @@ export const AppLayout: React.FC = () => {
           <Sidebar />
         </Box>
       </Drawer>
-      
-      <Box 
+
+      <Box
         className="main-content-wrapper responsive-layout"
         data-responsive="flex-layout"
         data-breakpoint-behavior="adaptive"
-        sx={{ 
-          display: 'flex', 
+        sx={{
+          display: 'flex',
           flex: 1,
           overflow: 'hidden'
         }}
@@ -183,7 +189,7 @@ export const AppLayout: React.FC = () => {
         {!isMobile && (
           <Box
             className="desktop-sidebar responsive-element desktop-only"
-            data-responsive="desktop-only" 
+            data-responsive="desktop-only"
             data-breakpoint="md-up"
             data-contextual="navigation-sidebar"
             sx={{
@@ -197,24 +203,24 @@ export const AppLayout: React.FC = () => {
             <Sidebar />
           </Box>
         )}
-        
+
         {/* Main content area */}
-        <Box 
+        <Box
           component="main"
           className="main-content-area responsive-content"
           data-responsive="content-area"
           data-contextual="main-content"
-          sx={{ 
+          sx={{
             flex: 1,
             overflow: 'auto',
             display: 'flex',
             flexDirection: 'column'
           }}
         >
-          <Outlet />
+          {children || <Outlet />}
         </Box>
       </Box>
-      
+
       {/* Bottom navigation for mobile */}
       {isMobile && <BottomNavigation />}
 
@@ -230,4 +236,4 @@ export const AppLayout: React.FC = () => {
       </Box>
     </Box>
   );
-}; 
+};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, startTransition } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -155,10 +155,10 @@ const UnitsFlowAnimation: React.FC = () => (
 
 // Componente de progreso visual
 const WalletStoryVisualization: React.FC<{ balance: number }> = ({ balance }) => (
-  <Card 
-    sx={{ 
+  <Card
+    sx={{
       mt: 2,
-      background: balance >= 0 
+      background: balance >= 0
         ? 'linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)'
         : 'linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%)',
       border: `2px solid ${balance >= 0 ? '#4caf50' : '#ff9800'}`,
@@ -169,8 +169,8 @@ const WalletStoryVisualization: React.FC<{ balance: number }> = ({ balance }) =>
         {balance >= 0 ? '+' : ''}{balance}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {balance >= 0 
-          ? '¡Has contribuido más de lo que has recibido!' 
+        {balance >= 0
+          ? '¡Has contribuido más de lo que has recibido!'
           : 'La comunidad te está apoyando'
         }
       </Typography>
@@ -197,19 +197,27 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
     newCompletedSteps.add(activeStep);
     setCompletedSteps(newCompletedSteps);
 
-    if (isLastStep) {
-      setShowCelebration(true);
-      setTimeout(() => {
-        onComplete();
-        onClose();
-      }, 3000);
-    } else {
-      setActiveStep(prev => prev + 1);
-    }
+    startTransition(() => {
+      if (isLastStep) {
+        setShowCelebration(true);
+        setTimeout(() => {
+          onComplete();
+          onClose();
+        }, 3000);
+      } else {
+        setActiveStep(prev => prev + 1);
+      }
+    });
   };
 
   const handleBack = () => {
     setActiveStep(prev => prev - 1);
+  };
+
+  const handleSkip = () => {
+    startTransition(() => {
+      onClose();
+    });
   };
 
   const handlePracticeAction = () => {
@@ -338,9 +346,9 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   }
 
   return (
-    <Dialog 
-      open={open} 
-      fullWidth 
+    <Dialog
+      open={open}
+      fullWidth
       maxWidth="md"
       PaperProps={{
         sx: {
@@ -365,17 +373,17 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Paso {activeStep + 1} de {ONBOARDING_STEPS.length}
           </Typography>
-          <LinearProgress 
-            variant="determinate" 
-            value={progress} 
-            sx={{ 
-              height: 8, 
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{
+              height: 8,
               borderRadius: 4,
               bgcolor: 'grey.200',
               '& .MuiLinearProgress-bar': {
                 background: 'linear-gradient(90deg, #2196f3 0%, #21cbf3 100%)',
               }
-            }} 
+            }}
           />
         </Box>
 
@@ -388,7 +396,7 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
             <Typography variant="subtitle1" color="text.secondary" paragraph>
               {currentStep.subtitle}
             </Typography>
-            
+
             <Fade in key={activeStep}>
               <Box>
                 {renderStepContent(currentStep)}
@@ -399,14 +407,14 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
       </DialogContent>
 
       <DialogActions sx={{ p: 3, justifyContent: 'space-between' }}>
-        <Button 
-          onClick={handleBack} 
+        <Button
+          onClick={handleBack}
           disabled={activeStep === 0}
           variant="outlined"
         >
           Anterior
         </Button>
-        
+
         <Box>
           {currentStep.userAction === 'practice' ? (
             <Button
@@ -418,7 +426,7 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
               Practicar
             </Button>
           ) : null}
-          
+
           <Button
             onClick={handleNext}
             variant="contained"
@@ -432,4 +440,4 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   );
 };
 
-export default LetsOnboardingWizard; 
+export default LetsOnboardingWizard;
