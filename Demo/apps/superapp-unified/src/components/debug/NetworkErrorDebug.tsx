@@ -423,11 +423,8 @@ Environment:
                 fontSize: '0.8rem',
               }}
             >
-              {`Backend URL: ${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002'}
-Frontend Origin: ${window.location.origin}
-Mock Auth: ${import.meta.env.VITE_ENABLE_MOCK_AUTH || 'false'}
+              {`Mock Auth: ${import.meta.env.VITE_ENABLE_MOCK_AUTH || 'false'}
 Navigator Online: ${navigator.onLine}
-User Agent: ${navigator.userAgent.substring(0, 100)}...
 Timestamp: ${new Date().toISOString()}`}
             </Typography>
           </AccordionDetails>
