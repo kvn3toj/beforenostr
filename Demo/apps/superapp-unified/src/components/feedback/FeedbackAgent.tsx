@@ -3,43 +3,53 @@ import { Box } from '@mui/material';
 import FeedbackModeToggle from './FeedbackModeToggle';
 import FeedbackFloatingButton from './FeedbackFloatingButton';
 import FeedbackCaptureModal from './FeedbackCaptureModal';
-import useFeedbackAgent from '../../hooks/useFeedbackAgent';
+import { useFeedbackContext } from '../../contexts/FeedbackContext';
 
 /**
- * Agente de Feedback Inteligente para CoomÜnity SuperApp
+ * Agente de Feedback Inteligente para CoomÜnity SuperApp - "Oráculo de CoomÜnity"
  *
  * Este componente implementa un sistema completo de recolección de feedback
  * para el prelanzamiento, incluyendo:
  *
+ * 🎯 FUNCIONALIDADES PRINCIPALES:
  * - 🔘 Toggle de Modo Agente (solo para administradores)
- * - 🔴 Botón Flotante con tipos de feedback
- * - 📍 Selector interactivo de elementos UI
- * - 💬 Modal de captura de datos detallados
- * - 🤖 Integración con LLM para análisis
+ * - 🔴 Botón Flotante con 6 tipos de feedback específicos
+ * - 📍 Selector interactivo de elementos UI con overlay visual
+ * - 💬 Modal de captura de datos detallados con contexto técnico
+ * - 🤖 Integración con LLM para análisis inteligente
  * - ⚡ Ejecución automática de scripts de análisis de código
  * - 📊 Envío estructurado al backend para Gamifier Admin
+ * - 💾 Almacenamiento local como fallback si el backend no está disponible
+ * - 🔔 Notificaciones visuales de éxito/error
+ * - 💿 Persistencia del modo agente entre sesiones
  *
- * Arquitectura:
+ * 🏗️ ARQUITECTURA:
  * - Frontend: SuperApp (captura) → Backend NestJS (procesamiento) → Gamifier Admin (gestión)
  * - Integración con tu infraestructura existente de +100 scripts de análisis
  * - Datos técnicos contextuales para debugging eficiente
+ * - Context API para gestión centralizada del estado
+ *
+ * 🧙‍♂️ FILOSOFÍA COOMUNITY:
+ * - Ayni: Reciprocidad entre usuarios reportando y desarrolladores mejorando
+ * - Bien Común: Feedback colectivo para mejorar la experiencia de todos
+ * - Neguentropía: Organización inteligente del caos de bugs en mejoras sistemáticas
  */
 export const FeedbackAgent: React.FC = () => {
   const {
-    // Estado
-    isAgentMode,
+    // Estado del agente
+    isFeedbackModeActive,
     isSelectingElement,
     selectedFeedbackType,
     selectedElement,
     isModalOpen,
     canUseAgent,
 
-    // Acciones
-    toggleAgentMode,
+    // Acciones principales
+    toggleFeedbackMode,
     startFeedbackCapture,
     submitFeedback,
     closeModal
-  } = useFeedbackAgent();
+  } = useFeedbackContext();
 
   // No renderizar nada si el usuario no puede usar el agente
   if (!canUseAgent) {
@@ -50,13 +60,13 @@ export const FeedbackAgent: React.FC = () => {
     <Box>
       {/* Toggle de Modo Agente - Esquina superior derecha */}
       <FeedbackModeToggle
-        isActive={isAgentMode}
-        onToggle={toggleAgentMode}
+        isActive={isFeedbackModeActive}
+        onToggle={toggleFeedbackMode}
       />
 
       {/* Botón Flotante - Solo visible cuando el modo agente está activo */}
       <FeedbackFloatingButton
-        isVisible={isAgentMode}
+        isVisible={isFeedbackModeActive}
         onFeedbackStart={startFeedbackCapture}
       />
 
@@ -78,10 +88,10 @@ export const FeedbackAgent: React.FC = () => {
           right={0}
           bottom={0}
           zIndex={9998}
-          pointerEvents="none"
           sx={{
             background: 'rgba(0, 123, 255, 0.02)',
             backdropFilter: 'blur(0.5px)',
+            pointerEvents: 'none',
           }}
         />
       )}

@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { FeedbackType } from '../components/feedback/FeedbackFloatingButton';
 import { FeedbackData } from '../components/feedback/FeedbackCaptureModal';
 import { useAuth } from '../contexts/AuthContext';
+import { apiService } from '../lib/api-service';
 
 interface SelectedElement {
   tagName: string;
@@ -157,21 +158,8 @@ export const useFeedbackAgent = () => {
 
   const submitFeedback = useCallback(async (feedbackData: FeedbackData): Promise<void> => {
     try {
-      // 1. Enviar feedback al backend
-      const response = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('COOMUNITY_AUTH_TOKEN')}`
-        },
-        body: JSON.stringify(feedbackData)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result: FeedbackSubmissionResponse = await response.json();
+      // 1. Enviar feedback al backend usando apiService
+      const result: FeedbackSubmissionResponse = await apiService.post('/feedback', feedbackData);
 
       // 2. Si se solicita análisis de código, ejecutar scripts
       if (feedbackData.requestCodeAnalysis) {
@@ -205,20 +193,7 @@ export const useFeedbackAgent = () => {
         priority: feedbackData.priority
       };
 
-      const response = await fetch('/api/feedback/analyze-code', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('COOMUNITY_AUTH_TOKEN')}`
-        },
-        body: JSON.stringify(analysisRequest)
-      });
-
-      if (!response.ok) {
-        throw new Error(`Code analysis failed: ${response.status}`);
-      }
-
-      const analysisResult = await response.json();
+      const analysisResult = await apiService.post('/feedback/analyze-code', analysisRequest);
       console.log('🔍 Análisis de código completado:', analysisResult);
 
     } catch (error) {

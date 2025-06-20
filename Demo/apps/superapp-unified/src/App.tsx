@@ -9,6 +9,7 @@ import { Toaster } from 'sonner';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
+import { FeedbackProvider } from './contexts/FeedbackContext';
 
 // 🎓 Tutorial Discovery System
 import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';
@@ -245,7 +246,8 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthProvider>
-            <LetsEducationProvider>
+            <FeedbackProvider>
+              <LetsEducationProvider>
               <CssBaseline />
               <Router>
                 <DiscoveryTutorialProvider>
@@ -295,6 +297,7 @@ const App: React.FC = () => {
                 </DiscoveryTutorialProvider>
               </Router>
             </LetsEducationProvider>
+              </FeedbackProvider>
           </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>

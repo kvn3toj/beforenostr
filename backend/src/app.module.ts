@@ -19,6 +19,7 @@ import { LoggerModule } from './common/logger/logger.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
 import { ChallengesModule } from './challenges/challenges.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ChallengesModule } from './challenges/challenges.module';
     MarketplaceModule,
     StudyRoomsModule,
     ChallengesModule, // 🏆 Challenges Module - gamified challenges and tasks
+    FeedbackModule, // 🤖 Feedback Agent Module - sistema de recolección de reportes
     ConsoleModule, // 🎮 Módulo de la Consola de Experiencias
   ],
   controllers: [AppController],
@@ -48,4 +50,4 @@ export class AppModule {
   constructor() {
 // // //     console.log('>>> AppModule CONSTRUCTOR: Initializing...');
   }
-} 
+}

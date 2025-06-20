@@ -39,12 +39,21 @@
     "db:seed": "ts-node prisma/seed.ts",
     "db:reset": "npx prisma migrate reset",
     "start:backend": "node dist/main.js",
-    "start:backend:dev": "tsx watch --no-cache --clear-screen=false --tsconfig tsconfig.backend.json backend/src/main.ts",
+    "start:backend:dev": "cd backend && npm run start:dev",
     "start:backend:prod": "npm run clean:backend && npm run build:backend && node dist/main.js",
     "start:backend:compiled": "npm run build:backend && cp -r backend/src/generated dist/ && node dist/main.js",
     "build:backend": "tsc -p tsconfig.backend.json",
     "mock-cleanup-agent": "node scripts/mock-cleanup-background-agent.js",
-    "mock-cleanup-dispatch": "node scripts/slack-mock-cleanup-dispatcher.js"
+    "mock-cleanup-dispatch": "node scripts/slack-mock-cleanup-dispatcher.js",
+    "dm": "./scripts/dev-manager.sh",
+    "dm:check": "./scripts/dev-manager.sh check",
+    "dm:clean": "./scripts/dev-manager.sh clean",
+    "dm:start": "./scripts/dev-manager.sh start all",
+    "dm:backend": "./scripts/dev-manager.sh start backend",
+    "dm:superapp": "./scripts/dev-manager.sh start superapp",
+    "dm:status": "./scripts/dev-manager.sh status",
+    "dm:test": "./scripts/dev-manager.sh test",
+    "dm:open": "./scripts/dev-manager.sh open"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
