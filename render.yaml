@@ -11,6 +11,7 @@ services:
   - type: redis
     name: coomunity-redis
     plan: free
+    ipAllowList: []
     maxmemoryPolicy: allkeys-lru
 
   #--------------------------------
@@ -22,9 +23,7 @@ services:
     repo: https://github.com/kvn3toj/beforenostr
     branch: gamifier3.5
     dockerfilePath: ./backend/Dockerfile
-    healthCheck:
-      path: /health
-      initialDelaySeconds: 120
+    healthCheckPath: /health
     dockerCommand: "npm run start:prod:migrate"
     envVars:
       - key: PORT
@@ -54,9 +53,7 @@ services:
     rootDir: Demo/apps/superapp-unified
     buildCommand: "npm install --legacy-peer-deps && npm run build"
     startCommand: "npx serve -s dist"
-    healthCheck:
-      path: /
-      initialDelaySeconds: 60
+    healthCheckPath: /
     envVars:
       - key: NODE_ENV
         value: production
