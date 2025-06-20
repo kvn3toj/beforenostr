@@ -63,7 +63,7 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
 
       // Since authAPIDebug is not available, run basic diagnostics
       const baseURL =
-        import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+        import.meta.env.VITE_API_BASE_URL || 'http://backend:3002';
       const diagnostics = [];
 
       // Test backend health
@@ -439,7 +439,7 @@ Timestamp: ${new Date().toISOString()}`}
           sx={{ mt: 2, p: 2, backgroundColor: 'info.light', borderRadius: 1 }}
         >
           <Typography variant="body2" color="info.contrastText">
-            💡 <strong>Tip:</strong> Si el problema persiste despu��s de seguir
+            💡 <strong>Tip:</strong> Si el problema persiste después de seguir
             estos pasos, copia el reporte de diagnósticos y compártelo con el
             equipo de desarrollo.
           </Typography>
