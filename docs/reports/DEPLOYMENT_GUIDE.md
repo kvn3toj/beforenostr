@@ -7,14 +7,16 @@ Esta guía describe cómo desplegar el ecosistema completo de CoomÜnity utiliza
 ## 📋 **Requisitos Previos**
 
 ### **Sistema**
+
 - Docker Engine 20.10+
 - Docker Compose 2.0+
 - Sistema Linux/macOS/Windows con WSL2
 - Mínimo 4GB RAM, 20GB espacio en disco
 
 ### **Puertos Requeridos**
+
 - `3000`: Gamifier Admin Frontend
-- `3001`: SuperApp Frontend  
+- `3001`: SuperApp Frontend
 - `3002`: Backend NestJS API
 - `5432`: PostgreSQL Database
 - `6379`: Redis Cache
@@ -67,6 +69,7 @@ nano .env.prod
 ```
 
 **⚠️ IMPORTANTE:** Cambiar todos los valores por defecto, especialmente:
+
 - `DB_PASSWORD`: Contraseña segura para PostgreSQL
 - `JWT_SECRET`: Clave secreta para JWT (mínimo 256 bits)
 - `REDIS_PASSWORD`: Contraseña para Redis
@@ -99,7 +102,7 @@ npm run health:all
 Después del deployment exitoso:
 
 - **SuperApp (Usuarios)**: http://localhost:3001
-- **Gamifier Admin**: http://localhost:3000  
+- **Gamifier Admin**: http://localhost:3000
 - **Backend API Docs**: http://localhost:3002/api
 - **Grafana** (si monitoring habilitado): http://localhost:3003
 - **Prometheus** (si monitoring habilitado): http://localhost:9090
@@ -107,6 +110,7 @@ Después del deployment exitoso:
 ## 📚 **Comandos de Deployment**
 
 ### **Build Commands**
+
 ```bash
 npm run docker:build              # Build todos los servicios
 npm run docker:build:backend      # Build solo backend
@@ -115,6 +119,7 @@ npm run docker:build:admin        # Build solo Admin
 ```
 
 ### **Deployment Commands**
+
 ```bash
 npm run deploy:full               # Deployment completo
 npm run deploy:start              # Solo iniciar servicios
@@ -123,12 +128,14 @@ npm run deploy:restart            # Reiniciar servicios
 ```
 
 ### **Monitoring Commands**
+
 ```bash
 npm run deploy:monitoring         # Iniciar con monitoring
 npm run monitoring:start          # Solo monitoring stack
 ```
 
 ### **Logs y Debugging**
+
 ```bash
 npm run docker:logs               # Logs de todos los servicios
 npm run docker:logs:backend       # Logs solo del backend
@@ -140,36 +147,43 @@ npm run docker:logs:admin         # Logs solo del Admin
 
 ### **Variables de Entorno Críticas**
 
-| Variable | Descripción | Requerido |
-|----------|-------------|-----------|
-| `DB_PASSWORD` | Contraseña PostgreSQL | ✅ |
-| `JWT_SECRET` | Clave secreta JWT | ✅ |
-| `REDIS_PASSWORD` | Contraseña Redis | ✅ |
-| `ALLOWED_ORIGINS` | Dominios permitidos CORS | ✅ |
-| `VITE_API_BASE_URL` | URL del backend para frontends | ✅ |
+| Variable              | Descripción                   | Requerido |
+| --------------------- | ------------------------------ | --------- |
+| `DB_PASSWORD`       | Contraseña PostgreSQL         | ✅        |
+| `JWT_SECRET`        | Clave secreta JWT              | ✅        |
+| `REDIS_PASSWORD`    | Contraseña Redis              | ✅        |
+| `ALLOWED_ORIGINS`   | Dominios permitidos CORS       | ✅        |
+| `VITE_API_BASE_URL` | URL del backend para frontends | ✅        |
 
 ### **Profiles de Docker Compose**
 
 **Base Profile** (por defecto):
+
 - Backend NestJS
-- SuperApp Frontend  
+- SuperApp Frontend
 - Gamifier Admin Frontend
 - PostgreSQL Database
 - Redis Cache
 
 **Monitoring Profile**:
+
 ```bash
 npm run deploy:monitoring
 ```
+
 Incluye:
+
 - Prometheus para métricas
 - Grafana para dashboards
 
 **Proxy Profile**:
+
 ```bash
 ./scripts/docker-deploy.sh proxy
 ```
+
 Incluye:
+
 - Nginx como reverse proxy
 - SSL/TLS termination
 
@@ -212,6 +226,7 @@ docker-compose -f docker-compose.prod.yml logs | grep -i error
 ### **Problemas Comunes**
 
 **1. Servicios no inician:**
+
 ```bash
 # Verificar logs
 npm run docker:logs
@@ -224,6 +239,7 @@ docker system df
 ```
 
 **2. Base de datos no conecta:**
+
 ```bash
 # Verificar PostgreSQL
 docker-compose -f docker-compose.prod.yml exec postgres pg_isready
@@ -233,6 +249,7 @@ docker-compose -f docker-compose.prod.yml exec backend env | grep DATABASE
 ```
 
 **3. Frontend no carga:**
+
 ```bash
 # Verificar build
 npm run docker:build:superapp
@@ -257,7 +274,7 @@ docker network ls | grep coomunity
 docker volume ls | grep coomunity
 ```
 
-## 📈 **Escalabilidad**
+## 📈 **Escalabilidad:**
 
 ### **Horizontal Scaling**
 
@@ -274,6 +291,7 @@ docker-compose -f docker-compose.prod.yml up -d --scale backend=2
 ### **Load Balancing**
 
 Para producción con alta disponibilidad, considerar:
+
 - Nginx como load balancer
 - Multiple instancias de cada servicio
 - Database clustering
@@ -292,6 +310,7 @@ Para producción con alta disponibilidad, considerar:
 ### **SSL/TLS Setup**
 
 Para HTTPS, configurar en `.env.prod`:
+
 ```bash
 SSL_CERT_PATH=/path/to/cert.pem
 SSL_KEY_PATH=/path/to/key.pem
@@ -302,7 +321,7 @@ SSL_KEY_PATH=/path/to/key.pem
 Para problemas de deployment:
 
 1. **Verificar logs**: `npm run docker:logs`
-2. **Revisar estado**: `npm run docker:ps`  
+2. **Revisar estado**: `npm run docker:ps`
 3. **Verificar configuración**: Revisar `.env.prod`
 4. **Consultar documentación**: Este archivo
 5. **Restart services**: `npm run deploy:restart`
@@ -312,6 +331,7 @@ Para problemas de deployment:
 ## ✅ **Fase F.1 Completada**
 
 La configuración de deployment está lista para:
+
 - ✅ Contenerización completa del ecosistema
 - ✅ Orquestación con Docker Compose
 - ✅ Scripts automatizados de deployment
@@ -319,4 +339,4 @@ La configuración de deployment está lista para:
 - ✅ Configuración de seguridad básica
 - ✅ Documentación completa
 
-**Próximos pasos**: Fase F.2 - Configuración de CI/CD y automatización avanzada. 
+**Próximos pasos**: Fase F.2 - Configuración de CI/CD y automatización avanzada.
