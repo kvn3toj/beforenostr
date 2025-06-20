@@ -5,6 +5,7 @@
   "description": "CoomÜnity SuperApp - Plataforma Unificada",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm cache clean --force",
     "build": "npx vite build --mode development",
     "build:prod": "vite build",
     "preview": "vite preview --host --port 3001",
