@@ -90,7 +90,7 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
 
       // Test CORS
       try {
-        const corsResponse = await fetch(`${baseURL}/auth/login`, {
+        const corsResponse = await fetch(`${baseURL}/api/test`, {
           method: 'OPTIONS',
           headers: {
             Origin: 'https://frontend:3001',
