@@ -37,9 +37,78 @@ export const NetworkErrorDebug: React.FC<NetworkErrorDebugProps> = ({
   const runDiagnostics = async () => {
     setDiagnosticsRunning(true);
     try {
-      const result = await authAPIDebug.runDiagnostics();
+      // Since authAPIDebug is not available, run basic diagnostics
+      const baseURL =
+        import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+      const diagnostics = [];
+
+      // Test backend health
+      try {
+        const healthResponse = await fetch(`${baseURL}/health`);
+        diagnostics.push({
+          step: 'Backend Health Check',
+          success: healthResponse.ok,
+          error: healthResponse.ok ? null : `HTTP ${healthResponse.status}`,
+          details: healthResponse.ok
+            ? 'Backend is responding'
+            : 'Backend not available',
+        });
+      } catch (err: any) {
+        diagnostics.push({
+          step: 'Backend Health Check',
+          success: false,
+          error: err.message,
+          details: 'Failed to connect to backend',
+        });
+      }
+
+      // Test CORS
+      try {
+        const corsResponse = await fetch(`${baseURL}/auth/login`, {
+          method: 'OPTIONS',
+          headers: {
+            Origin: window.location.origin,
+            'Access-Control-Request-Method': 'POST',
+            'Access-Control-Request-Headers': 'Content-Type',
+          },
+        });
+        diagnostics.push({
+          step: 'CORS Preflight Test',
+          success: corsResponse.ok,
+          error: corsResponse.ok ? null : `HTTP ${corsResponse.status}`,
+          details: corsResponse.ok
+            ? 'CORS configured correctly'
+            : 'CORS configuration issue',
+        });
+      } catch (err: any) {
+        diagnostics.push({
+          step: 'CORS Preflight Test',
+          success: false,
+          error: err.message,
+          details: 'CORS test failed',
+        });
+      }
+
+      const result = {
+        success: diagnostics.every((d) => d.success),
+        diagnostics,
+      };
+
       setDiagnosticsResult(result);
-      setDiagnosticReport(authAPIDebug.generateReport());
+
+      const report = `Network Diagnostics Report
+Generated: ${new Date().toISOString()}
+Backend URL: ${baseURL}
+Frontend Origin: ${window.location.origin}
+
+Test Results:
+${diagnostics.map((d) => `${d.success ? '✅' : '❌'} ${d.step}: ${d.details || d.error || 'OK'}`).join('\n')}
+
+Environment:
+- Navigator Online: ${navigator.onLine}
+- User Agent: ${navigator.userAgent}
+`;
+      setDiagnosticReport(report);
     } catch (err) {
       console.error('Failed to run diagnostics:', err);
     } finally {
