@@ -4,83 +4,49 @@
 # ================================================================
 
 # ================================================================
-# Etapa 1: Builder - Preparación y compilación
+# Etapa 1: Builder - Construir la aplicación
 # ================================================================
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
-# Metadatos del contenedor
-LABEL maintainer="CoomÜnity Team"
-LABEL version="1.0.0"
-LABEL description="CoomÜnity Backend NestJS - Builder Stage"
+WORKDIR /usr/src/app
 
-# Instalar dependencias del sistema necesarias para build
-RUN apk add --no-cache python3 make g++ openssl
+# Copiar archivos de dependencias
+COPY backend/package*.json ./
 
-# Establecer directorio de trabajo
-WORKDIR /app
+# Instalar TODAS las dependencias (incluyendo devDependencies para el build)
+RUN npm install
 
-# Copiar archivos de configuración de dependencias
-COPY package*.json ./
-COPY tsconfig*.json ./
+# Copiar todo el código fuente del backend
+COPY backend/ ./
 
-# Instalar todas las dependencias (incluyendo devDependencies)
-RUN npm ci --only=production=false && npm cache clean --force
-
-# Copiar código fuente
-COPY src/ ./src/
-COPY prisma/ ./prisma/
-
-# Generar cliente de Prisma
-RUN npx prisma generate
-
-# Compilar la aplicación TypeScript
+# Compilar la aplicación TypeScript a JavaScript
 RUN npm run build
 
 # ================================================================
-# Etapa 2: Producción - Imagen optimizada final
+# Etapa 2: Production - Crear la imagen final y ligera
 # ================================================================
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
-# Metadatos del contenedor
-LABEL maintainer="CoomÜnity Team"
-LABEL version="1.0.0"
-LABEL description="CoomÜnity Backend NestJS - Production"
+# Argumento para el usuario de la aplicación
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
-# Instalar dependencias mínimas del sistema
-RUN apk add --no-cache openssl curl
+WORKDIR /usr/src/app
 
-# Crear usuario no-root para seguridad
-RUN addgroup -g 1001 -S coomunity && \
-    adduser -S coomunity -u 1001
+# Copiar archivos de dependencias
+COPY backend/package*.json ./
 
-# Establecer directorio de trabajo
-WORKDIR /app
-
-# Copiar archivos de configuración
-COPY package*.json ./
-
-# Instalar solo dependencias de producción
+# Instalar SOLO las dependencias de producción
 RUN npm ci --only=production && npm cache clean --force
 
-# Copiar aplicación compilada desde builder
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+# Copiar aplicación compilada desde la etapa de builder
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
+COPY backend/prisma ./prisma
 
-# Cambiar propietario de archivos al usuario no-root
-RUN chown -R coomunity:coomunity /app
-USER coomunity
-
-# Exponer puerto de la aplicación
+# Exponer el puerto
 EXPOSE 3002
 
-# Variables de entorno por defecto
-ENV NODE_ENV=production
-ENV PORT=3002
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD curl -f http://localhost:3002/health || exit 1
-
-# Comando de inicio
-CMD ["node", "dist/main.js"] 
+# Comando para iniciar la aplicación (sin migraciones aquí, se maneja en render.yaml)
+CMD ["node", "dist/main"]
