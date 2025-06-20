@@ -33,7 +33,7 @@ import { AuditLogsModule } from '../admin/audit-logs/audit-logs.module';
     AuthService,
     JwtStrategy,
   ],
-      exports: [
+  exports: [
     'AuthService',
     AuthService,
     JwtStrategy,

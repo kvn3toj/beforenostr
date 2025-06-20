@@ -9,8 +9,8 @@ import * as path from 'path';
 const config = {
   plugins: [
     react(),
-    nodePolyfills({ 
-      include: ['buffer', 'process'] 
+    nodePolyfills({
+      include: ['buffer', 'process']
     }),
     /* // Comentado
     VitePWA({
@@ -47,6 +47,7 @@ const config = {
     force: true, // Forzar re-optimización
     exclude: [
       // Excluir módulos problemáticos que causan EMFILE
+      '@mui/icons-material',
       '@mui/icons-material/*',
       '@mui/x-date-pickers/*',
       'date-fns/*',
@@ -56,6 +57,12 @@ const config = {
       'react-router-dom',
       '@google/generative-ai',
     ],
+    // Limit the number of files processed to prevent EMFILE
+    esbuildOptions: {
+      target: 'es2020',
+      // Reduce memory usage and file handles
+      logLimit: 0,
+    },
     include: [
       // Incluir solo módulos específicos necesarios
       '@mui/material',
@@ -73,22 +80,22 @@ const config = {
       // Configurar exports específicos para módulos problemáticos
       namedExports: {
         'react-is': [
-          'isValidElementType', 
-          'isContextConsumer', 
-          'isForwardRef', 
-          'isMemo', 
-          'isProfiler', 
-          'isFragment', 
-          'isLazy', 
-          'isPortal', 
-          'isProvider', 
-          'isStrictMode', 
+          'isValidElementType',
+          'isContextConsumer',
+          'isForwardRef',
+          'isMemo',
+          'isProfiler',
+          'isFragment',
+          'isLazy',
+          'isPortal',
+          'isProvider',
+          'isStrictMode',
           'isSuspense',
           'isElement',
           'isValidElement'
         ],
         'prop-types': [
-          'PropTypes', 
+          'PropTypes',
           'checkPropTypes',
           'resetWarningCache'
         ],
@@ -116,6 +123,32 @@ const config = {
   },
   server: {
     port: 3000,
+    fs: {
+      // Limit file watching to prevent EMFILE errors
+      strict: false,
+    },
+    watch: {
+      // Optimize file watching to prevent EMFILE
+      usePolling: false,
+      interval: 100,
+      binaryInterval: 300,
+      // Limit the number of files being watched
+      depth: 3,
+      ignored: [
+        '**/node_modules/**',
+        '**/.git/**',
+        '**/dist/**',
+        '**/coverage/**',
+        '**/.turbo/**',
+        '**/.next/**',
+        '**/.vscode/**',
+        '**/tmp/**',
+        '**/temp/**',
+        '**/test-results/**',
+        '**/playwright-report/**',
+        '**/.cache/**'
+      ]
+    }
   },
   preview: {
     port: 3000,

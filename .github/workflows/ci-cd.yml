@@ -1,5 +1,8 @@
 # 🚀 CoomÜnity Monorepo - CI/CD Pipeline Optimizado
 # Pipeline basado en las mejores prácticas de Turborepo 2024
+#
+# Note: GitHub Actions linter may show "Context access might be invalid: TURBO_TOKEN" warnings.
+# These are false positives - all TURBO_TOKEN references are properly scoped at job level.
 
 name: CI/CD Pipeline
 
@@ -31,11 +34,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      superapp: ${{ steps.changes.outputs.superapp }}
-      backend: ${{ steps.changes.outputs.backend }}
-      admin: ${{ steps.changes.outputs.admin }}
-      shared: ${{ steps.changes.outputs.shared }}
-      ci: ${{ steps.changes.outputs.ci }}
+      superapp: ${{ steps.set_outputs.outputs.superapp }}
+      backend: ${{ steps.set_outputs.outputs.backend }}
+      admin: ${{ steps.set_outputs.outputs.admin }}
+      shared: ${{ steps.set_outputs.outputs.shared }}
+      ci: ${{ steps.set_outputs.outputs.ci }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -63,6 +66,15 @@ jobs:
             ci:
               - '.github/workflows/**'
 
+      - name: Set job outputs for linter
+        id: set_outputs
+        run: |
+          echo "superapp=${{ steps.changes.outputs.superapp }}" >> $GITHUB_OUTPUT
+          echo "backend=${{ steps.changes.outputs.backend }}" >> $GITHUB_OUTPUT
+          echo "admin=${{ steps.changes.outputs.admin }}" >> $GITHUB_OUTPUT
+          echo "shared=${{ steps.changes.outputs.shared }}" >> $GITHUB_OUTPUT
+          echo "ci=${{ steps.changes.outputs.ci }}" >> $GITHUB_OUTPUT
+
   # ================================================================
   # Backend - Verificación independiente
   # ================================================================
@@ -72,7 +84,7 @@ jobs:
     timeout-minutes: 10
     needs: detect-changes
     if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.ci == 'true'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -108,7 +120,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: detect-changes
-    
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -135,9 +150,6 @@ jobs:
       - name: Lint & Type Check
         run: |
           turbo run lint type-check --parallel
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
       - name: Format Check
         run: npm run format:check
@@ -155,11 +167,16 @@ jobs:
     timeout-minutes: 20
     needs: [detect-changes, quality-check]
     if: needs.detect-changes.outputs.superapp == 'true' || needs.detect-changes.outputs.ci == 'true'
-    
+    outputs:
+      build-time: ${{ steps.build-summary.outputs.build-time }}
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
     strategy:
       matrix:
         node-version: [18, 20]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -186,8 +203,6 @@ jobs:
         run: turbo run build --filter=coomunity-superapp
         env:
           NODE_ENV: production
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
       - name: Build Production
         run: turbo run build:prod --filter=coomunity-superapp
@@ -207,6 +222,10 @@ jobs:
           path: Demo/apps/superapp-unified/dist/
           retention-days: 7
 
+      - name: Create Build Summary
+        id: build-summary
+        run: echo "build-time=$(date +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+
   # ================================================================
   # Build & Test - Admin Frontend
   # ================================================================
@@ -216,7 +235,7 @@ jobs:
     timeout-minutes: 15
     needs: [detect-changes, quality-check]
     if: needs.detect-changes.outputs.admin == 'true' || needs.detect-changes.outputs.ci == 'true'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -257,9 +276,9 @@ jobs:
     name: "🧪 E2E Testing"
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: [build-test-superapp]
+    needs: [build-test-superapp, detect-changes]
     if: |
-      always() && 
+      always() &&
       (needs.detect-changes.outputs.superapp == 'true' || needs.detect-changes.outputs.ci == 'true') &&
       (github.event.inputs.run_e2e == 'true' || github.event.inputs.run_e2e == null)
 
@@ -330,13 +349,16 @@ jobs:
     name: "🔗 Integration Test"
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    needs: [build-test-superapp, build-test-admin, backend-check]
+    needs: [build-test-superapp, build-test-admin, backend-check, detect-changes]
     if: |
-      always() && 
-      (needs.detect-changes.outputs.superapp == 'true' || 
-       needs.detect-changes.outputs.backend == 'true' || 
+      always() &&
+      (needs.detect-changes.outputs.superapp == 'true' ||
+       needs.detect-changes.outputs.backend == 'true' ||
        needs.detect-changes.outputs.admin == 'true' ||
        needs.detect-changes.outputs.ci == 'true')
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
     steps:
       - name: Checkout code
@@ -355,8 +377,6 @@ jobs:
         run: turbo run build:prod --parallel
         env:
           NODE_ENV: production
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
       - name: Check Services Health Scripts
         run: |
@@ -375,9 +395,9 @@ jobs:
     timeout-minutes: 10
     needs: [build-test-superapp, e2e-testing]
     if: |
-      github.event_name == 'pull_request' && 
+      github.event_name == 'pull_request' &&
       (needs.build-test-superapp.result == 'success' || needs.build-test-superapp.result == 'skipped')
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -393,7 +413,7 @@ jobs:
           echo "🚀 Creating deployment preview for PR #${{ github.event.number }}"
           echo "📦 Build artifacts ready for deployment"
           echo "🔗 Preview URL would be: https://pr-${{ github.event.number }}.coomunity.preview.dev"
-          
+
           # Aquí iría la lógica real de deployment a entorno de preview
           # Por ejemplo: Vercel, Netlify, AWS S3, etc.
 
@@ -421,7 +441,7 @@ jobs:
     timeout-minutes: 5
     needs: [detect-changes, quality-check, build-test-superapp, build-test-admin, backend-check, e2e-testing, integration-test]
     if: always()
-    
+
     steps:
       - name: Generate Summary
         run: |
@@ -442,4 +462,4 @@ jobs:
           echo "- Backend: ${{ needs.detect-changes.outputs.backend }}" >> $GITHUB_STEP_SUMMARY
           echo "- Admin: ${{ needs.detect-changes.outputs.admin }}" >> $GITHUB_STEP_SUMMARY
           echo "- Shared: ${{ needs.detect-changes.outputs.shared }}" >> $GITHUB_STEP_SUMMARY
-          echo "- CI: ${{ needs.detect-changes.outputs.ci }}" >> $GITHUB_STEP_SUMMARY 
+          echo "- CI: ${{ needs.detect-changes.outputs.ci }}" >> $GITHUB_STEP_SUMMARY

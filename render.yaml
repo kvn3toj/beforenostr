@@ -1,14 +1,17 @@
 services:
+  # 🚀 CoomÜnity Backend - NestJS API
   - type: web
-    name: superapp
-    runtime: node
+    name: coomunity-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile.render
+    dockerContext: ./backend
+    plan: starter
     region: oregon
-    plan: free
-    buildCommand: npm run build:render
-    startCommand: npm run start:render
-    repo: https://github.com/kvn3toj/beforenostr
-    branch: gamifier2.0
-    rootDir: backend
+    branch: main
+    buildCommand: echo "Building with Docker"
+    startCommand: node dist/main.js
+
+    # Environment Variables
     envVars:
       - key: NODE_ENV
         value: production
@@ -19,25 +22,24 @@ services:
           name: coomunity-postgres
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: coomunity-redis
-          property: connectionString
+        value: redis://red-abc123:6379
       - key: JWT_SECRET
         generateValue: true
-      - key: JWT_EXPIRES_IN
-        value: "7d"
       - key: CORS_ORIGIN
-        value: "https://superapp-peach.vercel.app,http://localhost:3001"
+        value: https://coomunity-superapp.vercel.app
+      - key: API_BASE_URL
+        value: https://coomunity-backend.onrender.com
 
-  - type: redis
-    name: coomunity-redis
-    region: oregon
-    plan: free
+    # Health check endpoint
+    healthCheckPath: /health
 
 databases:
+  # 🗄️ PostgreSQL Database
   - name: coomunity-postgres
-    databaseName: coomunity
+    databaseName: coomunity_prod
     user: coomunity_user
+    plan: starter
     region: oregon
-    plan: free
+    postgresMajorVersion: "15"
+
+
