@@ -157,29 +157,64 @@ export const useFeedbackAgent = () => {
 
   const submitFeedback = useCallback(async (feedbackData: FeedbackData): Promise<void> => {
     try {
-      // 1. Enviar feedback al backend
-      const response = await fetch('/api/feedback', {
+      // 📝 [ORÁCULO] Preparar datos para el backend NestJS
+      const backendPayload = {
+        pageUrl: feedbackData.technicalContext.route || window.location.href,
+        feedbackText: feedbackData.description,
+        feedbackType: feedbackData.type.toUpperCase().replace('-', '_'), // BUG, IMPROVEMENT, MISSING_FEATURE, etc.
+        componentContext: feedbackData.elementContext ? 
+          `${feedbackData.elementContext.tagName}${feedbackData.elementContext.id ? `#${feedbackData.elementContext.id}` : ''}${feedbackData.elementContext.className ? `.${feedbackData.elementContext.className}` : ''}` 
+          : undefined,
+        technicalContext: {
+          route: feedbackData.technicalContext.route,
+          userAgent: feedbackData.elementContext.userAgent,
+          timestamp: feedbackData.elementContext.timestamp,
+          screenResolution: `${screen.width}x${screen.height}`,
+          viewport: `${feedbackData.elementContext.viewport.width}x${feedbackData.elementContext.viewport.height}`,
+          elementPosition: feedbackData.elementContext.position,
+          url: feedbackData.elementContext.url,
+          userId: feedbackData.technicalContext.userId,
+          sessionId: feedbackData.technicalContext.sessionId,
+          buildVersion: feedbackData.technicalContext.buildVersion
+        },
+        priority: feedbackData.priority === 'critical' ? 5 : 
+                  feedbackData.priority === 'high' ? 4 : 
+                  feedbackData.priority === 'medium' ? 3 : 
+                  feedbackData.priority === 'low' ? 2 : 1,
+        tags: [feedbackData.category, feedbackData.priority] // Usar category y priority como tags
+      };
+
+      console.log('🔮 [ORÁCULO] Enviando feedback al backend NestJS:', backendPayload);
+
+      // 1. Enviar feedback al backend NestJS del Oráculo
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('COOMUNITY_AUTH_TOKEN')}`
         },
-        body: JSON.stringify(feedbackData)
+        body: JSON.stringify(backendPayload)
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Error ${response.status}: ${errorData.message || 'Error del servidor'}`);
       }
 
       const result: FeedbackSubmissionResponse = await response.json();
 
-      // 2. Si se solicita análisis de código, ejecutar scripts
+      // 2. Si se solicita análisis de código, ejecutar scripts (funcionalidad futura de la CoP)
       if (feedbackData.requestCodeAnalysis) {
         await triggerCodeAnalysis(result.id, feedbackData);
       }
 
-      // 3. Notificar éxito
-      console.log('✅ Feedback enviado exitosamente:', result);
+      // 3. Notificar éxito al usuario
+      console.log('✅ [ORÁCULO] Feedback enviado exitosamente al sistema:', result);
+      
+      // Mostrar notificación de éxito al usuario (puedes personalizar esto)
+      if (window.showSnackbar) {
+        window.showSnackbar('🔮 Feedback enviado al Oráculo de CoomÜnity', 'success');
+      }
 
       // Resetear estado
       setState(prev => ({
@@ -190,7 +225,14 @@ export const useFeedbackAgent = () => {
       }));
 
     } catch (error) {
-      console.error('❌ Error enviando feedback:', error);
+      console.error('❌ [ORÁCULO] Error enviando feedback:', error);
+      
+      // Mostrar error al usuario
+      if (window.showSnackbar) {
+        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+        window.showSnackbar(`Error enviando feedback: ${errorMessage}`, 'error');
+      }
+      
       throw error;
     }
   }, []);
@@ -263,6 +305,7 @@ export const useFeedbackAgent = () => {
 declare global {
   interface Window {
     removeElementSelectionListeners?: () => void;
+    showSnackbar?: (message: string, type: string) => void;
   }
 }
 

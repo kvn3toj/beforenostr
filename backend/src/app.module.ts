@@ -19,6 +19,7 @@ import { LoggerModule } from './common/logger/logger.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
 import { ChallengesModule } from './challenges/challenges.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ChallengesModule } from './challenges/challenges.module';
     StudyRoomsModule,
     ChallengesModule, // 🏆 Challenges Module - gamified challenges and tasks
     ConsoleModule, // 🎮 Módulo de la Consola de Experiencias
+    FeedbackModule, // 🔮 Módulo del Oráculo de CoomÜnity - Sistema de Feedback para CoP
   ],
   controllers: [AppController],
   providers: [AppService],

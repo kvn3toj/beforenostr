@@ -189,6 +189,7 @@ model User {
   wallet                     Wallet?
   createdWorlds              World[]               @relation("WorldCreator")
   marketplaceItems           MarketplaceItem[]
+  feedbacks                  Feedback[]
 
   @@index([email])
   @@index([isActive])
@@ -982,4 +983,54 @@ model StudyRoomMessage {
   @@index([messageType])
   @@index([createdAt])
   @@map("study_room_messages")
+}
+
+// =====================================================================
+// FEEDBACK AGENT SYSTEM - Oráculo de CoomÜnity
+// =====================================================================
+
+enum FeedbackType {
+  BUG
+  IMPROVEMENT
+  MISSING_FEATURE
+  UI_UX
+  PERFORMANCE
+  OTHER
+}
+
+enum FeedbackStatus {
+  PENDING
+  INVESTIGATING
+  RESOLVED
+  WONT_FIX
+  ARCHIVED
+}
+
+model Feedback {
+  id          String   @id @default(cuid())
+  userId      String
+  pageUrl     String
+  feedbackText String  @db.Text
+  feedbackType FeedbackType
+  status      FeedbackStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id])
+  
+  // Contexto adicional capturado por el agente Oráculo
+  componentContext String?
+  technicalContext Json? // Para userAgent, screen resolution, etc.
+  screenshotUrl   String? // Si se implementa la subida de imágenes
+  
+  // Metadatos para la CoP Oráculo
+  priority    Int?     @default(0) // 0-5, para priorización en la CoP
+  tags        String[] // Para categorización avanzada
+  
+  @@index([userId])
+  @@index([feedbackType])
+  @@index([status])
+  @@index([createdAt])
+  @@index([priority])
+  @@map("feedbacks")
 }
