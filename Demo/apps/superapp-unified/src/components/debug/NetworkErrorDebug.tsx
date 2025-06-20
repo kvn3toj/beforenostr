@@ -109,7 +109,7 @@ Environment:
 - User Agent: ${navigator.userAgent}
 `;
       setDiagnosticReport(report);
-    } catch (err) {
+    } catch {
       // Silently handle diagnostic errors
     } finally {
       setDiagnosticsRunning(false);
