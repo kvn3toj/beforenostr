@@ -58,25 +58,13 @@ services:
       - key: NODE_ENV
         value: production
       - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: coomunity-backend
-          property: url
+        value: "https://coomunity-backend.onrender.com"
       - key: VITE_BASE_URL
-        fromService:
-          type: web
-          name: coomunity-superapp
-          property: url
+        value: "https://coomunity-superapp.onrender.com"
       - key: VITE_NETWORK_API_URL
-        fromService:
-          type: web
-          name: coomunity-backend
-          property: url
+        value: "https://coomunity-backend.onrender.com"
       - key: VITE_NETWORK_BASE_URL
-        fromService:
-          type: web
-          name: coomunity-superapp
-          property: url
+        value: "https://coomunity-superapp.onrender.com"
       - key: VITE_ENABLE_MOCK_AUTH
         value: "false"
       - key: VITE_ENABLE_ANALYTICS
