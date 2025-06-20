@@ -117,6 +117,9 @@ const AppRoutes: React.FC = () => {
         {/* 🔧 WebSocket Test - Temporal para pruebas */}
         <Route path="/websocket-test" element={<LazyPages.WebSocketTest />} />
 
+        {/* 🗄️ Supabase Test - Temporal para pruebas de integración */}
+        <Route path="/supabase-test" element={<LazyPages.SupabaseTest />} />
+
         {/* Settings */}
         <Route path="/settings" element={<LazyPages.SettingsPage />} />
         <Route path="/help" element={<LazyPages.HelpPage />} />

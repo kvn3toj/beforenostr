@@ -1,0 +1,37 @@
+services:
+  # 🌟 CoomÜnity SuperApp Frontend
+  - type: web
+    name: coomunity-superapp
+    runtime: node
+    plan: starter
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm run preview
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_BASE_URL
+        value: https://backend-production-80bb.up.railway.app
+      - key: VITE_ENABLE_MOCK_AUTH
+        value: "false"
+      - key: VITE_BASE_URL
+        value: https://coomunity-superapp.onrender.com
+      - key: VITE_SUPABASE_URL
+        value: https://huwbieukmudvbkhywgmi.supabase.co
+      - key: VITE_SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1d2JpZXVrbXVkdmJraHl3Z21pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzODIwNTAsImV4cCI6MjA2NTk1ODA1MH0.oFvOhZbPcAmWUdKBH7maQKZO-dyrCRSBr7NE24FzdnY
+
+# 🗄️ Database (PostgreSQL)
+databases:
+  - name: coomunity-db
+    databaseName: coomunity
+    user: coomunity_user
+    plan: free
+
+# 🔄 Background Workers (si necesario)
+# workers:
+#   - name: coomunity-worker
+#     runtime: node
+#     buildCommand: npm install --legacy-peer-deps
+#     startCommand: npm run worker
+#     plan: free

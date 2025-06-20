@@ -43,6 +43,9 @@ const DesignSystemShowcase = lazy(() => import('../pages/DesignSystemShowcase'))
 // WebSocket Test - CORREGIDO A PÁGINA EXISTENTE
 const WebSocketTest = lazy(() => import('../pages/StudyRoomsPage'));
 
+// Supabase Test
+const SupabaseTest = lazy(() => import('../components/SupabaseTest'));
+
 // Settings
 const SettingsPage = lazy(() => import('../pages/Settings'));
 
@@ -74,16 +77,16 @@ export const LazyPages = {
   ProfilePage: Profile, // Alias para compatibilidad
   Wallet,
   WalletPage: Wallet, // Alias para compatibilidad
-  
+
   // Challenge & Group Pages
   ChallengesPage,
   GroupsPage,
   ChallengeDetailPage,
-  
+
   // UStats & Analytics
   UStatsPage,
   AnalyticsPage,
-  
+
   // Video/UPlay Routes
   UPlayVideoPlayer,
   UnifiedUPlay,
@@ -91,38 +94,41 @@ export const LazyPages = {
   InteractiveVideoDemo,
   VideoHome,
   VideoPlayer,
-  
+
   // Marketplace Routes
   MarketplaceTest,
-  
+
   // LETS Routes
   LetsPage,
-  
+
   // Social Routes
   SocialChat,
   SocialFeed,
-  
+
   // Special Pages
   DesignSystemShowcase,
-  
-  // WebSocket Test
+
+    // WebSocket Test
   WebSocketTest,
-  
+
+  // Supabase Test
+  SupabaseTest,
+
   // Settings
   SettingsPage,
-  
+
   // Nuevas páginas
   NotificationsPage,
   StudyRoomsPage,
-  
+
   // PWA & Beta
   PWADemo,
   BetaRegister,
   HomePageAlternative,
-  
+
   // 404
   NotFoundPage,
-  
+
   // Onboarding
   OnboardingDemo,
 };
