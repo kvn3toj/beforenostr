@@ -4,6 +4,32 @@
   "outputDirectory": "dist",
   "installCommand": "npm install --legacy-peer-deps",
   "devCommand": "npm run dev",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000"
+        }
+      ]
+    }
+  ],
   "env": {
     "VITE_API_BASE_URL": "http://localhost:3002",
     "VITE_ENABLE_MOCK_AUTH": "false",
@@ -20,28 +46,11 @@
       "maxDuration": 30
     }
   },
-  "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ],
   "redirects": [
     {
       "source": "/",
       "destination": "/home",
       "statusCode": 307
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
