@@ -297,10 +297,10 @@ const Login: React.FC = () => {
             'Content-Type': 'application/json',
             Origin: window.location.origin,
           },
-                  body: JSON.stringify({
-          email: 'admin@gamifier.com',
-          password: 'admin123',
-        }),
+          body: JSON.stringify({
+            email: 'admin@gamifier.com',
+            password: 'admin123',
+          }),
         });
 
         if (loginResponse.ok) {
@@ -566,7 +566,9 @@ const Login: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      <NetworkDebugger />
+      {typeof window !== 'undefined' && import.meta.env?.DEV && (
+        <NetworkDebugger />
+      )}
     </Container>
   );
 };
