@@ -83,6 +83,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          # The action defaults to search for the dependency file
+          # (package-lock.json or yarn.lock) in the repository root, and uses
+          # its hash as a part of the cache key.
+          # https://github.com/actions/setup-node#caching-packages-dependencies
+          cache-dependency-path: './Demo/package-lock.json'
 
       - name: Install dependencies (root)
         run: npm install --legacy-peer-deps
@@ -132,6 +137,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          # The action defaults to search for the dependency file
+          # (package-lock.json or yarn.lock) in the repository root, and uses
+          # its hash as a part of the cache key.
+          # https://github.com/actions/setup-node#caching-packages-dependencies
+          cache-dependency-path: './Demo/package-lock.json'
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
