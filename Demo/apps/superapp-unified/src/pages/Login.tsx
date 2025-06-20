@@ -566,20 +566,8 @@ const Login: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      {(() => {
-        try {
-          return (
-            typeof window !== 'undefined' &&
-            import.meta.env?.DEV === true &&
-            import.meta.env?.MODE === 'development' &&
-            (typeof process === 'undefined' ||
-              process.env?.NODE_ENV !== 'test') &&
-            (typeof process === 'undefined' || !process.env?.CI)
-          );
-        } catch {
-          return false;
-        }
-      })() && <NetworkDebugger />}
+      {/* NetworkDebugger temporarily disabled for E2E test compatibility */}
+      {/* {import.meta.env?.DEV && <NetworkDebugger />} */}
     </Container>
   );
 };
