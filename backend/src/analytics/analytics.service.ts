@@ -36,7 +36,7 @@ export class AnalyticsService {
   }
 
   async recordEngagement(data: CreateUserEngagementDto, userId: string): Promise<UserEngagement> {
-    return this.prisma.userEngagement.create({
+    return this.prisma.activity.create({
       data: {
         ...data,
         userId: userId,
@@ -45,14 +45,14 @@ export class AnalyticsService {
   }
 
   async getUserEngagement(userId: string): Promise<UserEngagement[]> {
-    return this.prisma.userEngagement.findMany({
+    return this.prisma.activity.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     });
   }
 
   async getContentItemEngagement(contentItemId: string): Promise<UserEngagement[]> {
-    return this.prisma.userEngagement.findMany({
+    return this.prisma.activity.findMany({
       where: { contentItemId },
       orderBy: { createdAt: 'desc' },
     });
@@ -456,7 +456,7 @@ export class AnalyticsService {
         this.prisma.playlist.count(),
         this.prisma.mundo.count(),
         this.prisma.contentItem.count(),
-        this.prisma.userEngagement.findMany({
+        this.prisma.activity.findMany({
           take: 10,
           orderBy: { createdAt: 'desc' },
           include: { user: { select: { name: true, email: true } } }

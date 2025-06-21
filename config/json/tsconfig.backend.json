@@ -2,6 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    },
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2021",
@@ -79,4 +83,4 @@
     "esm": false,
     "experimentalSpecifierResolution": "node"
   }
-} 
+}

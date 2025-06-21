@@ -23,8 +23,8 @@ import {
 import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 
 @ApiTags('🔮 Feedback - Oráculo de CoomÜnity')
 @ApiBearerAuth()

@@ -36,8 +36,8 @@ class AIQuestionGenerator {
   private apiKey: string;
 
   constructor() {
-    // En producción, esto vendría de variables de entorno
-    this.apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY || 'AIzaSyDXMoHjoHi8-xUfiD5QN6bFVIeoTMhK2z4';
+    // En producción, esto vendría de variables de entorno del backend
+    this.apiKey = process.env.GOOGLE_AI_API_KEY || 'AIzaSyDXMoHjoHi8-xUfiD5QN6bFVIeoTMhK2z4';
   }
 
   async generateQuestions(
@@ -51,7 +51,7 @@ class AIQuestionGenerator {
 
       // Importar dinámicamente Google AI (solo cuando se necesite)
       const { GoogleGenerativeAI } = await import('@google/generative-ai');
-      
+
       if (!this.apiKey) {
         throw new Error('API key de Google AI no configurada');
       }
@@ -191,7 +191,7 @@ FORMATO DE RESPUESTA (JSON válido):
   ]
 }
 
-IMPORTANTE: 
+IMPORTANTE:
 - Las preguntas deben ser sobre detalles específicos del video
 - Deben requerir que el usuario haya visto ESA parte específica
 - No preguntes sobre conocimiento general
@@ -250,7 +250,7 @@ IMPORTANTE:
       if (!jsonMatch) {
         jsonMatch = text.match(/\{[\s\S]*\}/);
       }
-      
+
       if (!jsonMatch) {
         throw new Error('No se encontró JSON válido en la respuesta de IA');
       }
@@ -292,4 +292,4 @@ export const PRESET_CONFIGS: Record<string, Partial<QuestionGenerationConfig>> =
     timeDistribution: 'distributed',
     difficultyLevel: 'medium'
   }
-}; 
+};

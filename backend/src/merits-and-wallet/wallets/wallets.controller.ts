@@ -2,8 +2,8 @@ import { Controller, Get, Param, UseGuards, Req, ForbiddenException, NotFoundExc
 import { WalletsService } from './wallets.service';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../rbac/guards/roles.guard';
-import { Roles } from '../../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 import { Request } from 'express';
 
 // Define a basic type for the authenticated user

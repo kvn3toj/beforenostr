@@ -3,9 +3,9 @@ import { ChallengesService } from './challenges.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // Adjust path as necessary
-import { RolesGuard } from '../rbac/guards/roles.guard'; // Adjust path as necessary
-import { Roles } from '../rbac/decorators/roles.decorator'; // Adjust path as necessary
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 import { CreateChallengeRewardDto } from './dto/create-challenge-reward.dto';
 
 @ApiTags('challenges')
@@ -109,4 +109,4 @@ export class ChallengesController {
   removeReward(@Param('rewardId') rewardId: string) {
       return this.challengesService.removeReward(rewardId);
   }
-} 
+}

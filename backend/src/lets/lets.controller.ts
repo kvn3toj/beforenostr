@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Param, Query, UseGuards, Inject } from '@n
 import { LetsService } from './lets.service';
 import { CreateLetsTransactionDto, LetsBalanceDto, LetsExpiryCheckDto } from './dto/lets.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('lets')

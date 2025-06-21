@@ -11,7 +11,7 @@ export class CreateConfigDto {
   @IsNotEmpty()
   key: string;
 
-  @ApiProperty({ description: 'The configuration value (JSONB)', type: 'object' })
+  @ApiProperty({ description: 'The configuration value (JSONB)', type: 'object', additionalProperties: true })
   // @IsJSON() // Use @IsOptional() and handle object validation if needed
   @IsOptional()
   value?: AppConfigValue; // Use the defined type
@@ -27,4 +27,4 @@ export class CreateConfigDto {
   isSensitive?: boolean;
 }
 
-export class UpdateConfigDto extends PartialType(CreateConfigDto) {} 
+export class UpdateConfigDto extends PartialType(CreateConfigDto) {}

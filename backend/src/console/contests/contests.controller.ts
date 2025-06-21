@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Put, Param, Body, UseGuards } from '@nestjs/common';
 import { ContestsService } from './contests.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../rbac/guards/roles.guard';
-import { Roles } from '../../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 
 @Controller('console/contests')
 @UseGuards(JwtAuthGuard, RolesGuard)

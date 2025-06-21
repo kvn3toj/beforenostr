@@ -4,8 +4,8 @@ import { CreateMeritDto } from './dto/create-merit.dto';
 import { UpdateMeritDto } from './dto/update-merit.dto';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Assuming this path
-import { RolesGuard } from '../../rbac/guards/roles.guard'; // Assuming this path
-import { Roles } from '../../rbac/decorators/roles.decorator'; // Assuming this path
+import { RolesGuard } from '@/rbac/guards/roles.guard'; // Assuming this path
+import { Roles } from '@/rbac/decorators/roles.decorator'; // Assuming this path
 
 @ApiTags('merits')
 @ApiBearerAuth()

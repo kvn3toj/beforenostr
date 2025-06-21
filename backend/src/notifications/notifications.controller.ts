@@ -2,8 +2,8 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Inje
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto, CreateBulkNotificationDto, UpdateNotificationDto, NotificationFilterDto } from './dto/notifications.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 
 @Controller('notifications')
 @UseGuards(JwtAuthGuard, RolesGuard)

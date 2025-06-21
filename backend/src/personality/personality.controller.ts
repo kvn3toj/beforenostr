@@ -14,8 +14,8 @@ import { CreatePersonalityDto } from './dto/create-personality.dto';
 import { UpdatePersonalityDto } from './dto/update-personality.dto';
 import { AssignPersonalityDto } from './dto/assign-personality.dto';
 // import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-// import { RolesGuard } from '../rbac/guards/roles.guard';
-// import { Roles } from '../rbac/decorators/roles.decorator';
+// import { RolesGuard } from '@/rbac/guards/roles.guard';
+// import { Roles } from '@/rbac/decorators/roles.decorator';
 import {
   ApiTags,
   // ApiBearerAuth,

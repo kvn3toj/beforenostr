@@ -2,6 +2,11 @@ import { IsInt, IsNotEmpty, IsString, IsOptional, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateChallengeRewardDto {
+  @ApiProperty({ description: 'The type of the reward (e.g., MERIT, ITEM)' })
+  @IsString()
+  @IsOptional()
+  type?: string;
+
   @ApiProperty({ description: 'The amount of merits to reward' })
   @IsInt()
   @IsNotEmpty()
@@ -12,4 +17,4 @@ export class CreateChallengeRewardDto {
   @IsString()
   @IsOptional()
   description?: string;
-} 
+}

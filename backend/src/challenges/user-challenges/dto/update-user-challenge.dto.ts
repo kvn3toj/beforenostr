@@ -14,8 +14,8 @@ export class UpdateUserChallengeDto {
   @IsOptional()
   status?: UserChallengeStatus;
 
-  @ApiProperty({ description: 'Progress data for the user challenge (JSONB)', type: 'object' })
+  @ApiProperty({ description: 'Progress data for the user challenge (JSONB)', type: 'object', additionalProperties: true })
   @IsJSON()
   @IsOptional()
   progress?: any;
-} 
+}

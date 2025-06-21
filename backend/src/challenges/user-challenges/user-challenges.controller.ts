@@ -3,8 +3,8 @@ import { UserChallengesService } from './user-challenges.service';
 import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Adjust path as necessary
-import { RolesGuard } from '../../rbac/guards/roles.guard'; // Adjust path as necessary
-import { Roles } from '../../rbac/decorators/roles.decorator'; // Adjust path as necessary
+import { RolesGuard } from '@/rbac/guards/roles.guard'; // Adjust path as necessary
+import { Roles } from '@/rbac/decorators/roles.decorator'; // Adjust path as necessary
 import { Request } from 'express';
 import { AuthenticatedUser } from 'src/types/auth.types';
 

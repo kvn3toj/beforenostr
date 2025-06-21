@@ -1,15 +1,20 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Inject } from '@nestjs/common';
 import { InvitationsService } from './invitations.service';
-import { 
-  CreateGiftCardDto, 
-  RedeemGiftCardDto, 
+import {
+  CreateGiftCardDto,
+  RedeemGiftCardDto,
   UpdateGiftCardDto,
   InvitationStatsDto
 } from './dto/invitations.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
+import { UpdateInvitationStatusDto } from './dto/update-invitation-status.dto';
+import { AuthenticatedUser } from '@/types/auth.types';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('invitations')
+@ApiBearerAuth()
 @Controller('invitations')
 export class InvitationsController {
   constructor(@Inject(InvitationsService) private readonly invitationsService: InvitationsService) {
@@ -22,8 +27,8 @@ export class InvitationsController {
   @Get('ping')
   async ping() {
 //     console.log('>>> InvitationsController.ping: Invitations module is working');
-    return { 
-      message: 'Invitations module is working', 
+    return {
+      message: 'Invitations module is working',
       timestamp: new Date().toISOString(),
       module: 'Invitations & Gift Cards System'
     };
@@ -87,8 +92,8 @@ export class InvitationsController {
     @Query('endDate') endDate?: string
   ) {
 //     console.log('>>> InvitationsController.getInvitationStats: Getting invitation statistics');
-    
+
     const dto: InvitationStatsDto = { inviterId, startDate, endDate };
     return await this.invitationsService.getInvitationStats(dto);
   }
-} 
+}

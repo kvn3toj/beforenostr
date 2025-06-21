@@ -28,7 +28,7 @@ export class NotificationService {
       };
 
       if (emailConfig.host && emailConfig.auth.user && emailConfig.auth.pass) {
-        this.emailTransporter = nodemailer.createTransporter(emailConfig);
+        this.emailTransporter = nodemailer.createTransport(emailConfig);
         this.logger.log('Email transporter initialized successfully');
       } else {
         this.logger.warn('Email configuration incomplete - email alerts disabled');
@@ -54,7 +54,7 @@ export class NotificationService {
 
   async sendConsistencyAlert(checkResult: ConsistencyCheckResultDto): Promise<boolean> {
     const threshold = parseInt(process.env.ALERT_THRESHOLD || '5');
-    
+
     if (checkResult.inconsistenciesFound < threshold) {
       this.logger.log(`Inconsistencies (${checkResult.inconsistenciesFound}) below threshold (${threshold}) - no alert sent`);
       return false;
@@ -90,11 +90,11 @@ export class NotificationService {
 
   private buildAlertMessage(checkResult: ConsistencyCheckResultDto): string {
     const { inconsistenciesFound, totalVideos, problematicVideos } = checkResult;
-    
+
     let message = `🚨 GAMIFIER VIDEO ANALYTICS ALERT\n\n`;
     message += `Consistency check completed at ${checkResult.timestamp}\n`;
     message += `Found ${inconsistenciesFound} inconsistencies out of ${totalVideos} videos checked\n\n`;
-    
+
     if (problematicVideos.length > 0) {
       message += `Problematic videos:\n`;
       problematicVideos.slice(0, 10).forEach(video => {
@@ -105,15 +105,15 @@ export class NotificationService {
         }
         message += `\n`;
       });
-      
+
       if (problematicVideos.length > 10) {
         message += `... and ${problematicVideos.length - 10} more videos\n`;
       }
     }
-    
+
     message += `\nExecution time: ${checkResult.executionTime}ms\n`;
     message += `Please check the system dashboard for more details.`;
-    
+
     return message;
   }
 
@@ -178,7 +178,7 @@ export class NotificationService {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*Top Issues:*\n${checkResult.problematicVideos.slice(0, 5).map(v => 
+            text: `*Top Issues:*\n${checkResult.problematicVideos.slice(0, 5).map(v =>
               `• ID ${v.id}: ${v.title} - ${v.issue}`
             ).join('\n')}`,
           },
@@ -197,7 +197,7 @@ export class NotificationService {
             <h2 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 10px;">
               🚨 GAMIFIER Video Analytics Alert
             </h2>
-            
+
             <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; padding: 15px; margin: 20px 0;">
               <h3 style="margin-top: 0; color: #856404;">Summary</h3>
               <ul style="margin: 0;">
@@ -216,12 +216,12 @@ export class NotificationService {
                     <li style="margin-bottom: 10px;">
                       <strong>ID ${video.id}:</strong> ${video.title}<br>
                       <em>Issue:</em> ${video.issue}
-                      ${video.storedDuration !== null && video.actualDuration !== null ? 
+                      ${video.storedDuration !== null && video.actualDuration !== null ?
                         `<br><em>Duration:</em> Stored ${video.storedDuration}s, Actual ${video.actualDuration}s` : ''}
                     </li>
                   `).join('')}
                 </ul>
-                ${checkResult.problematicVideos.length > 10 ? 
+                ${checkResult.problematicVideos.length > 10 ?
                   `<p><em>... and ${checkResult.problematicVideos.length - 10} more videos</em></p>` : ''}
               </div>
             ` : ''}
@@ -295,14 +295,14 @@ export class NotificationService {
    */
   async sendHealthReport(healthReport: any): Promise<boolean> {
     this.logger.log('📊 Sending system health report...');
-    
+
     let emailSent = false;
     let slackSent = false;
 
     try {
       // Generar contenido del reporte
       const reportContent = this.generateHealthReportContent(healthReport);
-      
+
       // Enviar por email si está configurado
       if (this.emailTransporter && process.env.ALERT_EMAIL_ENABLED === 'true') {
         emailSent = await this.sendHealthReportEmail(reportContent, healthReport);
@@ -315,7 +315,7 @@ export class NotificationService {
 
       const success = emailSent || slackSent;
       this.logger.log(`Health report sent - Email: ${emailSent}, Slack: ${slackSent}`);
-      
+
       return success;
 
     } catch (error) {
@@ -333,9 +333,9 @@ export class NotificationService {
     html: string;
   } {
     const { period, timestamp, consistencyCheck, performanceMetrics, errorSummary, recommendations } = healthReport;
-    
+
     const subject = `🏥 GAMIFIER ${period.toUpperCase()} Health Report - ${new Date(timestamp).toLocaleDateString()}`;
-    
+
     const text = `
 GAMIFIER SYSTEM HEALTH REPORT
 =============================
@@ -379,7 +379,7 @@ This is an automated report from GAMIFIER Monitoring System.
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
         <h1 style="color: #2c3e50; border-bottom: 2px solid #3498db;">🏥 GAMIFIER System Health Report</h1>
-        
+
         <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
           <h3>Report Summary</h3>
           <p><strong>Period:</strong> ${period}</p>
@@ -393,7 +393,7 @@ This is an automated report from GAMIFIER Monitoring System.
             <p><strong>Inconsistencies:</strong> ${consistencyCheck.inconsistenciesFound}</p>
             <p><strong>Execution Time:</strong> ${consistencyCheck.executionTime}ms</p>
           </div>
-          
+
           <div style="background: #e8f4fd; padding: 15px; border-radius: 5px;">
             <h3 style="color: #3498db;">⚡ Performance</h3>
             <p><strong>Avg Calculation Time:</strong> ${Math.round(performanceMetrics.averageCalculationTime)}ms</p>
@@ -463,7 +463,7 @@ This is an automated report from GAMIFIER Monitoring System.
       }
 
       const { consistencyCheck, performanceMetrics, errorSummary } = healthReport;
-      
+
       // Determinar color basado en el estado del sistema
       let color = '#36a64f'; // Verde por defecto
       if (errorSummary.criticalErrors > 0 || consistencyCheck.inconsistenciesFound > 10) {
@@ -500,7 +500,7 @@ This is an automated report from GAMIFIER Monitoring System.
               }
             ],
             footer: 'GAMIFIER Monitoring System',
-            ts: new Date(healthReport.timestamp).getTime() / 1000
+            ts: (new Date(healthReport.timestamp).getTime() / 1000).toString()
           }
         ]
       };
@@ -520,7 +520,7 @@ This is an automated report from GAMIFIER Monitoring System.
    */
   async sendQuestionValidationAlert(message: string, details: any): Promise<boolean> {
     this.logger.log('📋 Sending question validation alert...');
-    
+
     let alertsSent = false;
 
     // Enviar por email si está configurado
@@ -573,4 +573,4 @@ This is an automated report from GAMIFIER Monitoring System.
 
     return alertsSent;
   }
-} 
+}

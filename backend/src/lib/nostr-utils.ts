@@ -1,14 +1,19 @@
 import { Buffer } from 'buffer';
-import { getPublicKey as nostrGetPublicKey, generateSecretKey } from 'nostr-tools';
+
+// Helper function to dynamically import nostr-tools
+async function getNostrTools() {
+  return await import('nostr-tools');
+}
 
 /**
  * Obtiene la clave privada desde localStorage o la genera si no existe.
- * @returns Clave privada en formato hex (string)
+ * @returns {Promise<string>} Clave privada en formato hex (string)
  */
-export function getPrivateKey(): string {
+export async function getPrivateKey(): Promise<string> {
   let privKey = localStorage.getItem('nostr-privkey');
   if (!privKey) {
-    privKey = Buffer.from(generateSecretKey()).toString('hex');
+    const nostr = await getNostrTools();
+    privKey = Buffer.from(nostr.generateSecretKey()).toString('hex');
     localStorage.setItem('nostr-privkey', privKey);
   }
   return privKey;
@@ -16,11 +21,12 @@ export function getPrivateKey(): string {
 
 /**
  * Obtiene la clave pública a partir de la clave privada.
- * @param privKeyHex Clave privada en formato hex (string)
- * @returns Clave pública en formato hex (string)
+ * @param {string} [privKeyHex] - Clave privada en formato hex (string)
+ * @returns {Promise<string>} Clave pública en formato hex (string)
  */
-export function getPublicKey(privKeyHex?: string): string {
-  const privKey = privKeyHex || getPrivateKey();
+export async function getPublicKey(privKeyHex?: string): Promise<string> {
+  const nostr = await getNostrTools();
+  const privKey = privKeyHex || await getPrivateKey();
   const privKeyBytes = Uint8Array.from(Buffer.from(privKey, 'hex'));
-  return nostrGetPublicKey(privKeyBytes);
-} 
+  return nostr.getPublicKey(privKeyBytes);
+}

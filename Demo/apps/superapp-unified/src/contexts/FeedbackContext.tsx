@@ -45,10 +45,10 @@ const defaultContext: FeedbackContextType = {
 const FeedbackContext = createContext<FeedbackContextType>(defaultContext);
 
 // Hook personalizado para usar el contexto
-export const useFeedback = () => {
+export const useFeedbackContext = () => {
   const context = useContext(FeedbackContext);
   if (!context) {
-    throw new Error('useFeedback debe ser usado dentro de un FeedbackProvider');
+    throw new Error('useFeedbackContext debe ser usado dentro de un FeedbackProvider');
   }
   return context;
 };
@@ -150,17 +150,13 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = ({ children }) 
       console.log('✅ Feedback enviado exitosamente:', response);
 
       // Mostrar notificación de éxito
-      if (typeof window !== 'undefined' && window.alert) {
-        alert('🎉 ¡Feedback enviado exitosamente! Gracias por tu contribución al Bien Común.');
-      }
+      alert('🎉 ¡Feedback enviado exitosamente! Gracias por tu contribución al Bien Común.');
 
     } catch (error) {
       console.error('❌ Error al enviar feedback:', error);
 
       // Mostrar notificación de error
-      if (typeof window !== 'undefined' && window.alert) {
-        alert('❌ Error al enviar feedback. Por favor, inténtalo de nuevo.');
-      }
+      alert('❌ Error al enviar feedback. Por favor, inténtalo de nuevo.');
     }
   }, []);
 

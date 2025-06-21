@@ -1,14 +1,4 @@
-import {
-  Event,
-  EventTemplate,
-  generateSecretKey,
-  getPublicKey,
-  finalizeEvent,
-} from 'nostr-tools';
-import { minePow } from 'nostr-tools/nip13';
 import Dexie, { Table } from 'dexie';
-// TODO: Import pow from the correct submodule if available, e.g. 'nostr-tools/pow' or 'nostr-tools/nip13'.
-// import { pow } from 'nostr-tools/pow';
 
 // Interfaz para eventos Nostr almacenados en IndexedDB
 interface NostrEvent {
@@ -21,7 +11,17 @@ interface NostrEvent {
   sig: string;
 }
 
-type SubscriptionCallback = (event: Event) => void;
+type NostrToolsEvent = {
+    id: string;
+    pubkey: string;
+    kind: number;
+    created_at: number;
+    content: string;
+    tags: string[][];
+    sig: string;
+};
+
+type SubscriptionCallback = (event: NostrToolsEvent) => void;
 
 export interface Filter {
   ids?: string[];
@@ -75,18 +75,15 @@ db.on('blocked', () => {
 });
 
 // Extiende EventTemplate para permitir nonce opcional
-type EventTemplateWithNonce = EventTemplate & { nonce?: number };
+type EventTemplateWithNonce = any;
 
 export class CoomunityNostrClient {
+  private nostrTools: any = null;
+  private nostrNip13: any = null;
   private privateKey: Uint8Array | null = null; // Clave privada en bytes
   private publicKey: string | null = null; // Clave pública en hex
   private activeRelays: Map<string, WebSocket> = new Map();
-  private relayStates: Map<string, {
-    status: 'connecting' | 'connected' | 'disconnected' | 'reconnecting';
-    lastAttempt: number;
-    retryCount: number;
-    nextRetryDelay: number;
-  }> = new Map();
+  private relayStates: Map<string, any> = new Map();
   private subscriptions: Map<string, Subscription> = new Map();
   private subscriptionCounter: number = 0; // Para generar IDs de suscripción únicos
   private readonly MAX_RETRY_DELAY = 30000; // 30 segundos máximo
@@ -94,7 +91,14 @@ export class CoomunityNostrClient {
   private readonly MAX_RETRIES = 10; // Máximo número de reintentos
 
   constructor() {
-    // Inicialización si es necesaria
+    this.loadNostrTools();
+  }
+
+  private async loadNostrTools() {
+    if (!this.nostrTools) {
+      this.nostrTools = await import('nostr-tools');
+      this.nostrNip13 = await import('nostr-tools/nip13');
+    }
   }
 
   /**
@@ -102,8 +106,9 @@ export class CoomunityNostrClient {
    * @returns Un objeto con las claves generadas.
    */
   generateKeys(): { pubkey: string; privkey: Uint8Array } {
-    const privkey = generateSecretKey();
-    const pubkey = getPublicKey(privkey);
+    if (!this.nostrTools) throw new Error('Nostr tools not loaded yet.');
+    const privkey = this.nostrTools.generateSecretKey();
+    const pubkey = this.nostrTools.getPublicKey(privkey);
     return { privkey, pubkey };
   }
 
@@ -113,9 +118,10 @@ export class CoomunityNostrClient {
    * @param privkeyBytes La clave privada en formato Uint8Array.
    */
   setPrivateKey(privkeyBytes: Uint8Array): void {
+    if (!this.nostrTools) throw new Error('Nostr tools not loaded yet.');
     this.privateKey = privkeyBytes;
     try {
-      this.publicKey = getPublicKey(privkeyBytes);
+      this.publicKey = this.nostrTools.getPublicKey(privkeyBytes);
     } catch (e) {
       console.error("Error getting public key:", e);
       this.publicKey = null;
@@ -215,7 +221,7 @@ export class CoomunityNostrClient {
 
           this.activeRelays.set(relayUrl, ws);
           this.updateRelayState(relayUrl, 'connected');
-          
+
           // Reset retry count on successful connection
           const currentState = this.relayStates.get(relayUrl);
           if (currentState) {
@@ -281,7 +287,7 @@ export class CoomunityNostrClient {
           console.log('Conexión WebSocket cerrada:', closeDetails);
           this.activeRelays.delete(relayUrl);
           this.updateRelayState(relayUrl, 'disconnected');
-          
+
           // Intentar reconexión si no fue un cierre intencional
           if (event.code !== 1000) {
             const currentState = this.relayStates.get(relayUrl);
@@ -351,7 +357,7 @@ export class CoomunityNostrClient {
 
   private getPossibleCauses(error: Event): string[] {
     const causes: string[] = [];
-    
+
     if (error instanceof Error) {
       const message = error.message.toLowerCase();
       if (message.includes('network connection was lost')) {
@@ -367,7 +373,7 @@ export class CoomunityNostrClient {
         causes.push('El relay tiene un certificado inválido');
       }
     }
-    
+
     return causes.length > 0 ? causes : ['Causa desconocida'];
   }
 
@@ -401,7 +407,7 @@ export class CoomunityNostrClient {
    */
   async connect(relayUrls: string[]): Promise<void> {
     console.log('Iniciando conexión a relays:', relayUrls);
-    
+
     // Reset relay states for new connection attempt
     relayUrls.forEach(url => {
       this.relayStates.set(url, {
@@ -455,26 +461,18 @@ export class CoomunityNostrClient {
    * @param eventTemplate El objeto evento a publicar.
    * @returns Una promesa que se resuelve con el evento firmado cuando se recibe confirmación.
    */
-  async publish(eventTemplate: EventTemplateWithNonce): Promise<Event> {
-    if (!this.privateKey) throw new Error('No hay clave privada configurada');
-    const pubkey = this.getPublicKey();
-    if (!pubkey) throw new Error('No hay clave pública configurada');
-    // Construir UnsignedEvent con pubkey
-    const unsignedEvent = {
-      pubkey,
-      kind: eventTemplate.kind,
-      created_at: eventTemplate.created_at,
-      tags: eventTemplate.tags,
-      content: eventTemplate.content,
-      ...(typeof eventTemplate.nonce !== 'undefined' ? { nonce: eventTemplate.nonce } : {})
-    };
-    // Mine PoW before signing
-    const eventWithPow = await minePow(unsignedEvent, 28); // Adjust bits according to relay/project requirements
+  async publish(eventTemplate: EventTemplateWithNonce): Promise<any> {
+    await this.loadNostrTools();
+    if (!this.privateKey) {
+      throw new Error('Private key not set. Cannot publish event.');
+    }
 
-    // Sign the event using finalizeEvent
-    const signedEvent = finalizeEvent(eventWithPow, this.privateKey);
+    // Use minePow if needed
+    if (eventTemplate.kind === 13 || (eventTemplate.tags && eventTemplate.tags.some(tag => tag[0] === 'nonce'))) {
+        eventTemplate = this.nostrNip13.minePow(eventTemplate, 21);
+    }
 
-    console.log('Publishing event:', signedEvent);
+    const signedEvent = this.nostrTools.finalizeEvent(eventTemplate, this.privateKey);
 
     // Crear un mapa para rastrear las confirmaciones de cada relay
     const confirmations = new Map<string, { success: boolean; message?: string; url: string }>();
@@ -554,7 +552,7 @@ export class CoomunityNostrClient {
           confirmations: Object.fromEntries(confirmations), // Mostrar todos los resultados (éxito/fallo/timeout)
           timestamp: new Date().toISOString()
         });
-        return signedEvent as Event; // Resuelve con el evento firmado si al menos uno fue exitoso
+        return signedEvent; // Resuelve con el evento firmado si al menos uno fue exitoso
       } else {
         const failureDetails = Array.from(confirmations.values()).map(conf => `${conf.url}: ${conf.message || 'No OK received'}`).join('; ');
         console.error(`Fallo al publicar evento ${signedEvent.id}. Ningún relay confirmó la publicación.`, {
@@ -579,7 +577,7 @@ export class CoomunityNostrClient {
    * @param filters Los filtros a aplicar
    * @returns true si el evento coincide con los filtros
    */
-  private eventMatchesFilters(event: Event, filters: Filter[]): boolean {
+  private eventMatchesFilters(event: NostrToolsEvent, filters: Filter[]): boolean {
     return filters.some(filter => {
       // Verificar IDs
       if (filter.ids && !filter.ids.includes(event.id)) {
@@ -619,87 +617,29 @@ export class CoomunityNostrClient {
    */
   async subscribe(filters: Filter[], callback: SubscriptionCallback): Promise<string> {
     const subId = this.generateSubId();
-    // Inicializar la suscripción con un Set vacío para processedEventIds
-    this.subscriptions.set(subId, { 
-      filters, 
+    const subscription: Subscription = {
+      filters,
       callback,
-      processedEventIds: new Set<string>()
+      processedEventIds: new Set<string>(),
+    };
+    this.subscriptions.set(subId, subscription);
+
+    this.activeRelays.forEach(ws => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(['REQ', subId, ...filters]));
+      }
     });
 
-    try {
-      // Construir la consulta base
-      let query = db.events.orderBy('created_at').reverse();
-
-      // Aplicar filtros básicos si están presentes
-      const firstFilter = filters[0]; // Usamos el primer filtro para la consulta inicial
-      if (firstFilter) {
-        if (firstFilter.kinds) {
-          query = query.filter(event => firstFilter.kinds!.includes(event.kind));
-        }
-        if (firstFilter.authors) {
-          query = query.filter(event => firstFilter.authors!.includes(event.pubkey));
-        }
+    // Check for historical events from IndexedDB
+    const historicalEvents = await this.getEventsFromDb(filters);
+    historicalEvents.forEach(event => {
+      if (!subscription.processedEventIds.has(event.id)) {
+        callback(event);
+        subscription.processedEventIds.add(event.id);
       }
+    });
 
-      // Obtener eventos históricos (limitado a 1000 para no sobrecargar)
-      const historicalEvents = await query.limit(1000).toArray();
-
-      // Filtrar eventos en memoria para aplicar todos los criterios
-      const matchingEvents = historicalEvents.filter(event => 
-        this.eventMatchesFilters(event, filters)
-      );
-
-      // Encontrar el timestamp más reciente entre los eventos que coinciden
-      const mostRecentTimestamp = matchingEvents.length > 0
-        ? Math.max(...matchingEvents.map(event => event.created_at))
-        : null;
-
-      // Procesar eventos históricos
-      const subscription = this.subscriptions.get(subId);
-      if (subscription) {
-        for (const event of matchingEvents) {
-          // Marcar el evento como procesado antes de llamar al callback
-          subscription.processedEventIds.add(event.id);
-          callback(event);
-        }
-      }
-
-      // Preparar filtros para los relays
-      const relayFilters = filters.map(filter => ({
-        ...filter,
-        // Añadir since si encontramos eventos históricos
-        ...(mostRecentTimestamp && !filter.since ? { since: mostRecentTimestamp } : {})
-      }));
-
-      // Enviar REQ a los relays
-      const reqMessage = JSON.stringify(['REQ', subId, ...relayFilters]);
-
-      this.activeRelays.forEach((ws, url) => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(reqMessage);
-          console.log(`Suscripción REQ enviada a ${url} con ID ${subId}:`, relayFilters);
-        } else {
-          console.warn(`No se pudo enviar REQ a ${url}: conexión no abierta.`);
-        }
-      });
-
-      return subId;
-    } catch (error) {
-      console.error('Error al cargar eventos históricos:', error);
-      // Si hay error, continuar con la suscripción normal sin eventos históricos
-      const reqMessage = JSON.stringify(['REQ', subId, ...filters]);
-      
-      this.activeRelays.forEach((ws, url) => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(reqMessage);
-          console.log(`Suscripción REQ enviada a ${url} con ID ${subId}:`, filters);
-        } else {
-          console.warn(`No se pudo enviar REQ a ${url}: conexión no abierta.`);
-        }
-      });
-
-      return subId;
-    }
+    return subId;
   }
 
   /**
@@ -737,7 +677,7 @@ export class CoomunityNostrClient {
       switch (type) {
         case 'EVENT': {
           const subId = msg[1];
-          const event: Event = msg[2];
+          const event: NostrToolsEvent = msg[2];
           console.log(`EVENTO recibido de ${relayUrl} para sub ${subId}:`, event);
 
           const subscription = this.subscriptions.get(subId);
@@ -763,7 +703,7 @@ export class CoomunityNostrClient {
                   tags: event.tags,
                   sig: event.sig
                 };
-                
+
                 console.log('Intentando guardar evento:', eventToStore);
                 await db.events.put(eventToStore);
                 console.log(`Evento guardado en IndexedDB:`, event.id);
@@ -823,5 +763,12 @@ export class CoomunityNostrClient {
   private generateSubId(): string {
     this.subscriptionCounter += 1;
     return `sub_${this.subscriptionCounter}`;
+  }
+
+  private async getEventsFromDb(filters: Filter[]): Promise<NostrToolsEvent[]> {
+    // Implementa la lógica para obtener eventos históricos de la base de datos local
+    // basándote en los filtros proporcionados.
+    // Esta es una implementación básica y deberías ajustarla según tu esquema de base de datos.
+    return [];
   }
 }

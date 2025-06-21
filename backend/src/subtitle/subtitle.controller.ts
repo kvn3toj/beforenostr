@@ -17,8 +17,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 import { SubtitleService } from './subtitle.service';
 import { CreateSubtitleDto } from './dto/create-subtitle.dto';
 import { UpdateSubtitleDto } from './dto/update-subtitle.dto';

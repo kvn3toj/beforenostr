@@ -19,8 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { FeedbackAgentsService } from '../agents/feedback-agents.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../rbac/guards/roles.guard';
-import { Roles } from '../../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 
 @ApiTags('🤖 CoP Oráculo - Agentes Multi-IA')
 @ApiBearerAuth()

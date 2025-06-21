@@ -4,7 +4,6 @@ import { CacheService } from '../cache/cache.service';
 import { MetricsService } from '../common/metrics/metrics.service';
 import { VideoPlatform } from '../common/constants/platform.enum';
 import { VideoQuality, VideoMetadata } from '../common/interfaces/video-metadata.interface';
-import fetch from 'node-fetch';
 import { AbortController } from 'node-abort-controller';
 
 // Minimal interfaces for API responses
@@ -53,6 +52,11 @@ export class VideoItemsService {
     private readonly metricsService: MetricsService,
   ) {
     this.logger.log('VideoItemsService initialized');
+  }
+
+  private async fetch(url: any, options: any = {}): Promise<any> {
+    const { default: fetch } = await import('node-fetch');
+    return fetch(url, options);
   }
 
   /**
@@ -355,7 +359,7 @@ export class VideoItemsService {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 5000);
 
-        const response = await fetch(url, { signal: controller.signal });
+        const response = await this.fetch(url, { signal: controller.signal });
         clearTimeout(timeout);
 
         if (!response.ok) {
@@ -382,7 +386,7 @@ export class VideoItemsService {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await this.fetch(url, { signal: controller.signal });
       clearTimeout(timeout);
 
       if (!response.ok) {
@@ -421,7 +425,7 @@ export class VideoItemsService {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await this.fetch(url, { signal: controller.signal });
       clearTimeout(timeout);
 
       if (!response.ok) {
@@ -686,7 +690,7 @@ export class VideoItemsService {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await this.fetch(url, { signal: controller.signal });
       clearTimeout(timeout);
 
       if (!response.ok) {
@@ -720,7 +724,7 @@ export class VideoItemsService {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await this.fetch(url, { signal: controller.signal });
       clearTimeout(timeout);
 
       if (!response.ok) {

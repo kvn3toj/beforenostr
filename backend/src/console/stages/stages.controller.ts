@@ -8,8 +8,8 @@
 import { Controller, Get, Put, Param, Body, UseGuards } from '@nestjs/common';
 import { StagesService } from './stages.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../rbac/guards/roles.guard';
-import { Roles } from '../../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 
 @Controller('console/stages')
 @UseGuards(JwtAuthGuard, RolesGuard)

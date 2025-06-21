@@ -2,8 +2,8 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Inje
 import { MarketplaceService } from './marketplace.service';
 import { CreateMarketplaceItemDto, UpdateMarketplaceItemDto, MarketplaceSearchDto } from './dto/marketplace.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 
 @Controller('marketplace')
 export class MarketplaceController {

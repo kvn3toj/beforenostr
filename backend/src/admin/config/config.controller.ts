@@ -4,8 +4,8 @@ import { CreateConfigDto } from './dto/create-config.dto';
 import { UpdateConfigDto } from './dto/update-config.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Adjust path
-import { RolesGuard } from '../../rbac/guards/roles.guard'; // Adjust path
-import { Roles } from '../../rbac/decorators/roles.decorator'; // Adjust path
+import { RolesGuard } from '@/rbac/guards/roles.guard'; // Adjust path
+import { Roles } from '@/rbac/decorators/roles.decorator'; // Adjust path
 import { Request } from 'express';
 
 interface AuthenticatedRequest extends Request {

@@ -15,7 +15,7 @@ export class ConfigService {
 
   async create(createConfigDto: CreateConfigDto, user: AuthenticatedUser): Promise<AppConfig> {
     // TODO: Associate createdBy user ID from req.user
-    const newConfig = await this.prisma.appConfig.create({
+    const newConfig = await this.prisma.configuration.create({
       data: {
         ...createConfigDto,
         value: createConfigDto.value ?? {},
@@ -38,11 +38,11 @@ export class ConfigService {
 
   async findAll(): Promise<AppConfig[]> {
     // TODO: Consider masking sensitive values for non-admin users
-    return this.prisma.appConfig.findMany();
+    return this.prisma.configuration.findMany();
   }
 
   async findOne(id: string): Promise<AppConfig | null> {
-    const config = await this.prisma.appConfig.findUnique({
+    const config = await this.prisma.configuration.findUnique({
       where: { id },
     });
     if (!config) {
@@ -53,7 +53,7 @@ export class ConfigService {
   }
 
   async findOneByKey(key: string): Promise<AppConfig | null> {
-    const config = await this.prisma.appConfig.findUnique({
+    const config = await this.prisma.configuration.findUnique({
       where: { key },
     });
      // TODO: Consider masking sensitive values for non-admin users
@@ -62,7 +62,7 @@ export class ConfigService {
 
   async update(id: string, updateConfigDto: UpdateConfigDto, user: AuthenticatedUser): Promise<AppConfig> {
      // TODO: Associate updatedBy user ID from req.user
-    const existingConfig = await this.prisma.appConfig.findUnique({
+    const existingConfig = await this.prisma.configuration.findUnique({
         where: { id }
     });
 
@@ -73,7 +73,7 @@ export class ConfigService {
     // Capture old value before update (excluding sensitive values)
     const oldValue = { ...existingConfig, value: existingConfig.isSensitive ? '[SENSITIVE]' : existingConfig.value };
 
-    const updatedConfig = await this.prisma.appConfig.update({
+    const updatedConfig = await this.prisma.configuration.update({
       where: { id },
       data: {
         ...updateConfigDto,
@@ -100,7 +100,7 @@ export class ConfigService {
   }
 
   async remove(id: string, user: AuthenticatedUser): Promise<AppConfig> {
-     const existingConfig = await this.prisma.appConfig.findUnique({
+     const existingConfig = await this.prisma.configuration.findUnique({
         where: { id }
     });
 
@@ -111,7 +111,7 @@ export class ConfigService {
     // Capture old value before deletion (excluding sensitive values)
     const oldValue = { ...existingConfig, value: existingConfig.isSensitive ? '[SENSITIVE]' : existingConfig.value };
 
-    const deletedConfig = await this.prisma.appConfig.delete({
+    const deletedConfig = await this.prisma.configuration.delete({
       where: { id },
     });
 

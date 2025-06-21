@@ -23,8 +23,8 @@ import type { Question } from '../generated/prisma';
 
 // Assuming you have AuthGuard and RolesGuard/Roles decorator for admin routes
 // import { AuthGuard } from '@nestjs/passport';
-// import { RolesGuard } from '../rbac/guards/roles.guard';
-// import { Roles } from '../rbac/decorators/roles.decorator';
+// import { RolesGuard } from '@/rbac/guards/roles.guard';
+// import { Roles } from '@/rbac/decorators/roles.decorator';
 // import { AuthenticatedUser } from '../auth/types/authenticated-user.interface'; // If needed to pass user to service
 
 @ApiTags('questions') // Tag for Swagger

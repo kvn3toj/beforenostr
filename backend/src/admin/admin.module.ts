@@ -7,7 +7,7 @@ import { SystemService } from './system/system.service';
 import { SystemController } from './system/system.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module'; // Assuming AuthModule is needed for JwtAuthGuard
-import { RbacModule } from '../rbac/rbac.module'; // Assuming RbacModule is needed for RolesGuard
+import { RbacModule } from '@/rbac/rbac.module'; // Assuming RbacModule is needed for RolesGuard
 
 @Module({
   imports: [PrismaModule, AuthModule, RbacModule], // Import necessary modules

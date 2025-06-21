@@ -7,7 +7,7 @@ import { WalletsService } from './wallets/wallets.service';
 import { WalletsController } from './wallets/wallets.controller';
 import { PrismaModule } from '../prisma/prisma.module'; // Assuming PrismaModule is in ../prisma
 import { AuthModule } from '../auth/auth.module'; // Assuming AuthModule is in ../auth
-import { RbacModule } from '../rbac/rbac.module'; // Assuming RbacModule is in ../rbac
+import { RbacModule } from '@/rbac/rbac.module'; // Assuming RbacModule is in ../rbac
 
 @Module({
   imports: [PrismaModule, AuthModule, RbacModule], // Import necessary modules

@@ -3,7 +3,7 @@ import { MarketplaceController } from './marketplace.controller';
 import { MarketplaceService } from './marketplace.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
-import { RbacModule } from '../rbac/rbac.module';
+import { RbacModule } from '@/rbac/rbac.module';
 
 @Module({
   imports: [

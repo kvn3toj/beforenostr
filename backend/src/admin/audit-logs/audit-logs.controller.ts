@@ -2,8 +2,8 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { AuditLogsService } from './audit-logs.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 // import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Temporarily commented
-// import { RolesGuard } from '../../rbac/guards/roles.guard'; // Temporarily commented
-// import { Roles } from '../../rbac/decorators/roles.decorator'; // Temporarily commented
+// import { RolesGuard } from '@/rbac/guards/roles.guard'; // Temporarily commented
+// import { Roles } from '@/rbac/decorators/roles.decorator'; // Temporarily commented
 import { GetAuditLogsDto } from './dto/get-audit-logs.dto';
 
 @ApiTags('admin/audit-logs')

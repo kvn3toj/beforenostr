@@ -317,4 +317,8 @@ export class UsersService {
       aire: 120 + (seed * 4) + Math.floor(Math.cos(seed * 1.5) * 35)  // Visión/Claridad mental
     };
   }
+
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
 }

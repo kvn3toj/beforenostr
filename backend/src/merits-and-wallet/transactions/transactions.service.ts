@@ -30,7 +30,7 @@ export class TransactionsService {
     const transaction = await this.prisma.$transaction(async (prisma) => {
       // 1. Create the transaction record
       // Note: Prisma handles JSONB fields with 'any' or specific types defined in schema.prisma
-      const newTransaction = await prisma.meritTransaction.create({ 
+      const newTransaction = await prisma.transaction.create({ 
           data: {
               ...data,
               eventData: data.eventData as any || {}, // Cast to any for Prisma, default to empty object
@@ -49,7 +49,7 @@ export class TransactionsService {
 
   async findAllForUser(userId: string): Promise<MeritTransaction[]> {
     // eventData is JsonValue, compatible with any.
-    return this.prisma.meritTransaction.findMany({
+    return this.prisma.transaction.findMany({
       where: { userId },
       orderBy: { timestamp: 'desc' },
       include: { merit: true }, // Optionally include merit details
@@ -60,7 +60,7 @@ export class TransactionsService {
     id: string,
     user: AuthenticatedUser, // Accept authenticated user object
   ): Promise<MeritTransaction & { merit: any }> { // Include merit details in return type
-    const transaction = await this.prisma.meritTransaction.findUnique({
+    const transaction = await this.prisma.transaction.findUnique({
       where: { id },
       include: { merit: true },
     });
@@ -80,7 +80,7 @@ export class TransactionsService {
 
   // Admin method to find any transaction (no ownership check)
   async findTransactionAdmin(id: string): Promise<MeritTransaction & { merit: any }> {
-    const transaction = await this.prisma.meritTransaction.findUnique({
+    const transaction = await this.prisma.transaction.findUnique({
       where: { id },
       include: { merit: true },
     });
@@ -95,7 +95,7 @@ export class TransactionsService {
   // Admin method to find all transactions (no ownership check)
   async findAllTransactionsAdmin(): Promise<(MeritTransaction & { merit: any })[]> {
     // eventData is JsonValue, compatible with any.
-    return this.prisma.meritTransaction.findMany({
+    return this.prisma.transaction.findMany({
       orderBy: { timestamp: 'desc' },
       include: { merit: true },
     });

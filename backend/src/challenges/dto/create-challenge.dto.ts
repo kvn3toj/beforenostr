@@ -1,22 +1,15 @@
-import { IsString, IsNotEmpty, IsDate, IsOptional, IsJSON, IsArray, ValidateNested, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsDate, IsOptional, IsArray, ValidateNested, IsObject } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateChallengeRewardDto } from './create-challenge-reward.dto';
 import { ChallengeConfig } from '../types/challenge-config.interface';
 
-enum ChallengeType {
-  CUSTOM = 'CUSTOM',
-  AUTOMATED = 'AUTOMATED',
-}
-
-enum ChallengeStatus {
-  DRAFT = 'DRAFT',
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  ARCHIVED = 'ARCHIVED',
-}
-
 export class CreateChallengeDto {
+  @ApiProperty({ description: 'The title of the challenge' })
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
   @ApiProperty({ description: 'The name of the challenge' })
   @IsString()
   @IsNotEmpty()
@@ -32,19 +25,25 @@ export class CreateChallengeDto {
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ description: 'The type of the challenge', enum: ChallengeType })
-  @IsEnum(ChallengeType)
+  @ApiProperty({ description: 'The type of the challenge (e.g., AUTOMATED, MANUAL)' })
+  @IsString()
   @IsNotEmpty()
-  type: ChallengeType;
+  type: string;
 
-  @ApiProperty({ description: 'Configuration data for the challenge (JSONB)', type: 'object', additionalProperties: true })
+  @ApiProperty({
+    description: 'Configuration data for the challenge (JSON object)',
+    type: 'object',
+    example: { "targetValue": 100, "actionType": "complete_video" },
+    additionalProperties: true
+  })
+  @IsObject()
   @IsOptional()
   config?: ChallengeConfig;
 
-  @ApiProperty({ description: 'The status of the challenge', enum: ChallengeStatus })
-  @IsEnum(ChallengeStatus)
+  @ApiProperty({ description: 'The status of the challenge (e.g., ACTIVE, INACTIVE)' })
+  @IsString()
   @IsOptional()
-  status?: ChallengeStatus;
+  status?: string;
 
   @ApiProperty({ description: 'The start date of the challenge' })
   @Type(() => Date)
