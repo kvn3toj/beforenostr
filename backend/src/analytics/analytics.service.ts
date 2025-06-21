@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserEngagementDto } from './dto/create-user-engagement.dto';
-import { UserEngagement } from '@prisma/client'; // Import UserEngagement type from Prisma client
+import { Activity } from '../generated/prisma'; // Use Activity from generated Prisma
 
 interface TimeRangeParams {
   interval?: string;
@@ -35,30 +35,34 @@ export class AnalyticsService {
 // //     console.log('>>> AnalyticsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
-  async recordEngagement(data: CreateUserEngagementDto, userId: string): Promise<UserEngagement> {
+  async recordEngagement(data: CreateUserEngagementDto, userId: string): Promise<Activity> {
     return this.prisma.activity.create({
       data: {
-        ...data,
-        userId: userId,
+        title: `User Engagement - ${data.eventType}`,
+        description: data.eventData ? JSON.stringify(data.eventData) : undefined,
+        type: data.eventType,
+        creatorId: userId,
+        experienceId: data.contentItemId || 'default-experience-id', // Use contentItemId from DTO
+        status: 'ACTIVE',
       },
     });
   }
 
-  async getUserEngagement(userId: string): Promise<UserEngagement[]> {
+  async getUserEngagement(userId: string): Promise<Activity[]> {
     return this.prisma.activity.findMany({
-      where: { userId },
+      where: { creatorId: userId },
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  async getContentItemEngagement(contentItemId: string): Promise<UserEngagement[]> {
+  async getContentItemEngagement(contentItemId: string): Promise<Activity[]> {
     return this.prisma.activity.findMany({
-      where: { contentItemId },
+      where: { experienceId: contentItemId },
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  async getMyEngagement(userId: string): Promise<UserEngagement[]> {
+  async getMyEngagement(userId: string): Promise<Activity[]> {
     // This method is essentially the same as getUserEngagement but provided for controller clarity
     return this.getUserEngagement(userId);
   }
@@ -387,11 +391,7 @@ export class AnalyticsService {
       // Intentar obtener el conteo real de videos
       let totalVideos = 42; // Valor por defecto
       try {
-        const videoCount = await this.prisma.contentItem.count({
-          where: {
-            type: 'video'
-          }
-        });
+        const videoCount = await this.prisma.contentItem.count();
         totalVideos = videoCount > 0 ? videoCount : 42;
       } catch (dbError) {
         console.warn('[AnalyticsService] Could not fetch video count from DB, using mock data');
@@ -459,14 +459,14 @@ export class AnalyticsService {
         this.prisma.activity.findMany({
           take: 10,
           orderBy: { createdAt: 'desc' },
-          include: { user: { select: { name: true, email: true } } }
+          include: { creator: { select: { name: true, email: true } } }
         })
       ]);
 
-      // Calcular usuarios activos (últimos 7 días)
+      // Calcular usuarios activos (últimos 7 días) - usando actividades como proxy
       const activeUsers = await this.prisma.user.count({
         where: {
-          userEngagements: {
+          createdActivities: {
             some: {
               createdAt: {
                 gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
@@ -492,10 +492,10 @@ export class AnalyticsService {
       // Actividad reciente
       const recentActivity = recentEngagement.map(engagement => ({
         id: engagement.id,
-        type: engagement.eventType,
-        user: engagement.user?.name || 'Usuario Anónimo',
+        type: engagement.type,
+        user: engagement.creator?.name || 'Usuario Anónimo',
         timestamp: engagement.createdAt,
-        details: engagement.eventData
+        details: engagement.description
       }));
 
       return {

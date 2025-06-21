@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, Inject } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Wallet, Prisma } from '@prisma/client';
+import { Wallet } from '../../generated/prisma';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[]; /* other properties */ };
@@ -15,14 +15,14 @@ export class WalletsService {
     const wallet = await this.prisma.wallet.upsert({
       where: { userId },
       update: {
-        ...(type === 'units' 
+        ...(type === 'units'
           ? { balanceUnits: { increment: amount } }
           : { balanceToins: { increment: amount } }
         ),
       },
       create: {
         userId,
-        ...(type === 'units' 
+        ...(type === 'units'
           ? { balanceUnits: amount, balanceToins: 0 }
           : { balanceUnits: 0, balanceToins: amount }
         ),
@@ -89,7 +89,7 @@ export class WalletsService {
 
     // Get wallet with user info
     const wallet = await this.getWalletForUser(userId, user);
-    
+
     // Get merits summary by type
     const meritsGrouped = await this.prisma.merit.groupBy({
       by: ['type'],
@@ -165,7 +165,7 @@ export class WalletsService {
     async getAllBalancesForUserAdmin(userId: string) {
         // Get wallet with user info
         const wallet = await this.getWalletForUserAdmin(userId);
-        
+
         // Get merits summary by type
         const meritsGrouped = await this.prisma.merit.groupBy({
           by: ['type'],
@@ -183,4 +183,4 @@ export class WalletsService {
           })),
         };
     }
-} 
+}

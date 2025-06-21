@@ -4,7 +4,7 @@ import * as os from 'os';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
-import { AuthenticatedUser } from '../../../types/auth.types';
+import { AuthenticatedUser } from '../../types/auth.types';
 
 const execAsync = promisify(exec);
 
@@ -98,4 +98,4 @@ export class SystemService {
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
-} 
+}

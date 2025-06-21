@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Challenge } from '@prisma/client';
+import { Challenge } from '../generated/prisma';
 
 @Injectable()
 export class ChallengesPublicService {
@@ -17,11 +17,11 @@ export class ChallengesPublicService {
     console.log('[ChallengesPublicService] Testing connection...');
     console.log('[ChallengesPublicService] this.prisma:', !!this.prisma);
     console.log('[ChallengesPublicService] this.prisma.challenge:', !!this.prisma?.challenge);
-    
+
     if (!this.prisma) {
       return { error: 'PrismaService not injected' };
     }
-    
+
     try {
       const count = await this.prisma.challenge.count();
       return { success: true, challengeCount: count };
@@ -36,7 +36,7 @@ export class ChallengesPublicService {
       console.log('[ChallengesPublicService] Current date:', new Date());
       console.log('[ChallengesPublicService] this.prisma exists:', !!this.prisma);
       console.log('[ChallengesPublicService] this.prisma.challenge exists:', !!this.prisma?.challenge);
-      
+
       const activeChallenges = await this.prisma.challenge.findMany({
         where: {
           status: 'ACTIVE',
@@ -45,7 +45,7 @@ export class ChallengesPublicService {
         },
         include: { rewards: true },
       });
-      
+
       console.log('[ChallengesPublicService] Found active challenges:', activeChallenges.length);
       console.log('[ChallengesPublicService] Challenges data:', JSON.stringify(activeChallenges, null, 2));
       return activeChallenges;
@@ -58,4 +58,4 @@ export class ChallengesPublicService {
       return [];
     }
   }
-} 
+}

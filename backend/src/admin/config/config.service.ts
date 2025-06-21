@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateConfigDto, AppConfigValue } from './dto/create-config.dto';
+import { CreateConfigDto } from './dto/create-config.dto';
 import { UpdateConfigDto } from './dto/update-config.dto';
-import { AppConfig } from '@prisma/client';
+import { Configuration } from '../../generated/prisma';
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
-import { AuthenticatedUser } from '../../../types/auth.types';
+import { AuthenticatedUser } from '../../types/auth.types';
 
 @Injectable()
 export class ConfigService {
@@ -13,55 +13,49 @@ export class ConfigService {
     private readonly auditLogsService: AuditLogsService,
   ) {}
 
-  async create(createConfigDto: CreateConfigDto, user: AuthenticatedUser): Promise<AppConfig> {
-    // TODO: Associate createdBy user ID from req.user
+  async create(createConfigDto: CreateConfigDto, user: AuthenticatedUser): Promise<Configuration> {
     const newConfig = await this.prisma.configuration.create({
       data: {
-        ...createConfigDto,
-        value: createConfigDto.value ?? {},
-        // createdBy: userId, // Uncomment and pass userId from controller
+        key: createConfigDto.key,
+        value: typeof createConfigDto.value === 'string' ? createConfigDto.value : JSON.stringify(createConfigDto.value),
+        type: createConfigDto.type || 'string',
       },
     });
 
     // Log config creation
     await this.auditLogsService.createLog({
-        userId: user.id, // User performing the action
+        userId: user.id,
         actionType: 'config:created',
-        entityType: 'AppConfig',
+        entityType: 'Configuration',
         entityId: newConfig.id,
         newValue: newConfig,
-        // TODO: Add ipAddress, userAgent if available from request context
     });
 
     return newConfig;
   }
 
-  async findAll(): Promise<AppConfig[]> {
-    // TODO: Consider masking sensitive values for non-admin users
+  async findAll(): Promise<Configuration[]> {
     return this.prisma.configuration.findMany();
   }
 
-  async findOne(id: string): Promise<AppConfig | null> {
+  async findOne(id: string): Promise<Configuration | null> {
     const config = await this.prisma.configuration.findUnique({
       where: { id },
     });
     if (!config) {
       throw new NotFoundException(`Config with ID ${id} not found`);
     }
-     // TODO: Consider masking sensitive values for non-admin users
     return config;
   }
 
-  async findOneByKey(key: string): Promise<AppConfig | null> {
+  async findOneByKey(key: string): Promise<Configuration | null> {
     const config = await this.prisma.configuration.findUnique({
       where: { key },
     });
-     // TODO: Consider masking sensitive values for non-admin users
-    return config; // Can return null if not found, controller handles 404
+    return config;
   }
 
-  async update(id: string, updateConfigDto: UpdateConfigDto, user: AuthenticatedUser): Promise<AppConfig> {
-     // TODO: Associate updatedBy user ID from req.user
+  async update(id: string, updateConfigDto: UpdateConfigDto, user: AuthenticatedUser): Promise<Configuration> {
     const existingConfig = await this.prisma.configuration.findUnique({
         where: { id }
     });
@@ -70,36 +64,37 @@ export class ConfigService {
         throw new NotFoundException(`Config with ID ${id} not found`);
     }
 
-    // Capture old value before update (excluding sensitive values)
-    const oldValue = { ...existingConfig, value: existingConfig.isSensitive ? '[SENSITIVE]' : existingConfig.value };
+    // Capture old value before update
+    const oldValue = { ...existingConfig };
 
     const updatedConfig = await this.prisma.configuration.update({
       where: { id },
       data: {
-        ...updateConfigDto,
-        value: updateConfigDto.value ?? existingConfig.value,
-        // updatedBy: userId, // Uncomment and pass userId from controller
+        ...(updateConfigDto.key && { key: updateConfigDto.key }),
+        ...(updateConfigDto.value !== undefined && {
+          value: typeof updateConfigDto.value === 'string' ? updateConfigDto.value : JSON.stringify(updateConfigDto.value)
+        }),
+        ...(updateConfigDto.type && { type: updateConfigDto.type }),
       },
     });
 
-    // Capture new value after update (excluding sensitive values)
-    const newValue = { ...updatedConfig, value: updatedConfig.isSensitive ? '[SENSITIVE]' : updatedConfig.value };
+    // Capture new value after update
+    const newValue = { ...updatedConfig };
 
     // Log config update
     await this.auditLogsService.createLog({
-        userId: user.id, // User performing the action
+        userId: user.id,
         actionType: 'config:updated',
-        entityType: 'AppConfig',
+        entityType: 'Configuration',
         entityId: updatedConfig.id,
         oldValue: oldValue,
         newValue: newValue,
-        // TODO: Add ipAddress, userAgent if available from request context
     });
 
     return updatedConfig;
   }
 
-  async remove(id: string, user: AuthenticatedUser): Promise<AppConfig> {
+  async remove(id: string, user: AuthenticatedUser): Promise<Configuration> {
      const existingConfig = await this.prisma.configuration.findUnique({
         where: { id }
     });
@@ -108,8 +103,8 @@ export class ConfigService {
         throw new NotFoundException(`Config with ID ${id} not found`);
     }
 
-    // Capture old value before deletion (excluding sensitive values)
-    const oldValue = { ...existingConfig, value: existingConfig.isSensitive ? '[SENSITIVE]' : existingConfig.value };
+    // Capture old value before deletion
+    const oldValue = { ...existingConfig };
 
     const deletedConfig = await this.prisma.configuration.delete({
       where: { id },
@@ -117,14 +112,13 @@ export class ConfigService {
 
     // Log config deletion
     await this.auditLogsService.createLog({
-        userId: user.id, // User performing the action
+        userId: user.id,
         actionType: 'config:deleted',
-        entityType: 'AppConfig',
+        entityType: 'Configuration',
         entityId: deletedConfig.id,
-        oldValue: oldValue, // Show the state before deletion
-        // TODO: Add ipAddress, userAgent if available from request context
+        oldValue: oldValue,
     });
 
     return deletedConfig;
   }
-} 
+}

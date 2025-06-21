@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Req, NotFoundException } from '@nestjs/common';
 import { ConfigService } from './config.service';
 import { CreateConfigDto } from './dto/create-config.dto';
 import { UpdateConfigDto } from './dto/update-config.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Adjust path
-import { RolesGuard } from '@/rbac/guards/roles.guard'; // Adjust path
-import { Roles } from '@/rbac/decorators/roles.decorator'; // Adjust path
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../rbac/guards/roles.guard';
+import { Roles } from '../../rbac/decorators/roles.decorator';
 import { Request } from 'express';
+import { AuthenticatedUser } from '../../types/auth.types';
 
 interface AuthenticatedRequest extends Request {
-    user: { id: string; /* other user properties */ };
+    user: AuthenticatedUser;
 }
 
 @ApiTags('admin/config')
@@ -26,8 +27,7 @@ export class ConfigController {
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   create(@Req() req: AuthenticatedRequest, @Body() createConfigDto: CreateConfigDto) {
-    // TODO: Pass req.user.id to service for createdBy
-    return this.configService.create(createConfigDto);
+    return this.configService.create(createConfigDto, req.user);
   }
 
   @Get()
@@ -60,15 +60,13 @@ export class ConfigController {
       return config;
   }
 
-
   @Put(':id')
   @ApiOperation({ summary: 'Update a configuration setting by ID (Admin only)' })
   @ApiResponse({ status: 200, description: 'The updated configuration setting.' })
   @ApiResponse({ status: 404, description: 'Config not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() updateConfigDto: UpdateConfigDto) {
-     // TODO: Pass req.user.id to service for updatedBy
-    return this.configService.update(id, updateConfigDto);
+    return this.configService.update(id, updateConfigDto, req.user);
   }
 
   @Delete(':id')
@@ -76,7 +74,7 @@ export class ConfigController {
   @ApiResponse({ status: 200, description: 'Configuration setting successfully deleted.' })
   @ApiResponse({ status: 404, description: 'Config not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
-  remove(@Param('id') id: string) {
-    return this.configService.remove(id);
+  remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.configService.remove(id, req.user);
   }
-} 
+}
