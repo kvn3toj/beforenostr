@@ -23,9 +23,9 @@ services:
     runtime: docker
     repo: https://github.com/kvn3toj/beforenostr
     branch: gamifier3.5
-    dockerfilePath: ./backend/Dockerfile
+    dockerfilePath: ./backend/Dockerfile.simple
     healthCheckPath: /health
-    dockerCommand: "npm run start:prod:migrate"
+    dockerCommand: "npm run start:prod"
     envVars:
       - key: PORT
         value: 3002
@@ -33,12 +33,19 @@ services:
           name: coomunity-db
           property: connectionString
         key: DATABASE_URL
-      - key: REDIS_URL
-        value: "redis://red-d1ain6fdiees73ddnpi0:6379"
+      - fromService:
+          type: redis
+          name: coomunity-redis
+          property: connectionString
+        key: REDIS_URL
       - key: JWT_SECRET
         generateValue: true
       - key: NODE_ENV
         value: production
+      - key: ALLOWED_ORIGINS
+        value: "https://coomunity-superapp.onrender.com,https://coomunity-admin.onrender.com"
+      - key: BCRYPT_ROUNDS
+        value: "12"
 
   #--------------------------------
   # Frontend - SuperApp (Vite)
@@ -50,8 +57,8 @@ services:
     repo: https://github.com/kvn3toj/beforenostr
     branch: gamifier3.5
     rootDir: Demo/apps/superapp-unified
-    buildCommand: "npm install --legacy-peer-deps && npm run build"
-    startCommand: "npx serve -s dist"
+    buildCommand: "npm install --legacy-peer-deps && npm run build:prod"
+    startCommand: "npx serve -s dist -p $PORT"
     healthCheckPath: /
     envVars:
       - key: NODE_ENV
@@ -62,15 +69,32 @@ services:
         value: "https://coomunity-superapp.onrender.com"
       - key: VITE_NETWORK_API_URL
         value: "https://coomunity-backend.onrender.com"
-      - key: VITE_NETWORK_BASE_URL
-        value: "https://coomunity-superapp.onrender.com"
+      - key: VITE_APP_ENV
+        value: "production"
       - key: VITE_ENABLE_MOCK_AUTH
         value: "false"
       - key: VITE_ENABLE_ANALYTICS
         value: "true"
-      - key: VITE_BETA_TRACKING
-        value: "false"
-      - key: VITE_GA_TRACKING_ID
-        value: "G-XXXXXXXXXX"
-      - key: VITE_HOTJAR_ID
-        value: "0000000"
+
+  #--------------------------------
+  # Admin Frontend - Gamifier Admin
+  #--------------------------------
+  - type: web
+    name: coomunity-admin
+    plan: free
+    runtime: node
+    repo: https://github.com/kvn3toj/beforenostr
+    branch: gamifier3.5
+    rootDir: apps/admin-frontend
+    buildCommand: "npm install --legacy-peer-deps && npm run build"
+    startCommand: "npx serve -s dist -p $PORT"
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_BASE_URL
+        value: "https://coomunity-backend.onrender.com"
+      - key: VITE_BASE_URL
+        value: "https://coomunity-admin.onrender.com"
+      - key: VITE_APP_ENV
+        value: "production"
