@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "name": "coomunity-superapp",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "VITE_API_BASE_URL": "https://coomunity-backend.onrender.com",
+    "VITE_BASE_URL": "https://coomunity-superapp.vercel.app",
+    "VITE_APP_ENV": "production",
+    "VITE_ENABLE_MOCK_AUTH": "false"
+  },
+  "functions": {
+    "app/api/health.js": {
+      "maxDuration": 10
+    }
+  }
+}
