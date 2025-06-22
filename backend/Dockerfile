@@ -54,4 +54,4 @@ CMD ["node", "dist/main"]
 # Iniciar la aplicación después de ejecutar las migraciones
 CMD ["npm", "run", "start:prod:migrate"]
 
-# Trigger re-deploy
+# Trigger  re-deploy
