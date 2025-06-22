@@ -23,9 +23,9 @@ services:
     runtime: docker
     repo: https://github.com/kvn3toj/beforenostr
     branch: cursor/profundizar-en-documentos-y-perfiles-2a28
-    dockerfilePath: ./backend/Dockerfile.simple
+    dockerfilePath: ./backend/Dockerfile
     healthCheckPath: /health
-    dockerCommand: "npm run start:prod"
+    dockerCommand: "npm run start:prod:migrate"
     envVars:
       - key: PORT
         value: 3002
