@@ -55,8 +55,7 @@ export class ChallengesService {
       where: {
         status: 'ACTIVE',
         startDate: { lte: new Date() },
-        // Ensure endDate is either null (ongoing) or in the future
-        OR: [{ endDate: { gte: new Date() } }, { endDate: null }],
+        endDate: { gte: new Date() }
       },
       include: { rewards: true },
     });
