@@ -50,3 +50,8 @@ EXPOSE 3002
 
 # Comando para iniciar la aplicación (sin migraciones aquí, se maneja en render.yaml)
 CMD ["node", "dist/main"]
+
+# Iniciar la aplicación después de ejecutar las migraciones
+CMD ["npm", "run", "start:prod:migrate"]
+
+# Trigger re-deploy
