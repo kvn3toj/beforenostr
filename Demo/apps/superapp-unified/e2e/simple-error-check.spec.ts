@@ -127,4 +127,90 @@ test.describe('🔧 Test Simple de Errores - Post-Fix', () => {
     // El test siempre pasa, solo reporta información
     expect(true).toBe(true);
   });
+});
+
+test.describe('Simple Error Check - No Authentication Required', () => {
+  test('should access home page and check for conversion errors', async ({ page }) => {
+    const errors: string[] = [];
+    
+    // Capturar errores de consola
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        const errorText = msg.text();
+        if (errorText.includes('Cannot convert object to primitive value')) {
+          errors.push(`Console Error: ${errorText}`);
+        }
+      }
+    });
+
+    // Capturar errores JavaScript
+    page.on('pageerror', (error) => {
+      if (error.message.includes('Cannot convert object to primitive value')) {
+        errors.push(`JavaScript Error: ${error.message}`);
+      }
+    });
+
+    // Ir a la página principal (sin autenticación)
+    await page.goto('/');
+    
+    // Esperar a que React se monte
+    await page.waitForSelector('#root', { timeout: 10000 });
+    
+    // Esperar un poco para que se carguen los componentes
+    await page.waitForTimeout(3000);
+    
+    // Verificar que no hay errores de conversión
+    expect(errors.length).toBe(0);
+    
+    if (errors.length > 0) {
+      console.log('🚨 Errores de conversión detectados:');
+      errors.forEach((error, index) => {
+        console.log(`${index + 1}. ${error}`);
+      });
+    } else {
+      console.log('✅ No se detectaron errores de conversión en la página principal');
+    }
+  });
+
+  test('should navigate to challenges page and check for conversion errors', async ({ page }) => {
+    const errors: string[] = [];
+    
+    // Capturar errores de consola
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        const errorText = msg.text();
+        if (errorText.includes('Cannot convert object to primitive value')) {
+          errors.push(`Console Error: ${errorText}`);
+        }
+      }
+    });
+
+    // Capturar errores JavaScript
+    page.on('pageerror', (error) => {
+      if (error.message.includes('Cannot convert object to primitive value')) {
+        errors.push(`JavaScript Error: ${error.message}`);
+      }
+    });
+
+    // Ir directamente a la página de challenges
+    await page.goto('/challenges');
+    
+    // Esperar a que React se monte
+    await page.waitForSelector('#root', { timeout: 10000 });
+    
+    // Esperar un poco para que se carguen los componentes
+    await page.waitForTimeout(5000);
+    
+    // Verificar que no hay errores de conversión
+    expect(errors.length).toBe(0);
+    
+    if (errors.length > 0) {
+      console.log('🚨 Errores de conversión detectados en /challenges:');
+      errors.forEach((error, index) => {
+        console.log(`${index + 1}. ${error}`);
+      });
+    } else {
+      console.log('✅ No se detectaron errores de conversión en la página de challenges');
+    }
+  });
 }); 

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import apiService from '@/lib/api-service';
 import { useAuth } from '@/contexts/AuthContext';
+import { safeLog, createSafeErrorMessage } from '@/utils/safeConversion';
 
 export interface AyniMetricsData {
   // Métricas principales
@@ -73,26 +74,30 @@ export const useAyniMetrics = () => {
       }
 
       try {
-        const response = await apiService.get(`/users/${user.id}/ayni-metrics`);
+        const response = await apiService.get<AyniMetricsData | { data: AyniMetricsData }>(`/users/${user.id}/ayni-metrics`);
 
-        if (response && response.data) {
-          console.log('🌟 ÉXITO: Datos Ayni obtenidos del backend real:', {
+        // The backend returns data directly, not wrapped in a data property
+        if (response && ((response as AyniMetricsData).ondas !== undefined || (response as any).data)) {
+          // Handle both direct response and wrapped response
+          const metricsData = (response as any).data || response;
+
+          safeLog.log('🌟 ÉXITO: Datos Ayni obtenidos del backend real:', {
             userId: user.id,
-            ondas: response.data.ondas,
-            ayniLevel: response.data.ayniLevel,
+            ondas: metricsData.ondas,
+            ayniLevel: metricsData.ayniLevel,
             source: 'BACKEND_REAL'
           });
           return {
             ...DEFAULT_AYNI_METRICS,
-            ...response.data,
+            ...metricsData,
             lastUpdated: new Date().toISOString()
           };
         } else {
           throw new Error("Backend response data for Ayni metrics is empty or invalid.");
         }
       } catch (error) {
-        console.warn('🌟 Usando métricas Ayni por defecto (backend no disponible):', error);
-        console.log('🔄 Fallback: Generando datos simulados para usuario:', user.email);
+        safeLog.warn('🌟 Usando métricas Ayni por defecto (backend no disponible):', error);
+        safeLog.log('🔄 Fallback: Generando datos simulados para usuario:', user.email);
         return {
           ...DEFAULT_AYNI_METRICS,
           // Personalizar ligeramente basado en el usuario

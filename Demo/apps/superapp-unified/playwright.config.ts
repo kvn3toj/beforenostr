@@ -97,6 +97,17 @@ export default defineConfig({
       },
       dependencies: ['setup'],
     },
+    
+    // ✅ PROJECT SIN AUTENTICACIÓN para tests simples
+    {
+      name: 'no-auth',
+      use: { 
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+        // Sin storageState ni dependencies - no requiere autenticación
+      },
+      // Sin dependencies - no ejecuta setup
+    },
   ],
 
   // Configuración del servidor web (opcional, para CI)

@@ -1,5 +1,4 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
@@ -57,14 +56,14 @@ export class PlaylistService {
 
     const skip = (page - 1) * limit;
 
-    const where: Prisma.PlaylistWhereInput = {};
+    const where: any = {};
     if (mundoId) where.mundoId = mundoId;
     if (typeof isActive === 'boolean') where.isActive = isActive;
     if (name) where.name = { contains: name, mode: 'insensitive' };
     if (description)
       where.description = { contains: description, mode: 'insensitive' };
 
-    const include: Prisma.PlaylistInclude = {};
+    const include: any = {};
     if (includeMundo) include.mundo = true;
     if (includeItems)
       include.videoItems = {
@@ -72,7 +71,7 @@ export class PlaylistService {
         orderBy: { order: 'asc' },
       };
 
-    const orderByClause: Prisma.PlaylistOrderByWithRelationInput = {
+    const orderByClause: any = {
       [orderBy]: orderDirection,
     };
 

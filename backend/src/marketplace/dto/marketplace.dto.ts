@@ -18,7 +18,8 @@ export enum MarketplaceItemType {
 
 export enum MarketplaceItemStatus {
   DRAFT = 'DRAFT',
-  PUBLISHED = 'PUBLISHED',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
   SOLD = 'SOLD',
   EXPIRED = 'EXPIRED',
   SUSPENDED = 'SUSPENDED',

@@ -152,8 +152,26 @@ export class VideoItemsService {
   async create(data: CreateVideoItemDto) {
     //     console.log('>>> VideoItemsService.create: Creating new video item');
 
+    // Convertir DTO a formato compatible con Prisma
+    const createData = {
+      title: data.title,
+      description: data.description,
+      content: data.content,
+      url: data.url,
+      platform: data.platform,
+      externalId: data.externalId,
+      duration: data.duration,
+      thumbnailUrl: data.thumbnailUrl,
+      itemTypeId: data.itemTypeId,
+      tags: data.tags,
+      categories: data.categories,
+      quality: data.quality,
+      // Set playlistId directly as foreign key
+      playlistId: data.playlistId
+    };
+
     return this.prisma.videoItem.create({
-      data,
+      data: createData,
     });
   }
 
@@ -163,9 +181,30 @@ export class VideoItemsService {
   async update(id: number, data: UpdateVideoItemDto) {
     //     console.log(`>>> VideoItemsService.update: Updating video item with ID: ${id}`);
 
+    // Convertir DTO a formato compatible con Prisma
+    const updateData: any = {};
+
+    if (data.title !== undefined) updateData.title = data.title;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.content !== undefined) updateData.content = data.content;
+    if (data.url !== undefined) updateData.url = data.url;
+    if (data.platform !== undefined) updateData.platform = data.platform;
+    if (data.externalId !== undefined) updateData.externalId = data.externalId;
+    if (data.duration !== undefined) updateData.duration = data.duration;
+    if (data.thumbnailUrl !== undefined) updateData.thumbnailUrl = data.thumbnailUrl;
+    if (data.itemTypeId !== undefined) updateData.itemTypeId = data.itemTypeId;
+    if (data.tags !== undefined) updateData.tags = data.tags;
+    if (data.categories !== undefined) updateData.categories = data.categories;
+    if (data.quality !== undefined) updateData.quality = data.quality;
+
+    // Set playlistId directly as foreign key if present
+    if (data.playlistId !== undefined) {
+      updateData.playlistId = data.playlistId;
+    }
+
     return this.prisma.videoItem.update({
       where: { id },
-      data,
+      data: updateData,
     });
   }
 

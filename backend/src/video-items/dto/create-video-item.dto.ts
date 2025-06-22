@@ -36,22 +36,22 @@ export class CreateVideoItemDto {
   @IsOptional()
   thumbnailUrl?: string;
 
-  @IsInt()
-  playlistId: number;
+  @IsString()
+  playlistId: string;
 
-  @IsInt()
+  @IsString()
   @IsOptional()
-  itemTypeId?: number;
+  itemTypeId?: string;
 
-  @IsArray()
+  @IsString()
   @IsOptional()
-  tags?: string[];
+  tags?: string;
 
-  @IsArray()
+  @IsString()
   @IsOptional()
-  categories?: string[];
+  categories?: string;
 
-  @IsObject()
+  @IsString()
   @IsOptional()
-  quality?: Record<string, unknown>;
+  quality?: string;
 }

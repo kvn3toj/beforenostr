@@ -58,6 +58,13 @@ interface ErrorSummary {
 // This DTO structure now matches the data expected by the NotificationService
 export class HealthReportDto {
   @ApiProperty({
+    description: 'Overall health status of the system',
+    example: 'healthy',
+    enum: ['healthy', 'warning', 'critical']
+  })
+  status: 'healthy' | 'warning' | 'critical';
+
+  @ApiProperty({
     description: 'The time period the report covers (e.g., "daily", "weekly")',
     example: 'daily',
   })

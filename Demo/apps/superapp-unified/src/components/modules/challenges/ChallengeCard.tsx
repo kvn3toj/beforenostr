@@ -56,6 +56,7 @@ import {
   ChallengeDifficulty,
   ChallengeCategory,
 } from '../../../types/challenges';
+import { safeToString, safeLog } from '../../../utils/safeConversion';
 
 interface ChallengeCardProps {
   challenge: Challenge;
@@ -197,11 +198,25 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   compact = false,
   variant = 'default',
 }) => {
+  // 🔧 React Hooks deben estar ANTES de cualquier return condicional
+  const [showDetails, setShowDetails] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [liked, setLiked] = useState(false);
+
   // Safety check: ensure challenge object is valid
   if (!challenge || !challenge.id || !challenge.title) {
+    // 🛡️ SOLUCIÓN: Usar conversión segura para prevenir "Cannot convert object to primitive value"
+    const safeObjectString = (() => {
+      try {
+        return JSON.stringify(challenge, null, 2);
+      } catch (error) {
+        return '[Object cannot be serialized]';
+      }
+    })();
+    
     console.warn(
       '⚠️ ChallengeCard received invalid challenge object:',
-      challenge
+      safeObjectString
     );
     return (
       <Card sx={{ height: 400 }}>
@@ -213,10 +228,6 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
       </Card>
     );
   }
-
-  const [showDetails, setShowDetails] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  const [liked, setLiked] = useState(false);
 
   const completionRate = challenge._count?.participants
     ? (challenge._count.completions / challenge._count.participants) * 100
