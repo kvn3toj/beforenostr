@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -63,6 +63,178 @@ import PieChart from './components/PieChart';
 import HeatMap from './components/HeatMap';
 import UserLocationMap from './components/UserLocationMap';
 
+// 🎨 NUEVO: Advanced Navigation System siguiendo técnicas del artículo Medium
+interface MarkerPosition {
+  x: number;
+  width: number;
+  height: number;
+  prevX?: number;
+  prevWidth?: number;
+}
+
+interface NavigationTabProps {
+  label: string;
+  icon: React.ReactNode;
+  isSelected: boolean;
+  onClick: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  ref: React.RefObject<HTMLDivElement>;
+  variant?: 'analytics';
+}
+
+const ACTIVE_MARKER_HEIGHT = 5;
+const HOVER_MARKER_HEIGHT = 7;
+
+// 🎯 Hook personalizado para la navegación avanzada (técnicas del artículo Medium)
+const useAdvancedAnalyticsNavigation = () => {
+  const [markerPosition, setMarkerPosition] = useState<MarkerPosition>({
+    x: 0,
+    width: 0,
+    height: ACTIVE_MARKER_HEIGHT,
+  });
+
+  const updateMarkerPosition = useCallback((ref: React.RefObject<HTMLDivElement>, isHover = false) => {
+    if (ref.current) {
+      const { offsetLeft, offsetWidth } = ref.current;
+      setMarkerPosition(prev => ({
+        ...prev,
+        prevX: isHover ? prev.x : undefined,
+        prevWidth: isHover ? prev.width : undefined,
+        x: offsetLeft,
+        width: offsetWidth,
+        height: isHover ? HOVER_MARKER_HEIGHT : ACTIVE_MARKER_HEIGHT,
+      }));
+    }
+  }, []);
+
+  const returnToSelected = useCallback(() => {
+    setMarkerPosition(prev => ({
+      x: prev.prevX ?? prev.x,
+      width: prev.prevWidth ?? prev.width,
+      height: ACTIVE_MARKER_HEIGHT,
+      prevX: undefined,
+      prevWidth: undefined,
+    }));
+  }, []);
+
+  return { markerPosition, updateMarkerPosition, returnToSelected };
+};
+
+// 🎨 Componente de marcador animado especializado para Analytics
+const AnalyticsNavigationMarker: React.FC<{ position: MarkerPosition }> = ({ position }) => (
+  <Box
+    sx={{
+      position: 'absolute',
+      bottom: 0,
+      left: position.x,
+      width: position.width,
+      height: position.height,
+      background: 'linear-gradient(90deg, #ff6b35, #f7931e, #ffbb33)',
+      borderRadius: '3px 3px 0 0',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 0 15px rgba(255, 107, 53, 0.5)',
+      pointerEvents: 'none',
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: '-2px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '6px',
+        height: '6px',
+        borderRadius: '50%',
+        background: '#ff6b35',
+        boxShadow: '0 0 8px rgba(255, 107, 53, 0.8)',
+      },
+    }}
+  />
+);
+
+// 🎨 Tab individual con micro-interacciones avanzadas para Analytics
+const AdvancedAnalyticsTab: React.FC<NavigationTabProps> = React.forwardRef<HTMLDivElement, NavigationTabProps>(
+  ({ label, icon, isSelected, onClick, onMouseEnter, onMouseLeave }, ref) => {
+    const theme = useTheme();
+
+    return (
+      <Box
+        ref={ref}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          px: 3,
+          py: 2.5,
+          cursor: 'pointer',
+          position: 'relative',
+          fontWeight: isSelected ? 700 : 500,
+          color: isSelected ? '#ff6b35' : theme.palette.text.secondary,
+          transition: 'all 0.2s ease-in-out',
+          borderRadius: 2,
+          background: isSelected
+            ? `linear-gradient(135deg, ${alpha('#ff6b35', 0.1)}, ${alpha('#ffbb33', 0.05)})`
+            : 'transparent',
+          '&:hover': {
+            color: '#ff6b35',
+            transform: 'translateY(-1px)',
+            background: `linear-gradient(135deg, ${alpha('#ff6b35', 0.08)}, ${alpha('#ffbb33', 0.03)})`,
+            '& .tab-icon': {
+              transform: 'scale(1.15) rotate(2deg)',
+            },
+            '& .tab-label': {
+              letterSpacing: '0.5px',
+            },
+          },
+        }}
+      >
+        <Box
+          className="tab-icon"
+          sx={{
+            transition: 'transform 0.3s ease-in-out',
+            filter: isSelected ? 'drop-shadow(0 2px 4px rgba(255, 107, 53, 0.3))' : 'none',
+          }}
+        >
+          {icon}
+        </Box>
+        <Typography
+          variant="body2"
+          fontWeight="inherit"
+          className="tab-label"
+          sx={{
+            transition: 'letter-spacing 0.2s ease-in-out',
+            letterSpacing: isSelected ? '0.5px' : '0px',
+          }}
+        >
+          {label}
+        </Typography>
+        {isSelected && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              right: 8,
+              transform: 'translateY(-50%)',
+              width: 4,
+              height: 4,
+              borderRadius: '50%',
+              background: '#ff6b35',
+              boxShadow: '0 0 6px rgba(255, 107, 53, 0.6)',
+              animation: 'pulse 2s ease-in-out infinite',
+              '@keyframes pulse': {
+                '0%, 100%': { opacity: 1, transform: 'translateY(-50%) scale(1)' },
+                '50%': { opacity: 0.6, transform: 'translateY(-50%) scale(1.3)' },
+              },
+            }}
+          />
+        )}
+      </Box>
+    );
+  }
+);
+
 interface SearchStat {
   term: string;
   category: string;
@@ -75,11 +247,21 @@ const UStatsMain: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const theme = useTheme();
 
+  // 🎯 Referencias para la navegación avanzada
+  const tabRefs = [
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+  ];
+
+  const { markerPosition, updateMarkerPosition, returnToSelected } = useAdvancedAnalyticsNavigation();
+
   // 🔥 USAR DATOS REALES DEL BACKEND EN LUGAR DE HARDCODEADOS
-  const { 
-    data: dashboardData, 
-    isLoading, 
-    error, 
+  const {
+    data: dashboardData,
+    isLoading,
+    error,
     refetch,
     totalUsers,
     totalPlaylists,
@@ -102,6 +284,16 @@ const UStatsMain: React.FC = () => {
       setRealTimeData(dashboardData.realTimeData);
     }
   }, [dashboardData]);
+
+  // 🎯 Inicializar posición del marcador cuando el componente se monta
+  useEffect(() => {
+    if (!isLoading && tabRefs[activeTab]?.current) {
+      const timer = setTimeout(() => {
+        updateMarkerPosition(tabRefs[activeTab]);
+      }, 100); // Pequeño delay para asegurar que el DOM está listo
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, activeTab, updateMarkerPosition]);
 
   // Actualización muy sutil cada 2 minutos para simular tiempo real
   useEffect(() => {
@@ -131,26 +323,52 @@ const UStatsMain: React.FC = () => {
     return () => clearInterval(interval);
   }, [dashboardData]);
 
+  // 🎯 Handlers para navegación avanzada
+  const handleTabClick = useCallback((index: number) => {
+    setActiveTab(index);
+    updateMarkerPosition(tabRefs[index]);
+  }, [updateMarkerPosition, tabRefs]);
+
+  const handleTabHover = useCallback((index: number) => {
+    if (index !== activeTab) {
+      updateMarkerPosition(tabRefs[index], true);
+    }
+  }, [activeTab, updateMarkerPosition, tabRefs]);
+
+  const handleTabLeave = useCallback(() => {
+    returnToSelected();
+  }, [returnToSelected]);
+
   // 🔥 MANEJO DE ESTADOS DE CARGA Y ERROR
   if (isLoading) {
     return (
       <RevolutionaryWidget
         title="📊 UStats - Cargando Métricas Cósmicas"
-        gradientDirection="135deg"
-        enableParticles={false}
+        subtitle="Conectando con el universo de datos del ecosistema CoomÜnity"
+        variant="elevated"
+        element="tierra"
+        cosmicEffects={{
+          enableParticles: true,
+          particleTheme: 'earth',
+          enableGlow: true,
+          glowIntensity: 1.0,
+          enableAnimations: true,
+          enableOrbitalEffects: true
+        }}
+        cosmicIntensity="moderate"
         sx={{ minHeight: '100vh' }}
       >
         <Container maxWidth="xl" sx={{ py: 4 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 8 }}>
-            <CircularProgress 
-              size={60} 
-              sx={{ 
-                color: theme.palette.primary.main,
+            <CircularProgress
+              size={60}
+              sx={{
+                color: '#ff6b35',
                 mb: 3,
                 '& .MuiCircularProgress-circle': {
                   strokeLinecap: 'round',
                 }
-              }} 
+              }}
             />
             <Typography variant="h6" sx={{ mb: 2, color: 'text.primary' }}>
               🌌 Conectando con el Cosmos de Datos...
@@ -158,7 +376,7 @@ const UStatsMain: React.FC = () => {
             <Typography variant="body2" color="text.secondary">
               Cargando métricas en tiempo real desde el backend
             </Typography>
-            
+
             {/* Esqueletos de carga */}
             <Grid container spacing={3} sx={{ mt: 4, width: '100%' }}>
               {[1, 2, 3, 4].map((item) => (
@@ -183,14 +401,14 @@ const UStatsMain: React.FC = () => {
     return (
       <RevolutionaryWidget
         title="📊 UStats - Error de Conexión"
-        gradientDirection="135deg"
-        enableParticles={false}
+        element="tierra"
+        cosmicEffects={{ enableParticles: false }}
         sx={{ minHeight: '100vh' }}
       >
         <Container maxWidth="xl" sx={{ py: 4 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 8 }}>
-            <Alert 
-              severity="error" 
+            <Alert
+              severity="error"
               sx={{ mb: 3, width: '100%', maxWidth: 600 }}
               action={
                 <IconButton
@@ -209,7 +427,7 @@ const UStatsMain: React.FC = () => {
                 {error.message || 'No se pudo conectar con el backend de analytics'}
               </Typography>
             </Alert>
-            
+
             <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
               💡 Tip: Asegúrate de que el backend esté ejecutándose en puerto 3002
             </Typography>
@@ -223,8 +441,8 @@ const UStatsMain: React.FC = () => {
     return (
       <RevolutionaryWidget
         title="📊 UStats - Sin Datos"
-        gradientDirection="135deg"
-        enableParticles={false}
+        element="tierra"
+        cosmicEffects={{ enableParticles: false }}
         sx={{ minHeight: '100vh' }}
       >
         <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -282,12 +500,32 @@ const UStatsMain: React.FC = () => {
     },
   ];
 
+  // 🎯 Configuración de pestañas con íconos mejorados
+  const tabs = [
+    {
+      label: 'Resumen',
+      icon: <AssessmentIcon />,
+    },
+    {
+      label: 'Búsquedas',
+      icon: <SearchIcon />,
+    },
+    {
+      label: 'Geografía',
+      icon: <MapIcon />,
+    },
+    {
+      label: 'Rendimiento',
+      icon: <SpeedIcon />,
+    },
+  ];
+
   const AppHeader = () => (
     <AppBar
       position="sticky"
       elevation={0}
       sx={{
-        backgroundColor: theme.palette.primary.main,
+        background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
         borderBottom: 1,
         borderColor: 'divider',
       }}
@@ -303,9 +541,9 @@ const UStatsMain: React.FC = () => {
             color: 'white',
           }}
         >
-          🔥 UStats - Dashboard Cósmico
+          🪨 UStats - Dashboard Tierra
         </Typography>
-        
+
         {/* Mostrar métricas LETS si están disponibles */}
         {unitsBalance !== undefined && (
           <Chip
@@ -319,9 +557,9 @@ const UStatsMain: React.FC = () => {
             }}
           />
         )}
-        
-        <IconButton 
-          color="inherit" 
+
+        <IconButton
+          color="inherit"
           onClick={refetch}
           title="Actualizar datos"
         >
@@ -329,7 +567,7 @@ const UStatsMain: React.FC = () => {
             <RefreshIcon />
           </Badge>
         </IconButton>
-        
+
         <IconButton color="inherit">
           <Badge badgeContent={3} color="error">
             <NotificationsIcon />
@@ -398,7 +636,7 @@ const UStatsMain: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        
+
         <Grid item xs={12} md={6}>
           <Card elevation={3}>
             <CardContent>
@@ -728,14 +966,23 @@ const UStatsMain: React.FC = () => {
 
   return (
     <RevolutionaryWidget
-      title="📊 UStats - Analytics Revolucionario"
-      description="Dashboard cósmico con datos en tiempo real del ecosistema CoomÜnity"
-      gradientDirection="135deg"
-      enableParticles={true}
+      title="🪨 UStats: Fundamentos que Revelan"
+      subtitle="Donde cada métrica cuenta una historia de crecimiento y cada estadística refleja el pulso vital del ecosistema CoomÜnity."
+      variant="elevated"
+      element="tierra"
+      cosmicEffects={{
+        enableParticles: true,
+        particleTheme: 'earth',
+        enableGlow: true,
+        glowIntensity: 1.0,
+        enableAnimations: true,
+        enableOrbitalEffects: true
+      }}
+      cosmicIntensity="intense"
       sx={{ minHeight: '100vh' }}
     >
       <AppHeader />
-      
+
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* Información de conexión */}
         <Box sx={{ mb: 3 }}>
@@ -743,15 +990,19 @@ const UStatsMain: React.FC = () => {
             elevation={2}
             sx={{
               p: 2,
-              background: `linear-gradient(90deg, ${alpha(theme.palette.success.main, 0.1)}, transparent)`,
-              border: `1px solid ${alpha(theme.palette.success.main, 0.3)}`,
+              background: `linear-gradient(90deg, ${alpha('#ff6b35', 0.1)}, transparent)`,
+              border: `1px solid ${alpha('#ff6b35', 0.3)}`,
             }}
           >
             <Stack direction="row" alignItems="center" spacing={2}>
               <Chip
                 icon={<TrendingUpIcon />}
                 label="🌐 Conectado al Backend"
-                color="success"
+                sx={{
+                  backgroundColor: alpha('#ff6b35', 0.1),
+                  color: '#ff6b35',
+                  fontWeight: 600,
+                }}
                 variant="outlined"
               />
               <Typography variant="body2" color="text.secondary">
@@ -775,24 +1026,41 @@ const UStatsMain: React.FC = () => {
           </Paper>
         </Box>
 
-        {/* Navigation tabs */}
-        <Paper elevation={3} sx={{ mb: 3 }}>
-          <Tabs
-            value={activeTab}
-            onChange={(_, newValue) => setActiveTab(newValue)}
-            variant="fullWidth"
+        {/* Navegación avanzada con highlight animado */}
+        <Paper
+          elevation={3}
+          sx={{
+            mb: 4,
+            borderRadius: 3,
+            background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)}, ${alpha(theme.palette.background.paper, 0.8)})`,
+            backdropFilter: 'blur(20px)',
+            border: `1px solid ${alpha('#ff6b35', 0.1)}`,
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <Box
             sx={{
-              '& .MuiTab-root': {
-                fontWeight: 600,
-                textTransform: 'none',
-              },
+              display: 'flex',
+              position: 'relative',
+              px: 2,
+              py: 1,
             }}
           >
-            <Tab icon={<AssessmentIcon />} label="📊 Resumen" />
-            <Tab icon={<SearchIcon />} label="🔍 Búsquedas" />
-            <Tab icon={<MapIcon />} label="🌎 Geografía" />
-            <Tab icon={<SpeedIcon />} label="⚡ Rendimiento" />
-          </Tabs>
+            {tabs.map((tab, index) => (
+              <AdvancedAnalyticsTab
+                key={index}
+                ref={tabRefs[index]}
+                label={tab.label}
+                icon={tab.icon}
+                isSelected={activeTab === index}
+                onClick={() => handleTabClick(index)}
+                onMouseEnter={() => handleTabHover(index)}
+                onMouseLeave={handleTabLeave}
+              />
+            ))}
+            <AnalyticsNavigationMarker position={markerPosition} />
+          </Box>
         </Paper>
 
         {/* Tab content */}
@@ -804,6 +1072,34 @@ const UStatsMain: React.FC = () => {
         >
           <TabContent />
         </motion.div>
+
+        {/* 🌟 Mensaje inspiracional flotante específico para UStats */}
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 24,
+            right: 24,
+            maxWidth: 280,
+            p: 2,
+            borderRadius: 3,
+            background: `linear-gradient(135deg, ${alpha('#ff6b35', 0.9)}, ${alpha('#f7931e', 0.9)})`,
+            color: 'white',
+            boxShadow: theme.shadows[8],
+            backdropFilter: 'blur(10px)',
+            border: `1px solid ${alpha('#fff', 0.2)}`,
+            zIndex: 1000,
+          }}
+        >
+          <Box sx={{ fontSize: '1.2rem', mb: 1 }}>🪨</Box>
+          <Box sx={{ fontSize: '0.85rem', fontWeight: 'bold', mb: 0.5 }}>
+            Sabiduría de la Tierra
+          </Box>
+          <Box sx={{ fontSize: '0.75rem', opacity: 0.9, fontStyle: 'italic' }}>
+            "Como la tierra firme que sostiene toda vida, los datos verdaderos
+            son el fundamento sobre el cual construimos un futuro próspero para
+            el Bien Común."
+          </Box>
+        </Box>
       </Container>
     </RevolutionaryWidget>
   );

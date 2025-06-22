@@ -58,12 +58,12 @@ import { ChatBox } from './components/ChatBox';
 
 // Importar hooks y stores
 import { useOptimizedQuestions } from '../../../hooks/interactive-video/useOptimizedQuestions';
-import { 
-  useUPlayStore, 
-  usePlayerMetrics, 
+import {
+  useUPlayStore,
+  usePlayerMetrics,
   useUnreadNotifications,
   useCurrentSession,
-  useUnlockedAchievements 
+  useUnlockedAchievements
 } from '../../../stores/uplayStore';
 
 // [NUEVO] Integración real de rutas de aprendizaje (playlists) y videos
@@ -71,6 +71,9 @@ import { useQuery } from '@tanstack/react-query';
 import { videosAPI } from '../../../lib/api-service';
 import { useVideos } from '../../../hooks/data/useVideoData';
 import { usePlaylists } from '../../../hooks/data/usePlaylistData';
+
+// 🌌 Cosmic Design System
+import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
 
 // ============================================================================
 // ADAPTADORES Y HELPERS
@@ -81,7 +84,7 @@ const adaptBackendVideoToVideoItem = (backendVideo: any): VideoItem => {
   // Calcular recompensas basadas en la duración y número de preguntas
   const questionsCount = backendVideo.questions?.length || 0;
   const durationMinutes = Math.ceil((backendVideo.duration || 0) / 60);
-  
+
   // Fórmulas de recompensas CoomÜnity:
   // - Mëritos: base 20 + 5 por pregunta + bonus por duración
   // - Öndas: base 10 + 3 por pregunta + bonus por duración
@@ -100,10 +103,10 @@ const adaptBackendVideoToVideoItem = (backendVideo: any): VideoItem => {
   // Determinar thumbnail emoji basado en categorías o título
   let thumbnail = '🎬'; // default
   const titleLower = (backendVideo.title || '').toLowerCase();
-  const categoriesArray = Array.isArray(backendVideo.categories) 
-    ? backendVideo.categories 
+  const categoriesArray = Array.isArray(backendVideo.categories)
+    ? backendVideo.categories
     : JSON.parse(backendVideo.categories || '[]');
-  
+
   if (titleLower.includes('gamific') || categoriesArray.includes('Gamificación')) {
     thumbnail = '🎮';
   } else if (titleLower.includes('narrat') || titleLower.includes('story')) {
@@ -206,9 +209,9 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other })
   );
 };
 
-const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void }> = ({ 
-  video, 
-  onPlay 
+const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void }> = ({
+  video,
+  onPlay
 }) => {
   // Validación defensiva adicional
   if (!isValidVideoItem(video)) {
@@ -246,18 +249,22 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
   };
 
   return (
-    <Card 
-      sx={{ 
+    <Card
+      sx={{
         height: '100%',
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         position: 'relative',
         overflow: 'hidden',
+        background: 'linear-gradient(145deg, rgba(34,34,34,0.85), rgba(45,45,45,0.95))',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 3,
         '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: 4,
+          transform: 'translateY(-6px) scale(1.03)',
+          boxShadow: `0 10px 20px rgba(0,0,0,0.3), 0 0 15px ${getDifficultyColor(video.difficulty)}70`,
           '& .play-overlay': {
             opacity: 1,
+            transform: 'scale(1)',
           },
         },
       }}
@@ -266,7 +273,7 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
       <Box
         sx={{
           height: 180,
-          background: `linear-gradient(135deg, ${getDifficultyColor(video.difficulty)}20, ${getDifficultyColor(video.difficulty)}10)`,
+          background: `linear-gradient(135deg, ${getDifficultyColor(video.difficulty)}30, ${getDifficultyColor(video.difficulty)}20)`,
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
@@ -274,123 +281,105 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
           fontSize: '4rem',
         }}
       >
-        {/* Emoji como thumbnail */}
-        <Typography variant="h1" sx={{ fontSize: '4rem' }}>
+        <Typography variant="h1" sx={{ fontSize: '4rem', filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.5))' }}>
           {video.thumbnail}
         </Typography>
-        
-        {/* Overlay de play */}
+
         <Box
           className="play-overlay"
           sx={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.6)',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.8) 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             opacity: 0,
-            transition: 'opacity 0.3s ease',
+            transform: 'scale(1.2)',
+            transition: 'all 0.3s ease-in-out',
           }}
         >
           <Fab
             size="large"
-            color="primary"
             sx={{
-              bgcolor: 'rgba(255,255,255,0.95)',
-              '&:hover': { bgcolor: 'rgba(255,255,255,1)' },
+              background: 'linear-gradient(45deg, #ff6b6b, #feca57)',
+              color: 'white',
+              '&:hover': {
+                transform: 'scale(1.1)',
+                boxShadow: '0 0 20px #ff6b6b'
+              },
             }}
           >
-            <PlayArrow sx={{ color: '#1976d2', fontSize: '2rem' }} />
+            <PlayArrow sx={{ fontSize: '2.5rem' }} />
           </Fab>
         </Box>
-        
-        {/* Badge de completado */}
+
         {video.isCompleted && (
           <Chip
             label="✓ Completado"
             color="success"
             size="small"
-            sx={{ 
-              position: 'absolute', 
-              top: 12, 
-              right: 12,
-              fontWeight: 'bold',
-            }}
+            sx={{ position: 'absolute', top: 12, right: 12, fontWeight: 'bold' }}
           />
         )}
-        
-        {/* Badge de dificultad */}
+
         <Chip
           label={getDifficultyLabel(video.difficulty)}
           size="small"
-          sx={{ 
+          sx={{
             position: 'absolute',
-            top: 12,
-            left: 12,
+            top: 12, left: 12,
             bgcolor: getDifficultyColor(video.difficulty),
             color: 'white',
             fontWeight: 'bold',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px'
           }}
         />
       </Box>
-      
-      <CardContent sx={{ pb: 1 }}>
-        <Typography variant="h6" component="h3" gutterBottom noWrap>
+
+      <CardContent sx={{ pb: 1, p: 2 }}>
+        <Typography variant="h6" component="h3" gutterBottom noWrap sx={{ fontWeight: 600, color: 'white' }}>
           {video.title}
         </Typography>
-        
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, minHeight: 40 }}>
+
+        <Typography variant="body2" color="rgba(255,255,255,0.7)" sx={{ mb: 2, minHeight: 40 }}>
           {video.description}
         </Typography>
-        
-        {/* Información del video */}
+
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" color="rgba(255,255,255,0.5)">
             {Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')}
             {video.questionsCount && ` • ${video.questionsCount} preguntas`}
           </Typography>
         </Box>
-        
-        {/* Recompensas - VALIDACIÓN DEFENSIVA */}
+
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Box display="flex" gap={1}>
             <Chip
-              icon={<Diamond sx={{ fontSize: '16px !important' }} />}
+              icon={<Diamond sx={{ fontSize: '16px !important', color: '#d8a4fe !important' }} />}
               label={`${video.rewards?.meritos || 0} Mëritos`}
               size="small"
               variant="outlined"
-              sx={{ 
-                color: '#9c27b0',
-                borderColor: '#9c27b0',
-                '& .MuiChip-icon': { color: '#9c27b0' },
-              }}
+              sx={{ color: '#d8a4fe', borderColor: '#d8a4fe' }}
             />
             <Chip
-              icon={<Bolt sx={{ fontSize: '16px !important' }} />}
+              icon={<Bolt sx={{ fontSize: '16px !important', color: '#feca57 !important' }} />}
               label={`${video.rewards?.ondas || 0} Öndas`}
               size="small"
               variant="outlined"
-              sx={{ 
-                color: '#ff9800',
-                borderColor: '#ff9800',
-                '& .MuiChip-icon': { color: '#ff9800' },
-              }}
+              sx={{ color: '#feca57', borderColor: '#feca57' }}
             />
           </Box>
         </Box>
-        
-        {/* Barra de progreso */}
+
         {video.progress > 0 && (
-          <Box>
+          <Box sx={{ mt: 2 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="rgba(255,255,255,0.5)">
                 Progreso
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="rgba(255,255,255,0.7)">
                 {Math.round(video.progress)}%
               </Typography>
             </Box>
@@ -400,10 +389,10 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
               sx={{
                 height: 6,
                 borderRadius: 3,
-                bgcolor: 'rgba(0,0,0,0.1)',
+                bgcolor: 'rgba(255,255,255,0.2)',
                 '& .MuiLinearProgress-bar': {
                   borderRadius: 3,
-                  bgcolor: video.isCompleted ? '#4caf50' : '#1976d2',
+                  background: video.isCompleted ? 'linear-gradient(45deg, #4caf50, #81c784)' : 'linear-gradient(45deg, #ff6b6b, #feca57)',
                 },
               }}
             />
@@ -422,7 +411,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
-  
+
   // Estados locales
   const [tabValue, setTabValue] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -440,7 +429,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
   // Fetch playlists (rutas de aprendizaje)
   const {
-    data: playlists,
+    data: playlists = [],
     isLoading: isLoadingPlaylists,
     isError: isErrorPlaylists,
     error: errorPlaylists,
@@ -448,7 +437,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
   // Fetch videos
   const {
-    data: videos,
+    data: videos = [],
     isLoading: isLoadingVideos,
     isError: isErrorVideos,
     error: errorVideos,
@@ -458,9 +447,9 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   const adaptedVideos = React.useMemo(() => {
     console.log('🔄 Adaptando videos del backend al formato VideoItem...');
     console.log('🔄 Videos crudos del backend:', videos);
-    
+
     if (!videos) return [];
-    
+
     const adapted = videos.map((backendVideo: any) => {
       try {
         const adaptedVideo = adaptBackendVideoToVideoItem(backendVideo);
@@ -487,7 +476,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         };
       }
     });
-    
+
     console.log('🔄 Videos adaptados finales:', adapted);
     return adapted;
   }, [videos]);
@@ -497,7 +486,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     // Datos de métricas actuales con validaciones para evitar NaN
     const metricsData = {
       meritos: Number(playerMetrics?.meritos) || 340, // fallback para demo
-      ondas: Number(playerMetrics?.ondas) || 125, // fallback para demo  
+      ondas: Number(playerMetrics?.ondas) || 125, // fallback para demo
       nivel: Number(playerMetrics?.level) || 1,
       precision: Number(playerMetrics?.accuracy) || 87, // porcentaje de precisión
       racha: Number(playerMetrics?.streak) || 5, // días consecutivos
@@ -539,7 +528,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
       const total = adaptedVideos.length;
       const categoryColors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
-      
+
       return Object.entries(categoryCount).map(([name, count], index) => ({
         name,
         value: Math.round((count / total) * 100),
@@ -561,21 +550,21 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     console.log('🎪 Agrupando videos adaptados por playlist...');
     console.log('🎪 Videos adaptados recibidos para agrupar:', adaptedVideos);
     console.log('🎪 Videos originales para referencia:', videos);
-    
+
     if (!adaptedVideos || !videos) return {};
     const grouped: Record<string, VideoItem[]> = {};
-    
+
     // Usar índice para mapear videos adaptados con originales
     videos.forEach((originalVideo: any, index: number) => {
       const adaptedVideo = adaptedVideos[index];
       if (!adaptedVideo) return;
-      
+
       const pid = originalVideo.playlistId || 'unassigned';
       console.log(`🎪 Video ${index + 1} "${adaptedVideo.title}" → playlist: "${pid}"`);
       if (!grouped[pid]) grouped[pid] = [];
       grouped[pid].push(adaptedVideo);
     });
-    
+
     console.log('🎪 Resultado del agrupamiento:', grouped);
     console.log('🎪 Playlists con videos:', Object.keys(grouped));
     return grouped;
@@ -595,11 +584,11 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
   const handleVideoPlay = useCallback((videoId: string) => {
     console.log('🎬 Playing video:', videoId);
-    
+
     // Buscar el video completo en los datos del backend
     const videoData = videos?.find((v: any) => v.id.toString() === videoId);
     console.log('🎬 Found video data:', videoData);
-    
+
     if (videoData) {
       // Navegar al reproductor con los datos del video
       navigate(`/uplay/video/${videoId}`, {
@@ -617,7 +606,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         }
       });
     }
-    
+
     setSelectedVideo(videoId);
     setCurrentVideo(videoId);
   }, [setCurrentVideo, videos, navigate]);
@@ -662,10 +651,10 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   // ========================================================================
 
   const renderHeader = () => (
-    <AppBar 
-      position="sticky" 
+    <AppBar
+      position="sticky"
       elevation={0}
-      sx={{ 
+      sx={{
         bgcolor: 'background.paper',
         borderBottom: 1,
         borderColor: 'divider',
@@ -682,7 +671,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             <Menu />
           </IconButton>
         )}
-        
+
         <Box display="flex" alignItems="center" flexGrow={1}>
           <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
             <PlayArrow />
@@ -717,7 +706,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             size="small"
             sx={{ color: '#2196f3', fontWeight: 'bold' }}
           />
-          
+
           <IconButton color="inherit">
             <Badge badgeContent={unreadNotifications.length} color="error">
               <Notifications />
@@ -730,8 +719,8 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
   const renderTabs = () => (
     <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
-      <Tabs 
-        value={tabValue} 
+      <Tabs
+        value={tabValue}
         onChange={handleTabChange}
         variant={isMobile ? "scrollable" : "standard"}
         scrollButtons="auto"
@@ -744,34 +733,34 @@ export const UPlayGamifiedDashboard: React.FC = () => {
           },
         }}
       >
-        <Tab 
-          icon={<Dashboard />} 
-          label="Dashboard" 
+        <Tab
+          icon={<Dashboard />}
+          label="Dashboard"
           iconPosition="start"
         />
-        <Tab 
-          icon={<VideoLibrary />} 
-          label="Biblioteca" 
+        <Tab
+          icon={<VideoLibrary />}
+          label="Biblioteca"
           iconPosition="start"
         />
-        <Tab 
-          icon={<TrendingUp />} 
-          label="Métricas" 
+        <Tab
+          icon={<TrendingUp />}
+          label="Métricas"
           iconPosition="start"
         />
-        <Tab 
-          icon={<EmojiEvents />} 
-          label="Logros" 
+        <Tab
+          icon={<EmojiEvents />}
+          label="Logros"
           iconPosition="start"
         />
-        <Tab 
-          icon={<Groups />} 
-          label="Salas de Estudio" 
+        <Tab
+          icon={<Groups />}
+          label="Salas de Estudio"
           iconPosition="start"
         />
-        <Tab 
-          icon={<LiveTv />} 
-          label="Video Parties" 
+        <Tab
+          icon={<LiveTv />}
+          label="Video Parties"
           iconPosition="start"
         />
       </Tabs>
@@ -851,7 +840,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             <Close />
           </IconButton>
         </Box>
-        
+
         {/* Métricas del jugador en sidebar */}
         <Card sx={{ mb: 2 }}>
           <CardContent>
@@ -889,7 +878,18 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   // ========================================================================
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+    <RevolutionaryWidget
+      title="🔥 ÜPlay: Enciende tu Conocimiento"
+      subtitle="Sumérgete en Rutas de Aprendizaje gamificadas y transforma tu potencial en acción."
+      element="fuego"
+      cosmicEffects={{
+        enableGlow: true,
+        enableParticles: true,
+        particleTheme: 'flame'
+      }}
+      cosmicIntensity="intense"
+    >
+      <Box sx={{ minHeight: '100vh', bgcolor: 'transparent' }}>
       {renderHeader()}
       {renderTabs()}
       {renderSidebar()}
@@ -897,20 +897,36 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       <TabPanel value={tabValue} index={1}>
         {playlists?.map((playlist: any) => (
           <Box key={playlist.id} sx={{ mb: 6 }}>
-            <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  mb: 2,
+                  fontWeight: 'bold',
+                  background: 'linear-gradient(90deg, #FF8C00, #FF4500)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  borderBottom: '2px solid #FF4500',
+                  pb: 1,
+                  display: 'inline-block'
+                }}
+              >
               {playlist.name}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: '80ch' }}>
               {playlist.description}
             </Typography>
-            <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
+              <Grid container spacing={3}>
               {(videosByPlaylist[playlist.id] || []).map((video: any) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
                   <VideoCard video={video} onPlay={handleVideoPlay} />
                 </Grid>
               ))}
               {!(videosByPlaylist[playlist.id]?.length) && (
-                <Grid item xs={12}><Typography color="text.secondary">No hay videos en esta ruta.</Typography></Grid>
+                  <Grid item xs={12}>
+                    <Card sx={{ p: 3, textAlign: 'center', bgcolor: 'rgba(0,0,0,0.2)' }}>
+                      <Typography color="text.secondary">No hay videos en esta ruta de aprendizaje todavía.</Typography>
+                    </Card>
+                  </Grid>
               )}
             </Grid>
           </Box>
@@ -919,9 +935,9 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         {videosByPlaylist['unassigned'] && (
           <Box sx={{ mb: 6 }}>
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
-              Sin ruta asignada
+                Otros Videos
             </Typography>
-            <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
+              <Grid container spacing={3}>
               {videosByPlaylist['unassigned'].map((video: any) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
                   <VideoCard video={video} onPlay={handleVideoPlay} />
@@ -934,7 +950,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
       <TabPanel value={tabValue} index={0}>
         {dynamicMetricsData?.metrics ? (
-          <DynamicMetricsDashboard 
+          <DynamicMetricsDashboard
             metrics={dynamicMetricsData.metrics}
             progressHistory={dynamicMetricsData.progressHistory || []}
             categoryProgress={dynamicMetricsData.categoryProgress || []}
@@ -954,7 +970,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             </Card>
           </Container>
         )}
-        
+
         {/* [NUEVO] FASE 3: Sistema de Misiones Avanzado según recomendaciones del review */}
         <Container maxWidth="xl" sx={{ mt: 4 }}>
           <Card sx={{ mb: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
@@ -1069,7 +1085,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
       <TabPanel value={tabValue} index={2}>
         {dynamicMetricsData?.metrics ? (
-          <DynamicMetricsDashboard 
+          <DynamicMetricsDashboard
             metrics={dynamicMetricsData.metrics}
             progressHistory={dynamicMetricsData.progressHistory || []}
             categoryProgress={dynamicMetricsData.categoryProgress || []}
@@ -1098,7 +1114,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       {/* [NUEVO] FASE 2: Funcionalidades Sociales según recomendaciones del review */}
       <TabPanel value={tabValue} index={4}>
         <Container maxWidth="xl">
-          <StudyRoomList 
+          <StudyRoomList
             onJoinRoom={async (roomId) => {
               console.log('Joining study room:', roomId);
               // TODO: Implementar lógica de unirse a sala
@@ -1123,10 +1139,10 @@ export const UPlayGamifiedDashboard: React.FC = () => {
               Próximamente: Sesiones sincronizadas con activación temporal
             </Typography>
             <Typography variant="body1" color="text.secondary" mb={4} maxWidth="600px" mx="auto">
-              Únete a eventos especiales donde videos se activan solo cuando hay suficientes participantes. 
+              Únete a eventos especiales donde videos se activan solo cuando hay suficientes participantes.
               Experiencia colaborativa única con recompensas exclusivas y efectos de celebración sincronizados.
             </Typography>
-            
+
             {/* Preview de funcionalidades que vendrán */}
             <Grid container spacing={3} maxWidth="800px" mx="auto">
                              <Grid item xs={12} md={4}>
@@ -1161,7 +1177,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             <Button
               variant="contained"
               size="large"
-              sx={{ 
+              sx={{
                 mt: 4,
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 px: 4,
@@ -1189,7 +1205,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         />
       )}
     </Box>
+  </RevolutionaryWidget>
   );
-};
 
-export default UPlayGamifiedDashboard; 
+export default UPlayGamifiedDashboard;

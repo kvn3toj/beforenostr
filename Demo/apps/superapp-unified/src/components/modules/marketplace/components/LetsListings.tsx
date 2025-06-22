@@ -66,7 +66,7 @@ export const LetsListings: React.FC = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { data: listings, isLoading, refetch } = useLetsListings(filters);
+  const { data: listings = [], isLoading, refetch } = useLetsListings(filters);
   const createMutation = useCreateLetsListing();
 
   const handleFilterChange = (key: keyof LetsSearchFilters, value: any) => {
@@ -105,10 +105,10 @@ export const LetsListings: React.FC = () => {
             🔄 Intercambios LETS Locales
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Economía colaborativa basada en Ayni y reciprocidad
+            Economía colaborativa basada en principios de Reciprocidad
           </Typography>
         </Box>
-        
+
         <Fab
           color="primary"
           onClick={() => setCreateModalOpen(true)}
@@ -129,7 +129,7 @@ export const LetsListings: React.FC = () => {
           <FilterList color="primary" />
           Filtros de Búsqueda
         </Typography>
-        
+
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={4}>
             <TextField
@@ -143,7 +143,7 @@ export const LetsListings: React.FC = () => {
               }}
             />
           </Grid>
-          
+
           <Grid item xs={12} md={2}>
             <FormControl fullWidth>
               <InputLabel>Tipo</InputLabel>
@@ -157,7 +157,7 @@ export const LetsListings: React.FC = () => {
               </Select>
             </FormControl>
           </Grid>
-          
+
           <Grid item xs={12} md={2}>
             <FormControl fullWidth>
               <InputLabel>Categoría</InputLabel>
@@ -174,7 +174,7 @@ export const LetsListings: React.FC = () => {
               </Select>
             </FormControl>
           </Grid>
-          
+
           <Grid item xs={12} md={2}>
             <TextField
               fullWidth
@@ -186,7 +186,7 @@ export const LetsListings: React.FC = () => {
               }}
             />
           </Grid>
-          
+
           <Grid item xs={12} md={2}>
             <Box display="flex" gap={1}>
               <Button
@@ -277,7 +277,7 @@ export const LetsListings: React.FC = () => {
                 No se encontraron intercambios
               </Typography>
               <Typography variant="body2" color="text.secondary" mb={3}>
-                {Object.keys(filters).length > 0 
+                {Object.keys(filters).length > 0
                   ? 'Intenta ajustar los filtros de búsqueda'
                   : 'Sé el primero en crear un intercambio LETS'
                 }
@@ -320,10 +320,10 @@ interface LetsListingCardProps {
   currentUserId?: string;
 }
 
-const LetsListingCard: React.FC<LetsListingCardProps> = ({ 
-  listing, 
-  onInteract, 
-  currentUserId 
+const LetsListingCard: React.FC<LetsListingCardProps> = ({
+  listing,
+  onInteract,
+  currentUserId
 }) => {
   const isOffer = listing.type === 'offer';
   const isOwner = listing.userId === currentUserId;
@@ -371,7 +371,7 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
             fontSize: '0.75rem'
           }}
         />
-        
+
         <Box display="flex" alignItems="center" gap={0.5}>
           <LocationOn sx={{ fontSize: 14, color: 'text.secondary' }} />
           <Typography variant="caption" color="text.secondary">
@@ -385,9 +385,9 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
         {listing.title}
       </Typography>
 
-      <Typography 
-        variant="body2" 
-        color="text.secondary" 
+      <Typography
+        variant="body2"
+        color="text.secondary"
         mb={2}
         sx={{
           display: '-webkit-box',
@@ -448,7 +448,7 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
             key={index}
             label={tag}
             size="small"
-            sx={{ 
+            sx={{
               fontSize: '0.7rem',
               height: 20,
               bgcolor: 'rgba(0,0,0,0.05)'
@@ -459,7 +459,7 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
           <Chip
             label={`+${listing.tags.length - 3}`}
             size="small"
-            sx={{ 
+            sx={{
               fontSize: '0.7rem',
               height: 20,
               bgcolor: 'rgba(0,0,0,0.1)'
@@ -552,7 +552,7 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
     }
 
     await onSubmit(formData);
-    
+
     // Reset form
     setFormData({
       type: 'offer',
@@ -592,7 +592,7 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
           Crear Nuevo Intercambio LETS
         </Box>
       </DialogTitle>
-      
+
       <DialogContent>
         <Box display="flex" flexDirection="column" gap={2} mt={1}>
           {/* Tipo */}
@@ -703,7 +703,7 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
                 )
               }}
             />
-            
+
             {formData.tags.length > 0 && (
               <Box display="flex" gap={0.5} flexWrap="wrap" mt={1}>
                 {formData.tags.map((tag, index) => (
@@ -721,13 +721,13 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
           {/* Información sobre Ayni */}
           <Alert severity="info">
             <Typography variant="body2">
-              <strong>Principio Ayni:</strong> Los intercambios LETS se basan en reciprocidad justa. 
+              <strong>Principio Ayni:</strong> Los intercambios LETS se basan en reciprocidad justa.
               El valor en Ünits debe reflejar el tiempo, esfuerzo y valor real del intercambio.
             </Typography>
           </Alert>
         </Box>
       </DialogContent>
-      
+
       <DialogActions>
         <Button onClick={onClose}>
           Cancelar
@@ -742,4 +742,4 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
       </DialogActions>
     </Dialog>
   );
-}; 
+};

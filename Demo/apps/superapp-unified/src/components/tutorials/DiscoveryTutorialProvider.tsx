@@ -88,7 +88,7 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
   {
     id: 'marketplace-discovery',
     title: '🛒 Discovery Marketplace (GMP)',
-    description: 'Descubre el Gamified Match Place: tu espacio de intercambio basado en Ayni',
+            description: 'Descubre el Gamified Match Place: tu espacio de intercambio basado en Reciprocidad',
     category: 'marketplace',
     difficulty: 'beginner',
     estimatedTime: '12-15 minutos',
@@ -101,10 +101,10 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
       {
         id: 'marketplace-philosophy',
         title: '🌟 Filosofía del Marketplace',
-        content: 'El Marketplace de CoomÜnity no es como cualquier tienda online. Está basado en el principio andino de AYNI (reciprocidad balanceada), donde cada intercambio debe beneficiar a ambas partes y al Bien Común.',
+        content: 'El Marketplace de CoomÜnity no es como cualquier tienda online. Está basado en el principio de RECIPROCIDAD balanceada, donde cada intercambio debe beneficiar a ambas partes y al Bien Común.',
         type: 'info',
         tips: [
-          'Ayni significa "hoy por ti, mañana por mí" - reciprocidad perfecta',
+          'Reciprocidad significa "hoy por ti, mañana por mí" - intercambio perfecto',
           'Cada transacción genera Mëritos para ambas partes',
           'Los precios se miden en Lükas, no en dinero tradicional'
         ]
@@ -483,19 +483,19 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
         }
       },
       {
-        id: 'ayni-integration',
-        title: '🔄 TOINS y el Principio Ayni',
-        content: 'Las TOINS están profundamente integradas con el principio Ayni de reciprocidad. Cada TOIN representa un compromiso con dar y recibir en equilibrio consciente.',
+        id: 'reciprocidad-integration',
+        title: '🔄 TOINS y el Principio de Reciprocidad',
+        content: 'Las TOINS están profundamente integradas con el principio de Reciprocidad. Cada TOIN representa un compromiso con dar y recibir en equilibrio consciente.',
         type: 'tip',
         tips: [
           'Al gastar TOINS, considera cómo estás contribuyendo al ecosistema',
           'Al recibir TOINS, reflexiona sobre el valor que has aportado',
-          'El flujo de TOINS debe mantener el equilibrio Ayni',
+          'El flujo de TOINS debe mantener el equilibrio de Reciprocidad',
           'Las TOINS conectan tu prosperidad con la del colectivo'
         ],
         actionButton: {
-          text: '⚖️ Evaluar Mi Balance Ayni',
-          action: () => console.log('Evaluando balance personal de Ayni')
+                      text: '⚖️ Evaluar Mi Balance de Reciprocidad',
+            action: () => console.log('Evaluando balance personal de Reciprocidad')
         }
       },
       {
@@ -508,7 +508,7 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
           'Revisa regularmente tus balances y transacciones',
           'Planifica tus intercambios considerando ambas monedas',
           'Usa TOINS para experiencias que generen crecimiento',
-          'Mantén el equilibrio Ayni en todas tus transacciones',
+          'Mantén el equilibrio de Reciprocidad en todas tus transacciones',
           'Comparte tu conocimiento con nuevos miembros'
         ],
         actionButton: {
@@ -900,12 +900,27 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                   {getStepIcon(currentStep)}
                   <Box component="span" sx={{ ml: 1 }}>{currentStep + 1}. {currentStepData.title}</Box>
                 </Typography>
-                <Alert severity={getAlertSeverity(currentStepData.type)} sx={{ mb: 2 }}>
+                <Alert
+                  severity={getAlertSeverity(currentStepData.type)}
+                  sx={{
+                    mb: 2,
+                    backgroundColor: 'rgba(28, 28, 58, 0.7)',
+                    backdropFilter: 'blur(12px) saturate(200%)',
+                    WebkitBackdropFilter: 'blur(12px) saturate(200%)',
+                    border: '1px solid rgba(255, 255, 255, 0.125)',
+                    borderRadius: 2,
+                    color: '#fff',
+                    '& .MuiAlert-icon': {
+                      color: '#fff',
+                      opacity: 0.8
+                    },
+                  }}
+                >
                   {renderStepContent(currentStepData, navigate)}
                 </Alert>
                 {currentStepData.tips && currentStepData.tips.length > 0 && (
-                  <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px dashed', borderColor: 'grey.300' }}>
-                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
+                  <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(0,0,0,0.2)', borderRadius: 2, border: '1px dashed', borderColor: 'grey.700' }}>
+                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.light' }}>
                       💡 Consejos Rápidos:
                     </Typography>
                     <List dense>
@@ -914,7 +929,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                           <ListItemIcon sx={{ minWidth: '30px' }}>
                             <InfoIcon fontSize="small" color="action" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">{tip}</Typography>} />
+                          <ListItemText primary={<Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.85)' }}>{tip}</Typography>} />
                         </ListItem>
                       ))}
                     </List>
