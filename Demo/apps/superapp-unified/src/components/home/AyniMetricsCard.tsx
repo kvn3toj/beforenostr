@@ -25,10 +25,10 @@ import {
 
 // Import our enhanced design system components
 import { AyniCard } from '../ui';
-import { 
-  MetricsRelationships, 
+import {
+  MetricsRelationships,
   AdvancedElementalProgress,
-  EnhancedLoadingState 
+  EnhancedLoadingState
 } from '../ui/enhanced';
 import { useElementalBalance } from '../../hooks/home';
 import { cn, elementColors } from '../../utils/styles';
@@ -121,7 +121,7 @@ const EnhancedElementIcon: React.FC<{
       arrow
       placement="top"
     >
-      <Box 
+      <Box
         className="text-center relative cursor-pointer"
         onMouseEnter={() => onHover(element)}
         onMouseLeave={() => onHover(null)}
@@ -147,8 +147,8 @@ const EnhancedElementIcon: React.FC<{
         >
           {elementData.name}
         </Typography>
-        <Typography 
-          variant="caption" 
+        <Typography
+          variant="caption"
           className={cn(
             "coomunity-caption transition-colors",
             isHovered ? "text-coomunity-600" : "text-coomunity-500"
@@ -198,8 +198,8 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
   if (isLoading) {
     return (
       <AyniCard className="p-6">
-        <EnhancedLoadingState 
-          message="Calculando tu balance Ayni..." 
+        <EnhancedLoadingState
+          message="Calculando tu balance CoomÜnity..."
           showMessage={true}
         />
       </AyniCard>
@@ -210,21 +210,21 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
     <AyniCard className="p-6 space-y-6 relative overflow-hidden">
       {/* Enhanced header with connection status */}
       <Box className="flex items-center justify-between">
-        <Typography 
-          variant="h5" 
+        <Typography
+          variant="h5"
           className="coomunity-h5 font-bold text-coomunity-800 flex items-center gap-2"
         >
           <AutoAwesome className="text-coomunity-600" />
-          Tu Balance Ayni
+          Tu Balance CoomÜnity
         </Typography>
-        
+
         <Stack direction="row" spacing={1} alignItems="center">
           {!isConnected && (
             <Tooltip title="Sin conexión - Datos locales">
               <WifiOff className="text-orange-500" fontSize="small" />
             </Tooltip>
           )}
-          
+
           <Tooltip title="Actualizar métricas">
             <IconButton
               onClick={handleRefresh}
@@ -258,8 +258,8 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
                   <AutoAwesome sx={{ fontSize: 28, color: '#6366f1' }} />
                 </Box>
               </Typography>
-              <Typography 
-                variant="caption" 
+              <Typography
+                variant="caption"
                 className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
               >
                 Öndas
@@ -281,8 +281,8 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
                   <EmojiEvents sx={{ fontSize: 28, color: '#f59e0b' }} />
                 </Box>
               </Typography>
-              <Typography 
-                variant="caption" 
+              <Typography
+                variant="caption"
                 className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
               >
                 Mëritos
@@ -304,8 +304,8 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
                   <Favorite sx={{ fontSize: 28, color: '#ef4444' }} />
                 </Box>
               </Typography>
-              <Typography 
-                variant="caption" 
+              <Typography
+                variant="caption"
                 className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
               >
                 Bien Común
@@ -319,7 +319,7 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
                 variant="h3"
                 className={cn(
                   "coomunity-h3 font-bold",
-                  balanceAyni >= 80 ? "text-green-600" : 
+                  balanceAyni >= 80 ? "text-green-600" :
                   balanceAyni >= 60 ? "text-yellow-600" : "text-red-600",
                   "flex items-center justify-center hover-lift"
                 )}
@@ -329,8 +329,8 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
                   <Psychology sx={{ fontSize: 28 }} />
                 </Box>
               </Typography>
-              <Typography 
-                variant="caption" 
+              <Typography
+                variant="caption"
                 className="coomunity-caption text-coomunity-600 font-bold uppercase tracking-wider"
               >
                 Balance Ayni
@@ -342,8 +342,8 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
         {/* Enhanced Ayni level progress */}
         <Box className="space-y-3 animate-fade-in" style={{ animationDelay: '0.5s' }}>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography 
-              variant="body1" 
+            <Typography
+              variant="body1"
               className="coomunity-body1 font-bold text-coomunity-800"
             >
               Nivel Ayni: {ayniLevel}
@@ -382,13 +382,13 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
 
         {/* Enhanced elemental balance section */}
         <Box className="space-y-4 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-          <Typography 
-            variant="h6" 
+          <Typography
+            variant="h6"
             className="coomunity-h6 font-bold text-coomunity-800 text-center"
           >
             Balance Elemental
           </Typography>
-          
+
           <Grid container spacing={2} justifyContent="center">
             {(Object.keys(elementConfig) as Array<keyof typeof elementConfig>).map((element) => (
               <Grid item xs={3} key={element}>
@@ -415,24 +415,24 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
 
         {/* Enhanced balance insights */}
         {elementalBalance.recommendations && elementalBalance.recommendations.length > 0 && (
-          <Box 
+          <Box
             className={cn(
               "p-4 rounded-xl border-l-4 animate-fade-in",
               "bg-gradient-subtle hover-lift smooth-transition"
             )}
-            style={{ 
+            style={{
               borderLeftColor: elementConfig[elementalBalance.dominantElement].color,
               animationDelay: '0.8s'
             }}
           >
-            <Typography 
-              variant="body2" 
+            <Typography
+              variant="body2"
               className="coomunity-body-sm font-medium text-coomunity-700 mb-2"
             >
               💡 Insight Elemental
             </Typography>
-            <Typography 
-              variant="body2" 
+            <Typography
+              variant="body2"
               className="coomunity-body-sm text-coomunity-600"
             >
               {elementalBalance.recommendations[0]}

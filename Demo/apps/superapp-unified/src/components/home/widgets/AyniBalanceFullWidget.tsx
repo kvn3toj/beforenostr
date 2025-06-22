@@ -21,16 +21,16 @@ export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
   className = '',
 }) => {
   // 🌟 USAR HOOKS DINÁMICOS EN LUGAR DE DATOS HARDCODEADOS
-  const { 
-    data: ayniMetrics, 
-    isLoading: ayniLoading, 
-    error: ayniError 
+  const {
+    data: ayniMetrics,
+    isLoading: ayniLoading,
+    error: ayniError
   } = useAyniMetrics();
-  
-  const { 
-    data: elementalConfig, 
-    isLoading: configLoading, 
-    error: configError 
+
+  const {
+    data: elementalConfig,
+    isLoading: configLoading,
+    error: configError
   } = useElementalConfig();
 
   // 🔄 Estados de carga
@@ -51,9 +51,9 @@ export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
           p: 4,
         }}
       >
-        <Alert 
-          severity="warning" 
-          sx={{ 
+        <Alert
+          severity="warning"
+          sx={{
             maxWidth: '500px',
             background: 'rgba(255, 193, 7, 0.1)',
             color: 'rgba(255, 255, 255, 0.9)',
@@ -64,7 +64,7 @@ export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
             🌟 Conectando con el Cosmos...
           </Typography>
           <Typography variant="body2">
-            Estamos sincronizando tus métricas Ayni con el universo. 
+            Estamos sincronizando tus métricas Ayni con el universo.
             Los datos se cargarán automáticamente.
           </Typography>
         </Alert>
@@ -106,10 +106,10 @@ export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
             animation: 'revolutionary-rotate-continuous 2s linear infinite',
           }}
         >
-          <CircularProgress 
-            size={80} 
-            thickness={2} 
-            sx={{ color: 'white' }} 
+          <CircularProgress
+            size={80}
+            thickness={2}
+            sx={{ color: 'white' }}
           />
         </Box>
 
@@ -244,7 +244,7 @@ export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
             lineHeight: 1.1,
           }}
         >
-          🌍 Tu Balance Ayni
+          🌍 Tu Balance CoomÜnity
         </Typography>
         <Typography
           variant="h4"
@@ -264,7 +264,7 @@ export const AyniBalanceFullWidget: React.FC<AyniBalanceFullWidgetProps> = ({
         >
           🌟 {ayniMetrics.ayniLevel} - Universo de Prosperidad Elemental
         </Typography>
-        
+
         {/* 📊 Indicador de datos en tiempo real */}
         <Typography
           variant="body2"

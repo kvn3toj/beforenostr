@@ -72,7 +72,7 @@ const LetsPage: React.FC = () => {
     totalTransactions: 1247,
     activeUsers: 89,
     totalUnitsCirculating: 3456,
-    ayniIndex: 0.87,
+    coomunityIndex: 0.87,
   };
 
   return (
@@ -134,10 +134,10 @@ const LetsPage: React.FC = () => {
                     Local Exchange Trading System - Economía Colaborativa basada en Ayni
                   </Typography>
                   <Typography variant="body1" sx={{ mb: 3, opacity: 0.8 }}>
-                    Intercambia productos, servicios y conocimientos usando Ünits, nuestra moneda local 
+                    Intercambia productos, servicios y conocimientos usando Ünits, nuestra moneda local
                     que promueve la reciprocidad y el bien común en la comunidad.
                   </Typography>
-                  
+
                   <Stack direction="row" spacing={2} flexWrap="wrap">
                     <Chip
                       label="💰 Sin Intereses"
@@ -148,7 +148,7 @@ const LetsPage: React.FC = () => {
                       sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
                     />
                     <Chip
-                      label="⚖️ Principio Ayni"
+                      label="⚖️ Principio CoomÜnity"
                       sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
                     />
                     <Chip
@@ -193,10 +193,10 @@ const LetsPage: React.FC = () => {
                     <Grid item xs={6}>
                       <Box textAlign="center">
                         <Typography variant="h4" fontWeight="bold">
-                          {(letsStats.ayniIndex * 100).toFixed(0)}%
+                          {(letsStats.coomunityIndex * 100).toFixed(0)}%
                         </Typography>
                         <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                          Índice Ayni
+                          Índice CoomÜnity
                         </Typography>
                       </Box>
                     </Grid>
@@ -341,4 +341,4 @@ const LetsPage: React.FC = () => {
   );
 };
 
-export default LetsPage; 
+export default LetsPage;

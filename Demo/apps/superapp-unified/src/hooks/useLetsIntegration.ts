@@ -9,23 +9,24 @@ import { apiService } from '../lib/api-service';
 const USE_MOCK_LETS = false; // ✅ Cambiado a false para usar backend real
 const letsService = letsApiService;
 
-import {
+import type {
+  // Core types
   UnitsWallet,
   UnitsTransaction,
-  TransferUnitsData,
   LetsListing,
   LetsSearchFilters,
-  CreateLetsListingDto,
-  CopKnowledgeExchange,
-  CopHierarchyLevel,
-  CreateKnowledgeExchangeDto,
-  LetsAnalytics,
   TrustRating,
-  UserLetsProfile,
-  CreateLetsListingRequest,
+  LetsNotification,
+  CopKnowledgeExchange,
+  LetsAnalytics,
+  LetsRecommendation,
+
+  // Request types
   TransferUnitsRequest,
+  CreateLetsListingRequest,
   CreateKnowledgeExchangeRequest,
-  RateTrustRequest
+  CreateTrustRatingRequest,
+  RateTrustRequest,
 } from '../types/lets';
 
 // ============================================================================
@@ -33,18 +34,19 @@ import {
 // ============================================================================
 
 export const LETS_QUERY_KEYS = {
-  wallet: (userId: string) => ['lets', 'wallet', userId],
-  transactions: (userId: string) => ['lets', 'transactions', userId],
-  listings: (filters?: LetsSearchFilters) => ['lets', 'listings', filters],
-  listing: (id: string) => ['lets', 'listing', id],
-  knowledgeExchanges: (filters?: any) => ['lets', 'knowledge-exchanges', filters],
-  knowledgeExchange: (id: string) => ['lets', 'knowledge-exchange', id],
-  copHierarchy: (copId: string, userId: string) => ['lets', 'cop-hierarchy', copId, userId],
-  trustRatings: (userId: string) => ['lets', 'trust-ratings', userId],
-  analytics: () => ['lets', 'analytics'],
-  userProfile: (userId: string) => ['lets', 'user-profile', userId],
-  recommendations: (userId: string) => ['lets', 'recommendations', userId],
-  notifications: (userId: string) => ['lets', 'notifications', userId]
+  wallet: (userId: string) => ['lets-wallet', userId] as const,
+  transactions: (userId: string) => ['lets-transactions', userId] as const,
+  listings: (filters?: LetsSearchFilters) => ['lets-listings', filters] as const,
+  listing: (id: string) => ['lets', 'listing', id] as const,
+  knowledgeExchanges: (filters?: { copId?: string; category?: string }) =>
+    ['lets-knowledge-exchanges', filters] as const,
+  knowledgeExchange: (id: string) => ['lets', 'knowledge-exchange', id] as const,
+  copHierarchy: (copId: string, userId: string) => ['lets', 'cop-hierarchy', copId, userId] as const,
+  trustRatings: (userId: string) => ['lets-trust-ratings', userId] as const,
+  analytics: (timeRange?: string) => ['lets-analytics', timeRange] as const,
+  userProfile: (userId: string) => ['lets', 'user-profile', userId] as const,
+  recommendations: (userId: string) => ['lets-recommendations', userId] as const,
+  notifications: (userId: string) => ['lets-notifications', userId] as const,
 } as const;
 
 // ============================================================================
@@ -56,12 +58,26 @@ export const useUnitsWallet = (userId: string) => {
   return useQuery({
     queryKey: LETS_QUERY_KEYS.wallet(userId),
     queryFn: async (): Promise<UnitsWallet> => {
-      const response = await apiService.get(`/lets/wallet/${userId}`);
-      return response.data || response;
+      try {
+        const response = await apiService.get(`/lets/wallet/${userId}`);
+        return response.data || response;
+      } catch (error) {
+        console.warn('⚠️ LETS wallet API not available, using fallback:', error);
+                  // Fallback data para evitar crashes
+          return {
+            id: `fallback-${userId}`,
+            userId,
+            balance: 0,
+            creditLimit: 1000,
+            trustScore: 0.5,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          } as UnitsWallet;
+      }
     },
     staleTime: 30000, // 30 segundos
     enabled: !!userId,
-    retry: 2,
+    retry: 1, // Reducir reintentos para evitar spam
     retryDelay: 1000,
   });
 };
@@ -77,9 +93,8 @@ export const useTransferUnits = () => {
     },
     onSuccess: (data, variables) => {
       // Invalidar wallets de ambos usuarios
-      queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.wallet(variables.fromUserId) });
       queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.wallet(variables.toUserId) });
-      queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.transactions(variables.fromUserId) });
+      queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.transactions(variables.toUserId) });
 
       console.log('✅ Transferencia de Ünits completada:', data);
     },
@@ -345,7 +360,7 @@ export const useLetsRecommendations = (userId: string) => {
 // 📊 Hook para analytics LETS
 export const useLetsAnalytics = (timeRange?: 'day' | 'week' | 'month' | 'year') => {
   return useQuery({
-    queryKey: [...LETS_QUERY_KEYS.analytics(), timeRange],
+    queryKey: LETS_QUERY_KEYS.analytics(timeRange),
     queryFn: async (): Promise<LetsAnalytics> => {
       const response = await apiService.get('/lets/analytics', {
         params: timeRange ? { timeRange } : {}

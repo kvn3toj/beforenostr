@@ -108,7 +108,7 @@ export const AyniWalletWidget: React.FC<AyniWalletWidgetProps> = ({
             mb: 1,
           }}
         >
-          🌍 Tu Balance Ayni
+          🌍 Tu Balance CoomÜnity
         </Typography>
         <Typography
           variant="h6"

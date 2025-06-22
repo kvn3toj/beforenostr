@@ -36,21 +36,21 @@ import { ElementStats, AyniMetrics } from '../../design-system/types';
 /**
  * 🌌 AYNI BALANCE VISUALIZATION - REFACTORED
  * =========================================
- * 
+ *
  * Versión refactorizada del widget Balance Ayni usando el
  * Design System revolucionario centralizado.
- * 
+ *
  * ANTES: AyniBalanceVisualization.tsx (1236 líneas)
  * DESPUÉS: Uso de RevolutionaryWidget + patrones centralizados
- * 
+ *
  * Mejoras implementadas:
  * ✅ Uso de patrones revolucionarios centralizados
- * ✅ Template widget con efectos cósmicos 
+ * ✅ Template widget con efectos cósmicos
  * ✅ Testing 3D integrado
  * ✅ Performance monitoring automático
  * ✅ Gradientes elementales unificados
  * ✅ Responsividad avanzada
- * 
+ *
  * Fase 2, Semana 1 - Plan Maestro Material UI
  */
 
@@ -83,7 +83,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   // 🎭 Estados locales simplificados (reducidos gracias al template)
   const [refreshing, setRefreshing] = useState(false);
   const [expandedDetails, setExpandedDetails] = useState(false);
@@ -131,7 +131,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
   // 🎨 Calcular elemento dominante para efectos visuales
   const dominantElement = useMemo(() => {
     const elementValues = Object.entries(elementos);
-    const [dominantKey] = elementValues.reduce((a, b) => 
+    const [dominantKey] = elementValues.reduce((a, b) =>
       elementos[a[0] as keyof ElementStats] > elementos[b[0] as keyof ElementStats] ? a : b
     );
     return dominantKey as keyof ElementStats;
@@ -144,7 +144,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
       <Grid xs={6} sm={3}>
         <Box sx={{ textAlign: 'center' }}>
           <BoltIcon sx={{ color: elementalPatterns.aire.particleColor, mb: 1 }} />
-          <Typography variant="h4" sx={{ 
+          <Typography variant="h4" sx={{
             fontWeight: 700,
             background: elementalPatterns.aire.gradient,
             backgroundClip: 'text',
@@ -163,7 +163,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
       <Grid xs={6} sm={3}>
         <Box sx={{ textAlign: 'center' }}>
           <DiamondIcon sx={{ color: elementalPatterns.tierra.particleColor, mb: 1 }} />
-          <Typography variant="h4" sx={{ 
+          <Typography variant="h4" sx={{
             fontWeight: 700,
             background: elementalPatterns.tierra.gradient,
             backgroundClip: 'text',
@@ -182,7 +182,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
       <Grid xs={12} sm={6}>
         <Box sx={{ textAlign: 'center' }}>
           <AutoAwesomeIcon sx={{ color: elementalPatterns.espiritu.particleColor, mb: 1 }} />
-          <Typography variant="h3" sx={{ 
+          <Typography variant="h3" sx={{
             fontWeight: 800,
             background: elementalPatterns.espiritu.gradient,
             backgroundClip: 'text',
@@ -194,7 +194,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
           <Typography variant="body2" color="text.secondary">
             Balance Ayni
           </Typography>
-          
+
           {/* Barra de progreso cósmica */}
           <LinearProgress
             variant="determinate"
@@ -231,18 +231,18 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
         <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
           🌟 Distribución Elemental
         </Typography>
-        
+
         <Grid container spacing={2}>
           {Object.entries(elementos).map(([element, value]) => {
             const elementKey = element as keyof ElementStats;
             const pattern = elementalPatterns[elementKey];
             const isSpiritu = elementKey === 'espiritu';
-            
+
             if (isSpiritu && value === undefined) return null;
-            
+
             return (
               <Grid xs={6} sm={2.4} key={element}>
-                <Box sx={{ 
+                <Box sx={{
                   textAlign: 'center',
                   p: 1.5,
                   borderRadius: 2,
@@ -257,10 +257,10 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
                   <Box sx={{ color: pattern.particleColor, mb: 1 }}>
                     {elementIcons[elementKey]}
                   </Box>
-                  
-                  <Typography 
-                    variant="h6" 
-                    sx={{ 
+
+                  <Typography
+                    variant="h6"
+                    sx={{
                       fontWeight: 600,
                       background: pattern.gradient,
                       backgroundClip: 'text',
@@ -270,7 +270,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
                   >
                     {value || 0}%
                   </Typography>
-                  
+
                   <Typography variant="caption" sx={{ textTransform: 'capitalize' }}>
                     {element}
                   </Typography>
@@ -287,10 +287,10 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
   const renderLevelInfo = () => (
     <Box sx={{ mt: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Chip 
+        <Chip
           label={ayniLevel}
           color="primary"
-          sx={{ 
+          sx={{
             background: elementalPatterns[dominantElement].gradient,
             color: 'white',
             fontWeight: 600
@@ -300,7 +300,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
           Siguiente: {nextLevel}
         </Typography>
       </Box>
-      
+
       <LinearProgress
         variant="determinate"
         value={ayniProgress}
@@ -314,7 +314,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
           }
         }}
       />
-      
+
       <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
         Progreso: {ayniProgress}% hacia {nextLevel}
       </Typography>
@@ -323,7 +323,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
 
   return (
     <RevolutionaryWidget
-      title="🌟 Tu Balance Ayni"
+      title="🌟 Tu Balance CoomÜnity"
       subtitle="Sistema solar personal de equilibrio cósmico"
       variant={widgetConfig.variant}
       element={dominantElement}
@@ -342,21 +342,21 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
     >
       {/* 📊 Métricas principales */}
       {renderMainMetrics()}
-      
+
       {/* 🌟 Distribución elemental */}
       {renderElementalDistribution()}
-      
+
       {/* 🎯 Información de nivel */}
       {renderLevelInfo()}
-      
+
       {/* 🏆 Contribuciones al Bien Común */}
       <Box sx={{ mt: 3, textAlign: 'center' }}>
         <Typography variant="body2" color="text.secondary">
           🤝 Contribuciones al Bien Común
         </Typography>
-        <Typography variant="h5" sx={{ 
+        <Typography variant="h5" sx={{
           fontWeight: 600,
-          color: elementalPatterns.agua.particleColor 
+          color: elementalPatterns.agua.particleColor
         }}>
           {bienComunContributions.toLocaleString()}
         </Typography>
@@ -365,4 +365,4 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
   );
 };
 
-export default AyniBalanceVisualizationRefactored; 
+export default AyniBalanceVisualizationRefactored;
