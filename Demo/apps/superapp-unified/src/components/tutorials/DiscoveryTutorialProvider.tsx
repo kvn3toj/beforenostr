@@ -88,7 +88,7 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
   {
     id: 'marketplace-discovery',
     title: '🛒 Discovery Marketplace (GMP)',
-    description: 'Descubre el Gamified Match Place: tu espacio de intercambio basado en Ayni',
+            description: 'Descubre el Gamified Match Place: tu espacio de intercambio basado en Reciprocidad',
     category: 'marketplace',
     difficulty: 'beginner',
     estimatedTime: '12-15 minutos',
@@ -101,10 +101,10 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
       {
         id: 'marketplace-philosophy',
         title: '🌟 Filosofía del Marketplace',
-        content: 'El Marketplace de CoomÜnity no es como cualquier tienda online. Está basado en el principio andino de AYNI (reciprocidad balanceada), donde cada intercambio debe beneficiar a ambas partes y al Bien Común.',
+        content: 'El Marketplace de CoomÜnity no es como cualquier tienda online. Está basado en el principio de RECIPROCIDAD balanceada, donde cada intercambio debe beneficiar a ambas partes y al Bien Común.',
         type: 'info',
         tips: [
-          'Ayni significa "hoy por ti, mañana por mí" - reciprocidad perfecta',
+          'Reciprocidad significa "hoy por ti, mañana por mí" - intercambio perfecto',
           'Cada transacción genera Mëritos para ambas partes',
           'Los precios se miden en Lükas, no en dinero tradicional'
         ]
@@ -483,19 +483,19 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
         }
       },
       {
-        id: 'ayni-integration',
-        title: '🔄 TOINS y el Principio Ayni',
-        content: 'Las TOINS están profundamente integradas con el principio Ayni de reciprocidad. Cada TOIN representa un compromiso con dar y recibir en equilibrio consciente.',
+        id: 'reciprocidad-integration',
+        title: '🔄 TOINS y el Principio de Reciprocidad',
+        content: 'Las TOINS están profundamente integradas con el principio de Reciprocidad. Cada TOIN representa un compromiso con dar y recibir en equilibrio consciente.',
         type: 'tip',
         tips: [
           'Al gastar TOINS, considera cómo estás contribuyendo al ecosistema',
           'Al recibir TOINS, reflexiona sobre el valor que has aportado',
-          'El flujo de TOINS debe mantener el equilibrio Ayni',
+          'El flujo de TOINS debe mantener el equilibrio de Reciprocidad',
           'Las TOINS conectan tu prosperidad con la del colectivo'
         ],
         actionButton: {
-          text: '⚖️ Evaluar Mi Balance Ayni',
-          action: () => console.log('Evaluando balance personal de Ayni')
+                      text: '⚖️ Evaluar Mi Balance de Reciprocidad',
+            action: () => console.log('Evaluando balance personal de Reciprocidad')
         }
       },
       {
@@ -508,7 +508,7 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
           'Revisa regularmente tus balances y transacciones',
           'Planifica tus intercambios considerando ambas monedas',
           'Usa TOINS para experiencias que generen crecimiento',
-          'Mantén el equilibrio Ayni en todas tus transacciones',
+          'Mantén el equilibrio de Reciprocidad en todas tus transacciones',
           'Comparte tu conocimiento con nuevos miembros'
         ],
         actionButton: {

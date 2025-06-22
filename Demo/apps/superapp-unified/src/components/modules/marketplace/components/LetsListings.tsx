@@ -105,7 +105,7 @@ export const LetsListings: React.FC = () => {
             🔄 Intercambios LETS Locales
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Economía colaborativa basada en Ayni y reciprocidad
+            Economía colaborativa basada en principios de Reciprocidad
           </Typography>
         </Box>
         

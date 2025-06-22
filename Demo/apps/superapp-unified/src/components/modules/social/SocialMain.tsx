@@ -173,7 +173,7 @@ const AdvancedNavigationTab: React.FC<NavigationTabProps> = React.forwardRef<HTM
 // ✅ DATOS DINÁMICOS REALES ÚNICAMENTE
 const createRealSocialData = (backendData: any) => ({
   userStats: {
-    ayniBalance: backendData?.ayniBalance || 0.75,
+    reciprocidadBalance: backendData?.reciprocidadBalance || backendData?.ayniBalance || 0.75,
     socialLevel: backendData?.socialLevel || 'Nuevo Miembro',
     nextLevel: backendData?.nextLevel || 'Colaborador Equilibrado',
     socialProgress: backendData?.socialProgress || 25,
@@ -195,7 +195,7 @@ const createRealSocialData = (backendData: any) => ({
     activeConnections: backendData?.activeConnections || 0,
     onlineMembers: backendData?.onlineMembers || 24,
     dailyInteractions: backendData?.dailyInteractions || 12,
-    ayniExchanges: backendData?.ayniExchanges || 8,
+    reciprocidadExchanges: backendData?.reciprocidadExchanges || backendData?.ayniExchanges || 8,
     activeCircles: backendData?.activeCircles || 5,
     weeklyGrowth: backendData?.weeklyGrowth || 15,
   },
@@ -331,7 +331,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
       ),
     },
     {
-      label: 'Conexiones Ayni',
+                        label: 'Conexiones de Reciprocidad',
       icon: (
         <Badge badgeContent={normalizedMatches.length} color="primary">
           <ChatIcon />
@@ -355,7 +355,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
   return (
     <RevolutionaryWidget
       title="🌬️ Social: Conexiones que Inspiran"
-      subtitle="Donde cada interacción cultiva la semilla del Bien Común y fortalece los lazos de Ayni."
+      subtitle="Donde cada interacción cultiva la semilla del Bien Común y fortalece los lazos de Reciprocidad."
       variant="elevated"
       element="aire" // Cambiado a Aire para comunicación/conexión
       cosmicEffects={{
@@ -481,7 +481,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
                 </Grid>
               )}
 
-              {/* Tab 1: Conexiones Ayni */}
+              {/* Tab 1: Conexiones de Reciprocidad */}
               {activeTab === 1 && (
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={4}>

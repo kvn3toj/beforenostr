@@ -27,16 +27,16 @@ const MOCK_TOKEN = 'mock-jwt-token-string-for-testing-purposes';
 const MOCK_MARKETPLACE_ITEMS = [
   {
     id: 'item-1',
-    title: 'Clases de Filosofía Andina - Ayni y Reciprocidad',
-    description: 'Sesiones personalizadas sobre filosofía andina, enfocadas en el concepto de Ayni y su aplicación en la vida moderna. Aprende de la sabiduría ancestral.',
-    fullDescription: 'Sumérgete en la profunda sabiduría de los pueblos andinos y descubre cómo aplicar el principio del Ayni (reciprocidad) en tu vida cotidiana. Estas sesiones incluyen meditaciones guiadas, ejercicios prácticos y herramientas para desarrollar una perspectiva más consciente del intercambio energético.',
+    title: 'Clases de Filosofía Andina - Principios de Reciprocidad',
+    description: 'Sesiones personalizadas sobre filosofía andina, enfocadas en el concepto de Reciprocidad y su aplicación en la vida moderna. Aprende de la sabiduría ancestral.',
+    fullDescription: 'Sumérgete en la profunda sabiduría de los pueblos andinos y descubre cómo aplicar el principio de la Reciprocidad en tu vida cotidiana. Estas sesiones incluyen meditaciones guiadas, ejercicios prácticos y herramientas para desarrollar una perspectiva más consciente del intercambio energético.',
     type: 'SERVICE',
     price: 150,
     originalPrice: 200,
     currency: 'LUKAS',
     category: 'Educación',
     subcategory: 'Filosofía',
-    tags: ['filosofía', 'ayni', 'educación', 'cultura andina', 'sabiduría ancestral'],
+    tags: ['filosofía', 'reciprocidad', 'educación', 'cultura andina', 'sabiduría ancestral'],
     images: ['https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400'],
     mainImage: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400',
     seller: {
@@ -102,7 +102,7 @@ const MOCK_MARKETPLACE_ITEMS = [
       available: true,
       nextAvailable: '2024-02-01'
     },
-    ayniScore: 95,
+          reciprocidadScore: 95,
     bienComunScore: 92,
     impactLevel: 'regional',
     sustainabilityScore: 88

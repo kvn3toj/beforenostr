@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -26,6 +26,7 @@ import {
   Grow,
   Zoom,
   CircularProgress,
+  alpha,
 } from '@mui/material';
 import '../../../styles/marketplace-mobile.css';
 import '../../../styles/marketplace-enhanced.css';
@@ -719,7 +720,7 @@ const MarketplaceMain: React.FC = () => {
 
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 500, mx: 'auto' }}>
               Estamos mostrando una experiencia de demostración del marketplace CoomÜnity.
-              Explora cómo funciona nuestro sistema de intercambio basado en Ayni y Bien Común.
+              Explora cómo funciona nuestro sistema de intercambio basado en Reciprocidad y Bien Común.
             </Typography>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
@@ -773,23 +774,23 @@ const MarketplaceMain: React.FC = () => {
   // 🖥️ Layout de escritorio optimizado
   return (
     <RevolutionaryWidget
-      title="🏪 Marketplace CoomÜnity"
-      subtitle="Economía colaborativa para el bien común"
+      title="🔥 Marketplace: Intercambio que Transforma"
+      subtitle="Donde cada transacción enciende la llama del Bien Común y fortalece los lazos de Reciprocidad."
       variant="elevated"
-      element="tierra"
+      element="fuego"
       cosmicEffects={{
         enableGlow: true,
         enableAnimations: true,
         enableParticles: true,
         enableOrbitalEffects: true,
-        glowIntensity: 1.5,
-        particleTheme: 'dust',
+        glowIntensity: 1.8,
+        particleTheme: 'flames',
         particleConfig: {
-          count: 8,
-          size: 5,
-          color: '#8BC34A',
-          speed: 1.2,
-          opacity: 0.7
+          count: 12,
+          size: 6,
+          color: '#FF5722',
+          speed: 1.5,
+          opacity: 0.8
         }
       }}
       cosmicIntensity="intense"
@@ -1260,7 +1261,7 @@ const MarketplaceMain: React.FC = () => {
                   💫 Intercambios Locales con Ünits
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  Participa en la economía colaborativa usando Ünits, nuestra moneda local basada en reciprocidad (Ayni)
+                  Participa en la economía colaborativa usando Ünits, nuestra moneda local basada en principios de Reciprocidad
                 </Typography>
 
                 <Grid container spacing={2}>
