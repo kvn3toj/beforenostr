@@ -37,7 +37,7 @@ WORKDIR /usr/src/app
 COPY backend/package*.json ./
 
 # Instalar SOLO las dependencias de producción
-RUN npm ci --only=production --legacy-peer-deps && npm cache clean --force
+RUN npm install --only=production --legacy-peer-deps && npm cache clean --force
 
 # Copiar aplicación compilada desde la etapa de builder
 COPY --from=builder /usr/src/app/dist ./dist
