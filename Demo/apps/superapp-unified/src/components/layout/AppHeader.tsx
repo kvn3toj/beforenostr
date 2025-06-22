@@ -33,10 +33,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { MainNavigation } from '../navigation/MainNavigation';
 
 interface AppHeaderProps {
-  onMenuClick?: () => void;
+  onDrawerToggle?: () => void;
+  showTopLoader?: boolean;
 }
 
-export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
+export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle, showTopLoader }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
@@ -109,7 +110,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick }) => {
           color="inherit"
           aria-label="Abrir menú de navegación"
           title="Abrir menú de navegación"
-          onClick={onMenuClick}
+          onClick={onDrawerToggle}
           data-testid="hamburger-menu"
           className="hamburger-menu mobile-only responsive-element menu-toggle icon-micro-interactive"
           data-responsive="mobile-only"

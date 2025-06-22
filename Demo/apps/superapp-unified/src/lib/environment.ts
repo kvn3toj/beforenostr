@@ -59,23 +59,23 @@ const isBuilderIOEnvironment = (): boolean => {
   // ✅ DESHABILITADO: Siempre retornar false para forzar datos reales
   // ❌ NO detectar Builder.io - esto forzaba modo mock
   return false;
-  
+
   // ❌ CÓDIGO ORIGINAL COMENTADO:
   // if (typeof window === 'undefined') return false;
-  // 
+  //
   // const currentPort = parseInt(window.location.port);
   // const hostname = window.location.hostname;
-  // 
+  //
   // // Builder.io typically uses ports in the 48000+ range
   // const isBuilderPort = currentPort >= 48000 && currentPort <= 49000;
-  // 
+  //
   // // Check for Builder.io specific indicators
-  // const hasBuilderIndicators = 
+  // const hasBuilderIndicators =
   //   hostname === 'localhost' && isBuilderPort ||
   //   window.location.search.includes('builder') ||
   //   window.location.search.includes('localEditUrl') ||
   //   document.querySelector('[data-builder-io]') !== null;
-  // 
+  //
   // if (hasBuilderIndicators) {
   //   console.log('🏗️ Builder.io environment detected:', {
   //     port: currentPort,
@@ -84,7 +84,7 @@ const isBuilderIOEnvironment = (): boolean => {
   //     builderElement: !!document.querySelector('[data-builder-io]')
   //   });
   // }
-  // 
+  //
   // return hasBuilderIndicators;
 };
 
@@ -92,6 +92,7 @@ const isBuilderIOEnvironment = (): boolean => {
  * 🎯 Smart API URL detection
  *
  * Handles different scenarios:
+ * - Mock authentication mode (bypasses proxy)
  * - Explicit environment variable
  * - Development default
  * - Testing environment with dynamic ports
@@ -99,11 +100,19 @@ const isBuilderIOEnvironment = (): boolean => {
  * - Builder.io proxy detection
  */
 const getApiBaseUrl = (): string => {
+  // 🔶 Check if mock authentication is enabled - HIGHEST PRIORITY
+  const isMockAuth = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+
+  if (isMockAuth) {
+    console.log('🔶 [Environment] Mock mode enabled, bypassing proxy logic');
+    return 'http://localhost:3002'; // This will fail and trigger mock data
+  }
+
   // 1. DETECCIÓN SIMPLIFICADA - Si no estamos en puerto 3001, usar proxy
   if (typeof window !== 'undefined') {
     const currentPort = parseInt(window.location.port);
     const currentOrigin = window.location.origin;
-    
+
     // Si NO estamos en puerto 3001 (puerto nativo de SuperApp), usar proxy
     if (currentPort !== 3001) {
       console.log('🔧 Non-native port detected, using proxy:', {
@@ -113,7 +122,7 @@ const getApiBaseUrl = (): string => {
       });
       return '/api'; // USAR PROXY SIEMPRE que no sea puerto 3001
     }
-    
+
     console.log('🏠 Native SuperApp port detected:', {
       port: currentPort,
       origin: currentOrigin,

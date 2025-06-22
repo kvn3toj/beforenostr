@@ -9,6 +9,10 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  server: {
+    port: 3001,
+    host: true,
+  },
   plugins: [
     react(),
     // PWA DISABLED FOR DEBUGGING

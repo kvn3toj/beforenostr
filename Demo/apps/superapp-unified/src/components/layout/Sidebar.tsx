@@ -11,6 +11,8 @@ import {
   Typography,
   Chip,
   useTheme,
+  Drawer,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Home,
@@ -129,10 +131,21 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   },
 ];
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  variant?: 'permanent' | 'temporary';
+  open?: boolean;
+  onClose?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({
+  variant = 'permanent',
+  open = false,
+  onClose
+}) => {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const isActive = (path: string) => {
     if (path === '/') {
@@ -147,7 +160,7 @@ export const Sidebar: React.FC = () => {
 
   const renderSection = (section: string, title: string) => {
     const items = NAVIGATION_ITEMS.filter(item => item.section === section);
-    
+
     return (
       <Box key={section}>
         {title && (
@@ -190,7 +203,7 @@ export const Sidebar: React.FC = () => {
                 <ListItemIcon sx={{ minWidth: 40 }}>
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText 
+                <ListItemText
                   primary={item.label}
                   primaryTypographyProps={{
                     fontSize: '0.875rem',
@@ -213,13 +226,14 @@ export const Sidebar: React.FC = () => {
     );
   };
 
-  return (
+  const sidebarContent = (
     <Box
       component="nav"
       role="navigation"
       aria-label="Navegación lateral"
       data-testid="sidebar"
       sx={{
+        width: variant === 'temporary' ? 280 : '100%',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -232,11 +246,11 @@ export const Sidebar: React.FC = () => {
       {renderSection('modules', 'Módulos')}
       <Divider sx={{ my: 1 }} />
       {renderSection('settings', 'Configuración')}
-      
+
       {/* Status indicator for system visibility */}
-      <Box 
-        className="status sidebar-status" 
-        role="status" 
+      <Box
+        className="status sidebar-status"
+        role="status"
         aria-live="polite"
         sx={{ px: 2, py: 1, display: 'none' }}
       >
@@ -244,7 +258,7 @@ export const Sidebar: React.FC = () => {
           Sistema funcionando correctamente
         </Typography>
       </Box>
-      
+
       {/* Admin Section (if admin) */}
       <Box sx={{ mt: 'auto', pt: 2 }}>
         <Divider sx={{ mb: 1 }} />
@@ -263,7 +277,7 @@ export const Sidebar: React.FC = () => {
               <ListItemIcon sx={{ minWidth: 40 }}>
                 <AdminPanelSettings color="warning" />
               </ListItemIcon>
-              <ListItemText 
+              <ListItemText
                 primary="Admin Panel"
                 primaryTypographyProps={{
                   fontSize: '0.875rem',
@@ -276,4 +290,28 @@ export const Sidebar: React.FC = () => {
       </Box>
     </Box>
   );
-}; 
+
+  if (variant === 'temporary') {
+    return (
+      <Drawer
+        variant="temporary"
+        open={open}
+        onClose={onClose}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: 280,
+          },
+        }}
+      >
+        {sidebarContent}
+      </Drawer>
+    );
+  }
+
+  return sidebarContent;
+};

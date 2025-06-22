@@ -1,6 +1,17 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
 const AUTH_ENDPOINT = `${API_BASE_URL}/auth`;
 
+// Check if a real backend is configured. If not, default to mock authentication.
+const IS_REAL_API_CONFIGURED = import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.trim() !== '';
+const IS_MOCK_AUTH_ENABLED = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true' || !IS_REAL_API_CONFIGURED;
+
+// Log the effective authentication mode
+if (IS_MOCK_AUTH_ENABLED) {
+  console.log('🔶 [AuthService] Running in MOCK authentication mode. No real API calls will be made for auth.');
+} else {
+  console.log('🌍 [AuthService] Running in REAL authentication mode.');
+}
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -33,11 +44,59 @@ export interface User {
   permissions?: string[];
 }
 
+// Mock users for testing
+const MOCK_USERS = {
+  'admin@gamifier.com': {
+    id: '00000000-0000-0000-0000-000000000001',
+    email: 'admin@gamifier.com',
+    name: 'Administrator',
+    avatarUrl: null,
+    roles: ['admin'],
+    permissions: [
+      'users:read',
+      'users:write',
+      'analytics:read',
+      'content:write',
+      'content:read',
+      'admin:view_all',
+      'groups:manage',
+      'roles:read',
+      'invitations:send',
+      'wallet:manage',
+      'gamification:manage',
+      'roles:write'
+    ]
+  },
+  'test@coomunity.com': {
+    id: '00000000-0000-0000-0000-000000000002',
+    email: 'test@coomunity.com',
+    name: 'Test User',
+    avatarUrl: null,
+    roles: ['user'],
+    permissions: [
+      'content:read',
+      'groups:read',
+      'wallet:read'
+    ]
+  }
+};
+
+const MOCK_PASSWORDS = {
+  'admin@gamifier.com': 'admin123',
+  'test@coomunity.com': 'test123'
+};
+
 class AuthService {
   /**
    * Inicia sesión con email y contraseña
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
+    // Use mock authentication if enabled
+    if (IS_MOCK_AUTH_ENABLED) {
+      console.log('🔶 [AuthService] Using mock authentication for:', credentials.email);
+      return this.mockLogin(credentials);
+    }
+
     // 🔍 DEBUGGING: Log exact request details
     const requestPayload = JSON.stringify(credentials);
     const requestUrl = `${AUTH_ENDPOINT}/login`;
@@ -98,7 +157,7 @@ class AuthService {
       return data;
     } catch (error: any) {
       console.error('🔍 [AuthService] COMPLETE ERROR DETAILS:', {
-        error: error,
+        error,
         message: error?.message,
         stack: error?.stack,
         name: error?.name
@@ -108,9 +167,40 @@ class AuthService {
   }
 
   /**
+   * Mock login for development/testing
+   */
+  private async mockLogin(credentials: LoginCredentials): Promise<AuthResponse> {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const mockUser = MOCK_USERS[credentials.email as keyof typeof MOCK_USERS];
+    const expectedPassword = MOCK_PASSWORDS[credentials.email as keyof typeof MOCK_PASSWORDS];
+
+    if (!mockUser || credentials.password !== expectedPassword) {
+      throw new Error('Credenciales incorrectas');
+    }
+
+    const mockToken = `mock-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    console.log('✅ [AuthService] Mock login successful for:', credentials.email);
+
+    return {
+      access_token: mockToken,
+      user: {
+        ...mockUser
+      }
+    };
+  }
+
+  /**
    * Registra un nuevo usuario
    */
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
+    if (IS_MOCK_AUTH_ENABLED) {
+      console.log('🔶 [AuthService] Using mock registration for:', credentials.email);
+      return this.mockRegister(credentials);
+    }
+
     try {
       const response = await fetch(`${AUTH_ENDPOINT}/register`, {
         method: 'POST',
@@ -135,9 +225,45 @@ class AuthService {
   }
 
   /**
+   * Mock register for development/testing
+   */
+  private async mockRegister(credentials: RegisterCredentials): Promise<AuthResponse> {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Check if user already exists
+    if (MOCK_USERS[credentials.email as keyof typeof MOCK_USERS]) {
+      throw new Error('El usuario ya existe');
+    }
+
+    const mockUser = {
+      id: `mock-user-${Date.now()}`,
+      email: credentials.email,
+      name: credentials.name || 'New User',
+      avatarUrl: null,
+      roles: ['user'],
+      permissions: ['content:read', 'groups:read', 'wallet:read']
+    };
+
+    const mockToken = `mock-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    console.log('✅ [AuthService] Mock registration successful for:', credentials.email);
+
+    return {
+      access_token: mockToken,
+      user: mockUser
+    };
+  }
+
+  /**
    * Obtiene el usuario autenticado actual
    */
   async getCurrentUser(token: string): Promise<User> {
+    if (IS_MOCK_AUTH_ENABLED) {
+      console.log('🔶 [AuthService] Using mock getCurrentUser');
+      return this.mockGetCurrentUser(token);
+    }
+
     const response = await fetch(`${API_BASE_URL}/users/me`, {
       method: 'GET',
       headers: {
@@ -157,9 +283,32 @@ class AuthService {
   }
 
   /**
+   * Mock getCurrentUser for development/testing
+   */
+  private async mockGetCurrentUser(token: string): Promise<User> {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Extract email from stored user data or use default
+    const storedUser = this.getStoredUser();
+    if (storedUser) {
+      return storedUser;
+    }
+
+    // Default to admin user if no stored data
+    return MOCK_USERS['admin@gamifier.com'];
+  }
+
+  /**
    * Valida si un token JWT es válido
    */
   async validateToken(token: string): Promise<boolean> {
+    if (IS_MOCK_AUTH_ENABLED) {
+      console.log('🔶 [AuthService] Using mock token validation');
+      // Mock tokens are always valid if they start with 'mock-token-'
+      return token.startsWith('mock-token-');
+    }
+
     try {
       await this.getCurrentUser(token);
       return true;
@@ -224,6 +373,26 @@ class AuthService {
     if (!token) return false;
 
     return await this.validateToken(token);
+  }
+
+  /**
+   * Update profile method for mock auth
+   */
+  async updateProfile(updates: Partial<User>): Promise<User> {
+    if (IS_MOCK_AUTH_ENABLED) {
+      console.log('🔶 [AuthService] Using mock updateProfile');
+      const currentUser = this.getStoredUser();
+      if (!currentUser) {
+        throw new Error('No authenticated user found');
+      }
+
+      const updatedUser = { ...currentUser, ...updates };
+      localStorage.setItem('COOMUNITY_USER_DATA', JSON.stringify(updatedUser));
+      return updatedUser;
+    }
+
+    // Real implementation would go here
+    throw new Error('Profile update not implemented for real backend');
   }
 }
 

@@ -64,6 +64,7 @@ export const BottomNavigation: React.FC = () => {
       role="navigation"
       aria-label="Navegación móvil principal"
       className="mobile-nav responsive-element mobile-only"
+      data-testid="bottom-navigation"
       data-responsive="mobile-only"
       data-breakpoint="md-down"
       data-contextual="mobile-navigation"

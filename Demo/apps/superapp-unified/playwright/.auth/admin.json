@@ -5,16 +5,8 @@
       "origin": "http://localhost:3001",
       "localStorage": [
         {
-          "name": "COOMUNITY_AUTH_TOKEN",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZmNhOTAxYi0xMzk3LTQ3OTQtOGNjZS0yYTFlYWRlN2Y0OGUiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbiBVc2VyIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTA1Njc0NzEsImV4cCI6MTc1MTE3MjI3MX0.bjPWe-lEfbkxQ3-Q5ubaLLhUmk2lZY__DkOU1ijmizg"
-        },
-        {
           "name": "lets_education_state",
-          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-22T04:44:27.935Z\"}}"
-        },
-        {
-          "name": "COOMUNITY_USER_DATA",
-          "value": "{\"id\":\"efca901b-1397-4794-8cce-2a1eade7f48e\",\"email\":\"admin@gamifier.com\",\"full_name\":\"Admin User\",\"role\":\"admin\",\"created_at\":\"2025-06-22T04:44:31.537Z\",\"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZmNhOTAxYi0xMzk3LTQ3OTQtOGNjZS0yYTFlYWRlN2Y0OGUiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbiBVc2VyIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTA1Njc0NzEsImV4cCI6MTc1MTE3MjI3MX0.bjPWe-lEfbkxQ3-Q5ubaLLhUmk2lZY__DkOU1ijmizg\"}"
+          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-22T13:46:28.032Z\"}}"
         }
       ]
     }

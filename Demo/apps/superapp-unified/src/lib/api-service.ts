@@ -12,27 +12,25 @@ import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
 
 // 🔧 Función para detectar URL del API dinámicamente
 const getApiUrl = (): string => {
-  // Verificar si estamos en entorno del navegador
-  if (typeof window === 'undefined') {
-    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
-  }
+  const isProd = import.meta.env.PROD;
+  const localApiUrl = 'http://localhost:3002';
 
-  const currentHost = window.location.hostname;
-  const isNetworkAccess = currentHost !== 'localhost' && currentHost !== '127.0.0.1';
-
-  if (isNetworkAccess) {
-    // Usar la URL de red configurada o construir dinámicamente
-    const networkApiUrl = import.meta.env.VITE_NETWORK_API_URL;
-    if (networkApiUrl) {
-      return networkApiUrl;
-    } else {
-      // Construir URL usando la misma IP pero puerto 3002
-      return `http://${currentHost}:3002`;
+  // En producción, siempre usar la variable de entorno.
+  // Si no está definida, los servicios deben usar su lógica de mock y no llamar a la API.
+  if (isProd) {
+    const prodUrl = import.meta.env.VITE_API_BASE_URL;
+    if (!prodUrl) {
+      console.warn("🔶 [ApiService] VITE_API_BASE_URL no definida en producción. La aplicación debería operar en modo mock.");
+      return 'http://mock.api'; // URL placeholder para modo mock
     }
-  } else {
-    // Usar localhost para desarrollo local
-    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
+    console.log(`🌍 [ApiService] Entorno de Producción. Usando API: ${prodUrl}`);
+    return prodUrl;
   }
+
+  // En desarrollo, usar la variable de entorno o el fallback a localhost.
+  const devUrl = import.meta.env.VITE_API_BASE_URL || localApiUrl;
+  console.log(`💻 [ApiService] Entorno de Desarrollo. Usando API: ${devUrl}`);
+  return devUrl;
 };
 
 // 🔧 Configuración de la API - usando detección automática de red
