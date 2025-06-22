@@ -42,9 +42,9 @@ export class LetsService {
           expired: 0
         };
       }
-      
+
       acc[token.type].total += token.amount;
-      
+
       // Verificar si está próximo a caducar (30 días)
       if (token.caducityDate) {
         const daysToExpiry = Math.ceil((token.caducityDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
@@ -54,7 +54,7 @@ export class LetsService {
           acc[token.type].expired += token.amount;
         }
       }
-      
+
       return acc;
     }, {} as Record<string, { total: number; expiring: number; expired: number }>);
 
@@ -141,7 +141,7 @@ export class LetsService {
         if (remainingAmount <= 0) break;
 
         const amountToDeduct = Math.min(token.amount, remainingAmount);
-        
+
         if (amountToDeduct === token.amount) {
           // Marcar token como usado
           await tx.token.update({
@@ -272,7 +272,12 @@ export class LetsService {
       where: { id: userId },
       include: {
         wallet: true,
-        transactions: {
+        transactionsTo: {
+          where: { status: 'COMPLETED' },
+          orderBy: { createdAt: 'desc' },
+          take: 10
+        },
+        transactionsFrom: {
           where: { status: 'COMPLETED' },
           orderBy: { createdAt: 'desc' },
           take: 10
@@ -290,8 +295,9 @@ export class LetsService {
     // 3. No debe tener historial de transacciones fallidas recientes
 
     const accountAge = Math.ceil((Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24));
-    const successfulTransactions = user.transactions.filter(tx => tx.status === 'COMPLETED').length;
-    
+    const allTransactions = [...(user.transactionsTo || []), ...(user.transactionsFrom || [])];
+    const successfulTransactions = allTransactions.filter(tx => tx.status === 'COMPLETED').length;
+
     const isEligible = accountAge >= 30 && successfulTransactions >= 5;
     const maxNegativeBalance = isEligible ? -100 : 0; // Máximo -100 Ünits
 
@@ -478,8 +484,8 @@ export class LetsService {
       // Filtrar por categoría si se especifica
       let filteredExchanges = mockExchanges;
       if (filters.category) {
-        filteredExchanges = mockExchanges.filter(exchange => 
-          exchange.knowledgeAreas.some(area => 
+        filteredExchanges = mockExchanges.filter(exchange =>
+          exchange.knowledgeAreas.some(area =>
             area.toLowerCase().includes(filters.category.toLowerCase())
           )
         );
@@ -557,8 +563,12 @@ export class LetsService {
         where: { id: userId },
         include: {
           wallet: true,
-          transactions: {
-            take: 10,
+          transactionsTo: {
+            take: 5,
+            orderBy: { createdAt: 'desc' }
+          },
+          transactionsFrom: {
+            take: 5,
             orderBy: { createdAt: 'desc' }
           }
         }
@@ -744,4 +754,4 @@ export class LetsService {
       return [];
     }
   }
-} 
+}

@@ -175,14 +175,13 @@ export class UserChallengesService {
     if (challenge.rewards && challenge.rewards.length > 0) {
         for (const reward of challenge.rewards) {
             // Assuming TransactionsService.createTransaction exists and handles merit awarding
-            await this.transactionsService.createTransaction({
-                userId: userChallenge.userId,
-                meritId: 'placeholder_merit_id', // FIXME: This needs a real meritId
+                          await this.transactionsService.createTransaction({
+                toUserId: userChallenge.userId,
                 amount: reward.amount,
-                type: 'MERIT',
-                source: 'CHALLENGE',
-                notes: `Reward for completing challenge "${challenge.title}": ${reward.description || ''}`,
-                sourceId: challenge.id,
+                type: 'RECEIVE',
+                tokenType: 'MERIT',
+                status: 'COMPLETED',
+                description: `Reward for completing challenge "${challenge.title}": ${reward.description || ''}`
             });
         }
     }

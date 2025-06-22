@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { 
-  CreateInvitationTemplateDto, 
-  CreateGiftCardDto, 
-  RedeemGiftCardDto, 
+import { NotificationType } from '../notifications/dto/notifications.dto';
+import {
+  CreateInvitationTemplateDto,
+  CreateGiftCardDto,
+  RedeemGiftCardDto,
   UpdateGiftCardDto,
   InvitationChallengeDto,
   InvitationStatsDto,
@@ -77,6 +78,7 @@ export class InvitationsService {
       await tx.transaction.create({
         data: {
           fromUserId: dto.inviterId,
+          toUserId: dto.inviterId, // Temporal, será actualizado cuando se canjee
           amount: dto.unitsAmount,
           tokenType: 'CIRCULATING_UNIT',
           type: 'SEND',
@@ -91,7 +93,7 @@ export class InvitationsService {
     // Enviar notificación al invitador
     await this.notificationsService.createNotification({
       userId: dto.inviterId,
-      type: 'SYSTEM_ANNOUNCEMENT',
+      type: NotificationType.SYSTEM_ANNOUNCEMENT,
       message: `Gift card de ${dto.unitsAmount} Ünits creada para ${dto.invitedName}`,
       metadata: { giftCardId: giftCard.id, token }
     });
@@ -122,7 +124,7 @@ export class InvitationsService {
     }
 
     const giftCardContent = JSON.parse(giftCardPublication.content);
-    
+
     if (giftCardContent.token !== dto.token) {
       throw new BadRequestException('Token de gift card inválido');
     }
@@ -210,11 +212,11 @@ export class InvitationsService {
     // Notificar al invitador
     await this.notificationsService.createNotification({
       userId: giftCardPublication.userId,
-      type: 'SYSTEM_ANNOUNCEMENT',
+      type: NotificationType.SYSTEM_ANNOUNCEMENT,
       message: `${dto.invitedName} ha canjeado tu gift card de ${giftCardContent.unitsAmount} Ünits`,
-      metadata: { 
-        giftCardId: giftCardPublication.id, 
-        newUserId: result.newUser.id 
+      metadata: {
+        giftCardId: giftCardPublication.id,
+        newUserId: result.newUser.id
       }
     });
 
@@ -302,9 +304,9 @@ export class InvitationsService {
 //     console.log('>>> InvitationsService.getInvitationStats: Getting invitation statistics', dto);
 
     const where: any = { type: 'GIFT_CARD' };
-    
-    if (dto.inviterId) {
-      where.userId = dto.inviterId;
+
+    if (dto.userId) {
+      where.userId = dto.userId;
     }
 
     if (dto.startDate || dto.endDate) {
@@ -321,10 +323,10 @@ export class InvitationsService {
 
     const stats = giftCards.reduce((acc, card) => {
       const content = JSON.parse(card.content);
-      
+
       acc.total++;
       acc.totalUnitsDistributed += content.unitsAmount;
-      
+
       switch (content.status) {
         case InvitationStatus.SENT:
           acc.pending++;
@@ -339,7 +341,7 @@ export class InvitationsService {
           acc.cancelled++;
           break;
       }
-      
+
       return acc;
     }, {
       total: 0,
@@ -375,7 +377,7 @@ export class InvitationsService {
     }
 
     const content = JSON.parse(giftCard.content);
-    
+
     if (content.status !== InvitationStatus.SENT) {
       throw new BadRequestException('Solo se pueden cancelar gift cards pendientes');
     }
@@ -415,4 +417,4 @@ export class InvitationsService {
 
     return { message: 'Gift card cancelada y Ünits devueltos exitosamente' };
   }
-} 
+}

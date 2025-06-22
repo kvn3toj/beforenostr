@@ -45,9 +45,9 @@ export class ItemsService {
   }
 
   async findAllInPlaylist(playlistId: string, includeInactive = false): Promise<ContentItem[]> {
-    // Ensure the playlist exists and is not deleted for admin view
+    // Ensure the playlist exists and is active for admin view
     const playlist = await this.prisma.playlist.findFirst({
-      where: { id: playlistId, isDeleted: false },
+      where: { id: playlistId, isActive: true },
     });
     if (!playlist) {
       throw new NotFoundException(`Playlist with ID ${playlistId} not found or is deleted`);

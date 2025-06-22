@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMarketplaceItemDto, UpdateMarketplaceItemDto, MarketplaceSearchDto, CreateMarketplaceOfferDto, MarketplaceItemStatus, MarketplaceItemType } from './dto/marketplace.dto';
+import { MarketplaceItemStatus as PrismaMarketplaceItemStatus } from '../generated/prisma';
 
 @Injectable()
 export class MarketplaceService {
@@ -42,15 +43,15 @@ export class MarketplaceService {
         isDeleted: false
       },
       include: {
-        seller: { 
-          select: { 
-            id: true, 
-            email: true, 
-            firstName: true, 
+        seller: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
             lastName: true,
             username: true,
             avatarUrl: true
-          } 
+          }
         }
       }
     });
@@ -90,21 +91,21 @@ export class MarketplaceService {
     const where = {
       isActive: true,
       isDeleted: false,
-      status: 'ACTIVE'
+      status: PrismaMarketplaceItemStatus.ACTIVE
     };
 
     const [items, total] = await Promise.all([
       this.prisma.marketplaceItem.findMany({
         where,
         include: {
-          seller: { 
-            select: { 
-              id: true, 
-              firstName: true, 
+          seller: {
+            select: {
+              id: true,
+              firstName: true,
               lastName: true,
               username: true,
               avatarUrl: true
-            } 
+            }
           }
         },
         orderBy: { createdAt: 'desc' },
@@ -156,7 +157,7 @@ export class MarketplaceService {
     const where: any = {
       isActive: true,
       isDeleted: false,
-      status: 'ACTIVE'
+      status: PrismaMarketplaceItemStatus.ACTIVE
     };
 
     // Aplicar filtros
@@ -209,15 +210,15 @@ export class MarketplaceService {
       this.prisma.marketplaceItem.findMany({
         where,
         include: {
-          seller: { 
-            select: { 
-              id: true, 
-              email: true, 
-              firstName: true, 
+          seller: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
               lastName: true,
               username: true,
               avatarUrl: true
-            } 
+            }
           }
         },
         orderBy: { createdAt: 'desc' },
@@ -264,21 +265,21 @@ export class MarketplaceService {
 //     console.log('>>> MarketplaceService.getItem: Getting marketplace item', itemId);
 
     const item = await this.prisma.marketplaceItem.findFirst({
-      where: { 
+      where: {
         id: itemId,
         isActive: true,
         isDeleted: false
       },
       include: {
-        seller: { 
-          select: { 
-            id: true, 
-            email: true, 
-            firstName: true, 
+        seller: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
             lastName: true,
             username: true,
             avatarUrl: true
-          } 
+          }
         }
       }
     });
@@ -322,7 +323,7 @@ export class MarketplaceService {
 //     console.log('>>> MarketplaceService.updateItem: Updating marketplace item', itemId);
 
     const item = await this.prisma.marketplaceItem.findFirst({
-      where: { 
+      where: {
         id: itemId,
         sellerId: userId, // Solo el propietario puede actualizar
         isDeleted: false
@@ -349,15 +350,15 @@ export class MarketplaceService {
       where: { id: itemId },
       data: updateData,
       include: {
-        seller: { 
-          select: { 
-            id: true, 
-            email: true, 
-            firstName: true, 
+        seller: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
             lastName: true,
             username: true,
             avatarUrl: true
-          } 
+          }
         }
       }
     });
@@ -391,7 +392,7 @@ export class MarketplaceService {
 //     console.log('>>> MarketplaceService.deleteItem: Deleting marketplace item', itemId);
 
     const item = await this.prisma.marketplaceItem.findFirst({
-      where: { 
+      where: {
         id: itemId,
         sellerId: userId, // Solo el propietario puede eliminar
         isDeleted: false
@@ -405,7 +406,7 @@ export class MarketplaceService {
     // Soft delete
     await this.prisma.marketplaceItem.update({
       where: { id: itemId },
-      data: { 
+      data: {
         isDeleted: true,
         deletedAt: new Date(),
         status: 'INACTIVE'
@@ -422,21 +423,21 @@ export class MarketplaceService {
 //     console.log('>>> MarketplaceService.getSellerItems: Getting items for seller', sellerId);
 
     const items = await this.prisma.marketplaceItem.findMany({
-      where: { 
+      where: {
         sellerId,
         isActive: true,
         isDeleted: false
       },
       include: {
-        seller: { 
-          select: { 
-            id: true, 
-            email: true, 
-            firstName: true, 
+        seller: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
             lastName: true,
             username: true,
             avatarUrl: true
-          } 
+          }
         }
       },
       orderBy: { createdAt: 'desc' }
@@ -483,15 +484,15 @@ export class MarketplaceService {
       itemsByType,
       itemsByStatus
     ] = await Promise.all([
-      this.prisma.marketplaceItem.count({ 
-        where: { isDeleted: false } 
+      this.prisma.marketplaceItem.count({
+        where: { isDeleted: false }
       }),
-      this.prisma.marketplaceItem.count({ 
-        where: { 
-          isDeleted: false, 
-          isActive: true, 
-          status: 'ACTIVE' 
-        } 
+      this.prisma.marketplaceItem.count({
+        where: {
+          isDeleted: false,
+          isActive: true,
+          status: 'ACTIVE'
+        }
       }),
       this.prisma.marketplaceItem.groupBy({
         by: ['sellerId'],
@@ -545,9 +546,9 @@ export class MarketplaceService {
     // TODO: Implementar cuando se cree el esquema de favoritos
     // Por ahora retornamos una estructura vacía pero válida
     // Cuando se implemente el esquema, la consulta sería algo como:
-    // 
+    //
     // const favoriteItems = await this.prisma.userFavoriteItem.findMany({
-    //   where: { 
+    //   where: {
     //     userId,
     //     item: {
     //       isActive: true,
@@ -558,14 +559,14 @@ export class MarketplaceService {
     //   include: {
     //     item: {
     //       include: {
-    //         seller: { 
-    //           select: { 
-    //             id: true, 
-    //             firstName: true, 
+    //         seller: {
+    //           select: {
+    //             id: true,
+    //             firstName: true,
     //             lastName: true,
     //             username: true,
     //             avatarUrl: true
-    //           } 
+    //           }
     //         }
     //       }
     //     }
@@ -581,4 +582,4 @@ export class MarketplaceService {
       timestamp: new Date().toISOString()
     };
   }
-} 
+}

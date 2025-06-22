@@ -93,7 +93,7 @@ export class InvitationsController {
   ) {
 //     console.log('>>> InvitationsController.getInvitationStats: Getting invitation statistics');
 
-    const dto: InvitationStatsDto = { inviterId, startDate, endDate };
+    const dto: InvitationStatsDto = { userId: inviterId, startDate, endDate };
     return await this.invitationsService.getInvitationStats(dto);
   }
 }

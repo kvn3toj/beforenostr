@@ -16,8 +16,8 @@ export class VideoItemResponseDto {
   @ApiProperty({ description: 'URL original del video', required: false, type: String })
   url?: string;
 
-  @ApiProperty({ 
-    description: 'Plataforma del video', 
+  @ApiProperty({
+    description: 'Plataforma del video',
     example: 'youtube',
     type: String
   })
@@ -38,24 +38,22 @@ export class VideoItemResponseDto {
   @ApiProperty({ description: 'ID del tipo de item', required: false, type: Number })
   itemTypeId?: number;
 
-  @ApiProperty({ 
-    description: 'Tags del video (array de strings)', 
+  @ApiProperty({
+    description: 'Tags del video (array de strings)',
     type: [String],
-    required: false 
+    required: false
   })
   tags?: string[];
 
-  @ApiProperty({ 
-    description: 'Categorías del video (array de strings)', 
+  @ApiProperty({
+    description: 'Categorías del video (array de strings)',
     type: [String],
-    required: false 
+    required: false
   })
   categories?: string[];
 
-  @ApiProperty({ 
-    description: 'Información de calidad del video', 
-    type: 'object',
-    required: false 
+    @ApiProperty({
+    description: 'Información de calidad del video'
   })
   quality?: Record<string, any>;
 
@@ -67,4 +65,4 @@ export class VideoItemResponseDto {
 
   @ApiProperty({ description: 'Fecha de eliminación (soft delete)', required: false, type: Date })
   deletedAt?: Date;
-} 
+}
