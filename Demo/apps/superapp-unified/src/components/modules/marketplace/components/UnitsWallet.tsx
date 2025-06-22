@@ -281,7 +281,7 @@ const UnitsWallet: React.FC<UnitsWalletProps> = ({
 
             {/* Estadísticas rápidas */}
             <Grid container spacing={1} mb={2}>
-              <Grid size={{xs:6}}>
+              <Grid item xs={6}>
                 <Box textAlign="center" p={1} sx={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
                   <TrendingUp fontSize="small" />
                   <Typography variant="caption" display="block">
@@ -289,7 +289,7 @@ const UnitsWallet: React.FC<UnitsWalletProps> = ({
                   </Typography>
                 </Box>
               </Grid>
-              <Grid size={{xs:6}}>
+              <Grid item xs={6}>
                 <Box textAlign="center" p={1} sx={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
                   <TrendingDown fontSize="small" />
                   <Typography variant="caption" display="block">

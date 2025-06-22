@@ -472,7 +472,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
 
         {/* Key Metrics Preview */}
         <Grid container spacing={3} sx={{ mb: 'var(--space-6)' }}>
-          <Grid size={{ xs: 4 }}>
+          <Grid item xs={4}>
             <Box className="text-center">
               <Typography
                 variant="h4"
@@ -502,7 +502,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 4 }}>
+          <Grid item xs={4}>
             <Box className="text-center">
               <Typography
                 variant="h4"
@@ -532,7 +532,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 4 }}>
+          <Grid item xs={4}>
             <Box className="text-center">
               <Typography
                 variant="h4"
@@ -672,7 +672,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
               <Grid container spacing={3} justifyContent="center">
                 {(Object.keys(elementos) as Array<keyof ElementStats>).map(
                   (element) => (
-                    <Grid size={{ xs: 3 }} key={element}>
+                    <Grid item xs={3} key={element}>
                       <Box className="text-center">
                         <ElementProgressRing
                           element={element}

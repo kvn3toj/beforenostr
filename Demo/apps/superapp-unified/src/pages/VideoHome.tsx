@@ -656,7 +656,7 @@ export const VideoHome: React.FC = () => {
                 🎯 Categorías de Contenido
               </Typography>
               <Grid container spacing={2} sx={{ mt: 1 }}>
-                <Grid size={{xs:6,sm:4,md:3}}>
+                <Grid item xs={6} sm={4} md={3}>
                   <Button
                     fullWidth
                     variant={selectedCategory === 'all' ? 'contained' : 'outlined'}
@@ -670,7 +670,7 @@ export const VideoHome: React.FC = () => {
                 {videoSystemData.categories.map((category) => {
                   const IconComponent = category.icon;
                   return (
-                    <Grid size={{xs:6,sm:4,md:3}} key={category.id}>
+                    <Grid item xs={6} sm={4} md={3} key={category.id}>
                       <Button
                         fullWidth
                         variant={selectedCategory === category.id ? 'contained' : 'outlined'}
@@ -698,7 +698,7 @@ export const VideoHome: React.FC = () => {
           </Typography>
           <Grid container spacing={3} sx={{ mb: 4 }}>
             {filteredVideos.map((video) => (
-              <Grid size={{xs:12}} md={viewMode === 'grid' ? 6 : 12} key={video.id}>
+              <Grid item xs={12} md={viewMode === 'grid' ? 6 : 12} key={video.id}>
                 <Card 
                   elevation={2} 
                   sx={{ 
@@ -840,7 +840,7 @@ export const VideoHome: React.FC = () => {
         {/* Tab Panel 1: Tendencias */}
         <TabPanel value={tabValue} index={1}>
           <Grid container spacing={3}>
-            <Grid size={{xs:12,md:8}}>
+            <Grid item xs={12} md={8}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom color="primary">
@@ -888,7 +888,7 @@ export const VideoHome: React.FC = () => {
               </Card>
             </Grid>
 
-            <Grid size={{xs:12,md:4}}>
+            <Grid item xs={12} md={4}>
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom color="primary">
@@ -944,7 +944,7 @@ export const VideoHome: React.FC = () => {
         {/* Tab Panel 2: Mis Playlists */}
         <TabPanel value={tabValue} index={2}>
           <Grid container spacing={3}>
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                 <Typography variant="h6" color="primary">
                   📚 Mis Listas de Reproducción
@@ -960,7 +960,7 @@ export const VideoHome: React.FC = () => {
             </Grid>
 
             {videoSystemData.playlists.map((playlist) => (
-              <Grid size={{xs:12,md:6}} key={playlist.id}>
+              <Grid item xs={12} md={6} key={playlist.id}>
                 <Card elevation={2} sx={{ borderRadius: 3 }}>
                   <Box
                     sx={{

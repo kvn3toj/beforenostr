@@ -630,7 +630,7 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
         {/* 🔍 BÚSQUEDA Y FILTROS */}
         <Box sx={{ mb: 3 }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid size={{xs: 12, md: 6}}>
+            <Grid item xs={12} md={6}>
               <input
                 type="text"
                 placeholder="Buscar videos por título, tema o instructor..."
@@ -647,7 +647,7 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
               />
             </Grid>
 
-            <Grid size={{xs: 12, md: 6}}>
+            <Grid item xs={12} md={6}>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                 {categories.map((category) => (
                   <Chip
@@ -699,7 +699,7 @@ const UPlayEnhanced: React.FC<UPlayEnhancedProps> = ({
       <Grid container spacing={3}>
         <AnimatePresence mode="popLayout">
           {filteredVideos.map((video) => (
-            <Grid key={video.id} size={{xs: 12, sm: 6, md: 4, lg: 3}}>
+            <Grid key={video.id} item xs={12} sm={6} md={4} lg={3}>
               <VideoCard
                 video={video}
                 onPlay={handleVideoPlay}

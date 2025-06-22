@@ -317,14 +317,14 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
 
           <Grid container spacing={3}>
             {/* 📝 Información básica */}
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 📝 Información Básica
               </Typography>
             </Grid>
 
             {/* Título */}
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <Controller
                 name="title"
                 control={control}
@@ -347,7 +347,7 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
             </Grid>
 
             {/* Descripción */}
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <Controller
                 name="description"
                 control={control}
@@ -367,13 +367,13 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
             </Grid>
 
             {/* Tipo de item */}
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <Typography variant="subtitle1" gutterBottom>
                 Tipo de item *
               </Typography>
               <Grid container spacing={2}>
                 {ITEM_TYPES.map((type) => (
-                  <Grid size={{xs:12,sm:6,md:3}} key={type.value}>
+                  <Grid item xs={12} sm={6} md={3} key={type.value}>
                     <Card
                       sx={{
                         cursor: 'pointer',
@@ -423,13 +423,13 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
             </Grid>
 
             {/* 💰 Precio */}
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 💰 Precio
               </Typography>
             </Grid>
 
-            <Grid size={{xs:12,sm:6}}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="priceUnits"
                 control={control}
@@ -453,7 +453,7 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
               />
             </Grid>
 
-            <Grid size={{xs:12,sm:6}}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="priceToins"
                 control={control}
@@ -476,7 +476,7 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
             </Grid>
 
             {/* 🏷️ Tags */}
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 🏷️ Etiquetas
               </Typography>
@@ -550,13 +550,13 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
             </Grid>
 
             {/* 📍 Ubicación e imagen */}
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 📍 Detalles Adicionales
               </Typography>
             </Grid>
 
-            <Grid size={{xs:12,sm:6}}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="location"
                 control={control}
@@ -580,7 +580,7 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
               />
             </Grid>
 
-            <Grid size={{xs:12,sm:6}}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="imageUrl"
                 control={control}

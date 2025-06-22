@@ -511,7 +511,7 @@ export const GroupsCollaborationTools: React.FC<
 
         {/* Métricas Ayni */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid size={{xs:4}}>
+          <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h6" color="primary" fontWeight="bold">
                 {project.ayniExchanges}
@@ -521,7 +521,7 @@ export const GroupsCollaborationTools: React.FC<
               </Typography>
             </Box>
           </Grid>
-          <Grid size={{xs:4}}>
+          <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h6" color="success.main" fontWeight="bold">
                 {project.meritosGenerated}
@@ -531,7 +531,7 @@ export const GroupsCollaborationTools: React.FC<
               </Typography>
             </Box>
           </Grid>
-          <Grid size={{xs:4}}>
+          <Grid item xs={4}>
             <Box textAlign="center">
               <Chip
                 label={project.impact}
@@ -661,13 +661,13 @@ export const GroupsCollaborationTools: React.FC<
         </Stack>
 
         <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid size={{xs:6}}>
+          <Grid item xs={6}>
             <Stack direction="row" alignItems="center" spacing={0.5}>
               <Schedule sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="caption">{exchange.duration}</Typography>
             </Stack>
           </Grid>
-          <Grid size={{xs:6}}>
+          <Grid item xs={6}>
             <Stack direction="row" alignItems="center" spacing={0.5}>
               <Business sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="caption">{exchange.format}</Typography>
@@ -803,13 +803,13 @@ export const GroupsCollaborationTools: React.FC<
         {/* Proyectos Colaborativos */}
         <Grid container spacing={3}>
           {mockProjects.map((project) => (
-            <Grid size={{xs:12,md:6,lg:4}} key={project.id}>
+            <Grid item xs={12} md={6} lg={4} key={project.id}>
               {renderProjectCard(project)}
             </Grid>
           ))}
 
           {/* Tarjeta para crear nuevo proyecto */}
-          <Grid size={{xs:12,md:6,lg:4}}>
+          <Grid item xs={12} md={6} lg={4}>
             <Card
               sx={{
                 height: '100%',
@@ -847,13 +847,13 @@ export const GroupsCollaborationTools: React.FC<
         {/* Intercambio de Saberes */}
         <Grid container spacing={3}>
           {mockExchanges.map((exchange) => (
-            <Grid size={{xs:12,md:6}} key={exchange.id}>
+            <Grid item xs={12} md={6} key={exchange.id}>
               {renderKnowledgeExchange(exchange)}
             </Grid>
           ))}
 
           {/* Tarjeta para crear nuevo intercambio */}
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card
               sx={{
                 height: '100%',
@@ -906,7 +906,7 @@ export const GroupsCollaborationTools: React.FC<
         {/* Eventos y Círculos */}
         <Grid container spacing={3}>
           {mockEvents.map((event) => (
-            <Grid size={{xs:12,md:6,lg:4}} key={event.id}>
+            <Grid item xs={12} md={6} lg={4} key={event.id}>
               <Card>
                 <CardContent>
                   <Stack
@@ -981,7 +981,7 @@ export const GroupsCollaborationTools: React.FC<
           ))}
 
           {/* Tarjeta para crear nuevo evento */}
-          <Grid size={{xs:12,md:6,lg:4}}>
+          <Grid item xs={12} md={6} lg={4}>
             <Card
               sx={{
                 height: '100%',
@@ -1112,7 +1112,7 @@ export const GroupsCollaborationTools: React.FC<
                   fullWidth
                 />
                 <Grid container spacing={2}>
-                  <Grid size={{xs:6}}>
+                  <Grid item xs={6}>
                     <FormControl fullWidth>
                       <InputLabel>Tipo</InputLabel>
                       <Select
@@ -1134,7 +1134,7 @@ export const GroupsCollaborationTools: React.FC<
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid size={{xs:6}}>
+                  <Grid item xs={6}>
                     <FormControl fullWidth>
                       <InputLabel>Formato</InputLabel>
                       <Select
@@ -1181,7 +1181,7 @@ export const GroupsCollaborationTools: React.FC<
                   fullWidth
                 />
                 <Grid container spacing={2}>
-                  <Grid size={{xs:6}}>
+                  <Grid item xs={6}>
                     <TextField
                       label="Fecha y Hora"
                       type="datetime-local"
@@ -1196,7 +1196,7 @@ export const GroupsCollaborationTools: React.FC<
                       InputLabelProps={{ shrink: true }}
                     />
                   </Grid>
-                  <Grid size={{xs:6}}>
+                  <Grid item xs={6}>
                     <TextField
                       label="Duración"
                       value={eventForm.duration}

@@ -358,7 +358,7 @@ export const SmartActions: React.FC<SmartActionsProps> = ({
       {/* Smart Actions Grid */}
       <Grid container spacing={3}>
         {smartActions.map((action, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={action.id}>
+          <Grid item xs={12} sm={6} md={4} key={action.id}>
             <Card
               className="interactive focus-outline"
               onClick={() => handleActionClick(action)}

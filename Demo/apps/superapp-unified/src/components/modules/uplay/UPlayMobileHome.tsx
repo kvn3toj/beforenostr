@@ -1033,7 +1033,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
           // Desktop Layout - Grid-based with improved organization
           <Grid container spacing={4}>
             {/* Left Column - Continue Watching & Featured */}
-            <Grid size={{xs:12,md:8}}>
+            <Grid item xs={12} md={8}>
               {/* Continuar viendo - Solo si hay videos del backend */}
               {processedVideos.length > 0 && (
                 <Box sx={{ mb: 4 }}>
@@ -1064,7 +1064,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     onClick={handleContinueWatching}
                   >
                     <Grid container>
-                      <Grid size={{xs:5}}>
+                      <Grid item xs={5}>
                         <VideoThumbnail 
                           width="100%" 
                           height={200} 
@@ -1072,7 +1072,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                           thumbnailUrl={processedVideos[0]?.thumbnailUrl}
                         />
                       </Grid>
-                      <Grid size={{xs:7}}>
+                      <Grid item xs={7}>
                         <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                           <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
                             {processedVideos[0]?.title || 'Video Destacado'}
@@ -1101,7 +1101,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
             </Grid>
 
             {/* Right Column - Stats & Progress */}
-            <Grid size={{xs:12,md:4}}>
+            <Grid item xs={12} md={4}>
               {/* User Stats Card - Enhanced for Desktop */}
               <Card sx={{ borderRadius: 3, mb: 3 }}>
                 <Box
@@ -1115,7 +1115,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     📊 Tu Progreso
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6}>
                       <Box textAlign="center">
                         <Typography variant="h3" sx={{ fontWeight: 800 }}>
                           {userStats.completedVideos}
@@ -1125,7 +1125,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6}>
                       <Box textAlign="center">
                         <Typography variant="h3" sx={{ fontWeight: 800 }}>
                           {Math.floor(userStats.totalWatchTime / 3600)}h
@@ -1386,7 +1386,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
           <Collapse in={showStats}>
             <CardContent sx={{ p: 3 }}>
               <Grid container spacing={3}>
-                <Grid size={{xs:6}}>
+                <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography
                       variant="h4"
@@ -1400,7 +1400,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid size={{xs:6}}>
+                <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography
                       variant="h4"
@@ -1414,7 +1414,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid size={{xs:6}}>
+                <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography
                       variant="h4"
@@ -1428,7 +1428,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid size={{xs:6}}>
+                <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography
                       variant="h4"

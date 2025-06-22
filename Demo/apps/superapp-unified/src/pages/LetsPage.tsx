@@ -126,7 +126,7 @@ const LetsPage: React.FC = () => {
               />
 
               <Grid container spacing={3} alignItems="center" sx={{ position: 'relative', zIndex: 1 }}>
-                <Grid size={{xs:12,md:8}}>
+                <Grid item xs={12} md={8}>
                   <Typography variant="h3" fontWeight="bold" sx={{ mb: 2 }}>
                     🔄 Sistema LETS CoomÜnity
                   </Typography>
@@ -158,9 +158,9 @@ const LetsPage: React.FC = () => {
                   </Stack>
                 </Grid>
 
-                <Grid size={{xs:12,md:4}}>
+                <Grid item xs={12} md={4}>
                   <Grid container spacing={2}>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6}>
                       <Box textAlign="center">
                         <Typography variant="h4" fontWeight="bold">
                           {letsStats.totalTransactions}
@@ -170,7 +170,7 @@ const LetsPage: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6}>
                       <Box textAlign="center">
                         <Typography variant="h4" fontWeight="bold">
                           {letsStats.activeUsers}
@@ -180,7 +180,7 @@ const LetsPage: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6}>
                       <Box textAlign="center">
                         <Typography variant="h4" fontWeight="bold">
                           {letsStats.totalUnitsCirculating}
@@ -190,7 +190,7 @@ const LetsPage: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6}>
                       <Box textAlign="center">
                         <Typography variant="h4" fontWeight="bold">
                           {(letsStats.ayniIndex * 100).toFixed(0)}%
@@ -211,10 +211,10 @@ const LetsPage: React.FC = () => {
         <Fade in timeout={1000}>
           <Box sx={{ mb: 4 }}>
             <Grid container spacing={3}>
-              <Grid size={{xs:12,md:6}}>
+              <Grid item xs={12} md={6}>
                 <UnitsWallet userId={user?.id || ''} />
               </Grid>
-              <Grid size={{xs:12,md:6}}>
+              <Grid item xs={12} md={6}>
                 <Card sx={{ p: 3, height: '100%' }}>
                   <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
                     🎯 Principios del Sistema LETS

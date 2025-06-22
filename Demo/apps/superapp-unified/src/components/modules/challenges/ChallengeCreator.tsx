@@ -350,7 +350,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
 
   const renderBasicInfo = () => (
     <Grid container spacing={3}>
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Controller
           name="title"
           control={control}
@@ -368,7 +368,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Controller
           name="shortDescription"
           control={control}
@@ -384,7 +384,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Controller
           name="description"
           control={control}
@@ -404,7 +404,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12,sm:6}}>
+      <Grid item xs={12} sm={6}>
         <Controller
           name="category"
           control={control}
@@ -440,7 +440,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12,sm:6}}>
+      <Grid item xs={12} sm={6}>
         <Controller
           name="difficulty"
           control={control}
@@ -467,7 +467,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Box
           sx={{
             border: '2px dashed',
@@ -514,7 +514,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
 
   const renderConfiguration = () => (
     <Grid container spacing={3}>
-      <Grid size={{xs:12,sm:6}}>
+      <Grid item xs={12} sm={6}>
         <Controller
           name="type"
           control={control}
@@ -533,7 +533,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12,sm:6}}>
+      <Grid item xs={12} sm={6}>
         <Controller
           name="duration"
           control={control}
@@ -550,7 +550,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12,sm:6}}>
+      <Grid item xs={12} sm={6}>
         <Controller
           name="points"
           control={control}
@@ -567,7 +567,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12,sm:6}}>
+      <Grid item xs={12} sm={6}>
         <Controller
           name="maxParticipants"
           control={control}
@@ -584,7 +584,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Controller
           name="tags"
           control={control}
@@ -617,7 +617,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         />
       </Grid>
 
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Alert severity="info" sx={{ mt: 2 }}>
           <Typography variant="body2">
             💡 <strong>Filosofía CoomÜnity:</strong> Los desafíos deben fomentar
@@ -672,7 +672,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
             >
               <Box sx={{ width: '100%' }}>
                 <Grid container spacing={2}>
-                  <Grid size={{xs:12,sm:6}}>
+                  <Grid item xs={12} sm={6}>
                     <Controller
                       name={`tasks.${index}.title`}
                       control={control}
@@ -688,7 +688,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                       )}
                     />
                   </Grid>
-                  <Grid size={{xs:12,sm:4}}>
+                  <Grid item xs={12} sm={4}>
                     <Controller
                       name={`tasks.${index}.type`}
                       control={control}
@@ -708,7 +708,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                       )}
                     />
                   </Grid>
-                  <Grid size={{xs:12,sm:2}}>
+                  <Grid item xs={12} sm={2}>
                     <Controller
                       name={`tasks.${index}.points`}
                       control={control}
@@ -724,7 +724,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                       )}
                     />
                   </Grid>
-                  <Grid size={{xs:12}}>
+                  <Grid item xs={12}>
                     <Controller
                       name={`tasks.${index}.description`}
                       control={control}
@@ -741,7 +741,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                       )}
                     />
                   </Grid>
-                  <Grid size={{xs:12}}>
+                  <Grid item xs={12}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Controller
                         name={`tasks.${index}.isRequired`}
@@ -820,7 +820,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
             >
               <Box sx={{ width: '100%' }}>
                 <Grid container spacing={2} alignItems="center">
-                  <Grid size={{xs:12,sm:3}}>
+                  <Grid item xs={12} sm={3}>
                     <Controller
                       name={`rewards.${index}.type`}
                       control={control}
@@ -852,7 +852,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                       )}
                     />
                   </Grid>
-                  <Grid size={{xs:12,sm:2}}>
+                  <Grid item xs={12} sm={2}>
                     <Controller
                       name={`rewards.${index}.amount`}
                       control={control}
@@ -868,7 +868,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                       )}
                     />
                   </Grid>
-                  <Grid size={{xs:12,sm:6}}>
+                  <Grid item xs={12} sm={6}>
                     <Controller
                       name={`rewards.${index}.description`}
                       control={control}
@@ -883,7 +883,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                       )}
                     />
                   </Grid>
-                  <Grid size={{xs:12,sm:1}}>
+                  <Grid item xs={12} sm={1}>
                     <IconButton
                       onClick={() => removeReward(index)}
                       color="error"
@@ -910,7 +910,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid size={{xs:12,md:8}}>
+          <Grid item xs={12} md={8}>
             <Card>
               <CardContent>
                 <Typography variant="h5" gutterBottom>
@@ -957,7 +957,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
             </Card>
           </Grid>
 
-          <Grid size={{xs:12,md:4}}>
+          <Grid item xs={12} md={4}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>

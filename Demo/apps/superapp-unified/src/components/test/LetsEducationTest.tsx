@@ -35,7 +35,7 @@ export const LetsEducationTest: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Estado Actual */}
-        <Grid size={{xs:12,md:6}}>
+        <Grid item xs={12} md={6}>
           <Typography variant="h6" gutterBottom>
             📊 Estado Actual
           </Typography>
@@ -132,7 +132,7 @@ export const LetsEducationTest: React.FC = () => {
         </Grid>
 
         {/* Funciones Computadas */}
-        <Grid size={{xs:12,md:6}}>
+        <Grid item xs={12} md={6}>
           <Typography variant="h6" gutterBottom>
             🧮 Funciones Computadas
           </Typography>
@@ -175,7 +175,7 @@ export const LetsEducationTest: React.FC = () => {
         </Grid>
 
         {/* Controles de Prueba */}
-        <Grid size={{xs:12}}>
+        <Grid item xs={12}>
           <Typography variant="h6" gutterBottom>
             🎮 Controles de Prueba
           </Typography>

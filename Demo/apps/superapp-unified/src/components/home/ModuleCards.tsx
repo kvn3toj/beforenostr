@@ -180,7 +180,7 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({
         {/* Module cards skeleton */}
         <Grid container spacing={3}>
           {[1, 2, 3, 4].map((index) => (
-            <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={index}>
+            <Grid item xs={12} sm={6} lg={3} key={index}>
               <EnhancedLoadingState
                 type="skeleton"
                 variant="card"
@@ -238,7 +238,7 @@ export const ModuleCards: React.FC<ModuleCardsProps> = ({
       {/* Enhanced module grid */}
       <Grid container spacing={3}>
         {modules.map((module, index) => (
-          <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={module.id}>
+          <Grid item xs={12} sm={6} lg={3} key={module.id}>
             <Box
               className="animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}

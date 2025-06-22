@@ -265,7 +265,7 @@ const UPlay: React.FC = () => {
                 key: 'logros'
               }
             ].map((metric, index) => (
-              <Grid key={metric.key} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid key={metric.key} item xs={12} sm={6} md={4}>
                 <Zoom in={animate} timeout={1000 + index * 200}>
                   <Card
                     className="uplay-metric-card"

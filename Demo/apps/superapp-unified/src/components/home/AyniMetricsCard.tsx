@@ -244,7 +244,7 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
       {/* Enhanced metrics grid */}
       <Box className="space-y-6">
         <Grid container spacing={3}>
-          <Grid size={{ xs: 6, sm: 3 }}>
+          <Grid item xs={6} sm={3}>
             <Box className="text-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <Typography
                 variant="h3"
@@ -267,7 +267,7 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 6, sm: 3 }}>
+          <Grid item xs={6} sm={3}>
             <Box className="text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <Typography
                 variant="h3"
@@ -290,7 +290,7 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 6, sm: 3 }}>
+          <Grid item xs={6} sm={3}>
             <Box className="text-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
               <Typography
                 variant="h3"
@@ -313,7 +313,7 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 6, sm: 3 }}>
+          <Grid item xs={6} sm={3}>
             <Box className="text-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
               <Typography
                 variant="h3"
@@ -391,7 +391,7 @@ export const AyniMetricsCard: React.FC<AyniMetricsProps> = ({
           
           <Grid container spacing={2} justifyContent="center">
             {(Object.keys(elementConfig) as Array<keyof typeof elementConfig>).map((element) => (
-              <Grid size={{ xs: 3 }} key={element}>
+              <Grid item xs={3} key={element}>
                 <EnhancedElementIcon
                   element={element}
                   value={elementos[element]}

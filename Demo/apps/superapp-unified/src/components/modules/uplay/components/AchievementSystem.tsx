@@ -366,7 +366,7 @@ const AchievementSystem: React.FC<AchievementSystemProps> = ({
 
         <CardContent sx={{ p: 3 }}>
           <Grid container spacing={3}>
-            <Grid size={{ xs: 12, md: 4 }}>
+            <Grid item xs={12} md={4}>
               <Box textAlign="center">
                 <Typography
                   variant="h4"
@@ -380,7 +380,7 @@ const AchievementSystem: React.FC<AchievementSystemProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
+            <Grid item xs={12} md={4}>
               <Box textAlign="center">
                 <Typography
                   variant="h4"
@@ -397,7 +397,7 @@ const AchievementSystem: React.FC<AchievementSystemProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
+            <Grid item xs={12} md={4}>
               <Box textAlign="center">
                 <Typography
                   variant="h4"
@@ -450,7 +450,7 @@ const AchievementSystem: React.FC<AchievementSystemProps> = ({
               ? allAchievements
               : achievements.slice(0, 3)
             ).map((achievement) => (
-                              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={achievement.id}>
+                              <Grid item xs={12} sm={6} md={4} key={achievement.id}>
                 <AchievementCard achievement={achievement} />
               </Grid>
             ))}
@@ -484,7 +484,7 @@ const AchievementSystem: React.FC<AchievementSystemProps> = ({
           <Grid container spacing={2}>
             {(showAllBadges ? allBadges : allBadges.slice(0, 3)).map(
               (badge) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={badge.id}>
+                <Grid item xs={12} sm={6} md={4} key={badge.id}>
                   <BadgeCard badge={badge} />
                 </Grid>
               )

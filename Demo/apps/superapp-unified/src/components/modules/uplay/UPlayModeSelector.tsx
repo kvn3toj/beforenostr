@@ -132,7 +132,7 @@ const UPlayModeSelector: React.FC<UPlayModeSelectorProps> = ({
 
       <Grid container spacing={3}>
         {modeConfigs.map((mode) => (
-          <Grid size={{xs:12,md:4}} key={mode.id}>
+          <Grid item xs={12} md={4} key={mode.id}>
             <Card
               sx={{
                 height: '100%',

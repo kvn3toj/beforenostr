@@ -296,7 +296,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
               {/* Tab 0: Feed Comunitario */}
               {activeTab === 0 && (
                 <Grid container spacing={3}>
-                  <Grid size={{xs:12,lg:8}}>
+                  <Grid item xs={12} lg={8}>
                     <CommunityFeed
                       isConnected={backendAvailability.isAvailable}
                       quickActions={dynamicQuickActions}
@@ -304,7 +304,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
                       communityMetrics={dynamicCommunityMetrics}
                     />
                   </Grid>
-                  <Grid size={{xs:12,lg:4}}>
+                  <Grid item xs={12} lg={4}>
                     <AyniSocialMetrics
                       userStats={dynamicStats}
                       communityMetrics={dynamicCommunityMetrics}
@@ -319,7 +319,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
               {/* Tab 1: Conexiones Ayni */}
               {activeTab === 1 && (
                 <Grid container spacing={3}>
-                  <Grid size={{xs:12,md:4}}>
+                  <Grid item xs={12} md={4}>
                     <ConnectionsManager
                       connections={normalizedMatches}
                       isLoading={matchesLoading}
@@ -328,7 +328,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
                       userStats={dynamicStats}
                     />
                   </Grid>
-                  <Grid size={{xs:12,md:8}}>
+                  <Grid item xs={12} md={8}>
                     <SocialChatArea
                       connections={normalizedMatches}
                       isLoading={matchesLoading}
@@ -355,7 +355,7 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
               {/* Tab 3: Hub de Crecimiento */}
               {activeTab === 3 && (
                 <Grid container spacing={3}>
-                  <Grid size={{xs:12}}>
+                  <Grid item xs={12}>
                     <AyniSocialMetrics
                       userStats={dynamicStats}
                       communityMetrics={dynamicCommunityMetrics}

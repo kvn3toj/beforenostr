@@ -227,7 +227,7 @@ const InteractiveVideoDemo: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Video Player */}
-        <Grid size={{xs:12,lg:8}}>
+        <Grid item xs={12} lg={8}>
           {selectedVideo ? (
             <Box>
               <Card sx={{ mb: 2 }}>
@@ -312,7 +312,7 @@ const InteractiveVideoDemo: React.FC = () => {
         </Grid>
 
         {/* Video List */}
-        <Grid size={{xs:12,lg:4}}>
+        <Grid item xs={12} lg={4}>
           <Typography variant="h6" gutterBottom>
             📚 Videos Disponibles
           </Typography>

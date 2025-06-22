@@ -200,7 +200,7 @@ const DesignSystemShowcase: React.FC = () => {
 
             {/* Estadísticas del sistema */}
             <Grid container spacing={3}>
-              <Grid size={{xs:6,sm:3}}>
+              <Grid item xs={6} sm={3}>
                 <Box textAlign="center">
                   <Typography
                     variant="h4"
@@ -217,7 +217,7 @@ const DesignSystemShowcase: React.FC = () => {
                   </Typography>
                 </Box>
               </Grid>
-              <Grid size={{xs:6,sm:3}}>
+              <Grid item xs={6} sm={3}>
                 <Box textAlign="center">
                   <Typography
                     variant="h4"
@@ -234,7 +234,7 @@ const DesignSystemShowcase: React.FC = () => {
                   </Typography>
                 </Box>
               </Grid>
-              <Grid size={{xs:6,sm:3}}>
+              <Grid item xs={6} sm={3}>
                 <Box textAlign="center">
                   <Typography
                     variant="h4"
@@ -251,7 +251,7 @@ const DesignSystemShowcase: React.FC = () => {
                   </Typography>
                 </Box>
               </Grid>
-              <Grid size={{xs:6,sm:3}}>
+              <Grid item xs={6} sm={3}>
                 <Box textAlign="center">
                   <Typography
                     variant="h4"

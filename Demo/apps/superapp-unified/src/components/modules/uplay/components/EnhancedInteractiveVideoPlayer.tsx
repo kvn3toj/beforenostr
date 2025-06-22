@@ -1764,7 +1764,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                   Estadísticas de Sesión
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid size={6}>
+                  <Grid item xs={6}>
                     <Stack alignItems="center">
                       <Typography
                         variant="h6"
@@ -1780,7 +1780,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                       </Typography>
                     </Stack>
                   </Grid>
-                  <Grid size={6}>
+                  <Grid item xs={6}>
                     <Stack alignItems="center">
                       <Typography
                         variant="h6"
@@ -1796,7 +1796,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                       </Typography>
                     </Stack>
                   </Grid>
-                  <Grid size={6}>
+                  <Grid item xs={6}>
                     <Stack alignItems="center">
                       <Typography
                         variant="h6"
@@ -1812,7 +1812,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                       </Typography>
                     </Stack>
                   </Grid>
-                  <Grid size={6}>
+                  <Grid item xs={6}>
                     <Stack alignItems="center">
                       <Typography
                         variant="h6"

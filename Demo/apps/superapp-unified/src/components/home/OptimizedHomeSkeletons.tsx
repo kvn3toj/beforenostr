@@ -154,7 +154,7 @@ export const PrimaryDashboardSkeleton: React.FC = () => (
     {/* Key Metrics */}
     <Grid container spacing={3}>
       {[1, 2, 3].map((index) => (
-        <Grid size={{ xs: 4 }} key={index}>
+        <Grid item xs={4} key={index}>
           <Box sx={{ textAlign: 'center' }}>
             <Skeleton
               variant="text"
@@ -190,7 +190,7 @@ export const ModuleCardsSkeleton: React.FC = () => (
     />
     <Grid container spacing={3}>
       {[1, 2, 3, 4].map((index) => (
-        <Grid size={{ xs: 12, sm: 6 }} key={index}>
+        <Grid item xs={12} sm={6} key={index}>
           <Card
             sx={{
               p: 'var(--space-3)',
@@ -229,7 +229,7 @@ export const ModuleCardsSkeleton: React.FC = () => (
 
             {/* Stats */}
             <Grid container spacing={2}>
-              <Grid size={{ xs: 6 }}>
+              <Grid item xs={6}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Skeleton
                     variant="text"
@@ -245,7 +245,7 @@ export const ModuleCardsSkeleton: React.FC = () => (
                   />
                 </Box>
               </Grid>
-              <Grid size={{ xs: 6 }}>
+              <Grid item xs={6}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Skeleton
                     variant="text"
@@ -314,11 +314,11 @@ export const WalletOverviewSkeleton: React.FC = () => (
       </Box>
 
       <Grid container spacing={2}>
-        <Grid size={{ xs: 6 }}>
+        <Grid item xs={6}>
           <Skeleton variant="text" width="100%" height={16} sx={{ mb: 0.5 }} />
           <Skeleton variant="text" width="80%" height={20} />
         </Grid>
-        <Grid size={{ xs: 6 }}>
+        <Grid item xs={6}>
           <Skeleton variant="text" width="100%" height={16} sx={{ mb: 0.5 }} />
           <Skeleton variant="text" width="60%" height={20} />
         </Grid>
@@ -366,12 +366,12 @@ export const CompleteDashboardSkeleton: React.FC = () => (
 
     <Grid container spacing={4}>
       {/* Panel principal */}
-      <Grid size={{ xs: 12, lg: 8 }}>
+      <Grid item xs={12} lg={8}>
         <PrimaryDashboardSkeleton />
       </Grid>
 
       {/* Panel lateral */}
-      <Grid size={{ xs: 12, lg: 4 }}>
+      <Grid item xs={12} lg={4}>
         <Stack spacing={4}>
           <WalletOverviewSkeleton />
           <QuickActionsSkeleton />
@@ -379,7 +379,7 @@ export const CompleteDashboardSkeleton: React.FC = () => (
       </Grid>
 
       {/* Módulos principales */}
-      <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
+      <Grid item xs={12} sx={{ mt: 2 }}>
         <ModuleCardsSkeleton />
       </Grid>
     </Grid>
@@ -413,7 +413,7 @@ export const SmartDashboardSkeleton: React.FC = () => (
         />
         <Grid container spacing={2}>
           {[1, 2, 3].map((index) => (
-            <Grid size={{ xs: 4 }} key={index}>
+            <Grid item xs={4} key={index}>
               <Skeleton
                 variant="rectangular"
                 width="100%"

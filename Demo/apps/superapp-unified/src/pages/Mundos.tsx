@@ -113,7 +113,7 @@ export const Mundos: React.FC = () => {
       {mundos && mundos.length > 0 ? (
         <Grid container spacing={3}>
           {mundos.map((mundo: Mundo) => (
-            <Grid size={{xs:12,md:6,lg:4}} key={mundo.id}>
+            <Grid item xs={12} md={6} lg={4} key={mundo.id}>
               <Card 
                 elevation={2}
                 sx={{ 

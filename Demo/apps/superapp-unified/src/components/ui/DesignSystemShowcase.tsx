@@ -66,7 +66,7 @@ export const DesignSystemShowcase: React.FC = () => {
         <Typography variant="h6" className="mb-3">Colores Primarios</Typography>
         <Grid container spacing={2}>
           {Object.entries(coomunityColors.primary).map(([shade, color]) => (
-            <Grid size={{xs:6,sm:4,md:2}} key={shade}>
+            <Grid item xs={6} sm={4} md={2} key={shade}>
               <CoomunityCard variant="outlined" padding="sm" className="text-center">
                 <Box
                   className="w-full h-16 rounded-lg mb-2"
@@ -94,7 +94,7 @@ export const DesignSystemShowcase: React.FC = () => {
             { name: 'Fuego', color: '#dc2626', icon: '🔥', concept: 'Acción, Energía' },
             { name: 'Aire', color: '#7c3aed', icon: '💨', concept: 'Visión, Estructura' },
           ].map((element) => (
-            <Grid size={{xs:6,sm:3}} key={element.name}>
+            <Grid item xs={6} sm={3} key={element.name}>
               <CoomunityCard variant="outlined" padding="sm" className="text-center">
                 <Box
                   className="w-full h-16 rounded-lg mb-2 flex items-center justify-center text-2xl"
@@ -160,7 +160,7 @@ export const DesignSystemShowcase: React.FC = () => {
             { term: 'Bien Común', definition: 'Beneficio colectivo sobre individual', color: 'success' },
             { term: 'Emprendedores Confiables', definition: 'Usuarios verificados con alta reputación', color: 'warning' },
           ].map((item) => (
-            <Grid size={{xs:12,sm:6,md:4}} key={item.term}>
+            <Grid item xs={12} sm={6} md={4} key={item.term}>
               <CoomunityCard variant="outlined" padding="md">
                 <Chip
                   label={item.term}
@@ -234,7 +234,7 @@ export const DesignSystemShowcase: React.FC = () => {
       <Box>
         <Typography variant="h6" className="mb-3">Tarjetas</Typography>
         <Grid container spacing={3}>
-          <Grid size={{xs:12,sm:6,md:4}}>
+          <Grid item xs={12} sm={6} md={4}>
             <CoomunityCard variant="elevated" padding="md">
               <Typography variant="h6" className="mb-2">
                 Tarjeta Elevada
@@ -248,7 +248,7 @@ export const DesignSystemShowcase: React.FC = () => {
             </CoomunityCard>
           </Grid>
 
-          <Grid size={{xs:12,sm:6,md:4}}>
+          <Grid item xs={12} sm={6} md={4}>
             <CoomunityCard variant="outlined" padding="md">
               <Typography variant="h6" className="mb-2">
                 Tarjeta Outlined
@@ -262,7 +262,7 @@ export const DesignSystemShowcase: React.FC = () => {
             </CoomunityCard>
           </Grid>
 
-          <Grid size={{xs:12,sm:6,md:4}}>
+          <Grid item xs={12} sm={6} md={4}>
             <CoomunityCard variant="coomunity" padding="md">
               <Typography variant="h6" className="mb-2">
                 Tarjeta CoomÜnity
@@ -292,7 +292,7 @@ export const DesignSystemShowcase: React.FC = () => {
         <Typography variant="h6" className="mb-3">Micro-interacciones</Typography>
         <CoomunityCard variant="outlined" padding="lg">
           <Grid container spacing={3}>
-            <Grid size={{xs:12,sm:6,md:3}}>
+            <Grid item xs={12} sm={6} md={3}>
               <Box className="text-center">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -309,7 +309,7 @@ export const DesignSystemShowcase: React.FC = () => {
               </Box>
             </Grid>
 
-            <Grid size={{xs:12,sm:6,md:3}}>
+            <Grid item xs={12} sm={6} md={3}>
               <Box className="text-center">
                 <motion.div
                   animate={{ rotate: 360 }}
@@ -322,7 +322,7 @@ export const DesignSystemShowcase: React.FC = () => {
               </Box>
             </Grid>
 
-            <Grid size={{xs:12,sm:6,md:3}}>
+            <Grid item xs={12} sm={6} md={3}>
               <Box className="text-center">
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
@@ -335,7 +335,7 @@ export const DesignSystemShowcase: React.FC = () => {
               </Box>
             </Grid>
 
-            <Grid size={{xs:12,sm:6,md:3}}>
+            <Grid item xs={12} sm={6} md={3}>
               <Box className="text-center">
                 <motion.div
                   whileHover={{ y: -5 }}

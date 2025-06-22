@@ -357,7 +357,7 @@ const PerformanceMonitor: React.FC = () => {
           </Typography>
           <Grid container spacing={3}>
             {metrics.slice(0, 4).map((metric, index) => (
-              <Grid size={{xs:12,sm:6,md:3}} key={metric.name}>
+              <Grid item xs={12} sm={6} md={3} key={metric.name}>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -396,7 +396,7 @@ const PerformanceMonitor: React.FC = () => {
               Análisis de Bundle
             </Typography>
             <Grid container spacing={3}>
-              <Grid size={{xs:12,md:6}}>
+              <Grid item xs={12} md={6}>
                 <Card sx={{ p: 3 }}>
                   <Typography variant="h6" mb={2}>Distribución de Tamaños</Typography>
                   <List>
@@ -438,7 +438,7 @@ const PerformanceMonitor: React.FC = () => {
                   </List>
                 </Card>
               </Grid>
-              <Grid size={{xs:12,md:6}}>
+              <Grid item xs={12} md={6}>
                 <Card sx={{ p: 3 }}>
                   <Typography variant="h6" mb={2}>Optimización</Typography>
                   <Box display="flex" alignItems="center" gap={2} mb={2}>
@@ -480,7 +480,7 @@ const PerformanceMonitor: React.FC = () => {
           <AccordionDetails>
             <Grid container spacing={2}>
               {metrics.map((metric, index) => (
-                <Grid size={{xs:12,sm:6,md:4}} key={metric.name}>
+                <Grid item xs={12} sm={6} md={4} key={metric.name}>
                   <Card sx={{ p: 2, height: '100%' }}>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       {getStatusIcon(metric.status)}

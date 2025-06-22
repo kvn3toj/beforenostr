@@ -530,7 +530,7 @@ export function HomePageOptimized() {
               }}
             >
               {/* === BIENVENIDA === */}
-              <Grid size={12}>
+              <Grid item xs={12}>
                 <Fade in timeout={600}>
                   <Box sx={{ mb: { xs: 1, sm: 2, md: 3 } }}>
                     <WelcomeWidget
@@ -542,7 +542,7 @@ export function HomePageOptimized() {
               </Grid>
 
               {/* === BALANCE AYNI - PROTAGONISTA === */}
-              <Grid size={12}>
+              <Grid item xs={12}>
                 <Fade in timeout={800}>
                   <Box
                     sx={{
@@ -560,7 +560,7 @@ export function HomePageOptimized() {
               </Grid>
 
               {/* === ACCIONES Y NOTIFICACIONES === */}
-              <Grid size={{ xs: 12, lg: 8 }}>
+              <Grid item xs={12} lg={8}>
                 <Fade in timeout={1000}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                     <QuickActionsWidget onActionClick={handleActionClick} />
@@ -568,7 +568,7 @@ export function HomePageOptimized() {
                 </Fade>
               </Grid>
 
-              <Grid size={{ xs: 12, lg: 4 }}>
+              <Grid item xs={12} lg={4}>
                 <Fade in timeout={1200}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                     <NotificationsWidget
@@ -587,7 +587,7 @@ export function HomePageOptimized() {
               </Grid>
 
               {/* === MÓDULOS PRINCIPALES === */}
-              <Grid size={12}>
+              <Grid item xs={12}>
                 <Fade in timeout={1400}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                     <MainModulesWidget onModuleClick={handleModuleClick} />
@@ -596,7 +596,7 @@ export function HomePageOptimized() {
               </Grid>
 
               {/* === WALLET === */}
-              <Grid size={{ xs: 12, md: 6 }}>
+              <Grid item xs={12} md={6}>
                 <Fade in timeout={1600}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                     <WalletOnlyWidget
@@ -610,7 +610,7 @@ export function HomePageOptimized() {
               </Grid>
 
               {/* === REFLEXIÓN FINAL OPTIMIZADA === */}
-              <Grid size={{ xs: 12, md: 6 }}>
+              <Grid item xs={12} md={6}>
                 <Fade in timeout={1800}>
                   <Box
                     sx={{

@@ -240,7 +240,7 @@ const Wallet: React.FC = () => {
 
             <Grid container spacing={3}>
               {walletDataQuery.data?.accounts?.map((account, index) => (
-                <Grid size={{xs:12,sm:6,md:4}} key={account.id}>
+                <Grid item xs={12} sm={6} md={4} key={account.id}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -326,7 +326,7 @@ const Wallet: React.FC = () => {
 
             <Grid container spacing={2}>
               {paymentMethodsQuery.data?.map((method, index) => (
-                <Grid size={{xs:12,sm:6}} key={method.id}>
+                <Grid item xs={12} sm={6} key={method.id}>
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}

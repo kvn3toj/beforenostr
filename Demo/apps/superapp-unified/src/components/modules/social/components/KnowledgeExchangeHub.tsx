@@ -185,7 +185,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
         color: 'white'
       }}>
         <Grid container spacing={3} alignItems="center">
-          <Grid size={{xs:12,md:8}}>
+          <Grid item xs={12} md={8}>
             <Typography variant="h4" fontWeight="bold" mb={1}>
               🎓 Hub de Intercambio de Conocimiento
             </Typography>
@@ -197,7 +197,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
             </Typography>
           </Grid>
           
-          <Grid size={{xs:12,md:4}}>
+          <Grid item xs={12} md={4}>
             <Paper sx={{ p: 2, bgcolor: alpha(theme.palette.common.white, 0.1) }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                 <Typography variant="subtitle2" color="inherit">
@@ -257,7 +257,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
 
       {/* Acciones principales */}
       <Grid container spacing={2} mb={3}>
-        <Grid size={{xs:12,md:4}}>
+        <Grid item xs={12} md={4}>
           <Card sx={{ p: 2, textAlign: 'center', height: '100%' }}>
             <School sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
             <Typography variant="h6" mb={1}>Crear Sesión</Typography>
@@ -276,7 +276,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
           </Card>
         </Grid>
 
-        <Grid size={{xs:12,md:4}}>
+        <Grid item xs={12} md={4}>
           <Card sx={{ p: 2, textAlign: 'center', height: '100%' }}>
             <Group sx={{ fontSize: 48, color: 'secondary.main', mb: 1 }} />
             <Typography variant="h6" mb={1}>Unirse a Taller</Typography>
@@ -289,7 +289,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
           </Card>
         </Grid>
 
-        <Grid size={{xs:12,md:4}}>
+        <Grid item xs={12} md={4}>
           <Card sx={{ p: 2, textAlign: 'center', height: '100%' }}>
             <Star sx={{ fontSize: 48, color: 'warning.main', mb: 1 }} />
             <Typography variant="h6" mb={1}>Mentoría 1:1</Typography>
@@ -400,7 +400,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
             />
             
             <Grid container spacing={2}>
-              <Grid size={{xs:12,sm:6}}>
+              <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
                   <InputLabel>Tipo de Sesión</InputLabel>
                   <Select
@@ -415,7 +415,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
                 </FormControl>
               </Grid>
               
-              <Grid size={{xs:12,sm:6}}>
+              <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
                   <InputLabel>Formato</InputLabel>
                   <Select
@@ -431,7 +431,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
             </Grid>
             
             <Grid container spacing={2}>
-              <Grid size={{xs:12,sm:4}}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   label="Costo en Ünits"
                   type="number"
@@ -442,7 +442,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
                 />
               </Grid>
               
-              <Grid size={{xs:12,sm:4}}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   label="Duración (horas)"
                   type="number"
@@ -453,7 +453,7 @@ export const KnowledgeExchangeHub: React.FC<KnowledgeExchangeHubProps> = ({
                 />
               </Grid>
               
-              <Grid size={{xs:12,sm:4}}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   label="Máx. Participantes"
                   type="number"
@@ -617,7 +617,7 @@ const KnowledgeExchangeCard: React.FC<KnowledgeExchangeCardProps> = ({
         </Box>
 
         <Grid container spacing={2} mb={2}>
-          <Grid size={{xs:6}}>
+          <Grid item xs={6}>
             <Box display="flex" alignItems="center" gap={0.5}>
               <AccessTime sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2">
@@ -626,7 +626,7 @@ const KnowledgeExchangeCard: React.FC<KnowledgeExchangeCardProps> = ({
             </Box>
           </Grid>
           
-          <Grid size={{xs:6}}>
+          <Grid item xs={6}>
             <Box display="flex" alignItems="center" gap={0.5}>
               <AutoAwesome sx={{ fontSize: 16, color: 'primary.main' }} />
               <Typography variant="body2" color="primary" fontWeight="bold">
@@ -635,7 +635,7 @@ const KnowledgeExchangeCard: React.FC<KnowledgeExchangeCardProps> = ({
             </Box>
           </Grid>
           
-          <Grid size={{xs:6}}>
+          <Grid item xs={6}>
             <Box display="flex" alignItems="center" gap={0.5}>
               <People sx={{ fontSize: 16, color: 'text.secondary' }} />
               <Typography variant="body2">
@@ -644,7 +644,7 @@ const KnowledgeExchangeCard: React.FC<KnowledgeExchangeCardProps> = ({
             </Box>
           </Grid>
           
-          <Grid size={{xs:6}}>
+          <Grid item xs={6}>
             <Box display="flex" alignItems="center" gap={0.5}>
               {exchange.format === 'virtual' ? (
                 <VideoCall sx={{ fontSize: 16, color: 'text.secondary' }} />

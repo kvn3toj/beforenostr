@@ -137,7 +137,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   return (
     <Grid container spacing={4}>
       {/* Columna izquierda - Galería */}
-      <Grid size={{xs:12,md:7}}>
+      <Grid item xs={12} md={7}>
         <Fade in timeout={500}>
           <Box>
             <ProductGallery
@@ -150,7 +150,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       </Grid>
 
       {/* Columna derecha - Información del producto */}
-      <Grid size={{xs:12,md:5}}>
+      <Grid item xs={12} md={5}>
         <Zoom in timeout={700} style={{ transitionDelay: '200ms' }}>
           <Box>
             {/* Header del producto */}
@@ -368,7 +368,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       </Grid>
 
       {/* Sección completa - Información del vendedor */}
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Fade in timeout={800} style={{ transitionDelay: '400ms' }}>
           <Box sx={{ mt: 4 }}>
             <SellerInfoCard seller={product.seller} />
@@ -377,7 +377,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       </Grid>
 
       {/* Sección completa - Tabs con información detallada */}
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Fade in timeout={1000} style={{ transitionDelay: '600ms' }}>
           <Box sx={{ mt: 4 }}>
             <Paper elevation={1} sx={{ borderRadius: 2 }}>
@@ -438,7 +438,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                       </Typography>
                       <Grid container spacing={2}>
                         {product.features.map((feature, index) => (
-                          <Grid size={{xs:12,sm:6}} key={index}>
+                          <Grid item xs={12} sm={6} key={index}>
                             <Box
                               sx={{
                                 display: 'flex',
@@ -507,7 +507,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 <Box sx={{ px: 3 }}>
                   {/* Resumen de calificaciones */}
                   <Grid container spacing={4} sx={{ mb: 4 }}>
-                    <Grid size={{xs:12,md:4}}>
+                    <Grid item xs={12} md={4}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography variant="h2" fontWeight="bold">
                           {product.rating}
@@ -525,7 +525,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     </Grid>
 
                     {aspectRatings && (
-                      <Grid size={{xs:12,md:8}}>
+                      <Grid item xs={12} md={8}>
                         <Box
                           sx={{
                             display: 'flex',
@@ -591,7 +591,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     <Grid container spacing={3}>
                       {Object.entries(product.specifications).map(
                         ([key, value]) => (
-                          <Grid size={{xs:12,sm:6,md:4}} key={key}>
+                          <Grid item xs={12} sm={6} md={4} key={key}>
                             <Paper
                               elevation={0}
                               sx={{
@@ -625,7 +625,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       </Grid>
 
       {/* Productos relacionados */}
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Fade in timeout={1200} style={{ transitionDelay: '800ms' }}>
           <Box sx={{ mt: 6 }}>
             <RelatedProducts

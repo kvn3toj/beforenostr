@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { LoginPage } from './LoginPage';
+import LoginPage from './LoginPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -63,7 +63,7 @@ describe('LoginPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Setup default mocks
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
     vi.mocked(authService.login).mockImplementation(mockLogin);
@@ -79,7 +79,7 @@ describe('LoginPage', () => {
   });
 
   it('should handle successful login', async () => {
-    const mockAuthResponse = { 
+    const mockAuthResponse = {
       access_token: 'token123',
       user: { id: 'user-123', email: 'test@example.com', name: 'Test User', avatarUrl: null }
     };
@@ -224,4 +224,4 @@ describe('LoginPage', () => {
       expect(toast.success).toHaveBeenCalledWith('Inicio de sesión exitoso');
     });
   });
-}); 
+});

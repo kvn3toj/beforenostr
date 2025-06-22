@@ -170,7 +170,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
       >
         <CardContent sx={{ p: 2 }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid size={{xs:3}}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography
                   variant="h6"
@@ -205,7 +205,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
               </Box>
             </Grid>
 
-            <Grid size={{xs:3}}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography
                   variant="h6"
@@ -240,7 +240,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
               </Box>
             </Grid>
 
-            <Grid size={3}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography
                   variant="h6"
@@ -257,7 +257,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
               </Box>
             </Grid>
 
-            <Grid size={3}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 {metrics.currentStreak > 0 && (
                   <>
@@ -399,7 +399,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
 
       {/* Core Metrics Grid */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 6, md: 3 }}>
+        <Grid item xs={6} md={3}>
           <Card
             sx={{
               borderRadius: 3,
@@ -474,7 +474,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 6, md: 3 }}>
+        <Grid item xs={6} md={3}>
           <Card
             sx={{
               borderRadius: 3,
@@ -549,7 +549,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 6, md: 3 }}>
+        <Grid item xs={6} md={3}>
           <Card
             sx={{
               borderRadius: 3,
@@ -604,7 +604,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 6, md: 3 }}>
+        <Grid item xs={6} md={3}>
           <Card
             sx={{
               borderRadius: 3,
@@ -665,7 +665,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
 
       {/* Performance Metrics */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 3, height: '100%' }}>
             <CardContent sx={{ p: 3 }}>
               <Typography
@@ -742,7 +742,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 3, height: '100%' }}>
             <CardContent sx={{ p: 3 }}>
               <Typography
@@ -759,7 +759,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
               </Typography>
 
               <Grid container spacing={2}>
-                <Grid size={6}>
+                <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography
                       variant="h5"
@@ -774,7 +774,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
                   </Box>
                 </Grid>
 
-                <Grid size={6}>
+                <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography
                       variant="h5"
@@ -796,7 +796,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
                   </Box>
                 </Grid>
 
-                <Grid size={6}>
+                <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography
                       variant="h5"
@@ -811,7 +811,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
                   </Box>
                 </Grid>
 
-                <Grid size={6}>
+                <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography
                       variant="h5"
@@ -856,7 +856,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
             }}
           >
             <Grid container spacing={2} alignItems="center">
-              <Grid size={{ xs: 12, md: 8 }}>
+              <Grid item xs={12} md={8}>
                 <Typography variant="body1" sx={{ mb: 1, fontWeight: 500 }}>
                   Tu rendimiento en esta sesión ha sido{' '}
                   <strong
@@ -903,7 +903,7 @@ const EnhancedPlayerMetrics: React.FC<EnhancedPlayerMetricsProps> = ({
                 </Stack>
               </Grid>
 
-              <Grid size={{ xs: 12, md: 4 }}>
+              <Grid item xs={12} md={4}>
                 <Box textAlign="center">
                   <Typography
                     variant="h4"

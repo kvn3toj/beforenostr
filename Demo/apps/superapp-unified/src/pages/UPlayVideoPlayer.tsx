@@ -741,7 +741,7 @@ const UPlayVideoPlayer: React.FC = () => {
 
         <Grid container spacing={isMobile ? 0 : 3}>
           {/* Video Player Section */}
-          <Grid size={{ xs: 12, lg: 8 }}>
+          <Grid item xs={12} lg={8}>
             <Card
               sx={{
                 borderRadius: isMobile ? 0 : 3,
@@ -788,7 +788,7 @@ const UPlayVideoPlayer: React.FC = () => {
           </Grid>
 
           {/* Sidebar Section */}
-          <Grid size={{ xs: 12, lg: 4 }}>
+          <Grid item xs={12} lg={4}>
             <Stack spacing={3}>
               {/* Video Information */}
               <Card sx={{ borderRadius: 3 }}>
@@ -1047,7 +1047,7 @@ const UPlayVideoPlayer: React.FC = () => {
                   </Typography>
 
                   <Grid container spacing={2}>
-                    <Grid size={6}>
+                    <Grid item xs={6}>
                       <Stack alignItems="center">
                         <Typography
                           variant="h5"
@@ -1063,7 +1063,7 @@ const UPlayVideoPlayer: React.FC = () => {
                         </Typography>
                       </Stack>
                     </Grid>
-                    <Grid size={6}>
+                    <Grid item xs={6}>
                       <Stack alignItems="center">
                         <Typography
                           variant="h5"

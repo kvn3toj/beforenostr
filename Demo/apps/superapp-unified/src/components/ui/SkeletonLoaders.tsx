@@ -33,7 +33,7 @@ export const DashboardSkeleton: React.FC = () => (
     {/* Cards grid skeleton */}
     <Grid container spacing={3}>
       {/* Gamification Card Skeleton */}
-      <Grid size={{xs:12,md:6,lg:4}}>
+      <Grid item xs={12} md={6} lg={4}>
         <Card sx={{ height: '100%' }}>
           <CardContent>
             {/* Header with icon */}
@@ -79,7 +79,7 @@ export const DashboardSkeleton: React.FC = () => (
       </Grid>
 
       {/* Wallet Card Skeleton */}
-      <Grid size={{xs:12,md:6,lg:4}}>
+      <Grid item xs={12} md={6} lg={4}>
         <Card sx={{ height: '100%' }}>
           <CardContent>
             {/* Header with wallet icon */}
@@ -121,14 +121,14 @@ export const DashboardSkeleton: React.FC = () => (
       </Grid>
 
       {/* Quick Actions Card Skeleton */}
-      <Grid size={{xs:12,lg:4}}>
+      <Grid item xs={12} lg={4}>
         <Card sx={{ height: '100%' }}>
           <CardContent>
             <Skeleton variant="text" width="70%" height={28} sx={{ mb: 2 }} />
             {/* 2x2 grid of action buttons */}
             <Grid container spacing={1}>
               {[1, 2, 3, 4].map((item) => (
-                <Grid size={{xs:6}} key={item}>
+                <Grid item xs={6} key={item}>
                   <Skeleton variant="rectangular" width="100%" height={60} sx={{ borderRadius: 1 }} />
                 </Grid>
               ))}
@@ -138,7 +138,7 @@ export const DashboardSkeleton: React.FC = () => (
       </Grid>
 
       {/* Activity Card Skeleton - Full width */}
-      <Grid size={{xs:12}}>
+      <Grid item xs={12}>
         <Card>
           <CardContent>
             {/* Header with notification icon and badge */}
@@ -202,7 +202,7 @@ export const MarketplaceSkeleton: React.FC = () => (
       <Skeleton variant="text" width="25%" height={32} sx={{ mx: 'auto', mb: 3 }} />
       <Grid container spacing={2}>
         {[1, 2, 3, 4, 5, 6].map((item) => (
-          <Grid size={{xs:12,sm:6,md:4}} key={item}>
+          <Grid item xs={12} sm={6} md={4} key={item}>
             <Card>
               {/* Image with correct height */}
               <Skeleton variant="rectangular" width="100%" height={150} />

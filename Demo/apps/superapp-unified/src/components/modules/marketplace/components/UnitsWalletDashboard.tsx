@@ -205,7 +205,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
             </Box>
 
             <Grid container spacing={2}>
-              <Grid size={{xs:6}}>
+              <Grid item xs={6}>
                 <Button
                   fullWidth
                   variant="contained"
@@ -220,7 +220,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
                   Transferir
                 </Button>
               </Grid>
-              <Grid size={{xs:6}}>
+              <Grid item xs={6}>
                 <Button
                   fullWidth
                   variant="outlined"
@@ -278,7 +278,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
           </Typography>
 
           <Grid container spacing={3}>
-            <Grid size={{xs:12,sm:4}}>
+            <Grid item xs={12} sm={4}>
               <Box sx={{ textAlign: 'center' }}>
                 <TrendingUpIcon sx={{ fontSize: 32, color: 'success.main', mb: 1 }} />
                 <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
@@ -290,7 +290,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
               </Box>
             </Grid>
 
-            <Grid size={{xs:12,sm:4}}>
+            <Grid item xs={12} sm={4}>
               <Box sx={{ textAlign: 'center' }}>
                 <TrendingDownIcon sx={{ fontSize: 32, color: 'error.main', mb: 1 }} />
                 <Typography variant="h5" sx={{ fontWeight: 700, color: 'error.main' }}>
@@ -302,7 +302,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
               </Box>
             </Grid>
 
-            <Grid size={{xs:12,sm:4}}>
+            <Grid item xs={12} sm={4}>
               <Box sx={{ textAlign: 'center' }}>
                 <TransferIcon sx={{ 
                   fontSize: 32, 
@@ -492,13 +492,13 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
       {/* Contenido de tabs */}
       <TabPanel value={tabValue} index={0}>
         <Grid container spacing={3}>
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <WalletOverviewCard />
           </Grid>
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <WalletStatsCard />
           </Grid>
-          <Grid size={{xs:12}}>
+          <Grid item xs={12}>
             <CreditLimitCard />
           </Grid>
         </Grid>
@@ -521,7 +521,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
 
       <TabPanel value={tabValue} index={2}>
         <Grid container spacing={3}>
-          <Grid size={{xs:12}}>
+          <Grid item xs={12}>
             <CreditLimitCard />
           </Grid>
         </Grid>

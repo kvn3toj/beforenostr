@@ -16,6 +16,8 @@ import Badge from '@mui/material/Badge';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { useTheme, useMediaQuery } from '@mui/material';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 
 // 🎯 ICONOS ESPECÍFICOS
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -25,8 +27,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 // 🎨 SISTEMA DE COLORES CENTRALIZADO
-import { 
-  getPrimaryGradient, 
+import {
+  getPrimaryGradient,
   getSemanticGradient,
   getPrimaryColor,
   getSemanticColor,
@@ -48,6 +50,9 @@ import UniversalCosmicBackground from '../components/home/UniversalCosmicBackgro
 
 // 🎨 CSS CONSOLIDADO (OPTIMIZADO - SOLO LOS ESENCIALES)
 import '../styles/home-optimized-consolidated.css';
+
+// 🧪 TEST COMPONENT
+import TestGrid from '../test-grid';
 
 // 🏷️ Tipos para las notificaciones
 interface Notification {
@@ -107,9 +112,9 @@ class HomePageErrorBoundary extends React.Component<
               onClick={() => window.location.reload()}
               variant="contained"
               size="small"
-              sx={{ 
+              sx={{
                 background: getPrimaryGradient(),
-                color: 'white' 
+                color: 'white'
               }}
             >
               Recargar Dashboard
@@ -179,7 +184,7 @@ export function HomePage() {
   // 📜 Scroll handler optimizado con throttling
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    
+
     const handleScroll = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
@@ -378,7 +383,7 @@ export function HomePage() {
                     sx={{
                       background: 'rgba(255, 255, 255, 0.1)',
                       color: 'white',
-                      '&:hover': { 
+                      '&:hover': {
                         background: 'rgba(255, 255, 255, 0.2)',
                         transform: 'scale(1.05)',
                       },
@@ -399,7 +404,7 @@ export function HomePage() {
                     sx={{
                       background: 'rgba(255, 255, 255, 0.1)',
                       color: 'white',
-                      '&:hover': { 
+                      '&:hover': {
                         background: 'rgba(255, 255, 255, 0.2)',
                         transform: 'scale(1.05)',
                       },
@@ -418,7 +423,7 @@ export function HomePage() {
                     sx={{
                       background: 'rgba(255, 255, 255, 0.1)',
                       color: 'white',
-                      '&:hover': { 
+                      '&:hover': {
                         background: 'rgba(255, 255, 255, 0.2)',
                         transform: 'scale(1.05)',
                       },
@@ -447,7 +452,7 @@ export function HomePage() {
               }}
             >
               {/* === BIENVENIDA === */}
-              <Grid size={12}>
+              <Grid item xs={12}>
                 <Fade in timeout={600}>
                   <Box sx={{ mb: { xs: 1, sm: 2, md: 3 } }}>
                     <WelcomeWidget
@@ -459,7 +464,7 @@ export function HomePage() {
               </Grid>
 
               {/* === BALANCE AYNI - PROTAGONISTA === */}
-              <Grid size={12}>
+              <Grid item xs={12}>
                 <Fade in timeout={800}>
                   <Box
                     sx={{
@@ -482,7 +487,7 @@ export function HomePage() {
               </Grid>
 
               {/* === ACCIONES Y MÓDULOS === */}
-              <Grid size={{ xs: 12, lg: 8 }}>
+              <Grid item xs={12} lg={8}>
                 <Fade in timeout={1000}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                     <QuickActionsWidget
@@ -498,7 +503,7 @@ export function HomePage() {
               </Grid>
 
               {/* === NOTIFICACIONES === */}
-              <Grid size={{ xs: 12, lg: 4 }}>
+              <Grid item xs={12} lg={4}>
                 <Fade in timeout={1200}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                     <NotificationsWidget
@@ -519,7 +524,7 @@ export function HomePage() {
               </Grid>
 
               {/* === MÓDULOS PRINCIPALES === */}
-              <Grid size={12}>
+              <Grid item xs={12}>
                 <Fade in timeout={1400}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                     <MainModulesWidget
@@ -535,7 +540,7 @@ export function HomePage() {
               </Grid>
 
               {/* === WALLET === */}
-              <Grid size={{ xs: 12, md: 6 }}>
+              <Grid item xs={12} md={6}>
                 <Fade in timeout={1600}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
                     <WalletOnlyWidget
@@ -551,7 +556,7 @@ export function HomePage() {
               </Grid>
 
               {/* === REFLEXIÓN FINAL OPTIMIZADA === */}
-              <Grid size={{ xs: 12, md: 6 }}>
+              <Grid item xs={12} md={6}>
                 <Fade in timeout={1800}>
                   <Box
                     sx={{

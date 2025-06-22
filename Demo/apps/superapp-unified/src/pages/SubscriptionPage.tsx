@@ -47,7 +47,7 @@ import {
   Analytics as AnalyticsIcon,
   Campaign as CampaignIcon,
   Rocket as RocketIcon,
-  Crown as CrownIcon,
+  EmojiEvents as CrownIcon,
   LocalFireDepartment as FireIcon,
   AutoAwesome as MagicIcon,
   Verified as VerifiedIcon,
@@ -128,7 +128,7 @@ const SubscriptionPage: React.FC = () => {
   const [selectedTier, setSelectedTier] = useState<SubscriptionTier | null>(null)
   const [showPaymentFlow, setShowPaymentFlow] = useState(false)
   const [paymentStep, setPaymentStep] = useState(0)
-  
+
   const queryClient = useQueryClient()
 
   // Subscription tiers
@@ -280,7 +280,7 @@ const SubscriptionPage: React.FC = () => {
 
   const handlePayment = () => {
     if (!selectedTier) return
-    
+
     upgradeMutation.mutate({
       tierId: selectedTier.id,
       billingCycle
@@ -316,7 +316,7 @@ const SubscriptionPage: React.FC = () => {
 
         {/* Current Status */}
         {userSubscription && (
-          <Alert 
+          <Alert
             severity={userSubscription.status === 'TRIAL' ? 'info' : 'success'}
             sx={{ mb: 3, maxWidth: 600, mx: 'auto' }}
           >
@@ -325,7 +325,7 @@ const SubscriptionPage: React.FC = () => {
                 {currentTier?.icon}
               </Avatar>
               <Typography variant="body2">
-                {userSubscription.status === 'TRIAL' 
+                {userSubscription.status === 'TRIAL'
                   ? `Prueba gratuita: ${userSubscription.trialDaysLeft} días restantes`
                   : `Plan actual: ${currentTier?.name}`
                 }
@@ -361,8 +361,8 @@ const SubscriptionPage: React.FC = () => {
               whileHover={{ scale: 1.02, y: -5 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <Card 
-                sx={{ 
+              <Card
+                sx={{
                   height: '100%',
                   position: 'relative',
                   border: tier.popular ? `3px solid ${tier.color}` : `1px solid`,
@@ -408,11 +408,11 @@ const SubscriptionPage: React.FC = () => {
                 <CardContent sx={{ textAlign: 'center', pb: 1 }}>
                   {/* Icon */}
                   <Box sx={{ mb: 2 }}>
-                    <Avatar 
-                      sx={{ 
-                        width: 80, 
-                        height: 80, 
-                        bgcolor: tier.color, 
+                    <Avatar
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        bgcolor: tier.color,
                         mx: 'auto',
                         mb: 2
                       }}
@@ -443,7 +443,7 @@ const SubscriptionPage: React.FC = () => {
                             /{billingCycle === 'yearly' ? 'año' : 'mes'}
                           </Typography>
                         </Box>
-                        
+
                         {billingCycle === 'yearly' && tier.discount && (
                           <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
                             Ahorras ${getSavings(tier)} al año
@@ -465,9 +465,9 @@ const SubscriptionPage: React.FC = () => {
                       <ListItem key={feature.id} sx={{ px: 0, py: 0.5 }}>
                         <ListItemIcon sx={{ minWidth: 32 }}>
                           {feature.included ? (
-                            <CheckIcon sx={{ 
+                            <CheckIcon sx={{
                               color: feature.highlighted ? tier.color : 'success.main',
-                              fontSize: 20 
+                              fontSize: 20
                             }} />
                           ) : (
                             <LockIcon sx={{ color: 'text.disabled', fontSize: 20 }} />
@@ -527,9 +527,9 @@ const SubscriptionPage: React.FC = () => {
                       }
                     }}
                   >
-                    {userSubscription?.currentTier === tier.id 
-                      ? 'Plan Actual' 
-                      : tier.price.monthly === 0 
+                    {userSubscription?.currentTier === tier.id
+                      ? 'Plan Actual'
+                      : tier.price.monthly === 0
                         ? 'Comenzar Gratis'
                         : 'Upgradearse'
                     }
@@ -586,7 +586,7 @@ const SubscriptionPage: React.FC = () => {
                   <Typography variant="h6" sx={{ mb: 2 }}>
                     Resumen del Plan
                   </Typography>
-                  
+
                   <Paper sx={{ p: 3, mb: 3, backgroundColor: 'grey.50' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                       <Typography variant="h5" fontWeight="bold">
@@ -616,17 +616,17 @@ const SubscriptionPage: React.FC = () => {
                         Recibirás inmediatamente:
                       </Typography>
                       <Stack direction="row" spacing={1}>
-                        <Chip 
+                        <Chip
                           icon={<TrophyIcon />}
                           label={`${selectedTier.rewards.onboardingBonus.meritos} Méritos`}
                           color="warning"
                         />
-                        <Chip 
+                        <Chip
                           icon={<WalletIcon />}
                           label={`${selectedTier.rewards.onboardingBonus.lukas} Lükas`}
                           color="success"
                         />
-                        <Chip 
+                        <Chip
                           label={`${selectedTier.rewards.loyaltyMultiplier}x Multiplicador`}
                           color="primary"
                         />
@@ -649,7 +649,7 @@ const SubscriptionPage: React.FC = () => {
         </DialogContent>
 
         <DialogActions sx={{ p: 3 }}>
-          <Button 
+          <Button
             onClick={() => setShowUpgradeDialog(false)}
             disabled={upgradeMutation.isPending}
           >

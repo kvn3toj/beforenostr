@@ -11,10 +11,10 @@ import {
   Rating
 } from '@mui/material';
 import {
-  FavoriteIcon,
-  ShareIcon,
-  AttachMoneyIcon,
-  VerifiedIcon
+  Favorite as FavoriteIcon,
+  Share as ShareIcon,
+  AttachMoney as AttachMoneyIcon,
+  Verified as VerifiedIcon
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { formatPrice, safeToLocaleString } from '../../../utils/numberUtils';

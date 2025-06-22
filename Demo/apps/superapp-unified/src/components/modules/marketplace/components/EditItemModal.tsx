@@ -242,7 +242,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
       <DialogContent dividers>
         <Grid container spacing={3}>
           {/* Título */}
-          <Grid size={{xs:12}}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               label="Título"
@@ -262,7 +262,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
           </Grid>
 
           {/* Descripción */}
-          <Grid size={{xs:12}}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               multiline
@@ -284,7 +284,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
           </Grid>
 
           {/* Tipo y Ubicación */}
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <FormControl fullWidth required>
               <InputLabel>Tipo</InputLabel>
               <Select
@@ -313,7 +313,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
             </FormControl>
           </Grid>
 
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <TextField
               fullWidth
               label="Ubicación"
@@ -333,7 +333,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
           </Grid>
 
           {/* Precios */}
-          <Grid size={{xs:12,md:4}}>
+          <Grid item xs={12} md={4}>
             <FormControl fullWidth>
               <InputLabel>Moneda</InputLabel>
               <Select
@@ -351,7 +351,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
             </FormControl>
           </Grid>
 
-          <Grid size={{xs:12,md:4}}>
+          <Grid item xs={12} md={4}>
             <TextField
               fullWidth
               type="number"
@@ -371,7 +371,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
             />
           </Grid>
 
-          <Grid size={{xs:12,md:4}}>
+          <Grid item xs={12} md={4}>
             <TextField
               fullWidth
               type="number"
@@ -391,7 +391,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
           </Grid>
 
           {/* Tags */}
-          <Grid size={{xs:12}}>
+          <Grid item xs={12}>
             <Typography variant="subtitle2" gutterBottom>
               Etiquetas
             </Typography>

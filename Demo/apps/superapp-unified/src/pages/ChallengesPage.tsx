@@ -465,7 +465,7 @@ export const ChallengesPage: React.FC = () => {
       {challengesLoading ? (
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {Array.from({ length: 4 }).map((_, index) => (
-            <Grid size={{xs:6,sm:3}} key={index}>
+            <Grid item xs={6} sm={3} key={index}>
               <StatsCardSkeleton />
             </Grid>
           ))}
@@ -567,7 +567,7 @@ export const ChallengesPage: React.FC = () => {
       {challengesLoading ? (
         <Grid container spacing={3}>
           {Array.from({ length: 6 }).map((_, index) => (
-            <Grid size={{xs:12}} sm={viewMode === 'grid' ? 6 : 12}
+            <Grid item xs={12} sm={viewMode === 'grid' ? 6 : 12}
               md={viewMode === 'grid' ? 4 : 12}
               key={index}>
               <ChallengeCardSkeleton />
@@ -577,7 +577,7 @@ export const ChallengesPage: React.FC = () => {
       ) : filteredChallenges.length > 0 ? (
         <Grid container spacing={3}>
           {filteredChallenges.map((challenge, index) => (
-            <Grid size={{xs:12}} sm={viewMode === 'grid' ? 6 : 12}
+            <Grid item xs={12} sm={viewMode === 'grid' ? 6 : 12}
               md={viewMode === 'grid' ? 4 : 12}
               key={challenge.id}>
               <ChallengeCard

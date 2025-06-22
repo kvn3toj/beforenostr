@@ -16,15 +16,15 @@ import { CoomunityCard } from '../components/ui';
 import CoomunityButton from '../components/ui/CoomunityButton';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import {
-  SearchIcon,
-  FilterIcon,
-  GridIcon,
-  ListIcon,
-  TrendingUpIcon,
-  StarIcon,
-  VerifiedIcon,
-  AttachMoneyIcon,
-  GroupIcon
+  Search as SearchIcon,
+  FilterList as FilterIcon,
+  GridView as GridIcon,
+  List as ListIcon,
+  TrendingUp as TrendingUpIcon,
+  Star as StarIcon,
+  Verified as VerifiedIcon,
+  AttachMoney as AttachMoneyIcon,
+  Group as GroupIcon
 } from '@mui/icons-material';
 
 // 🌌 COSMIC DESIGN SYSTEM IMPORT
@@ -341,7 +341,7 @@ const MarketplacePage: React.FC = () => {
           {/* Filters Sidebar */}
           <AnimatePresence>
             {showFilters && (
-              <Grid size={{xs:12,md:3}}>
+              <Grid item xs={12} md={3}>
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -357,7 +357,7 @@ const MarketplacePage: React.FC = () => {
           </AnimatePresence>
 
           {/* Products/Services Grid */}
-          <Grid size={{xs:12}} md={showFilters ? 9 : 12}>
+          <Grid item xs={12} md={showFilters ? 9 : 12}>
             <motion.div variants={itemVariants}>
               <Suspense fallback={<LoadingSpinner size="large" />}>
                 <AnimatePresence mode="wait">

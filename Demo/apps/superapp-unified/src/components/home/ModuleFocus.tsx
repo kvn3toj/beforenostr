@@ -468,7 +468,7 @@ export const ModuleFocus: React.FC<ModuleFocusProps> = ({
           {/* Stats */}
           <Grid container spacing={3} sx={{ mb: 'var(--space-4)' }}>
             {recommendedModule.stats.map((stat, index) => (
-              <Grid size={{ xs: 4 }} key={index}>
+              <Grid item xs={4} key={index}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Stack
                     direction="row"
@@ -618,7 +618,7 @@ export const ModuleFocus: React.FC<ModuleFocusProps> = ({
 
               <Grid container spacing={3}>
                 {otherModules.map((module) => (
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={module.id}>
+                  <Grid item xs={12} sm={6} md={4} key={module.id}>
                     <Card
                       className="interactive focus-outline"
                       onClick={() => handleModuleClick(module.id, module.path)}

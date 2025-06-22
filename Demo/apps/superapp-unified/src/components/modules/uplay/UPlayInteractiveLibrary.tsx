@@ -227,7 +227,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
 
         {/* Barra de búsqueda y filtros */}
         <Grid container spacing={2} alignItems="center">
-          <Grid size={{ xs: 12, md: 8 }}>
+          <Grid item xs={12} md={8}>
             <TextField
               fullWidth
               placeholder="Buscar videos por título o contenido..."
@@ -255,7 +255,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
               }}
             />
           </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid item xs={12} md={4}>
             <Button
               fullWidth
               variant="outlined"
@@ -305,7 +305,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
 
   // 🎨 Card de video mejorada
   const renderVideoCard = (video: VideoItem, index: number) => (
-    <Grid key={video.id} size={{ xs: 12, sm: 6, md: 4 }}>
+    <Grid key={video.id} item xs={12} sm={6} md={4}>
       <Zoom in={animate} timeout={800 + index * 100}>
         <Card
           className="uplay-video-card"

@@ -457,7 +457,7 @@ const UPlayEnhancedDashboard: React.FC = () => {
           key: 'progress'
         }
       ].map((metric, index) => (
-        <Grid key={metric.key} size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid key={metric.key} item xs={12} sm={6} md={3}>
           <Zoom in={animate} timeout={800 + index * 150}>
             <Card
               className="uplay-metric-card"
@@ -554,7 +554,7 @@ const UPlayEnhancedDashboard: React.FC = () => {
 
           <Grid container spacing={2}>
             {dashboardData.weeklyProgress.map((day, index) => (
-              <Grid key={day.day} size={{ xs: 1.714 }}>
+              <Grid key={day.day} item xs={1.714}>
                 <Slide in={animate} timeout={1000 + index * 100} direction="up">
                   <Box sx={{ textAlign: 'center' }}>
                     <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
@@ -752,7 +752,7 @@ const UPlayEnhancedDashboard: React.FC = () => {
           
           <Grid container spacing={2}>
             {dashboardData.quickActions.map((action, index) => (
-              <Grid key={action.label} size={{ xs: 12, sm: 6 }}>
+              <Grid key={action.label} item xs={12} sm={6}>
                 <Zoom in={animate} timeout={1400 + index * 100}>
                   <Button
                     className="uplay-card-enhanced"
@@ -892,10 +892,10 @@ const UPlayEnhancedDashboard: React.FC = () => {
 
         {/* Grid de contenido */}
         <Grid container spacing={3}>
-          <Grid size={{ xs: 12, lg: 7 }}>
+          <Grid item xs={12} lg={7}>
             {renderWeeklyProgress()}
           </Grid>
-          <Grid size={{ xs: 12, lg: 5 }}>
+          <Grid item xs={12} lg={5}>
             {renderRecentActivity()}
           </Grid>
         </Grid>

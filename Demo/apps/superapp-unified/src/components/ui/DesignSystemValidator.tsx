@@ -356,7 +356,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
           {/* Summary Stats */}
           {!isValidating && validationResults.length > 0 && (
             <Grid container spacing={2} mb={3}>
-              <Grid size={{xs:6,sm:3}}>
+              <Grid item xs={6} sm={3}>
                 <Card sx={{ textAlign: 'center', p: 2 }}>
                   <Typography variant="h3" color="success.main" fontWeight="bold">
                     {successRate}%
@@ -366,7 +366,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
                   </Typography>
                 </Card>
               </Grid>
-              <Grid size={{xs:6,sm:3}}>
+              <Grid item xs={6} sm={3}>
                 <Card sx={{ textAlign: 'center', p: 2 }}>
                   <Typography variant="h4" color="success.main" fontWeight="bold">
                     {passedTests}
@@ -376,7 +376,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
                   </Typography>
                 </Card>
               </Grid>
-              <Grid size={{xs:6,sm:3}}>
+              <Grid item xs={6} sm={3}>
                 <Card sx={{ textAlign: 'center', p: 2 }}>
                   <Typography variant="h4" color="warning.main" fontWeight="bold">
                     {warningTests}
@@ -386,7 +386,7 @@ const DesignSystemValidator: React.FC<DesignSystemValidatorProps> = ({
                   </Typography>
                 </Card>
               </Grid>
-              <Grid size={{xs:6,sm:3}}>
+              <Grid item xs={6} sm={3}>
                 <Card sx={{ textAlign: 'center', p: 2 }}>
                   <Typography variant="h4" color="error.main" fontWeight="bold">
                     {failedTests}

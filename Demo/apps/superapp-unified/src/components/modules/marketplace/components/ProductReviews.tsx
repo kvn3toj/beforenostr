@@ -153,7 +153,7 @@ const WriteReviewDialog: React.FC<WriteReviewDialogProps> = ({
           </Typography>
           <Grid container spacing={3}>
             {Object.entries(aspectRatings).map(([aspect, value]) => (
-              <Grid size={{xs:12,sm:6}} key={aspect}>
+              <Grid item xs={12} sm={6} key={aspect}>
                 <Box>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     {aspect === 'communication'
@@ -337,7 +337,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({ review, onHelpfulVote }) => {
               <AccordionDetails sx={{ px: 0, pt: 0 }}>
                 <Grid container spacing={2}>
                   {Object.entries(review.aspects).map(([aspect, rating]) => (
-                    <Grid size={{xs:6}} key={aspect}>
+                    <Grid item xs={6} key={aspect}>
                       <Box
                         sx={{
                           display: 'flex',

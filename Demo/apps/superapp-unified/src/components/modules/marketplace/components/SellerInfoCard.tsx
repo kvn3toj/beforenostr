@@ -181,7 +181,7 @@ const SellerProfileDialog: React.FC<SellerProfileDialogProps> = ({
           </Typography>
           <Grid container spacing={2}>
             {seller.badges.map((badge) => (
-              <Grid size={{xs:12,sm:6}} key={badge.id}>
+              <Grid item xs={12} sm={6} key={badge.id}>
                 <Paper
                   elevation={1}
                   sx={{
@@ -226,7 +226,7 @@ const SellerProfileDialog: React.FC<SellerProfileDialogProps> = ({
             Estadísticas
           </Typography>
           <Grid container spacing={3}>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" fontWeight="bold" color="primary">
                   {seller.salesCount || 0}
@@ -236,7 +236,7 @@ const SellerProfileDialog: React.FC<SellerProfileDialogProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" fontWeight="bold" color="primary">
                   {seller.responseRate}%
@@ -246,7 +246,7 @@ const SellerProfileDialog: React.FC<SellerProfileDialogProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" fontWeight="bold" color="primary">
                   {seller.completionRate || 100}%
@@ -256,7 +256,7 @@ const SellerProfileDialog: React.FC<SellerProfileDialogProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" fontWeight="bold" color="primary">
                   {seller.yearsActive || 0}
@@ -486,7 +486,7 @@ export const SellerInfoCard: React.FC<SellerInfoCardProps> = ({ seller }) => {
 
           {/* Estadísticas rápidas */}
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center', p: 1 }}>
                 <Typography variant="h6" fontWeight="bold" color="primary">
                   {seller.responseTime}
@@ -496,7 +496,7 @@ export const SellerInfoCard: React.FC<SellerInfoCardProps> = ({ seller }) => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center', p: 1 }}>
                 <Typography variant="h6" fontWeight="bold" color="primary">
                   {seller.responseRate}%
@@ -506,7 +506,7 @@ export const SellerInfoCard: React.FC<SellerInfoCardProps> = ({ seller }) => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center', p: 1 }}>
                 <Typography variant="h6" fontWeight="bold" color="primary">
                   {seller.salesCount || 0}
@@ -516,7 +516,7 @@ export const SellerInfoCard: React.FC<SellerInfoCardProps> = ({ seller }) => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid item xs={6} sm={3}>
               <Box sx={{ textAlign: 'center', p: 1 }}>
                 <Typography variant="h6" fontWeight="bold" color="primary">
                   {memberSinceText}

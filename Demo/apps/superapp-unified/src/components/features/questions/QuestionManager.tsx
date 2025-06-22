@@ -197,7 +197,7 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
           }}
         >
           <Grid container spacing={3} alignItems="center">
-            <Grid size={{xs:12,md:8}}>
+            <Grid item xs={12} md={8}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 2 }}>
                 <Box sx={{ 
                   p: 2, 
@@ -223,7 +223,7 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
                 </Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:12,md:4}}>
+            <Grid item xs={12} md={4}>
               <Stack spacing={2} direction={{ xs: 'column', sm: 'row', md: 'column' }}>
                 <Button
                   variant="contained"
@@ -371,7 +371,7 @@ export const QuestionManager: React.FC<QuestionManagerProps> = ({ videoItemId })
             
             <Grid container spacing={3}>
               {questions.map((question) => (
-                <Grid size={{xs:12,lg:6}} key={question.id}>
+                <Grid item xs={12} lg={6} key={question.id}>
                   <QuestionCard
                     question={question}
                     onEdit={handleEditQuestion}

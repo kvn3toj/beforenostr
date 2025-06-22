@@ -472,7 +472,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
           {/* 🔍 BARRA DE BÚSQUEDA AVANZADA */}
           <Box sx={{ mb: 3 }}>
             <Grid container spacing={2} alignItems="center">
-              <Grid size={{xs: 12, md: 6}}>
+              <Grid item xs={12} md={6}>
                 <Box sx={{ position: 'relative' }}>
                   <SearchIcon sx={{
                     position: 'absolute',
@@ -498,7 +498,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
                 </Box>
               </Grid>
 
-              <Grid size={{xs: 12, md: 6}}>
+              <Grid item xs={12} md={6}>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                   {/* 🏷️ FILTROS RÁPIDOS */}
                   {['all', 'product', 'service', 'collaboration'].map((type) => (
@@ -561,7 +561,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
           <Grid container spacing={3}>
             <AnimatePresence mode="popLayout">
               {filteredItems.map((item) => (
-                <Grid key={item.id} size={{xs: 12, sm: 6, md: 4, lg: 3}}>
+                <Grid key={item.id} item xs={12} sm={6} md={4} lg={3}>
                   <MarketplaceItemCard
                     item={item}
                     onItemClick={handleItemClick}

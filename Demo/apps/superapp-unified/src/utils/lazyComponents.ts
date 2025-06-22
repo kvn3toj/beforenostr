@@ -63,7 +63,7 @@ const BetaRegister = createLazyPage('BetaRegister');
 const NotFoundPage = createLazyPage('NotFoundPage');
 
 // Componentes de Onboarding (pueden ser renderizados como páginas)
-const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo.tsx').then(module => ({ default: module.OnboardingDemo })));
+const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo'));
 
 // --- Mapa de Componentes para el Enrutador ---
 

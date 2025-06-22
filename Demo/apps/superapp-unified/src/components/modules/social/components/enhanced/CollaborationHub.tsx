@@ -300,7 +300,7 @@ const CircleCard: React.FC<{
 
         {/* Métricas del círculo */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid size={{xs:4}}>
+          <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h6" fontWeight="bold" color="primary.main">
                 {circle.memberCount}
@@ -310,7 +310,7 @@ const CircleCard: React.FC<{
               </Typography>
             </Box>
           </Grid>
-          <Grid size={{xs:4}}>
+          <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h6" fontWeight="bold" color="success.main">
                 {circle.ayniExchanges}
@@ -320,7 +320,7 @@ const CircleCard: React.FC<{
               </Typography>
             </Box>
           </Grid>
-          <Grid size={{xs:4}}>
+          <Grid item xs={4}>
             <Box textAlign="center">
               <Typography
                 variant="h6"
@@ -565,7 +565,7 @@ export const CollaborationHub: React.FC<CollaborationHubProps> = ({
 
           {/* Métricas del usuario */}
           <Grid container spacing={2}>
-            <Grid size={{xs:3}}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   {joinedCircles.length}
@@ -573,7 +573,7 @@ export const CollaborationHub: React.FC<CollaborationHubProps> = ({
                 <Typography variant="caption">Círculos Unidos</Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:3}}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   {joinedCircles.reduce(
@@ -584,7 +584,7 @@ export const CollaborationHub: React.FC<CollaborationHubProps> = ({
                 <Typography variant="caption">Intercambios Totales</Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:3}}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   {joinedCircles.reduce(
@@ -595,7 +595,7 @@ export const CollaborationHub: React.FC<CollaborationHubProps> = ({
                 <Typography variant="caption">Proyectos Activos</Typography>
               </Box>
             </Grid>
-            <Grid size={{xs:3}}>
+            <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   {userStats.trustScore}
@@ -663,7 +663,7 @@ export const CollaborationHub: React.FC<CollaborationHubProps> = ({
       {/* 🎯 Grid de círculos */}
       <Grid container spacing={3}>
         {filteredCircles.map((circle) => (
-          <Grid size={{xs:12,md:6,lg:4}} key={circle.id}>
+          <Grid item xs={12} md={6} lg={4} key={circle.id}>
             <CircleCard
               circle={circle}
               onJoin={handleJoinCircle}

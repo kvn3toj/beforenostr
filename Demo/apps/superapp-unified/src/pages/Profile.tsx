@@ -683,7 +683,7 @@ const Profile: React.FC = () => {
             </Box>
             <Grid container spacing={3}>
               {[...Array(6)].map((_, index) => (
-                <Grid size={{xs:6,sm:4,md:2}} key={index}>
+                <Grid item xs={6} sm={4} md={2} key={index}>
                   <Box sx={{ textAlign: 'center' }}>
                     <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
                     <Skeleton variant="text" sx={{ fontSize: '0.875rem' }} />
@@ -968,7 +968,7 @@ const Profile: React.FC = () => {
             </Box>
           ) : (
           <Grid container spacing={3}>
-            <Grid size={{xs:6,sm:4,md:2}}>
+            <Grid item xs={6} sm={4} md={2}>
               <MetricCard
                 title="Nivel"
                   value={metrics.level}
@@ -978,7 +978,7 @@ const Profile: React.FC = () => {
                 progress={levelProgress}
               />
             </Grid>
-            <Grid size={{xs:6,sm:4,md:2}}>
+            <Grid item xs={6} sm={4} md={2}>
               <MetricCard
                 title="Mëritos"
                   value={safeToLocaleString(metrics.meritos)}
@@ -987,7 +987,7 @@ const Profile: React.FC = () => {
                 subtitle="Bien Común"
               />
             </Grid>
-            <Grid size={{xs:6,sm:4,md:2}}>
+            <Grid item xs={6} sm={4} md={2}>
               <MetricCard
                 title="Öndas"
                   value={safeToLocaleString(metrics.ondas)}
@@ -996,7 +996,7 @@ const Profile: React.FC = () => {
                 subtitle="Energía Vibracional"
               />
             </Grid>
-            <Grid size={{xs:6,sm:4,md:2}}>
+            <Grid item xs={6} sm={4} md={2}>
               <MetricCard
                 title="Ayni"
                   value={`${metrics.ayniLevel}%`}
@@ -1005,7 +1005,7 @@ const Profile: React.FC = () => {
                 subtitle="Reciprocidad"
               />
             </Grid>
-            <Grid size={{xs:6,sm:4,md:2}}>
+            <Grid item xs={6} sm={4} md={2}>
               <MetricCard
                 title="Conexiones"
                   value={safeToLocaleString(metrics.socialConnections)}
@@ -1014,7 +1014,7 @@ const Profile: React.FC = () => {
                 subtitle="Red CoomÜnity"
               />
             </Grid>
-            <Grid size={{xs:6,sm:4,md:2}}>
+            <Grid item xs={6} sm={4} md={2}>
               <MetricCard
                 title="Rating"
                   value={metrics.marketplaceRating || 0}
@@ -1081,7 +1081,7 @@ const Profile: React.FC = () => {
       <TabPanel value={tabValue} index={0}>
         <Grid container spacing={3}>
           {/* Información Básica */}
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Person color="primary" />}
@@ -1151,7 +1151,7 @@ const Profile: React.FC = () => {
           </Grid>
 
           {/* Estado de la Cuenta */}
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Security color="primary" />}
@@ -1214,7 +1214,7 @@ const Profile: React.FC = () => {
           </Grid>
 
           {/* Estadísticas de Gamificación */}
-          <Grid size={{xs:12}}>
+          <Grid item xs={12}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Analytics color="primary" />}
@@ -1228,7 +1228,7 @@ const Profile: React.FC = () => {
                   </Box>
                 ) : (
                 <Grid container spacing={3}>
-                  <Grid size={{xs:12,sm:6,md:3}}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
@@ -1242,7 +1242,7 @@ const Profile: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid size={{xs:12,sm:6,md:3}}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
@@ -1256,7 +1256,7 @@ const Profile: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid size={{xs:12,sm:6,md:3}}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
@@ -1270,7 +1270,7 @@ const Profile: React.FC = () => {
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid size={{xs:12,sm:6,md:3}}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Box sx={{ textAlign: 'center' }}>
                       <Typography
                         variant="h4"
@@ -1295,7 +1295,7 @@ const Profile: React.FC = () => {
       {/* 🎯 Tab Panel 1: Actividad Reciente */}
       <TabPanel value={tabValue} index={1}>
         <Grid container spacing={3}>
-          <Grid size={{xs:12,lg:8}}>
+          <Grid item xs={12} lg={8}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Timeline color="primary" />}
@@ -1313,7 +1313,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid size={{xs:12,lg:4}}>
+          <Grid item xs={12} lg={4}>
             <Stack spacing={3}>
               {/* Resumen de Actividad */}
               <Card elevation={3} sx={{ borderRadius: 3 }}>
@@ -1323,7 +1323,7 @@ const Profile: React.FC = () => {
                 />
                 <CardContent>
                   <Grid container spacing={2}>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6} sm={3}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h5"
@@ -1337,7 +1337,7 @@ const Profile: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6} sm={3}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h5"
@@ -1351,7 +1351,7 @@ const Profile: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6} sm={3}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h5"
@@ -1365,7 +1365,7 @@ const Profile: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6} sm={3}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h5"
@@ -1445,7 +1445,7 @@ const Profile: React.FC = () => {
 
         <Grid container spacing={3}>
           {mockAchievements.map((achievement) => (
-            <Grid size={{xs:12,sm:6,md:4,lg:3}} key={achievement.id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={achievement.id}>
               <AchievementCard achievement={achievement} />
             </Grid>
           ))}
@@ -1459,7 +1459,7 @@ const Profile: React.FC = () => {
           <Card elevation={3} sx={{ borderRadius: 3 }}>
             <CardContent>
               <Grid container spacing={3}>
-                <Grid size={{xs:12,md:6}}>
+                <Grid item xs={12} md={6}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -1494,7 +1494,7 @@ const Profile: React.FC = () => {
                   </Typography>
                 </Grid>
 
-                <Grid size={{xs:12,md:6}}>
+                <Grid item xs={12} md={6}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -1546,7 +1546,7 @@ const Profile: React.FC = () => {
         </Alert>
 
         <Grid container spacing={3}>
-          <Grid size={{xs:12,md:8}}>
+          <Grid item xs={12} md={8}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Group color="primary" />}
@@ -1568,7 +1568,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid size={{xs:12,md:4}}>
+          <Grid item xs={12} md={4}>
             <Stack spacing={3}>
               <Card elevation={3} sx={{ borderRadius: 3 }}>
                 <CardHeader
@@ -1577,7 +1577,7 @@ const Profile: React.FC = () => {
                 />
                 <CardContent>
                   <Grid container spacing={2}>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6} sm={3}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h4"
@@ -1591,7 +1591,7 @@ const Profile: React.FC = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid size={{xs:6}}>
+                    <Grid item xs={6} sm={3}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h4"
@@ -1639,7 +1639,7 @@ const Profile: React.FC = () => {
       {/* 🎯 Tab Panel 4: Configuración */}
       <TabPanel value={tabValue} index={4}>
         <Grid container spacing={3}>
-          <Grid size={{xs:12}}>
+          <Grid item xs={12}>
             <Alert severity="info" sx={{ mb: 3, borderRadius: 3 }}>
               <Typography variant="h6">Configuraciones de Usuario</Typography>
               <Typography variant="body2">
@@ -1650,7 +1650,7 @@ const Profile: React.FC = () => {
             </Alert>
           </Grid>
 
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Notifications color="primary" />}
@@ -1679,7 +1679,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Security color="primary" />}
@@ -1708,7 +1708,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Language color="primary" />}
@@ -1753,7 +1753,7 @@ const Profile: React.FC = () => {
             </Card>
           </Grid>
 
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card elevation={3} sx={{ borderRadius: 3 }}>
               <CardHeader
                 avatar={<Palette color="primary" />}
@@ -1832,7 +1832,7 @@ const Profile: React.FC = () => {
           )}
 
           <Grid container spacing={3}>
-            <Grid size={{xs:12,md:6}}>
+            <Grid item xs={12} md={6}>
               <TextField
                 autoFocus
                 label="Nombre Completo"
@@ -1856,7 +1856,7 @@ const Profile: React.FC = () => {
               />
             </Grid>
 
-            <Grid size={{xs:12,md:6}}>
+            <Grid item xs={12} md={6}>
               <TextField
                 label="Teléfono"
                 fullWidth
@@ -1880,7 +1880,7 @@ const Profile: React.FC = () => {
               />
             </Grid>
 
-            <Grid size={{xs:12,md:6}}>
+            <Grid item xs={12} md={6}>
               <TextField
                 label="Ubicación"
                 fullWidth
@@ -1904,7 +1904,7 @@ const Profile: React.FC = () => {
               />
             </Grid>
 
-            <Grid size={{xs:12,md:6}}>
+            <Grid item xs={12} md={6}>
               <TextField
                 label="Sitio Web"
                 fullWidth
@@ -1928,7 +1928,7 @@ const Profile: React.FC = () => {
               />
             </Grid>
 
-            <Grid size={{xs:12}}>
+            <Grid item xs={12}>
               <TextField
                 label="Biografía"
                 multiline
@@ -2082,7 +2082,7 @@ const Profile: React.FC = () => {
                 Compartir en redes sociales
               </Typography>
               <Grid container spacing={2}>
-                <Grid size={{xs:6,sm:3}}>
+                <Grid item xs={6} sm={3}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -2092,7 +2092,7 @@ const Profile: React.FC = () => {
                     WhatsApp
                   </Button>
                 </Grid>
-                <Grid size={{xs:6,sm:3}}>
+                <Grid item xs={6} sm={3}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -2102,7 +2102,7 @@ const Profile: React.FC = () => {
                     Telegram
                   </Button>
                 </Grid>
-                <Grid size={{xs:6,sm:3}}>
+                <Grid item xs={6} sm={3}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -2112,7 +2112,7 @@ const Profile: React.FC = () => {
                     Twitter
                   </Button>
                 </Grid>
-                <Grid size={{xs:6,sm:3}}>
+                <Grid item xs={6} sm={3}>
                   <Button
                     fullWidth
                     variant="outlined"

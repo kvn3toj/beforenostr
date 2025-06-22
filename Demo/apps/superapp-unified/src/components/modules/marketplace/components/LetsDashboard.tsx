@@ -68,7 +68,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
       <Box sx={{ p: 2 }}>
         <Grid container spacing={3}>
           {[1, 2, 3, 4].map((item) => (
-            <Grid size={{xs:12,sm:6,md:3}} key={item}>
+            <Grid item xs={12} sm={6} md={3} key={item}>
               <Card>
                 <CardContent>
                   <Skeleton variant="text" width="60%" height={24} />
@@ -156,7 +156,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
         {/* Métricas principales */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {/* Total Ünits Circulando */}
-          <Grid size={{xs:12,sm:6,md:3}}>
+          <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -195,7 +195,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
           </Grid>
 
           {/* Transacciones Diarias */}
-          <Grid size={{xs:12,sm:6,md:3}}>
+          <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
                 background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
@@ -233,7 +233,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
           </Grid>
 
           {/* Usuarios Activos */}
-          <Grid size={{xs:12,sm:6,md:3}}>
+          <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
                 background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
@@ -271,7 +271,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
           </Grid>
 
           {/* Índice Ayni */}
-          <Grid size={{xs:12,sm:6,md:3}}>
+          <Grid item xs={12} sm={6} md={3}>
             <Card
               sx={{
                 background: `linear-gradient(135deg, ${getAyniColor(analytics.ayniIndex)} 0%, ${getAyniColor(analytics.ayniIndex)}CC 100%)`,
@@ -325,7 +325,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
 
         {/* Categorías más populares */}
         <Grid container spacing={3}>
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
                 <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
@@ -376,14 +376,14 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
           </Grid>
 
           {/* Crecimiento de usuarios */}
-          <Grid size={{xs:12,md:6}}>
+          <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
                 <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
                   📈 Crecimiento de la Comunidad
                 </Typography>
                 <Grid container spacing={2}>
-                  <Grid size={{xs:12}}>
+                  <Grid item xs={12}>
                     <Box
                       sx={{
                         display: 'flex',
@@ -406,7 +406,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
                       <TrendingUp sx={{ fontSize: 32, color: '#4CAF50' }} />
                     </Box>
                   </Grid>
-                  <Grid size={{xs:12}}>
+                  <Grid item xs={12}>
                     <Box
                       sx={{
                         display: 'flex',

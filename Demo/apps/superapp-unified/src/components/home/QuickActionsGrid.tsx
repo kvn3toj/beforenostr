@@ -280,7 +280,7 @@ export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
             </motion.div>
             <Grid container spacing={1}>
               {ayniActions.map((action, index) => (
-                <Grid size={{xs:6}} key={index}>
+                <Grid item xs={6} key={index}>
                   <ActionButton 
                     action={action} 
                     onClick={handleActionClick} 
@@ -310,7 +310,7 @@ export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
             </motion.div>
             <Grid container spacing={1}>
               {moduleActions.map((action, index) => (
-                <Grid size={{xs:6}} key={index}>
+                <Grid item xs={6} key={index}>
                   <ActionButton 
                     action={action} 
                     onClick={handleActionClick} 

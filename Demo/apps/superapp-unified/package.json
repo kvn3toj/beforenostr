@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "type": "module",
   "description": "CoomÜnity SuperApp - Plataforma Unificada",
+  "engines": {
+    "node": ">=18.17.0"
+  },
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm cache clean --force",
-    "build": "npx vite build --mode development",
+    "build": "vite build",
     "build:prod": "vite build",
+    "build:vercel": "npm install --legacy-peer-deps && vite build",
     "start": "serve -s dist -l 3001",
     "preview": "serve -s dist -l 3001",
     "render:build": "npm install --legacy-peer-deps && npx vite build",

@@ -1,19 +1,21 @@
 {
   "version": 2,
-  "name": "coomunity-superapp",
-  "builds": [
+  "buildCommand": "npm install --legacy-peer-deps && npm run build",
+  "outputDirectory": "dist",
+  "env": {
+    "NODE_ENV": "production",
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "VITE_API_BASE_URL": "https://huwbieukmudvbkhywgmi.supabase.co",
+    "VITE_NETWORK_API_URL": "https://huwbieukmudvbkhywgmi.supabase.co",
+    "VITE_BASE_URL": "https://superapp-unified.vercel.app",
+    "VITE_ENABLE_MOCK_AUTH": "false",
+    "VITE_ENABLE_ANALYTICS": "true",
+    "VITE_BETA_TRACKING": "true"
+  },
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "buildCommand": "npm run build:prod",
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

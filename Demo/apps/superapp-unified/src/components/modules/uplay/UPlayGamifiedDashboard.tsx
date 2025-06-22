@@ -788,7 +788,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     <Container maxWidth="lg">
       <Grid container spacing={3}>
         {unlockedAchievements.map((achievement) => (
-          <Grid size={{xs:12,sm:6,md:4}} key={achievement.id}>
+          <Grid item xs={12} sm={6} md={4} key={achievement.id}>
             <Card>
               <CardContent>
                 <Box display="flex" alignItems="center" gap={2} mb={2}>
@@ -905,12 +905,12 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
               {(videosByPlaylist[playlist.id] || []).map((video: any) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={video.id}>
+                <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
                   <VideoCard video={video} onPlay={handleVideoPlay} />
                 </Grid>
               ))}
               {!(videosByPlaylist[playlist.id]?.length) && (
-                <Grid size={{ xs: 12 }}><Typography color="text.secondary">No hay videos en esta ruta.</Typography></Grid>
+                <Grid item xs={12}><Typography color="text.secondary">No hay videos en esta ruta.</Typography></Grid>
               )}
             </Grid>
           </Box>
@@ -923,7 +923,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
               {videosByPlaylist['unassigned'].map((video: any) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={video.id}>
+                <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
                   <VideoCard video={video} onPlay={handleVideoPlay} />
                 </Grid>
               ))}
@@ -970,7 +970,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
           <Grid container spacing={3}>
             {/* Misión Individual */}
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+            <Grid item xs={12} md={6} lg={4}>
               <Card sx={{ height: '100%', border: '2px solid', borderColor: 'primary.main' }}>
                 <CardContent>
                   <Box display="flex" alignItems="center" mb={2}>
@@ -999,7 +999,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             </Grid>
 
             {/* Misión Colaborativa */}
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+            <Grid item xs={12} md={6} lg={4}>
               <Card sx={{ height: '100%', border: '2px solid', borderColor: 'success.main' }}>
                 <CardContent>
                   <Box display="flex" alignItems="center" mb={2}>
@@ -1031,7 +1031,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             </Grid>
 
             {/* Misión Temporal */}
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+            <Grid item xs={12} md={6} lg={4}>
               <Card sx={{ height: '100%', border: '2px solid', borderColor: 'warning.main' }}>
                 <CardContent>
                   <Box display="flex" alignItems="center" mb={2}>
@@ -1129,7 +1129,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             
             {/* Preview de funcionalidades que vendrán */}
             <Grid container spacing={3} maxWidth="800px" mx="auto">
-                             <Grid size={{ xs: 12, md: 4 }}>
+                             <Grid item xs={12} md={4}>
                  <Card sx={{ textAlign: 'center', p: 3 }}>
                    <PartyMode sx={{ fontSize: 40, color: 'primary.main', mb: 2 }} />
                    <Typography variant="h6" mb={1}>Activación por Usuarios</Typography>
@@ -1138,7 +1138,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
                    </Typography>
                  </Card>
                </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
+              <Grid item xs={12} md={4}>
                 <Card sx={{ textAlign: 'center', p: 3 }}>
                   <Celebration sx={{ fontSize: 40, color: 'secondary.main', mb: 2 }} />
                   <Typography variant="h6" mb={1}>Recompensas Exclusivas</Typography>
@@ -1147,7 +1147,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
                   </Typography>
                 </Card>
               </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
+              <Grid item xs={12} md={4}>
                 <Card sx={{ textAlign: 'center', p: 3 }}>
                   <AutoAwesome sx={{ fontSize: 40, color: 'warning.main', mb: 2 }} />
                   <Typography variant="h6" mb={1}>Efectos Sincronizados</Typography>

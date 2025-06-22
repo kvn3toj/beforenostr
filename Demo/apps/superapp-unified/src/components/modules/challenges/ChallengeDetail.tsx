@@ -362,7 +362,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
 
       <Grid container spacing={4}>
         {/* Información principal */}
-        <Grid size={{xs:12,md:8}}>
+        <Grid item xs={12} md={8}>
           <Card sx={{ mb: 3, overflow: 'hidden' }}>
             {/* Imagen destacada */}
             <CardMedia
@@ -550,7 +550,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
               {activeTab === 1 && (
                 <Box>
                   <Grid container spacing={3}>
-                    <Grid size={{xs:12,md:6}}>
+                    <Grid item xs={12} md={6}>
                       <Typography variant="h6" gutterBottom>
                         Detalles del Desafío
                       </Typography>
@@ -589,7 +589,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
                       </List>
                     </Grid>
 
-                    <Grid size={{xs:12,md:6}}>
+                    <Grid item xs={12} md={6}>
                       <Typography variant="h6" gutterBottom>
                         Requisitos
                       </Typography>
@@ -649,7 +649,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
         </Grid>
 
         {/* Sidebar */}
-        <Grid size={{xs:12,md:4}}>
+        <Grid item xs={12} md={4}>
           {/* Acciones principales */}
           <Card sx={{ mb: 3, p: 3 }}>
             <Typography variant="h6" gutterBottom>
@@ -753,7 +753,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
               📊 Estadísticas
             </Typography>
             <Grid container spacing={2}>
-              <Grid size={{xs:6}}>
+              <Grid item xs={6}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h4" color="primary.main">
                     {challenge._count?.participants || 0}
@@ -761,7 +761,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
                   <Typography variant="caption">Participantes</Typography>
                 </Box>
               </Grid>
-              <Grid size={{xs:6}}>
+              <Grid item xs={6}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h4" color="success.main">
                     {challenge._count?.completions || 0}
@@ -769,7 +769,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
                   <Typography variant="caption">Completados</Typography>
                 </Box>
               </Grid>
-              <Grid size={{xs:6}}>
+              <Grid item xs={6}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h4" color="warning.main">
                     {challenge.points}
@@ -777,7 +777,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
                   <Typography variant="caption">Mëritos</Typography>
                 </Box>
               </Grid>
-              <Grid size={{xs:6}}>
+              <Grid item xs={6}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h4" color="info.main">
                     {challenge._count?.participants

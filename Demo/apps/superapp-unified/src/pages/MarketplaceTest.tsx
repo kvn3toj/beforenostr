@@ -51,25 +51,25 @@ export const MarketplaceTest: React.FC = () => {
         }}
       >
         <Grid container spacing={3}>
-          <Grid size={{xs:12,md:3}}>
+          <Grid item xs={12} md={3}>
             <Typography variant="h4" fontWeight="bold">
               {0}
             </Typography>
             <Typography variant="body2">Items Totales</Typography>
           </Grid>
-          <Grid size={{xs:12,md:3}}>
+          <Grid item xs={12} md={3}>
             <Typography variant="h4" fontWeight="bold">
               {0}
             </Typography>
             <Typography variant="body2">Items Destacados</Typography>
           </Grid>
-          <Grid size={{xs:12,md:3}}>
+          <Grid item xs={12} md={3}>
             <Typography variant="h4" fontWeight="bold">
               {0}
             </Typography>
             <Typography variant="body2">Items Trending</Typography>
           </Grid>
-          <Grid size={{xs:12,md:3}}>
+          <Grid item xs={12} md={3}>
             <Typography variant="h4" fontWeight="bold">
               {0}
             </Typography>
@@ -84,7 +84,7 @@ export const MarketplaceTest: React.FC = () => {
       </Typography>
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {featuredItems.map((item) => (
-          <Grid size={{xs:12,sm:6,md:4}} key={item.id}>
+          <Grid item xs={12} sm={6} md={4} key={item.id}>
             <Card
               sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
             >
@@ -136,7 +136,7 @@ export const MarketplaceTest: React.FC = () => {
       </Typography>
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {trendingItems.map((item) => (
-          <Grid size={{xs:12,sm:6,md:4}} key={item.id}>
+          <Grid item xs={12} sm={6} md={4} key={item.id}>
             <Card
               sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
             >
@@ -200,7 +200,7 @@ export const MarketplaceTest: React.FC = () => {
       </Typography>
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {sustainabilityItems.slice(0, 3).map((item) => (
-          <Grid size={{xs:12,sm:4}} key={item.id}>
+          <Grid item xs={12} sm={4} key={item.id}>
             <Card>
               <CardMedia
                 component="img"
@@ -227,7 +227,7 @@ export const MarketplaceTest: React.FC = () => {
       </Typography>
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {educationItems.slice(0, 3).map((item) => (
-          <Grid size={{xs:12,sm:4}} key={item.id}>
+          <Grid item xs={12} sm={4} key={item.id}>
             <Card>
               <CardMedia
                 component="img"
