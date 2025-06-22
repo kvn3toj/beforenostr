@@ -19,6 +19,9 @@ RUN npm install --legacy-peer-deps
 # Copiar todo el código fuente del backend
 COPY backend/ ./
 
+# Generar el cliente de Prisma ANTES de compilar
+RUN npx prisma generate
+
 # Compilar la aplicación TypeScript a JavaScript
 RUN npm run build
 
