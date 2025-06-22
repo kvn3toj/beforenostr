@@ -31,6 +31,12 @@ async function bootstrap() {
       'http://192.168.1.37:3000',
       'http://192.168.1.37:5173',
 
+      // Production & Staging origins
+      'https://coomunity-backend.onrender.com',
+      /^https:\/\/.*--kvn3toj\.netlify\.app$/,
+      /^https:\/\/superapp-.*\.vercel\.app$/,
+      'https://beforenostr.vercel.app',
+
       // Regex patterns para todas las redes locales privadas
       /^http:\/\/192\.168\.\d+\.\d+:\d+$/, // 192.168.x.x:any_port
       /^http:\/\/10\.\d+\.\d+\.\d+:\d+$/, // 10.x.x.x:any_port
