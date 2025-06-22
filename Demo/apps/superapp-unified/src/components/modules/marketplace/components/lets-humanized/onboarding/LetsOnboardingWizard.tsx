@@ -454,18 +454,33 @@ const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
             boxShadow: theme.shadows[4],
           }}
         >
+          {/* 🚀 BOTÓN DE CIERRE MEJORADO - MÁS VISIBLE */}
           <IconButton
             onClick={onClose}
+            aria-label="Cerrar tutorial LETS"
             sx={{
               position: 'absolute',
               top: 16,
               right: 16,
               color: 'white',
-              bgcolor: alpha('white', 0.1),
-              '&:hover': { bgcolor: alpha('white', 0.2) },
+              backgroundColor: 'rgba(255, 255, 255, 0.15)',
+              backdropFilter: 'blur(10px)',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              width: 48,
+              height: 48,
+              zIndex: 1000,
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                transform: 'scale(1.1)',
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+              },
+              '&:active': {
+                transform: 'scale(0.95)',
+              },
+              transition: 'all 0.2s ease',
             }}
           >
-            <CloseIcon />
+            <CloseIcon sx={{ fontSize: 24 }} />
           </IconButton>
 
           <Box sx={{ maxWidth: 800, mx: 'auto' }}>

@@ -376,53 +376,260 @@ export const useGuardianColors = (): GuardianColorContextType => {
   return context;
 };
 
-// ===== 🎛️ COMPONENTE SELECTOR DE TEMA =====
+// ===== 🎛️ COMPONENTE SELECTOR DE TEMA MEJORADO =====
 export const GuardianThemeSelector: React.FC = () => {
   const { currentTheme, switchTheme } = useGuardianColors();
+  const [isVisible, setIsVisible] = useState(() => {
+    // Recuperar estado de visibilidad desde localStorage
+    const saved = localStorage.getItem('guardian-theme-selector-visible');
+    return saved !== 'false'; // Por defecto visible, oculto solo si se guardó como 'false'
+  });
+
+  // Guardar estado de visibilidad
+  useEffect(() => {
+    localStorage.setItem('guardian-theme-selector-visible', isVisible.toString());
+  }, [isVisible]);
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 20,
-      right: 20,
-      zIndex: 9999,
-      background: 'var(--guardian-bg-surface)',
-      border: '2px solid var(--guardian-primary)',
-      borderRadius: 16,
-      padding: 16,
-      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)'
-    }}>
-      <h4 style={{
-        margin: '0 0 12px 0',
-        color: 'var(--guardian-text-primary)',
-        fontSize: '0.875rem',
-        fontWeight: 600
-      }}>
-        🌟 Guardian Themes
-      </h4>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {Object.entries(GUARDIAN_PALETTES).map(([key, palette]) => (
+    <>
+      {/* Botón de toggle cuando está oculto */}
+      {!isVisible && (
+        <div style={{
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          zIndex: 99999, // Z-index más alto para evitar conflictos
+        }}>
           <button
-            key={key}
-            onClick={() => switchTheme(key as GuardianTheme)}
+            onClick={toggleVisibility}
             style={{
-              padding: '8px 12px',
-              border: currentTheme === key ? '2px solid var(--guardian-primary)' : '1px solid var(--guardian-neutral)',
-              borderRadius: 12,
-              background: currentTheme === key ? 'var(--guardian-primary)' : 'transparent',
-              color: currentTheme === key ? '#ffffff' : 'var(--guardian-text-primary)',
-              fontSize: '0.75rem',
-              fontWeight: 600,
+              background: 'var(--guardian-primary)',
+              border: 'none',
+              borderRadius: '50%',
+              width: 48,
+              height: 48,
               cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
               transition: 'all 200ms ease',
-              textAlign: 'left'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '18px',
             }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'scale(1.1) translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.2)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'scale(1) translateY(0px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            title="Mostrar Guardian Themes"
           >
-            {palette.name}
+            🎨
           </button>
-        ))}
-      </div>
-    </div>
+        </div>
+      )}
+
+      {/* Panel principal cuando está visible */}
+      {isVisible && (
+        <div style={{
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          zIndex: 99999, // Z-index más alto para evitar conflictos
+          background: 'var(--guardian-bg-surface)',
+          border: '2px solid var(--guardian-primary)',
+          borderRadius: 16,
+          padding: 16,
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
+          backdropFilter: 'blur(12px)',
+          minWidth: 250,
+          transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+        }}>
+          {/* Header con título y botón de cerrar */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 12,
+          }}>
+            <h4 style={{
+              margin: 0,
+              color: 'var(--guardian-text-primary)',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+            }}>
+              🌟 Guardian Themes
+            </h4>
+            <button
+              onClick={toggleVisibility}
+              style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '2px solid #ef4444',
+                borderRadius: '50%',
+                width: 32,
+                height: 32,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '16px',
+                color: '#ef4444',
+                fontWeight: 'bold',
+                transition: 'all 200ms ease',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = '#ef4444';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.transform = 'scale(1.1)';
+                e.currentTarget.style.boxShadow = '0 4px 8px rgba(239, 68, 68, 0.3)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                e.currentTarget.style.color = '#ef4444';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+              }}
+              title="Ocultar panel Guardian Themes"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Información del tema actual */}
+          <div style={{
+            padding: '8px 12px',
+            background: `linear-gradient(135deg, var(--guardian-primary)20, var(--guardian-accent)20)`,
+            borderRadius: 8,
+            marginBottom: 12,
+            border: `1px solid var(--guardian-primary)40`,
+          }}>
+            <div style={{
+              fontSize: '0.75rem',
+              color: 'var(--guardian-text-secondary)',
+              marginBottom: 2,
+            }}>
+              Tema Actual:
+            </div>
+            <div style={{
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              color: 'var(--guardian-text-primary)',
+            }}>
+              {GUARDIAN_PALETTES[currentTheme].name}
+            </div>
+          </div>
+
+          {/* Botones de temas */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {Object.entries(GUARDIAN_PALETTES).map(([key, palette]) => (
+              <button
+                key={key}
+                onClick={() => switchTheme(key as GuardianTheme)}
+                style={{
+                  padding: '12px 16px',
+                  border: currentTheme === key ? '2px solid var(--guardian-primary)' : '1px solid var(--guardian-neutral)',
+                  borderRadius: 12,
+                  background: currentTheme === key
+                    ? `linear-gradient(135deg, var(--guardian-primary), var(--guardian-accent))`
+                    : 'var(--guardian-bg-surface)',
+                  color: currentTheme === key ? '#ffffff' : 'var(--guardian-text-primary)',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 200ms ease',
+                  textAlign: 'left',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+                onMouseOver={(e) => {
+                  if (currentTheme !== key) {
+                    e.currentTarget.style.background = `linear-gradient(135deg, ${palette.primary}20, ${palette.accent}20)`;
+                    e.currentTarget.style.transform = 'translateX(4px) scale(1.02)';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (currentTheme !== key) {
+                    e.currentTarget.style.background = 'var(--guardian-bg-surface)';
+                    e.currentTarget.style.transform = 'translateX(0px) scale(1)';
+                  }
+                }}
+              >
+                <div style={{ fontWeight: 'bold', marginBottom: 2 }}>
+                  {palette.name}
+                </div>
+                <div style={{
+                  fontSize: '0.65rem',
+                  opacity: currentTheme === key ? 0.9 : 0.6,
+                  lineHeight: 1.2,
+                }}>
+                  {palette.description}
+                </div>
+                {/* Indicador visual de colores */}
+                <div style={{
+                  position: 'absolute',
+                  right: 8,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  display: 'flex',
+                  gap: 2,
+                }}>
+                  <div style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: palette.primary,
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                  }} />
+                  <div style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: palette.secondary,
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                  }} />
+                  <div style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: palette.accent,
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                  }} />
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Footer informativo */}
+          <div style={{
+            marginTop: 12,
+            padding: '8px 12px',
+            background: 'var(--guardian-bg-primary)',
+            borderRadius: 8,
+            border: '1px solid var(--guardian-neutral)',
+          }}>
+            <div style={{
+              fontSize: '0.65rem',
+              color: 'var(--guardian-text-muted)',
+              textAlign: 'center',
+              lineHeight: 1.3,
+            }}>
+              🌟 Sistema Guardian Visual<br/>
+              Temas dinámicos que se adaptan al Bien Común
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

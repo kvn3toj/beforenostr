@@ -36,6 +36,7 @@ import {
   Info as InfoIcon
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
+import { useGuardianColors } from '../guardian/GuardianColorProvider';
 
 // 🎓 Tipos para los tutoriales
 interface TutorialStep {
@@ -632,12 +633,15 @@ const renderStepContent = (step: TutorialStep, navigate: ReturnType<typeof useNa
 
 export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentTutorial, setCurrentTutorial] = useState<Tutorial | null>(null);
-  const [isActive, setIsActive] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, loading: authLoading } = useAuth();
-  const [isPending, startTransition] = useTransition();
+  const { user, isAuthenticated, loading } = useAuth();
+
+  // 🎨 INTEGRACIÓN GUARDIAN COLORS para mejor contraste y legibilidad
+  const { colorSystem, currentTheme, getGradient, getElementColor } = useGuardianColors();
 
   const availableTutorials = DISCOVERY_TUTORIALS;
 
@@ -684,7 +688,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
   }, [currentStep]);
 
   useEffect(() => {
-    if (authLoading) return;
+    if (loading) return;
 
     const marketplaceTutorialId = 'marketplace-discovery';
     const hasCompletedMarketplaceTutorial = localStorage.getItem(`coomunity-tutorial-${marketplaceTutorialId}-completed`);
@@ -694,7 +698,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
         startTutorial(marketplaceTutorialId);
       });
     }
-  }, [isAuthenticated, location.pathname, startTutorial, authLoading]);
+  }, [isAuthenticated, location.pathname, startTutorial, loading]);
 
   useEffect(() => {
     const step = currentTutorial?.steps[currentStep];
@@ -862,14 +866,43 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
           PaperProps={{
             sx: {
               borderRadius: 3,
-              boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-              backdropFilter: 'blur( 4px )',
-              WebkitBackdropFilter: 'blur( 4px )',
-              border: '1px solid rgba( 255, 255, 255, 0.18 )',
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0))',
+              // 🌟 GUARDIAN VISUAL ENHANCEMENT: Fondo sólido con gradiente Guardian
+              background: getGradient('cosmic'),
+              // Sombra mejorada con colores Guardian
+              boxShadow: `0 12px 40px 0 rgba(0, 0, 0, 0.4), 0 0 0 1px ${colorSystem.mystic}40`,
+              // Borde Guardian para definir mejor el contorno
+              border: `2px solid ${colorSystem.mystic}60`,
               position: 'relative',
               overflow: 'hidden',
+              // 🎯 ELIMINAR TRANSPARENCIA PROBLEMÁTICA
+              backdropFilter: 'none',
+              WebkitBackdropFilter: 'none',
+              // Color de texto fijo para el tema cósmico
+              color: '#ffffff',
+              // Asegurar que el contenido sea legible
+              '& *': {
+                color: '#ffffff !important',
+              },
+              // Override específico para mantener colores de MUI components
+              '& .MuiButton-root': {
+                color: 'inherit',
+              },
+              '& .MuiChip-root': {
+                color: '#ffffff',
+                backgroundColor: `${colorSystem.ether}40`,
+                border: `1px solid ${colorSystem.ether}80`,
+              }
             },
+          }}
+          // 🎨 BACKDROP GUARDIAN con opacidad controlada
+          slotProps={{
+            backdrop: {
+              sx: {
+                backgroundColor: `${colorSystem.bgPrimary}95`,
+                backdropFilter: 'blur(8px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(8px) saturate(180%)',
+              }
+            }
           }}
         >
           <IconButton
@@ -879,57 +912,206 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
               position: 'absolute',
               right: 8,
               top: 8,
-              color: (theme) => theme.palette.grey[500],
+              color: '#ffffff',
+              backgroundColor: `${colorSystem.ether}30`,
+              backdropFilter: 'blur(10px)',
+              border: `1px solid ${colorSystem.ether}60`,
               zIndex: 1,
+              '&:hover': {
+                backgroundColor: `${colorSystem.ether}50`,
+                transform: 'scale(1.05)',
+              },
+              transition: 'all 0.3s ease',
             }}
           >
             <CloseIcon />
           </IconButton>
-          <DialogTitle sx={{ textAlign: 'center', pb: 0 }}>
-            <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+
+          {/* 🌟 TÍTULO GUARDIAN ENHANCED */}
+          <DialogTitle sx={{
+            textAlign: 'center',
+            background: `linear-gradient(45deg, ${colorSystem.primary}20, ${colorSystem.mystic}20)`,
+            borderBottom: `2px solid ${colorSystem.mystic}40`,
+            pt: 3,
+            pb: 2,
+          }}>
+            <Typography
+              variant="h4"
+              component="div"
+              sx={{
+                fontWeight: 'bold',
+                color: '#ffffff',
+                textShadow: `0 2px 8px ${colorSystem.primary}80`,
+                mb: 1,
+                background: getGradient('primary'),
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                // Fallback para navegadores que no soportan background-clip
+                '@supports not (background-clip: text)': {
+                  color: '#ffffff',
+                  WebkitTextFillColor: 'initial',
+                }
+              }}
+            >
               {currentTutorial.title}
             </Typography>
-            <Typography variant="subtitle2" color="textSecondary">
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: '#ffffff',
+                opacity: 0.9,
+                textShadow: '0 1px 4px rgba(0,0,0,0.3)',
+              }}
+            >
               {currentTutorial.description}
             </Typography>
+
+            {/* 🏷️ CHIPS GUARDIAN ENHANCED */}
+            <Box sx={{ display: 'flex', gap: 1, mt: 2, justifyContent: 'center' }}>
+              <Chip
+                label={currentTutorial.difficulty}
+                size="small"
+                sx={{
+                  background: getElementColor('fuego'),
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                }}
+              />
+              <Chip
+                label={currentTutorial.estimatedTime}
+                size="small"
+                sx={{
+                  background: getElementColor('agua'),
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                }}
+              />
+            </Box>
           </DialogTitle>
-          <DialogContent dividers sx={{ p: 3 }}>
+
+          {/* 🎯 CONTENIDO GUARDIAN OPTIMIZADO */}
+          <DialogContent dividers sx={{
+            p: 3,
+            background: `linear-gradient(135deg, ${colorSystem.primary}10, ${colorSystem.secondary}10, ${colorSystem.mystic}10)`,
+            borderTop: `1px solid ${colorSystem.mystic}30`,
+            borderBottom: `1px solid ${colorSystem.mystic}30`,
+          }}>
             <Fade in={true} key={currentStep}>
               <Box>
-                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 3,
+                    color: '#ffffff',
+                    fontWeight: 600,
+                    textShadow: '0 1px 4px rgba(0,0,0,0.3)',
+                  }}
+                >
                   {getStepIcon(currentStep)}
-                  <Box component="span" sx={{ ml: 1 }}>{currentStep + 1}. {currentStepData.title}</Box>
+                  <Box component="span" sx={{ ml: 1 }}>
+                    {currentStep + 1}. {currentStepData.title}
+                  </Box>
                 </Typography>
+
+                {/* 🚀 ALERT GUARDIAN CON FONDO SÓLIDO Y LEGIBLE - VERSIÓN MEJORADA */}
                 <Alert
                   severity={getAlertSeverity(currentStepData.type)}
                   sx={{
-                    mb: 2,
-                    backgroundColor: 'rgba(28, 28, 58, 0.7)',
-                    backdropFilter: 'blur(12px) saturate(200%)',
-                    WebkitBackdropFilter: 'blur(12px) saturate(200%)',
-                    border: '1px solid rgba(255, 255, 255, 0.125)',
-                    borderRadius: 2,
-                    color: '#fff',
-                    '& .MuiAlert-icon': {
-                      color: '#fff',
-                      opacity: 0.8
+                    mb: 3,
+                    // 🌟 FONDO COMPLETAMENTE SÓLIDO GUARDIAN (eliminar transparencia total)
+                    backgroundColor: '#1a1a2e !important', // Fondo sólido oscuro
+                    color: '#ffffff !important',
+                    border: `2px solid ${getElementColor('tierra')}80`,
+                    borderRadius: 3,
+                    boxShadow: `0 4px 20px ${getElementColor('tierra')}60`,
+
+                    // 🎯 OVERRIDE TOTAL PARA ELIMINAR TRANSPARENCIA
+                    '& .MuiAlert-message': {
+                      color: '#ffffff !important',
+                      width: '100%',
                     },
+                    '& .MuiAlert-icon': {
+                      color: `${getElementColor('tierra')} !important`,
+                    },
+                    '& .MuiTypography-root': {
+                      color: '#ffffff !important',
+                    },
+                    '& .MuiList-root': {
+                      color: '#ffffff !important',
+                    },
+                    '& .MuiListItemText-primary': {
+                      color: '#ffffff !important',
+                    },
+                    '& .MuiListItemIcon-root': {
+                      color: `${getElementColor('agua')} !important`,
+                    },
+                    '& .MuiButton-root': {
+                      color: '#ffffff !important',
+                      backgroundColor: `${colorSystem.primary}80 !important`,
+                      '&:hover': {
+                        backgroundColor: `${colorSystem.primary} !important`,
+                      }
+                    }
                   }}
                 >
                   {renderStepContent(currentStepData, navigate)}
                 </Alert>
+
+                {/* 💡 TIPS GUARDIAN ENHANCED */}
                 {currentStepData.tips && currentStepData.tips.length > 0 && (
-                  <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(0,0,0,0.2)', borderRadius: 2, border: '1px dashed', borderColor: 'grey.700' }}>
-                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.light' }}>
+                  <Box sx={{
+                    mt: 3,
+                    p: 3,
+                    background: `linear-gradient(135deg, ${getElementColor('eter')}20, ${getElementColor('aire')}20)`,
+                    borderRadius: 3,
+                    border: `2px solid ${getElementColor('eter')}60`,
+                    boxShadow: `0 4px 16px ${getElementColor('eter')}30`,
+                  }}>
+                    <Typography
+                      variant="subtitle2"
+                      gutterBottom
+                      sx={{
+                        fontWeight: 'bold',
+                        color: '#ffffff',
+                        textShadow: '0 1px 4px rgba(0,0,0,0.4)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        mb: 2,
+                      }}
+                    >
+                      <TipIcon sx={{ mr: 1, color: getElementColor('eter') }} />
                       💡 Consejos Rápidos:
                     </Typography>
                     <List dense>
                       {currentStepData.tips.map((tip, index) => (
                         <ListItem key={index} disableGutters>
                           <ListItemIcon sx={{ minWidth: '30px' }}>
-                            <InfoIcon fontSize="small" color="action" />
+                            <InfoIcon
+                              fontSize="small"
+                              sx={{ color: getElementColor('aire') }}
+                            />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.85)' }}>{tip}</Typography>} />
+                          <ListItemText
+                            primary={
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  color: '#ffffff',
+                                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                                }}
+                              >
+                                {tip}
+                              </Typography>
+                            }
+                          />
                         </ListItem>
                       ))}
                     </List>
@@ -938,19 +1120,60 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
               </Box>
             </Fade>
           </DialogContent>
-          <DialogActions sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+          {/* 🎮 ACCIONES GUARDIAN ENHANCED */}
+          <DialogActions sx={{
+            p: 3,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            background: `linear-gradient(90deg, ${colorSystem.primary}15, ${colorSystem.secondary}15)`,
+            borderTop: `2px solid ${colorSystem.mystic}40`,
+          }}>
             <Box>
-              <Chip label={`Paso ${currentStep + 1} de ${currentTutorial.steps.length}`} color="secondary" size="small" />
-              <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
+              <Chip
+                label={`Paso ${currentStep + 1} de ${currentTutorial.steps.length}`}
+                size="small"
+                sx={{
+                  background: getGradient('ayni'),
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  boxShadow: `0 2px 8px ${colorSystem.accent}40`,
+                }}
+              />
+              <Typography
+                variant="caption"
+                sx={{
+                  ml: 2,
+                  color: '#ffffff',
+                  opacity: 0.9,
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                }}
+              >
                 Tiempo estimado: {currentTutorial?.estimatedTime}
               </Typography>
             </Box>
+
             <Box>
               <Button
                 onClick={previousStep}
                 disabled={currentStep === 0 || isPending}
                 startIcon={<BackIcon />}
-                sx={{ mr: 1 }}
+                sx={{
+                  mr: 2,
+                  color: '#ffffff',
+                  borderColor: colorSystem.secondary,
+                  '&:hover': {
+                    backgroundColor: `${colorSystem.secondary}30`,
+                    borderColor: colorSystem.secondary,
+                  },
+                  '&:disabled': {
+                    color: 'rgba(255,255,255,0.3)',
+                    borderColor: 'rgba(255,255,255,0.2)',
+                  }
+                }}
+                variant="outlined"
               >
                 Anterior
               </Button>
@@ -959,9 +1182,26 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                 disabled={isPending}
                 endIcon={<NextIcon />}
                 variant="contained"
-                color="primary"
+                sx={{
+                  background: getGradient('primary'),
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  boxShadow: `0 4px 16px ${colorSystem.primary}60`,
+                  border: `1px solid ${colorSystem.primary}80`,
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                  '&:hover': {
+                    background: getGradient('secondary'),
+                    transform: 'translateY(-2px)',
+                    boxShadow: `0 6px 20px ${colorSystem.primary}80`,
+                  },
+                  '&:disabled': {
+                    background: 'rgba(255,255,255,0.2)',
+                    color: 'rgba(255,255,255,0.5)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
               >
-                {currentStep === currentTutorial.steps.length - 1 ? 'Finalizar' : 'Siguiente'}
+                {currentStep === currentTutorial.steps.length - 1 ? '🎉 Finalizar' : 'Siguiente'}
               </Button>
             </Box>
           </DialogActions>

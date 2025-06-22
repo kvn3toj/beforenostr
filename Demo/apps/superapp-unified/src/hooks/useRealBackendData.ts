@@ -1741,11 +1741,11 @@ export function useSocialNotifications(userId: string) {
         }
 
         // Si la respuesta tiene estructura { notifications: [...] }
-        if (response.notifications && Array.isArray(response.notifications)) {
+        if ((response as any).notifications && Array.isArray((response as any).notifications)) {
           return {
-            data: response.notifications,
-            notifications: response.notifications,
-            total: response.total || response.notifications.length,
+            data: (response as any).notifications,
+            notifications: (response as any).notifications,
+            total: (response as any).total || (response as any).notifications.length,
             ...response
           };
         }
@@ -1760,11 +1760,11 @@ export function useSocialNotifications(userId: string) {
         }
 
         // Si la respuesta tiene estructura { data: [...] }
-        if (response.data && Array.isArray(response.data)) {
+        if ((response as any).data && Array.isArray((response as any).data)) {
           return {
-            data: response.data,
-            notifications: response.data,
-            total: response.total || response.data.length,
+            data: (response as any).data,
+            notifications: (response as any).data,
+            total: (response as any).total || (response as any).data.length,
             ...response
           };
         }
@@ -1851,7 +1851,7 @@ export function useSocialPosts(page = 0, limit = 20) {
       const backendData = await socialAPI.getPosts(page, limit);
 
       // Transformar datos del backend usando la función de mapeo
-      return backendData.map((publication: any) =>
+      return (backendData as any[]).map((publication: any) =>
         mapBackendPostToUIPost(publication)
       );
     },

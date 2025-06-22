@@ -53,6 +53,9 @@ export const useFeedbackContext = () => {
   return context;
 };
 
+// Alias para compatibilidad
+export const useFeedback = useFeedbackContext;
+
 // Props del provider
 interface FeedbackProviderProps {
   children: ReactNode;
@@ -60,11 +63,11 @@ interface FeedbackProviderProps {
 
 // Provider del contexto
 export const FeedbackProvider: React.FC<FeedbackProviderProps> = ({ children }) => {
-  // Estado del modo feedback
+  // Estado del modo feedback - ACTIVADO POR DEFECTO para recopilación de información
   const [isFeedbackModeActive, setIsFeedbackModeActive] = useState<boolean>(() => {
-    // Cargar estado desde localStorage
+    // Cargar estado desde localStorage, activado por defecto para recolección de feedback
     const saved = localStorage.getItem('coomunity_feedback_mode_active');
-    return saved === 'true';
+    return saved !== 'false'; // Activado por defecto, solo se desactiva si se guarda como 'false'
   });
 
   // Estado del modal

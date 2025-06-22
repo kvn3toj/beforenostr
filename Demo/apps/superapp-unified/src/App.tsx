@@ -17,6 +17,9 @@ import { GuardianColorProvider, GuardianThemeSelector } from './components/theme
 // 🎓 Tutorial Discovery System
 import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';
 
+// 🔍 Guardian Feedback System - Para recopilación de información de usuarios
+import { FeedbackAgent } from './components/feedback/FeedbackAgent';
+
 // Route Protection
 import { ProtectedRoute } from './components/ProtectedRoute';
 import ErrorBoundary from './components/ui/ErrorBoundary';
@@ -200,6 +203,9 @@ const App: React.FC = () => {
 
                       {/* El botón flotante del tutorial va aquí para heredar el contexto */}
                       <TutorialFloatingButton />
+
+                      {/* 🔍 Guardian Feedback Agent - Sistema de recopilación de feedback */}
+                      <FeedbackAgent />
 
                       {/* Banner de Entorno */}
                       <EnvironmentBanner />
