@@ -327,7 +327,7 @@ export function useGameData(userId: string) {
       }
 
       // 🔗 En desarrollo normal, intentar llamada API con fallback
-      return await gameAPI.getUserStats(userId);
+      return await gameAPI.getGameData(userId);
     },
     enabled: !!userId && !isBuilderEnvironment, // Deshabilitar en
     silentFail: true, // Don't log errors for missing game endpoint
@@ -378,7 +378,7 @@ export function useGameData(userId: string) {
 export function useQuests() {
   return useQuery({
     queryKey: queryKeys.quests,
-    queryFn: () => gameAPI.getLeaderboard(), // Temporal hasta que haya endpoint de quests
+    queryFn: () => gameAPI.getQuests(), // Corregido: usar getQuests en lugar de getLeaderboard
     staleTime: 1000 * 60 * 15, // 15 minutos
   });
 }
@@ -1294,7 +1294,7 @@ export function useMarketplaceSearch(searchTerm: string, filters: any = {}) {
 
           return { ...item, relevanceScore: score };
         })
-        .sort((a, b) => b.relevanceScore - a.relevanceScore);
+        .sort((a: any, b: any) => b.relevanceScore - a.relevanceScore);
 
       // Generar sugerencias
       const suggestions = allItems.items
@@ -1450,7 +1450,8 @@ export function useVideoCategories() {
 
         // Extraer categorías únicas de los video-items
         const categories = new Set();
-        videoItems.forEach((item: any) => {
+        const videoItemsArray = Array.isArray(videoItems) ? videoItems : [];
+        videoItemsArray.forEach((item: any) => {
           if (item.categories) {
             const itemCategories = JSON.parse(item.categories);
             itemCategories.forEach((cat: string) => categories.add(cat));
@@ -1460,7 +1461,7 @@ export function useVideoCategories() {
         return Array.from(categories).map((cat: any, index) => ({
           id: cat.toLowerCase().replace(/\s+/g, '-'),
           name: cat,
-          count: videoItems.filter(
+          count: videoItemsArray.filter(
             (item: any) =>
               item.categories && JSON.parse(item.categories).includes(cat)
           ).length,
@@ -1481,9 +1482,11 @@ export function useVideos(category?: string) {
         // Usar el endpoint real de video-items que sabemos que funciona
         const allVideos = await videosAPI.getVideos();
 
+        const allVideosArray = Array.isArray(allVideos) ? allVideos : [];
+
         if (category && category !== 'all') {
           // Filtrar por categoría
-          return allVideos.filter((video: any) => {
+          return allVideosArray.filter((video: any) => {
             if (video.categories) {
               const categories = JSON.parse(video.categories);
               return categories.some((cat: string) =>
@@ -1494,7 +1497,7 @@ export function useVideos(category?: string) {
           });
         }
 
-        return allVideos;
+        return allVideosArray;
       } catch (error) {
         console.warn('🔄 Fallback: Error obteniendo videos');
         return [];
@@ -1538,7 +1541,7 @@ export function useUpdateGameProgress() {
 
   return useMutation({
     mutationFn: ({ userId, data }: { userId: string; data: any }) =>
-      gameAPI.updateUserStats(userId, data),
+      gameAPI.updateProgress(userId, data),
     onSuccess: (_, variables) => {
       // Invalidar cache del usuario
       queryClient.invalidateQueries({
@@ -1581,8 +1584,8 @@ export function useAddTransaction() {
 // 📝 Mutation para enviar formularios
 export function useSubmitForm() {
   return useMutation({
-    mutationFn: ({ formType, data }: { formType: string; data: any }) =>
-      formsAPI.submit(formType, data),
+    mutationFn: (data: any) =>
+      formsAPI.submit(data),
   });
 }
 

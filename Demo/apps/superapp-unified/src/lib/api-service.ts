@@ -846,8 +846,8 @@ export const socialAPI = {
   getPost: (postId: string) =>
     apiService.get(`/social/publications/${postId}`),
 
-  createPost: (postData: any) =>
-    apiService.post('/social/publications', postData),
+  createPost: (content: string, type?: string, media?: File) =>
+    apiService.post('/social/publications', { content, type, media }),
 
   deletePost: (postId: string) =>
     apiService.delete(`/social/publications/${postId}`),
@@ -870,7 +870,10 @@ export const socialAPI = {
   deleteComment: (commentId: string) =>
     apiService.delete(`/social/comments/${commentId}`),
 
-  likeComment: (commentId: string) =>
+  toggleLike: (postId: string) =>
+    apiService.post(`/social/publications/${postId}/toggle-like`),
+
+  likeComment: (postId: string, commentId: string) =>
     apiService.post(`/social/comments/${commentId}/like`),
 
   unlikeComment: (commentId: string) =>
@@ -893,7 +896,7 @@ export const socialAPI = {
     return Promise.resolve([]);
   },
 
-  sendMessage: (matchId: string, message: string) => {
+  sendMessage: (matchId: string, message: string, type?: string) => {
     console.warn('🚧 Send message functionality not yet implemented in backend');
     return Promise.resolve({ success: false, message: 'Not implemented yet' });
   },
