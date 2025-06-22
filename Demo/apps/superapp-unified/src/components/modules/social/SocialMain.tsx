@@ -136,9 +136,27 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
   const normalizedMatches = Array.isArray(matchesData?.data)
     ? matchesData.data
     : [];
-  const normalizedNotifications = Array.isArray(notificationsData?.data)
-    ? notificationsData.data
-    : [];
+
+  const normalizedNotifications = React.useMemo(() => {
+    // 🛡️ Validación robusta para prevenir errores de filter
+    const responseData = notificationsData as any;
+
+    // Verificar si hay datos válidos del backend
+    if (responseData?.data && Array.isArray(responseData.data)) {
+      return responseData.data;
+    }
+
+    if (responseData?.notifications && Array.isArray(responseData.notifications)) {
+      return responseData.notifications;
+    }
+
+    if (Array.isArray(responseData)) {
+      return responseData;
+    }
+
+    // Si no hay datos válidos, retornar array vacío
+    return [];
+  }, [notificationsData]);
 
   // 📊 Calcular métricas dinámicas usando datos reales del backend
   const realSocialData = createRealSocialData(notificationsData);
@@ -158,8 +176,8 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
       subtitle="Tu espacio sagrado de colaboración y reciprocidad"
       variant="elevated"
       element="agua" // Paleta de colores asociada al agua - fluidez, conexión y profundidad emocional
-      cosmicEffects={{ 
-        enableParticles: true, 
+      cosmicEffects={{
+        enableParticles: true,
         particleTheme: 'waterRipples',
         enableGlow: true,
         glowIntensity: 1.2,

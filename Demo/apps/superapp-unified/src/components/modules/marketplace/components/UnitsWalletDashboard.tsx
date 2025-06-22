@@ -1,6 +1,6 @@
 /**
  * 💰 Units Wallet Dashboard - Dashboard Completo del Wallet de Ünits
- * 
+ *
  * Dashboard integral para gestionar Ünits, ver historial de transacciones,
  * límites de crédito y métricas de intercambio
  */
@@ -60,10 +60,10 @@ import {
   Schedule as ScheduleIcon
 } from '@mui/icons-material';
 
-import { 
-  useUnitsWallet, 
-  useTransferUnits, 
-  useTransactionHistory 
+import {
+  useUnitsWallet,
+  useTransferUnits,
+  useTransactionHistory
 } from '../../../../hooks/useLetsMarketplace';
 
 interface TabPanelProps {
@@ -102,6 +102,23 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
   const { data: transactions, isLoading: transactionsLoading } = useTransactionHistory(userId);
   const transferMutation = useTransferUnits();
 
+  // 🛡️ SOLUCIÓN: Validación robusta de arrays para prevenir errores de filter
+  const safeTransactions = (() => {
+    if (!transactions) return [];
+    if (Array.isArray(transactions.transactions)) return transactions.transactions;
+    if (Array.isArray(transactions)) return transactions;
+    return [];
+  })();
+
+  // ✅ VERIFICACIÓN ADICIONAL: Asegurar que cada transacción es un objeto válido
+  const validatedTransactions = safeTransactions.filter((tx: any) =>
+    tx &&
+    typeof tx === 'object' &&
+    typeof tx.fromUserId === 'string' &&
+    typeof tx.toUserId === 'string' &&
+    typeof tx.amount === 'number'
+  );
+
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
@@ -111,12 +128,13 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
 
     try {
       await transferMutation.mutateAsync({
+        fromUserId: userId,
         toUserId: transferRecipient,
         amount: parseFloat(transferAmount),
         description: transferDescription,
         transactionType: 'direct_transfer'
       });
-      
+
       setTransferDialogOpen(false);
       setTransferAmount('');
       setTransferRecipient('');
@@ -144,7 +162,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
     const creditUsage = getCreditUsagePercentage();
 
     return (
-      <Card sx={{ 
+      <Card sx={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         color: 'white',
         height: '100%'
@@ -163,11 +181,11 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
                   </Typography>
                 </Box>
               </Stack>
-              
+
               <Chip
                 label={`Confianza: ${((wallet?.trustScore || 0) * 100).toFixed(0)}%`}
-                sx={{ 
-                  bgcolor: 'rgba(255,255,255,0.2)', 
+                sx={{
+                  bgcolor: 'rgba(255,255,255,0.2)',
                   color: 'white',
                   fontWeight: 600
                 }}
@@ -211,8 +229,8 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
                   variant="contained"
                   startIcon={<SendIcon />}
                   onClick={() => setTransferDialogOpen(true)}
-                  sx={{ 
-                    bgcolor: 'rgba(255,255,255,0.2)', 
+                  sx={{
+                    bgcolor: 'rgba(255,255,255,0.2)',
                     color: 'white',
                     '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' }
                   }}
@@ -226,8 +244,8 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
                   variant="outlined"
                   startIcon={<HistoryIcon />}
                   onClick={() => setTabValue(1)}
-                  sx={{ 
-                    borderColor: 'rgba(255,255,255,0.5)', 
+                  sx={{
+                    borderColor: 'rgba(255,255,255,0.5)',
                     color: 'white',
                     '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
                   }}
@@ -260,15 +278,15 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
     );
   };
 
-  // Componente de estadísticas
+    // Componente de estadísticas
   const WalletStatsCard = () => {
-    const totalReceived = transactions?.filter((tx: any) => tx.toUserId === userId)
-      .reduce((sum: number, tx: any) => sum + tx.amount, 0) || 0;
-    
-    const totalSent = transactions?.filter((tx: any) => tx.fromUserId === userId)
+    const receivedAmount = validatedTransactions.filter((tx: any) => tx.toUserId === userId)
       .reduce((sum: number, tx: any) => sum + tx.amount, 0) || 0;
 
-    const ayniBalance = totalReceived - totalSent;
+    const sentAmount = validatedTransactions.filter((tx: any) => tx.fromUserId === userId)
+      .reduce((sum: number, tx: any) => sum + tx.amount, 0) || 0;
+
+    const ayniBalance = receivedAmount - sentAmount;
 
     return (
       <Card sx={{ height: '100%' }}>
@@ -282,7 +300,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
               <Box sx={{ textAlign: 'center' }}>
                 <TrendingUpIcon sx={{ fontSize: 32, color: 'success.main', mb: 1 }} />
                 <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
-                  +{totalReceived.toFixed(2)}
+                  +{receivedAmount.toFixed(2)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Ünits Recibidas
@@ -294,7 +312,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
               <Box sx={{ textAlign: 'center' }}>
                 <TrendingDownIcon sx={{ fontSize: 32, color: 'error.main', mb: 1 }} />
                 <Typography variant="h5" sx={{ fontWeight: 700, color: 'error.main' }}>
-                  -{totalSent.toFixed(2)}
+                  -{sentAmount.toFixed(2)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Ünits Enviadas
@@ -304,14 +322,14 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
 
             <Grid item xs={12} sm={4}>
               <Box sx={{ textAlign: 'center' }}>
-                <TransferIcon sx={{ 
-                  fontSize: 32, 
-                  color: ayniBalance >= 0 ? 'success.main' : 'warning.main', 
-                  mb: 1 
+                <TransferIcon sx={{
+                  fontSize: 32,
+                  color: ayniBalance >= 0 ? 'success.main' : 'warning.main',
+                  mb: 1
                 }} />
-                <Typography variant="h5" sx={{ 
-                  fontWeight: 700, 
-                  color: ayniBalance >= 0 ? 'success.main' : 'warning.main' 
+                <Typography variant="h5" sx={{
+                  fontWeight: 700,
+                  color: ayniBalance >= 0 ? 'success.main' : 'warning.main'
                 }}>
                   {ayniBalance >= 0 ? '+' : ''}{ayniBalance.toFixed(2)}
                 </Typography>
@@ -322,13 +340,13 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
             </Grid>
           </Grid>
 
-          <Alert 
-            severity={Math.abs(ayniBalance) <= 5 ? 'success' : 'info'} 
+          <Alert
+            severity={Math.abs(ayniBalance) <= 5 ? 'success' : 'info'}
             sx={{ mt: 3 }}
           >
-            {Math.abs(ayniBalance) <= 5 
+            {Math.abs(ayniBalance) <= 5
               ? "¡Excelente! Mantienes un buen equilibrio Ayni en tus intercambios."
-              : ayniBalance > 5 
+              : ayniBalance > 5
                 ? "Has recibido más de lo que has dado. Considera ofrecer más servicios."
                 : "Has dado más de lo que has recibido. ¡Busca oportunidades para recibir!"
             }
@@ -404,10 +422,10 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
           </TableRow>
         </TableHead>
         <TableBody>
-          {transactions?.slice(0, 10).map((transaction: any, index: number) => {
+          {validatedTransactions?.slice(0, 10).map((transaction: any, index: number) => {
             const isReceived = transaction.toUserId === userId;
             const otherUser = isReceived ? transaction.fromUser : transaction.toUser;
-            
+
             return (
               <TableRow key={index}>
                 <TableCell>
@@ -432,9 +450,9 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
                   </Typography>
                 </TableCell>
                 <TableCell align="right">
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
+                  <Typography
+                    variant="body2"
+                    sx={{
                       fontWeight: 600,
                       color: isReceived ? 'success.main' : 'error.main'
                     }}
@@ -528,8 +546,8 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
       </TabPanel>
 
       {/* Dialog de transferencia */}
-      <Dialog 
-        open={transferDialogOpen} 
+      <Dialog
+        open={transferDialogOpen}
         onClose={() => setTransferDialogOpen(false)}
         maxWidth="sm"
         fullWidth
@@ -546,7 +564,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
               fullWidth
               required
             />
-            
+
             <TextField
               label="Cantidad de Ünits"
               type="number"
@@ -556,7 +574,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
               required
               inputProps={{ min: 0.01, step: 0.01 }}
             />
-            
+
             <TextField
               label="Descripción"
               value={transferDescription}
@@ -576,8 +594,8 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
           <Button onClick={() => setTransferDialogOpen(false)}>
             Cancelar
           </Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={handleTransfer}
             disabled={transferMutation.isPending || !transferAmount || !transferRecipient}
           >
@@ -589,4 +607,4 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
   );
 };
 
-export default UnitsWalletDashboard; 
+export default UnitsWalletDashboard;

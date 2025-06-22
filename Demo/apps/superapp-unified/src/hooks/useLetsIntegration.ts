@@ -80,7 +80,7 @@ export const useTransferUnits = () => {
       queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.wallet(variables.fromUserId) });
       queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.wallet(variables.toUserId) });
       queryClient.invalidateQueries({ queryKey: LETS_QUERY_KEYS.transactions(variables.fromUserId) });
-      
+
       console.log('✅ Transferencia de Ünits completada:', data);
     },
     onError: (error) => {
@@ -90,10 +90,10 @@ export const useTransferUnits = () => {
 };
 
 // 📊 Hook para historial de transacciones
-export const useUnitsTransactions = (userId?: string, filters?: { 
-  type?: string; 
-  limit?: number; 
-  offset?: number 
+export const useUnitsTransactions = (userId?: string, filters?: {
+  type?: string;
+  limit?: number;
+  offset?: number
 }) => {
   return useQuery({
     queryKey: LETS_QUERY_KEYS.transactions(userId || 'all'),
@@ -171,10 +171,10 @@ export const useKnowledgeExchanges = (filters?: { copId?: string; category?: str
       const params = new URLSearchParams();
       if (filters?.copId) params.append('copId', filters.copId);
       if (filters?.category) params.append('category', filters.category);
-      
+
       const queryString = params.toString();
       const url = queryString ? `/lets/knowledge-exchanges?${queryString}` : '/lets/knowledge-exchanges';
-      
+
       const response = await apiService.get(url);
       return response.data || response;
     },
@@ -204,8 +204,8 @@ export const useCreateKnowledgeExchange = () => {
     },
     onSuccess: () => {
       // Invalidar lista de knowledge exchanges
-      queryClient.invalidateQueries({ 
-        queryKey: LETS_QUERY_KEYS.knowledgeExchanges({}) 
+      queryClient.invalidateQueries({
+        queryKey: LETS_QUERY_KEYS.knowledgeExchanges({})
       });
       console.log('✅ Intercambio de conocimiento creado exitosamente');
     }
@@ -217,12 +217,12 @@ export const useJoinKnowledgeExchange = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
-      exchangeId, 
-      role = 'learner' 
-    }: { 
-      exchangeId: string; 
-      role?: 'learner' | 'observer' 
+    mutationFn: async ({
+      exchangeId,
+      role = 'learner'
+    }: {
+      exchangeId: string;
+      role?: 'learner' | 'observer'
     }): Promise<void> => {
       await apiService.post(`/knowledge-exchanges/${exchangeId}/join`, { role });
     },
@@ -347,8 +347,8 @@ export const useLetsAnalytics = (timeRange?: 'day' | 'week' | 'month' | 'year') 
   return useQuery({
     queryKey: [...LETS_QUERY_KEYS.analytics(), timeRange],
     queryFn: async (): Promise<LetsAnalytics> => {
-      const response = await apiService.get('/lets/analytics', { 
-        params: timeRange ? { timeRange } : {} 
+      const response = await apiService.get('/lets/analytics', {
+        params: timeRange ? { timeRange } : {}
       });
       return response.data || response;
     },
@@ -382,7 +382,24 @@ export const useCanTransferUnits = (userId: string, amount: number) => {
 export const useAyniBalance = (userId: string) => {
   const { data: transactions } = useUnitsTransactions(userId);
 
-  if (!transactions) {
+  // 🛡️ SOLUCIÓN: Validación robusta de arrays para prevenir errores de filter
+  const safeTransactions = (() => {
+    if (!transactions) return [];
+    if (Array.isArray(transactions.transactions)) return transactions.transactions;
+    if (Array.isArray(transactions)) return transactions;
+    return [];
+  })();
+
+  // ✅ VERIFICACIÓN ADICIONAL: Asegurar que cada transacción es un objeto válido
+  const validatedTransactions = safeTransactions.filter((tx: any) =>
+    tx &&
+    typeof tx === 'object' &&
+    typeof tx.fromUserId === 'string' &&
+    typeof tx.toUserId === 'string' &&
+    typeof tx.amount === 'number'
+  );
+
+  if (!validatedTransactions || validatedTransactions.length === 0) {
     return {
       given: 0,
       received: 0,
@@ -392,13 +409,14 @@ export const useAyniBalance = (userId: string) => {
     };
   }
 
-  const given = transactions
-    .filter(t => t.fromUserId === userId)
-    .reduce((sum, t) => sum + t.amount, 0);
+  // ✅ Usar validatedTransactions con validación adicional
+  const given = validatedTransactions
+    .filter((t: any) => t && t.fromUserId === userId)
+    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
 
-  const received = transactions
-    .filter(t => t.toUserId === userId)
-    .reduce((sum, t) => sum + t.amount, 0);
+  const received = validatedTransactions
+    .filter((t: any) => t && t.toUserId === userId)
+    .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
 
   const ayniRatio = received > 0 ? given / received : given > 0 ? Infinity : 1;
   const isBalanced = ayniRatio >= 0.8 && ayniRatio <= 1.2;
@@ -419,4 +437,4 @@ export const useAyniBalance = (userId: string) => {
     isBalanced,
     recommendation
   };
-}; 
+};

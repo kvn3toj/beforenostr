@@ -293,6 +293,72 @@ const MarketplaceMain: React.FC = () => {
     }
   }, [marketplaceItemsResponse, queryClient, refetchMarketplaceData]);
 
+  // 🎨 ESTADOS VISUALES MEJORADOS
+  const [feedbackMessage, setFeedbackMessage] = useState<{
+    type: 'success' | 'error' | 'warning' | 'info';
+    text: string;
+  } | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
+
+  // 🔄 MANEJO INTELIGENTE DE ERRORES
+  useEffect(() => {
+    if (itemsError) {
+      console.error('❌ Error en marketplace:', itemsError);
+
+      const errorMessage = itemsError.message || 'Error desconocido';
+
+      // Determinar el tipo de feedback basado en el error
+      if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+        setFeedbackMessage({
+          type: 'warning',
+          text: '🌐 Problemas de conexión. Mostrando datos locales.'
+        });
+      } else if (errorMessage.includes('timeout')) {
+        setFeedbackMessage({
+          type: 'warning',
+          text: '⏱️ El servidor está tardando. Usando datos de respaldo.'
+        });
+      } else {
+        setFeedbackMessage({
+          type: 'info',
+          text: '🎨 Modo demo activado. ¡Explora la experiencia CoomÜnity!'
+        });
+      }
+
+      // Auto-ocultar feedback después de 5 segundos
+      setTimeout(() => setFeedbackMessage(null), 5000);
+    } else if (marketplaceItemsResponse?.success) {
+      // Mostrar mensaje de éxito si venimos de un error
+      if (retryCount > 0) {
+        setFeedbackMessage({
+          type: 'success',
+          text: '✅ Conexión restaurada. Datos actualizados.'
+        });
+        setTimeout(() => setFeedbackMessage(null), 3000);
+        setRetryCount(0);
+      }
+    }
+  }, [itemsError, marketplaceItemsResponse, retryCount]);
+
+  // 🔄 FUNCIÓN DE REINTENTO MEJORADA
+  const handleRetry = async () => {
+    setIsRetrying(true);
+    setRetryCount(prev => prev + 1);
+
+    try {
+      await refetchMarketplaceData();
+      setFeedbackMessage({
+        type: 'info',
+        text: '🔄 Reintentando conexión...'
+      });
+    } catch (error) {
+      console.error('Error en reintento:', error);
+    } finally {
+      setIsRetrying(false);
+    }
+  };
+
   // Estados optimizados
   const [selectedRole, setSelectedRole] = useState<'consumer' | 'provider'>(
     'consumer'
@@ -530,100 +596,166 @@ const MarketplaceMain: React.FC = () => {
     communitiesServed: 47,
   };
 
-  // 🚨 Estados de carga y error mejorados
+  // 🛡️ DATOS SEGUROS CON VALIDACIÓN ROBUSTA
+  const marketplaceItems = useMemo(() => {
+    if (!marketplaceItemsResponse?.items) return [];
+
+    return marketplaceItemsResponse.items.map((item: any) => ({
+      ...item,
+      // Garantizar campos requeridos con valores por defecto seguros
+      id: item.id || `item-${Date.now()}-${Math.random()}`,
+      title: item.title || 'Producto sin título',
+      description: item.description || 'Descripción no disponible',
+      price: typeof item.price === 'number' ? item.price : 0,
+      currency: item.currency || 'LUKAS',
+      images: Array.isArray(item.images) && item.images.length > 0
+        ? item.images
+        : ['https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400'],
+      seller: {
+        ...item.seller,
+        name: item.seller?.name || 'Vendedor anónimo',
+        verified: Boolean(item.seller?.verified),
+        rating: typeof item.seller?.rating === 'number' ? item.seller.rating : 4.0,
+        avatarUrl: item.seller?.avatarUrl || `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 10) + 1}`
+      },
+      rating: typeof item.rating === 'number' ? Math.max(0, Math.min(5, item.rating)) : 4.0,
+      reviewCount: typeof item.reviewCount === 'number' ? Math.max(0, item.reviewCount) : 0,
+      tags: Array.isArray(item.tags) ? item.tags.filter(tag => typeof tag === 'string' && tag.trim()) : [],
+      featured: Boolean(item.featured),
+      trending: Boolean(item.trending)
+    }));
+  }, [marketplaceItemsResponse]);
+
+  // 🎯 ESTADO DE CARGA MEJORADO
   if (isLoadingItems) {
     return (
-      <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
-        <Container maxWidth="xl" sx={{ py: 3 }}>
-          {/* Header skeleton */}
+      <RevolutionaryWidget
+        title="🛒 Marketplace - Cargando"
+        subtitle="Preparando la experiencia de intercambio consciente"
+        gradientDirection="135deg"
+        enableParticles={true}
+        sx={{ minHeight: '100vh' }}
+      >
+        <Container maxWidth="xl" sx={{ py: 4 }}>
+          {/* 🎨 SKELETON MEJORADO CON DISEÑO ATRACTIVO */}
           <Box sx={{ mb: 4 }}>
-            <Skeleton variant="text" width={300} height={60} sx={{ mb: 2 }} />
-            <Skeleton
-              variant="rectangular"
-              height={120}
-              sx={{ borderRadius: 3, mb: 3 }}
-            />
-          </Box>
-
-          {/* Categories skeleton */}
-          <Box sx={{ mb: 4 }}>
-            <Skeleton variant="text" width={250} height={40} sx={{ mb: 3 }} />
-            <Grid container spacing={2}>
-              {Array.from({ length: 8 }).map((_, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
-                  <Skeleton
-                    variant="rectangular"
-                    height={100}
-                    sx={{ borderRadius: 2 }}
-                  />
+            <Skeleton variant="rectangular" width="100%" height={120} sx={{ borderRadius: 3, mb: 3 }} />
+            <Grid container spacing={3}>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
+                  <Card elevation={0} sx={{ borderRadius: 3, overflow: 'hidden' }}>
+                    <Skeleton variant="rectangular" height={200} />
+                    <CardContent>
+                      <Skeleton variant="text" width="80%" height={24} sx={{ mb: 1 }} />
+                      <Skeleton variant="text" width="60%" height={20} sx={{ mb: 2 }} />
+                      <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Skeleton variant="text" width="40%" height={20} />
+                        <Skeleton variant="circular" width={32} height={32} />
+                      </Box>
+                    </CardContent>
+                  </Card>
                 </Grid>
               ))}
             </Grid>
           </Box>
 
-          {/* Products grid skeleton */}
-          <Grid container spacing={{ xs: 2, sm: 3, md: 3 }}>
-            {Array.from({ length: 12 }).map((_, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                <Box>
-                  <Skeleton
-                    variant="rectangular"
-                    height={180}
-                    sx={{ borderRadius: 2, mb: 1 }}
-                  />
-                  <Skeleton variant="text" width="80%" height={30} />
-                  <Skeleton variant="text" width="60%" height={25} />
-                  <Skeleton variant="text" width="40%" height={25} />
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          {/* 🔄 INDICADOR DE PROGRESO ELEGANTE */}
+          <Box display="flex" flexDirection="column" alignItems="center" gap={2} sx={{ mt: 4 }}>
+            <CircularProgress
+              size={40}
+              thickness={3}
+              sx={{
+                color: theme.palette.primary.main,
+                '& .MuiCircularProgress-circle': {
+                  strokeLinecap: 'round'
+                }
+              }}
+            />
+            <Typography variant="body2" color="text.secondary" textAlign="center">
+              🌱 Cargando productos que contribuyen al Bien Común...
+            </Typography>
+          </Box>
         </Container>
-      </Box>
+      </RevolutionaryWidget>
     );
   }
 
-  if (itemsError) {
+  // 🚨 ESTADO DE ERROR MEJORADO CON OPCIONES DE RECUPERACIÓN
+  if (itemsError && !marketplaceItems.length) {
     return (
-      <Box sx={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
-        <Container
-          maxWidth="xl"
-          sx={{ py: { xs: 2, sm: 3 }, px: { xs: 1, sm: 2, md: 3 } }}
-        >
-          <Alert severity="error" sx={{ mb: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Error al cargar el marketplace
-            </Typography>
-            <Typography variant="body2">
-              No se pudo conectar con el backend. Verifica que esté ejecutándose
-              en puerto 3002.
-            </Typography>
-            <Typography
-              variant="caption"
-              display="block"
-              sx={{ mt: 1, opacity: 0.8 }}
-            >
-              Error: {itemsError?.message || 'Conexión fallida'}
-            </Typography>
-          </Alert>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="contained"
-              onClick={() => {
-                queryClient.invalidateQueries({
-                  queryKey: ['marketplace-items'],
-                });
-                refetchMarketplaceData();
+      <RevolutionaryWidget
+        title="🛒 Marketplace - Modo Demo"
+        subtitle="Experiencia de demostración CoomÜnity"
+        gradientDirection="135deg"
+        enableParticles={false}
+        sx={{ minHeight: '100vh' }}
+      >
+        <Container maxWidth="md" sx={{ py: 8 }}>
+          <Card
+            elevation={0}
+            sx={{
+              p: 4,
+              textAlign: 'center',
+              background: `linear-gradient(145deg, ${alpha(theme.palette.info.main, 0.05)}, ${alpha(theme.palette.info.main, 0.02)})`,
+              border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
+              borderRadius: 3
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 80,
+                height: 80,
+                margin: '0 auto 16px',
+                background: `linear-gradient(145deg, ${theme.palette.info.main}, ${alpha(theme.palette.info.main, 0.8)})`,
+                fontSize: '2rem'
               }}
             >
-              Reintentar Conexión
-            </Button>
-            <Button variant="outlined" onClick={() => window.location.reload()}>
-              Recargar Página
-            </Button>
-          </Box>
+              🛒
+            </Avatar>
+
+            <Typography variant="h5" fontWeight="bold" gutterBottom color="primary">
+              Marketplace en Modo Demo
+            </Typography>
+
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 500, mx: 'auto' }}>
+              Estamos mostrando una experiencia de demostración del marketplace CoomÜnity.
+              Explora cómo funciona nuestro sistema de intercambio basado en Ayni y Bien Común.
+            </Typography>
+
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
+              <Button
+                variant="contained"
+                onClick={handleRetry}
+                disabled={isRetrying}
+                startIcon={isRetrying ? <CircularProgress size={20} /> : <RefreshIcon />}
+                sx={{ minWidth: 160 }}
+              >
+                {isRetrying ? 'Reintentando...' : 'Intentar de Nuevo'}
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={() => window.location.reload()}
+                startIcon={<HomeIcon />}
+              >
+                Recargar Página
+              </Button>
+            </Stack>
+
+            {retryCount > 0 && (
+              <Alert
+                severity="info"
+                sx={{ mt: 3, textAlign: 'left' }}
+                icon={<InfoIcon />}
+              >
+                <AlertTitle>Intentos de conexión: {retryCount}</AlertTitle>
+                Continuamos en modo demo para que puedas explorar la plataforma.
+                Los datos que ves son representativos de la experiencia real.
+              </Alert>
+            )}
+          </Card>
         </Container>
-      </Box>
+      </RevolutionaryWidget>
     );
   }
 
@@ -645,7 +777,7 @@ const MarketplaceMain: React.FC = () => {
       subtitle="Economía colaborativa para el bien común"
       variant="elevated"
       element="tierra"
-      cosmicEffects={{ 
+      cosmicEffects={{
         enableGlow: true,
         enableAnimations: true,
         enableParticles: true,
@@ -1114,13 +1246,13 @@ const MarketplaceMain: React.FC = () => {
           >
             🔄 Sistema LETS - Intercambio Colaborativo
           </Typography>
-          
+
           <Grid container spacing={3}>
             {/* UnitsWallet */}
             <Grid item xs={12} md={4}>
               <UnitsWallet userId={user?.id || ''} />
             </Grid>
-            
+
             {/* LETS Quick Actions */}
             <Grid item xs={12} md={8}>
               <Card sx={{ p: 3, height: '100%' }}>
@@ -1130,7 +1262,7 @@ const MarketplaceMain: React.FC = () => {
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                   Participa en la economía colaborativa usando Ünits, nuestra moneda local basada en reciprocidad (Ayni)
                 </Typography>
-                
+
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                                          <Button

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -15,6 +15,10 @@ import {
   CircularProgress,
   Badge,
   Paper,
+  IconButton,
+  Tooltip,
+  Collapse,
+  Skeleton,
 } from '@mui/material';
 import {
   People,
@@ -31,7 +35,17 @@ import {
   Park,
   Notifications,
   AccessTime,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  AccountBalance as BalanceIcon,
+  Groups as GroupIcon,
+  EmojiEvents as EmojiEventsIcon,
+  Verified as VerifiedIcon,
+  Star as StarIcon,
 } from '@mui/icons-material';
+import { useMediaQuery } from '@mui/material';
+import { formatDistanceToNow } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface SocialElementStats {
   comunicacion: number; // Aire - Comunicación efectiva
@@ -157,7 +171,7 @@ const SocialElementIcon: React.FC<{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: color,
+            color,
             fontSize: 28,
           }}
         >
@@ -189,426 +203,417 @@ const SocialElementIcon: React.FC<{
   );
 };
 
-export const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
+const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
   userStats,
   communityMetrics,
   notifications,
   isLoading = false,
   isConnected = true,
-  showDetailedView = false,
+  showDetailedView = true
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const getBalanceColor = (balance: number) => {
-    if (balance >= 0.8) return 'success';
-    if (balance >= 0.6) return 'warning';
-    return 'error';
+  // 🛡️ VALORES POR DEFECTO SEGUROS PARA EVITAR UNDEFINED
+  const safeUserStats = {
+    ayniBalance: userStats?.ayniBalance ?? 0.5,
+    socialLevel: userStats?.socialLevel ?? 'Nuevo Miembro',
+    nextLevel: userStats?.nextLevel ?? 'Colaborador Equilibrado',
+    socialProgress: userStats?.socialProgress ?? 0,
+    connectionsCount: userStats?.connectionsCount ?? 0,
+    collaborationsCount: userStats?.collaborationsCount ?? 0,
+    bienComunContributions: userStats?.bienComunContributions ?? 0,
+    socialMeritos: userStats?.socialMeritos ?? 0,
+    trustScore: userStats?.trustScore ?? 4.0,
+    elementos: {
+      comunicacion: userStats?.elementos?.comunicacion ?? 70,
+      empatia: userStats?.elementos?.empatia ?? 75,
+      confianza: userStats?.elementos?.confianza ?? 65,
+      inspiracion: userStats?.elementos?.inspiracion ?? 80,
+    }
   };
 
-  const getBalanceMessage = (balance: number) => {
-    if (balance >= 0.8) return 'Ayni en excelente equilibrio';
-    if (balance >= 0.6) return 'Considera dar más para equilibrar';
-    return 'Necesitas dar más en tus relaciones';
+  const safeCommunityMetrics = {
+    activeConnections: communityMetrics?.activeConnections ?? 0,
+    onlineMembers: communityMetrics?.onlineMembers ?? 12,
+    dailyInteractions: communityMetrics?.dailyInteractions ?? 8,
+    ayniExchanges: communityMetrics?.ayniExchanges ?? 3,
+    activeCircles: communityMetrics?.activeCircles ?? 2,
+    weeklyGrowth: communityMetrics?.weeklyGrowth ?? 5
   };
+
+  const safeNotifications = Array.isArray(notifications) ? notifications : [];
+
+  // 🎨 ESTADOS VISUALES MEJORADOS
+  const [showAnimations, setShowAnimations] = useState(true);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  // 🌈 COLORES DINÁMICOS BASADOS EN VALORES
+  const getAyniColor = (value: number) => {
+    if (value >= 0.8) return theme.palette.success.main;
+    if (value >= 0.6) return theme.palette.warning.main;
+    return theme.palette.error.main;
+  };
+
+  const getElementoColor = (value: number) => {
+    if (value >= 85) return '#4CAF50';
+    if (value >= 70) return '#FF9800';
+    return '#F44336';
+  };
+
+  // 🔄 LOADING STATE MEJORADO
+  if (isLoading) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Skeleton variant="rectangular" width="100%" height={200} sx={{ mb: 2, borderRadius: 2 }} />
+        <Grid container spacing={2}>
+          {[1, 2, 3, 4].map((i) => (
+            <Grid item xs={6} md={3} key={i}>
+              <Skeleton variant="rectangular" height={100} sx={{ borderRadius: 2 }} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    );
+  }
 
   return (
-    <Stack spacing={3}>
-      {/* 📊 Métricas principales Ayni */}
-      <Card
-        sx={{
-          background: `linear-gradient(135deg, ${alpha(
-            '#E91E63',
-            0.02
-          )} 0%, ${alpha('#9C27B0', 0.02)} 100%)`,
-          border: `1px solid ${alpha('#E91E63', 0.1)}`,
-        }}
-      >
-        <CardContent>
-          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
-            <Avatar
-              sx={{
-                bgcolor: '#E91E63',
-                background: `linear-gradient(45deg, #E91E63, #9C27B0)`,
-                width: 48,
-                height: 48,
-              }}
-            >
-              <Handshake />
-            </Avatar>
-            <Box>
-              <Typography variant="h6" fontWeight="bold">
-                Tu Perfil Social Ayni
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Balance de reciprocidad y colaboración
-              </Typography>
-            </Box>
-            {!isConnected && (
-              <Chip
-                label="Modo Demo"
-                color="warning"
-                size="small"
-                variant="outlined"
-              />
-            )}
-          </Stack>
-
-          {/* 🎯 Métricas principales */}
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid item xs={6} sm={3}>
-              <Box textAlign="center">
-                <Typography
-                  variant="h4"
-                  fontWeight="bold"
-                  sx={{
-                    background: `linear-gradient(45deg, #E91E63, #9C27B0)`,
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  {userStats.connectionsCount}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  fontWeight="bold"
-                >
-                  Conexiones
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <Box textAlign="center">
-                <Typography variant="h4" fontWeight="bold" color="success.main">
-                  {Math.round(userStats.ayniBalance * 100)}%
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  fontWeight="bold"
-                >
-                  Balance Ayni
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <Box textAlign="center">
-                <Typography variant="h4" fontWeight="bold" color="warning.main">
-                  {userStats.socialMeritos}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  fontWeight="bold"
-                >
-                  Mëritos Sociales
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <Box textAlign="center">
-                <Typography
-                  variant="h4"
-                  fontWeight="bold"
-                  color="error.main"
-                  sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-                >
-                  <Star sx={{ fontSize: '0.8em' }} />
-                  {userStats.trustScore}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  fontWeight="bold"
-                >
-                  Confianza
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-
-          {/* 🎯 Balance Ayni con feedback */}
-          <Box sx={{ mb: 3 }}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              sx={{ mb: 1 }}
-            >
-              <Chip
-                label={userStats.socialLevel}
-                color="primary"
-                variant="outlined"
+    <Box
+      sx={{
+        background: `linear-gradient(145deg, ${theme.palette.background.paper}, ${alpha(theme.palette.primary.main, 0.05)})`,
+        borderRadius: 3,
+        p: 3,
+        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
+      {/* 🌟 HEADER CON INDICADOR DE CONEXIÓN */}
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Avatar
+            sx={{
+              width: 56,
+              height: 56,
+              background: `linear-gradient(145deg, ${getAyniColor(safeUserStats.ayniBalance)}, ${alpha(getAyniColor(safeUserStats.ayniBalance), 0.7)})`,
+              boxShadow: theme.shadows[3]
+            }}
+          >
+            <Handshake sx={{ fontSize: 28, color: 'white' }} />
+          </Avatar>
+          <Box>
+            <Typography variant="h6" fontWeight="bold" color="primary">
+              Métricas Ayni
+            </Typography>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Box
                 sx={{
-                  fontWeight: 'bold',
-                  background: `linear-gradient(45deg, ${alpha(
-                    '#E91E63',
-                    0.1
-                  )}, ${alpha('#9C27B0', 0.1)})`,
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  backgroundColor: isConnected ? theme.palette.success.main : theme.palette.error.main,
+                  animation: isConnected ? 'pulse 2s infinite' : 'none'
                 }}
               />
-              <Typography variant="body2" color="text.secondary">
-                Progreso a <strong>{userStats.nextLevel}</strong>
-              </Typography>
-            </Stack>
-            <LinearProgress
-              variant="determinate"
-              value={userStats.socialProgress}
-              sx={{
-                height: 10,
-                borderRadius: 5,
-                bgcolor: alpha('#E91E63', 0.1),
-                '& .MuiLinearProgress-bar': {
-                  background: `linear-gradient(90deg, #E91E63, #9C27B0)`,
-                  borderRadius: 5,
-                },
-              }}
-            />
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ mt: 0.5, display: 'block' }}
-            >
-              {userStats.socialProgress}% •{' '}
-              {getBalanceMessage(userStats.ayniBalance)}
-            </Typography>
-          </Box>
-
-          {/* 🎯 Elementos sociales */}
-          <Box>
-            <Typography
-              variant="subtitle1"
-              fontWeight="bold"
-              gutterBottom
-              sx={{ mb: 2 }}
-            >
-              Elementos Sociales en Equilibrio
-            </Typography>
-            <Grid container spacing={2} justifyContent="center">
-              <Grid>
-                <SocialElementIcon
-                  element="comunicacion"
-                  value={userStats.elementos.comunicacion}
-                  color="#8b5cf6"
-                />
-              </Grid>
-              <Grid>
-                <SocialElementIcon
-                  element="empatia"
-                  value={userStats.elementos.empatia}
-                  color="#06b6d4"
-                />
-              </Grid>
-              <Grid>
-                <SocialElementIcon
-                  element="confianza"
-                  value={userStats.elementos.confianza}
-                  color="#78716c"
-                />
-              </Grid>
-              <Grid>
-                <SocialElementIcon
-                  element="inspiracion"
-                  value={userStats.elementos.inspiracion}
-                  color="#ef4444"
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </CardContent>
-      </Card>
-
-      {/* 🌐 Métricas de la comunidad */}
-      <Card>
-        <CardContent>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Estado de la Comunidad
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Group color="primary" />
-                <Box>
-                  <Typography variant="h6" fontWeight="bold">
-                    {communityMetrics.onlineMembers}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Miembros en línea
-                  </Typography>
-                </Box>
-              </Stack>
-            </Grid>
-            <Grid item xs={6}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Handshake color="success" />
-                <Box>
-                  <Typography variant="h6" fontWeight="bold">
-                    {communityMetrics.ayniExchanges}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Intercambios Ayni hoy
-                  </Typography>
-                </Box>
-              </Stack>
-            </Grid>
-            <Grid item xs={6}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <People color="secondary" />
-                <Box>
-                  <Typography variant="h6" fontWeight="bold">
-                    {communityMetrics.activeCircles}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Círculos activos
-                  </Typography>
-                </Box>
-              </Stack>
-            </Grid>
-            <Grid item xs={6}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <TrendingUp color="warning" />
-                <Box>
-                  <Typography variant="h6" fontWeight="bold">
-                    +{communityMetrics.weeklyGrowth}%
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Crecimiento semanal
-                  </Typography>
-                </Box>
-              </Stack>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-
-      {/* 🔔 Notificaciones recientes */}
-      <Card>
-        <CardContent>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ mb: 2 }}
-          >
-            <Typography variant="h6" fontWeight="bold">
-              Actividad Reciente
-            </Typography>
-            <Badge badgeContent={notifications.length} color="primary">
-              <Notifications />
-            </Badge>
-          </Stack>
-
-          {notifications.length === 0 ? (
-            <Box sx={{ textAlign: 'center', py: 2 }}>
-              <Typography variant="body2" color="text.secondary">
-                No hay actividad reciente
+              <Typography variant="caption" color="text.secondary">
+                {isConnected ? 'Conectado' : 'Desconectado'}
               </Typography>
             </Box>
-          ) : (
-            <Stack spacing={1}>
-              {notifications
-                .slice(0, showDetailedView ? 10 : 3)
-                .map((notification) => (
-                  <Paper
-                    key={notification.id}
+          </Box>
+        </Box>
+
+        <Tooltip title={showDetailedView ? 'Vista compacta' : 'Vista detallada'}>
+          <IconButton
+            onClick={() => setExpandedSection(expandedSection ? null : 'main')}
+            size="small"
+            sx={{
+              background: alpha(theme.palette.primary.main, 0.1),
+              '&:hover': { background: alpha(theme.palette.primary.main, 0.2) }
+            }}
+          >
+            {expandedSection ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </IconButton>
+        </Tooltip>
+      </Box>
+
+      {/* 🔢 MÉTRICAS PRINCIPALES */}
+      <Grid container spacing={2} mb={3}>
+        <Grid item xs={6} md={3}>
+          <Card
+            elevation={0}
+            sx={{
+              p: 2,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)}, ${alpha(theme.palette.success.main, 0.05)})`,
+              border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: theme.shadows[4]
+              }
+            }}
+          >
+            <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <BalanceIcon color="success" fontSize="small" />
+              <Typography variant="caption" color="success.main" fontWeight="medium">
+                Balance Ayni
+              </Typography>
+            </Box>
+            <Typography variant="h4" fontWeight="bold" color="success.main">
+              {(safeUserStats.ayniBalance * 100).toFixed(0)}%
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={safeUserStats.ayniBalance * 100}
+              sx={{
+                mt: 1,
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: alpha(theme.palette.success.main, 0.1),
+                '& .MuiLinearProgress-bar': {
+                  backgroundColor: getAyniColor(safeUserStats.ayniBalance),
+                  borderRadius: 3
+                }
+              }}
+            />
+          </Card>
+        </Grid>
+
+        <Grid item xs={6} md={3}>
+          <Card
+            elevation={0}
+            sx={{
+              p: 2,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.1)}, ${alpha(theme.palette.info.main, 0.05)})`,
+              border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: theme.shadows[4]
+              }
+            }}
+          >
+            <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <GroupIcon color="info" fontSize="small" />
+              <Typography variant="caption" color="info.main" fontWeight="medium">
+                Conexiones
+              </Typography>
+            </Box>
+            <Typography variant="h4" fontWeight="bold" color="info.main">
+              {safeUserStats.connectionsCount}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              +{safeCommunityMetrics.activeConnections} activas
+            </Typography>
+          </Card>
+        </Grid>
+
+        <Grid item xs={6} md={3}>
+          <Card
+            elevation={0}
+            sx={{
+              p: 2,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)}, ${alpha(theme.palette.warning.main, 0.05)})`,
+              border: `1px solid ${alpha(theme.palette.warning.main, 0.2)}`,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: theme.shadows[4]
+              }
+            }}
+          >
+            <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <EmojiEventsIcon color="warning" fontSize="small" />
+              <Typography variant="caption" color="warning.main" fontWeight="medium">
+                Méritos
+              </Typography>
+            </Box>
+            <Typography variant="h4" fontWeight="bold" color="warning.main">
+              {safeUserStats.socialMeritos.toLocaleString()}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {safeUserStats.socialLevel}
+            </Typography>
+          </Card>
+        </Grid>
+
+        <Grid item xs={6} md={3}>
+          <Card
+            elevation={0}
+            sx={{
+              p: 2,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.05)})`,
+              border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: theme.shadows[4]
+              }
+            }}
+          >
+            <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <VerifiedIcon color="secondary" fontSize="small" />
+              <Typography variant="caption" color="secondary.main" fontWeight="medium">
+                Confianza
+              </Typography>
+            </Box>
+            <Typography variant="h4" fontWeight="bold" color="secondary.main">
+              {safeUserStats.trustScore.toFixed(1)}
+            </Typography>
+            <Box display="flex" mt={0.5}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <StarIcon
+                  key={star}
+                  sx={{
+                    fontSize: 16,
+                    color: star <= safeUserStats.trustScore
+                      ? theme.palette.warning.main
+                      : alpha(theme.palette.warning.main, 0.3)
+                  }}
+                />
+              ))}
+            </Box>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* 🌱 ELEMENTOS DE CRECIMIENTO - Vista Expandida */}
+      <Collapse in={!!expandedSection}>
+        <Card
+          elevation={0}
+          sx={{
+            p: 3,
+            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)}, ${alpha(theme.palette.primary.main, 0.02)})`,
+            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+            borderRadius: 2,
+            mb: 3
+          }}
+        >
+          <Typography variant="h6" fontWeight="bold" mb={2} color="primary">
+            🌱 Elementos de Crecimiento
+          </Typography>
+
+          <Grid container spacing={3}>
+            {Object.entries(safeUserStats.elementos).map(([elemento, valor]) => (
+              <Grid item xs={6} md={3} key={elemento}>
+                <Box>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                    <Typography variant="body2" fontWeight="medium" textTransform="capitalize">
+                      {elemento}
+                    </Typography>
+                    <Typography variant="body2" fontWeight="bold" color={getElementoColor(valor)}>
+                      {valor}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress
+                    variant="determinate"
+                    value={valor}
                     sx={{
-                      p: 1.5,
-                      border: `1px solid ${alpha('#E91E63', 0.1)}`,
-                      bgcolor: alpha('#E91E63', 0.02),
+                      height: 8,
+                      borderRadius: 4,
+                      backgroundColor: alpha(getElementoColor(valor), 0.1),
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: getElementoColor(valor),
+                        borderRadius: 4
+                      }
                     }}
-                  >
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <Avatar
-                        sx={{
-                          bgcolor: '#E91E63',
-                          width: 32,
-                          height: 32,
-                          fontSize: '0.8rem',
-                        }}
-                      >
-                        {notification.category === 'ayni' && '🤝'}
-                        {notification.category === 'collaboration' && '👥'}
-                        {notification.category === 'network' && '🌐'}
-                      </Avatar>
-                      <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="subtitle2" fontWeight="bold">
-                          {notification.title}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {notification.message}
-                        </Typography>
-                      </Box>
-                      <Stack direction="row" alignItems="center" spacing={0.5}>
-                        <AccessTime
-                          sx={{ fontSize: 12, color: 'text.secondary' }}
-                        />
-                        <Typography variant="caption" color="text.secondary">
-                          {notification.time}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </Paper>
-                ))}
-            </Stack>
-          )}
-        </CardContent>
+                  />
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Card>
+      </Collapse>
+
+      {/* 📊 MÉTRICAS COMUNITARIAS */}
+      <Card
+        elevation={0}
+        sx={{
+          p: 2,
+          background: alpha(theme.palette.background.default, 0.5),
+          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+        }}
+      >
+        <Typography variant="subtitle1" fontWeight="bold" mb={2} color="text.primary">
+          🌐 Actividad Comunitaria
+        </Typography>
+
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Box textAlign="center">
+              <Typography variant="h6" fontWeight="bold" color="primary">
+                {safeCommunityMetrics.onlineMembers}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Miembros en línea
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box textAlign="center">
+              <Typography variant="h6" fontWeight="bold" color="success.main">
+                {safeCommunityMetrics.dailyInteractions}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Interacciones hoy
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
       </Card>
 
-      {/* 🎯 Vista detallada adicional */}
-      {showDetailedView && (
-        <Card>
-          <CardContent>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-              Análisis de Crecimiento Personal
-            </Typography>
-            <Stack spacing={2}>
-              <Box>
-                <Typography variant="body2" fontWeight="bold" gutterBottom>
-                  Fortalezas Identificadas
+      {/* 🔔 NOTIFICACIONES RECIENTES */}
+      {safeNotifications.length > 0 && (
+        <Box mt={3}>
+          <Typography variant="subtitle2" fontWeight="bold" mb={1} color="text.primary">
+            🔔 Actividad Reciente
+          </Typography>
+          {safeNotifications.slice(0, 3).map((notification, index) => (
+            <Box
+              key={notification.id || index}
+              display="flex"
+              alignItems="center"
+              gap={2}
+              p={1.5}
+              mb={1}
+              sx={{
+                background: alpha(theme.palette.info.main, 0.05),
+                borderRadius: 1,
+                border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`
+              }}
+            >
+              <Avatar sx={{ width: 32, height: 32, fontSize: 14 }}>
+                {notification.type === 'achievement' ? '🏆' :
+                 notification.type === 'connection' ? '🤝' : '💬'}
+              </Avatar>
+              <Box flex={1}>
+                <Typography variant="body2" color="text.primary">
+                  {notification.message || 'Nueva actividad'}
                 </Typography>
-                <Stack direction="row" spacing={1} flexWrap="wrap">
-                  {userStats.elementos.empatia >= 90 && (
-                    <Chip label="Alta Empatía" color="primary" size="small" />
-                  )}
-                  {userStats.elementos.comunicacion >= 85 && (
-                    <Chip
-                      label="Comunicador Efectivo"
-                      color="secondary"
-                      size="small"
-                    />
-                  )}
-                  {userStats.trustScore >= 4.5 && (
-                    <Chip
-                      label="Alta Confiabilidad"
-                      color="success"
-                      size="small"
-                    />
-                  )}
-                </Stack>
+                                 <Typography variant="caption" color="text.secondary">
+                   {notification.time ? formatDistanceToNow(new Date(notification.time), { addSuffix: true, locale: es }) : 'hace un momento'}
+                 </Typography>
               </Box>
-
-              <Box>
-                <Typography variant="body2" fontWeight="bold" gutterBottom>
-                  Áreas de Desarrollo
-                </Typography>
-                <Stack direction="row" spacing={1} flexWrap="wrap">
-                  {userStats.elementos.confianza < 80 && (
-                    <Chip
-                      label="Fortalecer Confianza"
-                      color="warning"
-                      size="small"
-                    />
-                  )}
-                  {userStats.ayniBalance < 0.7 && (
-                    <Chip label="Equilibrar Ayni" color="error" size="small" />
-                  )}
-                </Stack>
-              </Box>
-            </Stack>
-          </CardContent>
-        </Card>
+            </Box>
+          ))}
+        </Box>
       )}
-    </Stack>
+
+      {/* 🎨 EFECTOS VISUALES */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: -50,
+          right: -50,
+          width: 100,
+          height: 100,
+          background: `radial-gradient(circle, ${alpha(theme.palette.primary.main, 0.1)}, transparent)`,
+          borderRadius: '50%',
+          zIndex: 0
+        }}
+      />
+    </Box>
   );
 };
+
+export { AyniSocialMetrics };
+export default AyniSocialMetrics;

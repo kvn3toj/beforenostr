@@ -163,7 +163,26 @@ const SocialNotifications: React.FC = () => {
   ];
 
   // Usar datos del backend o fallback a mock
-  const notifications = (notificationsResponse as any)?.data || mockNotifications;
+  const notifications = React.useMemo(() => {
+    // 🛡️ Validación robusta para prevenir errores de filter
+    const responseData = notificationsResponse as any;
+
+    // Verificar si hay datos válidos del backend
+    if (responseData?.data && Array.isArray(responseData.data)) {
+      return responseData.data;
+    }
+
+    if (responseData?.notifications && Array.isArray(responseData.notifications)) {
+      return responseData.notifications;
+    }
+
+    if (Array.isArray(responseData)) {
+      return responseData;
+    }
+
+    // Si no hay datos válidos del backend, usar mock
+    return mockNotifications;
+  }, [notificationsResponse]);
 
   const tabs = [
     { label: 'Todas', value: 'all', icon: <Notifications /> },
@@ -173,12 +192,37 @@ const SocialNotifications: React.FC = () => {
     { label: 'Sistema', value: 'system', icon: <Settings /> },
   ];
 
-  const filteredNotifications = notifications.filter((notif: NotificationItem) => {
-    if (selectedFilter === 'all') return true;
-    return notif.category === selectedFilter;
-  });
+  const filteredNotifications = React.useMemo(() => {
+    // 🛡️ Asegurar que notifications es siempre un array antes de filtrar
+    if (!Array.isArray(notifications)) {
+      console.warn('[SocialNotifications] notifications is not an array:', notifications);
+      return [];
+    }
 
-  const unreadCount = notifications.filter((n: NotificationItem) => !n.isRead).length;
+    return notifications.filter((notif: NotificationItem) => {
+      try {
+        if (selectedFilter === 'all') return true;
+        return notif.category === selectedFilter;
+      } catch (error) {
+        console.error('[SocialNotifications] Error filtering notification:', error, notif);
+        return false;
+      }
+    });
+  }, [notifications, selectedFilter]);
+
+  const unreadCount = React.useMemo(() => {
+    // 🛡️ Asegurar que notifications es siempre un array antes de filtrar
+    if (!Array.isArray(notifications)) {
+      return 0;
+    }
+
+    try {
+      return notifications.filter((n: NotificationItem) => !n.isRead).length;
+    } catch (error) {
+      console.error('[SocialNotifications] Error counting unread notifications:', error);
+      return 0;
+    }
+  }, [notifications]);
 
   const getNotificationIcon = (type: string, priority: string) => {
     const iconProps = {
@@ -231,7 +275,7 @@ const SocialNotifications: React.FC = () => {
   const handleNotificationClick = (notification: NotificationItem) => {
     // Marcar como leída (aquí se haría la llamada al backend)
     console.log('Marcando notificación como leída:', notification.id);
-    
+
     // Navegar a la acción correspondiente
     if (notification.actionUrl) {
       navigate(notification.actionUrl);
@@ -397,7 +441,7 @@ const SocialNotifications: React.FC = () => {
                 No hay notificaciones
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {selectedFilter === 'all' 
+                {selectedFilter === 'all'
                   ? 'No tienes notificaciones en este momento.'
                   : `No tienes notificaciones de ${tabs.find(t => t.value === selectedFilter)?.label.toLowerCase()}.`
                 }
@@ -412,11 +456,11 @@ const SocialNotifications: React.FC = () => {
                   sx={{
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
-                    bgcolor: notification.isRead 
-                      ? 'background.paper' 
+                    bgcolor: notification.isRead
+                      ? 'background.paper'
                       : alpha(theme.palette.primary.main, 0.05),
-                    borderLeft: notification.isRead 
-                      ? 'none' 
+                    borderLeft: notification.isRead
+                      ? 'none'
                       : `4px solid ${getPriorityColor(notification.priority)}`,
                     '&:hover': {
                       transform: 'translateY(-2px)',
@@ -454,7 +498,7 @@ const SocialNotifications: React.FC = () => {
                             <Typography variant="caption" color="text.secondary">
                               {formatTime(notification.time)}
                             </Typography>
-                            
+
                             <IconButton
                               size="small"
                               onClick={(e) => handleMenuOpen(e, notification.id)}
@@ -526,7 +570,7 @@ const SocialNotifications: React.FC = () => {
 
         {/* Mensaje inspiracional */}
         <Alert severity="info" sx={{ mt: 4 }}>
-          💫 <strong>Conexión Consciente:</strong> Cada notificación es una oportunidad 
+          💫 <strong>Conexión Consciente:</strong> Cada notificación es una oportunidad
           para fortalecer los lazos de tu comunidad CoomÜnity y contribuir al Bien Común.
         </Alert>
       </Container>

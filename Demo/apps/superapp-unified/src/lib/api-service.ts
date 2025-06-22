@@ -36,10 +36,32 @@ const getApiUrl = (): string => {
 
 // Comprobar si el modo mock está activado
 const isMockMode = () => {
-  const mockEnabled = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+  const isProd = import.meta.env.PROD;
+  const mockAuthEnabled = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+  const mockDataEnabled = import.meta.env.VITE_ENABLE_MOCK_DATA === 'true';
+  const mockModeEnabled = import.meta.env.VITE_MOCK_MODE === 'true';
+  const useBackend = import.meta.env.VITE_USE_BACKEND === 'true';
+
+  // En producción, si VITE_USE_BACKEND es false o no está definido, usar mocks
+  if (isProd && !useBackend) {
+    console.warn('🟡 [ApiService] MODO MOCK ACTIVADO EN PRODUCCIÓN - Backend no disponible');
+    return true;
+  }
+
+  // En desarrollo, verificar las variables específicas
+  const mockEnabled = mockAuthEnabled || mockDataEnabled || mockModeEnabled;
+
   if (mockEnabled) {
     console.warn('🟡 [ApiService] MOCK MODE ACTIVADO. Todas las llamadas a la API serán simuladas.');
+    console.log('🔧 Variables de mock:', {
+      VITE_ENABLE_MOCK_AUTH: mockAuthEnabled,
+      VITE_ENABLE_MOCK_DATA: mockDataEnabled,
+      VITE_MOCK_MODE: mockModeEnabled,
+      VITE_USE_BACKEND: useBackend,
+      isProd
+    });
   }
+
   return mockEnabled;
 }
 

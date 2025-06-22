@@ -54,6 +54,9 @@ import {
 // 🏷️ Importar funciones de utilidad para mapeo de datos
 import { mapBackendPostToUIPost, type PostComment } from '../types';
 
+// 🎨 Importar función de datos mock
+import { getMockData } from '../lib/mock-data';
+
 // 🏷️ Tipos de datos del backend
 export interface BackendUser {
   id: string;
@@ -750,92 +753,399 @@ export function useAwardMerit() {
   });
 }
 
-// 🏪 Hook para datos del marketplace
 // 🏪 Hook para datos del marketplace - CON DATOS MOCK RICOS
 export function useMarketplaceData(filters?: any) {
-  const queryKey = ['marketplace-items', filters, 'v5']; // v5 - habilitado backend real
+  // 🎯 DETECTAR MODO MOCK DESDE VARIABLES DE ENTORNO
+  const shouldUseMock = (() => {
+    const isProd = import.meta.env.PROD;
+    const mockEnabled = import.meta.env.VITE_ENABLE_MOCK_DATA === 'true' ||
+                       import.meta.env.VITE_MOCK_MODE === 'true' ||
+                       import.meta.env.VITE_MOCK_MARKETPLACE === 'true';
+    const useBackend = import.meta.env.VITE_USE_BACKEND === 'true';
+
+    // En producción, si no se especifica usar backend, usar mocks
+    return isProd && !useBackend || mockEnabled;
+  })();
 
   return useQuery({
-    queryKey,
+    queryKey: ['marketplace-items', filters],
     queryFn: async () => {
+      console.log('🛒 [useMarketplaceData] Iniciando carga de datos...', {
+        shouldUseMock,
+        filters,
+        environment: import.meta.env.PROD ? 'production' : 'development'
+      });
+
+      if (shouldUseMock) {
+        console.info('🎨 [MOCK] Cargando datos mock del marketplace - backend deshabilitado');
+
+        try {
+          // Usar función getMockData para obtener datos consistentes
+          const mockData = getMockData('marketplace', 'GET');
+
+          // Simular tiempo de carga realista
+          await new Promise((resolve) => setTimeout(resolve, Math.random() * 300 + 200));
+
+          // 🔍 SANITIZACIÓN ROBUSTA DE DATOS MOCK
+          const sanitizedItems = Array.isArray(mockData?.marketplace?.items)
+            ? mockData.marketplace.items.map((item: any, index: number) => {
+                // Validación exhaustiva de cada campo
+                const sanitizedItem = {
+                  id: item?.id || `mock-item-${index}`,
+                  title: typeof item?.title === 'string' && item.title.trim() ? item.title : `Producto ${index + 1}`,
+                  description: typeof item?.description === 'string' && item.description.trim() ? item.description : 'Descripción no disponible',
+                  fullDescription: typeof item?.fullDescription === 'string' ? item.fullDescription : item?.description || 'Descripción completa no disponible',
+                  type: typeof item?.type === 'string' ? item.type : 'SERVICE',
+                  price: typeof item?.price === 'number' && !isNaN(item.price) ? item.price : 0,
+                  originalPrice: typeof item?.originalPrice === 'number' && !isNaN(item.originalPrice) ? item.originalPrice : null,
+                  currency: typeof item?.currency === 'string' ? item.currency : 'LUKAS',
+                  category: typeof item?.category === 'string' ? item.category : 'General',
+                  subcategory: typeof item?.subcategory === 'string' ? item.subcategory : '',
+                  tags: Array.isArray(item?.tags)
+                    ? item.tags.filter((tag: any) => typeof tag === 'string' && tag.trim() !== '')
+                    : [],
+                  images: Array.isArray(item?.images) && item.images.length > 0
+                    ? item.images.filter((img: any) => typeof img === 'string' && img.trim() !== '')
+                    : ['https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400'],
+                  mainImage: typeof item?.mainImage === 'string' && item.mainImage.trim()
+                    ? item.mainImage
+                    : item?.images?.[0] || 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400',
+                  location: typeof item?.location === 'string' ? item.location : 'Ubicación no especificada',
+                  rating: typeof item?.rating === 'number' && !isNaN(item.rating) ? Math.max(0, Math.min(5, item.rating)) : 4.0,
+                  reviewCount: typeof item?.reviewCount === 'number' && !isNaN(item.reviewCount) ? Math.max(0, item.reviewCount) : 0,
+                  featured: Boolean(item?.featured),
+                  trending: Boolean(item?.trending),
+                  isActive: Boolean(item?.isActive !== false), // Default to true
+                  status: typeof item?.status === 'string' ? item.status : 'ACTIVE',
+                  createdAt: typeof item?.createdAt === 'string' ? item.createdAt : new Date().toISOString(),
+                  updatedAt: typeof item?.updatedAt === 'string' ? item.updatedAt : new Date().toISOString(),
+
+                  // Sanitización del seller
+                  seller: {
+                    id: item?.seller?.id || `seller-${index}`,
+                    name: typeof item?.seller?.name === 'string' && item.seller.name.trim()
+                      ? item.seller.name
+                      : 'Vendedor Anónimo',
+                    username: typeof item?.seller?.username === 'string'
+                      ? item.seller.username
+                      : `@user${index}`,
+                    firstName: typeof item?.seller?.firstName === 'string'
+                      ? item.seller.firstName
+                      : item?.seller?.name?.split(' ')[0] || 'Usuario',
+                    lastName: typeof item?.seller?.lastName === 'string'
+                      ? item.seller.lastName
+                      : item?.seller?.name?.split(' ').slice(1).join(' ') || '',
+                    avatarUrl: typeof item?.seller?.avatarUrl === 'string'
+                      ? item.seller.avatarUrl
+                      : `https://i.pravatar.cc/150?img=${(index % 10) + 1}`,
+                    verified: Boolean(item?.seller?.verified),
+                    rating: typeof item?.seller?.rating === 'number' && !isNaN(item.seller.rating)
+                      ? Math.max(0, Math.min(5, item.seller.rating))
+                      : 4.0,
+                    reviewCount: typeof item?.seller?.reviewCount === 'number' && !isNaN(item.seller.reviewCount)
+                      ? Math.max(0, item.seller.reviewCount)
+                      : 0,
+                    responseTime: typeof item?.seller?.responseTime === 'string'
+                      ? item.seller.responseTime
+                      : '< 24 horas',
+                    responseRate: typeof item?.seller?.responseRate === 'number' && !isNaN(item.seller.responseRate)
+                      ? Math.max(0, Math.min(100, item.seller.responseRate))
+                      : 95,
+                    isOnline: Boolean(item?.seller?.isOnline),
+                    isActive: Boolean(item?.seller?.isActive !== false),
+                    allowMessages: Boolean(item?.seller?.allowMessages !== false),
+                    memberSince: typeof item?.seller?.memberSince === 'string'
+                      ? item.seller.memberSince
+                      : '2023-01-01',
+                    location: typeof item?.seller?.location === 'string'
+                      ? item.seller.location
+                      : 'Ubicación no especificada',
+                    trustLevel: typeof item?.seller?.trustLevel === 'string'
+                      ? item.seller.trustLevel
+                      : 'NUEVO_MIEMBRO',
+                    meritos: typeof item?.seller?.meritos === 'number' && !isNaN(item.seller.meritos)
+                      ? Math.max(0, item.seller.meritos)
+                      : 100,
+                    badges: Array.isArray(item?.seller?.badges)
+                      ? item.seller.badges.filter((badge: any) => typeof badge === 'string' && badge.trim() !== '')
+                      : [],
+                    contactMethods: Array.isArray(item?.seller?.contactMethods)
+                      ? item.seller.contactMethods.filter((method: any) => typeof method === 'string' && method.trim() !== '')
+                      : ['message']
+                  },
+
+                  // Campos adicionales con valores por defecto seguros
+                  viewCount: typeof item?.viewCount === 'number' && !isNaN(item.viewCount) ? Math.max(0, item.viewCount) : 0,
+                  favoriteCount: typeof item?.favoriteCount === 'number' && !isNaN(item.favoriteCount) ? Math.max(0, item.favoriteCount) : 0,
+                  shareCount: typeof item?.shareCount === 'number' && !isNaN(item.shareCount) ? Math.max(0, item.shareCount) : 0,
+                  availability: typeof item?.availability === 'string' ? item.availability : 'available',
+                  deliveryOptions: Array.isArray(item?.deliveryOptions) ? item.deliveryOptions : ['pickup'],
+                  paymentMethods: Array.isArray(item?.paymentMethods) ? item.paymentMethods : ['lukas'],
+
+                  // Campos específicos de CoomÜnity
+                  ayniScore: typeof item?.ayniScore === 'number' && !isNaN(item.ayniScore)
+                    ? Math.max(0, Math.min(100, item.ayniScore))
+                    : Math.floor(Math.random() * 40) + 60, // 60-100
+                  bienComunScore: typeof item?.bienComunScore === 'number' && !isNaN(item.bienComunScore)
+                    ? Math.max(0, Math.min(100, item.bienComunScore))
+                    : Math.floor(Math.random() * 30) + 70, // 70-100
+                  impactLevel: ['local', 'regional', 'global'][Math.floor(Math.random() * 3)],
+                  sustainabilityScore: Math.floor(Math.random() * 30) + 70 // 70-100
+                };
+
+                return sanitizedItem;
+              })
+            : [];
+
+          console.info(`✅ [MOCK] Cargados ${sanitizedItems.length} productos del marketplace (mock) - datos completamente sanitizados`);
+
+          return {
+            items: sanitizedItems,
+            total: sanitizedItems.length,
+            page: 1,
+            limit: 20,
+            hasMore: false,
+            source: 'mock-rich-data',
+            lastUpdated: new Date().toISOString(),
+            filters: filters || {},
+            success: true,
+            message: 'Datos mock cargados correctamente'
+          };
+
+        } catch (mockError) {
+          console.error('❌ [MOCK] Error procesando datos mock:', mockError);
+
+          // Fallback a datos mínimos seguros
+          const fallbackItems = Array.from({ length: 6 }, (_, index) => ({
+            id: `fallback-${index}`,
+            title: `Producto de Emergencia ${index + 1}`,
+            description: 'Descripción de emergencia - datos mock no disponibles',
+            fullDescription: 'Descripción completa de emergencia',
+            type: 'SERVICE',
+            price: 100,
+            originalPrice: null,
+            currency: 'LUKAS',
+            category: 'General',
+            subcategory: '',
+            tags: ['emergencia'],
+            images: ['https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400'],
+            mainImage: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400',
+            location: 'Ubicación no disponible',
+            rating: 4.0,
+            reviewCount: 0,
+            featured: false,
+            trending: false,
+            isActive: true,
+            status: 'ACTIVE',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            seller: {
+              id: `emergency-seller-${index}`,
+              name: 'Vendedor de Emergencia',
+              username: `@emergency${index}`,
+              firstName: 'Vendedor',
+              lastName: 'Emergencia',
+              avatarUrl: `https://i.pravatar.cc/150?img=${(index % 10) + 1}`,
+              verified: false,
+              rating: 4.0,
+              reviewCount: 0,
+              responseTime: '< 24 horas',
+              responseRate: 95,
+              isOnline: false,
+              isActive: true,
+              allowMessages: true,
+              memberSince: '2023-01-01',
+              location: 'Ubicación no disponible',
+              trustLevel: 'NUEVO_MIEMBRO',
+              meritos: 100,
+              badges: [],
+              contactMethods: ['message']
+            },
+            viewCount: 0,
+            favoriteCount: 0,
+            shareCount: 0,
+            availability: 'available',
+            deliveryOptions: ['pickup'],
+            paymentMethods: ['lukas'],
+            ayniScore: 60,
+            bienComunScore: 70,
+            impactLevel: 'local',
+            sustainabilityScore: 70
+          }));
+
+          return {
+            items: fallbackItems,
+            total: fallbackItems.length,
+            page: 1,
+            limit: 20,
+            hasMore: false,
+            source: 'emergency-fallback',
+            lastUpdated: new Date().toISOString(),
+            filters: filters || {},
+            success: false,
+            error: 'Error en datos mock, usando fallback de emergencia',
+            message: 'Datos de emergencia cargados'
+          };
+        }
+      }
+
+      // Modo backend real
       try {
-        // ✅ USAR BACKEND REAL - Datos reales del backend NestJS
         console.info('🔄 Cargando datos reales del backend NestJS marketplace...');
 
         const response = await marketplaceAPI.getItems(filters);
 
-        console.info(`✅ Cargados ${response?.items?.length || 0} productos del marketplace desde backend NestJS`);
+        // Verificar que la respuesta del backend sea válida
+        if (!response || typeof response !== 'object') {
+          throw new Error('Respuesta del backend inválida o vacía');
+        }
 
-        // Retornar datos del backend con formato consistente
+                 // 🔍 SANITIZACIÓN DE DATOS DEL BACKEND REAL
+         const sanitizedItems = Array.isArray((response as any)?.items)
+           ? (response as any).items.map((item: any, index: number) => ({
+              ...item,
+              // Aplicar las mismas validaciones que en mock
+              id: item?.id || `backend-item-${index}`,
+              title: typeof item?.title === 'string' && item.title.trim() ? item.title : `Producto ${index + 1}`,
+              description: typeof item?.description === 'string' && item.description.trim() ? item.description : 'Descripción no disponible',
+              tags: Array.isArray(item?.tags)
+                ? item.tags.filter((tag: any) => typeof tag === 'string' && tag.trim() !== '')
+                : [],
+              price: typeof (item?.price || item?.priceUnits) === 'number'
+                ? (item.price || item.priceUnits)
+                : 0,
+              currency: typeof item?.currency === 'string' ? item.currency : 'LUKAS',
+              images: Array.isArray(item?.images) && item.images.length > 0
+                ? item.images.filter((img: any) => typeof img === 'string' && img.trim() !== '')
+                : ['https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400'],
+              seller: {
+                ...item?.seller,
+                name: item?.seller?.name || 'Vendedor Backend',
+                verified: Boolean(item?.seller?.verified),
+                rating: typeof item?.seller?.rating === 'number' ? item.seller.rating : 4.0,
+                avatarUrl: item?.seller?.avatarUrl || `https://i.pravatar.cc/150?img=${(index % 10) + 1}`
+              },
+              rating: typeof item?.rating === 'number' ? Math.max(0, Math.min(5, item.rating)) : 4.0,
+              reviewCount: typeof item?.reviewCount === 'number' ? Math.max(0, item.reviewCount) : 0
+            }))
+          : [];
+
+        console.info(`✅ Cargados ${sanitizedItems.length} productos del marketplace desde backend NestJS - datos sanitizados`);
+
         return {
           ...response,
+          items: sanitizedItems,
           source: 'backend-real',
           lastUpdated: new Date().toISOString(),
+          success: true,
+          filters: filters || {}
         };
-      } catch (error) {
-        console.error('Error cargando datos del marketplace desde backend:', error);
 
-        // Fallback a datos vacíos en caso de error
-        return {
-          items: [],
-          total: 0,
-          page: 1,
-          limit: 20,
-          hasMore: false,
-          source: 'error-fallback',
-          error: error instanceof Error ? error.message : 'Error desconocido',
-        };
+      } catch (error) {
+        console.error('❌ Error cargando datos del marketplace desde backend:', error);
+
+        // 🔄 FALLBACK AUTOMÁTICO A MOCK EN CASO DE ERROR DEL BACKEND
+        console.warn('🎨 [FALLBACK] Usando datos mock debido a error del backend');
+
+        try {
+          const mockData = getMockData('marketplace', 'GET');
+
+          // Usar la misma lógica de sanitización que en modo mock
+          const sanitizedItems = Array.isArray(mockData?.marketplace?.items)
+            ? mockData.marketplace.items.map((item: any, index: number) => ({
+                id: item?.id || `fallback-${index}`,
+                title: typeof item?.title === 'string' && item.title.trim() ? item.title : `Producto ${index + 1}`,
+                description: typeof item?.description === 'string' && item.description.trim() ? item.description : 'Descripción no disponible',
+                tags: Array.isArray(item?.tags)
+                  ? item.tags.filter((tag: any) => typeof tag === 'string' && tag.trim() !== '')
+                  : [],
+                price: typeof item?.price === 'number' && !isNaN(item.price) ? item.price : 0,
+                currency: typeof item?.currency === 'string' ? item.currency : 'LUKAS',
+                images: Array.isArray(item?.images) && item.images.length > 0
+                  ? item.images
+                  : ['https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400'],
+                seller: {
+                  ...item?.seller,
+                  name: item?.seller?.name || 'Vendedor Fallback',
+                  verified: Boolean(item?.seller?.verified),
+                  avatarUrl: item?.seller?.avatarUrl || `https://i.pravatar.cc/150?img=${(index % 10) + 1}`
+                },
+                rating: typeof item?.rating === 'number' ? item.rating : 4.0,
+                reviewCount: typeof item?.reviewCount === 'number' ? item.reviewCount : 0
+              }))
+            : [];
+
+          return {
+            items: sanitizedItems,
+            total: sanitizedItems.length,
+            page: 1,
+            limit: 20,
+            hasMore: false,
+            source: 'mock-fallback',
+            error: error instanceof Error ? error.message : 'Error desconocido del backend',
+            lastUpdated: new Date().toISOString(),
+            success: false,
+            filters: filters || {},
+            message: 'Fallback automático a datos mock'
+          };
+
+        } catch (fallbackError) {
+          console.error('❌ [FALLBACK] Error crítico en fallback mock:', fallbackError);
+
+          // Último recurso: datos mínimos de emergencia
+          const emergencyItems = [{
+            id: 'emergency-1',
+            title: 'Servicio de Emergencia',
+            description: 'Datos no disponibles temporalmente',
+            tags: [],
+            price: 0,
+            currency: 'LUKAS',
+            images: ['https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400'],
+            seller: {
+              name: 'Sistema de Emergencia',
+              verified: false,
+              avatarUrl: 'https://i.pravatar.cc/150?img=1'
+            },
+            rating: 0,
+            reviewCount: 0
+          }];
+
+          return {
+            items: emergencyItems,
+            total: emergencyItems.length,
+            page: 1,
+            limit: 20,
+            hasMore: false,
+            source: 'emergency-final',
+            error: 'Error crítico en todos los sistemas de datos',
+            lastUpdated: new Date().toISOString(),
+            success: false,
+            filters: filters || {},
+            message: 'Sistema de emergencia activado'
+          };
+        }
       }
     },
-    staleTime: 5 * 60 * 1000, // 5 minutos - mantener datos frescos por un tiempo razonable
+    staleTime: 5 * 60 * 1000, // 5 minutos
     gcTime: 10 * 60 * 1000, // 10 minutos en caché
-    retry: 2, // Reintentar hasta 2 veces en caso de error
-    retryDelay: 1000, // 1 segundo entre reintentos
-    refetchOnMount: false, // No refetch automático al montar (usar caché si está disponible)
-    refetchOnWindowFocus: false, // No refetch en focus
-    refetchOnReconnect: true, // Refetch cuando se restablezca la conexión
-    // Configuración mejorada para UX
-    keepPreviousData: true, // Mantener datos anteriores mientras carga nuevos
-    notifyOnChangeProps: ['data', 'error', 'isLoading'], // Solo notificar cambios importantes
-    // Optimización de performance
-    select: (data) => {
-      // Pre-procesar datos para optimizar renders
-      if (!data?.items) return data;
-
-      return {
-        ...data,
-        items: data.items.map((item: any) => ({
-          ...item,
-          // Pre-calcular campos computados
-          discountPercentage: item.originalPrice
-            ? Math.round(
-                ((item.originalPrice - item.price) / item.originalPrice) * 100
-              )
-            : 0,
-          // Optimizar formato de precio
-          formattedPrice:
-            item.currency === 'LUKAS'
-              ? `ü ${(item.price || 0).toLocaleString()}`
-              : `$${(item.price || 0).toLocaleString()}`,
-          // Pre-calcular estado de tendencia
-          isTrendingCalculated: (item.viewCount || 0) > 50 || item.trending,
-        })),
-        // Agregar metadatos útiles
-        metadata: {
-          lastUpdated: new Date().toISOString(),
-          totalCategories: new Set(
-            data.items.map((item: any) => item.category || item.type)
-          ).size,
-          avgPrice:
-            data.items.reduce(
-              (sum: number, item: any) => sum + (item.price || 0),
-              0
-            ) / data.items.length,
-        },
-      };
+    retry: (failureCount, error) => {
+      // Solo reintentar si no estamos en modo mock
+      if (shouldUseMock) return false;
+      return failureCount < 2;
     },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    enabled: true, // Siempre habilitado
+    // Configuración de error mejorada
+    throwOnError: false, // No lanzar errores, manejarlos internamente
+    meta: {
+      errorMessage: 'Error cargando datos del marketplace'
+    }
   });
 }
+
 /**
  * 🛒 Hook de mutación para crear items del marketplace
  * Conectado al backend NestJS real - Endpoint: POST /marketplace/items
@@ -1417,10 +1727,73 @@ export function useUpdateUserStatus() {
 export function useSocialNotifications(userId: string) {
   return useQuery({
     queryKey: ['social', 'notifications', userId],
-    queryFn: () => socialAPI.getNotifications(userId),
+    queryFn: async () => {
+      try {
+        const response = await socialAPI.getNotifications(userId);
+
+        // 🛡️ Validación de datos para prevenir errores de filter
+        if (!response) {
+          console.warn('[useSocialNotifications] Response is null/undefined, returning empty array');
+          return { data: [], notifications: [] };
+        }
+
+        // Si la respuesta tiene estructura { notifications: [...] }
+        if (response.notifications && Array.isArray(response.notifications)) {
+          return {
+            data: response.notifications,
+            notifications: response.notifications,
+            total: response.total || response.notifications.length,
+            ...response
+          };
+        }
+
+        // Si la respuesta es directamente un array
+        if (Array.isArray(response)) {
+          return {
+            data: response,
+            notifications: response,
+            total: response.length
+          };
+        }
+
+        // Si la respuesta tiene estructura { data: [...] }
+        if (response.data && Array.isArray(response.data)) {
+          return {
+            data: response.data,
+            notifications: response.data,
+            total: response.total || response.data.length,
+            ...response
+          };
+        }
+
+        // Fallback seguro - cualquier otro caso
+        console.warn('[useSocialNotifications] Unexpected response structure:', response);
+        return {
+          data: [],
+          notifications: [],
+          total: 0
+        };
+
+      } catch (error) {
+        console.error('[useSocialNotifications] Error fetching notifications:', error);
+        // En caso de error, retornar estructura vacía pero válida
+        return {
+          data: [],
+          notifications: [],
+          total: 0
+        };
+      }
+    },
     enabled: !!userId, // Solo ejecutar si tenemos userId
     staleTime: 1000 * 60 * 2, // 2 minutos
     refetchInterval: 1000 * 30, // Refetch cada 30 segundos
+    // 🔄 Configuración de retry para manejar errores de red
+    retry: (failureCount, error) => {
+      // Solo reintentar hasta 2 veces para errores de red
+      if (failureCount >= 2) return false;
+      return true;
+    },
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -2212,7 +2585,7 @@ export function useChallenges(filters?: any) {
       }
 
       const response = await apiService.get(endpoint);
-      
+
       // 🛡️ SOLUCIÓN: Usar conversión segura para prevenir "Cannot convert object to primitive value"
       console.log('✅ [Challenges] Backend NestJS respondió exitosamente');
 
