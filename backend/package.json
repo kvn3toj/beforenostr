@@ -14,7 +14,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "start:prod:migrate": "prisma migrate deploy && node dist/main",
+    "start:prod:migrate": "npx prisma migrate deploy && node dist/main",
     "lint": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -26,8 +26,8 @@
     "db:reset": "prisma migrate reset --force",
     "db:seed": "npx ts-node prisma/seed.ts",
     "db:studio": "prisma studio",
-    "migration:generate": "prisma migrate dev",
-    "migration:deploy": "prisma migrate deploy"
+    "migration:generate": "npx prisma migrate dev",
+    "migration:deploy": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
