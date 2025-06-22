@@ -36,6 +36,9 @@ WORKDIR /usr/src/app
 # Copiar archivos de dependencias
 COPY backend/package*.json ./
 
+# Copiar el esquema de Prisma ANTES de instalar para que `postinstall` funcione
+COPY --from=builder /usr/src/app/prisma ./prisma
+
 # Instalar SOLO las dependencias de producción
 RUN npm install --only=production --legacy-peer-deps && npm cache clean --force
 
@@ -43,13 +46,9 @@ RUN npm install --only=production --legacy-peer-deps && npm cache clean --force
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /usr/src/app/prisma ./prisma
 
 # Exponer el puerto
 EXPOSE 3002
-
-# Comando para iniciar la aplicación (sin migraciones aquí, se maneja en render.yaml)
-CMD ["node", "dist/main"]
 
 # Iniciar la aplicación después de ejecutar las migraciones
 CMD ["npm", "run", "start:prod:migrate"]
