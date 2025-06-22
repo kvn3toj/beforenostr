@@ -59,17 +59,12 @@ export class PlaylistController {
     //     console.log('>>> PlaylistController.create: this.playlistService IS', this.playlistService ? 'DEFINED' : 'UNDEFINED');
 
     // Mapear mundo_id a mundoId si es necesario
-    if ((createPlaylistDto as any).mundo_id && !createPlaylistDto.mundoId) {
-      createPlaylistDto.mundoId = (createPlaylistDto as any).mundo_id;
+    if (createPlaylistDto.mundo_id && !createPlaylistDto.mundoId) {
+      createPlaylistDto.mundoId = createPlaylistDto.mundo_id;
       //       console.log('>>> PlaylistController.create: Mapped mundo_id to mundoId:', createPlaylistDto.mundoId);
     }
 
-    try {
-      return this.playlistService.create(createPlaylistDto);
-    } catch (error) {
-      //       console.error('>>> PlaylistController.create: Error:', error);
-      throw error;
-    }
+    return this.playlistService.create(createPlaylistDto);
   }
 
   @Get()
@@ -93,14 +88,9 @@ export class PlaylistController {
       throw new Error('Playlist service is not available.');
     }
 
-    try {
-      const result = await this.playlistService.findAll(findAllDto);
-      //       console.log('>>> PlaylistController.findAll result:', result);
-      return result;
-    } catch (error) {
-      //       console.error('>>> PlaylistController.findAll error:', error);
-      throw error;
-    }
+    const result = await this.playlistService.findAll(findAllDto);
+    //       console.log('>>> PlaylistController.findAll result:', result);
+    return result;
   }
 
   @Get(':id')

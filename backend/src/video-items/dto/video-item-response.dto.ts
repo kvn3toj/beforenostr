@@ -82,7 +82,7 @@ export class VideoItemResponseDto {
   @ApiProperty({
     description: 'Información de calidad del video',
   })
-  quality?: Record<string, any>;
+  quality?: Record<string, unknown>;
 
   @ApiProperty({ description: 'Fecha de creación', type: Date })
   createdAt: Date;

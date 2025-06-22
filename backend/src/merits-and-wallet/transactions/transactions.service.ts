@@ -12,7 +12,7 @@ import { Transaction } from '../../generated/prisma';
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
 
 // Basic type for eventData - its structure depends on the transaction source/type
-export type TransactionEventData = any; // Can be refined if specific structures are known
+export type TransactionEventData = Record<string, unknown>; // Can be refined if specific structures are known
 
 @Injectable()
 export class TransactionsService {

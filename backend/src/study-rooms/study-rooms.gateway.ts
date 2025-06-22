@@ -436,7 +436,7 @@ export class StudyRoomsGateway
   }
 
   // Método auxiliar para notificar eventos a una sala específica
-  notifyRoom(roomId: string, event: string, data: any) {
+  notifyRoom(roomId: string, event: string, data: Record<string, unknown>) {
     this.server.to(roomId).emit(event, data);
     this.logger.log(`Notified room ${roomId} with event: ${event}`);
   }

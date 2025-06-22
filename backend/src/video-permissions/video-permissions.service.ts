@@ -217,7 +217,7 @@ export class VideoPermissionsService {
   async findDrafts(userId?: string): Promise<VideoPermissions[]> {
     //     console.log('>>> VideoPermissionsService.findDrafts called with userId:', userId);
 
-    const where: any = { isDraft: true };
+    const where: { isDraft: boolean; createdById?: string } = { isDraft: true };
     if (userId) {
       where.createdById = userId;
     }

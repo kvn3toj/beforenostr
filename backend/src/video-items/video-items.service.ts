@@ -8,6 +8,8 @@ import {
   VideoMetadata,
 } from '../common/interfaces/video-metadata.interface';
 import { AbortController } from 'node-abort-controller';
+import { CreateVideoItemDto } from './dto/create-video-item.dto';
+import { UpdateVideoItemDto } from './dto/update-video-item.dto';
 
 // Minimal interfaces for API responses
 interface YouTubeApiResponse {
@@ -41,7 +43,7 @@ interface YouTubeVideoListResponse {
     contentDetails: {
       duration: string;
     };
-    statistics: any; // Keep it simple for now
+    statistics: Record<string, unknown>; // Keep it simple for now
   }[];
 }
 
@@ -57,7 +59,10 @@ export class VideoItemsService {
     this.logger.log('VideoItemsService initialized');
   }
 
-  private async fetch(url: any, options: any = {}): Promise<any> {
+  private async fetch(
+    url: string,
+    options: Record<string, unknown> = {}
+  ): Promise<any> {
     const { default: fetch } = await import('node-fetch');
     return fetch(url, options);
   }
@@ -123,33 +128,28 @@ export class VideoItemsService {
    */
   async findAll() {
     //     console.log('>>> VideoItemsService.findAll: ENTERING METHOD');
-    try {
-      //       console.log('>>> VideoItemsService.findAll: Finding all video items');
-      //       console.log('>>> VideoItemsService.findAll: About to call prisma.videoItem.findMany');
+    //       console.log('>>> VideoItemsService.findAll: Finding all video items');
+    //       console.log('>>> VideoItemsService.findAll: About to call prisma.videoItem.findMany');
 
-      const result = await this.prisma.videoItem.findMany({
-        include: {
-          playlist: true,
-          questions: {
-            include: {
-              answerOptions: true,
-            },
+    const result = await this.prisma.videoItem.findMany({
+      include: {
+        playlist: true,
+        questions: {
+          include: {
+            answerOptions: true,
           },
         },
-      });
+      },
+    });
 
-      //       console.log('>>> VideoItemsService.findAll: Prisma call successful, found', result.length, 'items');
-      return result;
-    } catch (error) {
-      //       console.error('>>> VideoItemsService.findAll: ERROR CAUGHT:', error);
-      throw error;
-    }
+    //       console.log('>>> VideoItemsService.findAll: Prisma call successful, found', result.length, 'items');
+    return result;
   }
 
   /**
    * Crea un nuevo video item
    */
-  async create(data: any) {
+  async create(data: CreateVideoItemDto) {
     //     console.log('>>> VideoItemsService.create: Creating new video item');
 
     return this.prisma.videoItem.create({
@@ -160,7 +160,7 @@ export class VideoItemsService {
   /**
    * Actualiza un video item
    */
-  async update(id: number, data: any) {
+  async update(id: number, data: UpdateVideoItemDto) {
     //     console.log(`>>> VideoItemsService.update: Updating video item with ID: ${id}`);
 
     return this.prisma.videoItem.update({
@@ -833,7 +833,9 @@ export class VideoItemsService {
   /**
    * Actualiza metadatos de un video existente
    */
-  async updateVideoMetadata(id: number): Promise<any> {
+  async updateVideoMetadata(
+    id: number
+  ): Promise<{ metadata: VideoMetadata; [key: string]: any }> {
     // this.logger.log(`Updating metadata for video item ${id}`);
     const videoItem = await this.prisma.videoItem.findUnique({ where: { id } });
 
@@ -845,7 +847,7 @@ export class VideoItemsService {
 
     const metadata = await this.extractVideoMetadata(videoItem.content);
 
-    const updateData: any = {};
+    const updateData: Partial<UpdateVideoItemDto> = {};
 
     if (metadata.duration && metadata.duration !== videoItem.duration) {
       updateData.duration = metadata.duration;
@@ -883,7 +885,13 @@ export class VideoItemsService {
   async recalculateAllDurations(): Promise<{
     updated: number;
     errors: number;
-    results: any[];
+    results: {
+      id: number;
+      title: string;
+      duration?: number;
+      status: string;
+      error?: string;
+    }[];
   }> {
     // this.logger.log('Starting bulk duration recalculation for videos with null duration');
     const videosWithNullDuration = await this.prisma.videoItem.findMany({
@@ -900,7 +908,13 @@ export class VideoItemsService {
     // this.logger.log(`Found ${videosWithNullDuration.length} videos with null duration`);
     let updated = 0;
     let errors = 0;
-    const results: any[] = [];
+    const results: {
+      id: number;
+      title: string;
+      duration?: number;
+      status: string;
+      error?: string;
+    }[] = [];
 
     for (const video of videosWithNullDuration) {
       try {
@@ -966,7 +980,19 @@ export class VideoItemsService {
     errors: number;
     verified: number;
     protectedCount: number;
-    results: any[];
+    results: {
+      id: number;
+      title: string;
+      status: string;
+      duration?: number;
+      message?: string;
+      oldDuration?: number;
+      newDuration?: number;
+      change?: number;
+      calculatedDuration?: number;
+      currentDuration?: number;
+      error?: string;
+    }[];
   }> {
     // this.logger.log('🔄 Starting FORCE bulk duration recalculation for ALL videos (WITH DATA PROTECTION)');
 
@@ -986,7 +1012,19 @@ export class VideoItemsService {
     let errors = 0;
     let verified = 0; // Videos que ya tenían la duración correcta
     let protectedCount = 0; // Videos protegidos de sobrescritura destructiva
-    const results: any[] = [];
+    const results: {
+      id: number;
+      title: string;
+      status: string;
+      duration?: number;
+      message?: string;
+      oldDuration?: number;
+      newDuration?: number;
+      change?: number;
+      calculatedDuration?: number;
+      currentDuration?: number;
+      error?: string;
+    }[] = [];
 
     // 🛡️ LISTA DE DURACIONES CONOCIDAS Y VERIFICADAS MANUALMENTE
     const manuallyVerifiedDurations: Record<number, number> = {

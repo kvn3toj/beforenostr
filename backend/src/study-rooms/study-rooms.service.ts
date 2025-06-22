@@ -11,7 +11,23 @@ import {
   StudyRoomResponseDto,
   StudyRoomParticipantDto,
 } from './dto/study-room-response.dto';
-import { StudyRoomStatus } from '../generated/prisma';
+import { StudyRoomStatus, StudyRoom, User } from '../generated/prisma';
+
+type StudyRoomWithRelations = StudyRoom & {
+  video: { id: number; title: string };
+  host: { id: string; name: string; avatarUrl: string };
+  participants: ({
+    user: { id: string; name: string; avatarUrl: string };
+  } & {
+    id: string;
+    studyRoomId: string;
+    userId: string;
+    isHost: boolean;
+    isActive: boolean;
+    joinedAt: Date;
+    leftAt: Date | null;
+  })[];
+};
 
 @Injectable()
 export class StudyRoomsService {
@@ -89,7 +105,7 @@ export class StudyRoomsService {
       });
 
       this.logger.log(`Study room ${studyRoom.id} created successfully`);
-      return this.mapToStudyRoomResponse(studyRoom);
+      return this.mapToStudyRoomResponse(studyRoom as StudyRoomWithRelations);
     } catch (error) {
       this.logger.error(`Failed to create study room: ${error.message}`);
       throw error;
@@ -124,7 +140,9 @@ export class StudyRoomsService {
       }),
     ]);
 
-    const mappedRooms = rooms.map((room) => this.mapToStudyRoomResponse(room));
+    const mappedRooms = rooms.map((room) =>
+      this.mapToStudyRoomResponse(room as StudyRoomWithRelations)
+    );
 
     this.logger.log(
       `Found ${total} study rooms, returning ${mappedRooms.length} for current page`
@@ -153,7 +171,7 @@ export class StudyRoomsService {
       throw new NotFoundException(`Sala de estudio ${roomId} no encontrada`);
     }
 
-    return this.mapToStudyRoomResponse(room);
+    return this.mapToStudyRoomResponse(room as StudyRoomWithRelations);
   }
 
   async joinStudyRoom(
@@ -420,7 +438,9 @@ export class StudyRoomsService {
     this.logger.log(`Study room ${roomId} deleted successfully`);
   }
 
-  private mapToStudyRoomResponse(room: any): StudyRoomResponseDto {
+  private mapToStudyRoomResponse(
+    room: StudyRoomWithRelations
+  ): StudyRoomResponseDto {
     const participants: StudyRoomParticipantDto[] = room.participants.map(
       (p) => ({
         id: p.user.id,

@@ -18,6 +18,8 @@ import * as bcrypt from 'bcryptjs';
 //   updatedAt: Date;
 // }
 
+type AuthenticatedUser = { id: string /* other properties may be included */ };
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -34,14 +36,9 @@ export class UsersService {
     //     console.log('>>> UsersService.findAll: Starting...');
     //     console.log('>>> UsersService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const result = await this.prisma.user.findMany();
-      //       console.log('>>> UsersService.findAll: SUCCESS, found', result.length, 'users');
-      return result;
-    } catch (error) {
-      //       console.error('>>> UsersService.findAll: ERROR:', error);
-      throw error;
-    }
+    const result = await this.prisma.user.findMany();
+    //       console.log('>>> UsersService.findAll: SUCCESS, found', result.length, 'users');
+    return result;
   }
 
   async findAllPaginated(params: {
@@ -58,7 +55,10 @@ export class UsersService {
     const { page, pageSize, sortBy, sortDirection, filters } = params;
 
     // Construir el objeto where para filtros
-    const where: any = {};
+    const where: {
+      email?: { contains: string; mode: 'insensitive' };
+      isActive?: boolean;
+    } = {};
 
     if (filters?.email) {
       where.email = {
@@ -74,7 +74,7 @@ export class UsersService {
     // TODO: Implementar filtro por role_id cuando tengamos la relación con roles
 
     // Construir el objeto orderBy para ordenamiento
-    const orderBy: any = {};
+    const orderBy: { [key: string]: 'asc' | 'desc' } = {};
     if (sortBy) {
       orderBy[sortBy] = sortDirection || 'asc';
     } else {
@@ -109,18 +109,13 @@ export class UsersService {
     //     console.log('>>> UsersService.findOne: Starting with id:', id);
     //     console.log('>>> UsersService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const user = await this.prisma.user.findUnique({ where: { id } });
-      //       console.log('>>> UsersService.findOne: Query result:', user ? 'FOUND' : 'NOT FOUND');
-      if (!user) throw new NotFoundException('Usuario no encontrado');
-      return user;
-    } catch (error) {
-      //       console.error('>>> UsersService.findOne: ERROR:', error);
-      throw error;
-    }
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    //       console.log('>>> UsersService.findOne: Query result:', user ? 'FOUND' : 'NOT FOUND');
+    if (!user) throw new NotFoundException('Usuario no encontrado');
+    return user;
   }
 
-  async create(data: CreateUserDto, user: any): Promise<User> {
+  async create(data: CreateUserDto, user: AuthenticatedUser): Promise<User> {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const createData = {
@@ -150,7 +145,11 @@ export class UsersService {
     return newUser;
   }
 
-  async update(id: string, data: UpdateUserDto, user: any): Promise<User> {
+  async update(
+    id: string,
+    data: UpdateUserDto,
+    user: AuthenticatedUser
+  ): Promise<User> {
     const existingUser = await this.prisma.user.findUnique({ where: { id } });
     if (!existingUser) throw new NotFoundException('Usuario no encontrado');
 
@@ -189,7 +188,7 @@ export class UsersService {
     return updatedUser;
   }
 
-  async remove(id: string, user: any): Promise<User> {
+  async remove(id: string, user: AuthenticatedUser): Promise<User> {
     const existingUser = await this.prisma.user.findUnique({ where: { id } });
     if (!existingUser) throw new NotFoundException('Usuario no encontrado');
 
@@ -235,42 +234,37 @@ export class UsersService {
   async getAyniMetrics(userId: string) {
     //     console.log('>>> UsersService.getAyniMetrics: Starting for user:', userId);
 
-    try {
-      // Verificar que el usuario existe
-      const user = await this.prisma.user.findUnique({ where: { id: userId } });
-      if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
-      }
-
-      // 🌟 GENERAR MÉTRICAS AYNI DINÁMICAS BASADAS EN DATOS REALES
-      // Por ahora, generamos métricas realistas basadas en el usuario
-      // En el futuro, estas se calcularán desde transacciones, actividades, etc.
-
-      const baseMetrics = {
-        ondas: 1000 + user.id.length * 47, // Base de 1000 + variación por usuario
-        meritos: 50 + user.id.length * 7, // Base de 50 + variación
-        balanceAyni: Math.min(1, 0.6 + user.id.length * 0.02), // Entre 0.6 y 1.0
-        ayniLevel: this.calculateAyniLevel(user),
-        nextLevel: this.getNextAyniLevel(user),
-        ayniProgress: this.calculateAyniProgress(user),
-        bienComunContributions: 10 + user.id.length * 3,
-        reciprocityScore: Math.min(10, 7 + user.id.length * 0.15),
-        elementos: this.calculateElementalBalance(user),
-        totalTransactions: 25 + user.id.length * 5,
-        positiveImpact: 500 + user.id.length * 73,
-        communityRank: Math.max(1, 200 - user.id.length * 8),
-        weeklyGrowth:
-          Math.round((Math.sin(user.id.length) * 10 + 15) * 100) / 100,
-        lastUpdated: new Date().toISOString(),
-        joinedDate: user.createdAt.toISOString(),
-      };
-
-      //       console.log('>>> UsersService.getAyniMetrics: Generated metrics for user:', user.email);
-      return baseMetrics;
-    } catch (error) {
-      //       console.error('>>> UsersService.getAyniMetrics: ERROR:', error);
-      throw error;
+    // Verificar que el usuario existe
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
     }
+
+    // 🌟 GENERAR MÉTRICAS AYNI DINÁMICAS BASADAS EN DATOS REALES
+    // Por ahora, generamos métricas realistas basadas en el usuario
+    // En el futuro, estas se calcularán desde transacciones, actividades, etc.
+
+    const baseMetrics = {
+      ondas: 1000 + user.id.length * 47, // Base de 1000 + variación por usuario
+      meritos: 50 + user.id.length * 7, // Base de 50 + variación
+      balanceAyni: Math.min(1, 0.6 + user.id.length * 0.02), // Entre 0.6 y 1.0
+      ayniLevel: this.calculateAyniLevel(user),
+      nextLevel: this.getNextAyniLevel(user),
+      ayniProgress: this.calculateAyniProgress(user),
+      bienComunContributions: 10 + user.id.length * 3,
+      reciprocityScore: Math.min(10, 7 + user.id.length * 0.15),
+      elementos: this.calculateElementalBalance(user),
+      totalTransactions: 25 + user.id.length * 5,
+      positiveImpact: 500 + user.id.length * 73,
+      communityRank: Math.max(1, 200 - user.id.length * 8),
+      weeklyGrowth:
+        Math.round((Math.sin(user.id.length) * 10 + 15) * 100) / 100,
+      lastUpdated: new Date().toISOString(),
+      joinedDate: user.createdAt.toISOString(),
+    };
+
+    //       console.log('>>> UsersService.getAyniMetrics: Generated metrics for user:', user.email);
+    return baseMetrics;
   }
 
   private calculateAyniLevel(user: User): string {

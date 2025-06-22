@@ -35,7 +35,7 @@ export class CreateNotificationDto {
   relatedEntityId?: string; // ID de la entidad relacionada (publicación, transacción, etc.)
 
   @IsOptional()
-  metadata?: any; // Datos adicionales en formato JSON
+  metadata?: Record<string, unknown>; // Datos adicionales en formato JSON
 }
 
 export class CreateBulkNotificationDto {
@@ -54,7 +54,7 @@ export class CreateBulkNotificationDto {
   relatedEntityId?: string;
 
   @IsOptional()
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 export class UpdateNotificationDto {
