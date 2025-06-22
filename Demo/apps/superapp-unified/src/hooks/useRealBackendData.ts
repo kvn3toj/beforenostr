@@ -2151,8 +2151,8 @@ export function usePostComments(postId: string, page = 0, limit = 10) {
       }
 
       // Si viene en formato { data: [...] }
-      if (response?.data && Array.isArray(response.data)) {
-        return response.data
+      if ((response as any)?.data && Array.isArray((response as any).data)) {
+        return (response as any).data
           .map(mapBackendCommentToUIComment)
           .filter(
             (comment: PostComment | null): comment is PostComment =>
@@ -2368,7 +2368,7 @@ export function useMundoPlaylists(mundoId: string) {
 export function useMundosTest() {
   return useQuery({
     queryKey: ['mundos', 'test'],
-    queryFn: () => mundosAPI.testMundos(),
+    queryFn: () => mundosAPI.getMundos(), // Corregido: usar getMundos en lugar de testMundos
     staleTime: 1000 * 60 * 5, // 5 minutos
     retry: 3,
     retryDelay: 1000,
@@ -2387,7 +2387,7 @@ export function useGroupsData() {
       const response = await apiService.get('/groups');
 
       // Transformar los datos del backend al formato esperado por el frontend
-      const transformedGroups = response.map((group: any) => ({
+      const transformedGroups = (response as any).map((group: any) => ({
         id: group.id,
         name: group.name,
         description: group.description,
@@ -2595,13 +2595,13 @@ export function useChallenges(filters?: any) {
       // Adaptar el formato de respuesta del backend a la estructura esperada por la UI
       // El backend devuelve un array directo de challenges con rewards incluidos
       return {
-        challenges: Array.isArray(response) ? response : response.data || [],
+        challenges: Array.isArray(response) ? (response as any) : (response as any).data || [],
         pagination: {
           page: 0,
           limit: 20,
           total: Array.isArray(response)
-            ? response.length
-            : response.data?.length || 0,
+            ? (response as any).length
+            : (response as any).data?.length || 0,
           totalPages: 1,
         },
       };
