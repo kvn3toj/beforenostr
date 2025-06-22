@@ -4,7 +4,7 @@ import { UpdateGplContentDto } from './dto/update-gpl-content.dto';
 
 @Injectable()
 export class GplContentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly _prisma: PrismaService) {}
 
   async getAllGPLContent() {
     return [

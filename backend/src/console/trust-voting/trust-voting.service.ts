@@ -4,7 +4,7 @@ import { UpdateTrustVotingDto } from './dto/update-trust-voting.dto';
 
 @Injectable()
 export class TrustVotingService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly _prisma: PrismaService) {}
 
   async getTrustVotingSystem() {
     return {

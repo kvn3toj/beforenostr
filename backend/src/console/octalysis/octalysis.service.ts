@@ -4,7 +4,7 @@ import { UpdateOctalysisElementDto } from './dto/update-octalysis-element.dto';
 
 @Injectable()
 export class OctalysisService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly _prisma: PrismaService) {}
 
   async getOctalysisConfig() {
     return {

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
 /**
@@ -57,7 +57,9 @@ interface FeedbackData {
 export class FeedbackAgentsService {
   private readonly logger = new Logger(FeedbackAgentsService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly _prisma: PrismaService) {
+    // console.log('>>> FeedbackAgentsService CONSTRUCTOR: this._prisma IS', this._prisma ? 'DEFINED' : 'UNDEFINED');
+  }
 
   /**
    * 🧠 AGENTE ORÁCULO PRINCIPAL

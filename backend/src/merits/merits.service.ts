@@ -69,67 +69,52 @@ export class MeritsService {
   }
 
   async findAll(): Promise<Merit[]> {
-    try {
-      return await this.prisma.merit.findMany({
-        include: {
-          user: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              username: true,
-            },
+    return this.prisma.merit.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            username: true,
           },
         },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      });
-    } catch (error) {
-      //       console.error('>>> MeritsService findAll error:', error);
-      throw error;
-    }
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
 
   async findByUserId(userId: string): Promise<Merit[]> {
-    try {
-      return await this.prisma.merit.findMany({
-        where: { userId },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      });
-    } catch (error) {
-      //       console.error('>>> MeritsService findByUserId error:', error);
-      throw error;
-    }
+    return this.prisma.merit.findMany({
+      where: { userId },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
 
   async findOne(id: string): Promise<Merit> {
-    try {
-      const merit = await this.prisma.merit.findUnique({
-        where: { id },
-        include: {
-          user: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              username: true,
-            },
+    const merit = await this.prisma.merit.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            username: true,
           },
         },
-      });
+      },
+    });
 
-      if (!merit) {
-        throw new NotFoundException(`Merit with ID ${id} not found`);
-      }
-
-      return merit;
-    } catch (error) {
-      //       console.error('>>> MeritsService findOne error:', error);
-      throw error;
+    if (!merit) {
+      throw new NotFoundException(`Merit with ID ${id} not found`);
     }
+
+    return merit;
   }
 
   // Métodos específicos de negocio para merits
@@ -138,35 +123,30 @@ export class MeritsService {
     userId: string,
     meritType?: string
   ): Promise<{ type: string; totalAmount: number }[]> {
-    try {
-      const whereClause: any = {
-        userId,
-      };
+    const whereClause: { userId: string; type?: string } = {
+      userId,
+    };
 
-      if (meritType) {
-        whereClause.type = meritType;
-      }
-
-      const merits = await this.prisma.merit.findMany({
-        where: whereClause,
-      });
-
-      // Agrupar por tipo y sumar cantidades
-      const balanceMap = new Map<string, number>();
-
-      merits.forEach((merit) => {
-        const currentBalance = balanceMap.get(merit.type) || 0;
-        balanceMap.set(merit.type, currentBalance + merit.amount);
-      });
-
-      return Array.from(balanceMap.entries()).map(([type, totalAmount]) => ({
-        type,
-        totalAmount,
-      }));
-    } catch (error) {
-      //       console.error('>>> MeritsService getUserMeritBalance error:', error);
-      throw error;
+    if (meritType) {
+      whereClause.type = meritType;
     }
+
+    const merits = await this.prisma.merit.findMany({
+      where: whereClause,
+    });
+
+    // Agrupar por tipo y sumar cantidades
+    const balanceMap = new Map<string, number>();
+
+    merits.forEach((merit) => {
+      const currentBalance = balanceMap.get(merit.type) || 0;
+      balanceMap.set(merit.type, currentBalance + merit.amount);
+    });
+
+    return Array.from(balanceMap.entries()).map(([type, totalAmount]) => ({
+      type,
+      totalAmount,
+    }));
   }
 
   async awardMerit(
@@ -176,76 +156,75 @@ export class MeritsService {
     source: string,
     relatedEntityId?: string
   ): Promise<Merit> {
-    try {
-      const createMeritDto: CreateMeritDto = {
-        userId,
-        amount,
-        type,
-        source,
-        relatedEntityId,
-      };
+    const createMeritDto: CreateMeritDto = {
+      userId,
+      amount,
+      type,
+      source,
+      relatedEntityId,
+    };
 
-      return await this.create(createMeritDto);
-    } catch (error) {
-      //       console.error('>>> MeritsService awardMerit error:', error);
-      throw error;
-    }
+    return this.create(createMeritDto);
   }
 
   async getMeritLeaderboard(
     meritType?: string,
     limit: number = 10
-  ): Promise<{ userId: string; user: any; totalMerits: number }[]> {
-    try {
-      const whereClause: any = {};
+  ): Promise<
+    {
+      userId: string;
+      user: { id: string; email: string; name: string; username: string };
+      totalMerits: number;
+    }[]
+  > {
+    const whereClause: { type?: string } = {};
 
-      if (meritType) {
-        whereClause.type = meritType;
-      }
+    if (meritType) {
+      whereClause.type = meritType;
+    }
 
-      const merits = await this.prisma.merit.findMany({
-        where: whereClause,
-        include: {
-          user: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              username: true,
-            },
+    const merits = await this.prisma.merit.findMany({
+      where: whereClause,
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            username: true,
           },
         },
-      });
+      },
+    });
 
-      // Agrupar por usuario y sumar merits
-      const userMeritsMap = new Map<
-        string,
-        { user: any; totalMerits: number }
-      >();
+    // Agrupar por usuario y sumar merits
+    const userMeritsMap = new Map<
+      string,
+      {
+        user: { id: string; email: string; name: string; username: string };
+        totalMerits: number;
+      }
+    >();
 
-      merits.forEach((merit) => {
-        const current = userMeritsMap.get(merit.userId) || {
-          user: merit.user,
-          totalMerits: 0,
-        };
-        current.totalMerits += merit.amount;
-        userMeritsMap.set(merit.userId, current);
-      });
+    merits.forEach((merit) => {
+      const current = userMeritsMap.get(merit.userId) || {
+        user: merit.user,
+        totalMerits: 0,
+      };
+      current.totalMerits += merit.amount;
+      userMeritsMap.set(merit.userId, current);
+    });
 
-      // Convertir a array y ordenar por total de merits
-      const leaderboard = Array.from(userMeritsMap.entries())
-        .map(([userId, data]) => ({
-          userId,
-          user: data.user,
-          totalMerits: data.totalMerits,
-        }))
-        .sort((a, b) => b.totalMerits - a.totalMerits)
-        .slice(0, limit);
+    // Convertir a array y ordenar por total de merits
+    const leaderboard = Array.from(userMeritsMap.entries())
+      .map(([userId, data]) => ({
+        userId,
+        user: data.user,
+        totalMerits: data.totalMerits,
+      }))
+      .sort((a, b) => b.totalMerits - a.totalMerits)
+      .slice(0, limit);
 
-      return leaderboard;
-    } catch (error) {
-      //       console.error('>>> MeritsService getMeritLeaderboard error:', error);
-      throw error;
-    }
+    return leaderboard;
   }
 }

@@ -6,7 +6,7 @@ import { CreateFeedbackDto } from './dto/create-feedback.dto';
 export class FeedbackService {
   private readonly logger = new Logger(FeedbackService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private _prisma: PrismaService) {}
 
   /**
    * Crea un nuevo feedback reportado por el Oráculo de CoomÜnity
@@ -22,7 +22,7 @@ export class FeedbackService {
 
       // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
       /*
-      const feedback = await this.prisma.feedback.create({
+      const feedback = await this._prisma.feedback.create({
         data: {
           userId,
           pageUrl: dto.pageUrl,
@@ -115,7 +115,7 @@ export class FeedbackService {
       if (filters?.userId) where.userId = filters.userId;
       if (filters?.priority !== undefined) where.priority = filters.priority;
 
-      const feedbacks = await this.prisma.feedback.findMany({
+      const feedbacks = await this._prisma.feedback.findMany({
         where,
         include: {
           user: {
@@ -179,7 +179,7 @@ export class FeedbackService {
 
       // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
       /*
-      const feedback = await this.prisma.feedback.findUnique({
+      const feedback = await this._prisma.feedback.findUnique({
         where: { id },
         include: {
           user: {
@@ -238,7 +238,7 @@ export class FeedbackService {
 
       // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
       /*
-      const feedback = await this.prisma.feedback.update({
+      const feedback = await this._prisma.feedback.update({
         where: { id },
         data: { status },
         include: {
@@ -291,16 +291,16 @@ export class FeedbackService {
       // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
       /*
       const [totalCount, statusStats, typeStats, priorityStats] = await Promise.all([
-        this.prisma.feedback.count(),
-        this.prisma.feedback.groupBy({
+        this._prisma.feedback.count(),
+        this._prisma.feedback.groupBy({
           by: ['status'],
           _count: true,
         }),
-        this.prisma.feedback.groupBy({
+        this._prisma.feedback.groupBy({
           by: ['feedbackType'],
           _count: true,
         }),
-        this.prisma.feedback.groupBy({
+        this._prisma.feedback.groupBy({
           by: ['priority'],
           _count: true,
           orderBy: { priority: 'desc' },

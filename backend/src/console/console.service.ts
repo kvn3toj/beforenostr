@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ConsoleService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly _prisma: PrismaService) {}
 
   async getConsoleAnalytics() {
     // Mock analytics data based on Miro board requirements

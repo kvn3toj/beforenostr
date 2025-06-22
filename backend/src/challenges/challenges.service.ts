@@ -105,7 +105,10 @@ export class ChallengesService {
       data: {
         ...challengeData,
         ...(type !== undefined && { type }),
-        ...(updateChallengeDto.hasOwnProperty('config') && {
+        ...(Object.prototype.hasOwnProperty.call(
+          updateChallengeDto,
+          'config'
+        ) && {
           config: config ? JSON.stringify(config) : '{}',
         }),
         rewards: rewards

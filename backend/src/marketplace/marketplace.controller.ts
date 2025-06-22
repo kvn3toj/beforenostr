@@ -46,7 +46,7 @@ export class MarketplaceController {
   @Roles('admin', 'USER')
   async createItem(
     @Body() dto: CreateMarketplaceItemDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
     //     console.log('>>> MarketplaceController.createItem: Creating marketplace item', dto);
 
@@ -127,7 +127,7 @@ export class MarketplaceController {
   async updateItem(
     @Param('itemId') itemId: string,
     @Body() dto: UpdateMarketplaceItemDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
     //     console.log('>>> MarketplaceController.updateItem: Updating marketplace item', itemId);
 
@@ -148,7 +148,7 @@ export class MarketplaceController {
   @Roles('admin', 'USER')
   async deleteItem(
     @Param('itemId') itemId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
     //     console.log('>>> MarketplaceController.deleteItem: Deleting marketplace item', itemId);
 

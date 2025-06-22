@@ -94,4 +94,8 @@ export class CreatePlaylistDto {
   @IsOptional()
   @IsDateString()
   unpublished_at?: string;
+
+  @IsOptional()
+  @IsString()
+  mundo_id?: string;
 }

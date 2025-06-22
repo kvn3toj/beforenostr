@@ -10,7 +10,7 @@ import { UpdateStageDto } from './dto/update-stage.dto';
 
 @Injectable()
 export class StagesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly _prisma: PrismaService) {}
 
   async getAllStages() {
     // Mock data based on Miro board

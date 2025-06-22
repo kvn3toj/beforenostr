@@ -23,5 +23,5 @@ export class CreatePersonalityDto {
     },
   })
   @IsObject()
-  traits: Record<string, any>;
+  traits: Record<string, unknown>;
 }

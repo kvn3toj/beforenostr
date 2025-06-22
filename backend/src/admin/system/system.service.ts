@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as os from 'os';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { AuthenticatedUser } from '../../types/auth.types';
-
-const execAsync = promisify(exec);
 
 @Injectable()
 export class SystemService {

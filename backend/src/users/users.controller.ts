@@ -108,27 +108,22 @@ export class UsersController {
     //     console.log('>>> UsersController.findAll: Starting...');
     //     console.log('>>> UsersController.findAll: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const params = {
-        page: page ? parseInt(page, 10) : 0,
-        pageSize: pageSize ? parseInt(pageSize, 10) : 10,
-        sortBy,
-        sortDirection,
-        filters: {
-          email,
-          role_id: roleId,
-          is_active: isActive !== undefined ? isActive === 'true' : undefined,
-        },
-      };
+    const params = {
+      page: page ? parseInt(page, 10) : 0,
+      pageSize: pageSize ? parseInt(pageSize, 10) : 10,
+      sortBy,
+      sortDirection,
+      filters: {
+        email,
+        role_id: roleId,
+        is_active: isActive !== undefined ? isActive === 'true' : undefined,
+      },
+    };
 
-      //       console.log('>>> UsersController.findAll: Calling service with params:', params);
-      const result = await this.usersService.findAllPaginated(params);
-      //       console.log('>>> UsersController.findAll: SUCCESS, returning result');
-      return result;
-    } catch (error) {
-      //       console.error('>>> UsersController.findAll: ERROR:', error);
-      throw error;
-    }
+    //       console.log('>>> UsersController.findAll: Calling service with params:', params);
+    const result = await this.usersService.findAllPaginated(params);
+    //       console.log('>>> UsersController.findAll: SUCCESS, returning result');
+    return result;
   }
 
   @Get('test')
@@ -162,15 +157,10 @@ export class UsersController {
     //     console.log('>>> UsersController.findAllSimple: Starting...');
     //     console.log('>>> UsersController.findAllSimple: this.usersService IS', this.usersService ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      //       console.log('>>> UsersController.findAllSimple: Calling service.findAll()...');
-      const result = await this.usersService.findAll();
-      //       console.log('>>> UsersController.findAllSimple: SUCCESS, returning result');
-      return result;
-    } catch (error) {
-      //       console.error('>>> UsersController.findAllSimple: ERROR:', error);
-      throw error;
-    }
+    //       console.log('>>> UsersController.findAllSimple: Calling service.findAll()...');
+    const result = await this.usersService.findAll();
+    //       console.log('>>> UsersController.findAllSimple: SUCCESS, returning result');
+    return result;
   }
 
   @Get('db-test')

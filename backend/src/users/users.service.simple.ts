@@ -48,7 +48,10 @@ export class SimpleUsersService {
     const { page, pageSize, sortBy, sortDirection, filters } = params;
 
     // Construir el objeto where para filtros
-    const where: any = {};
+    const where: {
+      email?: { contains: string; mode: 'insensitive' };
+      isActive?: boolean;
+    } = {};
 
     if (filters?.email) {
       where.email = {
@@ -62,7 +65,7 @@ export class SimpleUsersService {
     }
 
     // Construir el objeto orderBy para ordenamiento
-    const orderBy: any = {};
+    const orderBy: { [key: string]: 'asc' | 'desc' } = {};
     if (sortBy) {
       orderBy[sortBy] = sortDirection || 'asc';
     } else {

@@ -101,7 +101,11 @@ export class NotificationsService {
     const limit = filters.limit ? parseInt(filters.limit, 10) : 50;
     const offset = filters.offset ? parseInt(filters.offset, 10) : 0;
 
-    const where: any = { userId };
+    const where: {
+      userId: string;
+      type?: NotificationType;
+      read?: boolean;
+    } = { userId };
 
     if (filters.type) {
       where.type = filters.type;

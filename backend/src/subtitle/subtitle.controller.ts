@@ -98,35 +98,25 @@ export class SubtitleController {
     //     console.log('>>> SubtitleController.create: Starting with data:', createSubtitleDto);
     //     console.log('>>> SubtitleController.create: this.subtitleService IS', this.subtitleService ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const result = await this.subtitleService.create(createSubtitleDto);
-      //       console.log('>>> SubtitleController.create: SUCCESS');
-      return result;
-    } catch (error) {
-      //       console.error('>>> SubtitleController.create: ERROR:', error);
-      throw error;
-    }
+    const result = await this.subtitleService.create(createSubtitleDto);
+    //       console.log('>>> SubtitleController.create: SUCCESS');
+    return result;
   }
 
   @Get('search')
-  async findAll(@Query() findAllDto: FindAllSubtitlesDto): Promise<any> {
+  async findAll(@Query() findAllDto: FindAllSubtitlesDto): Promise<Subtitle[]> {
     //     console.log('>>> SubtitleController.findAll: Starting with params:', findAllDto);
     //     console.log('>>> SubtitleController.findAll: this.subtitleService IS', this.subtitleService ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      if (!this.subtitleService) {
-        //         console.error('>>> SubtitleController.findAll: SubtitleService is not available!');
-        throw new Error('SubtitleService is not available');
-      }
-
-      //       console.log('>>> SubtitleController.findAll: About to call service.findAll');
-      const result = await this.subtitleService.findAll(findAllDto);
-      //       console.log('>>> SubtitleController.findAll: SUCCESS, found', result.length, 'subtitles');
-      return result;
-    } catch (error) {
-      //       console.error('>>> SubtitleController.findAll: ERROR:', error);
-      throw error;
+    if (!this.subtitleService) {
+      //         console.error('>>> SubtitleController.findAll: SubtitleService is not available!');
+      throw new Error('SubtitleService is not available');
     }
+
+    //       console.log('>>> SubtitleController.findAll: About to call service.findAll');
+    const result = await this.subtitleService.findAll(findAllDto);
+    //       console.log('>>> SubtitleController.findAll: SUCCESS, found', result.length, 'subtitles');
+    return result;
   }
 
   @Get('all-debug')
@@ -230,19 +220,14 @@ export class SubtitleController {
     //     console.log('>>> SubtitleController.findOne: Starting with id:', id);
     //     console.log('>>> SubtitleController.findOne: this.subtitleService IS', this.subtitleService ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const numericId = parseInt(id, 10);
-      if (isNaN(numericId)) {
-        throw new BadRequestException('Invalid ID format');
-      }
-
-      const result = await this.subtitleService.findOne(numericId);
-      //       console.log('>>> SubtitleController.findOne: SUCCESS');
-      return result;
-    } catch (error) {
-      //       console.error('>>> SubtitleController.findOne: ERROR:', error);
-      throw error;
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new BadRequestException('Invalid ID format');
     }
+
+    const result = await this.subtitleService.findOne(numericId);
+    //       console.log('>>> SubtitleController.findOne: SUCCESS');
+    return result;
   }
 
   @Patch(':id')
@@ -258,22 +243,17 @@ export class SubtitleController {
     //     console.log('>>> SubtitleController.update: Starting with id:', id, 'data:', updateSubtitleDto);
     //     console.log('>>> SubtitleController.update: this.subtitleService IS', this.subtitleService ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const numericId = parseInt(id, 10);
-      if (isNaN(numericId)) {
-        throw new BadRequestException('Invalid ID format');
-      }
-
-      const result = await this.subtitleService.update(
-        numericId,
-        updateSubtitleDto
-      );
-      //       console.log('>>> SubtitleController.update: SUCCESS');
-      return result;
-    } catch (error) {
-      //       console.error('>>> SubtitleController.update: ERROR:', error);
-      throw error;
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new BadRequestException('Invalid ID format');
     }
+
+    const result = await this.subtitleService.update(
+      numericId,
+      updateSubtitleDto
+    );
+    //       console.log('>>> SubtitleController.update: SUCCESS');
+    return result;
   }
 
   @Delete(':id')
@@ -287,17 +267,12 @@ export class SubtitleController {
     //     console.log('>>> SubtitleController.remove: Starting with id:', id);
     //     console.log('>>> SubtitleController.remove: this.subtitleService IS', this.subtitleService ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const numericId = parseInt(id, 10);
-      if (isNaN(numericId)) {
-        throw new BadRequestException('Invalid ID format');
-      }
-
-      await this.subtitleService.remove(numericId);
-      //       console.log('>>> SubtitleController.remove: SUCCESS');
-    } catch (error) {
-      //       console.error('>>> SubtitleController.remove: ERROR:', error);
-      throw error;
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new BadRequestException('Invalid ID format');
     }
+
+    await this.subtitleService.remove(numericId);
+    //       console.log('>>> SubtitleController.remove: SUCCESS');
   }
 }

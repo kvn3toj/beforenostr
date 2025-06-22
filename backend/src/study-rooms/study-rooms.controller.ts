@@ -27,6 +27,12 @@ import { CreateStudyRoomDto } from './dto/create-study-room.dto';
 import { JoinStudyRoomDto } from './dto/join-study-room.dto';
 import { StudyRoomResponseDto } from './dto/study-room-response.dto';
 
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+  };
+}
+
 @ApiTags('Study Rooms - ÜPlay Social Collaboration')
 @Controller('study-rooms')
 @UseGuards(JwtAuthGuard)
@@ -56,7 +62,7 @@ export class StudyRoomsController {
     description: 'Token de autenticación requerido',
   })
   async createStudyRoom(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Body() createStudyRoomDto: CreateStudyRoomDto
   ): Promise<StudyRoomResponseDto> {
     this.logger.log(
@@ -161,7 +167,7 @@ export class StudyRoomsController {
     description: 'Error al unirse (capacidad llena, ya está en la sala, etc.)',
   })
   async joinStudyRoom(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param('roomId') roomId: string
   ): Promise<StudyRoomResponseDto> {
     this.logger.log(`User ${req.user.id} joining study room: ${roomId}`);
@@ -188,7 +194,7 @@ export class StudyRoomsController {
     description: 'Usuario no está en la sala o sala no encontrada',
   })
   async leaveStudyRoom(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param('roomId') roomId: string
   ): Promise<{ message: string }> {
     this.logger.log(`User ${req.user.id} leaving study room: ${roomId}`);
@@ -220,7 +226,7 @@ export class StudyRoomsController {
     description: 'Sala de estudio no encontrada',
   })
   async updateVideoSync(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param('roomId') roomId: string,
     @Body() syncData: { currentTime: number; isPaused: boolean }
   ): Promise<{ message: string }> {
@@ -260,7 +266,7 @@ export class StudyRoomsController {
     description: 'Sala de estudio no encontrada',
   })
   async deleteStudyRoom(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param('roomId') roomId: string
   ): Promise<{ message: string }> {
     this.logger.log(`User ${req.user.id} deleting study room: ${roomId}`);
