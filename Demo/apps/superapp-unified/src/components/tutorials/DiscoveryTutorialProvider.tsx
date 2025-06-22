@@ -900,12 +900,27 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                   {getStepIcon(currentStep)}
                   <Box component="span" sx={{ ml: 1 }}>{currentStep + 1}. {currentStepData.title}</Box>
                 </Typography>
-                <Alert severity={getAlertSeverity(currentStepData.type)} sx={{ mb: 2 }}>
+                <Alert 
+                  severity={getAlertSeverity(currentStepData.type)} 
+                  sx={{ 
+                    mb: 2,
+                    backgroundColor: 'rgba(28, 28, 58, 0.7)',
+                    backdropFilter: 'blur(12px) saturate(200%)',
+                    WebkitBackdropFilter: 'blur(12px) saturate(200%)',
+                    border: '1px solid rgba(255, 255, 255, 0.125)',
+                    borderRadius: 2,
+                    color: '#fff',
+                    '& .MuiAlert-icon': {
+                      color: '#fff',
+                      opacity: 0.8
+                    },
+                  }}
+                >
                   {renderStepContent(currentStepData, navigate)}
                 </Alert>
                 {currentStepData.tips && currentStepData.tips.length > 0 && (
-                  <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px dashed', borderColor: 'grey.300' }}>
-                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
+                  <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(0,0,0,0.2)', borderRadius: 2, border: '1px dashed', borderColor: 'grey.700' }}>
+                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.light' }}>
                       💡 Consejos Rápidos:
                     </Typography>
                     <List dense>
@@ -914,7 +929,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
                           <ListItemIcon sx={{ minWidth: '30px' }}>
                             <InfoIcon fontSize="small" color="action" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">{tip}</Typography>} />
+                          <ListItemText primary={<Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.85)' }}>{tip}</Typography>} />
                         </ListItem>
                       ))}
                     </List>

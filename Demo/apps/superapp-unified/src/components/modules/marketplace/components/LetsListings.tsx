@@ -66,7 +66,7 @@ export const LetsListings: React.FC = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { data: listings, isLoading, refetch } = useLetsListings(filters);
+  const { data: listings = [], isLoading, refetch } = useLetsListings(filters);
   const createMutation = useCreateLetsListing();
 
   const handleFilterChange = (key: keyof LetsSearchFilters, value: any) => {
