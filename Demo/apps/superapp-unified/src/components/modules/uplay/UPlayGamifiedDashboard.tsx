@@ -72,6 +72,9 @@ import { videosAPI } from '../../../lib/api-service';
 import { useVideos } from '../../../hooks/data/useVideoData';
 import { usePlaylists } from '../../../hooks/data/usePlaylistData';
 
+// 🌌 Cosmic Design System
+import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
+
 // ============================================================================
 // ADAPTADORES Y HELPERS
 // ============================================================================
@@ -253,11 +256,15 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
         transition: 'all 0.3s ease',
         position: 'relative',
         overflow: 'hidden',
+        background: 'linear-gradient(145deg, rgba(34,34,34,0.85), rgba(45,45,45,0.95))',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 3,
         '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: 4,
+          transform: 'translateY(-6px) scale(1.03)',
+          boxShadow: `0 10px 20px rgba(0,0,0,0.3), 0 0 15px ${getDifficultyColor(video.difficulty)}70`,
           '& .play-overlay': {
             opacity: 1,
+            transform: 'scale(1)',
           },
         },
       }}
@@ -266,7 +273,7 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
       <Box
         sx={{
           height: 180,
-          background: `linear-gradient(135deg, ${getDifficultyColor(video.difficulty)}20, ${getDifficultyColor(video.difficulty)}10)`,
+          background: `linear-gradient(135deg, ${getDifficultyColor(video.difficulty)}30, ${getDifficultyColor(video.difficulty)}20)`,
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
@@ -274,123 +281,105 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
           fontSize: '4rem',
         }}
       >
-        {/* Emoji como thumbnail */}
-        <Typography variant="h1" sx={{ fontSize: '4rem' }}>
+        <Typography variant="h1" sx={{ fontSize: '4rem', filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.5))' }}>
           {video.thumbnail}
         </Typography>
         
-        {/* Overlay de play */}
         <Box
           className="play-overlay"
           sx={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.6)',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.8) 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             opacity: 0,
-            transition: 'opacity 0.3s ease',
+            transform: 'scale(1.2)',
+            transition: 'all 0.3s ease-in-out',
           }}
         >
           <Fab
             size="large"
-            color="primary"
             sx={{
-              bgcolor: 'rgba(255,255,255,0.95)',
-              '&:hover': { bgcolor: 'rgba(255,255,255,1)' },
+              background: 'linear-gradient(45deg, #ff6b6b, #feca57)',
+              color: 'white',
+              '&:hover': { 
+                transform: 'scale(1.1)',
+                boxShadow: '0 0 20px #ff6b6b'
+              },
             }}
           >
-            <PlayArrow sx={{ color: '#1976d2', fontSize: '2rem' }} />
+            <PlayArrow sx={{ fontSize: '2.5rem' }} />
           </Fab>
         </Box>
         
-        {/* Badge de completado */}
         {video.isCompleted && (
           <Chip
             label="✓ Completado"
             color="success"
             size="small"
-            sx={{ 
-              position: 'absolute', 
-              top: 12, 
-              right: 12,
-              fontWeight: 'bold',
-            }}
+            sx={{ position: 'absolute', top: 12, right: 12, fontWeight: 'bold' }}
           />
         )}
         
-        {/* Badge de dificultad */}
         <Chip
           label={getDifficultyLabel(video.difficulty)}
           size="small"
           sx={{ 
             position: 'absolute',
-            top: 12,
-            left: 12,
+            top: 12, left: 12,
             bgcolor: getDifficultyColor(video.difficulty),
             color: 'white',
             fontWeight: 'bold',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px'
           }}
         />
       </Box>
       
-      <CardContent sx={{ pb: 1 }}>
-        <Typography variant="h6" component="h3" gutterBottom noWrap>
+      <CardContent sx={{ pb: 1, p: 2 }}>
+        <Typography variant="h6" component="h3" gutterBottom noWrap sx={{ fontWeight: 600, color: 'white' }}>
           {video.title}
         </Typography>
         
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, minHeight: 40 }}>
+        <Typography variant="body2" color="rgba(255,255,255,0.7)" sx={{ mb: 2, minHeight: 40 }}>
           {video.description}
         </Typography>
         
-        {/* Información del video */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" color="rgba(255,255,255,0.5)">
             {Math.floor(video.duration / 60)}:{(video.duration % 60).toString().padStart(2, '0')}
             {video.questionsCount && ` • ${video.questionsCount} preguntas`}
           </Typography>
         </Box>
         
-        {/* Recompensas - VALIDACIÓN DEFENSIVA */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Box display="flex" gap={1}>
             <Chip
-              icon={<Diamond sx={{ fontSize: '16px !important' }} />}
+              icon={<Diamond sx={{ fontSize: '16px !important', color: '#d8a4fe !important' }} />}
               label={`${video.rewards?.meritos || 0} Mëritos`}
               size="small"
               variant="outlined"
-              sx={{ 
-                color: '#9c27b0',
-                borderColor: '#9c27b0',
-                '& .MuiChip-icon': { color: '#9c27b0' },
-              }}
+              sx={{ color: '#d8a4fe', borderColor: '#d8a4fe' }}
             />
             <Chip
-              icon={<Bolt sx={{ fontSize: '16px !important' }} />}
+              icon={<Bolt sx={{ fontSize: '16px !important', color: '#feca57 !important' }} />}
               label={`${video.rewards?.ondas || 0} Öndas`}
               size="small"
               variant="outlined"
-              sx={{ 
-                color: '#ff9800',
-                borderColor: '#ff9800',
-                '& .MuiChip-icon': { color: '#ff9800' },
-              }}
+              sx={{ color: '#feca57', borderColor: '#feca57' }}
             />
           </Box>
         </Box>
         
-        {/* Barra de progreso */}
         {video.progress > 0 && (
-          <Box>
+          <Box sx={{ mt: 2 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="rgba(255,255,255,0.5)">
                 Progreso
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="rgba(255,255,255,0.7)">
                 {Math.round(video.progress)}%
               </Typography>
             </Box>
@@ -400,10 +389,10 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
               sx={{
                 height: 6,
                 borderRadius: 3,
-                bgcolor: 'rgba(0,0,0,0.1)',
+                bgcolor: 'rgba(255,255,255,0.2)',
                 '& .MuiLinearProgress-bar': {
                   borderRadius: 3,
-                  bgcolor: video.isCompleted ? '#4caf50' : '#1976d2',
+                  background: video.isCompleted ? 'linear-gradient(45deg, #4caf50, #81c784)' : 'linear-gradient(45deg, #ff6b6b, #feca57)',
                 },
               }}
             />
@@ -440,7 +429,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
   // Fetch playlists (rutas de aprendizaje)
   const {
-    data: playlists,
+    data: playlists = [],
     isLoading: isLoadingPlaylists,
     isError: isErrorPlaylists,
     error: errorPlaylists,
@@ -448,7 +437,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
   // Fetch videos
   const {
-    data: videos,
+    data: videos = [],
     isLoading: isLoadingVideos,
     isError: isErrorVideos,
     error: errorVideos,
@@ -889,247 +878,274 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   // ========================================================================
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      {renderHeader()}
-      {renderTabs()}
-      {renderSidebar()}
+    <RevolutionaryWidget
+      title="🔥 ÜPlay: Enciende tu Conocimiento"
+      subtitle="Sumérgete en Rutas de Aprendizaje gamificadas y transforma tu potencial en acción."
+      element="fuego"
+      cosmicEffects={{
+        enableGlow: true,
+        enableParticles: true,
+        particleTheme: 'flame'
+      }}
+      cosmicIntensity="intense"
+    >
+      <Box sx={{ minHeight: '100vh', bgcolor: 'transparent' }}>
+        {renderHeader()}
+        {renderTabs()}
+        {renderSidebar()}
 
-      <TabPanel value={tabValue} index={1}>
-        {playlists?.map((playlist: any) => (
-          <Box key={playlist.id} sx={{ mb: 6 }}>
-            <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
-              {playlist.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              {playlist.description}
-            </Typography>
-            <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
-              {(videosByPlaylist[playlist.id] || []).map((video: any) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
-                  <VideoCard video={video} onPlay={handleVideoPlay} />
-                </Grid>
-              ))}
-              {!(videosByPlaylist[playlist.id]?.length) && (
-                <Grid item xs={12}><Typography color="text.secondary">No hay videos en esta ruta.</Typography></Grid>
-              )}
-            </Grid>
-          </Box>
-        ))}
-        {/* Sección para videos sin playlist */}
-        {videosByPlaylist['unassigned'] && (
-          <Box sx={{ mb: 6 }}>
-            <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
-              Sin ruta asignada
-            </Typography>
-            <Grid container spacing={2} sx={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
-              {videosByPlaylist['unassigned'].map((video: any) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
-                  <VideoCard video={video} onPlay={handleVideoPlay} />
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        )}
-      </TabPanel>
+        <TabPanel value={tabValue} index={1}>
+          {playlists?.map((playlist: any) => (
+            <Box key={playlist.id} sx={{ mb: 6 }}>
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  mb: 2, 
+                  fontWeight: 'bold',
+                  background: 'linear-gradient(90deg, #FF8C00, #FF4500)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  borderBottom: '2px solid #FF4500',
+                  pb: 1,
+                  display: 'inline-block'
+                }}
+              >
+                {playlist.name}
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: '80ch' }}>
+                {playlist.description}
+              </Typography>
+              <Grid container spacing={3}>
+                {(videosByPlaylist[playlist.id] || []).map((video: any) => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
+                    <VideoCard video={video} onPlay={handleVideoPlay} />
+                  </Grid>
+                ))}
+                {!(videosByPlaylist[playlist.id]?.length) && (
+                  <Grid item xs={12}>
+                    <Card sx={{ p: 3, textAlign: 'center', bgcolor: 'rgba(0,0,0,0.2)' }}>
+                      <Typography color="text.secondary">No hay videos en esta ruta de aprendizaje todavía.</Typography>
+                    </Card>
+                  </Grid>
+                )}
+              </Grid>
+            </Box>
+          ))}
+          {/* Sección para videos sin playlist */}
+          {videosByPlaylist['unassigned'] && (
+            <Box sx={{ mb: 6 }}>
+              <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
+                Otros Videos
+              </Typography>
+              <Grid container spacing={3}>
+                {videosByPlaylist['unassigned'].map((video: any) => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
+                    <VideoCard video={video} onPlay={handleVideoPlay} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          )}
+        </TabPanel>
 
-      <TabPanel value={tabValue} index={0}>
-        {dynamicMetricsData?.metrics ? (
-          <DynamicMetricsDashboard 
-            metrics={dynamicMetricsData.metrics}
-            progressHistory={dynamicMetricsData.progressHistory || []}
-            categoryProgress={dynamicMetricsData.categoryProgress || []}
-            isLoading={dynamicMetricsData.isLoading || false}
-            showAnimations={dynamicMetricsData.showAnimations || true}
-          />
-        ) : (
-          <Container maxWidth="xl" sx={{ py: 4 }}>
-            <Card sx={{ textAlign: 'center', p: 4 }}>
-              <CircularProgress size={60} />
-              <Typography variant="h6" sx={{ mt: 2 }}>
-                Cargando Dashboard Dinámico...
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Preparando las métricas de tu progreso en ÜPlay
-              </Typography>
+        <TabPanel value={tabValue} index={0}>
+          {dynamicMetricsData?.metrics ? (
+            <DynamicMetricsDashboard 
+              metrics={dynamicMetricsData.metrics}
+              progressHistory={dynamicMetricsData.progressHistory || []}
+              categoryProgress={dynamicMetricsData.categoryProgress || []}
+              isLoading={dynamicMetricsData.isLoading || false}
+              showAnimations={dynamicMetricsData.showAnimations || true}
+            />
+          ) : (
+            <Container maxWidth="xl" sx={{ py: 4 }}>
+              <Card sx={{ textAlign: 'center', p: 4 }}>
+                <CircularProgress size={60} />
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  Cargando Dashboard Dinámico...
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  Preparando las métricas de tu progreso en ÜPlay
+                </Typography>
+              </Card>
+            </Container>
+          )}
+          
+          {/* [NUEVO] FASE 3: Sistema de Misiones Avanzado según recomendaciones del review */}
+          <Container maxWidth="xl" sx={{ mt: 4 }}>
+            <Card sx={{ mb: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
+              <CardContent>
+                <Typography variant="h5" fontWeight="bold" mb={2}>
+                  🎯 Misiones Colaborativas Activas
+                </Typography>
+                <Typography variant="body1" sx={{ opacity: 0.9 }}>
+                  Conecta con otros jugadores para completar desafíos únicos y ganar recompensas exclusivas
+                </Typography>
+              </CardContent>
             </Card>
-          </Container>
-        )}
-        
-        {/* [NUEVO] FASE 3: Sistema de Misiones Avanzado según recomendaciones del review */}
-        <Container maxWidth="xl" sx={{ mt: 4 }}>
-          <Card sx={{ mb: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
-            <CardContent>
-              <Typography variant="h5" fontWeight="bold" mb={2}>
-                🎯 Misiones Colaborativas Activas
-              </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                Conecta con otros jugadores para completar desafíos únicos y ganar recompensas exclusivas
-              </Typography>
-            </CardContent>
-          </Card>
 
-          <Grid container spacing={3}>
-            {/* Misión Individual */}
-            <Grid item xs={12} md={6} lg={4}>
-              <Card sx={{ height: '100%', border: '2px solid', borderColor: 'primary.main' }}>
-                <CardContent>
-                  <Box display="flex" alignItems="center" mb={2}>
-                    <Star sx={{ color: 'primary.main', mr: 1 }} />
-                    <Typography variant="h6" fontWeight="bold">
-                      Explorador Curioso
-                    </Typography>
-                    <Chip label="Individual" size="small" sx={{ ml: 'auto' }} />
-                  </Box>
-                  <Typography variant="body2" color="text.secondary" mb={3}>
-                    Completa videos de 3 categorías diferentes en un solo día
-                  </Typography>
-                  <Box mb={2}>
-                    <Box display="flex" justifyContent="space-between" mb={1}>
-                      <Typography variant="caption">Progreso</Typography>
-                      <Typography variant="caption">2/3 categorías</Typography>
-                    </Box>
-                    <LinearProgress variant="determinate" value={67} sx={{ height: 6, borderRadius: 3 }} />
-                  </Box>
-                  <Box display="flex" gap={1}>
-                    <Chip icon={<Diamond />} label="+50 Mëritos" size="small" color="primary" />
-                    <Chip icon={<Bolt />} label="+25 Öndas" size="small" color="secondary" />
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* Misión Colaborativa */}
-            <Grid item xs={12} md={6} lg={4}>
-              <Card sx={{ height: '100%', border: '2px solid', borderColor: 'success.main' }}>
-                <CardContent>
-                  <Box display="flex" alignItems="center" mb={2}>
-                    <Groups sx={{ color: 'success.main', mr: 1 }} />
-                    <Typography variant="h6" fontWeight="bold">
-                      Círculo de Ayni
-                    </Typography>
-                    <Chip label="Colaborativa" size="small" color="success" sx={{ ml: 'auto' }} />
-                  </Box>
-                  <Typography variant="body2" color="text.secondary" mb={3}>
-                    Formar un grupo de estudio de 5 personas y completar una sesión juntos
-                  </Typography>
-                  <Box mb={2}>
-                    <Box display="flex" justifyContent="space-between" mb={1}>
-                      <Typography variant="caption">Participantes</Typography>
-                      <Typography variant="caption">3/5 unidos</Typography>
-                    </Box>
-                    <LinearProgress variant="determinate" value={60} sx={{ height: 6, borderRadius: 3 }} />
-                  </Box>
-                  <Box display="flex" gap={1} mb={2}>
-                    <Chip icon={<Diamond />} label="+200 Mëritos" size="small" color="primary" />
-                    <Chip icon={<Bolt />} label="+100 Öndas" size="small" color="secondary" />
-                  </Box>
-                  <Button variant="outlined" color="success" size="small" fullWidth>
-                    Invitar Amigos
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* Misión Temporal */}
-            <Grid item xs={12} md={6} lg={4}>
-              <Card sx={{ height: '100%', border: '2px solid', borderColor: 'warning.main' }}>
-                <CardContent>
-                  <Box display="flex" alignItems="center" mb={2}>
-                    <Whatshot sx={{ color: 'warning.main', mr: 1 }} />
-                    <Typography variant="h6" fontWeight="bold">
-                      Evento Solsticio
-                    </Typography>
-                    <Chip label="Temporal" size="small" color="warning" sx={{ ml: 'auto' }} />
-                  </Box>
-                  <Typography variant="body2" color="text.secondary" mb={3}>
-                    Evento especial: Participar en 3 Video Parties durante el fin de semana
-                  </Typography>
-                  <Box mb={2}>
-                    <Box display="flex" justifyContent="space-between" mb={1}>
-                      <Typography variant="caption">Tiempo restante</Typography>
-                      <Typography variant="caption" color="warning.main" fontWeight="bold">
-                        2 días 14h
+            <Grid container spacing={3}>
+              {/* Misión Individual */}
+              <Grid item xs={12} md={6} lg={4}>
+                <Card sx={{ height: '100%', border: '2px solid', borderColor: 'primary.main' }}>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" mb={2}>
+                      <Star sx={{ color: 'primary.main', mr: 1 }} />
+                      <Typography variant="h6" fontWeight="bold">
+                        Explorador Curioso
                       </Typography>
+                      <Chip label="Individual" size="small" sx={{ ml: 'auto' }} />
                     </Box>
-                    <LinearProgress variant="determinate" value={33} sx={{ height: 6, borderRadius: 3 }} />
-                  </Box>
-                  <Box display="flex" gap={1} mb={2}>
-                    <Chip icon={<Diamond />} label="+500 Mëritos" size="small" color="primary" />
-                    <Chip icon={<AutoAwesome />} label="Logro Exclusivo" size="small" color="warning" />
-                  </Box>
-                  <Button variant="outlined" color="warning" size="small" fullWidth disabled>
-                    Requiere Video Parties
-                  </Button>
-                </CardContent>
-              </Card>
+                    <Typography variant="body2" color="text.secondary" mb={3}>
+                      Completa videos de 3 categorías diferentes en un solo día
+                    </Typography>
+                    <Box mb={2}>
+                      <Box display="flex" justifyContent="space-between" mb={1}>
+                        <Typography variant="caption">Progreso</Typography>
+                        <Typography variant="caption">2/3 categorías</Typography>
+                      </Box>
+                      <LinearProgress variant="determinate" value={67} sx={{ height: 6, borderRadius: 3 }} />
+                    </Box>
+                    <Box display="flex" gap={1}>
+                      <Chip icon={<Diamond />} label="+50 Mëritos" size="small" color="primary" />
+                      <Chip icon={<Bolt />} label="+25 Öndas" size="small" color="secondary" />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Misión Colaborativa */}
+              <Grid item xs={12} md={6} lg={4}>
+                <Card sx={{ height: '100%', border: '2px solid', borderColor: 'success.main' }}>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" mb={2}>
+                      <Groups sx={{ color: 'success.main', mr: 1 }} />
+                      <Typography variant="h6" fontWeight="bold">
+                        Círculo de Ayni
+                      </Typography>
+                      <Chip label="Colaborativa" size="small" color="success" sx={{ ml: 'auto' }} />
+                    </Box>
+                    <Typography variant="body2" color="text.secondary" mb={3}>
+                      Formar un grupo de estudio de 5 personas y completar una sesión juntos
+                    </Typography>
+                    <Box mb={2}>
+                      <Box display="flex" justifyContent="space-between" mb={1}>
+                        <Typography variant="caption">Participantes</Typography>
+                        <Typography variant="caption">3/5 unidos</Typography>
+                      </Box>
+                      <LinearProgress variant="determinate" value={60} sx={{ height: 6, borderRadius: 3 }} />
+                    </Box>
+                    <Box display="flex" gap={1} mb={2}>
+                      <Chip icon={<Diamond />} label="+200 Mëritos" size="small" color="primary" />
+                      <Chip icon={<Bolt />} label="+100 Öndas" size="small" color="secondary" />
+                    </Box>
+                    <Button variant="outlined" color="success" size="small" fullWidth>
+                      Invitar Amigos
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Misión Temporal */}
+              <Grid item xs={12} md={6} lg={4}>
+                <Card sx={{ height: '100%', border: '2px solid', borderColor: 'warning.main' }}>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" mb={2}>
+                      <Whatshot sx={{ color: 'warning.main', mr: 1 }} />
+                      <Typography variant="h6" fontWeight="bold">
+                        Evento Solsticio
+                      </Typography>
+                      <Chip label="Temporal" size="small" color="warning" sx={{ ml: 'auto' }} />
+                    </Box>
+                    <Typography variant="body2" color="text.secondary" mb={3}>
+                      Evento especial: Participar en 3 Video Parties durante el fin de semana
+                    </Typography>
+                    <Box mb={2}>
+                      <Box display="flex" justifyContent="space-between" mb={1}>
+                        <Typography variant="caption">Tiempo restante</Typography>
+                        <Typography variant="caption" color="warning.main" fontWeight="bold">
+                          2 días 14h
+                        </Typography>
+                      </Box>
+                      <LinearProgress variant="determinate" value={33} sx={{ height: 6, borderRadius: 3 }} />
+                    </Box>
+                    <Box display="flex" gap={1} mb={2}>
+                      <Chip icon={<Diamond />} label="+500 Mëritos" size="small" color="primary" />
+                      <Chip icon={<AutoAwesome />} label="Logro Exclusivo" size="small" color="warning" />
+                    </Box>
+                    <Button variant="outlined" color="warning" size="small" fullWidth disabled>
+                      Requiere Video Parties
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </TabPanel>
-
-      <TabPanel value={tabValue} index={2}>
-        {dynamicMetricsData?.metrics ? (
-          <DynamicMetricsDashboard 
-            metrics={dynamicMetricsData.metrics}
-            progressHistory={dynamicMetricsData.progressHistory || []}
-            categoryProgress={dynamicMetricsData.categoryProgress || []}
-            isLoading={dynamicMetricsData.isLoading || false}
-            showAnimations={dynamicMetricsData.showAnimations || true}
-          />
-        ) : (
-          <Container maxWidth="xl" sx={{ py: 4 }}>
-            <Card sx={{ textAlign: 'center', p: 4 }}>
-              <CircularProgress size={60} />
-              <Typography variant="h6" sx={{ mt: 2 }}>
-                Cargando Métricas Avanzadas...
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Analizando tu rendimiento de aprendizaje
-              </Typography>
-            </Card>
           </Container>
-        )}
-      </TabPanel>
+        </TabPanel>
 
-      <TabPanel value={tabValue} index={3}>
-        {renderAchievements()}
-      </TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          {dynamicMetricsData?.metrics ? (
+            <DynamicMetricsDashboard 
+              metrics={dynamicMetricsData.metrics}
+              progressHistory={dynamicMetricsData.progressHistory || []}
+              categoryProgress={dynamicMetricsData.categoryProgress || []}
+              isLoading={dynamicMetricsData.isLoading || false}
+              showAnimations={dynamicMetricsData.showAnimations || true}
+            />
+          ) : (
+            <Container maxWidth="xl" sx={{ py: 4 }}>
+              <Card sx={{ textAlign: 'center', p: 4 }}>
+                <CircularProgress size={60} />
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  Cargando Métricas Avanzadas...
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  Analizando tu rendimiento de aprendizaje
+                </Typography>
+              </Card>
+            </Container>
+          )}
+        </TabPanel>
 
-      {/* [NUEVO] FASE 2: Funcionalidades Sociales según recomendaciones del review */}
-      <TabPanel value={tabValue} index={4}>
-        <Container maxWidth="xl">
-          <StudyRoomList 
-            onJoinRoom={async (roomId) => {
-              console.log('Joining study room:', roomId);
-              // TODO: Implementar lógica de unirse a sala
-            }}
-            onCreateRoom={async (roomData) => {
-              console.log('Creating study room:', roomData);
-              // TODO: Implementar lógica de crear sala
-            }}
-            currentVideoId={selectedVideo}
-          />
-        </Container>
-      </TabPanel>
+        <TabPanel value={tabValue} index={3}>
+          {renderAchievements()}
+        </TabPanel>
 
-      <TabPanel value={tabValue} index={5}>
-        <Container maxWidth="xl">
-          <Box textAlign="center" py={8}>
-            <LiveTv sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h4" fontWeight="bold" mb={2}>
-              Video Parties 🎉
-            </Typography>
-            <Typography variant="h6" color="text.secondary" mb={3}>
-              Próximamente: Sesiones sincronizadas con activación temporal
-            </Typography>
-            <Typography variant="body1" color="text.secondary" mb={4} maxWidth="600px" mx="auto">
-              Únete a eventos especiales donde videos se activan solo cuando hay suficientes participantes. 
-              Experiencia colaborativa única con recompensas exclusivas y efectos de celebración sincronizados.
-            </Typography>
-            
-            {/* Preview de funcionalidades que vendrán */}
-            <Grid container spacing={3} maxWidth="800px" mx="auto">
-                             <Grid item xs={12} md={4}>
+        {/* [NUEVO] FASE 2: Funcionalidades Sociales según recomendaciones del review */}
+        <TabPanel value={tabValue} index={4}>
+          <Container maxWidth="xl">
+            <StudyRoomList 
+              onJoinRoom={async (roomId) => {
+                console.log('Joining study room:', roomId);
+                // TODO: Implementar lógica de unirse a sala
+              }}
+              onCreateRoom={async (roomData) => {
+                console.log('Creating study room:', roomData);
+                // TODO: Implementar lógica de crear sala
+              }}
+              currentVideoId={selectedVideo}
+            />
+          </Container>
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={5}>
+          <Container maxWidth="xl">
+            <Box textAlign="center" py={8}>
+              <LiveTv sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+              <Typography variant="h4" fontWeight="bold" mb={2}>
+                Video Parties 🎉
+              </Typography>
+              <Typography variant="h6" color="text.secondary" mb={3}>
+                Próximamente: Sesiones sincronizadas con activación temporal
+              </Typography>
+              <Typography variant="body1" color="text.secondary" mb={4} maxWidth="600px" mx="auto">
+                Únete a eventos especiales donde videos se activan solo cuando hay suficientes participantes. 
+                Experiencia colaborativa única con recompensas exclusivas y efectos de celebración sincronizados.
+              </Typography>
+              
+              {/* Preview de funcionalidades que vendrán */}
+              <Grid container spacing={3} maxWidth="800px" mx="auto">
+                               <Grid item xs={12} md={4}>
                  <Card sx={{ textAlign: 'center', p: 3 }}>
                    <PartyMode sx={{ fontSize: 40, color: 'primary.main', mb: 2 }} />
                    <Typography variant="h6" mb={1}>Activación por Usuarios</Typography>
@@ -1189,7 +1205,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         />
       )}
     </Box>
-  );
-};
+  </RevolutionaryWidget>
+);
 
 export default UPlayGamifiedDashboard; 
