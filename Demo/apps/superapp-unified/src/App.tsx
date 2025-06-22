@@ -86,11 +86,12 @@ const App: React.FC = () => {
                     }}
                   >
                     <AppRoutes />
+
+                    {/* El botón flotante del tutorial va aquí para heredar el contexto */}
+                    <TutorialFloatingButton />
                   </Box>
 
                   {/* Onboarding System and other complex components are disabled for now */}
-
-                  <TutorialFloatingButton />
 
                   <Toaster
                     position="top-right"
