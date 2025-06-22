@@ -23,6 +23,9 @@ import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import { useTheme, alpha, useMediaQuery } from '@mui/material';
 
+// 🌟 GUARDIAN AGENTS - Visual Harmony System
+import { useGuardianColors } from '../components/theme/GuardianColorProvider';
+
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
@@ -85,6 +88,10 @@ import '../styles/home-effects-advanced.css';
 import '../styles/home-renovated.css';
 import '../styles/home-harmony.css';
 import '../styles/ayni-revolutionary.css';
+// 🌟 NUEVO: Sistema Visual Guardian - Armonía unificada
+import '../styles/guardian-visual-system.css';
+// 🌟 GUARDIAN: Armonía visual mejorada
+import '../styles/visual-harmony-enhancement.css';
 
 // 🏷️ Tipos para las notificaciones inteligentes
 interface Notification {
@@ -250,6 +257,9 @@ export const HomeEnhanced: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isTablet = useMediaQuery(theme.breakpoints.between('md', 'lg'));
 
+  // 🌟 GUARDIAN AGENTS - Visual Harmony Integration
+  const { currentTheme, palette } = useGuardianColors();
+
   // 🎯 Estados locales
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [animate, setAnimate] = useState(false);
@@ -263,7 +273,7 @@ export const HomeEnhanced: React.FC = () => {
     'normal' | 'optimized'
   >('normal');
   const [notificationFilter, setNotificationFilter] = useState<
-    'all' | 'high' | 'unread'
+    'all' | 'high' | 'unread' | 'critical' | 'smart'
   >('all');
 
   // 🎯 Estados de interacción avanzados
@@ -299,11 +309,16 @@ export const HomeEnhanced: React.FC = () => {
         return notifications.filter((n) => n.priority === 'high');
       case 'unread':
         return notifications.filter((n) => !n.isRead);
+      case 'critical':
+        return notifications.filter((n) => n.priority === 'critical');
+      case 'smart':
+        return notifications.filter((n) => (n.aiScore || 0) > 80);
       default:
         return notifications;
     }
   }, [notificationFilter]);
 
+  // 🌟 Guardian-enhanced notification stats
   const notificationStats = useMemo(() => {
     const total = enhancedMockData.notifications.length;
     const unread = enhancedMockData.notifications.filter(
@@ -312,8 +327,32 @@ export const HomeEnhanced: React.FC = () => {
     const high = enhancedMockData.notifications.filter(
       (n) => n.priority === 'high'
     ).length;
+    const critical = enhancedMockData.notifications.filter(
+      (n) => n.priority === 'critical'
+    ).length;
 
-    return { total, unread, high };
+    const avgEngagement = enhancedMockData.notifications.reduce(
+      (acc, n) => acc + (n.userEngagement || 0), 0
+    ) / total;
+
+    const byType = {
+      ayni: enhancedMockData.notifications.filter((n) => n.type === 'ayni').length,
+      meritos: enhancedMockData.notifications.filter((n) => n.type === 'meritos').length,
+      social: enhancedMockData.notifications.filter((n) => n.type === 'social').length,
+      marketplace: enhancedMockData.notifications.filter((n) => n.type === 'marketplace').length,
+      system: enhancedMockData.notifications.filter((n) => n.type === 'system').length,
+      achievement: enhancedMockData.notifications.filter((n) => n.type === 'achievement').length,
+      tip: enhancedMockData.notifications.filter((n) => n.type === 'tip').length,
+    };
+
+    return {
+      total,
+      unread,
+      high,
+      critical,
+      avgEngagement,
+      byType
+    };
   }, []);
 
   // 🎨 Mapear datos del backend al formato esperado
@@ -354,7 +393,7 @@ export const HomeEnhanced: React.FC = () => {
     };
   }, [walletData]);
 
-  // 🎨 Hero personalizado dinámico
+  // 🎨 Hero personalizado dinámico con Guardian theming
   const heroData = useMemo(() => {
     const hour = new Date().getHours();
     let greeting = '¡Buen día!';
@@ -364,7 +403,8 @@ export const HomeEnhanced: React.FC = () => {
 
     const userName = (
       userData?.full_name ||
-      user?.full_name ||
+      user?.name ||
+      user?.email?.split('@')[0] ||
       'CoomÜnity'
     ).split(' ')[0];
 
@@ -443,7 +483,7 @@ export const HomeEnhanced: React.FC = () => {
   }, [notificationsOpen]);
 
   const handleNotificationFilterChange = useCallback(
-    (filter: 'all' | 'high' | 'unread') => {
+    (filter: 'all' | 'high' | 'unread' | 'critical' | 'smart') => {
       setNotificationFilter(filter);
     },
     []
@@ -493,150 +533,217 @@ export const HomeEnhanced: React.FC = () => {
     }
   }, []);
 
-  // 🎨 Hero Section Mejorado
+  // 🌟 Guardian Enhanced Hero Section
   const renderEnhancedHero = () => (
-    <Fade in={animate} timeout={600}>
-      <Box
-        className="harmony-card-hero harmony-section-hero"
-        sx={{
-          background: `linear-gradient(135deg,
-            ${alpha(theme.palette.primary.main, 0.9)} 0%,
-            ${alpha(theme.palette.secondary.main, 0.8)} 50%,
-            ${alpha(theme.palette.primary.dark, 0.9)} 100%)`,
-          position: 'relative',
-          overflow: 'hidden',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            animation: 'float-pattern 20s ease-in-out infinite',
-          },
-        }}
-      >
-        <Grid container spacing={4} alignItems="center">
+    <Box
+      sx={{
+        position: 'relative',
+        background: `linear-gradient(135deg, ${palette.primary}15 0%, ${palette.secondary}10 100%)`,
+        borderRadius: 3,
+        padding: { xs: 3, md: 4 },
+        marginBottom: 3,
+        border: `1px solid ${palette.primary}25`,
+        overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `radial-gradient(circle at 30% 20%, ${palette.mystic}08 0%, transparent 70%)`,
+          pointerEvents: 'none',
+        },
+      }}
+    >
+      <Fade in={animate} timeout={800}>
+        <Grid container spacing={3} alignItems="center">
+          {/* Welcome Message with Guardian theming */}
           <Grid item xs={12} md={8}>
             <Box sx={{ position: 'relative', zIndex: 1 }}>
-              <Box
-                sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}
+              <Typography
+                variant="h3"
+                sx={{
+                  fontWeight: 800,
+                  background: `linear-gradient(135deg, ${palette.primary}, ${palette.accent})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  marginBottom: 1,
+                  fontSize: { xs: '2rem', md: '3rem' },
+                }}
               >
-                <WavingHandIcon sx={{ fontSize: '2rem', color: '#FFD54F' }} />
-                <Typography
-                  variant="h3"
-                  sx={{
-                    fontWeight: 'bold',
-                    color: 'white',
-                    fontSize: { xs: '1.8rem', md: '2.5rem' },
-                  }}
-                >
-                  {heroData.greeting}
-                </Typography>
-              </Box>
+                {heroData.greeting}
+              </Typography>
 
               <Typography
-                variant="h4"
+                variant="h5"
                 sx={{
-                  color: 'white',
-                  mb: 1,
-                  fontSize: { xs: '1.5rem', md: '2rem' },
+                  color: palette.text.primary,
+                  fontWeight: 600,
+                  marginBottom: 2,
+                  fontSize: { xs: '1.25rem', md: '1.5rem' },
                 }}
               >
                 {heroData.userName}
               </Typography>
 
-              <Typography
-                variant="h6"
-                sx={{
-                  color: alpha('#fff', 0.9),
-                  mb: 3,
-                  fontSize: { xs: '1rem', md: '1.25rem' },
-                }}
-              >
-                {heroData.level}
-              </Typography>
-
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                <Chip
-                  icon={<BoltIcon />}
-                  label={`${normalizedGameData.ondas} Öndas`}
-                  sx={{
-                    bgcolor: alpha('#FFD54F', 0.2),
-                    color: '#FFD54F',
-                    fontWeight: 'bold',
-                  }}
-                />
-                <Chip
-                  icon={<DiamondIcon />}
-                  label={`${normalizedGameData.meritos} Mëritos`}
-                  sx={{
-                    bgcolor: alpha('#4FC3F7', 0.2),
-                    color: '#4FC3F7',
-                    fontWeight: 'bold',
-                  }}
-                />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
                 <Chip
                   icon={<StarIcon />}
-                  label={`${heroData.streak} días seguidos`}
+                  label={heroData.level}
                   sx={{
-                    bgcolor: alpha('#8BC34A', 0.2),
-                    color: '#8BC34A',
-                    fontWeight: 'bold',
+                    background: `linear-gradient(135deg, ${palette.accent}, ${palette.primary})`,
+                    color: '#ffffff',
+                    fontWeight: 600,
+                    '& .MuiChip-icon': { color: '#ffffff' },
+                  }}
+                />
+
+                <Chip
+                  icon={<LocalFireDepartmentIcon />}
+                  label={`${heroData.streak} días`}
+                  sx={{
+                    background: `linear-gradient(135deg, ${palette.primary}, ${palette.secondary})`,
+                    color: '#ffffff',
+                    fontWeight: 600,
+                    '& .MuiChip-icon': { color: '#ffffff' },
+                  }}
+                />
+
+                <Chip
+                  icon={<HandshakeIcon />}
+                  label={`${normalizedGameData.bienComunContributions} contribuciones`}
+                  sx={{
+                    background: `linear-gradient(135deg, ${palette.secondary}, ${palette.mystic})`,
+                    color: '#ffffff',
+                    fontWeight: 600,
+                    '& .MuiChip-icon': { color: '#ffffff' },
                   }}
                 />
               </Box>
             </Box>
           </Grid>
 
+          {/* Guardian Elements Visualization */}
           <Grid item xs={12} md={4}>
-            <Box sx={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+            <Box
+              sx={{
+                position: 'relative',
+                height: 180,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {/* Five Elements Circle */}
               <Box
                 sx={{
-                  width: 180,
-                  height: 180,
+                  position: 'relative',
+                  width: 140,
+                  height: 140,
                   borderRadius: '50%',
-                  background: `conic-gradient(from 0deg, #8BC34A 0deg ${heroData.progress * 3.6}deg, rgba(255,255,255,0.2) ${heroData.progress * 3.6}deg 360deg)`,
+                  background: `conic-gradient(
+                    ${palette.primary} 0deg 72deg,
+                    ${palette.secondary} 72deg 144deg,
+                    ${palette.accent} 144deg 216deg,
+                    ${palette.mystic} 216deg 288deg,
+                    ${palette.neutral} 288deg 360deg
+                  )`,
+                  padding: 3,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  mx: 'auto',
-                  animation: 'rotate-slow 20s linear infinite',
+                  animation: 'guardian-rotate 20s linear infinite',
+                  '@keyframes guardian-rotate': {
+                    from: { transform: 'rotate(0deg)' },
+                    to: { transform: 'rotate(360deg)' },
+                  },
                 }}
               >
                 <Box
                   sx={{
-                    width: 140,
-                    height: 140,
+                    width: '100%',
+                    height: '100%',
                     borderRadius: '50%',
-                    bgcolor: alpha('#fff', 0.1),
+                    background: palette.background,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    backdropFilter: 'blur(10px)',
+                    gap: 1,
                   }}
                 >
                   <Typography
                     variant="h4"
-                    sx={{ color: 'white', fontWeight: 'bold', mb: 1 }}
+                    sx={{
+                      fontWeight: 800,
+                      color: palette.primary,
+                    }}
                   >
-                    {Math.round(normalizedGameData.balanceAyni * 100)}%
+                    {Math.round(heroData.progress)}%
                   </Typography>
                   <Typography
                     variant="caption"
-                    sx={{ color: alpha('#fff', 0.8) }}
+                    sx={{
+                      color: palette.text.secondary,
+                      fontWeight: 600,
+                      textAlign: 'center',
+                    }}
                   >
-                    Balance Ayni
+                    Progreso Ayni
                   </Typography>
                 </Box>
               </Box>
+
+              {/* Floating Elements Icons */}
+              {[
+                { icon: <LocalFireDepartmentIcon />, color: palette.primary, position: { top: 10, right: 10 } },
+                { icon: <WavingHandIcon />, color: palette.secondary, position: { top: 50, left: -10 } },
+                { icon: <DiamondIcon />, color: palette.accent, position: { bottom: 50, left: -10 } },
+                { icon: <BoltIcon />, color: palette.mystic, position: { bottom: 10, right: 10 } },
+              ].map((element, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    position: 'absolute',
+                    ...element.position,
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    background: element.color,
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    animation: `guardian-float-${index} 3s ease-in-out infinite`,
+                    animationDelay: `${index * 0.5}s`,
+                    '@keyframes guardian-float-0': {
+                      '0%, 100%': { transform: 'translateY(0px)' },
+                      '50%': { transform: 'translateY(-8px)' },
+                    },
+                    '@keyframes guardian-float-1': {
+                      '0%, 100%': { transform: 'translateX(0px)' },
+                      '50%': { transform: 'translateX(8px)' },
+                    },
+                    '@keyframes guardian-float-2': {
+                      '0%, 100%': { transform: 'translateY(0px)' },
+                      '50%': { transform: 'translateY(8px)' },
+                    },
+                    '@keyframes guardian-float-3': {
+                      '0%, 100%': { transform: 'translateX(0px)' },
+                      '50%': { transform: 'translateX(-8px)' },
+                    },
+                  }}
+                >
+                  {element.icon}
+                </Box>
+              ))}
             </Box>
           </Grid>
         </Grid>
-      </Box>
-    </Fade>
+      </Fade>
+    </Box>
   );
 
   // 🎯 Esqueleto de carga

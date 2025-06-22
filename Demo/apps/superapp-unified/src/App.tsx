@@ -11,6 +11,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
 import { FeedbackProvider } from './contexts/FeedbackContext';
 
+// 🌟 GUARDIAN AGENTS - Color Harmony System
+import { GuardianColorProvider, GuardianThemeSelector } from './components/theme/GuardianColorProvider';
+
 // 🎓 Tutorial Discovery System
 import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';
 
@@ -172,56 +175,58 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <AuthProvider>
-            <FeedbackProvider>
-              <LetsEducationProvider>
-              <CssBaseline />
-              <Router>
-                <DiscoveryTutorialProvider>
-                  <Box
-                    sx={{
-                      minHeight: '100vh',
-                      background: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)'
-                          : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
-                    }}
-                  >
-                    <Suspense fallback={<div>Cargando...</div>}>
-                      <AppRoutes />
-                    </Suspense>
+        {/* 🌟 GUARDIAN AGENTS ACTIVATED - Global Visual Harmony */}
+        <GuardianColorProvider initialTheme="guardian">
+          <ThemeProvider>
+            <AuthProvider>
+              <FeedbackProvider>
+                <LetsEducationProvider>
+                <CssBaseline />
+                <Router>
+                  <DiscoveryTutorialProvider>
+                    <Box
+                      sx={{
+                        minHeight: '100vh',
+                        background: 'var(--guardian-gradient-cosmic)',
+                        transition: 'background 300ms ease',
+                      }}
+                    >
+                      <Suspense fallback={<div>Cargando...</div>}>
+                        <AppRoutes />
+                      </Suspense>
 
-                    {/* El botón flotante del tutorial va aquí para heredar el contexto */}
-                    <TutorialFloatingButton />
+                      {/* 🎨 Guardian Theme Selector - For testing and admin */}
+                      <GuardianThemeSelector />
 
-                    {/* Banner de Entorno */}
-                    <EnvironmentBanner />
-                  </Box>
+                      {/* El botón flotante del tutorial va aquí para heredar el contexto */}
+                      <TutorialFloatingButton />
 
-                  {/* Onboarding System and other complex components are disabled for now */}
-
-                  <Toaster
-                    position="top-right"
-                    toastOptions={{
-                      duration: 4000,
-                      style: {
-                        background: 'var(--coomunity-card-bg)',
-                        color: 'var(--coomunity-text-primary)',
-                        border: '1px solid var(--coomunity-border)',
-                      },
-                    }}
-                  />
-
-                  {process.env.NODE_ENV === 'development' && (
-                    <ReactQueryDevtools initialIsOpen={false} />
-                  )}
-                </DiscoveryTutorialProvider>
-              </Router>
-            </LetsEducationProvider>
+                      {/* Banner de Entorno */}
+                      <EnvironmentBanner />
+                    </Box>
+                  </DiscoveryTutorialProvider>
+                </Router>
+                </LetsEducationProvider>
               </FeedbackProvider>
-          </AuthProvider>
-        </ThemeProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </GuardianColorProvider>
+
+        {/* React Query DevTools */}
+        <ReactQueryDevtools initialIsOpen={false} />
+
+        {/* Toast Notifications with Guardian theming */}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: 'var(--guardian-bg-surface)',
+              color: 'var(--guardian-text-primary)',
+              border: '1px solid var(--guardian-primary)',
+              borderRadius: '16px',
+            },
+          }}
+        />
       </QueryClientProvider>
     </ErrorBoundary>
   );

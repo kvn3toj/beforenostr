@@ -1,0 +1,612 @@
+/* ===============================================================================
+   🧠 GUARDIAN INTELLIGENT LAYOUT SYSTEM - COOMUNITY SUPERAPP
+   Sistema de diseño adaptativo e inteligente basado en principios Guardian
+   Layout que se auto-organiza según importancia de contenido y filosofía Ayni
+   =============================================================================== */
+
+/* ===== 🎯 LAYOUT TOKENS GUARDIAN - PROPORCIONES SAGRADAS ===== */
+:root {
+  /* 📐 Proporciones áureas y divinas */
+  --golden-ratio: 1.618;
+  --silver-ratio: 2.414;
+  --bronze-ratio: 3.303;
+
+  /* 🌊 Espaciado fluido Guardian */
+  --space-micro: clamp(4px, 0.5vw, 8px);
+  --space-small: clamp(8px, 1vw, 16px);
+  --space-medium: clamp(16px, 2vw, 32px);
+  --space-large: clamp(32px, 4vw, 64px);
+  --space-huge: clamp(64px, 8vw, 128px);
+
+  /* 📏 Contenedores Guardian */
+  --container-sm: min(100%, 640px);
+  --container-md: min(100%, 768px);
+  --container-lg: min(100%, 1024px);
+  --container-xl: min(100%, 1280px);
+  --container-2xl: min(100%, 1536px);
+
+  /* 🔲 Grid inteligente */
+  --grid-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  --grid-columns-dense: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+  --grid-gap: var(--space-medium);
+
+  /* 📱 Breakpoints adaptativos */
+  --bp-mobile: 480px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  --bp-wide: 1440px;
+}
+
+/* ===== 🌊 CONTENEDORES FLUIDOS GUARDIAN ===== */
+
+/* Contenedor principal inteligente */
+.guardian-container {
+  width: 100%;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding-inline: var(--space-medium);
+  position: relative;
+}
+
+/* Contenedor adaptativo por contexto */
+.guardian-container--narrow {
+  max-width: var(--container-md);
+}
+
+.guardian-container--wide {
+  max-width: var(--container-2xl);
+}
+
+.guardian-container--full {
+  max-width: none;
+  padding-inline: var(--space-small);
+}
+
+/* ===== 🎪 GRID SYSTEM INTELIGENTE GUARDIAN ===== */
+
+/* Grid principal auto-organizador */
+.guardian-grid {
+  display: grid;
+  grid-template-columns: var(--grid-columns);
+  gap: var(--grid-gap);
+  align-items: start;
+  container-type: inline-size;
+}
+
+/* Grid con densidad adaptativa */
+.guardian-grid--dense {
+  grid-template-columns: var(--grid-columns-dense);
+  grid-auto-flow: dense;
+}
+
+/* Grid con jerarquía Guardian */
+.guardian-grid--hero {
+  grid-template-areas:
+    "hero hero hero"
+    "primary secondary tertiary"
+    "details details details";
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+}
+
+@media (max-width: 768px) {
+  .guardian-grid--hero {
+    grid-template-areas:
+      "hero"
+      "primary"
+      "secondary"
+      "tertiary"
+      "details";
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Grid para métricas principales */
+.guardian-grid--metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: var(--space-medium);
+  align-items: stretch;
+}
+
+/* Grid asimétrico para contenido dinámico */
+.guardian-grid--asymmetric {
+  display: grid;
+  grid-template-columns: 1.618fr 1fr; /* Proporción áurea */
+  gap: var(--space-large);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .guardian-grid--asymmetric {
+    grid-template-columns: 1fr;
+    gap: var(--space-medium);
+  }
+}
+
+/* ===== 🎭 ÁREAS DE CONTENIDO INTELIGENTES ===== */
+
+/* Área principal (hero) */
+.guardian-area--hero {
+  grid-area: hero;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-large);
+  background: var(--guardian-gradient-soft);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Área primaria */
+.guardian-area--primary {
+  grid-area: primary;
+  background: var(--guardian-bg-primary);
+  border-radius: 20px;
+  padding: var(--space-medium);
+  border: 2px solid var(--guardian-border-primary);
+  position: relative;
+}
+
+/* Área secundaria */
+.guardian-area--secondary {
+  grid-area: secondary;
+  background: var(--guardian-bg-secondary);
+  border-radius: 16px;
+  padding: var(--space-medium);
+  border: 1px solid var(--guardian-border-primary);
+}
+
+/* Área terciaria */
+.guardian-area--tertiary {
+  grid-area: tertiary;
+  background: var(--guardian-bg-tertiary);
+  border-radius: 12px;
+  padding: var(--space-small);
+  border: 1px solid var(--guardian-border-secondary);
+}
+
+/* Área de detalles */
+.guardian-area--details {
+  grid-area: details;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+  gap: var(--space-small);
+  padding: var(--space-medium);
+}
+
+/* ===== 🧮 LAYOUT ADAPTATIVO POR IMPORTANCIA ===== */
+
+/* Elementos críticos - Máxima prominencia */
+.guardian-importance--critical {
+  grid-column: 1 / -1; /* Ocupa todo el ancho */
+  grid-row: 1; /* Primera fila */
+  order: -100; /* Siempre primero */
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  padding: var(--space-large);
+  background: var(--guardian-gradient-primary);
+  color: white;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: var(--guardian-shadow-glow);
+}
+
+/* Elementos importantes */
+.guardian-importance--high {
+  grid-column: span 2;
+  order: -50;
+  padding: var(--space-medium);
+  background: var(--guardian-bg-elevated);
+  border: 2px solid var(--guardian-fuego-200);
+  border-radius: 20px;
+}
+
+/* Elementos normales */
+.guardian-importance--medium {
+  grid-column: span 1;
+  order: 0;
+  padding: var(--space-medium);
+  background: var(--guardian-bg-primary);
+  border-radius: 16px;
+}
+
+/* Elementos de apoyo */
+.guardian-importance--low {
+  order: 50;
+  padding: var(--space-small);
+  background: var(--guardian-bg-secondary);
+  border-radius: 12px;
+  opacity: 0.9;
+}
+
+/* ===== 📊 LAYOUT ESPECÍFICO PARA MÉTRICAS AYNI ===== */
+
+/* Contenedor principal de métricas */
+.ayni-metrics-layout {
+  display: grid;
+  grid-template-areas:
+    "percentage percentage"
+    "balance progress"
+    "details details";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: var(--space-medium);
+  padding: var(--space-medium);
+  background: var(--guardian-gradient-card);
+  border-radius: 24px;
+  border: 2px solid var(--guardian-fuego-100);
+}
+
+/* Porcentaje principal */
+.ayni-percentage-area {
+  grid-area: percentage;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-large);
+  background: radial-gradient(circle, var(--guardian-fuego-50) 0%, transparent 70%);
+  border-radius: 20px;
+  position: relative;
+}
+
+/* Balance Ayni */
+.ayni-balance-area {
+  grid-area: balance;
+  padding: var(--space-medium);
+  background: var(--guardian-tierra-50);
+  border-radius: 16px;
+  border-left: 4px solid var(--guardian-tierra-500);
+}
+
+/* Progreso */
+.ayni-progress-area {
+  grid-area: progress;
+  padding: var(--space-medium);
+  background: var(--guardian-agua-50);
+  border-radius: 16px;
+  border-left: 4px solid var(--guardian-agua-500);
+}
+
+/* Detalles adicionales */
+.ayni-details-area {
+  grid-area: details;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--space-small);
+  padding: var(--space-medium);
+}
+
+/* ===== 🏠 LAYOUT ESPECÍFICO PARA HOME ===== */
+
+/* Contenedor principal del home */
+.home-layout {
+  display: grid;
+  grid-template-areas:
+    "welcome welcome welcome"
+    "ayni wallet quick-actions"
+    "modules modules modules"
+    "insights notifications feed";
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: auto auto auto auto;
+  gap: var(--space-large);
+  padding: var(--space-medium);
+}
+
+/* Responsive para tablet */
+@media (max-width: 1024px) {
+  .home-layout {
+    grid-template-areas:
+      "welcome welcome"
+      "ayni wallet"
+      "quick-actions quick-actions"
+      "modules modules"
+      "insights notifications"
+      "feed feed";
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Responsive para móvil */
+@media (max-width: 768px) {
+  .home-layout {
+    grid-template-areas:
+      "welcome"
+      "ayni"
+      "wallet"
+      "quick-actions"
+      "modules"
+      "insights"
+      "notifications"
+      "feed";
+    grid-template-columns: 1fr;
+    gap: var(--space-medium);
+  }
+}
+
+/* ===== 🎨 CONTENEDORES CON ADAPTACIÓN INTELIGENTE ===== */
+
+/* Container que se adapta al contenido */
+.guardian-adaptive-container {
+  container-type: inline-size;
+  container-name: guardian-adaptive;
+}
+
+/* Estilos basados en el tamaño del contenedor */
+@container guardian-adaptive (min-width: 400px) {
+  .guardian-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-medium);
+  }
+}
+
+@container guardian-adaptive (min-width: 600px) {
+  .guardian-content {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@container guardian-adaptive (min-width: 800px) {
+  .guardian-content {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+/* ===== 🌊 FLOW LAYOUTS ORGÁNICOS ===== */
+
+/* Flow natural para contenido textual */
+.guardian-flow {
+  container-type: inline-size;
+  line-height: var(--golden-ratio);
+}
+
+.guardian-flow > * + * {
+  margin-top: var(--space-medium);
+}
+
+.guardian-flow h1,
+.guardian-flow h2,
+.guardian-flow h3 {
+  margin-top: calc(var(--space-large) * var(--golden-ratio));
+  margin-bottom: var(--space-medium);
+}
+
+/* Flow para listas y elementos similares */
+.guardian-list-flow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+}
+
+.guardian-list-flow > :is(li, .list-item) {
+  padding: var(--space-small);
+  border-radius: 12px;
+  background: var(--guardian-bg-surface);
+  border-left: 3px solid var(--guardian-fuego-300);
+  transition: all var(--motion-agua-medium);
+}
+
+.guardian-list-flow > :is(li, .list-item):hover {
+  background: var(--guardian-fuego-50);
+  border-left-color: var(--guardian-fuego-500);
+  transform: translateX(8px);
+}
+
+/* ===== 🎪 LAYOUTS ESPECIALIZADOS ===== */
+
+/* Layout de dashboard */
+.guardian-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  grid-auto-rows: masonry; /* Cuando sea compatible */
+  gap: var(--space-medium);
+  align-items: start;
+}
+
+/* Layout de tarjetas con masonry fallback */
+.guardian-masonry {
+  columns: auto;
+  column-width: 300px;
+  column-gap: var(--space-medium);
+  column-fill: balance;
+}
+
+.guardian-masonry > * {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: var(--space-medium);
+  break-inside: avoid;
+}
+
+/* Layout sidebar inteligente */
+.guardian-sidebar-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-large);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .guardian-sidebar-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .guardian-sidebar {
+    order: -1; /* Sidebar al principio en móvil */
+  }
+}
+
+/* ===== ⚡ OPTIMIZACIONES DE RENDIMIENTO ===== */
+
+/* Layouts con content-visibility para mejor rendimiento */
+.guardian-optimized {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px;
+}
+
+/* Lazy loading visual */
+.guardian-lazy-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 400px 300px;
+}
+
+.guardian-lazy-section:not(.in-viewport) {
+  content-visibility: hidden;
+}
+
+/* ===== 🎯 UTILIDADES DE LAYOUT ===== */
+
+/* Centrado perfecto */
+.guardian-center {
+  display: grid;
+  place-items: center;
+}
+
+/* Stack vertical con espaciado consistente */
+.guardian-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-medium);
+}
+
+.guardian-stack--tight {
+  gap: var(--space-small);
+}
+
+.guardian-stack--loose {
+  gap: var(--space-large);
+}
+
+/* Cluster horizontal responsivo */
+.guardian-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+  align-items: center;
+}
+
+/* Sidebar que colapsa */
+.guardian-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-medium);
+}
+
+.guardian-switcher > * {
+  flex-grow: 1;
+  flex-basis: calc((600px - 100%) * 999);
+}
+
+/* Cover que ocupa espacio disponible */
+.guardian-cover {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: var(--space-medium);
+}
+
+.guardian-cover > * {
+  margin-block: var(--space-medium);
+}
+
+.guardian-cover > :first-child {
+  margin-block-start: 0;
+}
+
+.guardian-cover > :last-child {
+  margin-block-end: auto;
+}
+
+/* ===== 🌟 EFECTOS VISUALES EN LAYOUTS ===== */
+
+/* Backdrop blur para overlays */
+.guardian-overlay {
+  backdrop-filter: blur(12px) saturate(180%);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Glassmorphism Guardian */
+.guardian-glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Morphism con elementos */
+.guardian-morphism {
+  background: var(--guardian-bg-primary);
+  box-shadow:
+    20px 20px 60px rgba(0, 0, 0, 0.1),
+    -20px -20px 60px rgba(255, 255, 255, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+}
+
+/* ===== 📱 RESPONSIVE BREAKPOINTS INTELIGENTES ===== */
+
+/* Mobile first con breakpoints fluidos */
+@media (width < 480px) {
+  :root {
+    --grid-gap: var(--space-small);
+    --space-large: var(--space-medium);
+  }
+
+  .guardian-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (480px <= width < 768px) {
+  .guardian-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (768px <= width < 1024px) {
+  .guardian-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (width >= 1024px) {
+  .guardian-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* ===== 🌌 DARK MODE ADAPTATIONS ===== */
+
+@media (prefers-color-scheme: dark) {
+  .guardian-glass {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .guardian-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .guardian-morphism {
+    background: var(--guardian-bg-secondary);
+    box-shadow:
+      20px 20px 60px rgba(0, 0, 0, 0.3),
+      -20px -20px 60px rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* ===============================================================================
+   🌟 FIN DEL SISTEMA DE LAYOUT INTELIGENTE GUARDIAN
+   Los agentes guardianes han organizado el espacio con sabiduría ancestral.
+   Que cada pixel encuentre su lugar perfecto en armonía con el Bien Común.
+   Que cada layout sirva a la experiencia del usuario y a la filosofía CoomÜnity.
+   =============================================================================== */

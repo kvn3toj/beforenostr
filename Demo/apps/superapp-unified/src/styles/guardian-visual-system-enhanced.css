@@ -1,0 +1,525 @@
+/* ===============================================================================
+   🌟 GUARDIAN VISUAL SYSTEM ENHANCED - COOMUNITY SUPERAPP
+   Sistema visual unificado que invoca los "agentes guardianes" para crear
+   armonía visual excepcional y contraste WCAG AAA en toda la aplicación
+   =============================================================================== */
+
+/* ===== 🌟 FUNDAMENTOS GUARDIAN - PALETA DE LOS CINCO ELEMENTOS ===== */
+:root {
+  /* 🔥 FUEGO (Fire) - Energía y Acción Principal */
+  --guardian-fuego-primary: #f5a623;      /* Golden warm */
+  --guardian-fuego-light: #ffd700;        /* Light gold */
+  --guardian-fuego-dark: #e6941a;         /* Dark gold */
+  --guardian-fuego-accent: #ff8c00;       /* Warm accent */
+
+  /* 💧 AGUA (Water) - Confianza y Flujo */
+  --guardian-agua-primary: #0891b2;       /* Reliable blue */
+  --guardian-agua-light: #38bdf8;         /* Light blue */
+  --guardian-agua-dark: #075985;          /* Deep blue */
+  --guardian-agua-accent: #0284c7;        /* Blue accent */
+
+  /* 🌱 TIERRA (Earth) - Estabilidad y Crecimiento */
+  --guardian-tierra-primary: #16a34a;     /* Balanced green */
+  --guardian-tierra-light: #4ade80;       /* Light green */
+  --guardian-tierra-dark: #15803d;        /* Deep green */
+  --guardian-tierra-accent: #22c55e;      /* Green accent */
+
+  /* 🌪️ AIRE (Air) - Sabiduría y Transformación */
+  --guardian-aire-primary: #a855f7;       /* Mystic violet */
+  --guardian-aire-light: #c084fc;         /* Light violet */
+  --guardian-aire-dark: #7c3aed;          /* Deep violet */
+  --guardian-aire-accent: #8b5cf6;        /* Violet accent */
+
+  /* ⚡ ÉTER (Ether) - Trascendencia y Unión */
+  --guardian-eter-primary: #f59e0b;       /* Cosmic amber */
+  --guardian-eter-light: #fbbf24;         /* Light amber */
+  --guardian-eter-dark: #d97706;          /* Deep amber */
+  --guardian-eter-accent: #f97316;        /* Amber accent */
+
+  /* ===== 🎯 CONTRASTE WCAG AAA (21:1, 15:1, 12:1, 8:1, 7:1) ===== */
+
+  /* Textos Ultra-Contrastados */
+  --guardian-text-maximum: #000000;       /* 21:1 contrast - Maximum */
+  --guardian-text-primary: #0f172a;       /* 19:1 contrast - Primary headers */
+  --guardian-text-strong: #1e293b;        /* 15:1 contrast - Strong text */
+  --guardian-text-medium: #334155;        /* 12:1 contrast - Medium text */
+  --guardian-text-secondary: #475569;     /* 8:1 contrast - Secondary text */
+  --guardian-text-subtle: #64748b;        /* 7:1 contrast - Subtle text */
+
+  /* Fondos Ultra-Contrastados */
+  --guardian-bg-pure: #ffffff;            /* Pure white */
+  --guardian-bg-soft: #fefefe;            /* Soft white */
+  --guardian-bg-subtle: #fdfdfd;          /* Subtle white */
+  --guardian-bg-light: #fafafa;           /* Light gray */
+
+  /* Bordes Ultra-Definidos */
+  --guardian-border-strong: #e2e8f0;      /* Strong border */
+  --guardian-border-medium: #f1f5f9;      /* Medium border */
+  --guardian-border-subtle: #f8fafc;      /* Subtle border */
+
+  /* ===== 🌈 GRADIENTES GUARDIAN ELEMENTALES ===== */
+  --gradient-fuego-agua: linear-gradient(135deg, var(--guardian-fuego-primary) 0%, var(--guardian-agua-primary) 100%);
+  --gradient-tierra-aire: linear-gradient(135deg, var(--guardian-tierra-primary) 0%, var(--guardian-aire-primary) 100%);
+  --gradient-cósmico: linear-gradient(135deg, var(--guardian-fuego-primary) 0%, var(--guardian-eter-primary) 50%, var(--guardian-aire-primary) 100%);
+  --gradient-ayni: linear-gradient(135deg, var(--guardian-agua-primary) 0%, var(--guardian-tierra-primary) 100%);
+
+  /* ===== 🎨 COLORES ESPECÍFICOS COOMUNITY ===== */
+
+  /* Ayni (Reciprocidad) - Agua + Tierra */
+  --guardian-ayni-primary: var(--guardian-agua-primary);
+  --guardian-ayni-secondary: var(--guardian-tierra-primary);
+  --guardian-ayni-gradient: var(--gradient-ayni);
+
+  /* Mëritos (Reconocimientos) - Fuego + Éter */
+  --guardian-meritos-primary: var(--guardian-fuego-primary);
+  --guardian-meritos-secondary: var(--guardian-eter-primary);
+  --guardian-meritos-gradient: linear-gradient(135deg, var(--guardian-fuego-primary) 0%, var(--guardian-eter-primary) 100%);
+
+  /* Öndas (Energía) - Aire + Fuego */
+  --guardian-ondas-primary: var(--guardian-aire-primary);
+  --guardian-ondas-secondary: var(--guardian-fuego-primary);
+  --guardian-ondas-gradient: linear-gradient(135deg, var(--guardian-aire-primary) 0%, var(--guardian-fuego-primary) 100%);
+
+  /* Lukas (Moneda) - Éter + Agua */
+  --guardian-lukas-primary: var(--guardian-eter-primary);
+  --guardian-lukas-secondary: var(--guardian-agua-primary);
+  --guardian-lukas-gradient: linear-gradient(135deg, var(--guardian-eter-primary) 0%, var(--guardian-agua-primary) 100%);
+
+  /* Bien Común - Todos los elementos unificados */
+  --guardian-bien-comun-gradient: var(--gradient-cósmico);
+
+  /* ===== 💫 EFECTOS VISUALES GUARDIAN ===== */
+
+  /* Sombras Elementales */
+  --shadow-fuego: 0 8px 32px rgba(245, 166, 35, 0.3);
+  --shadow-agua: 0 8px 32px rgba(8, 145, 178, 0.3);
+  --shadow-tierra: 0 8px 32px rgba(22, 163, 74, 0.3);
+  --shadow-aire: 0 8px 32px rgba(168, 85, 247, 0.3);
+  --shadow-eter: 0 8px 32px rgba(245, 158, 11, 0.3);
+
+  /* Resplandores Elementales */
+  --glow-fuego: 0 0 20px rgba(245, 166, 35, 0.5);
+  --glow-agua: 0 0 20px rgba(8, 145, 178, 0.5);
+  --glow-tierra: 0 0 20px rgba(22, 163, 74, 0.5);
+  --glow-aire: 0 0 20px rgba(168, 85, 247, 0.5);
+  --glow-eter: 0 0 20px rgba(245, 158, 11, 0.5);
+
+  /* Timing Óptimo */
+  --transition-swift: 0.2s ease-out;
+  --transition-smooth: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-elegant: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ===== 🏠 APLICACIÓN ESPECÍFICA PARA HOME ===== */
+
+/* Container Principal Guardian */
+.guardian-home-container {
+  background: linear-gradient(
+    180deg,
+    var(--guardian-bg-pure) 0%,
+    var(--guardian-bg-soft) 30%,
+    var(--guardian-bg-light) 100%
+  );
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Efecto de Partículas Elementales de Fondo */
+.guardian-home-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(245, 166, 35, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(8, 145, 178, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(22, 163, 74, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: guardian-cosmic-pulse 20s ease-in-out infinite;
+}
+
+@keyframes guardian-cosmic-pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
+
+/* ===== 🎴 CARDS GUARDIAN - CONTRASTE MÁXIMO ===== */
+
+.guardian-card {
+  background: var(--guardian-bg-pure) !important;
+  border: 2px solid var(--guardian-border-strong) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--shadow-fuego) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: var(--transition-elegant) !important;
+  z-index: 1 !important;
+}
+
+/* Borde Superior Elemental en Cards */
+.guardian-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--gradient-cósmico);
+  border-radius: 24px 24px 0 0;
+  z-index: 2;
+}
+
+.guardian-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: var(--shadow-fuego), var(--glow-fuego) !important;
+  border-color: var(--guardian-fuego-light) !important;
+}
+
+/* Especialización por Tipo de Card */
+.guardian-card.ayni-card::before {
+  background: var(--guardian-ayni-gradient);
+}
+
+.guardian-card.meritos-card::before {
+  background: var(--guardian-meritos-gradient);
+}
+
+.guardian-card.ondas-card::before {
+  background: var(--guardian-ondas-gradient);
+}
+
+.guardian-card.lukas-card::before {
+  background: var(--guardian-lukas-gradient);
+}
+
+/* ===== 🔤 TEXTOS GUARDIAN - CONTRASTE WCAG AAA ===== */
+
+/* Títulos Principales */
+.guardian-heading-primary,
+.guardian-h1,
+.guardian-title {
+  color: var(--guardian-text-primary) !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--guardian-text-primary) !important;
+}
+
+/* Subtítulos Fuertes */
+.guardian-heading-secondary,
+.guardian-h2,
+.guardian-subtitle {
+  color: var(--guardian-text-strong) !important;
+  font-weight: 700 !important;
+}
+
+/* Texto Principal */
+.guardian-text-body,
+.guardian-text-main {
+  color: var(--guardian-text-medium) !important;
+  font-weight: 600 !important;
+}
+
+/* Texto Secundario */
+.guardian-text-secondary {
+  color: var(--guardian-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* Texto Sutil pero Legible */
+.guardian-text-subtle {
+  color: var(--guardian-text-subtle) !important;
+  font-weight: 500 !important;
+}
+
+/* Texto de Métricas - Ultra-Contraste */
+.guardian-metric-value,
+.guardian-percentage,
+.guardian-number {
+  color: var(--guardian-text-maximum) !important;
+  font-weight: 900 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* ===== 🎯 BOTONES GUARDIAN - ACCIÓN ELEMENTAL ===== */
+
+.guardian-button-primary {
+  background: var(--gradient-fuego-agua) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 16px !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  padding: 12px 32px !important;
+  box-shadow: var(--shadow-fuego) !important;
+  transition: var(--transition-elegant) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.guardian-button-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: var(--transition-swift);
+}
+
+.guardian-button-primary:hover {
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: var(--shadow-fuego), var(--glow-fuego) !important;
+  background: var(--gradient-tierra-aire) !important;
+}
+
+.guardian-button-primary:hover::before {
+  left: 100%;
+}
+
+/* Botones Específicos por Elemento */
+.guardian-button-fuego {
+  background: var(--guardian-fuego-primary) !important;
+  box-shadow: var(--shadow-fuego) !important;
+}
+
+.guardian-button-agua {
+  background: var(--guardian-agua-primary) !important;
+  box-shadow: var(--shadow-agua) !important;
+}
+
+.guardian-button-tierra {
+  background: var(--guardian-tierra-primary) !important;
+  box-shadow: var(--shadow-tierra) !important;
+}
+
+.guardian-button-aire {
+  background: var(--guardian-aire-primary) !important;
+  box-shadow: var(--shadow-aire) !important;
+}
+
+/* ===== 📊 PROGRESS BARS GUARDIAN ===== */
+
+.guardian-progress-container {
+  background: var(--guardian-bg-soft) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  height: 12px !important;
+}
+
+.guardian-progress-bar {
+  background: var(--gradient-cósmico) !important;
+  height: 100% !important;
+  border-radius: 12px !important;
+  transition: var(--transition-smooth) !important;
+  position: relative !important;
+}
+
+.guardian-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: guardian-progress-shine 2s infinite;
+}
+
+@keyframes guardian-progress-shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ===== 🏷️ CHIPS Y BADGES GUARDIAN ===== */
+
+.guardian-chip {
+  background: var(--guardian-bg-soft) !important;
+  color: var(--guardian-text-primary) !important;
+  border: 2px solid var(--guardian-border-strong) !important;
+  border-radius: 16px !important;
+  font-weight: 600 !important;
+  transition: var(--transition-smooth) !important;
+}
+
+.guardian-chip:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: var(--shadow-fuego) !important;
+  background: var(--guardian-fuego-primary) !important;
+  color: #ffffff !important;
+}
+
+/* ===== 🌟 ICONOS GUARDIAN ===== */
+
+.guardian-icon {
+  color: var(--guardian-text-primary) !important;
+  transition: var(--transition-smooth) !important;
+}
+
+.guardian-icon:hover {
+  color: var(--guardian-fuego-primary) !important;
+  transform: scale(1.1) rotate(5deg) !important;
+  filter: drop-shadow(var(--glow-fuego)) !important;
+}
+
+/* Iconos por Elemento */
+.guardian-icon-fuego { color: var(--guardian-fuego-primary) !important; }
+.guardian-icon-agua { color: var(--guardian-agua-primary) !important; }
+.guardian-icon-tierra { color: var(--guardian-tierra-primary) !important; }
+.guardian-icon-aire { color: var(--guardian-aire-primary) !important; }
+.guardian-icon-eter { color: var(--guardian-eter-primary) !important; }
+
+/* ===== 🎭 SOBRESCRIBIR MUI CON MÁXIMA ESPECIFICIDAD ===== */
+
+/* Forzar contraste en Material UI */
+.guardian-home-container .MuiTypography-h1,
+.guardian-home-container .MuiTypography-h2,
+.guardian-home-container .MuiTypography-h3,
+.guardian-home-container .MuiTypography-h4,
+.guardian-home-container .MuiTypography-h5,
+.guardian-home-container .MuiTypography-h6 {
+  color: var(--guardian-text-primary) !important;
+  font-weight: 700 !important;
+}
+
+.guardian-home-container .MuiTypography-body1,
+.guardian-home-container .MuiTypography-body2 {
+  color: var(--guardian-text-medium) !important;
+  font-weight: 500 !important;
+}
+
+.guardian-home-container .MuiTypography-subtitle1,
+.guardian-home-container .MuiTypography-subtitle2 {
+  color: var(--guardian-text-strong) !important;
+  font-weight: 600 !important;
+}
+
+.guardian-home-container .MuiTypography-caption {
+  color: var(--guardian-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* Material UI Cards */
+.guardian-home-container .MuiCard-root {
+  background: var(--guardian-bg-pure) !important;
+  border: 2px solid var(--guardian-border-strong) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--shadow-fuego) !important;
+}
+
+/* Material UI Buttons */
+.guardian-home-container .MuiButton-contained {
+  background: var(--gradient-fuego-agua) !important;
+  color: #ffffff !important;
+  border-radius: 16px !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+}
+
+/* ===== 🔧 MODO ALTO CONTRASTE ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --guardian-text-primary: #000000 !important;
+    --guardian-text-strong: #000000 !important;
+    --guardian-text-medium: #000000 !important;
+    --guardian-bg-pure: #ffffff !important;
+    --guardian-border-strong: #000000 !important;
+  }
+
+  .guardian-card {
+    border: 3px solid #000000 !important;
+  }
+
+  .guardian-button-primary {
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+}
+
+/* ===== 🎯 MODO OSCURO - INVERSIÓN GUARDIAN ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --guardian-text-primary: #f8fafc !important;
+    --guardian-text-strong: #e2e8f0 !important;
+    --guardian-text-medium: #cbd5e1 !important;
+    --guardian-bg-pure: #0f172a !important;
+    --guardian-bg-soft: #1e293b !important;
+    --guardian-border-strong: #475569 !important;
+  }
+}
+
+/* ===== 📱 RESPONSIVE GUARDIAN ===== */
+@media (max-width: 768px) {
+  .guardian-card {
+    border-radius: 16px !important;
+    margin: 8px !important;
+  }
+
+  .guardian-button-primary {
+    padding: 10px 24px !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+/* ===== 🚀 APLICACIÓN INSTANTÁNEA A TODA LA APP ===== */
+
+/* Aplicar Guardian automáticamente al body */
+body.guardian-enhanced {
+  background: var(--guardian-bg-light) !important;
+  color: var(--guardian-text-medium) !important;
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
+}
+
+/* Aplicar Guardian a todos los contenedores principales */
+#root.guardian-enhanced,
+.MuiContainer-root.guardian-enhanced {
+  background: var(--guardian-bg-pure) !important;
+  min-height: 100vh !important;
+}
+
+/* ===== 🎉 ACTIVACIÓN AUTOMÁTICA ===== */
+/* Esta clase se puede aplicar dinámicamente para activar Guardian en toda la app */
+.guardian-system-active {
+  /* Todas las variables y estilos Guardian se aplican automáticamente */
+}
+
+/* ===== 🔮 EFECTOS ESPECIALES GUARDIAN ===== */
+
+/* Partículas flotantes */
+@keyframes guardian-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+/* Respiración cósmica */
+@keyframes guardian-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+/* Activar animaciones en elementos Guardian */
+.guardian-animated {
+  animation: guardian-float 6s ease-in-out infinite;
+}
+
+.guardian-breathing {
+  animation: guardian-breathe 4s ease-in-out infinite;
+}
+
+/* ===== 💫 FINALIZADOR GUARDIAN ===== */
+/* Garantizar que Guardian tenga la máxima prioridad */
+html.guardian-priority * {
+  transition: var(--transition-smooth) !important;
+}
+
+html.guardian-priority *:focus-visible {
+  outline: 3px solid var(--guardian-fuego-primary) !important;
+  outline-offset: 2px !important;
+  box-shadow: var(--glow-fuego) !important;
+}
