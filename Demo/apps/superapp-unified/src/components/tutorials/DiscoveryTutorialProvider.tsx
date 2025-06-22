@@ -1,5 +1,5 @@
-import React, { useState, useContext, createContext, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext, createContext, useCallback, useEffect, useTransition } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Dialog,
   DialogTitle,
@@ -35,6 +35,7 @@ import {
   Warning as WarningIcon,
   Info as InfoIcon
 } from '@mui/icons-material';
+import { useAuth } from '../hooks/useAuth';
 
 // 🎓 Tipos para los tutoriales
 interface TutorialStep {
@@ -634,6 +635,9 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
   const [currentStep, setCurrentStep] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
+  const [isPending, startTransition] = useTransition();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
   const startTutorial = useCallback((tutorialId: string) => {
     const tutorial = DISCOVERY_TUTORIALS.find(t => t.id === tutorialId);
@@ -676,19 +680,28 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
     setCurrentStep(0);
   }, [currentTutorial, currentStep]);
 
-  // Auto-mostrar tutorial de onboarding para nuevos usuarios
+  // Auto-mostrar tutorial de onboarding para el marketplace
   useEffect(() => {
-    const hasSeenTutorials = localStorage.getItem('coomunity-tutorials-seen');
-    if (!hasSeenTutorials) {
-      // Mostrar tutorial después de 3 segundos
+    const tutorialId = 'marketplace-discovery';
+    const hasCompletedTutorial = localStorage.getItem(
+      `coomunity-tutorial-${tutorialId}-completed`
+    );
+
+    if (
+      isAuthenticated &&
+      location.pathname === '/marketplace' &&
+      !hasCompletedTutorial
+    ) {
+      // Usamos un delay para que la UI principal se estabilice
       const timer = setTimeout(() => {
-        startTutorial('marketplace-discovery');
-        localStorage.setItem('coomunity-tutorials-seen', 'true');
-      }, 3000);
+        startTransition(() => {
+          startTutorial(tutorialId);
+        });
+      }, 1500);
 
       return () => clearTimeout(timer);
     }
-  }, [startTutorial]);
+  }, [isAuthenticated, location.pathname, startTutorial]);
 
   const contextValue: TutorialContextType = {
     currentTutorial,
