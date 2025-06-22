@@ -19,8 +19,8 @@
  * solo cuando el endpoint no funciona o no está implementado.
  *
  * 🧹 RESULTADO FASE C:
- * - Eliminados fallbacks innecesarios para endpoints funcionales
- * - Mocks restantes claramente documentados con TODOs
+ * - Eliminados fallbacks innecesarios para endpoints funcionalesss
+ *  * - Mocks restantes claramente documentados con TODOs
  * - Código más limpio y mantenible
  * - Deuda técnica visible y medible
  */
