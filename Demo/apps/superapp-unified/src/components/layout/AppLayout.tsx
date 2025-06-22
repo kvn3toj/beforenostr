@@ -51,13 +51,19 @@ export const AppLayout: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <UniversalCosmicBackground />
-      {!isMobile && <Sidebar />}
+
+      {/* Desktop Sidebar */}
+      {!isMobile && <Sidebar variant="permanent" />}
+
+      {/* Main Content Area */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           flex: 1,
-          overflow: 'hidden'
+          overflow: 'hidden',
+          // Add margin for desktop sidebar
+          marginLeft: isMobile ? 0 : 0, // Drawer handles its own spacing
         }}
       >
         <AppHeader onDrawerToggle={handleDrawerToggle} showTopLoader={showTopLoader} />
@@ -75,8 +81,10 @@ export const AppLayout: React.FC = () => {
         </Box>
       </Box>
 
+      {/* Mobile Navigation */}
       {isMobile && <BottomNavigation />}
 
+      {/* Mobile Drawer */}
       {isMobile && (
         <Sidebar
           variant="temporary"

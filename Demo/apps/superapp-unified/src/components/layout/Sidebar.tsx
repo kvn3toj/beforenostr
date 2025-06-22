@@ -313,5 +313,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
     );
   }
 
-  return sidebarContent;
+  // Desktop permanent sidebar with proper container
+  return (
+    <Drawer
+      variant="permanent"
+      sx={{
+        display: { xs: 'none', md: 'block' },
+        width: 280,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: 280,
+          boxSizing: 'border-box',
+          position: 'relative',
+        },
+      }}
+    >
+      {sidebarContent}
+    </Drawer>
+  );
 };

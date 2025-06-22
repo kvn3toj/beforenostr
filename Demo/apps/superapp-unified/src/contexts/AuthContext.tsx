@@ -3,6 +3,9 @@ import { authService, type User, type AuthResponse } from '../services/auth.serv
 import { apiService } from '../lib/api-service';
 import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
 
+// Comprobar si el modo mock está activado
+const IS_MOCK_MODE = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+
 // Interfaces para el contexto de autenticación
 interface AuthContextType {
   user: User | null;
@@ -41,7 +44,7 @@ const mapBackendUserToFrontend = (
       backendUser.created_at ||
       backendUser.createdAt ||
       new Date().toISOString(),
-    access_token: access_token,
+    access_token,
     refresh_token: backendUser.refresh_token,
   };
 };
@@ -303,16 +306,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Verificar autenticación existente al cargar
   useEffect(() => {
     const checkAuth = async () => {
+      setLoading(true);
       try {
         console.log(`${AUTH_CONFIG.LOG_PREFIX} Starting authentication check`);
 
-        const authenticatedUser = await checkAuthFromToken();
-        setUser(authenticatedUser);
-
-        if (authenticatedUser) {
-          console.log(`${AUTH_CONFIG.LOG_PREFIX} User authenticated:`, authenticatedUser.email);
+        if (IS_MOCK_MODE) {
+          console.warn('🟡 [AuthContext] MOCK MODE ACTIVADO. Creando sesión de usuario mock.');
+          const mockUser: User = {
+            id: 'mock-user-123',
+            email: 'mock.user@coomunity.com',
+            full_name: 'Mock Player',
+            avatar_url: `https://i.pravatar.cc/150?u=mock-user-${Date.now()}`,
+            role: 'user',
+            created_at: new Date().toISOString(),
+            access_token: 'mock-jwt-token-string-for-testing-purposes',
+            refresh_token: 'mock-jwt-refresh-token',
+          };
+          setUser(mockUser);
+          console.log(`${AUTH_CONFIG.LOG_PREFIX} Mock user authenticated:`, mockUser.email);
         } else {
-          console.log(`${AUTH_CONFIG.LOG_PREFIX} No authenticated user found`);
+          const authenticatedUser = await checkAuthFromToken();
+          setUser(authenticatedUser);
+
+          if (authenticatedUser) {
+            console.log(`${AUTH_CONFIG.LOG_PREFIX} User authenticated:`, authenticatedUser.email);
+          } else {
+            console.log(`${AUTH_CONFIG.LOG_PREFIX} No authenticated user found`);
+          }
         }
       } catch (error) {
         console.error('[Auth] Error en verificación inicial:', error);

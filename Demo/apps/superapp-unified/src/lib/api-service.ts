@@ -9,6 +9,7 @@
 
 import { ENV, EnvironmentHelpers } from './environment';
 import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
+import { getMockData } from './mock-data';
 
 // 🔧 Función para detectar URL del API dinámicamente
 const getApiUrl = (): string => {
@@ -32,6 +33,15 @@ const getApiUrl = (): string => {
   console.log(`💻 [ApiService] Entorno de Desarrollo. Usando API: ${devUrl}`);
   return devUrl;
 };
+
+// Comprobar si el modo mock está activado
+const isMockMode = () => {
+  const mockEnabled = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+  if (mockEnabled) {
+    console.warn('🟡 [ApiService] MOCK MODE ACTIVADO. Todas las llamadas a la API serán simuladas.');
+  }
+  return mockEnabled;
+}
 
 // 🔧 Configuración de la API - usando detección automática de red
 const API_TIMEOUT = 30000; // 30 segundos
@@ -390,6 +400,15 @@ class ApiService {
     options: RequestInit = {},
     retryCount: number = 0
   ): Promise<T> {
+    // Interceptar y devolver datos mock si el modo mock está activado
+    if (isMockMode()) {
+      console.log(`🟡 [MOCK] Interceptando: ${options.method || 'GET'} ${endpoint}`);
+      await new Promise(resolve => setTimeout(resolve, 300)); // Simular delay de red
+      const mockData = getMockData(endpoint, options.method || 'GET');
+      console.log(`🟡 [MOCK] Devolviendo datos para ${endpoint}:`, mockData);
+      return Promise.resolve(mockData as T);
+    }
+
     const maxRetries = 3;
     const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
 

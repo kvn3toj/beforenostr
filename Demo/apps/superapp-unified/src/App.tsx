@@ -27,6 +27,48 @@ import {
 // Styles
 import './index.css';
 
+//  nowego komponentu
+const EnvironmentBanner: React.FC = () => {
+  const env = import.meta.env.VITE_APP_ENV || 'development';
+  const isMock = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+
+  if (env === 'production') {
+    return null;
+  }
+
+  const bannerStyle: React.CSSProperties = {
+    position: 'fixed',
+    bottom: '10px',
+    left: '10px',
+    padding: '4px 10px',
+    borderRadius: '6px',
+    fontSize: '0.8rem',
+    fontWeight: 'bold',
+    zIndex: 9999,
+    textTransform: 'uppercase',
+    opacity: 0.8,
+  };
+
+  const environments: Record<string, { text: string; style: React.CSSProperties }> = {
+    development: {
+      text: 'Dev',
+      style: { ...bannerStyle, backgroundColor: '#4caf50', color: 'white' },
+    },
+    staging: {
+      text: 'Staging',
+      style: { ...bannerStyle, backgroundColor: '#ff9800', color: 'white' },
+    },
+  };
+
+  const { text, style } = environments[env] || environments.development;
+
+  return (
+    <div style={style}>
+      {text} {isMock && '| Mock'}
+    </div>
+  );
+};
+
 // Create QueryClient
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -152,6 +194,9 @@ const App: React.FC = () => {
 
                     {/* El botón flotante del tutorial va aquí para heredar el contexto */}
                     <TutorialFloatingButton />
+
+                    {/* Banner de Entorno */}
+                    <EnvironmentBanner />
                   </Box>
 
                   {/* Onboarding System and other complex components are disabled for now */}
