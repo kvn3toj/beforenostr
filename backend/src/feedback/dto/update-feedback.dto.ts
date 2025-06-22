@@ -12,9 +12,9 @@ export class UpdateFeedbackDto {
 
   @IsOptional()
   @IsObject()
-  codeAnalysis?: any;
+  codeAnalysis?: Record<string, unknown>;
 
   @IsOptional()
   @IsObject()
-  aiSuggestions?: any;
+  aiSuggestions?: Record<string, unknown>;
 }

@@ -1,7 +1,16 @@
-import { Injectable, Logger, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateStudyRoomDto } from './dto/create-study-room.dto';
-import { StudyRoomResponseDto, StudyRoomParticipantDto } from './dto/study-room-response.dto';
+import {
+  StudyRoomResponseDto,
+  StudyRoomParticipantDto,
+} from './dto/study-room-response.dto';
 import { StudyRoomStatus } from '../generated/prisma';
 
 @Injectable()
@@ -10,18 +19,25 @@ export class StudyRoomsService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async createStudyRoom(hostId: string, createStudyRoomDto: CreateStudyRoomDto): Promise<StudyRoomResponseDto> {
-    this.logger.log(`Creating study room for host ${hostId} with video ${createStudyRoomDto.videoId}`);
+  async createStudyRoom(
+    hostId: string,
+    createStudyRoomDto: CreateStudyRoomDto
+  ): Promise<StudyRoomResponseDto> {
+    this.logger.log(
+      `Creating study room for host ${hostId} with video ${createStudyRoomDto.videoId}`
+    );
 
     try {
       // Verificar que el video existe
       const videoExists = await this.prisma.videoItem.findUnique({
         where: { id: parseInt(createStudyRoomDto.videoId) },
-        select: { id: true, title: true }
+        select: { id: true, title: true },
       });
 
       if (!videoExists) {
-        throw new NotFoundException(`Video con ID ${createStudyRoomDto.videoId} no encontrado`);
+        throw new NotFoundException(
+          `Video con ID ${createStudyRoomDto.videoId} no encontrado`
+        );
       }
 
       // Crear la sala de estudio
@@ -38,19 +54,19 @@ export class StudyRoomsService {
         },
         include: {
           video: {
-            select: { id: true, title: true }
+            select: { id: true, title: true },
           },
           host: {
-            select: { id: true, name: true, avatarUrl: true }
+            select: { id: true, name: true, avatarUrl: true },
           },
           participants: {
             include: {
               user: {
-                select: { id: true, name: true, avatarUrl: true }
-              }
-            }
-          }
-        }
+                select: { id: true, name: true, avatarUrl: true },
+              },
+            },
+          },
+        },
       });
 
       // Agregar el host como participante
@@ -59,7 +75,7 @@ export class StudyRoomsService {
           studyRoomId: studyRoom.id,
           userId: hostId,
           isHost: true,
-        }
+        },
       });
 
       // Crear mensaje de sistema de bienvenida
@@ -68,8 +84,8 @@ export class StudyRoomsService {
           studyRoomId: studyRoom.id,
           userId: hostId,
           message: `¡Bienvenidos a la sala de estudio "${studyRoom.name}"! 🎓`,
-          messageType: 'SYSTEM'
-        }
+          messageType: 'SYSTEM',
+        },
       });
 
       this.logger.log(`Study room ${studyRoom.id} created successfully`);
@@ -80,7 +96,10 @@ export class StudyRoomsService {
     }
   }
 
-  async getAllStudyRooms(page: number = 1, limit: number = 10): Promise<{ rooms: StudyRoomResponseDto[], total: number }> {
+  async getAllStudyRooms(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ rooms: StudyRoomResponseDto[]; total: number }> {
     this.logger.log(`Fetching study rooms - page: ${page}, limit: ${limit}`);
 
     const [rooms, total] = await Promise.all([
@@ -92,22 +111,24 @@ export class StudyRoomsService {
           participants: {
             where: { isActive: true },
             include: {
-              user: { select: { id: true, name: true, avatarUrl: true } }
-            }
-          }
+              user: { select: { id: true, name: true, avatarUrl: true } },
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
       }),
       this.prisma.studyRoom.count({
-        where: { isActive: true }
-      })
+        where: { isActive: true },
+      }),
     ]);
 
-    const mappedRooms = rooms.map(room => this.mapToStudyRoomResponse(room));
+    const mappedRooms = rooms.map((room) => this.mapToStudyRoomResponse(room));
 
-    this.logger.log(`Found ${total} study rooms, returning ${mappedRooms.length} for current page`);
+    this.logger.log(
+      `Found ${total} study rooms, returning ${mappedRooms.length} for current page`
+    );
     return { rooms: mappedRooms, total };
   }
 
@@ -122,10 +143,10 @@ export class StudyRoomsService {
         participants: {
           where: { isActive: true },
           include: {
-            user: { select: { id: true, name: true, avatarUrl: true } }
-          }
-        }
-      }
+            user: { select: { id: true, name: true, avatarUrl: true } },
+          },
+        },
+      },
     });
 
     if (!room) {
@@ -135,7 +156,10 @@ export class StudyRoomsService {
     return this.mapToStudyRoomResponse(room);
   }
 
-  async joinStudyRoom(roomId: string, userId: string): Promise<StudyRoomResponseDto> {
+  async joinStudyRoom(
+    roomId: string,
+    userId: string
+  ): Promise<StudyRoomResponseDto> {
     this.logger.log(`User ${userId} attempting to join study room ${roomId}`);
 
     // Verificar que la sala existe y está activa
@@ -143,13 +167,15 @@ export class StudyRoomsService {
       where: { id: roomId, isActive: true },
       include: {
         participants: {
-          where: { isActive: true }
-        }
-      }
+          where: { isActive: true },
+        },
+      },
     });
 
     if (!room) {
-      throw new NotFoundException(`Sala de estudio ${roomId} no encontrada o no activa`);
+      throw new NotFoundException(
+        `Sala de estudio ${roomId} no encontrada o no activa`
+      );
     }
 
     // Verificar capacidad
@@ -158,14 +184,15 @@ export class StudyRoomsService {
     }
 
     // Verificar si el usuario ya está en la sala
-    const existingParticipant = await this.prisma.studyRoomParticipant.findUnique({
-      where: {
-        studyRoomId_userId: {
-          studyRoomId: roomId,
-          userId: userId
-        }
-      }
-    });
+    const existingParticipant =
+      await this.prisma.studyRoomParticipant.findUnique({
+        where: {
+          studyRoomId_userId: {
+            studyRoomId: roomId,
+            userId,
+          },
+        },
+      });
 
     if (existingParticipant) {
       if (existingParticipant.isActive) {
@@ -174,7 +201,7 @@ export class StudyRoomsService {
         // Reactivar participación
         await this.prisma.studyRoomParticipant.update({
           where: { id: existingParticipant.id },
-          data: { isActive: true, leftAt: null }
+          data: { isActive: true, leftAt: null },
         });
       }
     } else {
@@ -182,25 +209,25 @@ export class StudyRoomsService {
       await this.prisma.studyRoomParticipant.create({
         data: {
           studyRoomId: roomId,
-          userId: userId,
+          userId,
           isHost: false,
-        }
+        },
       });
     }
 
     // Crear mensaje de sistema
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true }
+      select: { name: true },
     });
 
     await this.prisma.studyRoomMessage.create({
       data: {
         studyRoomId: roomId,
-        userId: userId,
+        userId,
         message: `${user?.name || 'Usuario'} se ha unido a la sala 👋`,
-        messageType: 'SYSTEM'
-      }
+        messageType: 'SYSTEM',
+      },
     });
 
     this.logger.log(`User ${userId} joined study room ${roomId} successfully`);
@@ -214,9 +241,9 @@ export class StudyRoomsService {
       where: {
         studyRoomId_userId: {
           studyRoomId: roomId,
-          userId: userId
-        }
-      }
+          userId,
+        },
+      },
     });
 
     if (!participant || !participant.isActive) {
@@ -228,23 +255,23 @@ export class StudyRoomsService {
       where: { id: participant.id },
       data: {
         isActive: false,
-        leftAt: new Date()
-      }
+        leftAt: new Date(),
+      },
     });
 
     // Crear mensaje de sistema
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true }
+      select: { name: true },
     });
 
     await this.prisma.studyRoomMessage.create({
       data: {
         studyRoomId: roomId,
-        userId: userId,
+        userId,
         message: `${user?.name || 'Usuario'} ha salido de la sala 👋`,
-        messageType: 'SYSTEM'
-      }
+        messageType: 'SYSTEM',
+      },
     });
 
     // Si era el host, transferir ownership al siguiente participante
@@ -253,26 +280,26 @@ export class StudyRoomsService {
         where: {
           studyRoomId: roomId,
           isActive: true,
-          userId: { not: userId }
+          userId: { not: userId },
         },
-        orderBy: { joinedAt: 'asc' }
+        orderBy: { joinedAt: 'asc' },
       });
 
       if (nextHost) {
         await this.prisma.studyRoomParticipant.update({
           where: { id: nextHost.id },
-          data: { isHost: true }
+          data: { isHost: true },
         });
 
         await this.prisma.studyRoom.update({
           where: { id: roomId },
-          data: { hostId: nextHost.userId }
+          data: { hostId: nextHost.userId },
         });
 
         // Mensaje de nuevo host
         const newHostUser = await this.prisma.user.findUnique({
           where: { id: nextHost.userId },
-          select: { name: true }
+          select: { name: true },
         });
 
         await this.prisma.studyRoomMessage.create({
@@ -280,17 +307,17 @@ export class StudyRoomsService {
             studyRoomId: roomId,
             userId: nextHost.userId,
             message: `${newHostUser?.name || 'Usuario'} es ahora el host de la sala 👑`,
-            messageType: 'SYSTEM'
-          }
+            messageType: 'SYSTEM',
+          },
         });
       } else {
         // No hay más participantes, desactivar la sala
         await this.prisma.studyRoom.update({
           where: { id: roomId },
-          data: { 
+          data: {
             isActive: false,
-            status: StudyRoomStatus.ENDED
-          }
+            status: StudyRoomStatus.ENDED,
+          },
         });
       }
     }
@@ -298,26 +325,37 @@ export class StudyRoomsService {
     this.logger.log(`User ${userId} left study room ${roomId} successfully`);
   }
 
-  async updateVideoSync(roomId: string, userId: string, currentTime: number, isPaused: boolean): Promise<void> {
-    this.logger.log(`Updating video sync for room ${roomId}: time=${currentTime}, paused=${isPaused}`);
+  async updateVideoSync(
+    roomId: string,
+    userId: string,
+    currentTime: number,
+    isPaused: boolean
+  ): Promise<void> {
+    this.logger.log(
+      `Updating video sync for room ${roomId}: time=${currentTime}, paused=${isPaused}`
+    );
 
     // Verificar que el usuario es host o participante activo
     const participant = await this.prisma.studyRoomParticipant.findUnique({
       where: {
         studyRoomId_userId: {
           studyRoomId: roomId,
-          userId: userId
-        }
-      }
+          userId,
+        },
+      },
     });
 
     if (!participant || !participant.isActive) {
-      throw new ForbiddenException('No tienes permisos para controlar la reproducción');
+      throw new ForbiddenException(
+        'No tienes permisos para controlar la reproducción'
+      );
     }
 
     // Solo el host puede controlar la reproducción por defecto
     if (!participant.isHost) {
-      throw new ForbiddenException('Solo el host puede controlar la reproducción');
+      throw new ForbiddenException(
+        'Solo el host puede controlar la reproducción'
+      );
     }
 
     // Actualizar estado de reproducción
@@ -326,8 +364,8 @@ export class StudyRoomsService {
       data: {
         currentTime,
         isPaused,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
 
     // Crear mensaje de evento de video
@@ -335,11 +373,11 @@ export class StudyRoomsService {
     await this.prisma.studyRoomMessage.create({
       data: {
         studyRoomId: roomId,
-        userId: userId,
+        userId,
         message: `Video ${eventType} en ${Math.floor(currentTime)}s`,
         messageType: 'VIDEO_EVENT',
-        metadata: JSON.stringify({ currentTime, isPaused })
-      }
+        metadata: JSON.stringify({ currentTime, isPaused }),
+      },
     });
 
     this.logger.log(`Video sync updated for room ${roomId}`);
@@ -350,7 +388,7 @@ export class StudyRoomsService {
 
     const room = await this.prisma.studyRoom.findUnique({
       where: { id: roomId },
-      select: { hostId: true }
+      select: { hostId: true },
     });
 
     if (!room) {
@@ -366,8 +404,8 @@ export class StudyRoomsService {
       where: { id: roomId },
       data: {
         isActive: false,
-        status: StudyRoomStatus.ENDED
-      }
+        status: StudyRoomStatus.ENDED,
+      },
     });
 
     // Desactivar todos los participantes
@@ -375,21 +413,23 @@ export class StudyRoomsService {
       where: { studyRoomId: roomId },
       data: {
         isActive: false,
-        leftAt: new Date()
-      }
+        leftAt: new Date(),
+      },
     });
 
     this.logger.log(`Study room ${roomId} deleted successfully`);
   }
 
   private mapToStudyRoomResponse(room: any): StudyRoomResponseDto {
-    const participants: StudyRoomParticipantDto[] = room.participants.map(p => ({
-      id: p.user.id,
-      name: p.user.name || 'Usuario',
-      avatarUrl: p.user.avatarUrl,
-      isHost: p.isHost,
-      joinedAt: p.joinedAt
-    }));
+    const participants: StudyRoomParticipantDto[] = room.participants.map(
+      (p) => ({
+        id: p.user.id,
+        name: p.user.name || 'Usuario',
+        avatarUrl: p.user.avatarUrl,
+        isHost: p.isHost,
+        joinedAt: p.joinedAt,
+      })
+    );
 
     return {
       id: room.id,
@@ -405,7 +445,7 @@ export class StudyRoomsService {
       isPaused: room.isPaused,
       participants,
       createdAt: room.createdAt,
-      updatedAt: room.updatedAt
+      updatedAt: room.updatedAt,
     };
   }
-} 
+}

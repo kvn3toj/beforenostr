@@ -11,4 +11,4 @@ export class AssignPersonalityDto {
   @IsString()
   @IsUUID()
   personalityId: string;
-} 
+}

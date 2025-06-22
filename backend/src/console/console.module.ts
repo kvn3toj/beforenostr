@@ -1,9 +1,9 @@
 /**
  * 🎮 Console Module - Experience Management Backend
- * 
+ *
  * Módulo principal para la gestión de experiencias gamificadas
  * Basado en el Customer Journey Map del tablero de Miro
- * 
+ *
  * Funcionalidades:
  * - Gestión de STAGES del customer journey
  * - Administración de concursos de Mëritos y Öndas
@@ -30,10 +30,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { CacheModule } from '../cache/cache.module';
 
 @Module({
-  imports: [
-    PrismaModule,
-    CacheModule,
-  ],
+  imports: [PrismaModule, CacheModule],
   controllers: [
     ConsoleController,
     StagesController,

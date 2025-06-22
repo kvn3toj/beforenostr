@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { UpdateGplContentDto } from './dto/update-gpl-content.dto';
 
 @Injectable()
 export class GplContentService {
@@ -19,19 +20,19 @@ export class GplContentService {
             duration: 240,
             category: 'Fundamentos',
             philosophyAlignment: 'ayni',
-            isEpicContent: false
-          }
-        ]
-      }
+            isEpicContent: false,
+          },
+        ],
+      },
     ];
   }
 
   async getGPLContentById(contentId: string) {
     const content = await this.getAllGPLContent();
-    return content.find(item => item.id === contentId);
+    return content.find((item) => item.id === contentId);
   }
 
-  async updateGPLContent(contentId: string, data: any) {
+  async updateGPLContent(contentId: string, data: UpdateGplContentDto) {
     return { id: contentId, ...data, updated: true };
   }
 
@@ -40,7 +41,7 @@ export class GplContentService {
       contentId,
       views: 1247,
       engagement: 84,
-      completionRate: 92
+      completionRate: 92,
     };
   }
 }

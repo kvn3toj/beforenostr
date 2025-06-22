@@ -1,11 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean, IsInt, IsUUID, IsNotEmpty, MaxLength, Min, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsInt,
+  IsUUID,
+  IsNotEmpty,
+  MaxLength,
+  Min,
+  IsDateString,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreatePlaylistDto {
   @ApiProperty({
     description: 'ID del mundo al que pertenece la playlist',
-    example: '123e4567-e89b-12d3-a456-426614174000'
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @IsNotEmpty()
   @IsString()
@@ -14,7 +24,7 @@ export class CreatePlaylistDto {
   @ApiProperty({
     description: 'Nombre de la playlist',
     example: 'Introducción a TypeScript',
-    maxLength: 255
+    maxLength: 255,
   })
   @IsNotEmpty()
   @IsString()
@@ -23,8 +33,9 @@ export class CreatePlaylistDto {
 
   @ApiProperty({
     description: 'Descripción de la playlist',
-    example: 'Una serie de videos introductorios sobre TypeScript para principiantes',
-    required: false
+    example:
+      'Una serie de videos introductorios sobre TypeScript para principiantes',
+    required: false,
   })
   @IsOptional()
   @IsString()
@@ -33,7 +44,7 @@ export class CreatePlaylistDto {
   @ApiProperty({
     description: 'URL de la imagen o thumbnail de la playlist',
     example: 'https://example.com/images/typescript-intro.jpg',
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsString()
@@ -44,7 +55,7 @@ export class CreatePlaylistDto {
     example: 1,
     minimum: 0,
     default: 0,
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsInt()
@@ -56,7 +67,7 @@ export class CreatePlaylistDto {
     description: 'Estado activo/inactivo de la playlist',
     example: true,
     default: true,
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsBoolean()
@@ -70,7 +81,7 @@ export class CreatePlaylistDto {
 
   @ApiProperty({
     description: 'Fecha de publicación (no se persiste en DB actualmente)',
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsDateString()
@@ -78,9 +89,9 @@ export class CreatePlaylistDto {
 
   @ApiProperty({
     description: 'Fecha de despublicación (no se persiste en DB actualmente)',
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsDateString()
   unpublished_at?: string;
-} 
+}

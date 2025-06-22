@@ -10,16 +10,16 @@ i18n
   .init({
     fallbackLng: 'es', // Idioma de fallback si el detectado no está disponible
     debug: process.env.NODE_ENV !== 'production', // Habilita debug en desarrollo
-    
+
     // Mapear idiomas específicos de región a idiomas base
     load: 'languageOnly', // Cargar solo el idioma base (en lugar de en-US)
-    
+
     // Configuración de detección de idioma
     detection: {
       order: ['navigator', 'htmlTag', 'path', 'subdomain'],
       caches: ['localStorage'],
     },
-    
+
     interpolation: {
       escapeValue: false, // No escapar valores de interpolación
     },
@@ -28,12 +28,12 @@ i18n
     },
     ns: ['translation'], // Namespaces por defecto
     defaultNS: 'translation', // Namespace por defecto
-    
+
     // Idiomas soportados
     supportedLngs: ['en', 'es'],
-    
+
     // Configuración para manejar idiomas no soportados
     nonExplicitSupportedLngs: true,
   });
 
-export default i18n; 
+export default i18n;

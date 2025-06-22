@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
@@ -9,13 +13,19 @@ import { AuthenticatedUser } from '../types/auth.types';
 export class ChallengesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createChallengeDto: CreateChallengeDto, user: AuthenticatedUser): Promise<Challenge> {
-    const { rewards, config, type, startDate, endDate, ...challengeData } = createChallengeDto;
+  async create(
+    createChallengeDto: CreateChallengeDto,
+    user: AuthenticatedUser
+  ): Promise<Challenge> {
+    const { rewards, config, type, startDate, endDate, ...challengeData } =
+      createChallengeDto;
 
     if (type === 'AUTOMATED' && config) {
-        if (typeof config !== 'object' || config === null) {
-            throw new BadRequestException('Automated challenge config must be a valid object.');
-        }
+      if (typeof config !== 'object' || config === null) {
+        throw new BadRequestException(
+          'Automated challenge config must be a valid object.'
+        );
+      }
     }
 
     const newChallenge = await this.prisma.challenge.create({
@@ -25,11 +35,13 @@ export class ChallengesService {
         startDate: startDate || new Date(),
         endDate: endDate || null,
         config: config ? JSON.stringify(config) : '{}',
-        rewards: rewards ? {
-          createMany: {
-            data: rewards.map(reward => ({ ...reward, type: 'default' }))
-          }
-        } : undefined,
+        rewards: rewards
+          ? {
+              createMany: {
+                data: rewards.map((reward) => ({ ...reward, type: 'default' })),
+              },
+            }
+          : undefined,
       },
       include: { rewards: true },
     });
@@ -43,10 +55,7 @@ export class ChallengesService {
         status: 'ACTIVE',
         startDate: { lte: new Date() },
         // Ensure endDate is either null (ongoing) or in the future
-        OR: [
-          { endDate: { gte: new Date() } },
-          { endDate: null }
-        ]
+        OR: [{ endDate: { gte: new Date() } }, { endDate: null }],
       },
       include: { rewards: true },
     });
@@ -69,17 +78,26 @@ export class ChallengesService {
     return challenge;
   }
 
-  async update(id: string, updateChallengeDto: UpdateChallengeDto, user: AuthenticatedUser): Promise<Challenge> {
+  async update(
+    id: string,
+    updateChallengeDto: UpdateChallengeDto,
+    user: AuthenticatedUser
+  ): Promise<Challenge> {
     const { rewards, config, type, ...challengeData } = updateChallengeDto;
 
-    const existingChallenge = await this.prisma.challenge.findUnique({ where: { id } });
-    if (!existingChallenge) throw new NotFoundException(`Challenge with ID ${id} not found`);
+    const existingChallenge = await this.prisma.challenge.findUnique({
+      where: { id },
+    });
+    if (!existingChallenge)
+      throw new NotFoundException(`Challenge with ID ${id} not found`);
 
     const finalType = type || existingChallenge.type;
     if (finalType === 'AUTOMATED' && config) {
-        if (typeof config !== 'object' || config === null) {
-            throw new BadRequestException('Automated challenge config must be a valid object.');
-        }
+      if (typeof config !== 'object' || config === null) {
+        throw new BadRequestException(
+          'Automated challenge config must be a valid object.'
+        );
+      }
     }
 
     const updatedChallenge = await this.prisma.challenge.update({
@@ -87,13 +105,17 @@ export class ChallengesService {
       data: {
         ...challengeData,
         ...(type !== undefined && { type }),
-        ...(updateChallengeDto.hasOwnProperty('config') && { config: config ? JSON.stringify(config) : '{}' }),
-        rewards: rewards ? {
-           deleteMany: {},
-           createMany: {
-             data: rewards.map(reward => ({ ...reward, type: 'default' }))
-           },
-        } : undefined,
+        ...(updateChallengeDto.hasOwnProperty('config') && {
+          config: config ? JSON.stringify(config) : '{}',
+        }),
+        rewards: rewards
+          ? {
+              deleteMany: {},
+              createMany: {
+                data: rewards.map((reward) => ({ ...reward, type: 'default' })),
+              },
+            }
+          : undefined,
       },
       include: { rewards: true },
     });
@@ -102,18 +124,21 @@ export class ChallengesService {
   }
 
   async remove(id: string, user: AuthenticatedUser): Promise<Challenge> {
-    const existingChallenge = await this.prisma.challenge.findUnique({ where: { id } });
-    if (!existingChallenge) throw new NotFoundException(`Challenge with ID ${id} not found`);
+    const existingChallenge = await this.prisma.challenge.findUnique({
+      where: { id },
+    });
+    if (!existingChallenge)
+      throw new NotFoundException(`Challenge with ID ${id} not found`);
 
     // Capture old value before deletion
     const oldValue = existingChallenge;
 
     // Need to consider deleting associated UserChallenges and ChallengeRewards first
     await this.prisma.challengeReward.deleteMany({
-        where: { challengeId: id }
+      where: { challengeId: id },
     });
     await this.prisma.userChallenge.deleteMany({
-        where: { challengeId: id }
+      where: { challengeId: id },
     });
     const deletedChallenge = await this.prisma.challenge.delete({
       where: { id },
@@ -133,17 +158,17 @@ export class ChallengesService {
   }
 
   async addRewardToChallenge(challengeId: string, createChallengeRewardDto) {
-      return this.prisma.challengeReward.create({
-          data: {
-              ...createChallengeRewardDto,
-              challengeId: challengeId,
-          }
-      });
+    return this.prisma.challengeReward.create({
+      data: {
+        ...createChallengeRewardDto,
+        challengeId,
+      },
+    });
   }
 
   async removeReward(rewardId: string) {
-      return this.prisma.challengeReward.delete({
-          where: { id: rewardId }
-      });
+    return this.prisma.challengeReward.delete({
+      where: { id: rewardId },
+    });
   }
 }

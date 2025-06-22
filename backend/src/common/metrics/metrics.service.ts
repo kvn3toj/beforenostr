@@ -1,5 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
+import {
+  register,
+  collectDefaultMetrics,
+  Counter,
+  Histogram,
+  Gauge,
+} from 'prom-client';
 
 @Injectable()
 export class MetricsService {
@@ -82,12 +88,14 @@ export class MetricsService {
   });
 
   constructor() {
-    this.logger.log('>>> MetricsService CONSTRUCTOR: Initializing Prometheus metrics');
-    
+    this.logger.log(
+      '>>> MetricsService CONSTRUCTOR: Initializing Prometheus metrics'
+    );
+
     try {
       // Limpiar registry existente para evitar duplicados
       register.clear();
-      
+
       // Crear nuevos contadores después de limpiar
       this.httpRequestsTotal = new Counter({
         name: 'http_requests_total',
@@ -97,7 +105,7 @@ export class MetricsService {
 
       // Registrar métricas por defecto del sistema
       collectDefaultMetrics({ register });
-      
+
       this.logger.log('✅ Prometheus metrics initialized successfully');
     } catch (error) {
       this.logger.error('❌ Error initializing metrics:', error);
@@ -120,7 +128,11 @@ export class MetricsService {
   /**
    * Incrementar contador de requests HTTP
    */
-  incrementHttpRequests(method: string, route: string, statusCode: number): void {
+  incrementHttpRequests(
+    method: string,
+    route: string,
+    statusCode: number
+  ): void {
     this.httpRequestsTotal.inc({
       method,
       route,
@@ -131,7 +143,11 @@ export class MetricsService {
   /**
    * Observar duración de request HTTP
    */
-  observeHttpDuration(method: string, route: string, durationSeconds: number): void {
+  observeHttpDuration(
+    method: string,
+    route: string,
+    durationSeconds: number
+  ): void {
     this.httpRequestDuration.observe({ method, route }, durationSeconds);
   }
 
@@ -145,7 +161,10 @@ export class MetricsService {
   /**
    * Incrementar operaciones de caché
    */
-  incrementCacheOperations(operation: 'get' | 'set' | 'del', result: 'hit' | 'miss' | 'success' | 'error'): void {
+  incrementCacheOperations(
+    operation: 'get' | 'set' | 'del',
+    result: 'hit' | 'miss' | 'success' | 'error'
+  ): void {
     this.cacheOperationsTotal.inc({ operation, result });
   }
 
@@ -159,7 +178,10 @@ export class MetricsService {
   /**
    * Incrementar métodos de cálculo de duración de video
    */
-  incrementVideoDurationMethods(method: 'api' | 'scraping' | 'oembed' | 'estimation', success: boolean): void {
+  incrementVideoDurationMethods(
+    method: 'api' | 'scraping' | 'oembed' | 'estimation',
+    success: boolean
+  ): void {
     this.videoDurationMethodsTotal.inc({
       method,
       success: success.toString(),
@@ -169,14 +191,20 @@ export class MetricsService {
   /**
    * Observar tiempo de cálculo de duración de video
    */
-  observeVideoDurationCalculation(method: string, durationSeconds: number): void {
+  observeVideoDurationCalculation(
+    method: string,
+    durationSeconds: number
+  ): void {
     this.videoDurationCalculationTime.observe({ method }, durationSeconds);
   }
 
   /**
    * Incrementar ejecuciones de cron jobs
    */
-  incrementCronJobExecutions(jobName: string, status: 'success' | 'error'): void {
+  incrementCronJobExecutions(
+    jobName: string,
+    status: 'success' | 'error'
+  ): void {
     this.cronJobExecutionsTotal.inc({ job_name: jobName, status });
   }
 
@@ -190,7 +218,11 @@ export class MetricsService {
   /**
    * Observar duración de query de base de datos
    */
-  observeDatabaseQuery(operation: string, table: string, durationSeconds: number): void {
+  observeDatabaseQuery(
+    operation: string,
+    table: string,
+    durationSeconds: number
+  ): void {
     this.databaseQueryDuration.observe({ operation, table }, durationSeconds);
   }
 
@@ -215,4 +247,4 @@ export class MetricsService {
     register.clear();
     this.logger.log('All metrics cleared');
   }
-} 
+}

@@ -5,4 +5,4 @@ export const QUERY_KEYS = {
   PLAYLISTS: 'playlists',
   AUDIT_LOGS: 'auditLogs',
   AVAILABLE_PERMISSIONS: 'availablePermissions',
-} as const; 
+} as const;

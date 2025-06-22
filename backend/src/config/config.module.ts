@@ -5,4 +5,4 @@ import { ConfigController } from './config.controller';
   controllers: [ConfigController],
   exports: [],
 })
-export class ConfigModule {} 
+export class ConfigModule {}

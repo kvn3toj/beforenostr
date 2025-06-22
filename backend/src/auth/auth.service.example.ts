@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException, ConflictException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+  Inject,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { RegisterDto } from './dto/register.dto';
@@ -12,8 +17,10 @@ export class AuthServiceExample {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(JwtService) private readonly jwtService: JwtService,
-    @Inject(AuditLogsService) private readonly auditLogsService: AuditLogsService,
-    @Inject(CoomUnityLoggerService) private readonly logger: CoomUnityLoggerService,
+    @Inject(AuditLogsService)
+    private readonly auditLogsService: AuditLogsService,
+    @Inject(CoomUnityLoggerService)
+    private readonly logger: CoomUnityLoggerService
   ) {
     // 🎯 NUEVO: Log de inicialización profesional
     this.logger.info('AuthService initialized', { module: 'AuthService' });
@@ -35,14 +42,14 @@ export class AuthServiceExample {
                 include: {
                   rolePermissions: {
                     include: {
-                      permission: true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                      permission: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       if (!user) {
@@ -65,11 +72,14 @@ export class AuthServiceExample {
       this.logger.auth('User authenticated successfully', {
         email,
         roles: user.userRoles?.length || 0,
-        permissions: user.userRoles?.flatMap(ur => ur.role.rolePermissions).length || 0
+        permissions:
+          user.userRoles?.flatMap((ur) => ur.role.rolePermissions).length || 0,
       });
 
       // 🎯 NUEVO: Log de performance automático
-      this.logger.performance('validateUser', duration, { module: 'AuthService' });
+      this.logger.performance('validateUser', duration, {
+        module: 'AuthService',
+      });
 
       const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
@@ -77,11 +87,15 @@ export class AuthServiceExample {
       const duration = Date.now() - startTime;
 
       // 🎯 NUEVO: Log de error estructurado con contexto completo
-      this.logger.error('User validation failed', error instanceof Error ? error.stack : undefined, {
-        module: 'AuthService',
-        email,
-        duration
-      });
+      this.logger.error(
+        'User validation failed',
+        error instanceof Error ? error.stack : undefined,
+        {
+          module: 'AuthService',
+          email,
+          duration,
+        }
+      );
       return null;
     }
   }
@@ -98,25 +112,29 @@ export class AuthServiceExample {
         throw new UnauthorizedException('Invalid credentials');
       }
 
-      const roles = user.userRoles?.map(userRole => userRole.role.name) || [];
-      const permissions = user.userRoles?.flatMap(userRole =>
-        userRole.role.rolePermissions?.map(rolePermission => rolePermission.permission.name) || []
-      ) || [];
+      const roles = user.userRoles?.map((userRole) => userRole.role.name) || [];
+      const permissions =
+        user.userRoles?.flatMap(
+          (userRole) =>
+            userRole.role.rolePermissions?.map(
+              (rolePermission) => rolePermission.permission.name
+            ) || []
+        ) || [];
 
       // 🎯 NUEVO: Log de roles extraídos
       this.logger.auth('Roles and permissions extracted', {
         email: dto.email,
         rolesCount: roles.length,
-        permissionsCount: permissions.length
+        permissionsCount: permissions.length,
       });
 
       const payload = {
         sub: user.id,
         email: user.email,
         name: user.name,
-        roles: roles,
-        permissions: permissions,
-        iat: Math.floor(Date.now() / 1000)
+        roles,
+        permissions,
+        iat: Math.floor(Date.now() / 1000),
       };
 
       const access_token = this.jwtService.sign(payload);
@@ -127,7 +145,7 @@ export class AuthServiceExample {
       this.logger.userAction(user.id, 'LOGIN_SUCCESS', {
         email: dto.email,
         rolesCount: roles.length,
-        permissionsCount: permissions.length
+        permissionsCount: permissions.length,
       });
 
       // 🎯 NUEVO: Log de performance
@@ -140,24 +158,28 @@ export class AuthServiceExample {
           email: user.email,
           name: user.name,
           avatarUrl: user.avatarUrl,
-          roles: roles,
-          permissions: permissions
+          roles,
+          permissions,
         },
       };
     } catch (error) {
       const duration = Date.now() - startTime;
 
       // 🎯 NUEVO: Log de error con contexto completo
-      this.logger.error('Login failed', error instanceof Error ? error.stack : undefined, {
-        module: 'AuthService',
-        email: dto.email,
-        duration
-      });
+      this.logger.error(
+        'Login failed',
+        error instanceof Error ? error.stack : undefined,
+        {
+          module: 'AuthService',
+          email: dto.email,
+          duration,
+        }
+      );
 
       // 🎯 NUEVO: Log de acción fallida
       this.logger.userAction('unknown', 'LOGIN_FAILED', {
         email: dto.email,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
 
       throw error;
@@ -172,11 +194,13 @@ export class AuthServiceExample {
       this.logger.auth('Registration attempt started', { email: dto.email });
 
       const existingUser = await this.prisma.user.findUnique({
-        where: { email: dto.email }
+        where: { email: dto.email },
       });
 
       if (existingUser) {
-        this.logger.auth('Registration failed - user exists', { email: dto.email });
+        this.logger.auth('Registration failed - user exists', {
+          email: dto.email,
+        });
         throw new ConflictException('User with this email already exists');
       }
 
@@ -196,28 +220,32 @@ export class AuthServiceExample {
                 include: {
                   rolePermissions: {
                     include: {
-                      permission: true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                      permission: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
-      const roles = user.userRoles?.map(userRole => userRole.role.name) || [];
-      const permissions = user.userRoles?.flatMap(userRole =>
-        userRole.role.rolePermissions?.map(rolePermission => rolePermission.permission.name) || []
-      ) || [];
+      const roles = user.userRoles?.map((userRole) => userRole.role.name) || [];
+      const permissions =
+        user.userRoles?.flatMap(
+          (userRole) =>
+            userRole.role.rolePermissions?.map(
+              (rolePermission) => rolePermission.permission.name
+            ) || []
+        ) || [];
 
       const payload = {
         sub: user.id,
         email: user.email,
         name: user.name,
-        roles: roles,
-        permissions: permissions,
-        iat: Math.floor(Date.now() / 1000)
+        roles,
+        permissions,
+        iat: Math.floor(Date.now() / 1000),
       };
 
       const access_token = this.jwtService.sign(payload);
@@ -227,14 +255,14 @@ export class AuthServiceExample {
       // 🎯 NUEVO: Log de acción de usuario exitosa
       this.logger.userAction(user.id, 'REGISTER_SUCCESS', {
         email: dto.email,
-        name: user.name
+        name: user.name,
       });
 
       // 🎯 NUEVO: Log de evento de negocio
       this.logger.business('USER_REGISTERED', {
         userId: user.id,
         email: dto.email,
-        registrationMethod: 'standard'
+        registrationMethod: 'standard',
       });
 
       // 🎯 NUEVO: Log de performance
@@ -247,24 +275,28 @@ export class AuthServiceExample {
           email: user.email,
           name: user.name,
           avatarUrl: user.avatarUrl,
-          roles: roles,
-          permissions: permissions
+          roles,
+          permissions,
         },
       };
     } catch (error) {
       const duration = Date.now() - startTime;
 
       // 🎯 NUEVO: Log de error estructurado
-      this.logger.error('Registration failed', error instanceof Error ? error.stack : undefined, {
-        module: 'AuthService',
-        email: dto.email,
-        duration
-      });
+      this.logger.error(
+        'Registration failed',
+        error instanceof Error ? error.stack : undefined,
+        {
+          module: 'AuthService',
+          email: dto.email,
+          duration,
+        }
+      );
 
       // 🎯 NUEVO: Log de acción fallida
       this.logger.userAction('unknown', 'REGISTER_FAILED', {
         email: dto.email,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
 
       throw error;

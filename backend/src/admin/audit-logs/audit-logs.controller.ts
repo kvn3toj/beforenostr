@@ -20,8 +20,18 @@ export class AuditLogsController {
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   @ApiQuery({ name: 'userId', required: false, type: String })
   @ApiQuery({ name: 'actionType', required: false, type: String })
-  @ApiQuery({ name: 'startDate', required: false, type: String, description: 'ISO 8601 date string' })
-  @ApiQuery({ name: 'endDate', required: false, type: String, description: 'ISO 8601 date string' })
+  @ApiQuery({
+    name: 'startDate',
+    required: false,
+    type: String,
+    description: 'ISO 8601 date string',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    required: false,
+    type: String,
+    description: 'ISO 8601 date string',
+  })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'offset', required: false, type: Number })
   findAll(@Query() filterDto: GetAuditLogsDto) {
@@ -36,4 +46,4 @@ export class AuditLogsController {
   findOne(@Param('id') id: string) {
     return this.auditLogsService.findOne(id);
   }
-} 
+}

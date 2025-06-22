@@ -13,14 +13,18 @@ export class ItemsService {
       where: { id: dto.playlistId },
     });
     if (!playlist) {
-      throw new NotFoundException(`Playlist with ID ${dto.playlistId} not found.`);
+      throw new NotFoundException(
+        `Playlist with ID ${dto.playlistId} not found.`
+      );
     }
 
     const itemType = await this.prisma.itemType.findUnique({
       where: { id: dto.itemTypeId },
     });
     if (!itemType) {
-      throw new NotFoundException(`ItemType with ID ${dto.itemTypeId} not found.`);
+      throw new NotFoundException(
+        `ItemType with ID ${dto.itemTypeId} not found.`
+      );
     }
 
     return this.prisma.contentItem.create({ data: dto });
@@ -31,12 +35,14 @@ export class ItemsService {
       where: { id: playlistId, isActive: true },
     });
     if (!playlist) {
-      throw new NotFoundException(`Playlist with ID ${playlistId} not found or is inactive.`);
+      throw new NotFoundException(
+        `Playlist with ID ${playlistId} not found or is inactive.`
+      );
     }
 
     return this.prisma.contentItem.findMany({
       where: {
-        playlistId: playlistId,
+        playlistId,
         isActive: true,
         isDeleted: false,
       },
@@ -44,13 +50,18 @@ export class ItemsService {
     });
   }
 
-  async findAllInPlaylist(playlistId: string, includeInactive = false): Promise<ContentItem[]> {
+  async findAllInPlaylist(
+    playlistId: string,
+    includeInactive = false
+  ): Promise<ContentItem[]> {
     // Ensure the playlist exists and is active for admin view
     const playlist = await this.prisma.playlist.findFirst({
       where: { id: playlistId, isActive: true },
     });
     if (!playlist) {
-      throw new NotFoundException(`Playlist with ID ${playlistId} not found or is deleted`);
+      throw new NotFoundException(
+        `Playlist with ID ${playlistId} not found or is deleted`
+      );
     }
     const whereCondition = includeInactive
       ? { playlistId, isDeleted: false }
@@ -73,7 +84,9 @@ export class ItemsService {
       where: { id, playlistId, isDeleted: false },
     });
     if (!contentItem) {
-      throw new NotFoundException(`ContentItem with ID ${id} not found in this playlist or is deleted`);
+      throw new NotFoundException(
+        `ContentItem with ID ${id} not found in this playlist or is deleted`
+      );
     }
     return contentItem;
   }
@@ -84,7 +97,9 @@ export class ItemsService {
         where: { id: dto.playlistId },
       });
       if (!playlist) {
-        throw new NotFoundException(`Playlist with ID ${dto.playlistId} not found.`);
+        throw new NotFoundException(
+          `Playlist with ID ${dto.playlistId} not found.`
+        );
       }
     }
 

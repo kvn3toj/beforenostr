@@ -1,5 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsBoolean, IsUUID, IsInt, Min, IsString, IsEnum, Max } from 'class-validator';
+import {
+  IsOptional,
+  IsBoolean,
+  IsUUID,
+  IsInt,
+  Min,
+  IsString,
+  IsEnum,
+  Max,
+} from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
 export enum PlaylistOrderDirection {
@@ -51,7 +60,8 @@ export class FindAllPlaylistsDto {
   isActive?: boolean = true;
 
   @ApiPropertyOptional({
-    description: 'Campo por el cual ordenar los resultados (ej. name, createdAt, orderInMundo)',
+    description:
+      'Campo por el cual ordenar los resultados (ej. name, createdAt, orderInMundo)',
     example: 'createdAt',
     default: 'createdAt',
     required: false,
@@ -126,4 +136,4 @@ export class FindAllPlaylistsDto {
   @Min(1)
   @Max(100) // Added a reasonable maximum
   limit?: number = 10; // Renamed from pageSize to limit for consistency with service
-} 
+}

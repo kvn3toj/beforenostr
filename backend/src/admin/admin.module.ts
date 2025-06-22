@@ -15,4 +15,4 @@ import { RbacModule } from '@/rbac/rbac.module'; // Assuming RbacModule is neede
   providers: [ConfigService, AuditLogsService, SystemService],
   exports: [ConfigService, AuditLogsService], // Export services that might be used by other modules (e.g., AuditLogsService)
 })
-export class AdminModule {} 
+export class AdminModule {}

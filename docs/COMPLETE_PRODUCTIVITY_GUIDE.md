@@ -1,4 +1,5 @@
 # 🌿 GUÍA COMPLETA DE PRODUCTIVIDAD PARA COOMUNITY SUPERAPP
+
 ## Organización de Información, Extensiones y Monitoreo Saludable del Backend
 
 Esta guía consolidada combina las mejores prácticas de organización de información, herramientas de productividad y monitoreo biomimético, específicamente diseñadas para el proyecto CoomÜnity SuperApp.
@@ -16,6 +17,7 @@ Esta guía consolidada combina las mejores prácticas de organización de inform
 5. **🧘 Bienestar del Desarrollador** - Prevención de burnout y desarrollo sostenible
 
 ### Estado del Proyecto (Verificado)
+
 - ✅ **Backend NestJS**: Puerto 3002, Sistema de health checks implementado
 - ✅ **SuperApp React**: Puerto 3001, Arquitectura MUI + TypeScript
 - ✅ **PostgreSQL**: Base de datos principal
@@ -27,12 +29,14 @@ Esta guía consolidada combina las mejores prácticas de organización de inform
 ## 🚀 **QUICK START - CONFIGURACIÓN EN 5 MINUTOS**
 
 ### 1. Instalar Extensiones Críticas
+
 ```bash
 # Ejecutar desde la raíz del proyecto
 ./scripts/productivity-automation.sh extensions
 ```
 
 ### 2. Configurar VS Code Workspace
+
 ```bash
 # Crear configuración automática
 mkdir -p .vscode
@@ -61,6 +65,7 @@ EOF
 ```
 
 ### 3. Configurar Rutina Diaria
+
 ```bash
 # Ritual matutino
 ./scripts/productivity-automation.sh morning
@@ -77,6 +82,7 @@ EOF
 ## 📱 **EXTENSIONES VS CODE CRÍTICAS**
 
 ### Pack Esencial (Auto-instalable)
+
 ```bash
 # Ejecutar para instalar automáticamente
 code --install-extension ms-ossdata.vscode-postgresql     # PostgreSQL Management
@@ -91,20 +97,24 @@ code --install-extension eamodio.gitlens                  # Git Enhancement
 ### Extensiones por Categoría
 
 **🔧 Development Essentials:**
+
 - **PostgreSQL** - Gestión directa de BD desde VS Code
 - **REST Client** - Testing de endpoints NestJS sin salir del editor
 - **Prisma** - Autocompletado y validación para schemas
 
 **🎮 Testing & Quality:**
+
 - **Playwright Test** - Integración nativa de E2E tests
 - **SonarLint** - Análisis de calidad en tiempo real
 - **Code Spell Checker** - Prevención de typos
 
 **🎨 UI/UX:**
+
 - **Material-UI Snippets** - Acelera desarrollo con MUI v7
 - **React Hook Form Snippets** - Formularios eficientes
 
 ### Configuración Optimizada (.vscode/settings.json)
+
 ```json
 {
   "coomunity.metrics": {
@@ -140,6 +150,7 @@ code --install-extension eamodio.gitlens                  # Git Enhancement
 El sistema existente de CoomÜnity ya incluye health checks avanzados. Las mejoras propuestas añaden capacidades biomimético:
 
 #### 🫀 Sistema Circulatorio (API Health)
+
 ```typescript
 // Integración con AnalyticsService existente
 const healthData = await analyticsService.getSystemHealth();
@@ -156,6 +167,7 @@ const pulse = {
 ```
 
 #### 🫁 Sistema Respiratorio (Data Flow)
+
 ```typescript
 // Monitoreo de flujo de datos
 const breathing = {
@@ -166,6 +178,7 @@ const breathing = {
 ```
 
 #### 🧠 Sistema Nervioso (Alerting)
+
 ```typescript
 // Red neuronal adaptativa
 const synapses = new Map([
@@ -181,6 +194,7 @@ if (performance > 0.8) {
 ```
 
 #### 🛡️ Sistema Inmunológico (Security)
+
 ```typescript
 // Memoria inmunológica
 const immuneMemory = new Map([
@@ -194,6 +208,7 @@ const immuneMemory = new Map([
 ```
 
 ### Endpoints Biomimé(ticos Nuevos
+
 ```bash
 # Acceder a métricas biomimé(ticas
 GET /monitoring/vital-signs        # Signos vitales en tiempo real
@@ -208,6 +223,7 @@ GET /monitoring/biometric-dashboard # Dashboard visual completo
 ### Script Principal: `productivity-automation.sh`
 
 #### Comandos Disponibles
+
 ```bash
 # Ritual matutino completo
 ./scripts/productivity-automation.sh morning
@@ -237,6 +253,7 @@ GET /monitoring/biometric-dashboard # Dashboard visual completo
 #### Métricas CoomÜnity Integradas
 
 **🤝 Ayni Score (Reciprocidad):**
+
 ```bash
 # Calculado automáticamente
 - Componentes compartidos/reutilizables
@@ -245,6 +262,7 @@ GET /monitoring/biometric-dashboard # Dashboard visual completo
 ```
 
 **🏆 Mérito Score (Calidad):**
+
 ```bash
 # Basado en:
 - TypeScript strict mode
@@ -254,6 +272,7 @@ GET /monitoring/biometric-dashboard # Dashboard visual completo
 ```
 
 **🌍 Bien Común Score (Sustentabilidad):**
+
 ```bash
 # Evaluado por:
 - Características de accesibilidad
@@ -265,6 +284,7 @@ GET /monitoring/biometric-dashboard # Dashboard visual completo
 ### Patrones de Workflow Natural
 
 #### Detección de Ritmo Circadiano
+
 ```bash
 06:00-09:00 🌅 Morning Focus     # Problem solving complejo
 10:00-12:00 🧠 Cognitive Peak    # Decisiones arquitectónicas  
@@ -274,6 +294,7 @@ GET /monitoring/biometric-dashboard # Dashboard visual completo
 ```
 
 #### Ciclo Semanal
+
 ```bash
 Monday    🗓️ Planning & Architecture
 Tuesday   🏗️ Implementation Focus
@@ -289,6 +310,7 @@ Friday    📚 Cleanup & Documentation
 ### Métricas Visuales en Tiempo Real
 
 #### Health Check Completo
+
 ```bash
 # Verificación matutina automática
 🔍 SYSTEM VITALS:
@@ -309,6 +331,7 @@ Friday    📚 Cleanup & Documentation
 ```
 
 #### Dashboard Biomimético (Propuesto)
+
 ```url
 http://localhost:3002/monitoring/biometric-dashboard
 
@@ -326,6 +349,7 @@ http://localhost:3002/monitoring/biometric-dashboard
 ### Prevención de Burnout Integrada
 
 #### Recordatorios Automáticos
+
 ```bash
 # Configurar con crontab -e
 0 9 * * 1-5   ./scripts/productivity-automation.sh morning
@@ -335,6 +359,7 @@ http://localhost:3002/monitoring/biometric-dashboard
 ```
 
 #### Micro-breaks Sugeridos
+
 ```bash
 ⏰ BREAK REMINDERS:
   • 2 min: Deep breathing (4-7-8 technique)
@@ -346,6 +371,7 @@ http://localhost:3002/monitoring/biometric-dashboard
 ```
 
 #### Principios de Desarrollo Saludable
+
 1. **🌱 Crecimiento Orgánico** - Evolución gradual, no revoluciones agresivas
 2. **🔄 Ritmos Naturales** - Respeto por ciclos circadianos
 3. **⚖️ Equilibrio Trabajo-Descanso** - Descanso como parte productiva
@@ -357,6 +383,7 @@ http://localhost:3002/monitoring/biometric-dashboard
 ## 🔧 **IMPLEMENTACIÓN PASO A PASO**
 
 ### Día 1: Setup Básico
+
 ```bash
 # 1. Instalar extensiones críticas
 ./scripts/productivity-automation.sh extensions
@@ -369,6 +396,7 @@ mkdir -p .vscode && cp docs/settings.json .vscode/
 ```
 
 ### Día 2-7: Integración de Hábitos
+
 ```bash
 # Rutina diaria automática
 # Mañana: Ritual de inicio
@@ -378,6 +406,7 @@ mkdir -p .vscode && cp docs/settings.json .vscode/
 ```
 
 ### Semana 2: Optimización
+
 ```bash
 # Análisis de métricas acumuladas
 ./scripts/productivity-automation.sh metrics
@@ -388,6 +417,7 @@ mkdir -p .vscode && cp docs/settings.json .vscode/
 ```
 
 ### Mes 1: Mastery
+
 ```bash
 # Sistema completamente integrado
 # Métricas CoomÜnity optimizadas
@@ -400,6 +430,7 @@ mkdir -p .vscode && cp docs/settings.json .vscode/
 ## 📋 **CHECKLIST DE IMPLEMENTACIÓN**
 
 ### ✅ Setup Inicial
+
 - [ ] Extensiones VS Code instaladas
 - [ ] Configuración workspace aplicada
 - [ ] Script de productividad funcionando
@@ -407,18 +438,21 @@ mkdir -p .vscode && cp docs/settings.json .vscode/
 - [ ] Backend health check exitoso
 
 ### ✅ Rutinas Diarias
+
 - [ ] Ritual matutino configurado
 - [ ] Métricas CoomÜnity monitoreadas
 - [ ] Breaks naturales programados
 - [ ] Wrap-up nocturno implementado
 
 ### ✅ Métricas CoomÜnity
+
 - [ ] Ayni Score > 80
 - [ ] Mérito Score > 90
 - [ ] Bien Común Score > 85
 - [ ] Overall Status: EXCELLENT
 
 ### ✅ Bienestar del Desarrollador
+
 - [ ] Break reminders activos
 - [ ] Workflow patterns optimizados
 - [ ] Burnout prevention implementado
@@ -429,18 +463,21 @@ mkdir -p .vscode && cp docs/settings.json .vscode/
 ## 🎯 **RESULTADOS ESPERADOS**
 
 ### Inmediatos (1-7 días)
+
 - ⚡ **Productividad**: Aumento del 25% en eficiencia de código
 - 🧘 **Bienestar**: Reducción del estrés de desarrollo
 - 🔧 **Calidad**: Menos bugs por mejores herramientas
 - 🤝 **Colaboración**: Mejor workflow en equipo
 
 ### Mediano Plazo (1-4 semanas)
+
 - 📈 **Métricas**: CoomÜnity scores consistentemente altos
 - 🎯 **Focus**: Mayor claridad en prioridades diarias
 - 🌱 **Crecimiento**: Habilidades técnicas mejoradas
 - 🔄 **Sostenibilidad**: Ritmo de trabajo equilibrado
 
 ### Largo Plazo (1+ meses)
+
 - 🏆 **Excelencia**: Desarrollo de clase mundial
 - 🌍 **Impacto**: Contribución significativa al Bien Común
 - 🧠 **Maestría**: Workflow naturalmente optimizado
@@ -451,16 +488,19 @@ mkdir -p .vscode && cp docs/settings.json .vscode/
 ## 🤝 **SOPORTE Y RECURSOS**
 
 ### Documentación de Referencia
+
 - 📖 [`RECOMMENDED_EXTENSIONS.md`](./RECOMMENDED_EXTENSIONS.md) - Guía completa de extensiones
 - 🌿 [`BACKEND_HEALTH_MONITORING.md`](./BACKEND_HEALTH_MONITORING.md) - Sistema biomimético original
 - 🔧 [`ENHANCED_BACKEND_MONITORING.md`](./ENHANCED_BACKEND_MONITORING.md) - Mejoras avanzadas
 
 ### Scripts Disponibles
+
 - 🤖 `scripts/productivity-automation.sh` - Automatización principal
 - 🏥 `scripts/health-check.sh` - Verificación de sistema
 - 📊 `scripts/utilities/check-backend-health.js` - Diagnóstico backend
 
 ### Endpoints de Monitoreo
+
 ```bash
 # Existentes
 GET /monitoring/health-report      # Reporte general
@@ -478,28 +518,32 @@ GET /monitoring/biometric-dashboard # Dashboard visual
 ### Principios Fundamentales en el Código
 
 **🤝 Ayni (Reciprocidad):**
+
 - Componentes reutilizables y compartidos
 - Code reviews constructivos
 - Documentación clara para el equipo
 - Conocimiento compartido libremente
 
 **🏆 Mérito (Calidad):**
+
 - TypeScript strict mode
 - Tests comprehensivos
 - Código limpio y legible
 - Performance optimizado
 
 **🌍 Bien Común (Sustentabilidad):**
+
 - Accesibilidad como prioridad
 - Error handling robusto
 - Desarrollo sostenible
 - Impacto positivo en la comunidad
 
 ### Recordatorio Diario
+
 > *"En CoomÜnity, cada línea de código es una oportunidad de contribuir al Bien Común. Desarrollamos con Ayni (reciprocidad), buscamos la excelencia del Mérito, y siempre priorizamos el bienestar colectivo sobre el beneficio individual."*
 
 ---
 
 **🎉 ¡Bienvenido a una nueva era de productividad natural y desarrollo sostenible con CoomÜnity SuperApp!**
 
-*Donde la tecnología y la naturaleza se encuentran para crear software extraordinario.* 
+*Donde la tecnología y la naturaleza se encuentran para crear software extraordinario.*

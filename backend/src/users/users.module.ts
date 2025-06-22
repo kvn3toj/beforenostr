@@ -13,16 +13,17 @@ import { RbacModule } from '@/rbac/rbac.module';
 
 @Module({
   imports: [PrismaModule, RbacModule], // Added RbacModule for RolesGuard
-  controllers: [UsersController, SimpleUsersController, MinimalUsersController, UsersTestController],
-  providers: [
-    UsersService,
-    SimpleUsersService,
-    MinimalUsersService,
+  controllers: [
+    UsersController,
+    SimpleUsersController,
+    MinimalUsersController,
+    UsersTestController,
   ],
+  providers: [UsersService, SimpleUsersService, MinimalUsersService],
   exports: [UsersService],
 })
 export class UsersModule {
   constructor() {
-// // //     console.log('>>> UsersModule CONSTRUCTOR: Initializing...');
+    // // //     console.log('>>> UsersModule CONSTRUCTOR: Initializing...');
   }
-} 
+}

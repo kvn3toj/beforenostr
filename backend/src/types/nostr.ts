@@ -34,4 +34,4 @@ export interface MeritTransaction {
   amount: number;
   type: string;
   action: MeritAction;
-} 
+}

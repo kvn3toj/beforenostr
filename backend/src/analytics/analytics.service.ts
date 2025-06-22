@@ -32,14 +32,19 @@ export interface ContentInteractionMetric {
 @Injectable()
 export class AnalyticsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-// //     console.log('>>> AnalyticsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> AnalyticsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
-  async recordEngagement(data: CreateUserEngagementDto, userId: string): Promise<Activity> {
+  async recordEngagement(
+    data: CreateUserEngagementDto,
+    userId: string
+  ): Promise<Activity> {
     return this.prisma.activity.create({
       data: {
         title: `User Engagement - ${data.eventType}`,
-        description: data.eventData ? JSON.stringify(data.eventData) : undefined,
+        description: data.eventData
+          ? JSON.stringify(data.eventData)
+          : undefined,
         type: data.eventType,
         creatorId: userId,
         experienceId: data.contentItemId || 'default-experience-id', // Use contentItemId from DTO
@@ -97,7 +102,9 @@ export class AnalyticsService {
     }
   }
 
-  async getUsersCreatedOverTime(params: TimeRangeParams): Promise<TimeSeriesDataPoint[]> {
+  async getUsersCreatedOverTime(
+    params: TimeRangeParams
+  ): Promise<TimeSeriesDataPoint[]> {
     try {
       // Por ahora devolvemos datos mock, pero aquí se implementaría la lógica real
       // usando agregaciones de Prisma con fechas
@@ -108,12 +115,17 @@ export class AnalyticsService {
       ];
       return mockData;
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting users created over time:', error);
+      console.warn(
+        '[AnalyticsService] Error getting users created over time:',
+        error
+      );
       return [];
     }
   }
 
-  async getPlaylistsCreatedOverTime(params: TimeRangeParams): Promise<TimeSeriesDataPoint[]> {
+  async getPlaylistsCreatedOverTime(
+    params: TimeRangeParams
+  ): Promise<TimeSeriesDataPoint[]> {
     try {
       const mockData: TimeSeriesDataPoint[] = [
         { time_period: '2024-01-01', count: 2 },
@@ -122,12 +134,17 @@ export class AnalyticsService {
       ];
       return mockData;
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting playlists created over time:', error);
+      console.warn(
+        '[AnalyticsService] Error getting playlists created over time:',
+        error
+      );
       return [];
     }
   }
 
-  async getMundosCreatedOverTime(params: TimeRangeParams): Promise<TimeSeriesDataPoint[]> {
+  async getMundosCreatedOverTime(
+    params: TimeRangeParams
+  ): Promise<TimeSeriesDataPoint[]> {
     try {
       const mockData: TimeSeriesDataPoint[] = [
         { time_period: '2024-01-01', count: 1 },
@@ -136,7 +153,10 @@ export class AnalyticsService {
       ];
       return mockData;
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting mundos created over time:', error);
+      console.warn(
+        '[AnalyticsService] Error getting mundos created over time:',
+        error
+      );
       return [];
     }
   }
@@ -161,7 +181,10 @@ export class AnalyticsService {
         thumbnail_url: undefined,
       }));
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting top viewed playlists:', error);
+      console.warn(
+        '[AnalyticsService] Error getting top viewed playlists:',
+        error
+      );
       return [];
     }
   }
@@ -185,12 +208,17 @@ export class AnalyticsService {
         thumbnail_url: undefined,
       }));
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting top viewed mundos:', error);
+      console.warn(
+        '[AnalyticsService] Error getting top viewed mundos:',
+        error
+      );
       return [];
     }
   }
 
-  async getActiveUsersOverTime(params: TimeRangeParams): Promise<TimeSeriesDataPoint[]> {
+  async getActiveUsersOverTime(
+    params: TimeRangeParams
+  ): Promise<TimeSeriesDataPoint[]> {
     try {
       const mockData: TimeSeriesDataPoint[] = [
         { time_period: '2024-01-01', count: 15 },
@@ -199,7 +227,10 @@ export class AnalyticsService {
       ];
       return mockData;
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting active users over time:', error);
+      console.warn(
+        '[AnalyticsService] Error getting active users over time:',
+        error
+      );
       return [];
     }
   }
@@ -222,7 +253,10 @@ export class AnalyticsService {
       ];
       return mockData;
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting top interacted content:', error);
+      console.warn(
+        '[AnalyticsService] Error getting top interacted content:',
+        error
+      );
       return [];
     }
   }
@@ -246,7 +280,10 @@ export class AnalyticsService {
         thumbnail_url: undefined,
       }));
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting least viewed playlists:', error);
+      console.warn(
+        '[AnalyticsService] Error getting least viewed playlists:',
+        error
+      );
       return [];
     }
   }
@@ -270,7 +307,10 @@ export class AnalyticsService {
         thumbnail_url: undefined,
       }));
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting least viewed mundos:', error);
+      console.warn(
+        '[AnalyticsService] Error getting least viewed mundos:',
+        error
+      );
       return [];
     }
   }
@@ -287,7 +327,10 @@ export class AnalyticsService {
       ];
       return mockData;
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting least interacted playlists:', error);
+      console.warn(
+        '[AnalyticsService] Error getting least interacted playlists:',
+        error
+      );
       return [];
     }
   }
@@ -304,7 +347,10 @@ export class AnalyticsService {
       ];
       return mockData;
     } catch (error) {
-      console.warn('[AnalyticsService] Error getting least interacted mundos:', error);
+      console.warn(
+        '[AnalyticsService] Error getting least interacted mundos:',
+        error
+      );
       return [];
     }
   }
@@ -394,7 +440,9 @@ export class AnalyticsService {
         const videoCount = await this.prisma.contentItem.count();
         totalVideos = videoCount > 0 ? videoCount : 42;
       } catch (dbError) {
-        console.warn('[AnalyticsService] Could not fetch video count from DB, using mock data');
+        console.warn(
+          '[AnalyticsService] Could not fetch video count from DB, using mock data'
+        );
       }
 
       return {
@@ -402,34 +450,34 @@ export class AnalyticsService {
         averageWatchTime: 180, // en segundos
         mostViewedVideo: 'Introducción a la Gamificación',
         totalQuestionsAnswered: 5320,
-        totalVideos: totalVideos,
+        totalVideos,
         topVideos: [
           {
             id: '1',
             title: 'Introducción a la Gamificación',
             views: 2500,
-            duration: 300
+            duration: 300,
           },
           {
             id: '2',
             title: 'Principios de Ayni',
             views: 1800,
-            duration: 240
+            duration: 240,
           },
           {
             id: '3',
             title: 'Economía Colaborativa',
             views: 1200,
-            duration: 420
-          }
+            duration: 420,
+          },
         ],
         viewsByDay: [
           { date: '2024-01-01', views: 150 },
           { date: '2024-01-02', views: 200 },
           { date: '2024-01-03', views: 180 },
           { date: '2024-01-04', views: 220 },
-          { date: '2024-01-05', views: 190 }
-        ]
+          { date: '2024-01-05', views: 190 },
+        ],
       };
     } catch (error) {
       console.warn('[AnalyticsService] Error getting video analytics:', error);
@@ -440,7 +488,7 @@ export class AnalyticsService {
         totalQuestionsAnswered: 0,
         totalVideos: 0,
         topVideos: [],
-        viewsByDay: []
+        viewsByDay: [],
       };
     }
   }
@@ -451,7 +499,13 @@ export class AnalyticsService {
       console.log('[AnalyticsService] Getting dashboard metrics...');
 
       // Obtener métricas básicas del sistema
-      const [totalUsers, totalPlaylists, totalMundos, totalContentItems, recentEngagement] = await Promise.all([
+      const [
+        totalUsers,
+        totalPlaylists,
+        totalMundos,
+        totalContentItems,
+        recentEngagement,
+      ] = await Promise.all([
         this.prisma.user.count(),
         this.prisma.playlist.count(),
         this.prisma.mundo.count(),
@@ -459,8 +513,8 @@ export class AnalyticsService {
         this.prisma.activity.findMany({
           take: 10,
           orderBy: { createdAt: 'desc' },
-          include: { creator: { select: { name: true, email: true } } }
-        })
+          include: { creator: { select: { name: true, email: true } } },
+        }),
       ]);
 
       // Calcular usuarios activos (últimos 7 días) - usando actividades como proxy
@@ -469,11 +523,11 @@ export class AnalyticsService {
           createdActivities: {
             some: {
               createdAt: {
-                gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-              }
-            }
-          }
-        }
+                gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+              },
+            },
+          },
+        },
       });
 
       const totalContent = totalPlaylists + totalMundos + totalContentItems;
@@ -484,18 +538,18 @@ export class AnalyticsService {
         totalOndas: Math.floor(Math.random() * 50000) + 25000,
         ayniBalance: {
           given: Math.floor(Math.random() * 1000) + 500,
-          received: Math.floor(Math.random() * 1000) + 500
+          received: Math.floor(Math.random() * 1000) + 500,
         },
-        trustLevel: Math.random() * 5 + 3 // Entre 3-8
+        trustLevel: Math.random() * 5 + 3, // Entre 3-8
       };
 
       // Actividad reciente
-      const recentActivity = recentEngagement.map(engagement => ({
+      const recentActivity = recentEngagement.map((engagement) => ({
         id: engagement.id,
         type: engagement.type,
         user: engagement.creator?.name || 'Usuario Anónimo',
         timestamp: engagement.createdAt,
-        details: engagement.description
+        details: engagement.description,
       }));
 
       return {
@@ -506,22 +560,25 @@ export class AnalyticsService {
         breakdown: {
           playlists: totalPlaylists,
           mundos: totalMundos,
-          contentItems: totalContentItems
+          contentItems: totalContentItems,
         },
         engagement: {
           totalEvents: recentEngagement.length,
-          recentEvents: recentEngagement.length
+          recentEvents: recentEngagement.length,
         },
         recentActivity: recentActivity.slice(0, 5), // Últimas 5 actividades
         ayniMetrics,
         summary: {
           userGrowth: Math.floor(Math.random() * 20) + 5, // % crecimiento simulado
           engagementRate: Math.random() * 30 + 70, // % entre 70-100
-          contentUtilization: totalContent > 0 ? Math.random() * 40 + 60 : 0 // % entre 60-100
-        }
+          contentUtilization: totalContent > 0 ? Math.random() * 40 + 60 : 0, // % entre 60-100
+        },
       };
     } catch (error) {
-      console.error('[AnalyticsService] Error getting dashboard metrics:', error);
+      console.error(
+        '[AnalyticsService] Error getting dashboard metrics:',
+        error
+      );
       return {
         timestamp: new Date().toISOString(),
         totalUsers: 0,
@@ -534,13 +591,13 @@ export class AnalyticsService {
           totalLukas: 0,
           totalOndas: 0,
           ayniBalance: { given: 0, received: 0 },
-          trustLevel: 0
+          trustLevel: 0,
         },
         summary: {
           userGrowth: 0,
           engagementRate: 0,
-          contentUtilization: 0
-        }
+          contentUtilization: 0,
+        },
       };
     }
   }
@@ -565,7 +622,10 @@ export class AnalyticsService {
           databaseStatus = 'critical';
         }
       } catch (dbError) {
-        console.error('[AnalyticsService] Database health check failed:', dbError);
+        console.error(
+          '[AnalyticsService] Database health check failed:',
+          dbError
+        );
         databaseStatus = 'critical';
         dbResponseTime = -1;
       }
@@ -574,7 +634,7 @@ export class AnalyticsService {
       const memoryUsage = {
         used: Math.floor(Math.random() * 500) + 200, // MB
         total: 1024, // MB
-        percentage: Math.floor((Math.random() * 50) + 20) // 20-70%
+        percentage: Math.floor(Math.random() * 50 + 20), // 20-70%
       };
 
       // Determine overall health status
@@ -596,30 +656,30 @@ export class AnalyticsService {
           database: {
             status: databaseStatus,
             responseTime: dbResponseTime,
-            connection: databaseStatus !== 'critical'
+            connection: databaseStatus !== 'critical',
           },
           cache: {
             status: 'healthy', // Simulated
-            responseTime: Math.floor(Math.random() * 50) + 5
+            responseTime: Math.floor(Math.random() * 50) + 5,
           },
           api: {
             status: 'healthy',
-            responseTime: Date.now() - startTime
-          }
+            responseTime: Date.now() - startTime,
+          },
         },
         resources: {
           memory: memoryUsage,
           cpu: {
             usage: Math.floor(Math.random() * 60) + 10, // 10-70%
-            load: Math.random() * 2 + 0.5 // 0.5-2.5
-          }
+            load: Math.random() * 2 + 0.5, // 0.5-2.5
+          },
         },
         metrics: {
           activeConnections: Math.floor(Math.random() * 100) + 10,
           requestsPerMinute: Math.floor(Math.random() * 500) + 50,
-          errorRate: Math.random() * 5 // 0-5%
+          errorRate: Math.random() * 5, // 0-5%
         },
-        lastHealthCheck: new Date().toISOString()
+        lastHealthCheck: new Date().toISOString(),
       };
     } catch (error) {
       console.error('[AnalyticsService] Error checking system health:', error);
@@ -630,19 +690,19 @@ export class AnalyticsService {
         services: {
           database: { status: 'critical', responseTime: -1, connection: false },
           cache: { status: 'unknown', responseTime: -1 },
-          api: { status: 'critical', responseTime: -1 }
+          api: { status: 'critical', responseTime: -1 },
         },
         resources: {
           memory: { used: 0, total: 0, percentage: 0 },
-          cpu: { usage: 0, load: 0 }
+          cpu: { usage: 0, load: 0 },
         },
         metrics: {
           activeConnections: 0,
           requestsPerMinute: 0,
-          errorRate: 100
+          errorRate: 100,
         },
         lastHealthCheck: new Date().toISOString(),
-        error: error.message
+        error: error.message,
       };
     }
   }

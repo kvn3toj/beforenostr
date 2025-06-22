@@ -98,4 +98,4 @@ jest.mock('@prisma/client', () => ({
       delete: jest.fn(),
     },
   })),
-})); 
+}));

@@ -1,8 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  Put,
+} from '@nestjs/common';
 import { ChallengesService } from './challenges.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
@@ -41,7 +57,10 @@ export class ChallengesController {
   @ApiBearerAuth()
   @Get('/admin/all')
   @ApiOperation({ summary: '[ADMIN] Get all challenges' })
-  @ApiResponse({ status: 200, description: 'List of all challenges (admin only).' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all challenges (admin only).',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   findAllAdmin() {
     return this.challengesService.findAllAdmin();
@@ -69,7 +88,11 @@ export class ChallengesController {
   @ApiResponse({ status: 200, description: 'The updated challenge.' })
   @ApiResponse({ status: 404, description: 'Challenge not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
-  update(@Param('id') id: string, @Body() updateChallengeDto: UpdateChallengeDto, @Req() req) {
+  update(
+    @Param('id') id: string,
+    @Body() updateChallengeDto: UpdateChallengeDto,
+    @Req() req
+  ) {
     return this.challengesService.update(id, updateChallengeDto, req.user);
   }
 
@@ -94,8 +117,14 @@ export class ChallengesController {
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   @ApiResponse({ status: 404, description: 'Challenge not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
-  addReward(@Param('challengeId') challengeId: string, @Body() createChallengeRewardDto: CreateChallengeRewardDto) {
-      return this.challengesService.addRewardToChallenge(challengeId, createChallengeRewardDto);
+  addReward(
+    @Param('challengeId') challengeId: string,
+    @Body() createChallengeRewardDto: CreateChallengeRewardDto
+  ) {
+    return this.challengesService.addRewardToChallenge(
+      challengeId,
+      createChallengeRewardDto
+    );
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -107,6 +136,6 @@ export class ChallengesController {
   @ApiResponse({ status: 404, description: 'Reward not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   removeReward(@Param('rewardId') rewardId: string) {
-      return this.challengesService.removeReward(rewardId);
+    return this.challengesService.removeReward(rewardId);
   }
 }

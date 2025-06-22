@@ -13,4 +13,4 @@ export class CreateGroupDto {
 
   @IsString()
   type: string; // CLAN, FRIEND, CLIENT, ALLY, GOVERNANCE_BODY, COMMUNITY_OF_PRACTICE
-} 
+}

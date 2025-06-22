@@ -25,9 +25,16 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     },
     divider: mode === 'light' ? '#E5E7EB' : '#374151',
     action: {
-      hover: mode === 'light' ? 'rgba(205, 171, 90, 0.08)' : 'rgba(205, 171, 90, 0.12)',
-      selected: mode === 'light' ? 'rgba(205, 171, 90, 0.12)' : 'rgba(205, 171, 90, 0.16)',
-      disabled: mode === 'light' ? 'rgba(0, 0, 0, 0.26)' : 'rgba(255, 255, 255, 0.3)',
+      hover:
+        mode === 'light'
+          ? 'rgba(205, 171, 90, 0.08)'
+          : 'rgba(205, 171, 90, 0.12)',
+      selected:
+        mode === 'light'
+          ? 'rgba(205, 171, 90, 0.12)'
+          : 'rgba(205, 171, 90, 0.16)',
+      disabled:
+        mode === 'light' ? 'rgba(0, 0, 0, 0.26)' : 'rgba(255, 255, 255, 0.3)',
     },
     info: {
       main: mode === 'light' ? '#3B82F6' : '#60A5FA',
@@ -135,13 +142,15 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: mode === 'light' 
-            ? '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
-            : '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)',
+          boxShadow:
+            mode === 'light'
+              ? '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
+              : '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)',
           '&:hover': {
-            boxShadow: mode === 'light'
-              ? '0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)'
-              : '0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3)',
+            boxShadow:
+              mode === 'light'
+                ? '0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)'
+                : '0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3)',
           },
         },
       },
@@ -152,9 +161,10 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
           borderRadius: 8,
         },
         elevation1: {
-          boxShadow: mode === 'light'
-            ? '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
-            : '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)',
+          boxShadow:
+            mode === 'light'
+              ? '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
+              : '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)',
         },
       },
     },
@@ -224,4 +234,4 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
 
 export const createAppTheme = (mode: 'light' | 'dark') => {
   return createTheme(getDesignTokens(mode));
-}; 
+};

@@ -1,4 +1,11 @@
-import { IsString, IsBoolean, IsOptional, IsEnum, IsUUID, IsArray } from 'class-validator';
+import {
+  IsString,
+  IsBoolean,
+  IsOptional,
+  IsEnum,
+  IsUUID,
+  IsArray,
+} from 'class-validator';
 
 export enum NotificationType {
   NEW_PUBLICATION = 'NEW_PUBLICATION',
@@ -10,7 +17,7 @@ export enum NotificationType {
   CHAT_MESSAGE = 'CHAT_MESSAGE',
   EXPERIENCE_COMPLETED = 'EXPERIENCE_COMPLETED',
   TOKEN_EXPIRY_WARNING = 'TOKEN_EXPIRY_WARNING',
-  MARKETPLACE_UPDATE = 'MARKETPLACE_UPDATE'
+  MARKETPLACE_UPDATE = 'MARKETPLACE_UPDATE',
 }
 
 export class CreateNotificationDto {
@@ -72,4 +79,4 @@ export class NotificationFilterDto {
   @IsOptional()
   @IsString()
   offset?: string;
-} 
+}

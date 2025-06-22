@@ -10,4 +10,4 @@ export class JoinGroupDto {
   @IsOptional()
   @IsString()
   roleInGroup?: string; // MEMBER, LEADER, ARBITRATOR, MODERATOR (default: MEMBER)
-} 
+}

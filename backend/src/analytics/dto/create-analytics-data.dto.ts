@@ -6,7 +6,10 @@ export class CreateAnalyticsDataDto {
   @IsString()
   eventType: string;
 
-  @ApiProperty({ description: 'ID del usuario que generó el evento', type: String })
+  @ApiProperty({
+    description: 'ID del usuario que generó el evento',
+    type: String,
+  })
   @IsString()
   @IsUUID()
   userId: string;
@@ -31,15 +34,15 @@ export class CreateAnalyticsDataDto {
   @IsString()
   sessionId?: string;
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     description: 'Metadatos adicionales del evento',
     example: {
       duration: 120,
       position: 45,
-      device: 'mobile'
-    }
+      device: 'mobile',
+    },
   })
   @IsOptional()
   @IsObject()
   metadata?: Record<string, any>;
-} 
+}

@@ -18,4 +18,4 @@ export class CreateMeritDto {
   @IsOptional()
   @IsString()
   relatedEntityId?: string; // ID de la entidad relacionada (activityId, transactionId, etc.)
-} 
+}

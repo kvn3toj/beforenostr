@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Inject,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationType } from '../notifications/dto/notifications.dto';
@@ -10,7 +15,7 @@ import {
   InvitationChallengeDto,
   InvitationStatsDto,
   InvitationStatus,
-  UserInvitationStatus
+  UserInvitationStatus,
 } from './dto/invitations.dto';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
@@ -19,22 +24,23 @@ import * as bcrypt from 'bcryptjs';
 export class InvitationsService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
-    @Inject(NotificationsService) private readonly notificationsService: NotificationsService
+    @Inject(NotificationsService)
+    private readonly notificationsService: NotificationsService
   ) {
-// //     console.log('>>> InvitationsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-// //     console.log('>>> InvitationsService CONSTRUCTOR: this.notificationsService IS', this.notificationsService ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> InvitationsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> InvitationsService CONSTRUCTOR: this.notificationsService IS', this.notificationsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
    * Crear una gift card de invitación
    */
   async createGiftCard(dto: CreateGiftCardDto) {
-//     console.log('>>> InvitationsService.createGiftCard: Creating gift card', dto);
+    //     console.log('>>> InvitationsService.createGiftCard: Creating gift card', dto);
 
     // Verificar que el invitador existe y tiene suficientes Ünits
     const inviter = await this.prisma.user.findUnique({
       where: { id: dto.inviterId },
-      include: { wallet: true }
+      include: { wallet: true },
     });
 
     if (!inviter) {
@@ -42,7 +48,9 @@ export class InvitationsService {
     }
 
     if (!inviter.wallet || inviter.wallet.balanceUnits < dto.unitsAmount) {
-      throw new BadRequestException('Balance insuficiente para crear la gift card');
+      throw new BadRequestException(
+        'Balance insuficiente para crear la gift card'
+      );
     }
 
     // Generar token único para la gift card
@@ -62,16 +70,16 @@ export class InvitationsService {
             suggestions: dto.suggestions || [],
             token,
             status: InvitationStatus.SENT,
-            templateId: dto.templateId
+            templateId: dto.templateId,
           }),
-          type: 'GIFT_CARD'
-        }
+          type: 'GIFT_CARD',
+        },
       });
 
       // 2. Descontar Ünits del invitador
       await tx.wallet.update({
         where: { userId: dto.inviterId },
-        data: { balanceUnits: { decrement: dto.unitsAmount } }
+        data: { balanceUnits: { decrement: dto.unitsAmount } },
       });
 
       // 3. Crear transacción de registro
@@ -83,8 +91,8 @@ export class InvitationsService {
           tokenType: 'CIRCULATING_UNIT',
           type: 'SEND',
           status: 'COMPLETED',
-          description: `Gift card creada para ${dto.invitedName} (${dto.invitedEmail})`
-        }
+          description: `Gift card creada para ${dto.invitedName} (${dto.invitedEmail})`,
+        },
       });
 
       return card;
@@ -95,14 +103,14 @@ export class InvitationsService {
       userId: dto.inviterId,
       type: NotificationType.SYSTEM_ANNOUNCEMENT,
       message: `Gift card de ${dto.unitsAmount} Ünits creada para ${dto.invitedName}`,
-      metadata: { giftCardId: giftCard.id, token }
+      metadata: { giftCardId: giftCard.id, token },
     });
 
     const content = JSON.parse(giftCard.content);
     return {
       id: giftCard.id,
       ...content,
-      createdAt: giftCard.createdAt
+      createdAt: giftCard.createdAt,
     };
   }
 
@@ -110,13 +118,13 @@ export class InvitationsService {
    * Canjear una gift card
    */
   async redeemGiftCard(dto: RedeemGiftCardDto) {
-//     console.log('>>> InvitationsService.redeemGiftCard: Redeeming gift card', { token: dto.token, email: dto.invitedEmail });
+    //     console.log('>>> InvitationsService.redeemGiftCard: Redeeming gift card', { token: dto.token, email: dto.invitedEmail });
 
     // Buscar la gift card por token
     const giftCardPublication = await this.prisma.publication.findFirst({
       where: {
-        type: 'GIFT_CARD'
-      }
+        type: 'GIFT_CARD',
+      },
     });
 
     if (!giftCardPublication) {
@@ -130,7 +138,9 @@ export class InvitationsService {
     }
 
     if (giftCardContent.status !== InvitationStatus.SENT) {
-      throw new BadRequestException('Gift card ya ha sido canjeada o está expirada');
+      throw new BadRequestException(
+        'Gift card ya ha sido canjeada o está expirada'
+      );
     }
 
     if (giftCardContent.invitedEmail !== dto.invitedEmail) {
@@ -139,7 +149,7 @@ export class InvitationsService {
 
     // Verificar si el usuario ya existe
     const existingUser = await this.prisma.user.findUnique({
-      where: { email: dto.invitedEmail }
+      where: { email: dto.invitedEmail },
     });
 
     if (existingUser) {
@@ -155,9 +165,10 @@ export class InvitationsService {
           email: dto.invitedEmail,
           password: hashedPassword,
           firstName: dto.firstName || dto.invitedName.split(' ')[0],
-          lastName: dto.lastName || dto.invitedName.split(' ').slice(1).join(' '),
-          isActive: true
-        }
+          lastName:
+            dto.lastName || dto.invitedName.split(' ').slice(1).join(' '),
+          isActive: true,
+        },
       });
 
       // 2. Crear wallet para el nuevo usuario
@@ -165,8 +176,8 @@ export class InvitationsService {
         data: {
           userId: newUser.id,
           balanceUnits: giftCardContent.unitsAmount,
-          balanceToins: 0
-        }
+          balanceToins: 0,
+        },
       });
 
       // 3. Crear token inicial para el nuevo usuario
@@ -177,8 +188,8 @@ export class InvitationsService {
           type: 'PROMOTIONAL_UNIT',
           status: 'ACTIVE',
           source: 'GIFT_CARD',
-          caducityDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 año
-        }
+          caducityDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 año
+        },
       });
 
       // 4. Marcar gift card como canjeada
@@ -189,9 +200,9 @@ export class InvitationsService {
             ...giftCardContent,
             status: InvitationStatus.REDEEMED,
             redeemedAt: new Date(),
-            redeemedByUserId: newUser.id
-          })
-        }
+            redeemedByUserId: newUser.id,
+          }),
+        },
       });
 
       // 5. Crear transacción de canje
@@ -202,8 +213,8 @@ export class InvitationsService {
           tokenType: 'PROMOTIONAL_UNIT',
           type: 'RECEIVE',
           status: 'COMPLETED',
-          description: `Canje de gift card de bienvenida`
-        }
+          description: `Canje de gift card de bienvenida`,
+        },
       });
 
       return { newUser, wallet };
@@ -216,8 +227,8 @@ export class InvitationsService {
       message: `${dto.invitedName} ha canjeado tu gift card de ${giftCardContent.unitsAmount} Ünits`,
       metadata: {
         giftCardId: giftCardPublication.id,
-        newUserId: result.newUser.id
-      }
+        newUserId: result.newUser.id,
+      },
     });
 
     return {
@@ -226,13 +237,13 @@ export class InvitationsService {
         id: result.newUser.id,
         email: result.newUser.email,
         firstName: result.newUser.firstName,
-        lastName: result.newUser.lastName
+        lastName: result.newUser.lastName,
       },
       wallet: {
         balanceUnits: result.wallet.balanceUnits,
-        balanceToins: result.wallet.balanceToins
+        balanceToins: result.wallet.balanceToins,
       },
-      giftCardAmount: giftCardContent.unitsAmount
+      giftCardAmount: giftCardContent.unitsAmount,
     };
   }
 
@@ -240,23 +251,23 @@ export class InvitationsService {
    * Obtener gift cards de un usuario
    */
   async getUserGiftCards(userId: string) {
-//     console.log('>>> InvitationsService.getUserGiftCards: Getting gift cards for user', userId);
+    //     console.log('>>> InvitationsService.getUserGiftCards: Getting gift cards for user', userId);
 
     const giftCards = await this.prisma.publication.findMany({
       where: {
         userId,
-        type: 'GIFT_CARD'
+        type: 'GIFT_CARD',
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     });
 
-    return giftCards.map(card => {
+    return giftCards.map((card) => {
       const content = JSON.parse(card.content);
       return {
         id: card.id,
         ...content,
         createdAt: card.createdAt,
-        updatedAt: card.updatedAt
+        updatedAt: card.updatedAt,
       };
     });
   }
@@ -264,15 +275,19 @@ export class InvitationsService {
   /**
    * Actualizar gift card
    */
-  async updateGiftCard(giftCardId: string, dto: UpdateGiftCardDto, userId: string) {
-//     console.log('>>> InvitationsService.updateGiftCard: Updating gift card', giftCardId);
+  async updateGiftCard(
+    giftCardId: string,
+    dto: UpdateGiftCardDto,
+    userId: string
+  ) {
+    //     console.log('>>> InvitationsService.updateGiftCard: Updating gift card', giftCardId);
 
     const giftCard = await this.prisma.publication.findFirst({
       where: {
         id: giftCardId,
         userId,
-        type: 'GIFT_CARD'
-      }
+        type: 'GIFT_CARD',
+      },
     });
 
     if (!giftCard) {
@@ -285,15 +300,15 @@ export class InvitationsService {
     const updatedGiftCard = await this.prisma.publication.update({
       where: { id: giftCardId },
       data: {
-        content: JSON.stringify(updatedContent)
-      }
+        content: JSON.stringify(updatedContent),
+      },
     });
 
     return {
       id: updatedGiftCard.id,
       ...JSON.parse(updatedGiftCard.content),
       createdAt: updatedGiftCard.createdAt,
-      updatedAt: updatedGiftCard.updatedAt
+      updatedAt: updatedGiftCard.updatedAt,
     };
   }
 
@@ -301,7 +316,7 @@ export class InvitationsService {
    * Obtener estadísticas de invitaciones
    */
   async getInvitationStats(dto: InvitationStatsDto) {
-//     console.log('>>> InvitationsService.getInvitationStats: Getting invitation statistics', dto);
+    //     console.log('>>> InvitationsService.getInvitationStats: Getting invitation statistics', dto);
 
     const where: any = { type: 'GIFT_CARD' };
 
@@ -321,40 +336,44 @@ export class InvitationsService {
 
     const giftCards = await this.prisma.publication.findMany({ where });
 
-    const stats = giftCards.reduce((acc, card) => {
-      const content = JSON.parse(card.content);
+    const stats = giftCards.reduce(
+      (acc, card) => {
+        const content = JSON.parse(card.content);
 
-      acc.total++;
-      acc.totalUnitsDistributed += content.unitsAmount;
+        acc.total++;
+        acc.totalUnitsDistributed += content.unitsAmount;
 
-      switch (content.status) {
-        case InvitationStatus.SENT:
-          acc.pending++;
-          break;
-        case InvitationStatus.REDEEMED:
-          acc.redeemed++;
-          break;
-        case InvitationStatus.EXPIRED:
-          acc.expired++;
-          break;
-        case InvitationStatus.CANCELLED:
-          acc.cancelled++;
-          break;
+        switch (content.status) {
+          case InvitationStatus.SENT:
+            acc.pending++;
+            break;
+          case InvitationStatus.REDEEMED:
+            acc.redeemed++;
+            break;
+          case InvitationStatus.EXPIRED:
+            acc.expired++;
+            break;
+          case InvitationStatus.CANCELLED:
+            acc.cancelled++;
+            break;
+        }
+
+        return acc;
+      },
+      {
+        total: 0,
+        pending: 0,
+        redeemed: 0,
+        expired: 0,
+        cancelled: 0,
+        totalUnitsDistributed: 0,
       }
-
-      return acc;
-    }, {
-      total: 0,
-      pending: 0,
-      redeemed: 0,
-      expired: 0,
-      cancelled: 0,
-      totalUnitsDistributed: 0
-    });
+    );
 
     return {
       ...stats,
-      conversionRate: stats.total > 0 ? (stats.redeemed / stats.total) * 100 : 0
+      conversionRate:
+        stats.total > 0 ? (stats.redeemed / stats.total) * 100 : 0,
     };
   }
 
@@ -362,14 +381,14 @@ export class InvitationsService {
    * Cancelar gift card
    */
   async cancelGiftCard(giftCardId: string, userId: string) {
-//     console.log('>>> InvitationsService.cancelGiftCard: Cancelling gift card', giftCardId);
+    //     console.log('>>> InvitationsService.cancelGiftCard: Cancelling gift card', giftCardId);
 
     const giftCard = await this.prisma.publication.findFirst({
       where: {
         id: giftCardId,
         userId,
-        type: 'GIFT_CARD'
-      }
+        type: 'GIFT_CARD',
+      },
     });
 
     if (!giftCard) {
@@ -379,7 +398,9 @@ export class InvitationsService {
     const content = JSON.parse(giftCard.content);
 
     if (content.status !== InvitationStatus.SENT) {
-      throw new BadRequestException('Solo se pueden cancelar gift cards pendientes');
+      throw new BadRequestException(
+        'Solo se pueden cancelar gift cards pendientes'
+      );
     }
 
     // Cancelar gift card y devolver Ünits
@@ -391,15 +412,15 @@ export class InvitationsService {
           content: JSON.stringify({
             ...content,
             status: InvitationStatus.CANCELLED,
-            cancelledAt: new Date()
-          })
-        }
+            cancelledAt: new Date(),
+          }),
+        },
       });
 
       // 2. Devolver Ünits al invitador
       await tx.wallet.update({
         where: { userId },
-        data: { balanceUnits: { increment: content.unitsAmount } }
+        data: { balanceUnits: { increment: content.unitsAmount } },
       });
 
       // 3. Crear transacción de devolución
@@ -410,8 +431,8 @@ export class InvitationsService {
           tokenType: 'CIRCULATING_UNIT',
           type: 'RECEIVE',
           status: 'COMPLETED',
-          description: `Devolución por cancelación de gift card`
-        }
+          description: `Devolución por cancelación de gift card`,
+        },
       });
     });
 

@@ -1,4 +1,15 @@
-import { IsString, IsNumber, IsOptional, IsEnum, IsUUID, IsEmail, IsArray, Min, IsBoolean, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsEnum,
+  IsUUID,
+  IsEmail,
+  IsArray,
+  Min,
+  IsBoolean,
+  IsDateString,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -6,14 +17,14 @@ export enum InvitationStatus {
   SENT = 'SENT',
   REDEEMED = 'REDEEMED',
   EXPIRED = 'EXPIRED',
-  CANCELLED = 'CANCELLED'
+  CANCELLED = 'CANCELLED',
 }
 
 export enum UserInvitationStatus {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
-  EXPIRED = 'EXPIRED'
+  EXPIRED = 'EXPIRED',
 }
 
 export class CreateInvitationTemplateDto {
@@ -33,7 +44,10 @@ export class CreateInvitationTemplateDto {
   @IsString()
   textContent: string;
 
-  @ApiProperty({ description: 'Variables disponibles en el template', required: false })
+  @ApiProperty({
+    description: 'Variables disponibles en el template',
+    required: false,
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
@@ -73,7 +87,10 @@ export class CreateGiftCardDto {
   @IsString({ each: true })
   suggestions?: string[];
 
-  @ApiProperty({ description: 'ID del template de invitación', required: false })
+  @ApiProperty({
+    description: 'ID del template de invitación',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   templateId?: string;
@@ -156,12 +173,18 @@ export class InvitationChallengeDto {
 }
 
 export class InvitationStatsDto {
-  @ApiProperty({ description: 'ID del usuario para filtrar estadísticas', required: false })
+  @ApiProperty({
+    description: 'ID del usuario para filtrar estadísticas',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   userId?: string;
 
-  @ApiProperty({ description: 'Fecha de inicio para el rango', required: false })
+  @ApiProperty({
+    description: 'Fecha de inicio para el rango',
+    required: false,
+  })
   @IsOptional()
   @IsDateString()
   startDate?: string;

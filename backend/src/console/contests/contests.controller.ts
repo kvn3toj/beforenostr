@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Put, Param, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Param,
+  Body,
+  UseGuards,
+} from '@nestjs/common';
 import { ContestsService } from './contests.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
+import { CreateContestDto } from './dto/create-contest.dto';
+import { UpdateContestDto } from './dto/update-contest.dto';
 
 @Controller('console/contests')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -21,13 +31,16 @@ export class ContestsController {
   }
 
   @Post()
-  createContest(@Body() data: any) {
-    return this.contestsService.createContest(data);
+  createContest(@Body() createContestDto: CreateContestDto) {
+    return this.contestsService.createContest(createContestDto);
   }
 
   @Put(':contestId')
-  updateContest(@Param('contestId') contestId: string, @Body() data: any) {
-    return this.contestsService.updateContest(contestId, data);
+  updateContest(
+    @Param('contestId') contestId: string,
+    @Body() updateContestDto: UpdateContestDto
+  ) {
+    return this.contestsService.updateContest(contestId, updateContestDto);
   }
 
   @Get(':contestId/leaderboard')

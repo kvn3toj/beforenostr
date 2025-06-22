@@ -1,31 +1,38 @@
-import { Injectable, NotFoundException, ForbiddenException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  Inject,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Wallet } from '../../generated/prisma';
 
 // Define a basic type for the authenticated user passed from the controller
-type AuthenticatedUser = { id: string; roles: string[]; /* other properties */ };
+type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
 
 @Injectable()
 export class WalletsService {
   constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
   // Called by TransactionsService internally
-  async updateWalletBalance(userId: string, amount: number, type: 'units' | 'toins' = 'units'): Promise<Wallet> {
+  async updateWalletBalance(
+    userId: string,
+    amount: number,
+    type: 'units' | 'toins' = 'units'
+  ): Promise<Wallet> {
     // Find or create the wallet for the user
     const wallet = await this.prisma.wallet.upsert({
       where: { userId },
       update: {
         ...(type === 'units'
           ? { balanceUnits: { increment: amount } }
-          : { balanceToins: { increment: amount } }
-        ),
+          : { balanceToins: { increment: amount } }),
       },
       create: {
         userId,
         ...(type === 'units'
           ? { balanceUnits: amount, balanceToins: 0 }
-          : { balanceUnits: 0, balanceToins: amount }
-        ),
+          : { balanceUnits: 0, balanceToins: amount }),
       },
     });
     return wallet;
@@ -33,11 +40,13 @@ export class WalletsService {
 
   async getWalletForUser(
     userId: string,
-    user: AuthenticatedUser, // Accept authenticated user object
+    user: AuthenticatedUser // Accept authenticated user object
   ) {
-     // Ownership check: User must be the owner OR have the 'admin' role
+    // Ownership check: User must be the owner OR have the 'admin' role
     if (userId !== user.id && !user.roles.includes('admin')) {
-        throw new ForbiddenException('You do not have permission to view this user\'s wallet.');
+      throw new ForbiddenException(
+        "You do not have permission to view this user's wallet."
+      );
     }
 
     const wallet = await this.prisma.wallet.findUnique({
@@ -49,9 +58,9 @@ export class WalletsService {
             name: true,
             email: true,
             avatarUrl: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     // If wallet doesn't exist, create one with zero balances
@@ -69,9 +78,9 @@ export class WalletsService {
               name: true,
               email: true,
               avatarUrl: true,
-            }
-          }
-        }
+            },
+          },
+        },
       });
     }
 
@@ -80,11 +89,13 @@ export class WalletsService {
 
   async getAllBalancesForUser(
     userId: string,
-    user: AuthenticatedUser, // Accept authenticated user object
+    user: AuthenticatedUser // Accept authenticated user object
   ) {
-     // Ownership check: User must be the owner OR have the 'admin' role
+    // Ownership check: User must be the owner OR have the 'admin' role
     if (userId !== user.id && !user.roles.includes('admin')) {
-        throw new ForbiddenException('You do not have permission to view this user\'s wallet balances.');
+      throw new ForbiddenException(
+        "You do not have permission to view this user's wallet balances."
+      );
     }
 
     // Get wallet with user info
@@ -101,7 +112,7 @@ export class WalletsService {
 
     return {
       wallet,
-      meritsSummary: meritsGrouped.map(group => ({
+      meritsSummary: meritsGrouped.map((group) => ({
         type: group.type,
         totalAmount: group._sum.amount || 0,
       })),
@@ -111,76 +122,76 @@ export class WalletsService {
   async updateBalance(
     userId: string,
     amount: number, // Amount to add/subtract
-    type: 'units' | 'toins' = 'units',
+    type: 'units' | 'toins' = 'units'
     // user: AuthenticatedUser, // Decide if update needs ownership check or is purely internal/admin
   ) {
-      // Wallet updates are typically triggered by internal logic (e.g., completing challenges) or admin actions.
-      // Assuming this method is called internally or only by authorized services/controllers.
-      // If exposed directly via a user endpoint, add ownership/permission checks.
+    // Wallet updates are typically triggered by internal logic (e.g., completing challenges) or admin actions.
+    // Assuming this method is called internally or only by authorized services/controllers.
+    // If exposed directly via a user endpoint, add ownership/permission checks.
 
     return this.updateWalletBalance(userId, amount, type);
   }
 
-    // Admin method to get wallet for any user (no ownership check)
-    async getWalletForUserAdmin(userId: string) {
-         const wallet = await this.prisma.wallet.findUnique({
-             where: { userId },
-             include: {
-               user: {
-                 select: {
-                   id: true,
-                   name: true,
-                   email: true,
-                   avatarUrl: true,
-                 }
-               }
-             }
-         });
-
-         // If wallet doesn't exist, create one with zero balances
-         if (!wallet) {
-           return this.prisma.wallet.create({
-             data: {
-               userId,
-               balanceUnits: 0,
-               balanceToins: 0,
-             },
-             include: {
-               user: {
-                 select: {
-                   id: true,
-                   name: true,
-                   email: true,
-                   avatarUrl: true,
-                 }
-               }
-             }
-           });
-         }
-
-         return wallet;
-    }
-
-     // Admin method to get all balances for any user (no ownership check)
-    async getAllBalancesForUserAdmin(userId: string) {
-        // Get wallet with user info
-        const wallet = await this.getWalletForUserAdmin(userId);
-
-        // Get merits summary by type
-        const meritsGrouped = await this.prisma.merit.groupBy({
-          by: ['type'],
-          where: { userId },
-          _sum: {
-            amount: true,
+  // Admin method to get wallet for any user (no ownership check)
+  async getWalletForUserAdmin(userId: string) {
+    const wallet = await this.prisma.wallet.findUnique({
+      where: { userId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true,
           },
-        });
+        },
+      },
+    });
 
-        return {
-          wallet,
-          meritsSummary: meritsGrouped.map(group => ({
-            type: group.type,
-            totalAmount: group._sum.amount || 0,
-          })),
-        };
+    // If wallet doesn't exist, create one with zero balances
+    if (!wallet) {
+      return this.prisma.wallet.create({
+        data: {
+          userId,
+          balanceUnits: 0,
+          balanceToins: 0,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              avatarUrl: true,
+            },
+          },
+        },
+      });
     }
+
+    return wallet;
+  }
+
+  // Admin method to get all balances for any user (no ownership check)
+  async getAllBalancesForUserAdmin(userId: string) {
+    // Get wallet with user info
+    const wallet = await this.getWalletForUserAdmin(userId);
+
+    // Get merits summary by type
+    const meritsGrouped = await this.prisma.merit.groupBy({
+      by: ['type'],
+      where: { userId },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    return {
+      wallet,
+      meritsSummary: meritsGrouped.map((group) => ({
+        type: group.type,
+        totalAmount: group._sum.amount || 0,
+      })),
+    };
+  }
 }

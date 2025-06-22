@@ -9,8 +9,13 @@ export class ChallengesPublicController {
     @Inject(ChallengesPublicService)
     private readonly challengesPublicService: ChallengesPublicService
   ) {
-    console.log('[ChallengesPublicController] Constructor called with explicit @Inject');
-    console.log('[ChallengesPublicController] Service injected:', !!this.challengesPublicService);
+    console.log(
+      '[ChallengesPublicController] Constructor called with explicit @Inject'
+    );
+    console.log(
+      '[ChallengesPublicController] Service injected:',
+      !!this.challengesPublicService
+    );
   }
 
   @Get('test-connection')
@@ -26,13 +31,18 @@ export class ChallengesPublicController {
   @ApiResponse({ status: 200, description: 'List of active challenges.' })
   findAllActive() {
     console.log('[ChallengesPublicController] findAllActive called');
-    console.log('[ChallengesPublicController] Service status:', !!this.challengesPublicService);
-    
+    console.log(
+      '[ChallengesPublicController] Service status:',
+      !!this.challengesPublicService
+    );
+
     if (!this.challengesPublicService) {
-      console.error('[ChallengesPublicController] ERROR: challengesPublicService is undefined!');
+      console.error(
+        '[ChallengesPublicController] ERROR: challengesPublicService is undefined!'
+      );
       throw new Error('ChallengesPublicService is not injected properly');
     }
-    
+
     return this.challengesPublicService.findAllActive();
   }
 
@@ -43,4 +53,4 @@ export class ChallengesPublicController {
     console.log('[ChallengesPublicController] testPublic called');
     return { message: 'Public challenges controller is working' };
   }
-} 
+}

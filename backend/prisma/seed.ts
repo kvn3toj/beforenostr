@@ -39,7 +39,9 @@ async function main() {
     },
   });
   await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: adminUser.id, roleId: createdRoles['admin'].id } },
+    where: {
+      userId_roleId: { userId: adminUser.id, roleId: createdRoles['admin'].id },
+    },
     update: {},
     create: { userId: adminUser.id, roleId: createdRoles['admin'].id },
   });
@@ -55,7 +57,12 @@ async function main() {
     },
   });
   await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: regularUser.id, roleId: createdRoles['user'].id } },
+    where: {
+      userId_roleId: {
+        userId: regularUser.id,
+        roleId: createdRoles['user'].id,
+      },
+    },
     update: {},
     create: { userId: regularUser.id, roleId: createdRoles['user'].id },
   });
@@ -71,7 +78,12 @@ async function main() {
     },
   });
   await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: premiumUser.id, roleId: createdRoles['premium'].id } },
+    where: {
+      userId_roleId: {
+        userId: premiumUser.id,
+        roleId: createdRoles['premium'].id,
+      },
+    },
     update: {},
     create: { userId: premiumUser.id, roleId: createdRoles['premium'].id },
   });
@@ -87,7 +99,12 @@ async function main() {
     },
   });
   await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: creatorUser.id, roleId: createdRoles['creator'].id } },
+    where: {
+      userId_roleId: {
+        userId: creatorUser.id,
+        roleId: createdRoles['creator'].id,
+      },
+    },
     update: {},
     create: { userId: creatorUser.id, roleId: createdRoles['creator'].id },
   });
@@ -103,7 +120,12 @@ async function main() {
     },
   });
   await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: moderatorUser.id, roleId: createdRoles['moderator'].id } },
+    where: {
+      userId_roleId: {
+        userId: moderatorUser.id,
+        roleId: createdRoles['moderator'].id,
+      },
+    },
     update: {},
     create: { userId: moderatorUser.id, roleId: createdRoles['moderator'].id },
   });

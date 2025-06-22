@@ -38,6 +38,21 @@ interface CollaborationTask {
   lukasGenerated: number;
 }
 
+interface FeedbackData {
+  id: string;
+  feedbackText: string;
+  category:
+    | 'BUG'
+    | 'IMPROVEMENT'
+    | 'MISSING_FEATURE'
+    | 'UI_UX'
+    | 'PERFORMANCE'
+    | 'OTHER';
+  urgency?: number; // Optional, might be calculated
+  complexity?: number; // Optional, might be calculated
+  // Add other potential fields based on usage if necessary
+}
+
 @Injectable()
 export class FeedbackAgentsService {
   private readonly logger = new Logger(FeedbackAgentsService.name);
@@ -48,7 +63,9 @@ export class FeedbackAgentsService {
    * 🧠 AGENTE ORÁCULO PRINCIPAL
    * Analiza feedback usando IA contextual y filosofía CoomÜnity
    */
-  async analyzeWithOraculo(feedbackData: any): Promise<FeedbackAnalysis> {
+  async analyzeWithOraculo(
+    feedbackData: FeedbackData
+  ): Promise<FeedbackAnalysis> {
     this.logger.log(`🔮 [ORÁCULO] Analizando feedback: ${feedbackData.id}`);
 
     // Simulación de análisis IA avanzado
@@ -58,10 +75,12 @@ export class FeedbackAgentsService {
       complexity: this.calculateComplexity(feedbackData),
       category: this.categorizeByElement(feedbackData),
       recommendedPath: this.recommendPath(feedbackData),
-      lukasReward: this.calculateLukasReward(feedbackData)
+      lukasReward: this.calculateLukasReward(feedbackData),
     };
 
-    this.logger.log(`🎯 [ORÁCULO] Análisis completado - Categoría: ${analysis.category}, Lükas: ${analysis.lukasReward}`);
+    this.logger.log(
+      `🎯 [ORÁCULO] Análisis completado - Categoría: ${analysis.category}, Lükas: ${analysis.lukasReward}`
+    );
     return analysis;
   }
 
@@ -82,16 +101,18 @@ export class FeedbackAgentsService {
         priority: 'CRITICAL',
         estimatedResolution: '2 hours',
         resourcesNeeded: ['backend-dev', 'qa-tester'],
-        ayniImpact: 'HIGH' // Impacto en el Bien Común
+        ayniImpact: 'HIGH', // Impacto en el Bien Común
       },
-      lukasGenerated: 50
+      lukasGenerated: 50,
     };
 
     // Simulación de procesamiento rápido del agente Fuego
     await this.simulateAgentWork(2000);
     task.status = 'COMPLETED';
 
-    this.logger.log(`🔥 [FUEGO] Tarea completada - Lükas generados: ${task.lukasGenerated}`);
+    this.logger.log(
+      `🔥 [FUEGO] Tarea completada - Lükas generados: ${task.lukasGenerated}`
+    );
     return task;
   }
 
@@ -112,15 +133,17 @@ export class FeedbackAgentsService {
         stakeholdersNotified: ['admin-team', 'ux-team'],
         collaborationChannels: ['slack-cop-oraculo', 'feedback-board'],
         consensusLevel: 0.85,
-        ayniFlow: 'BALANCED' // Flujo equilibrado de Ayni
+        ayniFlow: 'BALANCED', // Flujo equilibrado de Ayni
       },
-      lukasGenerated: 30
+      lukasGenerated: 30,
     };
 
     await this.simulateAgentWork(3000);
     task.status = 'COMPLETED';
 
-    this.logger.log(`💧 [AGUA] Colaboración facilitada - Consenso: ${task.results.consensusLevel}`);
+    this.logger.log(
+      `💧 [AGUA] Colaboración facilitada - Consenso: ${task.results.consensusLevel}`
+    );
     return task;
   }
 
@@ -141,15 +164,17 @@ export class FeedbackAgentsService {
         knowledgeArticlesCreated: 2,
         bestPracticesUpdated: ['feedback-handling', 'user-communication'],
         wisdomScore: 8.5,
-        foundationStrength: 'SOLID' // Solidez para el Bien Común
+        foundationStrength: 'SOLID', // Solidez para el Bien Común
       },
-      lukasGenerated: 40
+      lukasGenerated: 40,
     };
 
     await this.simulateAgentWork(4000);
     task.status = 'COMPLETED';
 
-    this.logger.log(`🌱 [TIERRA] Sabiduría documentada - Artículos: ${task.results.knowledgeArticlesCreated}`);
+    this.logger.log(
+      `🌱 [TIERRA] Sabiduría documentada - Artículos: ${task.results.knowledgeArticlesCreated}`
+    );
     return task;
   }
 
@@ -170,15 +195,17 @@ export class FeedbackAgentsService {
         trendsIdentified: ['ui-accessibility', 'mobile-first'],
         innovationOpportunities: 3,
         futureImpactScore: 9.2,
-        visionClarity: 'CRYSTAL_CLEAR' // Claridad visionaria
+        visionClarity: 'CRYSTAL_CLEAR', // Claridad visionaria
       },
-      lukasGenerated: 60
+      lukasGenerated: 60,
     };
 
     await this.simulateAgentWork(5000);
     task.status = 'COMPLETED';
 
-    this.logger.log(`💨 [AIRE] Visión completada - Oportunidades: ${task.results.innovationOpportunities}`);
+    this.logger.log(
+      `💨 [AIRE] Visión completada - Oportunidades: ${task.results.innovationOpportunities}`
+    );
     return task;
   }
 
@@ -186,13 +213,18 @@ export class FeedbackAgentsService {
    * 🤝 COORDINADOR DE COLABORACIÓN AYNI
    * Orchestor principal que gestiona la colaboración entre todos los agentes
    */
-  async orchestrateCollaboration(feedbackId: string, analysis: FeedbackAnalysis): Promise<{
+  async orchestrateCollaboration(
+    feedbackId: string,
+    analysis: FeedbackAnalysis
+  ): Promise<{
     tasks: CollaborationTask[];
     totalLukasGenerated: number;
     ayniBalance: number;
     collaborationScore: number;
   }> {
-    this.logger.log(`🤝 [COORDINADOR] Orquestando colaboración para feedback: ${feedbackId}`);
+    this.logger.log(
+      `🤝 [COORDINADOR] Orquestando colaboración para feedback: ${feedbackId}`
+    );
 
     const tasks: CollaborationTask[] = [];
 
@@ -209,21 +241,29 @@ export class FeedbackAgentsService {
     tasks.push(await this.processTierraAgent(feedbackId));
 
     // Para insights avanzados
-    if (analysis.category === 'IMPROVEMENT' || analysis.category === 'MISSING_FEATURE') {
+    if (
+      analysis.category === 'IMPROVEMENT' ||
+      analysis.category === 'MISSING_FEATURE'
+    ) {
       tasks.push(await this.processAireAgent(feedbackId));
     }
 
-    const totalLukasGenerated = tasks.reduce((sum, task) => sum + task.lukasGenerated, 0);
+    const totalLukasGenerated = tasks.reduce(
+      (sum, task) => sum + task.lukasGenerated,
+      0
+    );
     const ayniBalance = this.calculateAyniBalance(tasks);
     const collaborationScore = this.calculateCollaborationScore(tasks);
 
-    this.logger.log(`🏆 [COORDINADOR] Colaboración completada - Lükas total: ${totalLukasGenerated}, Ayni: ${ayniBalance}`);
+    this.logger.log(
+      `🏆 [COORDINADOR] Colaboración completada - Lükas total: ${totalLukasGenerated}, Ayni: ${ayniBalance}`
+    );
 
     return {
       tasks,
       totalLukasGenerated,
       ayniBalance,
-      collaborationScore
+      collaborationScore,
     };
   }
 
@@ -241,89 +281,73 @@ export class FeedbackAgentsService {
       wisdomQuotient: 8.7, // Calidad de la sabiduría generada
       ayniIndex: 0.92, // Balance de reciprocidad
       collaborationVelocity: 15.3, // Velocidad de colaboración
-      innovationScore: 7.8 // Nivel de innovación
+      innovationScore: 7.8, // Nivel de innovación
     };
   }
 
   // Métodos auxiliares privados
   private calculateSentiment(text: string): number {
     // Simulación de análisis de sentimiento
-    const positiveWords = ['bueno', 'excelente', 'genial', 'útil'];
-    const negativeWords = ['malo', 'terrible', 'roto', 'problema'];
-
+    const positiveWords = ['good', 'great', 'love', 'excellent', 'amazing'];
+    const negativeWords = ['bad', 'terrible', 'hate', 'awful', 'problem'];
+    const words = text.toLowerCase().split(/\s+/);
     let score = 0;
-    positiveWords.forEach(word => {
-      if (text.toLowerCase().includes(word)) score += 0.2;
+    words.forEach((word) => {
+      if (positiveWords.includes(word)) score++;
+      if (negativeWords.includes(word)) score--;
     });
-    negativeWords.forEach(word => {
-      if (text.toLowerCase().includes(word)) score -= 0.2;
-    });
-
-    return Math.max(-1, Math.min(1, score));
+    return score / words.length || 0;
   }
 
-  private calculateUrgency(feedbackData: any): number {
-    // Lógica de urgencia basada en tipo y contexto
-    const urgencyMap = {
-      'BUG': 4,
-      'PERFORMANCE': 3,
-      'UI_UX': 2,
-      'IMPROVEMENT': 2,
-      'MISSING_FEATURE': 1
-    };
-    return urgencyMap[feedbackData.feedbackType] || 2;
+  private calculateUrgency(feedbackData: FeedbackData): number {
+    if (feedbackData.category === 'BUG') return 5;
+    if (feedbackData.category === 'PERFORMANCE') return 4;
+    return feedbackData.urgency || 2;
   }
 
-  private calculateComplexity(feedbackData: any): number {
-    // Análisis de complejidad
+  private calculateComplexity(feedbackData: FeedbackData): number {
     const textLength = feedbackData.feedbackText.length;
-    const technicalTerms = ['api', 'database', 'server', 'authentication'].some(
-      term => feedbackData.feedbackText.toLowerCase().includes(term)
-    );
-
-    let complexity = Math.min(5, Math.floor(textLength / 100) + 1);
-    if (technicalTerms) complexity += 1;
-
-    return Math.min(5, complexity);
+    if (textLength > 500) return 5;
+    if (textLength > 200) return 3;
+    return feedbackData.complexity || 1;
   }
 
-  private categorizeByElement(feedbackData: any): string {
-    const typeElementMap = {
-      'BUG': 'FUEGO',
-      'PERFORMANCE': 'FUEGO',
-      'UI_UX': 'AGUA',
-      'IMPROVEMENT': 'AIRE',
-      'MISSING_FEATURE': 'AIRE',
-      'OTHER': 'TIERRA'
-    };
-    return typeElementMap[feedbackData.feedbackType] || 'TIERRA';
+  private categorizeByElement(feedbackData: FeedbackData): string {
+    // Lógica de mapeo a los 4 elementos
+    switch (feedbackData.category) {
+      case 'BUG':
+      case 'PERFORMANCE':
+        return 'FUEGO';
+      case 'UI_UX':
+        return 'AGUA';
+      case 'MISSING_FEATURE':
+      case 'IMPROVEMENT':
+        return 'AIRE';
+      case 'OTHER':
+      default:
+        return 'TIERRA';
+    }
   }
 
-  private recommendPath(feedbackData: any): string {
-    // Recomendaciones basadas en análisis
-    const pathMap = {
-      'FUEGO': 'rapid-resolution',
-      'AGUA': 'collaborative-improvement',
-      'TIERRA': 'knowledge-documentation',
-      'AIRE': 'innovation-incubation'
-    };
-    return pathMap[this.categorizeByElement(feedbackData)] || 'standard-review';
+  private recommendPath(feedbackData: FeedbackData): string {
+    if (feedbackData.category === 'BUG') return 'Fuego -> Agua -> Tierra';
+    return 'Oraculo -> Aire -> Tierra -> Agua';
   }
 
-  private calculateLukasReward(feedbackData: any): number {
-    // Sistema de recompensas Lükas
-    const baseReward = 10;
-    const complexityMultiplier = this.calculateComplexity(feedbackData) * 2;
-    const urgencyMultiplier = this.calculateUrgency(feedbackData) * 1.5;
-
-    return Math.floor(baseReward + complexityMultiplier + urgencyMultiplier);
+  private calculateLukasReward(feedbackData: FeedbackData): number {
+    let reward = 10; // Base reward
+    reward += this.calculateUrgency(feedbackData) * 5;
+    reward += this.calculateComplexity(feedbackData) * 3;
+    return Math.round(reward);
   }
 
   private calculateAyniBalance(tasks: CollaborationTask[]): number {
     // Cálculo del balance de Ayni (reciprocidad)
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(task => task.status === 'COMPLETED').length;
-    const lukasDistribution = tasks.map(task => task.lukasGenerated);
+    const completedTasks = tasks.filter(
+      (task) => task.status === 'COMPLETED'
+    ).length;
+    const lukasDistribution = tasks.map((task) => task.lukasGenerated);
     const variance = this.calculateVariance(lukasDistribution);
 
     // Balance perfecto cuando hay alta completitud y baja varianza en distribución
@@ -335,8 +359,9 @@ export class FeedbackAgentsService {
 
   private calculateCollaborationScore(tasks: CollaborationTask[]): number {
     // Puntuación de colaboración basada en diversidad de agentes y sincronización
-    const uniqueAgentTypes = new Set(tasks.map(task => task.type)).size;
-    const avgLukasPerTask = tasks.reduce((sum, task) => sum + task.lukasGenerated, 0) / tasks.length;
+    const uniqueAgentTypes = new Set(tasks.map((task) => task.type)).size;
+    const avgLukasPerTask =
+      tasks.reduce((sum, task) => sum + task.lukasGenerated, 0) / tasks.length;
 
     return Math.min(10, uniqueAgentTypes * 2 + avgLukasPerTask / 10);
   }
@@ -344,12 +369,12 @@ export class FeedbackAgentsService {
   private calculateVariance(numbers: number[]): number {
     if (numbers.length === 0) return 0;
     const mean = numbers.reduce((sum, num) => sum + num, 0) / numbers.length;
-    const squaredDiffs = numbers.map(num => Math.pow(num - mean, 2));
+    const squaredDiffs = numbers.map((num) => Math.pow(num - mean, 2));
     return squaredDiffs.reduce((sum, diff) => sum + diff, 0) / numbers.length;
   }
 
   private async simulateAgentWork(duration: number): Promise<void> {
     // Simulación de trabajo asíncrono del agente
-    return new Promise(resolve => setTimeout(resolve, duration));
+    return new Promise((resolve) => setTimeout(resolve, duration));
   }
 }

@@ -1,15 +1,16 @@
 /**
  * 🏆 Contests Service - Merit Contests Management
- * 
+ *
  * Servicio para gestión de concursos de Mëritos y Öndas
  */
 
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { CreateContestDto } from './dto/create-contest.dto';
+import { UpdateContestDto } from './dto/update-contest.dto';
 
 @Injectable()
 export class ContestsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor() {}
 
   async getAllContests() {
     // Mock contest data based on Miro board
@@ -30,7 +31,7 @@ export class ContestsService {
             position: 1,
             meritos: 245,
             ondas: 89,
-            isEligible: true
+            isEligible: true,
           },
           {
             userId: '2',
@@ -38,31 +39,31 @@ export class ContestsService {
             position: 2,
             meritos: 232,
             ondas: 76,
-            isEligible: true
-          }
-        ]
-      }
+            isEligible: true,
+          },
+        ],
+      },
     ];
   }
 
   async getContestById(contestId: string) {
     const contests = await this.getAllContests();
-    return contests.find(contest => contest.id === contestId);
+    return contests.find((contest) => contest.id === contestId);
   }
 
-  async createContest(data: any) {
+  async createContest(createContestDto: CreateContestDto) {
     return {
       id: `contest_${Date.now()}`,
-      ...data,
-      created: true
+      ...createContestDto,
+      created: true,
     };
   }
 
-  async updateContest(contestId: string, data: any) {
+  async updateContest(contestId: string, updateContestDto: UpdateContestDto) {
     return {
       id: contestId,
-      ...data,
-      updated: true
+      ...updateContestDto,
+      updated: true,
     };
   }
 
@@ -77,7 +78,7 @@ export class ContestsService {
       totalParticipants: 247,
       engagementRate: 84,
       averageScore: 156,
-      completionRate: 92
+      completionRate: 92,
     };
   }
 }

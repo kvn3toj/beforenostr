@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException, ConflictException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+  Inject,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { RegisterDto } from './dto/register.dto';
@@ -12,8 +17,10 @@ export class AuthService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(JwtService) private readonly jwtService: JwtService,
-    @Inject(AuditLogsService) private readonly auditLogsService: AuditLogsService,
-    @Inject(CoomUnityLoggerService) private readonly logger: CoomUnityLoggerService,
+    @Inject(AuditLogsService)
+    private readonly auditLogsService: AuditLogsService,
+    @Inject(CoomUnityLoggerService)
+    private readonly logger: CoomUnityLoggerService
   ) {
     this.logger.info('AuthService initialized', { module: 'AuthService' });
   }
@@ -34,14 +41,14 @@ export class AuthService {
                 include: {
                   rolePermissions: {
                     include: {
-                      permission: true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                      permission: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       if (!user) {
@@ -61,20 +68,27 @@ export class AuthService {
       this.logger.auth('User authenticated successfully', {
         email,
         roles: user.userRoles?.length || 0,
-        permissions: user.userRoles?.flatMap(ur => ur.role.rolePermissions).length || 0
+        permissions:
+          user.userRoles?.flatMap((ur) => ur.role.rolePermissions).length || 0,
       });
-      this.logger.performance('validateUser', duration, { module: 'AuthService' });
+      this.logger.performance('validateUser', duration, {
+        module: 'AuthService',
+      });
 
       // Remove password from returned user object
       const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } catch (error) {
       const duration = Date.now() - startTime;
-      this.logger.error('User validation failed', error instanceof Error ? error.stack : undefined, {
-        module: 'AuthService',
-        email,
-        duration
-      });
+      this.logger.error(
+        'User validation failed',
+        error instanceof Error ? error.stack : undefined,
+        {
+          module: 'AuthService',
+          email,
+          duration,
+        }
+      );
       return null;
     }
   }
@@ -91,15 +105,19 @@ export class AuthService {
       }
 
       // Extract roles and permissions from user data
-      const roles = user.userRoles?.map(userRole => userRole.role.name) || [];
-      const permissions = user.userRoles?.flatMap(userRole =>
-        userRole.role.rolePermissions?.map(rolePermission => rolePermission.permission.name) || []
-      ) || [];
+      const roles = user.userRoles?.map((userRole) => userRole.role.name) || [];
+      const permissions =
+        user.userRoles?.flatMap(
+          (userRole) =>
+            userRole.role.rolePermissions?.map(
+              (rolePermission) => rolePermission.permission.name
+            ) || []
+        ) || [];
 
       this.logger.auth('Roles and permissions extracted', {
         email: dto.email,
         rolesCount: roles.length,
-        permissionsCount: permissions.length
+        permissionsCount: permissions.length,
       });
 
       // Create JWT payload
@@ -107,9 +125,9 @@ export class AuthService {
         sub: user.id,
         email: user.email,
         name: user.name,
-        roles: roles,
-        permissions: permissions,
-        iat: Math.floor(Date.now() / 1000)
+        roles,
+        permissions,
+        iat: Math.floor(Date.now() / 1000),
       };
 
       const access_token = this.jwtService.sign(payload);
@@ -120,7 +138,7 @@ export class AuthService {
       this.logger.userAction(user.id, 'LOGIN_SUCCESS', {
         email: dto.email,
         rolesCount: roles.length,
-        permissionsCount: permissions.length
+        permissionsCount: permissions.length,
       });
 
       this.logger.performance('login', duration, { module: 'AuthService' });
@@ -141,21 +159,25 @@ export class AuthService {
           email: user.email,
           name: user.name,
           avatarUrl: user.avatarUrl,
-          roles: roles,
-          permissions: permissions
+          roles,
+          permissions,
         },
       };
     } catch (error) {
       const duration = Date.now() - startTime;
-      this.logger.error('Login failed', error instanceof Error ? error.stack : undefined, {
-        module: 'AuthService',
-        email: dto.email,
-        duration
-      });
+      this.logger.error(
+        'Login failed',
+        error instanceof Error ? error.stack : undefined,
+        {
+          module: 'AuthService',
+          email: dto.email,
+          duration,
+        }
+      );
 
       this.logger.userAction('unknown', 'LOGIN_FAILED', {
         email: dto.email,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
 
       throw error;
@@ -170,11 +192,13 @@ export class AuthService {
 
       // Check if user already exists
       const existingUser = await this.prisma.user.findUnique({
-        where: { email: dto.email }
+        where: { email: dto.email },
       });
 
       if (existingUser) {
-        this.logger.auth('Registration failed - user exists', { email: dto.email });
+        this.logger.auth('Registration failed - user exists', {
+          email: dto.email,
+        });
         throw new ConflictException('User with this email already exists');
       }
 
@@ -196,30 +220,34 @@ export class AuthService {
                 include: {
                   rolePermissions: {
                     include: {
-                      permission: true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                      permission: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       // Extract roles and permissions from user data
-      const roles = user.userRoles?.map(userRole => userRole.role.name) || [];
-      const permissions = user.userRoles?.flatMap(userRole =>
-        userRole.role.rolePermissions?.map(rolePermission => rolePermission.permission.name) || []
-      ) || [];
+      const roles = user.userRoles?.map((userRole) => userRole.role.name) || [];
+      const permissions =
+        user.userRoles?.flatMap(
+          (userRole) =>
+            userRole.role.rolePermissions?.map(
+              (rolePermission) => rolePermission.permission.name
+            ) || []
+        ) || [];
 
       // Create JWT payload
       const payload = {
         sub: user.id,
         email: user.email,
         name: user.name,
-        roles: roles,
-        permissions: permissions,
-        iat: Math.floor(Date.now() / 1000)
+        roles,
+        permissions,
+        iat: Math.floor(Date.now() / 1000),
       };
 
       const access_token = this.jwtService.sign(payload);
@@ -229,13 +257,13 @@ export class AuthService {
       // Log successful registration
       this.logger.userAction(user.id, 'REGISTER_SUCCESS', {
         email: dto.email,
-        name: user.name
+        name: user.name,
       });
 
       this.logger.business('USER_REGISTERED', {
         userId: user.id,
         email: dto.email,
-        registrationMethod: 'standard'
+        registrationMethod: 'standard',
       });
 
       this.logger.performance('register', duration, { module: 'AuthService' });
@@ -256,21 +284,25 @@ export class AuthService {
           email: user.email,
           name: user.name,
           avatarUrl: user.avatarUrl,
-          roles: roles,
-          permissions: permissions
+          roles,
+          permissions,
         },
       };
     } catch (error) {
       const duration = Date.now() - startTime;
-      this.logger.error('Registration failed', error instanceof Error ? error.stack : undefined, {
-        module: 'AuthService',
-        email: dto.email,
-        duration
-      });
+      this.logger.error(
+        'Registration failed',
+        error instanceof Error ? error.stack : undefined,
+        {
+          module: 'AuthService',
+          email: dto.email,
+          duration,
+        }
+      );
 
       this.logger.userAction('unknown', 'REGISTER_FAILED', {
         email: dto.email,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
 
       throw error;
@@ -278,7 +310,9 @@ export class AuthService {
   }
 
   async getCurrentUser() {
-    this.logger.debug('getCurrentUser called - returning mock data', { module: 'AuthService' });
+    this.logger.debug('getCurrentUser called - returning mock data', {
+      module: 'AuthService',
+    });
 
     // For now, return a mock current user
     // In a real implementation, this would get the user from the JWT payload
@@ -288,7 +322,7 @@ export class AuthService {
       name: 'Administrator',
       avatarUrl: null,
       roles: ['admin'],
-      permissions: ['admin:all']
+      permissions: ['admin:all'],
     };
   }
 }

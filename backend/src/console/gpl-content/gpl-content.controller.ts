@@ -1,5 +1,6 @@
 import { Controller, Get, Put, Param, Body } from '@nestjs/common';
 import { GplContentService } from './gpl-content.service';
+import { UpdateGplContentDto } from './dto/update-gpl-content.dto';
 
 @Controller('console/gpl-content')
 export class GplContentController {
@@ -16,8 +17,14 @@ export class GplContentController {
   }
 
   @Put(':contentId')
-  updateGPLContent(@Param('contentId') contentId: string, @Body() data: any) {
-    return this.gplContentService.updateGPLContent(contentId, data);
+  updateGPLContent(
+    @Param('contentId') contentId: string,
+    @Body() updateGplContentDto: UpdateGplContentDto
+  ) {
+    return this.gplContentService.updateGPLContent(
+      contentId,
+      updateGplContentDto
+    );
   }
 
   @Get(':contentId/analytics')

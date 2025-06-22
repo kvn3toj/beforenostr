@@ -15,4 +15,4 @@ import { RbacModule } from '@/rbac/rbac.module'; // Assuming RbacModule is in ..
   providers: [MeritsService, TransactionsService, WalletsService],
   exports: [MeritsService, TransactionsService, WalletsService], // Export services that might be used by other modules
 })
-export class MeritsAndWalletModule {} 
+export class MeritsAndWalletModule {}

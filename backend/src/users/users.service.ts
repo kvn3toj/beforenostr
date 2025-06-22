@@ -21,25 +21,25 @@ import * as bcrypt from 'bcryptjs';
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(PrismaService) private readonly prisma: PrismaService
     // private readonly auditLogsService: AuditLogsService, // Temporarily commented
   ) {
-// // //     console.log('>>> UsersService CONSTRUCTOR: Initializing...');
-// //     console.log('>>> UsersService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
-// //     console.log('>>> UsersService CONSTRUCTOR: this instance is', this);
-// //     console.log('>>> UsersService CONSTRUCTOR: constructor name is', this.constructor.name);
+    // // //     console.log('>>> UsersService CONSTRUCTOR: Initializing...');
+    // //     console.log('>>> UsersService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> UsersService CONSTRUCTOR: this instance is', this);
+    // //     console.log('>>> UsersService CONSTRUCTOR: constructor name is', this.constructor.name);
   }
 
   async findAll() {
-//     console.log('>>> UsersService.findAll: Starting...');
-//     console.log('>>> UsersService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    //     console.log('>>> UsersService.findAll: Starting...');
+    //     console.log('>>> UsersService.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
 
     try {
       const result = await this.prisma.user.findMany();
-//       console.log('>>> UsersService.findAll: SUCCESS, found', result.length, 'users');
+      //       console.log('>>> UsersService.findAll: SUCCESS, found', result.length, 'users');
       return result;
     } catch (error) {
-//       console.error('>>> UsersService.findAll: ERROR:', error);
+      //       console.error('>>> UsersService.findAll: ERROR:', error);
       throw error;
     }
   }
@@ -106,16 +106,16 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-//     console.log('>>> UsersService.findOne: Starting with id:', id);
-//     console.log('>>> UsersService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    //     console.log('>>> UsersService.findOne: Starting with id:', id);
+    //     console.log('>>> UsersService.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
 
     try {
       const user = await this.prisma.user.findUnique({ where: { id } });
-//       console.log('>>> UsersService.findOne: Query result:', user ? 'FOUND' : 'NOT FOUND');
+      //       console.log('>>> UsersService.findOne: Query result:', user ? 'FOUND' : 'NOT FOUND');
       if (!user) throw new NotFoundException('Usuario no encontrado');
       return user;
     } catch (error) {
-//       console.error('>>> UsersService.findOne: ERROR:', error);
+      //       console.error('>>> UsersService.findOne: ERROR:', error);
       throw error;
     }
   }
@@ -190,17 +190,17 @@ export class UsersService {
   }
 
   async remove(id: string, user: any): Promise<User> {
-     const existingUser = await this.prisma.user.findUnique({ where: { id } });
-     if (!existingUser) throw new NotFoundException('Usuario no encontrado');
+    const existingUser = await this.prisma.user.findUnique({ where: { id } });
+    if (!existingUser) throw new NotFoundException('Usuario no encontrado');
 
-     // const oldValue: UserAuditSnapshot = {
-     //  id: existingUser.id,
-     //  email: existingUser.email,
-     //  name: existingUser.name ?? null,
-     //  isActive: existingUser.isActive,
-     //  createdAt: existingUser.createdAt,
-     //  updatedAt: existingUser.updatedAt,
-     // };
+    // const oldValue: UserAuditSnapshot = {
+    //  id: existingUser.id,
+    //  email: existingUser.email,
+    //  name: existingUser.name ?? null,
+    //  isActive: existingUser.isActive,
+    //  createdAt: existingUser.createdAt,
+    //  updatedAt: existingUser.updatedAt,
+    // };
 
     const softDeletedUser = await this.prisma.user.update({
       where: { id },
@@ -233,7 +233,7 @@ export class UsersService {
   }
 
   async getAyniMetrics(userId: string) {
-//     console.log('>>> UsersService.getAyniMetrics: Starting for user:', userId);
+    //     console.log('>>> UsersService.getAyniMetrics: Starting for user:', userId);
 
     try {
       // Verificar que el usuario existe
@@ -247,35 +247,35 @@ export class UsersService {
       // En el futuro, estas se calcularán desde transacciones, actividades, etc.
 
       const baseMetrics = {
-        ondas: 1000 + (user.id.length * 47), // Base de 1000 + variación por usuario
-        meritos: 50 + (user.id.length * 7),  // Base de 50 + variación
-        balanceAyni: Math.min(1, 0.6 + (user.id.length * 0.02)), // Entre 0.6 y 1.0
+        ondas: 1000 + user.id.length * 47, // Base de 1000 + variación por usuario
+        meritos: 50 + user.id.length * 7, // Base de 50 + variación
+        balanceAyni: Math.min(1, 0.6 + user.id.length * 0.02), // Entre 0.6 y 1.0
         ayniLevel: this.calculateAyniLevel(user),
         nextLevel: this.getNextAyniLevel(user),
         ayniProgress: this.calculateAyniProgress(user),
-        bienComunContributions: 10 + (user.id.length * 3),
-        reciprocityScore: Math.min(10, 7 + (user.id.length * 0.15)),
+        bienComunContributions: 10 + user.id.length * 3,
+        reciprocityScore: Math.min(10, 7 + user.id.length * 0.15),
         elementos: this.calculateElementalBalance(user),
-        totalTransactions: 25 + (user.id.length * 5),
-        positiveImpact: 500 + (user.id.length * 73),
-        communityRank: Math.max(1, 200 - (user.id.length * 8)),
-        weeklyGrowth: Math.round((Math.sin(user.id.length) * 10 + 15) * 100) / 100,
+        totalTransactions: 25 + user.id.length * 5,
+        positiveImpact: 500 + user.id.length * 73,
+        communityRank: Math.max(1, 200 - user.id.length * 8),
+        weeklyGrowth:
+          Math.round((Math.sin(user.id.length) * 10 + 15) * 100) / 100,
         lastUpdated: new Date().toISOString(),
-        joinedDate: user.createdAt.toISOString()
+        joinedDate: user.createdAt.toISOString(),
       };
 
-//       console.log('>>> UsersService.getAyniMetrics: Generated metrics for user:', user.email);
+      //       console.log('>>> UsersService.getAyniMetrics: Generated metrics for user:', user.email);
       return baseMetrics;
-
     } catch (error) {
-//       console.error('>>> UsersService.getAyniMetrics: ERROR:', error);
+      //       console.error('>>> UsersService.getAyniMetrics: ERROR:', error);
       throw error;
     }
   }
 
   private calculateAyniLevel(user: User): string {
     // Calcular nivel basado en características del usuario
-    const userScore = user.id.length + (user.email.length * 2);
+    const userScore = user.id.length + user.email.length * 2;
 
     if (userScore > 60) return 'Guardián del Bien Común';
     if (userScore > 50) return 'Emprendedor Confiable';
@@ -292,7 +292,7 @@ export class UsersService {
       'Aprendiz del Ayni': 'Colaborador Activo',
       'Colaborador Activo': 'Emprendedor Confiable',
       'Emprendedor Confiable': 'Guardián del Bien Común',
-      'Guardián del Bien Común': 'Maestro Cósmico'
+      'Guardián del Bien Común': 'Maestro Cósmico',
     };
 
     return levelProgression[currentLevel] || 'Maestro Cósmico';
@@ -300,8 +300,10 @@ export class UsersService {
 
   private calculateAyniProgress(user: User): number {
     // Progreso basado en el tiempo desde creación y características del usuario
-    const daysSinceJoined = Math.floor((Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24));
-    const baseProgress = Math.min(90, daysSinceJoined * 2 + (user.id.length * 3));
+    const daysSinceJoined = Math.floor(
+      (Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const baseProgress = Math.min(90, daysSinceJoined * 2 + user.id.length * 3);
 
     return Math.max(10, baseProgress); // Mínimo 10%, máximo calculado
   }
@@ -311,10 +313,10 @@ export class UsersService {
     const seed = user.id.length + user.email.length;
 
     return {
-      fuego: 200 + (seed * 7) + Math.floor(Math.sin(seed) * 50),      // Acciones/Energía
-      agua: 150 + (seed * 5) + Math.floor(Math.cos(seed) * 40),       // Adaptabilidad/Emociones
-      tierra: 180 + (seed * 6) + Math.floor(Math.sin(seed * 2) * 45), // Estabilidad/Crecimiento
-      aire: 120 + (seed * 4) + Math.floor(Math.cos(seed * 1.5) * 35)  // Visión/Claridad mental
+      fuego: 200 + seed * 7 + Math.floor(Math.sin(seed) * 50), // Acciones/Energía
+      agua: 150 + seed * 5 + Math.floor(Math.cos(seed) * 40), // Adaptabilidad/Emociones
+      tierra: 180 + seed * 6 + Math.floor(Math.sin(seed * 2) * 45), // Estabilidad/Crecimiento
+      aire: 120 + seed * 4 + Math.floor(Math.cos(seed * 1.5) * 35), // Visión/Claridad mental
     };
   }
 

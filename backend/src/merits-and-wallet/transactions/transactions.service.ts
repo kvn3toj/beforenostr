@@ -1,10 +1,15 @@
-import { Injectable, ConflictException, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WalletsService } from '../wallets/wallets.service';
 import { Transaction } from '../../generated/prisma';
 
 // Define a basic type for the authenticated user passed from the controller
-type AuthenticatedUser = { id: string; roles: string[]; /* other properties */ };
+type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
 
 // Basic type for eventData - its structure depends on the transaction source/type
 export type TransactionEventData = any; // Can be refined if specific structures are known
@@ -13,7 +18,7 @@ export type TransactionEventData = any; // Can be refined if specific structures
 export class TransactionsService {
   constructor(
     private prisma: PrismaService,
-    private walletsService: WalletsService, // Inject WalletsService
+    private walletsService: WalletsService // Inject WalletsService
   ) {}
 
   async createTransaction(data: {
@@ -37,7 +42,7 @@ export class TransactionsService {
           type: data.type,
           status: data.status || 'PENDING',
           description: data.description,
-        }
+        },
       });
 
       // 2. Update the corresponding wallet balance if needed
@@ -53,10 +58,7 @@ export class TransactionsService {
   async findAllForUser(userId: string): Promise<Transaction[]> {
     return this.prisma.transaction.findMany({
       where: {
-        OR: [
-          { fromUserId: userId },
-          { toUserId: userId }
-        ]
+        OR: [{ fromUserId: userId }, { toUserId: userId }],
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -64,7 +66,7 @@ export class TransactionsService {
 
   async findTransaction(
     id: string,
-    user: AuthenticatedUser, // Accept authenticated user object
+    user: AuthenticatedUser // Accept authenticated user object
   ): Promise<Transaction> {
     const transaction = await this.prisma.transaction.findUnique({
       where: { id },
@@ -75,8 +77,14 @@ export class TransactionsService {
     }
 
     // Ownership check: User must be involved in the transaction OR have the 'admin' role
-    if (transaction.fromUserId !== user.id && transaction.toUserId !== user.id && !user.roles.includes('admin')) {
-        throw new ForbiddenException('You do not have permission to view this transaction.');
+    if (
+      transaction.fromUserId !== user.id &&
+      transaction.toUserId !== user.id &&
+      !user.roles.includes('admin')
+    ) {
+      throw new ForbiddenException(
+        'You do not have permission to view this transaction.'
+      );
     }
 
     return transaction;

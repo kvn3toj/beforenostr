@@ -27,7 +27,10 @@ export class UpdateContentItemDto {
   @IsString()
   itemTypeId?: string;
 
-  @ApiProperty({ description: 'Orden del item en la playlist', required: false })
+  @ApiProperty({
+    description: 'Orden del item en la playlist',
+    required: false,
+  })
   @IsOptional()
   @IsNumber()
   order?: number;

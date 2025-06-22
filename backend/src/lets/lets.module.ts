@@ -13,6 +13,6 @@ import { PrismaModule } from '../prisma/prisma.module';
 })
 export class LetsModule {
   constructor() {
-// //     console.log('>>> LetsModule CONSTRUCTOR: Initializing LETS (Local Exchange Trading System) (without Auth/RBAC)...');
+    // //     console.log('>>> LetsModule CONSTRUCTOR: Initializing LETS (Local Exchange Trading System) (without Auth/RBAC)...');
   }
-} 
+}

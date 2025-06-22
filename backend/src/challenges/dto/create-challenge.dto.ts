@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, IsDate, IsOptional, IsArray, ValidateNested, IsObject } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsDate,
+  IsOptional,
+  IsArray,
+  ValidateNested,
+  IsObject,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateChallengeRewardDto } from './create-challenge-reward.dto';
@@ -25,7 +33,9 @@ export class CreateChallengeDto {
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ description: 'The type of the challenge (e.g., AUTOMATED, MANUAL)' })
+  @ApiProperty({
+    description: 'The type of the challenge (e.g., AUTOMATED, MANUAL)',
+  })
   @IsString()
   @IsNotEmpty()
   type: string;
@@ -33,14 +43,16 @@ export class CreateChallengeDto {
   @ApiProperty({
     description: 'Configuration data for the challenge (JSON object)',
     type: 'object',
-    example: { "targetValue": 100, "actionType": "complete_video" },
-    additionalProperties: true
+    example: { targetValue: 100, actionType: 'complete_video' },
+    additionalProperties: true,
   })
   @IsObject()
   @IsOptional()
   config?: ChallengeConfig;
 
-  @ApiProperty({ description: 'The status of the challenge (e.g., ACTIVE, INACTIVE)' })
+  @ApiProperty({
+    description: 'The status of the challenge (e.g., ACTIVE, INACTIVE)',
+  })
   @IsString()
   @IsOptional()
   status?: string;
@@ -62,7 +74,10 @@ export class CreateChallengeDto {
   @IsNotEmpty()
   createdBy: string;
 
-  @ApiProperty({ description: 'Rewards for completing the challenge', type: () => [CreateChallengeRewardDto] })
+  @ApiProperty({
+    description: 'Rewards for completing the challenge',
+    type: () => [CreateChallengeRewardDto],
+  })
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })

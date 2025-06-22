@@ -9,12 +9,19 @@ enum UserChallengeStatus {
 }
 
 export class UpdateUserChallengeDto {
-  @ApiProperty({ description: 'The status of the user challenge', enum: UserChallengeStatus })
+  @ApiProperty({
+    description: 'The status of the user challenge',
+    enum: UserChallengeStatus,
+  })
   @IsEnum(UserChallengeStatus)
   @IsOptional()
   status?: UserChallengeStatus;
 
-  @ApiProperty({ description: 'Progress data for the user challenge (JSONB)', type: 'object', additionalProperties: true })
+  @ApiProperty({
+    description: 'Progress data for the user challenge (JSONB)',
+    type: 'object',
+    additionalProperties: true,
+  })
   @IsJSON()
   @IsOptional()
   progress?: any;

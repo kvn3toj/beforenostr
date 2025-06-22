@@ -5,4 +5,4 @@ export enum TransactionType {
   CHALLENGE = 'CHALLENGE',
   ADMIN = 'ADMIN',
   PURCHASE = 'PURCHASE',
-} 
+}

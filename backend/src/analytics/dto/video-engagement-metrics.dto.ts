@@ -1,74 +1,75 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class VideoEngagementMetricsDto {
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'ID del video',
-    example: '123'
+    example: '123',
   })
   videoId: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Título del video',
-    example: 'Introduction to React'
+    example: 'Introduction to React',
   })
   videoTitle: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Duración real del video en segundos',
-    example: 300
+    example: 300,
   })
   videoDuration: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Número total de visualizaciones únicas',
-    example: 45
+    example: 45,
   })
   totalViews: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Tiempo promedio de visualización en segundos',
-    example: 180.5
+    example: 180.5,
   })
   averageWatchTime: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Tasa de completitud como porcentaje (0-100)',
-    example: 60.2
+    example: 60.2,
   })
   completionRate: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Puntuación de engagement (métrica compuesta 0-100)',
-    example: 75.8
+    example: 75.8,
   })
   engagementScore: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Número total de pausas durante las visualizaciones',
-    example: 12
+    example: 12,
   })
   totalPauses: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Número total de saltos/seeks durante las visualizaciones',
-    example: 8
+    example: 8,
   })
   totalSeeks: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Número total de respuestas a preguntas',
-    example: 28
+    example: 28,
   })
   totalQuestionAnswers: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Porcentaje de respuestas correctas a preguntas (0-100)',
-    example: 85.7
+    example: 85.7,
   })
   correctAnswerRate: number;
 
-  @ApiPropertyOptional({ 
-    description: 'Desglose de eventos por usuario (opcional para reportes detallados)'
+  @ApiPropertyOptional({
+    description:
+      'Desglose de eventos por usuario (opcional para reportes detallados)',
   })
   userBreakdown?: Array<{
     userId: string;
@@ -80,26 +81,26 @@ export class VideoEngagementMetricsDto {
 }
 
 export class VideoEngagementReportDto {
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Rango de fechas del reporte',
     example: {
       startDate: '2025-05-01T00:00:00Z',
-      endDate: '2025-05-30T23:59:59Z'
-    }
+      endDate: '2025-05-30T23:59:59Z',
+    },
   })
   dateRange: {
     startDate: string;
     endDate: string;
   };
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Métricas de engagement de los videos',
-    type: () => [VideoEngagementMetricsDto]
+    type: () => [VideoEngagementMetricsDto],
   })
   videos: VideoEngagementMetricsDto[];
 
-  @ApiProperty({ 
-    description: 'Resumen general del reporte'
+  @ApiProperty({
+    description: 'Resumen general del reporte',
   })
   summary: {
     totalVideos: number;
@@ -108,4 +109,4 @@ export class VideoEngagementReportDto {
     averageCompletionRate: number;
     totalWatchTimeHours: number;
   };
-} 
+}

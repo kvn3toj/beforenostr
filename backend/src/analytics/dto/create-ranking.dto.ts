@@ -1,4 +1,11 @@
-import { IsString, IsOptional, IsObject, IsUUID, IsNumber, IsInt } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsObject,
+  IsUUID,
+  IsNumber,
+  IsInt,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateRankingDto {
@@ -10,7 +17,11 @@ export class CreateRankingDto {
   @IsString()
   type: string;
 
-  @ApiProperty({ description: 'Período del ranking', enum: ['DAILY', 'WEEKLY', 'MONTHLY', 'CONTEST'], default: 'DAILY' })
+  @ApiProperty({
+    description: 'Período del ranking',
+    enum: ['DAILY', 'WEEKLY', 'MONTHLY', 'CONTEST'],
+    default: 'DAILY',
+  })
   @IsString()
   @IsOptional()
   period?: string;
@@ -28,15 +39,15 @@ export class CreateRankingDto {
   @IsInt()
   rank: number;
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     description: 'Metadatos adicionales del ranking',
     example: {
       category: 'education',
       period: 'monthly',
-      details: {}
-    }
+      details: {},
+    },
   })
   @IsOptional()
   @IsObject()
   metadata?: Record<string, any>;
-} 
+}

@@ -644,11 +644,13 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
   const startTutorial = useCallback((tutorialId: string) => {
     const tutorialToStart = availableTutorials.find(t => t.id === tutorialId);
     if (tutorialToStart) {
-      startTransition(() => {
-        setCurrentTutorial(tutorialToStart);
-        setCurrentStep(0);
-        setIsActive(true);
-      });
+      setCurrentTutorial(tutorialToStart);
+      setCurrentStep(0);
+      setIsActive(true);
+
+      localStorage.setItem('coomunity-last-tutorial', tutorialId);
+      localStorage.setItem(`coomunity-tutorial-${tutorialId}-started`, new Date().toISOString());
+
     } else {
       console.warn(`Tutorial with ID '${tutorialId}' not found.`);
     }
@@ -692,10 +694,11 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
         startTutorial(marketplaceTutorialId);
       });
     }
-  }, [isAuthenticated, location.pathname, currentTutorial, isActive, startTutorial, authLoading]);
+  }, [isAuthenticated, location.pathname, startTutorial, authLoading]);
 
   useEffect(() => {
-    if (isActive && currentTutorial && currentTutorial.steps[currentStep]?.actionButton?.url && location.pathname !== currentTutorial.steps[currentStep].actionButton.url) {
+    const step = currentTutorial?.steps[currentStep];
+    if (isActive && step?.actionButton?.url && location.pathname !== step.actionButton.url) {
       closeTutorial();
     }
   }, [isActive, currentTutorial, currentStep, location.pathname, closeTutorial]);
@@ -836,110 +839,119 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
     }
   };
 
-  if (!isActive || !currentTutorial || !currentStepData) {
-    return <>{children}</>;
-  }
+  const contextValue = {
+    currentTutorial,
+    isActive,
+    currentStep,
+    startTutorial,
+    nextStep,
+    previousStep,
+    closeTutorial,
+    availableTutorials
+  };
 
   return (
-    <TutorialContext.Provider value={{ currentTutorial, isActive, currentStep, startTutorial, nextStep, previousStep, closeTutorial, availableTutorials }}>
+    <TutorialContext.Provider value={contextValue}>
       {children}
-      <Dialog
-        open={isActive}
-        onClose={closeTutorial}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 3,
-            boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-            backdropFilter: 'blur( 4px )',
-            WebkitBackdropFilter: 'blur( 4px )',
-            border: '1px solid rgba( 255, 255, 255, 0.18 )',
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0))',
-            position: 'relative',
-            overflow: 'hidden',
-          },
-        }}
-      >
-        <IconButton
-          aria-label="close"
-          onClick={closeTutorial}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-            zIndex: 1,
+      {isActive && currentTutorial && currentStepData && (
+        <Dialog
+          open={isActive}
+          onClose={closeTutorial}
+          maxWidth="md"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+              backdropFilter: 'blur( 4px )',
+              WebkitBackdropFilter: 'blur( 4px )',
+              border: '1px solid rgba( 255, 255, 255, 0.18 )',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0))',
+              position: 'relative',
+              overflow: 'hidden',
+            },
           }}
         >
-          <CloseIcon />
-        </IconButton>
-        <DialogTitle sx={{ textAlign: 'center', pb: 0 }}>
-          <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-            {currentTutorial.title}
-          </Typography>
-          <Typography variant="subtitle2" color="textSecondary">
-            {currentTutorial.description}
-          </Typography>
-        </DialogTitle>
-        <DialogContent dividers sx={{ p: 3 }}>
-          <Fade in={true} key={currentStep}>
-            <Box>
-              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                {getStepIcon(currentStep)}
-                <Box component="span" sx={{ ml: 1 }}>{currentStep + 1}. {currentStepData.title}</Box>
-              </Typography>
-              <Alert severity={getAlertSeverity(currentStepData.type)} sx={{ mb: 2 }}>
-                {renderStepContent(currentStepData, navigate)}
-              </Alert>
-              {currentStepData.tips && currentStepData.tips.length > 0 && (
-                <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px dashed', borderColor: 'grey.300' }}>
-                  <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
-                    💡 Consejos Rápidos:
-                  </Typography>
-                  <List dense>
-                    {currentStepData.tips.map((tip, index) => (
-                      <ListItem key={index} disableGutters>
-                        <ListItemIcon sx={{ minWidth: '30px' }}>
-                          <InfoIcon fontSize="small" color="action" />
-                        </ListItemIcon>
-                        <ListItemText primary={<Typography variant="body2">{tip}</Typography>} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              )}
-            </Box>
-          </Fade>
-        </DialogContent>
-        <DialogActions sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Box>
-            <Chip label={`Paso ${currentStep + 1} de ${currentTutorial.steps.length}`} color="secondary" size="small" />
-            <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
-              Tiempo estimado: {currentTutorial?.estimatedTime}
+          <IconButton
+            aria-label="close"
+            onClick={closeTutorial}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+              zIndex: 1,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogTitle sx={{ textAlign: 'center', pb: 0 }}>
+            <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+              {currentTutorial.title}
             </Typography>
-          </Box>
-          <Box>
-            <Button
-              onClick={previousStep}
-              disabled={currentStep === 0 || isPending}
-              startIcon={<BackIcon />}
-              sx={{ mr: 1 }}
-            >
-              Anterior
-            </Button>
-            <Button
-              onClick={nextStep}
-              disabled={isPending}
-              endIcon={<NextIcon />}
-              variant="contained"
-              color="primary"
-            >
-              {currentStep === currentTutorial.steps.length - 1 ? 'Finalizar' : 'Siguiente'}
-            </Button>
-          </Box>
-        </DialogActions>
-      </Dialog>
+            <Typography variant="subtitle2" color="textSecondary">
+              {currentTutorial.description}
+            </Typography>
+          </DialogTitle>
+          <DialogContent dividers sx={{ p: 3 }}>
+            <Fade in={true} key={currentStep}>
+              <Box>
+                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  {getStepIcon(currentStep)}
+                  <Box component="span" sx={{ ml: 1 }}>{currentStep + 1}. {currentStepData.title}</Box>
+                </Typography>
+                <Alert severity={getAlertSeverity(currentStepData.type)} sx={{ mb: 2 }}>
+                  {renderStepContent(currentStepData, navigate)}
+                </Alert>
+                {currentStepData.tips && currentStepData.tips.length > 0 && (
+                  <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px dashed', borderColor: 'grey.300' }}>
+                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
+                      💡 Consejos Rápidos:
+                    </Typography>
+                    <List dense>
+                      {currentStepData.tips.map((tip, index) => (
+                        <ListItem key={index} disableGutters>
+                          <ListItemIcon sx={{ minWidth: '30px' }}>
+                            <InfoIcon fontSize="small" color="action" />
+                          </ListItemIcon>
+                          <ListItemText primary={<Typography variant="body2">{tip}</Typography>} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                )}
+              </Box>
+            </Fade>
+          </DialogContent>
+          <DialogActions sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box>
+              <Chip label={`Paso ${currentStep + 1} de ${currentTutorial.steps.length}`} color="secondary" size="small" />
+              <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
+                Tiempo estimado: {currentTutorial?.estimatedTime}
+              </Typography>
+            </Box>
+            <Box>
+              <Button
+                onClick={previousStep}
+                disabled={currentStep === 0 || isPending}
+                startIcon={<BackIcon />}
+                sx={{ mr: 1 }}
+              >
+                Anterior
+              </Button>
+              <Button
+                onClick={nextStep}
+                disabled={isPending}
+                endIcon={<NextIcon />}
+                variant="contained"
+                color="primary"
+              >
+                {currentStep === currentTutorial.steps.length - 1 ? 'Finalizar' : 'Siguiente'}
+              </Button>
+            </Box>
+          </DialogActions>
+        </Dialog>
+      )}
     </TutorialContext.Provider>
   );
 };

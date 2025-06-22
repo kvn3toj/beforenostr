@@ -8,4 +8,4 @@ export interface PlaylistFolder {
   updated_at: string;
   is_deleted: boolean;
   deleted_at?: string;
-} 
+}

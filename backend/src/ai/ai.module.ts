@@ -9,4 +9,4 @@ import { PrismaModule } from '../prisma/prisma.module';
   providers: [QuestionGeneratorService],
   exports: [QuestionGeneratorService],
 })
-export class AiModule {} 
+export class AiModule {}

@@ -2,7 +2,16 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { IncomingWebhook } from '@slack/webhook';
 // Temporalmente importar desde monitoring hasta que movamos el DTO
-import { ConsistencyCheckResultDto } from '../../monitoring/dto/health-report.dto';
+import {
+  ConsistencyCheckResultDto,
+  HealthReportDto,
+} from '../../monitoring/dto/health-report.dto';
+
+interface ReportContent {
+  subject: string;
+  text: string;
+  html: string;
+}
 
 @Injectable()
 export class NotificationService {
@@ -31,7 +40,9 @@ export class NotificationService {
         this.emailTransporter = nodemailer.createTransport(emailConfig);
         this.logger.log('Email transporter initialized successfully');
       } else {
-        this.logger.warn('Email configuration incomplete - email alerts disabled');
+        this.logger.warn(
+          'Email configuration incomplete - email alerts disabled'
+        );
       }
     } catch (error) {
       this.logger.error('Failed to initialize email transporter:', error);
@@ -45,18 +56,24 @@ export class NotificationService {
         this.slackWebhook = new IncomingWebhook(slackWebhookUrl);
         this.logger.log('Slack webhook initialized successfully');
       } else {
-        this.logger.warn('Slack webhook URL not configured - Slack alerts disabled');
+        this.logger.warn(
+          'Slack webhook URL not configured - Slack alerts disabled'
+        );
       }
     } catch (error) {
       this.logger.error('Failed to initialize Slack webhook:', error);
     }
   }
 
-  async sendConsistencyAlert(checkResult: ConsistencyCheckResultDto): Promise<boolean> {
+  async sendConsistencyAlert(
+    checkResult: ConsistencyCheckResultDto
+  ): Promise<boolean> {
     const threshold = parseInt(process.env.ALERT_THRESHOLD || '5');
 
     if (checkResult.inconsistenciesFound < threshold) {
-      this.logger.log(`Inconsistencies (${checkResult.inconsistenciesFound}) below threshold (${threshold}) - no alert sent`);
+      this.logger.log(
+        `Inconsistencies (${checkResult.inconsistenciesFound}) below threshold (${threshold}) - no alert sent`
+      );
       return false;
     }
 
@@ -89,7 +106,8 @@ export class NotificationService {
   }
 
   private buildAlertMessage(checkResult: ConsistencyCheckResultDto): string {
-    const { inconsistenciesFound, totalVideos, problematicVideos } = checkResult;
+    const { inconsistenciesFound, totalVideos, problematicVideos } =
+      checkResult;
 
     let message = `🚨 GAMIFIER VIDEO ANALYTICS ALERT\n\n`;
     message += `Consistency check completed at ${checkResult.timestamp}\n`;
@@ -97,7 +115,7 @@ export class NotificationService {
 
     if (problematicVideos.length > 0) {
       message += `Problematic videos:\n`;
-      problematicVideos.slice(0, 10).forEach(video => {
+      problematicVideos.slice(0, 10).forEach((video) => {
         message += `- ID ${video.id}: ${video.title}\n`;
         message += `  Issue: ${video.issue}\n`;
         if (video.storedDuration !== null && video.actualDuration !== null) {
@@ -117,7 +135,10 @@ export class NotificationService {
     return message;
   }
 
-  private async sendEmailAlert(message: string, checkResult: ConsistencyCheckResultDto): Promise<void> {
+  private async sendEmailAlert(
+    message: string,
+    checkResult: ConsistencyCheckResultDto
+  ): Promise<void> {
     if (!this.emailTransporter) {
       throw new Error('Email transporter not initialized');
     }
@@ -138,7 +159,10 @@ export class NotificationService {
     await this.emailTransporter.sendMail(mailOptions);
   }
 
-  private async sendSlackAlert(message: string, checkResult: ConsistencyCheckResultDto): Promise<void> {
+  private async sendSlackAlert(
+    message: string,
+    checkResult: ConsistencyCheckResultDto
+  ): Promise<void> {
     if (!this.slackWebhook) {
       throw new Error('Slack webhook not initialized');
     }
@@ -178,9 +202,10 @@ export class NotificationService {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*Top Issues:*\n${checkResult.problematicVideos.slice(0, 5).map(v =>
-              `• ID ${v.id}: ${v.title} - ${v.issue}`
-            ).join('\n')}`,
+            text: `*Top Issues:*\n${checkResult.problematicVideos
+              .slice(0, 5)
+              .map((v) => `• ID ${v.id}: ${v.title} - ${v.issue}`)
+              .join('\n')}`,
           },
         },
       ],
@@ -189,7 +214,10 @@ export class NotificationService {
     await this.slackWebhook.send(slackMessage);
   }
 
-  private formatEmailHtml(message: string, checkResult: ConsistencyCheckResultDto): string {
+  private formatEmailHtml(
+    message: string,
+    checkResult: ConsistencyCheckResultDto
+  ): string {
     return `
       <html>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -208,23 +236,39 @@ export class NotificationService {
               </ul>
             </div>
 
-            ${checkResult.problematicVideos.length > 0 ? `
+            ${
+              checkResult.problematicVideos.length > 0
+                ? `
               <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; padding: 15px; margin: 20px 0;">
                 <h3 style="margin-top: 0; color: #721c24;">Problematic Videos</h3>
                 <ul>
-                  ${checkResult.problematicVideos.slice(0, 10).map(video => `
+                  ${checkResult.problematicVideos
+                    .slice(0, 10)
+                    .map(
+                      (video) => `
                     <li style="margin-bottom: 10px;">
                       <strong>ID ${video.id}:</strong> ${video.title}<br>
                       <em>Issue:</em> ${video.issue}
-                      ${video.storedDuration !== null && video.actualDuration !== null ?
-                        `<br><em>Duration:</em> Stored ${video.storedDuration}s, Actual ${video.actualDuration}s` : ''}
+                      ${
+                        video.storedDuration !== null &&
+                        video.actualDuration !== null
+                          ? `<br><em>Duration:</em> Stored ${video.storedDuration}s, Actual ${video.actualDuration}s`
+                          : ''
+                      }
                     </li>
-                  `).join('')}
+                  `
+                    )
+                    .join('')}
                 </ul>
-                ${checkResult.problematicVideos.length > 10 ?
-                  `<p><em>... and ${checkResult.problematicVideos.length - 10} more videos</em></p>` : ''}
+                ${
+                  checkResult.problematicVideos.length > 10
+                    ? `<p><em>... and ${checkResult.problematicVideos.length - 10} more videos</em></p>`
+                    : ''
+                }
               </div>
-            ` : ''}
+            `
+                : ''
+            }
 
             <div style="background-color: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 5px; padding: 15px; margin: 20px 0;">
               <p style="margin: 0;"><strong>Action Required:</strong> Please check the system dashboard for more details and consider running the auto-correction process if appropriate.</p>
@@ -293,7 +337,7 @@ export class NotificationService {
   /**
    * Envía un reporte de salud del sistema por email y/o Slack
    */
-  async sendHealthReport(healthReport: any): Promise<boolean> {
+  async sendHealthReport(healthReport: HealthReportDto): Promise<boolean> {
     this.logger.log('📊 Sending system health report...');
 
     let emailSent = false;
@@ -305,19 +349,26 @@ export class NotificationService {
 
       // Enviar por email si está configurado
       if (this.emailTransporter && process.env.ALERT_EMAIL_ENABLED === 'true') {
-        emailSent = await this.sendHealthReportEmail(reportContent, healthReport);
+        emailSent = await this.sendHealthReportEmail(
+          reportContent,
+          healthReport
+        );
       }
 
       // Enviar por Slack si está configurado
       if (this.slackWebhook && process.env.ALERT_SLACK_ENABLED === 'true') {
-        slackSent = await this.sendHealthReportSlack(reportContent, healthReport);
+        slackSent = await this.sendHealthReportSlack(
+          reportContent,
+          healthReport
+        );
       }
 
       const success = emailSent || slackSent;
-      this.logger.log(`Health report sent - Email: ${emailSent}, Slack: ${slackSent}`);
+      this.logger.log(
+        `Health report sent - Email: ${emailSent}, Slack: ${slackSent}`
+      );
 
       return success;
-
     } catch (error) {
       this.logger.error('Failed to send health report:', error);
       return false;
@@ -327,50 +378,47 @@ export class NotificationService {
   /**
    * Genera el contenido del reporte de salud
    */
-  private generateHealthReportContent(healthReport: any): {
-    subject: string;
-    text: string;
-    html: string;
-  } {
-    const { period, timestamp, consistencyCheck, performanceMetrics, errorSummary, recommendations } = healthReport;
-
-    const subject = `🏥 GAMIFIER ${period.toUpperCase()} Health Report - ${new Date(timestamp).toLocaleDateString()}`;
+  private generateHealthReportContent(
+    healthReport: HealthReportDto
+  ): ReportContent {
+    const statusEmoji = healthReport.status === 'healthy' ? '✅' : '❌';
+    const subject = `${statusEmoji} GAMIFIER System Health Report - ${healthReport.timestamp}`;
 
     const text = `
 GAMIFIER SYSTEM HEALTH REPORT
 =============================
 
-Period: ${period}
-Generated: ${new Date(timestamp).toLocaleString()}
+Period: ${healthReport.period}
+Generated: ${new Date(healthReport.timestamp).toLocaleString()}
 
 CONSISTENCY CHECK
 -----------------
-Total Videos: ${consistencyCheck.totalVideos}
-Inconsistencies Found: ${consistencyCheck.inconsistenciesFound}
-Execution Time: ${consistencyCheck.executionTime}ms
+Total Videos: ${healthReport.consistencyCheck.totalVideos}
+Inconsistencies Found: ${healthReport.consistencyCheck.inconsistenciesFound}
+Execution Time: ${healthReport.consistencyCheck.executionTime}ms
 
 PERFORMANCE METRICS
 -------------------
-Average Calculation Time: ${Math.round(performanceMetrics.averageCalculationTime)}ms
-Total Calculations: ${performanceMetrics.totalCalculations}
-Cache Hit Ratio: ${Math.round(performanceMetrics.cacheHitRatio)}%
-Error Rate: ${Math.round(performanceMetrics.errorRate)}%
+Average Calculation Time: ${Math.round(healthReport.performanceMetrics.averageCalculationTime)}ms
+Total Calculations: ${healthReport.performanceMetrics.totalCalculations}
+Cache Hit Ratio: ${Math.round(healthReport.performanceMetrics.cacheHitRatio)}%
+Error Rate: ${Math.round(healthReport.performanceMetrics.errorRate)}%
 
 METHOD DISTRIBUTION
 -------------------
-Cache Hits: ${performanceMetrics.methodDistribution.cache_hit}
-YouTube API: ${performanceMetrics.methodDistribution.youtube_api}
-Scraping: ${performanceMetrics.methodDistribution.scraping}
-Estimation: ${performanceMetrics.methodDistribution.estimation}
+Cache Hits: ${healthReport.performanceMetrics.methodDistribution.cache_hit}
+YouTube API: ${healthReport.performanceMetrics.methodDistribution.youtube_api}
+Scraping: ${healthReport.performanceMetrics.methodDistribution.scraping}
+Estimation: ${healthReport.performanceMetrics.methodDistribution.estimation}
 
 ERROR SUMMARY
 -------------
-Total Errors: ${errorSummary.totalErrors}
-Critical Errors: ${errorSummary.criticalErrors}
+Total Errors: ${healthReport.errorSummary.totalErrors}
+Critical Errors: ${healthReport.errorSummary.criticalErrors}
 
 RECOMMENDATIONS
 ---------------
-${recommendations.map((rec: string, index: number) => `${index + 1}. ${rec}`).join('\n')}
+${healthReport.recommendations.map((rec: string, index: number) => `${index + 1}. ${rec}`).join('\n')}
 
 ---
 This is an automated report from GAMIFIER Monitoring System.
@@ -382,30 +430,30 @@ This is an automated report from GAMIFIER Monitoring System.
 
         <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
           <h3>Report Summary</h3>
-          <p><strong>Period:</strong> ${period}</p>
-          <p><strong>Generated:</strong> ${new Date(timestamp).toLocaleString()}</p>
+          <p><strong>Period:</strong> ${healthReport.period}</p>
+          <p><strong>Generated:</strong> ${new Date(healthReport.timestamp).toLocaleString()}</p>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
           <div style="background: #e8f5e8; padding: 15px; border-radius: 5px;">
             <h3 style="color: #27ae60;">✅ Consistency Check</h3>
-            <p><strong>Total Videos:</strong> ${consistencyCheck.totalVideos}</p>
-            <p><strong>Inconsistencies:</strong> ${consistencyCheck.inconsistenciesFound}</p>
-            <p><strong>Execution Time:</strong> ${consistencyCheck.executionTime}ms</p>
+            <p><strong>Total Videos:</strong> ${healthReport.consistencyCheck.totalVideos}</p>
+            <p><strong>Inconsistencies:</strong> ${healthReport.consistencyCheck.inconsistenciesFound}</p>
+            <p><strong>Execution Time:</strong> ${healthReport.consistencyCheck.executionTime}ms</p>
           </div>
 
           <div style="background: #e8f4fd; padding: 15px; border-radius: 5px;">
             <h3 style="color: #3498db;">⚡ Performance</h3>
-            <p><strong>Avg Calculation Time:</strong> ${Math.round(performanceMetrics.averageCalculationTime)}ms</p>
-            <p><strong>Cache Hit Ratio:</strong> ${Math.round(performanceMetrics.cacheHitRatio)}%</p>
-            <p><strong>Error Rate:</strong> ${Math.round(performanceMetrics.errorRate)}%</p>
+            <p><strong>Avg Calculation Time:</strong> ${Math.round(healthReport.performanceMetrics.averageCalculationTime)}ms</p>
+            <p><strong>Cache Hit Ratio:</strong> ${Math.round(healthReport.performanceMetrics.cacheHitRatio)}%</p>
+            <p><strong>Error Rate:</strong> ${Math.round(healthReport.performanceMetrics.errorRate)}%</p>
           </div>
         </div>
 
         <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
           <h3 style="color: #856404;">🔧 Recommendations</h3>
           <ol>
-            ${recommendations.map((rec: string) => `<li>${rec}</li>`).join('')}
+            ${healthReport.recommendations.map((rec: string) => `<li>${rec}</li>`).join('')}
           </ol>
         </div>
 
@@ -421,7 +469,10 @@ This is an automated report from GAMIFIER Monitoring System.
   /**
    * Envía el reporte de salud por email
    */
-  private async sendHealthReportEmail(reportContent: any, healthReport: any): Promise<boolean> {
+  private async sendHealthReportEmail(
+    reportContent: ReportContent,
+    healthReport: HealthReportDto
+  ): Promise<boolean> {
     try {
       if (!this.emailTransporter) {
         this.logger.warn('Email transporter not available');
@@ -443,9 +494,10 @@ This is an automated report from GAMIFIER Monitoring System.
       };
 
       await this.emailTransporter.sendMail(mailOptions);
-      this.logger.log(`Health report email sent to ${recipients.length} recipients`);
+      this.logger.log(
+        `Health report email sent to ${recipients.length} recipients`
+      );
       return true;
-
     } catch (error) {
       this.logger.error('Failed to send health report email:', error);
       return false;
@@ -455,20 +507,30 @@ This is an automated report from GAMIFIER Monitoring System.
   /**
    * Envía el reporte de salud por Slack
    */
-  private async sendHealthReportSlack(reportContent: any, healthReport: any): Promise<boolean> {
+  private async sendHealthReportSlack(
+    reportContent: ReportContent,
+    healthReport: HealthReportDto
+  ): Promise<boolean> {
     try {
       if (!this.slackWebhook) {
         this.logger.warn('Slack webhook not available');
         return false;
       }
 
-      const { consistencyCheck, performanceMetrics, errorSummary } = healthReport;
+      const { consistencyCheck, performanceMetrics, errorSummary } =
+        healthReport;
 
       // Determinar color basado en el estado del sistema
       let color = '#36a64f'; // Verde por defecto
-      if (errorSummary.criticalErrors > 0 || consistencyCheck.inconsistenciesFound > 10) {
+      if (
+        errorSummary.criticalErrors > 0 ||
+        consistencyCheck.inconsistenciesFound > 10
+      ) {
         color = '#ff0000'; // Rojo para problemas críticos
-      } else if (performanceMetrics.errorRate > 5 || performanceMetrics.cacheHitRatio < 50) {
+      } else if (
+        performanceMetrics.errorRate > 5 ||
+        performanceMetrics.cacheHitRatio < 50
+      ) {
         color = '#ffaa00'; // Amarillo para advertencias
       }
 
@@ -481,34 +543,33 @@ This is an automated report from GAMIFIER Monitoring System.
               {
                 title: 'Consistency Check',
                 value: `${consistencyCheck.inconsistenciesFound} issues found in ${consistencyCheck.totalVideos} videos`,
-                short: true
+                short: true,
               },
               {
                 title: 'Performance',
                 value: `${Math.round(performanceMetrics.cacheHitRatio)}% cache hit ratio, ${Math.round(performanceMetrics.errorRate)}% error rate`,
-                short: true
+                short: true,
               },
               {
                 title: 'Errors',
                 value: `${errorSummary.totalErrors} total, ${errorSummary.criticalErrors} critical`,
-                short: true
+                short: true,
               },
               {
                 title: 'Recommendations',
                 value: healthReport.recommendations.slice(0, 3).join('\n• '),
-                short: false
-              }
+                short: false,
+              },
             ],
             footer: 'GAMIFIER Monitoring System',
-            ts: (new Date(healthReport.timestamp).getTime() / 1000).toString()
-          }
-        ]
+            ts: (new Date(healthReport.timestamp).getTime() / 1000).toString(),
+          },
+        ],
       };
 
       await this.slackWebhook.send(slackMessage);
       this.logger.log('Health report sent to Slack');
       return true;
-
     } catch (error) {
       this.logger.error('Failed to send health report to Slack:', error);
       return false;
@@ -518,7 +579,10 @@ This is an automated report from GAMIFIER Monitoring System.
   /**
    * Método adicional para enviar alertas de validación de preguntas
    */
-  async sendQuestionValidationAlert(message: string, details: any): Promise<boolean> {
+  async sendQuestionValidationAlert(
+    message: string,
+    details: Record<string, unknown>
+  ): Promise<boolean> {
     this.logger.log('📋 Sending question validation alert...');
 
     let alertsSent = false;
@@ -539,13 +603,16 @@ This is an automated report from GAMIFIER Monitoring System.
               <hr>
               <p>Details:</p>
               <pre>${JSON.stringify(details, null, 2)}</pre>
-            </div>`
+            </div>`,
           });
           alertsSent = true;
           this.logger.log('Question validation email alert sent');
         }
       } catch (error) {
-        this.logger.error('Failed to send question validation email alert:', error);
+        this.logger.error(
+          'Failed to send question validation email alert:',
+          error
+        );
       }
     }
 
@@ -559,15 +626,18 @@ This is an automated report from GAMIFIER Monitoring System.
               type: 'section',
               text: {
                 type: 'mrkdwn',
-                text: message
-              }
-            }
-          ]
+                text: message,
+              },
+            },
+          ],
         });
         alertsSent = true;
         this.logger.log('Question validation Slack alert sent');
       } catch (error) {
-        this.logger.error('Failed to send question validation Slack alert:', error);
+        this.logger.error(
+          'Failed to send question validation Slack alert:',
+          error
+        );
       }
     }
 

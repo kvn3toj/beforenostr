@@ -8,4 +8,4 @@ export interface PlaylistItem {
   updated_at: string;
   title?: string;
   description?: string;
-} 
+}

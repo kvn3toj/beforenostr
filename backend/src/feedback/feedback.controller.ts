@@ -10,21 +10,30 @@ import {
   Req,
   HttpCode,
   HttpStatus,
-  Logger
+  Logger,
 } from '@nestjs/common';
+import { Request } from 'express';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
   ApiParam,
-  ApiQuery
+  ApiQuery,
 } from '@nestjs/swagger';
 import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email: string;
+    name?: string;
+  };
+}
 
 @ApiTags('🔮 Feedback - Oráculo de CoomÜnity')
 @ApiBearerAuth()
@@ -40,7 +49,8 @@ export class FeedbackController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Enviar feedback desde el Oráculo de CoomÜnity',
-    description: 'Endpoint exclusivo para que el agente Oráculo reporte feedback detectado automáticamente en la plataforma'
+    description:
+      'Endpoint exclusivo para que el agente Oráculo reporte feedback detectado automáticamente en la plataforma',
   })
   @ApiResponse({
     status: 201,
@@ -59,24 +69,39 @@ export class FeedbackController {
         user: {
           id: 'admin_user_id',
           email: 'admin@coomunity.com',
-          name: 'Administrador Oráculo'
-        }
-      }
-    }
+          name: 'Administrador Oráculo',
+        },
+      },
+    },
   })
-  @ApiResponse({ status: 401, description: 'No autorizado - Token JWT inválido' })
-  @ApiResponse({ status: 403, description: 'Prohibido - Solo administradores pueden usar el Oráculo' })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado - Token JWT inválido',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Prohibido - Solo administradores pueden usar el Oráculo',
+  })
   async submitFeedback(
     @Body() createFeedbackDto: CreateFeedbackDto,
-    @Req() req: any
+    @Req() req: AuthenticatedRequest
   ) {
-    this.logger.log(`🔮 [ORÁCULO-CONTROLLER] Recibiendo feedback de admin: ${req.user.email}`);
-    this.logger.log(`🔮 [ORÁCULO-CONTROLLER] Tipo: ${createFeedbackDto.feedbackType} | URL: ${createFeedbackDto.pageUrl}`);
+    this.logger.log(
+      `🔮 [ORÁCULO-CONTROLLER] Recibiendo feedback de admin: ${req.user.email}`
+    );
+    this.logger.log(
+      `🔮 [ORÁCULO-CONTROLLER] Tipo: ${createFeedbackDto.feedbackType} | URL: ${createFeedbackDto.pageUrl}`
+    );
 
     const adminUserId = req.user.id;
-    const feedback = await this.feedbackService.create(createFeedbackDto, adminUserId);
+    const feedback = await this.feedbackService.create(
+      createFeedbackDto,
+      adminUserId
+    );
 
-    this.logger.log(`✅ [ORÁCULO-CONTROLLER] Feedback procesado exitosamente: ${feedback.id}`);
+    this.logger.log(
+      `✅ [ORÁCULO-CONTROLLER] Feedback procesado exitosamente: ${feedback.id}`
+    );
     return feedback;
   }
 
@@ -84,13 +109,37 @@ export class FeedbackController {
   @Roles('admin') // Solo administradores pueden ver todos los feedbacks
   @ApiOperation({
     summary: 'Obtener todos los feedbacks de la CoP Oráculo',
-    description: 'Lista paginada de feedbacks con filtros opcionales para la gestión en la CoP'
+    description:
+      'Lista paginada de feedbacks con filtros opcionales para la gestión en la CoP',
   })
-  @ApiQuery({ name: 'status', required: false, description: 'Filtrar por estado del feedback' })
-  @ApiQuery({ name: 'feedbackType', required: false, description: 'Filtrar por tipo de feedback' })
-  @ApiQuery({ name: 'priority', required: false, type: Number, description: 'Filtrar por prioridad (0-5)' })
-  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Límite de resultados (default: 50)' })
-  @ApiQuery({ name: 'offset', required: false, type: Number, description: 'Offset para paginación (default: 0)' })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    description: 'Filtrar por estado del feedback',
+  })
+  @ApiQuery({
+    name: 'feedbackType',
+    required: false,
+    description: 'Filtrar por tipo de feedback',
+  })
+  @ApiQuery({
+    name: 'priority',
+    required: false,
+    type: Number,
+    description: 'Filtrar por prioridad (0-5)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Límite de resultados (default: 50)',
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    type: Number,
+    description: 'Offset para paginación (default: 0)',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de feedbacks obtenida exitosamente',
@@ -105,17 +154,17 @@ export class FeedbackController {
           status: 'PENDING',
           priority: 2,
           createdAt: '2025-06-20T12:35:00Z',
-          user: { email: 'admin@coomunity.com' }
-        }
-      }
-    }
+          user: { email: 'admin@coomunity.com' },
+        },
+      },
+    },
   })
   async getAllFeedbacks(
     @Query('status') status?: string,
     @Query('feedbackType') feedbackType?: string,
     @Query('priority') priority?: number,
     @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query('offset') offset?: number
   ) {
     this.logger.log(`🔍 [ORÁCULO-CONTROLLER] Obteniendo feedbacks con filtros`);
 
@@ -129,7 +178,9 @@ export class FeedbackController {
 
     const feedbacks = await this.feedbackService.findAll(filters);
 
-    this.logger.log(`📋 [ORÁCULO-CONTROLLER] Devolviendo ${feedbacks.length} feedbacks`);
+    this.logger.log(
+      `📋 [ORÁCULO-CONTROLLER] Devolviendo ${feedbacks.length} feedbacks`
+    );
     return feedbacks;
   }
 
@@ -137,7 +188,7 @@ export class FeedbackController {
   @Roles('admin')
   @ApiOperation({
     summary: 'Obtener estadísticas de feedbacks para la CoP Oráculo',
-    description: 'Métricas agregadas para gamificación y dashboards de la CoP'
+    description: 'Métricas agregadas para gamificación y dashboards de la CoP',
   })
   @ApiResponse({
     status: 200,
@@ -148,13 +199,13 @@ export class FeedbackController {
         byStatus: {
           PENDING: 15,
           INVESTIGATING: 5,
-          RESOLVED: 5
+          RESOLVED: 5,
         },
         byType: {
           BUG: 10,
           IMPROVEMENT: 8,
           UI_UX: 5,
-          PERFORMANCE: 2
+          PERFORMANCE: 2,
         },
         byPriority: {
           priority_0: 3,
@@ -162,17 +213,19 @@ export class FeedbackController {
           priority_2: 8,
           priority_3: 6,
           priority_4: 2,
-          priority_5: 1
-        }
-      }
-    }
+          priority_5: 1,
+        },
+      },
+    },
   })
   async getFeedbackStats() {
     this.logger.log(`📊 [ORÁCULO-CONTROLLER] Generando estadísticas para CoP`);
 
     const stats = await this.feedbackService.getStats();
 
-    this.logger.log(`📈 [ORÁCULO-CONTROLLER] Estadísticas generadas exitosamente`);
+    this.logger.log(
+      `📈 [ORÁCULO-CONTROLLER] Estadísticas generadas exitosamente`
+    );
     return stats;
   }
 
@@ -180,7 +233,7 @@ export class FeedbackController {
   @Roles('admin')
   @ApiOperation({
     summary: 'Obtener un feedback específico por ID',
-    description: 'Detalles completos de un feedback para gestión en la CoP'
+    description: 'Detalles completos de un feedback para gestión en la CoP',
   })
   @ApiParam({ name: 'id', description: 'ID único del feedback' })
   @ApiResponse({
@@ -197,16 +250,16 @@ export class FeedbackController {
         componentContext: 'VideoPlayer -> PlayButton',
         technicalContext: {
           userAgent: 'Mozilla/5.0...',
-          screenResolution: '1920x1080'
+          screenResolution: '1920x1080',
         },
         tags: ['video-player', 'critical'],
         createdAt: '2025-06-20T12:35:00Z',
         user: {
           email: 'admin@coomunity.com',
-          name: 'Administrador'
-        }
-      }
-    }
+          name: 'Administrador',
+        },
+      },
+    },
   })
   @ApiResponse({ status: 404, description: 'Feedback no encontrado' })
   async getFeedbackById(@Param('id') id: string) {
@@ -219,7 +272,9 @@ export class FeedbackController {
       return { message: 'Feedback no encontrado' };
     }
 
-    this.logger.log(`✅ [ORÁCULO-CONTROLLER] Feedback encontrado: ${feedback.id}`);
+    this.logger.log(
+      `✅ [ORÁCULO-CONTROLLER] Feedback encontrado: ${feedback.id}`
+    );
     return feedback;
   }
 
@@ -227,7 +282,8 @@ export class FeedbackController {
   @Roles('admin')
   @ApiOperation({
     summary: 'Actualizar el estado de un feedback',
-    description: 'Cambiar el estado de un feedback para gestión del flujo en la CoP'
+    description:
+      'Cambiar el estado de un feedback para gestión del flujo en la CoP',
   })
   @ApiParam({ name: 'id', description: 'ID único del feedback' })
   @ApiResponse({
@@ -238,20 +294,25 @@ export class FeedbackController {
   async updateFeedbackStatus(
     @Param('id') id: string,
     @Body('status') status: string,
-    @Req() req: any
+    @Req() req: AuthenticatedRequest
   ) {
-    this.logger.log(`🔄 [ORÁCULO-CONTROLLER] Admin ${req.user.email} actualizando status de ${id} a: ${status}`);
+    this.logger.log(
+      `🔄 [ORÁCULO-CONTROLLER] Admin ${req.user.email} actualizando status de ${id} a: ${status}`
+    );
 
     const updatedFeedback = await this.feedbackService.updateStatus(id, status);
 
-    this.logger.log(`✅ [ORÁCULO-CONTROLLER] Status actualizado exitosamente: ${updatedFeedback.id}`);
+    this.logger.log(
+      `✅ [ORÁCULO-CONTROLLER] Status actualizado exitosamente: ${updatedFeedback.id}`
+    );
     return updatedFeedback;
   }
 
   @Get('health/check')
   @ApiOperation({
     summary: 'Health check del módulo feedback',
-    description: 'Endpoint para verificar que el módulo de feedback está funcionando correctamente'
+    description:
+      'Endpoint para verificar que el módulo de feedback está funcionando correctamente',
   })
   @ApiResponse({
     status: 200,
@@ -261,9 +322,9 @@ export class FeedbackController {
         status: 'ok',
         module: 'feedback',
         message: 'Oráculo de CoomÜnity operacional',
-        timestamp: '2025-06-20T12:35:00Z'
-      }
-    }
+        timestamp: '2025-06-20T12:35:00Z',
+      },
+    },
   })
   healthCheck() {
     this.logger.log(`💚 [ORÁCULO-CONTROLLER] Health check ejecutado`);
@@ -273,7 +334,7 @@ export class FeedbackController {
       module: 'feedback',
       message: 'Oráculo de CoomÜnity operacional ✨',
       timestamp: new Date().toISOString(),
-      version: '1.0.0'
+      version: '1.0.0',
     };
   }
 }

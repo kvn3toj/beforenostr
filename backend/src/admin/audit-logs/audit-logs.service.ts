@@ -38,7 +38,7 @@ export class AuditLogsService {
         level: 'info',
         message: logMessage,
         context: 'audit',
-        metadata: metadata,
+        metadata,
       },
     });
   }
@@ -90,7 +90,7 @@ export class AuditLogsService {
       where: { id },
     });
     if (!log) {
-        throw new NotFoundException(`Audit log with ID ${id} not found`);
+      throw new NotFoundException(`Audit log with ID ${id} not found`);
     }
     return log;
   }

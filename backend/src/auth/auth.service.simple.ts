@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class SimpleAuthService {
   constructor() {
-// //     console.log('>>> SimpleAuthService initialized');
-//     console.log('>>> SimpleAuthService constructor complete');
+    // //     console.log('>>> SimpleAuthService initialized');
+    //     console.log('>>> SimpleAuthService constructor complete');
   }
 
   test() {
@@ -23,7 +23,12 @@ export class SimpleAuthService {
     console.log('[SimpleAuthService] Register called');
     return {
       access_token: 'fake_token',
-      user: { id: '1', email: dto.email, name: dto.name || 'Test User', avatarUrl: null },
+      user: {
+        id: '1',
+        email: dto.email,
+        name: dto.name || 'Test User',
+        avatarUrl: null,
+      },
     };
   }
 
@@ -36,4 +41,4 @@ export class SimpleAuthService {
       avatarUrl: null,
     };
   }
-} 
+}

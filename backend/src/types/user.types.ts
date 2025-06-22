@@ -2,7 +2,9 @@ export interface Role {
   id: string;
   name: string;
   description?: string;
-  permissions: string[] | Array<{ id: string; name: string; description?: string }>;
+  permissions:
+    | string[]
+    | Array<{ id: string; name: string; description?: string }>;
   createdAt: string;
   updatedAt: string;
 }
@@ -47,4 +49,4 @@ export interface UserAuditSnapshot {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-} 
+}

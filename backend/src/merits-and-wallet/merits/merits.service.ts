@@ -16,7 +16,7 @@ export class MeritsService {
         type: createMeritDto.type,
         source: createMeritDto.source,
         relatedEntityId: createMeritDto.relatedEntityId,
-      }
+      },
     });
   }
 

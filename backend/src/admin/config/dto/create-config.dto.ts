@@ -15,7 +15,10 @@ export class CreateConfigDto {
   @IsOptional()
   value?: string;
 
-  @ApiProperty({ description: 'The type of configuration (e.g., string, number, boolean, json)' })
+  @ApiProperty({
+    description:
+      'The type of configuration (e.g., string, number, boolean, json)',
+  })
   @IsString()
   @IsOptional()
   type?: string;

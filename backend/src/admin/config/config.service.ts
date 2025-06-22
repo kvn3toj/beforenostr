@@ -10,25 +10,31 @@ import { AuthenticatedUser } from '../../types/auth.types';
 export class ConfigService {
   constructor(
     private prisma: PrismaService,
-    private readonly auditLogsService: AuditLogsService,
+    private readonly auditLogsService: AuditLogsService
   ) {}
 
-  async create(createConfigDto: CreateConfigDto, user: AuthenticatedUser): Promise<Configuration> {
+  async create(
+    createConfigDto: CreateConfigDto,
+    user: AuthenticatedUser
+  ): Promise<Configuration> {
     const newConfig = await this.prisma.configuration.create({
       data: {
         key: createConfigDto.key,
-        value: typeof createConfigDto.value === 'string' ? createConfigDto.value : JSON.stringify(createConfigDto.value),
+        value:
+          typeof createConfigDto.value === 'string'
+            ? createConfigDto.value
+            : JSON.stringify(createConfigDto.value),
         type: createConfigDto.type || 'string',
       },
     });
 
     // Log config creation
     await this.auditLogsService.createLog({
-        userId: user.id,
-        actionType: 'config:created',
-        entityType: 'Configuration',
-        entityId: newConfig.id,
-        newValue: newConfig,
+      userId: user.id,
+      actionType: 'config:created',
+      entityType: 'Configuration',
+      entityId: newConfig.id,
+      newValue: newConfig,
     });
 
     return newConfig;
@@ -55,13 +61,17 @@ export class ConfigService {
     return config;
   }
 
-  async update(id: string, updateConfigDto: UpdateConfigDto, user: AuthenticatedUser): Promise<Configuration> {
+  async update(
+    id: string,
+    updateConfigDto: UpdateConfigDto,
+    user: AuthenticatedUser
+  ): Promise<Configuration> {
     const existingConfig = await this.prisma.configuration.findUnique({
-        where: { id }
+      where: { id },
     });
 
     if (!existingConfig) {
-        throw new NotFoundException(`Config with ID ${id} not found`);
+      throw new NotFoundException(`Config with ID ${id} not found`);
     }
 
     // Capture old value before update
@@ -72,7 +82,10 @@ export class ConfigService {
       data: {
         ...(updateConfigDto.key && { key: updateConfigDto.key }),
         ...(updateConfigDto.value !== undefined && {
-          value: typeof updateConfigDto.value === 'string' ? updateConfigDto.value : JSON.stringify(updateConfigDto.value)
+          value:
+            typeof updateConfigDto.value === 'string'
+              ? updateConfigDto.value
+              : JSON.stringify(updateConfigDto.value),
         }),
         ...(updateConfigDto.type && { type: updateConfigDto.type }),
       },
@@ -83,24 +96,24 @@ export class ConfigService {
 
     // Log config update
     await this.auditLogsService.createLog({
-        userId: user.id,
-        actionType: 'config:updated',
-        entityType: 'Configuration',
-        entityId: updatedConfig.id,
-        oldValue: oldValue,
-        newValue: newValue,
+      userId: user.id,
+      actionType: 'config:updated',
+      entityType: 'Configuration',
+      entityId: updatedConfig.id,
+      oldValue,
+      newValue,
     });
 
     return updatedConfig;
   }
 
   async remove(id: string, user: AuthenticatedUser): Promise<Configuration> {
-     const existingConfig = await this.prisma.configuration.findUnique({
-        where: { id }
+    const existingConfig = await this.prisma.configuration.findUnique({
+      where: { id },
     });
 
     if (!existingConfig) {
-        throw new NotFoundException(`Config with ID ${id} not found`);
+      throw new NotFoundException(`Config with ID ${id} not found`);
     }
 
     // Capture old value before deletion
@@ -112,11 +125,11 @@ export class ConfigService {
 
     // Log config deletion
     await this.auditLogsService.createLog({
-        userId: user.id,
-        actionType: 'config:deleted',
-        entityType: 'Configuration',
-        entityId: deletedConfig.id,
-        oldValue: oldValue,
+      userId: user.id,
+      actionType: 'config:deleted',
+      entityType: 'Configuration',
+      entityId: deletedConfig.id,
+      oldValue,
     });
 
     return deletedConfig;

@@ -2,7 +2,11 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { VideoItemsService } from '../../video-items/video-items.service';
 import { NotificationService } from '../notifications/notification.service';
-import type { Question, ActivityQuestion, VideoItem } from '../../generated/prisma';
+import type {
+  Question,
+  ActivityQuestion,
+  VideoItem,
+} from '../../generated/prisma';
 
 export interface QuestionValidationResult {
   questionId: string | number;
@@ -32,16 +36,22 @@ export class QuestionValidationService {
 
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
-    @Inject(VideoItemsService) private readonly videoItemsService: VideoItemsService,
-    @Inject(NotificationService) private readonly notificationService: NotificationService,
+    @Inject(VideoItemsService)
+    private readonly videoItemsService: VideoItemsService,
+    @Inject(NotificationService)
+    private readonly notificationService: NotificationService
   ) {
-    this.logger.log('QuestionValidationService initialized with NotificationService');
+    this.logger.log(
+      'QuestionValidationService initialized with NotificationService'
+    );
   }
 
   /**
    * Valida los timestamps de todas las preguntas de un video específico
    */
-  async validateQuestionTimestamps(videoItemId: number): Promise<QuestionValidationResult[]> {
+  async validateQuestionTimestamps(
+    videoItemId: number
+  ): Promise<QuestionValidationResult[]> {
     this.logger.log(`Validating question timestamps for video ${videoItemId}`);
 
     try {
@@ -55,11 +65,11 @@ export class QuestionValidationService {
 
       // Validar preguntas de VideoItem (tabla questions)
       const videoQuestions = await this.prisma.question.findMany({
-        where: { 
-          videoItemId: videoItemId,
-          isActive: true 
+        where: {
+          videoItemId,
+          isActive: true,
         },
-        orderBy: { timestamp: 'asc' }
+        orderBy: { timestamp: 'asc' },
       });
 
       for (const question of videoQuestions) {
@@ -75,8 +85,8 @@ export class QuestionValidationService {
 
       // Validar preguntas de Activity que referencian este video
       const activities = await this.prisma.activity.findMany({
-        where: { videoItemId: videoItemId },
-        include: { questions: true }
+        where: { videoItemId },
+        include: { questions: true },
       });
 
       for (const activity of activities) {
@@ -94,11 +104,15 @@ export class QuestionValidationService {
         }
       }
 
-      this.logger.log(`Validation completed for video ${videoItemId}: ${results.length} questions checked`);
+      this.logger.log(
+        `Validation completed for video ${videoItemId}: ${results.length} questions checked`
+      );
       return results;
-
     } catch (error) {
-      this.logger.error(`Error validating questions for video ${videoItemId}:`, error);
+      this.logger.error(
+        `Error validating questions for video ${videoItemId}:`,
+        error
+      );
       throw error;
     }
   }
@@ -108,7 +122,9 @@ export class QuestionValidationService {
    */
   async validateAllQuestionTimestamps(): Promise<ValidationSummary> {
     const startTime = Date.now();
-    this.logger.log('Starting validation of all question timestamps in the system');
+    this.logger.log(
+      'Starting validation of all question timestamps in the system'
+    );
 
     try {
       const allResults: QuestionValidationResult[] = [];
@@ -120,13 +136,15 @@ export class QuestionValidationService {
           isDeleted: { not: true },
           OR: [
             { questions: { some: { isActive: true } } },
-            { activities: { some: { questions: { some: {} } } } }
-          ]
+            { activities: { some: { questions: { some: {} } } } },
+          ],
         },
-        select: { id: true }
+        select: { id: true },
       });
 
-      this.logger.log(`Found ${videosWithQuestions.length} videos with questions to validate`);
+      this.logger.log(
+        `Found ${videosWithQuestions.length} videos with questions to validate`
+      );
 
       // Validar cada video
       for (const video of videosWithQuestions) {
@@ -140,8 +158,10 @@ export class QuestionValidationService {
       }
 
       const executionTime = Date.now() - startTime;
-      const invalidQuestions = allResults.filter(r => !r.isValid);
-      const questionsWithoutDuration = allResults.filter(r => r.videoDuration === null);
+      const invalidQuestions = allResults.filter((r) => !r.isValid);
+      const questionsWithoutDuration = allResults.filter(
+        (r) => r.videoDuration === null
+      );
 
       const summary: ValidationSummary = {
         totalQuestionsChecked: allResults.length,
@@ -150,10 +170,12 @@ export class QuestionValidationService {
         questionsWithoutVideoDuration: questionsWithoutDuration.length,
         validationResults: allResults,
         executionTime,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
-      this.logger.log(`Validation summary: ${summary.validQuestions}/${summary.totalQuestionsChecked} valid questions`);
+      this.logger.log(
+        `Validation summary: ${summary.validQuestions}/${summary.totalQuestionsChecked} valid questions`
+      );
 
       // Enviar alerta si hay problemas significativos
       if (invalidQuestions.length > 0) {
@@ -161,7 +183,6 @@ export class QuestionValidationService {
       }
 
       return summary;
-
     } catch (error) {
       this.logger.error('Error during global question validation:', error);
       throw error;
@@ -186,13 +207,14 @@ export class QuestionValidationService {
       videoDuration: videoItem.duration,
       questionTimestamp: timestamp,
       isValid: true,
-      severity: 'warning'
+      severity: 'warning',
     };
 
     // Si el video no tiene duración, no podemos validar
     if (!videoItem.duration) {
       result.isValid = false;
-      result.issue = 'Video duration not available - cannot validate question timestamp';
+      result.issue =
+        'Video duration not available - cannot validate question timestamp';
       result.severity = 'warning';
       return result;
     }
@@ -223,7 +245,8 @@ export class QuestionValidationService {
 
     // Advertencia si la pregunta aparece muy cerca del final del video
     const timeFromEnd = videoItem.duration - timestamp;
-    if (timeFromEnd < 10) { // Menos de 10 segundos del final
+    if (timeFromEnd < 10) {
+      // Menos de 10 segundos del final
       result.issue = `Question appears very close to video end (${timeFromEnd}s remaining)`;
       result.severity = 'warning';
     }
@@ -258,7 +281,6 @@ export class QuestionValidationService {
       }
 
       return { isValid: true };
-
     } catch (error) {
       this.logger.error('Error validating question before save:', error);
       return { isValid: false, error: 'Validation error occurred' };
@@ -268,31 +290,41 @@ export class QuestionValidationService {
   /**
    * Envía una alerta cuando se detectan problemas de validación
    */
-  private async sendQuestionValidationAlert(summary: ValidationSummary): Promise<void> {
+  private async sendQuestionValidationAlert(
+    summary: ValidationSummary
+  ): Promise<void> {
     try {
-      const threshold = parseInt(process.env.QUESTION_VALIDATION_ALERT_THRESHOLD || '5');
-      
+      const threshold = parseInt(
+        process.env.QUESTION_VALIDATION_ALERT_THRESHOLD || '5'
+      );
+
       if (summary.invalidQuestions < threshold) {
-        this.logger.log(`Invalid questions (${summary.invalidQuestions}) below threshold (${threshold}) - no alert sent`);
+        this.logger.log(
+          `Invalid questions (${summary.invalidQuestions}) below threshold (${threshold}) - no alert sent`
+        );
         return;
       }
 
       const alertMessage = this.buildQuestionValidationAlertMessage(summary);
-      
+
       // Usar el NotificationService para enviar la alerta
-      const alertSent = await this.notificationService.sendQuestionValidationAlert(alertMessage, {
-        totalQuestionsChecked: summary.totalQuestionsChecked,
-        invalidQuestions: summary.invalidQuestions,
-        questionsWithoutVideoDuration: summary.questionsWithoutVideoDuration,
-        executionTime: summary.executionTime
-      });
-      
+      const alertSent =
+        await this.notificationService.sendQuestionValidationAlert(
+          alertMessage,
+          {
+            totalQuestionsChecked: summary.totalQuestionsChecked,
+            invalidQuestions: summary.invalidQuestions,
+            questionsWithoutVideoDuration:
+              summary.questionsWithoutVideoDuration,
+            executionTime: summary.executionTime,
+          }
+        );
+
       if (alertSent) {
         this.logger.log('Question validation alert sent successfully');
       } else {
         this.logger.warn('Question validation alert was not sent');
       }
-
     } catch (error) {
       this.logger.error('Error sending question validation alert:', error);
     }
@@ -301,9 +333,11 @@ export class QuestionValidationService {
   /**
    * Construye el mensaje de alerta para problemas de validación
    */
-  private buildQuestionValidationAlertMessage(summary: ValidationSummary): string {
-    const invalidResults = summary.validationResults.filter(r => !r.isValid);
-    
+  private buildQuestionValidationAlertMessage(
+    summary: ValidationSummary
+  ): string {
+    const invalidResults = summary.validationResults.filter((r) => !r.isValid);
+
     let message = `🚨 GAMIFIER Question Validation Alert\n\n`;
     message += `Validation Summary:\n`;
     message += `- Total Questions Checked: ${summary.totalQuestionsChecked}\n`;
@@ -327,7 +361,7 @@ export class QuestionValidationService {
     }
 
     message += `Please review the question timestamps and video durations to ensure consistency.\n`;
-    
+
     return message;
   }
 
@@ -344,7 +378,7 @@ export class QuestionValidationService {
     try {
       // Contar preguntas de VideoItem
       const videoQuestions = await this.prisma.question.count({
-        where: { isActive: true }
+        where: { isActive: true },
       });
 
       // Contar preguntas de Activity
@@ -358,9 +392,9 @@ export class QuestionValidationService {
           isDeleted: { not: true },
           OR: [
             { questions: { some: { isActive: true } } },
-            { activities: { some: { questions: { some: {} } } } }
-          ]
-        }
+            { activities: { some: { questions: { some: {} } } } },
+          ],
+        },
       });
 
       return {
@@ -368,9 +402,8 @@ export class QuestionValidationService {
         questionsWithValidTimestamps: 0, // Se calculará en la próxima validación completa
         questionsWithInvalidTimestamps: 0, // Se calculará en la próxima validación completa
         videosWithoutDuration,
-        lastValidationRun: null // Se actualizará cuando se implemente el almacenamiento de resultados
+        lastValidationRun: null, // Se actualizará cuando se implemente el almacenamiento de resultados
       };
-
     } catch (error) {
       this.logger.error('Error getting validation stats:', error);
       throw error;
@@ -379,7 +412,7 @@ export class QuestionValidationService {
 
   async validateQuestionConsistency(videoItemId: number): Promise<void> {
     const questions = await this.prisma.question.findMany({
-      where: { videoItemId, isActive: true }
+      where: { videoItemId, isActive: true },
     });
 
     // Validaciones básicas
@@ -396,4 +429,4 @@ export class QuestionValidationService {
     // Más validaciones pueden ir aquí
     this.logger.log(`Questions validation completed for video ${videoItemId}`);
   }
-} 
+}

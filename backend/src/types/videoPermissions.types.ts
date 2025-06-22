@@ -7,28 +7,28 @@ export interface VideoPermissions {
   showVideoSubtitles: boolean;
   showComments: boolean;
   showPublishDate: boolean;
-  
+
   // Configuraciones de video
   showVideoDuration: boolean;
   showLikeButton: boolean;
   allowRewindForward: boolean;
-  
+
   // Configuraciones de comentarios
   allowViewComments: boolean;
   allowMakeComments: boolean;
   showLikeComments: boolean;
   sortCommentsByAffinity: boolean;
   showCommenterName: boolean;
-  
+
   // Posición en playlist
   playlistPosition: PlaylistPosition;
-  
+
   // Estado
   isDraft: boolean;
   createdAt: string;
   updatedAt: string;
   createdById?: string;
-  
+
   // Relaciones
   videoItem?: {
     id: number;
@@ -41,11 +41,18 @@ export interface VideoPermissions {
   };
 }
 
-export type PlaylistPosition = 'position1' | 'position2' | 'position3' | 'final';
+export type PlaylistPosition =
+  | 'position1'
+  | 'position2'
+  | 'position3'
+  | 'final';
 
 export interface VideoPermissionsUpdate {
   videoItemId: number;
-  permissions: Omit<VideoPermissions, 'id' | 'videoItemId' | 'createdAt' | 'updatedAt' | 'videoItem' | 'createdBy'>;
+  permissions: Omit<
+    VideoPermissions,
+    'id' | 'videoItemId' | 'createdAt' | 'updatedAt' | 'videoItem' | 'createdBy'
+  >;
   isDraft: boolean;
 }
 
@@ -61,7 +68,10 @@ export interface PlaylistOption {
   description: string;
 }
 
-export const DEFAULT_VIDEO_PERMISSIONS: Omit<VideoPermissions, 'id' | 'videoItemId' | 'createdAt' | 'updatedAt' | 'videoItem' | 'createdBy'> = {
+export const DEFAULT_VIDEO_PERMISSIONS: Omit<
+  VideoPermissions,
+  'id' | 'videoItemId' | 'createdAt' | 'updatedAt' | 'videoItem' | 'createdBy'
+> = {
   showWaveCount: true,
   showVideos: true,
   showVideoSubtitles: true,
@@ -179,4 +189,4 @@ export const PERMISSION_SWITCHES: PermissionSwitchConfig[] = [
     label: 'Ver nombre de la comentarista',
     section: 'comments',
   },
-]; 
+];

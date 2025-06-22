@@ -7,7 +7,11 @@ export class UpdateUserDto {
   @IsString()
   name?: string;
 
-  @ApiProperty({ example: 'https://example.com/avatar.png', required: false, type: String })
+  @ApiProperty({
+    example: 'https://example.com/avatar.png',
+    required: false,
+    type: String,
+  })
   @IsOptional()
   @IsString()
   avatarUrl?: string;
@@ -16,4 +20,4 @@ export class UpdateUserDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
-} 
+}

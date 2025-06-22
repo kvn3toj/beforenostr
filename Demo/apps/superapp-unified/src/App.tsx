@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, useTransition } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CssBaseline, Box } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -61,9 +61,13 @@ const AppRoutes: React.FC = () => {
 
 // Main App Component
 const App: React.FC = () => {
+  const [, startTransition] = useTransition();
+
   useEffect(() => {
     // Preload critical components on app start
-    preloadCriticalComponents();
+    startTransition(() => {
+      preloadCriticalComponents();
+    });
   }, []);
 
   return (
@@ -85,12 +89,15 @@ const App: React.FC = () => {
                           : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)',
                     }}
                   >
-                    <AppRoutes />
+                    <Suspense fallback={<div>Cargando...</div>}>
+                      <AppRoutes />
+                    </Suspense>
+
+                    {/* El botón flotante del tutorial va aquí para heredar el contexto */}
+                    <TutorialFloatingButton />
                   </Box>
 
                   {/* Onboarding System and other complex components are disabled for now */}
-
-                  <TutorialFloatingButton />
 
                   <Toaster
                     position="top-right"

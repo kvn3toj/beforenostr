@@ -68,7 +68,9 @@ export class FeedbackService {
         },
       };
 
-      this.logger.log(`✅ [ORÁCULO] Feedback creado exitosamente (MOCK): ${mockFeedback.id}`);
+      this.logger.log(
+        `✅ [ORÁCULO] Feedback creado exitosamente (MOCK): ${mockFeedback.id}`
+      );
 
       // Aquí se podría agregar lógica para:
       // - Notificar a la CoP Oráculo sobre el nuevo feedback
@@ -77,7 +79,10 @@ export class FeedbackService {
 
       return mockFeedback;
     } catch (error) {
-      this.logger.error(`❌ [ORÁCULO] Error creando feedback: ${error.message}`, error.stack);
+      this.logger.error(
+        `❌ [ORÁCULO] Error creando feedback: ${error.message}`,
+        error.stack
+      );
       throw error;
     }
   }
@@ -96,7 +101,10 @@ export class FeedbackService {
     offset?: number;
   }) {
     try {
-      this.logger.log(`🔍 [ORÁCULO] Obteniendo feedbacks con filtros:`, filters);
+      this.logger.log(
+        `🔍 [ORÁCULO] Obteniendo feedbacks con filtros:`,
+        filters
+      );
 
       // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
       /*
@@ -138,14 +146,24 @@ export class FeedbackService {
           status: 'PENDING',
           priority: 3,
           createdAt: new Date(),
-          user: { id: '1', email: 'admin@coomunity.com', name: 'Admin', username: 'admin' }
-        }
+          user: {
+            id: '1',
+            email: 'admin@coomunity.com',
+            name: 'Admin',
+            username: 'admin',
+          },
+        },
       ];
 
-      this.logger.log(`📊 [ORÁCULO] Encontrados ${mockFeedbacks.length} feedbacks (MOCK)`);
+      this.logger.log(
+        `📊 [ORÁCULO] Encontrados ${mockFeedbacks.length} feedbacks (MOCK)`
+      );
       return mockFeedbacks;
     } catch (error) {
-      this.logger.error(`❌ [ORÁCULO] Error obteniendo feedbacks: ${error.message}`, error.stack);
+      this.logger.error(
+        `❌ [ORÁCULO] Error obteniendo feedbacks: ${error.message}`,
+        error.stack
+      );
       throw error;
     }
   }
@@ -185,13 +203,23 @@ export class FeedbackService {
         status: 'PENDING',
         priority: 2,
         createdAt: new Date(),
-        user: { id: '1', email: 'admin@coomunity.com', name: 'Admin', username: 'admin' }
+        user: {
+          id: '1',
+          email: 'admin@coomunity.com',
+          name: 'Admin',
+          username: 'admin',
+        },
       };
 
-      this.logger.log(`✅ [ORÁCULO] Feedback encontrado (MOCK): ${mockFeedback.id}`);
+      this.logger.log(
+        `✅ [ORÁCULO] Feedback encontrado (MOCK): ${mockFeedback.id}`
+      );
       return mockFeedback;
     } catch (error) {
-      this.logger.error(`❌ [ORÁCULO] Error obteniendo feedback: ${error.message}`, error.stack);
+      this.logger.error(
+        `❌ [ORÁCULO] Error obteniendo feedback: ${error.message}`,
+        error.stack
+      );
       throw error;
     }
   }
@@ -204,7 +232,9 @@ export class FeedbackService {
    */
   async updateStatus(id: string, status: string) {
     try {
-      this.logger.log(`🔄 [ORÁCULO] Actualizando status de feedback ${id} a: ${status}`);
+      this.logger.log(
+        `🔄 [ORÁCULO] Actualizando status de feedback ${id} a: ${status}`
+      );
 
       // TODO: Descomentar cuando se ejecute la migración de PostgreSQL
       /*
@@ -229,13 +259,23 @@ export class FeedbackService {
         id,
         status,
         updatedAt: new Date(),
-        user: { id: '1', email: 'admin@coomunity.com', name: 'Admin', username: 'admin' }
+        user: {
+          id: '1',
+          email: 'admin@coomunity.com',
+          name: 'Admin',
+          username: 'admin',
+        },
       };
 
-      this.logger.log(`✅ [ORÁCULO] Status actualizado exitosamente (MOCK): ${mockFeedback.id}`);
+      this.logger.log(
+        `✅ [ORÁCULO] Status actualizado exitosamente (MOCK): ${mockFeedback.id}`
+      );
       return mockFeedback;
     } catch (error) {
-      this.logger.error(`❌ [ORÁCULO] Error actualizando status: ${error.message}`, error.stack);
+      this.logger.error(
+        `❌ [ORÁCULO] Error actualizando status: ${error.message}`,
+        error.stack
+      );
       throw error;
     }
   }
@@ -310,10 +350,15 @@ export class FeedbackService {
         },
       };
 
-      this.logger.log(`📈 [ORÁCULO] Estadísticas generadas (MOCK): ${JSON.stringify(stats, null, 2)}`);
+      this.logger.log(
+        `📈 [ORÁCULO] Estadísticas generadas (MOCK): ${JSON.stringify(stats, null, 2)}`
+      );
       return stats;
     } catch (error) {
-      this.logger.error(`❌ [ORÁCULO] Error generando estadísticas: ${error.message}`, error.stack);
+      this.logger.error(
+        `❌ [ORÁCULO] Error generando estadísticas: ${error.message}`,
+        error.stack
+      );
       throw error;
     }
   }

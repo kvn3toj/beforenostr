@@ -53,4 +53,4 @@ export interface FetchContentItemsParams {
     itemTypeId?: string;
     isActive?: boolean;
   };
-} 
+}

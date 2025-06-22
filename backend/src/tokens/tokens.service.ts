@@ -1,4 +1,9 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTokenDto } from './dto/create-token.dto';
 import { UpdateTokenDto } from './dto/update-token.dto';
@@ -7,30 +12,48 @@ import type { Token } from '../generated/prisma';
 @Injectable()
 export class TokensService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-// //     console.log('>>> TokensService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> TokensService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(createTokenDto: CreateTokenDto): Promise<Token> {
     try {
       // Validar que el usuario existe
       const user = await this.prisma.user.findUnique({
-        where: { id: createTokenDto.userId }
+        where: { id: createTokenDto.userId },
       });
 
       if (!user) {
-        throw new NotFoundException(`User with ID ${createTokenDto.userId} not found`);
+        throw new NotFoundException(
+          `User with ID ${createTokenDto.userId} not found`
+        );
       }
 
       // Validar tipos de token válidos
-      const validTokenTypes = ['PROMOTIONAL_UNIT', 'SUBSCRIPTION_UNIT', 'CIRCULATING_UNIT', 'TEST_UNIT', 'TOIN'];
+      const validTokenTypes = [
+        'PROMOTIONAL_UNIT',
+        'SUBSCRIPTION_UNIT',
+        'CIRCULATING_UNIT',
+        'TEST_UNIT',
+        'TOIN',
+      ];
       if (!validTokenTypes.includes(createTokenDto.type)) {
-        throw new BadRequestException(`Invalid token type: ${createTokenDto.type}`);
+        throw new BadRequestException(
+          `Invalid token type: ${createTokenDto.type}`
+        );
       }
 
       // Validar fuentes válidas
-      const validSources = ['GIFT_CARD', 'PURCHASE', 'CONVERSION', 'REWARD', 'INITIAL_GRANT'];
+      const validSources = [
+        'GIFT_CARD',
+        'PURCHASE',
+        'CONVERSION',
+        'REWARD',
+        'INITIAL_GRANT',
+      ];
       if (!validSources.includes(createTokenDto.source)) {
-        throw new BadRequestException(`Invalid token source: ${createTokenDto.source}`);
+        throw new BadRequestException(
+          `Invalid token source: ${createTokenDto.source}`
+        );
       }
 
       const token = await this.prisma.token.create({
@@ -39,15 +62,17 @@ export class TokensService {
           amount: createTokenDto.amount,
           type: createTokenDto.type,
           status: createTokenDto.status || 'ACTIVE',
-          caducityDate: createTokenDto.caducityDate ? new Date(createTokenDto.caducityDate) : null,
+          caducityDate: createTokenDto.caducityDate
+            ? new Date(createTokenDto.caducityDate)
+            : null,
           source: createTokenDto.source,
         },
       });
 
-//       console.log(`>>> TokensService: Created token ${token.id} for user ${createTokenDto.userId}`);
+      //       console.log(`>>> TokensService: Created token ${token.id} for user ${createTokenDto.userId}`);
       return token;
     } catch (error) {
-//       console.error('>>> TokensService create error:', error);
+      //       console.error('>>> TokensService create error:', error);
       throw error;
     }
   }
@@ -62,15 +87,15 @@ export class TokensService {
               email: true,
               name: true,
               username: true,
-            }
-          }
+            },
+          },
         },
         orderBy: {
-          createdAt: 'desc'
-        }
+          createdAt: 'desc',
+        },
       });
     } catch (error) {
-//       console.error('>>> TokensService findAll error:', error);
+      //       console.error('>>> TokensService findAll error:', error);
       throw error;
     }
   }
@@ -80,11 +105,11 @@ export class TokensService {
       return await this.prisma.token.findMany({
         where: { userId },
         orderBy: {
-          createdAt: 'desc'
-        }
+          createdAt: 'desc',
+        },
       });
     } catch (error) {
-//       console.error('>>> TokensService findByUserId error:', error);
+      //       console.error('>>> TokensService findByUserId error:', error);
       throw error;
     }
   }
@@ -100,9 +125,9 @@ export class TokensService {
               email: true,
               name: true,
               username: true,
-            }
-          }
-        }
+            },
+          },
+        },
       });
 
       if (!token) {
@@ -111,7 +136,7 @@ export class TokensService {
 
       return token;
     } catch (error) {
-//       console.error('>>> TokensService findOne error:', error);
+      //       console.error('>>> TokensService findOne error:', error);
       throw error;
     }
   }
@@ -125,14 +150,16 @@ export class TokensService {
         where: { id },
         data: {
           ...updateTokenDto,
-          caducityDate: updateTokenDto.caducityDate ? new Date(updateTokenDto.caducityDate) : undefined,
+          caducityDate: updateTokenDto.caducityDate
+            ? new Date(updateTokenDto.caducityDate)
+            : undefined,
         },
       });
 
-//       console.log(`>>> TokensService: Updated token ${id}`);
+      //       console.log(`>>> TokensService: Updated token ${id}`);
       return token;
     } catch (error) {
-//       console.error('>>> TokensService update error:', error);
+      //       console.error('>>> TokensService update error:', error);
       throw error;
     }
   }
@@ -146,17 +173,20 @@ export class TokensService {
         where: { id },
       });
 
-//       console.log(`>>> TokensService: Deleted token ${id}`);
+      //       console.log(`>>> TokensService: Deleted token ${id}`);
       return token;
     } catch (error) {
-//       console.error('>>> TokensService remove error:', error);
+      //       console.error('>>> TokensService remove error:', error);
       throw error;
     }
   }
 
   // Métodos específicos de negocio para tokens
 
-  async getUserTokenBalance(userId: string, tokenType?: string): Promise<{ type: string; totalAmount: number }[]> {
+  async getUserTokenBalance(
+    userId: string,
+    tokenType?: string
+  ): Promise<{ type: string; totalAmount: number }[]> {
     try {
       const whereClause: any = {
         userId,
@@ -173,18 +203,18 @@ export class TokensService {
 
       // Agrupar por tipo y sumar cantidades
       const balanceMap = new Map<string, number>();
-      
-      tokens.forEach(token => {
+
+      tokens.forEach((token) => {
         const currentBalance = balanceMap.get(token.type) || 0;
         balanceMap.set(token.type, currentBalance + token.amount);
       });
 
       return Array.from(balanceMap.entries()).map(([type, totalAmount]) => ({
         type,
-        totalAmount
+        totalAmount,
       }));
     } catch (error) {
-//       console.error('>>> TokensService getUserTokenBalance error:', error);
+      //       console.error('>>> TokensService getUserTokenBalance error:', error);
       throw error;
     }
   }
@@ -192,24 +222,24 @@ export class TokensService {
   async expireTokens(): Promise<number> {
     try {
       const now = new Date();
-      
+
       const result = await this.prisma.token.updateMany({
         where: {
           caducityDate: {
-            lte: now
+            lte: now,
           },
-          status: 'ACTIVE'
+          status: 'ACTIVE',
         },
         data: {
-          status: 'EXPIRED'
-        }
+          status: 'EXPIRED',
+        },
       });
 
-//       console.log(`>>> TokensService: Expired ${result.count} tokens`);
+      //       console.log(`>>> TokensService: Expired ${result.count} tokens`);
       return result.count;
     } catch (error) {
-//       console.error('>>> TokensService expireTokens error:', error);
+      //       console.error('>>> TokensService expireTokens error:', error);
       throw error;
     }
   }
-} 
+}

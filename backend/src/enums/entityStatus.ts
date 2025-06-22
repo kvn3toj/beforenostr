@@ -4,4 +4,4 @@ export enum EntityStatus {
   DRAFT = 'draft',
   PUBLISHED = 'published',
   PENDING = 'pending',
-} 
+}
