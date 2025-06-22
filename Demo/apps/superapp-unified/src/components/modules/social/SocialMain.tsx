@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -11,6 +11,9 @@ import {
   Button,
   useTheme,
   alpha,
+  Paper,
+  Typography,
+  IconButton,
 } from '@mui/material';
 import {
   People as PeopleIcon,
@@ -40,6 +43,124 @@ import {
   CollaborationHub,
 } from './components/enhanced';
 
+// 🎨 NUEVO: Advanced Navigation System siguiendo técnicas del artículo Medium
+interface MarkerPosition {
+  x: number;
+  width: number;
+  height: number;
+  prevX?: number;
+  prevWidth?: number;
+}
+
+interface NavigationTabProps {
+  label: string;
+  icon: React.ReactNode;
+  isSelected: boolean;
+  onClick: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  ref: React.RefObject<HTMLDivElement>;
+}
+
+const ACTIVE_MARKER_HEIGHT = 4;
+const HOVER_MARKER_HEIGHT = 6;
+
+// 🎯 Hook personalizado para la navegación avanzada (inspirado en el artículo Medium)
+const useAdvancedNavigation = () => {
+  const [markerPosition, setMarkerPosition] = useState<MarkerPosition>({
+    x: 0,
+    width: 0,
+    height: ACTIVE_MARKER_HEIGHT,
+  });
+
+  const updateMarkerPosition = useCallback((ref: React.RefObject<HTMLDivElement>, isHover = false) => {
+    if (ref.current) {
+      const { offsetLeft, offsetWidth } = ref.current;
+      setMarkerPosition(prev => ({
+        ...prev,
+        prevX: isHover ? prev.x : undefined,
+        prevWidth: isHover ? prev.width : undefined,
+        x: offsetLeft,
+        width: offsetWidth,
+        height: isHover ? HOVER_MARKER_HEIGHT : ACTIVE_MARKER_HEIGHT,
+      }));
+    }
+  }, []);
+
+  const returnToSelected = useCallback(() => {
+    setMarkerPosition(prev => ({
+      x: prev.prevX ?? prev.x,
+      width: prev.prevWidth ?? prev.width,
+      height: ACTIVE_MARKER_HEIGHT,
+      prevX: undefined,
+      prevWidth: undefined,
+    }));
+  }, []);
+
+  return { markerPosition, updateMarkerPosition, returnToSelected };
+};
+
+// 🎨 Componente de marcador animado (técnica del artículo Medium)
+const NavigationMarker: React.FC<{ position: MarkerPosition }> = ({ position }) => (
+  <Box
+    sx={{
+      position: 'absolute',
+      bottom: 0,
+      left: position.x,
+      width: position.width,
+      height: position.height,
+      background: 'linear-gradient(90deg, #00bcd4, #009688)',
+      borderRadius: '2px 2px 0 0',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: '0 0 12px rgba(0, 188, 212, 0.4)',
+      pointerEvents: 'none',
+    }}
+  />
+);
+
+// 🎨 Tab individual con micro-interacciones avanzadas
+const AdvancedNavigationTab: React.FC<NavigationTabProps> = React.forwardRef<HTMLDivElement, NavigationTabProps>(
+  ({ label, icon, isSelected, onClick, onMouseEnter, onMouseLeave }, ref) => {
+    const theme = useTheme();
+    
+    return (
+      <Box
+        ref={ref}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          px: 3,
+          py: 2,
+          cursor: 'pointer',
+          position: 'relative',
+          fontWeight: isSelected ? 700 : 500,
+          color: isSelected ? theme.palette.primary.main : theme.palette.text.secondary,
+          transition: 'all 0.2s ease-in-out',
+          borderRadius: 2,
+          '&:hover': {
+            color: theme.palette.primary.main,
+            transform: 'translateY(-1px)',
+            '& .tab-icon': {
+              transform: 'scale(1.1)',
+            },
+          },
+        }}
+      >
+        <Box className="tab-icon" sx={{ transition: 'transform 0.2s ease-in-out' }}>
+          {icon}
+        </Box>
+        <Typography variant="body2" fontWeight="inherit">
+          {label}
+        </Typography>
+      </Box>
+    );
+  }
+);
+
 // ✅ ELIMINADOS: Datos mock hardcodeados masivos - Usar SOLO datos reales del backend
 // ❌ Datos mock con terminología CoomÜnity
 // const mockSocialData = {
@@ -61,6 +182,8 @@ const createRealSocialData = (backendData: any) => ({
     bienComunContributions: backendData?.bienComunContributions || 0,
     socialMeritos: backendData?.socialMeritos || 0,
     trustScore: backendData?.trustScore || 4.2,
+    dailyInteractions: backendData?.dailyInteractions || 12,
+    activeCircles: backendData?.activeCircles || 5,
     elementos: {
       comunicacion: backendData?.elementos?.comunicacion || 85,
       empatia: backendData?.elementos?.empatia || 90,
@@ -89,6 +212,16 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [animate, setAnimate] = useState(false);
 
+  // 🎯 Referencias para la navegación avanzada
+  const tabRefs = [
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null), 
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+  ];
+
+  const { markerPosition, updateMarkerPosition, returnToSelected } = useAdvancedNavigation();
+
   // 🔗 Conectar al backend con fallbacks inteligentes
   const backendAvailability = useBackendAvailability();
   const {
@@ -114,16 +247,33 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  // 🎨 Inicializar posición del marcador cuando el componente se monta
+  useEffect(() => {
+    if (animate && tabRefs[activeTab]?.current) {
+      updateMarkerPosition(tabRefs[activeTab]);
+    }
+  }, [animate, activeTab, updateMarkerPosition]);
+
   // 🔄 Función para refrescar datos
   const handleRefresh = () => {
     refetchMatches();
-    // Aquí se pueden agregar más refetch cuando estén disponibles
   };
 
-  // 🎯 Handlers para navegación y acciones
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue);
-  };
+  // 🎯 Handlers para navegación avanzada
+  const handleTabClick = useCallback((index: number) => {
+    setActiveTab(index);
+    updateMarkerPosition(tabRefs[index]);
+  }, [updateMarkerPosition, tabRefs]);
+
+  const handleTabHover = useCallback((index: number) => {
+    if (index !== activeTab) {
+      updateMarkerPosition(tabRefs[index], true);
+    }
+  }, [activeTab, updateMarkerPosition, tabRefs]);
+
+  const handleTabLeave = useCallback(() => {
+    returnToSelected();
+  }, [returnToSelected]);
 
   const handleQuickAction = (actionId: string, path: string) => {
     console.log(`🤝 Acción rápida: ${actionId} -> ${path}`);
@@ -170,15 +320,47 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
   const dynamicCommunityMetrics = realSocialData.communityMetrics;
   const dynamicQuickActions = realSocialData.quickActions;
 
+  // 🎯 Configuración de pestañas
+  const tabs = [
+    {
+      label: 'Feed Comunitario',
+      icon: (
+        <Badge badgeContent={dynamicStats.dailyInteractions} color="secondary">
+          <PeopleIcon />
+        </Badge>
+      ),
+    },
+    {
+      label: 'Conexiones Ayni',
+      icon: (
+        <Badge badgeContent={normalizedMatches.length} color="primary">
+          <ChatIcon />
+        </Badge>
+      ),
+    },
+    {
+      label: 'Círculos de Colaboración',
+      icon: (
+        <Badge badgeContent={dynamicStats.activeCircles} color="warning">
+          <GroupsIcon />
+        </Badge>
+      ),
+    },
+    {
+      label: 'Hub de Crecimiento',
+      icon: <TrendingIcon />,
+    },
+  ];
+
   return (
     <RevolutionaryWidget
-      title="🌊 Conexiones CoomÜnity"
-      subtitle="Tu espacio sagrado de colaboración y reciprocidad"
+      title="🌬️ Social: Conexiones que Inspiran"
+      subtitle="Donde cada interacción cultiva la semilla del Bien Común y fortalece los lazos de Ayni."
       variant="elevated"
-      element="agua" // Paleta de colores asociada al agua - fluidez, conexión y profundidad emocional
+      element="aire" // Cambiado a Aire para comunicación/conexión
       cosmicEffects={{
         enableParticles: true,
-        particleTheme: 'waterRipples',
+        particleTheme: 'breeze',
         enableGlow: true,
         glowIntensity: 1.2,
         enableAnimations: true,
@@ -234,78 +416,43 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
             </Box>
           </Fade>
 
-          {/* 🎯 Navegación por pestañas mejorada */}
+          {/* 🎯 Navegación avanzada con highlight animado */}
           <Fade in={animate} timeout={800}>
-            <Box sx={{ mb: 3 }}>
-              <Tabs
-                value={activeTab}
-                onChange={handleTabChange}
-                centered
+            <Paper
+              elevation={2}
+              sx={{
+                mb: 4,
+                borderRadius: 3,
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)}, ${alpha(theme.palette.background.paper, 0.7)})`,
+                backdropFilter: 'blur(20px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <Box
                 sx={{
-                  bgcolor: alpha(theme.palette.primary.main, 0.05),
-                  borderRadius: 3,
-                  p: 1,
-                  '& .MuiTab-root': {
-                    fontWeight: 'bold',
-                    borderRadius: 2,
-                    mx: 0.5,
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': {
-                      bgcolor: alpha(theme.palette.primary.main, 0.1),
-                    },
-                    '&.Mui-selected': {
-                      bgcolor: theme.palette.primary.main,
-                      color: 'white',
-                      boxShadow: theme.shadows[4],
-                    },
-                  },
+                  display: 'flex',
+                  position: 'relative',
+                  px: 2,
+                  py: 1,
                 }}
               >
-                <Tab
-                  label="Feed Comunitario"
-                  icon={
-                    <Badge
-                      badgeContent={
-                        dynamicStats.dailyInteractions
-                      }
-                      color="secondary"
-                    >
-                      <PeopleIcon />
-                    </Badge>
-                  }
-                  iconPosition="start"
-                />
-                <Tab
-                  label="Conexiones Ayni"
-                  icon={
-                    <Badge
-                      badgeContent={normalizedMatches.length}
-                      color="primary"
-                    >
-                      <ChatIcon />
-                    </Badge>
-                  }
-                  iconPosition="start"
-                />
-                <Tab
-                  label="Círculos de Colaboración"
-                  icon={
-                    <Badge
-                      badgeContent={dynamicStats.activeCircles}
-                      color="warning"
-                    >
-                      <GroupsIcon />
-                    </Badge>
-                  }
-                  iconPosition="start"
-                />
-                <Tab
-                  label="Hub de Crecimiento"
-                  icon={<TrendingIcon />}
-                  iconPosition="start"
-                />
-              </Tabs>
-            </Box>
+                {tabs.map((tab, index) => (
+                  <AdvancedNavigationTab
+                    key={index}
+                    ref={tabRefs[index]}
+                    label={tab.label}
+                    icon={tab.icon}
+                    isSelected={activeTab === index}
+                    onClick={() => handleTabClick(index)}
+                    onMouseEnter={() => handleTabHover(index)}
+                    onMouseLeave={handleTabLeave}
+                  />
+                ))}
+                <NavigationMarker position={markerPosition} />
+              </Box>
+            </Paper>
           </Fade>
 
           {/* 🎯 Contenido de las pestañas */}
@@ -412,14 +559,14 @@ const SocialMain: React.FC<SocialMainProps> = ({ onNavigate }) => {
             zIndex: 1000,
           }}
         >
-          <Box sx={{ fontSize: '1.2rem', mb: 1 }}>🤝</Box>
+          <Box sx={{ fontSize: '1.2rem', mb: 1 }}>🌬️</Box>
           <Box sx={{ fontSize: '0.85rem', fontWeight: 'bold', mb: 0.5 }}>
-            Reflexión Social
+            Sabiduría del Aire
           </Box>
           <Box sx={{ fontSize: '0.75rem', opacity: 0.9, fontStyle: 'italic' }}>
-            "En cada conexión auténtica que creas, tejes un hilo más en la red
-            sagrada del Bien Común. Que tus interacciones siembren semillas de
-            cooperación."
+            "Como el viento que conecta montañas y valles, tus palabras y acciones
+            tejen puentes invisibles entre corazones. Cada conexión auténtica
+            multiplica la abundancia del Bien Común."
           </Box>
         </Box>
       </Box>
