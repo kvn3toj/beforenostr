@@ -19,7 +19,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { NetworkErrorDebug } from '../components/debug/NetworkErrorDebug';
-import { NetworkDebugger } from '../components/debug/NetworkDebugger';
+import { NetworkDebugger } from '../components/debug/networkDebugger';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -210,8 +210,8 @@ const Login: React.FC = () => {
         },
         mode: 'cors',
         body: JSON.stringify({
-          email: email,
-          password: password,
+          email,
+          password,
         }),
       });
 
