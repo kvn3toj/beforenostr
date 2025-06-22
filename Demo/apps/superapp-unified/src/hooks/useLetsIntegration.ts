@@ -131,11 +131,28 @@ export const useLetsListings = (filters?: LetsSearchFilters) => {
   return useQuery({
     queryKey: LETS_QUERY_KEYS.listings(filters),
     queryFn: async (): Promise<LetsListing[]> => {
-      const response = await apiService.get('/lets/listings', { params: filters });
-      return response.data || response;
+      try {
+        const response = await apiService.get('/lets/listings', { params: filters });
+        const data = response.data || response;
+
+        // 🛡️ VALIDACIÓN: Asegurar que la respuesta sea un array
+        if (!Array.isArray(data)) {
+          console.warn('⚠️ LETS listings API no devolvió un array:', data);
+          return [];
+        }
+
+        return data;
+      } catch (error) {
+        console.warn('⚠️ LETS listings API error, usando fallback:', error);
+        // Fallback: array vacío para evitar crashes
+        return [];
+      }
     },
     staleTime: 60000, // 1 minuto
     enabled: true,
+    // Agregar configuración para evitar reintentos excesivos
+    retry: 1,
+    retryDelay: 2000,
   });
 };
 

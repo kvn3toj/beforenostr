@@ -54,7 +54,6 @@ import {
 import {
   useLetsListings,
   useCreateLetsListing,
-  useUpdateLetsListing,
   useDeleteLetsListing
 } from '../../../../hooks/useLetsIntegration';
 import { useAuth } from '../../../../contexts/AuthContext';
@@ -66,8 +65,18 @@ export const LetsListings: React.FC = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { data: listings = [], isLoading, refetch } = useLetsListings(filters);
+  const { data: rawListings = [], isLoading, refetch } = useLetsListings(filters);
   const createMutation = useCreateLetsListing();
+
+  // 🛡️ VALIDACIÓN ROBUSTA: Asegurar que listings sea siempre un array válido
+  const listings = useMemo(() => {
+    // Si rawListings es null, undefined, o no es un array, devolver array vacío
+    if (!rawListings || !Array.isArray(rawListings)) {
+      console.warn('⚠️ [LetsListings] rawListings no es un array válido:', rawListings);
+      return [];
+    }
+    return rawListings;
+  }, [rawListings]);
 
   const handleFilterChange = (key: keyof LetsSearchFilters, value: any) => {
     setFilters(prev => ({
@@ -87,6 +96,19 @@ export const LetsListings: React.FC = () => {
     setFilters({});
     setSearchTerm('');
   };
+
+  // 📊 ESTADÍSTICAS SEGURAS: Con validaciones adicionales
+  const stats = useMemo(() => {
+    // Asegurar que listings es un array antes de hacer operaciones
+    const validListings = Array.isArray(listings) ? listings : [];
+
+    return {
+      offers: validListings.filter(l => l?.type === 'offer').length,
+      requests: validListings.filter(l => l?.type === 'request').length,
+      total: validListings.length,
+      categories: new Set(validListings.map(l => l?.category).filter(Boolean)).size
+    };
+  }, [listings]);
 
   if (isLoading) {
     return (
@@ -214,7 +236,7 @@ export const LetsListings: React.FC = () => {
           <Card sx={{ p: 2, textAlign: 'center' }}>
             <TrendingUp color="success" sx={{ fontSize: 32, mb: 1 }} />
             <Typography variant="h6" fontWeight="bold">
-              {listings?.filter(l => l.type === 'offer').length || 0}
+              {stats.offers}
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Ofertas Activas
@@ -225,7 +247,7 @@ export const LetsListings: React.FC = () => {
           <Card sx={{ p: 2, textAlign: 'center' }}>
             <TrendingDown color="warning" sx={{ fontSize: 32, mb: 1 }} />
             <Typography variant="h6" fontWeight="bold">
-              {listings?.filter(l => l.type === 'request').length || 0}
+              {stats.requests}
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Demandas Activas
@@ -236,7 +258,7 @@ export const LetsListings: React.FC = () => {
           <Card sx={{ p: 2, textAlign: 'center' }}>
             <Handshake color="primary" sx={{ fontSize: 32, mb: 1 }} />
             <Typography variant="h6" fontWeight="bold">
-              {listings?.length || 0}
+              {stats.total}
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Total Intercambios
@@ -247,7 +269,7 @@ export const LetsListings: React.FC = () => {
           <Card sx={{ p: 2, textAlign: 'center' }}>
             <Category color="info" sx={{ fontSize: 32, mb: 1 }} />
             <Typography variant="h6" fontWeight="bold">
-              {new Set(listings?.map(l => l.category)).size || 0}
+              {stats.categories}
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Categorías Activas
@@ -300,7 +322,11 @@ export const LetsListings: React.FC = () => {
         onClose={() => setCreateModalOpen(false)}
         onSubmit={async (data) => {
           try {
-            await createMutation.mutateAsync(data);
+            const dataWithUserId = {
+              ...data,
+              userId: user?.id || 'anonymous'
+            };
+            await createMutation.mutateAsync(dataWithUserId);
             setCreateModalOpen(false);
             refetch();
           } catch (error) {
