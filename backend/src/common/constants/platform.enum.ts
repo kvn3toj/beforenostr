@@ -3,7 +3,7 @@ export enum VideoPlatform {
   VIMEO = 'vimeo',
   LOCAL = 'local',
   UPLOADED = 'uploaded',
-  UNKNOWN = 'unknown'
+  UNKNOWN = 'unknown',
 }
 
 export const PLATFORM_PATTERNS = {
@@ -14,18 +14,18 @@ export const PLATFORM_PATTERNS = {
     /youtube\.com\/embed\/([^&\n?#"]+)/,
     /youtube\.com\/v\/([^&\n?#"]+)/,
     /src="https:\/\/www\.youtube\.com\/embed\/([^"]+)"/,
-    /src='https:\/\/www\.youtube\.com\/embed\/([^']+)'/
+    /src='https:\/\/www\.youtube\.com\/embed\/([^']+)'/,
   ],
   [VideoPlatform.VIMEO]: [
     /vimeo\.com\/(\d+)/,
     /vimeo\.com\/video\/(\d+)/,
     /player\.vimeo\.com\/video\/(\d+)/,
     /src="https:\/\/player\.vimeo\.com\/video\/(\d+)"/,
-    /src='https:\/\/player\.vimeo\.com\/video\/(\d+)'/
-  ]
+    /src='https:\/\/player\.vimeo\.com\/video\/(\d+)'/,
+  ],
 };
 
 export const PLATFORM_DOMAINS = {
   [VideoPlatform.YOUTUBE]: ['youtube.com', 'youtu.be', 'm.youtube.com'],
-  [VideoPlatform.VIMEO]: ['vimeo.com', 'player.vimeo.com']
-}; 
+  [VideoPlatform.VIMEO]: ['vimeo.com', 'player.vimeo.com'],
+};

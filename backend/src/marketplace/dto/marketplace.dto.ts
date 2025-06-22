@@ -1,19 +1,28 @@
-import { IsString, IsNumber, IsOptional, IsEnum, IsUUID, IsArray, Min } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsEnum,
+  IsUUID,
+  IsArray,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export enum MarketplaceItemType {
   PRODUCT = 'PRODUCT',
   SERVICE = 'SERVICE',
   EXPERIENCE = 'EXPERIENCE',
-  SKILL_EXCHANGE = 'SKILL_EXCHANGE'
+  SKILL_EXCHANGE = 'SKILL_EXCHANGE',
 }
 
 export enum MarketplaceItemStatus {
   DRAFT = 'DRAFT',
-  PUBLISHED = 'PUBLISHED',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
   SOLD = 'SOLD',
   EXPIRED = 'EXPIRED',
-  SUSPENDED = 'SUSPENDED'
+  SUSPENDED = 'SUSPENDED',
 }
 
 export class CreateMarketplaceItemDto {
@@ -55,7 +64,7 @@ export class CreateMarketplaceItemDto {
   location?: string;
 
   @IsOptional()
-  metadata?: any; // JSON para datos específicos del tipo de item
+  metadata?: Record<string, unknown>; // JSON para datos específicos del tipo de item
 }
 
 export class UpdateMarketplaceItemDto {
@@ -97,7 +106,7 @@ export class UpdateMarketplaceItemDto {
   location?: string;
 
   @IsOptional()
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 export class MarketplaceSearchDto {
@@ -158,4 +167,4 @@ export class CreateMarketplaceOfferDto {
   @IsOptional()
   @IsString()
   message?: string;
-} 
+}

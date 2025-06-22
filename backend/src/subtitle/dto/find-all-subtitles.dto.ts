@@ -8,29 +8,29 @@ export class FindAllSubtitlesDto {
   @Type(() => Number)
   videoItemId: number; // Required to filter subtitles by video
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     description: 'Filter subtitles by language code',
-    example: 'es-ES'
+    example: 'es-ES',
   })
   @IsOptional()
   @IsString()
   languageCode?: string;
 
-  @ApiPropertyOptional({ 
-    description: 'Filter subtitles by format', 
+  @ApiPropertyOptional({
+    description: 'Filter subtitles by format',
     enum: ['srt', 'vtt', 'ass'],
-    example: 'srt'
+    example: 'srt',
   })
   @IsOptional()
   @IsString()
   @IsIn(['srt', 'vtt', 'ass'])
   format?: string;
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     description: 'Filter subtitles by active status',
-    default: true
+    default: true,
   })
   @IsOptional()
   @Type(() => Boolean)
   isActive?: boolean;
-} 
+}

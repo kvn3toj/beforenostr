@@ -74,4 +74,4 @@ export interface UpdateMundoData {
   unpublishedAt?: string | null;
   unpublished_at?: string | null;
   version?: number;
-} 
+}

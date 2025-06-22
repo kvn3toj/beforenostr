@@ -43,7 +43,7 @@
     "start:backend:dev": "cd backend && npm run start:dev",
     "start:backend:prod": "npm run clean:backend && npm run build:backend && node dist/main.js",
     "start:backend:compiled": "npm run build:backend && cp -r backend/src/generated dist/ && node dist/main.js",
-    "build:backend": "tsc -p tsconfig.backend.json",
+    "build:backend": "tsc -p config/json/tsconfig.backend.json",
     "mock-cleanup-agent": "node scripts/mock-cleanup-background-agent.js",
     "mock-cleanup-dispatch": "node scripts/slack-mock-cleanup-dispatcher.js",
     "dm": "./scripts/dev-manager.sh",

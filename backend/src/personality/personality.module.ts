@@ -9,4 +9,4 @@ import { PersonalityController } from './personality.controller';
   controllers: [PersonalityController],
   exports: [PersonalityService],
 })
-export class PersonalityModule {} 
+export class PersonalityModule {}

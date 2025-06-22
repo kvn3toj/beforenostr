@@ -30,23 +30,30 @@ interface AuthenticatedSocket extends Socket {
     credentials: true,
   },
 })
-export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class StudyRoomsGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer() server: Server;
   private readonly logger = new Logger(StudyRoomsGateway.name);
 
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
-    private readonly studyRoomsService: StudyRoomsService,
+    private readonly studyRoomsService: StudyRoomsService
   ) {
     // ✅ DEBUGGING: Verificar que los servicios se inyecten correctamente
     this.logger.log('>>> StudyRoomsGateway constructor initialized');
     this.logger.log('>>> JwtService injected:', !!this.jwtService);
     this.logger.log('>>> PrismaService injected:', !!this.prisma);
-    this.logger.log('>>> StudyRoomsService injected:', !!this.studyRoomsService);
-    
+    this.logger.log(
+      '>>> StudyRoomsService injected:',
+      !!this.studyRoomsService
+    );
+
     if (!this.jwtService) {
-      this.logger.error('>>> CRITICAL: JwtService is undefined - WebSocket auth will fail');
+      this.logger.error(
+        '>>> CRITICAL: JwtService is undefined - WebSocket auth will fail'
+      );
     }
     if (!this.jwtService?.verify) {
       this.logger.error('>>> CRITICAL: JwtService.verify is undefined');
@@ -56,33 +63,42 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
   async handleConnection(client: AuthenticatedSocket) {
     try {
       this.logger.log('>>> WebSocket connection attempt started');
-      
+
       // ✅ DEBUGGING: Verificar servicios antes de usar
       if (!this.jwtService) {
-        this.logger.error('>>> CRITICAL: JwtService is undefined during connection');
+        this.logger.error(
+          '>>> CRITICAL: JwtService is undefined during connection'
+        );
         client.disconnect();
         return;
       }
-      
+
       if (!this.jwtService.verify) {
-        this.logger.error('>>> CRITICAL: JwtService.verify method is undefined');
+        this.logger.error(
+          '>>> CRITICAL: JwtService.verify method is undefined'
+        );
         client.disconnect();
         return;
       }
 
       // Extraer token JWT de la query o headers
-      const token = client.handshake.auth?.token || client.handshake.query?.token;
-      
+      const token =
+        client.handshake.auth?.token || client.handshake.query?.token;
+
       this.logger.log('>>> Token extraction attempt:', {
         hasAuthToken: !!client.handshake.auth?.token,
         hasQueryToken: !!client.handshake.query?.token,
         tokenPresent: !!token,
-        tokenLength: token ? token.length : 0
+        tokenLength: token ? token.length : 0,
       });
-      
+
       if (!token) {
-        this.logger.warn(`>>> WebSocket connection rejected: No token provided`);
-        client.emit('auth-error', { message: 'Token de autenticación requerido' });
+        this.logger.warn(
+          `>>> WebSocket connection rejected: No token provided`
+        );
+        client.emit('auth-error', {
+          message: 'Token de autenticación requerido',
+        });
         client.disconnect();
         return;
       }
@@ -91,11 +107,11 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
 
       // Verificar y decodificar el token
       const payload = this.jwtService.verify(token);
-      
+
       this.logger.log('>>> JWT verification successful:', {
         userId: payload.sub,
         email: payload.email,
-        exp: payload.exp
+        exp: payload.exp,
       });
 
       const user = await this.prisma.user.findUnique({
@@ -104,7 +120,9 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
       });
 
       if (!user || !user.isActive) {
-        this.logger.warn(`>>> WebSocket connection rejected: Invalid user ${payload.sub}`);
+        this.logger.warn(
+          `>>> WebSocket connection rejected: Invalid user ${payload.sub}`
+        );
         client.emit('auth-error', { message: 'Usuario no válido o inactivo' });
         client.disconnect();
         return;
@@ -113,20 +131,25 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
       client.userId = user.id;
       client.user = user;
 
-      this.logger.log(`>>> User ${user.name} (${user.id}) connected to study rooms WebSocket`);
-      client.emit('connection-success', { message: 'Conectado al chat de salas de estudio', user });
-
+      this.logger.log(
+        `>>> User ${user.name} (${user.id}) connected to study rooms WebSocket`
+      );
+      client.emit('connection-success', {
+        message: 'Conectado al chat de salas de estudio',
+        user,
+      });
     } catch (error) {
       this.logger.error(`>>> WebSocket authentication failed:`, {
         error: error.message,
         stack: error.stack,
         jwtServiceAvailable: !!this.jwtService,
-        verifyMethodAvailable: !!this.jwtService?.verify
+        verifyMethodAvailable: !!this.jwtService?.verify,
       });
-      
-      client.emit('auth-error', { 
+
+      client.emit('auth-error', {
         message: 'Error de autenticación',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        details:
+          process.env.NODE_ENV === 'development' ? error.message : undefined,
       });
       client.disconnect();
     }
@@ -134,14 +157,16 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
 
   handleDisconnect(client: AuthenticatedSocket) {
     if (client.user) {
-      this.logger.log(`User ${client.user.name} (${client.userId}) disconnected from study rooms WebSocket`);
+      this.logger.log(
+        `User ${client.user.name} (${client.userId}) disconnected from study rooms WebSocket`
+      );
     }
   }
 
   @SubscribeMessage('join-room')
   async handleJoinRoom(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() data: { roomId: string },
+    @MessageBody() data: { roomId: string }
   ) {
     try {
       if (!client.userId) {
@@ -166,8 +191,10 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
 
       // Unirse al room de Socket.IO
       await client.join(roomId);
-      
-      this.logger.log(`User ${client.user?.name} joined room ${roomId} via WebSocket`);
+
+      this.logger.log(
+        `User ${client.user?.name} joined room ${roomId} via WebSocket`
+      );
 
       // Notificar a otros participantes
       client.to(roomId).emit('user-joined-room', {
@@ -181,7 +208,6 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
         roomId,
         message: 'Te has unido al chat de la sala exitosamente',
       });
-
     } catch (error) {
       this.logger.error(`Error joining room: ${error.message}`);
       client.emit('error', { message: error.message });
@@ -191,14 +217,16 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
   @SubscribeMessage('leave-room')
   async handleLeaveRoom(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() data: { roomId: string },
+    @MessageBody() data: { roomId: string }
   ) {
     try {
       const { roomId } = data;
 
       await client.leave(roomId);
-      
-      this.logger.log(`User ${client.user?.name} left room ${roomId} via WebSocket`);
+
+      this.logger.log(
+        `User ${client.user?.name} left room ${roomId} via WebSocket`
+      );
 
       // Notificar a otros participantes
       client.to(roomId).emit('user-left-room', {
@@ -206,7 +234,6 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
         userName: client.user?.name,
         timestamp: new Date(),
       });
-
     } catch (error) {
       this.logger.error(`Error leaving room: ${error.message}`);
       client.emit('error', { message: error.message });
@@ -216,7 +243,7 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
   @SubscribeMessage('send-message')
   async handleSendMessage(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() data: { roomId: string; message: string },
+    @MessageBody() data: { roomId: string; message: string }
   ) {
     try {
       if (!client.userId) {
@@ -230,7 +257,9 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
       }
 
       if (message.length > 1000) {
-        throw new WsException('El mensaje es demasiado largo (máximo 1000 caracteres)');
+        throw new WsException(
+          'El mensaje es demasiado largo (máximo 1000 caracteres)'
+        );
       }
 
       // Verificar que el usuario está en la sala
@@ -278,8 +307,9 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
       // Enviar mensaje a todos los participantes de la sala (incluyendo el remitente)
       this.server.to(roomId).emit('new-message', messagePayload);
 
-      this.logger.log(`Message sent in room ${roomId} by user ${client.user?.name}: ${message.substring(0, 50)}${message.length > 50 ? '...' : ''}`);
-
+      this.logger.log(
+        `Message sent in room ${roomId} by user ${client.user?.name}: ${message.substring(0, 50)}${message.length > 50 ? '...' : ''}`
+      );
     } catch (error) {
       this.logger.error(`Error sending message: ${error.message}`);
       client.emit('error', { message: error.message });
@@ -289,7 +319,7 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
   @SubscribeMessage('get-messages')
   async handleGetMessages(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() data: { roomId: string; page?: number; limit?: number },
+    @MessageBody() data: { roomId: string; page?: number; limit?: number }
   ) {
     try {
       if (!client.userId) {
@@ -325,7 +355,7 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
         take: limit,
       });
 
-      const formattedMessages = messages.reverse().map(msg => ({
+      const formattedMessages = messages.reverse().map((msg) => ({
         id: msg.id,
         message: msg.message,
         messageType: msg.messageType,
@@ -344,8 +374,9 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
         hasMore: messages.length === limit,
       });
 
-      this.logger.log(`Sent ${formattedMessages.length} messages to user ${client.user?.name} for room ${roomId}`);
-
+      this.logger.log(
+        `Sent ${formattedMessages.length} messages to user ${client.user?.name} for room ${roomId}`
+      );
     } catch (error) {
       this.logger.error(`Error getting messages: ${error.message}`);
       client.emit('error', { message: error.message });
@@ -355,7 +386,8 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
   @SubscribeMessage('video-sync')
   async handleVideoSync(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() data: { roomId: string; currentTime: number; isPaused: boolean },
+    @MessageBody()
+    data: { roomId: string; currentTime: number; isPaused: boolean }
   ) {
     try {
       if (!client.userId) {
@@ -379,7 +411,12 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
       }
 
       // Actualizar estado en la base de datos
-      await this.studyRoomsService.updateVideoSync(roomId, client.userId, currentTime, isPaused);
+      await this.studyRoomsService.updateVideoSync(
+        roomId,
+        client.userId,
+        currentTime,
+        isPaused
+      );
 
       // Emitir evento de sincronización a todos los participantes excepto el host
       client.to(roomId).emit('video-sync-update', {
@@ -389,8 +426,9 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
         timestamp: new Date(),
       });
 
-      this.logger.log(`Video sync updated for room ${roomId}: time=${currentTime}, paused=${isPaused}`);
-
+      this.logger.log(
+        `Video sync updated for room ${roomId}: time=${currentTime}, paused=${isPaused}`
+      );
     } catch (error) {
       this.logger.error(`Error syncing video: ${error.message}`);
       client.emit('error', { message: error.message });
@@ -398,8 +436,8 @@ export class StudyRoomsGateway implements OnGatewayConnection, OnGatewayDisconne
   }
 
   // Método auxiliar para notificar eventos a una sala específica
-  notifyRoom(roomId: string, event: string, data: any) {
+  notifyRoom(roomId: string, event: string, data: Record<string, unknown>) {
     this.server.to(roomId).emit(event, data);
     this.logger.log(`Notified room ${roomId} with event: ${event}`);
   }
-} 
+}

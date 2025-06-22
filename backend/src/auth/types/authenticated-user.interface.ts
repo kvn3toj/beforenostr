@@ -5,4 +5,4 @@ export interface AuthenticatedUser {
   avatarUrl?: string;
   roles: string[];
   permissions: string[];
-} 
+}

@@ -461,7 +461,7 @@ export function useWalletData(userId: string) {
         return {
           balance: baseBalance,
           currency: 'COP',
-          ucoins: ucoins,
+          ucoins,
           accounts: [
             {
               id: 'default',
@@ -2212,10 +2212,9 @@ export function useChallenges(filters?: any) {
       }
 
       const response = await apiService.get(endpoint);
-      console.log(
-        '✅ [Challenges] Backend NestJS respondió exitosamente:',
-        response
-      );
+      
+      // 🛡️ SOLUCIÓN: Usar conversión segura para prevenir "Cannot convert object to primitive value"
+      console.log('✅ [Challenges] Backend NestJS respondió exitosamente');
 
       // Adaptar el formato de respuesta del backend a la estructura esperada por la UI
       // El backend devuelve un array directo de challenges con rewards incluidos
@@ -2315,7 +2314,7 @@ export function useChallenge(challengeId: string) {
           userProgress: {
             id: 'progress-1',
             userId: 'user-1',
-            challengeId: challengeId,
+            challengeId,
             status: 'ACTIVE',
             progress: 57,
             startedAt: '2025-01-18T09:00:00Z',

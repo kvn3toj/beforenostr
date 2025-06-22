@@ -1,4 +1,10 @@
-import { Injectable, Inject, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
@@ -8,24 +14,35 @@ import type { Group, UserGroup } from '../../generated/prisma';
 @Injectable()
 export class GroupsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-// //     console.log('>>> GroupsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> GroupsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
     try {
       // Validar que el owner existe
       const owner = await this.prisma.user.findUnique({
-        where: { id: createGroupDto.ownerId }
+        where: { id: createGroupDto.ownerId },
       });
 
       if (!owner) {
-        throw new NotFoundException(`Owner with ID ${createGroupDto.ownerId} not found`);
+        throw new NotFoundException(
+          `Owner with ID ${createGroupDto.ownerId} not found`
+        );
       }
 
       // Validar tipos de grupo válidos
-      const validGroupTypes = ['CLAN', 'FRIEND', 'CLIENT', 'ALLY', 'GOVERNANCE_BODY', 'COMMUNITY_OF_PRACTICE'];
+      const validGroupTypes = [
+        'CLAN',
+        'FRIEND',
+        'CLIENT',
+        'ALLY',
+        'GOVERNANCE_BODY',
+        'COMMUNITY_OF_PRACTICE',
+      ];
       if (!validGroupTypes.includes(createGroupDto.type)) {
-        throw new BadRequestException(`Invalid group type: ${createGroupDto.type}`);
+        throw new BadRequestException(
+          `Invalid group type: ${createGroupDto.type}`
+        );
       }
 
       const group = await this.prisma.group.create({
@@ -42,7 +59,7 @@ export class GroupsService {
               email: true,
               name: true,
               username: true,
-            }
+            },
           },
           userGroups: {
             include: {
@@ -52,17 +69,17 @@ export class GroupsService {
                   email: true,
                   name: true,
                   username: true,
-                }
-              }
-            }
+                },
+              },
+            },
           },
-        }
+        },
       });
 
-//       console.log(`>>> GroupsService: Created group ${group.id} by user ${createGroupDto.ownerId}`);
+      //       console.log(`>>> GroupsService: Created group ${group.id} by user ${createGroupDto.ownerId}`);
       return group;
     } catch (error) {
-//       console.error('>>> GroupsService create error:', error);
+      //       console.error('>>> GroupsService create error:', error);
       throw error;
     }
   }
@@ -77,7 +94,7 @@ export class GroupsService {
               email: true,
               name: true,
               username: true,
-            }
+            },
           },
           userGroups: {
             include: {
@@ -87,17 +104,17 @@ export class GroupsService {
                   email: true,
                   name: true,
                   username: true,
-                }
-              }
-            }
+                },
+              },
+            },
           },
         },
         orderBy: {
-          createdAt: 'desc'
-        }
+          createdAt: 'desc',
+        },
       });
     } catch (error) {
-//       console.error('>>> GroupsService findAll error:', error);
+      //       console.error('>>> GroupsService findAll error:', error);
       throw error;
     }
   }
@@ -113,7 +130,7 @@ export class GroupsService {
               email: true,
               name: true,
               username: true,
-            }
+            },
           },
           userGroups: {
             include: {
@@ -123,11 +140,11 @@ export class GroupsService {
                   email: true,
                   name: true,
                   username: true,
-                }
-              }
-            }
+                },
+              },
+            },
           },
-        }
+        },
       });
 
       if (!group) {
@@ -136,7 +153,7 @@ export class GroupsService {
 
       return group;
     } catch (error) {
-//       console.error('>>> GroupsService findOne error:', error);
+      //       console.error('>>> GroupsService findOne error:', error);
       throw error;
     }
   }
@@ -145,11 +162,13 @@ export class GroupsService {
     try {
       // Validar que el usuario existe
       const user = await this.prisma.user.findUnique({
-        where: { id: joinGroupDto.userId }
+        where: { id: joinGroupDto.userId },
       });
 
       if (!user) {
-        throw new NotFoundException(`User with ID ${joinGroupDto.userId} not found`);
+        throw new NotFoundException(
+          `User with ID ${joinGroupDto.userId} not found`
+        );
       }
 
       // Validar que el grupo existe
@@ -161,12 +180,14 @@ export class GroupsService {
           userId_groupId: {
             userId: joinGroupDto.userId,
             groupId: joinGroupDto.groupId,
-          }
-        }
+          },
+        },
       });
 
       if (existingMembership) {
-        throw new ConflictException(`User ${joinGroupDto.userId} is already a member of group ${joinGroupDto.groupId}`);
+        throw new ConflictException(
+          `User ${joinGroupDto.userId} is already a member of group ${joinGroupDto.groupId}`
+        );
       }
 
       // Validar roles válidos
@@ -189,7 +210,7 @@ export class GroupsService {
               email: true,
               name: true,
               username: true,
-            }
+            },
           },
           group: {
             include: {
@@ -199,18 +220,18 @@ export class GroupsService {
                   email: true,
                   name: true,
                   username: true,
-                }
-              }
-            }
-          }
-        }
+                },
+              },
+            },
+          },
+        },
       });
 
-//       console.log(`>>> GroupsService: User ${joinGroupDto.userId} joined group ${joinGroupDto.groupId} as ${roleInGroup}`);
+      //       console.log(`>>> GroupsService: User ${joinGroupDto.userId} joined group ${joinGroupDto.groupId} as ${roleInGroup}`);
       return userGroup;
     } catch (error) {
-//       console.error('>>> GroupsService joinGroup error:', error);
+      //       console.error('>>> GroupsService joinGroup error:', error);
       throw error;
     }
   }
-} 
+}

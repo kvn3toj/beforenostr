@@ -34,11 +34,17 @@ export interface PlaylistVersionDiff {
   newValue: any;
 }
 
-export type CreatePlaylistData = Pick<Playlist, 'name' | 'mundo_id' | 'published_at' | 'unpublished_at'> & {
+export type CreatePlaylistData = Pick<
+  Playlist,
+  'name' | 'mundo_id' | 'published_at' | 'unpublished_at'
+> & {
   description?: string;
   is_active?: boolean;
 };
-export type UpdatePlaylistData = Pick<Playlist, 'name' | 'mundo_id' | 'published_at' | 'unpublished_at'> & {
+export type UpdatePlaylistData = Pick<
+  Playlist,
+  'name' | 'mundo_id' | 'published_at' | 'unpublished_at'
+> & {
   description?: string;
   is_active?: boolean;
-}; 
+};

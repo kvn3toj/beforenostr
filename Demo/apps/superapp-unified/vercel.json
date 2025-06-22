@@ -6,6 +6,10 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
+<<<<<<< HEAD
+=======
+        "buildCommand": "npm run build:prod",
+>>>>>>> origin/gamifier3.5
         "distDir": "dist"
       }
     }
@@ -13,6 +17,7 @@
   "routes": [
     {
       "handle": "filesystem"
+<<<<<<< HEAD
     },
     {
       "src": "/(.*)",
@@ -63,3 +68,8 @@
     }
   }
 }
+=======
+    }
+  ]
+}
+>>>>>>> origin/gamifier3.5

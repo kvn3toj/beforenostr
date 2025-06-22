@@ -1,78 +1,85 @@
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 
-// Lazy loading de páginas principales - RUTAS VERIFICADAS
-const HomePage = lazy(() => import('../pages/HomePage'));
-const LoginPage = lazy(() => import('../pages/LoginPage'));
-const RegisterPage = lazy(() => import('../pages/RegisterPage'));
-const Marketplace = lazy(() => import('../pages/Marketplace'));
-const UPlay = lazy(() => import('../pages/UPlay'));
-const Social = lazy(() => import('../pages/Social'));
-const Profile = lazy(() => import('../pages/Profile'));
-const Wallet = lazy(() => import('../pages/Wallet'));
+// Este archivo centraliza la carga perezosa de componentes de página para el enrutador.
+// Los componentes de página usan exportaciones por defecto (export default)
 
-// Challenge & Group Pages
-const ChallengesPage = lazy(() => import('../pages/ChallengesPage'));
-const GroupsPage = lazy(() => import('../pages/GroupsPage'));
-const ChallengeDetailPage = lazy(() => import('../pages/ChallengeDetailPage'));
+// Helper para crear componentes lazy-loaded con exportaciones por defecto
+const createLazyPage = (path: string) => {
+  return lazy(() => import(`../pages/${path}.tsx`));
+};
 
-// UStats & Analytics
-const UStatsPage = lazy(() => import('../pages/UStats'));
-const AnalyticsPage = lazy(() => import('../pages/Analytics'));
+// --- Definiciones de Páginas Cargadas Perezosamente ---
 
-// Video/UPlay Routes
-const UPlayVideoPlayer = lazy(() => import('../pages/UPlayVideoPlayer'));
-const UnifiedUPlay = lazy(() => import('../pages/UnifiedUPlay'));
-const InteractiveVideoEnhanced = lazy(() => import('../pages/InteractiveVideoEnhanced'));
-const InteractiveVideoDemo = lazy(() => import('../pages/InteractiveVideoDemo'));
-const VideoHome = lazy(() => import('../pages/VideoHome'));
-const VideoPlayer = lazy(() => import('../pages/VideoPlayer'));
+// Páginas Principales y de Autenticación (exportaciones por defecto)
+const HomePage = createLazyPage('HomePage');
+const LoginPage = createLazyPage('LoginPage');
+const Login = createLazyPage('Login');
+const RegisterPage = createLazyPage('RegisterPage');
+const Register = createLazyPage('Register');
 
-// Marketplace Routes
-const MarketplaceTest = lazy(() => import('../pages/MarketplaceTest'));
+// Módulos Principales de la SuperApp (exportaciones por defecto)
+const Marketplace = createLazyPage('Marketplace');
+const MarketplacePage = createLazyPage('MarketplacePage');
+const UPlay = createLazyPage('UPlay');
+const Social = createLazyPage('Social');
+const Profile = createLazyPage('Profile');
+const Wallet = createLazyPage('Wallet');
 
-// LETS Routes
-const LetsPage = lazy(() => import('../pages/LetsPage'));
+// Módulos Secundarios (exportaciones por defecto o nombradas según el archivo)
+const ChallengesPage = createLazyPage('ChallengesPage');
+const GroupsPage = createLazyPage('GroupsPage');
+const ChallengeDetailPage = createLazyPage('ChallengeDetailPage');
+const UStatsPage = createLazyPage('UStats');
+const AnalyticsPage = createLazyPage('Analytics');
+const LetsPage = createLazyPage('LetsPage');
+const SettingsPage = createLazyPage('Settings');
+const NotificationsPage = createLazyPage('NotificationsPage');
+const StudyRoomsPage = createLazyPage('StudyRoomsPage');
 
-// Social Routes
-const SocialChat = lazy(() => import('../pages/SocialChat'));
-const SocialFeed = lazy(() => import('../pages/SocialFeed'));
+// Rutas de Video y UPlay (exportaciones por defecto)
+const UPlayVideoPlayer = createLazyPage('UPlayVideoPlayer');
+const UnifiedUPlay = createLazyPage('UnifiedUPlay');
+const InteractiveVideoEnhanced = createLazyPage('InteractiveVideoEnhanced');
+const InteractiveVideoDemo = createLazyPage('InteractiveVideoDemo');
+const VideoHome = createLazyPage('VideoHome');
+const VideoPlayer = createLazyPage('VideoPlayer');
 
-// Special Pages
-const DesignSystemShowcase = lazy(() => import('../pages/DesignSystemShowcase'));
+// Rutas de Marketplace (exportaciones por defecto)
+const MarketplaceTest = createLazyPage('MarketplaceTest');
 
-// WebSocket Test - CORREGIDO A PÁGINA EXISTENTE
-const WebSocketTest = lazy(() => import('../pages/StudyRoomsPage'));
+// Rutas Sociales (exportaciones por defecto)
+const SocialChat = createLazyPage('SocialChat');
+const SocialFeed = createLazyPage('SocialFeed');
 
-// Supabase Test
-const SupabaseTest = lazy(() => import('../components/SupabaseTest'));
+// Páginas Especiales y de Desarrollo (exportaciones por defecto)
+const DesignSystemShowcase = createLazyPage('DesignSystemShowcase');
+const WebSocketTest = createLazyPage('StudyRoomsPage'); // Reutiliza una página existente
 
-// Settings
-const SettingsPage = lazy(() => import('../pages/Settings'));
+// PWA & Beta (exportaciones por defecto)
+const PWADemo = createLazyPage('PWADemo');
+const BetaRegister = createLazyPage('BetaRegister');
 
-// Nuevas páginas
-const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
-const StudyRoomsPage = lazy(() => import('../pages/StudyRoomsPage'));
+// Página de Error (exportación por defecto)
+const NotFoundPage = createLazyPage('NotFoundPage');
 
-// PWA & Beta
-const PWADemo = lazy(() => import('../pages/PWADemo'));
-const BetaRegister = lazy(() => import('../pages/BetaRegister'));
-const HomePageAlternative = lazy(() => import('../pages/HomeEnhanced'));
+// Componentes de Onboarding (pueden ser renderizados como páginas)
+const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo.tsx').then(module => ({ default: module.OnboardingDemo })));
 
-// 404 - CORREGIDO A PÁGINA ESPECÍFICA
-const NotFoundPage = lazy(() => import('../pages/HomePage'));
-
-// Onboarding
-const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo'));
+// --- Mapa de Componentes para el Enrutador ---
 
 export const LazyPages = {
   // Main Pages
   HomePage,
   LoginPage,
+  Login,
   RegisterPage,
+  Register,
   Marketplace,
+  MarketplacePage,
   UPlay,
   UPlayPage: UPlay, // Alias para compatibilidad
   Social,
+  SocialPage: Social, // Alias para compatibilidad
   Profile,
   ProfilePage: Profile, // Alias para compatibilidad
   Wallet,
@@ -107,12 +114,7 @@ export const LazyPages = {
 
   // Special Pages
   DesignSystemShowcase,
-
-    // WebSocket Test
   WebSocketTest,
-
-  // Supabase Test
-  SupabaseTest,
 
   // Settings
   SettingsPage,
@@ -124,7 +126,6 @@ export const LazyPages = {
   // PWA & Beta
   PWADemo,
   BetaRegister,
-  HomePageAlternative,
 
   // 404
   NotFoundPage,
@@ -133,74 +134,74 @@ export const LazyPages = {
   OnboardingDemo,
 };
 
-// Funciones de preload OBLIGATORIAS
+// --- Funciones de Precarga ---
+
 export const preloadCriticalComponents = () => {
-  // Precargar componentes críticos con manejo de errores
+  // Precarga componentes críticos para una experiencia inicial fluida.
   try {
-    HomePage.preload?.();
-    LoginPage.preload?.();
-    Marketplace.preload?.();
-    UPlay.preload?.();
+    import('../pages/HomePage.tsx');
+    import('../pages/LoginPage.tsx');
+    import('../pages/Marketplace.tsx');
+    import('../pages/UPlay.tsx');
   } catch (error) {
-    console.warn('Preload error for critical components:', error);
+    console.warn('Error during critical components preload:', error);
   }
 };
 
 export const preloadRouteComponents = (pathname: string) => {
-  // Precargar componentes basado en la ruta actual con manejo de errores
+  // Precarga componentes de forma oportunista basado en la ruta del usuario.
   try {
     switch (pathname) {
       case '/':
-        HomePage.preload?.();
+        import('../pages/HomePage.tsx');
         break;
       case '/marketplace':
-        Marketplace.preload?.();
-        MarketplaceTest.preload?.();
+        import('../pages/Marketplace.tsx');
+        import('../pages/MarketplaceTest.tsx');
         break;
       case '/uplay':
-        UPlay.preload?.();
-        UnifiedUPlay.preload?.();
+        import('../pages/UPlay.tsx');
+        import('../pages/UnifiedUPlay.tsx');
         break;
       case '/social':
-        Social.preload?.();
-        SocialChat.preload?.();
-        SocialFeed.preload?.();
+        import('../pages/Social.tsx');
+        import('../pages/SocialChat.tsx');
+        import('../pages/SocialFeed.tsx');
         break;
       case '/challenges':
-        ChallengesPage.preload?.();
+        import('../pages/ChallengesPage.tsx');
         break;
       case '/groups':
-        GroupsPage.preload?.();
+        import('../pages/GroupsPage.tsx');
         break;
       case '/profile':
-        Profile.preload?.();
+        import('../pages/Profile.tsx');
         break;
       case '/wallet':
-        Wallet.preload?.();
+        import('../pages/Wallet.tsx');
         break;
       case '/lets':
-        LetsPage.preload?.();
+        import('../pages/LetsPage.tsx');
         break;
       case '/ustats':
-        UStatsPage.preload?.();
+        import('../pages/UStats.tsx');
         break;
       case '/analytics':
-        AnalyticsPage.preload?.();
+        import('../pages/Analytics.tsx');
         break;
       default:
-        // Para rutas dinámicas o no reconocidas, precargar componentes comunes
         if (pathname.startsWith('/uplay/')) {
-          UPlayVideoPlayer.preload?.();
-          InteractiveVideoEnhanced.preload?.();
+          import('../pages/UPlayVideoPlayer.tsx');
+          import('../pages/InteractiveVideoEnhanced.tsx');
         } else if (pathname.startsWith('/challenges/')) {
-          ChallengeDetailPage.preload?.();
+          import('../pages/ChallengeDetailPage.tsx');
         } else if (pathname.startsWith('/video/')) {
-          VideoPlayer.preload?.();
-          VideoHome.preload?.();
+          import('../pages/VideoPlayer.tsx');
+          import('../pages/VideoHome.tsx');
         }
         break;
     }
   } catch (error) {
-    console.warn('Preload error for route components:', error);
+    console.warn(`Error during component preload for path ${pathname}:`, error);
   }
 };

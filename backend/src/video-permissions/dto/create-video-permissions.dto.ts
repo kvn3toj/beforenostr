@@ -71,4 +71,4 @@ export class CreateVideoPermissionsDto {
   @IsString()
   @IsOptional()
   createdById?: string;
-} 
+}

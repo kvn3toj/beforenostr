@@ -6,14 +6,14 @@ export interface VideoMetadata {
   title?: string;
   description?: string;
   duration?: number;
-  
+
   // Metadatos avanzados
   thumbnailUrl?: string;
   language?: string;
   tags?: string[];
   categories?: string[];
   quality?: VideoQuality;
-  
+
   // Información de la plataforma
   platform: string;
   externalId?: string;
@@ -24,12 +24,12 @@ export interface VideoMetadata {
  * Interfaz para información de calidad de video
  */
 export interface VideoQuality {
-  resolution?: string;        // ej. '1080p', '720p', '4K'
-  aspectRatio?: string;       // ej. '16:9', '4:3'
-  bitrate?: number;          // en kbps
-  codec?: string;            // ej. 'h264', 'vp9'
-  fps?: number;              // frames per second
-  definition?: string;       // 'hd', 'sd', 'hq'
+  resolution?: string; // ej. '1080p', '720p', '4K'
+  aspectRatio?: string; // ej. '16:9', '4:3'
+  bitrate?: number; // en kbps
+  codec?: string; // ej. 'h264', 'vp9'
+  fps?: number; // frames per second
+  definition?: string; // 'hd', 'sd', 'hq'
 }
 
 /**
@@ -65,9 +65,9 @@ export interface VimeoMetadata extends VideoMetadata {
  * Interfaz para metadatos de videos locales/subidos
  */
 export interface LocalVideoMetadata extends VideoMetadata {
-  fileSize?: number;         // en bytes
+  fileSize?: number; // en bytes
   fileName?: string;
   mimeType?: string;
   uploadedAt?: string;
   checksum?: string;
-} 
+}

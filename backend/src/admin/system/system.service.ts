@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as os from 'os';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
-import { AuthenticatedUser } from '../../../types/auth.types';
-
-const execAsync = promisify(exec);
+import { AuthenticatedUser } from '../../types/auth.types';
 
 @Injectable()
 export class SystemService {
   constructor(
     private prisma: PrismaService,
-    private readonly auditLogsService: AuditLogsService,
+    private readonly auditLogsService: AuditLogsService
   ) {}
 
   async getSystemStatus() {
@@ -49,9 +45,9 @@ export class SystemService {
           total: this.formatBytes(totalMemory),
           free: this.formatBytes(freeMemory),
           used: this.formatBytes(usedMemory),
-          processUsage: processMemory // Provide detailed process memory usage
+          processUsage: processMemory, // Provide detailed process memory usage
         },
-        cpuLoad: cpuLoad,
+        cpuLoad,
       },
       timestamp: new Date().toISOString(),
     };
@@ -68,16 +64,19 @@ export class SystemService {
 
     // Log the backup initiation action
     await this.auditLogsService.createLog({
-        userId: user.id,
-        actionType: 'system:initiate_backup', // Correct action type
-        entityType: 'System',
-        entityId: 'backup', // Identifier for the system backup entity
-        newValue: { message: 'Simulated backup initiated' }, // Log details of the action
-        // You might add more context here, like requested type of backup (e.g., 'db')
+      userId: user.id,
+      actionType: 'system:initiate_backup', // Correct action type
+      entityType: 'System',
+      entityId: 'backup', // Identifier for the system backup entity
+      newValue: { message: 'Simulated backup initiated' }, // Log details of the action
+      // You might add more context here, like requested type of backup (e.g., 'db')
     });
 
     // Simulate a delay or asynchronous process start if desired, but for now just return success.
-    return { status: 'Backup initiation logged and simulated.', userId: user.id };
+    return {
+      status: 'Backup initiation logged and simulated.',
+      userId: user.id,
+    };
   }
 
   private formatUptime(seconds: number): string {
@@ -98,4 +97,4 @@ export class SystemService {
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
-} 
+}

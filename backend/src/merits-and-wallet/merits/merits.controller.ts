@@ -1,11 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { MeritsService } from './merits.service';
 import { CreateMeritDto } from './dto/create-merit.dto';
 import { UpdateMeritDto } from './dto/update-merit.dto';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Assuming this path
-import { RolesGuard } from '../../rbac/guards/roles.guard'; // Assuming this path
-import { Roles } from '../../rbac/decorators/roles.decorator'; // Assuming this path
+import { RolesGuard } from '@/rbac/guards/roles.guard'; // Assuming this path
+import { Roles } from '@/rbac/decorators/roles.decorator'; // Assuming this path
 
 @ApiTags('merits')
 @ApiBearerAuth()
@@ -17,7 +31,10 @@ export class MeritsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new merit type (Admin only)' })
-  @ApiResponse({ status: 201, description: 'The merit has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The merit has been successfully created.',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   create(@Body() createMeritDto: CreateMeritDto) {
     return this.meritsService.create(createMeritDto);
@@ -57,4 +74,4 @@ export class MeritsController {
   remove(@Param('id') id: string) {
     return this.meritsService.remove(id);
   }
-} 
+}

@@ -1,122 +1,163 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class HealthReportDto {
-  @ApiProperty({ 
-    description: 'Overall system health status',
-    example: 'healthy'
-  })
-  status: string;
+// --- Sub-interfaces for strong typing in HealthReportDto ---
 
-  @ApiProperty({ 
-    description: 'Timestamp of the report',
-    example: '2025-01-29T22:00:00.000Z'
+interface CacheHealth {
+  healthy: boolean;
+  stats: Record<string, unknown>; // Can be more specific if stats structure is known
+}
+
+interface YoutubeApiHealth {
+  configured: boolean;
+  accessible: boolean;
+  lastTest: string;
+}
+
+interface PerformanceMetrics {
+  averageCalculationTime: number;
+  totalCalculations: number;
+  cacheHitRatio: number;
+  errorRate: number;
+  methodDistribution: {
+    cache_hit: number;
+    youtube_api: number;
+    scraping: number;
+    estimation: number;
+  };
+}
+
+interface RecentAlert {
+  timestamp: string;
+  type: 'CACHE_ERROR' | 'YOUTUBE_API_FAILURE' | 'INCONSISTENCY_DETECTED';
+  message: string;
+}
+
+interface ProblematicVideo {
+  videoId: string;
+  issue: string;
+  details: Record<string, unknown>;
+  id: string;
+  title: string;
+  storedDuration?: number | null;
+  actualDuration?: number | null;
+}
+
+// Aligned with usage in notification.service.ts
+interface ConsistencyCheck {
+  totalVideos: number;
+  inconsistenciesFound: number;
+  executionTime: number;
+}
+
+// Aligned with usage in notification.service.ts
+interface ErrorSummary {
+  totalErrors: number;
+  criticalErrors: number;
+}
+
+// This DTO structure now matches the data expected by the NotificationService
+export class HealthReportDto {
+  @ApiProperty({
+    description: 'Overall health status of the system',
+    example: 'healthy',
+    enum: ['healthy', 'warning', 'critical']
+  })
+  status: 'healthy' | 'warning' | 'critical';
+
+  @ApiProperty({
+    description: 'The time period the report covers (e.g., "daily", "weekly")',
+    example: 'daily',
+  })
+  period: string;
+
+  @ApiProperty({
+    description: 'Timestamp of when the report was generated',
+    example: '2025-01-29T22:00:00.000Z',
   })
   timestamp: string;
 
-  @ApiProperty({ 
-    description: 'Last consistency check date',
-    example: '2025-01-29T21:00:00.000Z',
-    nullable: true
-  })
-  lastConsistencyCheck: string | null;
+  @ApiProperty({ description: 'Consistency check metrics' })
+  consistencyCheck: ConsistencyCheck;
 
-  @ApiProperty({ 
-    description: 'Number of inconsistencies found in last check',
-    example: 0
-  })
-  inconsistenciesCount: number;
+  @ApiProperty({ description: 'Performance metrics' })
+  performanceMetrics: PerformanceMetrics;
 
-  @ApiProperty({ 
-    description: 'Redis cache health status as JSON object',
-    example: { healthy: true, stats: {} }
-  })
-  cacheHealth: any;
+  @ApiProperty({ description: 'Summary of errors' })
+  errorSummary: ErrorSummary;
 
-  @ApiProperty({ 
-    description: 'YouTube API connectivity status as JSON object',
-    example: { configured: true, accessible: true, lastTest: '2025-01-29T21:00:00.000Z' }
+  @ApiProperty({
+    description: 'A list of actionable recommendations',
+    example: ['Review video processing logs for critical errors.'],
   })
-  youtubeApiHealth: any;
-
-  @ApiProperty({ 
-    description: 'Performance metrics as JSON object',
-    example: { averageDurationCalculationTime: 150, cacheHitRatio: 0.85, totalVideosProcessed: 100 }
-  })
-  performanceMetrics: any;
-
-  @ApiProperty({ 
-    description: 'Recent alerts sent as JSON array',
-    example: []
-  })
-  recentAlerts: any[];
+  recommendations: string[];
 }
 
 export class ConsistencyCheckResultDto {
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Check execution timestamp',
-    example: '2025-01-29T22:00:00.000Z'
+    example: '2025-01-29T22:00:00.000Z',
   })
   timestamp: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Total videos checked',
-    example: 100
+    example: 100,
   })
   totalVideos: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Number of inconsistencies found',
-    example: 0
+    example: 0,
   })
   inconsistenciesFound: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'List of videos with issues as JSON array',
-    example: []
+    example: [],
   })
-  problematicVideos: any[];
+  problematicVideos: ProblematicVideo[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Check execution time in milliseconds',
-    example: 1500
+    example: 1500,
   })
   executionTime: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Whether alerts were sent',
-    example: false
+    example: false,
   })
   alertsSent: boolean;
 }
 
 export class AlertConfigDto {
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Enable email alerts',
-    example: false
+    example: false,
   })
   emailEnabled: boolean;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Enable Slack alerts',
-    example: false
+    example: false,
   })
   slackEnabled: boolean;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Minimum inconsistencies to trigger alert',
-    example: 5
+    example: 5,
   })
   alertThreshold: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Email recipients as JSON array',
-    example: ['admin@example.com']
+    example: ['admin@example.com'],
   })
   emailRecipients: string[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Slack webhook URL configured',
-    example: false
+    example: false,
   })
   slackWebhookConfigured: boolean;
-} 
+}

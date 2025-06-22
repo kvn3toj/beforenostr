@@ -27,6 +27,12 @@ import { CreateStudyRoomDto } from './dto/create-study-room.dto';
 import { JoinStudyRoomDto } from './dto/join-study-room.dto';
 import { StudyRoomResponseDto } from './dto/study-room-response.dto';
 
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+  };
+}
+
 @ApiTags('Study Rooms - ÜPlay Social Collaboration')
 @Controller('study-rooms')
 @UseGuards(JwtAuthGuard)
@@ -39,7 +45,8 @@ export class StudyRoomsController {
   @Post()
   @ApiOperation({
     summary: 'Crear una nueva sala de estudio',
-    description: 'Permite a un usuario crear una sala de estudio colaborativa para un video específico. El creador se convierte automáticamente en el host.'
+    description:
+      'Permite a un usuario crear una sala de estudio colaborativa para un video específico. El creador se convierte automáticamente en el host.',
   })
   @ApiResponse({
     status: 201,
@@ -55,17 +62,22 @@ export class StudyRoomsController {
     description: 'Token de autenticación requerido',
   })
   async createStudyRoom(
-    @Request() req: any,
-    @Body() createStudyRoomDto: CreateStudyRoomDto,
+    @Request() req: AuthenticatedRequest,
+    @Body() createStudyRoomDto: CreateStudyRoomDto
   ): Promise<StudyRoomResponseDto> {
-    this.logger.log(`Creating study room: ${createStudyRoomDto.name} for user ${req.user.id}`);
-    return this.studyRoomsService.createStudyRoom(req.user.id, createStudyRoomDto);
+    this.logger.log(
+      `Creating study room: ${createStudyRoomDto.name} for user ${req.user.id}`
+    );
+    return this.studyRoomsService.createStudyRoom(
+      req.user.id,
+      createStudyRoomDto
+    );
   }
 
   @Get()
   @ApiOperation({
     summary: 'Obtener todas las salas de estudio activas',
-    description: 'Lista todas las salas de estudio disponibles con paginación'
+    description: 'Lista todas las salas de estudio disponibles con paginación',
   })
   @ApiQuery({
     name: 'page',
@@ -87,18 +99,18 @@ export class StudyRoomsController {
       properties: {
         rooms: {
           type: 'array',
-          items: { type: 'object' }  // Simplified to avoid circular reference
+          items: { type: 'object' }, // Simplified to avoid circular reference
         },
         total: {
           type: 'number',
-          description: 'Número total de salas'
-        }
-      }
-    }
+          description: 'Número total de salas',
+        },
+      },
+    },
   })
   async getAllStudyRooms(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
   ) {
     this.logger.log(`Fetching study rooms - page: ${page}, limit: ${limit}`);
     return this.studyRoomsService.getAllStudyRooms(page, limit);
@@ -107,7 +119,8 @@ export class StudyRoomsController {
   @Get(':roomId')
   @ApiOperation({
     summary: 'Obtener detalles de una sala de estudio específica',
-    description: 'Obtiene información detallada de una sala de estudio incluyendo participantes y estado del video'
+    description:
+      'Obtiene información detallada de una sala de estudio incluyendo participantes y estado del video',
   })
   @ApiParam({
     name: 'roomId',
@@ -123,7 +136,9 @@ export class StudyRoomsController {
     status: 404,
     description: 'Sala de estudio no encontrada',
   })
-  async getStudyRoomById(@Param('roomId') roomId: string): Promise<StudyRoomResponseDto> {
+  async getStudyRoomById(
+    @Param('roomId') roomId: string
+  ): Promise<StudyRoomResponseDto> {
     this.logger.log(`Fetching study room details: ${roomId}`);
     return this.studyRoomsService.getStudyRoomById(roomId);
   }
@@ -131,7 +146,7 @@ export class StudyRoomsController {
   @Post(':roomId/join')
   @ApiOperation({
     summary: 'Unirse a una sala de estudio',
-    description: 'Permite a un usuario unirse a una sala de estudio existente'
+    description: 'Permite a un usuario unirse a una sala de estudio existente',
   })
   @ApiParam({
     name: 'roomId',
@@ -152,8 +167,8 @@ export class StudyRoomsController {
     description: 'Error al unirse (capacidad llena, ya está en la sala, etc.)',
   })
   async joinStudyRoom(
-    @Request() req: any,
-    @Param('roomId') roomId: string,
+    @Request() req: AuthenticatedRequest,
+    @Param('roomId') roomId: string
   ): Promise<StudyRoomResponseDto> {
     this.logger.log(`User ${req.user.id} joining study room: ${roomId}`);
     return this.studyRoomsService.joinStudyRoom(roomId, req.user.id);
@@ -162,7 +177,8 @@ export class StudyRoomsController {
   @Post(':roomId/leave')
   @ApiOperation({
     summary: 'Salir de una sala de estudio',
-    description: 'Permite a un usuario salir de una sala de estudio. Si el host sale, se transfiere el rol al siguiente participante.'
+    description:
+      'Permite a un usuario salir de una sala de estudio. Si el host sale, se transfiere el rol al siguiente participante.',
   })
   @ApiParam({
     name: 'roomId',
@@ -178,8 +194,8 @@ export class StudyRoomsController {
     description: 'Usuario no está en la sala o sala no encontrada',
   })
   async leaveStudyRoom(
-    @Request() req: any,
-    @Param('roomId') roomId: string,
+    @Request() req: AuthenticatedRequest,
+    @Param('roomId') roomId: string
   ): Promise<{ message: string }> {
     this.logger.log(`User ${req.user.id} leaving study room: ${roomId}`);
     await this.studyRoomsService.leaveStudyRoom(roomId, req.user.id);
@@ -189,7 +205,8 @@ export class StudyRoomsController {
   @Put(':roomId/sync')
   @ApiOperation({
     summary: 'Sincronizar estado del video',
-    description: 'Permite al host sincronizar el tiempo y estado de reproducción del video para todos los participantes'
+    description:
+      'Permite al host sincronizar el tiempo y estado de reproducción del video para todos los participantes',
   })
   @ApiParam({
     name: 'roomId',
@@ -209,16 +226,18 @@ export class StudyRoomsController {
     description: 'Sala de estudio no encontrada',
   })
   async updateVideoSync(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param('roomId') roomId: string,
-    @Body() syncData: { currentTime: number; isPaused: boolean },
+    @Body() syncData: { currentTime: number; isPaused: boolean }
   ): Promise<{ message: string }> {
-    this.logger.log(`Updating video sync for room ${roomId}: time=${syncData.currentTime}, paused=${syncData.isPaused}`);
+    this.logger.log(
+      `Updating video sync for room ${roomId}: time=${syncData.currentTime}, paused=${syncData.isPaused}`
+    );
     await this.studyRoomsService.updateVideoSync(
       roomId,
       req.user.id,
       syncData.currentTime,
-      syncData.isPaused,
+      syncData.isPaused
     );
     return { message: 'Estado del video sincronizado exitosamente' };
   }
@@ -226,7 +245,8 @@ export class StudyRoomsController {
   @Delete(':roomId')
   @ApiOperation({
     summary: 'Eliminar una sala de estudio',
-    description: 'Permite al host eliminar permanentemente una sala de estudio. Todos los participantes son removidos automáticamente.'
+    description:
+      'Permite al host eliminar permanentemente una sala de estudio. Todos los participantes son removidos automáticamente.',
   })
   @ApiParam({
     name: 'roomId',
@@ -246,11 +266,11 @@ export class StudyRoomsController {
     description: 'Sala de estudio no encontrada',
   })
   async deleteStudyRoom(
-    @Request() req: any,
-    @Param('roomId') roomId: string,
+    @Request() req: AuthenticatedRequest,
+    @Param('roomId') roomId: string
   ): Promise<{ message: string }> {
     this.logger.log(`User ${req.user.id} deleting study room: ${roomId}`);
     await this.studyRoomsService.deleteStudyRoom(roomId, req.user.id);
     return { message: 'Sala de estudio eliminada exitosamente' };
   }
-} 
+}

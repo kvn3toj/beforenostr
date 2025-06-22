@@ -14,8 +14,8 @@ import { CreatePersonalityDto } from './dto/create-personality.dto';
 import { UpdatePersonalityDto } from './dto/update-personality.dto';
 import { AssignPersonalityDto } from './dto/assign-personality.dto';
 // import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-// import { RolesGuard } from '../rbac/guards/roles.guard';
-// import { Roles } from '../rbac/decorators/roles.decorator';
+// import { RolesGuard } from '@/rbac/guards/roles.guard';
+// import { Roles } from '@/rbac/decorators/roles.decorator';
 import {
   ApiTags,
   // ApiBearerAuth,
@@ -29,8 +29,11 @@ import {
 // @UseGuards(JwtAuthGuard)
 @Controller('personality')
 export class PersonalityController {
-  constructor(@Inject(PersonalityService) private readonly personalityService: PersonalityService) {
-// //     console.log('>>> PersonalityController CONSTRUCTOR: this.personalityService IS', this.personalityService ? 'DEFINED' : 'UNDEFINED');
+  constructor(
+    @Inject(PersonalityService)
+    private readonly personalityService: PersonalityService
+  ) {
+    // //     console.log('>>> PersonalityController CONSTRUCTOR: this.personalityService IS', this.personalityService ? 'DEFINED' : 'UNDEFINED');
   }
 
   @Post()
@@ -38,7 +41,10 @@ export class PersonalityController {
   // @Roles('admin', 'superadmin')
   @ApiOperation({ summary: 'Create a new personality (Admin only)' })
   @ApiResponse({ status: 201, description: 'Personality created successfully' })
-  @ApiResponse({ status: 409, description: 'Personality with this name already exists' })
+  @ApiResponse({
+    status: 409,
+    description: 'Personality with this name already exists',
+  })
   create(@Body() createPersonalityDto: CreatePersonalityDto) {
     return this.personalityService.create(createPersonalityDto);
   }
@@ -54,14 +60,20 @@ export class PersonalityController {
   @ApiOperation({ summary: 'Health check for personality module' })
   @ApiResponse({ status: 200, description: 'Personality module is working' })
   ping() {
-    return { message: 'Personality module is working', timestamp: new Date().toISOString() };
+    return {
+      message: 'Personality module is working',
+      timestamp: new Date().toISOString(),
+    };
   }
 
   @Get('test')
   @ApiOperation({ summary: 'Simple test endpoint' })
   @ApiResponse({ status: 200, description: 'Simple test response' })
   test() {
-    return { message: 'Test endpoint working', service: this.personalityService ? 'DEFINED' : 'UNDEFINED' };
+    return {
+      message: 'Test endpoint working',
+      service: this.personalityService ? 'DEFINED' : 'UNDEFINED',
+    };
   }
 
   @Get('stats')
@@ -87,7 +99,10 @@ export class PersonalityController {
   // @Roles('admin', 'superadmin')
   @ApiOperation({ summary: 'Get users assigned to a personality (Admin only)' })
   @ApiParam({ name: 'id', description: 'Personality ID' })
-  @ApiResponse({ status: 200, description: 'List of users with this personality' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of users with this personality',
+  })
   getUsersByPersonality(@Param('id') id: string) {
     return this.personalityService.getUsersByPersonality(id);
   }
@@ -99,8 +114,14 @@ export class PersonalityController {
   @ApiParam({ name: 'id', description: 'Personality ID' })
   @ApiResponse({ status: 200, description: 'Personality updated successfully' })
   @ApiResponse({ status: 404, description: 'Personality not found' })
-  @ApiResponse({ status: 409, description: 'Personality with this name already exists' })
-  update(@Param('id') id: string, @Body() updatePersonalityDto: UpdatePersonalityDto) {
+  @ApiResponse({
+    status: 409,
+    description: 'Personality with this name already exists',
+  })
+  update(
+    @Param('id') id: string,
+    @Body() updatePersonalityDto: UpdatePersonalityDto
+  ) {
     return this.personalityService.update(id, updatePersonalityDto);
   }
 
@@ -111,7 +132,10 @@ export class PersonalityController {
   @ApiParam({ name: 'id', description: 'Personality ID' })
   @ApiResponse({ status: 200, description: 'Personality deleted successfully' })
   @ApiResponse({ status: 404, description: 'Personality not found' })
-  @ApiResponse({ status: 409, description: 'Cannot delete personality with assigned users' })
+  @ApiResponse({
+    status: 409,
+    description: 'Cannot delete personality with assigned users',
+  })
   remove(@Param('id') id: string) {
     return this.personalityService.remove(id);
   }
@@ -120,7 +144,10 @@ export class PersonalityController {
   // @UseGuards(RolesGuard)
   // @Roles('admin', 'superadmin')
   @ApiOperation({ summary: 'Assign personality to user (Admin only)' })
-  @ApiResponse({ status: 200, description: 'Personality assigned successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Personality assigned successfully',
+  })
   @ApiResponse({ status: 404, description: 'User or personality not found' })
   assignToUser(@Body() assignPersonalityDto: AssignPersonalityDto) {
     return this.personalityService.assignToUser(assignPersonalityDto);
@@ -131,9 +158,12 @@ export class PersonalityController {
   // @Roles('admin', 'superadmin')
   @ApiOperation({ summary: 'Remove personality from user (Admin only)' })
   @ApiParam({ name: 'userId', description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'Personality removed from user successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Personality removed from user successfully',
+  })
   @ApiResponse({ status: 404, description: 'User not found' })
   removeFromUser(@Param('userId') userId: string) {
     return this.personalityService.removeFromUser(userId);
   }
-} 
+}

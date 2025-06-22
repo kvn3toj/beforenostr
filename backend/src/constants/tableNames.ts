@@ -5,4 +5,4 @@ export const TABLE_NAMES = {
   PLAYLISTS: 'playlists',
   MERIT_TRANSACTIONS: 'meritTransactions',
   ADMIN_PROFILES: 'admin_profiles',
-} as const; 
+} as const;

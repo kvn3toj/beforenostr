@@ -1,5 +1,5 @@
-import React, { useState, useContext, createContext, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext, createContext, useCallback, useEffect, useTransition } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Dialog,
   DialogTitle,
@@ -35,6 +35,7 @@ import {
   Warning as WarningIcon,
   Info as InfoIcon
 } from '@mui/icons-material';
+import { useAuth } from '../../contexts/AuthContext';
 
 // 🎓 Tipos para los tutoriales
 interface TutorialStep {
@@ -631,28 +632,50 @@ const renderStepContent = (step: TutorialStep, navigate: ReturnType<typeof useNa
 
 export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentTutorial, setCurrentTutorial] = useState<Tutorial | null>(null);
-  const [currentStep, setCurrentStep] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const [isPending, startTransition] = useTransition();
+
+  const availableTutorials = DISCOVERY_TUTORIALS;
 
   const startTutorial = useCallback((tutorialId: string) => {
-    const tutorial = DISCOVERY_TUTORIALS.find(t => t.id === tutorialId);
-    if (tutorial) {
-      setCurrentTutorial(tutorial);
+    const tutorialToStart = availableTutorials.find(t => t.id === tutorialId);
+    if (tutorialToStart) {
+      setCurrentTutorial(tutorialToStart);
       setCurrentStep(0);
       setIsActive(true);
 
-      // Guardar progreso en localStorage
       localStorage.setItem('coomunity-last-tutorial', tutorialId);
       localStorage.setItem(`coomunity-tutorial-${tutorialId}-started`, new Date().toISOString());
+
+    } else {
+      console.warn(`Tutorial with ID '${tutorialId}' not found.`);
     }
-  }, []);
+  }, [availableTutorials]);
+
+  const closeTutorial = useCallback(() => {
+    if (currentTutorial && currentStep === currentTutorial.steps.length - 1) {
+      localStorage.setItem(`coomunity-tutorial-${currentTutorial.id}-completed`, new Date().toISOString());
+
+      if (currentTutorial.completionRewards) {
+        console.log('🎉 Tutorial completado!', currentTutorial.completionRewards);
+      }
+    }
+    setIsActive(false);
+    setCurrentTutorial(null);
+    setCurrentStep(0);
+  }, [currentTutorial, currentStep]);
 
   const nextStep = useCallback(() => {
     if (currentTutorial && currentStep < currentTutorial.steps.length - 1) {
       setCurrentStep(prev => prev + 1);
+    } else {
+      closeTutorial();
     }
-  }, [currentTutorial, currentStep]);
+  }, [currentTutorial, currentStep, closeTutorial]);
 
   const previousStep = useCallback(() => {
     if (currentStep > 0) {
@@ -660,37 +683,163 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
     }
   }, [currentStep]);
 
-  const closeTutorial = useCallback(() => {
-    if (currentTutorial && currentStep === currentTutorial.steps.length - 1) {
-      // Tutorial completado
-      localStorage.setItem(`coomunity-tutorial-${currentTutorial.id}-completed`, new Date().toISOString());
+  useEffect(() => {
+    if (authLoading) return;
 
-      // Simular recompensa (en implementación real, esto sería una llamada API)
-      if (currentTutorial.completionRewards) {
-        console.log('🎉 Tutorial completado!', currentTutorial.completionRewards);
+    const marketplaceTutorialId = 'marketplace-discovery';
+    const hasCompletedMarketplaceTutorial = localStorage.getItem(`coomunity-tutorial-${marketplaceTutorialId}-completed`);
+
+    if (isAuthenticated && location.pathname === '/marketplace' && !currentTutorial && !isActive && !hasCompletedMarketplaceTutorial) {
+      startTransition(() => {
+        startTutorial(marketplaceTutorialId);
+      });
+    }
+  }, [isAuthenticated, location.pathname, startTutorial, authLoading]);
+
+  useEffect(() => {
+    const step = currentTutorial?.steps[currentStep];
+    if (isActive && step?.actionButton?.url && location.pathname !== step.actionButton.url) {
+      closeTutorial();
+    }
+  }, [isActive, currentTutorial, currentStep, location.pathname, closeTutorial]);
+
+  const currentStepData = currentTutorial ? currentTutorial.steps[currentStep] : null;
+
+  const renderStepContent = (step: TutorialStep, navigate: ReturnType<typeof useNavigate>) => {
+    switch (step.id) {
+      case 'marketplace-navigation':
+        return (
+          <Box>
+            <Typography variant="body1" paragraph>{step.content}</Typography>
+            <Alert severity="info" sx={{ mt: 2 }}>
+              <Typography variant="body2">
+                Haz clic en el botón a continuación para ir al Marketplace y explora las categorías.
+              </Typography>
+            </Alert>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+              {step.actionButton && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<StartIcon />}
+                  onClick={() => {
+                    if (step.actionButton?.url) {
+                      navigate(step.actionButton.url);
+                    }
+                    nextStep();
+                  }}
+                >
+                  {step.actionButton.text}
+                </Button>
+              )}
+            </Box>
+          </Box>
+        );
+      case 'marketplace-first-purchase':
+        return (
+          <Box>
+            <Typography variant="body1" paragraph>{step.content}</Typography>
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              <Typography variant="body2">
+                ¡Atención! Para esta sección, necesitas ir al Marketplace para ver productos.
+              </Typography>
+            </Alert>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+              {step.actionButton && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<StartIcon />}
+                  onClick={() => {
+                    navigate('/marketplace?filter=recommended');
+                    nextStep();
+                  }}
+                >
+                  {step.actionButton.text}
+                </Button>
+              )}
+            </Box>
+          </Box>
+        );
+      case 'console-intro':
+        return (
+          <Box>
+            <Typography variant="body1" paragraph>{step.content}</Typography>
+            <Alert severity="info" sx={{ mt: 2 }}>
+              <Typography variant="body2">
+                La consola es una herramienta para desarrolladores. No es parte del flujo normal del usuario.
+              </Typography>
+            </Alert>
+          </Box>
+        );
+      case 'social-bien-comun':
+        return (
+          <Box>
+            <Typography variant="body1" paragraph>{step.content}</Typography>
+            <Alert severity="success" sx={{ mt: 2 }}>
+              <Typography variant="body2">
+                La filosofía del Bien Común es el corazón de CoomÜnity.
+              </Typography>
+            </Alert>
+            {step.actionButton && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<StartIcon />}
+                  onClick={() => {
+                    if (step.actionButton?.url) {
+                      navigate(step.actionButton.url);
+                    }
+                    nextStep();
+                  }}
+                >
+                  {step.actionButton.text}
+                </Button>
+              </Box>
+            )}
+          </Box>
+        );
+      default:
+        return <Typography variant="body1" paragraph>{step.content}</Typography>;
+    }
+  };
+
+  const getStepIcon = (index: number) => {
+    const step = currentTutorial?.steps[index];
+    if (!step) return null;
+    switch (step.type) {
+      case 'info': return <InfoIcon />;
+      case 'warning': return <WarningIcon />;
+      case 'success': return <CheckIcon />;
+      case 'tip': return <TipIcon />;
+      case 'interactive': return <SchoolIcon />;
+      default: return null;
+    }
+  };
+
+  const getAlertSeverity = (type: TutorialStep['type']) => {
+    switch (type) {
+      case 'info': return 'info';
+      case 'warning': return 'warning';
+      case 'success': return 'success';
+      case 'tip': return 'info';
+      case 'interactive': return 'info';
+      default: return 'info';
+    }
+  };
+
+  const handleActionButtonClick = (step: TutorialStep) => {
+    if (step.actionButton) {
+      if (step.actionButton.url) {
+        navigate(step.actionButton.url);
+      } else if (step.actionButton.action) {
+        step.actionButton.action();
       }
     }
+  };
 
-    setIsActive(false);
-    setCurrentTutorial(null);
-    setCurrentStep(0);
-  }, [currentTutorial, currentStep]);
-
-  // Auto-mostrar tutorial de onboarding para nuevos usuarios
-  useEffect(() => {
-    const hasSeenTutorials = localStorage.getItem('coomunity-tutorials-seen');
-    if (!hasSeenTutorials) {
-      // Mostrar tutorial después de 3 segundos
-      const timer = setTimeout(() => {
-        startTutorial('marketplace-discovery');
-        localStorage.setItem('coomunity-tutorials-seen', 'true');
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [startTutorial]);
-
-  const contextValue: TutorialContextType = {
+  const contextValue = {
     currentTutorial,
     isActive,
     currentStep,
@@ -698,215 +847,108 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
     nextStep,
     previousStep,
     closeTutorial,
-    availableTutorials: DISCOVERY_TUTORIALS,
+    availableTutorials
   };
-
-  const currentStepData = currentTutorial?.steps[currentStep];
-  const isLastStep = currentTutorial && currentStep === currentTutorial.steps.length - 1;
 
   return (
     <TutorialContext.Provider value={contextValue}>
       {children}
-
-      {/* Dialog del Tutorial Expandido */}
-      {currentTutorial && (
+      {isActive && currentTutorial && currentStepData && (
         <Dialog
           open={isActive}
           onClose={closeTutorial}
-          maxWidth="lg"
+          maxWidth="md"
           fullWidth
           PaperProps={{
             sx: {
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white',
               borderRadius: 3,
+              boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+              backdropFilter: 'blur( 4px )',
+              WebkitBackdropFilter: 'blur( 4px )',
+              border: '1px solid rgba( 255, 255, 255, 0.18 )',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0))',
               position: 'relative',
-              overflow: 'visible',
-              minHeight: '70vh'
-            }
+              overflow: 'hidden',
+            },
           }}
         >
-          <DialogTitle sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            pb: 2,
-            borderBottom: '1px solid rgba(255,255,255,0.2)'
-          }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <SchoolIcon sx={{ fontSize: 32 }} />
-              <Box>
-                <Typography variant="h5" component="div" sx={{ fontWeight: 600 }}>
-                  {currentTutorial.title}
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)', mt: 0.5 }}>
-                  {currentTutorial.description}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                  <Chip
-                    label={currentTutorial.difficulty}
-                    size="small"
-                    sx={{
-                      background: currentTutorial.difficulty === 'beginner' ? '#4caf50' :
-                                 currentTutorial.difficulty === 'intermediate' ? '#ff9800' : '#f44336',
-                      color: 'white',
-                      fontWeight: 600
-                    }}
-                  />
-                  <Chip
-                    label={currentTutorial.estimatedTime}
-                    size="small"
-                    sx={{ background: 'rgba(255,255,255,0.2)', color: 'white' }}
-                  />
-                </Box>
-              </Box>
-            </Box>
-            <IconButton onClick={closeTutorial} sx={{ color: 'white' }}>
-              <CloseIcon />
-            </IconButton>
+          <IconButton
+            aria-label="close"
+            onClick={closeTutorial}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+              zIndex: 1,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogTitle sx={{ textAlign: 'center', pb: 0 }}>
+            <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+              {currentTutorial.title}
+            </Typography>
+            <Typography variant="subtitle2" color="textSecondary">
+              {currentTutorial.description}
+            </Typography>
           </DialogTitle>
-
-          <DialogContent sx={{ py: 3 }}>
-            <Box sx={{ mb: 4 }}>
-              <Stepper activeStep={currentStep} sx={{ mb: 4 }}>
-                {currentTutorial.steps.map((step, index) => (
-                  <Step key={step.id}>
-                    <StepLabel sx={{
-                      '& .MuiStepLabel-label': {
-                        color: 'white !important',
-                        fontSize: '0.9rem',
-                        fontWeight: index === currentStep ? 600 : 400
-                      },
-                      '& .MuiStepIcon-root': {
-                        color: 'rgba(255,255,255,0.5)',
-                        '&.Mui-active': {
-                          color: '#ffd700'
-                        },
-                        '&.Mui-completed': {
-                          color: '#4caf50'
-                        }
-                      }
-                    }}>
-                      {step.title}
-                    </StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-
-              <Fade in key={currentStep}>
-                <Card sx={{
-                  background: 'rgba(255,255,255,0.05)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.1)'
-                }}>
-                  <CardContent sx={{ p: 3 }}>
-                    {currentStepData && renderStepContent(currentStepData, navigate)}
-                  </CardContent>
-                </Card>
-              </Fade>
-
-              {/* Información de recompensas en el último paso */}
-              {isLastStep && currentTutorial.completionRewards && (
-                <Card sx={{
-                  mt: 3,
-                  background: 'linear-gradient(45deg, #4caf50, #8bc34a)',
-                  color: 'white'
-                }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
-                      🎉 ¡Recompensas por Completar!
+          <DialogContent dividers sx={{ p: 3 }}>
+            <Fade in={true} key={currentStep}>
+              <Box>
+                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  {getStepIcon(currentStep)}
+                  <Box component="span" sx={{ ml: 1 }}>{currentStep + 1}. {currentStepData.title}</Box>
+                </Typography>
+                <Alert severity={getAlertSeverity(currentStepData.type)} sx={{ mb: 2 }}>
+                  {renderStepContent(currentStepData, navigate)}
+                </Alert>
+                {currentStepData.tips && currentStepData.tips.length > 0 && (
+                  <Box sx={{ mt: 3, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px dashed', borderColor: 'grey.300' }}>
+                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
+                      💡 Consejos Rápidos:
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                      <Chip
-                        label={`+${currentTutorial.completionRewards.ondas} Öndas`}
-                        sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', fontWeight: 600 }}
-                      />
-                      <Chip
-                        label={`+${currentTutorial.completionRewards.meritos} Mëritos`}
-                        sx={{ background: 'rgba(255,255,255,0.2)', color: 'white', fontWeight: 600 }}
-                      />
-                    </Box>
-                    <Typography variant="body2">
-                      {currentTutorial.completionRewards.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              )}
-            </Box>
-          </DialogContent>
-
-          <DialogActions sx={{
-            justifyContent: 'space-between',
-            p: 3,
-            borderTop: '1px solid rgba(255,255,255,0.2)',
-            background: 'rgba(0,0,0,0.1)'
-          }}>
-            <Button
-              onClick={previousStep}
-              disabled={currentStep === 0}
-              startIcon={<BackIcon />}
-              sx={{ color: 'white', opacity: currentStep === 0 ? 0.5 : 1 }}
-            >
-              Anterior
-            </Button>
-
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
-                Paso {currentStep + 1} de {currentTutorial.steps.length}
-              </Typography>
-              <Box sx={{
-                width: 100,
-                height: 4,
-                background: 'rgba(255,255,255,0.2)',
-                borderRadius: 2,
-                overflow: 'hidden'
-              }}>
-                <Box sx={{
-                  width: `${((currentStep + 1) / currentTutorial.steps.length) * 100}%`,
-                  height: '100%',
-                  background: '#ffd700',
-                  transition: 'width 0.3s ease'
-                }} />
+                    <List dense>
+                      {currentStepData.tips.map((tip, index) => (
+                        <ListItem key={index} disableGutters>
+                          <ListItemIcon sx={{ minWidth: '30px' }}>
+                            <InfoIcon fontSize="small" color="action" />
+                          </ListItemIcon>
+                          <ListItemText primary={<Typography variant="body2">{tip}</Typography>} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                )}
               </Box>
+            </Fade>
+          </DialogContent>
+          <DialogActions sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box>
+              <Chip label={`Paso ${currentStep + 1} de ${currentTutorial.steps.length}`} color="secondary" size="small" />
+              <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
+                Tiempo estimado: {currentTutorial?.estimatedTime}
+              </Typography>
             </Box>
-
-            {!isLastStep ? (
+            <Box>
+              <Button
+                onClick={previousStep}
+                disabled={currentStep === 0 || isPending}
+                startIcon={<BackIcon />}
+                sx={{ mr: 1 }}
+              >
+                Anterior
+              </Button>
               <Button
                 onClick={nextStep}
+                disabled={isPending}
                 endIcon={<NextIcon />}
                 variant="contained"
-                sx={{
-                  background: 'linear-gradient(45deg, #ffd700, #ffeb3b)',
-                  color: '#000',
-                  fontWeight: 600,
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #ffc107, #ffeb3b)',
-                    transform: 'translateY(-1px)'
-                  },
-                  transition: 'all 0.2s ease'
-                }}
+                color="primary"
               >
-                Siguiente
+                {currentStep === currentTutorial.steps.length - 1 ? 'Finalizar' : 'Siguiente'}
               </Button>
-            ) : (
-              <Button
-                onClick={closeTutorial}
-                variant="contained"
-                startIcon={<CheckIcon />}
-                sx={{
-                  background: 'linear-gradient(45deg, #4caf50, #8bc34a)',
-                  color: 'white',
-                  fontWeight: 600,
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #45a049, #7cb342)',
-                    transform: 'translateY(-1px)'
-                  },
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                ¡Completar Tutorial!
-              </Button>
-            )}
+            </Box>
           </DialogActions>
         </Dialog>
       )}
@@ -917,7 +959,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
 export const useDiscoveryTutorial = () => {
   const context = useContext(TutorialContext);
   if (!context) {
-    throw new Error('useDiscoveryTutorial must be used within DiscoveryTutorialProvider');
+    throw new Error('useDiscoveryTutorial must be used within a DiscoveryTutorialProvider');
   }
   return context;
 };

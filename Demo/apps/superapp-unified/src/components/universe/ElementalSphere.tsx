@@ -49,12 +49,15 @@ const ElementalSphere: React.FC<ElementalSphereProps> = ({
   onClick,
   style = {},
 }) => {
+  // Validate and sanitize size to prevent NaN values
+  const validSize = Number.isFinite(size) && size > 0 ? size : 48;
+
   return (
     <div
       className={`elemental-sphere ${isSelected ? 'selected' : ''}`}
       style={{
-        width: size,
-        height: size,
+        width: validSize,
+        height: validSize,
         background: `radial-gradient(circle at 60% 30%, #fff 0%, ${color} 70%, #222 100%)`,
         borderRadius: '50%',
         boxShadow: `0 0 16px 4px ${color}55, 0 2px 12px #0008`,
@@ -73,8 +76,8 @@ const ElementalSphere: React.FC<ElementalSphereProps> = ({
           position: 'absolute',
           left: '50%',
           top: '50%',
-          width: size * 1.5,
-          height: size * 1.5,
+          width: validSize * 1.5,
+          height: validSize * 1.5,
           background: `radial-gradient(circle, ${color}33 0%, transparent 80%)`,
           transform: 'translate(-50%, -50%)',
           borderRadius: '50%',
@@ -93,8 +96,8 @@ const ElementalSphere: React.FC<ElementalSphereProps> = ({
           position: 'absolute',
           left: '20%',
           top: '18%',
-          width: size * 0.32,
-          height: size * 0.18,
+          width: validSize * 0.32,
+          height: validSize * 0.18,
           background: 'linear-gradient(120deg, #fff8 0%, #fff2 100%)',
           borderRadius: '50%',
           filter: 'blur(2px)',
@@ -109,8 +112,8 @@ const ElementalSphere: React.FC<ElementalSphereProps> = ({
           position: 'absolute',
           left: '50%',
           top: '50%',
-          width: size * 2.2,
-          height: size * 0.22,
+          width: validSize * 2.2,
+          height: validSize * 0.22,
           background: `radial-gradient(ellipse at center, ${trailColor} 0%, transparent 80%)`,
           transform: 'translate(-50%, 0) scaleY(0.7)',
           filter: 'blur(2.5px)',
@@ -121,4 +124,4 @@ const ElementalSphere: React.FC<ElementalSphereProps> = ({
   );
 };
 
-export default ElementalSphere; 
+export default ElementalSphere;

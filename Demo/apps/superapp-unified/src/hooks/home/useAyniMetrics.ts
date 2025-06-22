@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import apiService from '@/lib/api-service';
 import { useAuth } from '@/contexts/AuthContext';
+import { safeLog, createSafeErrorMessage } from '@/utils/safeConversion';
 
 export interface AyniMetricsData {
   // Métricas principales
@@ -10,11 +11,11 @@ export interface AyniMetricsData {
   ayniLevel: string;
   nextLevel: string;
   ayniProgress: number; // Porcentaje 0-100
-  
+
   // Contribuciones al Bien Común
   bienComunContributions: number;
   reciprocityScore: number; // Puntuación de reciprocidad
-  
+
   // Balance elemental del usuario
   elementos: {
     fuego: number; // Acciones realizadas
@@ -22,13 +23,13 @@ export interface AyniMetricsData {
     tierra: number; // Estabilidad aportada
     aire: number;   // Visión compartida
   };
-  
+
   // Métricas adicionales
   totalTransactions: number;
   positiveImpact: number;
   communityRank: number;
   weeklyGrowth: number;
-  
+
   // Timestamps
   lastUpdated: string;
   joinedDate: string;
@@ -42,52 +43,61 @@ const DEFAULT_AYNI_METRICS: AyniMetricsData = {
   ayniLevel: 'Emprendedor Confiable',
   nextLevel: 'Guardián del Bien Común',
   ayniProgress: 73,
-  
+
   bienComunContributions: 23,
   reciprocityScore: 8.4,
-  
+
   elementos: {
     fuego: 342,  // Acciones completadas
     agua: 189,   // Adaptaciones exitosas
     tierra: 267, // Contribuciones estables
     aire: 156    // Ideas compartidas
   },
-  
+
   totalTransactions: 45,
   positiveImpact: 912,
   communityRank: 127,
   weeklyGrowth: 12.3,
-  
+
   lastUpdated: new Date().toISOString(),
   joinedDate: '2024-03-15T00:00:00.000Z'
 };
 
 export const useAyniMetrics = () => {
   const { user } = useAuth();
-  
+
   return useQuery<AyniMetricsData>({
     queryKey: ['ayni-metrics', user?.id],
     queryFn: async () => {
       if (!user?.id) {
         return DEFAULT_AYNI_METRICS;
       }
-      
+
       try {
-        const response = await apiService.get(`/users/${user.id}/ayni-metrics`);
-        console.log('🌟 ÉXITO: Datos Ayni obtenidos del backend real:', {
-          userId: user.id,
-          ondas: response.data.ondas,
-          ayniLevel: response.data.ayniLevel,
-          source: 'BACKEND_REAL'
-        });
-        return {
-          ...DEFAULT_AYNI_METRICS,
-          ...response.data,
-          lastUpdated: new Date().toISOString()
-        };
+        const response = await apiService.get<AyniMetricsData | { data: AyniMetricsData }>(`/users/${user.id}/ayni-metrics`);
+
+        // The backend returns data directly, not wrapped in a data property
+        if (response && ((response as AyniMetricsData).ondas !== undefined || (response as any).data)) {
+          // Handle both direct response and wrapped response
+          const metricsData = (response as any).data || response;
+
+          safeLog.log('🌟 ÉXITO: Datos Ayni obtenidos del backend real:', {
+            userId: user.id,
+            ondas: metricsData.ondas,
+            ayniLevel: metricsData.ayniLevel,
+            source: 'BACKEND_REAL'
+          });
+          return {
+            ...DEFAULT_AYNI_METRICS,
+            ...metricsData,
+            lastUpdated: new Date().toISOString()
+          };
+        } else {
+          throw new Error("Backend response data for Ayni metrics is empty or invalid.");
+        }
       } catch (error) {
-        console.warn('🌟 Usando métricas Ayni por defecto (backend no disponible):', error);
-        console.log('🔄 Fallback: Generando datos simulados para usuario:', user.email);
+        safeLog.warn('🌟 Usando métricas Ayni por defecto (backend no disponible):', error);
+        safeLog.log('🔄 Fallback: Generando datos simulados para usuario:', user.email);
         return {
           ...DEFAULT_AYNI_METRICS,
           // Personalizar ligeramente basado en el usuario
@@ -108,7 +118,7 @@ export const useAyniMetrics = () => {
 // Hook adicional para métricas en tiempo real
 export const useAyniMetricsRealTime = () => {
   const baseMetrics = useAyniMetrics();
-  
+
   return {
     ...baseMetrics,
     data: baseMetrics.data ? {
@@ -120,4 +130,4 @@ export const useAyniMetricsRealTime = () => {
   };
 };
 
-export default useAyniMetrics; 
+export default useAyniMetrics;

@@ -1,4 +1,11 @@
-import { IsString, IsOptional, IsObject, IsUUID, IsNumber, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsObject,
+  IsUUID,
+  IsNumber,
+  IsEnum,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export enum VideoEventType {
@@ -9,13 +16,13 @@ export enum VideoEventType {
   VIDEO_COMPLETE = 'video_complete',
   VIDEO_ABANDON = 'video_abandon',
   QUESTION_ANSWERED = 'question_answered',
-  TOTAL_WATCH_TIME = 'total_watch_time'
+  TOTAL_WATCH_TIME = 'total_watch_time',
 }
 
 export class CreateVideoEngagementEventDto {
-  @ApiProperty({ 
-    description: 'Tipo de evento de video', 
-    enum: VideoEventType 
+  @ApiProperty({
+    description: 'Tipo de evento de video',
+    enum: VideoEventType,
   })
   @IsEnum(VideoEventType)
   eventType: VideoEventType;
@@ -43,31 +50,31 @@ export class CreateVideoEngagementEventDto {
   @IsString()
   sessionId: string;
 
-  @ApiPropertyOptional({ 
-    description: 'Timestamp específico del evento en el video (en segundos)', 
-    example: 45.5 
+  @ApiPropertyOptional({
+    description: 'Timestamp específico del evento en el video (en segundos)',
+    example: 45.5,
   })
   @IsOptional()
   @IsNumber()
   videoTimestamp?: number;
 
-  @ApiPropertyOptional({ 
-    description: 'Duración total del video (en segundos)', 
-    example: 300 
+  @ApiPropertyOptional({
+    description: 'Duración total del video (en segundos)',
+    example: 300,
   })
   @IsOptional()
   @IsNumber()
   videoDuration?: number;
 
-  @ApiPropertyOptional({ 
-    description: 'Tiempo total de visualización en esta sesión (en segundos)', 
-    example: 120 
+  @ApiPropertyOptional({
+    description: 'Tiempo total de visualización en esta sesión (en segundos)',
+    example: 120,
   })
   @IsOptional()
   @IsNumber()
   totalWatchTime?: number;
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     description: 'Metadatos adicionales del evento',
     example: {
       device: 'mobile',
@@ -75,10 +82,10 @@ export class CreateVideoEngagementEventDto {
       previousTimestamp: 30,
       newTimestamp: 60,
       questionId: 'q123',
-      answerCorrect: true
-    }
+      answerCorrect: true,
+    },
   })
   @IsOptional()
   @IsObject()
   metadata?: Record<string, any>;
-} 
+}

@@ -9,7 +9,7 @@ export interface AuditLog {
 }
 
 // Tipos de acciones posibles en el sistema
-export type AuditAction = 
+export type AuditAction =
   | 'create'
   | 'update'
   | 'delete'
@@ -18,7 +18,7 @@ export type AuditAction =
   | 'status_change';
 
 // Tipos de entidades que pueden ser auditadas
-export type AuditEntityType = 
+export type AuditEntityType =
   | 'user'
   | 'mundo'
   | 'playlist'
@@ -38,7 +38,9 @@ export interface SystemSettings {
   updated_at: string;
 }
 
-export type UpdateSystemSettingsData = Partial<Omit<SystemSettings, 'id' | 'created_at' | 'updated_at'>>;
+export type UpdateSystemSettingsData = Partial<
+  Omit<SystemSettings, 'id' | 'created_at' | 'updated_at'>
+>;
 
 export interface BackupStatus {
   id: string; // ID del backup
@@ -57,4 +59,4 @@ export interface ServiceStatus {
   message: string | null; // Mensaje adicional (ej. descripción del error)
 }
 
-export type SystemHealthMetric = ServiceStatus[]; 
+export type SystemHealthMetric = ServiceStatus[];

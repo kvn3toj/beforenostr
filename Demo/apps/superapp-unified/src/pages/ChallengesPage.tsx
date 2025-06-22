@@ -323,7 +323,11 @@ export const ChallengesPage: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4, position: 'relative' }}>
+    <Container 
+      maxWidth="lg" 
+      sx={{ py: 4, position: 'relative' }}
+      data-testid="challenges-page"
+    >
       {/* Header mejorado */}
       <Paper
         elevation={0}
@@ -715,3 +719,6 @@ export const ChallengesPage: React.FC = () => {
     </Container>
   );
 };
+
+// Exportación por defecto para lazy loading
+export default ChallengesPage;

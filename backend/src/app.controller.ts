@@ -4,12 +4,12 @@ import { AppService } from './app.service';
 @Controller()
 export class AppController {
   constructor(private readonly appService?: AppService) {
-// //     console.log('>>> AppController CONSTRUCTOR: appService is', this.appService ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> AppController CONSTRUCTOR: appService is', this.appService ? 'DEFINED' : 'UNDEFINED');
   }
 
   @Get()
   getHello() {
-//     console.log('>>> AppController.getHello: appService is', this.appService ? 'DEFINED' : 'UNDEFINED');
+    //     console.log('>>> AppController.getHello: appService is', this.appService ? 'DEFINED' : 'UNDEFINED');
 
     // Fallback si AppService no está disponible
     if (!this.appService) {
@@ -17,7 +17,7 @@ export class AppController {
         status: 'ok',
         message: 'Gamifier API is running! 🚀',
         timestamp: new Date().toISOString(),
-        note: 'Direct response (AppService unavailable)'
+        note: 'Direct response (AppService unavailable)',
       };
     }
 
@@ -25,15 +25,15 @@ export class AppController {
       return {
         status: 'ok',
         message: this.appService.getHello(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     } catch (error) {
-//       console.error('>>> AppController.getHello: Error calling appService.getHello():', error);
+      //       console.error('>>> AppController.getHello: Error calling appService.getHello():', error);
       return {
         status: 'ok',
         message: 'Gamifier API is running! 🚀',
         timestamp: new Date().toISOString(),
-        note: 'Fallback response due to AppService error'
+        note: 'Fallback response due to AppService error',
       };
     }
   }
@@ -48,8 +48,8 @@ export class AppController {
       endpoints: {
         health: 'OK',
         auth: 'OK',
-        api: 'OK'
-      }
+        api: 'OK',
+      },
     };
   }
 }

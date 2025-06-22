@@ -5,21 +5,19 @@ import { PrismaService } from '../prisma/prisma.service';
 @ApiTags('playlists-direct')
 @Controller('playlists-direct')
 export class PlaylistDirectController {
-  constructor(
-    @Inject(PrismaService) private readonly prisma: PrismaService
-  ) {
-//     console.log('>>> PlaylistDirectController constructor called');
-//     console.log('>>> PlaylistDirectController constructor - prisma:', !!this.prisma);
-//     console.log('>>> PlaylistDirectController constructor - prisma type:', typeof this.prisma);
-//     console.log('>>> PlaylistDirectController constructor - prisma constructor:', this.prisma?.constructor?.name);
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
+    //     console.log('>>> PlaylistDirectController constructor called');
+    //     console.log('>>> PlaylistDirectController constructor - prisma:', !!this.prisma);
+    //     console.log('>>> PlaylistDirectController constructor - prisma type:', typeof this.prisma);
+    //     console.log('>>> PlaylistDirectController constructor - prisma constructor:', this.prisma?.constructor?.name);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all playlists directly' })
   @ApiResponse({ status: 200, description: 'List of playlists' })
   async findAll() {
-//     console.log('>>> PlaylistDirectController.findAll called');
-//     console.log('>>> PlaylistDirectController.findAll - prisma:', !!this.prisma);
+    //     console.log('>>> PlaylistDirectController.findAll called');
+    //     console.log('>>> PlaylistDirectController.findAll - prisma:', !!this.prisma);
     try {
       const playlists = await this.prisma.playlist.findMany({
         where: { isActive: true },
@@ -28,10 +26,10 @@ export class PlaylistDirectController {
         },
         orderBy: { createdAt: 'desc' },
       });
-//       console.log('>>> PlaylistDirectController.findAll found:', playlists.length, 'playlists');
+      //       console.log('>>> PlaylistDirectController.findAll found:', playlists.length, 'playlists');
       return playlists;
     } catch (error) {
-//       console.error('>>> PlaylistDirectController.findAll error:', error);
+      //       console.error('>>> PlaylistDirectController.findAll error:', error);
       throw error;
     }
   }
@@ -39,45 +37,45 @@ export class PlaylistDirectController {
   @Get('test')
   @ApiOperation({ summary: 'Test endpoint for playlists' })
   test() {
-//     console.log('>>> PlaylistDirectController.test called');
-    return { 
+    //     console.log('>>> PlaylistDirectController.test called');
+    return {
       message: 'PlaylistDirectController is working',
       timestamp: new Date().toISOString(),
-      status: HttpStatus.OK
+      status: HttpStatus.OK,
     };
   }
 
   @Get('db-test')
   @ApiOperation({ summary: 'Test database connection' })
   async dbTest() {
-//     console.log('>>> PlaylistDirectController.dbTest called');
-//     console.log('>>> PlaylistDirectController.dbTest - prisma:', !!this.prisma);
-//     console.log('>>> PlaylistDirectController.dbTest - prisma type:', typeof this.prisma);
-    
+    //     console.log('>>> PlaylistDirectController.dbTest called');
+    //     console.log('>>> PlaylistDirectController.dbTest - prisma:', !!this.prisma);
+    //     console.log('>>> PlaylistDirectController.dbTest - prisma type:', typeof this.prisma);
+
     if (!this.prisma) {
       return {
         success: false,
         error: 'PrismaService is undefined',
-        message: 'Dependency injection failed'
+        message: 'Dependency injection failed',
       };
     }
-    
+
     try {
-//       console.log('>>> Testing prisma connection...');
+      //       console.log('>>> Testing prisma connection...');
       const result = await this.prisma.$queryRaw`SELECT 1 as test`;
-//       console.log('>>> Prisma query result:', result);
+      //       console.log('>>> Prisma query result:', result);
       return {
         success: true,
-        result: result,
-        message: 'Database connection successful'
+        result,
+        message: 'Database connection successful',
       };
     } catch (error) {
-//       console.error('>>> Database test error:', error);
+      //       console.error('>>> Database test error:', error);
       return {
         success: false,
         error: error.message,
-        message: 'Database connection failed'
+        message: 'Database connection failed',
       };
     }
   }
-} 
+}

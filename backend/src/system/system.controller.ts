@@ -2,7 +2,6 @@ import { Controller, Get } from '@nestjs/common';
 
 @Controller('system')
 export class SystemController {
-  
   @Get('settings')
   getSettings() {
     return {
@@ -24,4 +23,4 @@ export class SystemController {
   getHealth() {
     return [];
   }
-} 
+}

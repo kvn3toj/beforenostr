@@ -11,7 +11,7 @@ export class CreatePersonalityDto {
   @IsString()
   description?: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Características de personalidad en formato JSON',
     example: {
       openness: 0.8,
@@ -19,9 +19,9 @@ export class CreatePersonalityDto {
       extraversion: 0.7,
       agreeableness: 0.9,
       neuroticism: 0.3,
-      traits: ['creative', 'analytical', 'collaborative']
-    }
+      traits: ['creative', 'analytical', 'collaborative'],
+    },
   })
   @IsObject()
-  traits: Record<string, any>;
-} 
+  traits: Record<string, unknown>;
+}

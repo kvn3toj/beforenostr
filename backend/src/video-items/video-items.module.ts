@@ -10,6 +10,6 @@ import { LoggerModule } from '../common/logger/logger.module';
   imports: [PrismaModule, CacheModule, MetricsModule, LoggerModule],
   controllers: [VideoItemsController],
   providers: [VideoItemsService],
-  exports: [VideoItemsService]
+  exports: [VideoItemsService],
 })
 export class VideoItemsModule {}

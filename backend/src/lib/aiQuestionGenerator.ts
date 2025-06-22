@@ -18,6 +18,8 @@ export interface GeneratedQuestion {
   options?: string[];
   correctAnswer?: number | string;
   explanation?: string;
+  videoItemId: number;
+  generatedAt: string;
 }
 
 export interface GenerationResult {
@@ -31,19 +33,33 @@ export interface GenerationResult {
   };
 }
 
+interface Subtitle {
+  languageCode: string;
+  content: string;
+}
+
+interface VideoData {
+  id: number;
+  title: string;
+  description?: string;
+  subtitles?: Subtitle[];
+}
+
 // Simulamos un generador AI usando la lógica de demo
 class AIQuestionGenerator {
   private apiKey: string;
 
   constructor() {
-    // En producción, esto vendría de variables de entorno
-    this.apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY || 'AIzaSyDXMoHjoHi8-xUfiD5QN6bFVIeoTMhK2z4';
+    // En producción, esto vendría de variables de entorno del backend
+    this.apiKey =
+      process.env.GOOGLE_AI_API_KEY ||
+      'AIzaSyDXMoHjoHi8-xUfiD5QN6bFVIeoTMhK2z4';
   }
 
   async generateQuestions(
     videoItemId: number,
     config: QuestionGenerationConfig,
-    videoData?: any
+    videoData?: VideoData
   ): Promise<GenerationResult> {
     try {
       console.log('🤖 Generando preguntas con IA para video ID:', videoItemId);
@@ -51,7 +67,7 @@ class AIQuestionGenerator {
 
       // Importar dinámicamente Google AI (solo cuando se necesite)
       const { GoogleGenerativeAI } = await import('@google/generative-ai');
-      
+
       if (!this.apiKey) {
         throw new Error('API key de Google AI no configurada');
       }
@@ -65,7 +81,7 @@ class AIQuestionGenerator {
       const prompt = this.buildPrompt(mockVideoData, config);
 
       // Llamar a Google AI
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
@@ -80,20 +96,19 @@ class AIQuestionGenerator {
         config,
         metadata: {
           videoItemId,
-          generatedAt: new Date().toISOString()
-        }
+          generatedAt: new Date().toISOString(),
+        },
       };
 
       console.log('✅ Preguntas generadas:', generationResult);
       return generationResult;
-
     } catch (error) {
       console.error('❌ Error generando preguntas:', error);
       throw new Error(`Error al generar preguntas: ${error.message}`);
     }
   }
 
-  private getMockVideoData(videoItemId: number, providedData?: any) {
+  private getMockVideoData(videoItemId: number, providedData?: VideoData) {
     // Si se proporciona data del video, usarla
     if (providedData) {
       return providedData;
@@ -102,11 +117,12 @@ class AIQuestionGenerator {
     // Datos simulados por defecto
     return {
       id: videoItemId,
-      title: "Video de Gamificación",
-      description: "Contenido educativo sobre mecánicas de gamificación",
-      subtitles: [{
-        languageCode: 'es-ES',
-        content: `WEBVTT
+      title: 'Video de Gamificación',
+      description: 'Contenido educativo sobre mecánicas de gamificación',
+      subtitles: [
+        {
+          languageCode: 'es-ES',
+          content: `WEBVTT
 
 00:00:00.000 --> 00:00:05.000
 Bienvenidos a esta sesión sobre gamificación y engagement.
@@ -136,20 +152,31 @@ También debemos considerar las recompensas sorpresa para mantener el engagement
 Finalmente, el timing de las recompensas es crucial para el éxito.
 
 00:00:58.000 --> 00:01:05.000
-Gracias por su atención y nos vemos en la próxima sesión.`
-      }]
+Gracias por su atención y nos vemos en la próxima sesión.`,
+        },
+      ],
     };
   }
 
-  private buildPrompt(videoData: any, config: QuestionGenerationConfig): string {
-    const subtitlesText = videoData.subtitles
-      ?.filter(s => s.languageCode === config.languageCode || s.languageCode.startsWith(config.languageCode.split('-')[0]))
-      ?.map(s => s.content)
-      ?.join('\n') || 'Sin subtítulos disponibles';
+  private buildPrompt(
+    videoData: VideoData,
+    config: QuestionGenerationConfig
+  ): string {
+    const subtitlesText =
+      videoData.subtitles
+        ?.filter(
+          (s) =>
+            s.languageCode === config.languageCode ||
+            s.languageCode.startsWith(config.languageCode.split('-')[0])
+        )
+        ?.map((s) => s.content)
+        ?.join('\n') || 'Sin subtítulos disponibles';
 
     const focusInstructions = this.getFocusInstructions(config.focusContext);
     const typeInstructions = this.getTypeInstructions(config.questionTypes);
-    const distributionInstructions = this.getDistributionInstructions(config.timeDistribution);
+    const distributionInstructions = this.getDistributionInstructions(
+      config.timeDistribution
+    );
 
     return `
 Eres un asistente especializado en crear preguntas de ATENCIÓN para videos educativos.
@@ -191,7 +218,7 @@ FORMATO DE RESPUESTA (JSON válido):
   ]
 }
 
-IMPORTANTE: 
+IMPORTANTE:
 - Las preguntas deben ser sobre detalles específicos del video
 - Deben requerir que el usuario haya visto ESA parte específica
 - No preguntes sobre conocimiento general
@@ -214,18 +241,20 @@ IMPORTANTE:
   }
 
   private getTypeInstructions(types: string[]): string {
-    const instructions = types.map(type => {
-      switch (type) {
-        case 'multiple-choice':
-          return '- Opción múltiple: 4 opciones, solo una correcta';
-        case 'true-false':
-          return '- Verdadero/Falso: afirmaciones sobre lo que ocurre en el video';
-        case 'short-answer':
-          return '- Respuesta corta: palabras o frases específicas mencionadas';
-        default:
-          return '';
-      }
-    }).filter(Boolean);
+    const instructions = types
+      .map((type) => {
+        switch (type) {
+          case 'multiple-choice':
+            return '- Opción múltiple: 4 opciones, solo una correcta';
+          case 'true-false':
+            return '- Verdadero/Falso: afirmaciones sobre lo que ocurre en el video';
+          case 'short-answer':
+            return '- Respuesta corta: palabras o frases específicas mencionadas';
+          default:
+            return '';
+        }
+      })
+      .filter(Boolean);
 
     return instructions.join('\n');
   }
@@ -250,7 +279,7 @@ IMPORTANTE:
       if (!jsonMatch) {
         jsonMatch = text.match(/\{[\s\S]*\}/);
       }
-      
+
       if (!jsonMatch) {
         throw new Error('No se encontró JSON válido en la respuesta de IA');
       }
@@ -270,26 +299,29 @@ IMPORTANTE:
 export const aiQuestionGenerator = new AIQuestionGenerator();
 
 // Configuraciones predefinidas para facilidad de uso
-export const PRESET_CONFIGS: Record<string, Partial<QuestionGenerationConfig>> = {
+export const PRESET_CONFIGS: Record<
+  string,
+  Partial<QuestionGenerationConfig>
+> = {
   quick: {
     numberOfQuestions: 2,
     focusContext: 'general',
     questionTypes: ['multiple-choice'],
     timeDistribution: 'distributed',
-    difficultyLevel: 'easy'
+    difficultyLevel: 'easy',
   },
   standard: {
     numberOfQuestions: 3,
     focusContext: 'general',
     questionTypes: ['multiple-choice', 'true-false'],
     timeDistribution: 'distributed',
-    difficultyLevel: 'medium'
+    difficultyLevel: 'medium',
   },
   comprehensive: {
     numberOfQuestions: 5,
     focusContext: 'general',
     questionTypes: ['multiple-choice', 'true-false', 'short-answer'],
     timeDistribution: 'distributed',
-    difficultyLevel: 'medium'
-  }
-}; 
+    difficultyLevel: 'medium',
+  },
+};

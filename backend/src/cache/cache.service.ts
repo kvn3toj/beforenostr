@@ -1,4 +1,9 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Logger,
+} from '@nestjs/common';
 import { createClient, RedisClientType } from 'redis';
 import { MetricsService } from '../common/metrics/metrics.service';
 
@@ -9,9 +14,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   private cacheStats = { hits: 0, misses: 0 };
   private readonly logger = new Logger(CacheService.name);
 
-  constructor(
-    private readonly metricsService: MetricsService
-  ) {
+  constructor(private readonly metricsService: MetricsService) {
     this.logger.log('Initializing Redis client...', 'CacheService');
 
     this.client = createClient({
@@ -27,7 +30,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       this.logger.error('Redis Client Error', err.stack, 'CacheService', {
         error: err.message,
         host: process.env.REDIS_HOST || 'localhost',
-        port: process.env.REDIS_PORT || '6379'
+        port: process.env.REDIS_PORT || '6379',
       });
     });
 
@@ -61,7 +64,11 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       await this.client.disconnect();
       this.logger.log('Redis disconnected', 'CacheService');
     } catch (error) {
-      this.logger.error('Error disconnecting from Redis', error, 'CacheService');
+      this.logger.error(
+        'Error disconnecting from Redis',
+        error,
+        'CacheService'
+      );
     }
   }
 
@@ -73,7 +80,10 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   async getDuration(videoId: string): Promise<number | null> {
     try {
       if (!this.client.isReady) {
-        this.logger.log('Redis client not ready, skipping cache', 'CacheService');
+        this.logger.log(
+          'Redis client not ready, skipping cache',
+          'CacheService'
+        );
         return null;
       }
 
@@ -88,9 +98,14 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
 
         // Actualizar métricas de Prometheus
         this.metricsService.incrementCacheOperations('get', 'hit');
-        this.metricsService.setCacheHitRatio(this.cacheStats.hits / (this.cacheStats.hits + this.cacheStats.misses));
+        this.metricsService.setCacheHitRatio(
+          this.cacheStats.hits / (this.cacheStats.hits + this.cacheStats.misses)
+        );
 
-        this.logger.log(`Cache HIT for ${videoId}: ${duration}s`, 'CacheService');
+        this.logger.log(
+          `Cache HIT for ${videoId}: ${duration}s`,
+          'CacheService'
+        );
         return duration;
       }
 
@@ -98,7 +113,9 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
 
       // Actualizar métricas de Prometheus
       this.metricsService.incrementCacheOperations('get', 'miss');
-      this.metricsService.setCacheHitRatio(this.cacheStats.hits / (this.cacheStats.hits + this.cacheStats.misses));
+      this.metricsService.setCacheHitRatio(
+        this.cacheStats.hits / (this.cacheStats.hits + this.cacheStats.misses)
+      );
 
       this.logger.log(`Cache MISS for ${videoId}`, 'CacheService');
       return null;
@@ -115,17 +132,27 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
    * @param duration Duración en segundos
    * @param ttl Tiempo de vida en segundos (opcional, por defecto 7 días)
    */
-  async setDuration(videoId: string, duration: number, ttl?: number): Promise<void> {
+  async setDuration(
+    videoId: string,
+    duration: number,
+    ttl?: number
+  ): Promise<void> {
     try {
       if (!this.client.isReady) {
-        this.logger.log('Redis client not ready, skipping cache', 'CacheService');
+        this.logger.log(
+          'Redis client not ready, skipping cache',
+          'CacheService'
+        );
         return;
       }
 
       const key = this.generateCacheKey(videoId);
       const timeToLive = ttl || this.defaultTTL;
 
-      this.logger.log(`Setting cache for ${videoId}: ${duration}s (TTL: ${timeToLive}s)`, 'CacheService');
+      this.logger.log(
+        `Setting cache for ${videoId}: ${duration}s (TTL: ${timeToLive}s)`,
+        'CacheService'
+      );
 
       await this.client.setEx(key, timeToLive, duration.toString());
 
@@ -147,7 +174,10 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   async deleteDuration(videoId: string): Promise<void> {
     try {
       if (!this.client.isReady) {
-        this.logger.log('Redis client not ready, skipping cache', 'CacheService');
+        this.logger.log(
+          'Redis client not ready, skipping cache',
+          'CacheService'
+        );
         return;
       }
 
@@ -197,7 +227,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
 
       return {
         totalKeys: keys.length,
-        memoryUsage: memoryUsage.trim()
+        memoryUsage: memoryUsage.trim(),
       };
     } catch (error) {
       this.logger.error('Error getting cache stats', error, 'CacheService');
@@ -222,7 +252,11 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
    * @param metadata Metadatos del video
    * @param ttl TTL en segundos (opcional, usa defaultTTL si no se especifica)
    */
-  async setMetadata(videoId: string, metadata: any, ttl?: number): Promise<void> {
+  async setMetadata(
+    videoId: string,
+    metadata: any,
+    ttl?: number
+  ): Promise<void> {
     try {
       const key = this.generateMetadataCacheKey(videoId);
       const value = JSON.stringify(metadata);
@@ -233,10 +267,15 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       this.logger.log(`Metadata cached for video ${videoId}`, 'CacheService', {
         key,
         ttl: cacheTTL,
-        metadataSize: value.length
+        metadataSize: value.length,
       });
     } catch (error) {
-      this.logger.error('Error setting metadata cache:', error, 'CacheService', { videoId });
+      this.logger.error(
+        'Error setting metadata cache:',
+        error,
+        'CacheService',
+        { videoId }
+      );
     }
   }
 
@@ -255,17 +294,30 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
         this.metricsService.incrementCacheOperations('get', 'hit');
 
         const metadata = JSON.parse(value);
-        this.logger.log(`Metadata cache hit for video ${videoId}`, 'CacheService', { key });
+        this.logger.log(
+          `Metadata cache hit for video ${videoId}`,
+          'CacheService',
+          { key }
+        );
         return metadata;
       } else {
         this.cacheStats.misses++;
         this.metricsService.incrementCacheOperations('get', 'miss');
 
-        this.logger.log(`Metadata cache miss for video ${videoId}`, 'CacheService', { key });
+        this.logger.log(
+          `Metadata cache miss for video ${videoId}`,
+          'CacheService',
+          { key }
+        );
         return null;
       }
     } catch (error) {
-      this.logger.error('Error getting metadata cache:', error, 'CacheService', { videoId });
+      this.logger.error(
+        'Error getting metadata cache:',
+        error,
+        'CacheService',
+        { videoId }
+      );
       this.cacheStats.misses++;
       this.metricsService.incrementCacheOperations('get', 'error');
       return null;
@@ -281,9 +333,18 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       const key = this.generateMetadataCacheKey(videoId);
       await this.client.del(key);
 
-      this.logger.log(`Metadata cache deleted for video ${videoId}`, 'CacheService', { key });
+      this.logger.log(
+        `Metadata cache deleted for video ${videoId}`,
+        'CacheService',
+        { key }
+      );
     } catch (error) {
-      this.logger.error('Error deleting metadata cache:', error, 'CacheService', { videoId });
+      this.logger.error(
+        'Error deleting metadata cache:',
+        error,
+        'CacheService',
+        { videoId }
+      );
     }
   }
 
@@ -298,7 +359,12 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       const exists = await this.client.exists(key);
       return exists === 1;
     } catch (error) {
-      this.logger.error('Error checking metadata cache existence:', error, 'CacheService', { videoId });
+      this.logger.error(
+        'Error checking metadata cache existence:',
+        error,
+        'CacheService',
+        { videoId }
+      );
       return false;
     }
   }
@@ -327,10 +393,14 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
         ...basicStats,
         metadataKeys: metadataKeys.length,
         durationKeys: durationKeys.length,
-        totalVideoKeys: metadataKeys.length + durationKeys.length
+        totalVideoKeys: metadataKeys.length + durationKeys.length,
       };
     } catch (error) {
-      this.logger.error('Error getting cache stats with metadata:', error, 'CacheService');
+      this.logger.error(
+        'Error getting cache stats with metadata:',
+        error,
+        'CacheService'
+      );
       return this.getCacheStats();
     }
   }

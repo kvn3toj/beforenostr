@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID, IsOptional, MaxLength, MinLength } from 'class-validator';
+import {
+  IsString,
+  IsUUID,
+  IsOptional,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateStudyRoomDto {
   @ApiProperty({
@@ -38,4 +44,4 @@ export class CreateStudyRoomDto {
   })
   @IsOptional()
   maxParticipants?: number = 10;
-} 
+}

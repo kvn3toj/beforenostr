@@ -1,15 +1,34 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Inject,
+} from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
-import { CreateNotificationDto, CreateBulkNotificationDto, UpdateNotificationDto, NotificationFilterDto } from './dto/notifications.dto';
+import {
+  CreateNotificationDto,
+  CreateBulkNotificationDto,
+  UpdateNotificationDto,
+  NotificationFilterDto,
+} from './dto/notifications.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
 
 @Controller('notifications')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class NotificationsController {
-  constructor(@Inject(NotificationsService) private readonly notificationsService: NotificationsService) {
-// //     console.log('>>> NotificationsController CONSTRUCTOR: this.notificationsService IS', this.notificationsService ? 'DEFINED' : 'UNDEFINED');
+  constructor(
+    @Inject(NotificationsService)
+    private readonly notificationsService: NotificationsService
+  ) {
+    // //     console.log('>>> NotificationsController CONSTRUCTOR: this.notificationsService IS', this.notificationsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
@@ -18,7 +37,7 @@ export class NotificationsController {
   @Post()
   @Roles('admin', 'user')
   async createNotification(@Body() dto: CreateNotificationDto) {
-//     console.log('>>> NotificationsController.createNotification: Creating notification', dto);
+    //     console.log('>>> NotificationsController.createNotification: Creating notification', dto);
     return await this.notificationsService.createNotification(dto);
   }
 
@@ -28,7 +47,7 @@ export class NotificationsController {
   @Post('bulk')
   @Roles('admin')
   async createBulkNotifications(@Body() dto: CreateBulkNotificationDto) {
-//     console.log('>>> NotificationsController.createBulkNotifications: Creating bulk notifications', dto);
+    //     console.log('>>> NotificationsController.createBulkNotifications: Creating bulk notifications', dto);
     return await this.notificationsService.createBulkNotifications(dto);
   }
 
@@ -44,16 +63,19 @@ export class NotificationsController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string
   ) {
-//     console.log('>>> NotificationsController.getUserNotifications: Getting notifications for user', userId);
-    
+    //     console.log('>>> NotificationsController.getUserNotifications: Getting notifications for user', userId);
+
     const filters: NotificationFilterDto = {
       type: type as any,
       read: read ? read === 'true' : undefined,
       limit,
-      offset
+      offset,
     };
-    
-    return await this.notificationsService.getUserNotifications(userId, filters);
+
+    return await this.notificationsService.getUserNotifications(
+      userId,
+      filters
+    );
   }
 
   /**
@@ -62,7 +84,7 @@ export class NotificationsController {
   @Get('user/:userId/unread-count')
   @Roles('admin', 'user')
   async getUnreadCount(@Param('userId') userId: string) {
-//     console.log('>>> NotificationsController.getUnreadCount: Getting unread count for user', userId);
+    //     console.log('>>> NotificationsController.getUnreadCount: Getting unread count for user', userId);
     return await this.notificationsService.getUnreadCount(userId);
   }
 
@@ -75,7 +97,7 @@ export class NotificationsController {
     @Param('notificationId') notificationId: string,
     @Query('userId') userId: string
   ) {
-//     console.log('>>> NotificationsController.markAsRead: Marking notification as read', notificationId);
+    //     console.log('>>> NotificationsController.markAsRead: Marking notification as read', notificationId);
     return await this.notificationsService.markAsRead(notificationId, userId);
   }
 
@@ -85,7 +107,7 @@ export class NotificationsController {
   @Put('user/:userId/mark-all-read')
   @Roles('admin', 'user')
   async markAllAsRead(@Param('userId') userId: string) {
-//     console.log('>>> NotificationsController.markAllAsRead: Marking all notifications as read for user', userId);
+    //     console.log('>>> NotificationsController.markAllAsRead: Marking all notifications as read for user', userId);
     return await this.notificationsService.markAllAsRead(userId);
   }
 
@@ -98,8 +120,11 @@ export class NotificationsController {
     @Param('notificationId') notificationId: string,
     @Query('userId') userId: string
   ) {
-//     console.log('>>> NotificationsController.deleteNotification: Deleting notification', notificationId);
-    return await this.notificationsService.deleteNotification(notificationId, userId);
+    //     console.log('>>> NotificationsController.deleteNotification: Deleting notification', notificationId);
+    return await this.notificationsService.deleteNotification(
+      notificationId,
+      userId
+    );
   }
 
   /**
@@ -108,7 +133,7 @@ export class NotificationsController {
   @Post('cleanup')
   @Roles('admin')
   async cleanupOldNotifications() {
-//     console.log('>>> NotificationsController.cleanupOldNotifications: Cleaning up old notifications');
+    //     console.log('>>> NotificationsController.cleanupOldNotifications: Cleaning up old notifications');
     return await this.notificationsService.cleanupOldNotifications();
   }
 
@@ -117,11 +142,11 @@ export class NotificationsController {
    */
   @Get('ping')
   async ping() {
-//     console.log('>>> NotificationsController.ping: Notifications module is working');
-    return { 
-      message: 'Notifications module is working', 
+    //     console.log('>>> NotificationsController.ping: Notifications module is working');
+    return {
+      message: 'Notifications module is working',
       timestamp: new Date().toISOString(),
-      module: 'Notifications System'
+      module: 'Notifications System',
     };
   }
-} 
+}

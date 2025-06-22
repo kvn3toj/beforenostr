@@ -22,4 +22,4 @@ export class CreateTokenDto {
 
   @IsString()
   source: string; // GIFT_CARD, PURCHASE, CONVERSION, REWARD, INITIAL_GRANT
-} 
+}

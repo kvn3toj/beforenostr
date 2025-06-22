@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsArray, IsEnum, IsOptional, Min, Max } from 'class-validator';
+import {
+  IsInt,
+  IsString,
+  IsArray,
+  IsEnum,
+  IsOptional,
+  Min,
+  Max,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export enum FocusContext {
@@ -29,73 +37,73 @@ export enum DifficultyLevel {
 }
 
 export class GenerateQuestionsDto {
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'ID of the video item to generate questions for',
-    example: 1 
+    example: 1,
   })
   @Type(() => Number)
   @IsInt()
   @Min(1)
   videoItemId: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Number of questions to generate',
     example: 3,
     minimum: 1,
-    maximum: 10
+    maximum: 10,
   })
   @IsInt()
   @Min(1)
   @Max(10)
   numberOfQuestions: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Focus context for the questions',
     enum: FocusContext,
-    example: FocusContext.GENERAL
+    example: FocusContext.GENERAL,
   })
   @IsEnum(FocusContext)
   focusContext: FocusContext;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Types of questions to generate',
     enum: QuestionType,
     isArray: true,
-    example: [QuestionType.MULTIPLE_CHOICE, QuestionType.TRUE_FALSE]
+    example: [QuestionType.MULTIPLE_CHOICE, QuestionType.TRUE_FALSE],
   })
   @IsArray()
   @IsEnum(QuestionType, { each: true })
   questionTypes: QuestionType[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'How to distribute questions across the video timeline',
     enum: TimeDistribution,
-    example: TimeDistribution.DISTRIBUTED
+    example: TimeDistribution.DISTRIBUTED,
   })
   @IsEnum(TimeDistribution)
   timeDistribution: TimeDistribution;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Difficulty level of the questions',
     enum: DifficultyLevel,
-    example: DifficultyLevel.MEDIUM
+    example: DifficultyLevel.MEDIUM,
   })
   @IsEnum(DifficultyLevel)
   difficultyLevel: DifficultyLevel;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Language code for the questions',
-    example: 'es-ES'
+    example: 'es-ES',
   })
   @IsString()
   languageCode: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Whether to save the generated questions automatically',
     example: false,
     required: false,
-    default: false
+    default: false,
   })
   @IsOptional()
   autoSave?: boolean = false;
-} 
+}

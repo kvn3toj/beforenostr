@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ConflictException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  Inject,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePersonalityDto } from './dto/create-personality.dto';
 import { UpdatePersonalityDto } from './dto/update-personality.dto';
@@ -8,18 +13,22 @@ import type { Personality } from '../generated/prisma';
 @Injectable()
 export class PersonalityService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-// //     console.log('>>> PersonalityService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> PersonalityService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
-  async create(createPersonalityDto: CreatePersonalityDto): Promise<Personality> {
+  async create(
+    createPersonalityDto: CreatePersonalityDto
+  ): Promise<Personality> {
     try {
       // Verificar si ya existe una personalidad con ese nombre
       const existingPersonality = await this.prisma.personality.findUnique({
-        where: { name: createPersonalityDto.name }
+        where: { name: createPersonalityDto.name },
       });
 
       if (existingPersonality) {
-        throw new ConflictException(`Personality with name "${createPersonalityDto.name}" already exists`);
+        throw new ConflictException(
+          `Personality with name "${createPersonalityDto.name}" already exists`
+        );
       }
 
       return await this.prisma.personality.create({
@@ -64,18 +73,23 @@ export class PersonalityService {
     return personality;
   }
 
-  async update(id: string, updatePersonalityDto: UpdatePersonalityDto): Promise<Personality> {
+  async update(
+    id: string,
+    updatePersonalityDto: UpdatePersonalityDto
+  ): Promise<Personality> {
     // Verificar que la personalidad existe
     await this.findOne(id);
 
     // Si se está actualizando el nombre, verificar que no exista otra personalidad con ese nombre
     if (updatePersonalityDto.name) {
       const existingPersonality = await this.prisma.personality.findUnique({
-        where: { name: updatePersonalityDto.name }
+        where: { name: updatePersonalityDto.name },
       });
 
       if (existingPersonality && existingPersonality.id !== id) {
-        throw new ConflictException(`Personality with name "${updatePersonalityDto.name}" already exists`);
+        throw new ConflictException(
+          `Personality with name "${updatePersonalityDto.name}" already exists`
+        );
       }
     }
 
@@ -84,8 +98,12 @@ export class PersonalityService {
         where: { id },
         data: {
           ...(updatePersonalityDto.name && { name: updatePersonalityDto.name }),
-          ...(updatePersonalityDto.description !== undefined && { description: updatePersonalityDto.description }),
-          ...(updatePersonalityDto.traits && { traits: JSON.stringify(updatePersonalityDto.traits) }),
+          ...(updatePersonalityDto.description !== undefined && {
+            description: updatePersonalityDto.description,
+          }),
+          ...(updatePersonalityDto.traits && {
+            traits: JSON.stringify(updatePersonalityDto.traits),
+          }),
         },
       });
     } catch (error) {
@@ -100,11 +118,13 @@ export class PersonalityService {
     try {
       // Verificar si hay usuarios asignados a esta personalidad
       const usersWithPersonality = await this.prisma.user.count({
-        where: { personalityId: id }
+        where: { personalityId: id },
       });
 
       if (usersWithPersonality > 0) {
-        throw new ConflictException(`Cannot delete personality: ${usersWithPersonality} users are assigned to this personality`);
+        throw new ConflictException(
+          `Cannot delete personality: ${usersWithPersonality} users are assigned to this personality`
+        );
       }
 
       await this.prisma.personality.delete({
@@ -118,7 +138,9 @@ export class PersonalityService {
     }
   }
 
-  async assignToUser(assignPersonalityDto: AssignPersonalityDto): Promise<void> {
+  async assignToUser(
+    assignPersonalityDto: AssignPersonalityDto
+  ): Promise<void> {
     const { userId, personalityId } = assignPersonalityDto;
 
     // Verificar que la personalidad existe
@@ -126,7 +148,7 @@ export class PersonalityService {
 
     // Verificar que el usuario existe
     const user = await this.prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     if (!user) {
@@ -146,7 +168,7 @@ export class PersonalityService {
   async removeFromUser(userId: string): Promise<void> {
     // Verificar que el usuario existe
     const user = await this.prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     if (!user) {
@@ -159,7 +181,9 @@ export class PersonalityService {
         data: { personalityId: null },
       });
     } catch (error) {
-      throw new Error(`Failed to remove personality from user: ${error.message}`);
+      throw new Error(
+        `Failed to remove personality from user: ${error.message}`
+      );
     }
   }
 
@@ -180,7 +204,7 @@ export class PersonalityService {
 
   async getPersonalityStats() {
     const totalPersonalities = await this.prisma.personality.count();
-    
+
     const personalitiesWithUserCount = await this.prisma.personality.findMany({
       select: {
         id: true,
@@ -207,4 +231,4 @@ export class PersonalityService {
       personalitiesWithUserCount,
     };
   }
-} 
+}

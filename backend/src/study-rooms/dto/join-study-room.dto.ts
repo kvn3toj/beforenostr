@@ -8,4 +8,4 @@ export class JoinStudyRoomDto {
   })
   @IsUUID('4', { message: 'Debe ser un UUID válido' })
   roomId: string;
-} 
+}

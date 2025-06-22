@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { UpdateTrustVotingDto } from './dto/update-trust-voting.dto';
 
 @Injectable()
 export class TrustVotingService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly _prisma: PrismaService) {}
 
   async getTrustVotingSystem() {
     return {
@@ -14,12 +15,12 @@ export class TrustVotingService {
         purchasesFactor: 0.3,
         salesFactor: 0.4,
         meritosFactor: 0.2,
-        childrenPurchasesFactor: 0.15
-      }
+        childrenPurchasesFactor: 0.15,
+      },
     };
   }
 
-  async updateTrustVotingSystem(data: any) {
+  async updateTrustVotingSystem(data: UpdateTrustVotingDto) {
     return { updated: true, ...data };
   }
 
@@ -27,7 +28,7 @@ export class TrustVotingService {
     return {
       totalVotes: 89,
       weeklyAverage: 12.7,
-      validationRate: 0.85
+      validationRate: 0.85,
     };
   }
 }

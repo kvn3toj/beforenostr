@@ -8,29 +8,29 @@ export class FindAllQuestionsDto {
   @Type(() => Number)
   videoItemId: number; // Requerido para filtrar preguntas por video
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     description: 'Filter questions by language code',
-    example: 'es-ES'
+    example: 'es-ES',
   })
   @IsOptional()
   @IsString()
   languageCode?: string;
 
-  @ApiPropertyOptional({ 
-    description: 'Filter questions by type', 
+  @ApiPropertyOptional({
+    description: 'Filter questions by type',
     enum: ['multiple-choice', 'short-answer', 'true-false'],
-    example: 'multiple-choice'
+    example: 'multiple-choice',
   })
   @IsOptional()
   @IsString()
   @IsIn(['multiple-choice', 'short-answer', 'true-false'])
   type?: 'multiple-choice' | 'short-answer' | 'true-false';
 
-  @ApiPropertyOptional({ 
+  @ApiPropertyOptional({
     description: 'Filter questions by active status',
-    default: true
+    default: true,
   })
   @IsOptional()
   @Type(() => Boolean)
   isActive?: boolean;
-} 
+}

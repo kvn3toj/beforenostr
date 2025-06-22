@@ -1,6 +1,6 @@
 /**
  * 🎮 Console Controller - Main Analytics & Overview
- * 
+ *
  * Controller principal para analytics generales y overview de la Consola
  */
 
@@ -9,9 +9,11 @@ import { ConsoleService } from './console.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
 import { Roles } from '../rbac/decorators/roles.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('console')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth()
 @Roles('admin')
 export class ConsoleController {
   constructor(private readonly consoleService: ConsoleService) {}

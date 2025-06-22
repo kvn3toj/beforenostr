@@ -1,5 +1,6 @@
 import { Controller, Get, Put, Body } from '@nestjs/common';
 import { TrustVotingService } from './trust-voting.service';
+import { UpdateTrustVotingDto } from './dto/update-trust-voting.dto';
 
 @Controller('console/trust-voting')
 export class TrustVotingController {
@@ -11,7 +12,7 @@ export class TrustVotingController {
   }
 
   @Put()
-  updateTrustVotingSystem(@Body() data: any) {
+  updateTrustVotingSystem(@Body() data: UpdateTrustVotingDto) {
     return this.trustVotingService.updateTrustVotingSystem(data);
   }
 

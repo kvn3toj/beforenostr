@@ -15,19 +15,22 @@ export class CreateReportDto {
   @IsString()
   description?: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Datos del reporte',
     example: {
       totalUsers: 100,
       totalPlaylists: 50,
-      metrics: []
-    }
+      metrics: [],
+    },
   })
   @IsObject()
   data: Record<string, any>;
 
-  @ApiProperty({ description: 'ID del usuario que generó el reporte', type: String })
+  @ApiProperty({
+    description: 'ID del usuario que generó el reporte',
+    type: String,
+  })
   @IsString()
   @IsUUID()
   generatedById: string;
-} 
+}

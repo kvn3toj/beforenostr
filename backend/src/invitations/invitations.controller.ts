@@ -1,19 +1,38 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Inject,
+} from '@nestjs/common';
 import { InvitationsService } from './invitations.service';
-import { 
-  CreateGiftCardDto, 
-  RedeemGiftCardDto, 
+import {
+  CreateGiftCardDto,
+  RedeemGiftCardDto,
   UpdateGiftCardDto,
-  InvitationStatsDto
+  InvitationStatsDto,
 } from './dto/invitations.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@/rbac/guards/roles.guard';
+import { Roles } from '@/rbac/decorators/roles.decorator';
+import { UpdateInvitationStatusDto } from './dto/update-invitation-status.dto';
+import { AuthenticatedUser } from '@/types/auth.types';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('invitations')
+@ApiBearerAuth()
 @Controller('invitations')
 export class InvitationsController {
-  constructor(@Inject(InvitationsService) private readonly invitationsService: InvitationsService) {
-// //     console.log('>>> InvitationsController CONSTRUCTOR: this.invitationsService IS', this.invitationsService ? 'DEFINED' : 'UNDEFINED');
+  constructor(
+    @Inject(InvitationsService)
+    private readonly invitationsService: InvitationsService
+  ) {
+    // //     console.log('>>> InvitationsController CONSTRUCTOR: this.invitationsService IS', this.invitationsService ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
@@ -21,11 +40,11 @@ export class InvitationsController {
    */
   @Get('ping')
   async ping() {
-//     console.log('>>> InvitationsController.ping: Invitations module is working');
-    return { 
-      message: 'Invitations module is working', 
+    //     console.log('>>> InvitationsController.ping: Invitations module is working');
+    return {
+      message: 'Invitations module is working',
       timestamp: new Date().toISOString(),
-      module: 'Invitations & Gift Cards System'
+      module: 'Invitations & Gift Cards System',
     };
   }
 
@@ -34,7 +53,7 @@ export class InvitationsController {
    */
   @Post('gift-cards/redeem')
   async redeemGiftCard(@Body() dto: RedeemGiftCardDto) {
-//     console.log('>>> InvitationsController.redeemGiftCard: Redeeming gift card');
+    //     console.log('>>> InvitationsController.redeemGiftCard: Redeeming gift card');
     return await this.invitationsService.redeemGiftCard(dto);
   }
 
@@ -43,7 +62,7 @@ export class InvitationsController {
   @Post('gift-cards')
   @Roles('admin', 'user')
   async createGiftCard(@Body() dto: CreateGiftCardDto) {
-//     console.log('>>> InvitationsController.createGiftCard: Creating gift card', dto);
+    //     console.log('>>> InvitationsController.createGiftCard: Creating gift card', dto);
     return await this.invitationsService.createGiftCard(dto);
   }
 
@@ -51,7 +70,7 @@ export class InvitationsController {
   @Get('gift-cards/user/:userId')
   @Roles('admin', 'user')
   async getUserGiftCards(@Param('userId') userId: string) {
-//     console.log('>>> InvitationsController.getUserGiftCards: Getting gift cards for user', userId);
+    //     console.log('>>> InvitationsController.getUserGiftCards: Getting gift cards for user', userId);
     return await this.invitationsService.getUserGiftCards(userId);
   }
 
@@ -63,8 +82,12 @@ export class InvitationsController {
     @Body() dto: UpdateGiftCardDto,
     @Query('userId') userId: string
   ) {
-//     console.log('>>> InvitationsController.updateGiftCard: Updating gift card', giftCardId);
-    return await this.invitationsService.updateGiftCard(giftCardId, dto, userId);
+    //     console.log('>>> InvitationsController.updateGiftCard: Updating gift card', giftCardId);
+    return await this.invitationsService.updateGiftCard(
+      giftCardId,
+      dto,
+      userId
+    );
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -74,7 +97,7 @@ export class InvitationsController {
     @Param('giftCardId') giftCardId: string,
     @Query('userId') userId: string
   ) {
-//     console.log('>>> InvitationsController.cancelGiftCard: Cancelling gift card', giftCardId);
+    //     console.log('>>> InvitationsController.cancelGiftCard: Cancelling gift card', giftCardId);
     return await this.invitationsService.cancelGiftCard(giftCardId, userId);
   }
 
@@ -86,9 +109,9 @@ export class InvitationsController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string
   ) {
-//     console.log('>>> InvitationsController.getInvitationStats: Getting invitation statistics');
-    
-    const dto: InvitationStatsDto = { inviterId, startDate, endDate };
+    //     console.log('>>> InvitationsController.getInvitationStats: Getting invitation statistics');
+
+    const dto: InvitationStatsDto = { userId: inviterId, startDate, endDate };
     return await this.invitationsService.getInvitationStats(dto);
   }
-} 
+}

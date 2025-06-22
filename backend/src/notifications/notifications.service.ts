@@ -1,23 +1,29 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateNotificationDto, CreateBulkNotificationDto, UpdateNotificationDto, NotificationFilterDto, NotificationType } from './dto/notifications.dto';
+import {
+  CreateNotificationDto,
+  CreateBulkNotificationDto,
+  UpdateNotificationDto,
+  NotificationFilterDto,
+  NotificationType,
+} from './dto/notifications.dto';
 import type { Notification } from '../generated/prisma';
 
 @Injectable()
 export class NotificationsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-// //     console.log('>>> NotificationsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    // //     console.log('>>> NotificationsService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
   }
 
   /**
    * Crear una notificación individual
    */
   async createNotification(dto: CreateNotificationDto): Promise<Notification> {
-//     console.log('>>> NotificationsService.createNotification: Creating notification', dto);
+    //     console.log('>>> NotificationsService.createNotification: Creating notification', dto);
 
     // Verificar que el usuario existe
     const user = await this.prisma.user.findUnique({
-      where: { id: dto.userId }
+      where: { id: dto.userId },
     });
 
     if (!user) {
@@ -29,8 +35,8 @@ export class NotificationsService {
         userId: dto.userId,
         type: dto.type,
         message: dto.message,
-        read: false
-      }
+        read: false,
+      },
     });
 
     // Aquí se podría integrar con un servicio de push notifications real
@@ -43,11 +49,11 @@ export class NotificationsService {
    * Crear notificaciones en lote para múltiples usuarios
    */
   async createBulkNotifications(dto: CreateBulkNotificationDto) {
-//     console.log('>>> NotificationsService.createBulkNotifications: Creating bulk notifications', dto);
+    //     console.log('>>> NotificationsService.createBulkNotifications: Creating bulk notifications', dto);
 
     // Verificar que todos los usuarios existen
     const users = await this.prisma.user.findMany({
-      where: { id: { in: dto.userIds } }
+      where: { id: { in: dto.userIds } },
     });
 
     if (users.length !== dto.userIds.length) {
@@ -55,12 +61,12 @@ export class NotificationsService {
     }
 
     const notifications = await this.prisma.notification.createMany({
-      data: dto.userIds.map(userId => ({
+      data: dto.userIds.map((userId) => ({
         userId,
         type: dto.type,
         message: dto.message,
-        read: false
-      }))
+        read: false,
+      })),
     });
 
     // Enviar push notifications en lote
@@ -68,19 +74,21 @@ export class NotificationsService {
       where: {
         userId: { in: dto.userIds },
         type: dto.type,
-        message: dto.message
+        message: dto.message,
       },
       orderBy: { createdAt: 'desc' },
-      take: dto.userIds.length
+      take: dto.userIds.length,
     });
 
-    await Promise.all(createdNotifications.map(notification =>
-      this.sendPushNotification(notification)
-    ));
+    await Promise.all(
+      createdNotifications.map((notification) =>
+        this.sendPushNotification(notification)
+      )
+    );
 
     return {
       message: `Se crearon ${notifications.count} notificaciones`,
-      count: notifications.count
+      count: notifications.count,
     };
   }
 
@@ -88,12 +96,16 @@ export class NotificationsService {
    * Obtener notificaciones de un usuario con filtros
    */
   async getUserNotifications(userId: string, filters: NotificationFilterDto) {
-//     console.log('>>> NotificationsService.getUserNotifications: Getting notifications for user', userId);
+    //     console.log('>>> NotificationsService.getUserNotifications: Getting notifications for user', userId);
 
     const limit = filters.limit ? parseInt(filters.limit, 10) : 50;
     const offset = filters.offset ? parseInt(filters.offset, 10) : 0;
 
-    const where: any = { userId };
+    const where: {
+      userId: string;
+      type?: NotificationType;
+      read?: boolean;
+    } = { userId };
 
     if (filters.type) {
       where.type = filters.type;
@@ -108,9 +120,9 @@ export class NotificationsService {
         where,
         orderBy: { createdAt: 'desc' },
         take: limit,
-        skip: offset
+        skip: offset,
       }),
-      this.prisma.notification.count({ where })
+      this.prisma.notification.count({ where }),
     ]);
 
     return {
@@ -118,7 +130,7 @@ export class NotificationsService {
       total,
       limit,
       offset,
-      hasMore: offset + limit < total
+      hasMore: offset + limit < total,
     };
   }
 
@@ -126,10 +138,10 @@ export class NotificationsService {
    * Marcar notificación como leída
    */
   async markAsRead(notificationId: string, userId: string) {
-//     console.log('>>> NotificationsService.markAsRead: Marking notification as read', notificationId);
+    //     console.log('>>> NotificationsService.markAsRead: Marking notification as read', notificationId);
 
     const notification = await this.prisma.notification.findFirst({
-      where: { id: notificationId, userId }
+      where: { id: notificationId, userId },
     });
 
     if (!notification) {
@@ -138,7 +150,7 @@ export class NotificationsService {
 
     return await this.prisma.notification.update({
       where: { id: notificationId },
-      data: { read: true }
+      data: { read: true },
     });
   }
 
@@ -146,16 +158,16 @@ export class NotificationsService {
    * Marcar todas las notificaciones de un usuario como leídas
    */
   async markAllAsRead(userId: string) {
-//     console.log('>>> NotificationsService.markAllAsRead: Marking all notifications as read for user', userId);
+    //     console.log('>>> NotificationsService.markAllAsRead: Marking all notifications as read for user', userId);
 
     const result = await this.prisma.notification.updateMany({
       where: { userId, read: false },
-      data: { read: true }
+      data: { read: true },
     });
 
     return {
       message: `Se marcaron ${result.count} notificaciones como leídas`,
-      count: result.count
+      count: result.count,
     };
   }
 
@@ -163,10 +175,10 @@ export class NotificationsService {
    * Obtener conteo de notificaciones no leídas
    */
   async getUnreadCount(userId: string) {
-//     console.log('>>> NotificationsService.getUnreadCount: Getting unread count for user', userId);
+    //     console.log('>>> NotificationsService.getUnreadCount: Getting unread count for user', userId);
 
     const count = await this.prisma.notification.count({
-      where: { userId, read: false }
+      where: { userId, read: false },
     });
 
     return { unreadCount: count };
@@ -176,10 +188,10 @@ export class NotificationsService {
    * Eliminar notificación
    */
   async deleteNotification(notificationId: string, userId: string) {
-//     console.log('>>> NotificationsService.deleteNotification: Deleting notification', notificationId);
+    //     console.log('>>> NotificationsService.deleteNotification: Deleting notification', notificationId);
 
     const notification = await this.prisma.notification.findFirst({
-      where: { id: notificationId, userId }
+      where: { id: notificationId, userId },
     });
 
     if (!notification) {
@@ -187,7 +199,7 @@ export class NotificationsService {
     }
 
     await this.prisma.notification.delete({
-      where: { id: notificationId }
+      where: { id: notificationId },
     });
 
     return { message: 'Notificación eliminada exitosamente' };
@@ -196,8 +208,13 @@ export class NotificationsService {
   /**
    * Crear notificación automática para méritos otorgados
    */
-  async notifyMeritAwarded(userId: string, meritType: string, amount: number, source: string) {
-//     console.log('>>> NotificationsService.notifyMeritAwarded: Creating merit notification', { userId, meritType, amount });
+  async notifyMeritAwarded(
+    userId: string,
+    meritType: string,
+    amount: number,
+    source: string
+  ) {
+    //     console.log('>>> NotificationsService.notifyMeritAwarded: Creating merit notification', { userId, meritType, amount });
 
     const message = `¡Has recibido ${amount} ${meritType}! Fuente: ${source}`;
 
@@ -205,15 +222,20 @@ export class NotificationsService {
       userId,
       type: NotificationType.MERIT_AWARDED,
       message,
-      metadata: { meritType, amount, source }
+      metadata: { meritType, amount, source },
     });
   }
 
   /**
    * Crear notificación automática para transacciones completadas
    */
-  async notifyTransactionCompleted(userId: string, transactionType: string, amount: number, isIncoming: boolean) {
-//     console.log('>>> NotificationsService.notifyTransactionCompleted: Creating transaction notification', { userId, transactionType, amount });
+  async notifyTransactionCompleted(
+    userId: string,
+    transactionType: string,
+    amount: number,
+    isIncoming: boolean
+  ) {
+    //     console.log('>>> NotificationsService.notifyTransactionCompleted: Creating transaction notification', { userId, transactionType, amount });
 
     const direction = isIncoming ? 'recibido' : 'enviado';
     const message = `Transacción completada: ${direction} ${amount} ${transactionType}`;
@@ -222,15 +244,20 @@ export class NotificationsService {
       userId,
       type: NotificationType.TRANSACTION_COMPLETED,
       message,
-      metadata: { transactionType, amount, direction }
+      metadata: { transactionType, amount, direction },
     });
   }
 
   /**
    * Crear notificación automática para tokens próximos a caducar
    */
-  async notifyTokenExpiry(userId: string, tokenType: string, amount: number, daysToExpiry: number) {
-//     console.log('>>> NotificationsService.notifyTokenExpiry: Creating token expiry notification', { userId, tokenType, amount });
+  async notifyTokenExpiry(
+    userId: string,
+    tokenType: string,
+    amount: number,
+    daysToExpiry: number
+  ) {
+    //     console.log('>>> NotificationsService.notifyTokenExpiry: Creating token expiry notification', { userId, tokenType, amount });
 
     const message = `¡Atención! Tienes ${amount} ${tokenType} que caducarán en ${daysToExpiry} días`;
 
@@ -238,15 +265,19 @@ export class NotificationsService {
       userId,
       type: NotificationType.TOKEN_EXPIRY_WARNING,
       message,
-      metadata: { tokenType, amount, daysToExpiry }
+      metadata: { tokenType, amount, daysToExpiry },
     });
   }
 
   /**
    * Crear notificación automática para invitaciones a grupos
    */
-  async notifyGroupInvitation(userId: string, groupName: string, inviterName: string) {
-//     console.log('>>> NotificationsService.notifyGroupInvitation: Creating group invitation notification', { userId, groupName });
+  async notifyGroupInvitation(
+    userId: string,
+    groupName: string,
+    inviterName: string
+  ) {
+    //     console.log('>>> NotificationsService.notifyGroupInvitation: Creating group invitation notification', { userId, groupName });
 
     const message = `${inviterName} te ha invitado a unirte al grupo "${groupName}"`;
 
@@ -254,7 +285,7 @@ export class NotificationsService {
       userId,
       type: NotificationType.GROUP_INVITATION,
       message,
-      metadata: { groupName, inviterName }
+      metadata: { groupName, inviterName },
     });
   }
 
@@ -283,7 +314,7 @@ export class NotificationsService {
    * Limpiar notificaciones antiguas (más de 30 días)
    */
   async cleanupOldNotifications() {
-//     console.log('>>> NotificationsService.cleanupOldNotifications: Cleaning up old notifications');
+    //     console.log('>>> NotificationsService.cleanupOldNotifications: Cleaning up old notifications');
 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -291,13 +322,13 @@ export class NotificationsService {
     const result = await this.prisma.notification.deleteMany({
       where: {
         createdAt: { lt: thirtyDaysAgo },
-        read: true
-      }
+        read: true,
+      },
     });
 
     return {
       message: `Se eliminaron ${result.count} notificaciones antiguas`,
-      count: result.count
+      count: result.count,
     };
   }
 }

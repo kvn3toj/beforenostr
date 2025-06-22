@@ -36,8 +36,8 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { UniverseBackground, AyniPlanet, ElementalSphere, ElementalConnection } from '../universe';
 
 // 🌟 IMPORTS DEL SISTEMA ELEMENTAL UNIFICADO
-import { 
-  UNIFIED_ELEMENTAL_CONFIG, 
+import {
+  UNIFIED_ELEMENTAL_CONFIG,
   ELEMENTAL_PRESETS,
   ElementalUtils,
   ElementType,
@@ -97,7 +97,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   const [expanded, setExpanded] = useState(false);
   const [hoveredElement, setHoveredElement] = useState<string | null>(null);
   const [animationPhase, setAnimationPhase] = useState(0);
-  
+
   // 🌌 NUEVOS ESTADOS PARA EFECTOS VISUALES
   const [showUniverseBackground, setShowUniverseBackground] = useState(true);
   const [cosmicIntensity, setCosmicIntensity] = useState<'low' | 'medium' | 'high'>('medium');
@@ -105,7 +105,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   const [interactionMode, setInteractionMode] = useState<'hover' | 'click' | 'auto'>('hover');
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [orbitalHistory, setOrbitalHistory] = useState<Array<{element: string, x: number, y: number, timestamp: number}>>([]);
-  
+
   // 🔢 ESTADOS FIBONACCI MEJORADOS
   const [fibonacciTime, setFibonacciTime] = useState(0);
   const [orbitalPositions, setOrbitalPositions] = useState<OrbitalPosition[]>([]);
@@ -117,14 +117,14 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   });
   const [lastFrameTime, setLastFrameTime] = useState(Date.now());
   const [fibonacciPreset, setFibonacciPreset] = useState<keyof typeof FIBONACCI_PRESETS>('default');
-  
+
   // 🌟 PRESET ELEMENTAL ACTUAL
   const [currentElementalPreset, setCurrentElementalPreset] = useState<keyof typeof ELEMENTAL_PRESETS>('balanced');
 
   // 🌌 CONFIGURACIÓN ELEMENTAL UNIFICADA
   const unifiedElementConfig = useMemo(() => {
     const preset = ELEMENTAL_PRESETS[currentElementalPreset];
-    
+
     return {
       fuego: {
         ...ElementalUtils.applyPreset('fuego', currentElementalPreset),
@@ -158,20 +158,20 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
     const animationFrame = () => {
       const currentTime = Date.now();
       const deltaTime = currentTime - lastFrameTime;
-      
+
       // Actualizar tiempo Fibonacci
       const newFibonacciTime = fibonacciTime + deltaTime * 0.001; // Convertir a segundos
       setFibonacciTime(newFibonacciTime);
-      
+
       // Calcular nuevas posiciones orbitales usando utilidades Fibonacci
       const elements = Object.keys(unifiedElementConfig);
       const containerWidth = 400; // Tamaño del contenedor
       const containerHeight = 400;
-      
+
       const newPositions: OrbitalPosition[] = elements.map((elementKey, index) => {
         const config = unifiedElementConfig[elementKey as keyof typeof unifiedElementConfig];
         const animationSpeed = getFibonacciAnimationSpeed(index);
-        
+
         return calculateFibonacciOrbit(
           index,
           elements.length,
@@ -181,21 +181,21 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
           FIBONACCI_PRESETS[fibonacciPreset]
         );
       });
-      
+
       setOrbitalPositions(newPositions);
-      
+
       // Calcular métricas de rendimiento Fibonacci
       const metrics = calculateFibonacciMetrics(newPositions, deltaTime);
       setFibonacciMetrics(metrics);
-      
+
       setLastFrameTime(currentTime);
     };
 
     const animationId = requestAnimationFrame(animationFrame);
-    
+
     // Configurar loop de animación
     const intervalId = setInterval(animationFrame, 16); // ~60fps
-    
+
     return () => {
       cancelAnimationFrame(animationId);
       clearInterval(intervalId);
@@ -206,16 +206,16 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   const advancedStats = useMemo(() => {
     // Calcular puntaje Ayni basado en el balance y elementos
     const elementosTotales = elementos.fuego + elementos.agua + elementos.tierra + elementos.aire;
-    const balanceElemental = elementosTotales > 0 ? 
-      Math.min(100, Math.round(balanceAyni * 10 + (elementosTotales / 4))) : 
+    const balanceElemental = elementosTotales > 0 ?
+      Math.min(100, Math.round(balanceAyni * 10 + (elementosTotales / 4))) :
       Math.round(balanceAyni * 10);
-    
+
     // Calcular poder total basado en todas las métricas
     const baseScore = Math.min(100, Math.round(
-      (ondas * 0.001) + 
-      (meritos * 0.1) + 
-      (bienComunContributions * 2) + 
-      (balanceAyni * 5) + 
+      (ondas * 0.001) +
+      (meritos * 0.1) +
+      (bienComunContributions * 2) +
+      (balanceAyni * 5) +
       (elementosTotales * 0.25)
     ));
 
@@ -234,7 +234,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
 
     let gravitationalForceX = 0;
     let gravitationalForceY = 0;
-    let gravitationalForceZ = 0;
+    const gravitationalForceZ = 0;
 
     Object.entries(elements).forEach(([otherKey, otherElement]) => {
       if (otherKey === elementKey) return;
@@ -242,28 +242,28 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
       // Calcular distancia entre elementos
       const angle1 = targetElement.baseAngle + animationPhase * targetElement.orbitSpeed;
       const angle2 = otherElement.baseAngle + animationPhase * otherElement.orbitSpeed;
-      
+
       const radians1 = (angle1 * Math.PI) / 180;
       const radians2 = (angle2 * Math.PI) / 180;
-      
+
       const radius1 = 180 * targetElement.orbitRadius;
       const radius2 = 180 * otherElement.orbitRadius;
-      
+
       const x1 = radius1 * Math.cos(radians1);
       const y1 = radius1 * Math.sin(radians1) * 0.2;
       const x2 = radius2 * Math.cos(radians2);
       const y2 = radius2 * Math.sin(radians2) * 0.2;
-      
+
       const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-      
+
       // Fuerza gravitacional simplificada (F = G * m1 * m2 / r²)
-      const gravitationalForce = (otherElement.gravitationalInfluence * targetElement.mass) / 
+      const gravitationalForce = (otherElement.gravitationalInfluence * targetElement.mass) /
                                  Math.max(distance / 100, 0.5); // Normalizar y evitar división por cero
-      
+
       // Direcciones de la fuerza
       const forceX = gravitationalForce * (x2 - x1) / distance * 0.5;
       const forceY = gravitationalForce * (y2 - y1) / distance * 0.5;
-      
+
       gravitationalForceX += forceX;
       gravitationalForceY += forceY;
     });
@@ -281,21 +281,21 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
     if (!targetElement) return 1.0;
 
     let resonanceIntensity = 1.0;
-    
+
     // Calcular resonancia con elementos afines
     Object.entries(elements).forEach(([otherKey, otherElement]) => {
       if (otherKey === elementKey) return;
-      
+
       // Si este elemento está en afinidad con el otro
       if (targetElement.elementalAffinity?.includes(otherKey)) {
         // Calcular fase de resonancia basada en frecuencias
         const resonancePhase = (animationPhase * targetElement.resonanceFrequency) % 360;
         const otherResonancePhase = (animationPhase * otherElement.resonanceFrequency) % 360;
-        
+
         // Diferencia de fase para calcular constructividad/destructividad
         const phaseDifference = Math.abs(resonancePhase - otherResonancePhase);
         const normalizedPhase = Math.min(phaseDifference, 360 - phaseDifference);
-        
+
         // Resonancia constructiva cuando las fases están sincronizadas
         const resonanceFactor = 1 + 0.3 * Math.cos((normalizedPhase * Math.PI) / 180);
         resonanceIntensity *= resonanceFactor * targetElement.harmonicMultiplier;
@@ -308,13 +308,13 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   // 🆕 OPTIMIZADOR DE DENSIDAD VISUAL
   const optimizeVisualDensity = useCallback((elements: typeof unifiedElementConfig) => {
     // Calcular densidad total actual
-    const totalDensity = Object.values(elements).reduce((sum, element) => 
+    const totalDensity = Object.values(elements).reduce((sum, element) =>
       sum + element.visualDensity * element.size, 0
     );
-    
+
     // Si la densidad es muy alta, reducir efectos secundarios
     const densityFactor = Math.min(1.0, 4.0 / totalDensity);
-    
+
     return {
       trailOpacity: densityFactor,
       glowIntensity: densityFactor,
@@ -338,18 +338,18 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
 
     Object.entries(elements).forEach(([key, element]) => {
       const currentAngle = element.baseAngle + animationPhase * element.orbitSpeed;
-      
+
       // 🎯 Calcular proximidad con otros elementos
       let totalProximity = 0;
       let proximityCount = 0;
-      
+
       Object.entries(elements).forEach(([otherKey, otherElement]) => {
         if (otherKey === key) return;
-        
+
         const otherAngle = otherElement.baseAngle + animationPhase * otherElement.orbitSpeed;
         const angleDifference = Math.abs(currentAngle - otherAngle);
         const normalizedAngleDiff = Math.min(angleDifference, 360 - angleDifference);
-        
+
         // Proximidad inversamente proporcional a la distancia angular
         const proximity = 1 / Math.max(normalizedAngleDiff / 90, 0.1); // Normalizar a cuadrantes
         totalProximity += proximity;
@@ -357,35 +357,35 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
       });
 
       const averageProximity = proximityCount > 0 ? totalProximity / proximityCount : 1;
-      
+
       // 🌀 Calcular espaciamiento dinámico (más espacio si hay mucha proximidad)
       const dynamicSpacing = 1 + (antiClusteringForce * Math.max(0, averageProximity - 1));
-      
+
       // 🎯 Calcular balance de zona (qué tan bien distribuido está en su zona preferida)
-      const preferredZone = Object.values(distributionZones).find(zone => 
+      const preferredZone = Object.values(distributionZones).find(zone =>
         zone.elements.includes(key)
       ) || distributionZones.middle;
-      
+
       const currentRadiusNormalized = element.orbitRadius;
       const zoneBalanceScore = 1 - Math.abs(currentRadiusNormalized - preferredZone.radius) * 0.5;
-      
+
       // 🌈 Calcular armonía elemental (balance entre elementos opuestos)
       const oppositeElements = {
         fuego: 'agua',
-        agua: 'fuego', 
+        agua: 'fuego',
         tierra: 'aire',
         aire: 'tierra'
       };
-      
+
       const oppositeKey = oppositeElements[key as keyof typeof oppositeElements];
       const oppositeElement = oppositeKey ? elements[oppositeKey] : null;
-      
+
       let harmonyScore = 1;
       if (oppositeElement) {
         const oppositeAngle = oppositeElement.baseAngle + animationPhase * oppositeElement.orbitSpeed;
         const oppositeAngleDiff = Math.abs(currentAngle - oppositeAngle);
         const normalizedOppositeDiff = Math.min(oppositeAngleDiff, 360 - oppositeAngleDiff);
-        
+
         // Ideal: elementos opuestos a ~180 grados de distancia
         const idealOppositeDistance = 180;
         const oppositeDistanceError = Math.abs(normalizedOppositeDiff - idealOppositeDistance) / 180;
@@ -397,14 +397,6 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
         zoneBalance: Math.max(0.5, Math.min(1.5, zoneBalanceScore)),
         harmony: harmonyScore
       };
-
-      console.log(`🌌 Distribución dinámica ${key}:`, {
-        proximidad: Math.round(averageProximity * 100) / 100,
-        espaciamiento: Math.round(dynamicSpacing * 100) / 100,
-        balanceZona: Math.round(zoneBalanceScore * 100) / 100,
-        armonía: Math.round(harmonyScore * 100) / 100,
-        ánguloActual: Math.round(currentAngle),
-      });
     });
 
     return distributions;
@@ -413,17 +405,17 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
   // 🌟 NUEVO: CALCULADORA DE EQUILIBRIO UNIVERSAL
   const calculateUniversalBalance = useCallback((elements: typeof unifiedElementConfig) => {
     const distributions = calculateDynamicDistribution(elements);
-    
+
     // 📊 Métricas de balance universal
     const totalSpacing = Object.values(distributions).reduce((sum, dist) => sum + dist.spacing, 0);
     const averageSpacing = totalSpacing / Object.keys(distributions).length;
-    
+
     const totalZoneBalance = Object.values(distributions).reduce((sum, dist) => sum + dist.zoneBalance, 0);
     const averageZoneBalance = totalZoneBalance / Object.keys(distributions).length;
-    
+
     const totalHarmony = Object.values(distributions).reduce((sum, dist) => sum + dist.harmony, 0);
     const averageHarmony = totalHarmony / Object.keys(distributions).length;
-    
+
     // 🎯 Calcular score de distribución general (0-100)
     const distributionScore = (
       (Math.min(averageSpacing, 1.5) / 1.5) * 30 + // 30% para espaciamiento
@@ -453,8 +445,8 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
         needsMoreSpacing: averageSpacing < 1.0,
         needsBetterZoning: averageZoneBalance < 0.8,
         needsHarmonyAdjustment: averageHarmony < 0.8,
-        suggestedAction: distributionScore < 70 ? 'Ajustar velocidades orbitales' : 
-                        distributionScore < 85 ? 'Optimizar distribución de zonas' : 
+        suggestedAction: distributionScore < 70 ? 'Ajustar velocidades orbitales' :
+                        distributionScore < 85 ? 'Optimizar distribución de zonas' :
                         'Mantener configuración actual'
       }
     };
@@ -479,7 +471,7 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
 
     const optimizationInterval = setInterval(() => {
       const universalBalance = calculateUniversalBalance(unifiedElementConfig);
-      
+
       if (universalBalance.score < 75) {
         setDistributionOptimization(prev => ({
           ...prev,
@@ -709,9 +701,9 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
                   height: '18px',
                   fontSize: '0.65rem',
                   fontWeight: 700,
-                  background: universalBalance.score >= 85 
-                    ? 'linear-gradient(135deg, #4CAF50, #66BB6A)' 
-                    : universalBalance.score >= 70 
+                  background: universalBalance.score >= 85
+                    ? 'linear-gradient(135deg, #4CAF50, #66BB6A)'
+                    : universalBalance.score >= 70
                     ? 'linear-gradient(135deg, #FF9800, #FFB74D)'
                     : 'linear-gradient(135deg, #F44336, #EF5350)',
                   color: 'white',
@@ -726,9 +718,9 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
                     width: '12px',
                     height: '12px',
                     borderRadius: '50%',
-                    background: universalBalance.score >= 85 
-                      ? '#4CAF50' 
-                      : universalBalance.score >= 70 
+                    background: universalBalance.score >= 85
+                      ? '#4CAF50'
+                      : universalBalance.score >= 70
                       ? '#FF9800'
                       : '#F44336',
                     animation: universalBalance.score < 70 ? 'pulse 1.5s infinite' : 'none',

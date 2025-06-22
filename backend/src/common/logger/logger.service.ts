@@ -16,6 +16,8 @@ export interface LogContext {
   [key: string]: any;
 }
 
+type LoggableData = Record<string, unknown> | string | number | boolean | null;
+
 @Injectable()
 export class CoomUnityLoggerService implements LoggerService {
   private readonly logLevel: LogLevel;
@@ -31,17 +33,21 @@ export class CoomUnityLoggerService implements LoggerService {
     dim: '\x1b[2m',
   };
 
-    constructor() {
+  constructor() {
     // Configurar nivel de log desde ENV (default: INFO en development, ERROR en production)
-    const logLevelString = process.env.LOG_LEVEL ||
+    const logLevelString =
+      process.env.LOG_LEVEL ||
       (process.env.NODE_ENV === 'production' ? 'ERROR' : 'INFO');
-    this.logLevel = LogLevel[logLevelString.toUpperCase() as keyof typeof LogLevel] ?? LogLevel.INFO;
+    this.logLevel =
+      LogLevel[logLevelString.toUpperCase() as keyof typeof LogLevel] ??
+      LogLevel.INFO;
 
     // Configurar módulos habilitados desde ENV
     const enabledModulesString = process.env.LOG_MODULES || 'ALL';
-    this.enabledModules = enabledModulesString === 'ALL'
-      ? new Set(['ALL'])
-      : new Set(enabledModulesString.split(',').map(m => m.trim()));
+    this.enabledModules =
+      enabledModulesString === 'ALL'
+        ? new Set(['ALL'])
+        : new Set(enabledModulesString.split(',').map((m) => m.trim()));
   }
 
   /**
@@ -109,11 +115,17 @@ export class CoomUnityLoggerService implements LoggerService {
   }
 
   social(message: string, context?: LogContext) {
-    this.debug(`👥 SOCIAL: ${message}`, { module: 'SocialService', ...context });
+    this.debug(`👥 SOCIAL: ${message}`, {
+      module: 'SocialService',
+      ...context,
+    });
   }
 
   marketplace(message: string, context?: LogContext) {
-    this.debug(`🛒 MARKETPLACE: ${message}`, { module: 'MarketplaceService', ...context });
+    this.debug(`🛒 MARKETPLACE: ${message}`, {
+      module: 'MarketplaceService',
+      ...context,
+    });
   }
 
   uplay(message: string, context?: LogContext) {
@@ -121,7 +133,10 @@ export class CoomUnityLoggerService implements LoggerService {
   }
 
   wallet(message: string, context?: LogContext) {
-    this.debug(`💰 WALLET: ${message}`, { module: 'WalletService', ...context });
+    this.debug(`💰 WALLET: ${message}`, {
+      module: 'WalletService',
+      ...context,
+    });
   }
 
   ayni(message: string, context?: LogContext) {
@@ -133,36 +148,53 @@ export class CoomUnityLoggerService implements LoggerService {
    */
   performance(operation: string, duration: number, context?: LogContext) {
     const color = duration > 1000 ? 'warn' : duration > 500 ? 'info' : 'debug';
-    const level = duration > 1000 ? LogLevel.WARN : duration > 500 ? LogLevel.INFO : LogLevel.DEBUG;
+    const level =
+      duration > 1000
+        ? LogLevel.WARN
+        : duration > 500
+          ? LogLevel.INFO
+          : LogLevel.DEBUG;
 
     if (this.shouldLog(level, context?.module)) {
-      this.writeLog(level === LogLevel.WARN ? 'WARN' : level === LogLevel.INFO ? 'INFO' : 'DEBUG',
-        `⚡ PERF: ${operation} took ${duration}ms`, context);
+      this.writeLog(
+        level === LogLevel.WARN
+          ? 'WARN'
+          : level === LogLevel.INFO
+            ? 'INFO'
+            : 'DEBUG',
+        `⚡ PERF: ${operation} took ${duration}ms`,
+        context
+      );
     }
   }
 
   /**
    * Log estructurado para eventos de negocio
    */
-  business(event: string, data: any, context?: LogContext) {
+  business(event: string, data: LoggableData, context?: LogContext) {
     this.info(`📊 BUSINESS: ${event}`, {
       module: 'BusinessEvents',
       event,
       data: this.sanitizeData(data),
-      ...context
+      ...context,
     });
   }
 
   /**
    * Log de usuario para tracking de acciones
    */
-  userAction(userId: string, action: string, details?: any, context?: LogContext) {
+  userAction(
+    userId: string,
+    action: string,
+    details?: LoggableData,
+    context?: LogContext
+  ) {
     this.info(`👤 USER: ${action}`, {
       module: 'UserActions',
       userId,
       action,
       details: this.sanitizeData(details),
-      ...context
+      ...context,
     });
   }
 
@@ -173,7 +205,11 @@ export class CoomUnityLoggerService implements LoggerService {
     }
 
     // Verificar módulo habilitado
-    if (module && !this.enabledModules.has('ALL') && !this.enabledModules.has(module)) {
+    if (
+      module &&
+      !this.enabledModules.has('ALL') &&
+      !this.enabledModules.has(module)
+    ) {
       return false;
     }
 
@@ -182,7 +218,9 @@ export class CoomUnityLoggerService implements LoggerService {
 
   private writeLog(level: string, message: string, context?: LogContext) {
     const timestamp = new Date().toISOString();
-    const color = this.colors[level.toLowerCase() as keyof typeof this.colors] || this.colors.reset;
+    const color =
+      this.colors[level.toLowerCase() as keyof typeof this.colors] ||
+      this.colors.reset;
     const reset = this.colors.reset;
 
     // Formatear contexto
@@ -192,8 +230,8 @@ export class CoomUnityLoggerService implements LoggerService {
     if (process.env.NODE_ENV !== 'production') {
       console.log(
         `${this.colors.dim}${timestamp}${reset} ` +
-        `${color}${this.colors.bold}[${level}]${reset} ` +
-        `${message}${contextStr}`
+          `${color}${this.colors.bold}[${level}]${reset} ` +
+          `${message}${contextStr}`
       );
     } else {
       // Log JSON estructurado para producción
@@ -201,53 +239,61 @@ export class CoomUnityLoggerService implements LoggerService {
         timestamp,
         level,
         message,
-        ...context
+        ...context,
       };
       console.log(JSON.stringify(logEntry));
     }
   }
 
   private formatContext(context: LogContext): string {
-    const entries = Object.entries(context).filter(([key, value]) => value !== undefined);
+    const entries = Object.entries(context).filter(
+      ([key, value]) => value !== undefined
+    );
     if (entries.length === 0) return '';
 
-    const formatted = entries
+    const formattedEntries = entries
       .map(([key, value]) => `${key}=${this.formatValue(value)}`)
-      .join(' ');
+      .join(', ');
 
-    return ` ${this.colors.dim}(${formatted})${this.colors.reset}`;
+    return ` ${this.colors.dim}(${formattedEntries})${this.colors.reset}`;
   }
 
-  private formatValue(value: any): string {
-    if (typeof value === 'string') return value;
-    if (typeof value === 'number') return value.toString();
-    if (typeof value === 'boolean') return value.toString();
+  private formatValue(value: unknown): string {
+    if (typeof value === 'string') return `"${value}"`;
+    if (typeof value === 'number' || typeof value === 'boolean')
+      return String(value);
     if (value === null) return 'null';
     if (value === undefined) return 'undefined';
-    return JSON.stringify(value);
+    if (Array.isArray(value)) return `[...${value.length}]`;
+    if (typeof value === 'object') return '{...}';
+    return 'unknown';
   }
 
-  private sanitizeData(data: any): any {
-    if (!data) return data;
+  private sanitizeData(data: unknown): unknown {
+    if (typeof data !== 'object' || data === null) {
+      return data;
+    }
 
-    // Clonar para evitar mutaciones
-    const sanitized = JSON.parse(JSON.stringify(data));
-
-    // Eliminar campos sensibles
-    const sensitiveFields = ['password', 'token', 'secret', 'key', 'authorization'];
-    const sanitizeObject = (obj: any) => {
-      if (typeof obj !== 'object' || obj === null) return obj;
-
+    const seen = new WeakSet();
+    const sanitizeObject = (obj: Record<string, unknown>) => {
+      const newObj: Record<string, unknown> = {};
       for (const key in obj) {
-        if (sensitiveFields.some(field => key.toLowerCase().includes(field))) {
-          obj[key] = '[REDACTED]';
-        } else if (typeof obj[key] === 'object') {
-          sanitizeObject(obj[key]);
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          const value = obj[key];
+          if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) {
+              continue; // Evitar referencia circular
+            }
+            seen.add(value);
+            newObj[key] = sanitizeObject(value as Record<string, unknown>);
+          } else {
+            newObj[key] = value;
+          }
         }
       }
-      return obj;
+      return newObj;
     };
 
-    return sanitizeObject(sanitized);
+    return sanitizeObject(data as Record<string, unknown>);
   }
 }

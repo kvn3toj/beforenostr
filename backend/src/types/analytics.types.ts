@@ -68,4 +68,4 @@ export type TopInteractedContentMetric = ContentInteractionMetric[];
 
 export type LeastInteractedPlaylistsMetric = ContentInteractionMetric[];
 
-export type LeastInteractedMundosMetric = ContentInteractionMetric[]; 
+export type LeastInteractedMundosMetric = ContentInteractionMetric[];

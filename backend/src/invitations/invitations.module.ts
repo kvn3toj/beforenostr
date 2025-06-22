@@ -3,7 +3,7 @@ import { InvitationsController } from './invitations.controller';
 import { InvitationsService } from './invitations.service';
 import { PrismaModule } from '../prisma/prisma.module';
 // import { AuthModule } from '../auth/auth.module'; // COMENTADO TEMPORALMENTE: PROBLEMA CON RolesGuard
-// import { RbacModule } from '../rbac/rbac.module'; // COMENTADO TEMPORALMENTE: PROBLEMA CON RolesGuard
+// import { RbacModule } from '@/rbac/rbac.module'; // COMENTADO TEMPORALMENTE: PROBLEMA CON RolesGuard
 import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
@@ -14,6 +14,6 @@ import { NotificationsModule } from '../notifications/notifications.module';
 })
 export class InvitationsModule {
   constructor() {
-// //     console.log('>>> InvitationsModule CONSTRUCTOR: Initializing invitations system (without Auth/RBAC)...');
+    // //     console.log('>>> InvitationsModule CONSTRUCTOR: Initializing invitations system (without Auth/RBAC)...');
   }
-} 
+}

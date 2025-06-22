@@ -1,4 +1,12 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Get,
+  Inject,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 // import { AuthService } from './auth.service'; // Temporarily commented
 import { RegisterDto } from './dto/register.dto';
@@ -8,17 +16,20 @@ import { LoginDto } from './dto/login.dto';
 @Controller('auth')
 export class AuthController {
   constructor(@Inject('AuthService') private readonly authService: any) {
-// //     console.log('>>> AuthController initialized');
-//     console.log('>>> AuthController - this.authService:', this.authService);
+    // //     console.log('>>> AuthController initialized');
+    //     console.log('>>> AuthController - this.authService:', this.authService);
     if (this.authService === undefined) {
-//       console.error('>>> AuthController - ERROR: AuthService is undefined!');
+      //       console.error('>>> AuthController - ERROR: AuthService is undefined!');
     }
   }
 
   @Get('test')
   @ApiOperation({ summary: 'Test endpoint' })
   test() {
-    return { message: 'Auth controller is working', service: !!this.authService };
+    return {
+      message: 'Auth controller is working',
+      service: !!this.authService,
+    };
   }
 
   @Post('register')
@@ -42,4 +53,4 @@ export class AuthController {
   async getCurrentUser() {
     return this.authService.getCurrentUser();
   }
-} 
+}

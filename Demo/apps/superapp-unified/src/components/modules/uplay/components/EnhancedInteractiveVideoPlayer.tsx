@@ -65,6 +65,7 @@ import {
   VideoLibrary as VideoLibraryIcon,
 } from '@mui/icons-material';
 import ReactPlayer from 'react-player';
+import { safeToString, safeLog, createSafeErrorMessage } from '@/utils/safeConversion';
 
 // Import hooks and services
 import { useInteractiveVideo } from '../../../../hooks/useInteractiveVideo';
@@ -238,16 +239,16 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
 
       // 🎯 PRIORIDAD MÁXIMA: Si la URL es de YouTube, usarla directamente con embed format
       const isYouTubeUrl = videoData.url && (
-        videoData.url.includes('youtube.com') || 
+        videoData.url.includes('youtube.com') ||
         videoData.url.includes('youtu.be')
       );
 
       if (isYouTubeUrl) {
         console.log('🎯 [YOUTUBE] Detected YouTube URL, using embed format:', videoData.url);
-        
+
         // Validate YouTube URL first
         const isValidYouTubeUrl = await checkVideoAvailability(videoData.url);
-        
+
         if (isValidYouTubeUrl) {
           console.log('✅ YouTube URL is valid, setting as actual URL');
           setActualVideoUrl(videoData.url);
@@ -261,9 +262,9 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
       // For non-YouTube videos, check if the direct URL works
       if (videoData.url) {
         console.log('🔍 Checking non-YouTube video URL availability:', videoData.url);
-        
+
         const isAvailable = await checkVideoAvailability(videoData.url);
-        
+
         if (isAvailable) {
           console.log('✅ Direct video URL is available:', videoData.url);
           setActualVideoUrl(videoData.url);
@@ -349,7 +350,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
     // Si hay error o no hay preguntas del backend, usar fallback
     if (questionsError || (!questionsLoading && (!questionsFromBackend || questionsFromBackend.length === 0))) {
       console.log('🔄 [VideoPlayer] Backend questions not available, using fallback');
-      
+
       // Fallback to configured questions
       const configuredQuestions = getVideoQuestions(videoData.id);
       if (configuredQuestions.length > 0) {
@@ -502,7 +503,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
         const isInTimeRange = time >= q.timestamp && time <= q.endTimestamp;
         const notAnswered = !answeredQuestions.has(q.id);
         const noActiveQuestion = !activeQuestion;
-        
+
         if (isInTimeRange) {
           console.log('🎯 [VideoPlayer] Question candidate found:', {
             questionId: q.id,
@@ -515,7 +516,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
             willTrigger: isInTimeRange && notAnswered && noActiveQuestion,
           });
         }
-        
+
         return isInTimeRange && notAnswered && noActiveQuestion;
       }
     );
@@ -527,7 +528,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
         timestamp: candidateQuestion.timestamp,
         timeLimit: candidateQuestion.timeLimit,
       });
-      
+
       setActiveQuestion(candidateQuestion);
       setSelectedAnswer(null);
       videoRef.current.pause();
@@ -570,29 +571,29 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
         console.error('Video network state:', video.networkState);
         console.error('Video ready state:', video.readyState);
 
-        // Map error codes to user-friendly messages
+        // Map error codes to user-friendly messages using safe concatenation
         let errorMessage = 'Error loading video. ';
         switch (video.error?.code) {
           case 1: // MEDIA_ERR_ABORTED
-            errorMessage += 'Video loading was aborted.';
+            errorMessage = errorMessage + 'Video loading was aborted.';
             break;
           case 2: // MEDIA_ERR_NETWORK
-            errorMessage += 'Network error occurred while loading video.';
+            errorMessage = errorMessage + 'Network error occurred while loading video.';
             break;
           case 3: // MEDIA_ERR_DECODE
-            errorMessage += 'Video file is corrupted or in unsupported format.';
+            errorMessage = errorMessage + 'Video file is corrupted or in unsupported format.';
             break;
           case 4: // MEDIA_ERR_SRC_NOT_SUPPORTED
-            errorMessage += 'Video format not supported or file not found.';
+            errorMessage = errorMessage + 'Video format not supported or file not found.';
             break;
           default:
-            errorMessage += 'Unknown error occurred.';
+            errorMessage = errorMessage + 'Unknown error occurred.';
         }
 
-        setVideoError(`${errorMessage} (URL: ${actualVideoUrl})`);
+        setVideoError(createSafeErrorMessage(errorMessage, actualVideoUrl));
       } else {
         setVideoError(
-          `Error loading video: ${actualVideoUrl}. Please check that the video file exists.`
+          createSafeErrorMessage(`Error loading video: ${actualVideoUrl}. Please check that the video file exists.`, actualVideoUrl)
         );
       }
 
@@ -783,7 +784,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
             const currentTime = state.playedSeconds;
             setCurrentTime(currentTime);
             updateWatchTime(currentTime);
-            
+
             // 🎯 [CORREGIDO] Manejar preguntas con la lógica correcta
             if (questionsData.length > 0) {
               const candidateQuestion = questionsData.find(
@@ -791,7 +792,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                   const isInTimeRange = currentTime >= q.timestamp && currentTime <= q.endTimestamp;
                   const notAnswered = !answeredQuestions.has(q.id);
                   const noActiveQuestion = !activeQuestion;
-                  
+
                   return isInTimeRange && notAnswered && noActiveQuestion;
                 }
               );
@@ -803,7 +804,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                   timestamp: candidateQuestion.timestamp,
                   currentTime: currentTime.toFixed(2),
                 });
-                
+
                 setActiveQuestion(candidateQuestion);
                 setSelectedAnswer(null);
                 setIsPlaying(false);
@@ -817,7 +818,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
           }}
           onError={(error) => {
             console.error('ReactPlayer YouTube error:', error);
-            setVideoError(`Error loading YouTube video. Please check the video URL: ${actualVideoUrl}`);
+            setVideoError(createSafeErrorMessage('Error loading YouTube video. Please check the video URL:', actualVideoUrl));
             setIsLoading(false);
           }}
           onReady={() => {
@@ -975,9 +976,9 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                 <Chip
                   icon={questionsLoading ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <QuizIcon />}
                   label={
-                    questionsLoading 
-                      ? 'Cargando preguntas...' 
-                      : questionsError 
+                    questionsLoading
+                      ? 'Cargando preguntas...'
+                      : questionsError
                         ? 'Error en preguntas'
                         : `${answeredCount}/${totalQuestions} preguntas`
                   }
@@ -1277,7 +1278,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                           ? getDifficultyColor(activeQuestion.difficulty)
                           : 'rgba(255,255,255,0.9)',
                       color: selectedAnswer === option.id ? 'white' : '#1e293b',
-                      boxShadow: selectedAnswer === option.id 
+                      boxShadow: selectedAnswer === option.id
                         ? `0 8px 24px ${getDifficultyColor(activeQuestion.difficulty)}40`
                         : '0 2px 8px rgba(0,0,0,0.1)',
                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Transición suave
@@ -1319,7 +1320,7 @@ const VideoPlayerContent: React.FC<EnhancedInteractiveVideoPlayerProps> = ({
                           color: 'white',
                           fontWeight: 700,
                           fontSize: '16px',
-                          border: selectedAnswer === option.id 
+                          border: selectedAnswer === option.id
                             ? '2px solid rgba(255,255,255,0.5)'
                             : 'none',
                         }}

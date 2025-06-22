@@ -52,6 +52,9 @@ import { RevolutionaryWidget } from '../../../design-system';
 // 🔥 IMPORT DEL HOOK DE ANALYTICS REAL
 import { useDashboardAnalytics } from '../../../hooks/analytics/useDashboardAnalytics';
 
+// 🛡️ IMPORTS DE CONVERSIÓN SEGURA
+import { safeArray, safeMap, safeLog } from '../../../utils/safeConversion';
+
 // Import chart components
 import MinimalMetricCard from './components/MinimalMetricCard';
 import RealTimeStatus from './components/RealTimeStatus';
@@ -418,31 +421,35 @@ const UStatsMain: React.FC = () => {
           </Typography>
           <Box sx={{ overflow: 'auto' }}>
             <Grid container spacing={2}>
-              {chartData.activityData.map((activity, index) => (
-                <Grid item xs={6} sm={4} md={2} key={index}>
-                  <Paper
-                    elevation={1}
-                    sx={{
-                      p: 2,
-                      textAlign: 'center',
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
-                    }}
-                  >
-                    <Typography variant="h6" color="primary">
-                      {activity.time}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      🔍 {activity.searches}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      👤 {activity.users}
-                    </Typography>
-                    <Typography variant="body2" color="success.main">
-                      ✅ {activity.conversions}
-                    </Typography>
-                  </Paper>
-                </Grid>
-              ))}
+              {safeMap(
+                chartData?.activityData,
+                (activity: any, index: number) => (
+                  <Grid item xs={6} sm={4} md={2} key={index}>
+                    <Paper
+                      elevation={1}
+                      sx={{
+                        p: 2,
+                        textAlign: 'center',
+                        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.1)})`,
+                      }}
+                    >
+                      <Typography variant="h6" color="primary">
+                        {activity.time}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        🔍 {activity.searches}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        👤 {activity.users}
+                      </Typography>
+                      <Typography variant="body2" color="success.main">
+                        ✅ {activity.conversions}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                ),
+                [] // fallback vacío si no hay datos
+              )}
             </Grid>
           </Box>
         </CardContent>
@@ -461,45 +468,49 @@ const UStatsMain: React.FC = () => {
                 <InsightsIcon sx={{ mr: 1 }} />
                 🎯 Categorías Principales
               </Typography>
-              {chartData.categoryData.map((category, index) => (
-                <Box key={index} sx={{ mb: 3 }}>
-                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      {/* Renderizar iconos dinámicamente */}
-                      {category.icon === 'psychology' && <PsychologyIcon sx={{ mr: 1 }} />}
-                      {category.icon === 'person' && <PersonIcon sx={{ mr: 1 }} />}
-                      {category.icon === 'business' && <BusinessIcon sx={{ mr: 1 }} />}
-                      {category.icon === 'school' && <SchoolIcon sx={{ mr: 1 }} />}
-                      <Typography variant="subtitle1" fontWeight={600}>
-                        {category.name}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ textAlign: 'right' }}>
-                      <Typography variant="h6" color="primary">
-                        {category.searches}
-                      </Typography>
-                      <Chip
-                        label={`+${category.growth}%`}
-                        size="small"
-                        color="success"
-                        variant="outlined"
-                      />
-                    </Box>
-                  </Stack>
-                  <LinearProgress
-                    variant="determinate"
-                    value={category.value}
-                    sx={{
-                      height: 8,
-                      borderRadius: 4,
-                      backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                      '& .MuiLinearProgress-bar': {
+              {safeMap(
+                chartData?.categoryData,
+                (category: any, index: number) => (
+                  <Box key={index} sx={{ mb: 3 }}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        {/* Renderizar iconos dinámicamente */}
+                        {category.icon === 'psychology' && <PsychologyIcon sx={{ mr: 1 }} />}
+                        {category.icon === 'person' && <PersonIcon sx={{ mr: 1 }} />}
+                        {category.icon === 'business' && <BusinessIcon sx={{ mr: 1 }} />}
+                        {category.icon === 'school' && <SchoolIcon sx={{ mr: 1 }} />}
+                        <Typography variant="subtitle1" fontWeight={600}>
+                          {category.name}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ textAlign: 'right' }}>
+                        <Typography variant="h6" color="primary">
+                          {category.searches}
+                        </Typography>
+                        <Chip
+                          label={`+${category.growth}%`}
+                          size="small"
+                          color="success"
+                          variant="outlined"
+                        />
+                      </Box>
+                    </Stack>
+                    <LinearProgress
+                      variant="determinate"
+                      value={category.value}
+                      sx={{
+                        height: 8,
                         borderRadius: 4,
-                      },
-                    }}
-                  />
-                </Box>
-              ))}
+                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 4,
+                        },
+                      }}
+                    />
+                  </Box>
+                ),
+                [] // fallback vacío si no hay datos
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -512,46 +523,50 @@ const UStatsMain: React.FC = () => {
                 <SearchIcon sx={{ mr: 1 }} />
                 🔍 Términos Populares
               </Typography>
-              {searchStats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Paper
-                    elevation={1}
-                    sx={{
-                      p: 2,
-                      mb: 2,
-                      background: `linear-gradient(90deg, ${alpha(theme.palette.primary.main, 0.05)}, transparent)`,
-                      borderLeft: `4px solid ${theme.palette.primary.main}`,
-                    }}
+              {safeMap(
+                searchStats,
+                (stat: any, index: number) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
                   >
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                      <Box>
-                        <Typography variant="subtitle1" fontWeight={600}>
-                          {stat.term}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Categoría: {stat.category}
-                        </Typography>
-                      </Box>
-                      <Box sx={{ textAlign: 'right' }}>
-                        <Typography variant="h6" color="primary">
-                          {stat.requests}
-                        </Typography>
-                        <Typography variant="body2" color="success.main">
-                          ✅ {stat.success}/{stat.requests}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {stat.avgTime}s promedio
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Paper>
-                </motion.div>
-              ))}
+                    <Paper
+                      elevation={1}
+                      sx={{
+                        p: 2,
+                        mb: 2,
+                        background: `linear-gradient(90deg, ${alpha(theme.palette.primary.main, 0.05)}, transparent)`,
+                        borderLeft: `4px solid ${theme.palette.primary.main}`,
+                      }}
+                    >
+                      <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Box>
+                          <Typography variant="subtitle1" fontWeight={600}>
+                            {stat.term}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Categoría: {stat.category}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ textAlign: 'right' }}>
+                          <Typography variant="h6" color="primary">
+                            {stat.requests}
+                          </Typography>
+                          <Typography variant="body2" color="success.main">
+                            ✅ {stat.success}/{stat.requests}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {stat.avgTime}s promedio
+                          </Typography>
+                        </Box>
+                      </Stack>
+                    </Paper>
+                  </motion.div>
+                ),
+                [] // fallback vacío si no hay datos
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -580,10 +595,11 @@ const UStatsMain: React.FC = () => {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 📍 Top Ciudades
               </Typography>
-              {userLocationData
-                .sort((a, b) => b.users - a.users)
-                .slice(0, 8)
-                .map((location, index) => (
+              {safeMap(
+                safeArray(userLocationData)
+                  .sort((a, b) => b.users - a.users)
+                  .slice(0, 8),
+                (location: any, index: number) => (
                   <Box key={index} sx={{ mb: 2 }}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                       <Box>
@@ -598,14 +614,16 @@ const UStatsMain: React.FC = () => {
                         label={location.users}
                         size="small"
                         sx={{
-                          backgroundColor: alpha(location.color, 0.2),
-                          color: location.color,
+                          backgroundColor: alpha(location.color || '#1976d2', 0.2),
+                          color: location.color || '#1976d2',
                           fontWeight: 600,
                         }}
                       />
                     </Stack>
                   </Box>
-                ))}
+                ),
+                [] // fallback vacío si no hay datos
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -627,59 +645,63 @@ const UStatsMain: React.FC = () => {
   const PerformanceTab = () => (
     <Box>
       <Grid container spacing={3}>
-        {performanceData.map((metric, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card
-                elevation={3}
-                sx={{
-                  background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.05)})`,
-                  border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                }}
+        {safeMap(
+          performanceData,
+          (metric: any, index: number) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
               >
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Avatar
-                      sx={{
-                        bgcolor: metric.trend === 'up' ? 'success.main' : metric.trend === 'down' ? 'error.main' : 'warning.main',
-                        mr: 2,
-                      }}
-                    >
-                      {metric.trend === 'up' ? '📈' : metric.trend === 'down' ? '📉' : '📊'}
-                    </Avatar>
-                    <Box>
-                      <Typography variant="h4" fontWeight={700}>
-                        {metric.value}
-                        <Typography component="span" variant="h6" color="text.secondary">
-                          {metric.unit}
+                <Card
+                  elevation={3}
+                  sx={{
+                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.05)})`,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                  }}
+                >
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: metric.trend === 'up' ? 'success.main' : metric.trend === 'down' ? 'error.main' : 'warning.main',
+                          mr: 2,
+                        }}
+                      >
+                        {metric.trend === 'up' ? '📈' : metric.trend === 'down' ? '📉' : '📊'}
+                      </Avatar>
+                      <Box>
+                        <Typography variant="h4" fontWeight={700}>
+                          {metric.value}
+                          <Typography component="span" variant="h6" color="text.secondary">
+                            {metric.unit}
+                          </Typography>
                         </Typography>
-                      </Typography>
-                      <Typography variant="subtitle2" color="text.secondary">
-                        {metric.metric}
-                      </Typography>
+                        <Typography variant="subtitle2" color="text.secondary">
+                          {metric.name}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
 
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
-                      {metric.description}
-                    </Typography>
-                    <Chip
-                      label={`${metric.change > 0 ? '+' : ''}${metric.change}%`}
-                      size="small"
-                      color={metric.trend === 'up' ? 'success' : metric.trend === 'down' ? 'error' : 'default'}
-                      variant="outlined"
-                    />
-                  </Box>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </Grid>
-        ))}
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Rendimiento del sistema
+                      </Typography>
+                      <Chip
+                        label={`${metric.change > 0 ? '+' : ''}${metric.change}%`}
+                        size="small"
+                        color={metric.trend === 'up' ? 'success' : metric.trend === 'down' ? 'error' : 'default'}
+                        variant="outlined"
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </Grid>
+          ),
+          [] // fallback vacío si no hay datos
+        )}
       </Grid>
 
       {/* Status tiempo real */}
