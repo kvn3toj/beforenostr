@@ -26,13 +26,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-// 🎨 SISTEMA DE COLORES CENTRALIZADO
-import {
-  getPrimaryGradient,
-  getSemanticGradient,
-  getPrimaryColor,
-  getSemanticColor,
-} from '../design-system/color-system';
+// 🎨 NUEVO SISTEMA DE TEMAS COOMÜNITY
+import { useThemeContext, RevolutionaryWidget, CosmicCard, ElementalButton } from '../styles';
 
 import { useAuth } from '../contexts/AuthContext';
 import { useIntuitiveBehavior } from '../hooks/home/useIntuitiveBehavior';
@@ -108,17 +103,12 @@ class HomePageErrorBoundary extends React.Component<
               Error detectado:{' '}
               {this.state.error?.message || 'Error desconocido'}
             </Typography>
-            <Button
+            <ElementalButton
               onClick={() => window.location.reload()}
-              variant="contained"
-              size="small"
-              sx={{
-                background: getPrimaryGradient(),
-                color: 'white'
-              }}
+              element="fuego"
             >
               Recargar Dashboard
-            </Button>
+            </ElementalButton>
           </Alert>
         </Container>
       );
@@ -131,6 +121,7 @@ class HomePageErrorBoundary extends React.Component<
 export function HomePage() {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+  const { element, isDarkMode } = useThemeContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -250,22 +241,13 @@ export function HomePage() {
         <Typography variant="body1" sx={{ mb: 4 }}>
           Necesitas iniciar sesión para acceder al Dashboard
         </Typography>
-        <Button
-          variant="contained"
+        <ElementalButton
+          element="tierra"
           size="large"
           onClick={() => navigate('/login')}
-          sx={{
-            background: getPrimaryGradient(),
-            color: 'white',
-            '&:hover': {
-              background: getPrimaryGradient('45deg'),
-              transform: 'translateY(-2px)',
-            },
-            transition: 'all 0.2s ease'
-          }}
         >
           Iniciar Sesión
-        </Button>
+        </ElementalButton>
       </Container>
     );
   }
@@ -289,7 +271,7 @@ export function HomePage() {
               width: 120,
               height: 120,
               borderRadius: '50%',
-              background: `conic-gradient(from 0deg, ${getPrimaryColor(500 as any)}, ${getSemanticColor('info', 'main')}, ${getSemanticColor('success', 'main')}, ${getSemanticColor('warning', 'main')}, ${getPrimaryColor(500 as any)})`,
+              background: `conic-gradient(from 0deg, ${theme.palette.primary.main}, ${theme.palette.info.main}, ${theme.palette.success.main}, ${theme.palette.warning.main}, ${theme.palette.primary.main})`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -302,7 +284,7 @@ export function HomePage() {
           <Typography
             variant="h5"
             sx={{
-              background: getPrimaryGradient(),
+              background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -316,7 +298,7 @@ export function HomePage() {
           <Typography
             variant="body1"
             sx={{
-              color: 'rgba(255, 255, 255, 0.8)',
+              color: 'text.secondary',
               textAlign: 'center',
               fontStyle: 'italic',
             }}
@@ -365,7 +347,7 @@ export function HomePage() {
                 sx={{
                   fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' },
                   fontWeight: 800,
-                  background: getPrimaryGradient(),
+                  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -381,17 +363,17 @@ export function HomePage() {
                     onClick={handleRefreshDashboard}
                     disabled={refreshing}
                     sx={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      color: 'white',
+                      backgroundColor: 'background.paper',
+                      color: 'text.primary',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        backgroundColor: 'action.hover',
                         transform: 'scale(1.05)',
                       },
                       transition: 'all 0.2s ease'
                     }}
                   >
                     {refreshing ? (
-                      <CircularProgress size={20} sx={{ color: 'white' }} />
+                      <CircularProgress size={20} sx={{ color: 'text.primary' }} />
                     ) : (
                       <RefreshIcon />
                     )}
@@ -402,10 +384,10 @@ export function HomePage() {
                   <IconButton
                     onClick={() => navigate('/notifications')}
                     sx={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      color: 'white',
+                      backgroundColor: 'background.paper',
+                      color: 'text.primary',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        backgroundColor: 'action.hover',
                         transform: 'scale(1.05)',
                       },
                       transition: 'all 0.2s ease'
@@ -421,10 +403,10 @@ export function HomePage() {
                   <IconButton
                     onClick={() => navigate('/settings')}
                     sx={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      color: 'white',
+                      backgroundColor: 'background.paper',
+                      color: 'text.primary',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        backgroundColor: 'action.hover',
                         transform: 'scale(1.05)',
                       },
                       transition: 'all 0.2s ease'
@@ -558,36 +540,23 @@ export function HomePage() {
               {/* === REFLEXIÓN FINAL OPTIMIZADA === */}
               <Grid item xs={12} md={6}>
                 <Fade in timeout={1800}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      minHeight: { xs: '200px', md: '300px' },
-                      textAlign: 'center',
-                      p: { xs: 2, sm: 3, md: 4 },
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: 2,
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                    }}
-                  >
+                  <RevolutionaryWidget element={element} intensity={0.05}>
                     <Typography
                       sx={{
-                        color: 'rgba(255, 255, 255, 0.9)',
+                        color: 'text.primary',
                         fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
                         fontStyle: 'italic',
                         fontWeight: 500,
                         lineHeight: 1.6,
-                        maxWidth: '400px',
+                        textAlign: 'center',
                       }}
                     >
-                      <AutoAwesomeIcon sx={{ color: getSemanticColor('warning', 'main'), mr: 1 }} />
+                      <AutoAwesomeIcon sx={{ color: 'warning.main', mr: 1 }} />
                       "El equilibrio Ayni transforma cada interacción en un paso
                       hacia el bien común"
-                      <AutoAwesomeIcon sx={{ color: getSemanticColor('warning', 'main'), ml: 1 }} />
+                      <AutoAwesomeIcon sx={{ color: 'warning.main', ml: 1 }} />
                     </Typography>
-                  </Box>
+                  </RevolutionaryWidget>
                 </Fade>
               </Grid>
             </Grid>
@@ -603,13 +572,13 @@ export function HomePage() {
                 position: 'fixed',
                 bottom: { xs: 20, sm: 32 },
                 right: { xs: 20, sm: 32 },
-                background: `conic-gradient(from 0deg, ${getPrimaryColor(500 as any)}, ${getSemanticColor('info', 'main')}, ${getSemanticColor('success', 'main')}, ${getSemanticColor('warning', 'main')}, ${getPrimaryColor(500 as any)})`,
+                background: `conic-gradient(from 0deg, ${theme.palette.primary.main}, ${theme.palette.info.main}, ${theme.palette.success.main}, ${theme.palette.warning.main}, ${theme.palette.primary.main})`,
                 width: 56,
                 height: 56,
                 zIndex: 1000,
                 '&:hover': {
                   transform: 'scale(1.1)',
-                  boxShadow: `0 12px 40px ${getPrimaryColor(500 as any)}40`,
+                  boxShadow: (theme) => `0 12px 40px ${theme.palette.primary.main}40`,
                 },
                 transition: 'all 0.3s ease',
               }}
@@ -632,7 +601,7 @@ export function HomePage() {
             onClose={() => setSnackbarOpen(false)}
             severity="success"
             sx={{
-              background: getSemanticGradient('success'),
+              background: `linear-gradient(45deg, ${theme.palette.success.main} 30%, ${theme.palette.success.light} 90%)`,
               color: 'white',
               '& .MuiAlert-icon': { color: 'white' },
               fontWeight: 600,

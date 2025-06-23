@@ -3,237 +3,163 @@
    Colores cálidos, terrosos y acogedores del otoño
    =============================================================================== */
 
-import { createTheme, ThemeOptions } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
+import { CoomunityPaletteOptions, CoomunityThemeOptions } from './theme.types';
+import {
+  accessibilityStyles,
+  getHighContrastStyles,
+  getReducedMotionStyles,
+  getLargeFontStyles,
+  getLargeSpacingStyles,
+} from './theme.accessibility';
 
-// Paleta de otoño verdadero
-const autumnPalette = {
-  // Naranjas otoñales principales
+// Definir los colores base de CoomÜnity
+const coomunityColors = {
   primary: {
-    50: '#fff7ed',
-    100: '#ffedd5',
-    200: '#fed7aa',
-    300: '#fdba74',
-    400: '#fb923c',
-    500: '#f97316', // Naranja otoñal principal
-    600: '#ea580c',
-    700: '#c2410c',
-    800: '#9a3412',
-    900: '#7c2d12',
+    main: '#606c38', // Verde Oliva - Acento Primario
+    light: '#606c38', // Usar mismo tono para hover o estados
+    dark: '#283618',  // Verde Bosque Oscuro - Texto principal
+    contrastText: '#fefae0', // Fondo Claro
   },
-
-  // Rojos profundos otoñales
   secondary: {
-    50: '#fef2f2',
-    100: '#fee2e2',
-    200: '#fecaca',
-    300: '#fca5a5',
-    400: '#f87171',
-    500: '#dc2626', // Rojo otoñal equilibrado
-    600: '#b91c1c',
-    700: '#991b1b',
-    800: '#7f1d1d',
-    900: '#450a0a',
+    main: '#dda15e', // Ocre - Acento Secundario
+    light: '#e4b871',
+    dark: '#c9964a',
+    contrastText: '#ffffff',
   },
-
-  // Dorado otoñal
-  tertiary: {
-    50: '#fffbeb',
-    100: '#fef3c7',
-    200: '#fde68a',
-    300: '#fcd34d',
-    400: '#fbbf24',
-    500: '#f59e0b', // Dorado principal
-    600: '#d97706',
-    700: '#b45309',
-    800: '#92400e',
-    900: '#78350f',
-  },
-
-  // Colores semánticos otoñales
-  success: {
-    50: '#f0fdf4',
-    100: '#dcfce7',
-    200: '#bbf7d0',
-    300: '#86efac',
-    400: '#4ade80',
-    500: '#16a34a', // Verde oliva para éxito
-    600: '#15803d',
-    700: '#166534',
-    800: '#14532d',
-    900: '#052e16',
-  },
-
-  warning: {
-    50: '#fffbeb',
-    100: '#fef3c7',
-    200: '#fde68a',
-    300: '#fcd34d',
-    400: '#fbbf24',
-    500: '#f59e0b', // Dorado otoñal para advertencias
-    600: '#d97706',
-    700: '#b45309',
-    800: '#92400e',
-    900: '#78350f',
-  },
-
   error: {
-    50: '#fef2f2',
-    100: '#fee2e2',
-    200: '#fecaca',
-    300: '#fca5a5',
-    400: '#f87171',
-    500: '#dc2626', // Rojo otoñal para errores
-    600: '#b91c1c',
-    700: '#991b1b',
-    800: '#7f1d1d',
-    900: '#450a0a',
+    main: '#bc6c25', // Terracota para alertas sutiles
+    light: '#d08645',
+    dark: '#a85a1a',
+    contrastText: '#ffffff',
   },
-
+  success: {
+    main: '#606c38', // Verde Oliva para éxito
+    light: '#606c38',
+    dark: '#283618',
+    contrastText: '#ffffff',
+  },
+  warning: {
+    main: '#dda15e', // Ocre para advertencias
+    light: '#e4b871',
+    dark: '#c9964a',
+    contrastText: '#ffffff',
+  },
   info: {
-    50: '#fff7ed',
-    100: '#ffedd5',
-    200: '#fed7aa',
-    300: '#fdba74',
-    400: '#fb923c',
-    500: '#8b5a2b', // Marrón cálido para información
-    600: '#92400e',
-    700: '#78350f',
-    800: '#451a03',
-    900: '#292524',
+    main: '#bc6c25', // Terracota para información
+    light: '#d08645',
+    dark: '#a85a1a',
+    contrastText: '#ffffff',
   },
-
-  // Escala de grises cálida
   grey: {
-    50: '#fafaf9', // Blanco cálido
-    100: '#f5f5f4', // Casi blanco cálido
-    200: '#e7e5e4', // Gris muy claro cálido
-    300: '#d6d3d1', // Gris claro cálido
-    400: '#a8a29e', // Gris medio cálido
-    500: '#78716c', // Gris medio
-    600: '#57534e', // Gris oscuro cálido
-    700: '#44403c', // Gris muy oscuro cálido
-    800: '#292524', // Casi negro cálido
-    900: '#1c1917', // Negro cálido
+    50: '#fafaf9',
+    100: '#f5f5f4',
+    200: '#e7e5e4',
+    300: '#d6d3d1',
+    400: '#a8a29e',
+    500: '#78716c',
+    600: '#57534e',
+    700: '#44403c',
+    800: '#292524',
+    900: '#1c1917',
+    A100: '#f5f5f4',
+    A200: '#e7e5e4',
+    A400: '#a8a29e',
+    A700: '#44403c',
   },
-};
+  common: {
+    black: '#000000',
+    white: '#ffffff',
+  },
+  text: {
+    primary: '#283618', // Verde Bosque Oscuro - Texto principal
+    secondary: '#606c38', // Verde Oliva - Texto secundario
+    disabled: '#a8a29e', // Gris medio para texto deshabilitado
+  },
+  background: {
+    default: '#fefae0', // Blanco Hueso - Fondo principal
+    paper: '#ffffff', // Blanco puro para cards
+  },
+} as CoomunityPaletteOptions;
 
-// Configuración base del tema otoñal
-const autumnThemeOptions: ThemeOptions = {
+// Configuración base del tema CoomÜnity
+const coomunityThemeOptions: CoomunityThemeOptions = {
   palette: {
     mode: 'light',
-    primary: {
-      ...autumnPalette.primary,
-      main: autumnPalette.primary[500],
-      light: autumnPalette.primary[100],
-      dark: autumnPalette.primary[700],
-    },
-    secondary: {
-      ...autumnPalette.secondary,
-      main: autumnPalette.secondary[500],
-      light: autumnPalette.secondary[100],
-      dark: autumnPalette.secondary[700],
-    },
-    success: {
-      ...autumnPalette.success,
-      main: autumnPalette.success[500],
-    },
-    warning: {
-      ...autumnPalette.warning,
-      main: autumnPalette.warning[500],
-    },
-    error: {
-      ...autumnPalette.error,
-      main: autumnPalette.error[500],
-    },
-    info: {
-      ...autumnPalette.info,
-      main: autumnPalette.info[500],
-    },
-    grey: autumnPalette.grey,
-    background: {
-      default: '#fffefb', // Blanco muy cálido
-      paper: '#ffffff',
-    },
-    text: {
-      primary: autumnPalette.grey[800], // Contraste 12:1
-      secondary: autumnPalette.grey[600], // Contraste 7.5:1
-      disabled: autumnPalette.grey[400], // Contraste 3.2:1
-    },
-    divider: autumnPalette.grey[200],
+    ...coomunityColors,
+    contrastThreshold: 3,
+    tonalOffset: 0.2,
   },
-
   typography: {
-    fontFamily:
-      '"Inter", "Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
-
-    // Jerarquía tipográfica otoñal
+    fontFamily: '"Poppins", "Helvetica", "Arial", sans-serif',
     h1: {
       fontSize: '2.75rem',
       fontWeight: 800,
       lineHeight: 1.1,
-      color: autumnPalette.grey[800],
-      textShadow: '0 1px 2px rgba(124, 45, 18, 0.1)',
+      color: coomunityColors.text.primary,
+      textShadow: '0 1px 2px rgba(40, 54, 24, 0.1)',
     },
     h2: {
       fontSize: '2.25rem',
       fontWeight: 800,
       lineHeight: 1.2,
-      color: autumnPalette.grey[800],
-      textShadow: '0 1px 2px rgba(124, 45, 18, 0.1)',
+      color: coomunityColors.text.primary,
+      textShadow: '0 1px 2px rgba(40, 54, 24, 0.1)',
     },
     h3: {
       fontSize: '1.875rem',
       fontWeight: 700,
       lineHeight: 1.3,
-      color: autumnPalette.grey[700],
+      color: coomunityColors.text.primary,
     },
     h4: {
       fontSize: '1.5rem',
       fontWeight: 700,
       lineHeight: 1.3,
-      color: autumnPalette.grey[700],
+      color: coomunityColors.text.primary,
     },
     h5: {
       fontSize: '1.25rem',
       fontWeight: 600,
       lineHeight: 1.4,
-      color: autumnPalette.grey[700],
+      color: coomunityColors.text.primary,
     },
     h6: {
       fontSize: '1.125rem',
       fontWeight: 600,
       lineHeight: 1.4,
-      color: autumnPalette.grey[700],
+      color: coomunityColors.text.primary,
     },
     body1: {
       fontSize: '1rem',
       fontWeight: 500,
       lineHeight: 1.7,
-      color: autumnPalette.grey[600],
+      color: coomunityColors.grey[700],
     },
     body2: {
       fontSize: '0.875rem',
       fontWeight: 500,
       lineHeight: 1.6,
-      color: autumnPalette.grey[600],
+      color: coomunityColors.grey[700],
     },
     subtitle1: {
       fontSize: '1rem',
       fontWeight: 600,
       lineHeight: 1.5,
-      color: autumnPalette.grey[600],
+      color: coomunityColors.primary.main,
     },
     subtitle2: {
       fontSize: '0.875rem',
       fontWeight: 600,
       lineHeight: 1.5,
-      color: autumnPalette.grey[600],
+      color: coomunityColors.primary.main,
     },
     caption: {
       fontSize: '0.75rem',
       fontWeight: 500,
       lineHeight: 1.4,
-      color: autumnPalette.grey[500],
+      color: coomunityColors.grey[600],
     },
     overline: {
       fontSize: '0.75rem',
@@ -241,43 +167,39 @@ const autumnThemeOptions: ThemeOptions = {
       lineHeight: 1.4,
       textTransform: 'uppercase',
       letterSpacing: '1px',
-      color: autumnPalette.grey[500],
+      color: coomunityColors.secondary.main,
     },
   },
-
-  spacing: 8, // 8px base spacing
-
   shape: {
-    borderRadius: 16, // Bordes más redondeados y cálidos
+    borderRadius: 16,
   },
-
   shadows: [
     'none',
-    '0 2px 4px rgba(124, 45, 18, 0.1), 0 1px 2px rgba(124, 45, 18, 0.06)', // Sombras cálidas
-    '0 2px 4px rgba(124, 45, 18, 0.1), 0 1px 2px rgba(124, 45, 18, 0.06)',
-    '0 4px 8px rgba(124, 45, 18, 0.12), 0 2px 4px rgba(124, 45, 18, 0.08)',
-    '0 4px 8px rgba(124, 45, 18, 0.12), 0 2px 4px rgba(124, 45, 18, 0.08)',
-    '0 8px 16px rgba(124, 45, 18, 0.15), 0 4px 8px rgba(124, 45, 18, 0.08)',
-    '0 8px 16px rgba(124, 45, 18, 0.15), 0 4px 8px rgba(124, 45, 18, 0.08)',
-    '0 8px 16px rgba(124, 45, 18, 0.15), 0 4px 8px rgba(124, 45, 18, 0.08)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 12px 24px rgba(124, 45, 18, 0.18), 0 6px 12px rgba(124, 45, 18, 0.12)',
-    '0 16px 32px rgba(124, 45, 18, 0.2), 0 8px 16px rgba(124, 45, 18, 0.15)',
-    '0 16px 32px rgba(124, 45, 18, 0.2), 0 8px 16px rgba(124, 45, 18, 0.15)',
-    '0 16px 32px rgba(124, 45, 18, 0.2), 0 8px 16px rgba(124, 45, 18, 0.15)',
-    '0 16px 32px rgba(124, 45, 18, 0.2), 0 8px 16px rgba(124, 45, 18, 0.15)',
+    '0 2px 4px rgba(40, 54, 24, 0.1), 0 1px 2px rgba(40, 54, 24, 0.06)',
+    '0 2px 4px rgba(40, 54, 24, 0.1), 0 1px 2px rgba(40, 54, 24, 0.06)',
+    '0 4px 8px rgba(40, 54, 24, 0.12), 0 2px 4px rgba(40, 54, 24, 0.08)',
+    '0 4px 8px rgba(40, 54, 24, 0.12), 0 2px 4px rgba(40, 54, 24, 0.08)',
+    '0 8px 16px rgba(40, 54, 24, 0.15), 0 4px 8px rgba(40, 54, 24, 0.08)',
+    '0 8px 16px rgba(40, 54, 24, 0.15), 0 4px 8px rgba(40, 54, 24, 0.08)',
+    '0 8px 16px rgba(40, 54, 24, 0.15), 0 4px 8px rgba(40, 54, 24, 0.08)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 12px 24px rgba(40, 54, 24, 0.18), 0 6px 12px rgba(40, 54, 24, 0.12)',
+    '0 16px 32px rgba(40, 54, 24, 0.2), 0 8px 16px rgba(40, 54, 24, 0.15)',
+    '0 16px 32px rgba(40, 54, 24, 0.2), 0 8px 16px rgba(40, 54, 24, 0.15)',
+    '0 16px 32px rgba(40, 54, 24, 0.2), 0 8px 16px rgba(40, 54, 24, 0.15)',
+    '0 16px 32px rgba(40, 54, 24, 0.2), 0 8px 16px rgba(40, 54, 24, 0.15)',
+    '0 16px 32px rgba(40, 54, 24, 0.2), 0 8px 16px rgba(40, 54, 24, 0.15)',
+    '0 16px 32px rgba(40, 54, 24, 0.2), 0 8px 16px rgba(40, 54, 24, 0.15)',
+    '0 16px 32px rgba(40, 54, 24, 0.2), 0 8px 16px rgba(40, 54, 24, 0.15)',
   ],
-
-  // Configuración de transiciones cálidas
   transitions: {
     duration: {
       shortest: 180,
@@ -295,367 +217,277 @@ const autumnThemeOptions: ThemeOptions = {
       sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
     },
   },
-};
-
-// Sobrescribir componentes específicos para tema otoñal
-const autumnComponentOverrides = {
-  MuiCssBaseline: {
-    styleOverrides: {
-      body: {
-        scrollbarWidth: 'thin',
-        scrollbarColor: `${autumnPalette.grey[300]} ${autumnPalette.grey[100]}`,
-        '&::-webkit-scrollbar': {
-          width: 8,
-          height: 8,
-        },
-        '&::-webkit-scrollbar-thumb': {
-          backgroundColor: autumnPalette.primary[300],
-          borderRadius: 6,
-          '&:hover': {
-            backgroundColor: autumnPalette.primary[400],
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: coomunityColors.background.default,
+          color: coomunityColors.text.primary,
+          scrollbarWidth: 'thin',
+          scrollbarColor: `${coomunityColors.grey[300]} ${coomunityColors.grey[100]}`,
+          '&::-webkit-scrollbar': {
+            width: 8,
+            height: 8,
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: coomunityColors.primary.main,
+            borderRadius: 6,
+            '&:hover': {
+              backgroundColor: coomunityColors.primary.light,
+            },
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: coomunityColors.grey[100],
           },
         },
-        '&::-webkit-scrollbar-track': {
-          backgroundColor: autumnPalette.grey[100],
-        },
       },
     },
-  },
-
-  MuiAppBar: {
-    styleOverrides: {
-      root: {
-        background: `linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)`,
-        color: autumnPalette.grey[800],
-        boxShadow:
-          '0 1px 3px rgba(124, 45, 18, 0.05), 0 1px 2px rgba(124, 45, 18, 0.03)',
-        borderBottom: `1px solid ${autumnPalette.primary[200]}`,
-      },
-    },
-  },
-
-  MuiButton: {
-    styleOverrides: {
-      root: {
-        textTransform: 'none' as const,
-        fontWeight: 600,
-        borderRadius: 12,
-        padding: '12px 24px',
-        boxShadow:
-          '0 2px 4px rgba(124, 45, 18, 0.1), 0 1px 2px rgba(124, 45, 18, 0.06)',
-        transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-        '&:hover': {
-          transform: 'translateY(-1px)',
-          boxShadow:
-            '0 4px 8px rgba(124, 45, 18, 0.15), 0 2px 4px rgba(124, 45, 18, 0.08)',
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontWeight: 600,
+          borderRadius: 12,
+          padding: '12px 24px',
+          boxShadow: '0 2px 4px rgba(40, 54, 24, 0.1), 0 1px 2px rgba(40, 54, 24, 0.06)',
+          transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-1px)',
+            boxShadow: '0 4px 8px rgba(40, 54, 24, 0.15), 0 2px 4px rgba(40, 54, 24, 0.08)',
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+          },
         },
-        '&:active': {
-          transform: 'translateY(0)',
+        contained: {
+          background: `linear-gradient(135deg, ${coomunityColors.primary.main} 0%, ${coomunityColors.secondary.main} 100%)`,
+          color: coomunityColors.primary.contrastText,
+          '&:hover': {
+            background: `linear-gradient(135deg, ${coomunityColors.primary.dark} 0%, ${coomunityColors.secondary.dark} 100%)`,
+            filter: 'brightness(1.05)',
+          },
         },
-      },
-      contained: {
-        background: `linear-gradient(135deg, ${autumnPalette.primary[500]} 0%, ${autumnPalette.tertiary[500]} 100%)`,
-        color: '#ffffff',
-        '&:hover': {
-          background: `linear-gradient(135deg, ${autumnPalette.primary[600]} 0%, ${autumnPalette.tertiary[600]} 100%)`,
-          filter: 'brightness(1.05)',
-        },
-      },
-      outlined: {
-        borderColor: autumnPalette.primary[300],
-        color: autumnPalette.primary[600],
-        backgroundColor: 'transparent',
-        borderWidth: '2px',
-        '&:hover': {
-          backgroundColor: autumnPalette.primary[50],
-          borderColor: autumnPalette.primary[400],
-          color: autumnPalette.primary[700],
+        outlined: {
+          borderColor: coomunityColors.primary.main,
+          color: coomunityColors.primary.dark,
+          backgroundColor: 'transparent',
           borderWidth: '2px',
+          '&:hover': {
+            backgroundColor: coomunityColors.background.default,
+            borderColor: coomunityColors.primary.light,
+            color: coomunityColors.primary.dark,
+            borderWidth: '2px',
+          },
         },
       },
     },
-  },
-
-  MuiCard: {
-    styleOverrides: {
-      root: {
-        borderRadius: 24,
-        border: `2px solid ${autumnPalette.grey[200]}`,
-        boxShadow:
-          '0 2px 4px rgba(124, 45, 18, 0.1), 0 1px 2px rgba(124, 45, 18, 0.06)',
-        transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-        position: 'relative',
-        overflow: 'hidden',
-        '&:hover': {
-          transform: 'translateY(-3px)',
-          boxShadow:
-            '0 8px 16px rgba(124, 45, 18, 0.15), 0 4px 8px rgba(124, 45, 18, 0.08)',
-          borderColor: autumnPalette.primary[300],
-        },
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '4px',
-          background: `linear-gradient(135deg, ${autumnPalette.primary[500]} 0%, ${autumnPalette.tertiary[500]} 50%, ${autumnPalette.secondary[500]} 100%)`,
-          opacity: 0.8,
-        },
-      },
-    },
-  },
-
-  MuiChip: {
-    styleOverrides: {
-      root: {
-        borderRadius: 24,
-        fontWeight: 600,
-        border: `1px solid ${autumnPalette.grey[200]}`,
-        transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-      },
-      filled: {
-        backgroundColor: autumnPalette.primary[100],
-        color: autumnPalette.primary[800],
-        borderColor: autumnPalette.primary[200],
-        '&:hover': {
-          backgroundColor: autumnPalette.primary[200],
-          transform: 'translateY(-1px)',
-        },
-      },
-    },
-  },
-
-  MuiLinearProgress: {
-    styleOverrides: {
-      root: {
-        borderRadius: 9999,
-        height: 10,
-        backgroundColor: autumnPalette.grey[200],
-        boxShadow: 'inset 0 1px 2px rgba(124, 45, 18, 0.1)',
-      },
-      bar: {
-        borderRadius: 9999,
-        background: `linear-gradient(90deg, ${autumnPalette.primary[400]} 0%, ${autumnPalette.tertiary[400]} 50%, ${autumnPalette.secondary[400]} 100%)`,
-        transition: 'all 350ms cubic-bezier(0.4, 0, 0.2, 1)',
-      },
-    },
-  },
-
-  MuiFab: {
-    styleOverrides: {
-      root: {
-        background: `linear-gradient(135deg, ${autumnPalette.primary[500]} 0%, ${autumnPalette.tertiary[500]} 50%, ${autumnPalette.secondary[500]} 100%)`,
-        color: '#ffffff',
-        boxShadow:
-          '0 8px 16px rgba(124, 45, 18, 0.15), 0 4px 8px rgba(124, 45, 18, 0.08)',
-        transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-        '&:hover': {
-          background: `linear-gradient(135deg, ${autumnPalette.primary[600]} 0%, ${autumnPalette.tertiary[600]} 50%, ${autumnPalette.secondary[600]} 100%)`,
-          transform: 'scale(1.08) translateY(-3px)',
-          boxShadow:
-            '0 12px 24px rgba(124, 45, 18, 0.2), 0 6px 12px rgba(124, 45, 18, 0.12)',
-          filter: 'brightness(1.15) saturate(1.2)',
-        },
-      },
-    },
-  },
-
-  MuiPaper: {
-    styleOverrides: {
-      root: {
-        backgroundImage: 'none',
-        backgroundColor: '#fffefb',
-      },
-      elevation1: {
-        boxShadow:
-          '0 2px 4px rgba(124, 45, 18, 0.1), 0 1px 2px rgba(124, 45, 18, 0.06)',
-      },
-      elevation4: {
-        boxShadow:
-          '0 8px 16px rgba(124, 45, 18, 0.15), 0 4px 8px rgba(124, 45, 18, 0.08)',
-      },
-    },
-  },
-
-  MuiIconButton: {
-    styleOverrides: {
-      root: {
-        transition: 'all 180ms cubic-bezier(0.4, 0, 0.2, 1)',
-        borderRadius: 12,
-        '&:hover': {
-          backgroundColor: autumnPalette.primary[50],
-          transform: 'scale(1.08)',
-          color: autumnPalette.primary[600],
-        },
-      },
-    },
-  },
-
-  MuiTooltip: {
-    styleOverrides: {
-      tooltip: {
-        backgroundColor: autumnPalette.grey[800],
-        color: '#ffffff',
-        borderRadius: 8,
-        fontSize: '0.75rem',
-        fontWeight: 500,
-        padding: '8px 12px',
-        boxShadow:
-          '0 4px 8px rgba(124, 45, 18, 0.12), 0 2px 4px rgba(124, 45, 18, 0.08)',
-      },
-      arrow: {
-        color: autumnPalette.grey[800],
-      },
-    },
-  },
-
-  MuiAlert: {
-    styleOverrides: {
-      root: {
-        borderRadius: 12,
-        padding: '12px 16px',
-        '&.MuiAlert-standardSuccess': {
-          backgroundColor: autumnPalette.success[50],
-          color: autumnPalette.success[800],
-          border: `1px solid ${autumnPalette.success[200]}`,
-        },
-        '&.MuiAlert-standardWarning': {
-          backgroundColor: autumnPalette.warning[50],
-          color: autumnPalette.warning[800],
-          border: `1px solid ${autumnPalette.warning[200]}`,
-        },
-        '&.MuiAlert-standardError': {
-          backgroundColor: autumnPalette.error[50],
-          color: autumnPalette.error[800],
-          border: `1px solid ${autumnPalette.error[200]}`,
-        },
-        '&.MuiAlert-standardInfo': {
-          backgroundColor: autumnPalette.info[50],
-          color: autumnPalette.info[800],
-          border: `1px solid ${autumnPalette.info[200]}`,
-        },
-      },
-    },
-  },
-};
-
-// Crear tema otoñal final
-export const autumnTheme = createTheme({
-  ...autumnThemeOptions,
-  components: {
-    ...autumnComponentOverrides,
-    // 🍂 OVERRIDE GLOBAL CRÍTICO: Solución DEFINITIVA para erradicar fondos oscuros
-    MuiCssBaseline: {
-      styleOverrides: `
-        body {
-          background-color: #fffefb !important;
-          color: #292524 !important;
-        }
-        /* Override para cualquier estilo inline persistente */
-        *[style*="background-color: rgb(41, 37, 36)"] {
-          background-color: #fffefb !important;
-        }
-        *[style*="background-color: #121212"] {
-          background-color: #fffefb !important;
-        }
-        *[style*="background-color: rgb(18, 18, 18)"] {
-          background-color: #fffefb !important;
-        }
-        *[style*="background-color: #1e1e1e"] {
-          background-color: #fffefb !important;
-        }
-        /* Forzar elementos principales */
-        html {
-          background-color: #fffefb !important;
-        }
-        #root {
-          background-color: #fffefb !important;
-          color: #292524 !important;
-        }
-        /* Eliminar esquemas de color oscuro */
-        [data-mui-color-scheme="dark"] {
-          background-color: #fffefb !important;
-          color: #292524 !important;
-        }
-        /* Forzar todos los contenedores MUI */
-        .MuiContainer-root,
-        .MuiPaper-root,
-        .MuiCard-root,
-        .MuiBox-root {
-          background-color: transparent !important;
-        }
-        main.main-content-area {
-          background-color: #fffefb !important;
-        }
-        /* Override específico para cualquier clase CSS generada con fondo oscuro */
-        [class*="css-"][class*="MuiPaper-root"],
-        [class*="css-"][class*="MuiContainer-root"],
-        [class*="css-"][class*="MuiBox-root"] {
-          background-color: transparent !important;
-        }
-      `,
-    },
-  },
-});
-
-// Tema otoñal modo oscuro
-export const autumnThemeDark = createTheme({
-  ...autumnThemeOptions,
-  palette: {
-    ...autumnThemeOptions.palette,
-    mode: 'dark',
-    background: {
-      default: autumnPalette.grey[900],
-      paper: autumnPalette.grey[800],
-    },
-    text: {
-      primary: autumnPalette.grey[100],
-      secondary: autumnPalette.grey[300],
-      disabled: autumnPalette.grey[500],
-    },
-    divider: autumnPalette.grey[700],
-    primary: {
-      ...autumnPalette.primary,
-      main: autumnPalette.primary[400], // Más brillante en modo oscuro
-    },
-    secondary: {
-      ...autumnPalette.secondary,
-      main: autumnPalette.secondary[400], // Más brillante en modo oscuro
-    },
-  },
-  components: {
-    ...autumnComponentOverrides,
     MuiCard: {
-      styleOverrides: {
-        root: {
-          ...autumnComponentOverrides.MuiCard.styleOverrides?.root,
-          backgroundColor: autumnPalette.grey[800],
-          border: `2px solid ${autumnPalette.grey[700]}`,
-        },
+      defaultProps: {
+        elevation: 1,
       },
-    },
-    MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundColor: autumnPalette.grey[800],
+          borderRadius: 24,
+          border: `2px solid ${coomunityColors.grey[200]}`,
+          boxShadow: '0 2px 4px rgba(40, 54, 24, 0.1), 0 1px 2px rgba(40, 54, 24, 0.06)',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          position: 'relative',
+          overflow: 'hidden',
+          backgroundColor: coomunityColors.background.paper,
+          '&:hover': {
+            transform: 'translateY(-3px)',
+            boxShadow: '0 8px 16px rgba(40, 54, 24, 0.15), 0 4px 8px rgba(40, 54, 24, 0.08)',
+            borderColor: coomunityColors.primary.main,
+          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: `linear-gradient(135deg, ${coomunityColors.primary.main} 0%, ${coomunityColors.secondary.main} 50%, ${coomunityColors.error.main} 100%)`,
+            opacity: 0.8,
+          },
         },
       },
     },
     MuiChip: {
       styleOverrides: {
         root: {
-          ...autumnComponentOverrides.MuiChip.styleOverrides?.root,
-          border: `1px solid ${autumnPalette.grey[600]}`,
+          borderRadius: 24,
+          fontWeight: 600,
+          border: `1px solid ${coomunityColors.grey[200]}`,
+          transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
         },
         filled: {
-          backgroundColor: autumnPalette.primary[900],
-          color: autumnPalette.primary[200],
-          borderColor: autumnPalette.primary[700],
+          backgroundColor: coomunityColors.primary.light,
+          color: coomunityColors.primary.dark,
+          borderColor: coomunityColors.primary.main,
+          '&:hover': {
+            backgroundColor: coomunityColors.primary.main,
+            transform: 'translateY(-1px)',
+          },
+        },
+      },
+    },
+    MuiLinearProgress: {
+      styleOverrides: {
+        root: {
+          borderRadius: 9999,
+          height: 10,
+          backgroundColor: coomunityColors.grey[200],
+          boxShadow: 'inset 0 1px 2px rgba(40, 54, 24, 0.1)',
+        },
+        bar: {
+          borderRadius: 9999,
+          background: `linear-gradient(90deg, ${coomunityColors.primary.main} 0%, ${coomunityColors.secondary.main} 50%, ${coomunityColors.error.main} 100%)`,
+          transition: 'all 350ms cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+      },
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: {
+          background: `linear-gradient(135deg, ${coomunityColors.primary.main} 0%, ${coomunityColors.secondary.main} 50%, ${coomunityColors.error.main} 100%)`,
+          color: coomunityColors.primary.contrastText,
+          boxShadow: '0 8px 16px rgba(40, 54, 24, 0.15), 0 4px 8px rgba(40, 54, 24, 0.08)',
+          transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            background: `linear-gradient(135deg, ${coomunityColors.primary.dark} 0%, ${coomunityColors.secondary.dark} 50%, ${coomunityColors.error.dark} 100%)`,
+            transform: 'scale(1.08) translateY(-3px)',
+            boxShadow: '0 12px 24px rgba(40, 54, 24, 0.2), 0 6px 12px rgba(40, 54, 24, 0.12)',
+            filter: 'brightness(1.15) saturate(1.2)',
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+          backgroundColor: coomunityColors.background.paper,
+        },
+        elevation1: {
+          boxShadow: '0 2px 4px rgba(40, 54, 24, 0.1), 0 1px 2px rgba(40, 54, 24, 0.06)',
+        },
+        elevation4: {
+          boxShadow: '0 8px 16px rgba(40, 54, 24, 0.15), 0 4px 8px rgba(40, 54, 24, 0.08)',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          transition: 'all 180ms cubic-bezier(0.4, 0, 0.2, 1)',
+          borderRadius: 12,
+          '&:hover': {
+            backgroundColor: coomunityColors.grey[100],
+            transform: 'scale(1.08)',
+            color: coomunityColors.primary.dark,
+          },
+        },
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: coomunityColors.primary.dark,
+          color: coomunityColors.primary.contrastText,
+          borderRadius: 8,
+          fontSize: '0.75rem',
+          fontWeight: 500,
+          padding: '8px 12px',
+          boxShadow: '0 4px 8px rgba(40, 54, 24, 0.12), 0 2px 4px rgba(40, 54, 24, 0.08)',
+        },
+        arrow: {
+          color: coomunityColors.primary.dark,
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          padding: '12px 16px',
+          '&.MuiAlert-standardSuccess': {
+            backgroundColor: coomunityColors.success.light,
+            color: coomunityColors.success.dark,
+            border: `1px solid ${coomunityColors.success.main}`,
+          },
+          '&.MuiAlert-standardWarning': {
+            backgroundColor: coomunityColors.warning.light,
+            color: coomunityColors.warning.dark,
+            border: `1px solid ${coomunityColors.warning.main}`,
+          },
+          '&.MuiAlert-standardError': {
+            backgroundColor: coomunityColors.error.light,
+            color: coomunityColors.error.dark,
+            border: `1px solid ${coomunityColors.error.main}`,
+          },
+          '&.MuiAlert-standardInfo': {
+            backgroundColor: coomunityColors.info.light,
+            color: coomunityColors.info.dark,
+            border: `1px solid ${coomunityColors.info.main}`,
+          },
         },
       },
     },
   },
+};
+
+// Crear tema CoomÜnity final
+export const coomunityTheme = createTheme({
+  ...coomunityThemeOptions,
+  ...accessibilityStyles(coomunityThemeOptions as any),
 });
 
-export default autumnTheme;
+// Tema CoomÜnity modo oscuro
+export const coomunityThemeDark = createTheme({
+  ...coomunityThemeOptions,
+  palette: {
+    ...coomunityColors,
+    mode: 'dark',
+    background: {
+      default: coomunityColors.grey[900],
+      paper: coomunityColors.grey[800],
+    },
+    text: {
+      primary: coomunityColors.grey[100],
+      secondary: coomunityColors.grey[300],
+      disabled: coomunityColors.grey[500],
+    },
+    primary: {
+      ...coomunityColors.primary,
+      main: coomunityColors.primary.light,
+    },
+    secondary: {
+      ...coomunityColors.secondary,
+      main: coomunityColors.secondary.light,
+    },
+  },
+  components: {
+    ...coomunityThemeOptions.components,
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: coomunityColors.grey[800],
+          borderColor: coomunityColors.grey[700],
+          '&:hover': {
+            borderColor: coomunityColors.primary.light,
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: coomunityColors.grey[800],
+        },
+      },
+    },
+  },
+  ...accessibilityStyles(coomunityThemeOptions as any),
+});
+
+export default coomunityTheme;
