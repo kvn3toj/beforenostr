@@ -1,6 +1,46 @@
 /* ===== COOMUNITY DESIGN TOKENS - COLORS ===== */
 
 :root {
+  /* ============ PALETA CORPORATIVA UPLAY ============ */
+  /* Colores principales definidos según guía corporativa */
+  --uplay-navy: #142c46; /* C: 100 M: 80 Y: 45 K: 45 */
+  --uplay-blue: #005ca9; /* C: 100 M: 60 Y: 0 K: 0 */
+  --uplay-purple-dark: #392768; /* C: 95 M: 100 Y: 25 K: 10 */
+  --uplay-purple: #5c2483; /* C: 80 M: 100 Y: 0 K: 0 */
+
+  /* Variantes derivadas para UI */
+  --uplay-navy-light: #1a3555;
+  --uplay-navy-dark: #0f1f35;
+  --uplay-blue-light: #0066bc;
+  --uplay-blue-dark: #004a89;
+  --uplay-purple-light: #6b2d96;
+  --uplay-purple-ultra: #4a1d68;
+
+  /* Grises corporativos complementarios */
+  --uplay-gray-50: #f8fafc;
+  --uplay-gray-100: #f1f5f9;
+  --uplay-gray-200: #e2e8f0;
+  --uplay-gray-300: #cbd5e1;
+  --uplay-gray-400: #94a3b8;
+  --uplay-gray-500: #64748b;
+  --uplay-gray-600: #475569;
+  --uplay-gray-700: #334155;
+  --uplay-gray-800: #1e293b;
+  --uplay-gray-900: #0f172a;
+
+  /* Gradientes corporativos */
+  --gradient-primary-uplay: linear-gradient(135deg, var(--uplay-blue), var(--uplay-purple));
+  --gradient-header-uplay: linear-gradient(135deg, var(--uplay-navy) 0%, var(--uplay-blue) 50%, var(--uplay-purple-dark) 100%);
+  --gradient-card-uplay: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+
+  /* Sombras corporativas */
+  --shadow-sm-uplay: 0 2px 4px rgba(20, 44, 70, 0.08);
+  --shadow-md-uplay: 0 4px 12px rgba(20, 44, 70, 0.1);
+  --shadow-lg-uplay: 0 8px 25px rgba(0, 92, 169, 0.15);
+  --shadow-blue-uplay: 0 6px 20px rgba(0, 92, 169, 0.3);
+  --shadow-purple-uplay: 0 4px 12px rgba(92, 36, 131, 0.3);
+  --shadow-navy-uplay: 0 8px 32px rgba(20, 44, 70, 0.3);
+
   /* === COLORES PRIMARIOS COOMUNITY === */
   --coomunity-primary-50: #faf5ff;
   --coomunity-primary-100: #f3e8ff;
@@ -157,12 +197,12 @@
     --color-text-secondary: var(--color-gray-300);
     --color-text-tertiary: var(--color-gray-400);
     --color-text-inverse: var(--color-gray-900);
-    
+
     --color-background-primary: var(--color-gray-900);
     --color-background-secondary: var(--color-gray-800);
     --color-background-tertiary: var(--color-gray-700);
     --color-background-inverse: var(--color-white);
-    
+
     --color-border-primary: var(--color-gray-700);
     --color-border-secondary: var(--color-gray-600);
   }
@@ -177,4 +217,4 @@
     --color-background-primary: #ffffff;
     --color-border-primary: #000000;
   }
-} 
+}

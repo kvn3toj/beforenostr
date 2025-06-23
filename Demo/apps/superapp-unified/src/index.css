@@ -23,6 +23,8 @@
 @import './styles/simple-orbital-animations.css';
 /* Import Guardian dynamic styles */
 @import './styles/guardian-dynamic.css';
+/* Import UPlay Corporate Design System */
+@import './styles/uplay-corporate.css';
 
 @tailwind base;
 @tailwind components;

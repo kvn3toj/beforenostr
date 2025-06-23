@@ -74,59 +74,6 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
   );
 };
 
-// Enhanced Header Stats Component with hover effects
-const HeaderStat: React.FC<HeaderStatProps> = ({ icon, value, label, color, isHovered, onHover, onLeave }) => (
-  <Zoom in={true} timeout={800}>
-    <Card
-      onMouseEnter={onHover}
-      onMouseLeave={onLeave}
-      sx={{
-        cursor: 'pointer',
-        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        background: alpha('#ffffff', 0.05),
-        backdropFilter: 'blur(20px)',
-        border: `1px solid ${alpha(color, 0.3)}`,
-        '&:hover': {
-          boxShadow: `0 0 25px ${alpha(color, 0.4)}`
-        }
-      }}
-    >
-      <CardContent sx={{ textAlign: 'center', py: 2 }}>
-        <Box
-          sx={{
-            display: 'inline-flex',
-            p: 1.5,
-            borderRadius: 2,
-            background: `linear-gradient(135deg, ${alpha(color, 0.2)}, ${alpha(color, 0.1)})`,
-            color,
-            mb: 1,
-            boxShadow: `0 0 15px ${alpha(color, 0.3)}`
-          }}
-        >
-          <Icon component={icon} sx={{ fontSize: 28 }} />
-        </Box>
-        <Typography
-          variant="h4"
-          sx={{
-            mb: 0.5,
-            background: `linear-gradient(135deg, ${color}, ${alpha(color, 0.7)})`,
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            fontWeight: 'bold'
-          }}
-        >
-          {value}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {label}
-        </Typography>
-      </CardContent>
-    </Card>
-  </Zoom>
-);
-
 // Enhanced UPlay Header with restored metrics
 const UPlayHeader = () => {
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -159,167 +106,113 @@ const UPlayHeader = () => {
       label: 'Mëritos Totales',
       value: userStats.meritos,
       icon: Diamond,
-      color: '#7c3aed',
+      type: 'blue',
       key: 'meritos'
     },
     {
       label: 'Öndas Activas',
       value: userStats.ondas,
       icon: Bolt,
-      color: '#f59e0b',
+      type: 'purple',
       key: 'ondas'
     },
     {
       label: 'Logros Desbloqueados',
       value: userStats.logrosDesbloqueados,
       icon: EmojiEvents,
-      color: '#10b981',
+      type: 'navy',
       key: 'logros'
     }
   ];
 
   return (
     <Fade in={animate} timeout={800}>
-      <Box
-        sx={{
-          position: 'relative',
-          background: `linear-gradient(135deg,
-            ${alpha('#6366f1', 0.1)} 0%,
-            ${alpha('#a855f7', 0.08)} 50%,
-            ${alpha('#10b981', 0.06)} 100%)`,
-          borderRadius: 4,
-          overflow: 'hidden',
-          mb: 4,
-          p: 4,
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `radial-gradient(circle at 20% 20%, ${alpha('#6366f1', 0.15)} 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, ${alpha('#a855f7', 0.12)} 0%, transparent 50%)`,
-            pointerEvents: 'none',
-            zIndex: 1
-          }
-        }}
-      >
-        <div className="relative z-10 text-center">
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-              <AutoAwesome
-                sx={{
-                  fontSize: 40,
-                  color: '#6366f1',
-                  mr: 2,
-                  filter: 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.4))'
-                }}
-              />
-              <Typography
-                variant={isMobile ? "h4" : "h3"}
-                sx={{
-                  fontWeight: 700,
-                  background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  textShadow: '0 0 20px rgba(99, 102, 241, 0.3)'
+      <div className="uplay-header-corporate">
+        <div className="uplay-header-badge">
+          <AutoAwesome sx={{ fontSize: 20 }} />
+          <span>ÜPlay - GPL Gamified Play List</span>
+        </div>
+
+        <Typography
+          variant={isMobile ? "h4" : "h3"}
+          className="uplay-header-title"
+        >
+          Plataforma Interactiva de Aprendizaje Gamificado
+        </Typography>
+
+        <Typography
+          variant="h6"
+          className="uplay-header-subtitle"
+        >
+          Experimenta el poder del aprendizaje gamificado con la filosofía CoomÜnity
+        </Typography>
+
+        {/* Corporate metrics cards */}
+        <Grid container spacing={3} sx={{ mt: 2, mb: 3 }}>
+          {metrics.map((metric, index) => (
+            <Grid key={metric.key} item xs={12} sm={6} md={4}>
+              <div
+                className={`uplay-metric-card-corporate type-${metric.type}`}
+                onMouseEnter={() => setHoveredMetric(metric.key)}
+                onMouseLeave={() => setHoveredMetric(null)}
+                style={{
+                  transform: hoveredMetric === metric.key ? 'translateY(-4px)' : 'translateY(0)',
                 }}
               >
-                ÜPlay - GPL Gamified Play List
-              </Typography>
+                <div className={`uplay-metric-icon-${metric.type}`}>
+                  <metric.icon sx={{ fontSize: 28 }} />
+                </div>
+                <div className="uplay-metric-value">{metric.value}</div>
+                <div className="uplay-metric-label">{metric.label}</div>
+              </div>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Enhanced progress section with corporate styling */}
+        <div className="uplay-progress-section-corporate">
+          <div className="uplay-progress-header-corporate">
+            <div className="uplay-progress-header-title">
+              Progreso Semanal CoomÜnity
+            </div>
+            <Typography variant="body2" sx={{ opacity: 0.9 }}>
+              Construyendo el Bien Común a través del aprendizaje
+            </Typography>
+          </div>
+
+          <div className="uplay-progress-content">
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center', fontWeight: 600 }}>
+              Racha de la Semana:
+              <span style={{ color: 'var(--uplay-blue)', fontWeight: 800, marginLeft: '8px' }}>
+                {userStats.weeklyProgress} de {userStats.weeklyGoal} videos
+              </span>
+            </Typography>
+
+            <div className="uplay-progress-bar-container">
+              <div
+                className="uplay-progress-bar-fill"
+                style={{ width: `${(userStats.weeklyProgress / userStats.weeklyGoal) * 100}%` }}
+              />
+            </div>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+              <button className="uplay-btn-primary-corporate">
+                <PlayArrow sx={{ mr: 1 }} />
+                Continuar Aventura del Conocimiento
+              </button>
             </Box>
-            <Typography
-              variant="h6"
-              sx={{
-                color: 'text.secondary',
-                mb: 3,
-                opacity: 0.9
-              }}
-            >
-              Plataforma Interactiva de Aprendizaje Gamificado
-            </Typography>
-          </motion.div>
-
-          {/* Restored main metrics */}
-          <Grid container spacing={3} sx={{ mb: 3 }}>
-            {metrics.map((metric, index) => (
-              <Grid key={metric.key} item xs={12} sm={6} md={4}>
-                <HeaderStat
-                  icon={metric.icon}
-                  value={metric.value.toString()}
-                  label={metric.label}
-                  color={metric.color}
-                  isHovered={hoveredMetric === metric.key}
-                  onHover={() => setHoveredMetric(metric.key)}
-                  onLeave={() => setHoveredMetric(null)}
-                />
-              </Grid>
-            ))}
-          </Grid>
-
-          {/* Weekly progress indicator */}
-          <Box
-            sx={{
-              p: 3,
-              borderRadius: 3,
-              background: `linear-gradient(135deg,
-                ${alpha('#6366f1', 0.1)} 0%,
-                ${alpha('#a855f7', 0.08)} 100%)`,
-              border: `1px solid ${alpha('#6366f1', 0.2)}`,
-              backdropFilter: 'blur(10px)',
-              textAlign: 'center'
-            }}
-          >
-            <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.6 }}>
-              Racha de la Semana: <strong style={{ color: '#10b981' }}>{userStats.weeklyProgress} de {userStats.weeklyGoal} videos</strong>
-            </Typography>
-            <LinearProgress
-              variant="determinate"
-              value={(userStats.weeklyProgress / userStats.weeklyGoal) * 100}
-              sx={{
-                height: 8,
-                borderRadius: 4,
-                mb: 2,
-                '& .MuiLinearProgress-bar': {
-                  background: 'linear-gradient(90deg, #10b981, #06d6a0)'
-                }
-              }}
-            />
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<PlayArrow />}
-              sx={{
-                background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
-                borderRadius: 3,
-                px: 4,
-                py: 1.5,
-                fontSize: '1.1rem',
-                fontWeight: 600,
-                boxShadow: '0 8px 24px rgba(99, 102, 241, 0.4)',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #4f46e5 0%, #9333ea 100%)',
-                  boxShadow: '0 12px 32px rgba(99, 102, 241, 0.6)',
-                  transform: 'translateY(-2px)'
-                }
-              }}
-            >
-              Continuar Aventura
-            </Button>
-          </Box>
+          </div>
         </div>
-      </Box>
+      </div>
     </Fade>
   );
 };
 
 const tabs = [
-  { label: 'Dashboard', icon: <Dashboard />, component: <UPlayEnhancedDashboard /> },
-  { label: 'Videoteca', icon: <VideoLibrary />, component: <UPlayInteractiveLibrary />, notifications: 5 },
-  { label: 'Logros', icon: <EmojiEvents />, component: <UPlayAchievementSystem /> },
-  { label: 'Salas de Estudio', icon: <Groups />, component: <UPlayStudyRooms /> },
+  { label: 'Dashboard', icon: Dashboard, component: <UPlayEnhancedDashboard /> },
+  { label: 'Videoteca', icon: VideoLibrary, component: <UPlayInteractiveLibrary />, notifications: 5 },
+  { label: 'Logros', icon: EmojiEvents, component: <UPlayAchievementSystem /> },
+  { label: 'Salas de Estudio', icon: Groups, component: <UPlayStudyRooms /> },
 ];
 
 const UPlay: React.FC = () => {
@@ -336,62 +229,29 @@ const UPlay: React.FC = () => {
       {/* Enhanced Header with restored functionality */}
       <UPlayHeader />
 
-      {/* Professional Tabs Navigation */}
+      {/* Corporate Tabs Navigation */}
       <Fade in={true} timeout={1200}>
-        <Card
-          sx={{
-            background: alpha('#ffffff', 0.05),
-            backdropFilter: 'blur(20px)',
-            border: `1px solid ${alpha('#ffffff', 0.1)}`,
-            borderRadius: 4,
-            mb: 3,
-            overflow: 'hidden',
-            position: 'relative',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: '2px',
-              background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-            }
-          }}
-        >
-          <Tabs
-            value={activeTab}
-            onChange={handleTabChange}
-            variant="fullWidth"
-            sx={{
-              '& .MuiTab-root': {
-                textTransform: 'none',
-                fontWeight: 600,
-                fontSize: '1rem',
-                minHeight: 64,
-                color: alpha(theme.palette.text.primary, 0.7),
-                '&.Mui-selected': {
-                  color: theme.palette.primary.main,
-                },
-                '&:hover': {
-                  background: alpha(theme.palette.primary.main, 0.05),
-                }
-              }
-            }}
-          >
+        <div className="uplay-tabs-container-corporate">
+          <Box sx={{ display: 'flex', gap: 1 }}>
             {tabs.map((tab, index) => (
-              <Tab
+              <button
                 key={index}
-                icon={tab.notifications ? (
-                  <Badge badgeContent={tab.notifications} color="secondary">
-                    {tab.icon}
-                  </Badge>
-                ) : tab.icon}
-                label={tab.label}
-                iconPosition="start"
-              />
+                onClick={() => setActiveTab(index)}
+                className={`uplay-tab-button-corporate ${activeTab === index ? 'active' : 'inactive'}`}
+              >
+                <tab.icon sx={{ fontSize: 20, mr: 1 }} />
+                {tab.label}
+                {tab.notifications && (
+                  <Badge
+                    badgeContent={tab.notifications}
+                    className="uplay-tab-badge"
+                    sx={{ ml: 1 }}
+                  />
+                )}
+              </button>
             ))}
-          </Tabs>
-        </Card>
+          </Box>
+        </div>
       </Fade>
 
       {/* Tab Content */}
