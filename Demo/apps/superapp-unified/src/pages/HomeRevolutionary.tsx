@@ -35,6 +35,10 @@ import QuickActionsGridRevolutionary from '../components/home/QuickActionsGridRe
 import ModuleCardsRevolutionary from '../components/home/ModuleCardsRevolutionary';
 import NotificationCenterRevolutionary from '../components/home/NotificationCenterRevolutionary';
 
+// 🌟 SISTEMA UNIVERSAL GUARDIAN
+import { UniversalIntegrator } from '../components/theme/UniversalIntegrator';
+import { UniversalComponent, UniversalGrid, UniversalFlex } from '../components/universal/UniversalComponent';
+
 // 🎨 IMPORTAR SISTEMAS REVOLUCIONARIOS Y PROPORCIONES ÁUREAS
 import '../styles/home-revolutionary-system.css';
 import '../styles/golden-ratio-system.css';
@@ -249,10 +253,7 @@ const HomeRevolutionary: React.FC = () => {
           variant="contained"
           size="large"
           onClick={() => navigate('/login')}
-          sx={{
-            background: 'linear-gradient(135deg, #E91E63, #F06292)',
-            color: 'white',
-          }}
+          className="guardian-button"
         >
           Iniciar Sesión
         </Button>
@@ -292,9 +293,8 @@ const HomeRevolutionary: React.FC = () => {
 
           <Typography
             variant="h5"
-            className="revolutionary-text-gradient"
+            className="revolutionary-text-gradient guardian-gradient-elements"
             sx={{
-              background: 'linear-gradient(135deg, #E91E63, #9C27B0, #3F51B5)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -324,7 +324,12 @@ const HomeRevolutionary: React.FC = () => {
 
   return (
     <HomeRevolutionaryErrorBoundary>
-      <Box className="revolutionary-container">
+      <UniversalIntegrator
+        enableCosmicBackground={true}
+        philosophical={true}
+        className="home-revolutionary-cosmic"
+      >
+        <Box className="revolutionary-container">
         <Container
           maxWidth="xl"
           className="golden-container"
@@ -352,12 +357,10 @@ const HomeRevolutionary: React.FC = () => {
             >
               <Typography
                 variant="h3"
-                className="revolutionary-text-gradient"
+                className="revolutionary-text-gradient guardian-gradient-primary"
                 sx={{
                   fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' },
                   fontWeight: 800,
-                  background:
-                    'linear-gradient(135deg, #FF6B35, #E91E63, #9C27B0)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -848,6 +851,7 @@ const HomeRevolutionary: React.FC = () => {
           </Alert>
         </Snackbar>
       </Box>
+      </UniversalIntegrator>
     </HomeRevolutionaryErrorBoundary>
   );
 };

@@ -159,7 +159,7 @@ const GroupElementIcon: React.FC<{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: color,
+              color,
               fontSize: 20,
             }}
           >
@@ -389,12 +389,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
               <Typography
                 variant="h4"
                 fontWeight="bold"
-                sx={{
-                  background: `linear-gradient(45deg, #8E24AA, #5E35B1)`,
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
+                className="guardian-text-mystic"
               >
                 {Math.round(groupData.ayniBalance * 100)}%
               </Typography>

@@ -110,9 +110,8 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
 
   return (
     <Box
-      className="smart-header"
+      className="smart-header guardian-header"
       sx={{
-        background: `linear-gradient(135deg, ${primaryColors[500]}, ${secondaryColors[500]})`,
         color: 'white',
         p: 'var(--space-6)',
         borderRadius: 'var(--radius-3xl)',

@@ -159,11 +159,7 @@ const DesignSystemHub: React.FC = () => {
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3 }}>
       {/* Header */}
       <Box sx={{ mb: 4, textAlign: 'center' }}>
-        <Typography variant="h3" sx={{
-          background: 'linear-gradient(45deg, #FF6B35, #4A90E2, #8B4513, #9B59B6)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
+        <Typography variant="h3" className="guardian-text-gradient" sx={{
           fontWeight: 'bold',
           mb: 2
         }}>

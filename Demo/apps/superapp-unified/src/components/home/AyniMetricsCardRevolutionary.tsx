@@ -643,24 +643,18 @@ const AyniMetricsCardRevolutionary: React.FC<AyniMetricsRevolutionaryProps> = ({
             }}
           >
             <PublicIcon
+              className="guardian-text-gradient"
               sx={{
                 fontSize: '2.8rem',
-                background: 'linear-gradient(135deg, #00BCD4, #FFD700, #FF6B35)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
                 mb: 0.5,
                 filter: 'drop-shadow(0 2px 8px rgba(0, 188, 212, 0.5))',
               }}
             />
             <Typography
               variant="h3"
+              className="guardian-text-gradient"
               sx={{
                 fontWeight: 900,
-                background: 'linear-gradient(135deg, #FFD700, #FF6B35)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
                 fontSize: '2rem',
                 lineHeight: 1,
                 mb: 0.2,

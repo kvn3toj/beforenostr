@@ -824,11 +824,9 @@ const MarketplaceMain: React.FC = () => {
               {/* Estadísticas de impacto mejoradas */}
               <Paper
                 elevation={0}
+                className="guardian-marketplace-hero animate-scale-in"
                 sx={{
                   p: { xs: 2, sm: 3, md: 4 },
-                  background:
-                    'linear-gradient(135deg, #4CAF50 0%, #2E7D32 85%, #1B5E20 100%)',
-                  color: 'white',
                   borderRadius: 4,
                   mb: 3,
                   position: 'relative',
@@ -845,7 +843,6 @@ const MarketplaceMain: React.FC = () => {
                     opacity: 0.6,
                   },
                 }}
-                className="animate-scale-in"
               >
                 <Grid container spacing={3}>
                   <Grid item xs={6} sm={3}>

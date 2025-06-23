@@ -42,18 +42,13 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
       <Paper
+        className="guardian-progress-ring"
         sx={{
           p: 3,
-          background: `linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)`,
-          border: `1px solid ${color}40`,
           borderRadius: 2,
-          boxShadow: `0 0 20px ${color}20`,
           textAlign: 'center',
           position: 'relative',
           overflow: 'hidden',
-          '&:hover': {
-            boxShadow: `0 0 30px ${color}40`,
-          },
         }}
       >
         {/* Background Glow */}
@@ -75,7 +70,7 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
             component="h3"
             gutterBottom
             sx={{
-              color: color,
+              color,
               fontWeight: 'bold',
               textShadow: `0 0 10px ${color}60`,
               textTransform: 'uppercase',

@@ -44,14 +44,10 @@ export const SocialWelcomeHeader: React.FC<SocialWelcomeHeaderProps> = ({
   return (
     <Paper
       elevation={0}
+      className="guardian-social-header"
       sx={{
-        background: `linear-gradient(135deg, ${alpha(
-          '#E91E63',
-          0.1
-        )} 0%, ${alpha('#9C27B0', 0.1)} 50%, ${alpha('#3F51B5', 0.05)} 100%)`,
         p: 3,
         borderRadius: 3,
-        border: `1px solid ${alpha('#E91E63', 0.2)}`,
         position: 'relative',
         overflow: 'hidden',
       }}

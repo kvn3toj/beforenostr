@@ -3,7 +3,9 @@ import { ThemeProvider as MuiThemeProvider, createTheme, Theme } from '@mui/mate
 import CssBaseline from '@mui/material/CssBaseline';
 
 // ===== 🎨 TIPOS DE TEMAS GUARDIAN =====
-export type GuardianTheme = 'guardian' | 'autumn' | 'cosmic' | 'harmony';
+export type GuardianTheme =
+  | 'guardian' | 'autumn' | 'cosmic' | 'harmony'
+  | 'minimal' | 'zen' | 'nordic' | 'monochrome' | 'soft' | 'slate';
 
 // ===== 🌟 PALETAS DE COLORES GUARDIAN =====
 const GUARDIAN_PALETTES = {
@@ -69,6 +71,103 @@ const GUARDIAN_PALETTES = {
       primary: '#111827',
       secondary: '#374151',
       muted: '#6b7280'
+    }
+  },
+  // ===== 🎨 PALETAS MINIMALISTAS =====
+  minimal: {
+    name: 'Pure Minimal',
+    description: 'Pureza absoluta con toques sutiles de color',
+    primary: '#2563eb', // Azul puro
+    secondary: '#64748b', // Gris medio
+    accent: '#06b6d4', // Cyan suave
+    mystic: '#8b5cf6', // Violeta sutil
+    neutral: '#f1f5f9', // Gris muy claro
+    background: '#ffffff',
+    surface: '#fcfcfd',
+    text: {
+      primary: '#0f172a',
+      secondary: '#475569',
+      muted: '#94a3b8'
+    }
+  },
+  zen: {
+    name: 'Zen Garden',
+    description: 'Serenidad y equilibrio en tonos naturales',
+    primary: '#059669', // Verde natural
+    secondary: '#0891b2', // Azul sereno
+    accent: '#d97706', // Ocre tierra
+    mystic: '#7c3aed', // Violeta profundo
+    neutral: '#e2e8f0', // Piedra zen
+    background: '#fefefe',
+    surface: '#f8fafc',
+    text: {
+      primary: '#1e293b',
+      secondary: '#475569',
+      muted: '#64748b'
+    }
+  },
+  nordic: {
+    name: 'Nordic Minimalism',
+    description: 'Elegancia escandinava con tonos fríos y puros',
+    primary: '#1e40af', // Azul nórdico
+    secondary: '#374151', // Gris carbón
+    accent: '#0ea5e9', // Azul hielo
+    mystic: '#6366f1', // Índigo aurora
+    neutral: '#f3f4f6', // Blanco nieve
+    background: '#ffffff',
+    surface: '#f9fafb',
+    text: {
+      primary: '#111827',
+      secondary: '#4b5563',
+      muted: '#9ca3af'
+    }
+  },
+  monochrome: {
+    name: 'Pure Monochrome',
+    description: 'Elegancia atemporal en escala de grises',
+    primary: '#000000', // Negro puro
+    secondary: '#374151', // Gris oscuro
+    accent: '#6b7280', // Gris medio
+    mystic: '#9ca3af', // Gris claro
+    neutral: '#f3f4f6', // Gris muy claro
+    background: '#ffffff',
+    surface: '#f9fafb',
+    text: {
+      primary: '#111827',
+      secondary: '#374151',
+      muted: '#6b7280'
+    }
+  },
+  soft: {
+    name: 'Soft Pastels',
+    description: 'Suavidad y delicadeza en tonos pastel',
+    primary: '#7c3aed', // Violeta suave
+    secondary: '#06b6d4', // Cyan pastel
+    accent: '#10b981', // Verde menta
+    mystic: '#f59e0b', // Amarillo crema
+    neutral: '#f1f5f9', // Gris suave
+    background: '#fefefe',
+    surface: '#f8fafc',
+    text: {
+      primary: '#1e293b',
+      secondary: '#475569',
+      muted: '#64748b'
+    }
+  },
+  slate: {
+    name: 'Modern Slate',
+    description: 'Modernidad industrial con toques de color',
+    primary: '#0f172a', // Slate oscuro
+    secondary: '#334155', // Slate medio
+    accent: '#06b6d4', // Cyan brillante
+    mystic: '#a855f7', // Violeta tecnológico
+    neutral: '#cbd5e1', // Slate claro
+    background: '#f8fafc',
+    surface: '#f1f5f9',
+    text: {
+      primary: '#020617',
+      secondary: '#334155',
+      muted: '#64748b'
     }
   }
 };
@@ -317,6 +416,7 @@ export const GuardianColorProvider: React.FC<GuardianColorProviderProps> = ({
     const palette = GUARDIAN_PALETTES[currentTheme];
     const root = document.documentElement;
 
+    // Variables Guardian específicas
     root.style.setProperty('--guardian-primary', palette.primary);
     root.style.setProperty('--guardian-secondary', palette.secondary);
     root.style.setProperty('--guardian-accent', palette.accent);
@@ -328,6 +428,21 @@ export const GuardianColorProvider: React.FC<GuardianColorProviderProps> = ({
     root.style.setProperty('--guardian-text-secondary', palette.text.secondary);
     root.style.setProperty('--guardian-text-muted', palette.text.muted);
 
+    // ===== 🔄 INTEGRACIÓN CON SISTEMA DE DESIGN TOKENS EXISTENTE =====
+    // Actualizar variables principales del sistema para máxima compatibilidad
+    root.style.setProperty('--coomunity-primary-500', palette.primary);
+    root.style.setProperty('--coomunity-gold-500', palette.accent);
+    root.style.setProperty('--color-text-primary', palette.text.primary);
+    root.style.setProperty('--color-text-secondary', palette.text.secondary);
+    root.style.setProperty('--color-background-primary', palette.background);
+    root.style.setProperty('--color-background-secondary', palette.surface);
+
+    // Elementos naturales según paleta actual
+    root.style.setProperty('--coomunity-earth-500', palette.accent);   // Tierra/Verde
+    root.style.setProperty('--coomunity-water-500', palette.secondary); // Agua/Azul
+    root.style.setProperty('--coomunity-fire-500', palette.primary);    // Fuego/Dorado
+    root.style.setProperty('--coomunity-air-500', palette.mystic);      // Aire/Violeta
+
     // ===== 🔄 GRADIENTES DINÁMICOS =====
     root.style.setProperty('--guardian-gradient-primary',
       `linear-gradient(135deg, ${palette.primary} 0%, ${palette.accent} 100%)`);
@@ -335,6 +450,10 @@ export const GuardianColorProvider: React.FC<GuardianColorProviderProps> = ({
       `linear-gradient(135deg, ${palette.secondary} 0%, ${palette.mystic} 100%)`);
     root.style.setProperty('--guardian-gradient-unity',
       `linear-gradient(135deg, ${palette.primary} 0%, ${palette.secondary} 25%, ${palette.accent} 50%, ${palette.mystic} 75%, ${palette.neutral} 100%)`);
+    root.style.setProperty('--guardian-gradient-cosmic',
+      `linear-gradient(45deg, ${palette.primary}, ${palette.secondary})`);
+    root.style.setProperty('--guardian-gradient-elements',
+      `linear-gradient(135deg, ${palette.accent} 0%, ${palette.secondary} 25%, ${palette.primary} 50%, ${palette.mystic} 75%, ${palette.neutral} 100%)`);
 
   }, [currentTheme]);
 

@@ -11,8 +11,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
 import { FeedbackProvider } from './contexts/FeedbackContext';
 
-// 🌟 GUARDIAN AGENTS - Color Harmony System
+// 🌟 GUARDIAN AGENTS - Universal Harmony System
 import { GuardianColorProvider, GuardianThemeSelector } from './components/theme/GuardianColorProvider';
+import { UniversalIntegrator } from './components/theme/UniversalIntegrator';
 
 // 🎓 Tutorial Discovery System
 import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';

@@ -135,7 +135,7 @@ export const CosmicThemeSwitcher: React.FC<CosmicThemeSwitcherProps> = ({
   const currentConfig = COSMIC_ELEMENTS[selectedElement];
 
   // Calcular balance promedio si se proporciona
-  const averageBalance = userBalance 
+  const averageBalance = userBalance
     ? Math.round(Object.values(userBalance).reduce((sum, val) => sum + val, 0) / 5)
     : 75;
 
@@ -258,7 +258,7 @@ export const CosmicThemeSwitcher: React.FC<CosmicThemeSwitcherProps> = ({
           <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
             Cambiar Elemento Activo
           </Typography>
-          
+
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
             {Object.entries(COSMIC_ELEMENTS).map(([key, config]) => {
               const elementKey = key as CosmicElement;
@@ -290,13 +290,10 @@ export const CosmicThemeSwitcher: React.FC<CosmicThemeSwitcherProps> = ({
                 >
                   <ButtonBase
                     onClick={() => handleElementSelect(elementKey)}
+                    className={`guardian-element-button ${isSelected ? 'guardian-element-selected' : ''}`}
                     sx={{
                       p: 1.5,
                       borderRadius: 2,
-                      border: `2px solid ${isSelected ? config.color : alpha(config.color, 0.3)}`,
-                      background: isSelected 
-                        ? config.gradient 
-                        : `linear-gradient(135deg, ${alpha(config.color, 0.1)} 0%, ${alpha(config.color, 0.05)} 100%)`,
                       color: isSelected ? 'white' : config.color,
                       minWidth: 80,
                       flexDirection: 'column',
@@ -328,11 +325,11 @@ export const CosmicThemeSwitcher: React.FC<CosmicThemeSwitcherProps> = ({
                     <Typography variant="caption" fontWeight="bold">
                       {config.name}
                     </Typography>
-                    
+
                     {userBalance && (
-                      <Typography 
-                        variant="caption" 
-                        sx={{ 
+                      <Typography
+                        variant="caption"
+                        sx={{
                           fontSize: '0.7rem',
                           opacity: 0.8
                         }}
@@ -374,8 +371,8 @@ export const CosmicThemeSwitcher: React.FC<CosmicThemeSwitcherProps> = ({
 
         {/* Información filosófica del elemento seleccionado */}
         {!compact && (
-          <Box mt={3} p={2} sx={{ 
-            background: alpha(currentConfig.color, 0.05), 
+          <Box mt={3} p={2} sx={{
+            background: alpha(currentConfig.color, 0.05),
             borderRadius: 2,
             border: `1px solid ${alpha(currentConfig.color, 0.1)}`
           }}>
@@ -414,10 +411,10 @@ export const CosmicThemeSwitcher: React.FC<CosmicThemeSwitcherProps> = ({
             <Typography variant="caption" color="text.secondary" gutterBottom>
               Balance Cósmico General
             </Typography>
-            <Typography 
-              variant="h4" 
-              fontWeight="bold" 
-              sx={{ 
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{
                 color: currentConfig.color,
                 textShadow: `0 0 10px ${alpha(currentConfig.color, 0.3)}`
               }}
@@ -428,7 +425,7 @@ export const CosmicThemeSwitcher: React.FC<CosmicThemeSwitcherProps> = ({
         )}
 
         {/* CSS animations */}
-        <Box 
+        <Box
           sx={{
             position: 'absolute',
             top: 0,

@@ -341,10 +341,9 @@ const AyniSocialMetrics: React.FC<AyniSocialMetricsProps> = ({
         <Grid item xs={6} md={3}>
           <Card
             elevation={0}
+            className="guardian-card-success"
             sx={{
               p: 2,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)}, ${alpha(theme.palette.success.main, 0.05)})`,
-              border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-2px)',

@@ -36,7 +36,19 @@ import {
   Info as InfoIcon
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
-import { useGuardianColors } from '../guardian/GuardianColorProvider';
+import { useGuardianColors } from '../theme/GuardianColorProvider';
+
+// 🎨 EXPORTACIÓN GLOBAL para compatibilidad con colorSystem legacy
+// Esta definición está disponible para importación desde otros componentes si es necesario
+export const createColorSystemFromPalette = (palette: any) => ({
+  primary: palette.primary,
+  secondary: palette.secondary,
+  accent: palette.accent,
+  mystic: palette.mystic,
+  ether: palette.mystic, // ether se mapea a mystic
+  bgPrimary: palette.background,
+  neutral: palette.neutral
+});
 
 // 🎓 Tipos para los tutoriales
 interface TutorialStep {
@@ -641,7 +653,37 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
   const { user, isAuthenticated, loading } = useAuth();
 
   // 🎨 INTEGRACIÓN GUARDIAN COLORS para mejor contraste y legibilidad
-  const { colorSystem, currentTheme, getGradient, getElementColor } = useGuardianColors();
+  const { currentTheme, palette, getElementColor, getConceptColor } = useGuardianColors();
+
+  // Helper para crear gradientes basados en la paleta actual
+  const createGradient = (style: string) => {
+    switch (style) {
+      case 'cosmic':
+        return `linear-gradient(135deg, ${palette.primary}, ${palette.mystic})`;
+      case 'primary':
+        return `linear-gradient(45deg, ${palette.primary}, ${palette.accent})`;
+      case 'secondary':
+        return `linear-gradient(45deg, ${palette.secondary}, ${palette.mystic})`;
+      case 'ayni':
+        return `linear-gradient(135deg, ${getConceptColor('ayni')}, ${palette.accent})`;
+      default:
+        return `linear-gradient(45deg, ${palette.primary}, ${palette.secondary})`;
+    }
+  };
+
+  // Mapeo temporal para compatibilidad con colorSystem legacy
+  const colorSystem = {
+    primary: palette.primary,
+    secondary: palette.secondary,
+    accent: palette.accent,
+    mystic: palette.mystic,
+    ether: palette.mystic, // ether se mapea a mystic
+    bgPrimary: palette.background,
+    neutral: palette.neutral
+  };
+
+  // Helper para getGradient legacy
+  const getGradient = createGradient;
 
   const availableTutorials = DISCOVERY_TUTORIALS;
 
@@ -867,11 +909,11 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
             sx: {
               borderRadius: 3,
               // 🌟 GUARDIAN VISUAL ENHANCEMENT: Fondo sólido con gradiente Guardian
-              background: getGradient('cosmic'),
+              background: createGradient('cosmic'),
               // Sombra mejorada con colores Guardian
-              boxShadow: `0 12px 40px 0 rgba(0, 0, 0, 0.4), 0 0 0 1px ${colorSystem.mystic}40`,
+              boxShadow: `0 12px 40px 0 rgba(0, 0, 0, 0.4), 0 0 0 1px ${palette.mystic}40`,
               // Borde Guardian para definir mejor el contorno
-              border: `2px solid ${colorSystem.mystic}60`,
+              border: `2px solid ${palette.mystic}60`,
               position: 'relative',
               overflow: 'hidden',
               // 🎯 ELIMINAR TRANSPARENCIA PROBLEMÁTICA
@@ -889,8 +931,8 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
               },
               '& .MuiChip-root': {
                 color: '#ffffff',
-                backgroundColor: `${colorSystem.ether}40`,
-                border: `1px solid ${colorSystem.ether}80`,
+                backgroundColor: `${palette.mystic}40`,
+                border: `1px solid ${palette.mystic}80`,
               }
             },
           }}
@@ -898,7 +940,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
           slotProps={{
             backdrop: {
               sx: {
-                backgroundColor: `${colorSystem.bgPrimary}95`,
+                backgroundColor: `${palette.background}95`,
                 backdropFilter: 'blur(8px) saturate(180%)',
                 WebkitBackdropFilter: 'blur(8px) saturate(180%)',
               }

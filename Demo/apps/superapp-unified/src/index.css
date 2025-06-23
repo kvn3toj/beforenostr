@@ -30,6 +30,9 @@
 /* Import simple orbital animations - More intuitive approach */
 @import './styles/simple-orbital-animations.css';
 
+/* Import Guardian dynamic styles */
+@import './styles/guardian-dynamic.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -155,27 +155,28 @@ const MarketplacePage: React.FC = () => {
               <Chip
                 icon={<AttachMoneyIcon />}
                 label={`${filterStats.products} Productos`}
-                sx={{ background: 'linear-gradient(45deg, #667eea, #764ba2)', color: 'white' }}
+                className="guardian-chip-meritos"
               />
               <Chip
                 icon={<GroupIcon />}
                 label={`${filterStats.services} Servicios`}
-                sx={{ background: 'linear-gradient(45deg, #f093fb, #f5576c)', color: 'white' }}
+                className="guardian-chip-ayni"
               />
               <Chip
                 icon={<VerifiedIcon />}
                 label={`${filterStats.collaborations} Colaboraciones`}
-                sx={{ background: 'linear-gradient(45deg, #4facfe, #00f2fe)', color: 'white' }}
+                className="guardian-chip-lukas"
               />
               <Chip
                 icon={<TrendingUpIcon />}
                 label={`${filterStats.trending} Trending`}
-                sx={{ background: 'linear-gradient(45deg, #43e97b, #38f9d7)', color: 'white' }}
+                className="guardian-chip-ondas"
               />
               <Chip
                 icon={<StarIcon />}
                 label={`${filterStats.featured} Destacados`}
-                sx={{ background: 'linear-gradient(45deg, #fa709a, #fee140)', color: 'white' }}
+                className="guardian-gradient-primary"
+                sx={{ color: 'white' }}
               />
             </Box>
 
