@@ -47,6 +47,9 @@ import {
   KeyboardArrowUp,
 } from '@mui/icons-material';
 
+// 🌌 NUEVO: Import del Design System Cósmico
+import { CosmicCard } from '../../../../../design-system/components/cosmic/CosmicCard';
+
 interface QuickAction {
   id: string;
   label: string;
@@ -199,17 +202,18 @@ const PostCard: React.FC<{
   };
 
   return (
-    <Card
+    <CosmicCard
+      element="aire" // Elemento aire para fluidez social
+      variant="elevated"
+      intensity={0.15}
+      glow={post.isPinned || post.isPopular}
+      style={{
+        marginBottom: '16px',
+        border: post.isPinned ? `2px solid ${getCategoryColor(post.category)}` : undefined,
+      }}
       sx={{
-        mb: 2,
-        transition: 'all 0.3s ease-in-out',
-        border: `2px solid ${
-          post.isPinned ? getCategoryColor(post.category) : 'transparent'
-        }`,
         '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: theme.shadows[8],
-          border: `2px solid ${alpha(getCategoryColor(post.category), 0.3)}`,
+          transform: 'perspective(1000px) rotateX(1deg) rotateY(1deg) translateY(-2px)',
         },
       }}
     >
@@ -392,7 +396,7 @@ const PostCard: React.FC<{
           </IconButton>
         </Stack>
       </CardContent>
-    </Card>
+    </CosmicCard>
   );
 };
 

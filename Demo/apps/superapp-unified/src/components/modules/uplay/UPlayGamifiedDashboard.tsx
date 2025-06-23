@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useTransition } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -23,6 +23,8 @@ import {
   Button,
   Divider,
   CircularProgress,
+  Fade,
+  Skeleton,
 } from '@mui/material';
 import {
   PlayArrow,
@@ -50,7 +52,7 @@ import {
 import { PlayerMetricsDashboard } from './components/PlayerMetricsDashboard';
 import DynamicMetricsDashboard from './components/DynamicMetricsDashboard';
 import { EnhancedRewardFeedback, useRewardFeedback } from './components/EnhancedRewardFeedback';
-import { UnifiedUPlayPlayer } from './UnifiedUPlayPlayer';
+import UnifiedUPlayPlayer from './UnifiedUPlayPlayer';
 
 // [NUEVO] Funcionalidades Sociales según recomendaciones del review
 import { StudyRoomList } from './components/StudyRoomList';
@@ -154,6 +156,13 @@ const isValidVideoItem = (video: any): video is VideoItem => {
 // ============================================================================
 // INTERFACES
 // ============================================================================
+
+// 🔄 TIPOS PARA TRANSICIONES MEJORADAS
+interface TransitionState {
+  isTabChanging: boolean;
+  isVideoLoading: boolean;
+  isContentLoading: boolean;
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -570,6 +579,14 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     return grouped;
   }, [adaptedVideos, videos]);
 
+  // 🚀 PERFORMANCE: React 18 startTransition para mejor UX
+  const [isPending, startTransition] = useTransition();
+  const [transitionState, setTransitionState] = useState<TransitionState>({
+    isTabChanging: false,
+    isVideoLoading: false,
+    isContentLoading: false,
+  });
+
   // Helper para obtener nombre de playlist
   const getPlaylistName = (playlistId: string) => {
     if (playlistId === 'unassigned') return 'Sin ruta asignada';
@@ -577,47 +594,110 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     return pl?.name || 'Ruta desconocida';
   };
 
-  // HANDLERS (mover aquí todos los useCallback)
+  // 🎯 HANDLERS OPTIMIZADOS CON STARTTRANSITION
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
+    // Mostrar indicador inmediatamente
+    setTransitionState(prev => ({ ...prev, isTabChanging: true }));
+
+    startTransition(() => {
+      setTabValue(newValue);
+      // Resetear indicador después de la transición
+      setTimeout(() => {
+        setTransitionState(prev => ({ ...prev, isTabChanging: false }));
+      }, 300);
+    });
   }, []);
 
   const handleVideoPlay = useCallback((videoId: string) => {
     console.log('🎬 Playing video:', videoId);
 
-    // Buscar el video completo en los datos del backend
-    const videoData = videos?.find((v: any) => v.id.toString() === videoId);
-    console.log('🎬 Found video data:', videoData);
+    // Mostrar indicador de carga inmediatamente
+    setTransitionState(prev => ({ ...prev, isVideoLoading: true }));
 
-    if (videoData) {
-      // Navegar al reproductor con los datos del video
-      navigate(`/uplay/video/${videoId}`, {
-        state: {
-          from: '/uplay',
-          videoData: videoData
-        }
-      });
-    } else {
-      console.error('❌ Video not found:', videoId);
-      // Navegar de todas formas, el UPlayVideoPlayer manejará la carga
-      navigate(`/uplay/video/${videoId}`, {
-        state: {
-          from: '/uplay'
-        }
-      });
-    }
+    startTransition(() => {
+      // Buscar el video completo en los datos del backend
+      const videoData = videos?.find((v: any) => v.id.toString() === videoId);
+      console.log('🎬 Found video data:', videoData);
 
-    setSelectedVideo(videoId);
-    setCurrentVideo(videoId);
+      if (videoData) {
+        // Navegar al reproductor con los datos del video
+        navigate(`/uplay/video/${videoId}`, {
+          state: {
+            from: '/uplay',
+            videoData: videoData
+          }
+        });
+      } else {
+        console.error('❌ Video not found:', videoId);
+        // Navegar de todas formas, el UPlayVideoPlayer manejará la carga
+        navigate(`/uplay/video/${videoId}`, {
+          state: {
+            from: '/uplay'
+          }
+        });
+      }
+
+      setSelectedVideo(videoId);
+      setCurrentVideo(videoId);
+
+      // Resetear indicador después de un tiempo breve
+      setTimeout(() => {
+        setTransitionState(prev => ({ ...prev, isVideoLoading: false }));
+      }, 500);
+    });
   }, [setCurrentVideo, videos, navigate]);
 
   const handleCloseSidebar = useCallback(() => {
-    setSidebarOpen(false);
+    startTransition(() => {
+      setSidebarOpen(false);
+    });
   }, []);
 
-  // Loading state
+  // 🎯 OPTIMIZADOR DE CONTENT LOADING
+  const handleContentLoad = useCallback((loadingFn: () => void) => {
+    setTransitionState(prev => ({ ...prev, isContentLoading: true }));
+
+    startTransition(() => {
+      loadingFn();
+      // Simular tiempo de carga para UX suave
+      setTimeout(() => {
+        setTransitionState(prev => ({ ...prev, isContentLoading: false }));
+      }, 200);
+    });
+  }, []);
+
+  // Loading state con transiciones mejoradas
   if (isLoadingPlaylists || isLoadingVideos) {
-    return <Box sx={{ p: 4 }}><LinearProgress /><Typography sx={{ mt: 2 }}>Cargando rutas de aprendizaje...</Typography></Box>;
+    return (
+      <Box sx={{ p: 4 }}>
+        <Fade in={true} timeout={800}>
+          <Box>
+            <LinearProgress
+              sx={{
+                mb: 2,
+                '& .MuiLinearProgress-bar': {
+                  background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+                }
+              }}
+            />
+            <Typography sx={{ mt: 2, textAlign: 'center' }}>
+              Cargando rutas de aprendizaje...
+            </Typography>
+            <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+              {[1, 2, 3].map((i) => (
+                <Skeleton
+                  key={i}
+                  variant="rectangular"
+                  width="100%"
+                  height={120}
+                  sx={{ borderRadius: 2 }}
+                />
+              ))}
+            </Box>
+          </Box>
+        </Fade>
+      </Box>
+    );
   }
 
   // Error state
@@ -641,13 +721,22 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     isErrorVideos
   });
 
-  // Empty state
+  // Empty state con animación
   if (!playlists?.length && !Object.keys(videosByPlaylist).length) {
-    return <Box sx={{ p: 4 }}><Typography>No hay rutas de aprendizaje ni videos disponibles. (playlists: {playlists?.length}, videos: {Object.keys(videosByPlaylist).length})</Typography></Box>;
+    return (
+      <Fade in={true} timeout={600}>
+        <Box sx={{ p: 4, textAlign: 'center' }}>
+          <Typography>
+            No hay rutas de aprendizaje ni videos disponibles.
+            (playlists: {playlists?.length}, videos: {Object.keys(videosByPlaylist).length})
+          </Typography>
+        </Box>
+      </Fade>
+    );
   }
 
   // ========================================================================
-  // RENDER HELPERS
+  // RENDER HELPERS CON TRANSICIONES MEJORADAS
   // ========================================================================
 
   const renderHeader = () => (
@@ -658,6 +747,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         bgcolor: 'background.paper',
         borderBottom: 1,
         borderColor: 'divider',
+        transition: 'all 0.3s ease',
       }}
     >
       <Toolbar>
@@ -665,7 +755,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={() => setSidebarOpen(true)}
+            onClick={() => handleContentLoad(() => setSidebarOpen(true))}
             sx={{ mr: 2 }}
           >
             <Menu />
@@ -682,38 +772,78 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Aprendizaje interactivo gamificado
+              {isPending && (
+                <Chip
+                  label="Cargando..."
+                  size="small"
+                  sx={{ ml: 1, height: 16, fontSize: '0.6rem' }}
+                />
+              )}
             </Typography>
           </Box>
         </Box>
 
-        {/* Métricas rápidas en el header */}
-        <Box display="flex" gap={1} alignItems="center">
-          <Chip
-            icon={<Diamond />}
-            label={playerMetrics.meritos.toLocaleString()}
-            size="small"
-            sx={{ color: '#9c27b0', fontWeight: 'bold' }}
-          />
-          <Chip
-            icon={<Bolt />}
-            label={playerMetrics.ondas.toLocaleString()}
-            size="small"
-            sx={{ color: '#ff9800', fontWeight: 'bold' }}
-          />
-          <Chip
-            icon={<Star />}
-            label={`Nivel ${playerMetrics.level}`}
-            size="small"
-            sx={{ color: '#2196f3', fontWeight: 'bold' }}
-          />
+        {/* Métricas rápidas en el header con animaciones */}
+        <Fade in={!transitionState.isTabChanging} timeout={400}>
+          <Box display="flex" gap={1} alignItems="center">
+            <Chip
+              icon={<Diamond />}
+              label={playerMetrics.meritos.toLocaleString()}
+              size="small"
+              sx={{
+                color: '#9c27b0',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease',
+                '&:hover': { transform: 'scale(1.05)' }
+              }}
+            />
+            <Chip
+              icon={<Bolt />}
+              label={playerMetrics.ondas.toLocaleString()}
+              size="small"
+              sx={{
+                color: '#ff9800',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease',
+                '&:hover': { transform: 'scale(1.05)' }
+              }}
+            />
+            <Chip
+              icon={<Star />}
+              label={`Nivel ${playerMetrics.level}`}
+              size="small"
+              sx={{
+                color: '#2196f3',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease',
+                '&:hover': { transform: 'scale(1.05)' }
+              }}
+            />
 
-          <IconButton color="inherit">
-            <Badge badgeContent={unreadNotifications.length} color="error">
-              <Notifications />
-            </Badge>
-          </IconButton>
-        </Box>
+            <IconButton color="inherit">
+              <Badge badgeContent={unreadNotifications.length} color="error">
+                <Notifications />
+              </Badge>
+            </IconButton>
+          </Box>
+        </Fade>
       </Toolbar>
+
+      {/* Indicador de transición global */}
+      {(isPending || transitionState.isTabChanging || transitionState.isContentLoading) && (
+        <LinearProgress
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 2,
+            '& .MuiLinearProgress-bar': {
+              background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+            }
+          }}
+        />
+      )}
     </AppBar>
   );
 
@@ -730,7 +860,12 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             textTransform: 'none',
             fontSize: '1rem',
             fontWeight: 500,
+            transition: 'all 0.3s ease',
+            opacity: transitionState.isTabChanging ? 0.7 : 1,
           },
+          '& .Mui-selected': {
+            transform: transitionState.isTabChanging ? 'scale(0.95)' : 'scale(1)',
+          }
         }}
       >
         <Tab

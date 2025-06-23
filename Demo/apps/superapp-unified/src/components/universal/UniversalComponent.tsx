@@ -319,7 +319,7 @@ export const UniversalComponent: React.FC<UniversalComponentProps> = ({
     intensity
   });
 
-  const { getUniversalClassName } = useUniversalGuardian();
+  const { getUniversalClassName, getElementColor } = useUniversalGuardian();
 
   const baseStyles = getBaseStyles();
   const hoverStyles = getHoverStyles();
@@ -543,7 +543,7 @@ export const UniversalFlex: React.FC<UniversalFlexProps> = ({
 
 // ===== 📝 COMPONENTES DE TEXTO UNIVERSALES ===== //
 
-interface UniversalTextProps extends TypographyProps {
+interface UniversalTextProps extends Omit<TypographyProps, 'variant'> {
   variant?: 'h1' | 'h2' | 'h3' | 'body' | 'small' | 'caption';
   element?: CosmicElement;
   concept?: CoomunityConcept;
@@ -610,7 +610,7 @@ export const UniversalText: React.FC<UniversalTextProps> = ({
 
 // ===== 🔘 COMPONENTES DE BOTÓN UNIVERSALES ===== //
 
-interface UniversalButtonProps extends ButtonProps {
+interface UniversalButtonProps extends Omit<ButtonProps, 'size'> {
   element?: CosmicElement;
   concept?: CoomunityConcept;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';

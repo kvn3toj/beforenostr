@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 
 // Contexts
 import { ThemeProvider } from './contexts/ThemeContext';
+import { ThemeProvider as StylesThemeProvider } from './styles/theme.context';
 import { AuthProvider } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
 import { FeedbackProvider } from './contexts/FeedbackContext';
@@ -182,58 +183,60 @@ const App: React.FC = () => {
         {/* 🌟 GUARDIAN AGENTS ACTIVATED - Global Visual Harmony */}
         <GuardianColorProvider initialTheme="guardian">
           <ThemeProvider>
-            <AuthProvider>
-              <FeedbackProvider>
-                <LetsEducationProvider>
-                <CssBaseline />
-                <Router>
-                  <DiscoveryTutorialProvider>
-                    <Box
-                      sx={{
-                        minHeight: '100vh',
-                        background: 'var(--guardian-gradient-cosmic)',
-                        transition: 'background 300ms ease',
-                      }}
-                    >
-                      <Suspense fallback={<div>Cargando...</div>}>
-                        <AppRoutes />
-                      </Suspense>
+            <StylesThemeProvider>
+              <AuthProvider>
+                <FeedbackProvider>
+                  <LetsEducationProvider>
+                  <CssBaseline />
+                  <Router>
+                    <DiscoveryTutorialProvider>
+                      <Box
+                        sx={{
+                          minHeight: '100vh',
+                          background: 'var(--guardian-gradient-cosmic)',
+                          transition: 'background 300ms ease',
+                        }}
+                      >
+                        <Suspense fallback={<div>Cargando...</div>}>
+                          <AppRoutes />
+                        </Suspense>
 
-                      {/* 🎨 Guardian Theme Selector - For testing and admin */}
-                      <GuardianThemeSelector />
+                        {/* 🎨 Guardian Theme Selector - For testing and admin */}
+                        <GuardianThemeSelector />
 
-                      {/* El botón flotante del tutorial va aquí para heredar el contexto */}
-                      <TutorialFloatingButton />
+                        {/* El botón flotante del tutorial va aquí para heredar el contexto */}
+                        <TutorialFloatingButton />
 
-                      {/* 🔍 Guardian Feedback Agent - Sistema de recopilación de feedback */}
-                      <FeedbackAgent />
+                        {/* 🔍 Guardian Feedback Agent - Sistema de recopilación de feedback */}
+                        <FeedbackAgent />
 
-                      {/* Banner de Entorno */}
-                      <EnvironmentBanner />
-                    </Box>
-                  </DiscoveryTutorialProvider>
-                </Router>
-                </LetsEducationProvider>
-              </FeedbackProvider>
-            </AuthProvider>
+                        {/* Banner de Entorno */}
+                        <EnvironmentBanner />
+
+                        {/* Toast Notifications with Guardian theming */}
+                        <Toaster
+                          position="top-right"
+                          toastOptions={{
+                            style: {
+                              background: 'var(--guardian-bg-surface)',
+                              color: 'var(--guardian-text-primary)',
+                              border: '1px solid var(--guardian-primary)',
+                              borderRadius: '16px',
+                            },
+                          }}
+                        />
+                      </Box>
+                    </DiscoveryTutorialProvider>
+                  </Router>
+                  </LetsEducationProvider>
+                </FeedbackProvider>
+              </AuthProvider>
+            </StylesThemeProvider>
           </ThemeProvider>
         </GuardianColorProvider>
 
         {/* React Query DevTools */}
         <ReactQueryDevtools initialIsOpen={false} />
-
-        {/* Toast Notifications with Guardian theming */}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: 'var(--guardian-bg-surface)',
-              color: 'var(--guardian-text-primary)',
-              border: '1px solid var(--guardian-primary)',
-              borderRadius: '16px',
-            },
-          }}
-        />
       </QueryClientProvider>
     </ErrorBoundary>
   );
