@@ -6,13 +6,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'sonner';
 
 // Contexts
-import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
 import { FeedbackProvider } from './contexts/FeedbackContext';
 
-// 🌟 GUARDIAN AGENTS - Color Harmony System
-import { GuardianColorProvider, GuardianThemeSelector } from './components/theme/GuardianColorProvider';
+// Nuevo Sistema de Temas CoomÜnity
+import { ThemeProvider, ThemeToolbar, useThemeContext } from './styles';
 
 // 🎓 Tutorial Discovery System
 import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';
@@ -164,6 +163,34 @@ const AppRoutes: React.FC = () => {
   );
 };
 
+// Componente para el fondo adaptativo
+const AdaptiveBackground: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { element, isDarkMode } = useThemeContext();
+  
+  return (
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: theme => 
+          isDarkMode
+            ? `linear-gradient(135deg, ${theme.palette.grey[900]} 0%, ${theme.palette.grey[800]} 100%)`
+            : element === 'fuego'
+            ? `linear-gradient(135deg, ${theme.palette.error.light} 0%, ${theme.palette.background.default} 100%)`
+            : element === 'agua'
+            ? `linear-gradient(135deg, ${theme.palette.info.light} 0%, ${theme.palette.background.default} 100%)`
+            : element === 'tierra'
+            ? `linear-gradient(135deg, ${theme.palette.success.light} 0%, ${theme.palette.background.default} 100%)`
+            : `linear-gradient(135deg, ${theme.palette.warning.light} 0%, ${theme.palette.background.default} 100%)`,
+        transition: theme => theme.transitions.create(['background'], {
+          duration: theme.transitions.duration.standard,
+        }),
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
+
 // Main App Component
 const App: React.FC = () => {
   const [, startTransition] = useTransition();
@@ -178,28 +205,22 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        {/* 🌟 GUARDIAN AGENTS ACTIVATED - Global Visual Harmony */}
-        <GuardianColorProvider initialTheme="guardian">
-          <ThemeProvider>
-            <AuthProvider>
-              <FeedbackProvider>
-                <LetsEducationProvider>
-                <CssBaseline />
+        <ThemeProvider>
+          <CssBaseline />
+          <AuthProvider>
+            <FeedbackProvider>
+              <LetsEducationProvider>
                 <Router>
                   <DiscoveryTutorialProvider>
-                    <Box
-                      sx={{
-                        minHeight: '100vh',
-                        background: 'var(--guardian-gradient-cosmic)',
-                        transition: 'background 300ms ease',
-                      }}
-                    >
+                    <AdaptiveBackground>
                       <Suspense fallback={<div>Cargando...</div>}>
                         <AppRoutes />
                       </Suspense>
 
-                      {/* 🎨 Guardian Theme Selector - For testing and admin */}
-                      <GuardianThemeSelector />
+                      {/* 🎨 Barra de herramientas del tema */}
+                      <Box sx={{ position: 'fixed', top: 16, right: 16, zIndex: 1200 }}>
+                        <ThemeToolbar />
+                      </Box>
 
                       {/* El botón flotante del tutorial va aquí para heredar el contexto */}
                       <TutorialFloatingButton />
@@ -209,30 +230,29 @@ const App: React.FC = () => {
 
                       {/* Banner de Entorno */}
                       <EnvironmentBanner />
-                    </Box>
+                    </AdaptiveBackground>
                   </DiscoveryTutorialProvider>
                 </Router>
-                </LetsEducationProvider>
-              </FeedbackProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </GuardianColorProvider>
+              </LetsEducationProvider>
+            </FeedbackProvider>
+          </AuthProvider>
 
-        {/* React Query DevTools */}
-        <ReactQueryDevtools initialIsOpen={false} />
+          {/* React Query DevTools */}
+          <ReactQueryDevtools initialIsOpen={false} />
 
-        {/* Toast Notifications with Guardian theming */}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: 'var(--guardian-bg-surface)',
-              color: 'var(--guardian-text-primary)',
-              border: '1px solid var(--guardian-primary)',
-              borderRadius: '16px',
-            },
-          }}
-        />
+          {/* Toast Notifications with theme */}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: theme => ({
+                background: theme.palette.background.paper,
+                color: theme.palette.text.primary,
+                border: `1px solid ${theme.palette.primary.main}`,
+                borderRadius: theme.shape.borderRadius,
+              }),
+            }}
+          />
+        </ThemeProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
