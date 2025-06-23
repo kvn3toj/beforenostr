@@ -173,6 +173,26 @@
   }
 }
 
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+  }
+}
+
 /* === ANIMACIONES ESPECÍFICAS COOMUNITY === */
 
 @keyframes coomunityGlow {
@@ -277,7 +297,7 @@
 }
 
 .coomunity-wiggle {
-  animation: wiggle 1s var(--ease-in-out);
+  animation: wiggle var(--duration-slowest) ease-in-out;
 }
 
 /* Animaciones específicas CoomÜnity */
@@ -306,6 +326,20 @@
 
 .coomunity-ondas-ripple {
   animation: ondasRipple 0.6s var(--ease-out);
+}
+
+.floating-element {
+  animation: float 3s ease-in-out infinite;
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.glow-effect {
+  animation: glow-pulse 2s ease-in-out infinite;
 }
 
 /* === TRANSICIONES === */

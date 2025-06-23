@@ -13,6 +13,7 @@ import { ThemeProvider as StylesThemeProvider } from './styles/theme.context';
 import { AuthProvider } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
 import { FeedbackProvider } from './contexts/FeedbackContext';
+import { NotificationProvider } from './components/common/NotificationSystem';
 
 // 🌟 GUARDIAN AGENTS - Universal Harmony System
 import { GuardianColorProvider, GuardianThemeSelector } from './components/theme/GuardianColorProvider';
@@ -41,89 +42,9 @@ import {
 // Styles
 import './index.css';
 
-// Notification System
-// ===========================================
-interface Achievement {
-  id: string;
-  title: string;
-  reward: string;
-}
+// El sistema de notificaciones centralizado se proporciona a través de NotificationProvider
+// importado de './components/common/NotificationSystem'.
 
-interface Notification extends Achievement {}
-
-interface NotificationContextType {
-  notifications: Notification[];
-  addAchievementNotification: (achievement: Omit<Achievement, 'id'>) => void;
-  removeNotification: (id: string) => void;
-}
-
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
-
-export const useNotification = (): NotificationContextType => {
-  const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error('useNotification must be used within a NotificationProvider');
-  }
-  return context;
-};
-
-const NotificationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-
-  const removeNotification = useCallback((id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
-  }, []);
-
-  const addAchievementNotification = useCallback((achievement: Omit<Achievement, 'id'>) => {
-    const newNotification: Notification = {
-      ...achievement,
-      id: new Date().toISOString() + Math.random(),
-    };
-    setNotifications((prev) => [...prev, newNotification]);
-
-    setTimeout(() => {
-        removeNotification(newNotification.id);
-    }, 5000);
-
-  }, [removeNotification]);
-
-  return (
-    <NotificationContext.Provider value={{ notifications, addAchievementNotification, removeNotification }}>
-      {children}
-    </NotificationContext.Provider>
-  );
-};
-
-const NotificationContainer: React.FC = () => {
-    const { notifications, removeNotification } = useNotification();
-
-    return (
-        <Box
-            sx={{
-                position: 'fixed',
-                top: 16,
-                right: 16,
-                zIndex: 2000,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-            }}
-        >
-            <AnimatePresence>
-                {notifications.map((notif) => (
-                    <AchievementNotification
-                        key={notif.id}
-                        achievement={notif}
-                        onClose={() => removeNotification(notif.id)}
-                    />
-                ))}
-            </AnimatePresence>
-        </Box>
-    );
-};
-// ===========================================
-
-// nowego komponentu
 const EnvironmentBanner: React.FC = () => {
   const env = import.meta.env.VITE_APP_ENV || 'development';
   const isMock = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
@@ -267,68 +188,63 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <GuardianColorProvider initialTheme="guardian">
+      <Router>
+        <QueryClientProvider client={queryClient}>
           <DynamicThemeProvider>
-            <ThemeProvider>
-              <StylesThemeProvider>
+            <StylesThemeProvider>
+              <GuardianColorProvider initialTheme="guardian">
+                <CssBaseline />
                 <AuthProvider>
                   <FeedbackProvider>
-                    <LetsEducationProvider>
-                      <NotificationProvider>
-                        <CssBaseline />
-                        <Router>
-                          <DiscoveryTutorialProvider>
-                            <Box
-                              sx={{
-                                minHeight: '100vh',
-                                background: 'var(--guardian-bg-primary)',
-                                transition: 'background 300ms ease',
+                    <NotificationProvider>
+                      <LetsEducationProvider>
+                        <DiscoveryTutorialProvider>
+                          <Box
+                            sx={{
+                              minHeight: '100vh',
+                              background: 'var(--guardian-bg-primary)',
+                              transition: 'background 300ms ease',
+                            }}
+                          >
+                            <Suspense fallback={<div>Cargando...</div>}>
+                              <AppRoutes />
+                            </Suspense>
+
+                            <GuardianThemeSelector />
+
+                            <div style={{ position: 'fixed', bottom: '80px', right: '10px', zIndex: 10000 }}>
+                              <ThemeSelector />
+                            </div>
+
+                            <TutorialFloatingButton />
+
+                            <FeedbackAgent />
+
+                            <EnvironmentBanner />
+
+                            <Toaster
+                              position="top-right"
+                              toastOptions={{
+                                style: {
+                                  background: 'var(--guardian-bg-surface)',
+                                  color: 'var(--guardian-text-primary)',
+                                  border: '1px solid var(--guardian-primary)',
+                                  borderRadius: '16px',
+                                },
                               }}
-                            >
-                              <NotificationContainer />
-                              <Suspense fallback={<div>Cargando...</div>}>
-                                <AppRoutes />
-                              </Suspense>
-
-                              <GuardianThemeSelector />
-
-                              <div style={{ position: 'fixed', bottom: '80px', right: '10px', zIndex: 10000 }}>
-                                <ThemeSelector />
-                              </div>
-
-                              <TutorialFloatingButton />
-
-                              <FeedbackAgent />
-
-                              <EnvironmentBanner />
-
-                              <Toaster
-                                position="top-right"
-                                toastOptions={{
-                                  style: {
-                                    background: 'var(--guardian-bg-surface)',
-                                    color: 'var(--guardian-text-primary)',
-                                    border: '1px solid var(--guardian-primary)',
-                                    borderRadius: '16px',
-                                  },
-                                }}
-                              />
-                            </Box>
-                          </DiscoveryTutorialProvider>
-                        </Router>
-                      </NotificationProvider>
-                    </LetsEducationProvider>
+                            />
+                          </Box>
+                        </DiscoveryTutorialProvider>
+                      </LetsEducationProvider>
+                    </NotificationProvider>
                   </FeedbackProvider>
                 </AuthProvider>
-              </StylesThemeProvider>
-            </ThemeProvider>
+              </GuardianColorProvider>
+            </StylesThemeProvider>
           </DynamicThemeProvider>
-        </GuardianColorProvider>
-
-        {/* React Query DevTools */}
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </Router>
     </ErrorBoundary>
   );
 };

@@ -1,27 +1,20 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
-interface HoverState {
-  isHovered: boolean;
-  mousePosition: { x: number; y: number };
-}
-
-/**
- * Hook para gestionar estados de hover avanzados, incluyendo la posición del ratón.
- * @returns {object} - Estado y manejadores de eventos del ratón.
- */
 export const useAdvancedHover = () => {
-  const [hoverState, setHoverState] = useState<HoverState>({
+  const [hoverState, setHoverState] = useState({
     isHovered: false,
     mousePosition: { x: 0, y: 0 },
   });
 
-  const handleMouseEnter = () =>
+  const handleMouseEnter = useCallback(() => {
     setHoverState((prev) => ({ ...prev, isHovered: true }));
+  }, []);
 
-  const handleMouseLeave = () =>
+  const handleMouseLeave = useCallback(() => {
     setHoverState((prev) => ({ ...prev, isHovered: false }));
+  }, []);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setHoverState((prev) => ({
       ...prev,
@@ -30,7 +23,8 @@ export const useAdvancedHover = () => {
         y: e.clientY - rect.top,
       },
     }));
-  };
+  }, []);
 
   return { hoverState, handleMouseEnter, handleMouseLeave, handleMouseMove };
 };
+

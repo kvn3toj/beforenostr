@@ -5,6 +5,28 @@
 @import './styles/tokens/typography.css';
 @import './styles/tokens/spacing.css';
 @import './styles/tokens/shadows.css';
+/* Import Utilities */
+@import './styles/utilities/animations.css';
+/* Import responsive and contextual classes for Playwright detection */
+@import './styles/responsive-contextual.css';
+/* Import minimal dashboard styles for ÜStats */
+@import './styles/ustats-minimal.css';
+/* Import enhanced challenges module styles */
+@import './styles/challenges-enhanced.css';
+/* Import enhanced home module styles */
+@import './styles/home-enhanced.css';
+/* Import cosmic effects for Ayni Balance planetary system */
+@import './styles/cosmic-ayni-effects.css';
+/* Import orbital harmony animations for Ayni Revolutionary Widget */
+@import './styles/orbital-harmony-animations.css';
+/* Import simple orbital animations - More intuitive approach */
+@import './styles/simple-orbital-animations.css';
+/* Import Guardian dynamic styles */
+@import './styles/guardian-dynamic.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Paleta profesional refinada para UPlay */
 :root {
@@ -50,37 +72,6 @@
   --gradient-icon: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   --gradient-text: linear-gradient(135deg, #1f2937 0%, #374151 100%);
 }
-
-/* Import Utilities */
-@import './styles/utilities/animations.css';
-
-/* Import responsive and contextual classes for Playwright detection */
-@import './styles/responsive-contextual.css';
-
-/* Import minimal dashboard styles for ÜStats */
-@import './styles/ustats-minimal.css';
-
-/* Import enhanced challenges module styles */
-@import './styles/challenges-enhanced.css';
-
-/* Import enhanced home module styles */
-@import './styles/home-enhanced.css';
-
-/* Import cosmic effects for Ayni Balance planetary system */
-@import './styles/cosmic-ayni-effects.css';
-
-/* Import orbital harmony animations for Ayni Revolutionary Widget */
-@import './styles/orbital-harmony-animations.css';
-
-/* Import simple orbital animations - More intuitive approach */
-@import './styles/simple-orbital-animations.css';
-
-/* Import Guardian dynamic styles */
-@import './styles/guardian-dynamic.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* === BASE STYLES === */
 * {
