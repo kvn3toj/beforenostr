@@ -22,7 +22,7 @@ import {
   Margin as SpacingIcon,
   RoundedCorner as BorderRadiusIcon,
   Opacity as IntensityIcon,
-  LocalFire as FireIcon,
+  LocalFireDepartment as FireIcon,
   Waves as WaterIcon,
   Terrain as EarthIcon,
   Air as AirIcon,

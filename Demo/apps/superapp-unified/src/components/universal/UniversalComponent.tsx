@@ -23,6 +23,7 @@ interface UniversalComponentProps extends BoxProps, UniversalStyleProps {
 
 // ===== 🎨 HOOK UNIVERSAL DE ESTILOS MEJORADO ===== //
 export const useUniversalStyles = (props: UniversalStyleProps) => {
+  const guardian = useUniversalGuardian();
   const {
     getElementColor,
     getElementGradient,
@@ -30,7 +31,7 @@ export const useUniversalStyles = (props: UniversalStyleProps) => {
     getEffectStyle,
     getUniversalClassName,
     applyUniversalStyles
-  } = useUniversalGuardian();
+  } = guardian;
 
   const getBaseStyles = (): CSSProperties => {
     const {
