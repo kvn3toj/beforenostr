@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Fab, Tooltip } from '@mui/material';
-import { Help, AutoAwesome, Refresh } from '@mui/icons-material';
+import { Box, Fab, Tooltip, Dialog, DialogContent, DialogActions, Button } from '@mui/material';
+import { Help, AutoAwesome, Refresh, RocketLaunch } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-// ❌ REMOVIDO: import OnboardingFlow from './OnboardingFlow' (archivo vacío)
+import { useTheme } from '@mui/material/styles';
 
 interface OnboardingTriggerProps {
   userEmail?: string;
@@ -17,6 +17,8 @@ export const OnboardingTrigger: React.FC<OnboardingTriggerProps> = ({
 }) => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [shouldAutoTrigger, setShouldAutoTrigger] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const theme = useTheme();
 
   // Check if user should see onboarding on first visit
   useEffect(() => {
@@ -63,6 +65,11 @@ export const OnboardingTrigger: React.FC<OnboardingTriggerProps> = ({
     setShowOnboarding(true);
   };
 
+  const handleComplete = () => {
+    setCompleted(true);
+    // setTimeout(() => setShowOnboarding(false), 2000);
+  };
+
   return (
     <>
       {/* Manual Trigger FAB */}
@@ -72,10 +79,10 @@ export const OnboardingTrigger: React.FC<OnboardingTriggerProps> = ({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ 
+            transition={{
               delay: shouldAutoTrigger ? 0 : 3, // Show after auto-trigger or 3 seconds
-              type: "spring", 
-              stiffness: 400 
+              type: "spring",
+              stiffness: 400
             }}
             style={{
               position: 'fixed',
@@ -86,8 +93,8 @@ export const OnboardingTrigger: React.FC<OnboardingTriggerProps> = ({
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {/* Help/Restart Button */}
-              <Tooltip 
-                title={hasCompletedOnboarding ? "Repetir Onboarding" : "Iniciar Tutorial"} 
+              <Tooltip
+                title={hasCompletedOnboarding ? "Repetir Onboarding" : "Iniciar Tutorial"}
                 placement="left"
               >
                 <Fab
@@ -136,12 +143,11 @@ export const OnboardingTrigger: React.FC<OnboardingTriggerProps> = ({
       </AnimatePresence>
 
       {/* Onboarding Modal */}
-      {/* ❌ REMOVIDO: OnboardingFlow component (archivo vacío) */}
       {showOnboarding && (
-        <Box sx={{ 
-          position: 'fixed', 
-          top: '50%', 
-          left: '50%', 
+        <Box sx={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
           transform: 'translate(-50%, -50%)',
           zIndex: 1300,
           p: 3,
@@ -196,6 +202,38 @@ export const OnboardingTrigger: React.FC<OnboardingTriggerProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Dialog
+        open={showOnboarding}
+        onClose={handleSkipOnboarding}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          {/* Onboarding content */}
+          {/* ❌ REMOVIDO: OnboardingFlow component (archivo vacío) */}
+          <motion.div>
+            Onboarding placeholder - Component needs implementation
+            <button onClick={handleOnboardingComplete}>Completar</button>
+            <button onClick={handleSkipOnboarding}>Saltar</button>
+          </motion.div>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, background: theme.palette.background.default }}>
+          <Button
+            onClick={handleComplete}
+            variant="contained"
+            sx={{
+              color: theme.palette.primary.contrastText,
+              background: theme.palette.secondary.main,
+              '&:hover': {
+                background: theme.palette.secondary.dark,
+              }
+            }}
+          >
+            Marcar como Completado
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

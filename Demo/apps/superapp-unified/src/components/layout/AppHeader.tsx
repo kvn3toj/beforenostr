@@ -17,6 +17,7 @@ import {
   TextField,
   InputAdornment,
   CircularProgress,
+  ListItemIcon,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -30,6 +31,7 @@ import {
   Sync as SyncIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
+import { useDynamicTheme } from '../../context/DynamicThemeContext';
 import { MainNavigation } from '../navigation/MainNavigation';
 
 interface AppHeaderProps {
@@ -39,6 +41,7 @@ interface AppHeaderProps {
 
 export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle, showTopLoader }) => {
   const theme = useTheme();
+  const { theme: dynamicTheme } = useDynamicTheme();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -93,8 +96,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle, showTopLoa
       sx={{
         borderBottom: 1,
         borderColor: 'divider',
-        backgroundColor: 'primary.main',
-        color: 'text.primary',
+        backgroundColor: dynamicTheme.headerBackground,
+        color: dynamicTheme.headerText,
         zIndex: theme.zIndex.drawer + 1,
       }}
     >
@@ -102,7 +105,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle, showTopLoa
         component="nav"
         role="navigation"
         aria-label="Navegación principal"
-        sx={{ gap: 2 }}
+        sx={{ gap: 2, color: dynamicTheme.headerText }}
       >
         {/* Mobile Menu Button */}
         <IconButton
@@ -138,7 +141,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle, showTopLoa
               data-contextual="application-brand"
               sx={{
                 fontWeight: 700,
-                background: 'linear-gradient(45deg, #FFF 30%, #E3F2FD 90%)',
+                background: `linear-gradient(45deg, ${dynamicTheme.headerText} 30%, ${alpha(dynamicTheme.headerText, 0.7)} 90%)`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -162,11 +165,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle, showTopLoa
             <CircularProgress
               className="sync-spinner loading contextual-progress loading-bounce"
               size={16}
-              sx={{ color: 'white', mr: 1 }}
+              sx={{ color: dynamicTheme.headerText, mr: 1 }}
             />
             <Typography
               variant="caption"
-              sx={{ color: 'white', fontSize: '0.7rem' }}
+              sx={{ color: dynamicTheme.headerText, fontSize: '0.7rem' }}
             >
               Sincronizando
             </Typography>
@@ -268,175 +271,63 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle, showTopLoa
 
         {/* Profile Menu */}
         <IconButton
-          edge="end"
-          aria-label="Perfil de usuario"
-          title="Abrir menú de perfil"
+          onClick={handleProfileMenuOpen}
+          size="small"
+          aria-label="Menú del perfil de usuario"
           aria-controls={isMenuOpen ? 'primary-search-account-menu' : undefined}
           aria-haspopup="true"
-          onClick={handleProfileMenuOpen}
           color="inherit"
-          className="profile-menu-button contextual-control"
-          data-contextual="user-profile"
-          data-context-type="profile-access"
+          data-testid="profile-menu-button"
         >
           <Avatar
-            src={user?.avatar_url}
-            alt={user?.full_name}
-            className="user-avatar contextual-data avatar-micro-interactive"
-            data-contextual="user-avatar"
-            data-context-type="profile-image"
             sx={{ width: 32, height: 32 }}
-          />
+            src={user?.avatarUrl || ''}
+            alt={user?.fullName || 'Avatar del usuario'}
+          >
+            {user?.fullName ? user.fullName.charAt(0).toUpperCase() : <AccountCircle />}
+          </Avatar>
         </IconButton>
 
-        {/* Profile Menu Dropdown */}
+        {/* Profile Menu */}
         <Menu
-          id="primary-search-account-menu"
           anchorEl={anchorEl}
+          id="primary-search-account-menu"
+          keepMounted
           open={isMenuOpen}
           onClose={handleMenuClose}
-          onClick={handleMenuClose}
-          PaperProps={{
-            elevation: 3,
-            sx: {
-              overflow: 'visible',
-              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-              mt: 1.5,
-              minWidth: 200,
-              '& .MuiAvatar-root': {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1,
-              },
-              '&:before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: 'background.paper',
-                transform: 'translateY(-50%) rotate(45deg)',
-                zIndex: 0,
-              },
-            },
-          }}
-          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          aria-label="Menú de perfil de usuario"
-          className="profile-menu contextual-menu"
-          data-contextual="user-profile-menu"
-          data-context-type="profile-actions"
         >
-          {/* User Info Header */}
-          <Box sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: 'divider' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Avatar
-                src={user?.avatar_url}
-                alt={user?.full_name}
-                sx={{ width: 40, height: 40 }}
-              />
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography variant="subtitle2" noWrap sx={{ fontWeight: 600 }}>
-                  {user?.full_name || 'Usuario'}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  noWrap
-                  sx={{ display: 'block' }}
-                >
-                  {user?.email}
-                </Typography>
-                {user?.role && (
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: 'primary.main',
-                      fontWeight: 500,
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    {user.role}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-          </Box>
-
-          {/* Menu Items */}
-          <MenuItem
-            onClick={() => {
-              handleMenuClose();
-              navigate('/profile');
-            }}
-            className="profile-menu-item contextual-action"
-            data-contextual="profile-view"
-            data-context-type="profile-navigation"
-            sx={{ py: 1.5 }}
-          >
-            <AccountCircle sx={{ mr: 2, color: 'text.secondary' }} />
-            <Typography variant="body2">Ver Perfil</Typography>
-          </MenuItem>
-
-          <MenuItem
-            onClick={() => {
-              handleMenuClose();
-              navigate('/settings');
-            }}
-            className="settings-menu-item contextual-action"
-            data-contextual="settings-access"
-            data-context-type="settings-navigation"
-            sx={{ py: 1.5 }}
-          >
-            <Settings sx={{ mr: 2, color: 'text.secondary' }} />
-            <Typography variant="body2">Configuración</Typography>
-          </MenuItem>
-
-          {/* Admin Panel - Only for admin users */}
-          {(user?.role === 'admin' ||
-            user?.role === 'Super Admin' ||
-            user?.role === 'Content Admin') && (
-            <MenuItem
-              onClick={() => {
-                handleMenuClose();
-                navigate('/admin');
-              }}
-              className="admin-menu-item contextual-action"
-              data-contextual="admin-access"
-              data-context-type="admin-navigation"
-              sx={{ py: 1.5 }}
-            >
-              <AdminPanelSettings sx={{ mr: 2, color: 'warning.main' }} />
-              <Typography variant="body2">Panel de Administración</Typography>
-            </MenuItem>
-          )}
-
-          <Divider sx={{ my: 1 }} />
-
-          {/* Sign Out */}
-          <MenuItem
-            onClick={handleSignOut}
-            className="signout-menu-item contextual-action logout-action"
-            data-contextual="user-logout"
-            data-context-type="session-termination"
-            sx={{
-              py: 1.5,
-              color: 'error.main',
-              '&:hover': {
-                backgroundColor: 'error.light',
-                color: 'error.contrastText',
-              },
-            }}
-            aria-label="Cerrar sesión"
-            title="Cerrar sesión actual"
-          >
-            <Logout sx={{ mr: 2 }} />
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              Cerrar Sesión
+          <MenuItem disabled>
+            <Typography variant="subtitle1" component="div">
+              {user?.fullName}
             </Typography>
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => navigate('/profile')}>
+            <ListItemIcon>
+              <AccountCircle fontSize="small" />
+            </ListItemIcon>
+            Mi Perfil
+          </MenuItem>
+          {user?.roles?.includes('admin') && (
+             <MenuItem onClick={() => navigate('/admin')}>
+             <ListItemIcon>
+               <AdminPanelSettings fontSize="small" />
+             </ListItemIcon>
+             Panel de Admin
+           </MenuItem>
+          )}
+          <MenuItem onClick={() => navigate('/settings')}>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            Configuración
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={handleSignOut}>
+            <ListItemIcon>
+              <Logout fontSize="small" color="error" />
+            </ListItemIcon>
+            <Typography color="error">Cerrar Sesión</Typography>
           </MenuItem>
         </Menu>
       </Toolbar>
@@ -445,6 +336,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle, showTopLoa
       <Box sx={{ display: { xs: 'none', md: 'block' }, bgcolor: 'primary.dark' }}>
         <MainNavigation />
       </Box>
+
+      {showTopLoader && (
+        <Box sx={{ width: '100%', position: 'absolute', bottom: 0, left: 0 }}>
+          <div className="top-loader-bar" />
+        </Box>
+      )}
     </AppBar>
   );
 };

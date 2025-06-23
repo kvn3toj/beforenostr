@@ -10,9 +10,9 @@ const elementColors = {
     contrastText: '#ffffff',
   },
   agua: {
-    main: '#005CA9', // Azul profundo
-    light: '#1E88E5',
-    dark: '#004C8C',
+    main: '#005CA9', // Azul Coomunity
+    light: '#2196F3', // Azul más claro para highlights
+    dark: '#142C46', // Azul oscuro Coomunity
     contrastText: '#ffffff',
   },
   tierra: {
@@ -29,9 +29,28 @@ const elementColors = {
   },
 };
 
+const categoryColors = {
+  CHARLAS_INSPIRADORAS: '#9c27b0',
+  LIFEHACKS_SABIDURIA: '#ff9800',
+  DOCUMENTALES_CONSCIENTES: '#2196f3',
+  SABIDURIA_TRANSFORMADORA: '#4caf50',
+  SERIES_TEMATICAS: '#f44336',
+  DEFAULT: '#ff6b35',
+};
+
+const difficultyColors = {
+  BEGINNER: '#4caf50',
+  INTERMEDIATE: '#ff9800',
+  ADVANCED: '#f44336',
+  EXPERT: '#9c27b0',
+};
+
 // Función para crear una variante de tema basada en un elemento
 export const createElementTheme = (element: keyof typeof elementColors): Partial<CoomunityThemeOptions> => {
   const colors = elementColors[element];
+  const gradient = element === 'agua'
+    ? `linear-gradient(135deg, ${colors.dark} 0%, ${colors.main} 100%)`
+    : `linear-gradient(135deg, ${colors.main} 0%, ${colors.light} 100%)`;
 
   return {
     palette: {
@@ -49,17 +68,27 @@ export const createElementTheme = (element: keyof typeof elementColors): Partial
       text: {
         primary: colors.dark,
         secondary: colors.main,
+        disabled: alpha(colors.dark, 0.38),
+      },
+      category: categoryColors,
+      difficulty: difficultyColors,
+      common: {
+        black: '#000',
+        white: '#fff',
+        gold: '#ffd700',
+        lightGrey: '#f8f9fa',
+        darkGrey: '#e0e0e0',
       },
     },
     components: {
       MuiButton: {
         styleOverrides: {
           contained: {
-            background: `linear-gradient(135deg, ${colors.main} 0%, ${colors.light} 100%)`,
+            background: gradient,
             color: colors.contrastText,
             '&:hover': {
-              background: `linear-gradient(135deg, ${colors.dark} 0%, ${colors.main} 100%)`,
-              filter: 'brightness(1.05)',
+              background: gradient,
+              filter: 'brightness(1.1)',
             },
           },
           outlined: {
@@ -76,7 +105,7 @@ export const createElementTheme = (element: keyof typeof elementColors): Partial
         styleOverrides: {
           root: {
             '&::before': {
-              background: `linear-gradient(135deg, ${colors.main} 0%, ${colors.light} 100%)`,
+              background: gradient,
             },
           },
         },
@@ -84,16 +113,17 @@ export const createElementTheme = (element: keyof typeof elementColors): Partial
       MuiLinearProgress: {
         styleOverrides: {
           bar: {
-            background: `linear-gradient(90deg, ${colors.main} 0%, ${colors.light} 100%)`,
+            background: gradient,
           },
         },
       },
       MuiFab: {
         styleOverrides: {
           root: {
-            background: `linear-gradient(135deg, ${colors.main} 0%, ${colors.light} 100%)`,
+            background: gradient,
             '&:hover': {
-              background: `linear-gradient(135deg, ${colors.dark} 0%, ${colors.main} 100%)`,
+              background: gradient,
+              filter: 'brightness(1.1)',
             },
           },
         },
@@ -132,6 +162,9 @@ export const getElementAccentColor = (element: keyof typeof elementColors) => {
 // Función para obtener el gradiente basado en el elemento
 export const getElementGradient = (element: keyof typeof elementColors) => {
   const colors = elementColors[element];
+  if (element === 'agua') {
+    return `linear-gradient(135deg, ${colors.dark} 0%, ${colors.main} 100%)`;
+  }
   return `linear-gradient(135deg, ${colors.main} 0%, ${colors.light} 100%)`;
 };
 

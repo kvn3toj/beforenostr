@@ -23,33 +23,37 @@ export interface RegisterCredentials {
   name?: string;
 }
 
+// Interfaz flexible para la respuesta de autenticación, que puede variar.
 export interface AuthResponse {
-  access_token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string | null;
-    avatarUrl: string | null;
-    roles?: string[];
-    permissions?: string[];
-  };
+  access_token?: string;
+  token?: string;
+  accessToken?: string;
+  user: User;
+  data?: any; // Para estructuras anidadas como { data: { user: ... } }
 }
 
+// La única fuente de verdad para la estructura del usuario en el frontend.
 export interface User {
   id: string;
   email: string;
-  name: string | null;
+  fullName: string | null;
   avatarUrl: string | null;
   roles?: string[];
   permissions?: string[];
+  // Campos adicionales que pueden venir del backend
+  name?: string;
+  created_at?: string;
+  createdAt?: string;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 // Mock users for testing
-const MOCK_USERS = {
+const MOCK_USERS: { [key: string]: User } = {
   'admin@gamifier.com': {
     id: '00000000-0000-0000-0000-000000000001',
     email: 'admin@gamifier.com',
-    name: 'Administrator',
+    fullName: 'Administrator',
     avatarUrl: null,
     roles: ['admin'],
     permissions: [
@@ -70,7 +74,7 @@ const MOCK_USERS = {
   'test@coomunity.com': {
     id: '00000000-0000-0000-0000-000000000002',
     email: 'test@coomunity.com',
-    name: 'Test User',
+    fullName: 'Test User',
     avatarUrl: null,
     roles: ['user'],
     permissions: [
@@ -186,9 +190,7 @@ class AuthService {
 
     return {
       access_token: mockToken,
-      user: {
-        ...mockUser
-      }
+      user: mockUser
     };
   }
 
@@ -236,10 +238,10 @@ class AuthService {
       throw new Error('El usuario ya existe');
     }
 
-    const mockUser = {
+    const mockUser: User = {
       id: `mock-user-${Date.now()}`,
       email: credentials.email,
-      name: credentials.name || 'New User',
+      fullName: credentials.name || 'New User',
       avatarUrl: null,
       roles: ['user'],
       permissions: ['content:read', 'groups:read', 'wallet:read']
@@ -340,7 +342,7 @@ class AuthService {
    */
   saveAuthData(authResponse: AuthResponse): void {
     // Usar las claves estándar de CoomÜnity
-    localStorage.setItem('COOMUNITY_AUTH_TOKEN', authResponse.access_token);
+    localStorage.setItem('COOMUNITY_AUTH_TOKEN', authResponse.access_token || authResponse.token || authResponse.accessToken || '');
     localStorage.setItem('COOMUNITY_USER_DATA', JSON.stringify(authResponse.user));
     console.log('[AuthService] Datos de autenticación guardados');
   }

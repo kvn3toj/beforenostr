@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { 
-  VideoData, 
-  VideoProgress, 
+import {
+  VideoData,
+  VideoProgress,
   PlayerMetrics,
   validateVideoData,
   validateVideoProgress,
@@ -40,12 +40,12 @@ const CACHE_CONFIG = {
  */
 const adaptBackendVideoData = (backendVideo: any): any => {
   console.log('🔧 Adaptando video del backend:', backendVideo);
-  
+
   try {
     // Parsear arrays JSON si son strings
-    let categories = [];
-    let tags = [];
-    
+    let categories: string[] = [];
+    let tags: string[] = [];
+
     if (typeof backendVideo.categories === 'string') {
       try {
         categories = JSON.parse(backendVideo.categories);
@@ -94,10 +94,10 @@ const adaptBackendVideoData = (backendVideo: any): any => {
       questions: adaptedQuestions,
       category: categories[0] || 'General', // Tomar la primera categoría
       difficulty: 'beginner', // Default ya que el backend no mapea difficulty
-      tags: tags,
+      tags,
       createdAt: backendVideo.createdAt ? new Date(backendVideo.createdAt) : undefined,
       updatedAt: backendVideo.updatedAt ? new Date(backendVideo.updatedAt) : undefined,
-      
+
       // Campos requeridos por la interfaz VideoItem del dashboard
       rewards: {
         meritos: Math.floor(Math.random() * 100) + 50, // Mëritos aleatorios entre 50-150
@@ -106,7 +106,7 @@ const adaptBackendVideoData = (backendVideo: any): any => {
       isCompleted: false, // Por defecto no completado
       progress: 0, // Progreso inicial 0%
       questionsCount: adaptedQuestions.length,
-      
+
       // Campos adicionales del backend que podemos preservar
       playlistId: backendVideo.playlistId,
       platform: backendVideo.platform,
@@ -197,7 +197,7 @@ const VideoApiService = {
   // Obtener lista de videos
   async getVideos(params: VideoListParams = {}): Promise<VideoData[]> {
     const queryParams = new URLSearchParams();
-    
+
     if (params.category) queryParams.append('category', params.category);
     if (params.difficulty) queryParams.append('difficulty', params.difficulty);
     if (params.tags?.length) queryParams.append('tags', params.tags.join(','));
@@ -206,14 +206,14 @@ const VideoApiService = {
     if (params.search) queryParams.append('search', params.search);
 
     console.log('🎬 Obteniendo videos del backend...');
-    const response = await apiService.get(`/video-items?${queryParams.toString()}`);
+    const response: any = await apiService.get(`/video-items?${queryParams.toString()}`);
     console.log('🎬 Respuesta completa del backend:', response);
-    
+
     // La respuesta directa ya es el array de videos
     const videosArray = response;
     console.log('🎬 Videos array:', videosArray);
     console.log('🎬 Es array?', Array.isArray(videosArray));
-    
+
     // Adaptar y validar cada video en la respuesta
     if (Array.isArray(videosArray)) {
       console.log('🎥 Procesando videos del backend:', videosArray.length, 'videos');
@@ -227,13 +227,13 @@ const VideoApiService = {
       console.log('🎬 Videos finales procesados:', processedVideos);
       return processedVideos;
     }
-    
+
     return [];
   },
 
   // Obtener detalle de un video específico
   async getVideoById(videoId: string): Promise<VideoData> {
-    const response = await apiService.get(`/video-items/${videoId}`);
+    const response: any = await apiService.get(`/video-items/${videoId}`);
     const adaptedVideo = adaptBackendVideoData(response.data);
     return validateVideoData(adaptedVideo);
   },
@@ -241,7 +241,7 @@ const VideoApiService = {
   // Obtener progreso de un video
   async getVideoProgress(videoId: string): Promise<VideoProgress | null> {
     try {
-      const response = await apiService.get(`/video-progress/${videoId}`);
+      const response: any = await apiService.get(`/video-progress/${videoId}`);
       return response.data ? validateVideoProgress(response.data) : null;
     } catch (error) {
       // Si no existe progreso, retornar null en lugar de error
@@ -254,40 +254,32 @@ const VideoApiService = {
 
   // Actualizar progreso de un video
   async updateVideoProgress(update: VideoProgressUpdate): Promise<VideoProgress> {
-    const response = await apiService.post('/video-progress', update);
+    const response: any = await apiService.patch(`/video-progress/${update.videoId}`, update);
     return validateVideoProgress(response.data);
   },
 
   // Obtener métricas del jugador
   async getPlayerMetrics(): Promise<PlayerMetrics> {
-    const response = await apiService.get('/player-metrics');
+    const response: any = await apiService.get('/player-metrics');
     return validatePlayerMetrics(response.data);
   },
 
   // Actualizar métricas del jugador
   async updatePlayerMetrics(updates: PlayerMetricsUpdate): Promise<PlayerMetrics> {
-    const response = await apiService.patch('/player-metrics', updates);
+    const response: any = await apiService.patch('/player-metrics', updates);
     return validatePlayerMetrics(response.data);
   },
 
   // Obtener videos recomendados
   async getRecommendedVideos(limit: number = 10): Promise<VideoData[]> {
-    const response = await apiService.get(`/video-items/recommended?limit=${limit}`);
-    
-    if (Array.isArray(response.data)) {
-      return response.data.map((video: unknown) => {
-        const adaptedVideo = adaptBackendVideoData(video);
-        return validateVideoData(adaptedVideo);
-      });
-    }
-    
-    return [];
+    const response: any = await apiService.get(`/videos/recommended?limit=${limit}`);
+    return (response.data || []).map(adaptBackendVideoData).map(validateVideoData);
   },
 
   // Buscar videos
   async searchVideos(query: string, filters: VideoListParams = {}): Promise<VideoData[]> {
-    const params = { ...filters, search: query };
-    return this.getVideos(params);
+    const response: any = await apiService.get(`/videos/search?q=${query}&${new URLSearchParams(filters as any).toString()}`);
+    return (response.data || []).map(adaptBackendVideoData).map(validateVideoData);
   },
 };
 
@@ -302,26 +294,22 @@ export const useVideos = (
   params: VideoListParams = {},
   options: UseVideoDataOptions = {}
 ) => {
-  const {
-    enabled = true,
-    refetchOnWindowFocus = false,
-    refetchInterval,
-    onError,
-    onSuccess,
-  } = options;
+  const queryClient = useQueryClient();
 
-  return useQuery({
+  return useQuery<VideoData[]>({
+    // Identificador único para la query, incluyendo los parámetros
     queryKey: [QUERY_KEYS.VIDEOS, params],
+
+    // Función que se ejecutará para obtener los datos
     queryFn: () => VideoApiService.getVideos(params),
+
+    // Configuración de la caché y reintentos
     staleTime: CACHE_CONFIG.STALE_TIME,
     gcTime: CACHE_CONFIG.CACHE_TIME,
     retry: CACHE_CONFIG.RETRY_COUNT,
-    retryDelay: CACHE_CONFIG.RETRY_DELAY,
-    enabled,
-    refetchOnWindowFocus,
-    refetchInterval,
-    onError,
-    onSuccess,
+
+    // Placeholder data para una mejor experiencia de usuario inicial
+    placeholderData: (previousData) => previousData,
   });
 };
 
@@ -332,24 +320,11 @@ export const useVideoDetail = (
   videoId: string,
   options: UseVideoDataOptions = {}
 ) => {
-  const {
-    enabled = true,
-    refetchOnWindowFocus = false,
-    onError,
-    onSuccess,
-  } = options;
-
-  return useQuery({
+  return useQuery<VideoData>({
     queryKey: [QUERY_KEYS.VIDEO_DETAIL, videoId],
     queryFn: () => VideoApiService.getVideoById(videoId),
     staleTime: CACHE_CONFIG.STALE_TIME,
     gcTime: CACHE_CONFIG.CACHE_TIME,
-    retry: CACHE_CONFIG.RETRY_COUNT,
-    retryDelay: CACHE_CONFIG.RETRY_DELAY,
-    enabled: enabled && !!videoId,
-    refetchOnWindowFocus,
-    onError,
-    onSuccess,
   });
 };
 
@@ -360,24 +335,11 @@ export const useVideoProgress = (
   videoId: string,
   options: UseVideoDataOptions = {}
 ) => {
-  const {
-    enabled = true,
-    refetchOnWindowFocus = false,
-    onError,
-    onSuccess,
-  } = options;
-
   return useQuery({
     queryKey: [QUERY_KEYS.VIDEO_PROGRESS, videoId],
     queryFn: () => VideoApiService.getVideoProgress(videoId),
     staleTime: CACHE_CONFIG.STALE_TIME,
     gcTime: CACHE_CONFIG.CACHE_TIME,
-    retry: CACHE_CONFIG.RETRY_COUNT,
-    retryDelay: CACHE_CONFIG.RETRY_DELAY,
-    enabled: enabled && !!videoId,
-    refetchOnWindowFocus,
-    onError,
-    onSuccess,
   });
 };
 
@@ -385,26 +347,11 @@ export const useVideoProgress = (
  * Hook para obtener métricas del jugador
  */
 export const usePlayerMetrics = (options: UseVideoDataOptions = {}) => {
-  const {
-    enabled = true,
-    refetchOnWindowFocus = false,
-    refetchInterval,
-    onError,
-    onSuccess,
-  } = options;
-
   return useQuery({
     queryKey: [QUERY_KEYS.PLAYER_METRICS],
-    queryFn: VideoApiService.getPlayerMetrics,
+    queryFn: () => VideoApiService.getPlayerMetrics(),
     staleTime: CACHE_CONFIG.STALE_TIME,
     gcTime: CACHE_CONFIG.CACHE_TIME,
-    retry: CACHE_CONFIG.RETRY_COUNT,
-    retryDelay: CACHE_CONFIG.RETRY_DELAY,
-    enabled,
-    refetchOnWindowFocus,
-    refetchInterval,
-    onError,
-    onSuccess,
   });
 };
 
@@ -415,24 +362,11 @@ export const useRecommendedVideos = (
   limit: number = 10,
   options: UseVideoDataOptions = {}
 ) => {
-  const {
-    enabled = true,
-    refetchOnWindowFocus = false,
-    onError,
-    onSuccess,
-  } = options;
-
   return useQuery({
     queryKey: [QUERY_KEYS.VIDEOS, 'recommended', limit],
     queryFn: () => VideoApiService.getRecommendedVideos(limit),
     staleTime: CACHE_CONFIG.STALE_TIME,
     gcTime: CACHE_CONFIG.CACHE_TIME,
-    retry: CACHE_CONFIG.RETRY_COUNT,
-    retryDelay: CACHE_CONFIG.RETRY_DELAY,
-    enabled,
-    refetchOnWindowFocus,
-    onError,
-    onSuccess,
   });
 };
 
@@ -444,24 +378,12 @@ export const useVideoSearch = (
   filters: VideoListParams = {},
   options: UseVideoDataOptions = {}
 ) => {
-  const {
-    enabled = true,
-    refetchOnWindowFocus = false,
-    onError,
-    onSuccess,
-  } = options;
-
   return useQuery({
     queryKey: [QUERY_KEYS.VIDEOS, 'search', query, filters],
     queryFn: () => VideoApiService.searchVideos(query, filters),
     staleTime: CACHE_CONFIG.STALE_TIME,
     gcTime: CACHE_CONFIG.CACHE_TIME,
-    retry: CACHE_CONFIG.RETRY_COUNT,
-    retryDelay: CACHE_CONFIG.RETRY_DELAY,
-    enabled: enabled && !!query.trim(),
-    refetchOnWindowFocus,
-    onError,
-    onSuccess,
+    enabled: !!query && query.length > 2, // Solo ejecutar si la búsqueda tiene más de 2 caracteres
   });
 };
 
@@ -663,4 +585,4 @@ export type {
   VideoProgressUpdate,
   PlayerMetricsUpdate,
   UseVideoDataOptions,
-}; 
+};

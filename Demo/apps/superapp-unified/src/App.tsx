@@ -1,9 +1,11 @@
-import React, { useEffect, Suspense, useTransition } from 'react';
+import React, { useEffect, Suspense, useTransition, createContext, useState, useContext, ReactNode, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CssBaseline, Box } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'sonner';
+import { AnimatePresence } from 'framer-motion';
+import { AchievementNotification } from './components/notifications/AchievementNotification';
 
 // Contexts
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -15,6 +17,10 @@ import { FeedbackProvider } from './contexts/FeedbackContext';
 // 🌟 GUARDIAN AGENTS - Universal Harmony System
 import { GuardianColorProvider, GuardianThemeSelector } from './components/theme/GuardianColorProvider';
 import { UniversalIntegrator } from './components/theme/UniversalIntegrator';
+
+// My new Theme Provider and Selector
+import { DynamicThemeProvider } from './context/DynamicThemeContext';
+import ThemeSelector from './components/theme/ThemeSelector';
 
 // 🎓 Tutorial Discovery System
 import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';
@@ -35,7 +41,89 @@ import {
 // Styles
 import './index.css';
 
-//  nowego komponentu
+// Notification System
+// ===========================================
+interface Achievement {
+  id: string;
+  title: string;
+  reward: string;
+}
+
+interface Notification extends Achievement {}
+
+interface NotificationContextType {
+  notifications: Notification[];
+  addAchievementNotification: (achievement: Omit<Achievement, 'id'>) => void;
+  removeNotification: (id: string) => void;
+}
+
+const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+
+export const useNotification = (): NotificationContextType => {
+  const context = useContext(NotificationContext);
+  if (!context) {
+    throw new Error('useNotification must be used within a NotificationProvider');
+  }
+  return context;
+};
+
+const NotificationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const removeNotification = useCallback((id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  }, []);
+
+  const addAchievementNotification = useCallback((achievement: Omit<Achievement, 'id'>) => {
+    const newNotification: Notification = {
+      ...achievement,
+      id: new Date().toISOString() + Math.random(),
+    };
+    setNotifications((prev) => [...prev, newNotification]);
+
+    setTimeout(() => {
+        removeNotification(newNotification.id);
+    }, 5000);
+
+  }, [removeNotification]);
+
+  return (
+    <NotificationContext.Provider value={{ notifications, addAchievementNotification, removeNotification }}>
+      {children}
+    </NotificationContext.Provider>
+  );
+};
+
+const NotificationContainer: React.FC = () => {
+    const { notifications, removeNotification } = useNotification();
+
+    return (
+        <Box
+            sx={{
+                position: 'fixed',
+                top: 16,
+                right: 16,
+                zIndex: 2000,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+            }}
+        >
+            <AnimatePresence>
+                {notifications.map((notif) => (
+                    <AchievementNotification
+                        key={notif.id}
+                        achievement={notif}
+                        onClose={() => removeNotification(notif.id)}
+                    />
+                ))}
+            </AnimatePresence>
+        </Box>
+    );
+};
+// ===========================================
+
+// nowego komponentu
 const EnvironmentBanner: React.FC = () => {
   const env = import.meta.env.VITE_APP_ENV || 'development';
   const isMock = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
@@ -102,14 +190,13 @@ const AppRoutes: React.FC = () => {
         {/* 🏠 Página Principal */}
         <Route path="/" element={<LazyPages.HomePage />} />
 
-        {/* 🛒 Marketplace - GMP Gamified Match Place */}
-        <Route path="/marketplace" element={<LazyPages.Marketplace />} />
+        {/* 🛒 Marketplace - GMP Gamified Match Place (Temporalmente Desactivado) */}
+        <Route path="/marketplace" element={<div style={{ padding: '2rem', color: 'black' }}>Módulo Marketplace en reconstrucción.</div>} />
         <Route path="/marketplace-test" element={<LazyPages.MarketplaceTest />} />
 
         {/* 🎮 ÜPlay - GPL Gamified Play List */}
         <Route path="/uplay" element={<LazyPages.UPlay />} />
         <Route path="/uplay/video/:videoId" element={<LazyPages.UPlayVideoPlayer />} />
-        <Route path="/uplay/unified" element={<LazyPages.UnifiedUPlay />} />
         <Route path="/video/:videoId" element={<LazyPages.VideoPlayer />} />
         <Route path="/video" element={<LazyPages.VideoHome />} />
         <Route path="/interactive-video" element={<LazyPages.InteractiveVideoEnhanced />} />
@@ -167,6 +254,7 @@ const AppRoutes: React.FC = () => {
 };
 
 // Main App Component
+// FORCING LINTER RE-EVALUATION
 const App: React.FC = () => {
   const [, startTransition] = useTransition();
 
@@ -180,59 +268,62 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        {/* 🌟 GUARDIAN AGENTS ACTIVATED - Global Visual Harmony */}
         <GuardianColorProvider initialTheme="guardian">
-          <ThemeProvider>
-            <StylesThemeProvider>
-              <AuthProvider>
-                <FeedbackProvider>
-                  <LetsEducationProvider>
-                  <CssBaseline />
-                  <Router>
-                    <DiscoveryTutorialProvider>
-                      <Box
-                        sx={{
-                          minHeight: '100vh',
-                          background: 'var(--guardian-gradient-cosmic)',
-                          transition: 'background 300ms ease',
-                        }}
-                      >
-                        <Suspense fallback={<div>Cargando...</div>}>
-                          <AppRoutes />
-                        </Suspense>
+          <DynamicThemeProvider>
+            <ThemeProvider>
+              <StylesThemeProvider>
+                <AuthProvider>
+                  <FeedbackProvider>
+                    <LetsEducationProvider>
+                      <NotificationProvider>
+                        <CssBaseline />
+                        <Router>
+                          <DiscoveryTutorialProvider>
+                            <Box
+                              sx={{
+                                minHeight: '100vh',
+                                background: 'var(--guardian-bg-primary)',
+                                transition: 'background 300ms ease',
+                              }}
+                            >
+                              <NotificationContainer />
+                              <Suspense fallback={<div>Cargando...</div>}>
+                                <AppRoutes />
+                              </Suspense>
 
-                        {/* 🎨 Guardian Theme Selector - For testing and admin */}
-                        <GuardianThemeSelector />
+                              <GuardianThemeSelector />
 
-                        {/* El botón flotante del tutorial va aquí para heredar el contexto */}
-                        <TutorialFloatingButton />
+                              <div style={{ position: 'fixed', bottom: '80px', right: '10px', zIndex: 10000 }}>
+                                <ThemeSelector />
+                              </div>
 
-                        {/* 🔍 Guardian Feedback Agent - Sistema de recopilación de feedback */}
-                        <FeedbackAgent />
+                              <TutorialFloatingButton />
 
-                        {/* Banner de Entorno */}
-                        <EnvironmentBanner />
+                              <FeedbackAgent />
 
-                        {/* Toast Notifications with Guardian theming */}
-                        <Toaster
-                          position="top-right"
-                          toastOptions={{
-                            style: {
-                              background: 'var(--guardian-bg-surface)',
-                              color: 'var(--guardian-text-primary)',
-                              border: '1px solid var(--guardian-primary)',
-                              borderRadius: '16px',
-                            },
-                          }}
-                        />
-                      </Box>
-                    </DiscoveryTutorialProvider>
-                  </Router>
-                  </LetsEducationProvider>
-                </FeedbackProvider>
-              </AuthProvider>
-            </StylesThemeProvider>
-          </ThemeProvider>
+                              <EnvironmentBanner />
+
+                              <Toaster
+                                position="top-right"
+                                toastOptions={{
+                                  style: {
+                                    background: 'var(--guardian-bg-surface)',
+                                    color: 'var(--guardian-text-primary)',
+                                    border: '1px solid var(--guardian-primary)',
+                                    borderRadius: '16px',
+                                  },
+                                }}
+                              />
+                            </Box>
+                          </DiscoveryTutorialProvider>
+                        </Router>
+                      </NotificationProvider>
+                    </LetsEducationProvider>
+                  </FeedbackProvider>
+                </AuthProvider>
+              </StylesThemeProvider>
+            </ThemeProvider>
+          </DynamicThemeProvider>
         </GuardianColorProvider>
 
         {/* React Query DevTools */}

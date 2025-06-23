@@ -184,4 +184,4 @@ export const GamifierButton: React.FC<GamifierButtonProps> = ({
       {renderContent()}
     </StyledButton>
   );
-}; 
+};

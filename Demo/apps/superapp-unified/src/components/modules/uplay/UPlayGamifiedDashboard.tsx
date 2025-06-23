@@ -49,7 +49,6 @@ import {
 } from '@mui/icons-material';
 
 // Importar componentes mejorados
-import { PlayerMetricsDashboard } from './components/PlayerMetricsDashboard';
 import DynamicMetricsDashboard from './components/DynamicMetricsDashboard';
 import { EnhancedRewardFeedback, useRewardFeedback } from './components/EnhancedRewardFeedback';
 import UnifiedUPlayPlayer from './UnifiedUPlayPlayer';
@@ -624,7 +623,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         navigate(`/uplay/video/${videoId}`, {
           state: {
             from: '/uplay',
-            videoData: videoData
+            videoData
           }
         });
       } else {
@@ -707,13 +706,13 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
   // Debug logs (temporal)
   console.log('🔍 DEBUG Dashboard State:', {
-    playlists: playlists,
+    playlists,
     playlistsLength: playlists?.length,
-    videos: videos,
+    videos,
     videosLength: videos?.length,
-    adaptedVideos: adaptedVideos,
+    adaptedVideos,
     adaptedVideosLength: adaptedVideos?.length,
-    videosByPlaylist: videosByPlaylist,
+    videosByPlaylist,
     videosByPlaylistKeys: Object.keys(videosByPlaylist),
     isLoadingPlaylists,
     isLoadingVideos,
@@ -1342,5 +1341,6 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     </Box>
   </RevolutionaryWidget>
   );
+};
 
 export default UPlayGamifiedDashboard;

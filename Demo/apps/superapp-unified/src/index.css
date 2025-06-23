@@ -6,6 +6,51 @@
 @import './styles/tokens/spacing.css';
 @import './styles/tokens/shadows.css';
 
+/* Paleta profesional refinada para UPlay */
+:root {
+  /* ✅ Tipografía que escala fluidamente */
+  --fs-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --fs-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --fs-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --fs-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+  --fs-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  --fs-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --fs-3xl: clamp(2rem, 1.7rem + 1.5vw, 3rem);
+
+  /* Spacing fluido */
+  --space-xs: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+  --space-sm: clamp(0.75rem, 0.6rem + 0.75vw, 1rem);
+  --space-md: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  --space-xl: clamp(2rem, 1.6rem + 2vw, 3rem);
+
+  /* Azules principales */
+  --uplay-blue-50: #eff6ff;
+  --uplay-blue-100: #dbeafe;
+  --uplay-blue-200: #bfdbfe; /* Added from UPlay.tsx */
+  --uplay-blue-300: #93c5fd; /* Added from UPlay.tsx */
+  --uplay-blue-500: #3b82f6;
+  --uplay-blue-600: #2563eb;
+  --uplay-blue-700: #1d4ed8;
+  --uplay-blue-900: #1e3a8a; /* Added from UPlay.tsx */
+
+
+  /* Sombras profesionales */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-card-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-glow-blue: 0 0 30px rgba(59, 130, 246, 0.15);
+
+  /* Gradientes específicos */
+  --gradient-card-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  --gradient-icon: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --gradient-text: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+}
+
 /* Import Utilities */
 @import './styles/utilities/animations.css';
 
@@ -314,4 +359,48 @@ body {
 
 .contain-strict {
   contain: strict;
+}
+
+/* ✅ Animaciones más fluidas y naturales */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+  }
+}
+
+.floating-element {
+  animation: float 3s ease-in-out infinite;
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.glow-effect {
+  animation: glow-pulse 2s ease-in-out infinite;
 }

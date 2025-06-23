@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -29,6 +29,9 @@ import {
   PhoneAndroid,
   SwapHoriz,
 } from '@mui/icons-material';
+import { ThemeSelector } from './ThemeSelector';
+import { useDynamicTheme } from '../../context/DynamicThemeContext';
+import { moduleColors } from '../../theme/themeConfig';
 
 interface NavigationItem {
   label: string;
@@ -143,6 +146,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onClose
 }) => {
   const theme = useTheme();
+  const { setTheme, theme: dynamicTheme } = useDynamicTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -153,6 +157,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
     return location.pathname.startsWith(path);
   };
+
+  useEffect(() => {
+    // Establecer el color principal para la navegación general
+    setTheme({
+      ...dynamicTheme,
+      buttonPrimaryBackground: moduleColors.superappGeneral,
+      navMenuItemActive: moduleColors.superappGeneral
+    });
+  }, []);
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -189,18 +202,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   mx: 1,
                   borderRadius: 2,
                   '&.Mui-selected': {
-                    backgroundColor: 'primary.main',
-                    color: 'primary.contrastText',
+                    backgroundColor: dynamicTheme.navMenuItemActive,
+                    color: dynamicTheme.buttonPrimaryText,
                     '& .MuiListItemIcon-root': {
-                      color: 'primary.contrastText',
+                      color: dynamicTheme.buttonPrimaryText,
                     },
                     '&:hover': {
-                      backgroundColor: 'primary.dark',
+                      backgroundColor: dynamicTheme.navMenuItemActive,
+                      filter: 'brightness(0.9)',
                     },
                   },
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 40 }}>
+                <ListItemIcon sx={{ minWidth: 40, color: dynamicTheme.secondaryText }}>
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText
@@ -238,6 +252,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         display: 'flex',
         flexDirection: 'column',
         py: 2,
+        background: dynamicTheme.navMenuBackground,
+        color: dynamicTheme.navMenuText,
       }}
     >
       {/* Navigation Sections */}
@@ -246,6 +262,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {renderSection('modules', 'Módulos')}
       <Divider sx={{ my: 1 }} />
       {renderSection('settings', 'Configuración')}
+
+      {/* Theme Selector */}
+      <Box sx={{ mt: 'auto', p: 1 }}>
+        <Typography
+          variant="overline"
+          sx={{
+            px: 1,
+            py: 1,
+            display: 'block',
+            color: 'text.secondary',
+            fontWeight: 600,
+            fontSize: '0.75rem',
+            textAlign: 'center',
+          }}
+        >
+          Tema Elemental
+        </Typography>
+        <ThemeSelector />
+      </Box>
 
       {/* Status indicator for system visibility */}
       <Box

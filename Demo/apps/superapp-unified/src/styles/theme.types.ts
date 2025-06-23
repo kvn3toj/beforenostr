@@ -1,15 +1,27 @@
 import { Theme as MuiTheme, PaletteOptions, Palette, TypeText, TypeBackground, CommonColors, PaletteColor } from '@mui/material/styles';
 
+interface CustomColors {
+  [key: string]: string;
+}
+
 export interface CoomunityPaletteOptions extends Omit<Palette, 'text' | 'background' | 'common'> {
   text: TypeText;
   background: TypeBackground;
-  common: CommonColors;
+  common: CommonColors & {
+    gold: string;
+    white: string;
+    black: string;
+    lightGrey: string;
+    darkGrey: string;
+  };
   primary: PaletteColor;
   secondary: PaletteColor;
   error: PaletteColor;
   warning: PaletteColor;
   info: PaletteColor;
   success: PaletteColor;
+  category: CustomColors;
+  difficulty: CustomColors;
   grey: {
     50: string;
     100: string;

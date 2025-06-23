@@ -3,171 +3,24 @@ import { ThemeProvider as MuiThemeProvider, createTheme, Theme } from '@mui/mate
 import CssBaseline from '@mui/material/CssBaseline';
 
 // ===== 🎨 TIPOS DE TEMAS GUARDIAN =====
-export type GuardianTheme =
-  | 'guardian' | 'autumn' | 'cosmic' | 'harmony'
-  | 'minimal' | 'zen' | 'nordic' | 'monochrome' | 'soft' | 'slate';
+export type GuardianTheme = 'monochrome'; // Forzar un único tema
 
 // ===== 🌟 PALETAS DE COLORES GUARDIAN =====
 const GUARDIAN_PALETTES = {
-  guardian: {
-    name: 'Guardian Elements',
-    description: 'Los cinco elementos en armonía máxima',
-    primary: '#f5a623', // Fuego - Dorado
-    secondary: '#0891b2', // Agua - Azul
-    accent: '#16a34a', // Tierra - Verde
-    mystic: '#a855f7', // Aire - Violeta
-    neutral: '#e8e7e3', // Éter - Cristal
-    background: '#fffffe',
-    surface: '#fdfdfb',
-    text: {
-      primary: '#000000',
-      secondary: '#2d2d2d',
-      muted: '#595959'
-    }
-  },
-  autumn: {
-    name: 'Autumn Warmth',
-    description: 'Calidez otoñal con tonos terrosos',
-    primary: '#f97316', // Naranja otoñal
-    secondary: '#dc2626', // Rojo otoñal
-    accent: '#f59e0b', // Dorado otoñal
-    mystic: '#16a34a', // Verde bosque
-    neutral: '#78716c', // Marrón tierra
-    background: '#fffefb',
-    surface: '#fafaf9',
-    text: {
-      primary: '#292524',
-      secondary: '#57534e',
-      muted: '#78716c'
-    }
-  },
-  cosmic: {
-    name: 'Cosmic Vision',
-    description: 'Visión espacial y futurista',
-    primary: '#6366f1', // Índigo cósmico
-    secondary: '#8b5cf6', // Violeta espacial
-    accent: '#06b6d4', // Cian estelar
-    mystic: '#ec4899', // Rosa nebulosa
-    neutral: '#64748b', // Gris espacial
-    background: '#0f172a',
-    surface: '#1e293b',
-    text: {
-      primary: '#f8fafc',
-      secondary: '#e2e8f0',
-      muted: '#94a3b8'
-    }
-  },
-  harmony: {
-    name: 'Universal Harmony',
-    description: 'Equilibrio universal entre todos los elementos',
-    primary: '#10b981', // Verde armonía
-    secondary: '#3b82f6', // Azul equilibrio
-    accent: '#f59e0b', // Dorado sabiduría
-    mystic: '#8b5cf6', // Violeta elevación
-    neutral: '#6b7280', // Gris neutral
-    background: '#ffffff',
-    surface: '#f9fafb',
-    text: {
-      primary: '#111827',
-      secondary: '#374151',
-      muted: '#6b7280'
-    }
-  },
-  // ===== 🎨 PALETAS MINIMALISTAS =====
-  minimal: {
-    name: 'Pure Minimal',
-    description: 'Pureza absoluta con toques sutiles de color',
-    primary: '#2563eb', // Azul puro
-    secondary: '#64748b', // Gris medio
-    accent: '#06b6d4', // Cyan suave
-    mystic: '#8b5cf6', // Violeta sutil
-    neutral: '#f1f5f9', // Gris muy claro
-    background: '#ffffff',
-    surface: '#fcfcfd',
-    text: {
-      primary: '#0f172a',
-      secondary: '#475569',
-      muted: '#94a3b8'
-    }
-  },
-  zen: {
-    name: 'Zen Garden',
-    description: 'Serenidad y equilibrio en tonos naturales',
-    primary: '#059669', // Verde natural
-    secondary: '#0891b2', // Azul sereno
-    accent: '#d97706', // Ocre tierra
-    mystic: '#7c3aed', // Violeta profundo
-    neutral: '#e2e8f0', // Piedra zen
-    background: '#fefefe',
-    surface: '#f8fafc',
-    text: {
-      primary: '#1e293b',
-      secondary: '#475569',
-      muted: '#64748b'
-    }
-  },
-  nordic: {
-    name: 'Nordic Minimalism',
-    description: 'Elegancia escandinava con tonos fríos y puros',
-    primary: '#1e40af', // Azul nórdico
-    secondary: '#374151', // Gris carbón
-    accent: '#0ea5e9', // Azul hielo
-    mystic: '#6366f1', // Índigo aurora
-    neutral: '#f3f4f6', // Blanco nieve
-    background: '#ffffff',
-    surface: '#f9fafb',
-    text: {
-      primary: '#111827',
-      secondary: '#4b5563',
-      muted: '#9ca3af'
-    }
-  },
   monochrome: {
     name: 'Pure Monochrome',
     description: 'Elegancia atemporal en escala de grises',
     primary: '#000000', // Negro puro
-    secondary: '#374151', // Gris oscuro
-    accent: '#6b7280', // Gris medio
-    mystic: '#9ca3af', // Gris claro
-    neutral: '#f3f4f6', // Gris muy claro
+    secondary: '#555555', // Gris oscuro
+    accent: '#888888', // Gris medio
+    mystic: '#bbbbbb', // Gris claro
+    neutral: '#eeeeee', // Gris muy claro
     background: '#ffffff',
-    surface: '#f9fafb',
+    surface: '#fafafa',
     text: {
-      primary: '#111827',
-      secondary: '#374151',
-      muted: '#6b7280'
-    }
-  },
-  soft: {
-    name: 'Soft Pastels',
-    description: 'Suavidad y delicadeza en tonos pastel',
-    primary: '#7c3aed', // Violeta suave
-    secondary: '#06b6d4', // Cyan pastel
-    accent: '#10b981', // Verde menta
-    mystic: '#f59e0b', // Amarillo crema
-    neutral: '#f1f5f9', // Gris suave
-    background: '#fefefe',
-    surface: '#f8fafc',
-    text: {
-      primary: '#1e293b',
-      secondary: '#475569',
-      muted: '#64748b'
-    }
-  },
-  slate: {
-    name: 'Modern Slate',
-    description: 'Modernidad industrial con toques de color',
-    primary: '#0f172a', // Slate oscuro
-    secondary: '#334155', // Slate medio
-    accent: '#06b6d4', // Cyan brillante
-    mystic: '#a855f7', // Violeta tecnológico
-    neutral: '#cbd5e1', // Slate claro
-    background: '#f8fafc',
-    surface: '#f1f5f9',
-    text: {
-      primary: '#020617',
-      secondary: '#334155',
-      muted: '#64748b'
+      primary: '#000000',
+      secondary: '#333333',
+      muted: '#777777'
     }
   }
 };
@@ -176,7 +29,7 @@ const GUARDIAN_PALETTES = {
 interface GuardianColorContextType {
   currentTheme: GuardianTheme;
   palette: typeof GUARDIAN_PALETTES[GuardianTheme];
-  switchTheme: (theme: GuardianTheme) => void;
+  switchTheme: () => void;
   getElementColor: (element: 'fuego' | 'agua' | 'tierra' | 'aire' | 'eter') => string;
   getConceptColor: (concept: 'ayni' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun') => string;
   applyColorClass: (element: string) => string;
@@ -212,7 +65,7 @@ const getConceptColor = (concept: 'ayni' | 'meritos' | 'ondas' | 'lukas' | 'bien
 // ===== 🎨 CREACIÓN DEL TEMA MATERIAL-UI GUARDIAN =====
 const createGuardianTheme = (themeName: GuardianTheme): Theme => {
   const palette = GUARDIAN_PALETTES[themeName];
-  const isDark = themeName === 'cosmic';
+  const isDark = false; // El modo monocromático es claro por defecto
 
   return createTheme({
     palette: {
@@ -392,93 +245,54 @@ const createGuardianTheme = (themeName: GuardianTheme): Theme => {
 // ===== 🔧 PROVIDER COMPONENT =====
 interface GuardianColorProviderProps {
   children: ReactNode;
-  initialTheme?: GuardianTheme;
 }
 
 export const GuardianColorProvider: React.FC<GuardianColorProviderProps> = ({
   children,
-  initialTheme = 'guardian'
 }) => {
-  const [currentTheme, setCurrentTheme] = useState<GuardianTheme>(initialTheme);
-
-  // ===== 💾 PERSISTIR TEMA EN LOCALSTORAGE =====
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('guardian-theme') as GuardianTheme;
-    if (savedTheme && GUARDIAN_PALETTES[savedTheme]) {
-      setCurrentTheme(savedTheme);
-    }
-  }, []);
+  // Forzar el tema monocromático
+  const [currentTheme, setCurrentTheme] = useState<GuardianTheme>('monochrome');
 
   useEffect(() => {
-    localStorage.setItem('guardian-theme', currentTheme);
-
-    // ===== 🎨 APLICAR VARIABLES CSS DINÁMICAMENTE =====
-    const palette = GUARDIAN_PALETTES[currentTheme];
+    document.documentElement.setAttribute('data-theme', 'monochrome');
+    // Aplicar variables CSS para el tema monocromático
+    const palette = GUARDIAN_PALETTES.monochrome;
     const root = document.documentElement;
-
-    // Variables Guardian específicas
-    root.style.setProperty('--guardian-primary', palette.primary);
-    root.style.setProperty('--guardian-secondary', palette.secondary);
-    root.style.setProperty('--guardian-accent', palette.accent);
-    root.style.setProperty('--guardian-mystic', palette.mystic);
-    root.style.setProperty('--guardian-neutral', palette.neutral);
     root.style.setProperty('--guardian-bg-primary', palette.background);
     root.style.setProperty('--guardian-bg-surface', palette.surface);
     root.style.setProperty('--guardian-text-primary', palette.text.primary);
     root.style.setProperty('--guardian-text-secondary', palette.text.secondary);
-    root.style.setProperty('--guardian-text-muted', palette.text.muted);
+    root.style.setProperty('--guardian-primary', palette.primary);
+    root.style.setProperty('--guardian-secondary', palette.secondary);
+    root.style.setProperty('--guardian-accent', palette.accent);
+    // ...y así sucesivamente para todas las variables que uses.
+    // Esto es un reinicio completo.
+    root.style.setProperty('--guardian-gradient-cosmic', 'linear-gradient(180deg, #FFFFFF 0%, #F0F0F0 100%)');
 
-    // ===== 🔄 INTEGRACIÓN CON SISTEMA DE DESIGN TOKENS EXISTENTE =====
-    // Actualizar variables principales del sistema para máxima compatibilidad
-    root.style.setProperty('--coomunity-primary-500', palette.primary);
-    root.style.setProperty('--coomunity-gold-500', palette.accent);
-    root.style.setProperty('--color-text-primary', palette.text.primary);
-    root.style.setProperty('--color-text-secondary', palette.text.secondary);
-    root.style.setProperty('--color-background-primary', palette.background);
-    root.style.setProperty('--color-background-secondary', palette.surface);
 
-    // Elementos naturales según paleta actual
-    root.style.setProperty('--coomunity-earth-500', palette.accent);   // Tierra/Verde
-    root.style.setProperty('--coomunity-water-500', palette.secondary); // Agua/Azul
-    root.style.setProperty('--coomunity-fire-500', palette.primary);    // Fuego/Dorado
-    root.style.setProperty('--coomunity-air-500', palette.mystic);      // Aire/Violeta
+  }, []);
 
-    // ===== 🔄 GRADIENTES DINÁMICOS =====
-    root.style.setProperty('--guardian-gradient-primary',
-      `linear-gradient(135deg, ${palette.primary} 0%, ${palette.accent} 100%)`);
-    root.style.setProperty('--guardian-gradient-secondary',
-      `linear-gradient(135deg, ${palette.secondary} 0%, ${palette.mystic} 100%)`);
-    root.style.setProperty('--guardian-gradient-unity',
-      `linear-gradient(135deg, ${palette.primary} 0%, ${palette.secondary} 25%, ${palette.accent} 50%, ${palette.mystic} 75%, ${palette.neutral} 100%)`);
-    root.style.setProperty('--guardian-gradient-cosmic',
-      `linear-gradient(45deg, ${palette.primary}, ${palette.secondary})`);
-    root.style.setProperty('--guardian-gradient-elements',
-      `linear-gradient(135deg, ${palette.accent} 0%, ${palette.secondary} 25%, ${palette.primary} 50%, ${palette.mystic} 75%, ${palette.neutral} 100%)`);
 
-  }, [currentTheme]);
-
-  const switchTheme = (theme: GuardianTheme) => {
-    setCurrentTheme(theme);
+  const switchTheme = () => {
+    // La función de cambio de tema se deshabilita para forzar el monocromático.
+    console.log("El cambio de tema está deshabilitado en el modo de reinicio monocromático.");
   };
 
-  const applyColorClass = (element: string): string => {
-    return `guardian-${element}-${currentTheme}`;
-  };
+  const muiTheme = createGuardianTheme('monochrome');
 
-  const contextValue: GuardianColorContextType = {
-    currentTheme,
-    palette: GUARDIAN_PALETTES[currentTheme],
+  const value = {
+    currentTheme: 'monochrome' as GuardianTheme,
+    palette: GUARDIAN_PALETTES.monochrome,
     switchTheme,
-    getElementColor: (element) => getElementColor(element, GUARDIAN_PALETTES[currentTheme]),
-    getConceptColor: (concept) => getConceptColor(concept, GUARDIAN_PALETTES[currentTheme]),
-    applyColorClass
+    getElementColor: (element: 'fuego' | 'agua' | 'tierra' | 'aire' | 'eter') => getElementColor(element, GUARDIAN_PALETTES.monochrome),
+    getConceptColor: (concept: 'ayni' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun') => getConceptColor(concept, GUARDIAN_PALETTES.monochrome),
+    applyColorClass: (element: string): string => `guardian-${element}-monochrome`,
   };
 
-  const theme = createGuardianTheme(currentTheme);
 
   return (
-    <GuardianColorContext.Provider value={contextValue}>
-      <MuiThemeProvider theme={theme}>
+    <GuardianColorContext.Provider value={value}>
+      <MuiThemeProvider theme={muiTheme}>
         <CssBaseline />
         {children}
       </MuiThemeProvider>
@@ -497,259 +311,8 @@ export const useGuardianColors = (): GuardianColorContextType => {
 
 // ===== 🎛️ COMPONENTE SELECTOR DE TEMA MEJORADO =====
 export const GuardianThemeSelector: React.FC = () => {
-  const { currentTheme, switchTheme } = useGuardianColors();
-  const [isVisible, setIsVisible] = useState(() => {
-    // Recuperar estado de visibilidad desde localStorage
-    const saved = localStorage.getItem('guardian-theme-selector-visible');
-    return saved !== 'false'; // Por defecto visible, oculto solo si se guardó como 'false'
-  });
-
-  // Guardar estado de visibilidad
-  useEffect(() => {
-    localStorage.setItem('guardian-theme-selector-visible', isVisible.toString());
-  }, [isVisible]);
-
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible);
-  };
-
-  return (
-    <>
-      {/* Botón de toggle cuando está oculto */}
-      {!isVisible && (
-        <div style={{
-          position: 'fixed',
-          top: 20,
-          right: 20,
-          zIndex: 99999, // Z-index más alto para evitar conflictos
-        }}>
-          <button
-            onClick={toggleVisibility}
-            style={{
-              background: 'var(--guardian-primary)',
-              border: 'none',
-              borderRadius: '50%',
-              width: 48,
-              height: 48,
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-              transition: 'all 200ms ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '18px',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'scale(1.1) translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.2)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'scale(1) translateY(0px)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-            }}
-            title="Mostrar Guardian Themes"
-          >
-            🎨
-          </button>
-        </div>
-      )}
-
-      {/* Panel principal cuando está visible */}
-      {isVisible && (
-        <div style={{
-          position: 'fixed',
-          top: 20,
-          right: 20,
-          zIndex: 99999, // Z-index más alto para evitar conflictos
-          background: 'var(--guardian-bg-surface)',
-          border: '2px solid var(--guardian-primary)',
-          borderRadius: 16,
-          padding: 16,
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
-          backdropFilter: 'blur(12px)',
-          minWidth: 250,
-          transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-        }}>
-          {/* Header con título y botón de cerrar */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 12,
-          }}>
-            <h4 style={{
-              margin: 0,
-              color: 'var(--guardian-text-primary)',
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-            }}>
-              🌟 Guardian Themes
-            </h4>
-            <button
-              onClick={toggleVisibility}
-              style={{
-                background: 'rgba(239, 68, 68, 0.1)',
-                border: '2px solid #ef4444',
-                borderRadius: '50%',
-                width: 32,
-                height: 32,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '16px',
-                color: '#ef4444',
-                fontWeight: 'bold',
-                transition: 'all 200ms ease',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.background = '#ef4444';
-                e.currentTarget.style.color = '#ffffff';
-                e.currentTarget.style.transform = 'scale(1.1)';
-                e.currentTarget.style.boxShadow = '0 4px 8px rgba(239, 68, 68, 0.3)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
-                e.currentTarget.style.color = '#ef4444';
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-              }}
-              title="Ocultar panel Guardian Themes"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Información del tema actual */}
-          <div style={{
-            padding: '8px 12px',
-            background: `linear-gradient(135deg, var(--guardian-primary)20, var(--guardian-accent)20)`,
-            borderRadius: 8,
-            marginBottom: 12,
-            border: `1px solid var(--guardian-primary)40`,
-          }}>
-            <div style={{
-              fontSize: '0.75rem',
-              color: 'var(--guardian-text-secondary)',
-              marginBottom: 2,
-            }}>
-              Tema Actual:
-            </div>
-            <div style={{
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              color: 'var(--guardian-text-primary)',
-            }}>
-              {GUARDIAN_PALETTES[currentTheme].name}
-            </div>
-          </div>
-
-          {/* Botones de temas */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {Object.entries(GUARDIAN_PALETTES).map(([key, palette]) => (
-              <button
-                key={key}
-                onClick={() => switchTheme(key as GuardianTheme)}
-                style={{
-                  padding: '12px 16px',
-                  border: currentTheme === key ? '2px solid var(--guardian-primary)' : '1px solid var(--guardian-neutral)',
-                  borderRadius: 12,
-                  background: currentTheme === key
-                    ? `linear-gradient(135deg, var(--guardian-primary), var(--guardian-accent))`
-                    : 'var(--guardian-bg-surface)',
-                  color: currentTheme === key ? '#ffffff' : 'var(--guardian-text-primary)',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 200ms ease',
-                  textAlign: 'left',
-                  position: 'relative',
-                  overflow: 'hidden',
-                }}
-                onMouseOver={(e) => {
-                  if (currentTheme !== key) {
-                    e.currentTarget.style.background = `linear-gradient(135deg, ${palette.primary}20, ${palette.accent}20)`;
-                    e.currentTarget.style.transform = 'translateX(4px) scale(1.02)';
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (currentTheme !== key) {
-                    e.currentTarget.style.background = 'var(--guardian-bg-surface)';
-                    e.currentTarget.style.transform = 'translateX(0px) scale(1)';
-                  }
-                }}
-              >
-                <div style={{ fontWeight: 'bold', marginBottom: 2 }}>
-                  {palette.name}
-                </div>
-                <div style={{
-                  fontSize: '0.65rem',
-                  opacity: currentTheme === key ? 0.9 : 0.6,
-                  lineHeight: 1.2,
-                }}>
-                  {palette.description}
-                </div>
-                {/* Indicador visual de colores */}
-                <div style={{
-                  position: 'absolute',
-                  right: 8,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  display: 'flex',
-                  gap: 2,
-                }}>
-                  <div style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    background: palette.primary,
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                  }} />
-                  <div style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    background: palette.secondary,
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                  }} />
-                  <div style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    background: palette.accent,
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                  }} />
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Footer informativo */}
-          <div style={{
-            marginTop: 12,
-            padding: '8px 12px',
-            background: 'var(--guardian-bg-primary)',
-            borderRadius: 8,
-            border: '1px solid var(--guardian-neutral)',
-          }}>
-            <div style={{
-              fontSize: '0.65rem',
-              color: 'var(--guardian-text-muted)',
-              textAlign: 'center',
-              lineHeight: 1.3,
-            }}>
-              🌟 Sistema Guardian Visual<br/>
-              Temas dinámicos que se adaptan al Bien Común
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
+  // El selector de temas se deshabilita y se oculta.
+  return null;
 };
 
 // ===== 🎨 HOOK PARA CLASES DE UTILIDAD =====

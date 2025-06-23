@@ -1,543 +1,249 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   Grid,
-  Avatar,
-  LinearProgress,
   Chip,
   Button,
-  IconButton,
   useTheme,
   useMediaQuery,
-  alpha,
-  keyframes,
 } from '@mui/material';
 import {
   EmojiEvents,
   Star,
-  Diamond,
-  Bolt,
   School,
-  Celebration,
-  TrendingUp,
   Group,
-  Schedule,
-  CheckCircle,
-  Lock,
-  AutoAwesome,
-  Whatshot,
   LocalFireDepartment,
+  VideoLibrary,
+  WorkspacePremium,
+  MilitaryTech,
 } from '@mui/icons-material';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNotifications } from '../../common/NotificationSystem';
 
-// Animaciones
-const bounceAnimation = keyframes`
-  0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
-  40%, 43% { transform: translate3d(0,-30px,0); }
-  70% { transform: translate3d(0,-15px,0); }
-  90% { transform: translate3d(0,-4px,0); }
-`;
-
-const glowPulse = keyframes`
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 193, 7, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(255, 193, 7, 0.8); }
-`;
-
-const shimmerEffect = keyframes`
-  0% { background-position: -200px 0; }
-  100% { background-position: calc(200px + 100%) 0; }
-`;
-
+// Type definition for Achievements
 interface Achievement {
   id: string;
   title: string;
-  description: string;
-  icon: React.ReactNode;
-  category: 'learning' | 'social' | 'streak' | 'mastery' | 'special';
-  rarity: 'common' | 'rare' | 'epic' | 'legendary';
-  isUnlocked: boolean;
+  category: string[];
+  rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
   progress: number;
-  maxProgress: number;
-  rewards: {
-    meritos: number;
-    ondas: number;
-    title?: string;
-  };
-  unlockedAt?: Date;
+  total: number;
+  reward: string;
+  isNew?: boolean;
 }
+
+// Rarity styles mapping
+const rarityStyles = {
+  common: {
+    bg: 'from-gray-800 to-gray-900',
+    border: 'border-gray-600',
+    shadow: 'hover:shadow-gray-500/20',
+    glow: 'group-hover:from-gray-500/50',
+    badge: 'bg-gray-500 text-white',
+    icon: <WorkspacePremium />,
+  },
+  rare: {
+    bg: 'from-blue-900 to-indigo-950',
+    border: 'border-blue-700',
+    shadow: 'hover:shadow-blue-500/30',
+    glow: 'group-hover:from-blue-500/50',
+    badge: 'bg-blue-500 text-white',
+    icon: <MilitaryTech />,
+  },
+  epic: {
+    bg: 'from-purple-900 to-violet-950',
+    border: 'border-purple-700',
+    shadow: 'hover:shadow-purple-500/40',
+    glow: 'group-hover:from-purple-400/60',
+    badge: 'bg-purple-600 text-white',
+    icon: <EmojiEvents />,
+  },
+  legendary: {
+    bg: 'from-amber-900 to-orange-950',
+    border: 'border-amber-600',
+    shadow: 'hover:shadow-amber-500/50',
+    glow: 'group-hover:from-amber-400/70',
+    badge: 'bg-amber-500 text-white',
+    icon: <Star />,
+  },
+  mythic: {
+    bg: 'from-pink-950 to-rose-950',
+    border: 'border-rose-600',
+    shadow: 'hover:shadow-rose-400/60',
+    glow: 'group-hover:from-rose-400/80',
+    badge: 'bg-rose-500 text-white animate-pulse',
+    icon: <LocalFireDepartment />,
+  },
+};
+
+const CinematicAchievementCard: React.FC<Achievement> = ({ title, category, rarity, progress, total, reward, isNew }) => {
+  const styles = rarityStyles[rarity];
+  const isUnlocked = progress >= total;
+
+  return (
+    <motion.div
+      className={`group relative p-5 rounded-2xl overflow-hidden cursor-pointer border transition-all duration-300 ${styles.border} ${styles.shadow} ${isUnlocked ? `bg-gradient-to-br ${styles.bg}` : 'bg-gray-900'}`}
+      whileHover={{ y: -8, scale: 1.03 }}
+      layout
+    >
+      {/* Glow effect */}
+      <div className={`absolute -inset-px rounded-2xl transition-all duration-300 opacity-0 group-hover:opacity-100 bg-gradient-to-br ${styles.glow} to-transparent`} />
+
+      <div className="relative z-10 flex flex-col h-full">
+        <div className="flex justify-between items-start">
+          <div className="flex-grow">
+            <Typography variant="h6" className={`font-bold ${isUnlocked ? 'text-white' : 'text-gray-400'}`}>{title}</Typography>
+            <div className="flex flex-wrap gap-1 mt-1">
+              {category.map(cat => (
+                <Chip key={cat} label={cat} size="small" className="text-xs !bg-white/10 !text-gray-300" />
+              ))}
+            </div>
+          </div>
+          <div className={`text-4xl ${isUnlocked ? 'text-white' : 'text-gray-600'}`}>
+            {styles.icon}
+          </div>
+        </div>
+
+        <div className="flex-grow my-4">
+          <Typography variant="body2" className="text-gray-400">Recompensa: <span className="font-bold text-gray-300">{reward}</span></Typography>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="w-full bg-black/30 rounded-full h-2.5">
+          <motion.div
+            className={`h-2.5 rounded-full ${isUnlocked ? styles.badge : 'bg-gray-600'}`}
+            initial={{ width: 0 }}
+            animate={{ width: `${(progress / total) * 100}%` }}
+            transition={{ duration: 1 }}
+          />
+        </div>
+        <div className="flex justify-between mt-1">
+          <Typography variant="caption" className="text-gray-500">{isUnlocked ? 'Completado' : 'Progreso'}</Typography>
+          <Typography variant="caption" className="font-bold text-gray-400">{progress}/{total}</Typography>
+        </div>
+      </div>
+
+      {isUnlocked && (
+        <div className="absolute inset-0 z-0">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className={`absolute rounded-full ${styles.badge} opacity-50`}
+              style={{
+                width: Math.random() * 3,
+                height: Math.random() * 3,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
+              transition={{
+                duration: Math.random() * 2 + 1,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+};
 
 const UPlayAchievementSystem: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [filter, setFilter] = useState<'all' | 'unlocked' | 'locked'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const { showAchievement } = useNotifications();
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [achievements] = useState<Achievement[]>([
-    {
-      id: '1',
-      title: 'Primer Paso',
-      description: 'Completa tu primer video',
-      icon: <School />,
-      category: 'learning',
-      rarity: 'common',
-      isUnlocked: true,
-      progress: 1,
-      maxProgress: 1,
-      rewards: { meritos: 10, ondas: 5 },
-      unlockedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    },
-    {
-      id: '2',
-      title: 'Estudiante Dedicado',
-      description: 'Mantén una racha de 7 días consecutivos',
-      icon: <LocalFireDepartment />,
-      category: 'streak',
-      rarity: 'rare',
-      isUnlocked: true,
-      progress: 7,
-      maxProgress: 7,
-      rewards: { meritos: 50, ondas: 25, title: 'Dedicado' },
-      unlockedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    },
-    {
-      id: '3',
-      title: 'Maestro del Conocimiento',
-      description: 'Responde correctamente 100 preguntas',
-      icon: <AutoAwesome />,
-      category: 'mastery',
-      rarity: 'epic',
-      isUnlocked: false,
-      progress: 73,
-      maxProgress: 100,
-      rewards: { meritos: 100, ondas: 50, title: 'Maestro' },
-    },
-    {
-      id: '4',
-      title: 'Colaborador Social',
-      description: 'Participa en 10 salas de estudio',
-      icon: <Group />,
-      category: 'social',
-      rarity: 'rare',
-      isUnlocked: false,
-      progress: 6,
-      maxProgress: 10,
-      rewards: { meritos: 75, ondas: 40 },
-    },
-    {
-      id: '5',
-      title: 'Leyenda CoomÜnity',
-      description: 'Alcanza 1000 Mëritos totales',
-      icon: <Diamond />,
-      category: 'special',
-      rarity: 'legendary',
-      isUnlocked: false,
-      progress: 340,
-      maxProgress: 1000,
-      rewards: { meritos: 200, ondas: 100, title: 'Leyenda' },
-    },
-    {
-      id: '6',
-      title: 'Velocista del Aprendizaje',
-      description: 'Completa 5 videos en un día',
-      icon: <Bolt />,
-      category: 'learning',
-      rarity: 'common',
-      isUnlocked: true,
-      progress: 5,
-      maxProgress: 5,
-      rewards: { meritos: 25, ondas: 15 },
-      unlockedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    },
-  ]);
+  const allAchievements: Achievement[] = [
+    { id: '1', title: 'Primeros Pasos Cósmicos', category: ['Onboarding'], rarity: 'common', progress: 5, total: 5, reward: '+10 Mëritos', isNew: true },
+    { id: '2', title: 'Maratón de Sabiduría', category: ['Learning', 'Streak'], rarity: 'rare', progress: 7, total: 10, reward: '+50 Mëritos' },
+    { id: '3', title: 'Conector Social', category: ['Social'], rarity: 'rare', progress: 25, total: 50, reward: '+30 Öndas' },
+    { id: '4', title: 'Maestro del Debate', category: ['Social', 'Mastery'], rarity: 'epic', progress: 8, total: 10, reward: '+100 Mëritos', isNew: true },
+    { id: '5', title: 'Racha de Fuego', category: ['Streak'], rarity: 'epic', progress: 30, total: 30, reward: 'Título: "El Incansable"' },
+    { id: '6', title: 'Arquitecto del Conocimiento', category: ['Mastery', 'Learning'], rarity: 'legendary', progress: 15, total: 50, reward: '+500 Mëritos' },
+    { id: '7', title: 'Explorador Mítico', category: ['Special', 'Learning'], rarity: 'mythic', progress: 1, total: 1, reward: 'Acceso a Zona Secreta', isNew: true },
+    { id: '8', title: 'Coleccionista de Joyas', category: ['Mastery'], rarity: 'legendary', progress: 95, total: 100, reward: '+1000 Mëritos' },
+  ];
 
-  // Filtrar logros por categoría
-  const filteredAchievements = achievements.filter(achievement => 
-    selectedCategory === 'all' || achievement.category === selectedCategory
-  );
+  const categories = ['all', 'Onboarding', 'Learning', 'Social', 'Streak', 'Mastery', 'Special'];
 
-  // Estadísticas
-  const stats = {
-    total: achievements.length,
-    unlocked: achievements.filter(a => a.isUnlocked).length,
-    totalMeritos: achievements.filter(a => a.isUnlocked).reduce((sum, a) => sum + a.rewards.meritos, 0),
-    totalOndas: achievements.filter(a => a.isUnlocked).reduce((sum, a) => sum + a.rewards.ondas, 0),
-  };
+  const recentAchievements = allAchievements.filter(a => a.isNew);
+  const galleryAchievements = allAchievements
+    .filter(a => !a.isNew)
+    .filter(a => categoryFilter === 'all' || a.category.includes(categoryFilter));
 
-  // Obtener color según rareza
-  const getRarityColor = (rarity: string) => {
-    switch (rarity) {
-      case 'common': return '#9e9e9e';
-      case 'rare': return '#2196f3';
-      case 'epic': return '#9c27b0';
-      case 'legendary': return '#ff9800';
-      default: return '#757575';
-    }
-  };
-
-  // Obtener label de rareza
-  const getRarityLabel = (rarity: string) => {
-    switch (rarity) {
-      case 'common': return 'Común';
-      case 'rare': return 'Raro';
-      case 'epic': return 'Épico';
-      case 'legendary': return 'Legendario';
-      default: return rarity;
-    }
-  };
-
-  // Obtener color de categoría
-  const getCategoryColor = (category: string) => {
+  const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'learning': return '#4caf50';
-      case 'social': return '#2196f3';
-      case 'streak': return '#ff5722';
-      case 'mastery': return '#9c27b0';
-      case 'special': return '#ffc107';
-      default: return '#757575';
+      case 'Learning': return <School />;
+      case 'Social': return <Group />;
+      case 'Streak': return <LocalFireDepartment />;
+      case 'Mastery': return <EmojiEvents />;
+      case 'Special': return <Star />;
+      default: return <VideoLibrary />;
     }
-  };
-
-  // Componente de tarjeta de logro
-  const AchievementCard: React.FC<{ achievement: Achievement }> = ({ achievement }) => {
-    const rarityColor = getRarityColor(achievement.rarity);
-    const progressPercentage = (achievement.progress / achievement.maxProgress) * 100;
-    const isComplete = achievement.isUnlocked;
-
-    return (
-      <Card
-        sx={{
-          height: '100%',
-          background: isComplete 
-            ? `linear-gradient(135deg, ${alpha(rarityColor, 0.1)}, ${alpha(rarityColor, 0.05)})`
-            : alpha('#ffffff', 0.05),
-          backdropFilter: 'blur(20px)',
-          border: `2px solid ${isComplete ? alpha(rarityColor, 0.5) : alpha('#ffffff', 0.1)}`,
-          borderRadius: 4,
-          overflow: 'hidden',
-          position: 'relative',
-          transition: 'all 0.4s ease',
-          cursor: 'pointer',
-          animation: isComplete ? `${glowPulse} 3s ease-in-out infinite` : 'none',
-          '&:hover': {
-            transform: 'translateY(-8px) scale(1.02)',
-            boxShadow: `0 20px 60px ${alpha(rarityColor, 0.4)}`,
-            border: `2px solid ${alpha(rarityColor, 0.8)}`,
-          },
-        }}
-      >
-        {/* Efectos de brillo para logros legendarios */}
-        {achievement.rarity === 'legendary' && isComplete && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: '4px',
-              background: `linear-gradient(90deg, transparent, ${rarityColor}, transparent)`,
-              animation: `${shimmerEffect} 2s ease-in-out infinite`,
-            }}
-          />
-        )}
-
-        {/* Estado de bloqueo */}
-        {!isComplete && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 16,
-              right: 16,
-              zIndex: 2,
-            }}
-          >
-            <Avatar
-              sx={{
-                bgcolor: alpha('#000', 0.7),
-                color: '#757575',
-                width: 32,
-                height: 32,
-              }}
-            >
-              <Lock sx={{ fontSize: 16 }} />
-            </Avatar>
-          </Box>
-        )}
-
-        <CardContent sx={{ p: 3 }}>
-          {/* Icono y rareza */}
-          <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-            <Avatar
-              sx={{
-                bgcolor: alpha(rarityColor, 0.2),
-                color: rarityColor,
-                width: 64,
-                height: 64,
-                boxShadow: `0 8px 32px ${alpha(rarityColor, 0.3)}`,
-                animation: isComplete ? `${bounceAnimation} 1s ease-in-out` : 'none',
-              }}
-            >
-              {achievement.icon}
-            </Avatar>
-            <Chip
-              label={getRarityLabel(achievement.rarity)}
-              size="small"
-              sx={{
-                bgcolor: rarityColor,
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '0.75rem',
-              }}
-            />
-          </Box>
-
-          {/* Título y descripción */}
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              fontWeight: 'bold', 
-              mb: 1,
-              color: isComplete ? rarityColor : 'text.primary',
-            }}
-          >
-            {achievement.title}
-          </Typography>
-          
-          <Typography 
-            variant="body2" 
-            color="text.secondary" 
-            sx={{ mb: 2, minHeight: 40 }}
-          >
-            {achievement.description}
-          </Typography>
-
-          {/* Progreso */}
-          <Box mb={2}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-              <Typography variant="caption" color="text.secondary">
-                Progreso
-              </Typography>
-              <Typography variant="caption" sx={{ fontWeight: 'bold', color: rarityColor }}>
-                {achievement.progress}/{achievement.maxProgress}
-              </Typography>
-            </Box>
-            <LinearProgress
-              variant="determinate"
-              value={progressPercentage}
-              sx={{
-                height: 8,
-                borderRadius: 4,
-                bgcolor: alpha(rarityColor, 0.1),
-                '& .MuiLinearProgress-bar': {
-                  borderRadius: 4,
-                  background: `linear-gradient(90deg, ${rarityColor}, ${alpha(rarityColor, 0.8)})`,
-                  boxShadow: `0 0 10px ${alpha(rarityColor, 0.5)}`,
-                },
-              }}
-            />
-          </Box>
-
-          {/* Recompensas */}
-          <Box display="flex" gap={1} mb={2} flexWrap="wrap">
-            <Chip
-              icon={<Diamond sx={{ fontSize: '16px !important' }} />}
-              label={`${achievement.rewards.meritos} Mëritos`}
-              size="small"
-              variant="outlined"
-              sx={{
-                color: '#9c27b0',
-                borderColor: alpha('#9c27b0', 0.3),
-                bgcolor: alpha('#9c27b0', 0.1),
-              }}
-            />
-            <Chip
-              icon={<Bolt sx={{ fontSize: '16px !important' }} />}
-              label={`${achievement.rewards.ondas} Öndas`}
-              size="small"
-              variant="outlined"
-              sx={{
-                color: '#ff9800',
-                borderColor: alpha('#ff9800', 0.3),
-                bgcolor: alpha('#ff9800', 0.1),
-              }}
-            />
-          </Box>
-
-          {/* Título especial */}
-          {achievement.rewards.title && (
-            <Chip
-              icon={<Star sx={{ fontSize: '16px !important' }} />}
-              label={`Título: ${achievement.rewards.title}`}
-              size="small"
-              sx={{
-                bgcolor: alpha('#ffc107', 0.2),
-                color: '#ffc107',
-                fontWeight: 'bold',
-                border: `1px solid ${alpha('#ffc107', 0.3)}`,
-              }}
-            />
-          )}
-
-          {/* Fecha de desbloqueo */}
-          {isComplete && achievement.unlockedAt && (
-            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-              Desbloqueado el {achievement.unlockedAt.toLocaleDateString()}
-            </Typography>
-          )}
-        </CardContent>
-      </Card>
-    );
   };
 
   return (
-    <Box>
-      {/* Header con estadísticas */}
-      <Card
-        sx={{
-          background: alpha('#ffffff', 0.05),
-          backdropFilter: 'blur(20px)',
-          border: `1px solid ${alpha('#ffffff', 0.1)}`,
-          borderRadius: 4,
-          p: 3,
-          mb: 3,
-        }}
-      >
-        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
-          🏆 Sistema de Logros
-        </Typography>
+    <Box sx={{ p: isMobile ? 2 : 4, color: 'white' }}>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" className="font-bold text-center">Últimos Logros</Typography>
+        <Typography className="text-center text-gray-400 mb-4">¡Tus hazañas más recientes!</Typography>
+        <div className="flex overflow-x-auto space-x-4 p-4 -m-4">
+          {recentAchievements.map((achievement, index) => (
+            <motion.div
+              key={achievement.id}
+              className="min-w-[300px]"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <CinematicAchievementCard {...achievement} />
+            </motion.div>
+          ))}
+        </div>
+      </Box>
 
-        {/* Estadísticas principales */}
-        <Grid container spacing={3} mb={3}>
-          <Grid item xs={6} sm={3}>
-            <Box textAlign="center">
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#ffc107' }}>
-                {stats.unlocked}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Logros Desbloqueados
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <Box textAlign="center">
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#9c27b0' }}>
-                {stats.totalMeritos}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Mëritos Ganados
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <Box textAlign="center">
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
-                {stats.totalOndas}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Öndas Ganadas
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <Box textAlign="center">
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
-                {Math.round((stats.unlocked / stats.total) * 100)}%
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Completado
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
+      <Box>
+        <Typography variant="h4" className="font-bold text-center mt-8">Galería Principal</Typography>
+        <Typography className="text-center text-gray-400 mb-4">Explora todos los desafíos.</Typography>
 
-        {/* Filtros de categoría */}
-        <Box>
-          <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Categorías
-          </Typography>
-          <Box display="flex" gap={1} flexWrap="wrap">
-            {[
-              { id: 'all', label: 'Todos', icon: <EmojiEvents /> },
-              { id: 'learning', label: 'Aprendizaje', icon: <School /> },
-              { id: 'social', label: 'Social', icon: <Group /> },
-              { id: 'streak', label: 'Rachas', icon: <LocalFireDepartment /> },
-              { id: 'mastery', label: 'Maestría', icon: <AutoAwesome /> },
-              { id: 'special', label: 'Especiales', icon: <Diamond /> },
-            ].map((category) => (
-              <Chip
-                key={category.id}
-                icon={category.icon}
-                label={category.label}
-                variant={selectedCategory === category.id ? 'filled' : 'outlined'}
-                onClick={() => setSelectedCategory(category.id)}
-                sx={{
-                  borderColor: alpha('#ffffff', 0.3),
-                  '&.MuiChip-filled': {
-                    bgcolor: getCategoryColor(category.id),
-                    color: 'white',
-                  },
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
-                    boxShadow: `0 4px 15px ${alpha(getCategoryColor(category.id), 0.3)}`,
-                  }
-                }}
-              />
-            ))}
-          </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 1, mb: 4 }}>
+          {categories.map((cat) => (
+            <Chip
+              key={cat}
+              icon={cat !== 'all' ? getCategoryIcon(cat) : undefined}
+              label={cat === 'all' ? 'Todos' : cat}
+              clickable
+              onClick={() => setCategoryFilter(cat)}
+              sx={{
+                background: categoryFilter === cat ? 'var(--uplay-blue-600, #2563eb)' : 'rgba(255, 255, 255, 0.1)',
+                color: categoryFilter === cat ? '#fff' : 'var(--secondary-text, #ccc)',
+                transition: 'all 0.3s',
+                '&:hover': {
+                  background: categoryFilter === cat ? 'var(--uplay-blue-500, #3b82f6)' : 'rgba(255, 255, 255, 0.2)',
+                },
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}
+            />
+          ))}
         </Box>
-      </Card>
 
-      {/* Grid de logros */}
-      <Grid container spacing={3}>
-        {filteredAchievements.map((achievement) => (
-          <Grid item xs={12} sm={6} md={4} key={achievement.id}>
-            <AchievementCard achievement={achievement} />
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* Mensaje motivacional */}
-      <Card
-        sx={{
-          background: `linear-gradient(135deg, ${alpha('#ffc107', 0.1)}, ${alpha('#ff9800', 0.1)})`,
-          backdropFilter: 'blur(20px)',
-          border: `1px solid ${alpha('#ffc107', 0.2)}`,
-          borderRadius: 4,
-          p: 4,
-          mt: 4,
-          textAlign: 'center',
-        }}
-      >
-        <Celebration sx={{ fontSize: 64, color: '#ffc107', mb: 2 }} />
-        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-          ¡Sigue Desbloqueando Logros!
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          Cada logro que desbloqueas no solo te otorga recompensas, sino que también contribuye al 
-          <strong> Bien Común</strong> de la comunidad CoomÜnity. Tu progreso inspira a otros a seguir aprendiendo.
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AutoAwesome />}
-          sx={{
-            background: `linear-gradient(135deg, #ffc107, #ff9800)`,
-            color: 'white',
-            fontWeight: 'bold',
-            py: 1.5,
-            px: 4,
-            borderRadius: 3,
-            '&:hover': {
-              background: `linear-gradient(135deg, #ffb300, #f57c00)`,
-              transform: 'translateY(-2px)',
-              boxShadow: '0 8px 25px rgba(255, 193, 7, 0.4)',
-            }
-          }}
-        >
-          Continuar Aprendiendo
-        </Button>
-      </Card>
+        <Grid container spacing={3}>
+          <AnimatePresence>
+            {galleryAchievements.map((achievement) => (
+              <Grid item xs={12} sm={6} md={4} key={achievement.id}>
+                <CinematicAchievementCard {...achievement} />
+              </Grid>
+            ))}
+          </AnimatePresence>
+        </Grid>
+      </Box>
     </Box>
   );
 };
 
-export default UPlayAchievementSystem; 
+export default UPlayAchievementSystem;

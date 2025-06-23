@@ -13,7 +13,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, fullName?: string) => Promise<void>;
   signOut: () => Promise<void>;
-  updateProfile: (updates: Partial<User>) => Promise<void>;
+  updateProfile: (updates: Partial<User>) => Promise<User>;
   isAuthenticated: boolean;
 }
 
@@ -30,22 +30,24 @@ export const useAuth = () => {
 // 🔄 Función para mapear respuesta del backend al formato User del frontend
 const mapBackendUserToFrontend = (
   backendUser: any,
-  access_token?: string
+  accessToken?: string
 ): User => {
+  const userRoles = backendUser.roles || (backendUser.role ? [backendUser.role] : ['user']);
+
   return {
     id: backendUser.id || backendUser.userId,
     email: backendUser.email,
-    full_name:
-      backendUser.name || backendUser.full_name || backendUser.displayName,
-    avatar_url:
+    fullName:
+      backendUser.fullName || backendUser.name || backendUser.full_name || backendUser.displayName,
+    avatarUrl:
       backendUser.avatarUrl || backendUser.avatar_url || backendUser.picture,
-    role: backendUser.roles?.includes('admin') ? 'admin' : 'user',
-    created_at:
-      backendUser.created_at ||
+    roles: userRoles,
+    createdAt:
       backendUser.createdAt ||
+      backendUser.created_at ||
       new Date().toISOString(),
-    access_token,
-    refresh_token: backendUser.refresh_token,
+    accessToken,
+    refreshToken: backendUser.refreshToken || backendUser.refresh_token,
   };
 };
 
@@ -81,7 +83,7 @@ const backendSignIn = async (
     });
 
     // El backend puede devolver diferentes estructuras, adaptamos
-    const userData = response.user || response.data || response;
+    const userData = response.user || (response.data && response.data.user) || response;
     const token =
       response.access_token || response.token || response.accessToken;
 
@@ -219,7 +221,7 @@ const backendSignUp = async (
     const response = await authService.register({ email, password, name: fullName });
 
     // El backend puede devolver diferentes estructuras, adaptamos
-    const userData = response.user || response.data || response;
+    const userData = response.user || (response.data && response.data.user) || response;
     const token =
       response.access_token || response.token || response.accessToken;
 
@@ -250,49 +252,30 @@ const backendSignUp = async (
       );
     }
 
-    throw new Error(error.message || 'Error inesperado durante el registro');
+    throw error;
   }
 };
 
-// Función para verificar si el usuario está autenticado
 const checkAuthFromToken = async (): Promise<User | null> => {
-  // Verificar si hay token almacenado
   const token = localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
-  if (!token) {
-    console.log(`${AUTH_CONFIG.LOG_PREFIX} No token found in localStorage`);
+  const storedUserStr = localStorage.getItem(AUTH_STORAGE_KEYS.USER);
+
+  if (!token || !storedUserStr) {
     return null;
   }
 
   try {
-    // Verificar si el token es válido
-    const isValid = await authService.validateToken(token);
-    if (!isValid) {
-      throw new Error('Token inválido');
-    }
+    const storedUser = JSON.parse(storedUserStr);
 
-    // Obtener usuario del localStorage (ya validado) y asegurarse de que tiene token
-    const storedUser = authService.getStoredUser();
-    if (!storedUser) {
-      throw new Error('No hay datos de usuario almacenados');
-    }
+    // Aquí podrías añadir una validación real del token contra el backend si fuera necesario
+    // Por ahora, confiamos en que si hay token y usuario, la sesión es válida.
 
-    // Retornar usuario con token incluido
-    return {
-      ...storedUser,
-      access_token: token,
-      full_name: storedUser.name,
-      avatar_url: storedUser.avatarUrl,
-      role: storedUser.roles?.includes('admin') ? 'admin' : 'user',
-      created_at: new Date().toISOString(),
-      refresh_token: undefined
-    };
-  } catch (error: any) {
-    console.error(`${AUTH_CONFIG.LOG_PREFIX} Token validation failed:`, error);
-
-    // Limpiar token inválido
+    console.log('[Auth] Restoring session for user:', storedUser.email);
+    return storedUser;
+  } catch {
+    // Si hay cualquier error (token inválido, JSON malformado, etc.), limpiar y devolver null
     localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
     localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
-
     return null;
   }
 };
@@ -303,146 +286,75 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Verificar autenticación existente al cargar
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(true);
       try {
-        console.log(`${AUTH_CONFIG.LOG_PREFIX} Starting authentication check`);
-
-        if (IS_MOCK_MODE) {
-          console.warn('🟡 [AuthContext] MOCK MODE ACTIVADO. Creando sesión de usuario mock.');
-          const mockUser: User = {
-            id: 'mock-user-123',
-            email: 'mock.user@coomunity.com',
-            full_name: 'Mock Player',
-            avatar_url: `https://i.pravatar.cc/150?u=mock-user-${Date.now()}`,
-            role: 'user',
-            created_at: new Date().toISOString(),
-            access_token: 'mock-jwt-token-string-for-testing-purposes',
-            refresh_token: 'mock-jwt-refresh-token',
-          };
-          setUser(mockUser);
-          console.log(`${AUTH_CONFIG.LOG_PREFIX} Mock user authenticated:`, mockUser.email);
-        } else {
-          const authenticatedUser = await checkAuthFromToken();
-          setUser(authenticatedUser);
-
-          if (authenticatedUser) {
-            console.log(`${AUTH_CONFIG.LOG_PREFIX} User authenticated:`, authenticatedUser.email);
+          const userFromToken = await checkAuthFromToken();
+          setUser(userFromToken);
+          if (userFromToken) {
+            console.log(`${AUTH_CONFIG.LOG_PREFIX} User authenticated:`, userFromToken.email);
           } else {
             console.log(`${AUTH_CONFIG.LOG_PREFIX} No authenticated user found`);
           }
-        }
-      } catch (error) {
-        console.error('[Auth] Error en verificación inicial:', error);
+      } catch {
+        // Cualquier error durante la comprobación inicial resulta en un estado no autenticado.
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
-
     checkAuth();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    setLoading(true);
     try {
-      const authUser = await backendSignIn(email, password);
-
-      setUser(authUser);
-
-      // Guardar en localStorage usando las claves canónicas
-      try {
-        localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(authUser));
-        localStorage.setItem(AUTH_STORAGE_KEYS.TOKEN, authUser.access_token || '');
-        console.log(`${AUTH_CONFIG.LOG_PREFIX} 🔐 Token guardado en localStorage:`, authUser.access_token?.substring(0, 20) + '...');
-      } catch (error) {
-        console.warn(`${AUTH_CONFIG.LOG_PREFIX} Error guardando en localStorage:`, error);
-      }
+      const authenticatedUser = await backendSignIn(email, password);
+      setUser(authenticatedUser);
+      authService.saveAuthData({ user: authenticatedUser, accessToken: authenticatedUser.accessToken });
     } catch (error) {
-      // Re-lanzar el error para que el componente lo maneje
+      console.error('[Auth] signIn failed:', error);
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
-    setLoading(true);
     try {
       const newUser = await backendSignUp(email, password, fullName);
-
       setUser(newUser);
-
-      // Guardar en localStorage usando las claves canónicas
-      try {
-        localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(newUser));
-        localStorage.setItem(AUTH_STORAGE_KEYS.TOKEN, newUser.access_token || '');
-      } catch (error) {
-        console.warn(`${AUTH_CONFIG.LOG_PREFIX} Error guardando en localStorage:`, error);
-      }
+      authService.saveAuthData({ user: newUser, accessToken: newUser.accessToken });
     } catch (error) {
-      // Re-lanzar el error para que el componente lo maneje
+      console.error('[Auth] signUp failed:', error);
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
   const signOut = async () => {
-    setLoading(true);
     try {
-      // Intentar logout en el backend
-      if (user?.access_token) {
-        try {
-          await authService.logout();
-        } catch (error) {
-          console.warn('[Auth] Error en logout del backend:', error);
-          // No lanzar error, continuar con logout local
-        }
+      if (!IS_MOCK_MODE) {
+        await authService.logout();
       }
-
-      // Limpiar estado local del contexto
       setUser(null);
-
-      // Limpiar tokens usando el método del api-service
-      apiService.clearAuthTokens();
-
-      // Pequeño delay para UX
-      await new Promise((resolve) => setTimeout(resolve, 100));
     } catch (error) {
-      console.error('[Auth] Error en signOut:', error);
-      throw new Error('Error al cerrar sesión');
-    } finally {
-      setLoading(false);
+      console.error('[Auth] signOut failed:', error);
+      // Incluso si el logout de la API falla, limpiamos el estado local
+      setUser(null);
+      authService.logout(); // Llama al método que limpia localStorage
     }
   };
 
-  const updateProfile = async (updates: Partial<User>) => {
-    if (!user) throw new Error('No hay usuario autenticado');
-
-    setLoading(true);
+  const updateProfile = async (updates: Partial<User>): Promise<User> => {
+    if (!user) {
+      throw new Error('Cannot update profile, no user is signed in.');
+    }
     try {
       const updatedUser = await authService.updateProfile(updates);
       setUser(updatedUser);
-
-      // Actualizar localStorage
-      try {
-        localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(updatedUser));
-      } catch (error) {
-        console.warn(
-          `${AUTH_CONFIG.LOG_PREFIX} Error guardando perfil actualizado:`,
-          error
-        );
-      }
-    } catch (error: any) {
-      console.error('[Auth] Error en updateProfile:', error);
-      throw new Error(
-        error.message || 'Error al actualizar el perfil'
-      );
-    } finally {
-      setLoading(false);
+      authService.saveAuthData({ user: updatedUser, accessToken: updatedUser.accessToken });
+      return updatedUser;
+    } catch (error) {
+      console.error('[Auth] updateProfile failed:', error);
+      throw error;
     }
   };
 
@@ -453,7 +365,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     signUp,
     signOut,
     updateProfile,
-    isAuthenticated: !!user && !!user.access_token,
+    isAuthenticated: !!user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

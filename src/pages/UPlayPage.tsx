@@ -69,6 +69,8 @@ import {
 import { uplayService } from '../services/uplay/uplayService';
 import { UPlayDashboard } from '../components/modules/uplay/components/UPlayDashboard';
 import { AdvancedVideoPlayer } from '../components/modules/uplay/components/AdvancedVideoPlayer';
+import { useTheme } from '@mui/material/styles';
+import { Theme as MuiTheme } from '@mui/material/styles';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -89,6 +91,18 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
   );
 };
 
+// Temporary Type Shim to allow refactoring.
+// This should be removed once the component is migrated to the new architecture.
+interface Theme extends MuiTheme {
+  palette: MuiTheme['palette'] & {
+    category: { [key: string]: string };
+    difficulty: { [key: string]: string };
+    common: MuiTheme['palette']['common'] & {
+        gold: string;
+    }
+  };
+}
+
 // Componente de tarjeta de video mejorada
 const VideoCard: React.FC<{
   video: VideoItem;
@@ -100,32 +114,32 @@ const VideoCard: React.FC<{
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getCategoryColor = (category: VideoCategory) => {
+  const getCategoryColor = (category: VideoCategory, theme: Theme) => {
     const colors = {
-      [VideoCategory.CHARLAS_INSPIRADORAS]: '#9c27b0',
-      [VideoCategory.LIFEHACKS_SABIDURIA]: '#ff9800',
-      [VideoCategory.DOCUMENTALES_CONSCIENTES]: '#2196f3',
-      [VideoCategory.SABIDURIA_TRANSFORMADORA]: '#4caf50',
-      [VideoCategory.SERIES_TEMATICAS]: '#f44336'
+      [VideoCategory.CHARLAS_INSPIRADORAS]: theme.palette.category.CHARLAS_INSPIRADORAS,
+      [VideoCategory.LIFEHACKS_SABIDURIA]: theme.palette.category.LIFEHACKS_SABIDURIA,
+      [VideoCategory.DOCUMENTALES_CONSCIENTES]: theme.palette.category.DOCUMENTALES_CONSCIENTES,
+      [VideoCategory.SABIDURIA_TRANSFORMADORA]: theme.palette.category.SABIDURIA_TRANSFORMADORA,
+      [VideoCategory.SERIES_TEMATICAS]: theme.palette.category.SERIES_TEMATICAS
     };
-    return colors[category] || '#ff6b35';
+    return colors[category] || theme.palette.category.DEFAULT;
   };
 
-  const getDifficultyColor = (difficulty: DifficultyLevel) => {
+  const getDifficultyColor = (difficulty: DifficultyLevel, theme: Theme) => {
     const colors = {
-      [DifficultyLevel.BEGINNER]: '#4caf50',
-      [DifficultyLevel.INTERMEDIATE]: '#ff9800',
-      [DifficultyLevel.ADVANCED]: '#f44336',
-      [DifficultyLevel.EXPERT]: '#9c27b0'
+      [DifficultyLevel.BEGINNER]: theme.palette.difficulty.BEGINNER,
+      [DifficultyLevel.INTERMEDIATE]: theme.palette.difficulty.INTERMEDIATE,
+      [DifficultyLevel.ADVANCED]: theme.palette.difficulty.ADVANCED,
+      [DifficultyLevel.EXPERT]: theme.palette.difficulty.EXPERT
     };
-    return colors[difficulty];
+    return colors[difficulty] || theme.palette.primary.main;
   };
 
   return (
@@ -149,7 +163,7 @@ const VideoCard: React.FC<{
           alt={video.title}
           sx={{ objectFit: 'cover' }}
         />
-        
+
         {/* Play Overlay */}
         <Box
           sx={{
@@ -216,7 +230,7 @@ const VideoCard: React.FC<{
         <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
           {video.title}
         </Typography>
-        
+
         <Typography
           variant="body2"
           color="text.secondary"
@@ -239,7 +253,7 @@ const VideoCard: React.FC<{
             label={video.category.replace(/_/g, ' ')}
             size="small"
             sx={{
-              backgroundColor: getCategoryColor(video.category),
+              backgroundColor: getCategoryColor(video.category, useTheme() as Theme),
               color: 'white',
               fontSize: '0.7rem'
             }}
@@ -248,7 +262,7 @@ const VideoCard: React.FC<{
             label={video.difficulty}
             size="small"
             sx={{
-              backgroundColor: getDifficultyColor(video.difficulty),
+              backgroundColor: getDifficultyColor(video.difficulty, useTheme() as Theme),
               color: 'white',
               fontSize: '0.7rem'
             }}
@@ -272,7 +286,7 @@ const VideoCard: React.FC<{
               <IconButton
                 size="small"
                 onClick={() => onBookmark?.(video.id)}
-                sx={{ color: isBookmarked ? '#ff6b35' : 'text.secondary' }}
+                sx={{ color: isBookmarked ? getCategoryColor(video.category, useTheme() as Theme) : 'text.secondary' }}
               >
                 {isBookmarked ? <Bookmark /> : <BookmarkBorder />}
               </IconButton>
@@ -296,15 +310,15 @@ const VideoCard: React.FC<{
               sx={{ fontSize: '0.7rem' }}
             />
           </Stack>
-          
+
           <Button
             variant="contained"
             size="small"
             startIcon={<PlayArrow />}
             onClick={() => onPlay(video)}
             sx={{
-              backgroundColor: '#ff6b35',
-              '&:hover': { backgroundColor: '#e55a2e' },
+              backgroundColor: getCategoryColor(video.category, useTheme() as Theme),
+              '&:hover': { backgroundColor: useTheme().palette.primary.dark },
               borderRadius: 2
             }}
           >
@@ -349,6 +363,8 @@ export const UPlayPage: React.FC = () => {
     { label: 'Salas de Estudio', icon: <Group />, id: 'study-rooms' },
     { label: 'Logros', icon: <EmojiEvents />, id: 'achievements' }
   ];
+
+  const theme = useTheme() as Theme;
 
   // Load initial data
   useEffect(() => {
@@ -422,7 +438,7 @@ export const UPlayPage: React.FC = () => {
     if (filters.sortBy) {
       filtered.sort((a, b) => {
         let aValue: any, bValue: any;
-        
+
         switch (filters.sortBy) {
           case VideoSortBy.TITLE:
             aValue = a.title;
@@ -466,10 +482,10 @@ export const UPlayPage: React.FC = () => {
   // Event Handlers
   const handleVideoPlay = (video: VideoItem) => {
     setCurrentVideo(video);
-    navigate(`/uplay/video/${video.id}`, { 
-      state: { videoData: video } 
+    navigate(`/uplay/video/${video.id}`, {
+      state: { videoData: video }
     });
-    
+
     // Track video view
     uplayService.trackUserAction('video_started', {
       videoId: video.id,
@@ -486,7 +502,7 @@ export const UPlayPage: React.FC = () => {
       newBookmarks.add(videoId);
     }
     setBookmarkedVideos(newBookmarks);
-    
+
     // Here you would also sync with backend
     uplayService.trackUserAction('bookmark_toggle', { videoId });
   };
@@ -533,14 +549,14 @@ export const UPlayPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+    <Box sx={{ backgroundColor: theme.palette.background.default, minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 3 }}>
         {/* Header */}
         <Box sx={{ mb: 4 }}>
           <Breadcrumbs separator={<NavigateNext fontSize="small" />} sx={{ mb: 2 }}>
-            <Link 
-              color="inherit" 
-              href="/" 
+            <Link
+              color="inherit"
+              href="/"
               sx={{ display: 'flex', alignItems: 'center' }}
             >
               <Home sx={{ mr: 0.5, fontSize: 20 }} />
@@ -636,7 +652,7 @@ export const UPlayPage: React.FC = () => {
               >
                 Volver a la biblioteca
               </Button>
-              
+
               <AdvancedVideoPlayer
                 video={currentVideo}
                 onVideoEnd={() => {
@@ -678,9 +694,9 @@ export const UPlayPage: React.FC = () => {
                       <Select
                         value={filters.category || ''}
                         label="Categoría"
-                        onChange={(e) => setFilters(prev => ({ 
-                          ...prev, 
-                          category: e.target.value as VideoCategory || undefined 
+                        onChange={(e) => setFilters(prev => ({
+                          ...prev,
+                          category: e.target.value as VideoCategory || undefined
                         }))}
                       >
                         <MenuItem value="">Todas</MenuItem>
@@ -699,9 +715,9 @@ export const UPlayPage: React.FC = () => {
                       <Select
                         value={filters.difficulty || ''}
                         label="Dificultad"
-                        onChange={(e) => setFilters(prev => ({ 
-                          ...prev, 
-                          difficulty: e.target.value as DifficultyLevel || undefined 
+                        onChange={(e) => setFilters(prev => ({
+                          ...prev,
+                          difficulty: e.target.value as DifficultyLevel || undefined
                         }))}
                       >
                         <MenuItem value="">Todas</MenuItem>
@@ -720,9 +736,9 @@ export const UPlayPage: React.FC = () => {
                       <Select
                         value={filters.sortBy || VideoSortBy.CREATED_AT}
                         label="Ordenar por"
-                        onChange={(e) => setFilters(prev => ({ 
-                          ...prev, 
-                          sortBy: e.target.value as VideoSortBy 
+                        onChange={(e) => setFilters(prev => ({
+                          ...prev,
+                          sortBy: e.target.value as VideoSortBy
                         }))}
                       >
                         <MenuItem value={VideoSortBy.CREATED_AT}>Más recientes</MenuItem>
@@ -752,7 +768,7 @@ export const UPlayPage: React.FC = () => {
                 <Typography variant="h6">
                   {filteredVideos.length} videos encontrados
                 </Typography>
-                
+
                 {filteredVideos.length > videosPerPage && (
                   <Pagination
                     count={totalPages}

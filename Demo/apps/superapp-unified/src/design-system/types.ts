@@ -1,10 +1,10 @@
 /**
  * 🌌 COOMUNITY DESIGN SYSTEM - TYPES
  * =================================
- * 
+ *
  * Tipos centralizados para el Sistema de Diseño revolucionario
  * Extraídos del análisis del Dashboard HOME
- * 
+ *
  * Fase 2, Semana 1 - Plan Maestro Material UI
  */
 
@@ -12,7 +12,7 @@
 export type ElementType = 'fuego' | 'agua' | 'tierra' | 'aire' | 'espiritu';
 
 // 🎨 VARIANTES DE COMPONENTES REVOLUCIONARIOS
-export type ComponentVariant = 'primary' | 'secondary' | 'accent' | 'elevated' | 'minimal';
+export type ComponentVariant = 'primary' | 'secondary' | 'accent' | 'elevated' | 'minimal' | 'cosmic';
 
 // ⚡ INTENSIDAD CÓSMICA
 export type CosmicIntensity = 'subtle' | 'medium' | 'intense';
@@ -269,4 +269,4 @@ export interface RevolutionaryTheme {
     default: CosmicEffectsConfig;
     presets: Record<string, CosmicPreset>;
   };
-} 
+}

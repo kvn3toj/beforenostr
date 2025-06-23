@@ -40,17 +40,18 @@ import {
   Security as SecurityIcon,
   Analytics as AnalyticsIcon,
   History as HistoryIcon,
-} from '../components/common/Icons';
+} from '@mui/icons-material';
 
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
+import ThemeSelector from '../components/ThemeSelector';
 
 const drawerWidth = 280;
 
 // Componente del Logo minimalista
 const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({ collapsed = false }) => {
   const navigate = useNavigate();
-  
+
   return (
     <Box
       component="button"
@@ -65,7 +66,7 @@ const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({ collapsed = false }) =
         justifyContent: collapsed ? 'center' : 'flex-start',
         width: '100%',
         '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
         },
         transition: 'all 0.3s ease',
         borderRadius: '8px',
@@ -92,7 +93,7 @@ const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({ collapsed = false }) =
           variant="h5"
           sx={{
             fontWeight: 'bold',
-            color: '#FFFFFF',
+            color: 'var(--header-text)',
             letterSpacing: '0.5px',
           }}
         >
@@ -264,7 +265,30 @@ export const MainLayout = () => {
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* Logo en el drawer */}
       <MinimalLogo collapsed={false} />
-      
+
+      {/* Navegación */}
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
+        <NavigationMenu
+          items={navigationItems}
+          onItemClick={() => setMobileOpen(false)}
+        />
+      </Box>
+    </Box>
+  );
+
+  const drawer = (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        background: 'var(--nav-menu-background)',
+        color: 'var(--nav-menu-text)',
+      }}
+    >
+      {/* Logo en el drawer */}
+      <MinimalLogo collapsed={false} />
+
       {/* Navegación */}
       <Box sx={{ flex: 1, overflow: 'auto' }}>
         <NavigationMenu
@@ -276,18 +300,19 @@ export const MainLayout = () => {
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', background: 'var(--main-background)' }}>
       <CssBaseline />
-      
+
       {/* Header minimalista */}
       <AppBar
         position="fixed"
         sx={{
-          zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: '#FFFFFF',
-          color: '#333333',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          borderBottom: '1px solid #E0E0E0',
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          ml: { md: `${drawerWidth}px` },
+          background: 'var(--header-background)',
+          color: 'var(--header-text)',
+          boxShadow: 'none',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >
         <Toolbar sx={{ justifyContent: 'space-between', minHeight: '64px !important' }}>
@@ -298,9 +323,9 @@ export const MainLayout = () => {
             edge="start"
             onClick={handleDrawerToggle}
             sx={{
-              color: '#333333',
+              color: 'var(--header-text)',
               '&:hover': {
-                backgroundColor: 'rgba(0,0,0,0.04)',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
               },
             }}
           >
@@ -313,7 +338,7 @@ export const MainLayout = () => {
               variant="h6"
               sx={{
                 fontWeight: 'bold',
-                color: '#333333',
+                color: 'var(--header-text)',
                 letterSpacing: '0.5px',
               }}
             >
@@ -326,20 +351,20 @@ export const MainLayout = () => {
 
           {/* Usuario */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ color: '#666666', display: { xs: 'none', sm: 'block' } }}>
+            <Typography variant="body2" sx={{ color: 'var(--secondary-text)', display: { xs: 'none', sm: 'block' } }}>
               {user?.email || 'Usuario'}
             </Typography>
             <IconButton
               onClick={handleUserMenuOpen}
               sx={{
-                color: '#333333',
+                color: 'var(--header-text)',
                 '&:hover': {
-                  backgroundColor: 'rgba(0,0,0,0.04)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
                 },
               }}
             >
-              <Avatar sx={{ width: 32, height: 32, bgcolor: '#CDA83A' }}>
-                {user?.email?.charAt(0).toUpperCase() || 'U'}
+              <Avatar sx={{ width: 32, height: 32, bgcolor: 'var(--accent-color)' }}>
+                <PersonIcon />
               </Avatar>
             </IconButton>
           </Box>
@@ -356,54 +381,73 @@ export const MainLayout = () => {
       >
         <MenuItem onClick={handleProfile}>
           <PersonIcon sx={{ mr: 1 }} />
-          Perfil
+          {t('profile')}
         </MenuItem>
-        <Divider />
         <MenuItem onClick={handleLogout}>
           <LogoutIcon sx={{ mr: 1 }} />
-          Cerrar Sesión
+          {t('logout')}
         </MenuItem>
       </Menu>
 
       {/* Navigation Drawer */}
-      <Drawer
-        variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        sx={{
-          '& .MuiDrawer-paper': { 
-            boxSizing: 'border-box', 
-            width: drawerWidth,
-            backgroundColor: '#2C3E50',
-            color: '#FFFFFF',
-            border: 'none',
-            boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
-          },
-        }}
+      <Box
+        component="nav"
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+        aria-label="mailbox folders"
       >
-        {drawerContent}
-      </Drawer>
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              backgroundColor: 'var(--nav-menu-background)',
+              color: 'var(--nav-menu-text)',
+              border: 'none',
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              backgroundColor: 'var(--nav-menu-background)',
+              color: 'var(--nav-menu-text)',
+              border: 'none',
+              boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
+            },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Box>
 
       {/* Main Content */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          width: '100%',
-          minHeight: '100vh',
-          backgroundColor: '#F8F9FA',
-          transition: 'margin 0.3s ease',
+          p: 3,
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          color: 'var(--primary-text)',
         }}
       >
-        {/* Spacer for fixed header */}
-        <Box sx={{ height: 64 }} />
-        
-        {/* Page Content */}
+        <Toolbar />
         <Outlet />
+        <div className="mt-8">
+          <ThemeSelector />
+        </div>
       </Box>
     </Box>
   );
-}; 
+};

@@ -60,9 +60,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useOptionalQuery } from '../../hooks/useGracefulQuery';
 import { apiService } from '../../lib/api-service';
 import { useAuth } from '../../contexts/AuthContext';
-import { formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale';
-import { safeFormatDistance as safeDateFormat } from '../../utils/dateUtils';
+import { formatDateTime } from '../../utils/dateUtils';
 
 // 🏷️ Tipos de notificaciones
 export type NotificationType =
@@ -174,15 +172,15 @@ const notificationReducer = (
   action: NotificationAction_Reducer
 ): NotificationState => {
   switch (action.type) {
-    case 'ADD_NOTIFICATION':
+    case 'ADD_NOTIFICATION': {
       const newNotifications = [action.payload, ...state.notifications];
       return {
         ...state,
         notifications: newNotifications,
         unreadCount: newNotifications.filter((n) => !n.read).length,
       };
-
-    case 'REMOVE_NOTIFICATION':
+    }
+    case 'REMOVE_NOTIFICATION': {
       const filteredNotifications = state.notifications.filter(
         (n) => n.id !== action.payload
       );
@@ -191,8 +189,8 @@ const notificationReducer = (
         notifications: filteredNotifications,
         unreadCount: filteredNotifications.filter((n) => !n.read).length,
       };
-
-    case 'MARK_AS_READ':
+    }
+    case 'MARK_AS_READ': {
       const updatedNotifications = state.notifications.map((n) =>
         n.id === action.payload ? { ...n, read: true } : n
       );
@@ -201,8 +199,8 @@ const notificationReducer = (
         notifications: updatedNotifications,
         unreadCount: updatedNotifications.filter((n) => !n.read).length,
       };
-
-    case 'MARK_ALL_AS_READ':
+    }
+    case 'MARK_ALL_AS_READ': {
       const allReadNotifications = state.notifications.map((n) => ({
         ...n,
         read: true,
@@ -212,7 +210,7 @@ const notificationReducer = (
         notifications: allReadNotifications,
         unreadCount: 0,
       };
-
+    }
     case 'CLEAR_ALL':
       return {
         ...state,
@@ -226,7 +224,7 @@ const notificationReducer = (
         showDrawer: !state.showDrawer,
       };
 
-    case 'SET_NOTIFICATIONS':
+    case 'SET_NOTIFICATIONS': {
       // ✅ Validar que el payload sea un array antes de usar filter
       const notifications = Array.isArray(action.payload) ? action.payload : [];
       return {
@@ -234,7 +232,7 @@ const notificationReducer = (
         notifications,
         unreadCount: notifications.filter((n) => !n.read).length,
       };
-
+    }
     default:
       return state;
   }
@@ -278,6 +276,22 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
   undefined
 );
 
+const MOCK_NOTIFICATIONS: { local: Notification[]; remote: Notification[] } = {
+  local: [
+    {
+      id: 'local-1',
+      type: 'info',
+      title: 'Bienvenido a CoomÜnity',
+      message: 'Explora el universo de posibilidades.',
+      timestamp: new Date().toISOString(),
+      read: false,
+      category: 'welcome',
+      priority: 'medium',
+    },
+  ],
+  remote: [], // Simular que no hay notificaciones remotas inicialmente
+};
+
 // 🎪 Provider del sistema de notificaciones
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -292,108 +306,67 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   // 🧪 Verificar si mock auth está habilitado
-  const isMockEnabled =
-    (import.meta as any).env.VITE_ENABLE_MOCK_AUTH === 'true';
+  const enableMock = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
 
-  // Fetch notifications from backend
-  const {
-    data: backendNotifications,
-    isLoading: isLoadingNotifications,
-    error: notificationsError,
-    refetch: refetchNotifications,
-  } = useQuery({
+  // Cargar notificaciones desde el backend
+  const { data: notificationsData, isLoading } = useQuery<Notification[]>({
     queryKey: ['notifications', user?.id],
-    queryFn: async () => {
-      if (!user?.id) {
-        return [];
-      }
-
-      // En modo mock, usar datos simulados
-      if (isMockEnabled) {
-        const mockData = [
-          {
-            id: 'mock-welcome-notification',
-            type: 'achievement',
-            title: '¡Bienvenido a CoomÜnity!',
-            message: 'Has comenzado tu viaje en el ecosistema colaborativo.',
-            timestamp: new Date().toISOString(),
-            read: false,
-            created_at: new Date().toISOString(),
-          },
-        ];
-        console.log('🧪 Mock notifications data:', mockData);
-        return mockData;
-      }
-
-      try {
-        const result = await apiService.get(`/notifications/user/${user.id}`);
-        console.log('📊 Backend notifications data type:', typeof result, 'data:', result);
-        return result;
-      } catch (error: any) {
-        // Handle specific error cases gracefully
-        if (error?.statusCode === 403) {
-          // Only log once every 5 minutes to reduce spam
-          const lastLogKey = `notifications-403-${user.id}`;
-          const lastLog = sessionStorage.getItem(lastLogKey);
-          const now = Date.now();
-
-          if (!lastLog || now - parseInt(lastLog) > 300000) { // 5 minutes
-            console.info('📊 Notifications require additional permissions - this is expected during development');
-            sessionStorage.setItem(lastLogKey, now.toString());
-          }
-          return []; // Return empty array instead of throwing
-        }
-        if (error?.statusCode === 404) {
-          console.info('📊 Notifications endpoint not yet implemented - this is expected during development');
-          return [];
-        }
-        throw error; // Re-throw other errors
-      }
-    },
-    enabled: !!user && !isMockEnabled, // Only enable for real backend
-    refetchInterval: isMockEnabled ? false : 60000, // Increased from 30s to 60s to reduce calls
-    fallbackData: [], // Always return empty array on errors
-    retry: (failureCount, error: any) => {
-      // No retry en modo mock
-      if (isMockEnabled) return false;
-
-      // Don't retry 403/404 errors (endpoint not implemented or no permissions)
-      if (error?.statusCode === 403 || error?.statusCode === 404) {
-        return false;
-      }
-      // Retry other errors up to 3 times
-      return failureCount < 3;
-    },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    queryFn: () => apiService.get('/notifications'),
+    enabled: !!user && !enableMock,
+    placeholderData: [], // ✅ Usar array vacío como placeholder
   });
+
+  // Efecto para setear notificaciones desde la API o mocks
+  useEffect(() => {
+    let dataToSet: Notification[] = [];
+    // 🧪 Si mock está habilitado, usar datos locales
+    if (enableMock) {
+      dataToSet = MOCK_NOTIFICATIONS.local;
+    } else if (notificationsData) {
+      // Si no, usar datos de la API si existen
+      dataToSet = notificationsData;
+    }
+
+    // ✅ Validar que sea un array antes de despachar
+    if (Array.isArray(dataToSet)) {
+      dispatch({ type: 'SET_NOTIFICATIONS', payload: dataToSet });
+    }
+  }, [notificationsData, enableMock]);
 
   // Mark notification as read mutation
   const markAsReadMutation = useMutation({
     mutationFn: async (notificationId: string) => {
       // En modo mock, simular operación exitosa sin petición al backend
-      if (isMockEnabled) {
+      if (enableMock) {
         console.info('📍 Mock mode: Marking notification as read locally');
-        return { success: true, local: true, mock: true };
+        return { success: true };
       }
-
-      try {
-        return await apiService.put(`/notifications/${notificationId}/read`);
-      } catch (error: any) {
-        // Handle 404 gracefully - endpoint not implemented yet
-        if (error.statusCode === 404) {
-          console.info(
-            '📍 Mark as read endpoint not available yet - handling locally only'
-          );
-          return { success: true, local: true };
-        }
-        throw error;
-      }
+      return apiService.patch(`/notifications/${notificationId}/read`);
     },
-    onSuccess: (result) => {
-      // Only invalidate queries if the backend operation was successful
-      if (!result?.local && !result?.mock) {
-        queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    onSuccess: (data, notificationId) => {
+      // Solo invalidar queries si NO estamos en modo mock
+      if (!enableMock) {
+        queryClient.invalidateQueries({ queryKey: ['notifications', user?.id] });
       }
+      // Actualizar estado local inmediatamente
+      dispatch({ type: 'MARK_AS_READ', payload: notificationId });
+    },
+  });
+
+  // Mark all notifications as read mutation
+  const markAllAsReadMutation = useMutation({
+    mutationFn: async () => {
+      if (enableMock) {
+        console.info('📍 Mock mode: Marking all as read locally');
+        return { success: true };
+      }
+      return apiService.post('/notifications/mark-all-as-read');
+    },
+    onSuccess: () => {
+      if (!enableMock) {
+        queryClient.invalidateQueries({ queryKey: ['notifications', user?.id] });
+      }
+      dispatch({ type: 'MARK_ALL_AS_READ' });
     },
   });
 
@@ -421,43 +394,15 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
     },
   });
 
-  // Sync with backend notifications
-  useEffect(() => {
-    console.log('🔄 Syncing notifications - Type:', typeof backendNotifications, 'IsArray:', Array.isArray(backendNotifications), 'Data:', backendNotifications);
-
-    // ✅ Validar que backendNotifications sea un array válido
-    if (Array.isArray(backendNotifications) && backendNotifications.length > 0) {
-      console.log('✅ Dispatching valid notifications array:', backendNotifications);
-      dispatch({ type: 'SET_NOTIFICATIONS', payload: backendNotifications });
-    } else if (backendNotifications && !Array.isArray(backendNotifications)) {
-      console.warn('⚠️ Received non-array data for notifications:', backendNotifications);
-      // Si no es array, inicializar con array vacío
-      dispatch({ type: 'SET_NOTIFICATIONS', payload: [] });
-    }
-  }, [backendNotifications]);
-
   // 🎯 Funciones del contexto
   const addNotification = useCallback(
     (notification: Omit<Notification, 'id' | 'timestamp'>) => {
       const newNotification: Notification = {
         ...notification,
-        id: `notification-${Date.now()}-${Math.random()}`,
+        id: `notif-${Date.now()}-${Math.random()}`,
         timestamp: new Date().toISOString(),
-        read: false,
       };
-
       dispatch({ type: 'ADD_NOTIFICATION', payload: newNotification });
-
-      // Auto-remove if not persistent
-      if (!notification.persistent) {
-        const duration = notification.autoHideDuration || 5000;
-        setTimeout(() => {
-          dispatch({
-            type: 'REMOVE_NOTIFICATION',
-            payload: newNotification.id,
-          });
-        }, duration);
-      }
     },
     []
   );
@@ -488,48 +433,68 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // 🎨 Funciones de conveniencia
   const showSuccess = useCallback(
-    (title: string, message = '', actions?: NotificationAction[]) => {
-      addNotification({ type: 'success', title, message, actions });
+    (title: string, message?: string, actions?: NotificationAction[]) => {
+      addNotification({
+        type: 'success',
+        title,
+        message: message || '',
+        read: false,
+        actions,
+      });
     },
     [addNotification]
   );
 
   const showError = useCallback(
-    (title: string, message = '', actions?: NotificationAction[]) => {
+    (title: string, message?: string, actions?: NotificationAction[]) => {
       addNotification({
         type: 'error',
         title,
-        message,
-        actions,
+        message: message || 'Ocurrió un error inesperado.',
         persistent: true,
+        read: false,
+        actions,
       });
     },
     [addNotification]
   );
 
   const showWarning = useCallback(
-    (title: string, message = '', actions?: NotificationAction[]) => {
-      addNotification({ type: 'warning', title, message, actions });
+    (title: string, message?: string, actions?: NotificationAction[]) => {
+      addNotification({
+        type: 'warning',
+        title,
+        message: message || '',
+        read: false,
+        actions,
+      });
     },
     [addNotification]
   );
 
   const showInfo = useCallback(
-    (title: string, message = '', actions?: NotificationAction[]) => {
-      addNotification({ type: 'info', title, message, actions });
+    (title: string, message?: string, actions?: NotificationAction[]) => {
+      addNotification({
+        type: 'info',
+        title,
+        message: message || '',
+        read: false,
+        actions,
+      });
     },
     [addNotification]
   );
 
   const showAchievement = useCallback(
-    (title: string, message = '', data?: any) => {
+    (title: string, message?: string, data?: any) => {
       addNotification({
         type: 'achievement',
         title,
-        message,
-        data,
+        message: message || '¡Nuevo logro desbloqueado!',
         persistent: true,
-        autoHideDuration: 8000,
+        autoHideDuration: 5000,
+        read: false,
+        data,
       });
     },
     [addNotification]
@@ -717,19 +682,23 @@ const NotificationDisplay: React.FC = () => {
                     <ListItemText
                       primary={notification.title}
                       secondary={
-                        <Box component="div">
-                          <Typography variant="body2" component="span" color="text.secondary" sx={{ display: 'block' }}>
+                        <Box component="span">
+                          <Typography variant="body2" component="span">
                             {notification.message}
                           </Typography>
-                          <Typography variant="caption" component="span" color="text.secondary" sx={{ display: 'block' }}>
-                            {safeDateFormat(notification.timestamp)}
+                          <Typography
+                            variant="caption"
+                            component="span"
+                            sx={{ display: 'block', mt: 0.5, opacity: 0.8 }}
+                          >
+                            {formatDateTime(notification.timestamp)}
                           </Typography>
                         </Box>
                       }
                       onClick={() =>
                         !notification.read && markAsRead(notification.id)
                       }
-                      sx={{ cursor: notification.read ? 'default' : 'pointer' }}
+                      sx={{ cursor: notification.read ? 'default' : 'pointer', mr: 4 }}
                     />
 
                     <ListItemSecondaryAction>
