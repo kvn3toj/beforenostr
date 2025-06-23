@@ -35,11 +35,7 @@ import {
   Send as SendIcon,
   Delete as DeleteIcon,
 } from '@mui/icons-material';
-
-// 🌌 NUEVO: Import del Design System Cósmico
-import { CosmicCard } from '../../../../design-system/components/cosmic/CosmicCard';
-
-// Hooks
+import { useThemeContext } from '../../../../styles';
 import {
   useToggleLike,
   usePostComments,
@@ -48,6 +44,10 @@ import {
   useLikeComment,
 } from '../../../../hooks/useRealBackendData';
 import { useAuth } from '../../../../contexts/AuthContext';
+import { alpha } from '@mui/material/styles';
+
+// 🌌 NUEVO: Import del Design System Cósmico
+import { CosmicCard } from '../../../../design-system/components/cosmic/CosmicCard';
 
 // Tipos
 import type { SocialPost, PostComment } from '../../../../types';
@@ -69,6 +69,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { isDarkMode } = useThemeContext();
 
   // Hooks de mutación
   const toggleLikeMutation = useToggleLike();
@@ -209,11 +210,10 @@ const PostCard: React.FC<PostCardProps> = ({
 
   return (
     <CosmicCard
-      element="agua" // Elemento agua para el módulo social - fluidez y conexión emocional
-      cosmicIntensity="medium" // Incrementado para más impacto visual
-      enableAnimations={true}
-      enableGlow={true} // Activado para efecto cósmico
-      enableParticles={true} // Activado para atmósfera cósmica
+      element="aire" // Elemento aire para el módulo social - fluidez y conexión emocional
+      variant="glass"
+      intensity={0.1}
+      glow={false}
       onClick={() => onPostClick?.(post.id)}
       sx={{
         mb: 2,
@@ -316,7 +316,7 @@ const PostCard: React.FC<PostCardProps> = ({
             <Button
               startIcon={
                 post.isLikedByCurrentUser ? (
-                  <FavoriteIcon sx={{ color: '#E91E63' }} />
+                  <FavoriteIcon sx={{ color: 'error.main' }} />
                 ) : (
                   <FavoriteBorderIcon />
                 )
@@ -330,9 +330,9 @@ const PostCard: React.FC<PostCardProps> = ({
               data-testid="like-count"
               sx={{
                 minWidth: 'auto',
-                color: post.isLikedByCurrentUser ? '#E91E63' : 'text.secondary',
+                color: post.isLikedByCurrentUser ? 'error.main' : 'text.secondary',
                 '&:hover': {
-                  backgroundColor: 'rgba(233, 30, 99, 0.08)',
+                  backgroundColor: (theme) => alpha(theme.palette.error.main, 0.08),
                 },
               }}
             >
@@ -354,7 +354,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 minWidth: 'auto',
                 color: 'text.secondary',
                 '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  backgroundColor: (theme) => alpha(theme.palette.text.secondary, 0.08),
                 },
               }}
             >
@@ -412,12 +412,12 @@ const PostCard: React.FC<PostCardProps> = ({
               sx={{
                 mt: 0.5,
                 backgroundColor: 'primary.main',
-                color: 'white',
+                color: 'primary.contrastText',
                 '&:hover': {
                   backgroundColor: 'primary.dark',
                 },
                 '&:disabled': {
-                  backgroundColor: 'grey.300',
+                  backgroundColor: 'action.disabledBackground',
                 },
               }}
             >
@@ -506,7 +506,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             startIcon={
                               comment.isLikedByCurrentUser ? (
                                 <FavoriteIcon
-                                  sx={{ fontSize: '12px', color: '#E91E63' }}
+                                  sx={{ fontSize: '12px', color: 'error.main' }}
                                 />
                               ) : (
                                 <FavoriteBorderIcon sx={{ fontSize: '12px' }} />
@@ -520,7 +520,7 @@ const PostCard: React.FC<PostCardProps> = ({
                               px: 1,
                               py: 0.25,
                               color: comment.isLikedByCurrentUser
-                                ? '#E91E63'
+                                ? 'error.main'
                                 : 'text.secondary',
                             }}
                           >
@@ -551,8 +551,8 @@ const PostCard: React.FC<PostCardProps> = ({
                                       : 1,
                                     '&:hover': {
                                       color: 'error.main',
-                                      backgroundColor:
-                                        'rgba(244, 67, 54, 0.08)',
+                                      backgroundColor: (theme) =>
+                                        alpha(theme.palette.error.main, 0.08),
                                     },
                                     '&:disabled': {
                                       color: 'text.disabled',

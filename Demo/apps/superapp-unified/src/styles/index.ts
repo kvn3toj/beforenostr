@@ -108,3 +108,6 @@ export {
   getLargeFontStyles,
   getLargeSpacingStyles,
 } from './theme.accessibility';
+
+// Exportar constantes
+export * from './theme.constants';
