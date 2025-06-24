@@ -472,34 +472,6 @@ const MarketplaceMain: React.FC = () => {
     },
   ];
 
-  const getCategoryIcon = (iconName: string) => {
-    const commonSx = {
-      fontSize: { xs: 24, md: 32 },
-      mb: 1,
-      color: theme.palette.text.primary,
-    };
-    switch (iconName) {
-      case 'eco':
-        return <EmojiNature sx={commonSx} />;
-      case 'school':
-        return <School sx={commonSx} />;
-      case 'healing':
-        return <Healing sx={commonSx} />;
-      case 'volunteer':
-        return <VolunteerActivism sx={commonSx} />;
-      case 'tech':
-        return <Store sx={commonSx} />;
-      case 'agriculture':
-        return <Agriculture sx={commonSx} />;
-      case 'recycling':
-        return <RecyclingOutlined sx={commonSx} />;
-      case 'inclusion':
-        return <AutoAwesome sx={commonSx} />;
-      default:
-        return <Star sx={commonSx} />;
-    }
-  };
-
   const handleProductClick = useCallback(
     (productId: string) => {
       navigate(`/marketplace/product/${productId}`);
@@ -858,31 +830,42 @@ const MarketplaceMain: React.FC = () => {
             Categorías de Impacto
           </Typography>
           <Grid container spacing={isMobile ? 2 : 3}>
-            {impactCategories.map((category) => (
-              <Grid item xs={6} sm={4} md={3} key={category.id}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    p: 2,
-                    textAlign: 'center',
-                    bgcolor: 'background.paper',
-                    color: 'text.secondary',
-                    border: `1px solid`,
-                    borderColor: 'divider',
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: (theme) => `0 4px 12px ${alpha(theme.palette.common.black, 0.1)}`,
-                    }
-                  }}
-                >
-                  {getCategoryIcon(category.icon)}
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
-                    {category.name}
-                  </Typography>
-                </Paper>
-              </Grid>
-            ))}
+            {impactCategories.map((category) => {
+              const isSelected = selectedCategory === category.id;
+              return (
+                <Grid item xs={6} sm={4} md={3} key={category.id}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      textAlign: 'center',
+                      bgcolor: 'background.paper',
+                      color: 'text.secondary',
+                      border: isSelected ? '2px solid #3E8638' : '1px solid',
+                      borderColor: isSelected ? '#3E8638' : 'divider',
+                      boxShadow: isSelected ? '0 0 12px 2px #3E863855' : undefined,
+                      transition: 'transform 0.2s, box-shadow 0.2s, border 0.2s',
+                      transform: isSelected ? 'scale(1.06)' : undefined,
+                      '&:hover': {
+                        transform: 'scale(1.04)',
+                        boxShadow: '0 6px 18px rgba(62,134,56,0.12)',
+                        borderColor: '#3E8638',
+                      },
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setSelectedCategory(category.id)}
+                    tabIndex={0}
+                    aria-label={`Categoría: ${category.name}`}
+                    aria-pressed={isSelected}
+                  >
+                    <span style={{ fontSize: 32, display: 'block', marginBottom: 8 }}>{category.icon}</span>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+                      {category.name}
+                    </Typography>
+                  </Paper>
+                </Grid>
+              );
+            })}
           </Grid>
         </Box>
 

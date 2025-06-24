@@ -1,6 +1,6 @@
 /**
  * 🏪 LETS Marketplace - Versión Corregida
- * 
+ *
  * Marketplace basado en Ünits donde los usuarios pueden intercambiar
  * productos y servicios usando el sistema LETS (Local Exchange Trading System)
  */
@@ -40,7 +40,7 @@ const LetsMarketplaceFixed: React.FC = () => {
         <Stack direction="row" alignItems="center" spacing={2} sx={{ color: 'white' }}>
           <Box sx={{ flex: 1 }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              Mi Wallet LETS
+              💰 Mi Wallet LETS
             </Typography>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               0 Ünits
@@ -86,7 +86,7 @@ const LetsMarketplaceFixed: React.FC = () => {
             <Typography variant="body1" color="text.secondary" paragraph>
               Aquí puedes intercambiar productos y servicios usando Ünits.
             </Typography>
-            
+
             <Button
               variant="contained"
               startIcon={<AddIcon />}
@@ -95,14 +95,14 @@ const LetsMarketplaceFixed: React.FC = () => {
             >
               Crear Listing
             </Button>
-            
+
             {showCreateDialog && (
               <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
                 <Typography variant="body2">
                   Funcionalidad de crear listing en desarrollo...
                 </Typography>
-                <Button 
-                  size="small" 
+                <Button
+                  size="small"
                   onClick={() => setShowCreateDialog(false)}
                   sx={{ mt: 1 }}
                 >
@@ -138,4 +138,4 @@ const LetsMarketplaceFixed: React.FC = () => {
   );
 };
 
-export default LetsMarketplaceFixed; 
+export default LetsMarketplaceFixed;

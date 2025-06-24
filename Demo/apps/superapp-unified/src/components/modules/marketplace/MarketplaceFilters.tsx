@@ -37,14 +37,14 @@ import {
   Schedule,
 } from '@mui/icons-material';
 
-interface MarketplaceFiltersProps {
-  onFiltersChange: (filters: MarketplaceFilters) => void;
-  initialFilters?: Partial<MarketplaceFilters>;
+interface IMarketplaceFiltersProps {
+  onFiltersChange: (filters: IMarketplaceFilters) => void;
+  initialFilters?: Partial<IMarketplaceFilters>;
   categories: Array<{ id: string; name: string; icon?: string }>;
   loading?: boolean;
 }
 
-interface MarketplaceFilters {
+interface IMarketplaceFilters {
   search: string;
   category: string;
   priceRange: [number, number];
@@ -89,13 +89,13 @@ const POPULAR_TAGS = [
   'idiomas', 'programación', 'diseño', 'consultoría', 'mindfulness'
 ];
 
-export const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
+export const MarketplaceFilters: React.FC<IMarketplaceFiltersProps> = ({
   onFiltersChange,
   initialFilters = {},
   categories = [],
   loading = false,
 }) => {
-  const [filters, setFilters] = useState<MarketplaceFilters>({
+  const [filters, setFilters] = useState<IMarketplaceFilters>({
     search: '',
     category: '',
     priceRange: [0, 1000],
@@ -115,14 +115,14 @@ export const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [customPriceRange, setCustomPriceRange] = useState(false);
 
-  const handleFilterChange = useCallback((key: keyof MarketplaceFilters, value: any) => {
+  const handleFilterChange = useCallback((key: keyof IMarketplaceFilters, value: any) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     onFiltersChange(newFilters);
   }, [filters, onFiltersChange]);
 
   const handleClearFilters = useCallback(() => {
-    const defaultFilters: MarketplaceFilters = {
+    const defaultFilters: IMarketplaceFilters = {
       search: '',
       category: '',
       priceRange: [0, 1000],
@@ -163,6 +163,51 @@ export const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
     return count;
   }, 0);
 
+  const isDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const getTagChipStyles = (active: boolean) => ({
+    borderRadius: '7px',
+    background: active
+      ? isDark
+        ? 'linear-gradient(90deg, #004134 60%, #3E8638 100%)'
+        : 'linear-gradient(90deg, #3E8638 60%, #004134 100%)'
+      : isDark
+        ? '#222'
+        : '#EDEDED',
+    color: active ? '#fff' : (isDark ? '#B2DFDB' : '#004134'),
+    fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
+    fontSize: '14px',
+    fontWeight: 500,
+    textAlign: 'center',
+    letterSpacing: '0.08px',
+    lineHeight: 1.18,
+    minHeight: 48,
+    minWidth: 48,
+    px: 2.5,
+    py: 1.5,
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    outline: active ? '2px solid #3E8638' : 'none',
+    boxShadow: active ? '0 0 0 2px #3E863844' : 'none',
+    '&:hover': {
+      background: active
+        ? (isDark
+            ? 'linear-gradient(90deg, #004134 80%, #3E8638 100%)'
+            : 'linear-gradient(90deg, #3E8638 80%, #004134 100%)')
+        : (isDark ? '#333' : '#E0E0E0'),
+      transform: 'scale(1.04)',
+    },
+    '&:focus-visible': {
+      outline: '2px solid #3E8638',
+      boxShadow: '0 0 0 2px #3E863844',
+    },
+    '&:active': {
+      transform: 'scale(0.98)',
+    },
+    '& .MuiChip-label': {
+      padding: 0,
+    },
+  });
+
   return (
     <Paper
       elevation={2}
@@ -196,6 +241,23 @@ export const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
             startIcon={<Clear />}
             onClick={handleClearFilters}
             disabled={activeFiltersCount === 0}
+            sx={{
+              borderColor: '#004134',
+              color: '#004134',
+              fontWeight: 600,
+              background: activeFiltersCount === 0 ? '#f5f5f5' : 'linear-gradient(90deg, #fff 60%, #3E8638 100%)',
+              minHeight: 48,
+              minWidth: 48,
+              px: 2.5,
+              py: 1.5,
+              '&:hover': {
+                background: 'linear-gradient(90deg, #3E8638 60%, #004134 100%)',
+                color: '#fff',
+                borderColor: '#3E8638',
+              },
+              transition: 'all 0.2s',
+            }}
+            aria-label="Limpiar todos los filtros"
           >
             Limpiar
           </Button>
@@ -321,22 +383,21 @@ export const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
             </Typography>
             {!customPriceRange ? (
               <Box>
-                {PRICE_RANGES.map((range) => (
-                  <Chip
-                    key={range.label}
-                    label={range.label}
-                    variant={
-                      filters.priceRange[0] === range.value[0] && 
-                      filters.priceRange[1] === range.value[1]
-                        ? 'filled' 
-                        : 'outlined'
-                    }
-                    color="primary"
-                    onClick={() => handleFilterChange('priceRange', range.value)}
-                    sx={{ mr: 1, mb: 1 }}
-                    size="small"
-                  />
-                ))}
+                {PRICE_RANGES.map((range) => {
+                  const active = filters.priceRange[0] === range.value[0] && filters.priceRange[1] === range.value[1];
+                  return (
+                    <Chip
+                      key={range.label}
+                      label={range.label}
+                      onClick={() => handleFilterChange('priceRange', range.value)}
+                      sx={getTagChipStyles(active)}
+                      aria-label={`Rango de precio: ${range.label}`}
+                      aria-pressed={active}
+                      tabIndex={0}
+                      size="small"
+                    />
+                  );
+                })}
                 <Button
                   size="small"
                   onClick={() => setCustomPriceRange(true)}
@@ -472,23 +533,21 @@ export const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
             <Typography variant="body2" gutterBottom>
               Tags populares
             </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {POPULAR_TAGS.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  variant={filters.tags.includes(tag) ? 'filled' : 'outlined'}
-                  color="primary"
-                  size="small"
-                  onClick={() => handleTagToggle(tag)}
-                  sx={{
-                    '&:hover': {
-                      backgroundColor: 'primary.light',
-                      color: 'white',
-                    },
-                  }}
-                />
-              ))}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+              {POPULAR_TAGS.map((tag) => {
+                const active = filters.tags.includes(tag);
+                return (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    onClick={() => handleTagToggle(tag)}
+                    sx={getTagChipStyles(active)}
+                    aria-label={`Tag: ${tag}`}
+                    aria-pressed={active}
+                    tabIndex={0}
+                  />
+                );
+              })}
             </Box>
           </Grid>
         </Grid>
@@ -539,4 +598,4 @@ export const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
   );
 };
 
-export default MarketplaceFilters; 
+export default MarketplaceFilters;

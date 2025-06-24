@@ -47,6 +47,8 @@ import {
   Fade,
   Slide,
   Zoom,
+  Popover,
+  Tooltip,
 } from '@mui/material';
 import {
   Menu,
@@ -86,6 +88,8 @@ import {
   FilterAlt,
   SwipeUp,
   TouchApp,
+  FavoriteBorder,
+  AccountBalanceWallet,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '../../../../lib/api-service';
@@ -100,6 +104,7 @@ import '../../../../styles/marketplace-enhanced.css';
 import consciousDesignSystem from '../../../../theme/consciousDesignSystem';
 import { AxiosResponse } from 'axios';
 import type { Product, Seller } from '../../../../types/marketplace';
+import { CreateItemModal } from './CreateItemModal';
 
 // Types
 interface MarketplaceItem {
@@ -222,6 +227,24 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
 
   // Estado local para favoritos (Set de IDs)
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+
+  // Estado para popover LETS/Wallet
+  const [walletAnchorEl, setWalletAnchorEl] = useState<null | HTMLElement>(null);
+  const [letsAnchorEl, setLetsAnchorEl] = useState<null | HTMLElement>(null);
+
+  // Simulación de datos de wallet (reemplazar por hook real si está disponible)
+  const walletBalance = 120.5; // TODO: usar hook real
+  const walletCredit = 200;
+  const letsBalance = 80.0; // TODO: usar hook real
+
+  const handleWalletClick = (event: React.MouseEvent<HTMLElement>) => {
+    setWalletAnchorEl(event.currentTarget);
+  };
+  const handleLetsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setLetsAnchorEl(event.currentTarget);
+  };
+  const handleWalletClose = () => setWalletAnchorEl(null);
+  const handleLetsClose = () => setLetsAnchorEl(null);
 
   // 🌍 Categorías enfocadas en el bien común (SINCRONIZADAS CON DESKTOP)
   const impactCategories: Category[] = [
@@ -668,6 +691,25 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     );
   }
 
+  // Estados adicionales para el modal de creación
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  // Handlers para el modal de creación
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
+  };
+
+  const handleCreateSuccess = () => {
+    setIsCreateModalOpen(false);
+    setFeedbackMessage('¡Producto/servicio creado exitosamente!');
+    setShowFeedback(true);
+    // TODO: Refrescar la lista de productos/servicios
+  };
+
   return (
     <Box
       data-testid="mobile-marketplace"
@@ -708,6 +750,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
             {/* Left section - Menu button */}
             <IconButton
               onClick={onMenuClick}
+              aria-label="Abrir menú principal"
               sx={{
                 color: consciousDesignSystem.colors.primary.main,
                 width: consciousDesignSystem.components.touchTarget.minimum,
@@ -717,6 +760,10 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
                 '&:hover': {
                   backgroundColor: `${consciousDesignSystem.colors.primary.main}10`,
                   transform: consciousDesignSystem.accessibility.hover.transform,
+                },
+                '&:focus': {
+                  outline: `2px solid ${consciousDesignSystem.colors.primary.main}`,
+                  outlineOffset: '2px',
                 },
               }}
             >
@@ -746,37 +793,34 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
 
             {/* Right section - Notifications and Chat */}
             <Box sx={{ display: 'flex', gap: consciousDesignSystem.spacing[2] }}>
-              <IconButton
-                onClick={onChatClick}
-                sx={{
-                  color: consciousDesignSystem.colors.secondary.main,
-                  width: consciousDesignSystem.components.touchTarget.minimum,
-                  height: consciousDesignSystem.components.touchTarget.minimum,
-                  borderRadius: consciousDesignSystem.components.button.borderRadius,
-                  transition: consciousDesignSystem.transitions.normal,
-                  '&:hover': {
-                    backgroundColor: `${consciousDesignSystem.colors.secondary.main}10`,
-                    transform: consciousDesignSystem.accessibility.hover.transform,
-                  },
-                }}
-              >
-                <Chat fontSize="medium" />
-              </IconButton>
+              <Tooltip title="Abrir chat de soporte" placement="bottom">
+                <IconButton
+                  onClick={onChatClick}
+                  aria-label="Abrir chat de soporte"
+                  sx={{
+                    color: consciousDesignSystem.colors.secondary.main,
+                    width: consciousDesignSystem.components.touchTarget.minimum,
+                    height: consciousDesignSystem.components.touchTarget.minimum,
+                    borderRadius: consciousDesignSystem.components.button.borderRadius,
+                    transition: consciousDesignSystem.transitions.normal,
+                    '&:hover': {
+                      backgroundColor: `${consciousDesignSystem.colors.secondary.main}10`,
+                      transform: consciousDesignSystem.accessibility.hover.transform,
+                    },
+                    '&:focus': {
+                      outline: `2px solid ${consciousDesignSystem.colors.secondary.main}`,
+                      outlineOffset: '2px',
+                    },
+                  }}
+                >
+                  <Chat fontSize="medium" />
+                </IconButton>
+              </Tooltip>
 
-              <Badge
-                badgeContent={3}
-                color="error"
-                sx={{
-                  '& .MuiBadge-badge': {
-                    backgroundColor: consciousDesignSystem.colors.accent.main,
-                    color: consciousDesignSystem.colors.accent.contrastText,
-                    fontSize: consciousDesignSystem.typography.fontSize.xs,
-                    fontWeight: consciousDesignSystem.typography.fontWeight.bold,
-                  },
-                }}
-              >
+              <Tooltip title="Ver notificaciones" placement="bottom">
                 <IconButton
                   onClick={onNotificationsClick}
+                  aria-label="Ver notificaciones"
                   sx={{
                     color: consciousDesignSystem.colors.accent.main,
                     width: consciousDesignSystem.components.touchTarget.minimum,
@@ -787,11 +831,15 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
                       backgroundColor: `${consciousDesignSystem.colors.accent.main}10`,
                       transform: consciousDesignSystem.accessibility.hover.transform,
                     },
+                    '&:focus': {
+                      outline: `2px solid ${consciousDesignSystem.colors.accent.main}`,
+                      outlineOffset: '2px',
+                    },
                   }}
                 >
                   <Notifications fontSize="medium" />
                 </IconButton>
-              </Badge>
+              </Tooltip>
             </Box>
           </Toolbar>
         </AppBar>
@@ -1142,6 +1190,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           right: 0,
           zIndex: 1000,
           borderTop: '1px solid #e0e0e0',
+          display: { xs: 'block', md: 'none' }, // Solo mobile
         }}
         elevation={3}
       >
@@ -1158,6 +1207,20 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
             label="Categorías"
             icon={<CategoryIcon />}
             onClick={() => setShowFilters(true)}
+          />
+          <BottomNavigationAction
+            label="LETS"
+            icon={<span role="img" aria-label="Saldo LETS" style={{fontSize: 22}}>💰</span>}
+            onClick={handleLetsClick}
+            aria-label="Ver saldo LETS"
+            sx={{ minWidth: 48, minHeight: 48 }}
+          />
+          <BottomNavigationAction
+            label="Wallet"
+            icon={<AccountBalanceWallet />}
+            onClick={handleWalletClick}
+            aria-label="Ver saldo Wallet"
+            sx={{ minWidth: 48, minHeight: 48 }}
           />
           <BottomNavigationAction
             label="Favoritos"
@@ -1196,8 +1259,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           tooltipTitle="Publicar Servicio"
           onClick={() => {
             setShowQuickActions(false);
-            // TODO: Abrir modal de creación cuando se implemente
-            console.log('Publicar servicio');
+            handleOpenCreateModal();
           }}
         />
         <SpeedDialAction
@@ -1269,6 +1331,59 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           {feedbackMessage}
         </Alert>
       </Snackbar>
+
+      {/* Popover LETS */}
+      <Popover
+        open={Boolean(letsAnchorEl)}
+        anchorEl={letsAnchorEl}
+        onClose={handleLetsClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        PaperProps={{ sx: { p: 2, minWidth: 220, borderRadius: 3 } }}
+      >
+        <Box display="flex" alignItems="center" gap={1} mb={1}>
+          <span role="img" aria-label="Saldo LETS" style={{fontSize: 28}}>💰</span>
+          <Typography variant="h6" fontWeight={700}>Saldo LETS</Typography>
+        </Box>
+        <Typography variant="h4" fontWeight={700} color="primary.main" mb={1}>{letsBalance.toFixed(2)} Ünits</Typography>
+        <Typography variant="body2" color="text.secondary">Límite de crédito: {walletCredit} Ünits</Typography>
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{ mt: 2, width: '100%' }}
+          onClick={() => { handleLetsClose(); /* TODO: navegar a dashboard LETS */ }}
+        >Ir al dashboard LETS</Button>
+      </Popover>
+
+      {/* Popover Wallet */}
+      <Popover
+        open={Boolean(walletAnchorEl)}
+        anchorEl={walletAnchorEl}
+        onClose={handleWalletClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        PaperProps={{ sx: { p: 2, minWidth: 220, borderRadius: 3 } }}
+      >
+        <Box display="flex" alignItems="center" gap={1} mb={1}>
+          <AccountBalanceWallet sx={{ fontSize: 28, color: 'primary.main' }} />
+          <Typography variant="h6" fontWeight={700}>Mi Wallet</Typography>
+        </Box>
+        <Typography variant="h4" fontWeight={700} color="primary.main" mb={1}>{walletBalance.toFixed(2)} Ünits</Typography>
+        <Typography variant="body2" color="text.secondary">Límite de crédito: {walletCredit} Ünits</Typography>
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{ mt: 2, width: '100%' }}
+          onClick={() => { handleWalletClose(); /* TODO: navegar a dashboard Wallet */ }}
+        >Ir al dashboard Wallet</Button>
+      </Popover>
+
+      {/* Modal de Creación de Items */}
+      <CreateItemModal
+        open={isCreateModalOpen}
+        onClose={handleCloseCreateModal}
+        onSuccess={handleCreateSuccess}
+      />
     </Box>
   );
 };
@@ -1316,6 +1431,15 @@ export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps>
     return (
       <Card
         onClick={() => onClick(id)}
+        tabIndex={0}
+        role="button"
+        aria-label={`Ver detalles de ${title}`}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick(id);
+          }
+        }}
         sx={{
           cursor: 'pointer',
           display: 'flex',
@@ -1436,6 +1560,24 @@ export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps>
               <Rating value={rating} precision={0.1} size="small" readOnly sx={{ mr: 0.5 }} />
               <Typography variant="caption" color="text.secondary">{rating?.toFixed(1)}</Typography>
             </Box>
+            <IconButton
+              aria-label={isFavorited ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+              onClick={e => {
+                e.stopPropagation();
+                onToggleFavorite(id);
+              }}
+              sx={{
+                ml: 1,
+                bgcolor: 'white',
+                color: isFavorited ? 'error.main' : 'grey.500',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                zIndex: 2,
+                '&:hover': { bgcolor: 'grey.100' },
+              }}
+              size="small"
+            >
+              {isFavorited ? <Favorite /> : <FavoriteBorder />}
+            </IconButton>
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, minHeight: 32 }}>
             {description}
@@ -1453,6 +1595,15 @@ export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps>
   return (
     <Card
       onClick={() => onClick(id)}
+      tabIndex={0}
+      role="button"
+      aria-label={`Ver detalles de ${title}`}
+      onKeyDown={e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(id);
+        }
+      }}
       sx={{
         cursor: 'pointer',
         height: '100%',

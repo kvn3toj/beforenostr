@@ -47,6 +47,7 @@ import {
   School,
   LiveTv,
 } from '@mui/icons-material';
+import { motion } from 'framer-motion';
 
 // Importar componentes mejorados
 import DynamicMetricsDashboard from './components/DynamicMetricsDashboard';
@@ -75,6 +76,9 @@ import { usePlaylists } from '../../../hooks/data/usePlaylistData';
 
 // 🌌 Cosmic Design System
 import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
+
+// [PHOENIX/ANA] Uso de useUPlayProgress para obtener progreso compartido
+import { useUPlayProgress } from './hooks/useUPlayProgress';
 
 // ============================================================================
 // ADAPTADORES Y HELPERS
@@ -261,15 +265,17 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
       sx={{
         height: '100%',
         cursor: 'pointer',
-        transition: 'all 0.3s ease',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         position: 'relative',
         overflow: 'hidden',
-        background: 'linear-gradient(145deg, rgba(34,34,34,0.85), rgba(45,45,45,0.95))',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'rgba(40,40,80,0.85)', // glassmorphism base
+        backdropFilter: 'blur(8px)',
+        border: '1.5px solid rgba(99,102,241,0.18)',
         borderRadius: 3,
+        boxShadow: '0 4px 24px 0 rgba(99,102,241,0.10)',
         '&:hover': {
-          transform: 'translateY(-6px) scale(1.03)',
-          boxShadow: `0 10px 20px rgba(0,0,0,0.3), 0 0 15px ${getDifficultyColor(video.difficulty)}70`,
+          transform: 'translateY(-8px) scale(1.04)',
+          boxShadow: `0 12px 32px rgba(99,102,241,0.18), 0 0 24px ${getDifficultyColor(video.difficulty)}70`,
           '& .play-overlay': {
             opacity: 1,
             transform: 'scale(1)',
@@ -277,6 +283,7 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
         },
       }}
       onClick={() => onPlay(video.id)}
+      aria-label={`Ver video: ${video.title}`}
     >
       <Box
         sx={{
@@ -307,19 +314,31 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
             transition: 'all 0.3s ease-in-out',
           }}
         >
-          <Fab
-            size="large"
-            sx={{
+          <motion.button
+            whileTap={{ scale: 0.85 }}
+            whileHover={{ scale: 1.1, boxShadow: '0 0 20px #ff6b6b' }}
+            style={{
+              border: 'none',
               background: 'linear-gradient(45deg, #ff6b6b, #feca57)',
+              borderRadius: '50%',
+              width: 64,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               color: 'white',
-              '&:hover': {
-                transform: 'scale(1.1)',
-                boxShadow: '0 0 20px #ff6b6b'
-              },
+              cursor: 'pointer',
+              outline: 'none',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+            }}
+            aria-label="Reproducir video"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPlay(video.id);
             }}
           >
-            <PlayArrow sx={{ fontSize: '2.5rem' }} />
-          </Fab>
+            <PlayArrow style={{ fontSize: '2.5rem' }} />
+          </motion.button>
         </Box>
 
         {video.isCompleted && (
@@ -451,6 +470,9 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     error: errorVideos,
   } = useVideos();
 
+  // [PHOENIX/ANA] Uso de useUPlayProgress para obtener progreso compartido
+  const progress = useUPlayProgress();
+
   // NUEVO: Adaptar videos del backend al formato VideoItem
   const adaptedVideos = React.useMemo(() => {
     console.log('🔄 Adaptando videos del backend al formato VideoItem...');
@@ -496,13 +518,14 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       meritos: Number(playerMetrics?.meritos) || 340, // fallback para demo
       ondas: Number(playerMetrics?.ondas) || 125, // fallback para demo
       nivel: Number(playerMetrics?.level) || 1,
-      precision: Number(playerMetrics?.accuracy) || 87, // porcentaje de precisión
-      racha: Number(playerMetrics?.streak) || 5, // días consecutivos
+      precision: Number(playerMetrics?.precision) || 87, // porcentaje de precisión
+      racha: Number(playerMetrics?.currentStreak) || 5, // días consecutivos
       videosCompletados: Number(playerMetrics?.completedVideos) || 2,
       tiempoTotal: Number(playerMetrics?.totalWatchTime) || 95, // minutos
       preguntasRespondidas: Number(playerMetrics?.questionsAnswered) || 18,
-      logrosDesbloqueados: Number(unlockedAchievements?.length) || 4,
-      rankingComunidad: Number(playerMetrics?.communityRank) || 42, // posición en la comunidad
+      logrosDesbloqueados: unlockedAchievements?.length || 0,
+      rankingComunidad: 42,
+      // ... otras métricas si es necesario
     };
 
     // Historial de progreso (simulado para demo, en producción vendría del backend)
@@ -743,9 +766,12 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       position="sticky"
       elevation={0}
       sx={{
-        bgcolor: 'background.paper',
+        bgcolor: 'rgba(34,34,64,0.85)', // glassmorphism base
+        backdropFilter: 'blur(12px)',
         borderBottom: 1,
         borderColor: 'divider',
+        boxShadow: '0 4px 32px 0 rgba(99,102,241,0.10)',
+        background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #FF5722 100%)',
         transition: 'all 0.3s ease',
       }}
     >
@@ -756,33 +782,32 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             color="inherit"
             onClick={() => handleContentLoad(() => setSidebarOpen(true))}
             sx={{ mr: 2 }}
+            aria-label="Abrir menú lateral"
           >
             <Menu />
           </IconButton>
         )}
-
         <Box display="flex" alignItems="center" flexGrow={1}>
-          <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
+          <Avatar sx={{ bgcolor: 'primary.main', mr: 2, boxShadow: '0 0 12px #8b5cf6' }}>
             <PlayArrow />
           </Avatar>
           <Box>
-            <Typography variant="h6" color="text.primary" fontWeight="bold">
-              ÜPlay - GPL Gamified Play List
+            <Typography variant="h5" color="white" fontWeight="bold" sx={{ letterSpacing: 1 }}>
+              ÜPlay – GPL Gamified Play List
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color="#e0e7ff">
               Aprendizaje interactivo gamificado
               {isPending && (
                 <Chip
                   label="Cargando..."
                   size="small"
-                  sx={{ ml: 1, height: 16, fontSize: '0.6rem' }}
+                  sx={{ ml: 1, height: 16, fontSize: '0.6rem', bgcolor: '#6366f1', color: 'white' }}
+                  aria-label="Cargando"
                 />
               )}
             </Typography>
           </Box>
         </Box>
-
-        {/* Métricas rápidas en el header con animaciones */}
         <Fade in={!transitionState.isTabChanging} timeout={400}>
           <Box display="flex" gap={1} alignItems="center">
             <Chip
@@ -790,36 +815,41 @@ export const UPlayGamifiedDashboard: React.FC = () => {
               label={playerMetrics.meritos.toLocaleString()}
               size="small"
               sx={{
-                color: '#9c27b0',
+                color: '#fff',
+                bgcolor: '#9c27b0',
                 fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                '&:hover': { transform: 'scale(1.05)' }
+                boxShadow: '0 0 8px #9c27b0',
+                '&:hover': { transform: 'scale(1.08)' },
               }}
+              aria-label="Mëritos acumulados"
             />
             <Chip
               icon={<Bolt />}
               label={playerMetrics.ondas.toLocaleString()}
               size="small"
               sx={{
-                color: '#ff9800',
+                color: '#fff',
+                bgcolor: '#ff9800',
                 fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                '&:hover': { transform: 'scale(1.05)' }
+                boxShadow: '0 0 8px #ff9800',
+                '&:hover': { transform: 'scale(1.08)' },
               }}
+              aria-label="Öndas acumuladas"
             />
             <Chip
               icon={<Star />}
               label={`Nivel ${playerMetrics.level}`}
               size="small"
               sx={{
-                color: '#2196f3',
+                color: '#fff',
+                bgcolor: '#2196f3',
                 fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                '&:hover': { transform: 'scale(1.05)' }
+                boxShadow: '0 0 8px #2196f3',
+                '&:hover': { transform: 'scale(1.08)' },
               }}
+              aria-label="Nivel actual"
             />
-
-            <IconButton color="inherit">
+            <IconButton color="inherit" aria-label="Notificaciones">
               <Badge badgeContent={unreadNotifications.length} color="error">
                 <Notifications />
               </Badge>
@@ -827,8 +857,6 @@ export const UPlayGamifiedDashboard: React.FC = () => {
           </Box>
         </Fade>
       </Toolbar>
-
-      {/* Indicador de transición global */}
       {(isPending || transitionState.isTabChanging || transitionState.isContentLoading) && (
         <LinearProgress
           sx={{
@@ -838,9 +866,10 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             right: 0,
             height: 2,
             '& .MuiLinearProgress-bar': {
-              background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+              background: 'linear-gradient(90deg, #6366f1, #8b5cf6, #FF5722)',
             }
           }}
+          aria-label="Cargando contenido"
         />
       )}
     </AppBar>
@@ -1019,7 +1048,6 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       cosmicEffects={{
         enableGlow: true,
         enableParticles: true,
-        particleTheme: 'flame'
       }}
       cosmicIntensity="intense"
     >
@@ -1257,7 +1285,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
               console.log('Creating study room:', roomData);
               // TODO: Implementar lógica de crear sala
             }}
-            currentVideoId={selectedVideo}
+            currentVideoId={selectedVideo || undefined}
           />
         </Container>
       </TabPanel>

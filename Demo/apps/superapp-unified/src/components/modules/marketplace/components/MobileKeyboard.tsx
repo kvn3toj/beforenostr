@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography, Tooltip } from '@mui/material';
 import {
   ArrowUpward,
   Backspace,
@@ -113,63 +113,59 @@ export const MobileKeyboard: React.FC<MobileKeyboardProps> = ({
           justifyContent: 'center',
         }}
       >
-        <IconButton sx={{ width: '23px', height: '23px', padding: 0 }}>
-          <ArrowUpward />
-        </IconButton>
-
-        <Box
-          sx={{
-            alignSelf: 'stretch',
-            position: 'relative',
-            display: 'flex',
-            minWidth: '240px',
-            marginTop: 'auto',
-            marginBottom: 'auto',
-            alignItems: 'start',
-            gap: '40px 45px',
-            justifyContent: 'start',
-          }}
-        >
-          <Box
-            sx={{
-              zIndex: 0,
-              display: 'flex',
-              alignItems: 'start',
-              gap: '35px',
-              justifyContent: 'start',
-            }}
+        {/*
+          Accesibilidad: Todos los IconButton deben tener un área táctil mínima de 44x44px (ideal 48x48px) según Material Design y recomendaciones de iOS/Android.
+          Esto mejora la usabilidad y accesibilidad, especialmente en mobile.
+        */}
+        <Tooltip title="Retroceso" placement="top">
+          <IconButton
+            aria-label="Ir hacia arriba en el teclado"
+            sx={{ width: 48, height: 48, minWidth: 44, minHeight: 44, padding: 0 }}
           >
-            <IconButton sx={{ width: '21px', height: '21px', padding: 0 }}>
-              <SentimentSatisfied />
-            </IconButton>
-            <IconButton sx={{ width: '21px', height: '21px', padding: 0 }}>
-              <Language />
-            </IconButton>
-            <IconButton sx={{ width: '20px', height: '20px', padding: 0 }}>
-              <Language />
-            </IconButton>
-            <IconButton sx={{ width: '21px', height: '21px', padding: 0 }}>
-              <SentimentSatisfied />
-            </IconButton>
-          </Box>
-
-          <Box
-            sx={{
-              zIndex: 0,
-              display: 'flex',
-              alignItems: 'start',
-              gap: '26px',
-              justifyContent: 'start',
-            }}
+            <ArrowUpward />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Emojis" placement="top">
+          <IconButton
+            aria-label="Abrir selector de emojis"
+            sx={{ width: 48, height: 48, minWidth: 44, minHeight: 44, padding: 0 }}
           >
-            <IconButton sx={{ width: '21px', height: '21px', padding: 0 }}>
-              <MoreHoriz />
-            </IconButton>
-            <IconButton sx={{ width: '21px', height: '21px', padding: 0 }}>
-              <Mic />
-            </IconButton>
-          </Box>
-        </Box>
+            <SentimentSatisfied />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Cambiar idioma" placement="top">
+          <IconButton
+            aria-label="Cambiar idioma del teclado"
+            sx={{ width: 48, height: 48, minWidth: 44, minHeight: 44, padding: 0 }}
+          >
+            <Language />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Micrófono" placement="top">
+          <IconButton
+            aria-label="Activar entrada por voz"
+            sx={{ width: 48, height: 48, minWidth: 44, minHeight: 44, padding: 0 }}
+          >
+            <Mic />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Más opciones" placement="top">
+          <IconButton
+            aria-label="Ver más opciones del teclado"
+            sx={{ width: 48, height: 48, minWidth: 44, minHeight: 44, padding: 0 }}
+          >
+            <MoreHoriz />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Borrar" placement="top">
+          <IconButton
+            onClick={onBackspace}
+            aria-label="Borrar carácter anterior"
+            sx={{ width: 48, height: 48, minWidth: 44, minHeight: 44, padding: 0 }}
+          >
+            <Backspace />
+          </IconButton>
+        </Tooltip>
       </Box>
 
       {/* Keyboard */}

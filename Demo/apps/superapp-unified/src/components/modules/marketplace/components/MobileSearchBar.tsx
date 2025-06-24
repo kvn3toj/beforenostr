@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, InputBase, IconButton, Typography } from '@mui/material';
+import { Box, InputBase, IconButton, Typography, Tooltip } from '@mui/material';
 import { Search, Mic, ArrowBack, TuneOutlined } from '@mui/icons-material';
 import consciousDesignSystem from '../../../../theme/consciousDesignSystem';
 
@@ -87,27 +87,34 @@ export const MobileSearchBar: React.FC<MobileSearchBarProps> = ({
           }}
         >
           {/* Enhanced Search Icon */}
-          <IconButton
-            sx={{
-              width: consciousDesignSystem.components.touchTarget.minimum,
-              height: consciousDesignSystem.components.touchTarget.minimum,
-              mr: consciousDesignSystem.spacing[2],
-              color: consciousDesignSystem.colors.primary.main,
-              backgroundColor: `${consciousDesignSystem.colors.primary.main}10`,
-              transition: consciousDesignSystem.transitions.normal,
-              '&:hover': {
-                backgroundColor: `${consciousDesignSystem.colors.primary.main}20`,
-                transform: consciousDesignSystem.accessibility.hover.transform,
-              },
-            }}
-          >
-            <Search
+          <Tooltip title="Buscar productos y servicios" placement="top">
+            <IconButton
+              aria-label="Buscar productos y servicios"
               sx={{
-                fontSize: '20px',
+                width: consciousDesignSystem.components.touchTarget.minimum,
+                height: consciousDesignSystem.components.touchTarget.minimum,
+                mr: consciousDesignSystem.spacing[2],
                 color: consciousDesignSystem.colors.primary.main,
+                backgroundColor: `${consciousDesignSystem.colors.primary.main}10`,
+                transition: consciousDesignSystem.transitions.normal,
+                '&:hover': {
+                  backgroundColor: `${consciousDesignSystem.colors.primary.main}20`,
+                  transform: consciousDesignSystem.accessibility.hover.transform,
+                },
+                '&:focus': {
+                  outline: `2px solid ${consciousDesignSystem.colors.primary.main}`,
+                  outlineOffset: '2px',
+                },
               }}
-            />
-          </IconButton>
+            >
+              <Search
+                sx={{
+                  fontSize: '20px',
+                  color: consciousDesignSystem.colors.primary.main,
+                }}
+              />
+            </IconButton>
+          </Tooltip>
 
           {/* Enhanced Input */}
           <InputBase
@@ -137,60 +144,70 @@ export const MobileSearchBar: React.FC<MobileSearchBarProps> = ({
 
           {/* Enhanced Voice Search */}
           {showVoiceSearch && (
-            <IconButton
-              sx={{
-                width: consciousDesignSystem.components.touchTarget.minimum,
-                height: consciousDesignSystem.components.touchTarget.minimum,
-                ml: consciousDesignSystem.spacing[1],
-                color: consciousDesignSystem.colors.secondary.main,
-                backgroundColor: `${consciousDesignSystem.colors.secondary.main}10`,
-                transition: consciousDesignSystem.transitions.normal,
-                '&:hover': {
-                  backgroundColor: `${consciousDesignSystem.colors.secondary.main}20`,
-                  transform: consciousDesignSystem.accessibility.hover.transform,
-                },
-              }}
-            >
-              <Mic
+            <Tooltip title="Búsqueda por voz" placement="top">
+              <IconButton
+                aria-label="Iniciar búsqueda por voz"
                 sx={{
-                  fontSize: '18px',
+                  width: consciousDesignSystem.components.touchTarget.minimum,
+                  height: consciousDesignSystem.components.touchTarget.minimum,
+                  ml: consciousDesignSystem.spacing[1],
                   color: consciousDesignSystem.colors.secondary.main,
+                  backgroundColor: `${consciousDesignSystem.colors.secondary.main}10`,
+                  transition: consciousDesignSystem.transitions.normal,
+                  '&:hover': {
+                    backgroundColor: `${consciousDesignSystem.colors.secondary.main}20`,
+                    transform: consciousDesignSystem.accessibility.hover.transform,
+                  },
+                  '&:focus': {
+                    outline: `2px solid ${consciousDesignSystem.colors.secondary.main}`,
+                    outlineOffset: '2px',
+                  },
                 }}
-              />
-            </IconButton>
+              >
+                <Mic
+                  sx={{
+                    fontSize: '18px',
+                    color: consciousDesignSystem.colors.secondary.main,
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
           )}
         </Box>
 
         {/* Enhanced Filter Button */}
         {onFilterClick && (
-          <IconButton
-            onClick={onFilterClick}
-            sx={{
-              width: consciousDesignSystem.components.touchTarget.recommended,
-              height: consciousDesignSystem.components.touchTarget.recommended,
-              backgroundColor: consciousDesignSystem.colors.accent.main,
-              color: consciousDesignSystem.colors.accent.contrastText,
-              borderRadius: consciousDesignSystem.components.button.borderRadius,
-              boxShadow: consciousDesignSystem.components.card.shadow.medium,
-              transition: consciousDesignSystem.transitions.normal,
-              '&:hover': {
-                backgroundColor: consciousDesignSystem.colors.accent.dark,
-                transform: consciousDesignSystem.accessibility.hover.transform,
-                boxShadow: consciousDesignSystem.components.card.shadow.consciousness,
-              },
-              '&:focus': {
-                outline: consciousDesignSystem.accessibility.focus.outline,
-                outlineColor: consciousDesignSystem.accessibility.focus.outlineColor,
-                outlineOffset: consciousDesignSystem.accessibility.focus.outlineOffset,
-              },
-            }}
-          >
-            <TuneOutlined
+          <Tooltip title="Filtros avanzados" placement="top">
+            <IconButton
+              onClick={onFilterClick}
+              aria-label="Abrir filtros avanzados"
               sx={{
-                fontSize: '20px',
+                width: consciousDesignSystem.components.touchTarget.recommended,
+                height: consciousDesignSystem.components.touchTarget.recommended,
+                backgroundColor: consciousDesignSystem.colors.accent.main,
+                color: consciousDesignSystem.colors.accent.contrastText,
+                borderRadius: consciousDesignSystem.components.button.borderRadius,
+                boxShadow: consciousDesignSystem.components.card.shadow.medium,
+                transition: consciousDesignSystem.transitions.normal,
+                '&:hover': {
+                  backgroundColor: consciousDesignSystem.colors.accent.dark,
+                  transform: consciousDesignSystem.accessibility.hover.transform,
+                  boxShadow: consciousDesignSystem.components.card.shadow.consciousness,
+                },
+                '&:focus': {
+                  outline: consciousDesignSystem.accessibility.focus.outline,
+                  outlineColor: consciousDesignSystem.accessibility.focus.outlineColor,
+                  outlineOffset: consciousDesignSystem.accessibility.focus.outlineOffset,
+                },
               }}
-            />
-          </IconButton>
+            >
+              <TuneOutlined
+                sx={{
+                  fontSize: '20px',
+                }}
+              />
+            </IconButton>
+          </Tooltip>
         )}
       </Box>
 

@@ -233,32 +233,62 @@ export const ServicesList: React.FC<ServicesListProps> = ({
               {/* Actions */}
               <Box sx={{ position: 'absolute', top: 12, right: 12, zIndex: 2 }}>
                 <Stack direction="row" spacing={1}>
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleFavorite(service.id);
-                    }}
-                    sx={{
-                      bgcolor: 'rgba(255, 255, 255, 0.9)',
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 1)' },
-                    }}
-                  >
-                    {favoriteServices.has(service.id) ? (
-                      <Favorite color="error" fontSize="small" />
-                    ) : (
-                      <FavoriteBorder fontSize="small" />
-                    )}
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    sx={{
-                      bgcolor: 'rgba(255, 255, 255, 0.9)',
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 1)' },
-                    }}
-                  >
-                    <Share fontSize="small" />
-                  </IconButton>
+                  <Tooltip title={favoriteServices.has(service.id) ? "Quitar de favoritos" : "Agregar a favoritos"}>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleFavorite(service.id);
+                      }}
+                      aria-label={favoriteServices.has(service.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
+                      sx={{
+                        bgcolor: 'rgba(255, 255, 255, 0.9)',
+                        minWidth: 44,
+                        minHeight: 44,
+                        width: 44,
+                        height: 44,
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': { 
+                          bgcolor: 'rgba(255, 255, 255, 1)',
+                          transform: 'scale(1.1)',
+                        },
+                        '&:focus': {
+                          outline: '2px solid #2196f3',
+                          outlineOffset: '2px',
+                        },
+                      }}
+                    >
+                      {favoriteServices.has(service.id) ? (
+                        <Favorite color="error" fontSize="small" />
+                      ) : (
+                        <FavoriteBorder fontSize="small" />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Compartir servicio">
+                    <IconButton
+                      size="small"
+                      aria-label="Compartir servicio"
+                      sx={{
+                        bgcolor: 'rgba(255, 255, 255, 0.9)',
+                        minWidth: 44,
+                        minHeight: 44,
+                        width: 44,
+                        height: 44,
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': { 
+                          bgcolor: 'rgba(255, 255, 255, 1)',
+                          transform: 'scale(1.1)',
+                        },
+                        '&:focus': {
+                          outline: '2px solid #2196f3',
+                          outlineOffset: '2px',
+                        },
+                      }}
+                    >
+                      <Share fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </Stack>
               </Box>
 

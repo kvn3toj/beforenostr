@@ -177,7 +177,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
                     💫 Wallet de Ünits
                   </Typography>
                   <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                    Sistema LETS CoomÜnity
+                    Sistema 💰 LETS CoomÜnity
                   </Typography>
                 </Box>
               </Stack>

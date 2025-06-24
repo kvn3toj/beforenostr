@@ -140,6 +140,15 @@ const ProductCard: React.FC<ProductCardProps> = props => {
         enableGlow
         enableParticles={featured || trending}
         onClick={handleCardClick}
+        tabIndex={0}
+        role="button"
+        aria-label={`Ver detalles de ${title}`}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCardClick();
+          }
+        }}
         sx={{
           borderRadius: '12px',
           boxShadow: isHovered ? '0 6px 24px 0 rgba(0,0,0,0.12)' : '0 1px 2px 0 rgba(0,0,0,0.05)',
@@ -232,22 +241,19 @@ const ProductCard: React.FC<ProductCardProps> = props => {
               <Rating value={rating} precision={0.1} size="small" readOnly sx={{ mr: 0.5 }} />
               <Typography variant="caption" color="text.secondary">{rating.toFixed(1)}</Typography>
             </Box>
-            <IconButton
-              aria-label={isFavoritedLocal ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-              onClick={handleToggleFavorite}
-              sx={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                bgcolor: 'white',
-                color: isFavoritedLocal ? 'error.main' : 'grey.500',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-                zIndex: 2,
-                '&:hover': { bgcolor: 'grey.100' },
-              }}
-            >
-              {isFavoritedLocal ? <Favorite /> : <FavoriteBorder />}
-            </IconButton>
+            <Tooltip title={isFavoritedLocal ? 'Quitar de favoritos' : 'Agregar a favoritos'} arrow>
+              <span>
+                <IconButton
+                  onClick={handleToggleFavorite}
+                  color={isFavoritedLocal ? 'error' : 'default'}
+                  aria-label={isFavoritedLocal ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                  size="large"
+                  sx={{ minWidth: 48, minHeight: 48 }}
+                >
+                  {isFavoritedLocal ? <Favorite /> : <FavoriteBorder />}
+                </IconButton>
+              </span>
+            </Tooltip>
           </Box>
 
           {/* --- Content Section --- */}

@@ -11,6 +11,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 // Icons for each mode
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -86,22 +87,38 @@ const UPlayModeSelector: React.FC<UPlayModeSelectorProps> = ({
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
           {modeConfigs.map((mode) => (
-            <Button
+            <motion.div
               key={mode.id}
-              variant={currentMode === mode.id ? 'contained' : 'outlined'}
-              onClick={() => handleModeSelect(mode.route)}
-              startIcon={mode.icon}
-              sx={{
-                borderRadius: 2,
-                textTransform: 'none',
-                ...(currentMode === mode.id && {
-                  background: mode.gradient,
-                  color: 'white',
-                }),
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={{
+                rotate: currentMode === mode.id ? 0 : 0, // placeholder for future animations
               }}
             >
-              {mode.title.replace('ÜPlay ', '')}
-            </Button>
+              <Button
+                variant={currentMode === mode.id ? 'contained' : 'outlined'}
+                onClick={() => handleModeSelect(mode.route)}
+                startIcon={mode.icon}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  transition: 'all 0.2s ease-in-out',
+                  ...(currentMode === mode.id
+                    ? {
+                        background: mode.gradient,
+                        color: 'white',
+                        '&:hover': {
+                          background: mode.gradient,
+                          opacity: 0.9,
+                        },
+                        boxShadow: '0 0 12px rgba(99,102,241,0.6)',
+                      }
+                    : {}),
+                }}
+              >
+                {mode.title.replace('ÜPlay ', '')}
+              </Button>
+            </motion.div>
           ))}
         </Box>
       </Box>
@@ -133,113 +150,120 @@ const UPlayModeSelector: React.FC<UPlayModeSelectorProps> = ({
       <Grid container spacing={3}>
         {modeConfigs.map((mode) => (
           <Grid item xs={12} md={4} key={mode.id}>
-            <Card
-              sx={{
-                height: '100%',
-                cursor: 'pointer',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                border: currentMode === mode.id ? '3px solid' : '1px solid',
-                borderColor: currentMode === mode.id ? theme.palette.primary.main : theme.palette.divider,
-                '&:hover': {
-                  transform: 'translateY(-8px)',
-                  boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
-                },
-              }}
-              onClick={() => handleModeSelect(mode.route)}
+            <motion.div
+              initial={false}
+              animate={currentMode === mode.id ? { boxShadow: '0 0 24px 8px #8b5cf6' } : { boxShadow: 'none' }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              style={{ borderRadius: 16 }}
             >
-              {/* Header with gradient */}
-              <Box
+              <Card
                 sx={{
-                  height: 120,
-                  background: mode.gradient,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  position: 'relative',
+                  height: '100%',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  border: currentMode === mode.id ? '3px solid' : '1px solid',
+                  borderColor: currentMode === mode.id ? theme.palette.primary.main : theme.palette.divider,
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+                  },
                 }}
+                onClick={() => handleModeSelect(mode.route)}
               >
-                {mode.icon}
-                {currentMode === mode.id && (
-                  <Chip
-                    label="Activo"
-                    size="small"
-                    sx={{
-                      position: 'absolute',
-                      top: 10,
-                      right: 10,
-                      bgcolor: 'rgba(255,255,255,0.2)',
-                      color: 'white',
-                      fontWeight: 600,
-                    }}
-                  />
-                )}
-              </Box>
-
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                  {mode.title}
-                </Typography>
-                <Typography variant="subtitle2" color="primary" gutterBottom>
-                  {mode.subtitle}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  {mode.description}
-                </Typography>
-
-                {/* Features */}
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
-                    Características:
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {mode.features.map((feature, index) => (
-                      <Chip
-                        key={index}
-                        icon={feature.icon}
-                        label={feature.label}
-                        size="small"
-                        sx={{
-                          bgcolor: `${feature.color}15`,
-                          color: feature.color,
-                          '& .MuiChip-icon': {
-                            color: feature.color,
-                          },
-                        }}
-                      />
-                    ))}
-                  </Box>
-                </Box>
-
-                {/* Action Button */}
-                <Button
-                  variant={currentMode === mode.id ? 'contained' : 'outlined'}
-                  fullWidth
+                {/* Header with gradient */}
+                <Box
                   sx={{
-                    borderRadius: 2,
-                    textTransform: 'none',
-                    fontWeight: 600,
-                    ...(currentMode === mode.id
-                      ? {
-                          background: mode.gradient,
-                          color: 'white',
-                          '&:hover': {
-                            background: mode.gradient,
-                            opacity: 0.9,
-                          },
-                        }
-                      : {
-                          borderColor: mode.gradient.includes('#6366f1') ? '#6366f1' : 
-                                      mode.gradient.includes('#FF5722') ? '#FF5722' : '#6750A4',
-                          color: mode.gradient.includes('#6366f1') ? '#6366f1' : 
-                                mode.gradient.includes('#FF5722') ? '#FF5722' : '#6750A4',
-                        }),
+                    height: 120,
+                    background: mode.gradient,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    position: 'relative',
                   }}
                 >
-                  {currentMode === mode.id ? 'Modo Actual' : 'Seleccionar Modo'}
-                </Button>
-              </CardContent>
-            </Card>
+                  {mode.icon}
+                  {currentMode === mode.id && (
+                    <Chip
+                      label="Activo"
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 10,
+                        bgcolor: 'rgba(255,255,255,0.2)',
+                        color: 'white',
+                        fontWeight: 600,
+                      }}
+                    />
+                  )}
+                </Box>
+
+                <CardContent sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                    {mode.title}
+                  </Typography>
+                  <Typography variant="subtitle2" color="primary" gutterBottom>
+                    {mode.subtitle}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    {mode.description}
+                  </Typography>
+
+                  {/* Features */}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                      Características:
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {mode.features.map((feature, index) => (
+                        <Chip
+                          key={index}
+                          icon={feature.icon}
+                          label={feature.label}
+                          size="small"
+                          sx={{
+                            bgcolor: `${feature.color}15`,
+                            color: feature.color,
+                            '& .MuiChip-icon': {
+                              color: feature.color,
+                            },
+                          }}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+
+                  {/* Action Button */}
+                  <Button
+                    variant={currentMode === mode.id ? 'contained' : 'outlined'}
+                    fullWidth
+                    sx={{
+                      borderRadius: 2,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      ...(currentMode === mode.id
+                        ? {
+                            background: mode.gradient,
+                            color: 'white',
+                            '&:hover': {
+                              background: mode.gradient,
+                              opacity: 0.9,
+                            },
+                          }
+                        : {
+                            borderColor: mode.gradient.includes('#6366f1') ? '#6366f1' :
+                                        mode.gradient.includes('#FF5722') ? '#FF5722' : '#6750A4',
+                            color: mode.gradient.includes('#6366f1') ? '#6366f1' :
+                                  mode.gradient.includes('#FF5722') ? '#FF5722' : '#6750A4',
+                          }),
+                    }}
+                  >
+                    {currentMode === mode.id ? 'Modo Actual' : 'Seleccionar Modo'}
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
           </Grid>
         ))}
       </Grid>
@@ -256,4 +280,4 @@ const UPlayModeSelector: React.FC<UPlayModeSelectorProps> = ({
   );
 };
 
-export default UPlayModeSelector; 
+export default UPlayModeSelector;

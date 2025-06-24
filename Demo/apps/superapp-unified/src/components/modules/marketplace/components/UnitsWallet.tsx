@@ -180,7 +180,7 @@ const UnitsWallet: React.FC<UnitsWalletProps> = ({
             <Box display="flex" alignItems="center" gap={1.5}>
               <AccountBalanceWallet sx={{ fontSize: 32, opacity: 0.9 }} />
               <Typography variant="h6" fontWeight="600">
-                Mi Wallet de Ünits
+                💰 Mi Wallet de Ünits
               </Typography>
             </Box>
 

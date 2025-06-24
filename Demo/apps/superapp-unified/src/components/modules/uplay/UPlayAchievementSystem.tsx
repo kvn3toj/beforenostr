@@ -15,6 +15,8 @@ import {
   Group,
   LocalFireDepartment,
   VideoLibrary,
+  VolumeUp,
+  VolumeOff,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotifications } from '../../common/NotificationSystem';
@@ -39,6 +41,14 @@ const UPlayAchievementSystem: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [notifiedAchievement, setNotifiedAchievement] = useState<Achievement | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(() => {
+    // Persistencia opcional con localStorage
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('uplay_achievement_sound');
+      return stored === null ? true : stored === 'true';
+    }
+    return true;
+  });
 
   // Mock Data
   const allAchievements: Achievement[] = [
@@ -77,13 +87,33 @@ const UPlayAchievementSystem: React.FC = () => {
     }
   };
 
+  const toggleSound = () => {
+    setSoundEnabled((prev) => {
+      localStorage.setItem('uplay_achievement_sound', String(!prev));
+      return !prev;
+    });
+  };
+
   return (
-    <Box sx={{ p: isMobile ? 2 : 4, color: 'white' }}>
+    <Box sx={{ p: isMobile ? 2 : 4, color: 'white', position: 'relative' }}>
+      {/* Control de sonido en la esquina superior derecha */}
+      <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
+        <Button
+          onClick={toggleSound}
+          variant="outlined"
+          size="small"
+          sx={{ minWidth: 0, p: 1, borderRadius: '50%', background: 'rgba(0,0,0,0.3)' }}
+          aria-label={soundEnabled ? 'Desactivar sonido de celebración' : 'Activar sonido de celebración'}
+        >
+          {soundEnabled ? <VolumeUp /> : <VolumeOff />}
+        </Button>
+      </Box>
       <AnimatePresence>
         {notifiedAchievement && (
           <AchievementNotification
             achievement={notifiedAchievement}
             onClose={() => setNotifiedAchievement(null)}
+            soundEnabled={soundEnabled}
           />
         )}
       </AnimatePresence>

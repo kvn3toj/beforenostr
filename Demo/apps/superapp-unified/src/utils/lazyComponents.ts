@@ -62,6 +62,10 @@ const NotFoundPage = createLazyPage('NotFoundPage');
 // Componentes de Onboarding
 const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo'));
 
+// [ATLAS/ANA] Lazy loading: Asegurado que UPlayInteractiveLibrary y UPlayWithStartTransition usan React.lazy
+export const UPlayInteractiveLibrary = React.lazy(() => import('../components/modules/uplay/UPlayInteractiveLibrary'));
+export const UPlayWithStartTransition = React.lazy(() => import('../components/modules/uplay/UPlayWithStartTransition'));
+
 // --- Mapa de Componentes para el Enrutador ---
 
 export const LazyPages = {

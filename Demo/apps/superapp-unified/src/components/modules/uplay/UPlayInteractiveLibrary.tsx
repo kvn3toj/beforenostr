@@ -37,6 +37,7 @@ import { RevolutionaryWidget } from '../../../design-system/templates';
 
 // 🎯 Hook para datos reales del backend
 import { useVideos } from '../../../hooks/data/useVideoData';
+import { useUPlayProgress } from './hooks/useUPlayProgress';
 
 // 🎯 Tipos
 interface VideoItem {
@@ -83,6 +84,9 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   // 🎯 Datos de videos del backend
   const { data: backendVideos, isLoading, error } = useVideos();
 
+  // 🎯 Uso de useUPlayProgress para obtener progreso compartido
+  const progress = useUPlayProgress();
+
   // 🎯 Adaptador Backend → Frontend mejorado
   const adaptBackendVideo = (backendVideo: any): VideoItem => {
     const duration = backendVideo.duration || 0;
@@ -110,7 +114,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
       id: backendVideo.id.toString(), // Asegurar que sea string para navegación
       title: backendVideo.title || 'Video Sin Título',
       description: backendVideo.description || 'Explora este contenido educativo interactivo.',
-      duration: duration,
+      duration,
       thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
       youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
       category: mainCategory,
@@ -176,7 +180,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   };
 
   const handleVideoClick = (videoId: string) => {
-    console.log('�� Video seleccionado:', videoId);
+    console.log('🎬 Video seleccionado:', videoId);
 
     // Buscar el video en los datos procesados
     const videoData = processedVideos.find(video => video.id === videoId);
@@ -188,7 +192,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
       navigate(`/uplay/video/${videoId}`, {
         state: {
           from: '/uplay',
-          videoData: videoData
+          videoData
         }
       });
     } else {
