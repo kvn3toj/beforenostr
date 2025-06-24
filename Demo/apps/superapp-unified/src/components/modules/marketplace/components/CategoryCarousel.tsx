@@ -354,6 +354,15 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   index,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+
+  // Fondo visual mejorado
+  const background = isDesktop
+    ? (category.gradient || (category.color ? `linear-gradient(135deg, ${category.color}20, ${category.color}60)` : `linear-gradient(135deg, #f0f0f0, #e0e0e0)`))
+    : (isSelected
+      ? `linear-gradient(135deg, ${consciousDesignSystem.colors.primary.main}20, ${consciousDesignSystem.colors.primary.main}35)`
+      : `linear-gradient(135deg, ${consciousDesignSystem.colors.grey[50]}, ${consciousDesignSystem.colors.grey[100]})`);
 
   return (
     <Zoom in timeout={300 + index * 100}>
@@ -363,211 +372,131 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
         onMouseLeave={() => setIsHovered(false)}
         aria-label={`Seleccionar categoría ${category.name}`}
         sx={{
-          width: { xs: 120, md: 160 },
-          height: { xs: 100, md: 120 },
-          cursor: 'pointer',
-          transition: 'box-shadow 0.2s, transform 0.2s, background 0.2s',
-          transform: isHovered
-            ? 'scale(1.02)'
-            : 'scale(1)',
-          boxShadow: isSelected
-            ? consciousDesignSystem.components.card.shadow.consciousness
-            : isHovered
-              ? consciousDesignSystem.components.card.shadow.soft
-              : consciousDesignSystem.components.card.shadow.subtle,
-          background: isSelected
-            ? `linear-gradient(135deg, ${consciousDesignSystem.colors.primary.main}20, ${consciousDesignSystem.colors.primary.main}35)`
-            : `linear-gradient(135deg, ${consciousDesignSystem.colors.grey[50]}, ${consciousDesignSystem.colors.grey[100]})`,
-          border: isSelected
-            ? `2px solid ${consciousDesignSystem.colors.primary.main}`
-            : `1px solid ${consciousDesignSystem.colors.grey[200]}`,
-          borderRadius: consciousDesignSystem.components.card.borderRadius,
+          minWidth: { xs: 110, md: 130 },
+          maxWidth: { xs: 140, md: 160 },
+          minHeight: { xs: 140, md: 180 },
+          maxHeight: { xs: 180, md: 210 },
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
+          p: { xs: 1.5, md: 2.5 },
+          borderRadius: 3,
+          boxShadow: isSelected
+            ? consciousDesignSystem.components.card.shadow.consciousness
+            : isHovered && isDesktop
+              ? consciousDesignSystem.components.card.shadow.medium
+              : consciousDesignSystem.components.card.shadow.subtle,
+          background,
+          border: isSelected
+            ? `2px solid ${consciousDesignSystem.colors.primary.main}`
+            : `1px solid ${consciousDesignSystem.colors.grey[200]}`,
+          transition: 'transform 0.22s, box-shadow 0.22s, background 0.22s',
+          transform: isHovered && isDesktop ? 'translateY(-4px) scale(1.04)' : 'none',
+          cursor: 'pointer',
           position: 'relative',
           overflow: 'hidden',
           scrollSnapAlign: 'start',
-          '&:hover': {
+          mx: { xs: 0, md: 0.5 },
+          '&:hover, &:focus': isDesktop ? {
             borderColor: consciousDesignSystem.colors.primary.light,
-            background: `linear-gradient(135deg, ${consciousDesignSystem.colors.primary.main}10, ${consciousDesignSystem.colors.primary.main}20)`,
-          },
-          minHeight: 44, // Touch target mínimo
+            background: category.gradient || (category.color ? `linear-gradient(135deg, ${category.color}40, ${category.color}80)` : consciousDesignSystem.colors.primary.light),
+            boxShadow: consciousDesignSystem.components.card.shadow.consciousness,
+          } : {},
         }}
         className="card-micro-interactive"
       >
-        {/* Badges de estado con animación pulse */}
-        {(category.trending || category.featured) && (
-          <Box sx={{ position: 'absolute', top: consciousDesignSystem.spacing[2], right: consciousDesignSystem.spacing[2] }}>
-            {category.featured && (
-              <Chip
-                icon={<AutoAwesome />}
-                label="⭐"
-                size="small"
-                sx={{
-                  minWidth: 'auto',
-                  height: 24,
-                  backgroundColor: consciousDesignSystem.colors.accent.main,
-                  color: consciousDesignSystem.colors.accent.contrastText,
-                  fontFamily: consciousDesignSystem.typography.fontFamily.primary,
-                  fontSize: consciousDesignSystem.typography.fontSize.xs,
-                  fontWeight: consciousDesignSystem.typography.fontWeight.bold,
-                  boxShadow: consciousDesignSystem.components.card.shadow.soft,
-                  animation: 'pulse 1.2s infinite alternate',
-                  '@keyframes pulse': {
-                    from: { opacity: 0.8 },
-                    to: { opacity: 1 },
-                  },
-                  '& .MuiChip-icon': {
-                    color: consciousDesignSystem.colors.accent.contrastText,
-                    fontSize: 14
-                  },
-                  mb: category.trending ? consciousDesignSystem.spacing[1] : 0,
-                }}
-              />
-            )}
-            {category.trending && (
-              <Chip
-                icon={<TrendingUp />}
-                label="🔥"
-                size="small"
-                sx={{
-                  minWidth: 'auto',
-                  height: 24,
-                  backgroundColor: consciousDesignSystem.colors.secondary.main,
-                  color: consciousDesignSystem.colors.secondary.contrastText,
-                  fontFamily: consciousDesignSystem.typography.fontFamily.primary,
-                  fontSize: consciousDesignSystem.typography.fontSize.xs,
-                  fontWeight: consciousDesignSystem.typography.fontWeight.bold,
-                  boxShadow: consciousDesignSystem.components.card.shadow.soft,
-                  animation: 'pulse 1.2s infinite alternate',
-                  '@keyframes pulse': {
-                    from: { opacity: 0.8 },
-                    to: { opacity: 1 },
-                  },
-                  '& .MuiChip-icon': {
-                    color: consciousDesignSystem.colors.secondary.contrastText,
-                    fontSize: 14
-                  },
-                }}
-              />
-            )}
-          </Box>
-        )}
-
-        {/* Contador de productos mejorado */}
+        {/* Chip contador arriba derecha */}
         {showCount && category.count && (
-          <Box sx={{ position: 'absolute', top: consciousDesignSystem.spacing[2], left: consciousDesignSystem.spacing[2] }}>
-            <Chip
-              label={formatCount(category.count)}
-              size="small"
-              sx={{
-                height: 24,
-                fontSize: consciousDesignSystem.typography.fontSize.xs,
-                fontFamily: consciousDesignSystem.typography.fontFamily.primary,
-                fontWeight: consciousDesignSystem.typography.fontWeight.bold,
-                backgroundColor: `${consciousDesignSystem.colors.grey[50]}F0`,
-                color: consciousDesignSystem.colors.grey[800],
-                backdropFilter: 'blur(8px)',
-                border: `1px solid ${consciousDesignSystem.colors.grey[200]}`,
-                boxShadow: consciousDesignSystem.components.card.shadow.subtle,
-              }}
-            />
-          </Box>
+          <Chip
+            label={formatCount(category.count)}
+            size="small"
+            sx={{
+              position: 'absolute',
+              top: 10,
+              right: 10,
+              zIndex: 2,
+              height: isDesktop ? 28 : 22,
+              fontSize: isDesktop ? '1rem' : '0.95rem',
+              fontWeight: 600,
+              bgcolor: '#e8f5e9',
+              color: '#388e3c',
+              px: 1.2,
+              boxShadow: 1,
+              border: `1.5px solid #b2dfdb`,
+            }}
+          />
         )}
-
-        {/* Icono principal más grande y animado */}
+        {/* Emoji/ícono grande y centrado */}
         <Box
           sx={{
-            fontSize: { xs: '32px', md: '40px' },
-            mb: consciousDesignSystem.spacing[3],
-            transition: 'transform 0.2s',
-            transform: isHovered
-              ? 'scale(1.1)'
-              : 'scale(1)',
-            filter: isSelected
-              ? `drop-shadow(0 4px 8px ${consciousDesignSystem.colors.primary.main}40)`
-              : 'none',
+            fontSize: { xs: '2.2rem', md: '2.7rem' },
+            mt: { xs: 2.5, md: 3 },
+            mb: { xs: 1.5, md: 2 },
+            textShadow: isHovered ? '0 2px 8px #b2dfdb' : 'none',
             lineHeight: 1,
             minHeight: 44,
             minWidth: 44,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            transition: 'text-shadow 0.2s, transform 0.2s',
+            transform: isHovered && isDesktop ? 'scale(1.12)' : 'scale(1)',
           }}
+          aria-hidden
         >
-          {/* Si es emoji, mostrarlo directamente */}
           {category.icon.match(/\p{Emoji}/u) ? (
             <span style={{
-              textShadow: isHovered ? `0 2px 8px ${consciousDesignSystem.colors.primary.main}30` : 'none',
+              textShadow: isHovered ? '0 2px 8px #b2dfdb' : 'none',
               display: 'inline-block',
+              fontSize: isDesktop ? '2.7rem' : '2.2rem',
               transition: 'text-shadow 0.2s',
-            }}>
-              {category.icon}
-            </span>
+            }}>{category.icon}</span>
           ) : (
-            /* Si es una imagen/icono */
             <Box
               component="img"
               src={category.icon}
               alt={category.name}
               sx={{
-                width: { xs: 32, md: 40 },
-                height: { xs: 32, md: 40 },
+                width: isDesktop ? 48 : 36,
+                height: isDesktop ? 48 : 36,
                 objectFit: 'contain',
-                filter: isSelected
-                  ? `drop-shadow(0 2px 4px ${consciousDesignSystem.colors.primary.main}40)`
-                  : 'none',
+                filter: isSelected && isDesktop
+                  ? `drop-shadow(0 4px 12px ${consciousDesignSystem.colors.primary.main}40)`
+                  : isSelected
+                    ? `drop-shadow(0 2px 4px ${consciousDesignSystem.colors.primary.main}40)`
+                    : 'none',
                 transition: 'filter 0.2s',
               }}
               onError={(e) => {
-                // Fallback a un icono genérico si la imagen falla
                 e.currentTarget.style.display = 'none';
                 e.currentTarget.parentElement!.innerHTML = '🏷️';
               }}
             />
           )}
         </Box>
-
-        {/* Nombre de la categoría más destacado */}
+        {/* Nombre de la categoría */}
         <Typography
-          variant={Math.max(config.itemWidth, 140) > 100 ? 'body1' : 'body2'}
+          variant="body1"
           sx={{
+            fontWeight: 700,
+            fontSize: { xs: '1.08rem', md: '1.15rem' },
             textAlign: 'center',
-            color: isSelected
-              ? consciousDesignSystem.colors.primary.main
-              : consciousDesignSystem.colors.grey[800],
-            transition: 'color 0.2s',
-            lineHeight: 1.3,
-            px: consciousDesignSystem.spacing[2],
-            fontFamily: consciousDesignSystem.typography.fontFamily.primary,
-            fontSize: Math.max(config.itemWidth, 140) > 100 ? '1.1rem' : consciousDesignSystem.typography.fontSize.sm,
-            fontWeight: isSelected
-              ? consciousDesignSystem.typography.fontWeight.bold
-              : consciousDesignSystem.typography.fontWeight.semibold,
-            letterSpacing: '0.25px',
+            color: '#222',
+            letterSpacing: 0.2,
+            mt: 'auto',
+            mb: 0,
+            lineHeight: 1.2,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            width: '100%',
+            px: 1,
           }}
+          aria-label={category.name}
         >
           {category.name}
         </Typography>
-
-        {/* Descripción (solo en variante featured) */}
-        {config.showDescription && category.description && (
-          <Typography
-            variant="caption"
-            sx={{
-              mt: 1,
-              color: consciousDesignSystem.colors.grey[700],
-              fontFamily: consciousDesignSystem.typography.fontFamily.primary,
-              fontSize: consciousDesignSystem.typography.fontSize.xs,
-              textAlign: 'center',
-              px: 2,
-            }}
-          >
-            {category.description}
-          </Typography>
-        )}
       </Card>
     </Zoom>
   );

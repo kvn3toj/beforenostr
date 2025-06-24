@@ -11,7 +11,7 @@ export { FilterStats };
 export { ItemGrid };
 
 // Named exports
-export { ProductCard } from './ProductCard';
+export { default as ProductCard } from './ProductCard';
 export { EnhancedMarketplaceCard } from './EnhancedMarketplaceCard';
 export { ProductReviews } from './ProductReviews';
 export { SellerInfoCard } from './SellerInfoCard';

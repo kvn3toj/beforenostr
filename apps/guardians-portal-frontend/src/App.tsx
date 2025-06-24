@@ -62,6 +62,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GuardianSpecificPage } from './components/GuardianSpecificPages';
 import CosmicBackground from './components/CosmicBackground';
+import CosmicInvocationConsole from './components/CosmicInvocationConsole';
 
 // Importar el prompt de Guardianes para UPlay. Usamos `?raw` para importar el contenido como string.
 import UPLAY_GUARDIANS_PROMPT from '../../../NARRATIVA/02_AGENTES_GUARDIANES/PROMPT_INVOCACION_GUARDIANES_UPLAY.md?raw';
@@ -594,6 +595,7 @@ ${promptInput}
     <ThemeProvider theme={portalTheme}>
       <CssBaseline />
       <CosmicBackground />
+      <CosmicInvocationConsole />
       <Box sx={{ flexGrow: 1, minHeight: '100vh', backgroundColor: portalTheme.palette.background.default }}>
         <AppBar position="static" elevation={1} sx={{ bgcolor: portalTheme.palette.primary.dark, py: 1.5 }}>
           <Toolbar>
