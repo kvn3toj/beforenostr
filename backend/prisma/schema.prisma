@@ -861,51 +861,26 @@ enum MarketplaceItemStatus {
 }
 
 model MarketplaceItem {
-  id          String                @id @default(uuid())
-  name        String
-  description String                @db.Text
-  price       Float
-  currency    Currency              @default(LUKAS)
-  itemType    MarketplaceItemType   @default(SERVICE)
-  status      MarketplaceItemStatus @default(ACTIVE)
-
-  // Media and content
-  images      String[] // Array de URLs de imágenes
-  tags        String[]
-  location    String?
-
-  // Metadata específico del tipo de item
-  metadata    String?               @db.Text
-
-  // Pricing adicional (sistema dual)
-  priceToins  Float?                @default(0)
-
-  // Relaciones
-  seller      User                  @relation(fields: [sellerId], references: [id])
-  sellerId    String
-
-  // Timestamps
-  createdAt   DateTime              @default(now())
-  updatedAt   DateTime              @updatedAt
-
-  // Campos de gestión
-  isActive    Boolean               @default(true)
-  isDeleted   Boolean               @default(false)
-  deletedAt   DateTime?
-
-  // Estadísticas
-  viewCount   Int                   @default(0)
-  favoriteCount Int                 @default(0)
+  id           String                @id @default(uuid())
+  name         String
+  description  String
+  type         MarketplaceItemType
+  priceUnits   Int
+  priceToins   Int?
+  tags         String[]
+  imageUrl     String?
+  location     String?
+  status       MarketplaceItemStatus @default(DRAFT)
+  sellerId     String
+  viewCount    Int                   @default(0)
+  favoriteCount Int                  @default(0)
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  seller       User                  @relation(fields: [sellerId], references: [id])
 
   @@index([sellerId])
-  @@index([itemType])
+  @@index([type])
   @@index([status])
-  @@index([currency])
-  @@index([isActive])
-  @@index([isDeleted])
-  @@index([createdAt])
-  @@index([price])
-  @@index([location])
   @@map("marketplace_items")
 }
 

@@ -149,7 +149,7 @@ const PREDEFINED_TAGS = {
   ],
 };
 
-const CreateItemModal: React.FC<CreateItemModalProps> = ({
+export const CreateItemModal: React.FC<CreateItemModalProps> = ({
   open,
   onClose,
   onSuccess,
@@ -621,12 +621,10 @@ const CreateItemModal: React.FC<CreateItemModalProps> = ({
               },
             }}
           >
-            {createItemMutation.isPending ? 'Creando...' : 'Crear Item'}
+            {createItemMutation.isPending ? 'Publicando...' : 'Publicar Item'}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
   );
 };
-
-export default CreateItemModal;

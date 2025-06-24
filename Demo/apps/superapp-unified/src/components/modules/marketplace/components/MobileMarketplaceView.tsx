@@ -1164,7 +1164,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
               variant="contained"
               size="large"
               startIcon={<AddIcon />}
-              onClick={() => console.log('Crear servicio')}
+              onClick={handleOpenCreateModal}
               sx={{
                 background: 'linear-gradient(45deg, #4CAF50, #66BB6A)',
                 '&:hover': {
@@ -1257,10 +1257,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
         <SpeedDialAction
           icon={<AddIcon />}
           tooltipTitle="Publicar Servicio"
-          onClick={() => {
-            setShowQuickActions(false);
-            handleOpenCreateModal();
-          }}
+          onClick={handleOpenCreateModal}
         />
         <SpeedDialAction
           icon={<Search />}

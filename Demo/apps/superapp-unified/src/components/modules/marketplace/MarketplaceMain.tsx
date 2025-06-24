@@ -72,7 +72,7 @@ import {
   useMarketplaceData,
 } from '../../../hooks/useRealBackendData';
 import { useQueryClient } from '@tanstack/react-query';
-import CreateItemModal from './components/CreateItemModal';
+import { CreateItemModal } from './components/CreateItemModal';
 import UnitsWallet from './components/UnitsWallet';
 import { LetsListings } from './components/LetsListings';
 import SearchBar from './components/SearchBar';
@@ -957,19 +957,21 @@ const MarketplaceMain: React.FC = () => {
 
       {/* FAB para crear item */}
       <Zoom in timeout={500} style={{ transitionDelay: '300ms' }}>
-        <Fab
-          color="primary"
-          aria-label="crear item"
-          onClick={handleOpenCreateModal}
-          data-testid="create-item-fab"
-          sx={{
-            position: 'fixed',
-            bottom: 20,
-            right: 20,
-          }}
-        >
-          <AddIcon />
-        </Fab>
+        <Tooltip title="Publicar">
+          <Fab
+            color="primary"
+            aria-label="publicar"
+            data-testid="create-item-fab"
+            onClick={handleOpenCreateModal}
+            sx={{
+              position: 'fixed',
+              bottom: 20,
+              right: 20,
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
       </Zoom>
 
       {/* Modal de Creación de Items */}
