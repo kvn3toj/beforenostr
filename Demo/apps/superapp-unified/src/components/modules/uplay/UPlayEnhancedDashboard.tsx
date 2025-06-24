@@ -185,7 +185,7 @@ const UPlayEnhancedDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 space-y-8">
+    <div data-testid="uplay-dashboard" className="p-4 space-y-8">
       <Grid container spacing={3}>
         {metricCards.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>

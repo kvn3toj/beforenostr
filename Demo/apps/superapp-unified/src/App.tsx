@@ -111,8 +111,8 @@ const AppRoutes: React.FC = () => {
         {/* 🏠 Página Principal */}
         <Route path="/" element={<LazyPages.HomePage />} />
 
-        {/* 🛒 Marketplace - GMP Gamified Match Place (Temporalmente Desactivado) */}
-        <Route path="/marketplace" element={<div style={{ padding: '2rem', color: 'black' }}>Módulo Marketplace en reconstrucción.</div>} />
+        {/* 🛒 Marketplace - GMP Gamified Match Place ⚜️ CONCILIO DE GUARDIANES ACTIVADO */}
+        <Route path="/marketplace" element={<LazyPages.MarketplacePage />} />
         <Route path="/marketplace-test" element={<LazyPages.MarketplaceTest />} />
 
         {/* 🎮 ÜPlay - GPL Gamified Play List */}

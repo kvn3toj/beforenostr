@@ -28,6 +28,8 @@ import {
   Zoom,
   CircularProgress,
   alpha,
+  LinearProgress,
+  Slide,
 } from '@mui/material';
 import {
   FilterList,
@@ -56,9 +58,14 @@ import {
   Refresh as RefreshIcon,
   Home as HomeIcon,
   Info as InfoIcon,
+  SelfImprovement,
+  Psychology,
+  FavoriteRounded,
+  Balance,
+  WaterDrop,
 } from '@mui/icons-material';
 import { useAuth } from '../../../contexts/AuthContext';
-import { ProductCard } from './components';
+import { ProductCard, ItemGrid } from './components';
 import ProductCardEnhanced from './components/ProductCardEnhanced';
 import { MobileMarketplaceView } from './components';
 import {
@@ -69,24 +76,24 @@ import CreateItemModal from './components/CreateItemModal';
 import UnitsWallet from './components/UnitsWallet';
 import { LetsListings } from './components/LetsListings';
 import SearchBar from './components/SearchBar';
-import ItemGrid from './components/ItemGrid';
-import LoadingSkeleton from './components/LoadingSkeleton';
-import NoResults from './components/NoResults';
-import { RevolutionaryWidget } from '../../design-system/templates/RevolutionaryWidget';
+import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
+import { ConsciousLoadingState } from '../../ui/enhanced/ConsciousLoadingState';
 
 const marketplaceCosmicEffects = {
   enableGlow: true,
   enableParticles: true,
   enableAnimations: true,
   enableOrbitalEffects: true,
-  glowIntensity: 1.0,
+  enableConsciousnessAura: true,
+  glowIntensity: 1.2,
   particleConfig: {
-    count: 5,
-    size: 3,
-    color: '#888888',
-    speed: 0.5,
-    opacity: 0.5,
+    count: 8,
+    size: 4,
+    color: '#4f46e5',
+    speed: 0.3,
+    opacity: 0.7,
     blur: true,
+    ayniMode: true,
   }
 };
 
@@ -106,6 +113,8 @@ interface MarketplaceItem {
     verified: boolean;
     rating: number;
     reviewCount: number;
+    ayniScore?: number;
+    consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
   };
   location: string;
   rating: number;
@@ -121,6 +130,10 @@ interface MarketplaceItem {
   originalPrice?: number;
   impactLevel?: 'local' | 'regional' | 'global';
   sustainabilityScore?: number;
+  ayniScore?: number;
+  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
+  bienComunContribution?: number;
+  reciprocityBalance?: number;
 }
 
 interface SearchFilters {
@@ -137,10 +150,14 @@ interface SearchFilters {
     | 'rating'
     | 'newest'
     | 'trending'
-    | 'impact';
+    | 'impact'
+    | 'ayni_score'
+    | 'consciousness';
   tags: string[];
   hasDiscount: boolean;
   impactLevel?: 'local' | 'regional' | 'global';
+  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
+  minimumAyniScore?: number;
 }
 
 interface Category {
@@ -150,18 +167,55 @@ interface Category {
   color?: string;
   count?: number;
   impact?: string;
+  consciousnessAlignment?: number;
 }
 
+const getConsciousnessStyle = (level?: string) => {
+  switch (level) {
+    case 'TRANSCENDENT':
+      return {
+        color: '#fbbf24',
+        gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+        glow: '0 0 20px rgba(251, 191, 36, 0.3)',
+        icon: <AutoAwesome />,
+      };
+    case 'FLOURISHING':
+      return {
+        color: '#10b981',
+        gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        glow: '0 0 15px rgba(16, 185, 129, 0.2)',
+        icon: <EmojiNature />,
+      };
+    case 'GROWING':
+      return {
+        color: '#3b82f6',
+        gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+        glow: '0 0 10px rgba(59, 130, 246, 0.2)',
+        icon: <SelfImprovement />,
+      };
+    case 'SEED':
+    default:
+      return {
+        color: '#6b7280',
+        gradient: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
+        glow: '0 0 5px rgba(107, 114, 128, 0.1)',
+        icon: <WaterDrop />,
+      };
+  }
+};
+
 const mapItemToUIItem = (item: any): MarketplaceItem => {
+  const consciousnessStyle = getConsciousnessStyle(item.consciousnessLevel);
+
   if (item.seller?.firstName && item.seller?.lastName) {
     return {
       id: item.id,
       title: item.title,
       description: item.description,
-      price: item.price,
+      price: item.priceUnits || item.price,
       originalPrice: item.originalPrice,
       currency: item.currency === 'LUKAS' ? 'ü' : item.currency,
-      category: item.category,
+      category: item.category || 'Servicios',
       images: item.images || [],
       seller: {
         id: item.seller?.id || 'unknown',
@@ -175,6 +229,8 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
         verified: item.seller?.verified || true,
         rating: item.seller?.rating || item.rating || 4.5,
         reviewCount: item.seller?.reviewCount || item.reviewCount || 0,
+        ayniScore: item.seller?.ayniScore || item.ayniScore || 75,
+        consciousnessLevel: item.seller?.consciousnessLevel || item.consciousnessLevel || 'GROWING',
       },
       location: item.location || 'Online',
       rating: item.rating || 4.5,
@@ -193,6 +249,10 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
         : undefined,
       impactLevel: item.impactLevel || 'local',
       sustainabilityScore: item.sustainabilityScore || 85,
+      ayniScore: item.ayniScore || 75,
+      consciousnessLevel: item.consciousnessLevel || 'GROWING',
+      bienComunContribution: item.bienComunContribution || 60,
+      reciprocityBalance: item.reciprocityBalance || 80,
     };
   }
 
@@ -200,51 +260,37 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
     id: item.id || 'unknown',
     title: item.title || 'Producto sin título',
     description: item.description || 'Sin descripción disponible',
-    price: item.priceUnits || 0,
+    price: item.priceUnits || item.price || 0,
     currency: item.currency === 'LUKAS' ? 'ü' : item.currency || 'ü',
-    category:
-      item.type === 'SERVICE'
-        ? 'tecnologia-social'
-        : item.type === 'PRODUCT'
-          ? 'sostenibilidad'
-          : item.type === 'DIGITAL_CONTENT'
-            ? 'educacion'
-            : item.type === 'EXPERIENCE'
-              ? 'comunidad'
-              : item.type === 'SKILL_EXCHANGE'
-                ? 'economia-circular'
-                : 'sostenibilidad',
-    images: item.images || (item.imageUrl ? [item.imageUrl] : []),
+    category: item.category || 'Servicios',
+    images: item.images || [],
     seller: {
-      id: item.seller?.id || 'unknown',
-      name:
-        `${item.seller?.firstName || ''} ${item.seller?.lastName || ''}`.trim() ||
-        'Usuario',
-      username: item.seller?.username || '@usuario',
-      avatar:
-        item.seller?.avatarUrl ||
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+      id: item.sellerId || 'unknown',
+      name: 'Usuario CoomÜnity',
+      username: '@coomunity',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
       verified: true,
-      rating: 4.8,
-      reviewCount: Math.floor(Math.random() * 100) + 20,
+      rating: 4.5,
+      reviewCount: 0,
+      ayniScore: item.ayniScore || 75,
+      consciousnessLevel: item.consciousnessLevel || 'GROWING',
     },
     location: item.location || 'Online',
-    rating: 4.8,
-    reviewCount: Math.floor(Math.random() * 100) + 20,
+    rating: item.rating || 4.5,
+    reviewCount: item.reviewCount || 0,
     tags: item.tags || [],
-    featured: Math.random() > 0.7,
-    trending: item.viewCount > 40,
-    createdAt: item.createdAt,
+    featured: false,
+    trending: false,
+    createdAt: item.createdAt || new Date().toISOString(),
     viewCount: item.viewCount || 0,
     favoriteCount: item.favoriteCount || 0,
     isFavorited: false,
-    impactLevel:
-      Math.random() > 0.6
-        ? 'global'
-        : Math.random() > 0.3
-          ? 'regional'
-          : 'local',
-    sustainabilityScore: Math.floor(Math.random() * 20) + 80,
+    impactLevel: 'local',
+    sustainabilityScore: 85,
+    ayniScore: item.ayniScore || 75,
+    consciousnessLevel: item.consciousnessLevel || 'GROWING',
+    bienComunContribution: 60,
+    reciprocityBalance: 80,
   };
 };
 
@@ -360,6 +406,7 @@ const MarketplaceMain: React.FC = () => {
     tags: [],
     hasDiscount: false,
     impactLevel: undefined,
+    consciousnessLevel: undefined,
   });
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
@@ -524,7 +571,7 @@ const MarketplaceMain: React.FC = () => {
     let items = isSearchActive ? searchResults : impactProducts;
 
     if (selectedCategory && selectedCategory !== '') {
-      items = items.filter((item) => item.category === selectedCategory);
+      items = items.filter((item: MarketplaceItem) => item.category === selectedCategory);
     }
 
     switch (currentFilters.sortBy) {
@@ -599,7 +646,7 @@ const MarketplaceMain: React.FC = () => {
       },
       rating: typeof item.rating === 'number' ? Math.max(0, Math.min(5, item.rating)) : 4.0,
       reviewCount: typeof item.reviewCount === 'number' ? Math.max(0, item.reviewCount) : 0,
-      tags: Array.isArray(item.tags) ? item.tags.filter(tag => typeof tag === 'string' && tag.trim()) : [],
+      tags: Array.isArray(item.tags) ? item.tags.filter((tag: any) => typeof tag === 'string' && tag.trim()) : [],
       featured: Boolean(item.featured),
       trending: Boolean(item.trending)
     }));
@@ -607,15 +654,62 @@ const MarketplaceMain: React.FC = () => {
 
   if (isLoadingItems) {
     return (
-      <Box sx={{ flexGrow: 1, width: '100%', bgcolor: 'background.default', color: 'text.primary' }}>
+      <RevolutionaryWidget
+        title="💧 GMP - Gamified Match Place"
+        subtitle="Conectando con el ecosistema de intercambio consciente"
+        variant="elevated"
+        element="agua"
+        cosmicEffects={marketplaceCosmicEffects}
+        cosmicIntensity="medium"
+      >
         <Container maxWidth="xl" sx={{ py: 4 }}>
+          {/* 🌊 Estado de carga consciente principal */}
+          <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center' }}>
+            <ConsciousLoadingState
+              element="agua"
+              variant="meditation"
+              size="large"
+              context="marketplace"
+              showProgress={false}
+            />
+          </Box>
+
+          {/* 💧 Esqueletos conscientes de productos */}
           <Box sx={{ mb: 4 }}>
-            <Skeleton variant="rectangular" width="100%" height={120} sx={{ borderRadius: 3, mb: 3 }} />
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              height={120}
+              sx={{
+                borderRadius: 3,
+                mb: 3,
+                background: 'linear-gradient(90deg, rgba(78, 205, 196, 0.1) 25%, rgba(78, 205, 196, 0.2) 50%, rgba(78, 205, 196, 0.1) 75%)',
+                backgroundSize: '200px 100%',
+                animation: 'shimmer 1.5s infinite'
+              }}
+            />
+
             <Grid container spacing={3}>
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
-                  <Card elevation={0} sx={{ borderRadius: 3, overflow: 'hidden' }}>
-                    <Skeleton variant="rectangular" height={200} />
+                  <Card
+                    elevation={0}
+                    sx={{
+                      borderRadius: 3,
+                      overflow: 'hidden',
+                      background: 'rgba(78, 205, 196, 0.02)',
+                      border: '1px solid rgba(78, 205, 196, 0.1)'
+                    }}
+                  >
+                    <Skeleton
+                      variant="rectangular"
+                      height={200}
+                      sx={{
+                        background: 'linear-gradient(90deg, rgba(78, 205, 196, 0.1) 25%, rgba(78, 205, 196, 0.2) 50%, rgba(78, 205, 196, 0.1) 75%)',
+                        backgroundSize: '200px 100%',
+                        animation: 'shimmer 1.5s infinite'
+                      }}
+                    />
                     <CardContent>
                       <Skeleton variant="text" width="80%" height={24} sx={{ mb: 1 }} />
                       <Skeleton variant="text" width="60%" height={20} sx={{ mb: 2 }} />
@@ -630,23 +724,35 @@ const MarketplaceMain: React.FC = () => {
             </Grid>
           </Box>
 
+          {/* ✨ Mensaje inspirador de carga */}
           <Box display="flex" flexDirection="column" alignItems="center" gap={2} sx={{ mt: 4 }}>
-            <CircularProgress
-              size={40}
-              thickness={3}
+            <Typography
+              variant="h6"
               sx={{
-                color: theme.palette.primary.main,
-                '& .MuiCircularProgress-circle': {
-                  strokeLinecap: 'round'
-                }
+                color: '#4ECDC4',
+                fontWeight: 500,
+                textAlign: 'center',
+                textShadow: '0 0 10px rgba(78, 205, 196, 0.3)'
               }}
-            />
-            <Typography variant="body2" color="text.secondary" textAlign="center">
-              🌱 Cargando productos que contribuyen al Bien Común...
+            >
+              🌊 Sincronizando con emprendedores confiables...
+            </Typography>
+            <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ maxWidth: 400 }}>
+              Conectando con productos y servicios que priorizan el <strong>Bien Común</strong> y
+              practican la <strong>Reciprocidad (Ayni)</strong> en cada intercambio.
             </Typography>
           </Box>
+
+          <style>
+            {`
+              @keyframes shimmer {
+                0% { background-position: -200px 0; }
+                100% { background-position: calc(200px + 100%) 0; }
+              }
+            `}
+          </style>
         </Container>
-      </Box>
+      </RevolutionaryWidget>
     );
   }
 
@@ -734,7 +840,7 @@ const MarketplaceMain: React.FC = () => {
 
   // 🖥️ Layout de escritorio optimizado
   return (
-    <RevolutionaryWidget>
+    <Box data-testid="marketplace-container">
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
           Marketplace
@@ -784,7 +890,7 @@ const MarketplaceMain: React.FC = () => {
         <Grid container spacing={4} sx={{ mb: 6 }}>
           <Grid item xs={12} md={5}>
             <Paper elevation={0} sx={{ p: 2, border: 1, borderColor: 'divider' }}>
-               <UnitsWallet />
+               <UnitsWallet userId={user?.id || ''} />
             </Paper>
           </Grid>
           <Grid item xs={12} md={7}>
@@ -798,13 +904,63 @@ const MarketplaceMain: React.FC = () => {
         <Box>
           <Typography variant="h5" gutterBottom>Todos los Servicios</Typography>
           {isLoadingItems ? (
-            <LoadingSkeleton />
+            <Grid container spacing={3}>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
+                  <Card elevation={0} sx={{ borderRadius: 3, overflow: 'hidden' }}>
+                    <Skeleton variant="rectangular" height={200} />
+                    <CardContent>
+                      <Skeleton variant="text" width="80%" height={24} sx={{ mb: 1 }} />
+                      <Skeleton variant="text" width="60%" height={20} sx={{ mb: 2 }} />
+                      <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Skeleton variant="text" width="40%" height={20} />
+                        <Skeleton variant="circular" width={32} height={32} />
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
           ) : itemsToDisplay.length === 0 ? (
-            <NoResults
-              isSearchActive={isSearchActive}
-              onClearSearch={() => handleFiltersChange({ query: '' })}
-              onCreateItem={handleOpenCreateModal}
-            />
+            <Box sx={{ textAlign: 'center', py: 8 }}>
+              <Avatar
+                sx={{
+                  width: 80,
+                  height: 80,
+                  margin: '0 auto 16px',
+                  bgcolor: 'grey.100',
+                  fontSize: '2rem'
+                }}
+              >
+                🔍
+              </Avatar>
+              <Typography variant="h6" gutterBottom>
+                {isSearchActive ? 'No se encontraron resultados' : 'No hay productos disponibles'}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                {isSearchActive
+                  ? 'Intenta ajustar tus filtros de búsqueda'
+                  : 'Sé el primero en crear un producto o servicio'
+                }
+              </Typography>
+              <Stack direction="row" spacing={2} justifyContent="center">
+                {isSearchActive && (
+                  <Button
+                    variant="outlined"
+                    onClick={() => setCurrentFilters(prev => ({ ...prev, query: '' }))}
+                  >
+                    Limpiar búsqueda
+                  </Button>
+                )}
+                <Button
+                  variant="contained"
+                  onClick={handleOpenCreateModal}
+                  startIcon={<AddIcon />}
+                >
+                  Crear item
+                </Button>
+              </Stack>
+            </Box>
           ) : (
             <ItemGrid
               items={itemsToDisplay}
@@ -839,7 +995,7 @@ const MarketplaceMain: React.FC = () => {
         onClose={handleCloseCreateModal}
         onSuccess={handleCreateSuccess}
       />
-    </RevolutionaryWidget>
+    </Box>
   );
 };
 

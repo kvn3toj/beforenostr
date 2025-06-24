@@ -3,12 +3,14 @@ import ProductCardEnhanced from './ProductCardEnhanced';
 import AdvancedSearch from './AdvancedSearch';
 import AdvancedFilters from './AdvancedFilters';
 import FilterStats from './FilterStats';
+import ItemGrid from './ItemGrid';
 
 // Export using imported components to avoid binding conflicts
 export { ProductCardEnhanced };
 export { AdvancedSearch };
 export { AdvancedFilters };
 export { FilterStats };
+export { ItemGrid };
 
 // Named exports
 export { ProductCard } from './ProductCard';
@@ -16,7 +18,7 @@ export { EnhancedMarketplaceCard } from './EnhancedMarketplaceCard';
 export { ProductReviews } from './ProductReviews';
 export { SellerInfoCard } from './SellerInfoCard';
 // ❌ REMOVIDO: ShareProduct (archivo no existe)
-export { BottomNavigation } from './BottomNavigation';
+// ❌ REMOVIDO: BottomNavigation (ahora usa navegación consciente unificada)
 export { CategoryCarousel } from './CategoryCarousel';
 export { CategoryChips } from './CategoryChips';
 export { MobileHeader } from './MobileHeader';

@@ -6,15 +6,15 @@
       "localStorage": [
         {
           "name": "COOMUNITY_AUTH_TOKEN",
-          "value": "mock-token-1750604865367-e87c6ulp0"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZmNhOTAxYi0xMzk3LTQ3OTQtOGNjZS0yYTFlYWRlN2Y0OGUiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbiBVc2VyIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTA3MDgyMzcsImV4cCI6MTc1MTMxMzAzN30.0xiebZ4JOwIUsqW-uw2bXWkrF7tObKvkysB2PaJZRS0"
         },
         {
           "name": "lets_education_state",
-          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-22T15:07:44.436Z\"}}"
+          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-23T19:50:36.465Z\"}}"
         },
         {
           "name": "COOMUNITY_USER_DATA",
-          "value": "{\"id\":\"00000000-0000-0000-0000-000000000001\",\"email\":\"admin@gamifier.com\",\"full_name\":\"Administrator\",\"role\":\"admin\",\"created_at\":\"2025-06-22T15:07:45.367Z\",\"access_token\":\"mock-token-1750604865367-e87c6ulp0\"}"
+          "value": "{\"id\":\"efca901b-1397-4794-8cce-2a1eade7f48e\",\"email\":\"admin@gamifier.com\",\"fullName\":\"Admin User\",\"roles\":[\"admin\"],\"createdAt\":\"2025-06-23T19:50:37.148Z\",\"accessToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZmNhOTAxYi0xMzk3LTQ3OTQtOGNjZS0yYTFlYWRlN2Y0OGUiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbiBVc2VyIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTA3MDgyMzcsImV4cCI6MTc1MTMxMzAzN30.0xiebZ4JOwIUsqW-uw2bXWkrF7tObKvkysB2PaJZRS0\"}"
         }
       ]
     }

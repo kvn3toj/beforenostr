@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
+import consciousDesignSystem from '../../../../theme/consciousDesignSystem';
 
 interface RoleToggleProps {
   selectedRole: 'consumer' | 'provider';
@@ -13,110 +14,119 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({
   return (
     <Box
       sx={{
-        borderRadius: '42px',
-        backgroundColor: '#ECEFF3',
-        alignSelf: 'center',
+        borderRadius: consciousDesignSystem.components.card.borderRadius,
+        backgroundColor: consciousDesignSystem.colors.grey[100],
         display: 'flex',
-        marginTop: '12px',
-        width: '237px',
+        padding: consciousDesignSystem.spacing[2],
+        width: 'fit-content',
         maxWidth: '100%',
-        paddingLeft: '5px',
-        paddingRight: '16px',
-        paddingTop: '6px',
-        paddingBottom: '6px',
-        alignItems: 'stretch',
-        gap: '2px',
-        fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-        fontSize: '14px',
-        fontWeight: 500,
-        whiteSpace: 'nowrap',
-        textAlign: 'center',
-        letterSpacing: '0.08px',
-        lineHeight: 1.18,
+        alignItems: 'center',
+        gap: consciousDesignSystem.spacing[1],
+        fontFamily: consciousDesignSystem.typography.fontFamily.primary,
+        fontSize: consciousDesignSystem.typography.fontSize.sm,
+        fontWeight: consciousDesignSystem.typography.fontWeight.medium,
+        boxShadow: consciousDesignSystem.components.card.shadow.subtle,
+        border: `1px solid ${consciousDesignSystem.colors.grey[200]}`,
+        transition: consciousDesignSystem.transitions.normal,
+        '&:hover': {
+          boxShadow: consciousDesignSystem.components.card.shadow.soft,
+          transform: consciousDesignSystem.accessibility.hover.transform,
+        },
       }}
     >
       {/* Consumidor Button */}
-      <Box
+      <Button
+        data-testid="consumer-role-button"
+        variant={selectedRole === 'consumer' ? 'contained' : 'outlined'}
+        onClick={() => onRoleChange('consumer')}
         sx={{
-          borderRadius: '83px',
-          backgroundColor:
-            selectedRole === 'consumer' ? '#740056' : 'transparent',
-          alignSelf: 'start',
-          display: 'flex',
-          minHeight: '33px',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          alignItems: 'stretch',
-          color: selectedRole === 'consumer' ? '#FFF' : '#740056',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease',
+          borderRadius: consciousDesignSystem.components.button.borderRadius,
+          backgroundColor: selectedRole === 'consumer'
+            ? consciousDesignSystem.colors.primary.main
+            : 'transparent',
+          color: selectedRole === 'consumer'
+            ? consciousDesignSystem.colors.primary.contrastText
+            : consciousDesignSystem.colors.primary.main,
+          border: selectedRole === 'consumer'
+            ? 'none'
+            : `1px solid ${consciousDesignSystem.colors.primary.light}`,
+          minHeight: consciousDesignSystem.components.touchTarget.minimum,
+          px: consciousDesignSystem.spacing[5],
+          py: consciousDesignSystem.spacing[2],
+          fontFamily: consciousDesignSystem.typography.fontFamily.primary,
+          fontSize: consciousDesignSystem.typography.fontSize.sm,
+          fontWeight: consciousDesignSystem.typography.fontWeight.semibold,
+          textTransform: 'none',
+          letterSpacing: '0.5px',
+          transition: consciousDesignSystem.transitions.normal,
+          boxShadow: selectedRole === 'consumer'
+            ? consciousDesignSystem.components.card.shadow.medium
+            : 'none',
           '&:hover': {
-            backgroundColor:
-              selectedRole === 'consumer' ? '#5a0042' : 'rgba(116, 0, 86, 0.1)',
+            backgroundColor: selectedRole === 'consumer'
+              ? consciousDesignSystem.colors.primary.dark
+              : `${consciousDesignSystem.colors.primary.main}10`,
+            transform: consciousDesignSystem.accessibility.hover.transform,
+            boxShadow: selectedRole === 'consumer'
+              ? consciousDesignSystem.components.card.shadow.consciousness
+              : consciousDesignSystem.components.card.shadow.soft,
+          },
+          '&:focus': {
+            outline: consciousDesignSystem.accessibility.focus.outline,
+            outlineColor: consciousDesignSystem.accessibility.focus.outlineColor,
+            outlineOffset: consciousDesignSystem.accessibility.focus.outlineOffset,
           },
         }}
-        onClick={() => onRoleChange('consumer')}
       >
-        <Box
-          sx={{
-            color: selectedRole === 'consumer' ? '#FFF' : '#740056',
-            alignSelf: 'stretch',
-            display: 'flex',
-            width: '100%',
-            paddingLeft: '20px',
-            paddingRight: '20px',
-            paddingTop: '8px',
-            paddingBottom: '8px',
-            alignItems: 'center',
-            gap: '7px',
-            justifyContent: 'center',
-            flex: 1,
-            height: '100%',
-          }}
-        >
-          Consumidor
-        </Box>
-      </Box>
+        🛒 Consumidor
+      </Button>
 
       {/* Proveedor Button */}
-      <Box
+      <Button
+        data-testid="provider-role-button"
+        variant={selectedRole === 'provider' ? 'contained' : 'outlined'}
+        onClick={() => onRoleChange('provider')}
         sx={{
-          borderRadius: '83px',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          alignItems: 'stretch',
-          color: selectedRole === 'provider' ? '#FFF' : '#740056',
-          backgroundColor:
-            selectedRole === 'provider' ? '#740056' : 'transparent',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease',
+          borderRadius: consciousDesignSystem.components.button.borderRadius,
+          backgroundColor: selectedRole === 'provider'
+            ? consciousDesignSystem.colors.secondary.main
+            : 'transparent',
+          color: selectedRole === 'provider'
+            ? consciousDesignSystem.colors.secondary.contrastText
+            : consciousDesignSystem.colors.secondary.main,
+          border: selectedRole === 'provider'
+            ? 'none'
+            : `1px solid ${consciousDesignSystem.colors.secondary.light}`,
+          minHeight: consciousDesignSystem.components.touchTarget.minimum,
+          px: consciousDesignSystem.spacing[5],
+          py: consciousDesignSystem.spacing[2],
+          fontFamily: consciousDesignSystem.typography.fontFamily.primary,
+          fontSize: consciousDesignSystem.typography.fontSize.sm,
+          fontWeight: consciousDesignSystem.typography.fontWeight.semibold,
+          textTransform: 'none',
+          letterSpacing: '0.5px',
+          transition: consciousDesignSystem.transitions.normal,
+          boxShadow: selectedRole === 'provider'
+            ? consciousDesignSystem.components.card.shadow.medium
+            : 'none',
           '&:hover': {
-            backgroundColor:
-              selectedRole === 'provider' ? '#5a0042' : 'rgba(116, 0, 86, 0.1)',
+            backgroundColor: selectedRole === 'provider'
+              ? consciousDesignSystem.colors.secondary.dark
+              : `${consciousDesignSystem.colors.secondary.main}10`,
+            transform: consciousDesignSystem.accessibility.hover.transform,
+            boxShadow: selectedRole === 'provider'
+              ? consciousDesignSystem.components.card.shadow.consciousness
+              : consciousDesignSystem.components.card.shadow.soft,
+          },
+          '&:focus': {
+            outline: consciousDesignSystem.accessibility.focus.outline,
+            outlineColor: consciousDesignSystem.accessibility.focus.outlineColor,
+            outlineOffset: consciousDesignSystem.accessibility.focus.outlineOffset,
           },
         }}
-        onClick={() => onRoleChange('provider')}
       >
-        <Box
-          sx={{
-            alignSelf: 'stretch',
-            display: 'flex',
-            width: '100%',
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            paddingTop: '8px',
-            paddingBottom: '8px',
-            alignItems: 'center',
-            gap: '7px',
-            justifyContent: 'center',
-          }}
-        >
-          Proveedor
-        </Box>
-      </Box>
+        🌱 Proveedor
+      </Button>
     </Box>
   );
 };

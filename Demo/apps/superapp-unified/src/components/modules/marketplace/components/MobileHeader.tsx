@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Typography, IconButton } from '@mui/material';
-import { Menu, Chat, Notifications } from '@mui/icons-material';
+import { Box, Typography, IconButton, InputBase, useTheme } from '@mui/material';
+import { Menu, Chat, Notifications, Search } from '@mui/icons-material';
 
 interface MobileHeaderProps {
   onMenuClick: () => void;
@@ -13,111 +13,119 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
   onChatClick,
   onNotificationsClick,
 }) => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        minHeight: '57px',
+        minHeight: '64px',
         width: '100%',
-        paddingX: '4px',
-        paddingY: '5px',
-        gap: '4px',
-        backgroundColor: '#FFF8F8',
+        px: 1.5,
+        py: 1,
+        gap: 1,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: '0 2px 8px 0 rgba(0,0,0,0.03)',
         zIndex: 10,
       }}
     >
       {/* Leading Icon - Menu */}
       <IconButton
         onClick={onMenuClick}
+        aria-label="Abrir menú principal"
         sx={{
-          width: '48px',
-          height: '48px',
+          width: 48,
+          height: 48,
           borderRadius: '100px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.04)',
+            backgroundColor: theme.palette.action.hover,
           },
         }}
       >
-        <Menu
-          sx={{
-            width: '24px',
-            height: '24px',
-            color: '#1D1B20',
-          }}
-        />
+        <Menu sx={{ width: 24, height: 24, color: theme.palette.text.primary }} />
       </IconButton>
 
-      {/* Headline - ÜMarket */}
+      {/* Logo/Branding (opcional, reemplaza por tu Logo si aplica) */}
       <Typography
         component="h1"
         sx={{
-          color: '#625B71',
+          color: theme.palette.primary.main,
           fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-          fontSize: '22px',
-          fontWeight: 400,
-          lineHeight: '1.27',
-          flex: 1,
-          textAlign: 'left',
-          marginLeft: 1,
+          fontSize: 22,
+          fontWeight: 500,
+          lineHeight: 1.27,
+          ml: 1,
+          mr: 2,
+          flexShrink: 0,
         }}
       >
         ÜMarket
       </Typography>
+
+      {/* Search Input centrado y prominente */}
+      <Box sx={{ flex: 1, mx: 1, minWidth: 0 }}>
+        <InputBase
+          placeholder="Buscar en CoomÜnity…"
+          inputProps={{ 'aria-label': 'Buscar productos o servicios', style: { fontSize: 16 } }}
+          startAdornment={<Search sx={{ mr: 1, color: theme.palette.text.secondary }} />}
+          sx={{
+            width: '100%',
+            bgcolor: theme.palette.background.default,
+            borderRadius: 2,
+            px: 2,
+            py: 0.5,
+            boxShadow: 1,
+            fontSize: 16,
+            transition: 'box-shadow 0.2s',
+            '&:focus-within': {
+              boxShadow: `0 0 0 2px ${theme.palette.primary.light}`,
+            },
+          }}
+        />
+      </Box>
 
       {/* Trailing Icons - Chat and Notifications */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          minHeight: '48px',
-          width: '96px',
+          minHeight: 48,
+          width: 96,
           justifyContent: 'flex-end',
-          gap: '4px',
+          gap: 1,
         }}
       >
         <IconButton
           onClick={onChatClick}
+          aria-label="Abrir chat comunitario"
           sx={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '20px',
+            width: 40,
+            height: 40,
+            borderRadius: 20,
             '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              backgroundColor: theme.palette.action.hover,
             },
           }}
         >
-          <Chat
-            sx={{
-              width: '20px',
-              height: '20px',
-              color: '#625B71',
-            }}
-          />
+          <Chat sx={{ width: 20, height: 20, color: theme.palette.text.secondary }} />
         </IconButton>
-
         <IconButton
           onClick={onNotificationsClick}
+          aria-label="Ver notificaciones"
           sx={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '20px',
+            width: 40,
+            height: 40,
+            borderRadius: 20,
             '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              backgroundColor: theme.palette.action.hover,
             },
           }}
         >
-          <Notifications
-            sx={{
-              width: '20px',
-              height: '20px',
-              color: '#625B71',
-            }}
-          />
+          <Notifications sx={{ width: 20, height: 20, color: theme.palette.text.secondary }} />
         </IconButton>
       </Box>
     </Box>

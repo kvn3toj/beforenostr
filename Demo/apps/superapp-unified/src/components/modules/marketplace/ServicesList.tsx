@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Box,
   Grid,
@@ -38,6 +38,8 @@ import {
 import { useAuth } from '../../../contexts/AuthContext';
 import { Product } from '../../../types/marketplace';
 import { formatPrice, safeToLocaleString } from '../../../utils/numberUtils';
+import { useNavigate } from 'react-router-dom';
+import { apiService } from '../../../lib/api-service';
 
 interface Service extends Omit<Product, 'type'> {
   type: 'service';
@@ -66,6 +68,7 @@ export const ServicesList: React.FC<ServicesListProps> = ({
 }) => {
   const { user } = useAuth();
   const [favoriteServices, setFavoriteServices] = useState<Set<string>>(new Set());
+  const navigate = useNavigate();
 
   const handleToggleFavorite = (serviceId: string) => {
     setFavoriteServices(prev => {
@@ -90,6 +93,55 @@ export const ServicesList: React.FC<ServicesListProps> = ({
       return b.rating - a.rating; // Por rating descendente
     });
   }, [services]);
+
+  // 🛠️ MIRA + ☮️ PAX: Chat Consciente entre Emprendedores
+  const useProviderChat = () => {
+    const navigate = useNavigate();
+
+    const openChatWithProvider = useCallback(async (providerId: string, providerName: string) => {
+      try {
+        // 🎯 ATLAS: Crear o obtener conversación existente con el proveedor
+        const response = await apiService.post('/social/conversations', {
+          participantId: providerId,
+          type: 'marketplace_inquiry',
+          context: {
+            source: 'services_list',
+            providerName,
+            timestamp: new Date().toISOString(),
+          }
+        });
+
+                 const conversationId = (response as any).data?.conversationId || (response as any).data?.id;
+
+        if (conversationId) {
+          // 🌙 LUNA: Navegar al chat con contexto consciente
+          navigate(`/social/chat/${conversationId}`, {
+            state: {
+              providerName,
+              chatType: 'marketplace_inquiry',
+              welcomeMessage: `¡Hola! Me interesa conocer más sobre tus servicios. ¿Podrías contarme más sobre cómo trabajas desde la filosofía del Bien Común?`
+            }
+          });
+        } else {
+          throw new Error('No se pudo crear la conversación');
+        }
+      } catch (error) {
+        console.error('Error al abrir chat con proveedor:', error);
+
+        // 🔮 PAX: Fallback consciente - usar sistema de mensajería simple
+        const fallbackChatUrl = `/social/new-message?to=${providerId}&context=marketplace&provider=${encodeURIComponent(providerName)}`;
+        navigate(fallbackChatUrl);
+      }
+    }, [navigate]);
+
+    return { openChatWithProvider };
+  };
+
+  const { openChatWithProvider } = useProviderChat();
+
+  const handleContactProvider = (providerId: string, providerName: string) => {
+    openChatWithProvider(providerId, providerName);
+  };
 
   if (isLoading) {
     return (
@@ -371,8 +423,7 @@ export const ServicesList: React.FC<ServicesListProps> = ({
                     startIcon={<Chat />}
                     onClick={(e) => {
                       e.stopPropagation();
-                      // TODO: Abrir chat con el proveedor
-                      console.log('Contactar proveedor:', service.seller.id);
+                      handleContactProvider(service.seller.id, service.seller.name);
                     }}
                     sx={{
                       borderRadius: 2,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -34,6 +34,11 @@ import {
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// ⚜️ GUARDIAN AGENTS INTEGRATION - COSMIC TRANSFORMATION SYSTEM
+import { UPlayCosmicIntegrator } from '../components/modules/uplay/enhanced/UPlayCosmicIntegrator';
+import { UPlayCosmicExperienceFlow } from '../components/modules/uplay/enhanced/UPlayCosmicExperienceFlow';
+import { UPlayCosmicDocumentation } from '../components/modules/uplay/enhanced/UPlayCosmicDocumentation';
+
 // Component Imports
 import UPlayEnhancedDashboard from '../components/modules/uplay/UPlayEnhancedDashboard';
 import UPlayAdvancedVideoPlayer from '../components/modules/uplay/UPlayAdvancedVideoPlayer';
@@ -53,25 +58,29 @@ interface TabPanelProps {
 
 // TabPanel Component
 const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
+  // Add data-testid for the first tab (Dashboard) that contains UPlayEnhancedDashboard
+  const testId = index === 0 ? 'uplay-dashboard-tab' : undefined;
+
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`uplay-tabpanel-${index}`}
       aria-labelledby={`uplay-tab-${index}`}
+      data-testid={testId}
     >
       {value === index && <Box sx={{ py: 2 }}>{children}</Box>}
     </div>
   );
 };
 
-// Enhanced UPlay Header with Advanced Corporate Styling
+// ✅ Enhanced UPlay Header with Corporate Styling
 const UPlayHeader = () => {
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
   const [animate, setAnimate] = useState(false);
   const [hoveredMetric, setHoveredMetric] = useState<string | null>(null);
 
-  // 🎯 Enhanced user stats with more variety
+  // 🎯 Enhanced user stats with corporate data
   const userStats = useMemo(() => ({
     meritos: 340,
     ondas: 125,
@@ -94,7 +103,7 @@ const UPlayHeader = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // 🎨 Enhanced metrics with different card types
+  // 🎨 Corporate metrics with official brand colors
   const metrics = [
     {
       label: 'Mëritos Totales',
@@ -116,7 +125,7 @@ const UPlayHeader = () => {
       label: 'Logros Desbloqueados',
       value: userStats.logrosDesbloqueados,
       icon: EmojiEvents,
-      type: 'magenta',
+      type: 'navy',
       trend: '2 nuevos',
       key: 'logros'
     }
@@ -135,221 +144,269 @@ const UPlayHeader = () => {
   return (
     <Fade in={animate} timeout={800}>
       <div className="main-background-advanced">
-        {/* 🎨 Advanced Header with Enhanced Contrast */}
+        {/* ✅ Corporate Header with Brand Identity */}
         <div className="header-uplay-advanced">
-          <div className="p-6">
-            {/* Header Badge */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center gap-2 bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full border border-white border-opacity-30">
+          <Container maxWidth="xl">
+            <div className="px-6 py-6">
+              {/* Corporate Header Badge */}
+              <div className="header-badge">
                 <AutoAwesome sx={{ fontSize: 20 }} />
-                <span className="font-semibold text-white">ÜPlay - GPL Gamified Play List</span>
+                <span>ÜPlay - GPL Gamified Play List</span>
               </div>
+
+              {/* Main Title with Corporate Typography */}
+              <Typography
+                variant={isMobile ? "h4" : "h3"}
+                className="header-text-enhanced"
+              >
+                Plataforma Interactiva de Aprendizaje Gamificado
+              </Typography>
+
+              {/* Corporate Subtitle */}
+              <Typography
+                variant="h6"
+                className="header-subtitle-enhanced"
+              >
+                Experimenta el poder del aprendizaje gamificado con la filosofía CoomÜnity
+              </Typography>
+            </div>
+          </Container>
+        </div>
+
+        {/* ✅ Corporate Metrics Cards with Defined Frames */}
+        <Container maxWidth="xl">
+          <div className="section-background-blue spacing-section">
+            <Typography variant="h5" className="text-gradient-blue mb-4 text-center font-black">
+              📊 Dashboard de Progreso Personal
+            </Typography>
+
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+              {metrics.map((metric, index) => (
+                <Grid key={metric.key} item xs={12} sm={6} md={4}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    className={`${
+                      metric.type === 'blue' ? 'metric-card' :
+                      metric.type === 'purple' ? 'achievement-card' :
+                      'activity-card'
+                    } group cursor-pointer spacing-component interactive-lift`}
+                    whileHover={{ y: -2, scale: 1.01 }}
+                    onMouseEnter={() => setHoveredMetric(metric.key)}
+                    onMouseLeave={() => setHoveredMetric(null)}
+                  >
+                    {/* Corporate Icon with Brand Colors */}
+                    <div className={`icon-container-base icon-container-${metric.type} group-hover:scale-105 transition-transform duration-300`}>
+                      <metric.icon className="text-white" sx={{ fontSize: 24 }} />
+                    </div>
+
+                    {/* Value with Corporate Typography */}
+                    <div className="spacing-element">
+                      <span className="text-3xl font-black text-gradient-blue">
+                        {metric.value}
+                      </span>
+                    </div>
+
+                    {/* ✅ Label with Better Contrast */}
+                    <p className="text-sm font-semibold text-dark-contrast spacing-element">
+                      {metric.label}
+                    </p>
+
+                    {/* ✅ Trend Indicator with Better Contrast */}
+                    <div className="flex items-center gap-2 text-uplay-blue">
+                      <ArrowUpward sx={{ fontSize: 16 }} />
+                      <span className="text-sm font-medium">{metric.trend}</span>
+                    </div>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </div>
+
+          {/* ✅ Corporate Progress Section with Redesigned Layout */}
+          <div className="progress-section spacing-section">
+            {/* Corporate Progress Header */}
+            <div className="progress-header">
+              <h3 className="text-lg font-bold mb-2">
+                🎯 Progreso Semanal CoomÜnity
+              </h3>
+              <p className="text-white text-opacity-90 text-sm">
+                Construyendo el Bien Común a través del aprendizaje
+              </p>
             </div>
 
-            {/* Main Title with Enhanced Contrast */}
-            <Typography
-              variant={isMobile ? "h4" : "h3"}
-              className="header-text-enhanced mb-3"
-            >
-              Plataforma Interactiva de Aprendizaje Gamificado
-            </Typography>
+            {/* Progress Content with Corporate Design */}
+            <div className="p-6 space-y-6">
+              {/* Corporate Progress Bar */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  {/* ✅ Better contrast for progress label */}
+                  <span className="font-semibold text-dark-contrast">
+                    Progreso hacia el siguiente nivel
+                  </span>
+                  <span className="text-gradient-blue font-bold text-lg">
+                    {userStats.progress}%
+                  </span>
+                </div>
 
-            {/* Subtitle with Enhanced Contrast */}
-            <Typography
-              variant="h6"
-              className="header-subtitle-enhanced mb-4"
-            >
-              Experimenta el poder del aprendizaje gamificado con la filosofía CoomÜnity
-            </Typography>
-          </div>
-        </div>
-
-        {/* 🎨 Enhanced Metrics Cards with Improved Proportions */}
-        <div className="section-background-blue spacing-section">
-          <Typography variant="h5" className="text-gradient-blue mb-4 text-center font-black">
-            📊 Dashboard de Progreso Personal
-          </Typography>
-
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            {metrics.map((metric, index) => (
-              <Grid key={metric.key} item xs={12} sm={6} md={4}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  className={`${
-                    metric.type === 'blue' ? 'metric-card' :
-                    metric.type === 'purple' ? 'achievement-card' :
-                    'activity-card'
-                  } group cursor-pointer spacing-component`}
-                  whileHover={{ y: -2, scale: 1.01 }}
-                  onMouseEnter={() => setHoveredMetric(metric.key)}
-                  onMouseLeave={() => setHoveredMetric(null)}
-                >
-                  {/* Enhanced Icon with Better Proportions */}
-                  <div className={`icon-container-base icon-container-${metric.type} group-hover:scale-105 transition-transform duration-300`}>
-                    <metric.icon className="text-white" sx={{ fontSize: 24 }} />
-                  </div>
-
-                  {/* Value with enhanced typography */}
-                  <div className="spacing-element">
-                    <span className="text-3xl font-black text-gradient-blue">
-                      {metric.value}
-                    </span>
-                  </div>
-
-                  {/* Label */}
-                  <p className="text-sm font-semibold text-gray-700 spacing-element">{metric.label}</p>
-
-                  {/* Trend indicator */}
-                  <div className={`flex items-center gap-2 ${
-                    metric.type === 'blue' ? 'text-blue-600' :
-                    metric.type === 'purple' ? 'text-purple-600' :
-                    'text-pink-600'
-                  }`}>
-                    <ArrowUpward sx={{ fontSize: 16 }} />
-                    <span className="text-sm font-medium">{metric.trend}</span>
-                  </div>
-
-                  {/* Hover effect line */}
-                  <div className="hover-line" />
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-
-        {/* 🎨 Enhanced Progress Section with Better Proportions */}
-        <div className="progress-card overflow-hidden spacing-section">
-          {/* Header with corporate gradient */}
-          <div className="bg-gradient-to-r from-green-700 to-green-900 text-white p-4 -m-6 mb-4">
-            <h3 className="text-lg font-bold mb-2">🎯 Progreso Semanal CoomÜnity</h3>
-            <p className="text-white text-opacity-85 text-sm">Construyendo el Bien Común a través del aprendizaje</p>
-          </div>
-
-          {/* Progress content with improved proportions */}
-          <div className="space-y-4">
-            {/* Circular progress with enhanced design and better size */}
-            <div className="flex items-center justify-center">
-              <div className="progress-circle-container relative">
-                <svg className="progress-circle-svg" viewBox="0 0 36 36">
-                  <path
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    fill="none"
-                    stroke="var(--uplay-gray-200)"
-                    strokeWidth="2"
+                <div className="progress-bar-advanced">
+                  <motion.div
+                    className="progress-fill-advanced"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${userStats.progress}%` }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
                   />
-                  <motion.path
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    fill="none"
-                    stroke="url(#progressGradient)"
-                    strokeWidth="3"
-                    strokeDasharray={`${userStats.progress}, 100`}
-                    initial={{ strokeDasharray: "0, 100" }}
-                    animate={{ strokeDasharray: `${userStats.progress}, 100` }}
-                    transition={{ duration: 2, ease: "easeOut" }}
-                  />
-                  <defs>
-                    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="var(--uplay-green)" />
-                      <stop offset="50%" stopColor="var(--uplay-blue)" />
-                      <stop offset="100%" stopColor="var(--uplay-purple)" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="progress-circle-content">
-                  <div className="text-center">
-                    <div className="progress-circle-percentage">
-                      {userStats.progress}%
-                    </div>
-                    <div className="progress-circle-fraction">
-                      {userStats.weeklyProgress}/{userStats.weeklyGoal}
-                    </div>
-                  </div>
+                </div>
+
+                {/* ✅ Better contrast for description */}
+                <div className="text-sm text-medium-contrast text-center">
+                  {userStats.weeklyProgress} de {userStats.weeklyGoal} videos completados esta semana
                 </div>
               </div>
-            </div>
 
-            {/* Weekly days with enhanced styling and better proportions */}
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="font-semibold text-gray-700">Progreso Semanal</span>
-                <span className="text-gradient-green font-medium">
-                  {userStats.weeklyProgress} de {userStats.weeklyGoal} videos
-                </span>
-              </div>
+              {/* Corporate Weekly Progress Days */}
+              <div className="space-y-3">
+                {/* ✅ Better contrast for section title */}
+                <h4 className="font-semibold text-dark-contrast text-center">
+                  Progreso Semanal
+                </h4>
 
-              <div className="flex gap-2">
-                {progressDays.map((day, index) => (
-                  <div key={index} className="flex-1 text-center">
+                <div className="flex justify-center gap-3">
+                  {progressDays.map((day, index) => (
                     <motion.div
-                      initial={{ scaleY: 0 }}
-                      animate={{ scaleY: 1 }}
+                      key={index}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
                       transition={{ delay: index * 0.1, duration: 0.4 }}
-                      className={`w-full h-2.5 rounded-full mb-2 origin-bottom ${
-                        day.completed
-                          ? 'bg-gradient-to-t from-green-500 to-blue-500 shadow-md'
-                          : 'bg-gray-200'
-                      }`}
-                    />
-                    <span className={`text-xs font-medium ${
-                      day.completed ? 'text-green-600' : 'text-gray-400'
-                    }`}>
+                      className={`${
+                        day.completed ? 'progress-day-completed' : 'progress-day-pending'
+                      } interactive-scale`}
+                    >
                       {day.label}
-                    </span>
-                  </div>
-                ))}
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Corporate Action Button */}
+              <div className="flex justify-center mt-6">
+                <button className="btn-primary-uplay">
+                  <PlayArrow sx={{ fontSize: 20 }} />
+                  Continuar Aventura del Conocimiento
+                </button>
               </div>
             </div>
-
-            {/* Action Button with Better Proportions */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-              <button className="btn-base-uplay btn-primary-uplay text-sm">
-                <PlayArrow sx={{ mr: 1, fontSize: 20 }} />
-                Continuar Aventura del Conocimiento
-              </button>
-            </Box>
           </div>
-        </div>
+        </Container>
       </div>
     </Fade>
   );
 };
 
+// ✅ Corporate Tab Configuration
 const tabs = [
-  { label: 'Dashboard', icon: Dashboard, component: <UPlayEnhancedDashboard /> },
-  { label: 'Videoteca', icon: VideoLibrary, component: <UPlayInteractiveLibrary />, notifications: 5 },
-  { label: 'Logros', icon: EmojiEvents, component: <UPlayAchievementSystem /> },
-  { label: 'Salas de Estudio', icon: Groups, component: <UPlayStudyRooms /> },
+  {
+    label: 'Dashboard',
+    icon: Dashboard,
+    component: <UPlayEnhancedDashboard />,
+    id: 'dashboard'
+  },
+  {
+    label: 'Videoteca',
+    icon: VideoLibrary,
+    component: <UPlayInteractiveLibrary />,
+    notifications: 5,
+    id: 'library'
+  },
+  {
+    label: 'Logros',
+    icon: EmojiEvents,
+    component: <UPlayAchievementSystem />,
+    id: 'achievements'
+  },
+  {
+    label: 'Salas de Estudio',
+    icon: Groups,
+    component: <UPlayStudyRooms />,
+    id: 'studyrooms'
+  },
 ];
 
 const UPlay: React.FC = () => {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
+  const [cosmicMode, setCosmicMode] = useState(true);
 
   // Handle tab change
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
 
-  return (
-    <Container maxWidth="xl" className="py-4 md:py-8">
-      {/* Enhanced Header with Advanced Corporate Styling */}
-      <UPlayHeader />
+  // 🌌 COSMIC EVENT HANDLERS
+  const handleCosmicEvent = useCallback((event: any) => {
+    console.log('🌌 COSMIC EVENT:', event);
+    // Here you can handle cosmic events from Guardian systems
+  }, []);
 
-      {/* 🎨 Advanced Corporate Tabs Navigation */}
-      <Fade in={true} timeout={1200}>
-        <div className="tab-container-advanced">
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+  const handleJourneyProgress = useCallback((journey: any) => {
+    console.log('🎯 JOURNEY PROGRESS:', journey);
+    // Handle user journey progress updates
+  }, []);
+
+  const handleStepComplete = useCallback((step: any) => {
+    console.log('✨ STEP COMPLETED:', step);
+    // Handle step completion with animations/rewards
+  }, []);
+
+  return (
+    <div data-testid="uplay-page" className="min-h-screen">
+      {/* ⚜️ COSMIC GUARDIAN INTEGRATION WRAPPER */}
+      <UPlayCosmicIntegrator
+        config={{
+          enableRealTimeSync: true,
+          enableCrossGuardianCommunication: true,
+          enablePhilosophyAlignment: true,
+          enableCosmicEvents: true,
+          performanceMode: 'cosmic',
+        }}
+        onCosmicEvent={handleCosmicEvent}
+      >
+        {/* 🎨 COSMIC EXPERIENCE FLOW ORCHESTRATION */}
+        <UPlayCosmicExperienceFlow
+          onJourneyProgress={handleJourneyProgress}
+          onStepComplete={handleStepComplete}
+          initialJourney={{
+            currentStage: 'discovery',
+            currentElement: 'fuego',
+            consciousnessLevel: 'explorer',
+          }}
+        >
+          {/* 📚 COSMIC DOCUMENTATION & WISDOM SYSTEM */}
+          <UPlayCosmicDocumentation
+            enableContextualHelp={true}
+            enableProgressChronicles={true}
+            enableWisdomSharing={true}
+          >
+            {/* ✅ ORIGINAL UPLAY CONTENT ENHANCED */}
+            <div className="cosmic-enhanced-content">
+              {/* ✅ Corporate Header Section */}
+              <UPlayHeader />
+
+              <Container maxWidth="xl" className="py-4 md:py-8">
+        {/* ✅ Corporate Tabs Navigation */}
+        <Fade in={true} timeout={1200}>
+          <div className="tab-container-advanced">
             {tabs.map((tab, index) => (
               <button
-                key={index}
+                key={tab.id}
                 onClick={() => setActiveTab(index)}
                 className={`${
                   activeTab === index ? 'tab-active' : 'tab-inactive'
                 } flex items-center relative`}
+                aria-label={`Navegación a ${tab.label}`}
               >
-                <tab.icon sx={{ fontSize: 20, mr: 1 }} />
+                <tab.icon sx={{ fontSize: 20 }} />
                 {tab.label}
                 {tab.notifications && (
                   <span className="tab-badge">
@@ -358,26 +415,90 @@ const UPlay: React.FC = () => {
                 )}
               </button>
             ))}
-          </Box>
-        </div>
-      </Fade>
+          </div>
+        </Fade>
 
-      {/* 🎨 Enhanced Tab Content with Background Context */}
-      <Box sx={{ mt: 2 }}>
-        {tabs.map((tab, index) => (
-          <TabPanel key={index} value={activeTab} index={index}>
-            <div className={`${
-              index === 0 ? 'section-background-blue' :
-              index === 1 ? 'section-background-purple' :
-              index === 2 ? 'section-background-blue' :
-              'section-background-purple'
-            } content-overlay`}>
-              {tab.component}
+        {/* ✅ Corporate Tab Content with Background Context */}
+        <Box sx={{ mt: 3 }}>
+          {tabs.map((tab, index) => (
+            <TabPanel key={tab.id} value={activeTab} index={index}>
+              <div className="section-background-blue animate-fade-in">
+                {tab.component}
+              </div>
+            </TabPanel>
+          ))}
+        </Box>
+
+        {/* ✅ Corporate Gallery Section with Better Contrast */}
+        <Fade in={true} timeout={1500}>
+          <div className="gallery-section spacing-section">
+            <div className="gallery-header">
+              <h3 className="text-xl font-bold">
+                📚 Biblioteca de Contenido Gamificado
+              </h3>
             </div>
-          </TabPanel>
-        ))}
-      </Box>
-    </Container>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Sample Content Items with Corporate Styling */}
+              {[
+                { title: 'Fundamentos de Ayni', category: 'Filosofía', progress: 85 },
+                { title: 'Economía Colaborativa', category: 'Bien Común', progress: 67 },
+                { title: 'Metanöia Digital', category: 'Transformación', progress: 45 },
+                { title: 'Reciprocidad en Acción', category: 'Práctica', progress: 92 },
+                { title: 'Consciencia Planetaria', category: 'Evolución', progress: 34 },
+                { title: 'Cooperación vs Competencia', category: 'Mindset', progress: 78 }
+              ].map((content, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  className="content-item interactive-lift"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      {/* ✅ Better contrast for content titles */}
+                      <h4 className="font-semibold text-uplay-primary mb-1">
+                        {content.title}
+                      </h4>
+                      <span className="category-tag">
+                        {content.category}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-gradient-blue">
+                        {content.progress}%
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="progress-bar-advanced">
+                    <div
+                      className="progress-fill-advanced"
+                      style={{ width: `${content.progress}%` }}
+                    />
+                  </div>
+
+                  <div className="mt-3 flex justify-between items-center">
+                    <button className="btn-secondary-uplay text-sm px-4 py-2">
+                      Continuar
+                    </button>
+                    {/* ✅ Better contrast for timestamp */}
+                    <span className="text-xs text-uplay-muted">
+                      Actualizado hoy
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </Fade>
+      </Container>
+            </div>
+          </UPlayCosmicDocumentation>
+        </UPlayCosmicExperienceFlow>
+      </UPlayCosmicIntegrator>
+    </div>
   );
 };
 

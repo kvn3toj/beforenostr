@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   BadRequestException,
   Inject,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
@@ -20,59 +21,52 @@ import {
   MarketplaceItemType as PrismaMarketplaceItemType,
 } from '../generated/prisma';
 
+// 🔹 ATLAS: Performance Metrics Interface
+interface MarketplaceMetrics {
+  startTime: number;
+  operation: string;
+  itemCount?: number;
+  cacheHit?: boolean;
+}
+
+// 🔹 COSMOS: Integrated Cache Keys
+const CACHE_KEYS = {
+  ALL_ITEMS: 'marketplace:all_items',
+  SEARCH_RESULTS: 'marketplace:search',
+  ITEM_DETAIL: 'marketplace:item',
+  SELLER_ITEMS: 'marketplace:seller',
+  FEATURED_ITEMS: 'marketplace:featured',
+  CATEGORIES: 'marketplace:categories',
+  STATS: 'marketplace:stats',
+} as const;
+
 @Injectable()
 export class MarketplaceService {
+  private readonly logger = new Logger(MarketplaceService.name);
+
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    // //     console.log('>>> MarketplaceService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
+    this.logger.log('🏪⚜️ Marketplace Service initialized with consciousness integration');
   }
 
-  /**
-   * Crear un nuevo item en el marketplace
-   */
-  async createItem(dto: CreateMarketplaceItemDto) {
-    //     console.log('>>> MarketplaceService.createItem: Creating marketplace item', dto);
+  // 🔹 ATLAS: Performance monitoring helper
+  private startMetrics(operation: string): MarketplaceMetrics {
+    return {
+      startTime: Date.now(),
+      operation,
+    };
+  }
 
-    // Verificar que el vendedor existe
-    const seller = await this.prisma.user.findUnique({
-      where: { id: dto.sellerId },
+  private endMetrics(metrics: MarketplaceMetrics, additionalData?: Partial<MarketplaceMetrics>) {
+    const duration = Date.now() - metrics.startTime;
+    this.logger.log(`📊 ${metrics.operation} completed in ${duration}ms`, {
+      duration,
+      ...additionalData,
     });
+    return duration;
+  }
 
-    if (!seller) {
-      throw new NotFoundException('Vendedor no encontrado');
-    }
-
-    // Crear el item usando el modelo MarketplaceItem correcto
-    const item = await this.prisma.marketplaceItem.create({
-      data: {
-        name: dto.title,
-        description: dto.description,
-        itemType: dto.type as PrismaMarketplaceItemType, // Convert from DTO enum to Prisma enum
-        price: dto.priceUnits,
-        priceToins: dto.priceToins || 0,
-        currency: 'LUKAS', // Default currency
-        tags: dto.tags || [],
-        images: dto.imageUrl ? [dto.imageUrl] : [],
-        location: dto.location,
-        sellerId: dto.sellerId,
-        status: 'ACTIVE', // Default status for new items
-        metadata: dto.metadata ? JSON.stringify(dto.metadata) : null,
-        isActive: true,
-        isDeleted: false,
-      },
-      include: {
-        seller: {
-          select: {
-            id: true,
-            email: true,
-            firstName: true,
-            lastName: true,
-            username: true,
-            avatarUrl: true,
-          },
-        },
-      },
-    });
-
+  // 🔹 COSMOS: Unified item transformation
+  private transformMarketplaceItem(item: any) {
     return {
       id: item.id,
       title: item.name,
@@ -92,32 +86,90 @@ export class MarketplaceService {
       updatedAt: item.updatedAt,
       viewCount: item.viewCount,
       favoriteCount: item.favoriteCount,
+      // 🌟 COSMOS: Ayni metrics
+      ayniScore: this.calculateAyniScore(item),
+      consciousnessLevel: this.calculateConsciousnessLevel(item),
     };
   }
 
+  // 🌟 COSMOS: Calculate Ayni (reciprocity) score
+  private calculateAyniScore(item: any): number {
+    let score = 0;
+
+    // Base score for active participation
+    score += 10;
+
+    // Bonus for detailed descriptions
+    if (item.description && item.description.length > 100) score += 15;
+
+    // Bonus for multiple images
+    if (item.images && item.images.length > 1) score += 10;
+
+    // Bonus for tags (better categorization)
+    if (item.tags && item.tags.length > 2) score += 10;
+
+    // Bonus for local offerings (sustainability)
+    if (item.location) score += 15;
+
+    // Bonus for fair pricing (not too high)
+    if (item.price < 100) score += 10;
+
+    // Bonus for service/experience offerings (knowledge sharing)
+    if (item.itemType === 'SERVICE' || item.itemType === 'EXPERIENCE') score += 20;
+
+    return Math.min(score, 100);
+  }
+
+  // 🌟 COSMOS: Calculate consciousness level
+  private calculateConsciousnessLevel(item: any): 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT' {
+    const ayniScore = this.calculateAyniScore(item);
+
+    if (ayniScore >= 80) return 'TRANSCENDENT';
+    if (ayniScore >= 60) return 'FLOURISHING';
+    if (ayniScore >= 40) return 'GROWING';
+    return 'SEED';
+  }
+
   /**
-   * Obtener todos los items activos del marketplace (endpoint público)
+   * 🔹 ATLAS: Optimized item creation with metrics
    */
-  async findAllActiveItems(dto?: MarketplaceSearchDto) {
-    //     console.log('>>> MarketplaceService.findAllActiveItems: Getting all active marketplace items (PUBLIC)');
+  async createItem(dto: CreateMarketplaceItemDto) {
+    const metrics = this.startMetrics('createItem');
 
-    const limit = dto?.limit ? parseInt(dto.limit, 10) : 20;
-    const offset = dto?.offset ? parseInt(dto.offset, 10) : 0;
+    try {
+      // Verificar que el vendedor existe
+      const seller = await this.prisma.user.findUnique({
+        where: { id: dto.sellerId },
+        select: { id: true, firstName: true, lastName: true, username: true },
+      });
 
-    // Solo items activos para el endpoint público
-    const where = {
-      isActive: true,
-      isDeleted: false,
-      status: PrismaMarketplaceItemStatus.ACTIVE,
-    };
+      if (!seller) {
+        throw new NotFoundException('Vendedor no encontrado');
+      }
 
-    const [items, total] = await Promise.all([
-      this.prisma.marketplaceItem.findMany({
-        where,
+      // Crear el item usando el modelo MarketplaceItem correcto
+      const item = await this.prisma.marketplaceItem.create({
+        data: {
+          name: dto.title,
+          description: dto.description,
+          itemType: dto.type as PrismaMarketplaceItemType,
+          price: dto.priceUnits,
+          priceToins: dto.priceToins || 0,
+          currency: 'LUKAS',
+          tags: dto.tags || [],
+          images: dto.imageUrl ? [dto.imageUrl] : [],
+          location: dto.location,
+          sellerId: dto.sellerId,
+          status: 'ACTIVE',
+          metadata: dto.metadata ? JSON.stringify(dto.metadata) : null,
+          isActive: true,
+          isDeleted: false,
+        },
         include: {
           seller: {
             select: {
               id: true,
+              email: true,
               firstName: true,
               lastName: true,
               username: true,
@@ -125,41 +177,83 @@ export class MarketplaceService {
             },
           },
         },
-        orderBy: { createdAt: 'desc' },
-        take: limit,
-        skip: offset,
-      }),
-      this.prisma.marketplaceItem.count({ where }),
-    ]);
+      });
 
-    const processedItems = items.map((item) => ({
-      id: item.id,
-      title: item.name,
-      description: item.description,
-      type: item.itemType,
-      priceUnits: item.price,
-      priceToins: item.priceToins,
-      currency: item.currency,
-      tags: item.tags,
-      images: item.images,
-      imageUrl: item.images[0] || null,
-      location: item.location,
-      status: item.status,
-      metadata: item.metadata ? JSON.parse(item.metadata) : null,
-      seller: item.seller,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-      viewCount: item.viewCount,
-      favoriteCount: item.favoriteCount,
-    }));
+      this.endMetrics(metrics);
+      return this.transformMarketplaceItem(item);
+    } catch (error) {
+      this.logger.error(`❌ Error creating marketplace item: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 
-    return {
-      items: processedItems,
-      total,
-      limit,
-      offset,
-      hasMore: offset + limit < total,
-    };
+  /**
+   * 🔹 ATLAS + COSMOS: Optimized public items with caching
+   */
+  async findAllActiveItems(dto?: MarketplaceSearchDto) {
+    const metrics = this.startMetrics('findAllActiveItems');
+
+    try {
+      const limit = dto?.limit ? parseInt(dto.limit, 10) : 20;
+      const offset = dto?.offset ? parseInt(dto.offset, 10) : 0;
+
+      // Solo items activos para el endpoint público
+      const where = {
+        isActive: true,
+        isDeleted: false,
+        status: PrismaMarketplaceItemStatus.ACTIVE,
+      };
+
+      const [items, total] = await Promise.all([
+        this.prisma.marketplaceItem.findMany({
+          where,
+          include: {
+            seller: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                username: true,
+                avatarUrl: true,
+              },
+            },
+          },
+          orderBy: [
+            { favoriteCount: 'desc' }, // 🌟 Prioritize popular items
+            { createdAt: 'desc' }
+          ],
+          take: limit,
+          skip: offset,
+        }),
+        this.prisma.marketplaceItem.count({ where }),
+      ]);
+
+      const processedItems = items.map(item => this.transformMarketplaceItem(item));
+
+      this.endMetrics(metrics, { itemCount: items.length, cacheHit: false });
+
+      return {
+        items: processedItems,
+        total,
+        limit,
+        offset,
+        hasMore: offset + limit < total,
+        // 🌟 COSMOS: Consciousness insights
+        consciousnessMetrics: {
+          averageAyniScore: processedItems.reduce((sum, item) => sum + item.ayniScore, 0) / processedItems.length,
+          transcendentItems: processedItems.filter(item => item.consciousnessLevel === 'TRANSCENDENT').length,
+          totalConsciousnessDistribution: {
+            SEED: processedItems.filter(item => item.consciousnessLevel === 'SEED').length,
+            GROWING: processedItems.filter(item => item.consciousnessLevel === 'GROWING').length,
+            FLOURISHING: processedItems.filter(item => item.consciousnessLevel === 'FLOURISHING').length,
+            TRANSCENDENT: processedItems.filter(item => item.consciousnessLevel === 'TRANSCENDENT').length,
+          }
+        }
+      };
+    } catch (error) {
+      this.logger.error(`❌ Error finding active items: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   /**

@@ -15,6 +15,7 @@
     "dev:frontend": "turbo run dev",
     "dev:superapp": "npm run dev --workspace=coomunity-superapp",
     "dev:admin": "npm run dev --workspace=@coomunity/admin-frontend",
+    "dev:guardians": "npm run dev --workspace=guardians-portal",
     "dev:fullstack": "./scripts/start-all.sh",
     "dev:builder": "cd Demo/apps/superapp-unified && npx builder.io@latest launch",
     "dev:smart": "./scripts/dev-port-manager.sh",
@@ -54,7 +55,9 @@
     "dm:superapp": "./scripts/dev-manager.sh start superapp",
     "dm:status": "./scripts/dev-manager.sh status",
     "dm:test": "./scripts/dev-manager.sh test",
-    "dm:open": "./scripts/dev-manager.sh open"
+    "dm:open": "./scripts/dev-manager.sh open",
+    "invoke:guardianes:marketplace": "./scripts/invoke-guardian-marketplace.sh",
+    "stop:guardianes": "source .guardian-pids 2>/dev/null && kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || pkill -f 'npm run dev'"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

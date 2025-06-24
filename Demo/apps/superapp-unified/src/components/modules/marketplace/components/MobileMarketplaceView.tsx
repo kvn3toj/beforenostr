@@ -103,6 +103,7 @@ import { CategoryCarousel } from './CategoryCarousel';
 import { RoleToggle } from './RoleToggle';
 import { useMarketplaceData } from '../../../../hooks/useRealBackendData';
 import '../../../../styles/marketplace-enhanced.css';
+import consciousDesignSystem from '../../../../theme/consciousDesignSystem';
 
 // Types
 interface MarketplaceItem {
@@ -303,218 +304,32 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     { value: 'nearby', label: 'Más Cercanos', icon: '📍' },
   ];
 
-  /* DATOS MOCK ANTIGUOS - AHORA USANDO DATOS REALES
-  const enhancedMockProducts: MarketplaceItem[] = [
-    {
-      id: '1',
-      title: 'Desarrollo Web Premium',
-      description:
-        'Aplicación web completa con React, Node.js, base de datos y deployment. Incluye SEO, optimización y soporte.',
-      price: 450,
-      originalPrice: 650,
-      currency: 'ü',
-      category: 'tecnologia',
-      images: ['/images/service-web-dev.jpg'],
-      seller: {
-        id: '1',
-        name: 'Alex Rodriguez',
-        username: '@alexdev',
-        avatar: '/images/avatar-alex.jpg',
-        verified: true,
-        rating: 4.9,
-        reviewCount: 47,
-        responseTime: '< 1 hora',
-        isOnline: true,
+  // 🎨 ARIA + 🔥 PHOENIX: Sistema de Favoritos Consciente
+  const useFavoriteToggle = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+      mutationFn: async ({ itemId, action }: { itemId: string; action: 'add' | 'remove' }) => {
+        // 🎯 ATLAS: Llamada real al backend para toggle de favorito
+        const response = await apiService.post(`/marketplace/items/${itemId}/favorite`, {
+          action
+        });
+        return response.data;
       },
-      location: 'Cali, Valle del Cauca',
-      rating: 4.9,
-      reviewCount: 47,
-      tags: ['react', 'nodejs', 'premium', 'seo'],
-      featured: true,
-      trending: true,
-      createdAt: '2024-01-01',
-      viewCount: 156,
-      favoriteCount: 89,
-      isFavorited: false,
-      discount: 31,
-      deliveryTime: '15-30 días',
-      hasVideo: true,
-      is24Hours: false,
-    },
-    {
-      id: '2',
-      title: 'Diseño UX/UI Completo',
-      description:
-        'Diseño de experiencia de usuario e interfaz completa para apps móviles y web. Wireframes, prototipos y guías de estilo.',
-      price: 320,
-      currency: 'ü',
-      category: 'diseno',
-      images: ['/images/service-design.jpg'],
-      seller: {
-        id: '2',
-        name: 'María García',
-        username: '@maria_design',
-        avatar: '/images/avatar-maria.jpg',
-        verified: true,
-        rating: 4.8,
-        reviewCount: 38,
-        responseTime: '< 2 horas',
-        isOnline: true,
+      onSuccess: (data: any, variables: { itemId: string; action: 'add' | 'remove' }) => {
+        // 🔍 NIRA: Invalidar queries relacionadas para actualizar estado
+        queryClient.invalidateQueries({ queryKey: ['marketplace', 'data'] });
+        queryClient.invalidateQueries({ queryKey: ['user', 'favorites'] });
+
+        // 🌸 ZENO: Feedback visual consciente
+        console.log(`✨ ${variables.action === 'add' ? 'Agregado a' : 'Removido de'} favoritos con amor`);
       },
-      location: 'Medellín, Antioquia',
-      rating: 4.8,
-      reviewCount: 38,
-      tags: ['ux', 'ui', 'prototyping', 'figma'],
-      featured: true,
-      trending: false,
-      createdAt: '2024-01-02',
-      viewCount: 124,
-      favoriteCount: 67,
-      isFavorited: true,
-      deliveryTime: '7-14 días',
-      hasVideo: false,
-      is24Hours: false,
-    },
-    {
-      id: '3',
-      title: 'Marketing Digital 360°',
-      description:
-        'Estrategia completa de marketing digital: redes sociales, content marketing, SEO, SEM y analytics.',
-      price: 275,
-      currency: 'ü',
-      category: 'marketing',
-      images: ['/images/service-marketing.jpg'],
-      seller: {
-        id: '3',
-        name: 'Carlos Mendoza',
-        username: '@carlos_mkt',
-        avatar: '/images/avatar-carlos.jpg',
-        verified: true,
-        rating: 4.7,
-        reviewCount: 52,
-        responseTime: '< 30 min',
-        isOnline: false,
-      },
-      location: 'Bogotá, Cundinamarca',
-      rating: 4.7,
-      reviewCount: 52,
-      tags: ['marketing', 'social media', 'seo', 'analytics'],
-      featured: true,
-      trending: true,
-      createdAt: '2024-01-03',
-      viewCount: 198,
-      favoriteCount: 134,
-      isFavorited: false,
-      deliveryTime: '5-10 días',
-      hasVideo: true,
-      is24Hours: true,
-    },
-    {
-      id: '4',
-      title: 'Bootcamp Programación',
-      description:
-        'Curso intensivo de 12 semanas para convertirte en desarrollador full-stack. Proyectos reales y mentorías.',
-      price: 850,
-      originalPrice: 1200,
-      currency: 'ü',
-      category: 'educacion',
-      images: ['/images/service-course.jpg'],
-      seller: {
-        id: '4',
-        name: 'Tech Academy',
-        username: '@tech_academy',
-        avatar: '/images/avatar-academy.jpg',
-        verified: true,
-        rating: 4.9,
-        reviewCount: 156,
-        responseTime: '< 4 horas',
-        isOnline: true,
-      },
-      location: 'Online - Virtual',
-      rating: 4.9,
-      reviewCount: 156,
-      tags: ['bootcamp', 'fullstack', 'certificación', 'mentoría'],
-      featured: true,
-      trending: true,
-      createdAt: '2024-01-04',
-      viewCount: 298,
-      favoriteCount: 201,
-      isFavorited: false,
-      discount: 29,
-      deliveryTime: '12 semanas',
-      hasVideo: true,
-      is24Hours: false,
-    },
-    {
-      id: '5',
-      title: 'Consultoría Empresarial',
-      description:
-        'Optimización de procesos empresariales, análisis financiero y plan estratégico personalizado.',
-      price: 650,
-      currency: 'ü',
-      category: 'consultoria',
-      images: ['/images/service-consulting.jpg'],
-      seller: {
-        id: '5',
-        name: 'Patricia Luna',
-        username: '@dra_luna',
-        avatar: '/images/avatar-patricia.jpg',
-        verified: true,
-        rating: 5.0,
-        reviewCount: 29,
-        responseTime: '< 6 horas',
-        isOnline: false,
-      },
-      location: 'Barranquilla, Atlántico',
-      rating: 5.0,
-      reviewCount: 29,
-      tags: ['consultoría', 'estrategia', 'finanzas', 'procesos'],
-      featured: false,
-      trending: false,
-      createdAt: '2024-01-05',
-      viewCount: 87,
-      favoriteCount: 45,
-      isFavorited: false,
-      deliveryTime: '2-4 semanas',
-      hasVideo: false,
-      is24Hours: false,
-    },
-    {
-      id: '6',
-      title: 'Terapia Holística',
-      description:
-        'Sesiones de reiki, aromaterapia, meditación guiada y plan de bienestar integral personalizado.',
-      price: 120,
-      currency: 'ü',
-      category: 'salud',
-      images: ['/images/service-therapy.jpg'],
-      seller: {
-        id: '6',
-        name: 'Luz Elena',
-        username: '@luz_bienestar',
-        avatar: '/images/avatar-luz.jpg',
-        verified: true,
-        rating: 4.8,
-        reviewCount: 94,
-        responseTime: '< 1 hora',
-        isOnline: true,
-      },
-      location: 'Manizales, Caldas',
-      rating: 4.8,
-      reviewCount: 94,
-      tags: ['reiki', 'bienestar', 'meditación', 'holístico'],
-      featured: false,
-      trending: true,
-      createdAt: '2024-01-06',
-      viewCount: 167,
-      favoriteCount: 112,
-      isFavorited: true,
-      deliveryTime: '1-3 días',
-      hasVideo: false,
-      is24Hours: true,
-    },
-  ];
-  */
+      onError: (error: any) => {
+        // 🔮 PAX: Manejo consciente de errores
+        console.error('Error al actualizar favorito:', error);
+      }
+    });
+  };
 
   // 🔄 Función para mapear datos del backend/mock a la estructura de la UI (SINCRONIZADA CON DESKTOP)
   const mapItemToUIItem = useCallback((item: any): MarketplaceItem => {
@@ -660,15 +475,34 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     setShowFilters(true);
   }, []);
 
-  const handleToggleFavorite = useCallback(
-    (itemId: string) => {
-      if (!user) return;
-      // TODO: Implementar toggle de favorito
-      setShowFeedback(true);
-      setFeedbackMessage('¡Agregado a favoritos!');
-    },
-    [user]
-  );
+  // Reemplazar por:
+  const { mutate: toggleFavorite } = useFavoriteToggle();
+
+  const handleToggleFavorite = useCallback((itemId: string) => {
+    if (!user) return;
+
+    // 🔍 NIRA: Determinar estado actual de favorito
+    const currentlyFavorited = userFavorites.includes(itemId);
+
+    toggleFavorite({
+      itemId,
+      action: currentlyFavorited ? 'remove' : 'add'
+    });
+
+    // 🌸 ZENO: Actualizar estado local inmediatamente para UX fluida
+    setFavorites(prev => {
+      const newFavorites = new Set(prev);
+      if (currentlyFavorited) {
+        newFavorites.delete(itemId);
+      } else {
+        newFavorites.add(itemId);
+      }
+      return newFavorites;
+    });
+
+    setShowFeedback(true);
+    setFeedbackMessage(currentlyFavorited ? 'Removido de favoritos' : '¡Agregado a favoritos!');
+  }, [user, toggleFavorite, userFavorites]);
 
   // Items a mostrar - SINCRONIZADO CON DESKTOP
   const itemsToDisplay = useMemo(() => {
@@ -835,28 +669,130 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
 
   return (
     <Box
+      data-testid="mobile-marketplace"
       sx={{
         minHeight: '100vh',
         backgroundColor: '#f8f9fa',
         position: 'relative',
       }}
     >
-      {/* Header mejorado con animación */}
+      {/* Header redesigned with conscious design system */}
       <Slide direction="down" in={showTopBar} mountOnEnter unmountOnExit>
         <AppBar
           position="fixed"
           elevation={0}
           sx={{
-            backgroundColor: '#fff8f8',
-            borderBottom: '1px solid #f0f0f0',
+            background: consciousDesignSystem.colors.grey[50],
+            borderBottom: `1px solid ${consciousDesignSystem.colors.grey[200]}`,
             zIndex: 1100,
+            boxShadow: consciousDesignSystem.components.card.shadow.soft,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            height: '72px', // Increased from 68px for better touch targets
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <MobileHeader
-            onMenuClick={onMenuClick}
-            onChatClick={onChatClick}
-            onNotificationsClick={onNotificationsClick}
-          />
+          <Toolbar
+            sx={{
+              width: '100%',
+              px: consciousDesignSystem.spacing[5],
+              py: consciousDesignSystem.spacing[3],
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              minHeight: 'unset !important',
+            }}
+          >
+            {/* Left section - Menu button */}
+            <IconButton
+              onClick={onMenuClick}
+              sx={{
+                color: consciousDesignSystem.colors.primary.main,
+                width: consciousDesignSystem.components.touchTarget.minimum,
+                height: consciousDesignSystem.components.touchTarget.minimum,
+                borderRadius: consciousDesignSystem.components.button.borderRadius,
+                transition: consciousDesignSystem.transitions.normal,
+                '&:hover': {
+                  backgroundColor: `${consciousDesignSystem.colors.primary.main}10`,
+                  transform: consciousDesignSystem.accessibility.hover.transform,
+                },
+              }}
+            >
+              <Menu fontSize="medium" />
+            </IconButton>
+
+            {/* Center section - Logo and title */}
+            <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontFamily: consciousDesignSystem.typography.fontFamily.consciousness,
+                  fontSize: consciousDesignSystem.typography.fontSize.xl,
+                  fontWeight: consciousDesignSystem.typography.fontWeight.bold,
+                  color: consciousDesignSystem.colors.primary.main,
+                  background: `linear-gradient(135deg, ${consciousDesignSystem.colors.primary.main} 0%, ${consciousDesignSystem.colors.accent.main} 100%)`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textAlign: 'center',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                🌱 Marketplace CoomÜnity
+              </Typography>
+            </Box>
+
+            {/* Right section - Notifications and Chat */}
+            <Box sx={{ display: 'flex', gap: consciousDesignSystem.spacing[2] }}>
+              <IconButton
+                onClick={onChatClick}
+                sx={{
+                  color: consciousDesignSystem.colors.secondary.main,
+                  width: consciousDesignSystem.components.touchTarget.minimum,
+                  height: consciousDesignSystem.components.touchTarget.minimum,
+                  borderRadius: consciousDesignSystem.components.button.borderRadius,
+                  transition: consciousDesignSystem.transitions.normal,
+                  '&:hover': {
+                    backgroundColor: `${consciousDesignSystem.colors.secondary.main}10`,
+                    transform: consciousDesignSystem.accessibility.hover.transform,
+                  },
+                }}
+              >
+                <Chat fontSize="medium" />
+              </IconButton>
+
+              <Badge
+                badgeContent={3}
+                color="error"
+                sx={{
+                  '& .MuiBadge-badge': {
+                    backgroundColor: consciousDesignSystem.colors.accent.main,
+                    color: consciousDesignSystem.colors.accent.contrastText,
+                    fontSize: consciousDesignSystem.typography.fontSize.xs,
+                    fontWeight: consciousDesignSystem.typography.fontWeight.bold,
+                  },
+                }}
+              >
+                <IconButton
+                  onClick={onNotificationsClick}
+                  sx={{
+                    color: consciousDesignSystem.colors.accent.main,
+                    width: consciousDesignSystem.components.touchTarget.minimum,
+                    height: consciousDesignSystem.components.touchTarget.minimum,
+                    borderRadius: consciousDesignSystem.components.button.borderRadius,
+                    transition: consciousDesignSystem.transitions.normal,
+                    '&:hover': {
+                      backgroundColor: `${consciousDesignSystem.colors.accent.main}10`,
+                      transform: consciousDesignSystem.accessibility.hover.transform,
+                    },
+                  }}
+                >
+                  <Notifications fontSize="medium" />
+                </IconButton>
+              </Badge>
+            </Box>
+          </Toolbar>
         </AppBar>
       </Slide>
 
@@ -931,7 +867,9 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
                 value={searchQuery}
                 onChange={setSearchQuery}
                 onSubmit={handleSearch}
-                placeholder="¿Qué necesitas hoy?"
+                onFilterClick={() => setShowFilters(true)}
+                placeholder="🔍 Descubre productos y servicios CoomÜnity"
+                showVoiceSearch={true}
               />
             </Box>
           </Fade>

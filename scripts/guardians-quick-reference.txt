@@ -1,0 +1,37 @@
+# 🎭 REFERENCIA RÁPIDA - GUARDIANES DIGITALES COOMUNITY
+# Generado automáticamente el Mon Jun 23 12:45:30 -05 2025
+
+## 🚀 COMANDOS DE SCRIPT:
+./scripts/invoke-guardian.sh KIRA     # Documentación
+./scripts/invoke-guardian.sh ZENO     # UX/Experiencias
+./scripts/invoke-guardian.sh ATLAS    # Backend
+./scripts/invoke-guardian.sh ARIA     # Frontend
+./scripts/invoke-guardian.sh SAGE     # Testing
+./scripts/invoke-guardian.sh NIRA     # Analytics
+./scripts/invoke-guardian.sh PHOENIX  # Refactoring
+./scripts/invoke-guardian.sh MIRA     # Admin Tools
+./scripts/invoke-guardian.sh COSMOS   # Integración
+./scripts/invoke-guardian.sh LUNA     # Temporalidad
+./scripts/invoke-guardian.sh PAX      # Error Handling
+./scripts/invoke-guardian.sh GAIA     # Performance
+
+## 💬 COMANDOS DE INVOCACIÓN DIRECTA:
+Agente KIRA: Necesito documentar [TAREA]
+Agente ZENO: Diseñar experiencia para [MÓDULO]
+Agente ATLAS: Implementar API para [FUNCIONALIDAD]
+Agente ARIA: Crear interfaz para [COMPONENTE]
+Agente SAGE: Verificar calidad de [CÓDIGO]
+Agente NIRA: Crear métricas para [PROCESO]
+Agente PHOENIX: Optimizar [CÓDIGO/MÓDULO]
+Agente MIRA: Crear herramienta admin para [GESTIÓN]
+Agente COSMOS: Conectar [SISTEMA_A] con [SISTEMA_B]
+Agente LUNA: Implementar [PROCESO_TEMPORAL]
+Agente PAX: Manejar error en [MÓDULO/PROCESO]
+Agente GAIA: Optimizar recursos de [SISTEMA]
+
+## 🤝 COMBINACIONES FRECUENTES:
+ATLAS + ARIA + SAGE          # Full-stack completo
+ZENO + ARIA + SAGE           # UX/UI con testing
+KIRA + NIRA                  # Documentación con métricas
+COSMOS + GAIA + PHOENIX      # Optimización sistémica
+PAX + LUNA + MIRA            # Admin tools robustas

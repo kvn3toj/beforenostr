@@ -49,7 +49,7 @@ import {
   MoreVert,
   ZoomIn,
   AutoAwesome,
-  Fire,
+  LocalFireDepartment,
   WorkspacePremium,
   Schedule,
   DeliveryDining,
@@ -59,7 +59,7 @@ import {
   ChevronLeft,
   ChevronRight,
   AddShoppingCart,
-  QuickReplyOutlined,
+  QuickreplyOutlined,
 } from '@mui/icons-material';
 import { useAuth } from '../../../../contexts/AuthContext';
 import {
@@ -67,6 +67,10 @@ import {
   useDeleteMarketplaceItem,
 } from '../../../../hooks/useRealBackendData';
 import { EditItemModal } from './EditItemModal';
+import consciousDesignSystem from '../../../../theme/consciousDesignSystem';
+import StatusBadges from './StatusBadges';
+import PriceDisplay from './PriceDisplay';
+import SellerInfo from './SellerInfo';
 
 interface ProductCardProps {
   id: string;
@@ -155,6 +159,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const [showQuickView, setShowQuickView] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Hooks for edit/delete functionality
@@ -175,12 +181,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setMenuAnchorEl(event.currentTarget);
+    setAnchorEl(event.currentTarget);
     setIsMenuOpen(true);
   };
 
   const handleMenuClose = () => {
-    setMenuAnchorEl(null);
+    setAnchorEl(null);
     setIsMenuOpen(false);
   };
 
@@ -227,13 +233,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleDeleteClick = () => {
     handleMenuClose();
-    setDeleteDialogOpen(true);
+    setShowDeleteDialog(true);
   };
 
   const handleDeleteConfirm = async () => {
     try {
       await deleteItemMutation.mutateAsync(id);
-      setDeleteDialogOpen(false);
+      setShowDeleteDialog(false);
       // Refresh the marketplace data if callback provided
       if (onRefresh) {
         onRefresh();
@@ -252,6 +258,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     if (onRefresh) {
       onRefresh();
     }
+  };
+
+  // Función para manejar el clic en el botón de edición
+  const handleEditClick = () => {
+    handleMenuClose();
+    setEditModalOpen(true);
   };
 
   // Configuraciones por tamaño
@@ -297,74 +309,74 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       flexDirection: 'column' as const,
       position: 'relative' as const,
       overflow: 'hidden' as const,
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      borderRadius: 3,
-      backgroundColor: '#ffffff', // Fondo blanco base para todas las variantes
+      transition: consciousDesignSystem.transitions.normal,
+      borderRadius: consciousDesignSystem.components.card.borderRadius,
+      backgroundColor: consciousDesignSystem.colors.grey[50],
     };
 
     const variantStyles = {
       recommended: {
         ...baseStyles,
-        border: '1px solid #e0e0e0',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        backgroundColor: '#ffffff', // Asegurar fondo blanco
+        border: `1px solid ${consciousDesignSystem.colors.grey[200]}`,
+        boxShadow: consciousDesignSystem.components.card.shadow.subtle,
+        backgroundColor: consciousDesignSystem.colors.grey[50],
         '&:hover': enableHover
           ? {
-              transform: 'translateY(-6px)',
-              boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
-              borderColor: '#1976d2',
-              backgroundColor: '#ffffff', // Mantener fondo blanco en hover
+              transform: consciousDesignSystem.accessibility.hover.transform,
+              boxShadow: consciousDesignSystem.components.card.shadow.soft,
+              borderColor: consciousDesignSystem.colors.primary.light,
+              backgroundColor: consciousDesignSystem.colors.grey[50],
             }
           : {},
       },
       category: {
         ...baseStyles,
-        border: '1px solid #f0f0f0',
-        backgroundColor: '#fafafa',
+        border: `1px solid ${consciousDesignSystem.colors.grey[100]}`,
+        backgroundColor: consciousDesignSystem.colors.grey[50],
         '&:hover': enableHover
           ? {
-              backgroundColor: '#f5f5f5',
-              transform: 'translateY(-3px)',
-              boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+              backgroundColor: consciousDesignSystem.colors.grey[100],
+              transform: consciousDesignSystem.accessibility.hover.transform,
+              boxShadow: consciousDesignSystem.components.card.shadow.subtle,
             }
           : {},
       },
       featured: {
         ...baseStyles,
-        border: '2px solid #FFD700',
-        background: 'linear-gradient(135deg, #FFF9C4 0%, #FFFFFF 100%)',
-        boxShadow: '0 4px 15px rgba(255, 215, 0, 0.3)',
+        border: `2px solid ${consciousDesignSystem.colors.accent.main}`,
+        background: `linear-gradient(135deg, ${consciousDesignSystem.colors.accent.main}10 0%, ${consciousDesignSystem.colors.grey[50]} 100%)`,
+        boxShadow: consciousDesignSystem.components.card.shadow.consciousness,
         '&:hover': enableHover
           ? {
-              transform: 'translateY(-8px) scale(1.02)',
-              boxShadow: '0 12px 30px rgba(255, 215, 0, 0.4)',
-              background: 'linear-gradient(135deg, #FFF9C4 0%, #FFFFFF 100%)',
+              transform: consciousDesignSystem.accessibility.hover.transformExtra,
+              boxShadow: consciousDesignSystem.components.card.shadow.extraLarge,
+              background: `linear-gradient(135deg, ${consciousDesignSystem.colors.accent.main}20 0%, ${consciousDesignSystem.colors.grey[50]} 100%)`,
             }
           : {},
       },
       trending: {
         ...baseStyles,
-        border: '2px solid #FF6B6B',
-        background: 'linear-gradient(135deg, #FFE3E3 0%, #FFFFFF 100%)',
-        boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)',
+        border: `2px solid ${consciousDesignSystem.colors.secondary.main}`,
+        background: `linear-gradient(135deg, ${consciousDesignSystem.colors.secondary.main}10 0%, ${consciousDesignSystem.colors.grey[50]} 100%)`,
+        boxShadow: consciousDesignSystem.components.card.shadow.consciousness,
         '&:hover': enableHover
           ? {
-              transform: 'translateY(-8px) scale(1.02)',
-              boxShadow: '0 12px 30px rgba(255, 107, 107, 0.4)',
-              background: 'linear-gradient(135deg, #FFE3E3 0%, #FFFFFF 100%)',
+              transform: consciousDesignSystem.accessibility.hover.transformExtra,
+              boxShadow: consciousDesignSystem.components.card.shadow.extraLarge,
+              background: `linear-gradient(135deg, ${consciousDesignSystem.colors.secondary.main}20 0%, ${consciousDesignSystem.colors.grey[50]} 100%)`,
             }
           : {},
       },
       compact: {
         ...baseStyles,
         height: 180,
-        border: '1px solid #e8e8e8',
-        backgroundColor: '#ffffff', // Asegurar fondo blanco
+        border: `1px solid ${consciousDesignSystem.colors.grey[200]}`,
+        backgroundColor: consciousDesignSystem.colors.grey[50],
         '&:hover': enableHover
           ? {
-              transform: 'translateY(-2px)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-              backgroundColor: '#ffffff', // Mantener fondo blanco en hover
+              transform: consciousDesignSystem.accessibility.hover.transformSmall,
+              boxShadow: consciousDesignSystem.components.card.shadow.soft,
+              backgroundColor: consciousDesignSystem.colors.grey[50],
             }
           : {},
       },
@@ -603,7 +615,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Owner Actions Menu */}
         <Menu
-          anchorEl={menuAnchorEl}
+          anchorEl={anchorEl}
           open={isMenuOpen}
           onClose={handleMenuClose}
           PaperProps={{
@@ -655,8 +667,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Delete Confirmation Dialog */}
         <Dialog
-          open={deleteDialogOpen}
-          onClose={() => setDeleteDialogOpen(false)}
+          open={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
           maxWidth="sm"
           fullWidth
         >
@@ -677,7 +689,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </DialogContent>
           <DialogActions sx={{ p: 2, gap: 1 }}>
             <Button
-              onClick={() => setDeleteDialogOpen(false)}
+              onClick={() => setShowDeleteDialog(false)}
               variant="outlined"
             >
               Cancelar
@@ -1240,7 +1252,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Owner Actions Menu */}
       <Menu
-        anchorEl={menuAnchorEl}
+        anchorEl={anchorEl}
         open={isMenuOpen}
         onClose={handleMenuClose}
         PaperProps={{
@@ -1292,8 +1304,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Delete Confirmation Dialog */}
       <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
+        open={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
         maxWidth="sm"
         fullWidth
       >
@@ -1313,7 +1325,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </Typography>
         </DialogContent>
         <DialogActions sx={{ p: 2, gap: 1 }}>
-          <Button onClick={() => setDeleteDialogOpen(false)} variant="outlined">
+          <Button onClick={() => setShowDeleteDialog(false)} variant="outlined">
             Cancelar
           </Button>
           <Button
@@ -1327,370 +1339,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </DialogActions>
       </Dialog>
     </>
-  );
-};
-
-// 🏷️ Componente de badges de estado
-interface StatusBadgesProps {
-  featured: boolean;
-  trending: boolean;
-  discount?: number;
-  is24Hours: boolean;
-  isUrgent: boolean;
-  hasVideo: boolean;
-  size: 'small' | 'medium' | 'large';
-}
-
-const StatusBadges: React.FC<StatusBadgesProps> = ({
-  featured,
-  trending,
-  discount,
-  is24Hours,
-  isUrgent,
-  hasVideo,
-  size,
-}) => {
-  const badgeSize = size === 'small' ? 'small' : 'medium';
-
-  return (
-    <>
-      {/* Badges superiores izquierdos */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 8,
-          left: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 0.5,
-          zIndex: 2,
-        }}
-      >
-        {featured && (
-          <Chip
-            icon={<WorkspacePremium />}
-            label="Destacado"
-            size={badgeSize}
-            sx={{
-              background: 'linear-gradient(45deg, #FFD700, #FFA500)',
-              color: 'white',
-              fontWeight: 'bold',
-              '& .MuiChip-icon': { color: 'white' },
-            }}
-          />
-        )}
-        {trending && (
-          <Chip
-            icon={<TrendingUp />}
-            label="Tendencia"
-            size={badgeSize}
-            sx={{
-              background: 'linear-gradient(45deg, #FF6B6B, #FF8E8E)',
-              color: 'white',
-              fontWeight: 'bold',
-              '& .MuiChip-icon': { color: 'white' },
-            }}
-          />
-        )}
-        {isUrgent && (
-          <Chip
-            icon={<FlashOn />}
-            label="Urgente"
-            size={badgeSize}
-            sx={{
-              background: 'linear-gradient(45deg, #FF4444, #FF6666)',
-              color: 'white',
-              fontWeight: 'bold',
-              animation: 'pulse 2s infinite',
-              '& .MuiChip-icon': { color: 'white' },
-            }}
-          />
-        )}
-      </Box>
-
-      {/* Badges superiores derechos */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 8,
-          right: 48, // Espacio para el botón de favorito
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 0.5,
-          alignItems: 'flex-end',
-          zIndex: 2,
-        }}
-      >
-        {discount && (
-          <Chip
-            label={`-${discount}%`}
-            size={badgeSize}
-            sx={{
-              backgroundColor: '#FF4444',
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: size === 'small' ? '10px' : '12px',
-            }}
-          />
-        )}
-        {is24Hours && (
-          <Chip
-            icon={<Schedule />}
-            label="24h"
-            size={badgeSize}
-            sx={{
-              backgroundColor: '#4CAF50',
-              color: 'white',
-              fontWeight: 'bold',
-              '& .MuiChip-icon': { color: 'white' },
-            }}
-          />
-        )}
-      </Box>
-
-      {/* Badge de video */}
-      {hasVideo && (
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 40, // Arriba del rating
-            right: 8,
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            borderRadius: 1,
-            px: 1,
-            py: 0.5,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-            zIndex: 2,
-          }}
-        >
-          <PlayArrow sx={{ fontSize: 16, color: 'white' }} />
-          <Typography variant="caption" color="white" fontWeight="bold">
-            Video
-          </Typography>
-        </Box>
-      )}
-    </>
-  );
-};
-
-// 💰 Componente de precio
-interface PriceDisplayProps {
-  price: number;
-  originalPrice?: number;
-  currency: string;
-  discount?: number;
-  size: 'small' | 'medium' | 'large';
-}
-
-const PriceDisplay: React.FC<PriceDisplayProps> = ({
-  price,
-  originalPrice,
-  currency,
-  discount,
-  size,
-}) => {
-  const formatPrice = (price: number, currency: string) => {
-    const safePrice = price || 0;
-    if (currency === 'ü' || currency === 'Lükas' || currency === 'LUKAS') {
-      return `ü ${safePrice.toLocaleString()}`;
-    }
-    return `$${safePrice.toLocaleString()}`;
-  };
-
-  const priceVariant =
-    size === 'small' ? 'subtitle2' : size === 'medium' ? 'h6' : 'h5';
-
-  return (
-    <Box
-      sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}
-    >
-      {/* Precio original tachado */}
-      {originalPrice && (
-        <Typography
-          variant="body2"
-          sx={{
-            textDecoration: 'line-through',
-            color: 'text.secondary',
-            fontSize: size === 'small' ? '12px' : '14px',
-          }}
-        >
-          {formatPrice(originalPrice, currency)}
-        </Typography>
-      )}
-
-      {/* Precio actual */}
-      <Typography
-        variant={priceVariant}
-        fontWeight="bold"
-        color="primary"
-        sx={{
-          fontSize:
-            size === 'small' ? '16px' : size === 'medium' ? '18px' : '24px',
-        }}
-      >
-        {formatPrice(price, currency)}
-      </Typography>
-
-      {/* Badge de descuento */}
-      {discount && (
-        <Chip
-          label={`${discount}% OFF`}
-          size="small"
-          sx={{
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '10px',
-            height: 20,
-          }}
-        />
-      )}
-    </Box>
-  );
-};
-
-// 👤 Componente de información del vendedor
-interface SellerInfoProps {
-  seller: {
-    name: string;
-    username: string;
-    avatar: string;
-    verified?: boolean;
-    isOnline?: boolean;
-    responseTime?: string;
-    rating?: number;
-  };
-  location: string;
-  deliveryTime?: string;
-  compact?: boolean;
-}
-
-const SellerInfo: React.FC<SellerInfoProps> = ({
-  seller,
-  location,
-  deliveryTime,
-  compact = false,
-}) => {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: compact ? 'center' : 'flex-start',
-        gap: 1,
-      }}
-    >
-      {/* Info del vendedor */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
-        <Badge
-          overlap="circular"
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          badgeContent={
-            seller.isOnline ? (
-              <Box
-                sx={{
-                  width: 12,
-                  height: 12,
-                  borderRadius: '50%',
-                  backgroundColor: '#4CAF50',
-                  border: '2px solid white',
-                }}
-              />
-            ) : null
-          }
-        >
-          <Avatar
-            src={seller.avatar}
-            sx={{ width: compact ? 24 : 32, height: compact ? 24 : 32 }}
-          />
-        </Badge>
-
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Typography
-              variant={compact ? 'caption' : 'body2'}
-              fontWeight="bold"
-              sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {seller.name || 'Usuario'}
-            </Typography>
-            {seller.verified && (
-              <Verified
-                sx={{ fontSize: compact ? 12 : 16, color: '#1976d2' }}
-              />
-            )}
-          </Box>
-
-          {!compact && (
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                display: 'block',
-              }}
-            >
-              {seller.username}
-            </Typography>
-          )}
-
-          {seller.responseTime && !compact && (
-            <Typography variant="caption" color="text.secondary">
-              Responde en {seller.responseTime}
-            </Typography>
-          )}
-        </Box>
-      </Box>
-
-      {/* Info de ubicación y entrega */}
-      <Box sx={{ textAlign: 'right', minWidth: 0 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
-          <LocationOn
-            sx={{ fontSize: compact ? 12 : 14, color: 'text.secondary' }}
-          />
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              maxWidth: 80,
-            }}
-          >
-            {(location || 'Online').split(',')[0]}
-          </Typography>
-        </Box>
-
-        {deliveryTime && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <DeliveryDining
-              sx={{ fontSize: compact ? 12 : 14, color: 'text.secondary' }}
-            />
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                maxWidth: 80,
-              }}
-            >
-              {deliveryTime}
-            </Typography>
-          </Box>
-        )}
-      </Box>
-    </Box>
   );
 };
 

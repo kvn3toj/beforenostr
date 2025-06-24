@@ -23,13 +23,11 @@ import {
   Bookmark,
   BookmarkBorder,
   Star,
-  Verified,
   LocationOn,
   Share,
   Favorite,
   FavoriteBorder,
   Visibility,
-  TrendingUp,
   FlashOn,
   CheckCircle,
   ShoppingCart,
@@ -48,6 +46,9 @@ import { formatPrice, safeToLocaleString } from '../../../../utils/numberUtils';
 
 // 🌌 COSMIC DESIGN SYSTEM IMPORT
 import { CosmicCard } from '../../../../design-system/components/cosmic/CosmicCard';
+import StatusBadges from './StatusBadges';
+import PriceDisplay from './PriceDisplay';
+import SellerInfo from './SellerInfo';
 
 interface ProductCardEnhancedProps {
   id: string;
@@ -191,7 +192,7 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
         sx={{
           cursor: 'pointer',
           height: '100%',
-          minHeight: { xs: 280, sm: 300, md: 320 },
+          minHeight: 280,
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
@@ -470,56 +471,16 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
             )}
           </IconButton>
 
-          {/* Badges de estado */}
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 8,
-              left: 8,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 0.5,
-            }}
-          >
-            {featured && (
-              <Chip
-                label="Destacado"
-                size="small"
-                sx={{
-                  backgroundColor: '#FFD700',
-                  color: '#000',
-                  fontWeight: 'bold',
-                  fontSize: '10px',
-                }}
-              />
-            )}
-            {trending && (
-              <Chip
-                icon={<TrendingUp />}
-                label="Tendencia"
-                size="small"
-                sx={{
-                  backgroundColor: '#FF6B6B',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  fontSize: '10px',
-                  '& .MuiChip-icon': { color: 'white' },
-                }}
-              />
-            )}
-            {discount && (
-              <Chip
-                label={`-${discount}%`}
-                size="small"
-                sx={{
-                  backgroundColor: '#FF4444',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  fontSize: '10px',
-                }}
-              />
-            )}
-          </Box>
+          {/* Badges de estado unificados */}
+          <StatusBadges
+            featured={featured || false}
+            trending={trending || false}
+            discount={discount}
+            is24Hours={false}
+            isUrgent={false}
+            hasVideo={images.length > 1}
+            size="small"
+          />
 
           {/* Loading skeleton */}
           {!imageLoaded && (
@@ -589,52 +550,32 @@ const ProductCardEnhanced: React.FC<ProductCardEnhancedProps> = ({
             {description}
           </Typography>
 
-          {/* Precio */}
+          {/* Precio unificado */}
           <Box sx={{ mb: 1.5 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="h6" color="primary" fontWeight="bold">
-                {currency === 'ü' || currency === 'Lükas' ? 'ü' : '$'}{' '}
-                {safeToLocaleString(price)}
-              </Typography>
-              {originalPrice && originalPrice > price && (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ textDecoration: 'line-through' }}
-                >
-                  {currency === 'ü' || currency === 'Lükas' ? 'ü' : '$'}{' '}
-                  {safeToLocaleString(originalPrice)}
-                </Typography>
-              )}
-            </Box>
+            <PriceDisplay
+              price={price}
+              originalPrice={originalPrice}
+              currency={currency}
+              discount={discount}
+              size="medium"
+            />
           </Box>
 
-          {/* Información del vendedor */}
-          <Box
-            sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 'auto' }}
-          >
-            <Avatar src={seller.avatar} sx={{ width: 32, height: 32 }} />
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Typography
-                  variant="body2"
-                  fontWeight="medium"
-                  sx={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {seller.name}
-                </Typography>
-                {seller.verified && (
-                  <Verified sx={{ fontSize: 16, color: '#1976d2' }} />
-                )}
-              </Box>
-              <Typography variant="caption" color="text.secondary">
-                📍 {location}
-              </Typography>
-            </Box>
+          {/* Información del vendedor unificada */}
+          <Box sx={{ mt: 'auto' }}>
+            <SellerInfo
+              seller={{
+                name: seller.name,
+                username: seller.username,
+                avatar: seller.avatar,
+                verified: seller.verified,
+                isOnline: false,
+                responseTime: seller.responseTime,
+                rating,
+              }}
+              location={location}
+              compact={true}
+            />
           </Box>
 
           {/* Tags */}

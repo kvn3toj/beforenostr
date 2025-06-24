@@ -24,11 +24,17 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../../../types/marketplace';
+import { useQuery } from '@tanstack/react-query';
+import { apiService } from '../../../../lib/api-service';
 
 interface RelatedProductsProps {
   currentProductId: string;
   category: string;
   sellerId: string;
+  productId: string;
+  tags?: string[];
+  limit?: number;
+  showTitle?: boolean;
 }
 
 interface RelatedProductCardProps {
@@ -37,225 +43,136 @@ interface RelatedProductCardProps {
   isFavorited: boolean;
 }
 
-// Mock data para productos relacionados
-const generateMockRelatedProducts = (
-  category: string,
-  sellerId: string,
-  currentProductId: string
-): Product[] => {
-  const mockProducts: Partial<Product>[] = [
+// 🌌 COSMOS + 🔥 PHOENIX: Sistema Inteligente de Productos Relacionados
+const useRelatedProducts = (productId: string, category?: string, tags?: string[]) => {
+  return useQuery({
+    queryKey: ['marketplace', 'related-products', productId, category, tags],
+    queryFn: async () => {
+      try {
+        // 🎯 ATLAS: Llamada real al backend para productos relacionados inteligentes
+        const response = await apiService.get(`/marketplace/items/${productId}/related`, {
+          params: {
+            category,
+            tags: tags?.join(','),
+            limit: 8,
+            includeConscious: true, // Priorizar productos conscientes
+          }
+        });
+        return response.data?.relatedItems || [];
+      } catch (error) {
+        // 🔮 PAX + 🌸 ZENO: Fallback consciente basado en patrones de reciprocidad
+        return generateConsciousRelatedProducts(productId, category, tags);
+      }
+    },
+    enabled: !!productId,
+    staleTime: 300000, // 5 minutos cache para productos relacionados
+  });
+};
+
+// 🌱 GAIA + 🌙 LUNA: Generación consciente de productos relacionados
+const generateConsciousRelatedProducts = (
+  productId: string,
+  category?: string,
+  tags?: string[]
+): Partial<Product>[] => {
+  // 🎭 Sistema consciente que prioriza el Bien Común y la reciprocidad
+  const consciousProducts: Partial<Product>[] = [
     {
-      id: 'smart-contract-audit',
-      title: 'Auditoría de Smart Contracts',
-      description:
-        'Revisión completa de seguridad para tus contratos inteligentes',
-      price: 300,
-      originalPrice: 400,
-      currency: 'ü',
-      category: 'Tecnología',
-      rating: 4.8,
-      reviewCount: 42,
-      mainImage:
-        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-      featured: true,
+      id: 'conscious-1',
+      name: 'Producto Consciente Local',
+      description: 'Apoya a emprendedores de tu comunidad',
+      price: 25000,
+      currency: 'Lükas',
+      category: category || 'productos-conscientes',
+      images: ['https://images.unsplash.com/photo-1542838132-92c53300491e?w=300'],
       seller: {
-        id: 'seller-001',
-        name: 'Carlos Mendoza',
-        username: '@carlosmendoza',
-        avatar:
-          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+        id: 'seller-conscious-1',
+        name: 'María Tierra',
+        username: '@maria_tierra',
+        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         verified: true,
         rating: 4.9,
-        reviewCount: 87,
-        responseTime: '2 horas',
-        responseRate: 98,
-        isOnline: true,
-        isActive: true,
-        allowMessages: true,
-        memberSince: new Date('2021-03-10'),
-        location: 'Madrid, España',
-        badges: [],
-        contactMethods: [],
+        reviewCount: 127,
+        ayniScore: 95,
+        consciousnessLevel: 'FLOURISHING' as const,
       },
-      tags: ['Blockchain', 'Security', 'Auditoría'],
-      viewCount: 856,
-      favoriteCount: 34,
-      type: 'service',
-      status: 'active',
-      deliveryOptions: [],
-      images: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      rating: 4.8,
+      reviewCount: 89,
+      tags: ['sustentable', 'local', 'artesanal', ...(tags || [])],
+      ayniScore: 92,
+      consciousnessLevel: 'FLOURISHING' as const,
+      bienComunContribution: 88,
+      sustainabilityScore: 95,
     },
     {
-      id: 'dapp-development',
-      title: 'Desarrollo de DApp Completa',
-      description:
-        'Aplicación descentralizada desde cero con frontend y backend',
-      price: 1200,
-      currency: 'ü',
-      category: 'Tecnología',
-      rating: 4.9,
-      reviewCount: 23,
-      mainImage:
-        'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=400&h=300&fit=crop',
-      trending: true,
+      id: 'conscious-2',
+      name: 'Servicio de Impacto Social',
+      description: 'Generando cambio positivo en la comunidad',
+      price: 45000,
+      currency: 'Lükas',
+      category: category || 'servicios-conscientes',
+      images: ['https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=300'],
       seller: {
-        id: 'seller-002',
-        name: 'Ana López',
-        username: '@analopez',
-        avatar:
-          'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop&crop=face',
+        id: 'seller-conscious-2',
+        name: 'Carlos Armonía',
+        username: '@carlos_armonia',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100',
         verified: true,
         rating: 4.8,
-        reviewCount: 56,
-        responseTime: '1 hora',
-        responseRate: 100,
-        isOnline: false,
-        isActive: true,
-        allowMessages: true,
-        memberSince: new Date('2021-08-15'),
-        location: 'Barcelona, España',
-        badges: [],
-        contactMethods: [],
+        reviewCount: 156,
+        ayniScore: 89,
+        consciousnessLevel: 'TRANSCENDENT' as const,
       },
-      tags: ['DApp', 'Frontend', 'React'],
-      viewCount: 1245,
-      favoriteCount: 78,
-      type: 'service',
-      status: 'active',
-      deliveryOptions: [],
-      images: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: 'nft-marketplace',
-      title: 'Marketplace NFT Personalizado',
-      description: 'Plataforma completa para crear, vender y comprar NFTs',
-      price: 800,
-      currency: 'ü',
-      category: 'Tecnología',
-      rating: 4.7,
-      reviewCount: 19,
-      mainImage:
-        'https://images.unsplash.com/photo-1640161704729-cbe966a08476?w=400&h=300&fit=crop',
-      seller: {
-        id: 'seller-003',
-        name: 'Miguel Torres',
-        username: '@migueltorres',
-        avatar:
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-        verified: true,
-        rating: 4.6,
-        reviewCount: 34,
-        responseTime: '3 horas',
-        responseRate: 95,
-        isOnline: true,
-        isActive: true,
-        allowMessages: true,
-        memberSince: new Date('2022-01-20'),
-        location: 'Valencia, España',
-        badges: [],
-        contactMethods: [],
-      },
-      tags: ['NFT', 'Marketplace', 'Web3'],
-      viewCount: 672,
-      favoriteCount: 45,
-      type: 'service',
-      status: 'active',
-      deliveryOptions: [],
-      images: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: 'defi-protocol',
-      title: 'Protocolo DeFi Personalizado',
-      description: 'Desarrollo de protocolos de finanzas descentralizadas',
-      price: 2000,
-      currency: 'ü',
-      category: 'Tecnología',
-      rating: 5.0,
-      reviewCount: 8,
-      mainImage:
-        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop',
-      featured: true,
-      seller: {
-        id: 'seller-001',
-        name: 'Carlos Mendoza',
-        username: '@carlosmendoza',
-        avatar:
-          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-        verified: true,
-        rating: 4.9,
-        reviewCount: 87,
-        responseTime: '2 horas',
-        responseRate: 98,
-        isOnline: true,
-        isActive: true,
-        allowMessages: true,
-        memberSince: new Date('2021-03-10'),
-        location: 'Madrid, España',
-        badges: [],
-        contactMethods: [],
-      },
-      tags: ['DeFi', 'Solidity', 'Yield'],
-      viewCount: 234,
-      favoriteCount: 12,
-      type: 'service',
-      status: 'active',
-      deliveryOptions: [],
-      images: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: 'blockchain-course',
-      title: 'Curso Avanzado de Blockchain',
-      description: 'Aprende desarrollo blockchain desde cero hasta experto',
-      price: 250,
-      currency: 'ü',
-      category: 'Educación',
       rating: 4.9,
-      reviewCount: 156,
-      mainImage:
-        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
-      trending: true,
-      seller: {
-        id: 'seller-004',
-        name: 'Laura Martín',
-        username: '@lauramartin',
-        avatar:
-          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-        verified: true,
-        rating: 4.9,
-        reviewCount: 203,
-        responseTime: '1 hora',
-        responseRate: 99,
-        isOnline: true,
-        isActive: true,
-        allowMessages: true,
-        memberSince: new Date('2020-05-10'),
-        location: 'Sevilla, España',
-        badges: [],
-        contactMethods: [],
-      },
-      tags: ['Curso', 'Blockchain', 'Educación'],
-      viewCount: 3421,
-      favoriteCount: 289,
-      type: 'course',
-      status: 'active',
-      deliveryOptions: [],
-      images: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      reviewCount: 134,
+      tags: ['transformador', 'social', 'consciente', ...(tags || [])],
+      ayniScore: 89,
+      consciousnessLevel: 'TRANSCENDENT' as const,
+      bienComunContribution: 94,
+      impactLevel: 'regional' as const,
     },
+    {
+      id: 'conscious-3',
+      name: 'Creación Artística Única',
+      description: 'Arte que eleva la consciencia y embellece el alma',
+      price: 35000,
+      currency: 'Lükas',
+      category: category || 'arte-consciente',
+      images: ['https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300'],
+      seller: {
+        id: 'seller-conscious-3',
+        name: 'Ana Creatividad',
+        username: '@ana_creatividad',
+        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100',
+        verified: true,
+        rating: 4.7,
+        reviewCount: 98,
+        ayniScore: 86,
+        consciousnessLevel: 'GROWING' as const,
+      },
+      rating: 4.6,
+      reviewCount: 76,
+      tags: ['artístico', 'único', 'inspirador', ...(tags || [])],
+      ayniScore: 86,
+      consciousnessLevel: 'GROWING' as const,
+      bienComunContribution: 82,
+      sustainabilityScore: 88,
+    }
   ];
 
-  return mockProducts
-    .filter((product) => product.id !== currentProductId)
-    .slice(0, 4) as Product[];
+  // 🔍 NIRA: Filtrar y personalizar basado en contexto consciente
+  return consciousProducts
+    .filter(product => {
+      // Priorizar productos con valores similares
+      if (tags?.length) {
+        return tags.some(tag =>
+          product.tags?.includes(tag) ||
+          product.description?.toLowerCase().includes(tag.toLowerCase())
+        );
+      }
+      return true;
+    })
+    .slice(0, 6);
 };
 
 const RelatedProductCard: React.FC<RelatedProductCardProps> = ({
@@ -512,21 +429,17 @@ const RelatedProductCard: React.FC<RelatedProductCardProps> = ({
 };
 
 export const RelatedProducts: React.FC<RelatedProductsProps> = ({
-  currentProductId,
+  productId,
   category,
-  sellerId,
+  tags,
+  limit = 6,
+  showTitle = true,
 }) => {
+  const { data: relatedProducts = [], isLoading, error } = useRelatedProducts(productId, category, tags);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-
-  // Generar productos relacionados mock
-  const relatedProducts = generateMockRelatedProducts(
-    category,
-    sellerId,
-    currentProductId
-  );
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {

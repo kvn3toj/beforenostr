@@ -17,13 +17,14 @@ import {
   Add,
   ArrowBackIos,
   ArrowForwardIos,
-  Category,
+  Category as CategoryIcon,
   TrendingUp,
   StarBorder as Star,
   LocalOffer,
   AutoAwesome,
   Explore,
 } from '@mui/icons-material';
+import consciousDesignSystem from '../../../../theme/consciousDesignSystem';
 
 interface Category {
   id: string;
@@ -361,24 +362,26 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         sx={{
-          minWidth: config.itemWidth,
-          width: config.itemWidth,
-          height: config.itemHeight,
+          minWidth: Math.max(config.itemWidth, 140), // Increased minimum size
+          width: Math.max(config.itemWidth, 140),
+          height: Math.max(config.itemHeight, 120),
           cursor: 'pointer',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          transition: consciousDesignSystem.transitions.normal,
           transform: isHovered
-            ? 'translateY(-4px) scale(1.02)'
+            ? consciousDesignSystem.accessibility.hover.transform
             : 'translateY(0) scale(1)',
           boxShadow: isSelected
-            ? `0 8px 25px ${category.color}40`
+            ? consciousDesignSystem.components.card.shadow.consciousness
             : isHovered
-              ? '0 8px 25px rgba(0,0,0,0.15)'
-              : '0 2px 8px rgba(0,0,0,0.1)',
+              ? consciousDesignSystem.components.card.shadow.soft
+              : consciousDesignSystem.components.card.shadow.subtle,
           background: isSelected
-            ? `linear-gradient(135deg, ${category.color}30, ${category.color}50)`
-            : getCategoryGradient(category),
-          border: isSelected ? `2px solid ${category.color}` : 'none',
-          borderRadius: 3,
+            ? `linear-gradient(135deg, ${consciousDesignSystem.colors.primary.main}20, ${consciousDesignSystem.colors.primary.main}35)`
+            : `linear-gradient(135deg, ${consciousDesignSystem.colors.grey[50]}, ${consciousDesignSystem.colors.grey[100]})`,
+          border: isSelected
+            ? `2px solid ${consciousDesignSystem.colors.primary.main}`
+            : `1px solid ${consciousDesignSystem.colors.grey[200]}`,
+          borderRadius: consciousDesignSystem.components.card.borderRadius,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -386,12 +389,16 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           position: 'relative',
           overflow: 'hidden',
           scrollSnapAlign: 'start',
+          '&:hover': {
+            borderColor: consciousDesignSystem.colors.primary.light,
+            background: `linear-gradient(135deg, ${consciousDesignSystem.colors.primary.main}10, ${consciousDesignSystem.colors.primary.main}20)`,
+          },
         }}
         className="card-micro-interactive"
       >
-        {/* Badges de estado */}
+        {/* Badges de estado con diseño consciente */}
         {(category.trending || category.featured) && (
-          <Box sx={{ position: 'absolute', top: 6, right: 6 }}>
+          <Box sx={{ position: 'absolute', top: consciousDesignSystem.spacing[2], right: consciousDesignSystem.spacing[2] }}>
             {category.featured && (
               <Chip
                 icon={<AutoAwesome />}
@@ -399,11 +406,18 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
                 size="small"
                 sx={{
                   minWidth: 'auto',
-                  height: 20,
-                  backgroundColor: '#FFD700',
-                  color: 'white',
-                  '& .MuiChip-icon': { color: 'white', fontSize: 12 },
-                  mb: category.trending ? 0.5 : 0,
+                  height: 24,
+                  backgroundColor: consciousDesignSystem.colors.accent.main,
+                  color: consciousDesignSystem.colors.accent.contrastText,
+                  fontFamily: consciousDesignSystem.typography.fontFamily.primary,
+                  fontSize: consciousDesignSystem.typography.fontSize.xs,
+                  fontWeight: consciousDesignSystem.typography.fontWeight.bold,
+                  boxShadow: consciousDesignSystem.components.card.shadow.soft,
+                  '& .MuiChip-icon': {
+                    color: consciousDesignSystem.colors.accent.contrastText,
+                    fontSize: 14
+                  },
+                  mb: category.trending ? consciousDesignSystem.spacing[1] : 0,
                 }}
               />
             )}
@@ -414,47 +428,65 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
                 size="small"
                 sx={{
                   minWidth: 'auto',
-                  height: 20,
-                  backgroundColor: '#FF6B6B',
-                  color: 'white',
-                  '& .MuiChip-icon': { color: 'white', fontSize: 12 },
+                  height: 24,
+                  backgroundColor: consciousDesignSystem.colors.secondary.main,
+                  color: consciousDesignSystem.colors.secondary.contrastText,
+                  fontFamily: consciousDesignSystem.typography.fontFamily.primary,
+                  fontSize: consciousDesignSystem.typography.fontSize.xs,
+                  fontWeight: consciousDesignSystem.typography.fontWeight.bold,
+                  boxShadow: consciousDesignSystem.components.card.shadow.soft,
+                  '& .MuiChip-icon': {
+                    color: consciousDesignSystem.colors.secondary.contrastText,
+                    fontSize: 14
+                  },
                 }}
               />
             )}
           </Box>
         )}
 
-        {/* Contador de productos */}
+        {/* Contador de productos mejorado */}
         {showCount && category.count && (
-          <Box sx={{ position: 'absolute', top: 6, left: 6 }}>
+          <Box sx={{ position: 'absolute', top: consciousDesignSystem.spacing[2], left: consciousDesignSystem.spacing[2] }}>
             <Chip
               label={formatCount(category.count)}
               size="small"
               sx={{
-                height: 18,
-                fontSize: '10px',
-                backgroundColor: 'rgba(255,255,255,0.9)',
-                color: category.color || 'text.primary',
-                fontWeight: 'bold',
+                height: 24,
+                fontSize: consciousDesignSystem.typography.fontSize.xs,
+                fontFamily: consciousDesignSystem.typography.fontFamily.primary,
+                fontWeight: consciousDesignSystem.typography.fontWeight.bold,
+                backgroundColor: `${consciousDesignSystem.colors.grey[50]}F0`, // 94% opacity
+                color: consciousDesignSystem.colors.grey[800],
+                backdropFilter: 'blur(8px)',
+                border: `1px solid ${consciousDesignSystem.colors.grey[200]}`,
+                boxShadow: consciousDesignSystem.components.card.shadow.subtle,
               }}
             />
           </Box>
         )}
 
-        {/* Icono principal */}
+        {/* Icono principal mejorado */}
         <Box
           sx={{
-            fontSize: config.itemWidth > 100 ? '32px' : '24px',
-            mb: 1,
-            transition: 'transform 0.3s ease',
+            fontSize: Math.max(config.itemWidth, 140) > 100 ? '40px' : '32px',
+            mb: consciousDesignSystem.spacing[3],
+            transition: consciousDesignSystem.transitions.normal,
             transform: isHovered
-              ? 'scale(1.2) rotate(5deg)'
+              ? 'scale(1.15) rotate(3deg)'
               : 'scale(1) rotate(0deg)',
+            filter: isSelected
+              ? `drop-shadow(0 4px 8px ${consciousDesignSystem.colors.primary.main}40)`
+              : 'none',
           }}
         >
           {/* Si es emoji, mostrarlo directamente */}
           {/\p{Emoji}/u.test(category.icon) ? (
-            <span>{category.icon}</span>
+            <span style={{
+              textShadow: isHovered ? `0 2px 8px ${consciousDesignSystem.colors.primary.main}30` : 'none'
+            }}>
+              {category.icon}
+            </span>
           ) : (
             /* Si es una imagen/icono */
             <Box
@@ -462,9 +494,12 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
               src={category.icon}
               alt={category.name}
               sx={{
-                width: config.itemWidth > 100 ? 40 : 32,
-                height: config.itemWidth > 100 ? 40 : 32,
+                width: Math.max(config.itemWidth, 140) > 100 ? 48 : 40,
+                height: Math.max(config.itemWidth, 140) > 100 ? 48 : 40,
                 objectFit: 'contain',
+                filter: isSelected
+                  ? `drop-shadow(0 2px 4px ${consciousDesignSystem.colors.primary.main}40)`
+                  : 'none',
               }}
               onError={(e) => {
                 // Fallback a un icono genérico si la imagen falla
@@ -475,16 +510,23 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           )}
         </Box>
 
-        {/* Nombre de la categoría */}
+        {/* Nombre de la categoría mejorado */}
         <Typography
-          variant={config.itemWidth > 100 ? 'body2' : 'caption'}
-          fontWeight="bold"
+          variant={Math.max(config.itemWidth, 140) > 100 ? 'body2' : 'caption'}
           sx={{
             textAlign: 'center',
-            color: isSelected ? category.color : 'text.primary',
-            transition: 'color 0.3s ease',
-            lineHeight: 1.2,
-            px: 0.5,
+            color: isSelected
+              ? consciousDesignSystem.colors.primary.main
+              : consciousDesignSystem.colors.grey[700],
+            transition: consciousDesignSystem.transitions.normal,
+            lineHeight: 1.3,
+            px: consciousDesignSystem.spacing[2],
+            fontFamily: consciousDesignSystem.typography.fontFamily.primary,
+            fontSize: consciousDesignSystem.typography.fontSize.sm,
+            fontWeight: isSelected
+              ? consciousDesignSystem.typography.fontWeight.bold
+              : consciousDesignSystem.typography.fontWeight.semibold,
+            letterSpacing: '0.25px',
           }}
         >
           {category.name}
