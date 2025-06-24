@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+@keyframes haloPulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.guardian-halo {
+  animation: haloPulse 2.5s infinite alternate;
+}

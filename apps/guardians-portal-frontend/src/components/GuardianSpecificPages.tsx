@@ -1104,6 +1104,121 @@ export const PhoenixPage: React.FC<GuardianPageProps> = ({ guardian, onAction })
   );
 };
 
+// MIRA - Curadora de Herramientas
+export const MiraPage: React.FC<GuardianPageProps> = ({ guardian }) => (
+  <Box sx={{ p: 3, textAlign: 'center' }}>
+    <Avatar sx={{ bgcolor: guardian.color, width: 72, height: 72, mx: 'auto', mb: 2 }}>
+      <guardian.icon sx={{ fontSize: 40, color: '#fff' }} />
+    </Avatar>
+    <Typography variant="h4" sx={{ fontWeight: 700, color: guardian.color, mb: 1 }}>{guardian.name}</Typography>
+    <Typography variant="h6" color="text.secondary" gutterBottom>{guardian.title}</Typography>
+    <Typography variant="body1" paragraph sx={{ maxWidth: 500, mx: 'auto' }}>{guardian.mission}</Typography>
+    <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Avatar sx={{ bgcolor: guardian.color, width: 56, height: 56, mb: 1, animation: 'haloPulse 2s infinite alternate' }}>
+        <guardian.icon sx={{ fontSize: 32, color: '#fff' }} />
+      </Avatar>
+      <Typography variant="h6" sx={{ color: guardian.color, fontWeight: 600 }}>
+        Laboratorio en construcción
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        Próximamente podrás explorar las herramientas de {guardian.name}.
+      </Typography>
+    </Box>
+  </Box>
+);
+
+// COSMOS - Tejedor de Sistemas Universales
+export const CosmosPage: React.FC<GuardianPageProps> = ({ guardian }) => (
+  <Box sx={{ p: 3, textAlign: 'center' }}>
+    <Avatar sx={{ bgcolor: guardian.color, width: 72, height: 72, mx: 'auto', mb: 2 }}>
+      <guardian.icon sx={{ fontSize: 40, color: '#fff' }} />
+    </Avatar>
+    <Typography variant="h4" sx={{ fontWeight: 700, color: guardian.color, mb: 1 }}>{guardian.name}</Typography>
+    <Typography variant="h6" color="text.secondary" gutterBottom>{guardian.title}</Typography>
+    <Typography variant="body1" paragraph sx={{ maxWidth: 500, mx: 'auto' }}>{guardian.mission}</Typography>
+    <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Avatar sx={{ bgcolor: guardian.color, width: 56, height: 56, mb: 1, animation: 'haloPulse 2s infinite alternate' }}>
+        <guardian.icon sx={{ fontSize: 32, color: '#fff' }} />
+      </Avatar>
+      <Typography variant="h6" sx={{ color: guardian.color, fontWeight: 600 }}>
+        Laboratorio en construcción
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        Próximamente podrás explorar los sistemas universales de {guardian.name}.
+      </Typography>
+    </Box>
+  </Box>
+);
+
+// LUNA - Guardiana de los Ritmos
+export const LunaPage: React.FC<GuardianPageProps> = ({ guardian }) => (
+  <Box sx={{ p: 3, textAlign: 'center' }}>
+    <Avatar sx={{ bgcolor: guardian.color, width: 72, height: 72, mx: 'auto', mb: 2 }}>
+      <guardian.icon sx={{ fontSize: 40, color: '#fff' }} />
+    </Avatar>
+    <Typography variant="h4" sx={{ fontWeight: 700, color: guardian.color, mb: 1 }}>{guardian.name}</Typography>
+    <Typography variant="h6" color="text.secondary" gutterBottom>{guardian.title}</Typography>
+    <Typography variant="body1" paragraph sx={{ maxWidth: 500, mx: 'auto' }}>{guardian.mission}</Typography>
+    <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Avatar sx={{ bgcolor: guardian.color, width: 56, height: 56, mb: 1, animation: 'haloPulse 2s infinite alternate' }}>
+        <guardian.icon sx={{ fontSize: 32, color: '#fff' }} />
+      </Avatar>
+      <Typography variant="h6" sx={{ color: guardian.color, fontWeight: 600 }}>
+        Laboratorio en construcción
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        Próximamente podrás explorar los ritmos y ciclos de {guardian.name}.
+      </Typography>
+    </Box>
+  </Box>
+);
+
+// PAX - Mediador de Conflictos
+export const PaxPage: React.FC<GuardianPageProps> = ({ guardian }) => (
+  <Box sx={{ p: 3, textAlign: 'center' }}>
+    <Avatar sx={{ bgcolor: guardian.color, width: 72, height: 72, mx: 'auto', mb: 2 }}>
+      <guardian.icon sx={{ fontSize: 40, color: '#fff' }} />
+    </Avatar>
+    <Typography variant="h4" sx={{ fontWeight: 700, color: guardian.color, mb: 1 }}>{guardian.name}</Typography>
+    <Typography variant="h6" color="text.secondary" gutterBottom>{guardian.title}</Typography>
+    <Typography variant="body1" paragraph sx={{ maxWidth: 500, mx: 'auto' }}>{guardian.mission}</Typography>
+    <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Avatar sx={{ bgcolor: guardian.color, width: 56, height: 56, mb: 1, animation: 'haloPulse 2s infinite alternate' }}>
+        <guardian.icon sx={{ fontSize: 32, color: '#fff' }} />
+      </Avatar>
+      <Typography variant="h6" sx={{ color: guardian.color, fontWeight: 600 }}>
+        Laboratorio en construcción
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        Próximamente podrás explorar la mediación y resolución de conflictos de {guardian.name}.
+      </Typography>
+    </Box>
+  </Box>
+);
+
+// GAIA - Consciencia Ecológica Digital
+export const GaiaPage: React.FC<GuardianPageProps> = ({ guardian }) => (
+  <Box sx={{ p: 3, textAlign: 'center' }}>
+    <Avatar sx={{ bgcolor: guardian.color, width: 72, height: 72, mx: 'auto', mb: 2 }}>
+      <guardian.icon sx={{ fontSize: 40, color: '#fff' }} />
+    </Avatar>
+    <Typography variant="h4" sx={{ fontWeight: 700, color: guardian.color, mb: 1 }}>{guardian.name}</Typography>
+    <Typography variant="h6" color="text.secondary" gutterBottom>{guardian.title}</Typography>
+    <Typography variant="body1" paragraph sx={{ maxWidth: 500, mx: 'auto' }}>{guardian.mission}</Typography>
+    <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Avatar sx={{ bgcolor: guardian.color, width: 56, height: 56, mb: 1, animation: 'haloPulse 2s infinite alternate' }}>
+        <guardian.icon sx={{ fontSize: 32, color: '#fff' }} />
+      </Avatar>
+      <Typography variant="h6" sx={{ color: guardian.color, fontWeight: 600 }}>
+        Laboratorio en construcción
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        Próximamente podrás explorar la consciencia ecológica de {guardian.name}.
+      </Typography>
+    </Box>
+  </Box>
+);
+
 // Crear un componente maestro que maneje todos los guardianes
 export const GuardianSpecificPage: React.FC<{ guardian: Guardian; onAction?: (action: string, details: any) => void }> = ({ guardian, onAction }) => {
   switch (guardian.id) {
@@ -1121,6 +1236,16 @@ export const GuardianSpecificPage: React.FC<{ guardian: Guardian; onAction?: (ac
       return <NiraPage guardian={guardian} onAction={onAction} />;
     case 'PHOENIX':
       return <PhoenixPage guardian={guardian} onAction={onAction} />;
+    case 'MIRA':
+      return <MiraPage guardian={guardian} onAction={onAction} />;
+    case 'COSMOS':
+      return <CosmosPage guardian={guardian} onAction={onAction} />;
+    case 'LUNA':
+      return <LunaPage guardian={guardian} onAction={onAction} />;
+    case 'PAX':
+      return <PaxPage guardian={guardian} onAction={onAction} />;
+    case 'GAIA':
+      return <GaiaPage guardian={guardian} onAction={onAction} />;
     default:
       return (
         <Box sx={{ p: 3, textAlign: 'center' }}>

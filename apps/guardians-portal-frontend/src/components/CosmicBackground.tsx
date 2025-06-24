@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const stars = Array.from({ length: 80 }, (_, i) => ({
   id: i,
@@ -19,98 +19,158 @@ const emeralds = [
   { points: '90,10 92,7 94,10 92,13', color: '#00e676', glow: '#b9f6ca' },
 ];
 
-const CosmicBackground: React.FC = () => (
-  <div
-    style={{
-      position: 'fixed',
-      zIndex: 0,
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      pointerEvents: 'none',
-      overflow: 'hidden',
-      background: 'radial-gradient(ellipse at 60% 20%, #2e1a47 60%, #0d133d 100%)',
-      transition: 'background 1s',
-    }}
-  >
-    <svg
-      width="100vw"
-      height="100vh"
-      viewBox="0 0 100 100"
-      style={{ position: 'absolute', width: '100vw', height: '100vh', left: 0, top: 0 }}
-      xmlns="http://www.w3.org/2000/svg"
+const cosmicMessages = [
+  // ANA
+  'La memoria colectiva es el puente entre el origen y el destino.',
+  'Cada acción consciente deja una huella en el archivo cósmico.',
+  'El bien común es la raíz de toda evolución duradera.',
+  // CIO
+  'La belleza emerge de la coherencia entre lo simple y lo complejo.',
+  'Todo sistema florece cuando cada parte coopera en armonía.',
+  'La evolución consciente es un acto de orquestación colectiva.',
+];
+
+const CosmicBackground: React.FC = () => {
+  const [msgIndex, setMsgIndex] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setMsgIndex((i) => (i + 1) % cosmicMessages.length);
+        setFade(true);
+      }, 800);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        zIndex: 0,
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        background: 'radial-gradient(ellipse at 60% 20%, #2e1a47 60%, #0d133d 100%)',
+        transition: 'background 1s',
+      }}
     >
-      {/* Stars */}
-      {stars.map((star) => (
-        <circle
-          key={star.id}
-          cx={star.cx}
-          cy={star.cy}
-          r={star.r}
-          fill="#fff"
-          opacity={star.opacity}
-        >
-          <animate
-            attributeName="opacity"
-            values={`${star.opacity};${star.opacity * 0.5};${star.opacity}`}
-            dur={`${1.5 + Math.random()}s`}
-            repeatCount="indefinite"
-          />
-        </circle>
-      ))}
-      {/* Planets */}
-      {planets.map((planet, i) => (
-        <g key={i}>
+      <svg
+        width="100vw"
+        height="100vh"
+        viewBox="0 0 100 100"
+        style={{ position: 'absolute', width: '100vw', height: '100vh', left: 0, top: 0 }}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Stars */}
+        {stars.map((star) => (
           <circle
-            cx={planet.cx}
-            cy={planet.cy}
-            r={planet.r}
-            fill={planet.color}
-            filter={`url(#glow${i})`}
+            key={star.id}
+            cx={star.cx}
+            cy={star.cy}
+            r={star.r}
+            fill="#fff"
+            opacity={star.opacity}
+          >
+            <animate
+              attributeName="opacity"
+              values={`${star.opacity};${star.opacity * 0.5};${star.opacity}`}
+              dur={`${1.5 + Math.random()}s`}
+              repeatCount="indefinite"
+            />
+          </circle>
+        ))}
+        {/* Planets */}
+        {planets.map((planet, i) => (
+          <g key={i}>
+            <circle
+              cx={planet.cx}
+              cy={planet.cy}
+              r={planet.r}
+              fill={planet.color}
+              filter={`url(#glow${i})`}
+              opacity="0.8"
+            />
+            <filter id={`glow${i}`}>
+              <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+              <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </g>
+        ))}
+        {/* Emeralds */}
+        {emeralds.map((em, i) => (
+          <polygon
+            key={i}
+            points={em.points}
+            fill={em.color}
             opacity="0.8"
-          />
-          <filter id={`glow${i}`}>
-            <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </g>
-      ))}
-      {/* Emeralds */}
-      {emeralds.map((em, i) => (
-        <polygon
-          key={i}
-          points={em.points}
-          fill={em.color}
-          opacity="0.8"
-          stroke={em.glow}
-          strokeWidth="0.3"
+            stroke={em.glow}
+            strokeWidth="0.3"
+          >
+            <animate
+              attributeName="opacity"
+              values="0.8;1;0.8"
+              dur="2.5s"
+              repeatCount="indefinite"
+            />
+          </polygon>
+        ))}
+        {/* Constellation lines */}
+        <polyline points="10,10 20,20 30,10 40,25 50,15" stroke="#fff" strokeWidth="0.15" opacity="0.5" fill="none" />
+        <polyline points="60,80 65,70 70,80 75,75 80,85" stroke="#fff" strokeWidth="0.12" opacity="0.4" fill="none" />
+        {/* Tree silhouette */}
+        <path d="M 50 100 Q 52 90 50 80 Q 48 90 50 100" stroke="#4caf50" strokeWidth="0.5" fill="none" opacity="0.5" />
+        <path d="M 50 80 Q 51 75 49 70 Q 50 75 50 80" stroke="#388e3c" strokeWidth="0.3" fill="none" opacity="0.4" />
+        {/* Roots */}
+        <path d="M 50 100 Q 48 105 46 110" stroke="#795548" strokeWidth="0.2" fill="none" opacity="0.3" />
+        <path d="M 50 100 Q 52 105 54 110" stroke="#795548" strokeWidth="0.2" fill="none" opacity="0.3" />
+        {/* Cave silhouette */}
+        <ellipse cx="20" cy="98" rx="3" ry="1.2" fill="#222" opacity="0.4" />
+        <ellipse cx="80" cy="98" rx="2.5" ry="1" fill="#222" opacity="0.3" />
+      </svg>
+      {/* Rotating cosmic message */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '3vh',
+          left: 0,
+          width: '100vw',
+          display: 'flex',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+        }}
+      >
+        <span
+          style={{
+            background: 'rgba(30, 20, 60, 0.55)',
+            color: '#fff',
+            fontSize: '1.15rem',
+            fontWeight: 500,
+            borderRadius: 16,
+            padding: '10px 32px',
+            boxShadow: '0 2px 16px #0004',
+            letterSpacing: 0.2,
+            opacity: fade ? 1 : 0,
+            transition: 'opacity 0.8s',
+            textShadow: '0 2px 8px #0008',
+            maxWidth: 600,
+            textAlign: 'center',
+            userSelect: 'none',
+          }}
         >
-          <animate
-            attributeName="opacity"
-            values="0.8;1;0.8"
-            dur="2.5s"
-            repeatCount="indefinite"
-          />
-        </polygon>
-      ))}
-      {/* Constellation lines */}
-      <polyline points="10,10 20,20 30,10 40,25 50,15" stroke="#fff" strokeWidth="0.15" opacity="0.5" fill="none" />
-      <polyline points="60,80 65,70 70,80 75,75 80,85" stroke="#fff" strokeWidth="0.12" opacity="0.4" fill="none" />
-      {/* Tree silhouette */}
-      <path d="M 50 100 Q 52 90 50 80 Q 48 90 50 100" stroke="#4caf50" strokeWidth="0.5" fill="none" opacity="0.5" />
-      <path d="M 50 80 Q 51 75 49 70 Q 50 75 50 80" stroke="#388e3c" strokeWidth="0.3" fill="none" opacity="0.4" />
-      {/* Roots */}
-      <path d="M 50 100 Q 48 105 46 110" stroke="#795548" strokeWidth="0.2" fill="none" opacity="0.3" />
-      <path d="M 50 100 Q 52 105 54 110" stroke="#795548" strokeWidth="0.2" fill="none" opacity="0.3" />
-      {/* Cave silhouette */}
-      <ellipse cx="20" cy="98" rx="3" ry="1.2" fill="#222" opacity="0.4" />
-      <ellipse cx="80" cy="98" rx="2.5" ry="1" fill="#222" opacity="0.3" />
-    </svg>
-  </div>
-);
+          {cosmicMessages[msgIndex]}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 export default CosmicBackground;

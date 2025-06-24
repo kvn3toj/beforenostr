@@ -46,9 +46,9 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
       {/* Precio actual */}
       <Typography
         variant={priceVariant}
-        fontWeight="bold"
         color="primary"
         sx={{
+          fontWeight: 700,
           fontSize:
             size === 'small' ? '16px' : size === 'medium' ? '18px' : '24px',
         }}

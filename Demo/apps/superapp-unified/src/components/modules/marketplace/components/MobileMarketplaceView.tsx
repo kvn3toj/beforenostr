@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -96,7 +90,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '../../../../lib/api-service';
 import { useAuth } from '../../../../contexts/AuthContext';
-import { ProductCard } from './ProductCard';
+import ProductCard from './ProductCard';
 import { MobileHeader } from './MobileHeader';
 import { MobileSearchBar } from './MobileSearchBar';
 import { CategoryCarousel } from './CategoryCarousel';
@@ -104,6 +98,8 @@ import { RoleToggle } from './RoleToggle';
 import { useMarketplaceData } from '../../../../hooks/useRealBackendData';
 import '../../../../styles/marketplace-enhanced.css';
 import consciousDesignSystem from '../../../../theme/consciousDesignSystem';
+import { AxiosResponse } from 'axios';
+import type { Product, Seller } from '../../../../types/marketplace';
 
 // Types
 interface MarketplaceItem {
@@ -224,6 +220,9 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     availability: '',
   });
 
+  // Estado local para favoritos (Set de IDs)
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+
   // 🌍 Categorías enfocadas en el bien común (SINCRONIZADAS CON DESKTOP)
   const impactCategories: Category[] = [
     {
@@ -311,7 +310,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     return useMutation({
       mutationFn: async ({ itemId, action }: { itemId: string; action: 'add' | 'remove' }) => {
         // 🎯 ATLAS: Llamada real al backend para toggle de favorito
-        const response = await apiService.post(`/marketplace/items/${itemId}/favorite`, {
+        const response: AxiosResponse<any> = await apiService.post(`/marketplace/items/${itemId}/favorite`, {
           action
         });
         return response.data;
@@ -439,9 +438,12 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
     return marketplaceItemsResponse.items.map(mapItemToUIItem);
   }, [marketplaceItemsResponse, mapItemToUIItem]);
 
-  const { data: userFavorites = [] } = useQuery({
+  const { data: userFavorites = [] } = useQuery<string[]>({
     queryKey: ['user-favorites', user?.id],
-    queryFn: () => apiService.get('/marketplace/favorites'),
+    queryFn: async () => {
+      const res: AxiosResponse<string[]> = await apiService.get('/marketplace/favorites');
+      return res.data;
+    },
     enabled: !!user,
     staleTime: 2 * 60 * 1000,
   });
@@ -506,42 +508,42 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
 
   // Items a mostrar - SINCRONIZADO CON DESKTOP
   const itemsToDisplay = useMemo(() => {
-    let items = isSearchActive ? searchResults : impactProducts;
+    let items: MarketplaceItem[] = isSearchActive ? searchResults : impactProducts;
 
     // Filtrar por categoría seleccionada
     if (selectedCategory && selectedCategory !== '') {
-      items = items.filter((item) => item.category === selectedCategory);
+      items = items.filter((item: MarketplaceItem) => item.category === selectedCategory);
     }
 
     // Aplicar ordenamiento
     switch (filters.sortBy) {
       case 'price_asc':
-        items = [...items].sort((a, b) => a.price - b.price);
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => a.price - b.price);
         break;
       case 'price_desc':
-        items = [...items].sort((a, b) => b.price - a.price);
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => b.price - a.price);
         break;
       case 'rating':
-        items = [...items].sort((a, b) => b.rating - a.rating);
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => b.rating - a.rating);
         break;
       case 'newest':
         items = [...items].sort(
-          (a, b) =>
+          (a: MarketplaceItem, b: MarketplaceItem) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         break;
       case 'trending':
-        items = [...items].sort((a, b) => {
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => {
           if (a.trending && !b.trending) return -1;
           if (!a.trending && b.trending) return 1;
           return b.viewCount - a.viewCount;
         });
         break;
       case 'popular':
-        items = [...items].sort((a, b) => b.viewCount - a.viewCount);
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => b.viewCount - a.viewCount);
         break;
       case 'nearby':
-        items = [...items].sort((a, b) => {
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => {
           // Priorizar items locales
           if (a.location.includes('Online') && !b.location.includes('Online'))
             return 1;
@@ -619,7 +621,6 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
         }}
       >
         <MobileHeader
-          title="🌱 ÜMarket"
           onMenuClick={onMenuClick}
           onChatClick={onChatClick}
           onNotificationsClick={onNotificationsClick}
@@ -811,40 +812,59 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           />
         )}
 
-        {/* Estadísticas de impacto móvil */}
+        {/* Hero Section Rediseñada */}
         <Box sx={{ px: 2, mb: 2 }}>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 2,
-              background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)',
-              color: 'white',
-              borderRadius: 2,
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Box textAlign="center">
-                  <Typography variant="h6" fontWeight="bold">
-                    {impactProducts.length}
-                  </Typography>
-                  <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                    Servicios de Impacto
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box textAlign="center">
-                  <Typography variant="h6" fontWeight="bold">
-                    8
-                  </Typography>
-                  <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                    Agentes de Cambio
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </Paper>
+          <Zoom in timeout={300}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                background: 'linear-gradient(135deg, var(--primary-green, #10b981) 0%, #059669 100%)',
+                color: 'white',
+                borderRadius: 3,
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <Box sx={{ position: 'relative', zIndex: 1 }}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={8}>
+                    <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
+                      Conectando Propósitos
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.9, mb: 2 }}>
+                      Encuentra productos y servicios que regeneran nuestro mundo.
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      sx={{
+                        backgroundColor: 'white',
+                        color: 'var(--primary-green, #10b981)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255,255,255,0.9)',
+                        },
+                      }}
+                    >
+                      Descubre Sostenibilidad
+                    </Button>
+                  </Grid>
+                  <Grid item xs={4} sx={{ textAlign: 'center' }}>
+                    <Fade in timeout={1000}>
+                      <AutoAwesome
+                        sx={{
+                          fontSize: 80,
+                          color: 'white',
+                          opacity: 0.2,
+                          transform: 'rotate(-15deg)',
+                        }}
+                      />
+                    </Fade>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Paper>
+          </Zoom>
         </Box>
 
         {/* Role Toggle */}
@@ -878,7 +898,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
         {/* Quick Filters */}
         <Box sx={{ px: 2, mb: 3 }}>
           <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 1 }}>
-            {quickFilters.map((filter, index) => (
+            {quickFilters.map((filter: { id: string; label: string; icon: string }, index: number) => (
               <Grow in timeout={500 + index * 100} key={filter.id}>
                 <Chip
                   icon={<span>{filter.icon}</span>}
@@ -922,33 +942,55 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
         <Box
           sx={{
             px: 2,
-            mb: 2,
+            mb: 1.5,
+            mt: 2,
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            gap: 0.5,
           }}
         >
-          <Typography variant="h6" fontWeight="bold">
+          <Typography variant="h6" fontWeight="bold" sx={{ color: selectedCategory ? 'primary.main' : '#059669', mb: 0.5 }}>
             {selectedCategory
               ? `${impactCategories.find((c) => c.id === selectedCategory)?.name} (${itemsToDisplay.length})`
               : `Recomendados (${itemsToDisplay.length})`}
           </Typography>
-
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton
-              size="small"
-              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              className="icon-micro-interactive"
-            >
-              {viewMode === 'grid' ? <ViewList /> : <ViewModule />}
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={() => setShowFilters(true)}
-              className="icon-micro-interactive"
-            >
-              <FilterAlt />
-            </IconButton>
+          <Typography variant="body2" sx={{ color: '#059669', opacity: 0.95, mb: 1 }}>
+            {selectedCategory
+              ? 'Mostrando resultados filtrados por categoría.'
+              : 'Productos y servicios destacados para ti en CoomÜnity.'}
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+            <Box>
+              <IconButton
+                size="small"
+                onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+                className="icon-micro-interactive"
+              >
+                {viewMode === 'grid' ? <ViewList /> : <ViewModule />}
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={() => setShowFilters(true)}
+                className="icon-micro-interactive"
+              >
+                <FilterAlt />
+              </IconButton>
+            </Box>
+            {selectedCategory && (
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  setSelectedCategory('');
+                  setIsSearchActive(false);
+                  setSearchQuery('');
+                }}
+                sx={{ ml: 1, borderColor: '#059669', color: '#059669', fontWeight: 500 }}
+              >
+                Ver todos
+              </Button>
+            )}
           </Box>
         </Box>
 
@@ -1031,7 +1073,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
                 },
               }}
             >
-              {itemsToDisplay.map((item, index) => (
+              {itemsToDisplay.map((item: MarketplaceItem, index: number) => (
                 <Grid item xs={6} sm={6} key={item.id}
                   sx={{
                     display: 'flex',
@@ -1127,7 +1169,7 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
           />
           <BottomNavigationAction
             label="Perfil"
-            icon={<Avatar sx={{ width: 24, height: 24 }} src={user?.avatar} />}
+            icon={<Avatar sx={{ width: 24, height: 24 }} src={user && 'avatar' in user ? (user as any).avatar ?? '' : ''} />}
           />
         </BottomNavigation>
       </Paper>
@@ -1232,13 +1274,14 @@ const MobileMarketplaceView: React.FC<MobileMarketplaceViewProps> = ({
 };
 
 // 🎨 Componente de tarjeta móvil mejorada
-interface EnhancedMobileProductCardProps extends MarketplaceItem {
+interface EnhancedMobileProductCardProps extends Product {
+  isFavorited?: boolean;
   viewMode: 'grid' | 'list';
   onToggleFavorite: (id: string) => void;
   onClick: (id: string) => void;
 }
 
-const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
+export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
   id,
   title,
   description,
@@ -1466,12 +1509,12 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
       sx={{
         cursor: 'pointer',
         height: '100%',
-        minHeight: { xs: 280, sm: 300 },
+        minHeight: { xs: 300, sm: 340 },
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
         overflow: 'hidden',
-        borderRadius: { xs: '14px', sm: '16px' },
+        borderRadius: { xs: '16px', sm: '20px' },
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: '0 3px 12px rgba(0, 0, 0, 0.08)',
         border: featured ? '2px solid #FFD700' : '1px solid #e0e0e0',
@@ -1488,24 +1531,25 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
       <Box
         className="marketplace-card-image-container"
         sx={{
-          height: { xs: 140, sm: 150 },
+          height: { xs: 160, sm: 200 },
           position: 'relative',
           overflow: 'hidden',
           backgroundImage: `url(${images[0] || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=240&fit=crop&crop=center'})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundColor: '#f8f9fa',
+          borderRadius: { xs: '16px', sm: '20px' },
         }}
       >
         {/* Badges superiores */}
         <Box
           sx={{
             position: 'absolute',
-            top: 6,
-            left: 6,
+            top: 10,
+            left: 10,
             display: 'flex',
             flexDirection: 'column',
-            gap: 0.5,
+            gap: 1,
           }}
         >
           {featured && (
@@ -1514,10 +1558,12 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
               size="small"
               sx={{
                 minWidth: 'auto',
-                height: 20,
+                height: 22,
                 backgroundColor: '#FFD700',
                 color: 'white',
-                fontSize: '10px',
+                fontSize: '12px',
+                fontWeight: 700,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
               }}
             />
           )}
@@ -1527,10 +1573,12 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
               size="small"
               sx={{
                 minWidth: 'auto',
-                height: 20,
+                height: 22,
                 backgroundColor: '#FF6B6B',
                 color: 'white',
-                fontSize: '10px',
+                fontSize: '12px',
+                fontWeight: 700,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
               }}
             />
           )}
@@ -1540,10 +1588,12 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
               size="small"
               sx={{
                 minWidth: 'auto',
-                height: 20,
+                height: 22,
                 backgroundColor: '#4CAF50',
                 color: 'white',
-                fontSize: '10px',
+                fontSize: '12px',
+                fontWeight: 700,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
               }}
             />
           )}
@@ -1556,12 +1606,13 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
             size="small"
             sx={{
               position: 'absolute',
-              top: 6,
-              right: 6,
+              top: 10,
+              right: 10,
               backgroundColor: '#FF4444',
               color: 'white',
               fontWeight: 'bold',
-              fontSize: '10px',
+              fontSize: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
             }}
           />
         )}
@@ -1574,56 +1625,51 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
           }}
           sx={{
             position: 'absolute',
-            bottom: 6,
-            right: 6,
-            backgroundColor: 'rgba(255,255,255,0.9)',
+            bottom: 10,
+            right: 10,
+            backgroundColor: 'rgba(255,255,255,0.95)',
             '&:hover': { backgroundColor: 'white' },
-            width: 32,
-            height: 32,
+            width: 36,
+            height: 36,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
           }}
           className="icon-micro-interactive"
         >
           {isFavorited ? (
-            <Favorite sx={{ fontSize: 16, color: '#FF4444' }} />
+            <Favorite sx={{ fontSize: 20, color: '#FF4444' }} />
           ) : (
-            <Favorite sx={{ fontSize: 16, color: '#ccc' }} />
+            <Favorite sx={{ fontSize: 20, color: '#ccc' }} />
           )}
         </IconButton>
 
         {/* Rating y características */}
-        <Box sx={{ position: 'absolute', bottom: 6, left: 6 }}>
+        <Box sx={{ position: 'absolute', bottom: 10, left: 10 }}>
           <Box
             sx={{
-              backgroundColor: 'rgba(255,255,255,0.9)',
+              backgroundColor: 'rgba(255,255,255,0.95)',
               borderRadius: 1,
-              px: 0.5,
-              py: 0.25,
+              px: 1,
+              py: 0.5,
               display: 'flex',
               alignItems: 'center',
-              gap: 0.25,
+              gap: 0.5,
               mb: hasVideo ? 0.5 : 0,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
             }}
           >
-            <StarIcon sx={{ fontSize: 12, color: '#FFD700' }} />
-            <Typography variant="caption" fontWeight="bold">
+            <StarIcon sx={{ fontSize: 18, color: '#FFD700' }} />
+            <Typography variant="body2" fontWeight="bold" sx={{ fontSize: 15 }}>
               {rating}
             </Typography>
-          </Box>
-
-          {hasVideo && (
-            <Box
-              sx={{
-                backgroundColor: 'rgba(0,0,0,0.7)',
-                borderRadius: 1,
-                px: 0.5,
-                py: 0.25,
-              }}
-            >
-              <Typography variant="caption" color="white" fontSize="10px">
-                📹 Video
+            <Typography variant="caption" color="text.secondary">
+              ({seller.reviewCount})
+            </Typography>
+            {hasVideo && (
+              <Typography variant="caption" sx={{ ml: 0.5, fontSize: 12 }}>
+                📹
               </Typography>
-            </Box>
-          )}
+            )}
+          </Box>
         </Box>
 
         {/* Indicador online del vendedor */}
@@ -1631,8 +1677,8 @@ const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps> = ({
           <Box
             sx={{
               position: 'absolute',
-              top: 6,
-              right: discount ? 80 : 6,
+              top: 10,
+              right: discount ? 80 : 10,
               width: 10,
               height: 10,
               borderRadius: '50%',

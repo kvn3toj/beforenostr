@@ -340,26 +340,27 @@ const MOCK_ACTIVITIES: GuardianActivity[] = [
 // Tema Material UI personalizado para el Portal de Guardianes
 const portalTheme = createTheme({
   palette: {
+    mode: 'dark', // Enable dark mode for better contrast
     primary: {
-      main: '#6A0DAD', // Púrpura cósmico
-      light: '#9D2EDC',
-      dark: '#4A0082',
+      main: '#9D2EDC', // Púrpura cósmico
+      light: '#B388FF',
+      dark: '#6A0DAD',
       contrastText: '#ffffff',
     },
     secondary: {
       main: '#00C4B4', // Turquesa vibrante
       light: '#33DBD4',
       dark: '#008D7A',
-      contrastText: '#000000',
+      contrastText: '#ffffff',
     },
     background: {
-      default: '#F8F0FF', // Fondo claro sutil
-      paper: '#FFFFFF', // Para tarjetas y contenedores
+      default: '#0d133d', // Fondo oscuro del cosmos
+      paper: 'rgba(26, 26, 46, 0.7)', // Tarjetas con transparencia
     },
     text: {
-      primary: '#333333',
-      secondary: '#555555',
-      disabled: '#AAAAAA',
+      primary: '#ffffff',
+      secondary: '#e0e0e0',
+      disabled: '#757575',
     },
   },
   typography: {
@@ -654,112 +655,119 @@ ${promptInput}
 
               {/* Tab: Guardianes */}
               {selectedTab === 0 && (
-                <Box sx={{ p: 3, backgroundColor: portalTheme.palette.background.paper }}>
-                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, color: portalTheme.palette.primary.main }}>
+                <Box sx={{ p: isMobile ? 2 : 4 }}>
+                  <Typography variant="h4" gutterBottom sx={{ fontWeight: 800, color: '#fff', textAlign: 'center', mb: 4 }}>
                     Los 12 Guardianes Digitales
                   </Typography>
-                  <Stack spacing={3}>
+                  <Grid container spacing={4} justifyContent="center">
                     {GUARDIANS_DATA.map((guardian) => (
-                      <motion.div
-                        key={guardian.id}
-                        whileHover={{ scale: 1.04, rotate: -1 }}
-                        whileTap={{ scale: 0.98 }}
-                        style={{ borderRadius: 24 }}
-                      >
-                        <Card
-                          sx={{
-                            minWidth: 280,
-                            borderRadius: 4,
-                            background: `rgba(255,255,255,0.18)`,
-                            boxShadow: `0 8px 32px 0 ${guardian.color}33, 0 1.5px 16px 0 #0002`,
-                            border: `1.5px solid ${guardian.color}55`,
-                            backdropFilter: 'blur(12px) saturate(1.2)',
-                            position: 'relative',
-                            overflow: 'visible',
-                            transition: 'all 0.35s cubic-bezier(.4,2,.3,1)',
-                            '&:hover': {
-                              boxShadow: `0 12px 40px 0 ${guardian.color}66, 0 2px 24px 0 #0003`,
-                              borderColor: `${guardian.color}AA`,
-                            },
-                          }}
+                      <Grid item key={guardian.id} xs={12} sm={6} md={4} lg={3}>
+                        <motion.div
+                          whileHover={{ scale: 1.04, rotate: -1 }}
+                          whileTap={{ scale: 0.98 }}
+                          style={{ borderRadius: 24, height: '100%' }}
                         >
-                          <CardContent sx={{ textAlign: 'center', py: 3, position: 'relative' }}>
-                            <Box sx={{ position: 'relative', display: 'inline-block', mb: 1 }}>
-                              {/* Animated Halo */}
-                              <Box
-                                className="guardian-halo"
-                                sx={{
-                                  position: 'absolute',
-                                  top: '-10px',
-                                  left: '-10px',
-                                  width: 76,
-                                  height: 76,
-                                  borderRadius: '50%',
-                                  background: `radial-gradient(circle, ${guardian.color}55 0%, transparent 70%)`,
-                                  filter: `blur(6px)`,
-                                  zIndex: 1,
+                          <Card
+                            sx={{
+                              height: '100%',
+                              borderRadius: 4,
+                              background: 'rgba(38, 26, 68, 0.6)',
+                              boxShadow: `0 8px 32px 0 ${guardian.color}11`,
+                              border: `1.5px solid ${guardian.color}66`,
+                              backdropFilter: 'blur(16px) saturate(1.4)',
+                              position: 'relative',
+                              overflow: 'visible',
+                              transition: 'all 0.35s cubic-bezier(.4,2,.3,1)',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              '&:hover': {
+                                boxShadow: `0 12px 40px 0 ${guardian.color}55, 0 2px 24px 0 #0003`,
+                                borderColor: `${guardian.color}BB`,
+                              },
+                            }}
+                          >
+                            <CardContent sx={{ textAlign: 'center', p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                              <Box>
+                                <Box sx={{ position: 'relative', display: 'inline-block', mb: 1 }}>
+                                  <Box
+                                    className="guardian-halo"
+                                    sx={{
+                                      position: 'absolute',
+                                      top: '-10px',
+                                      left: '50%',
+                                      transform: 'translateX(-50%)',
+                                      width: 76,
+                                      height: 76,
+                                      borderRadius: '50%',
+                                      background: `radial-gradient(circle, ${guardian.color}55 0%, transparent 70%)`,
+                                      filter: `blur(6px)`,
+                                      zIndex: 1,
+                                    }}
+                                  />
+                                  <Avatar
+                                    sx={{
+                                      bgcolor: guardian.color,
+                                      width: 56,
+                                      height: 56,
+                                      border: `2.5px solid #fff`,
+                                      boxShadow: `0 0 0 4px ${guardian.color}33`,
+                                      zIndex: 2,
+                                      position: 'relative',
+                                      mx: 'auto'
+                                    }}
+                                  >
+                                    <guardian.icon sx={{ fontSize: 32, color: '#fff' }} />
+                                  </Avatar>
+                                </Box>
+                                <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff' }}>
+                                  {guardian.name}
+                                </Typography>
+                                <Typography variant="subtitle2" sx={{ mb: 2, opacity: 0.7, color: '#eee' }}>
+                                  {guardian.title}
+                                </Typography>
+                                <Chip
+                                  label={guardian.element}
+                                  size="small"
+                                  sx={{
+                                    backgroundColor: `${guardian.color}33`,
+                                    color: '#fff',
+                                    mb: 2
+                                  }}
+                                />
+                                <Typography variant="body2" sx={{ mt: 1, opacity: 0.8, color: '#ccc', minHeight: '40px' }}>
+                                  {guardian.specialization}
+                                </Typography>
+                              </Box>
+                              <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={() => {
+                                  setSelectedGuardianForPage(guardian);
+                                  setSelectedTab(1);
                                 }}
-                              />
-                              <Avatar
                                 sx={{
-                                  bgcolor: guardian.color,
-                                  width: 56,
-                                  height: 56,
-                                  border: `2.5px solid ${guardian.color}`,
-                                  boxShadow: `0 0 0 4px ${guardian.color}22`,
-                                  zIndex: 2,
-                                  position: 'relative',
+                                  mt: 2,
+                                  borderColor: guardian.color,
+                                  color: '#fff',
+                                  fontWeight: 600,
+                                  letterSpacing: 0.5,
+                                  boxShadow: `0 1.5px 8px ${guardian.color}22`,
+                                  alignSelf: 'center',
+                                  '&:hover': {
+                                    backgroundColor: `${guardian.color}33`,
+                                    borderColor: guardian.color,
+                                    boxShadow: `0 2.5px 16px ${guardian.color}33`,
+                                  }
                                 }}
                               >
-                                <guardian.icon sx={{ fontSize: 32, color: '#fff' }} />
-                              </Avatar>
-                            </Box>
-                            <Typography variant="h6" sx={{ fontWeight: 700, color: guardian.color }}>
-                              {guardian.name}
-                            </Typography>
-                            <Typography variant="subtitle2" sx={{ mb: 2, opacity: 0.9 }}>
-                              {guardian.title}
-                            </Typography>
-                            <Chip
-                              label={guardian.element}
-                              size="small"
-                              sx={{
-                                backgroundColor: `${guardian.color}33`,
-                                color: guardian.color,
-                                mb: 1
-                              }}
-                            />
-                            <Typography variant="body2" sx={{ mt: 1, opacity: 0.8 }}>
-                              {guardian.specialization}
-                            </Typography>
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              onClick={() => {
-                                setSelectedGuardianForPage(guardian);
-                                setSelectedTab(1);
-                              }}
-                              sx={{
-                                mt: 2,
-                                borderColor: guardian.color,
-                                color: guardian.color,
-                                fontWeight: 600,
-                                letterSpacing: 0.5,
-                                boxShadow: `0 1.5px 8px ${guardian.color}22`,
-                                '&:hover': {
-                                  backgroundColor: `${guardian.color}11`,
-                                  borderColor: guardian.color,
-                                  boxShadow: `0 2.5px 16px ${guardian.color}33`,
-                                }
-                              }}
-                            >
-                              Visitar Laboratorio
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
+                                Visitar Laboratorio
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      </Grid>
                     ))}
-                  </Stack>
+                  </Grid>
                 </Box>
               )}
 

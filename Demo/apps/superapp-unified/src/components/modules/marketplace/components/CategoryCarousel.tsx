@@ -75,7 +75,7 @@ export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
       itemWidth: 120,
       itemHeight: 100,
       padding: 16,
-      gap: 12,
+      gap: 24,
       showDescription: false,
     },
     compact: {
@@ -89,7 +89,7 @@ export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
       itemWidth: 140,
       itemHeight: 120,
       padding: 20,
-      gap: 16,
+      gap: 24,
       showDescription: true,
     },
   };
@@ -361,15 +361,15 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        aria-label={`Seleccionar categoría ${category.name}`}
         sx={{
-          minWidth: Math.max(config.itemWidth, 140), // Increased minimum size
-          width: Math.max(config.itemWidth, 140),
-          height: Math.max(config.itemHeight, 120),
+          width: { xs: 120, md: 160 },
+          height: { xs: 100, md: 120 },
           cursor: 'pointer',
-          transition: consciousDesignSystem.transitions.normal,
+          transition: 'box-shadow 0.2s, transform 0.2s, background 0.2s',
           transform: isHovered
-            ? consciousDesignSystem.accessibility.hover.transform
-            : 'translateY(0) scale(1)',
+            ? 'scale(1.02)'
+            : 'scale(1)',
           boxShadow: isSelected
             ? consciousDesignSystem.components.card.shadow.consciousness
             : isHovered
@@ -393,10 +393,11 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
             borderColor: consciousDesignSystem.colors.primary.light,
             background: `linear-gradient(135deg, ${consciousDesignSystem.colors.primary.main}10, ${consciousDesignSystem.colors.primary.main}20)`,
           },
+          minHeight: 44, // Touch target mínimo
         }}
         className="card-micro-interactive"
       >
-        {/* Badges de estado con diseño consciente */}
+        {/* Badges de estado con animación pulse */}
         {(category.trending || category.featured) && (
           <Box sx={{ position: 'absolute', top: consciousDesignSystem.spacing[2], right: consciousDesignSystem.spacing[2] }}>
             {category.featured && (
@@ -413,6 +414,11 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
                   fontSize: consciousDesignSystem.typography.fontSize.xs,
                   fontWeight: consciousDesignSystem.typography.fontWeight.bold,
                   boxShadow: consciousDesignSystem.components.card.shadow.soft,
+                  animation: 'pulse 1.2s infinite alternate',
+                  '@keyframes pulse': {
+                    from: { opacity: 0.8 },
+                    to: { opacity: 1 },
+                  },
                   '& .MuiChip-icon': {
                     color: consciousDesignSystem.colors.accent.contrastText,
                     fontSize: 14
@@ -435,6 +441,11 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
                   fontSize: consciousDesignSystem.typography.fontSize.xs,
                   fontWeight: consciousDesignSystem.typography.fontWeight.bold,
                   boxShadow: consciousDesignSystem.components.card.shadow.soft,
+                  animation: 'pulse 1.2s infinite alternate',
+                  '@keyframes pulse': {
+                    from: { opacity: 0.8 },
+                    to: { opacity: 1 },
+                  },
                   '& .MuiChip-icon': {
                     color: consciousDesignSystem.colors.secondary.contrastText,
                     fontSize: 14
@@ -456,7 +467,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
                 fontSize: consciousDesignSystem.typography.fontSize.xs,
                 fontFamily: consciousDesignSystem.typography.fontFamily.primary,
                 fontWeight: consciousDesignSystem.typography.fontWeight.bold,
-                backgroundColor: `${consciousDesignSystem.colors.grey[50]}F0`, // 94% opacity
+                backgroundColor: `${consciousDesignSystem.colors.grey[50]}F0`,
                 color: consciousDesignSystem.colors.grey[800],
                 backdropFilter: 'blur(8px)',
                 border: `1px solid ${consciousDesignSystem.colors.grey[200]}`,
@@ -466,24 +477,32 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           </Box>
         )}
 
-        {/* Icono principal mejorado */}
+        {/* Icono principal más grande y animado */}
         <Box
           sx={{
-            fontSize: Math.max(config.itemWidth, 140) > 100 ? '40px' : '32px',
+            fontSize: { xs: '32px', md: '40px' },
             mb: consciousDesignSystem.spacing[3],
-            transition: consciousDesignSystem.transitions.normal,
+            transition: 'transform 0.2s',
             transform: isHovered
-              ? 'scale(1.15) rotate(3deg)'
-              : 'scale(1) rotate(0deg)',
+              ? 'scale(1.1)'
+              : 'scale(1)',
             filter: isSelected
               ? `drop-shadow(0 4px 8px ${consciousDesignSystem.colors.primary.main}40)`
               : 'none',
+            lineHeight: 1,
+            minHeight: 44,
+            minWidth: 44,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           {/* Si es emoji, mostrarlo directamente */}
-          {/\p{Emoji}/u.test(category.icon) ? (
+          {category.icon.match(/\p{Emoji}/u) ? (
             <span style={{
-              textShadow: isHovered ? `0 2px 8px ${consciousDesignSystem.colors.primary.main}30` : 'none'
+              textShadow: isHovered ? `0 2px 8px ${consciousDesignSystem.colors.primary.main}30` : 'none',
+              display: 'inline-block',
+              transition: 'text-shadow 0.2s',
             }}>
               {category.icon}
             </span>
@@ -494,12 +513,13 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
               src={category.icon}
               alt={category.name}
               sx={{
-                width: Math.max(config.itemWidth, 140) > 100 ? 48 : 40,
-                height: Math.max(config.itemWidth, 140) > 100 ? 48 : 40,
+                width: { xs: 32, md: 40 },
+                height: { xs: 32, md: 40 },
                 objectFit: 'contain',
                 filter: isSelected
                   ? `drop-shadow(0 2px 4px ${consciousDesignSystem.colors.primary.main}40)`
                   : 'none',
+                transition: 'filter 0.2s',
               }}
               onError={(e) => {
                 // Fallback a un icono genérico si la imagen falla
@@ -510,19 +530,19 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           )}
         </Box>
 
-        {/* Nombre de la categoría mejorado */}
+        {/* Nombre de la categoría más destacado */}
         <Typography
-          variant={Math.max(config.itemWidth, 140) > 100 ? 'body2' : 'caption'}
+          variant={Math.max(config.itemWidth, 140) > 100 ? 'body1' : 'body2'}
           sx={{
             textAlign: 'center',
             color: isSelected
               ? consciousDesignSystem.colors.primary.main
-              : consciousDesignSystem.colors.grey[700],
-            transition: consciousDesignSystem.transitions.normal,
+              : consciousDesignSystem.colors.grey[800],
+            transition: 'color 0.2s',
             lineHeight: 1.3,
             px: consciousDesignSystem.spacing[2],
             fontFamily: consciousDesignSystem.typography.fontFamily.primary,
-            fontSize: consciousDesignSystem.typography.fontSize.sm,
+            fontSize: Math.max(config.itemWidth, 140) > 100 ? '1.1rem' : consciousDesignSystem.typography.fontSize.sm,
             fontWeight: isSelected
               ? consciousDesignSystem.typography.fontWeight.bold
               : consciousDesignSystem.typography.fontWeight.semibold,
@@ -534,37 +554,20 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
 
         {/* Descripción (solo en variante featured) */}
         {config.showDescription && category.description && (
-          <Fade in={isHovered}>
-            <Typography
-              variant="caption"
-              sx={{
-                textAlign: 'center',
-                color: 'text.secondary',
-                mt: 0.5,
-                px: 1,
-                opacity: isHovered ? 1 : 0,
-                transition: 'opacity 0.3s ease',
-              }}
-            >
-              {category.description}
-            </Typography>
-          </Fade>
+          <Typography
+            variant="caption"
+            sx={{
+              mt: 1,
+              color: consciousDesignSystem.colors.grey[700],
+              fontFamily: consciousDesignSystem.typography.fontFamily.primary,
+              fontSize: consciousDesignSystem.typography.fontSize.xs,
+              textAlign: 'center',
+              px: 2,
+            }}
+          >
+            {category.description}
+          </Typography>
         )}
-
-        {/* Efecto de hover overlay */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `linear-gradient(135deg, ${category.color}10, transparent)`,
-            opacity: isHovered ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-            pointerEvents: 'none',
-          }}
-        />
       </Card>
     </Zoom>
   );

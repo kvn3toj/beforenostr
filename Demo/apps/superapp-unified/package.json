@@ -95,6 +95,7 @@
     "@types/dompurify": "^3.0.5",
     "@types/react-lazy-load-image-component": "^1.6.4",
     "@vitejs/plugin-react": "^4.5.2",
+    "@vitest/mocker": "^3.2.4",
     "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

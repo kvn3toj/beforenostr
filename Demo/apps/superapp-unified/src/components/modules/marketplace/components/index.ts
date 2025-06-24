@@ -1,12 +1,10 @@
 // Import default exports first
-import ProductCardEnhanced from './ProductCardEnhanced';
 import AdvancedSearch from './AdvancedSearch';
 import AdvancedFilters from './AdvancedFilters';
 import FilterStats from './FilterStats';
 import ItemGrid from './ItemGrid';
 
 // Export using imported components to avoid binding conflicts
-export { ProductCardEnhanced };
 export { AdvancedSearch };
 export { AdvancedFilters };
 export { FilterStats };
