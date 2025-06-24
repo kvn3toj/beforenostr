@@ -66,7 +66,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../../../contexts/AuthContext';
 import { ProductCard, ItemGrid } from './components';
-import ProductCardEnhanced from './components/ProductCardEnhanced';
+import { EnhancedMarketplaceCard } from './components';
 import { MobileMarketplaceView } from './components';
 import {
   useMarketplaceData,

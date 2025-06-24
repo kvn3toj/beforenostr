@@ -1319,15 +1319,18 @@ export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps>
         sx={{
           cursor: 'pointer',
           display: 'flex',
-          p: 1.5,
+          p: 2,
           height: 140,
+          borderRadius: 3,
+          boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
           transition: 'all 0.3s ease',
           '&:hover': {
             transform: 'translateY(-2px)',
-            boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+            boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
             borderColor: featured ? '#FFD700' : '#c0c0c0',
           },
           border: featured ? '2px solid #FFD700' : '1px solid #e0e0e0',
+          backgroundColor: theme => theme.palette.mode === 'dark' ? '#23272f' : '#fff',
         }}
         className="card-micro-interactive"
       >
@@ -1343,11 +1346,12 @@ export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps>
             backgroundPosition: 'center',
             position: 'relative',
             flexShrink: 0,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
           }}
         >
-          {trending && (
+          {featured && (
             <Chip
-              label="🔥"
+              label="★"
               size="small"
               sx={{
                 position: 'absolute',
@@ -1355,8 +1359,27 @@ export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps>
                 left: 4,
                 minWidth: 'auto',
                 height: 20,
+                backgroundColor: '#FFD700',
+                color: 'black',
+                fontWeight: 700,
+                zIndex: 2,
+              }}
+            />
+          )}
+          {trending && (
+            <Chip
+              label="🔥"
+              size="small"
+              sx={{
+                position: 'absolute',
+                top: 28,
+                left: 4,
+                minWidth: 'auto',
+                height: 20,
                 backgroundColor: '#FF6B6B',
                 color: 'white',
+                fontWeight: 700,
+                zIndex: 2,
               }}
             />
           )}
@@ -1378,125 +1401,49 @@ export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps>
             </Box>
           )}
         </Box>
-
         {/* Contenido */}
         <Box
-          sx={{ flex: 1, ml: 1.5, display: 'flex', flexDirection: 'column' }}
+          sx={{ flex: 1, ml: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}
         >
-          <Box sx={{ flex: 1 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                mb: 0.5,
-              }}
-            >
-              <Typography
-                variant="subtitle2"
-                fontWeight="bold"
-                sx={{ lineHeight: 1.2, flex: 1 }}
-              >
-                {title}
-              </Typography>
-              <IconButton
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleFavorite(id);
-                }}
-                sx={{ ml: 0.5 }}
-              >
-                {isFavorited ? (
-                  <Favorite sx={{ fontSize: 16, color: '#FF4444' }} />
-                ) : (
-                  <Favorite sx={{ fontSize: 16, color: '#ccc' }} />
-                )}
-              </IconButton>
-            </Box>
-
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ display: 'block', mb: 0.5 }}
-            >
-              {description.substring(0, 60)}...
-            </Typography>
-
-            <Box
-              sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}
-            >
-              <StarIcon sx={{ fontSize: 12, color: '#FFD700' }} />
-              <Typography variant="caption" fontWeight="bold">
-                {rating}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                ({seller.reviewCount})
-              </Typography>
-              {seller.isOnline && (
-                <Box
-                  sx={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    backgroundColor: '#4CAF50',
-                    ml: 0.5,
-                  }}
-                />
-              )}
-            </Box>
-          </Box>
-
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center',
+              alignItems: 'flex-start',
+              mb: 0.5,
             }}
           >
-            <Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                {originalPrice && (
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      textDecoration: 'line-through',
-                      color: 'text.secondary',
-                    }}
-                  >
-                    ü{originalPrice}
-                  </Typography>
-                )}
-                <Typography
-                  variant="subtitle2"
-                  fontWeight="bold"
-                  color="primary"
-                >
-                  {formatPrice(price, currency)}
-                </Typography>
-              </Box>
-              {deliveryTime && (
-                <Typography variant="caption" color="text.secondary">
-                  📦 {deliveryTime}
-                </Typography>
-              )}
-            </Box>
-
-            <Box sx={{ textAlign: 'right' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Avatar src={seller.avatar} sx={{ width: 16, height: 16 }} />
-                <Typography variant="caption" fontWeight="bold">
-                  {(seller.name || 'Usuario').split(' ')[0]}
-                </Typography>
-                {seller.verified && (
-                  <VerifiedIcon sx={{ fontSize: 12, color: '#1976d2' }} />
-                )}
-              </Box>
-              <Typography variant="caption" color="text.secondary">
-                {(location || 'Online').split(',')[0]}
-              </Typography>
+            <Typography
+              variant="subtitle2"
+              fontWeight="bold"
+              sx={{ lineHeight: 1.2, flex: 1 }}
+            >
+              {title}
+            </Typography>
+            {/* Rating visual reforzado */}
+            <Box
+              sx={{
+                bgcolor: 'white',
+                borderRadius: 2,
+                px: 0.5,
+                py: 0.25,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                ml: 1,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Rating value={rating} precision={0.1} size="small" readOnly sx={{ mr: 0.5 }} />
+              <Typography variant="caption" color="text.secondary">{rating?.toFixed(1)}</Typography>
             </Box>
           </Box>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, minHeight: 32 }}>
+            {description}
+          </Typography>
+          <Typography variant="subtitle2" fontWeight={700} color="primary.main" sx={{ mb: 0.5 }}>
+            {formatPrice(price, currency)}
+          </Typography>
+          {/* Aquí puedes agregar botón de favorito si lo deseas, asegurando que no tape info clave */}
         </Box>
       </Card>
     );
@@ -1560,7 +1507,7 @@ export const EnhancedMobileProductCard: React.FC<EnhancedMobileProductCardProps>
                 minWidth: 'auto',
                 height: 22,
                 backgroundColor: '#FFD700',
-                color: 'white',
+                color: 'black',
                 fontSize: '12px',
                 fontWeight: 700,
                 boxShadow: '0 2px 8px rgba(0,0,0,0.10)',

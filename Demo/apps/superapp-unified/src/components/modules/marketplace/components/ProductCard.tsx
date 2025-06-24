@@ -142,13 +142,14 @@ const ProductCard: React.FC<ProductCardProps> = props => {
         onClick={handleCardClick}
         sx={{
           borderRadius: '12px',
-          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+          boxShadow: isHovered ? '0 6px 24px 0 rgba(0,0,0,0.12)' : '0 1px 2px 0 rgba(0,0,0,0.05)',
           cursor: 'pointer',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
           overflow: 'hidden',
+          p: { xs: 1.5, md: 2.5 },
           ...(viewMode === 'list' && {
             flexDirection: 'row',
           }),
@@ -177,6 +178,7 @@ const ProductCard: React.FC<ProductCardProps> = props => {
               position: 'relative',
               overflow: 'hidden',
               backgroundColor: 'grey.200',
+              borderRadius: '12px 12px 0 0',
               ...(viewMode === 'list' && {
                 width: 200,
                 height: 'auto',
@@ -192,6 +194,7 @@ const ProductCard: React.FC<ProductCardProps> = props => {
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
+                borderRadius: '12px 12px 0 0',
                 transition: 'transform 0.3s ease-in-out',
                 transform: isHovered ? 'scale(1.05)' : 'scale(1)',
               }}
@@ -199,94 +202,64 @@ const ProductCard: React.FC<ProductCardProps> = props => {
             <StatusBadges
               featured={featured || false}
               trending={trending || false}
-              discount={discount}
-              is24Hours={props.is24Hours || false}
-              isUrgent={props.urgent || false}
-              hasVideo={props.hasVideo || false}
-              size={size}
+              sx={{
+                position: 'absolute',
+                top: 10,
+                left: 10,
+                zIndex: 2,
+                bgcolor: featured ? '#FFD700' : trending ? '#FF6B6B' : 'white',
+                color: featured || trending ? 'black' : 'text.primary',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                borderRadius: 2,
+                px: 1,
+                py: 0.5,
+              }}
             />
-            {images.length > 1 && isHovered && (
-              <>
-                <IconButton
-                  onClick={e => handleImageNavigation(e, 'prev')}
-                  size="small"
-                  sx={{ position: 'absolute', top: '50%', left: 4, transform: 'translateY(-50%)', color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)'} }}
-                >
-                  <ChevronLeft />
-                </IconButton>
-                <IconButton
-                   onClick={e => handleImageNavigation(e, 'next')}
-                   size="small"
-                   sx={{ position: 'absolute', top: '50%', right: 4, transform: 'translateY(-50%)', color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)'} }}
-                >
-                  <ChevronRight />
-                </IconButton>
-              </>
-            )}
-            <Tooltip title={isFavoritedLocal ? 'Remove from Wishlist' : 'Add to Wishlist'}>
-              <IconButton
-                onClick={handleToggleFavorite}
-                size="small"
-                sx={{ position: 'absolute', top: 8, right: 8, color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)'} }}
-              >
-                {isFavoritedLocal ? <Favorite color="error" /> : <FavoriteBorder />}
-              </IconButton>
-            </Tooltip>
-             {isOwner && (
-                <IconButton
-                  aria-label="settings"
-                  onClick={handleMenuOpen}
-                  size="small"
-                  sx={{ position: 'absolute', top: 8, left: 8, color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)'} }}
-                >
-                  <MoreVert />
-                </IconButton>
-              )}
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 10,
+                left: 10,
+                bgcolor: 'white',
+                borderRadius: 2,
+                px: 1,
+                py: 0.5,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Rating value={rating} precision={0.1} size="small" readOnly sx={{ mr: 0.5 }} />
+              <Typography variant="caption" color="text.secondary">{rating.toFixed(1)}</Typography>
+            </Box>
+            <IconButton
+              aria-label={isFavoritedLocal ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+              onClick={handleToggleFavorite}
+              sx={{
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                bgcolor: 'white',
+                color: isFavoritedLocal ? 'error.main' : 'grey.500',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                zIndex: 2,
+                '&:hover': { bgcolor: 'grey.100' },
+              }}
+            >
+              {isFavoritedLocal ? <Favorite /> : <FavoriteBorder />}
+            </IconButton>
           </Box>
 
           {/* --- Content Section --- */}
-          <CardContent
-            sx={{
-              p: '16px',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Box>
-              <Typography variant="h6" component="h3" gutterBottom sx={{ fontSize: '16px', fontWeight: 600 }}>
-                {title}
-              </Typography>
-              <SellerInfo seller={seller} location={location} deliveryTime={deliveryTime} />
-              <Rating name="read-only" value={rating} readOnly size="small" sx={{ my: 1, color: '#FBBF24' }} />
-              <Typography variant="body2" color="text.secondary" noWrap>
-                {shortDescription || 'No description available.'}
-              </Typography>
-            </Box>
-
-            <Box mt={2}>
-              <PriceDisplay price={price} originalPrice={originalPrice} currency={currency} discount={discount} size={size} />
-              <Fade in={isHovered}>
-                <Stack direction="row" spacing={1} mt={1}>
-                  <Tooltip title="Add to Cart">
-                    <IconButton size="small" onClick={handleAddToCart} disabled={isAddingToCart}>
-                      <AddShoppingCart />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Quick View">
-                    <IconButton size="small" onClick={handleQuickView}>
-                      <Visibility />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Share">
-                    <IconButton size="small">
-                      <Share />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Fade>
-            </Box>
+          <CardContent sx={{ flex: 1, p: { xs: 1, md: 2 }, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 0.5, lineHeight: 1.2 }}>
+              {title}
+            </Typography>
+            <PriceDisplay price={price} originalPrice={originalPrice} currency={currency} sx={{ mb: 0.5, fontWeight: 700 }} />
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1, minHeight: 36 }}>
+              {shortDescription}
+            </Typography>
+            <SellerInfo seller={seller} />
           </CardContent>
         </Box>
       </CosmicCard>
