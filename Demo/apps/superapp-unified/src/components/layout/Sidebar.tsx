@@ -28,6 +28,7 @@ import {
   Help,
   PhoneAndroid,
   SwapHoriz,
+  Psychology,
 } from '@mui/icons-material';
 import { ThemeSelector } from './ThemeSelector';
 import { useDynamicTheme } from '../../context/DynamicThemeContext';
@@ -104,6 +105,12 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
     label: 'ÜStats',
     icon: <Analytics />,
     path: '/ustats',
+    section: 'modules',
+  },
+  {
+    label: 'Consciencia',
+    icon: <Psychology />,
+    path: '/consciousness',
     section: 'modules',
   },
   {

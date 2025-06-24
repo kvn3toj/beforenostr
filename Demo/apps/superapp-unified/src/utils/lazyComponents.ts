@@ -32,6 +32,7 @@ const LetsPage = createLazyPage('LetsPage');
 const SettingsPage = createLazyPage('Settings');
 const NotificationsPage = createLazyPage('NotificationsPage');
 const StudyRoomsPage = createLazyPage('StudyRoomsPage');
+const ConsciousnessPage = createLazyPage('Consciousness');
 
 // Rutas de Video y UPlay
 const UPlayVideoPlayer = createLazyPage('UPlayVideoPlayer');
@@ -89,6 +90,9 @@ export const LazyPages = {
   // UStats & Analytics
   UStatsPage,
   AnalyticsPage,
+
+  // Consciousness & Cosmic Archive
+  ConsciousnessPage,
 
   // Video/UPlay Routes
   UPlayVideoPlayer,
@@ -179,6 +183,9 @@ export const preloadRouteComponents = (pathname: string) => {
         break;
       case '/analytics':
         import('../pages/Analytics.tsx');
+        break;
+      case '/consciousness':
+        import('../pages/Consciousness.tsx');
         break;
       default:
         if (pathname.startsWith('/uplay/')) {

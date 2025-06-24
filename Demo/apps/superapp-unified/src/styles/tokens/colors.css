@@ -1,12 +1,23 @@
 /* ===== COOMUNITY DESIGN TOKENS - COLORS ===== */
 
 :root {
-  /* ============ PALETA CORPORATIVA UPLAY ============ */
+  /* ============ PALETA CORPORATIVA UPLAY COMPLETA ============ */
   /* Colores principales definidos según guía corporativa */
   --uplay-navy: #142c46; /* C: 100 M: 80 Y: 45 K: 45 */
   --uplay-blue: #005ca9; /* C: 100 M: 60 Y: 0 K: 0 */
   --uplay-purple-dark: #392768; /* C: 95 M: 100 Y: 25 K: 10 */
   --uplay-purple: #5c2483; /* C: 80 M: 100 Y: 0 K: 0 */
+
+  /* 🆕 COLORES SECUNDARIOS CORPORATIVOS - GUÍA AVANZADA */
+  --uplay-burgundy: #5d1626; /* C: 50 M: 100 Y: 70 K: 50 */
+  --uplay-magenta: #d6075c; /* C: 10 M: 100 Y: 40 K: 0 */
+  --uplay-forest: #004134; /* C: 90 M: 40 Y: 70 K: 60 */
+  --uplay-green: #3e8638; /* C: 80 M: 30 Y: 100 K: 0 */
+
+  /* 🆕 NEUTROS CORPORATIVOS */
+  --uplay-white: #ffffff; /* C: 0 M: 0 Y: 0 K: 0 */
+  --uplay-black: #1d1d1b; /* C: 0 M: 0 Y: 0 K: 100 */
+  --uplay-yellow: #fbba00; /* C: 0 M: 30 Y: 100 K: 0 */
 
   /* Variantes derivadas para UI */
   --uplay-navy-light: #1a3555;
@@ -15,6 +26,16 @@
   --uplay-blue-dark: #004a89;
   --uplay-purple-light: #6b2d96;
   --uplay-purple-ultra: #4a1d68;
+
+  /* 🆕 VARIANTES DE COLORES SECUNDARIOS */
+  --uplay-magenta-light: #e63a7a;
+  --uplay-magenta-dark: #b30548;
+  --uplay-green-light: #4cad44;
+  --uplay-green-dark: #2d5f2a;
+  --uplay-forest-light: #00594a;
+  --uplay-forest-dark: #002e26;
+  --uplay-yellow-light: #ffcc33;
+  --uplay-yellow-dark: #cc9400;
 
   /* Grises corporativos complementarios */
   --uplay-gray-50: #f8fafc;
@@ -28,18 +49,58 @@
   --uplay-gray-800: #1e293b;
   --uplay-gray-900: #0f172a;
 
-  /* Gradientes corporativos */
+  /* ============ GRADIENTES CORPORATIVOS AVANZADOS ============ */
+  /* Gradientes principales */
+  --gradient-header-uplay: linear-gradient(
+    135deg,
+    var(--uplay-navy) 0%,
+    var(--uplay-blue) 25%,
+    var(--uplay-purple-dark) 50%,
+    var(--uplay-purple) 75%,
+    var(--uplay-magenta) 100%
+  );
   --gradient-primary-uplay: linear-gradient(135deg, var(--uplay-blue), var(--uplay-purple));
-  --gradient-header-uplay: linear-gradient(135deg, var(--uplay-navy) 0%, var(--uplay-blue) 50%, var(--uplay-purple-dark) 100%);
-  --gradient-card-uplay: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-secondary-uplay: linear-gradient(135deg, var(--uplay-green), var(--uplay-forest));
+  --gradient-tertiary-uplay: linear-gradient(135deg, var(--uplay-magenta), var(--uplay-burgundy));
+  --gradient-warning-uplay: linear-gradient(135deg, var(--uplay-yellow), #e6a500);
 
-  /* Sombras corporativas */
-  --shadow-sm-uplay: 0 2px 4px rgba(20, 44, 70, 0.08);
-  --shadow-md-uplay: 0 4px 12px rgba(20, 44, 70, 0.1);
-  --shadow-lg-uplay: 0 8px 25px rgba(0, 92, 169, 0.15);
-  --shadow-blue-uplay: 0 6px 20px rgba(0, 92, 169, 0.3);
-  --shadow-purple-uplay: 0 4px 12px rgba(92, 36, 131, 0.3);
-  --shadow-navy-uplay: 0 8px 32px rgba(20, 44, 70, 0.3);
+  /* 🆕 GRADIENTES MULTI-COLOR PARA PROGRESS BARS */
+  --gradient-progress-uplay: linear-gradient(
+    90deg,
+    var(--uplay-green) 0%,
+    var(--uplay-blue) 50%,
+    var(--uplay-purple) 100%
+  );
+  --gradient-success-uplay: linear-gradient(
+    135deg,
+    var(--uplay-green) 0%,
+    var(--uplay-blue) 100%
+  );
+  --gradient-achievement-uplay: linear-gradient(
+    135deg,
+    var(--uplay-purple) 0%,
+    var(--uplay-magenta) 100%
+  );
+
+  /* ============ SOMBRAS CORPORATIVAS AVANZADAS ============ */
+  /* Sombras con colores de marca */
+  --shadow-navy-uplay: 0 8px 32px rgba(20, 44, 70, 0.15), 0 2px 8px rgba(0, 92, 169, 0.08);
+  --shadow-blue-uplay: 0 12px 24px rgba(0, 92, 169, 0.1), 0 4px 8px rgba(20, 44, 70, 0.05);
+  --shadow-purple-uplay: 0 12px 24px rgba(92, 36, 131, 0.1), 0 4px 8px rgba(57, 39, 104, 0.05);
+  --shadow-green-uplay: 0 12px 24px rgba(62, 134, 56, 0.1), 0 4px 8px rgba(0, 65, 52, 0.05);
+  --shadow-magenta-uplay: 0 12px 24px rgba(214, 7, 92, 0.1), 0 4px 8px rgba(93, 22, 38, 0.05);
+
+  /* 🆕 SOMBRAS HOVER INTENSIFICADAS */
+  --shadow-hover-blue: 0 20px 40px rgba(0, 92, 169, 0.2), 0 8px 16px rgba(0, 92, 169, 0.15);
+  --shadow-hover-purple: 0 20px 40px rgba(92, 36, 131, 0.2), 0 8px 16px rgba(92, 36, 131, 0.15);
+  --shadow-hover-green: 0 20px 40px rgba(62, 134, 56, 0.2), 0 8px 16px rgba(62, 134, 56, 0.15);
+  --shadow-hover-magenta: 0 20px 40px rgba(214, 7, 92, 0.2), 0 8px 16px rgba(214, 7, 92, 0.15);
+
+  /* ============ GLASSMORPHISM EFFECTS ============ */
+  --glass-uplay: rgba(255, 255, 255, 0.95);
+  --glass-uplay-light: rgba(248, 250, 252, 0.95);
+  --glass-border-uplay: rgba(20, 44, 70, 0.15);
+  --glass-backdrop-blur: blur(12px);
 
   /* === COLORES PRIMARIOS COOMUNITY === */
   --coomunity-primary-50: #faf5ff;

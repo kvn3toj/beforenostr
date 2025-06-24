@@ -145,6 +145,9 @@ const AppRoutes: React.FC = () => {
         <Route path="/ustats" element={<LazyPages.UStatsPage />} />
         <Route path="/analytics" element={<LazyPages.AnalyticsPage />} />
 
+        {/* 🧠 Consciousness & Cosmic Archive */}
+        <Route path="/consciousness" element={<LazyPages.ConsciousnessPage />} />
+
         {/* 📚 Study Rooms */}
         <Route path="/study-rooms" element={<LazyPages.StudyRoomsPage />} />
         <Route path="/websocket-test" element={<LazyPages.WebSocketTest />} />

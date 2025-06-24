@@ -1,0 +1,702 @@
+/* ===== UPLAY ADVANCED DESIGN SYSTEM - VISUAL COHERENCE ENHANCED ===== */
+/* Implementación Completa con Mejoras de Proporción y Contraste */
+/* Paleta Corporativa Completa: Navy, Blue, Purple, Green, Magenta, Yellow */
+
+/* ============ CARDS CON DEPTH Y CONTRASTE MEJORADO ============ */
+
+/* ✅ Card Base Mejorado con Glassmorphism Corporativo */
+.uplay-card-enhanced {
+  background: linear-gradient(
+    145deg,
+    var(--glass-uplay) 0%,
+    var(--glass-uplay-light) 100%
+  );
+  border: 2px solid var(--glass-border-uplay);
+  border-left: 5px solid var(--uplay-blue);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 32px rgba(20, 44, 70, 0.12),
+    0 2px 8px rgba(0, 92, 169, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: var(--glass-backdrop-blur);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+.uplay-card-enhanced::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 92, 169, 0.3),
+    transparent
+  );
+}
+
+.uplay-card-enhanced:hover {
+  transform: translateY(-2px) scale(1.01);
+  border-color: var(--uplay-blue);
+  box-shadow: var(--shadow-hover-blue),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-left-color: var(--uplay-purple);
+}
+
+/* ✅ Cards por Tipo de Contenido - PROPORCIONES MEJORADAS */
+
+/* Card de Métricas - Estilo Azul Principal */
+.metric-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(239, 246, 255, 0.95) 100%
+  );
+  border: 2px solid rgba(0, 92, 169, 0.25);
+  border-left: 4px solid var(--uplay-blue);
+  box-shadow: var(--shadow-blue-uplay);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-hover-blue);
+  transform: translateY(-2px);
+  border-color: var(--uplay-blue);
+}
+
+.metric-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    currentColor 50%,
+    transparent 100%
+  );
+  opacity: 0.3;
+}
+
+/* Card de Logros - Estilo Púrpura */
+.achievement-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 245, 255, 0.95) 100%
+  );
+  border: 2px solid rgba(92, 36, 131, 0.25);
+  border-left: 4px solid var(--uplay-purple);
+  box-shadow: var(--shadow-purple-uplay);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-card:hover {
+  box-shadow: var(--shadow-hover-purple);
+  transform: translateY(-2px);
+  border-color: var(--uplay-purple);
+}
+
+.achievement-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    currentColor 50%,
+    transparent 100%
+  );
+  opacity: 0.3;
+}
+
+/* Card de Progreso - Estilo Verde */
+.progress-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(240, 253, 244, 0.95) 100%
+  );
+  border: 2px solid rgba(62, 134, 56, 0.25);
+  border-left: 4px solid var(--uplay-green);
+  box-shadow: var(--shadow-green-uplay);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-card:hover {
+  box-shadow: var(--shadow-hover-green);
+  transform: translateY(-2px);
+  border-color: var(--uplay-green);
+}
+
+/* Card de Actividad - Estilo Magenta */
+.activity-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 241, 249, 0.95) 100%
+  );
+  border: 2px solid rgba(214, 7, 92, 0.25);
+  border-left: 4px solid var(--uplay-magenta);
+  box-shadow: var(--shadow-magenta-uplay);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-card:hover {
+  box-shadow: var(--shadow-hover-magenta);
+  transform: translateY(-2px);
+  border-color: var(--uplay-magenta);
+}
+
+.activity-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    currentColor 50%,
+    transparent 100%
+  );
+  opacity: 0.3;
+}
+
+/* ============ SISTEMA DE ICONOS CON PROPORCIONES MEJORADAS ============ */
+
+.icon-container-base {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  position: relative;
+  transition: all 0.3s ease;
+  margin-bottom: 0.875rem;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.icon-container-blue {
+  background: linear-gradient(
+    135deg,
+    var(--uplay-blue) 0%,
+    var(--uplay-navy) 100%
+  );
+  box-shadow:
+    0 6px 12px rgba(0, 92, 169, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.icon-container-blue::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--uplay-blue), var(--uplay-purple));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.icon-container-blue:hover::after {
+  opacity: 0.15;
+}
+
+.icon-container-purple {
+  background: linear-gradient(
+    135deg,
+    var(--uplay-purple) 0%,
+    var(--uplay-purple-dark) 100%
+  );
+  box-shadow:
+    0 6px 12px rgba(92, 36, 131, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.icon-container-green {
+  background: linear-gradient(
+    135deg,
+    var(--uplay-green) 0%,
+    var(--uplay-forest) 100%
+  );
+  box-shadow:
+    0 6px 12px rgba(62, 134, 56, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.icon-container-magenta {
+  background: linear-gradient(
+    135deg,
+    var(--uplay-magenta) 0%,
+    var(--uplay-burgundy) 100%
+  );
+  box-shadow:
+    0 6px 12px rgba(214, 7, 92, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ============ HEADER AVANZADO CON CONTRASTE MEJORADO ============ */
+
+.header-uplay-advanced {
+  background: var(--gradient-header-uplay);
+  border-bottom: 3px solid var(--uplay-yellow);
+  box-shadow:
+    0 8px 32px rgba(20, 44, 70, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.header-uplay-advanced::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--uplay-yellow),
+    var(--uplay-magenta),
+    var(--uplay-yellow)
+  );
+}
+
+/* 🎨 MEJORA DE CONTRASTE EN TEXTO DEL HEADER */
+.header-text-enhanced {
+  color: white;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.5),
+    0 1px 3px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(0, 0, 0, 0.3);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.header-subtitle-enhanced {
+  color: rgba(255, 255, 255, 0.97);
+  text-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+/* ============ PROGRESS BARS MEJORADOS CON PROPORCIONES ============ */
+
+.progress-bar-advanced {
+  background: var(--uplay-gray-200);
+  border-radius: 8px;
+  height: 6px;
+  overflow: hidden;
+  border: 1px solid var(--uplay-gray-300);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.progress-fill-advanced {
+  background: var(--gradient-progress-uplay);
+  height: 100%;
+  border-radius: 6px;
+  position: relative;
+  box-shadow: 0 0 8px rgba(0, 92, 169, 0.3);
+  transition: width 0.5s ease;
+}
+
+.progress-fill-advanced::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25),
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.25)
+  );
+  border-radius: 6px 6px 0 0;
+}
+
+/* ============ PROGRESS CIRCLE MEJORADO ============ */
+
+.progress-circle-container {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 1.25rem;
+  position: relative;
+}
+
+.progress-circle-svg {
+  width: 110px;
+  height: 110px;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.progress-circle-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.progress-circle-percentage {
+  font-size: 1.625rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--uplay-green), var(--uplay-blue));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.progress-circle-fraction {
+  font-size: 0.75rem;
+  color: var(--uplay-gray-600);
+  font-weight: 600;
+  margin-top: 0.125rem;
+  opacity: 0.8;
+}
+
+/* ============ NAVIGATION TABS CON PROPORCIONES MEJORADAS ============ */
+
+.tab-container-advanced {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(248, 250, 252, 0.95)
+  );
+  border: 2px solid rgba(20, 44, 70, 0.1);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow:
+    0 6px 24px rgba(20, 44, 70, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: var(--glass-backdrop-blur);
+  margin-bottom: 1.5rem;
+}
+
+.tab-active {
+  background: var(--gradient-primary-uplay);
+  color: white;
+  border: 2px solid var(--uplay-purple);
+  border-radius: 11px;
+  box-shadow:
+    0 4px 16px rgba(0, 92, 169, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  padding: 0.625rem 1.125rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  letter-spacing: -0.01em;
+}
+
+.tab-inactive {
+  color: var(--uplay-navy);
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 11px;
+  padding: 0.625rem 1.125rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+}
+
+.tab-inactive:hover {
+  background: rgba(0, 92, 169, 0.04);
+  border-color: rgba(0, 92, 169, 0.15);
+  color: var(--uplay-blue);
+  transform: translateY(-1px);
+}
+
+.tab-badge {
+  background: var(--uplay-magenta);
+  color: white;
+  border: 1px solid white;
+  border-radius: 50%;
+  padding: 1px 5px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(214, 7, 92, 0.25);
+  margin-left: 0.375rem;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============ BACKGROUNDS CONTEXTUALES MEJORADOS ============ */
+
+.main-background-advanced {
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(0, 92, 169, 0.02) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(92, 36, 131, 0.02) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(62, 134, 56, 0.015) 0%,
+      transparent 50%
+    ),
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  min-height: 100vh;
+}
+
+.section-background-blue {
+  background: linear-gradient(
+      135deg,
+      rgba(0, 92, 169, 0.03) 0%,
+      rgba(20, 44, 70, 0.02) 100%
+    ),
+    radial-gradient(circle at 50% 0%, rgba(0, 92, 169, 0.05), transparent 70%);
+  border: 1px solid rgba(0, 92, 169, 0.08);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.section-background-purple {
+  background: linear-gradient(
+      135deg,
+      rgba(92, 36, 131, 0.03) 0%,
+      rgba(57, 39, 104, 0.02) 100%
+    ),
+    radial-gradient(circle at 50% 0%, rgba(92, 36, 131, 0.05), transparent 70%);
+  border: 1px solid rgba(92, 36, 131, 0.08);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+/* ============ TYPOGRAPHY MEJORADA ============ */
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, var(--uplay-blue), var(--uplay-purple));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.text-gradient-green {
+  background: linear-gradient(135deg, var(--uplay-green), var(--uplay-forest));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.text-gradient-magenta {
+  background: linear-gradient(135deg, var(--uplay-magenta), var(--uplay-burgundy));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* ============ ESPACIADOS CONSISTENTES ============ */
+
+.spacing-section {
+  margin-bottom: 1.375rem;
+}
+
+.spacing-component {
+  margin-bottom: 0.875rem;
+}
+
+.spacing-element {
+  margin-bottom: 0.375rem;
+}
+
+/* ============ RESPONSIVE MEJORADO ============ */
+
+@media (max-width: 768px) {
+  .icon-container-base {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9px;
+  }
+
+  .progress-circle-container {
+    width: 90px;
+    height: 90px;
+  }
+
+  .progress-circle-svg {
+    width: 90px;
+    height: 90px;
+  }
+
+  .progress-circle-percentage {
+    font-size: 1.375rem;
+  }
+
+  .metric-card,
+  .achievement-card,
+  .activity-card {
+    padding: 1rem;
+    min-height: 120px;
+  }
+
+  .tab-active,
+  .tab-inactive {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .icon-container-base {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 8px;
+  }
+
+  .progress-circle-container {
+    width: 80px;
+    height: 80px;
+  }
+
+  .progress-circle-svg {
+    width: 80px;
+    height: 80px;
+  }
+
+  .progress-circle-percentage {
+    font-size: 1.25rem;
+  }
+
+  .metric-card,
+  .achievement-card,
+  .activity-card {
+    min-height: 110px;
+    padding: 0.875rem;
+  }
+
+  .tab-active,
+  .tab-inactive {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .tab-badge {
+    padding: 1px 4px;
+    font-size: 0.625rem;
+    min-width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* ============ MEJORAS ESPECÍFICAS DE CONTRASTE Y PROPORCIONES ============ */
+
+/* 🎨 Utilidades de coherencia visual */
+.visual-balance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.content-hierarchy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.enhanced-shadow {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.enhanced-shadow-lg {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.backdrop-blur-enhanced {
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+}
+
+/* 🎨 Estados de interacción mejorados */
+.interactive-scale:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease-in-out;
+}
+
+.interactive-lift:hover {
+  transform: translateY(-1px);
+  transition: transform 0.2s ease-in-out;
+}
+
+.interactive-glow:hover {
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.1),
+    0 0 0 4px rgba(59, 130, 246, 0.05),
+    0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+}

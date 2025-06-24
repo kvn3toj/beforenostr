@@ -25,6 +25,8 @@
 @import './styles/guardian-dynamic.css';
 /* Import UPlay Corporate Design System */
 @import './styles/uplay-corporate.css';
+/* 🆕 Import UPlay advanced component system */
+@import './styles/uplay-advanced.css';
 
 @tailwind base;
 @tailwind components;
