@@ -20,6 +20,7 @@ import {
   Divider,
   Tooltip,
   CircularProgress,
+  Snackbar,
 } from '@mui/material';
 import {
   ShoppingCart,
@@ -37,6 +38,13 @@ import {
   Close,
 } from '@mui/icons-material';
 import { Product } from '../../../../types/marketplace';
+import { useNavigate } from 'react-router-dom';
+import apiService from '../../../../lib/api-service';
+import { useTheme } from '@mui/material';
+import { useCallback } from 'react';
+import useConsciousChat from './ConsciousMarketplaceEnhancements';
+import { motion, AnimatePresence } from 'framer-motion';
+import MuiAlert from '@mui/material/Alert';
 
 interface ProductActionsProps {
   product: Product;
@@ -45,6 +53,42 @@ interface ProductActionsProps {
   isFavorited: boolean;
   onToggleFavorite: () => void;
 }
+
+// Confetti simple (puedes reemplazar por una librería si se desea)
+const Confetti = () => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      pointerEvents: 'none',
+      zIndex: 2000,
+    }}
+  >
+    {/* Confetti dots */}
+    {[...Array(40)].map((_, i) => (
+      <motion.div
+        key={i}
+        initial={{ y: -50, opacity: 1 }}
+        animate={{ y: [0, 600], opacity: [1, 0.8, 0.5, 0] }}
+        transition={{ duration: 1.5 + Math.random(), delay: i * 0.03 }}
+        style={{
+          position: 'absolute',
+          left: `${Math.random() * 100}%`,
+          width: 12,
+          height: 12,
+          borderRadius: '50%',
+          background: `hsl(${Math.random() * 360}, 80%, 60%)`,
+        }}
+      />
+    ))}
+  </motion.div>
+);
 
 export const ProductActions: React.FC<ProductActionsProps> = ({
   product,
@@ -60,6 +104,15 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   const [reportReason, setReportReason] = useState('');
   const [reportDetails, setReportDetails] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const { initiateConsciousConversation } = useConsciousChat();
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({ open: false, message: '', severity: 'success' });
+  const [purchaseMessage, setPurchaseMessage] = useState('');
+  const [celebrateOpen, setCelebrateOpen] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
+  const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
   const selectedDelivery = product.deliveryOptions.find(
     (option) => option.id === selectedDeliveryOption
@@ -76,38 +129,58 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
   };
 
   const handlePurchase = async () => {
-    setIsProcessing(true);
+    setPurchaseLoading(true);
+    setPurchaseError(null);
     try {
-      // Simular proceso de compra
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await apiService.post('/marketplace/orders', {
+        productId: product.id,
+        deliveryOption: selectedDeliveryOption,
+        message: purchaseMessage,
+      });
       setPurchaseDialogOpen(false);
-      // Aquí iría la lógica real de compra
-      alert('¡Solicitud enviada! El vendedor se pondrá en contacto contigo.');
-    } catch (error) {
-      console.error('Error en la compra:', error);
-      alert('Error al procesar la solicitud. Inténtalo de nuevo.');
+      setCelebrateOpen(true);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 2200);
+      setSnackbar({ open: true, message: '¡Solicitud enviada! El vendedor se pondrá en contacto contigo.', severity: 'success' });
+      let orderId: string | number | undefined;
+      if (
+        response &&
+        typeof response === 'object' &&
+        'data' in response &&
+        response.data &&
+        typeof response.data === 'object'
+      ) {
+        const data = response.data as Record<string, unknown>;
+        if ('orderId' in data && (typeof data.orderId === 'string' || typeof data.orderId === 'number')) {
+          orderId = data.orderId as string | number;
+        } else if ('id' in data && (typeof data.id === 'string' || typeof data.id === 'number')) {
+          orderId = data.id as string | number;
+        }
+      }
+      if (orderId) {
+        setTimeout(() => navigate(`/orders/${orderId}`), 1200);
+      }
+    } catch (err) {
+      setPurchaseError('Algo salió mal, pero tu intención de intercambio es valiosa. Intenta de nuevo o contacta soporte.');
     } finally {
-      setIsProcessing(false);
+      setPurchaseLoading(false);
     }
   };
 
-  const handleContactSeller = async () => {
+  const handleContactSeller = useCallback(async () => {
     if (!contactMessage.trim()) return;
-
     setIsProcessing(true);
     try {
-      // Simular envío de mensaje
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await initiateConsciousConversation(product.seller.id, product.seller.name, product.title);
       setContactDialogOpen(false);
       setContactMessage('');
-      alert('Mensaje enviado al vendedor.');
+      setSnackbar({ open: true, message: '¡Chat iniciado con el vendedor!', severity: 'success' });
     } catch (error) {
-      console.error('Error al enviar mensaje:', error);
-      alert('Error al enviar mensaje. Inténtalo de nuevo.');
+      setSnackbar({ open: true, message: 'Error al iniciar el chat. Inténtalo de nuevo.', severity: 'error' });
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, [contactMessage, initiateConsciousConversation, product]);
 
   const handleReport = async () => {
     if (!reportReason || !reportDetails.trim()) return;
@@ -253,6 +326,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
           startIcon={<ShoppingCart />}
           onClick={() => setPurchaseDialogOpen(true)}
           disabled={!product.availability?.available}
+          aria-label={product.type === 'service' ? 'Solicitar Servicio' : 'Comprar Ahora'}
           sx={{
             py: 1.5,
             borderRadius: 2,
@@ -267,12 +341,13 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
           {product.type === 'service' ? 'Solicitar Servicio' : 'Comprar Ahora'}
         </Button>
 
-        {/* Botón de contactar */}
+        {/* Botón de contactar (chat real) */}
         <Button
           variant="outlined"
           size="large"
           startIcon={<Message />}
           onClick={() => setContactDialogOpen(true)}
+          aria-label="Iniciar chat consciente con el vendedor"
           sx={{
             py: 1.5,
             borderRadius: 2,
@@ -280,7 +355,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             fontWeight: 'bold',
           }}
         >
-          Contactar Vendedor
+          Chatear con el Vendedor
         </Button>
       </Stack>
 
@@ -392,26 +467,18 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         onClose={() => setPurchaseDialogOpen(false)}
         maxWidth="sm"
         fullWidth
+        aria-labelledby="dialog-solicitar-servicio"
       >
-        <DialogTitle>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
+        <DialogTitle id="dialog-solicitar-servicio">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h6">
-              {product.type === 'service'
-                ? 'Solicitar Servicio'
-                : 'Confirmar Compra'}
+              {product.type === 'service' ? 'Solicitar Servicio' : 'Confirmar Compra'}
             </Typography>
             <IconButton onClick={() => setPurchaseDialogOpen(false)}>
               <Close />
             </IconButton>
           </Box>
         </DialogTitle>
-
         <DialogContent>
           {/* Resumen del producto */}
           <Paper elevation={1} sx={{ p: 2, mb: 3, borderRadius: 2 }}>
@@ -479,20 +546,19 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             rows={4}
             label="Mensaje adicional (opcional)"
             placeholder="Describe tus necesidades específicas o haz preguntas al vendedor..."
+            value={purchaseMessage}
+            onChange={e => setPurchaseMessage(e.target.value)}
             sx={{ mb: 2 }}
+            aria-label="Mensaje adicional para el vendedor"
           />
 
           <Alert severity="info" sx={{ mb: 2 }}>
-            Tu solicitud será enviada al vendedor. El pago se procesará una vez
-            que ambos confirmen los detalles del proyecto.
+            Al contratar este servicio, contribuyes al Bien Común y practicas el Ayni. El pago se procesará una vez que ambos confirmen los detalles del proyecto.
           </Alert>
         </DialogContent>
 
         <DialogActions sx={{ p: 3, pt: 0 }}>
-          <Button
-            onClick={() => setPurchaseDialogOpen(false)}
-            disabled={isProcessing}
-          >
+          <Button onClick={() => setPurchaseDialogOpen(false)} disabled={isProcessing}>
             Cancelar
           </Button>
           <Button
@@ -501,34 +567,29 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             disabled={isProcessing}
             startIcon={isProcessing ? <CircularProgress size={20} /> : <Send />}
             sx={{ minWidth: 120 }}
+            aria-label="Enviar solicitud de contratación"
           >
             {isProcessing ? 'Enviando...' : 'Enviar Solicitud'}
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* Dialog de contacto */}
+      {/* Dialog de contacto (chat real) */}
       <Dialog
         open={contactDialogOpen}
         onClose={() => setContactDialogOpen(false)}
         maxWidth="sm"
         fullWidth
+        aria-labelledby="dialog-chat-vendedor"
       >
-        <DialogTitle>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
+        <DialogTitle id="dialog-chat-vendedor">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h6">Contactar Vendedor</Typography>
             <IconButton onClick={() => setContactDialogOpen(false)}>
               <Close />
             </IconButton>
           </Box>
         </DialogTitle>
-
         <DialogContent>
           <Box sx={{ mb: 3 }}>
             <Typography variant="body1" sx={{ mb: 1 }}>
@@ -541,24 +602,20 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
               </Typography>
             </Box>
           </Box>
-
           <TextField
             fullWidth
             multiline
             rows={6}
             label="Tu mensaje"
             value={contactMessage}
-            onChange={(e) => setContactMessage(e.target.value)}
+            onChange={e => setContactMessage(e.target.value)}
             placeholder="Hola! Estoy interesado en tu servicio..."
             required
+            aria-label="Mensaje para el vendedor"
           />
         </DialogContent>
-
         <DialogActions sx={{ p: 3, pt: 0 }}>
-          <Button
-            onClick={() => setContactDialogOpen(false)}
-            disabled={isProcessing}
-          >
+          <Button onClick={() => setContactDialogOpen(false)} disabled={isProcessing}>
             Cancelar
           </Button>
           <Button
@@ -567,6 +624,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             disabled={!contactMessage.trim() || isProcessing}
             startIcon={isProcessing ? <CircularProgress size={20} /> : <Send />}
             sx={{ minWidth: 120 }}
+            aria-label="Enviar mensaje al vendedor"
           >
             {isProcessing ? 'Enviando...' : 'Enviar Mensaje'}
           </Button>
@@ -644,6 +702,42 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar para feedback visual */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <MuiAlert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
+
+      {purchaseError && (
+        <Dialog open onClose={() => setPurchaseError(null)}>
+          <DialogTitle>Error en la compra</DialogTitle>
+          <DialogContent>{purchaseError}</DialogContent>
+          <DialogActions>
+            <Button onClick={() => setPurchaseError(null)}>Cerrar</Button>
+          </DialogActions>
+        </Dialog>
+      )}
+      <Dialog open={celebrateOpen} onClose={() => setCelebrateOpen(false)} aria-label="Compra exitosa">
+        <DialogTitle>¡Gracias por tu intercambio consciente!</DialogTitle>
+        <DialogContent>
+          <div style={{ marginBottom: 12 }}>
+            <strong>¡Gracias por contribuir al Bien Común!</strong><br />
+            Tu compra es un acto de <b>Ayni</b> y confianza. Recibirás notificaciones sobre el avance de tu pedido.
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCelebrateOpen(false)} autoFocus>Seguir explorando</Button>
+          <Button onClick={() => navigate('/orders')}>Ver mi pedido</Button>
+        </DialogActions>
+      </Dialog>
+      <AnimatePresence>{showConfetti && <Confetti />}</AnimatePresence>
     </>
   );
 };

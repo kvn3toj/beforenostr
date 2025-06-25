@@ -78,6 +78,7 @@ import { LetsListings } from './components/LetsListings';
 import SearchBar from './components/SearchBar';
 import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
 import { ConsciousLoadingState } from '../../ui/enhanced/ConsciousLoadingState';
+import { motion } from 'framer-motion';
 
 const marketplaceCosmicEffects = {
   enableGlow: true,
@@ -293,6 +294,83 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
     reciprocityBalance: 80,
   };
 };
+
+// Banner Hero Visual Guardianes
+const MarketplaceHeroBanner: React.FC = () => (
+  <Box
+    sx={{
+      mb: 5,
+      p: { xs: 3, md: 5 },
+      borderRadius: 4,
+      background: 'linear-gradient(120deg, #43e97b 0%, #38f9d7 100%)',
+      boxShadow: '0 4px 32px 0 rgba(56,249,215,0.10)',
+      position: 'relative',
+      overflow: 'hidden',
+      minHeight: { xs: 180, md: 200 },
+      display: 'flex',
+      flexDirection: { xs: 'column', md: 'row' },
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 3,
+    }}
+  >
+    <Box sx={{ zIndex: 2 }}>
+      <Typography
+        variant="h4"
+        sx={{ fontWeight: 800, color: 'white', mb: 1, textShadow: '0 2px 12px #38f9d799' }}
+      >
+        Conectando Propósitos
+      </Typography>
+      <Typography
+        variant="h6"
+        sx={{ color: 'white', opacity: 0.92, mb: 2, maxWidth: 420 }}
+      >
+        Encuentra productos y servicios que regeneran nuestro mundo. Cada intercambio es un acto de <b>Ayni</b> y contribuye al <b>Bien Común</b>.
+      </Typography>
+      <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>
+        <Button
+          variant="contained"
+          size="large"
+          sx={{
+            bgcolor: 'white',
+            color: '#10b981',
+            fontWeight: 700,
+            px: 4,
+            py: 1.5,
+            borderRadius: 3,
+            boxShadow: '0 2px 16px 0 #10b98133',
+            fontSize: '1.1rem',
+            textTransform: 'none',
+            '&:hover': { bgcolor: '#e0ffe6', color: '#059669' },
+          }}
+          aria-label="Descubre sostenibilidad"
+        >
+          Descubre Sostenibilidad
+        </Button>
+      </motion.div>
+    </Box>
+    {/* SVG animado Guardianes */}
+    <Box sx={{ position: 'absolute', right: 0, top: 0, height: '100%', zIndex: 1, opacity: 0.18 }}>
+      <motion.svg
+        width="220" height="180" viewBox="0 0 220 180" fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        initial={{ x: 60, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 1.2 }}
+      >
+        <motion.circle cx="180" cy="60" r="40" fill="#fff" initial={{ scale: 0.7 }} animate={{ scale: 1 }} transition={{ duration: 1.2, delay: 0.2 }} />
+        <motion.polygon points="120,20 140,60 100,60" fill="#fff" initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={{ delay: 0.5 }} />
+        <motion.polygon
+          points="200,130 205,145 220,145 208,155 213,170 200,160 187,170 192,155 180,145 195,145"
+          fill="#fff"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
+          transition={{ delay: 0.7 }}
+        />
+      </motion.svg>
+    </Box>
+  </Box>
+);
 
 const MarketplaceMain: React.FC = () => {
   const { user } = useAuth();
@@ -814,6 +892,7 @@ const MarketplaceMain: React.FC = () => {
   return (
     <Box data-testid="marketplace-container">
       <Container maxWidth="xl" sx={{ py: 4 }}>
+        <MarketplaceHeroBanner />
         <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
           Marketplace
         </Typography>

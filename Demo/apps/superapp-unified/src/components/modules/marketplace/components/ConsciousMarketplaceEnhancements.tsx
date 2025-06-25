@@ -486,4 +486,5 @@ const ConsciousMarketplaceEnhancements: React.FC<ConsciousMarketplaceProps> = ({
   );
 };
 
-export default ConsciousMarketplaceEnhancements;
+export { ConsciousMarketplaceEnhancements };
+export default useConsciousChat;

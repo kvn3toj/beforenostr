@@ -9,7 +9,6 @@
 
 import { ENV, EnvironmentHelpers } from './environment';
 import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
-import { getMockData } from './mock-data';
 
 // 🔧 Función para detectar URL del API dinámicamente
 const getApiUrl = (): string => {
@@ -422,15 +421,6 @@ class ApiService {
     options: RequestInit = {},
     retryCount: number = 0
   ): Promise<T> {
-    // Interceptar y devolver datos mock si el modo mock está activado
-    if (isMockMode()) {
-      console.log(`🟡 [MOCK] Interceptando: ${options.method || 'GET'} ${endpoint}`);
-      await new Promise(resolve => setTimeout(resolve, 300)); // Simular delay de red
-      const mockData = getMockData(endpoint, options.method || 'GET');
-      console.log(`🟡 [MOCK] Devolviendo datos para ${endpoint}:`, mockData);
-      return Promise.resolve(mockData as T);
-    }
-
     const maxRetries = 3;
     const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
 

@@ -32,7 +32,7 @@ import {
   DataUsage,
   ShowChart,
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, easeOut, backOut, easeInOut } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, AreaChart, Area, BarChart, Bar } from 'recharts';
 
 interface MetricsData {
@@ -79,8 +79,8 @@ const COSMIC_COLORS = {
   lightBlue: '#60a5fa',
   background: 'rgba(36,41,70,0.92)',
   cardBg: 'rgba(60,60,100,0.85)',
-  gradientBlue: 'linear-gradient(135deg, #2563eb 0%, #6366f1 100%)',
-  gradientViolet: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+  gradientBlue: 'linear-gradient(135deg, #2563eb 0%, #6366f1 60%, #a78bfa 100%)',
+  gradientViolet: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 60%, #e5e4e2 100%)',
   gradientGold: 'linear-gradient(135deg, #bfae60 0%, #e5e4e2 100%)',
   gradientGray: 'linear-gradient(135deg, #a1a1aa 0%, #d1d5db 100%)',
 };
@@ -138,7 +138,7 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.5, ease: "easeOut" }
+      transition: { duration: 0.5, ease: easeOut }
     },
     hover: {
       scale: 1.02,
@@ -152,7 +152,7 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.6, ease: "backOut" }
+      transition: { duration: 0.6, ease: backOut }
     }
   };
 
@@ -232,81 +232,141 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
   }
 
   return (
-    <Box sx={{ p: 3, backgroundColor: COSMIC_COLORS.background, minHeight: '100vh' }}>
-      {/* Header with animated title */}
+    <Box
+      sx={{
+        p: { xs: 1.5, md: 5 },
+        background: 'rgba(36,41,70,0.72)',
+        minHeight: '100vh',
+        borderRadius: 6,
+        boxShadow: '0 0 48px 0 #6366f144, 0 0 0 4px #8b5cf622',
+        position: 'relative',
+        overflow: 'hidden',
+        mt: 4,
+        mb: 8,
+        mx: { xs: 0, md: 2 },
+        '::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          background: 'radial-gradient(circle at 70% 10%, #a78bfa22 0%, transparent 80%)',
+          pointerEvents: 'none',
+        },
+        '::after': {
+          content: '""',
+          position: 'absolute',
+          left: '60%',
+          top: '80%',
+          width: 120,
+          height: 120,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, #2563eb22 0%, transparent 80%)',
+          filter: 'blur(24px)',
+          zIndex: 0,
+          pointerEvents: 'none',
+        },
+      }}
+    >
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -18 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.7 }}
       >
-        <Box sx={{ mb: 4, textAlign: 'center' }}>
+        <Box sx={{ mb: 3, textAlign: 'center' }}>
           <Typography
-            variant="h3"
+            variant="h4"
             sx={{
               fontWeight: 700,
               background: COSMIC_COLORS.gradientBlue,
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              mb: 1
+              mb: 0.5,
+              letterSpacing: 2,
+              textShadow: '0 2px 8px #6366f144',
             }}
           >
             Dashboard Dinámico ÜPlay
           </Typography>
-          <Typography variant="h6" color="text.secondary">
+          <Typography variant="body1" sx={{ color: '#e5e4e2', opacity: 0.78, fontWeight: 400, letterSpacing: 1, mb: 1 }}>
             Métricas en tiempo real de tu progreso de aprendizaje
           </Typography>
         </Box>
       </motion.div>
-
-      {/* Main Metrics Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={3} sx={{ mb: 3, mt: 1, alignItems: 'stretch', justifyContent: 'center' }}>
         {metricCards.map((card, index) => (
-          <Grid item xs={12} sm={6} md={4} key={card.key}>
+          <Grid item xs={12} sm={6} md={4} key={card.key} sx={{ display: 'flex', justifyContent: 'center' }}>
             <motion.div
               variants={cardVariants}
               initial="hidden"
               animate="visible"
               whileHover="hover"
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: index * 0.10 }}
             >
               <Card
                 sx={{
                   background: card.gradient,
                   color: '#fff',
-                  borderRadius: 5,
-                  boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)',
-                  backdropFilter: 'blur(8px)',
+                  borderRadius: 24,
+                  boxShadow: `0 4px 32px 0 ${card.color}22, 0 0 0 2px #fff1`,
+                  backdropFilter: 'blur(12px)',
                   cursor: 'pointer',
                   position: 'relative',
                   overflow: 'hidden',
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'rgba(255,255,255,0.08)',
-                    borderRadius: 5,
-                    pointerEvents: 'none',
-                  },
+                  minHeight: 140,
+                  minWidth: 220,
+                  maxWidth: 320,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  px: 2,
+                  py: 1.5,
+                  transition: 'box-shadow 0.38s, transform 0.22s',
                   '&:hover': {
-                    boxShadow: '0 8px 32px 0 rgba(99,102,241,0.22)',
+                    boxShadow: `0 8px 48px 0 ${card.color}44, 0 0 0 4px #fff2`,
+                    transform: 'scale(1.025)',
+                    background: `radial-gradient(circle at 70% 30%, #fff1 0%, transparent 70%), ${card.gradient}`,
+                  },
+                  '&:focus': {
+                    outline: '2px solid #a78bfa',
+                    boxShadow: '0 0 0 6px #a78bfa33',
                   },
                 }}
+                tabIndex={0}
                 onClick={() => setSelectedMetric(selectedMetric === card.key ? null : card.key)}
               >
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                    <card.icon sx={{ fontSize: 40, opacity: 0.9, color: card.color }} />
+                {/* Overlay de luz sutil */}
+                <Box sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  zIndex: 0,
+                  pointerEvents: 'none',
+                  background: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 70%)',
+                  borderRadius: 24,
+                }} />
+                <CardContent sx={{ position: 'relative', zIndex: 1, width: '100%', p: 0 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                    <motion.div
+                      animate={{ scale: [1, 1.04, 0.98, 1] }}
+                      transition={{ duration: 3.2, repeat: Infinity, ease: easeInOut }}
+                    >
+                      <card.icon sx={{ fontSize: 32, opacity: 0.92, color: card.color, filter: 'drop-shadow(0 0 6px #fff3)' }} />
+                    </motion.div>
                     <Chip
                       label={card.trend}
                       size="small"
                       sx={{
-                        backgroundColor: 'rgba(255,255,255,0.18)',
+                        background: COSMIC_COLORS.gradientViolet,
                         color: '#fff',
-                        fontWeight: 600
+                        fontWeight: 600,
+                        boxShadow: '0 1px 6px 0 rgba(99,102,241,0.13)',
+                        borderRadius: 4,
+                        px: 1.2,
+                        py: 0.2,
+                        fontSize: 13,
+                        letterSpacing: 0.5,
+                        border: '1.5px solid #fff2',
                       }}
                     />
                   </Box>
@@ -316,14 +376,14 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                     initial="hidden"
                     animate="visible"
                   >
-                    <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+                    <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, letterSpacing: 1.5, lineHeight: 1.1, textShadow: '0 1px 6px #fff3, 0 0 4px #6366f122' }}>
                       {card.value}
                     </Typography>
                   </motion.div>
-                  <Typography variant="h6" sx={{ opacity: 0.92, mb: 1, fontWeight: 600 }}>
+                  <Typography variant="subtitle1" sx={{ opacity: 0.96, mb: 0.5, fontWeight: 600, letterSpacing: 0.7, textShadow: '0 1px 4px #fff2' }}>
                     {card.title}
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                  <Typography variant="body2" sx={{ opacity: 0.82, fontSize: 15, mb: 1, letterSpacing: 0.3, color: '#e5e4e2', textShadow: '0 1px 3px #6366f122' }}>
                     {card.description}
                   </Typography>
                 </CardContent>
@@ -332,53 +392,55 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
           </Grid>
         ))}
       </Grid>
-
-      {/* Interactive Charts Section */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        {/* Progress Timeline */}
+      {/* --- CHARTS ARMONIOSOS --- */}
+      <Grid container spacing={3} sx={{ mb: 2, alignItems: 'stretch', justifyContent: 'center' }}>
+        {/* Progreso Temporal */}
         <Grid item xs={12} md={8}>
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.3 }}
           >
-            <Card sx={{ height: 400 }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <Timeline sx={{ mr: 2, color: COSMIC_COLORS.blue }} />
-                  <Typography variant="h6">Progreso Temporal</Typography>
+            <Card sx={{ height: 260, background: 'rgba(60,60,100,0.55)', borderRadius: 18, boxShadow: '0 2px 24px 0 #6366f122', backdropFilter: 'blur(8px)', p: 0 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Timeline sx={{ mr: 1, color: COSMIC_COLORS.blue }} />
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: 0.7 }}>Progreso Temporal</Typography>
                   <Box sx={{ ml: 'auto' }}>
                     <Chip
                       icon={<TrendingUp />}
                       label={`+${derivedMetrics.growthRate}% crecimiento`}
-                      color="success"
+                      sx={{ background: COSMIC_COLORS.gradientViolet, color: '#fff', fontWeight: 600, borderRadius: 3, px: 1, py: 0.2, fontSize: 13, letterSpacing: 0.5, boxShadow: '0 1px 6px 0 rgba(99,102,241,0.13)' }}
                       variant="outlined"
                     />
                   </Box>
                 </Box>
-
-                <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={progressHistory}>
+                <ResponsiveContainer width="100%" height={180}>
+                  <AreaChart data={progressHistory} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                     <defs>
                       <linearGradient id="meritoGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={COSMIC_COLORS.gold} stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor={COSMIC_COLORS.gold} stopOpacity={0.1}/>
+                        <stop offset="5%" stopColor={COSMIC_COLORS.gold} stopOpacity={0.7}/>
+                        <stop offset="95%" stopColor={COSMIC_COLORS.gold} stopOpacity={0.08}/>
                       </linearGradient>
                       <linearGradient id="ondaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={COSMIC_COLORS.blue} stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor={COSMIC_COLORS.blue} stopOpacity={0.1}/>
+                        <stop offset="5%" stopColor={COSMIC_COLORS.blue} stopOpacity={0.7}/>
+                        <stop offset="95%" stopColor={COSMIC_COLORS.blue} stopOpacity={0.08}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="date" stroke="#64748b" />
-                    <YAxis stroke="#64748b" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f022" />
+                    <XAxis dataKey="date" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
                     <RechartsTooltip
                       contentStyle={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'rgba(36,41,70,0.92)',
                         border: 'none',
                         borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        boxShadow: '0 2px 8px -1px #6366f122',
+                        color: '#fff',
+                        fontSize: 13,
                       }}
+                      itemStyle={{ color: '#fff' }}
+                      labelStyle={{ color: COSMIC_COLORS.violet, fontWeight: 600 }}
                     />
                     <Area
                       type="monotone"
@@ -386,7 +448,7 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                       stroke={COSMIC_COLORS.gold}
                       fillOpacity={1}
                       fill="url(#meritoGradient)"
-                      strokeWidth={3}
+                      strokeWidth={2.5}
                     />
                     <Area
                       type="monotone"
@@ -394,7 +456,7 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                       stroke={COSMIC_COLORS.blue}
                       fillOpacity={1}
                       fill="url(#ondaGradient)"
-                      strokeWidth={3}
+                      strokeWidth={2.5}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -402,29 +464,27 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
             </Card>
           </motion.div>
         </Grid>
-
-        {/* Category Distribution */}
+        {/* Distribución por Categorías */}
         <Grid item xs={12} md={4}>
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 12 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.4 }}
           >
-            <Card sx={{ height: 400 }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <DataUsage sx={{ mr: 2, color: COSMIC_COLORS.blue }} />
-                  <Typography variant="h6">Distribución por Categorías</Typography>
+            <Card sx={{ height: 260, background: 'rgba(60,60,100,0.55)', borderRadius: 18, boxShadow: '0 2px 24px 0 #8b5cf122', backdropFilter: 'blur(8px)', p: 0 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <DataUsage sx={{ mr: 1, color: COSMIC_COLORS.violet }} />
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: 0.7 }}>Distribución por Categorías</Typography>
                 </Box>
-
-                <ResponsiveContainer width="100%" height={200}>
+                <ResponsiveContainer width="100%" height={120}>
                   <PieChart>
                     <Pie
                       data={categoryProgress}
                       cx="50%"
                       cy="50%"
-                      innerRadius={40}
-                      outerRadius={80}
+                      innerRadius={28}
+                      outerRadius={48}
                       paddingAngle={5}
                       dataKey="value"
                     >
@@ -432,26 +492,36 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <RechartsTooltip />
+                    <RechartsTooltip
+                      contentStyle={{
+                        backgroundColor: 'rgba(36,41,70,0.92)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        boxShadow: '0 2px 8px -1px #8b5cf122',
+                        color: '#fff',
+                        fontSize: 13,
+                      }}
+                      itemStyle={{ color: '#fff' }}
+                      labelStyle={{ color: COSMIC_COLORS.blue, fontWeight: 600 }}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
-
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ mt: 1.5 }}>
                   {categoryProgress.map((category, index) => (
-                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
                       <Box
                         sx={{
-                          width: 12,
-                          height: 12,
+                          width: 10,
+                          height: 10,
                           backgroundColor: category.color,
                           borderRadius: '50%',
                           mr: 1
                         }}
                       />
-                      <Typography variant="body2" sx={{ flex: 1 }}>
+                      <Typography variant="body2" sx={{ flex: 1, fontSize: 13, color: '#e5e4e2' }}>
                         {category.name}
                       </Typography>
-                      <Typography variant="body2" fontWeight={600}>
+                      <Typography variant="body2" fontWeight={600} sx={{ fontSize: 13, color: '#fff' }}>
                         {category.value}%
                       </Typography>
                     </Box>
@@ -462,23 +532,35 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
           </motion.div>
         </Grid>
       </Grid>
-
       {/* Achievement Showcase */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
       >
-        <Card sx={{ mb: 4, background: COSMIC_COLORS.gradientViolet, color: '#fff', borderRadius: 5, boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)', backdropFilter: 'blur(8px)' }}>
-          <CardContent>
+        <Card sx={{ mb: 4, background: COSMIC_COLORS.gradientViolet, color: '#fff', borderRadius: 7, boxShadow: '0 8px 40px 0 rgba(99,102,241,0.22)', backdropFilter: 'blur(18px)' }}>
+          <Box sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            pointerEvents: 'none',
+            background: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.10) 0%, transparent 70%)',
+            animation: 'cosmicGlow 7s ease-in-out infinite alternate',
+            '@keyframes cosmicGlow': {
+              '0%': { opacity: 0.7 },
+              '100%': { opacity: 1 },
+            },
+            borderRadius: 7,
+          }} />
+          <CardContent sx={{ position: 'relative', zIndex: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <Celebration sx={{ mr: 2, color: COSMIC_COLORS.gold }} />
-              <Typography variant="h6">Logros Recientes</Typography>
+              <Celebration sx={{ mr: 2, color: COSMIC_COLORS.gold, filter: 'drop-shadow(0 0 8px #fff5)' }} />
+              <Typography variant="h6" sx={{ fontWeight: 700, letterSpacing: 0.5 }}>Logros Recientes</Typography>
               <Box sx={{ ml: 'auto' }}>
                 <Chip
                   icon={<AutoAwesome />}
                   label={`${metrics.logrosDesbloqueados} logros desbloqueados`}
-                  sx={{ background: COSMIC_COLORS.gradientGold, color: '#222', fontWeight: 700 }}
+                  sx={{ background: COSMIC_COLORS.gradientGold, color: '#222', fontWeight: 700, borderRadius: 3, px: 1.5, py: 0.5, fontSize: 15, letterSpacing: 0.5, boxShadow: '0 2px 8px 0 rgba(99,102,241,0.18)' }}
                   variant="outlined"
                 />
               </Box>
@@ -492,8 +574,8 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
               ].map((achievement, index) => (
                 <Grid item xs={12} sm={6} md={3} key={index}>
                   <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.07, boxShadow: '0 12px 48px 0 rgba(191,174,96,0.22)' }}
+                    whileTap={{ scale: 0.97 }}
                   >
                     <Card
                       sx={{
@@ -507,7 +589,7 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                           ? COSMIC_COLORS.gradientBlue
                           : COSMIC_COLORS.gradientGray,
                         color: '#fff',
-                        borderRadius: 5,
+                        borderRadius: 7,
                         boxShadow: '0 4px 24px 0 rgba(99,102,241,0.12)',
                         backdropFilter: 'blur(8px)',
                         minHeight: 180,
@@ -519,11 +601,11 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                       }}
                     >
                       <CardContent>
-                        <EmojiEvents sx={{ fontSize: 40, mb: 1, color: COSMIC_COLORS.gold }} />
-                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>
+                        <EmojiEvents sx={{ fontSize: 40, mb: 1, color: COSMIC_COLORS.gold, filter: 'drop-shadow(0 0 8px #fff5)' }} />
+                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 700, letterSpacing: 0.5 }}>
                           {achievement.title}
                         </Typography>
-                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                        <Typography variant="body2" sx={{ opacity: 0.9, fontSize: 15 }}>
                           {achievement.description}
                         </Typography>
                       </CardContent>
@@ -542,11 +624,24 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.0 }}
       >
-        <Card sx={{ background: COSMIC_COLORS.gradientBlue, color: '#fff', borderRadius: 5, boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)', backdropFilter: 'blur(8px)' }}>
-          <CardContent>
+        <Card sx={{ background: COSMIC_COLORS.gradientBlue, color: '#fff', borderRadius: 7, boxShadow: '0 8px 40px 0 rgba(99,102,241,0.22)', backdropFilter: 'blur(18px)' }}>
+          <Box sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            pointerEvents: 'none',
+            background: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.10) 0%, transparent 70%)',
+            animation: 'cosmicGlow 8s ease-in-out infinite alternate',
+            '@keyframes cosmicGlow': {
+              '0%': { opacity: 0.7 },
+              '100%': { opacity: 1 },
+            },
+            borderRadius: 7,
+          }} />
+          <CardContent sx={{ position: 'relative', zIndex: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <Insights sx={{ mr: 2, color: COSMIC_COLORS.violet }} />
-              <Typography variant="h6">Insights de la Comunidad</Typography>
+              <Insights sx={{ mr: 2, color: COSMIC_COLORS.violet, filter: 'drop-shadow(0 0 8px #fff5)' }} />
+              <Typography variant="h6" sx={{ fontWeight: 700, letterSpacing: 0.5 }}>Insights de la Comunidad</Typography>
             </Box>
             <Grid container spacing={3}>
               <Grid item xs={12} md={4}>
@@ -555,14 +650,16 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                     width: 80,
                     height: 80,
                     margin: '0 auto 16px',
-                    background: COSMIC_COLORS.gradientViolet
+                    background: COSMIC_COLORS.gradientViolet,
+                    border: '3px solid #fff',
+                    boxShadow: '0 0 24px 0 #a78bfa88',
                   }}>
                     <Groups sx={{ fontSize: 40 }} />
                   </Avatar>
-                  <Typography variant="h4" sx={{ fontWeight: 700, color: COSMIC_COLORS.blue }}>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: COSMIC_COLORS.blue, textShadow: '0 2px 8px #fff5' }}>
                     #{metrics.rankingComunidad}
                   </Typography>
-                  <Typography variant="body1" sx={{ color: '#e5e4e2' }}>
+                  <Typography variant="body1" sx={{ color: '#e5e4e2', fontWeight: 500 }}>
                     Ranking en la Comunidad
                   </Typography>
                 </Box>
@@ -573,14 +670,16 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                     width: 80,
                     height: 80,
                     margin: '0 auto 16px',
-                    background: COSMIC_COLORS.gradientBlue
+                    background: COSMIC_COLORS.gradientBlue,
+                    border: '3px solid #fff',
+                    boxShadow: '0 0 24px 0 #6366f188',
                   }}>
                     <ShowChart sx={{ fontSize: 40 }} />
                   </Avatar>
-                  <Typography variant="h4" sx={{ fontWeight: 700, color: COSMIC_COLORS.violet }}>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: COSMIC_COLORS.violet, textShadow: '0 2px 8px #fff5' }}>
                     {derivedMetrics.avgPrecision}%
                   </Typography>
-                  <Typography variant="body1" sx={{ color: '#e5e4e2' }}>
+                  <Typography variant="body1" sx={{ color: '#e5e4e2', fontWeight: 500 }}>
                     Precisión Promedio Global
                   </Typography>
                 </Box>
@@ -591,14 +690,16 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
                     width: 80,
                     height: 80,
                     margin: '0 auto 16px',
-                    background: COSMIC_COLORS.gradientGold
+                    background: COSMIC_COLORS.gradientGold,
+                    border: '3px solid #fff',
+                    boxShadow: '0 0 24px 0 #bfae6088',
                   }}>
                     <TrendingUp sx={{ fontSize: 40 }} />
                   </Avatar>
-                  <Typography variant="h4" sx={{ fontWeight: 700, color: COSMIC_COLORS.gold }}>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: COSMIC_COLORS.gold, textShadow: '0 2px 8px #fff5' }}>
                     +{derivedMetrics.growthRate}%
                   </Typography>
-                  <Typography variant="body1" sx={{ color: '#e5e4e2' }}>
+                  <Typography variant="body1" sx={{ color: '#e5e4e2', fontWeight: 500 }}>
                     Crecimiento este Mes
                   </Typography>
                 </Box>

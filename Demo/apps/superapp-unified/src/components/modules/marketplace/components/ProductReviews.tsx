@@ -39,6 +39,9 @@ import {
   Image as ImageIcon,
 } from '@mui/icons-material';
 import { Review } from '../../../../types/marketplace';
+import apiService from '../../../../lib/api-service';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 interface ProductReviewsProps {
   reviews: Review[];
@@ -53,12 +56,14 @@ interface WriteReviewDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (review: any) => void;
+  isSubmitting: boolean;
 }
 
 const WriteReviewDialog: React.FC<WriteReviewDialogProps> = ({
   open,
   onClose,
   onSubmit,
+  isSubmitting,
 }) => {
   const [rating, setRating] = useState<number | null>(0);
   const [title, setTitle] = useState('');
@@ -190,7 +195,7 @@ const WriteReviewDialog: React.FC<WriteReviewDialogProps> = ({
         <Button
           variant="contained"
           onClick={handleSubmit}
-          disabled={!rating || !comment.trim()}
+          disabled={!rating || !comment.trim() || isSubmitting}
           startIcon={<Send />}
         >
           Publicar Reseña
@@ -451,20 +456,36 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
     'newest' | 'oldest' | 'rating-high' | 'rating-low' | 'helpful'
   >('newest');
   const [showAll, setShowAll] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({ open: false, message: '', severity: 'success' });
+  const [localReviews, setLocalReviews] = useState(reviews);
 
   const handleHelpfulVote = (reviewId: string, helpful: boolean) => {
     // Aquí se implementaría la lógica para votar
     console.log('Vote:', reviewId, helpful);
   };
 
-  const handleWriteReview = (reviewData: any) => {
-    // Aquí se implementaría la lógica para enviar la reseña
-    console.log('New review:', reviewData);
-    alert('¡Reseña enviada exitosamente!');
+  const handleWriteReview = async (reviewData: any) => {
+    setIsSubmitting(true);
+    try {
+      // Ajusta la URL si el endpoint real es diferente
+      const response = await apiService.post('/marketplace/reviews', reviewData);
+      setSnackbar({ open: true, message: '¡Reseña enviada! Gracias por contribuir al Bien Común y practicar el Ayni.', severity: 'success' });
+      setWriteReviewOpen(false);
+      // Refrescar la lista localmente (idealmente, refetch desde backend)
+      const newId = (response && typeof response === 'object' && 'data' in response && response.data && typeof response.data === 'object' && 'id' in response.data)
+        ? response.data.id
+        : Date.now();
+      setLocalReviews(prev => [{ ...reviewData, id: newId }, ...prev]);
+    } catch (error) {
+      setSnackbar({ open: true, message: 'Error al enviar la reseña. Intenta de nuevo.', severity: 'error' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Ordenar reseñas
-  const sortedReviews = [...reviews].sort((a, b) => {
+  const sortedReviews = [...localReviews].sort((a, b) => {
     switch (sortBy) {
       case 'newest':
         return b.createdAt.getTime() - a.createdAt.getTime();
@@ -483,7 +504,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
 
   const displayedReviews = showAll ? sortedReviews : sortedReviews.slice(0, 3);
 
-  if (reviews.length === 0) {
+  if (localReviews.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', py: 6 }}>
         <Star sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
@@ -500,6 +521,16 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
         >
           Escribir Primera Reseña
         </Button>
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <MuiAlert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+            {snackbar.message}
+          </MuiAlert>
+        </Snackbar>
       </Box>
     );
   }
@@ -516,7 +547,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
         }}
       >
         <Typography variant="h6" fontWeight="bold">
-          Reseñas de clientes ({reviews.length})
+          Reseñas de clientes ({localReviews.length})
         </Typography>
         <Button
           variant="contained"
@@ -565,7 +596,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
       </Box>
 
       {/* Botón ver más/menos */}
-      {reviews.length > 3 && (
+      {localReviews.length > 3 && (
         <Box sx={{ textAlign: 'center', mt: 3 }}>
           <Button
             variant="outlined"
@@ -574,7 +605,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
           >
             {showAll
               ? 'Ver menos reseñas'
-              : `Ver todas las reseñas (${reviews.length})`}
+              : `Ver todas las reseñas (${localReviews.length})`}
           </Button>
         </Box>
       )}
@@ -584,7 +615,19 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
         open={writeReviewOpen}
         onClose={() => setWriteReviewOpen(false)}
         onSubmit={handleWriteReview}
+        isSubmitting={isSubmitting}
       />
+      {/* Snackbar para feedback visual */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <MuiAlert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
     </Box>
   );
 };

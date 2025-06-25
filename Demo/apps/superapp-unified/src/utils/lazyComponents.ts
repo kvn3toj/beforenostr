@@ -160,7 +160,6 @@ export const preloadRouteComponents = (pathname: string) => {
         break;
       case '/marketplace':
         import('../pages/MarketplacePage.tsx');
-        import('../pages/MarketplaceTest.tsx');
         break;
       case '/uplay':
         import('../pages/UPlay.tsx');

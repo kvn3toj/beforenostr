@@ -1137,252 +1137,148 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ p: isMobile ? 1 : 4, color: 'white', position: 'relative' }}>
-      {/* --- HEADER MOTIVACIONAL Y MÉTRICAS --- */}
-      <Box
-        sx={{
-          mb: 4,
-          borderRadius: 6,
-          px: isMobile ? 2 : 6,
-          py: isMobile ? 3 : 5,
-          background: 'linear-gradient(120deg, rgba(36,41,70,0.92) 0%, rgba(108,92,231,0.92) 60%, rgba(160,174,192,0.92) 100%)',
-          boxShadow: '0 8px 32px 0 rgba(99,102,241,0.18)',
-          backdropFilter: 'blur(18px)',
-          WebkitBackdropFilter: 'blur(18px)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Overlay cósmico */}
-        <Box sx={{
+    <Box
+      sx={{
+        p: { xs: 2, md: 6 },
+        background: 'linear-gradient(135deg, #181829 0%, #232347 100%)',
+        minHeight: '100vh',
+        borderRadius: 8,
+        boxShadow: '0 0 64px 0 #232347cc, 0 0 0 8px #e5e4e244',
+        position: 'relative',
+        overflow: 'hidden',
+        mt: 2,
+        mb: 6,
+        '::before': {
+          content: '""',
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(circle at 80% 20%, rgba(99,102,241,0.18) 0%, transparent 70%)',
-          zIndex: 1,
-        }} />
-        <Box sx={{ position: 'relative', zIndex: 2 }}>
-          <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} alignItems={isMobile ? 'flex-start' : 'center'} justifyContent="space-between" gap={4}>
-            <Box>
-              <Typography variant={isMobile ? 'h5' : 'h4'} fontWeight="bold" sx={{ mb: 1, letterSpacing: 1 }}>
-                🚀 Dashboard Cósmico
-              </Typography>
-              <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: isMobile ? 15 : 18, mb: 2 }}>
-                ¡Bienvenido a tu centro de evolución! Aquí puedes visualizar tu progreso, recompensas y próximos desafíos en tu viaje por el Bien Común.
-              </Typography>
-              {/* Barra de progreso global refinada (estilo WeeklyProgressWidget) */}
-              <Box sx={{ mt: 2 }}>
-                <Card sx={{
-                  background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
-                  color: 'white',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)',
-                  borderRadius: 4,
-                  p: 2,
-                  minWidth: 320,
-                  maxWidth: 420,
-                }}>
-                  <CardContent sx={{ pb: '8px !important' }}>
-                    <Box display="flex" alignItems="center" justifyContent="space-between">
-                      <Box>
-                        <Typography variant="subtitle1" fontWeight="bold">
-                          Nivel {dynamicMetricsData.metrics.nivel}
-                        </Typography>
-                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                          Progreso hacia el siguiente nivel
-                        </Typography>
-                      </Box>
-                      <Box position="relative">
-                        <CircularProgress
-                          variant="determinate"
-                          value={Math.min(100, (dynamicMetricsData.metrics.meritos / 500) * 100)}
-                          size={54}
-                          thickness={4}
-                          sx={{
-                            color: '#4ade80',
-                            '& .MuiCircularProgress-circle': {
-                              strokeLinecap: 'round',
-                            },
-                          }}
-                        />
-                        <Box
-                          position="absolute"
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Typography variant="caption" fontWeight="bold">
-                            {Math.round((dynamicMetricsData.metrics.meritos / 500) * 100)}%
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                    <LinearProgress
-                      variant="determinate"
-                      value={Math.min(100, (dynamicMetricsData.metrics.meritos / 500) * 100)}
-                      sx={{
-                        mt: 2,
-                        height: 8,
-                        borderRadius: 4,
-                        backgroundColor: 'rgba(36,50,80,0.18)',
-                        '& .MuiLinearProgress-bar': {
-                          background: 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)',
-                          borderRadius: 4,
-                        }
-                      }}
-                    />
-                  </CardContent>
-                </Card>
-              </Box>
-              {/* Métricas rápidas cósmicas */}
-              <Box display="flex" flexWrap="wrap" gap={isMobile ? 1 : 2} mt={3}>
-                {[
-                  { label: 'Mëritos', value: dynamicMetricsData.metrics.meritos, icon: '🏆', color: 'linear-gradient(90deg, #bfae60 0%, #e5e4e2 100%)' },
-                  { label: 'Öndas', value: dynamicMetricsData.metrics.ondas, icon: '⚡', color: 'linear-gradient(90deg, #6366f1 0%, #a78bfa 100%)' },
-                  { label: 'Precisión', value: dynamicMetricsData.metrics.precision + '%', icon: '🎯', color: 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)' },
-                  { label: 'Racha', value: dynamicMetricsData.metrics.racha, icon: '🔥', color: 'linear-gradient(90deg, #bfae60 0%, #e5e4e2 100%)' },
-                  { label: 'Logros', value: dynamicMetricsData.metrics.logrosDesbloqueados, icon: '🏅', color: 'linear-gradient(90deg, #a1a1aa 0%, #d1d5db 100%)' },
-                  { label: 'Ranking', value: '#' + dynamicMetricsData.metrics.rankingComunidad, icon: '⭐', color: 'linear-gradient(90deg, #6366f1 0%, #e0e7ff 100%)' },
-                ].map((metric, idx) => (
-                  <Box
-                    key={metric.label}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      px: isMobile ? 2 : 3,
-                      py: 1.2,
-                      borderRadius: 999,
-                      background: metric.color,
-                      color: '#222',
-                      fontWeight: 700,
-                      fontSize: isMobile ? 15 : 17,
-                      boxShadow: '0 2px 12px 0 rgba(99,102,241,0.10)',
-                      transition: 'all 0.18s',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)',
-                        transform: 'scale(1.04)',
-                        color: '#000',
-                      },
-                    }}
-                    aria-label={metric.label}
-                  >
-                    <span style={{ fontSize: isMobile ? 18 : 22 }}>{metric.icon}</span>
-                    <span>{metric.value}</span>
-                    <span style={{ fontWeight: 400, marginLeft: 4 }}>{metric.label}</span>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-            {/* Métricas rápidas */}
-            <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} gap={isMobile ? 2 : 3} alignItems={isMobile ? 'center' : 'flex-end'} justifyContent="center">
-              <Box sx={{
-                minWidth: 90,
-                minHeight: 70,
-                px: 2,
-                py: 1.5,
-                borderRadius: 4,
-                background: 'rgba(36,41,70,0.7)',
-                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
-                textAlign: 'center',
-              }}>
-                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.meritos}</Typography>
-                <Typography fontSize={13} color="#bdbdbd">Mëritos</Typography>
-              </Box>
-              <Box sx={{
-                minWidth: 90,
-                minHeight: 70,
-                px: 2,
-                py: 1.5,
-                borderRadius: 4,
-                background: 'rgba(36,41,70,0.7)',
-                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
-                textAlign: 'center',
-              }}>
-                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.ondas}</Typography>
-                <Typography fontSize={13} color="#bdbdbd">Öndas</Typography>
-              </Box>
-              <Box sx={{
-                minWidth: 90,
-                minHeight: 70,
-                px: 2,
-                py: 1.5,
-                borderRadius: 4,
-                background: 'rgba(36,41,70,0.7)',
-                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
-                textAlign: 'center',
-              }}>
-                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.precision}%</Typography>
-                <Typography fontSize={13} color="#bdbdbd">Precisión</Typography>
-              </Box>
-              <Box sx={{
-                minWidth: 90,
-                minHeight: 70,
-                px: 2,
-                py: 1.5,
-                borderRadius: 4,
-                background: 'rgba(36,41,70,0.7)',
-                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
-                textAlign: 'center',
-              }}>
-                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.racha}</Typography>
-                <Typography fontSize={13} color="#bdbdbd">Racha</Typography>
-              </Box>
-              <Box sx={{
-                minWidth: 90,
-                minHeight: 70,
-                px: 2,
-                py: 1.5,
-                borderRadius: 4,
-                background: 'rgba(36,41,70,0.7)',
-                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
-                textAlign: 'center',
-              }}>
-                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.logrosDesbloqueados}</Typography>
-                <Typography fontSize={13} color="#bdbdbd">Logros</Typography>
-              </Box>
-              <Box sx={{
-                minWidth: 90,
-                minHeight: 70,
-                px: 2,
-                py: 1.5,
-                borderRadius: 4,
-                background: 'rgba(36,41,70,0.7)',
-                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
-                textAlign: 'center',
-              }}>
-                <Typography variant="h5" fontWeight="bold" color="#fff">#{metrics.rankingComunidad}</Typography>
-                <Typography fontSize={13} color="#bdbdbd">Ranking</Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
+          zIndex: 0,
+          background: 'radial-gradient(circle at 60% 0%, #e5e4e222 0%, transparent 80%)',
+          pointerEvents: 'none',
+        },
+      }}
+    >
+      {/* Header refinado */}
+      <Box sx={{ mb: 4, textAlign: 'center' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 800,
+            color: '#e5e4e2',
+            letterSpacing: 2,
+            textShadow: '0 2px 16px #6366f1cc',
+          }}
+        >
+          🚀 Dashboard Cósmico
+        </Typography>
+        <Typography sx={{ color: '#e5e4e2cc', fontSize: 18, mb: 2, letterSpacing: 1 }}>
+          ¡Bienvenido a tu centro de evolución! Aquí puedes visualizar tu progreso, recompensas y próximos desafíos en tu viaje por el Bien Común.
+        </Typography>
       </Box>
-      {/* --- RESTO DEL DASHBOARD (widgets, galería, etc.) --- */}
-      <TabPanel value={tabValue} index={0}>
-        <Container maxWidth="xl" sx={{ py: 3 }}>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Grid container spacing={isMobile ? 2 : 4}>
-              <Grid item xs={12} sm={6} lg={4}><WeeklyProgressWidget /></Grid>
-              <Grid item xs={12} sm={6} lg={4}><StreakWidget /></Grid>
-              <Grid item xs={12} sm={6} lg={4}><RankingWidget /></Grid>
-              <Grid item xs={12} md={8}><UpcomingAchievementsWidget /></Grid>
-              <Grid item xs={12} md={4}><SessionStatsWidget /></Grid>
-              <Grid item xs={12}><DynamicMetricsDashboard metrics={dynamicMetricsData.metrics} progressHistory={dynamicMetricsData.progressHistory} categoryProgress={dynamicMetricsData.categoryProgress} isLoading={dynamicMetricsData.isLoading} showAnimations={dynamicMetricsData.showAnimations} /></Grid>
-            </Grid>
-          </motion.div>
-        </Container>
-      </TabPanel>
-      {/* Otros tabs: puedes agregar aquí el contenido de los otros tabs si es necesario */}
+      {/* Barra de progreso global refinada */}
+      <Box sx={{ mt: 2, mb: 4, display: 'flex', justifyContent: 'center' }}>
+        <Card sx={{
+          background: 'linear-gradient(135deg, #232347 0%, #2d225a 100%)',
+          color: '#e5e4e2',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 4px 24px 0 #23234788',
+          borderRadius: 6,
+          p: 2,
+          minWidth: 320,
+          maxWidth: 420,
+          border: '1.5px solid #e5e4e244',
+        }}>
+          <CardContent sx={{ pb: '8px !important' }}>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Box>
+                <Typography variant="subtitle1" fontWeight="bold" color="#e5e4e2">
+                  Nivel {dynamicMetricsData.metrics.nivel}
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9, color: '#e5e4e2' }}>
+                  Progreso hacia el siguiente nivel
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ mt: 2 }}>
+              <LinearProgress
+                variant="determinate"
+                value={dynamicMetricsData.metrics.precision}
+                sx={{
+                  height: 8,
+                  borderRadius: 4,
+                  bgcolor: '#232347',
+                  '& .MuiLinearProgress-bar': {
+                    bgcolor: 'linear-gradient(90deg, #e5e4e2 0%, #bfc9ca 100%)',
+                    boxShadow: '0 0 8px #e5e4e288',
+                  },
+                }}
+              />
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
+      {/* Métricas rápidas refinadas */}
+      <Box display="flex" flexWrap="wrap" gap={2} mt={3} justifyContent="center">
+        {[
+          { label: 'Mëritos', value: dynamicMetricsData.metrics.meritos, icon: '🏆', color: 'linear-gradient(90deg, #bfc9ca 0%, #e5e4e2 100%)' },
+          { label: 'Öndas', value: dynamicMetricsData.metrics.ondas, icon: '⚡', color: 'linear-gradient(90deg, #232347 0%, #6366f1 100%)' },
+          { label: 'Precisión', value: dynamicMetricsData.metrics.precision + '%', icon: '🎯', color: 'linear-gradient(90deg, #232347 0%, #8b5cf6 100%)' },
+          { label: 'Racha', value: dynamicMetricsData.metrics.racha, icon: '🔥', color: 'linear-gradient(90deg, #bfc9ca 0%, #e5e4e2 100%)' },
+          { label: 'Logros', value: dynamicMetricsData.metrics.logrosDesbloqueados, icon: '🏅', color: 'linear-gradient(90deg, #a1a1aa 0%, #e5e4e2 100%)' },
+          { label: 'Ranking', value: '#' + dynamicMetricsData.metrics.rankingComunidad, icon: '⭐', color: 'linear-gradient(90deg, #232347 0%, #e5e4e2 100%)' },
+        ].map((item, idx) => (
+          <Box key={item.label} sx={{
+            minWidth: 90,
+            minHeight: 70,
+            px: 2,
+            py: 1.5,
+            borderRadius: 6,
+            background: item.color,
+            boxShadow: '0 2px 8px 0 #23234744',
+            textAlign: 'center',
+            color: '#e5e4e2',
+            border: '1.5px solid #e5e4e244',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 700,
+            fontSize: 18,
+            letterSpacing: 1,
+            transition: 'box-shadow 0.22s, transform 0.18s',
+            '&:hover': {
+              boxShadow: '0 8px 32px 0 #e5e4e288',
+              transform: 'scale(1.04)',
+            },
+            '&:focus': {
+              outline: '2px solid #e5e4e2',
+              boxShadow: '0 0 0 6px #e5e4e244',
+            },
+          }}>
+            <span style={{ fontSize: 28, marginBottom: 4, filter: 'drop-shadow(0 0 6px #e5e4e288)' }}>{item.icon}</span>
+            <Typography variant="h5" fontWeight="bold" color="#e5e4e2">{item.value}</Typography>
+            <Typography fontSize={13} color="#bfc9ca">{item.label}</Typography>
+          </Box>
+        ))}
+      </Box>
+      {/* Widgets refinados */}
+      <Container maxWidth="xl" sx={{ py: 3 }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Grid container spacing={4}>
+            <Grid item xs={12} sm={6} lg={4}><WeeklyProgressWidget /></Grid>
+            <Grid item xs={12} sm={6} lg={4}><StreakWidget /></Grid>
+            <Grid item xs={12} sm={6} lg={4}><RankingWidget /></Grid>
+            <Grid item xs={12} md={8}><UpcomingAchievementsWidget /></Grid>
+            <Grid item xs={12} md={4}><SessionStatsWidget /></Grid>
+            <Grid item xs={12}><DynamicMetricsDashboard metrics={dynamicMetricsData.metrics} progressHistory={dynamicMetricsData.progressHistory} categoryProgress={dynamicMetricsData.categoryProgress} isLoading={dynamicMetricsData.isLoading} showAnimations={dynamicMetricsData.showAnimations} /></Grid>
+          </Grid>
+        </motion.div>
+      </Container>
       {/* Sistema de feedback de recompensas */}
       {showRewardFeedback && (
         <EnhancedRewardFeedback
