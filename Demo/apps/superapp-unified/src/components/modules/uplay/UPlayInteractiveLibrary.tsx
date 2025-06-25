@@ -270,9 +270,15 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 color: '#6366f1',
                 borderRadius: 3,
                 py: 1.5,
+                minHeight: 48,
+                minWidth: 48,
+                fontWeight: 700,
+                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)',
+                background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
                 '&:hover': {
                   borderColor: '#6366f1',
-                  background: alpha('#6366f1', 0.1)
+                  background: 'linear-gradient(135deg, #1e293b 0%, #6366f1 100%)',
+                  color: '#fff',
                 }
               }}
             >
@@ -383,12 +389,19 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 label={video.difficulty}
                 size="small"
                 sx={{
-                  background: video.difficulty === 'Avanzado' ? 'linear-gradient(135deg, #ef4444, #dc2626)' :
-                             video.difficulty === 'Intermedio' ? 'linear-gradient(135deg, #f59e0b, #d97706)' :
-                             'linear-gradient(135deg, #10b981, #059669)',
+                  background: video.difficulty === 'Avanzado'
+                    ? 'linear-gradient(135deg, #6366f1, #7c3aed)'
+                    : video.difficulty === 'Intermedio'
+                    ? 'linear-gradient(135deg, #a78bfa, #6366f1)'
+                    : 'linear-gradient(135deg, #64748b, #a0aec0)',
                   color: 'white',
                   fontWeight: 600,
-                  fontSize: '0.7rem'
+                  fontSize: '0.7rem',
+                  minHeight: 36,
+                  minWidth: 48,
+                  px: 2,
+                  borderRadius: 2,
+                  boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)'
                 }}
               />
             </Box>
@@ -444,7 +457,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                   transform: 'translateX(-50%)',
                   width: 24,
                   height: 24,
-                  background: 'radial-gradient(circle, #10b981, #059669)',
+                  background: 'radial-gradient(circle, #6366f1, #7c3aed)',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
@@ -507,7 +520,9 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                     className="uplay-progress-bar"
                     sx={{
                       width: `${video.progress}%`,
-                      height: '100%'
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #2563eb, #6c5ce7)',
+                      borderRadius: 3
                     }}
                   />
                 </Box>
@@ -524,6 +539,10 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                   background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
                   color: 'white',
                   fontSize: '0.7rem',
+                  minHeight: 36,
+                  minWidth: 48,
+                  px: 2,
+                  borderRadius: 2,
                   '& .MuiChip-icon': {
                     color: 'white',
                     fontSize: 14
@@ -535,9 +554,13 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 label={`${video.rewards.ondas} Öndas`}
                 size="small"
                 sx={{
-                  background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                  background: 'linear-gradient(135deg, #bfae60, #a0aec0)',
                   color: 'white',
                   fontSize: '0.7rem',
+                  minHeight: 36,
+                  minWidth: 48,
+                  px: 2,
+                  borderRadius: 2,
                   '& .MuiChip-icon': {
                     color: 'white',
                     fontSize: 14
@@ -549,7 +572,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
             {/* Footer de la tarjeta */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <StarIcon sx={{ color: '#fbbf24', fontSize: 16 }} />
+                <StarIcon sx={{ color: '#bfae60', fontSize: 16 }} />
                 <Typography variant="caption" sx={{ fontWeight: 600 }}>
                   {video.rating.toFixed(1)}
                 </Typography>
@@ -577,7 +600,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   if (isLoading) {
     return (
       <Box sx={{ textAlign: 'center', py: 8 }}>
-        <RevolutionaryWidget variant="cosmic" intensity="medium" />
+        <RevolutionaryWidget variant="cosmic" cosmicIntensity="medium">{null}</RevolutionaryWidget>
         <Typography variant="h6" sx={{ mt: 2, color: 'text.secondary' }}>
           Cargando biblioteca de videos...
         </Typography>
@@ -604,18 +627,17 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     <Box sx={{ position: 'relative', minHeight: '100vh' }}>
       {/* Efectos de fondo */}
       <RevolutionaryWidget
-        variant="subtle"
-        intensity="low"
+        variant="minimal"
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          zIndex: -1,
-          opacity: 0.2
+          zIndex: 0,
+          opacity: 0.12
         }}
-      />
+      >{null}</RevolutionaryWidget>
 
       {/* Partículas flotantes */}
       <Box

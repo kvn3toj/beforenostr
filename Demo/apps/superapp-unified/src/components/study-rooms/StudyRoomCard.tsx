@@ -38,9 +38,9 @@ export const StudyRoomCard: React.FC<StudyRoomCardProps> = ({
 }) => {
   const participantCount = room.participants?.length || 0;
   const isAtCapacity = participantCount >= room.maxParticipants;
-  const timeAgo = formatDistanceToNow(new Date(room.createdAt), { 
-    addSuffix: true, 
-    locale: es 
+  const timeAgo = formatDistanceToNow(new Date(room.createdAt), {
+    addSuffix: true,
+    locale: es
   });
 
   const handleJoinClick = () => {
@@ -54,9 +54,9 @@ export const StudyRoomCard: React.FC<StudyRoomCardProps> = ({
   };
 
   return (
-    <Card 
+    <Card
       className={className}
-      sx={{ 
+      sx={{
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -79,19 +79,29 @@ export const StudyRoomCard: React.FC<StudyRoomCardProps> = ({
       >
         <Chip
           label={room.isActive ? 'Activa' : 'Finalizada'}
-          color={room.isActive ? 'success' : 'default'}
           size="small"
-          variant="filled"
+          sx={{
+            background: room.isActive
+              ? 'linear-gradient(135deg, #6366f1 0%, #7c3aed 100%)'
+              : 'linear-gradient(135deg, #a0aec0 0%, #64748b 100%)',
+            color: '#fff',
+            fontWeight: 700,
+            minHeight: 36,
+            minWidth: 48,
+            px: 2,
+            borderRadius: 2,
+            boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)'
+          }}
         />
       </Box>
 
       <CardContent sx={{ flexGrow: 1, pb: 1 }}>
         {/* Room Title */}
-        <Typography 
-          variant="h6" 
+        <Typography
+          variant="h6"
           component="h3"
           gutterBottom
-          sx={{ 
+          sx={{
             fontWeight: 600,
             lineHeight: 1.3,
             mb: 1,
@@ -103,10 +113,10 @@ export const StudyRoomCard: React.FC<StudyRoomCardProps> = ({
 
         {/* Description */}
         {room.description && (
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             color="text.secondary"
-            sx={{ 
+            sx={{
               mb: 2,
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -120,8 +130,8 @@ export const StudyRoomCard: React.FC<StudyRoomCardProps> = ({
 
         {/* Video Info */}
         {room.video && (
-          <Box 
-            sx={{ 
+          <Box
+            sx={{
               display: 'flex',
               alignItems: 'center',
               gap: 1,
@@ -170,7 +180,7 @@ export const StudyRoomCard: React.FC<StudyRoomCardProps> = ({
             </Typography>
             <Box sx={{ display: 'flex', ml: 1 }}>
               {room.participants.slice(0, 3).map((participant, index) => (
-                <Tooltip 
+                <Tooltip
                   key={participant.id}
                   title={participant.user?.name || participant.userId}
                   arrow
@@ -217,11 +227,22 @@ export const StudyRoomCard: React.FC<StudyRoomCardProps> = ({
             disabled={!room.isActive || isAtCapacity || isJoining}
             onClick={handleJoinClick}
             startIcon={<PeopleIcon />}
-            sx={{ flexGrow: 1 }}
+            sx={{
+              flexGrow: 1,
+              background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
+              color: '#fff',
+              fontWeight: 700,
+              minHeight: 48,
+              minWidth: 48,
+              borderRadius: 3,
+              boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #1e293b 0%, #6366f1 100%)',
+                color: '#fff',
+              }
+            }}
           >
-            {isJoining ? 'Uniéndose...' : 
-             isAtCapacity ? 'Llena' : 
-             'Unirse'}
+            {isJoining ? 'Uniéndose...' : isAtCapacity ? 'Llena' : 'Unirse'}
           </Button>
 
           {/* Watch Solo Button */}
@@ -230,7 +251,7 @@ export const StudyRoomCard: React.FC<StudyRoomCardProps> = ({
               color="primary"
               onClick={handleWatchClick}
               disabled={!room.videoId}
-              sx={{ 
+              sx={{
                 border: '1px solid',
                 borderColor: 'primary.main',
                 '&:hover': {

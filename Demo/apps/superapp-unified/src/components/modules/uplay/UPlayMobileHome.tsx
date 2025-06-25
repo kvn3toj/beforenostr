@@ -167,8 +167,8 @@ const VideoThumbnail: React.FC<{
       borderRadius: 2,
       position: 'relative',
       overflow: 'hidden',
-      background: thumbnailUrl 
-        ? `url(${thumbnailUrl})` 
+      background: thumbnailUrl
+        ? `url(${thumbnailUrl})`
         : 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -333,7 +333,7 @@ const BackendVideoCard: React.FC<{
         }}
         className="video-item"
       >
-        <Box 
+        <Box
           data-testid={`video-item-${video.id}`}
           sx={{ display: 'flex', gap: 2 }}
         >
@@ -343,7 +343,7 @@ const BackendVideoCard: React.FC<{
               height={90}
               thumbnailUrl={video.thumbnailUrl}
             />
-            
+
             {/* Platform indicator */}
             <Chip
               label={video.platform.toUpperCase()}
@@ -352,10 +352,14 @@ const BackendVideoCard: React.FC<{
                 position: 'absolute',
                 bottom: 4,
                 right: 4,
-                backgroundColor: 'rgba(255,0,0,0.9)',
+                background: 'linear-gradient(135deg, #a0aec0, #bfae60)',
                 color: 'white',
                 fontSize: '10px',
                 height: 16,
+                minWidth: 48,
+                minHeight: 36,
+                padding: 2,
+                borderRadius: 2
               }}
             />
           </Box>
@@ -365,7 +369,7 @@ const BackendVideoCard: React.FC<{
               variant="h6"
               sx={{
                 fontWeight: 700,
-                mb: 1,
+                marginBottom: 1,
                 fontSize: '16px',
                 lineHeight: 1.3,
                 overflow: 'hidden',
@@ -382,7 +386,7 @@ const BackendVideoCard: React.FC<{
               variant="body2"
               color="text.secondary"
               sx={{
-                mb: 1,
+                marginBottom: 1,
                 fontSize: '14px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -394,7 +398,7 @@ const BackendVideoCard: React.FC<{
               {video.description}
             </Typography>
 
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ marginBottom: 1 }}>
               <Chip
                 icon={<AccessTimeIcon />}
                 label={formatDuration(video.duration)}
@@ -402,7 +406,7 @@ const BackendVideoCard: React.FC<{
                 variant="outlined"
                 sx={{ fontSize: '11px', height: 20 }}
               />
-              
+
               {categories.length > 0 && (
                 <Chip
                   icon={<CategoryIcon />}
@@ -446,7 +450,7 @@ const BackendVideoCard: React.FC<{
       sx={{
         width: 140,
         flexShrink: 0,
-        p: 1
+        padding: 1
       }}
       className="video-card"
     >
@@ -466,11 +470,15 @@ const BackendVideoCard: React.FC<{
             position: 'absolute',
             bottom: 8,
             right: 8,
-            backgroundColor: 'rgba(0,0,0,0.8)',
+            background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
             color: 'white',
             fontWeight: 600,
             fontSize: '11px',
             height: 20,
+            minWidth: 48,
+            minHeight: 36,
+            padding: 2,
+            borderRadius: 2
           }}
         />
 
@@ -482,16 +490,20 @@ const BackendVideoCard: React.FC<{
             position: 'absolute',
             top: 8,
             left: 8,
-            backgroundColor: 'rgba(255,0,0,0.9)',
+            background: 'linear-gradient(135deg, #a0aec0, #bfae60)',
             color: 'white',
             fontWeight: 600,
             fontSize: '10px',
             height: 20,
+            minWidth: 48,
+            minHeight: 36,
+            padding: 2,
+            borderRadius: 2
           }}
         />
       </Box>
 
-      <Box sx={{ mt: 1.5, px: 0.5 }}>
+      <Box sx={{ marginTop: 1.5, padding: 0.5 }}>
         <Typography
           variant="body2"
           sx={{
@@ -500,7 +512,7 @@ const BackendVideoCard: React.FC<{
             fontSize: '13px',
             fontWeight: 600,
             lineHeight: 1.3,
-            mb: 0.5,
+            marginBottom: 0.5,
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
@@ -519,7 +531,7 @@ const BackendVideoCard: React.FC<{
               fontSize: '11px',
               fontWeight: 400,
               lineHeight: 1.2,
-              mb: 1,
+              marginBottom: 1,
               display: 'block',
             }}
           >
@@ -562,7 +574,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   const [showAchievements, setShowAchievements] = useState(false);
   const [currentStreak, setCurrentStreak] = useState(3);
   const [showAllVideos, setShowAllVideos] = useState(false);
-  
+
   // 🏫 Estado para el panel de funcionalidades sociales
   const [showSocialPanel, setShowSocialPanel] = useState(false);
 
@@ -593,7 +605,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
         ranking: 47, // Esto puede venir de otro endpoint
       };
     }
-    
+
     // Fallback básico (NO mock) - valores realistas para un usuario nuevo
     return {
       name: 'Usuario',
@@ -659,8 +671,8 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
   const isPreviewEnvironment = false;
 
   // 🔥 Usar datos reales del backend (principal)
-  const { 
-    data: backendVideos, 
+  const {
+    data: backendVideos,
     isLoading: isBackendLoading,
     isError: isBackendError,
     error: backendError
@@ -679,12 +691,12 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     console.log('[ÜPLAY DEBUG] Data Type:', typeof backendVideos);
     console.log('[ÜPLAY DEBUG] Data is Array:', Array.isArray(backendVideos));
     console.log('[ÜPLAY DEBUG] Data Length:', backendVideos?.length);
-    
+
     if (backendVideos && Array.isArray(backendVideos)) {
       console.log('[ÜPLAY DEBUG] First Video:', backendVideos[0]);
       console.log('[ÜPLAY DEBUG] All Videos:', backendVideos);
     }
-    
+
     if (isBackendError) {
       console.error('[ÜPLAY DEBUG] ❌ ERROR DETAILS:', {
         error: backendError,
@@ -692,7 +704,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
         stack: backendError?.stack
       });
     }
-    
+
     console.log('[ÜPLAY DEBUG] =====================================');
   }, [isBackendLoading, isBackendError, backendVideos, backendError]);
 
@@ -702,24 +714,24 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     console.log('[ÜPLAY DEBUG] backendVideos raw:', backendVideos);
     console.log('[ÜPLAY DEBUG] backendVideos type:', typeof backendVideos);
     console.log('[ÜPLAY DEBUG] backendVideos isArray:', Array.isArray(backendVideos));
-    
+
     if (!backendVideos || !Array.isArray(backendVideos)) {
       console.log('[ÜPLAY DEBUG] ❌ No hay datos del backend válidos');
       return [];
     }
 
     console.log('[ÜPLAY DEBUG] Total videos recibidos:', backendVideos.length);
-    
+
     // Filtrar solo videos activos
     const activeVideos = backendVideos.filter((video: any) => {
       console.log('[ÜPLAY DEBUG] Video:', video.title, 'isActive:', video.isActive);
       return video.isActive;
     });
-    
+
     console.log('[ÜPLAY DEBUG] ✅ Videos activos filtrados:', activeVideos.length);
     console.log('[ÜPLAY DEBUG] Videos activos:', activeVideos);
     console.log('[ÜPLAY DEBUG] =====================================');
-    
+
     return activeVideos as BackendVideo[];
   }, [backendVideos]);
 
@@ -728,13 +740,13 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     console.log('[ÜPLAY DEBUG] ===== AGRUPANDO POR PLAYLIST =====');
     console.log('[ÜPLAY DEBUG] processedVideos para agrupar:', processedVideos);
     console.log('[ÜPLAY DEBUG] processedVideos length:', processedVideos.length);
-    
+
     const grouped: Record<string, BackendVideo[]> = {};
-    
+
     processedVideos.forEach((video) => {
       const playlistName = video.playlist?.name || 'Sin Playlist';
       console.log('[ÜPLAY DEBUG] Video:', video.title, 'Playlist:', playlistName);
-      
+
       if (!grouped[playlistName]) {
         grouped[playlistName] = [];
       }
@@ -744,7 +756,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     console.log('[ÜPLAY DEBUG] ✅ Videos agrupados por playlist:', grouped);
     console.log('[ÜPLAY DEBUG] Número de playlists:', Object.keys(grouped).length);
     console.log('[ÜPLAY DEBUG] =====================================');
-    
+
     return grouped;
   }, [processedVideos]);
 
@@ -753,13 +765,13 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     console.log('🔥 Playing video from backend:', video.title);
     console.log('🔥 Video URL:', video.url);
     console.log('🔥 Video data:', video);
-    
+
     // Mapear a rutas existentes o usar ID del video
     const videoId = video.externalId || video.id.toString();
-    
+
     console.log('🔥 Navigating to video ID:', videoId);
     navigate(`/uplay/video/${videoId}`, {
-      state: { 
+      state: {
         from: '/uplay',
         videoData: video // Pasar datos del video
       },
@@ -799,7 +811,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     color: 'success' | 'error' | 'warning' | 'info';
   }> = React.memo(({ icon, label, value, color }) => (
     <Chip
-      icon={icon}
+      icon={icon || undefined}
       label={`${label}: ${value}`}
       sx={{
         height: 28,
@@ -868,7 +880,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
             <Typography variant="h6" color="text.secondary">
               Cargando videos...
             </Typography>
-            
+
             {/* Loading skeletons */}
             {[1, 2, 3].map((i) => (
               <Skeleton
@@ -944,20 +956,20 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
       </AppBar>
 
       {/* Main Content */}
-      <Container 
-        maxWidth={isDesktop ? "lg" : "sm"} 
-        sx={{ 
-          px: isDesktop ? 4 : 2, 
-          py: isDesktop ? 4 : 2, 
-          pb: 10 
+      <Container
+        maxWidth={isDesktop ? "lg" : "sm"}
+        sx={{
+          px: isDesktop ? 4 : 2,
+          py: isDesktop ? 4 : 2,
+          pb: 10
         }}
       >
         {/* Desktop-specific layout improvements */}
         {isDesktop && (
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography 
-              variant="h3" 
-              sx={{ 
+            <Typography
+              variant="h3"
+              sx={{
                 fontWeight: 800,
                 background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                 backgroundClip: 'text',
@@ -976,10 +988,10 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
 
         {/* Status de conexión con Backend */}
         <Box sx={{ mb: 2 }}>
-          <Alert 
-            severity={isBackendError ? "error" : "success"} 
+          <Alert
+            severity={isBackendError ? "error" : "success"}
             icon={<VideoLibraryIcon />}
-            sx={{ 
+            sx={{
               borderRadius: 2,
               backgroundColor: isBackendError ? '#ffebee' : '#e8f5e8',
               border: `1px solid ${isBackendError ? '#f44336' : '#4caf50'}`,
@@ -1001,9 +1013,9 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
         <Stack
           direction="row"
           spacing={1}
-          sx={{ 
-            mb: 3, 
-            flexWrap: 'wrap', 
+          sx={{
+            mb: 3,
+            flexWrap: 'wrap',
             gap: 1,
             justifyContent: isDesktop ? 'center' : 'flex-start'
           }}
@@ -1043,7 +1055,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       color: '#1e293b',
                       fontFamily: 'Roboto',
                       fontWeight: 700,
-                      mb: 3,
+                      marginBottom: 3,
                     }}
                   >
                     📺 Continuar viendo
@@ -1059,34 +1071,34 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                         transform: 'translateY(-4px)',
                         boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
                       },
-                      mb: 4,
+                      marginBottom: 4,
                     }}
                     onClick={handleContinueWatching}
                   >
                     <Grid container>
                       <Grid item xs={5}>
-                        <VideoThumbnail 
-                          width="100%" 
-                          height={200} 
+                        <VideoThumbnail
+                          width="100%"
+                          height={200}
                           progress={35}
                           thumbnailUrl={processedVideos[0]?.thumbnailUrl}
                         />
                       </Grid>
                       <Grid item xs={7}>
-                        <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
+                        <CardContent sx={{ padding: 3, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                          <Typography variant="h5" sx={{ fontWeight: 700, marginBottom: 2 }}>
                             {processedVideos[0]?.title || 'Video Destacado'}
                           </Typography>
-                          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                          <Typography variant="body1" color="text.secondary" sx={{ marginBottom: 2 }}>
                             {processedVideos[0]?.description || 'Continúa donde lo dejaste'}
                           </Typography>
                           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                            <Chip 
+                            <Chip
                               label={`${Math.floor(processedVideos[0]?.duration / 60)}:${(processedVideos[0]?.duration % 60).toString().padStart(2, '0')}`}
                               size="small"
                               color="primary"
                             />
-                            <Chip 
+                            <Chip
                               label={processedVideos[0]?.platform.toUpperCase()}
                               size="small"
                               color="secondary"
@@ -1103,15 +1115,15 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
             {/* Right Column - Stats & Progress */}
             <Grid item xs={12} md={4}>
               {/* User Stats Card - Enhanced for Desktop */}
-              <Card sx={{ borderRadius: 3, mb: 3 }}>
+              <Card sx={{ borderRadius: 3, marginBottom: 3 }}>
                 <Box
                   sx={{
                     background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                     color: 'white',
-                    p: 3,
+                    padding: 3,
                   }}
                 >
-                  <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 700, marginBottom: 2 }}>
                     📊 Tu Progreso
                   </Typography>
                   <Grid container spacing={2}>
@@ -1137,13 +1149,13 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     </Grid>
                   </Grid>
                 </Box>
-                
-                <CardContent sx={{ p: 3 }}>
-                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>
+
+                <CardContent sx={{ padding: 3 }}>
+                  <Typography variant="h6" sx={{ marginBottom: 2, fontWeight: 700 }}>
                     🎯 Meta Semanal
                   </Typography>
-                  <Box sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Box sx={{ marginBottom: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
                       <Typography variant="body2">
                         {userStats.weeklyGoal} videos
                       </Typography>
@@ -1182,7 +1194,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     fontSize: '18px',
                     fontWeight: 700,
                     lineHeight: '22px',
-                    mb: 2,
+                    marginBottom: 2,
                   }}
                 >
                   📺 Continuar viendo
@@ -1198,14 +1210,14 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       transform: 'translateY(-4px)',
                       boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
                     },
-                    mb: 2,
+                    marginBottom: 2,
                   }}
                   onClick={handleContinueWatching}
                 >
                   <Box sx={{ position: 'relative' }}>
-                    <VideoThumbnail 
-                      width="100%" 
-                      height={220} 
+                    <VideoThumbnail
+                      width="100%"
+                      height={220}
                       progress={35}
                       thumbnailUrl={processedVideos[0]?.thumbnailUrl}
                     />
@@ -1253,8 +1265,8 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                     </Box>
                   </Box>
 
-                  <CardContent sx={{ p: 2 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                  <CardContent sx={{ padding: 2 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, marginBottom: 1 }}>
                       {processedVideos[0]?.title || 'Video Destacado'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1285,13 +1297,13 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                 fontSize: '16px',
                 fontWeight: 700,
                 lineHeight: '22px',
-                mb: 2,
+                marginBottom: 2,
               }}
             >
               🌟 {playlistName}
             </Typography>
 
-            <Stack direction="row" spacing={2} sx={{ overflowX: 'auto', pb: 2 }}>
+            <Stack direction="row" spacing={2} sx={{ overflowX: 'auto', paddingBottom: 2 }}>
               {videos.slice(0, showAllVideos ? videos.length : 5).map((video) => (
                 <BackendVideoCard
                   key={video.id}
@@ -1304,7 +1316,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
             {videos.length > 5 && (
               <Button
                 onClick={handleToggleAllVideos}
-                sx={{ mt: 1 }}
+                sx={{ marginTop: 1 }}
                 endIcon={showAllVideos ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               >
                 {showAllVideos ? 'Mostrar menos' : `Ver todos (${videos.length})`}
@@ -1322,7 +1334,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
               fontSize: '18px',
               fontWeight: 700,
               lineHeight: '22px',
-              mb: 2,
+              marginBottom: 2,
             }}
           >
             📋 Todos los Videos Disponibles ({processedVideos.length})
@@ -1340,13 +1352,13 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
               ))}
             </Box>
           ) : (
-            <Paper sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
-              <OndemandVideoIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+            <Paper sx={{ padding: 4, textAlign: 'center', borderRadius: 3 }}>
+              <OndemandVideoIcon sx={{ fontSize: 48, color: 'text.secondary', marginBottom: 2 }} />
+              <Typography variant="h6" color="text.secondary" sx={{ marginBottom: 1 }}>
                 No hay videos disponibles
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {isBackendError 
+                {isBackendError
                   ? 'Error conectando al backend. Verifica que el servicio esté ejecutándose.'
                   : 'No se encontraron videos en el backend.'
                 }
@@ -1356,12 +1368,12 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
         </Box>
 
         {/* Enhanced User Stats Section (Collapsible) */}
-        <Card sx={{ mb: 3, borderRadius: 3, overflow: 'hidden' }}>
+        <Card sx={{ marginBottom: 3, borderRadius: 3, overflow: 'hidden' }}>
           <Box
             sx={{
               background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
               color: 'white',
-              p: 2,
+              padding: 2,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -1384,7 +1396,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
           </Box>
 
           <Collapse in={showStats}>
-            <CardContent sx={{ p: 3 }}>
+            <CardContent sx={{ padding: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={6}>
                   <Box textAlign="center">
@@ -1444,17 +1456,17 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                 </Grid>
               </Grid>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ margin: 3 }} />
 
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>
+              <Typography variant="h6" sx={{ marginBottom: 2, fontWeight: 700 }}>
                 🎯 Progreso Semanal
               </Typography>
-              <Box sx={{ mb: 2 }}>
+              <Box sx={{ marginBottom: 2 }}>
                 <Box
                   sx={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    mb: 1,
+                    marginBottom: 1,
                   }}
                 >
                   <Typography variant="body2">

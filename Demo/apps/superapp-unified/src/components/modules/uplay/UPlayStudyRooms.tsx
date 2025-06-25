@@ -108,12 +108,21 @@ const UPlayStudyRooms: React.FC = () => {
             clickable
             onClick={() => setFilter(tag)}
             sx={{
-              background: filter === tag ? 'var(--uplay-blue-600, #2563eb)' : 'rgba(255, 255, 255, 0.1)',
-              color: filter === tag ? '#fff' : 'var(--secondary-text, #ccc)',
+              background: filter === tag ? 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)' : 'rgba(36, 50, 80, 0.15)',
+              color: filter === tag ? '#fff' : '#a0aec0',
+              fontWeight: 600,
+              fontSize: '1rem',
+              px: 2.5,
+              py: 1.5,
+              minHeight: 44,
+              minWidth: 44,
+              borderRadius: 2,
+              boxShadow: filter === tag ? '0 2px 8px 0 rgba(108,92,231,0.12)' : 'none',
               transition: 'all 0.3s',
               '&:hover': {
-                background: filter === tag ? 'var(--uplay-blue-500, #3b82f6)' : 'rgba(255, 255, 255, 0.2)',
-              }
+                background: filter === tag ? 'linear-gradient(90deg, #1e40af 0%, #7e22ce 100%)' : 'rgba(36, 50, 80, 0.22)',
+                color: '#fff',
+              },
             }}
           />
         ))}
@@ -151,8 +160,8 @@ const UPlayStudyRooms: React.FC = () => {
         onClose={handleCloseDialog}
         fullWidth
         maxWidth={false}
-        PaperProps={{ sx: { background: 'transparent', boxShadow: 'none', overflow: 'visible' } }}
-        sx={{ backdropFilter: 'blur(5px)' }}
+        PaperProps={{ sx: { background: 'linear-gradient(135deg, #232946 0%, #6c5ce7 60%, #a0aec0 100%)', boxShadow: '0 8px 32px 0 rgba(108,92,231,0.18)', overflow: 'visible', borderRadius: 4 } }}
+        sx={{ backdropFilter: 'blur(8px)' }}
       >
         <Fade in={!!selectedRoom}>
           <Box sx={{ width: isMobile ? '95vw' : '80vw', maxWidth: '1200px', height: isMobile ? '80vh' : '70vh' }}>
@@ -172,11 +181,28 @@ const UPlayStudyRooms: React.FC = () => {
                    <Typography variant="body2" sx={{fontWeight: 'bold', color: 'var(--primary-text)'}}>Participantes:</Typography>
                    <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1, overflowY: 'auto', maxHeight: '200px'}}>
                      {selectedRoom.participantDetails.map(p => (
-                       <Chip key={p.id} avatar={<Avatar src={p.avatar} />} label={p.name} sx={{background: 'rgba(255,255,255,0.1)', color: 'var(--primary-text)'}}/>
+                       <Chip key={p.id} avatar={<Avatar src={p.avatar} />} label={p.name} sx={{background: 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)', color: '#fff', fontWeight: 600, px: 2, py: 1, minHeight: 40, minWidth: 40, borderRadius: 2}}/>
                      ))}
                    </Box>
                    <Box sx={{flexGrow: 1}} />
-                   <Button variant="contained" color="error" onClick={handleCloseDialog} fullWidth>
+                   <Button
+                    variant="contained"
+                    onClick={handleCloseDialog}
+                    fullWidth
+                    sx={{
+                      background: 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)',
+                      color: '#fff',
+                      minHeight: 48,
+                      borderRadius: 3,
+                      fontWeight: 700,
+                      boxShadow: '0 2px 8px 0 rgba(108,92,231,0.12)',
+                      mt: 2,
+                      '&:hover': {
+                        background: 'linear-gradient(90deg, #1e40af 0%, #7e22ce 100%)',
+                        boxShadow: '0 4px 16px 0 rgba(108,92,231,0.18)',
+                      },
+                    }}
+                   >
                     Salir de la Sala
                   </Button>
                  </>}

@@ -368,9 +368,7 @@ export const OptimizedVideoTransitions: React.FC<OptimizedVideoTransitionsProps>
           backgroundColor: alpha(theme.palette.common.white, 0.3),
           '& .MuiLinearProgress-bar': {
             borderRadius: 3,
-            background: cosmicEffects
-              ? 'linear-gradient(90deg, #6366f1, #8b5cf6)'
-              : theme.palette.primary.main,
+            background: 'linear-gradient(90deg, #2563eb, #6c5ce7)',
             transition: transitionState.isSeekingPosition ? 'none' : 'transform 0.3s ease',
           },
         }}
@@ -499,8 +497,15 @@ export const OptimizedVideoTransitions: React.FC<OptimizedVideoTransitionsProps>
                 changePlaybackSpeed(nextSpeed);
               }}
               sx={{
-                color: 'white',
-                borderColor: 'white',
+                color: '#fff',
+                background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
+                border: 'none',
+                minHeight: 36,
+                minWidth: 48,
+                px: 2,
+                borderRadius: 2,
+                fontWeight: 600,
+                fontSize: '0.8rem',
                 transition: 'all 0.3s ease',
                 opacity: transitionState.isProcessingInteraction ? 0.6 : 1,
               }}
@@ -520,8 +525,15 @@ export const OptimizedVideoTransitions: React.FC<OptimizedVideoTransitionsProps>
                 changeVideoQuality(nextQuality);
               }}
               sx={{
-                color: 'white',
-                borderColor: 'white',
+                color: '#fff',
+                background: 'linear-gradient(135deg, #a0aec0, #bfae60)',
+                border: 'none',
+                minHeight: 36,
+                minWidth: 48,
+                px: 2,
+                borderRadius: 2,
+                fontWeight: 600,
+                fontSize: '0.8rem',
                 transition: 'all 0.3s ease',
                 opacity: transitionState.isChangingQuality ? 0.6 : 1,
               }}
@@ -579,8 +591,16 @@ export const OptimizedVideoTransitions: React.FC<OptimizedVideoTransitionsProps>
                 icon={<Star />}
                 label={`${videoMetadata.rewards.meritos} Mëritos`}
                 size="small"
-                color="primary"
                 sx={{
+                  color: '#fff',
+                  background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
+                  border: 'none',
+                  minHeight: 36,
+                  minWidth: 48,
+                  px: 2,
+                  borderRadius: 2,
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
                   transition: 'all 0.3s ease',
                   transform: transitionState.isProcessingInteraction ? 'scale(0.95)' : 'scale(1)',
                 }}
@@ -589,8 +609,16 @@ export const OptimizedVideoTransitions: React.FC<OptimizedVideoTransitionsProps>
                 icon={<Lightbulb />}
                 label={`${videoMetadata.rewards.ondas} Öndas`}
                 size="small"
-                color="secondary"
                 sx={{
+                  color: '#fff',
+                  background: 'linear-gradient(135deg, #bfae60, #a0aec0)',
+                  border: 'none',
+                  minHeight: 36,
+                  minWidth: 48,
+                  px: 2,
+                  borderRadius: 2,
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
                   transition: 'all 0.3s ease',
                   transform: transitionState.isProcessingInteraction ? 'scale(0.95)' : 'scale(1)',
                 }}

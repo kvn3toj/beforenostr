@@ -80,6 +80,9 @@ import { RevolutionaryWidget } from '../../../design-system/templates/Revolution
 // [PHOENIX/ANA] Uso de useUPlayProgress para obtener progreso compartido
 import { useUPlayProgress } from './hooks/useUPlayProgress';
 
+// [IMPORT] Añadir AchievementBar para barra de progreso global
+import AchievementBar from '../ustats/components/AchievementBar';
+
 // ============================================================================
 // ADAPTADORES Y HELPERS
 // ============================================================================
@@ -344,9 +347,19 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
         {video.isCompleted && (
           <Chip
             label="✓ Completado"
-            color="success"
-            size="small"
-            sx={{ position: 'absolute', top: 12, right: 12, fontWeight: 'bold' }}
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              fontWeight: 'bold',
+              background: 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)',
+              color: '#fff',
+              px: 2,
+              py: 1,
+              borderRadius: 2,
+              fontSize: '0.9rem',
+              boxShadow: '0 2px 8px 0 rgba(108,92,231,0.12)'
+            }}
           />
         )}
 
@@ -355,12 +368,18 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
           size="small"
           sx={{
             position: 'absolute',
-            top: 12, left: 12,
-            bgcolor: getDifficultyColor(video.difficulty),
-            color: 'white',
+            top: 12,
+            left: 12,
+            background: 'linear-gradient(90deg, #7e22ce 0%, #2563eb 100%)',
+            color: '#fff',
             fontWeight: 'bold',
             textTransform: 'uppercase',
-            letterSpacing: '0.5px'
+            letterSpacing: '0.5px',
+            px: 2,
+            py: 1,
+            borderRadius: 2,
+            fontSize: '0.9rem',
+            boxShadow: '0 2px 8px 0 rgba(108,92,231,0.12)'
           }}
         />
       </Box>
@@ -384,18 +403,18 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Box display="flex" gap={1}>
             <Chip
-              icon={<Diamond sx={{ fontSize: '16px !important', color: '#d8a4fe !important' }} />}
+              icon={<Diamond sx={{ fontSize: '16px !important', color: '#a78bfa !important' }} />}
               label={`${video.rewards?.meritos || 0} Mëritos`}
               size="small"
               variant="outlined"
-              sx={{ color: '#d8a4fe', borderColor: '#d8a4fe' }}
+              sx={{ color: '#a78bfa', borderColor: '#a78bfa', fontWeight: 600, px: 2, py: 1, minHeight: 36, borderRadius: 2 }}
             />
             <Chip
-              icon={<Bolt sx={{ fontSize: '16px !important', color: '#feca57 !important' }} />}
+              icon={<Bolt sx={{ fontSize: '16px !important', color: '#60a5fa !important' }} />}
               label={`${video.rewards?.ondas || 0} Öndas`}
               size="small"
               variant="outlined"
-              sx={{ color: '#feca57', borderColor: '#feca57' }}
+              sx={{ color: '#60a5fa', borderColor: '#60a5fa', fontWeight: 600, px: 2, py: 1, minHeight: 36, borderRadius: 2 }}
             />
           </Box>
         </Box>
@@ -416,10 +435,12 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
               sx={{
                 height: 6,
                 borderRadius: 3,
-                bgcolor: 'rgba(255,255,255,0.2)',
+                bgcolor: 'rgba(36,50,80,0.18)',
                 '& .MuiLinearProgress-bar': {
                   borderRadius: 3,
-                  background: video.isCompleted ? 'linear-gradient(45deg, #4caf50, #81c784)' : 'linear-gradient(45deg, #ff6b6b, #feca57)',
+                  background: video.isCompleted
+                    ? 'linear-gradient(90deg, #bfae60 0%, #e5e4e2 100%)' // dorado-plateado
+                    : 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)',
                 },
               }}
             />
@@ -432,73 +453,35 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
 
 // Widget de progreso semanal
 const WeeklyProgressWidget: React.FC = () => {
-  const [progress, setProgress] = useState(65); // Mock data - conectar con backend
-
+  const [progress] = useState(65); // Mock data
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
+      whileHover={{ scale: 1.03, boxShadow: '0 8px 32px 0 rgba(99,102,241,0.18)' }}
     >
       <Card sx={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #6366f1 0%, #a78bfa 100%)',
         color: 'white',
+        borderRadius: 5,
+        boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)',
+        backdropFilter: 'blur(8px)',
+        minHeight: 120,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        transition: 'box-shadow 0.2s',
       }}>
         <CardContent>
-          <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Box>
-              <Typography variant="h6" fontWeight="bold">
-                Progreso Semanal
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                {progress}% completado
-              </Typography>
-            </Box>
-            <Box position="relative">
-              <CircularProgress
-                variant="determinate"
-                value={progress}
-                size={60}
-                thickness={4}
-                sx={{
-                  color: '#4ade80',
-                  '& .MuiCircularProgress-circle': {
-                    strokeLinecap: 'round',
-                  },
-                }}
-              />
-              <Box
-                position="absolute"
-                top={0}
-                left={0}
-                bottom={0}
-                right={0}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Typography variant="caption" fontWeight="bold">
-                  {progress}%
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-          <LinearProgress
-            variant="determinate"
-            value={progress}
-            sx={{
-              mt: 2,
-              height: 8,
-              borderRadius: 4,
-              backgroundColor: 'rgba(255,255,255,0.2)',
-              '& .MuiLinearProgress-bar': {
-                background: 'linear-gradient(90deg, #4ade80, #22c55e)',
-                borderRadius: 4,
-              }
-            }}
-          />
+          <Typography variant="h6" fontWeight="bold" mb={1}>
+            Progreso Semanal
+          </Typography>
+          <Typography variant="body2" sx={{ opacity: 0.9 }}>
+            {progress}% completado esta semana
+          </Typography>
         </CardContent>
       </Card>
     </motion.div>
@@ -507,39 +490,49 @@ const WeeklyProgressWidget: React.FC = () => {
 
 // Widget de racha de días consecutivos
 const StreakWidget: React.FC = () => {
-  const [streak, setStreak] = useState(7); // Mock data
-  const [isOnFire, setIsOnFire] = useState(streak >= 3);
-
+  const [streak] = useState(7); // Mock data
+  const isOnFire = streak >= 3;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
+      whileHover={{ scale: 1.03, boxShadow: '0 8px 32px 0 rgba(191,174,96,0.18)' }}
     >
       <Card sx={{
         background: isOnFire
-          ? 'linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)'
-          : 'linear-gradient(135deg, #74b9ff 0%, #0984e3 100%)',
-        color: 'white',
+          ? 'linear-gradient(135deg, #bfae60 0%, #e5e4e2 100%)'
+          : 'linear-gradient(135deg, #6366f1 0%, #a78bfa 100%)',
+        color: isOnFire ? '#3d3d3d' : '#fff',
+        borderRadius: 5,
+        boxShadow: isOnFire
+          ? '0 4px 24px 0 rgba(191,174,96,0.18)'
+          : '0 4px 24px 0 rgba(99,102,241,0.18)',
+        backdropFilter: 'blur(8px)',
+        minHeight: 120,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        transition: 'box-shadow 0.2s',
       }}>
         <CardContent>
           <Box display="flex" alignItems="center" gap={2}>
             <motion.div
               animate={isOnFire ? {
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0]
+                scale: [1, 1.15, 1],
+                rotate: [0, 8, -8, 0]
               } : {}}
               transition={{
-                duration: 2,
+                duration: 2.2,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
             >
               {isOnFire ?
-                <Whatshot sx={{ fontSize: 40, color: '#ffeb3b' }} /> :
-                <Bolt sx={{ fontSize: 40, color: '#e3f2fd' }} />
+                <span style={{ fontSize: 40, filter: 'drop-shadow(0 0 8px #bfae60)' }}>🔥</span> :
+                <span style={{ fontSize: 40, filter: 'drop-shadow(0 0 8px #60a5fa)' }}>⚡</span>
               }
             </motion.div>
             <Box>
@@ -547,7 +540,7 @@ const StreakWidget: React.FC = () => {
                 {streak}
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                {isOnFire ? '🔥 ¡En racha!' : 'Días consecutivos'}
+                {isOnFire ? '¡En racha!' : 'Días consecutivos'}
               </Typography>
             </Box>
           </Box>
@@ -564,24 +557,33 @@ const StreakWidget: React.FC = () => {
 
 // Widget de ranking/clasificación
 const RankingWidget: React.FC = () => {
-  const [userRank, setUserRank] = useState(12); // Mock data
-  const [totalUsers, setTotalUsers] = useState(156);
-
+  const [userRank] = useState(12); // Mock data
+  const [totalUsers] = useState(156);
   const getRankIcon = (rank: number) => {
-    if (rank <= 3) return <Diamond sx={{ color: '#ffd700' }} />;
-    if (rank <= 10) return <Star sx={{ color: '#c0c0c0' }} />;
-    return <TrendingUp sx={{ color: '#cd7f32' }} />;
+    if (rank <= 3) return <span style={{ fontSize: 32, color: '#ffd700' }}>💎</span>;
+    if (rank <= 10) return <span style={{ fontSize: 32, color: '#c0c0c0' }}>⭐</span>;
+    return <span style={{ fontSize: 32, color: '#cd7f32' }}>📈</span>;
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
+      whileHover={{ scale: 1.03, boxShadow: '0 8px 32px 0 rgba(99,102,241,0.18)' }}
     >
       <Card sx={{
-        background: 'linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%)',
-        color: 'white'
+        background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
+        color: 'white',
+        borderRadius: 5,
+        boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)',
+        backdropFilter: 'blur(8px)',
+        minHeight: 120,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'box-shadow 0.2s',
       }}>
         <CardContent>
           <Box display="flex" alignItems="center" gap={2}>
@@ -602,18 +604,11 @@ const RankingWidget: React.FC = () => {
                 {Math.max(0, 10 - userRank)} posiciones
               </Typography>
             </Box>
-            <LinearProgress
-              variant="determinate"
-              value={Math.max(0, (10 - userRank) / 10 * 100)}
-              sx={{
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                '& .MuiLinearProgress-bar': {
-                  background: 'linear-gradient(90deg, #ffecd2, #fcb69f)',
-                  borderRadius: 3,
-                }
-              }}
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.max(0, (10 - userRank) / 10 * 100)}%` }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+              style={{ height: 6, borderRadius: 3, background: 'linear-gradient(90deg, #bfae60 0%, #e5e4e2 100%)' }}
             />
           </Box>
         </CardContent>
@@ -629,42 +624,47 @@ const UpcomingAchievementsWidget: React.FC = () => {
     { name: 'Explorador Incansable', progress: 45, icon: '🧭' },
     { name: 'Colaborador Estrella', progress: 60, icon: '⭐' }
   ];
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
+      whileHover={{ scale: 1.03, boxShadow: '0 8px 32px 0 rgba(124,58,237,0.18)' }}
     >
       <Card sx={{
-        background: 'linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%)',
-        color: 'white'
+        background: 'linear-gradient(135deg, #7e22ce 0%, #2563eb 100%)',
+        color: 'white',
+        borderRadius: 5,
+        boxShadow: '0 4px 24px 0 rgba(124,58,237,0.18)',
+        backdropFilter: 'blur(8px)',
+        minHeight: 120,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'box-shadow 0.2s',
       }}>
         <CardContent>
           <Typography variant="h6" fontWeight="bold" mb={2}>
-            <AutoAwesome sx={{ mr: 1 }} />
-            Próximos Logros
+            ✨ Próximos Logros
           </Typography>
           {upcomingAchievements.map((achievement, index) => (
             <Box key={index} mb={index < upcomingAchievements.length - 1 ? 2 : 0}>
               <Box display="flex" alignItems="center" gap={1} mb={1}>
-                <Typography variant="body2">{achievement.icon}</Typography>
+                <motion.span
+                  whileHover={{ scale: 1.2, rotate: 8 }}
+                  style={{ fontSize: 20 }}
+                >{achievement.icon}</motion.span>
                 <Typography variant="body2" fontWeight="medium">
                   {achievement.name}
                 </Typography>
               </Box>
-              <LinearProgress
-                variant="determinate"
-                value={achievement.progress}
-                sx={{
-                  height: 4,
-                  borderRadius: 2,
-                  backgroundColor: 'rgba(255,255,255,0.2)',
-                  '& .MuiLinearProgress-bar': {
-                    background: 'linear-gradient(90deg, #00b894, #00cec9)',
-                    borderRadius: 2,
-                  }
-                }}
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${achievement.progress}%` }}
+                transition={{ duration: 1.2, ease: 'easeInOut' }}
+                style={{ height: 4, borderRadius: 2, background: 'linear-gradient(90deg, #bfae60 0%, #e5e4e2 100%)' }}
               />
               <Typography variant="caption" sx={{ opacity: 0.8 }}>
                 {achievement.progress}% completado
@@ -679,64 +679,70 @@ const UpcomingAchievementsWidget: React.FC = () => {
 
 // Widget de estadísticas de sesión actual
 const SessionStatsWidget: React.FC = () => {
-  const [sessionTime, setSessionTime] = useState(0);
-  const [videosWatched, setVideosWatched] = useState(3);
-  const [questionsAnswered, setQuestionsAnswered] = useState(12);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSessionTime(prev => prev + 1);
-    }, 60000); // Actualizar cada minuto
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatTime = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours > 0) {
-      return `${hours}h ${mins}m`;
-    }
-    return `${mins}m`;
-  };
-
+  const [sessionTime] = useState(0);
+  const [videosWatched] = useState(3);
+  const [questionsAnswered] = useState(12);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
+      whileHover={{ scale: 1.03, boxShadow: '0 8px 32px 0 rgba(99,102,241,0.18)' }}
     >
       <Card sx={{
-        background: 'linear-gradient(135deg, #00b09b 0%, #96c93d 100%)',
-        color: 'white'
+        background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
+        color: 'white',
+        borderRadius: 5,
+        boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)',
+        backdropFilter: 'blur(8px)',
+        minHeight: 120,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'box-shadow 0.2s',
       }}>
         <CardContent>
           <Typography variant="h6" fontWeight="bold" mb={2}>
-            <LiveTv sx={{ mr: 1 }} />
+            <motion.span
+              animate={{ scale: [1, 1.15, 1], rotate: [0, 8, -8, 0] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+              style={{ display: 'inline-block', marginRight: 8 }}
+            >📺</motion.span>
             Sesión Actual
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <Box textAlign="center">
-                <Typography variant="h5" fontWeight="bold">
-                  {formatTime(sessionTime)}
-                </Typography>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.2 }}
+                  style={{ fontSize: 24, fontWeight: 700 }}
+                >{sessionTime}m</motion.span>
                 <Typography variant="caption">Tiempo</Typography>
               </Box>
             </Grid>
             <Grid item xs={4}>
               <Box textAlign="center">
-                <Typography variant="h5" fontWeight="bold">
-                  {videosWatched}
-                </Typography>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.2, delay: 0.2 }}
+                  style={{ fontSize: 24, fontWeight: 700 }}
+                >{videosWatched}</motion.span>
                 <Typography variant="caption">Videos</Typography>
               </Box>
             </Grid>
             <Grid item xs={4}>
               <Box textAlign="center">
-                <Typography variant="h5" fontWeight="bold">
-                  {questionsAnswered}
-                </Typography>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.2, delay: 0.4 }}
+                  style={{ fontSize: 24, fontWeight: 700 }}
+                >{questionsAnswered}</motion.span>
                 <Typography variant="caption">Preguntas</Typography>
               </Box>
             </Grid>
@@ -1119,358 +1125,264 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     );
   }
 
-  // ========================================================================
-  // RENDER HELPERS CON TRANSICIONES MEJORADAS
-  // ========================================================================
+  // --- MÉTRICAS RÁPIDAS ---
+  const metrics = dynamicMetricsData.metrics;
 
-  // 🎨 RENDERIZADO DE VIDEOTECA MEJORADO
-  const renderVideoLibrary = () => (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
-      {playlists?.map((playlist: any) => (
-        <Box key={playlist.id} sx={{ mb: 6 }}>
-          <Typography
-            variant="h4"
-            sx={{
-              mb: 2,
-              fontWeight: 'bold',
-              background: 'linear-gradient(90deg, #FF8C00, #FF4500)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              borderBottom: '2px solid #FF4500',
-              pb: 1,
-              display: 'inline-block'
-            }}
-          >
-            {playlist.name}
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: '80ch' }}>
-            {playlist.description}
-          </Typography>
-          <Grid container spacing={3}>
-            {(videosByPlaylist[playlist.id] || []).map((video: any) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
-                <VideoCard video={video} onPlay={handleVideoPlay} />
-              </Grid>
-            ))}
-            {!(videosByPlaylist[playlist.id]?.length) && (
-              <Grid item xs={12}>
-                <Card sx={{ p: 3, textAlign: 'center', bgcolor: 'rgba(0,0,0,0.2)' }}>
-                  <Typography color="text.secondary">No hay videos en esta ruta de aprendizaje todavía.</Typography>
-                </Card>
-              </Grid>
-            )}
-          </Grid>
-        </Box>
-      ))}
-      {/* Sección para videos sin playlist */}
-      {videosByPlaylist['unassigned'] && (
-        <Box sx={{ mb: 6 }}>
-          <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
-            Otros Videos
-          </Typography>
-          <Grid container spacing={3}>
-            {videosByPlaylist['unassigned'].map((video: any) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
-                <VideoCard video={video} onPlay={handleVideoPlay} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      )}
-    </Container>
-  );
-
-  // 🎨 RENDERIZADO DE LOGROS MEJORADO
-  const renderAchievements = () => (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <Typography variant="h4" fontWeight="bold" mb={4} textAlign="center">
-          🏆 Logros y Mëritos
-        </Typography>
-
-        <Grid container spacing={3}>
-          {/* Logros desbloqueados */}
-          {unlockedAchievements.map((achievement: any, index: number) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card sx={{
-                height: '100%',
-                background: 'linear-gradient(135deg, #232946 0%, #6c5ce7 60%, #a0aec0 100%)',
-                color: 'white',
-                border: '1.5px solid #c0c0c0',
-                boxShadow: '0 4px 24px 0 rgba(160,174,192,0.18), 0 1.5px 0 0 #c0c0c0',
-                transition: 'transform 0.3s ease',
-                '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 8px 32px 0 rgba(160,174,192,0.28), 0 2px 0 0 #c0c0c0' }
-              }}>
-                <CardContent>
-                  <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <EmojiEvents sx={{ fontSize: 32, color: '#e0e0e0' }} />
-                    <Typography variant="h6" fontWeight="bold">
-                      {achievement.name || 'Logro Desbloqueado'}
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ opacity: 0.92 }}>
-                    {achievement.description || 'Has completado este desafío exitosamente'}
-                  </Typography>
-                  <Box mt={2} display="flex" gap={1}>
-                    <Chip
-                      icon={<Star />}
-                      label={`+${achievement.meritos || 50} Mëritos`}
-                      size="small"
-                      sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#e0e0e0', border: '1px solid #c0c0c0' }}
-                    />
-                    <Chip
-                      icon={<Bolt />}
-                      label={`+${achievement.ondas || 25} Öndas`}
-                      size="small"
-                      sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#b4c5e4', border: '1px solid #c0c0c0' }}
-                    />
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-
-          {/* Mensaje si no hay logros */}
-          {unlockedAchievements.length === 0 && (
-            <Grid item xs={12}>
-              <Card sx={{ p: 4, textAlign: 'center', bgcolor: '#232946', color: '#e0e0e0', border: '1.5px solid #c0c0c0' }}>
-                <Typography variant="h6" color="#e0e0e0" mb={2}>
-                  ¡Comienza tu aventura de aprendizaje!
-                </Typography>
-                <Typography variant="body1" color="#b4c5e4">
-                  Completa videos y desafíos para desbloquear logros únicos y ganar Mëritos
-                </Typography>
-              </Card>
-            </Grid>
-          )}
-        </Grid>
-      </motion.div>
-    </Container>
-  );
-
-  const renderSidebar = () => (
-    <Drawer
-      anchor="left"
-      open={sidebarOpen}
-      onClose={handleCloseSidebar}
-      sx={{
-        '& .MuiDrawer-paper': {
-          width: 280,
-          bgcolor: 'background.default',
-        },
-      }}
-    >
-      <Box p={2}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h6" fontWeight="bold">
-            ÜPlay Menu
-          </Typography>
-          <IconButton onClick={handleCloseSidebar}>
-            <Close />
-          </IconButton>
-        </Box>
-
-        {/* Métricas del jugador en sidebar */}
-        <Card sx={{ mb: 2 }}>
-          <CardContent>
-            <Typography variant="subtitle2" gutterBottom>
-              Tu Progreso
-            </Typography>
-            <Box display="flex" flexDirection="column" gap={1}>
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">Mëritos:</Typography>
-                <Typography variant="body2" fontWeight="bold" color="primary">
-                  {playerMetrics.meritos.toLocaleString()}
-                </Typography>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">Öndas:</Typography>
-                <Typography variant="body2" fontWeight="bold" color="secondary">
-                  {playerMetrics.ondas.toLocaleString()}
-                </Typography>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">Nivel:</Typography>
-                <Typography variant="body2" fontWeight="bold">
-                  {playerMetrics.level}
-                </Typography>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
-    </Drawer>
-  );
-
-  // 🎨 COMPONENTE TABPANEL MEJORADO CON TRANSICIONES SLIDE
-  const EnhancedTabPanel: React.FC<TabPanelProps & { direction?: 'left' | 'right' }> = ({
-    children,
-    value,
-    index,
-    direction = 'left',
-    ...other
-  }) => {
-    const isActive = value === index;
-    const isPreloaded = preloadedTabs.has(index);
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={!isActive}
-        id={`uplay-tabpanel-${index}`}
-        aria-labelledby={`uplay-tab-${index}`}
-        {...other}
-      >
-        {isActive && (
-          <motion.div
-            key={`tab-${index}`}
-            initial={{
-              opacity: 0,
-              x: direction === 'left' ? -30 : 30,
-              scale: 0.98
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-              scale: 1
-            }}
-            exit={{
-              opacity: 0,
-              x: direction === 'left' ? 30 : -30,
-              scale: 0.98
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-              duration: 0.4
-            }}
-          >
-            {/* Indicador de carga específico del tab */}
-            {(!isPreloaded || transitionState.isContentLoading) && (
-              <Box sx={{ mb: 2 }}>
-                <LinearProgress
-                  sx={{
-                    height: 1,
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                    '& .MuiLinearProgress-bar': {
-                      background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-                    }
-                  }}
-                />
-              </Box>
-            )}
-            {children}
-          </motion.div>
-        )}
-      </div>
-    );
-  };
-
-  // ========================================================================
-  // RENDER PRINCIPAL
-  // ========================================================================
+  // --- Definición de tabs cósmicos ---
+  const dashboardTabs = [
+    { label: 'Dashboard', icon: <Dashboard />, id: 0 },
+    { label: 'Videoteca', icon: <VideoLibrary />, id: 1 },
+    { label: 'Logros', icon: <EmojiEvents />, id: 2 },
+    { label: 'Salas de Estudio', icon: <Groups />, id: 3 },
+  ];
 
   return (
-    <RevolutionaryWidget
-      title="🔥 ÜPlay: Enciende tu Conocimiento"
-      subtitle="Sumérgete en Rutas de Aprendizaje gamificadas y transforma tu potencial en acción."
-      element="fuego"
-      cosmicEffects={{
-        enableGlow: true,
-        enableParticles: true,
-      }}
-      cosmicIntensity="intense"
-    >
-      <Box sx={{ minHeight: '100vh', bgcolor: 'transparent' }}>
-      {/* renderHeader removed to avoid duplicate AppBar */}
-      {renderSidebar()}
-
-      <EnhancedTabPanel value={tabValue} index={0}>
+    <Box sx={{ p: isMobile ? 1 : 4, color: 'white', position: 'relative' }}>
+      {/* --- HEADER MOTIVACIONAL Y MÉTRICAS --- */}
+      <Box
+        sx={{
+          mb: 4,
+          borderRadius: 6,
+          px: isMobile ? 2 : 6,
+          py: isMobile ? 3 : 5,
+          background: 'linear-gradient(120deg, rgba(36,41,70,0.92) 0%, rgba(108,92,231,0.92) 60%, rgba(160,174,192,0.92) 100%)',
+          boxShadow: '0 8px 32px 0 rgba(99,102,241,0.18)',
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Overlay cósmico */}
+        <Box sx={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at 80% 20%, rgba(99,102,241,0.18) 0%, transparent 70%)',
+          zIndex: 1,
+        }} />
+        <Box sx={{ position: 'relative', zIndex: 2 }}>
+          <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} alignItems={isMobile ? 'flex-start' : 'center'} justifyContent="space-between" gap={4}>
+            <Box>
+              <Typography variant={isMobile ? 'h5' : 'h4'} fontWeight="bold" sx={{ mb: 1, letterSpacing: 1 }}>
+                🚀 Dashboard Cósmico
+              </Typography>
+              <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: isMobile ? 15 : 18, mb: 2 }}>
+                ¡Bienvenido a tu centro de evolución! Aquí puedes visualizar tu progreso, recompensas y próximos desafíos en tu viaje por el Bien Común.
+              </Typography>
+              {/* Barra de progreso global refinada (estilo WeeklyProgressWidget) */}
+              <Box sx={{ mt: 2 }}>
+                <Card sx={{
+                  background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
+                  color: 'white',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)',
+                  borderRadius: 4,
+                  p: 2,
+                  minWidth: 320,
+                  maxWidth: 420,
+                }}>
+                  <CardContent sx={{ pb: '8px !important' }}>
+                    <Box display="flex" alignItems="center" justifyContent="space-between">
+                      <Box>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          Nivel {dynamicMetricsData.metrics.nivel}
+                        </Typography>
+                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                          Progreso hacia el siguiente nivel
+                        </Typography>
+                      </Box>
+                      <Box position="relative">
+                        <CircularProgress
+                          variant="determinate"
+                          value={Math.min(100, (dynamicMetricsData.metrics.meritos / 500) * 100)}
+                          size={54}
+                          thickness={4}
+                          sx={{
+                            color: '#4ade80',
+                            '& .MuiCircularProgress-circle': {
+                              strokeLinecap: 'round',
+                            },
+                          }}
+                        />
+                        <Box
+                          position="absolute"
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Typography variant="caption" fontWeight="bold">
+                            {Math.round((dynamicMetricsData.metrics.meritos / 500) * 100)}%
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={Math.min(100, (dynamicMetricsData.metrics.meritos / 500) * 100)}
+                      sx={{
+                        mt: 2,
+                        height: 8,
+                        borderRadius: 4,
+                        backgroundColor: 'rgba(36,50,80,0.18)',
+                        '& .MuiLinearProgress-bar': {
+                          background: 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)',
+                          borderRadius: 4,
+                        }
+                      }}
+                    />
+                  </CardContent>
+                </Card>
+              </Box>
+              {/* Métricas rápidas cósmicas */}
+              <Box display="flex" flexWrap="wrap" gap={isMobile ? 1 : 2} mt={3}>
+                {[
+                  { label: 'Mëritos', value: dynamicMetricsData.metrics.meritos, icon: '🏆', color: 'linear-gradient(90deg, #bfae60 0%, #e5e4e2 100%)' },
+                  { label: 'Öndas', value: dynamicMetricsData.metrics.ondas, icon: '⚡', color: 'linear-gradient(90deg, #6366f1 0%, #a78bfa 100%)' },
+                  { label: 'Precisión', value: dynamicMetricsData.metrics.precision + '%', icon: '🎯', color: 'linear-gradient(90deg, #2563eb 0%, #6c5ce7 100%)' },
+                  { label: 'Racha', value: dynamicMetricsData.metrics.racha, icon: '🔥', color: 'linear-gradient(90deg, #bfae60 0%, #e5e4e2 100%)' },
+                  { label: 'Logros', value: dynamicMetricsData.metrics.logrosDesbloqueados, icon: '🏅', color: 'linear-gradient(90deg, #a1a1aa 0%, #d1d5db 100%)' },
+                  { label: 'Ranking', value: '#' + dynamicMetricsData.metrics.rankingComunidad, icon: '⭐', color: 'linear-gradient(90deg, #6366f1 0%, #e0e7ff 100%)' },
+                ].map((metric, idx) => (
+                  <Box
+                    key={metric.label}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      px: isMobile ? 2 : 3,
+                      py: 1.2,
+                      borderRadius: 999,
+                      background: metric.color,
+                      color: '#222',
+                      fontWeight: 700,
+                      fontSize: isMobile ? 15 : 17,
+                      boxShadow: '0 2px 12px 0 rgba(99,102,241,0.10)',
+                      transition: 'all 0.18s',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        boxShadow: '0 4px 24px 0 rgba(99,102,241,0.18)',
+                        transform: 'scale(1.04)',
+                        color: '#000',
+                      },
+                    }}
+                    aria-label={metric.label}
+                  >
+                    <span style={{ fontSize: isMobile ? 18 : 22 }}>{metric.icon}</span>
+                    <span>{metric.value}</span>
+                    <span style={{ fontWeight: 400, marginLeft: 4 }}>{metric.label}</span>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+            {/* Métricas rápidas */}
+            <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} gap={isMobile ? 2 : 3} alignItems={isMobile ? 'center' : 'flex-end'} justifyContent="center">
+              <Box sx={{
+                minWidth: 90,
+                minHeight: 70,
+                px: 2,
+                py: 1.5,
+                borderRadius: 4,
+                background: 'rgba(36,41,70,0.7)',
+                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
+                textAlign: 'center',
+              }}>
+                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.meritos}</Typography>
+                <Typography fontSize={13} color="#bdbdbd">Mëritos</Typography>
+              </Box>
+              <Box sx={{
+                minWidth: 90,
+                minHeight: 70,
+                px: 2,
+                py: 1.5,
+                borderRadius: 4,
+                background: 'rgba(36,41,70,0.7)',
+                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
+                textAlign: 'center',
+              }}>
+                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.ondas}</Typography>
+                <Typography fontSize={13} color="#bdbdbd">Öndas</Typography>
+              </Box>
+              <Box sx={{
+                minWidth: 90,
+                minHeight: 70,
+                px: 2,
+                py: 1.5,
+                borderRadius: 4,
+                background: 'rgba(36,41,70,0.7)',
+                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
+                textAlign: 'center',
+              }}>
+                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.precision}%</Typography>
+                <Typography fontSize={13} color="#bdbdbd">Precisión</Typography>
+              </Box>
+              <Box sx={{
+                minWidth: 90,
+                minHeight: 70,
+                px: 2,
+                py: 1.5,
+                borderRadius: 4,
+                background: 'rgba(36,41,70,0.7)',
+                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
+                textAlign: 'center',
+              }}>
+                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.racha}</Typography>
+                <Typography fontSize={13} color="#bdbdbd">Racha</Typography>
+              </Box>
+              <Box sx={{
+                minWidth: 90,
+                minHeight: 70,
+                px: 2,
+                py: 1.5,
+                borderRadius: 4,
+                background: 'rgba(36,41,70,0.7)',
+                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
+                textAlign: 'center',
+              }}>
+                <Typography variant="h5" fontWeight="bold" color="#fff">{metrics.logrosDesbloqueados}</Typography>
+                <Typography fontSize={13} color="#bdbdbd">Logros</Typography>
+              </Box>
+              <Box sx={{
+                minWidth: 90,
+                minHeight: 70,
+                px: 2,
+                py: 1.5,
+                borderRadius: 4,
+                background: 'rgba(36,41,70,0.7)',
+                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.10)',
+                textAlign: 'center',
+              }}>
+                <Typography variant="h5" fontWeight="bold" color="#fff">#{metrics.rankingComunidad}</Typography>
+                <Typography fontSize={13} color="#bdbdbd">Ranking</Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+      {/* --- RESTO DEL DASHBOARD (widgets, galería, etc.) --- */}
+      <TabPanel value={tabValue} index={0}>
         <Container maxWidth="xl" sx={{ py: 3 }}>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
           >
-            <Grid container spacing={3}>
-              {/* Primera fila - Métricas principales */}
-              <Grid item xs={12} sm={6} lg={4}>
-                <WeeklyProgressWidget />
-              </Grid>
-              <Grid item xs={12} sm={6} lg={4}>
-                <StreakWidget />
-              </Grid>
-              <Grid item xs={12} sm={12} lg={4}>
-                <RankingWidget />
-              </Grid>
-
-              {/* Segunda fila - Logros y sesión */}
-              <Grid item xs={12} lg={8}>
-                <UpcomingAchievementsWidget />
-              </Grid>
-              <Grid item xs={12} lg={4}>
-                <SessionStatsWidget />
-              </Grid>
-
-              {/* Tercera fila - Dashboard dinámico original (opcional) */}
-              <Grid item xs={12}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  {dynamicMetricsData?.metrics ? (
-                    <DynamicMetricsDashboard
-                      metrics={dynamicMetricsData.metrics}
-                      progressHistory={dynamicMetricsData.progressHistory || []}
-                      categoryProgress={dynamicMetricsData.categoryProgress || []}
-                      isLoading={dynamicMetricsData.isLoading || false}
-                      showAnimations={dynamicMetricsData.showAnimations || true}
-                    />
-                  ) : (
-                    <Card sx={{ textAlign: 'center', p: 4, background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', color: 'white' }}>
-                      <CircularProgress size={60} sx={{ color: 'white' }} />
-                      <Typography variant="h6" sx={{ mt: 2 }}>
-                        Cargando Métricas Avanzadas...
-                      </Typography>
-                      <Typography variant="body2" sx={{ mt: 1, opacity: 0.9 }}>
-                        Analizando tu rendimiento de aprendizaje
-                      </Typography>
-                    </Card>
-                  )}
-                </motion.div>
-              </Grid>
+            <Grid container spacing={isMobile ? 2 : 4}>
+              <Grid item xs={12} sm={6} lg={4}><WeeklyProgressWidget /></Grid>
+              <Grid item xs={12} sm={6} lg={4}><StreakWidget /></Grid>
+              <Grid item xs={12} sm={6} lg={4}><RankingWidget /></Grid>
+              <Grid item xs={12} md={8}><UpcomingAchievementsWidget /></Grid>
+              <Grid item xs={12} md={4}><SessionStatsWidget /></Grid>
+              <Grid item xs={12}><DynamicMetricsDashboard metrics={dynamicMetricsData.metrics} progressHistory={dynamicMetricsData.progressHistory} categoryProgress={dynamicMetricsData.categoryProgress} isLoading={dynamicMetricsData.isLoading} showAnimations={dynamicMetricsData.showAnimations} /></Grid>
             </Grid>
           </motion.div>
         </Container>
-      </EnhancedTabPanel>
-
-      <EnhancedTabPanel value={tabValue} index={1}>
-        {renderVideoLibrary()}
-      </EnhancedTabPanel>
-
-      <EnhancedTabPanel value={tabValue} index={2}>
-        {renderAchievements()}
-      </EnhancedTabPanel>
-
-      <EnhancedTabPanel value={tabValue} index={3}>
-        <Container maxWidth="xl" sx={{ py: 4 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} lg={8}>
-              <StudyRoomList />
-            </Grid>
-            <Grid item xs={12} lg={4}>
-              <ChatBox />
-            </Grid>
-          </Grid>
-        </Container>
-      </EnhancedTabPanel>
-
+      </TabPanel>
+      {/* Otros tabs: puedes agregar aquí el contenido de los otros tabs si es necesario */}
       {/* Sistema de feedback de recompensas */}
       {showRewardFeedback && (
         <EnhancedRewardFeedback
@@ -1485,7 +1397,6 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         />
       )}
     </Box>
-  </RevolutionaryWidget>
   );
 };
 

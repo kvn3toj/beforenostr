@@ -41,28 +41,40 @@ const PremiumStudyRoomCard: React.FC<PremiumStudyRoomCardProps> = ({
 
   return (
     <motion.div
-      whileHover={{ y: -4, scale: 1.02 }}
-      className="group relative overflow-hidden bg-gradient-to-br from-[#232946] via-[#6c5ce7] to-[#a0aec0] backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col"
+      whileHover={{ y: -4, scale: 1.03, boxShadow: '0 20px 40px 0 rgba(99,102,241,0.18)' }}
+      className="group relative overflow-hidden h-full flex flex-col"
+      style={{
+        background: 'linear-gradient(135deg, rgba(35,41,70,0.92) 0%, rgba(108,92,231,0.92) 60%, rgba(160,174,192,0.92) 100%)',
+        border: '1.5px solid rgba(160,174,192,0.18)',
+        boxShadow: '0 8px 32px 0 rgba(99,102,241,0.14)',
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
+        borderRadius: 32,
+        padding: 32,
+        minHeight: 260,
+        color: '#fff',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.3s',
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
     >
+      {/* Overlay de imagen de la sala como fondo sutil */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: `url(${imageUrl}) center/cover no-repeat`,
+          opacity: 0.10,
+          filter: 'blur(2.5px)',
+          zIndex: 0,
+        }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#232946]/70 to-transparent" />
-
-      {/* Interactive glow effect */}
-      {hoverState.isHovered && !isMobile && (
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent opacity-20 pointer-events-none"
-          style={{
-            background: `radial-gradient(circle at ${hoverState.mousePosition.x}px ${hoverState.mousePosition.y}px, rgba(147, 197, 253, 0.4), transparent 200px)`,
-          }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        />
-      )}
 
       <div className="relative z-10 flex flex-col flex-grow">
         {/* Live indicator with pulse */}
@@ -88,8 +100,8 @@ const PremiumStudyRoomCard: React.FC<PremiumStudyRoomCardProps> = ({
             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full" />
           </div>
           <div className={isMobile ? 'mt-2' : ''}>
-            <h3 className="font-semibold text-gray-800">{title}</h3>
-            <p className="text-sm text-gray-600">por {author}</p>
+            <h3 style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>{title}</h3>
+            <p style={{ fontSize: 14, color: '#a0aec0', margin: 0 }}>por {author}</p>
           </div>
         </div>
 
@@ -118,20 +130,44 @@ const PremiumStudyRoomCard: React.FC<PremiumStudyRoomCardProps> = ({
           </div>
 
           {/* Category badge */}
-          <Chip label={category} size="small" className={getCategoryColor(category)} />
+          <Chip
+            label={category}
+            size="small"
+            sx={{
+              background: 'linear-gradient(135deg, #6366f1 0%, #7c3aed 100%)',
+              color: '#fff',
+              fontWeight: 600,
+              minHeight: 32,
+              minWidth: 44,
+              px: 2,
+              borderRadius: 2,
+              boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)'
+            }}
+          />
 
         </div>
 
         <div className="relative z-10 mt-auto">
           {/* Join button with dynamic state */}
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
-              participants >= maxParticipants
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-blue-600 to-violet-700 hover:from-blue-700 hover:to-violet-800 text-white shadow-lg hover:shadow-violet-500/25"
-            }`}
+            whileHover={{ scale: participants >= maxParticipants ? 1 : 1.05 }}
+            whileTap={{ scale: participants >= maxParticipants ? 1 : 0.95 }}
+            style={{
+              width: '100%',
+              padding: '14px 0',
+              borderRadius: 16,
+              fontWeight: 700,
+              fontSize: 16,
+              background: participants >= maxParticipants
+                ? 'linear-gradient(135deg, #64748b 0%, #a0aec0 100%)'
+                : 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
+              color: '#fff',
+              opacity: participants >= maxParticipants ? 0.6 : 1,
+              cursor: participants >= maxParticipants ? 'not-allowed' : 'pointer',
+              boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)',
+              transition: 'all 0.3s',
+              marginTop: 8
+            }}
             disabled={participants >= maxParticipants}
           >
             {participants >= maxParticipants ? "Sala Llena" : "Unirse a Sala"}

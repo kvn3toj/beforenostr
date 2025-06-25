@@ -54,22 +54,45 @@ const CinematicAchievementCard: React.FC<CinematicAchievementCardProps> = ({
   return (
     <motion.div
       whileHover={{
-        scale: 1.02,
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        scale: 1.03,
+        boxShadow: "0 20px 40px 0 rgba(99,102,241,0.18)",
       }}
-      className={`group relative overflow-hidden rounded-2xl p-6 ${isNew ? 'floating-element' : ''}`}
+      className="group relative overflow-hidden"
       style={{
         transformStyle: "preserve-3d",
         perspective: "1000px",
-        background: 'linear-gradient(135deg, #232946 0%, #6c5ce7 60%, #a0aec0 100%)',
+        background: 'linear-gradient(135deg, rgba(35,41,70,0.92) 0%, rgba(108,92,231,0.92) 60%, rgba(160,174,192,0.92) 100%)',
         color: '#fff',
-        border: '1.5px solid #c0c0c0',
-        boxShadow: '0 4px 24px 0 rgba(160,174,192,0.18), 0 1.5px 0 0 #c0c0c0',
+        border: '1.5px solid rgba(160,174,192,0.18)',
+        boxShadow: '0 8px 32px 0 rgba(99,102,241,0.14)',
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
+        borderRadius: 32,
+        padding: 32,
+        minHeight: 240,
+        transition: 'all 0.3s',
+        position: 'relative',
+        overflow: 'hidden',
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
     >
+      {/* Overlay de icono como fondo sutil */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: `url(${icon}) center/60% no-repeat`,
+          opacity: 0.08,
+          filter: 'blur(2px)',
+          zIndex: 0,
+        }}
+      />
+
       {/* Rarity glow effect on hover */}
       {hoverState.isHovered && !isMobile && (
         <motion.div
@@ -108,7 +131,21 @@ const CinematicAchievementCard: React.FC<CinematicAchievementCardProps> = ({
         {category.map((cat) => (
           <span
             key={cat}
-            className={`px-3 py-1 rounded-full text-xs font-semibold border border-blue-300 bg-blue-900/60 text-white`}
+            style={{
+              padding: '8px 16px',
+              borderRadius: 24,
+              fontSize: 13,
+              fontWeight: 600,
+              background: 'linear-gradient(135deg, #6366f1 0%, #7c3aed 100%)',
+              color: '#fff',
+              border: '1.5px solid #a0aec0',
+              minWidth: 48,
+              minHeight: 36,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)'
+            }}
           >
             {cat}
           </span>
@@ -116,26 +153,34 @@ const CinematicAchievementCard: React.FC<CinematicAchievementCardProps> = ({
       </div>
 
       {/* Enhanced progress with particle effects */}
-      <div className="relative">
-        <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${(progress / total) * 100}%` }}
-            transition={{ duration: 2, ease: "easeOut" }}
-            className={`h-3 rounded-full bg-gradient-to-r ${rarityStyles[rarity]} relative`}
-          >
-            {/* Flowing particles in progress bar */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
-          </motion.div>
-        </div>
+      <div style={{ width: '100%', background: '#232946', borderRadius: 8, height: 12, overflow: 'hidden' }}>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${(progress / total) * 100}%` }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          style={{
+            height: 12,
+            borderRadius: 8,
+            background: 'linear-gradient(90deg, #2563eb, #6c5ce7)',
+            position: 'relative'
+          }}
+        >
+          {/* Flowing particles in progress bar */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)',
+            animation: 'pulse 2s infinite'
+          }} />
+        </motion.div>
+      </div>
 
-        {/* Progress text with better typography */}
-        <div className={`flex justify-between mt-2 text-sm ${isMobile ? 'flex-col items-start gap-1' : ''}`}>
-          <span className="font-medium text-white/90">
-            {progress}/{total}
-          </span>
-          <span className="font-bold text-blue-200">{reward}</span>
-        </div>
+      {/* Progress text with better typography */}
+      <div className={`flex justify-between mt-2 text-sm ${isMobile ? 'flex-col items-start gap-1' : ''}`}>
+        <span className="font-medium text-white/90">
+          {progress}/{total}
+        </span>
+        <span className="font-bold text-blue-200">{reward}</span>
       </div>
     </motion.div>
   );
