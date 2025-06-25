@@ -433,14 +433,14 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) => void 
 // Widget de progreso semanal
 const WeeklyProgressWidget: React.FC = () => {
   const [progress, setProgress] = useState(65); // Mock data - conectar con backend
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
     >
-      <Card sx={{ 
+      <Card sx={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         color: 'white',
         position: 'relative',
@@ -485,19 +485,19 @@ const WeeklyProgressWidget: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          <LinearProgress 
-            variant="determinate" 
-            value={progress} 
-            sx={{ 
-              mt: 2, 
-              height: 8, 
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{
+              mt: 2,
+              height: 8,
               borderRadius: 4,
               backgroundColor: 'rgba(255,255,255,0.2)',
               '& .MuiLinearProgress-bar': {
                 background: 'linear-gradient(90deg, #4ade80, #22c55e)',
                 borderRadius: 4,
               }
-            }} 
+            }}
           />
         </CardContent>
       </Card>
@@ -509,15 +509,15 @@ const WeeklyProgressWidget: React.FC = () => {
 const StreakWidget: React.FC = () => {
   const [streak, setStreak] = useState(7); // Mock data
   const [isOnFire, setIsOnFire] = useState(streak >= 3);
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <Card sx={{ 
-        background: isOnFire 
+      <Card sx={{
+        background: isOnFire
           ? 'linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)'
           : 'linear-gradient(135deg, #74b9ff 0%, #0984e3 100%)',
         color: 'white',
@@ -537,7 +537,7 @@ const StreakWidget: React.FC = () => {
                 ease: "easeInOut"
               }}
             >
-              {isOnFire ? 
+              {isOnFire ?
                 <Whatshot sx={{ fontSize: 40, color: '#ffeb3b' }} /> :
                 <Bolt sx={{ fontSize: 40, color: '#e3f2fd' }} />
               }
@@ -566,20 +566,20 @@ const StreakWidget: React.FC = () => {
 const RankingWidget: React.FC = () => {
   const [userRank, setUserRank] = useState(12); // Mock data
   const [totalUsers, setTotalUsers] = useState(156);
-  
+
   const getRankIcon = (rank: number) => {
     if (rank <= 3) return <Diamond sx={{ color: '#ffd700' }} />;
     if (rank <= 10) return <Star sx={{ color: '#c0c0c0' }} />;
     return <TrendingUp sx={{ color: '#cd7f32' }} />;
   };
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
     >
-      <Card sx={{ 
+      <Card sx={{
         background: 'linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%)',
         color: 'white'
       }}>
@@ -602,18 +602,18 @@ const RankingWidget: React.FC = () => {
                 {Math.max(0, 10 - userRank)} posiciones
               </Typography>
             </Box>
-            <LinearProgress 
-              variant="determinate" 
-              value={Math.max(0, (10 - userRank) / 10 * 100)} 
-              sx={{ 
-                height: 6, 
+            <LinearProgress
+              variant="determinate"
+              value={Math.max(0, (10 - userRank) / 10 * 100)}
+              sx={{
+                height: 6,
                 borderRadius: 3,
                 backgroundColor: 'rgba(255,255,255,0.2)',
                 '& .MuiLinearProgress-bar': {
                   background: 'linear-gradient(90deg, #ffecd2, #fcb69f)',
                   borderRadius: 3,
                 }
-              }} 
+              }}
             />
           </Box>
         </CardContent>
@@ -629,14 +629,14 @@ const UpcomingAchievementsWidget: React.FC = () => {
     { name: 'Explorador Incansable', progress: 45, icon: '🧭' },
     { name: 'Colaborador Estrella', progress: 60, icon: '⭐' }
   ];
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
     >
-      <Card sx={{ 
+      <Card sx={{
         background: 'linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%)',
         color: 'white'
       }}>
@@ -653,18 +653,18 @@ const UpcomingAchievementsWidget: React.FC = () => {
                   {achievement.name}
                 </Typography>
               </Box>
-              <LinearProgress 
-                variant="determinate" 
-                value={achievement.progress} 
-                sx={{ 
-                  height: 4, 
+              <LinearProgress
+                variant="determinate"
+                value={achievement.progress}
+                sx={{
+                  height: 4,
                   borderRadius: 2,
                   backgroundColor: 'rgba(255,255,255,0.2)',
                   '& .MuiLinearProgress-bar': {
                     background: 'linear-gradient(90deg, #00b894, #00cec9)',
                     borderRadius: 2,
                   }
-                }} 
+                }}
               />
               <Typography variant="caption" sx={{ opacity: 0.8 }}>
                 {achievement.progress}% completado
@@ -682,15 +682,15 @@ const SessionStatsWidget: React.FC = () => {
   const [sessionTime, setSessionTime] = useState(0);
   const [videosWatched, setVideosWatched] = useState(3);
   const [questionsAnswered, setQuestionsAnswered] = useState(12);
-  
+
   useEffect(() => {
     const timer = setInterval(() => {
       setSessionTime(prev => prev + 1);
     }, 60000); // Actualizar cada minuto
-    
+
     return () => clearInterval(timer);
   }, []);
-  
+
   const formatTime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -699,14 +699,14 @@ const SessionStatsWidget: React.FC = () => {
     }
     return `${mins}m`;
   };
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
     >
-      <Card sx={{ 
+      <Card sx={{
         background: 'linear-gradient(135deg, #00b09b 0%, #96c93d 100%)',
         color: 'white'
       }}>
@@ -933,7 +933,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
     if (!preloadedTabs.has(tabIndex)) {
       setPreloadedTabs(prev => new Set([...prev, tabIndex]));
       console.log(`🚀 Preloading tab ${tabIndex} content...`);
-      
+
       // Simular preload según el tipo de tab
       setTimeout(() => {
         console.log(`✅ Tab ${tabIndex} content preloaded`);
@@ -947,7 +947,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       Math.max(0, tabValue - 1),
       Math.min(3, tabValue + 1) // Asumiendo 4 tabs (0-3)
     ];
-    
+
     adjacentTabs.forEach(tabIndex => {
       if (tabIndex !== tabValue) {
         preloadTabContent(tabIndex);
@@ -972,13 +972,13 @@ export const UPlayGamifiedDashboard: React.FC = () => {
 
     startTransition(() => {
       setTabValue(newValue);
-      
+
       // Predicar y precargar tabs adyacentes al nuevo tab
       const adjacentTabs = [
         Math.max(0, newValue - 1),
         Math.min(3, newValue + 1)
       ];
-      
+
       adjacentTabs.forEach(tabIndex => {
         if (tabIndex !== newValue) {
           setTimeout(() => preloadTabContent(tabIndex), 200);
@@ -1123,227 +1123,6 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   // RENDER HELPERS CON TRANSICIONES MEJORADAS
   // ========================================================================
 
-  const renderHeader = () => (
-    <AppBar
-      position="sticky"
-      elevation={0}
-      sx={{
-        bgcolor: 'rgba(34,34,64,0.85)', // glassmorphism base
-        backdropFilter: 'blur(12px)',
-        borderBottom: 1,
-        borderColor: 'divider',
-        boxShadow: '0 4px 32px 0 rgba(99,102,241,0.10)',
-        background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #FF5722 100%)',
-        transition: 'all 0.3s ease',
-      }}
-    >
-      <Toolbar>
-        {isMobile && (
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={() => handleContentLoad(() => setSidebarOpen(true))}
-            sx={{ mr: 2 }}
-            aria-label="Abrir menú lateral"
-          >
-            <Menu />
-          </IconButton>
-        )}
-        <Box display="flex" alignItems="center" flexGrow={1}>
-          <Avatar sx={{ bgcolor: 'primary.main', mr: 2, boxShadow: '0 0 12px #8b5cf6' }}>
-            <PlayArrow />
-          </Avatar>
-          <Box>
-            <Typography variant="h5" color="white" fontWeight="bold" sx={{ letterSpacing: 1 }}>
-              ÜPlay – GPL Gamified Play List
-            </Typography>
-            <Typography variant="caption" color="#e0e7ff">
-              Aprendizaje interactivo gamificado
-              {isPending && (
-                <Chip
-                  label="Cargando..."
-                  size="small"
-                  sx={{ ml: 1, height: 16, fontSize: '0.6rem', bgcolor: '#6366f1', color: 'white' }}
-                  aria-label="Cargando"
-                />
-              )}
-            </Typography>
-          </Box>
-        </Box>
-        <Fade in={!transitionState.isTabChanging} timeout={400}>
-          <Box display="flex" gap={1} alignItems="center">
-            <Chip
-              icon={<Diamond />}
-              label={playerMetrics.meritos.toLocaleString()}
-              size="small"
-              sx={{
-                color: '#fff',
-                bgcolor: '#9c27b0',
-                fontWeight: 'bold',
-                boxShadow: '0 0 8px #9c27b0',
-                '&:hover': { transform: 'scale(1.08)' },
-              }}
-              aria-label="Mëritos acumulados"
-            />
-            <Chip
-              icon={<Bolt />}
-              label={playerMetrics.ondas.toLocaleString()}
-              size="small"
-              sx={{
-                color: '#fff',
-                bgcolor: '#ff9800',
-                fontWeight: 'bold',
-                boxShadow: '0 0 8px #ff9800',
-                '&:hover': { transform: 'scale(1.08)' },
-              }}
-              aria-label="Öndas acumuladas"
-            />
-            <Chip
-              icon={<Star />}
-              label={`Nivel ${playerMetrics.level}`}
-              size="small"
-              sx={{
-                color: '#fff',
-                bgcolor: '#2196f3',
-                fontWeight: 'bold',
-                boxShadow: '0 0 8px #2196f3',
-                '&:hover': { transform: 'scale(1.08)' },
-              }}
-              aria-label="Nivel actual"
-            />
-            <IconButton color="inherit" aria-label="Notificaciones">
-              <Badge badgeContent={unreadNotifications.length} color="error">
-                <Notifications />
-              </Badge>
-            </IconButton>
-          </Box>
-        </Fade>
-      </Toolbar>
-      {(isPending || transitionState.isTabChanging || transitionState.isContentLoading) && (
-        <LinearProgress
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 2,
-            '& .MuiLinearProgress-bar': {
-              background: 'linear-gradient(90deg, #6366f1, #8b5cf6, #FF5722)',
-            }
-          }}
-          aria-label="Cargando contenido"
-        />
-      )}
-    </AppBar>
-  );
-
-  // 🎨 RENDERIZADO DE TABS MEJORADO CON EFECTOS VISUALES
-  const renderTabs = () => (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Card sx={{ 
-        mb: 3, 
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: 3,
-        overflow: 'hidden'
-      }}>
-        {/* Indicador de carga durante transición */}
-        {transitionState.isTabChanging && (
-          <LinearProgress 
-            sx={{ 
-              height: 2,
-              background: 'linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899)',
-              '& .MuiLinearProgress-bar': {
-                background: 'linear-gradient(90deg, #ffffff, #f3f4f6)',
-              }
-            }} 
-          />
-        )}
-        
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          variant="fullWidth"
-          sx={{
-            '& .MuiTabs-indicator': {
-              background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-              height: 3,
-              borderRadius: '3px 3px 0 0'
-            },
-            '& .MuiTab-root': {
-              minHeight: 64,
-              textTransform: 'none',
-              fontSize: '1rem',
-              fontWeight: 500,
-              color: 'rgba(255,255,255,0.7)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              '&:hover': {
-                color: 'rgba(255,255,255,0.9)',
-                background: 'rgba(255,255,255,0.05)',
-              },
-              '&.Mui-selected': {
-                color: '#ffffff',
-                fontWeight: 600,
-              }
-            }
-          }}
-        >
-          <Tab 
-            icon={
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Dashboard />
-              </motion.div>
-            } 
-            label="Dashboard" 
-          />
-          <Tab 
-            icon={
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <VideoLibrary />
-              </motion.div>
-            } 
-            label="Videoteca" 
-          />
-          <Tab 
-            icon={
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Badge badgeContent={unlockedAchievements.length} color="secondary">
-                  <EmojiEvents />
-                </Badge>
-              </motion.div>
-            } 
-            label="Logros" 
-          />
-          <Tab 
-            icon={
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Groups />
-              </motion.div>
-            } 
-            label="Salas de Estudio" 
-          />
-        </Tabs>
-      </Card>
-    </motion.div>
-  );
-
   // 🎨 RENDERIZADO DE VIDEOTECA MEJORADO
   const renderVideoLibrary = () => (
     <Container maxWidth="xl" sx={{ py: 3 }}>
@@ -1412,40 +1191,42 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         <Typography variant="h4" fontWeight="bold" mb={4} textAlign="center">
           🏆 Logros y Mëritos
         </Typography>
-        
+
         <Grid container spacing={3}>
           {/* Logros desbloqueados */}
           {unlockedAchievements.map((achievement: any, index: number) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card sx={{ 
+              <Card sx={{
                 height: '100%',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #232946 0%, #6c5ce7 60%, #a0aec0 100%)',
                 color: 'white',
+                border: '1.5px solid #c0c0c0',
+                boxShadow: '0 4px 24px 0 rgba(160,174,192,0.18), 0 1.5px 0 0 #c0c0c0',
                 transition: 'transform 0.3s ease',
-                '&:hover': { transform: 'translateY(-4px)' }
+                '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 8px 32px 0 rgba(160,174,192,0.28), 0 2px 0 0 #c0c0c0' }
               }}>
                 <CardContent>
                   <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <EmojiEvents sx={{ fontSize: 32, color: '#ffd700' }} />
+                    <EmojiEvents sx={{ fontSize: 32, color: '#e0e0e0' }} />
                     <Typography variant="h6" fontWeight="bold">
                       {achievement.name || 'Logro Desbloqueado'}
                     </Typography>
                   </Box>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  <Typography variant="body2" sx={{ opacity: 0.92 }}>
                     {achievement.description || 'Has completado este desafío exitosamente'}
                   </Typography>
                   <Box mt={2} display="flex" gap={1}>
-                    <Chip 
-                      icon={<Star />} 
-                      label={`+${achievement.meritos || 50} Mëritos`} 
-                      size="small" 
-                      sx={{ bgcolor: 'rgba(255,255,255,0.2)' }}
+                    <Chip
+                      icon={<Star />}
+                      label={`+${achievement.meritos || 50} Mëritos`}
+                      size="small"
+                      sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#e0e0e0', border: '1px solid #c0c0c0' }}
                     />
-                    <Chip 
-                      icon={<Bolt />} 
-                      label={`+${achievement.ondas || 25} Öndas`} 
-                      size="small" 
-                      sx={{ bgcolor: 'rgba(255,255,255,0.2)' }}
+                    <Chip
+                      icon={<Bolt />}
+                      label={`+${achievement.ondas || 25} Öndas`}
+                      size="small"
+                      sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#b4c5e4', border: '1px solid #c0c0c0' }}
                     />
                   </Box>
                 </CardContent>
@@ -1456,11 +1237,11 @@ export const UPlayGamifiedDashboard: React.FC = () => {
           {/* Mensaje si no hay logros */}
           {unlockedAchievements.length === 0 && (
             <Grid item xs={12}>
-              <Card sx={{ p: 4, textAlign: 'center', bgcolor: 'rgba(0,0,0,0.1)' }}>
-                <Typography variant="h6" color="text.secondary" mb={2}>
+              <Card sx={{ p: 4, textAlign: 'center', bgcolor: '#232946', color: '#e0e0e0', border: '1.5px solid #c0c0c0' }}>
+                <Typography variant="h6" color="#e0e0e0" mb={2}>
                   ¡Comienza tu aventura de aprendizaje!
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1" color="#b4c5e4">
                   Completa videos y desafíos para desbloquear logros únicos y ganar Mëritos
                 </Typography>
               </Card>
@@ -1526,16 +1307,16 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   );
 
   // 🎨 COMPONENTE TABPANEL MEJORADO CON TRANSICIONES SLIDE
-  const EnhancedTabPanel: React.FC<TabPanelProps & { direction?: 'left' | 'right' }> = ({ 
-    children, 
-    value, 
-    index, 
+  const EnhancedTabPanel: React.FC<TabPanelProps & { direction?: 'left' | 'right' }> = ({
+    children,
+    value,
+    index,
     direction = 'left',
-    ...other 
+    ...other
   }) => {
     const isActive = value === index;
     const isPreloaded = preloadedTabs.has(index);
-    
+
     return (
       <div
         role="tabpanel"
@@ -1547,20 +1328,20 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         {isActive && (
           <motion.div
             key={`tab-${index}`}
-            initial={{ 
-              opacity: 0, 
+            initial={{
+              opacity: 0,
               x: direction === 'left' ? -30 : 30,
-              scale: 0.98 
+              scale: 0.98
             }}
-            animate={{ 
-              opacity: 1, 
+            animate={{
+              opacity: 1,
               x: 0,
-              scale: 1 
+              scale: 1
             }}
-            exit={{ 
-              opacity: 0, 
+            exit={{
+              opacity: 0,
               x: direction === 'left' ? 30 : -30,
-              scale: 0.98 
+              scale: 0.98
             }}
             transition={{
               type: "spring",
@@ -1572,14 +1353,14 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             {/* Indicador de carga específico del tab */}
             {(!isPreloaded || transitionState.isContentLoading) && (
               <Box sx={{ mb: 2 }}>
-                <LinearProgress 
-                  sx={{ 
+                <LinearProgress
+                  sx={{
                     height: 1,
                     backgroundColor: 'rgba(255,255,255,0.1)',
                     '& .MuiLinearProgress-bar': {
                       background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
                     }
-                  }} 
+                  }}
                 />
               </Box>
             )}
@@ -1606,8 +1387,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
       cosmicIntensity="intense"
     >
       <Box sx={{ minHeight: '100vh', bgcolor: 'transparent' }}>
-      {renderHeader()}
-      {renderTabs()}
+      {/* renderHeader removed to avoid duplicate AppBar */}
       {renderSidebar()}
 
       <EnhancedTabPanel value={tabValue} index={0}>
@@ -1628,7 +1408,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
               <Grid item xs={12} sm={12} lg={4}>
                 <RankingWidget />
               </Grid>
-              
+
               {/* Segunda fila - Logros y sesión */}
               <Grid item xs={12} lg={8}>
                 <UpcomingAchievementsWidget />
@@ -1636,7 +1416,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
               <Grid item xs={12} lg={4}>
                 <SessionStatsWidget />
               </Grid>
-              
+
               {/* Tercera fila - Dashboard dinámico original (opcional) */}
               <Grid item xs={12}>
                 <motion.div

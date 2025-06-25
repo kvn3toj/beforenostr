@@ -63,28 +63,28 @@ const NOTIFICATION_CONFIG = {
 
 const RARITY_COLORS = {
   common: {
-    primary: '#4CAF50',
-    secondary: '#81C784',
-    background: '#E8F5E8',
-    glow: '#4CAF50',
+    primary: '#64748b',
+    secondary: '#cbd5e1',
+    background: '#f1f5f9',
+    glow: '#64748b',
   },
   rare: {
-    primary: '#2196F3',
-    secondary: '#64B5F6',
-    background: '#E3F2FD',
-    glow: '#2196F3',
+    primary: '#2563eb',
+    secondary: '#60a5fa',
+    background: '#e0e7ef',
+    glow: '#2563eb',
   },
   epic: {
-    primary: '#9C27B0',
-    secondary: '#BA68C8',
-    background: '#F3E5F5',
-    glow: '#9C27B0',
+    primary: '#7e22ce',
+    secondary: '#a78bfa',
+    background: '#ede9fe',
+    glow: '#7e22ce',
   },
   legendary: {
-    primary: '#FF9800',
-    secondary: '#FFB74D',
-    background: '#FFF3E0',
-    glow: '#FF9800',
+    primary: '#bfae60',
+    secondary: '#e5e4e2',
+    background: '#f5f6fa',
+    glow: '#bfae60',
   },
 } as const;
 
@@ -101,12 +101,12 @@ const CATEGORY_ICONS = {
 // COMPONENTES DE UTILIDAD
 // ============================================================================
 
-const CelebrationEffect: React.FC<{ 
+const CelebrationEffect: React.FC<{
   level: 'normal' | 'epic' | 'legendary';
   isActive: boolean;
 }> = ({ level, isActive }) => {
   const theme = useTheme();
-  
+
   if (!isActive) return null;
 
   const getParticleCount = () => {
@@ -122,6 +122,14 @@ const CelebrationEffect: React.FC<{
       case 'legendary': return '2s';
       case 'epic': return '1.5s';
       default: return '1s';
+    }
+  };
+
+  const getParticleColor = () => {
+    switch (level) {
+      case 'legendary': return '#e5e4e2';
+      case 'epic': return '#7e22ce';
+      default: return '#2563eb';
     }
   };
 
@@ -145,11 +153,7 @@ const CelebrationEffect: React.FC<{
             position: 'absolute',
             width: level === 'legendary' ? 8 : level === 'epic' ? 6 : 4,
             height: level === 'legendary' ? 8 : level === 'epic' ? 6 : 4,
-            backgroundColor: level === 'legendary' 
-              ? '#FFD700' 
-              : level === 'epic' 
-                ? '#9C27B0' 
-                : '#4CAF50',
+            backgroundColor: getParticleColor(),
             borderRadius: '50%',
             animation: `celebration-particle-${level} ${getAnimationDuration()} ease-out forwards`,
             animationDelay: `${Math.random() * 0.5}s`,
@@ -214,7 +218,7 @@ const CelebrationEffect: React.FC<{
 
 const RarityBadge: React.FC<{ rarity: Achievement['rarity'] }> = ({ rarity }) => {
   const colors = RARITY_COLORS[rarity];
-  
+
   const getRarityIcon = () => {
     switch (rarity) {
       case 'legendary': return <SparkleIcon sx={{ fontSize: 16 }} />;
@@ -226,7 +230,7 @@ const RarityBadge: React.FC<{ rarity: Achievement['rarity'] }> = ({ rarity }) =>
 
   return (
     <Chip
-      icon={getRarityIcon()}
+      icon={getRarityIcon() || undefined}
       label={rarity.toUpperCase()}
       size="small"
       sx={{
@@ -243,8 +247,8 @@ const RarityBadge: React.FC<{ rarity: Achievement['rarity'] }> = ({ rarity }) =>
   );
 };
 
-const ProgressBar: React.FC<{ 
-  progress: number; 
+const ProgressBar: React.FC<{
+  progress: number;
   rarity: Achievement['rarity'];
   animated?: boolean;
 }> = ({ progress, rarity, animated = true }) => {
@@ -346,7 +350,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           background: `linear-gradient(135deg, ${colors.background} 0%, ${alpha(colors.secondary, 0.1)} 100%)`,
           border: `2px solid ${colors.primary}`,
           borderRadius: 3,
-          boxShadow: celebrationLevel === 'legendary' 
+          boxShadow: celebrationLevel === 'legendary'
             ? `0 8px 32px ${alpha(colors.glow, 0.4)}, 0 0 20px ${alpha(colors.glow, 0.3)}`
             : celebrationLevel === 'epic'
               ? `0 6px 24px ${alpha(colors.glow, 0.3)}, 0 0 15px ${alpha(colors.glow, 0.2)}`
@@ -385,7 +389,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
                 <RarityBadge rarity={achievement.rarity} />
               </Box>
             </Box>
-            
+
             <IconButton
               size="small"
               onClick={handleDismiss}
@@ -448,8 +452,8 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           </Box>
 
           {/* Barra de progreso (siempre 100% para logros desbloqueados) */}
-          <ProgressBar 
-            progress={100} 
+          <ProgressBar
+            progress={100}
             rarity={achievement.rarity}
             animated={enableAnimations}
           />
@@ -535,10 +539,10 @@ const AchievementNotifications: React.FC<AchievementNotificationsProps> = ({
       case 'bottom-left':
         return { ...baseStyles, bottom: 24, left: 24 };
       case 'center':
-        return { 
-          ...baseStyles, 
-          top: '50%', 
-          left: '50%', 
+        return {
+          ...baseStyles,
+          top: '50%',
+          left: '50%',
           transform: 'translate(-50%, -50%)',
         };
       default:
@@ -614,4 +618,4 @@ const AchievementNotifications: React.FC<AchievementNotificationsProps> = ({
   );
 };
 
-export default AchievementNotifications; 
+export default AchievementNotifications;

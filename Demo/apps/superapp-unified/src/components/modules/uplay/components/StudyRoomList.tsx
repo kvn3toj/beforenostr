@@ -59,7 +59,7 @@ export const StudyRoomList: React.FC<StudyRoomListProps> = ({
   currentVideoId,
 }) => {
   const theme = useTheme();
-  
+
   // Estado básico para desarrollo
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -67,7 +67,7 @@ export const StudyRoomList: React.FC<StudyRoomListProps> = ({
 
   const handleCreateRoom = useCallback(async (roomData: Partial<StudyRoom>) => {
     if (!onCreateRoom) return;
-    
+
     setIsCreating(true);
     try {
       await onCreateRoom(roomData);
@@ -91,7 +91,17 @@ export const StudyRoomList: React.FC<StudyRoomListProps> = ({
           startIcon={<AddIcon />}
           onClick={() => setShowCreateDialog(true)}
           sx={{
-            background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+            background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
+            color: '#fff',
+            minHeight: 48,
+            minWidth: 48,
+            borderRadius: 3,
+            fontWeight: 700,
+            boxShadow: '0 2px 8px 0 rgba(108,92,231,0.12)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #1e40af 0%, #7e22ce 100%)',
+              boxShadow: '0 4px 16px 0 rgba(108,92,231,0.18)',
+            },
           }}
         >
           Crear Sala
@@ -115,11 +125,11 @@ export const StudyRoomList: React.FC<StudyRoomListProps> = ({
       />
 
       {/* Placeholder para salas */}
-      <Box 
-        display="flex" 
-        flexDirection="column" 
-        alignItems="center" 
-        justifyContent="center" 
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
         py={8}
         textAlign="center"
       >
@@ -135,7 +145,17 @@ export const StudyRoomList: React.FC<StudyRoomListProps> = ({
           startIcon={<AddIcon />}
           onClick={() => setShowCreateDialog(true)}
           sx={{
-            background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+            background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
+            color: '#fff',
+            minHeight: 48,
+            minWidth: 48,
+            borderRadius: 3,
+            fontWeight: 700,
+            boxShadow: '0 2px 8px 0 rgba(108,92,231,0.12)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #1e40af 0%, #7e22ce 100%)',
+              boxShadow: '0 4px 16px 0 rgba(108,92,231,0.18)',
+            },
           }}
         >
           Crear Primera Sala
@@ -151,4 +171,4 @@ export const StudyRoomList: React.FC<StudyRoomListProps> = ({
       />
     </Box>
   );
-}; 
+};

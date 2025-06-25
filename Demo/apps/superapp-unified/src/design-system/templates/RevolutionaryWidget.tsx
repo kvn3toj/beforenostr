@@ -1,10 +1,10 @@
 /**
  * 🌌 REVOLUTIONARY WIDGET TEMPLATE
  * ===============================
- * 
+ *
  * Template revolucionario que encapsula todos los patrones extraídos
  * del Dashboard HOME para uso escalable en toda la SuperApp.
- * 
+ *
  * Incluye:
  * - Patrones revolutionarios centralizados
  * - Efectos cósmicos configurables
@@ -12,13 +12,13 @@
  * - Responsividad avanzada
  * - Testing 3D integrado
  * - Performance monitoring
- * 
+ *
  * Basado en análisis de:
  * - AyniMetricsCardRevolutionary.tsx (920 líneas)
  * - ModuleCardsRevolutionary.tsx (663 líneas)
  * - NotificationCenterRevolutionary.tsx (747 líneas)
  * - LiveActivityFeed.tsx (737 líneas - glassmorphism)
- * 
+ *
  * Fase 2, Semana 1 - Plan Maestro Material UI
  */
 
@@ -56,6 +56,7 @@ import {
   componentVariants
 } from '../patterns';
 import { homeGradients, applyElementalHomeGradient } from '../styles/gradients/cosmic-home';
+import { homeElementalGradients } from '../styles/gradients/cosmic-home';
 import {
   RevolutionaryWidgetProps,
   ElementType,
@@ -83,14 +84,14 @@ const use3DPerformanceMonitor = (enabled: boolean = true): Performance3DMetrics 
 
     const now = performance.now();
     const deltaTime = now - lastTimeRef.current;
-    
+
     framesRef.current++;
-    
+
     // Calcular FPS cada segundo
     if (deltaTime >= 1000) {
       const fps = (framesRef.current * 1000) / deltaTime;
       const renderTime = deltaTime / framesRef.current;
-      
+
       // Simular métricas GPU (en producción usar WebGL context)
       const gpuUsage = Math.min(100, (60 - fps) * 2);
       const memoryUsage = (performance as any).memory?.usedJSHeapSize || 0;
@@ -115,7 +116,7 @@ const use3DPerformanceMonitor = (enabled: boolean = true): Performance3DMetrics 
     if (enabled) {
       frameRef.current = requestAnimationFrame(measurePerformance);
     }
-    
+
     return () => {
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
@@ -149,12 +150,12 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   // 🎭 Estados del widget
   const [expanded, setExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  
+
   // 🌌 Configuración de efectos cósmicos con defaults
   const effects = useMemo(() => ({
     enableGlow: true,
@@ -177,7 +178,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
 
   // 🧪 Performance monitoring para efectos 3D
   const performance3D = use3DPerformanceMonitor(effects.enableAnimations);
-  
+
   // 📱 Configuración responsiva
   const responsive = useMemo(() => ({
     padding: isMobile ? '12px' : isTablet ? '16px' : '20px',
@@ -191,29 +192,32 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
     const variantStyles = componentVariants(theme);
     const baseVariant = variantStyles[variant] || variantStyles.primary;
     const elementalStyles = element ? applyElementalHomeGradient(element) : {};
-    
+
     return {
       ...baseVariant,
       ...elementalStyles,
       borderRadius: responsive.borderRadius,
       padding: responsive.padding,
-      
+
       // Efectos dinámicos basados en estado
       ...(isHovered && {
         transform: 'translateY(-6px) translateZ(12px) rotateX(1deg)',
-        boxShadow: effects.enableGlow 
+        boxShadow: effects.enableGlow
           ? cosmicUtils.createCosmicShadow(element || 'fuego', effects.glowIntensity)
           : baseVariant.boxShadow,
+        ...(element !== 'fuego' && {
+          filter: 'brightness(1.08) saturate(1.12)',
+        }),
       }),
-      
+
       ...(isActive && {
         transform: 'translateY(-3px) translateZ(6px)',
         transition: 'all 0.1s ease-out',
       }),
-      
+
       // Animaciones cósmicas
       ...(effects.enableAnimations && {
-        animation: cosmicIntensity === 'intense' 
+        animation: cosmicIntensity === 'intense'
           ? `${animationPatterns.cosmicPulse.animation}`
           : cosmicIntensity === 'medium'
           ? `${animationPatterns.gentleFloat.animation}`
@@ -304,12 +308,12 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
             component="h2"
             sx={{
               fontWeight: 600,
-              background: element 
+              background: element
                 ? elementalPatterns[element].gradient
                 : 'linear-gradient(145deg, #8B4513 0%, #CD853F 50%, #DEB887 100%)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              WebkitTextFillColor: element === 'fuego' ? '#fff' : 'transparent',
               textShadow: '0 1px 2px rgba(139,69,19,0.1)',
             }}
           >
@@ -337,7 +341,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
                   onClick={handleRefresh}
                   disabled={isLoading}
                   size="small"
-                  sx={{ 
+                  sx={{
                     opacity: isConnected ? 1 : 0.5,
                     color: element ? elementalPatterns[element].particleColor : 'inherit'
                   }}
@@ -346,7 +350,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
                 </IconButton>
               </Tooltip>
             )}
-            
+
             {/* 📊 Indicador de performance 3D */}
             {effects.enableAnimations && performance3D.fps < 45 && (
               <Tooltip title={`Performance: ${performance3D.fps} FPS`}>
@@ -355,7 +359,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
                 </IconButton>
               </Tooltip>
             )}
-            
+
             {/* ✨ Indicador de estado cósmico */}
             {effects.enableAnimations && performance3D.fps >= 45 && (
               <Tooltip title="Efectos cósmicos activos">
@@ -364,7 +368,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
                 </IconButton>
               </Tooltip>
             )}
-            
+
             {/* 📐 Botón de expansión */}
             {onExpand && (
               <Tooltip title={expanded ? "Contraer" : "Expandir"}>
@@ -380,7 +384,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
                 </IconButton>
               </Tooltip>
             )}
-            
+
             {/* ⚡ Acciones adicionales */}
             {actions}
           </Box>
@@ -407,16 +411,28 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
         position: 'relative',
         zIndex: 1,
         ...style,
+        ...(element === 'fuego' && {
+          background: `${homeElementalGradients.fuego.background} !important`,
+          backgroundColor: 'transparent !important',
+          '&:hover': {
+            background: `${homeElementalGradients.fuego.background} !important`,
+            backgroundColor: 'transparent !important',
+          },
+          '&:focus': {
+            background: `${homeElementalGradients.fuego.background} !important`,
+            backgroundColor: 'transparent !important',
+          },
+        }),
       }}
       elevation={0}
       {...props}
     >
       {/* 🌟 Partículas cósmicas de fondo */}
       {renderCosmicParticles()}
-      
+
       {/* 📋 Header del widget */}
       {renderHeader()}
-      
+
       {/* ⏳ Indicador de carga */}
       {isLoading && (
         <LinearProgress
@@ -428,14 +444,14 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
             borderRadius: `${responsive.borderRadius} ${responsive.borderRadius} 0 0`,
             backgroundColor: alpha(theme.palette.primary.main, 0.1),
             '& .MuiLinearProgress-bar': {
-              background: element 
+              background: element
                 ? elementalPatterns[element].gradient
                 : 'linear-gradient(90deg, #FFB74D, #FF9800)',
             },
           }}
         />
       )}
-      
+
       {/* 📄 Contenido principal */}
       <CardContent
         sx={{
@@ -445,6 +461,9 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
           '&:last-child': {
             paddingBottom: responsive.padding,
           },
+          ...(element === 'fuego' && {
+            color: '#fff',
+          }),
         }}
       >
         {isLoading ? (
@@ -458,7 +477,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
           children
         )}
       </CardContent>
-      
+
       {/* 📐 Contenido expandible */}
       {onExpand && (
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -472,12 +491,12 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
             <Typography variant="body2" color="text.secondary">
               🚀 Contenido expandido del widget revolucionario
             </Typography>
-            
+
             {/* 📊 Métricas de performance 3D */}
             {effects.enableAnimations && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="caption" color="text.secondary">
-                  Performance 3D: {performance3D.fps} FPS | 
+                  Performance 3D: {performance3D.fps} FPS |
                   Suavidad: {performance3D.smoothness}% |
                   Memoria: {performance3D.memoryUsage} MB
                 </Typography>
@@ -486,7 +505,7 @@ export const RevolutionaryWidget: React.FC<RevolutionaryWidgetProps> = ({
           </CardContent>
         </Collapse>
       )}
-      
+
       {/* 🎬 Acciones del pie */}
       {actions && !title && (
         <CardActions
@@ -543,4 +562,4 @@ export const RevolutionaryWidgetEspiritu: React.FC<Omit<RevolutionaryWidgetProps
   <RevolutionaryWidget element="espiritu" {...props} />
 );
 
-export default RevolutionaryWidget; 
+export default RevolutionaryWidget;
