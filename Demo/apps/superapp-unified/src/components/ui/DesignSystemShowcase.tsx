@@ -142,7 +142,7 @@ export const DesignSystemShowcase: React.FC = () => {
           <Typography variant="h5" className="mb-2">
             Heading 5 - Bien Común
           </Typography>
-          <Typography variant="h6" className="mb-2">
+          <Typography variant="h6" className="mb-2" component="div">
             Heading 6 - Emprendedores Confiables
           </Typography>
         </CoomunityCard>
@@ -200,7 +200,7 @@ export const DesignSystemShowcase: React.FC = () => {
               Primario LG
             </CoomunityButton>
           </Box>
-          
+
           <Box className="flex flex-wrap gap-3 mb-4">
             <CoomunityButton variant="secondary">
               Secundario
@@ -367,7 +367,7 @@ export const DesignSystemShowcase: React.FC = () => {
         <Typography variant="body1" className="text-gray-600 mb-4">
           Documentación completa de tokens, componentes y patrones de diseño
         </Typography>
-        
+
         <Box className="flex items-center gap-4">
           <FormControlLabel
             control={
@@ -379,7 +379,7 @@ export const DesignSystemShowcase: React.FC = () => {
             }
             label="Modo Oscuro"
           />
-          
+
           <Chip label="v1.0.0" color="primary" variant="outlined" />
           <Chip label="React 18+" color="success" variant="outlined" />
           <Chip label="Material UI v7" color="info" variant="outlined" />
@@ -428,4 +428,4 @@ export const DesignSystemShowcase: React.FC = () => {
   );
 };
 
-export default DesignSystemShowcase; 
+export default DesignSystemShowcase;

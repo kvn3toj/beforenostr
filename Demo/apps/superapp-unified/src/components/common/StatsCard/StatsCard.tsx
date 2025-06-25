@@ -50,71 +50,53 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   return (
     <Card
       sx={{
-        height: '100%',
+        background: 'rgba(255,255,255,0.7)',
+        backdropFilter: 'blur(6px)',
+        border: '1px solid #e2e8f0',
+        borderRadius: 2,
+        p: 3,
+        boxShadow: 'none',
+        transition: 'box-shadow 0.2s, border 0.2s, transform 0.2s',
+        '&:hover': {
+          boxShadow: '0 4px 12px 0 rgba(0,0,0,0.06)',
+          border: '1px solid #cbd5e1',
+          transform: 'translateY(-2px) scale(1.01)',
+        },
         cursor: onClick ? 'pointer' : 'default',
-        transition: 'all 0.2s ease-in-out',
-        '&:hover': onClick ? {
-          transform: 'translateY(-2px)',
-          boxShadow: 3,
-        } : {},
         ...sx,
       }}
       onClick={onClick}
     >
       <CardContent>
-        {/* Header */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          mb={2}
-        >
-          <Box display="flex" alignItems="center" gap={1}>
-            {icon && (
-              <Box
-                sx={{
-                  p: 1,
-                  borderRadius: 1,
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {icon}
-              </Box>
-            )}
-            <Typography variant="h6" component="h3" color="text.secondary">
-              {title}
-            </Typography>
-          </Box>
-          
-          {actions && (
-            <Box onClick={(e) => e.stopPropagation()}>
-              {actions}
+        <Box display="flex" alignItems="center" mb={1}>
+          {icon && (
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                background: 'linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)',
+                borderRadius: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+              }}
+            >
+              {icon}
             </Box>
           )}
+          <Typography variant="h6" sx={{ color: '#334155', fontWeight: 500 }}>
+            {title}
+          </Typography>
         </Box>
-
-        {/* Main Value */}
-        <Typography
-          variant="h3"
-          component="div"
-          fontWeight="bold"
-          color="text.primary"
-          mb={1}
-        >
+        <Typography variant="h4" sx={{ color: '#0f172a', fontWeight: 600 }}>
           {value}
         </Typography>
-
-        {/* Subtitle */}
         {subtitle && (
-          <Typography variant="body2" color="text.secondary" mb={1}>
+          <Typography variant="body2" sx={{ color: '#64748b', mt: 1 }}>
             {subtitle}
           </Typography>
         )}
-
         {/* Status Chip */}
         {status && (
           <Box mb={2}>
@@ -123,18 +105,18 @@ export const StatsCard: React.FC<StatsCardProps> = ({
               color={status.color}
               size="small"
               variant="outlined"
+              sx={{ fontWeight: 500, fontSize: 12, borderRadius: 1 }}
             />
           </Box>
         )}
-
         {/* Progress Bar */}
         {progress && (
           <Box mb={2}>
             <Box display="flex" justifyContent="space-between" mb={1}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{ color: '#94a3b8' }}>
                 Progreso
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{ color: '#94a3b8' }}>
                 {progress.value}{progress.max ? `/${progress.max}` : '%'}
               </Typography>
             </Box>
@@ -142,28 +124,26 @@ export const StatsCard: React.FC<StatsCardProps> = ({
               variant="determinate"
               value={progress.max ? (progress.value / progress.max) * 100 : progress.value}
               color={progress.color || 'primary'}
-              sx={{ height: 6, borderRadius: 3 }}
+              sx={{ height: 6, borderRadius: 3, background: '#e0e7ff' }}
             />
           </Box>
         )}
-
         {/* Trend */}
         {trend && (
           <Box display="flex" alignItems="center" gap={1}>
             {trend.isPositive ? (
-              <TrendingUp color="success" fontSize="small" />
+              <TrendingUp sx={{ color: '#10b981' }} fontSize="small" />
             ) : (
-              <TrendingDown color="error" fontSize="small" />
+              <TrendingDown sx={{ color: '#f59e0b' }} fontSize="small" />
             )}
             <Typography
               variant="body2"
-              color={trend.isPositive ? 'success.main' : 'error.main'}
-              fontWeight="medium"
+              sx={{ color: trend.isPositive ? '#10b981' : '#f59e0b', fontWeight: 500 }}
             >
               {trend.isPositive ? '+' : ''}{trend.value}%
             </Typography>
             {trend.label && (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{ color: '#94a3b8' }}>
                 {trend.label}
               </Typography>
             )}
@@ -172,4 +152,4 @@ export const StatsCard: React.FC<StatsCardProps> = ({
       </CardContent>
     </Card>
   );
-}; 
+};

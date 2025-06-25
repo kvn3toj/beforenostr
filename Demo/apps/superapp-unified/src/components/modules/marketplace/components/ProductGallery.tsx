@@ -118,7 +118,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
         {/* Imagen principal */}
         <Box
           component="img"
-          src={images[selectedImageIndex]}
+          src={images[selectedImageIndex] || '/images/servicio-domicilio.png'}
           alt={`${title} - Imagen ${selectedImageIndex + 1}`}
           onLoad={() => handleImageLoad(selectedImageIndex)}
           sx={{
@@ -308,49 +308,17 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
                 },
               }}
             >
-              {/* Badge de video en primera miniatura */}
-              {hasVideo && index === 0 && (
-                <Badge
-                  badgeContent={<PlayArrow sx={{ fontSize: 12 }} />}
-                  color="primary"
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    '& .MuiBadge-badge': {
-                      top: 4,
-                      right: 4,
-                      width: 20,
-                      height: 20,
-                      borderRadius: '50%',
-                    },
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={image}
-                    alt={`Miniatura ${index + 1}`}
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                </Badge>
-              )}
-
-              {/* Miniatura normal */}
-              {(!hasVideo || index !== 0) && (
-                <Box
-                  component="img"
-                  src={image}
-                  alt={`Miniatura ${index + 1}`}
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                  }}
-                />
-              )}
+              <Box
+                component="img"
+                src={image || '/images/servicio-domicilio.png'}
+                alt={`${title} - Miniatura ${index + 1}`}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: 1,
+                }}
+              />
             </Box>
           ))}
         </Box>
@@ -398,7 +366,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
           <Zoom in={isFullscreenOpen} timeout={300}>
             <Box
               component="img"
-              src={images[selectedImageIndex]}
+              src={images[selectedImageIndex] || '/images/servicio-domicilio.png'}
               alt={`${title} - Imagen ${selectedImageIndex + 1}`}
               sx={{
                 maxWidth: '90vw',

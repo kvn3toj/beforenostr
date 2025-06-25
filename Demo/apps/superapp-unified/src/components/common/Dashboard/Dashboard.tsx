@@ -32,6 +32,9 @@ export interface DashboardWidget {
   configurable?: boolean;
   removable?: boolean;
   fullscreenable?: boolean;
+  icon?: React.ReactNode;
+  value?: string;
+  subtitle?: string;
 }
 
 export interface DashboardProps {
@@ -94,7 +97,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   const renderWidgetActions = (widget: DashboardWidget) => {
     const hasActions = widget.refreshable || widget.configurable || widget.removable || widget.fullscreenable;
-    
+
     if (!hasActions) return null;
 
     return (
@@ -173,40 +176,57 @@ export const Dashboard: React.FC<DashboardProps> = ({
             xl={widget.gridProps?.xl || 3}
           >
             <Paper
-              elevation={1}
+              elevation={0}
               sx={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'all 0.2s ease-in-out',
+                background: '#fff',
+                border: '1px solid #e2e8f0',
+                borderRadius: 2,
+                p: 3,
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+                transition: 'box-shadow 0.2s, border 0.2s, transform 0.2s',
                 '&:hover': {
-                  elevation: 3,
-                  transform: 'translateY(-2px)',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid #cbd5e1',
+                  transform: 'translateY(-2px) scale(1.01)',
                 },
               }}
             >
               {/* Widget Header */}
-              <Box
-                sx={{
-                  p: 2,
-                  pb: 1,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderBottom: '1px solid',
-                  borderColor: 'divider',
-                }}
-              >
-                <Typography variant="h6" component="h3" noWrap>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                {/* Icono del widget (si existe) */}
+                {widget.icon && (
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      background: 'linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)',
+                      borderRadius: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mr: 2,
+                    }}
+                  >
+                    {widget.icon}
+                  </Box>
+                )}
+                <Typography variant="h6" sx={{ color: '#334155', fontWeight: 500 }}>
                   {widget.title}
                 </Typography>
-                {renderWidgetActions(widget)}
               </Box>
-
+              {/* Valor principal y descripción (si existen) */}
+              {widget.value && (
+                <Typography variant="h4" sx={{ color: '#0f172a', fontWeight: 600 }}>
+                  {widget.value}
+                </Typography>
+              )}
+              {widget.subtitle && (
+                <Typography variant="body2" sx={{ color: '#64748b', mt: 1 }}>
+                  {widget.subtitle}
+                </Typography>
+              )}
               {/* Widget Content */}
-              <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                {renderWidget(widget)}
-              </Box>
+              {renderWidget(widget)}
             </Paper>
           </Grid>
         ))}
@@ -269,4 +289,4 @@ export const Dashboard: React.FC<DashboardProps> = ({
       )}
     </Box>
   );
-}; 
+};

@@ -21,10 +21,10 @@ export { CategoryCarousel } from './CategoryCarousel';
 export { CategoryChips } from './CategoryChips';
 export { MobileHeader } from './MobileHeader';
 export { MobileKeyboard } from './MobileKeyboard';
-export { MobileMarketplaceView } from './MobileMarketplaceView';
+export { default as MobileMarketplaceView } from './MobileMarketplaceView';
 export { MobileSearchBar } from './MobileSearchBar';
 export { RequestCreationSection } from './RequestCreationSection';
-export { RoleToggle } from './RoleToggle';
+export * from './RoleToggle';
 
 // Nuevos componentes para el detalle del producto
 export { ProductDetailView } from './ProductDetailView';

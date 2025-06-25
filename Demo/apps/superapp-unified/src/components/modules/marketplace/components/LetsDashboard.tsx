@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Card,
-  CardContent,
+  Paper,
   Typography,
   Grid,
   LinearProgress,
   Chip,
-  Avatar,
-  Stack,
   IconButton,
   Tooltip,
   useTheme,
@@ -33,6 +30,53 @@ interface LetsDashboardProps {
   userId?: string;
 }
 
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  details?: string;
+  color?: string;
+}
+
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  icon,
+  details,
+  color = 'text.primary',
+}) => (
+  <Paper
+    variant="outlined"
+    sx={{
+      p: 2,
+      borderRadius: '16px',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'box-shadow 0.3s, border-color 0.3s',
+      '&:hover': {
+        boxShadow: '0 4px 12px 0 rgba(0,0,0,0.05)',
+        borderColor: '#cbd5e1',
+      },
+    }}
+  >
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+      {icon}
+      <Typography variant="h6" sx={{ ml: 1, fontWeight: 600, color: 'text.secondary' }}>
+        {title}
+      </Typography>
+    </Box>
+    <Typography variant="h4" sx={{ fontWeight: 700, color, mt: 'auto' }}>
+      {value}
+    </Typography>
+    {details && (
+      <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+        {details}
+      </Typography>
+    )}
+  </Paper>
+);
+
 const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -55,7 +99,11 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
       name: cat.category,
       count: cat.transactionCount
     })),
-    userGrowth: rawAnalytics.userEngagement
+    userGrowth: {
+      ...rawAnalytics.userEngagement,
+      growthPercentage: rawAnalytics.userEngagement.retentionRate * 100, // Usar retentionRate como base
+      newUsers: rawAnalytics.userEngagement.newUsersThisMonth,
+    }
   } : null;
 
   const handleRefresh = () => {
@@ -69,13 +117,11 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
         <Grid container spacing={3}>
           {[1, 2, 3, 4].map((item) => (
             <Grid item xs={12} sm={6} md={3} key={item}>
-              <Card>
-                <CardContent>
-                  <Skeleton variant="text" width="60%" height={24} />
-                  <Skeleton variant="text" width="40%" height={32} />
-                  <Skeleton variant="rectangular" width="100%" height={8} sx={{ mt: 2 }} />
-                </CardContent>
-              </Card>
+              <Paper>
+                <Skeleton variant="text" width="60%" height={24} />
+                <Skeleton variant="text" width="40%" height={32} />
+                <Skeleton variant="rectangular" width="100%" height={8} sx={{ mt: 2 }} />
+              </Paper>
             </Grid>
           ))}
         </Grid>
@@ -101,10 +147,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
   }
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('es-ES', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    }).format(num);
+    return new Intl.NumberFormat('es-ES').format(num);
   };
 
   const formatCurrency = (num: number) => {
@@ -115,9 +158,9 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
   };
 
   const getAyniColor = (index: number) => {
-    if (index >= 0.8) return '#4CAF50'; // Verde - Excelente
-    if (index >= 0.6) return '#FF9800'; // Naranja - Bueno
-    return '#F44336'; // Rojo - Necesita mejora
+    if (index >= 0.8) return theme.palette.success.main;
+    if (index >= 0.6) return theme.palette.warning.main;
+    return theme.palette.error.main;
   };
 
   const getAyniLabel = (index: number) => {
@@ -128,8 +171,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
 
   return (
     <Fade in timeout={600}>
-      <Box sx={{ p: 2 }}>
-        {/* Header con título y refresh */}
+      <Box sx={{ p: 2, backgroundColor: '#f8fafc', borderRadius: '16px' }}>
         <Box
           sx={{
             display: 'flex',
@@ -139,11 +181,11 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
           }}
         >
           <Box>
-            <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
-              📊 Dashboard LETS
+            <Typography variant="h5" fontWeight="bold" color="text.primary">
+              Dashboard LETS
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Sistema de Intercambio Local - Métricas en tiempo real
+              Métricas clave del sistema de intercambio
             </Typography>
           </Box>
           <Tooltip title="Actualizar datos">
@@ -154,304 +196,82 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
         </Box>
 
         {/* Métricas principales */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          {/* Total Ünits Circulando */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card
-              sx={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <AccountBalance sx={{ mr: 1, fontSize: 28 }} />
-                  <Typography variant="h6" fontWeight="bold">
-                    Ünits Totales
-                  </Typography>
-                </Box>
-                <Typography variant="h4" fontWeight="bold">
-                  {formatCurrency(analytics.totalUnitsCirculating)}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mt: 1 }}>
-                  En circulación activa
-                </Typography>
-                {/* Decorative element */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: -20,
-                    right: -20,
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Transacciones Diarias */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card
-              sx={{
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <SwapHoriz sx={{ mr: 1, fontSize: 28 }} />
-                  <Typography variant="h6" fontWeight="bold">
-                    Transacciones
-                  </Typography>
-                </Box>
-                <Typography variant="h4" fontWeight="bold">
-                  {analytics.dailyTransactions}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mt: 1 }}>
-                  Hoy
-                </Typography>
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: -20,
-                    right: -20,
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Usuarios Activos */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card
-              sx={{
-                background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Group sx={{ mr: 1, fontSize: 28 }} />
-                  <Typography variant="h6" fontWeight="bold">
-                    Usuarios Activos
-                  </Typography>
-                </Box>
-                <Typography variant="h4" fontWeight="bold">
-                  {analytics.activeUsers}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mt: 1 }}>
-                  Este mes
-                </Typography>
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: -20,
-                    right: -20,
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Índice Ayni */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card
-              sx={{
-                background: `linear-gradient(135deg, ${getAyniColor(analytics.ayniIndex)} 0%, ${getAyniColor(analytics.ayniIndex)}CC 100%)`,
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <EmojiNature sx={{ mr: 1, fontSize: 28 }} />
-                  <Typography variant="h6" fontWeight="bold">
-                    Índice Ayni
-                  </Typography>
-                  <Tooltip title="Mide el equilibrio de reciprocidad en la comunidad">
-                    <Info sx={{ ml: 1, fontSize: 16, opacity: 0.8 }} />
-                  </Tooltip>
-                </Box>
-                <Typography variant="h4" fontWeight="bold">
-                  {Math.round(analytics.ayniIndex * 100)}%
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mt: 1 }}>
-                  {getAyniLabel(analytics.ayniIndex)}
-                </Typography>
-                <LinearProgress
-                  variant="determinate"
-                  value={analytics.ayniIndex * 100}
-                  sx={{
-                    mt: 2,
-                    backgroundColor: 'rgba(255,255,255,0.3)',
-                    '& .MuiLinearProgress-bar': {
-                      backgroundColor: 'white',
-                    },
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: -20,
-                    right: -20,
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Categorías más populares */}
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
-                  🏷️ Categorías Más Populares
-                </Typography>
-                <Stack spacing={2}>
-                  {analytics.topCategories.map((category, index) => (
-                    <Box
-                      key={category.name}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        p: 2,
-                        borderRadius: 2,
-                        backgroundColor: index === 0 ? '#E3F2FD' : '#F5F5F5',
-                        border: index === 0 ? '2px solid #2196F3' : '1px solid #E0E0E0',
-                      }}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar
-                          sx={{
-                            width: 32,
-                            height: 32,
-                            backgroundColor: index === 0 ? '#2196F3' : '#757575',
-                            fontSize: 14,
-                            fontWeight: 'bold',
-                            mr: 2,
-                          }}
-                        >
-                          {index + 1}
-                        </Avatar>
-                        <Typography variant="body1" fontWeight={index === 0 ? 'bold' : 'medium'}>
-                          {category.name}
-                        </Typography>
-                      </Box>
-                      <Chip
-                        label={`${category.count} intercambios`}
-                        size="small"
-                        color={index === 0 ? 'primary' : 'default'}
-                        variant={index === 0 ? 'filled' : 'outlined'}
-                      />
-                    </Box>
-                  ))}
-                </Stack>
-              </CardContent>
-            </Card>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatCard
+              title="Ünits Totales"
+              value={formatCurrency(analytics.totalUnitsCirculating)}
+              icon={<AccountBalance color="action" />}
+              details="En circulación activa"
+            />
           </Grid>
-
-          {/* Crecimiento de usuarios */}
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
-                  📈 Crecimiento de la Comunidad
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        p: 2,
-                        borderRadius: 2,
-                        backgroundColor: '#E8F5E8',
-                        border: '1px solid #4CAF50',
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          Nuevos Usuarios
-                        </Typography>
-                        <Typography variant="h5" fontWeight="bold" color="#4CAF50">
-                          +{analytics.userGrowth.newUsers}
-                        </Typography>
-                      </Box>
-                      <TrendingUp sx={{ fontSize: 32, color: '#4CAF50' }} />
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        p: 2,
-                        borderRadius: 2,
-                        backgroundColor: '#FFF3E0',
-                        border: '1px solid #FF9800',
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          Tasa de Retención
-                        </Typography>
-                        <Typography variant="h5" fontWeight="bold" color="#FF9800">
-                          {Math.round(analytics.userGrowth.retentionRate * 100)}%
-                        </Typography>
-                      </Box>
-                      <LocalOffer sx={{ fontSize: 32, color: '#FF9800' }} />
-                    </Box>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatCard
+              title="Transacciones"
+              value={formatNumber(analytics.dailyTransactions)}
+              icon={<SwapHoriz color="action" />}
+              details="Últimas 24 horas"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatCard
+              title="Usuarios Activos"
+              value={formatNumber(analytics.activeUsers)}
+              icon={<Group color="action" />}
+              details="Conectados hoy"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatCard
+              title="Balance Ayni"
+              value={`${(analytics.ayniIndex * 100).toFixed(0)}%`}
+              icon={<TrendingUp color="action" />}
+              details={getAyniLabel(analytics.ayniIndex)}
+              color={getAyniColor(analytics.ayniIndex)}
+            />
           </Grid>
         </Grid>
 
-        {/* Información sobre Ayni */}
-        <Card sx={{ mt: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
-          <CardContent>
-            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-              🌱 ¿Qué es el Índice Ayni?
-            </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.9, lineHeight: 1.6 }}>
-              El Índice Ayni mide el equilibrio de reciprocidad en nuestra comunidad LETS. 
-              Un índice alto indica que los intercambios son justos y equilibrados, 
-              reflejando el principio andino de Ayni (reciprocidad). 
-              Cuando damos y recibimos en equilibrio, fortalecemos el Bien Común.
-            </Typography>
-          </CardContent>
-        </Card>
+        {/* Secciones secundarias */}
+        <Grid container spacing={3} sx={{ mt: 1 }}>
+          <Grid item xs={12} md={6}>
+            <Paper variant="outlined" sx={{ p: 2, borderRadius: '16px', height: '100%' }}>
+              <Typography variant="h6" fontWeight={600} color="text.secondary" gutterBottom>
+                Crecimiento de Usuarios
+              </Typography>
+              <LinearProgress
+                variant="determinate"
+                value={(analytics.userGrowth.growthPercentage / 100) * 100} // Usar el valor directamente
+                sx={{ height: 10, borderRadius: 5, mb: 1 }}
+              />
+              <Typography variant="body2" color="text.secondary">
+                +{analytics.userGrowth.newUsers} nuevos usuarios este mes (
+                {analytics.userGrowth.growthPercentage.toFixed(1)}% de crecimiento)
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Paper variant="outlined" sx={{ p: 2, borderRadius: '16px', height: '100%' }}>
+              <Typography variant="h6" fontWeight={600} color="text.secondary" gutterBottom>
+                Categorías Populares
+              </Typography>
+              <Box>
+                {analytics.topCategories.map((cat, index) => (
+                  <Chip
+                    key={index}
+                    label={`${cat.name} (${cat.count})`}
+                    variant="outlined"
+                    size="small"
+                    sx={{ mr: 1, mb: 1 }}
+                  />
+                ))}
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
       </Box>
     </Fade>
   );
 };
 
-export default LetsDashboard; 
+export default LetsDashboard;

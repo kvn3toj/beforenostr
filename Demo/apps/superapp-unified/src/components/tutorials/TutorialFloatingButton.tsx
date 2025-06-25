@@ -9,7 +9,6 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
-  Zoom,
 } from '@mui/material';
 import {
   School as SchoolIcon,
@@ -18,15 +17,16 @@ import {
   PlayArrow as PlayIcon,
   AccountBalanceWallet as WalletIcon,
   Terminal as TerminalIcon,
+  HelpOutline,
 } from '@mui/icons-material';
 import { useDiscoveryTutorial } from './DiscoveryTutorialProvider';
 
-const TUTORIAL_ICONS = {
-  'console-discovery': <TerminalIcon />,
-  'marketplace-discovery': <StoreIcon />,
-  'social-discovery': <GroupIcon />,
-  'uplay-discovery': <PlayIcon />,
-  'wallet-discovery': <WalletIcon />,
+const TUTORIAL_ICONS: Record<string, React.ReactElement> = {
+  'console-discovery': <TerminalIcon fontSize="small" />,
+  'marketplace-discovery': <StoreIcon fontSize="small" />,
+  'social-discovery': <GroupIcon fontSize="small" />,
+  'uplay-discovery': <PlayIcon fontSize="small" />,
+  'wallet-discovery': <WalletIcon fontSize="small" />,
 };
 
 export const TutorialFloatingButton: React.FC = () => {
@@ -50,27 +50,25 @@ export const TutorialFloatingButton: React.FC = () => {
   return (
     <>
       <Tooltip title="Tutoriales Discovery" placement="left">
-        <Zoom in timeout={1000}>
-          <Fab
-            color="primary"
-            aria-label="tutoriales"
-            onClick={handleClick}
-            sx={{
-              position: 'fixed',
-              bottom: 32,
-              right: 32,
-              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-              '&:hover': {
-                background: 'linear-gradient(45deg, #1976D2 30%, #0288D1 90%)',
-                transform: 'scale(1.1)',
-              },
-              transition: 'all 0.3s ease',
-              zIndex: 1000,
-            }}
-          >
-            <SchoolIcon />
-          </Fab>
-        </Zoom>
+        <Fab
+          color="secondary"
+          aria-label="tutoriales"
+          onClick={handleClick}
+          sx={{
+            position: 'fixed',
+            bottom: 32,
+            right: 32,
+            zIndex: 1050,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            transition: 'all 0.3s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
+            },
+          }}
+        >
+          <HelpOutline />
+        </Fab>
       </Tooltip>
 
       <Menu
@@ -86,62 +84,89 @@ export const TutorialFloatingButton: React.FC = () => {
           horizontal: 'right',
         }}
         PaperProps={{
+          elevation: 0,
           sx: {
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: 2,
-            minWidth: 280,
-          }
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.1))',
+            mt: -1,
+            border: '1px solid #e2e8f0',
+            borderRadius: '16px',
+            minWidth: 320,
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+          },
         }}
       >
-        <Box sx={{ p: 1, borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
-          <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
+        <Box sx={{ p: 2, borderBottom: '1px solid #e2e8f0' }}>
+          <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600, color: '#1e293b' }}>
             🎓 Tutoriales Discovery
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Aprende CoomÜnity paso a paso
+            Aprende CoomÜnity paso a paso.
           </Typography>
         </Box>
-        
+
         {availableTutorials.map((tutorial) => (
           <MenuItem
             key={tutorial.id}
             onClick={() => handleTutorialStart(tutorial.id)}
-            sx={{ 
-              py: 1.5, 
+            sx={{
+              py: 1.5,
               px: 2,
+              alignItems: 'flex-start',
+              transition: 'background-color 0.2s',
               '&:hover': {
-                background: 'rgba(33, 150, 243, 0.1)',
+                backgroundColor: '#f8fafc',
               }
             }}
           >
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              {TUTORIAL_ICONS[tutorial.id as keyof typeof TUTORIAL_ICONS] || <SchoolIcon />}
+            <ListItemIcon sx={{ minWidth: 36, mt: 0.5, color: 'text.secondary' }}>
+              {TUTORIAL_ICONS[tutorial.id] || <SchoolIcon fontSize="small" />}
             </ListItemIcon>
-            <ListItemText>
-              <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                {tutorial.title}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {tutorial.description}
-              </Typography>
-              <Box sx={{ mt: 0.5, display: 'flex', gap: 0.5 }}>
-                <Chip 
-                  label={tutorial.difficulty} 
-                  size="small" 
-                  sx={{ fontSize: '0.65rem', height: 18 }}
-                  color={tutorial.difficulty === 'beginner' ? 'success' : 
-                         tutorial.difficulty === 'intermediate' ? 'warning' : 'error'}
-                />
-                <Chip 
-                  label={tutorial.estimatedTime} 
-                  size="small" 
-                  sx={{ fontSize: '0.65rem', height: 18 }}
-                  variant="outlined"
-                />
-              </Box>
-            </ListItemText>
+            <ListItemText
+              primary={
+                <Typography variant="body1" sx={{ fontWeight: 500, color: 'text.primary' }}>
+                  {tutorial.title}
+                </Typography>
+              }
+              secondary={
+                <>
+                  <Typography component="span" variant="body2" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                    {tutorial.description}
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Chip
+                      label={tutorial.difficulty}
+                      size="small"
+                      sx={{
+                        fontSize: '0.7rem',
+                        height: 20,
+                        borderRadius: '6px',
+                      }}
+                      color={tutorial.difficulty === 'beginner' ? 'success' :
+                             tutorial.difficulty === 'intermediate' ? 'warning' : 'error'}
+                      variant="filled"
+                    />
+                    <Chip
+                      label={tutorial.estimatedTime}
+                      size="small"
+                      variant="outlined"
+                      sx={{
+                        fontSize: '0.7rem',
+                        height: 20,
+                        borderRadius: '6px',
+                        borderColor: '#e2e8f0',
+                        color: 'text.secondary',
+                      }}
+                    />
+                  </Box>
+                </>
+              }
+            />
           </MenuItem>
         ))}
       </Menu>

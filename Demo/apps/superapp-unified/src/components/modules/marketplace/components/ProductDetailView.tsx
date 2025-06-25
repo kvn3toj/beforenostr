@@ -51,10 +51,10 @@ import {
   Reviews,
   Person,
   LocalOffer,
-  Delivery,
+  LocalShipping,
   WorkspacePremium,
   TrendingUp,
-  OnlinePredicationOutlined,
+  OnlinePredictionOutlined,
   CalendarToday,
   ThumbUp,
   ThumbDown,
@@ -65,6 +65,7 @@ import { SellerInfoCard } from './SellerInfoCard';
 import { ProductReviews } from './ProductReviews';
 import { RelatedProducts } from './RelatedProducts';
 import { Product } from '../../../../types/marketplace';
+import StatusBadges from './StatusBadges';
 
 interface ProductDetailViewProps {
   product: Product;
@@ -145,6 +146,22 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               title={product.title}
               hasVideo={product.hasVideo}
             />
+            {/* BADGES FILOSÓFICOS Y DE ESTADO */}
+            <Box sx={{ mt: 2 }}>
+              <StatusBadges
+                featured={!!product.featured}
+                trending={!!product.trending}
+                discount={product.discount}
+                is24Hours={!!product.is24Hours}
+                isUrgent={!!product.urgent}
+                hasVideo={!!product.hasVideo}
+                size="medium"
+                ayniScore={product.seller.badges?.some(b => b.name.toLowerCase().includes('ayni')) ? 90 : undefined}
+                meritos={product.seller.badges?.filter(b => b.category === 'achievement').length || 0}
+                isSustainable={product.tags?.some(tag => tag.toLowerCase().includes('sostenible'))}
+                isEmprendedorConfiable={product.seller.badges?.some(b => b.category === 'verification' && b.name.toLowerCase().includes('confiable'))}
+              />
+            </Box>
           </Box>
         </Fade>
       </Grid>
@@ -155,42 +172,14 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           <Box>
             {/* Header del producto */}
             <Box sx={{ mb: 3 }}>
-              {/* Badges */}
-              <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-                {product.featured && (
-                  <Chip
-                    icon={<WorkspacePremium />}
-                    label="Destacado"
-                    color="warning"
-                    size="small"
-                    sx={{ fontWeight: 'bold' }}
-                  />
-                )}
-                {product.trending && (
-                  <Chip
-                    icon={<TrendingUp />}
-                    label="Tendencia"
-                    color="error"
-                    size="small"
-                    sx={{ fontWeight: 'bold' }}
-                  />
-                )}
-                {product.is24Hours && (
-                  <Chip
-                    icon={<Schedule />}
-                    label="Disponible 24h"
-                    color="success"
-                    size="small"
-                    sx={{ fontWeight: 'bold' }}
-                  />
-                )}
-              </Box>
-
-              {/* Título */}
+              {/* Badges ahora centralizados arriba */}
               <Typography variant="h4" fontWeight="bold" sx={{ mb: 2 }}>
                 {product.title}
               </Typography>
-
+              {/* MICROCOPY FILOSÓFICO */}
+              <Typography variant="subtitle2" color="success.main" fontWeight={600} sx={{ mb: 1 }}>
+                Cada intercambio aquí es un acto de Ayni: reciprocidad y Bien Común. Los Mëritos y Lükas reflejan tu contribución al ecosistema.
+              </Typography>
               {/* Rating y estadísticas */}
               <Box
                 sx={{
@@ -198,7 +187,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                   alignItems: 'center',
                   gap: 2,
                   mb: 2,
-                  flexWrap: 'wrap',
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -628,11 +616,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       <Grid item xs={12}>
         <Fade in timeout={1200} style={{ transitionDelay: '800ms' }}>
           <Box sx={{ mt: 6 }}>
-            <RelatedProducts
-              currentProductId={product.id}
-              category={product.category}
-              sellerId={product.seller.id}
-            />
+            <RelatedProducts productId={product.id} currentProductId={product.id} category={product.category} sellerId={product.seller.id} />
           </Box>
         </Fade>
       </Grid>

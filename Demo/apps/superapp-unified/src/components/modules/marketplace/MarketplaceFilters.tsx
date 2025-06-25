@@ -36,6 +36,8 @@ import {
   LocalOffer,
   Schedule,
 } from '@mui/icons-material';
+import { motion } from 'framer-motion';
+import Tooltip from '@mui/material/Tooltip';
 
 interface IMarketplaceFiltersProps {
   onFiltersChange: (filters: IMarketplaceFilters) => void;
@@ -165,7 +167,7 @@ export const MarketplaceFilters: React.FC<IMarketplaceFiltersProps> = ({
 
   const isDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   const getTagChipStyles = (active: boolean) => ({
-    borderRadius: '7px',
+    borderRadius: '12px',
     background: active
       ? isDark
         ? 'linear-gradient(90deg, #004134 60%, #3E8638 100%)'
@@ -175,8 +177,8 @@ export const MarketplaceFilters: React.FC<IMarketplaceFiltersProps> = ({
         : '#EDEDED',
     color: active ? '#fff' : (isDark ? '#B2DFDB' : '#004134'),
     fontFamily: 'Rubik, -apple-system, Roboto, Helvetica, sans-serif',
-    fontSize: '14px',
-    fontWeight: 500,
+    fontSize: '15px',
+    fontWeight: 600,
     textAlign: 'center',
     letterSpacing: '0.08px',
     lineHeight: 1.18,
@@ -185,9 +187,10 @@ export const MarketplaceFilters: React.FC<IMarketplaceFiltersProps> = ({
     px: 2.5,
     py: 1.5,
     cursor: 'pointer',
-    transition: 'all 0.2s',
+    transition: 'all 0.22s cubic-bezier(.4,2,.6,1)',
     outline: active ? '2px solid #3E8638' : 'none',
-    boxShadow: active ? '0 0 0 2px #3E863844' : 'none',
+    boxShadow: active ? '0 2px 12px 2px #3E863855' : 'none',
+    transform: active ? 'scale(1.08)' : 'none',
     '&:hover': {
       background: active
         ? (isDark
@@ -195,6 +198,7 @@ export const MarketplaceFilters: React.FC<IMarketplaceFiltersProps> = ({
             : 'linear-gradient(90deg, #3E8638 80%, #004134 100%)')
         : (isDark ? '#333' : '#E0E0E0'),
       transform: 'scale(1.04)',
+      boxShadow: '0 4px 16px 0 #3E863822',
     },
     '&:focus-visible': {
       outline: '2px solid #3E8638',
@@ -534,18 +538,27 @@ export const MarketplaceFilters: React.FC<IMarketplaceFiltersProps> = ({
               Tags populares
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
-              {POPULAR_TAGS.map((tag) => {
+              {POPULAR_TAGS.map((tag, idx) => {
                 const active = filters.tags.includes(tag);
                 return (
-                  <Chip
+                  <motion.div
                     key={tag}
-                    label={tag}
-                    onClick={() => handleTagToggle(tag)}
-                    sx={getTagChipStyles(active)}
-                    aria-label={`Tag: ${tag}`}
-                    aria-pressed={active}
-                    tabIndex={0}
-                  />
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    style={{ display: 'inline-block' }}
+                  >
+                    <Tooltip title={`Filtrar por tag: ${tag}`} arrow>
+                      <Chip
+                        label={tag}
+                        onClick={() => handleTagToggle(tag)}
+                        sx={getTagChipStyles(active)}
+                        aria-label={`Tag: ${tag}`}
+                        aria-pressed={active}
+                        tabIndex={0}
+                      />
+                    </Tooltip>
+                  </motion.div>
                 );
               })}
             </Box>

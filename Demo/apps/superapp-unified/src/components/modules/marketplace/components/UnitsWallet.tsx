@@ -26,7 +26,9 @@ import {
   ListItemIcon,
   CircularProgress,
   Tooltip,
-  Grid
+  Grid,
+  Stack,
+  alpha
 } from '@mui/material';
 import {
   AccountBalanceWallet,
@@ -138,181 +140,111 @@ const UnitsWallet: React.FC<UnitsWalletProps> = ({
 
   return (
     <>
-      <Card
-        sx={{
-          background: 'linear-gradient(135deg, var(--primary-blue, #3b82f6), var(--primary-green, #10b981))',
-          color: 'white',
-          position: 'relative',
-          overflow: 'hidden',
-          borderRadius: 4,
-          boxShadow: 'var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1))'
-        }}
-      >
-        {/* Elementos decorativos sutiles */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: -50,
-            right: -50,
-            width: 150,
-            height: 150,
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.05)',
-            zIndex: 0
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: -60,
-            left: -40,
-            width: 120,
-            height: 120,
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.03)',
-            zIndex: 0
-          }}
-        />
-
-        <CardContent sx={{ position: 'relative', zIndex: 1 }}>
-          {/* Header del Wallet */}
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-            <Box display="flex" alignItems="center" gap={1.5}>
-              <AccountBalanceWallet sx={{ fontSize: 32, opacity: 0.9 }} />
-              <Typography variant="h6" fontWeight="600">
-                💰 Mi Wallet de Ünits
-              </Typography>
-            </Box>
-
-            <Tooltip title={expanded ? "Contraer" : "Expandir"}>
-              <IconButton
-                onClick={() => setExpanded(!expanded)}
-                sx={{ color: 'white', backgroundColor: 'rgba(255,255,255,0.1)' }}
-                size="small"
-              >
-                {expanded ? <ExpandLess /> : <ExpandMore />}
-              </IconButton>
-            </Tooltip>
-          </Box>
-
-          {/* Balance Principal */}
-          <Box textAlign="center" mb={3}>
-            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.8)' }}>Balance Actual</Typography>
-            <Typography variant="h3" fontWeight="bold" sx={{ mb: 1, lineHeight: 1.2 }}>
-              {wallet.balance >= 0 ? '+' : ''}{wallet.balance.toFixed(2)}
-              <Typography component="span" variant="h5" sx={{ ml: 1, opacity: 0.7, fontWeight: 400 }}>
-                Ünits
-              </Typography>
+      <Box>
+        {/* Header del Wallet */}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ mb: 2 }}
+        >
+          <Stack direction="row" alignItems="center" spacing={1.5}>
+            <AccountBalanceWallet color="primary" />
+            <Typography variant="h6" fontWeight="600">
+              Mi Wallet de Ünits
             </Typography>
+          </Stack>
 
-            {isUsingCredit && (
-              <Chip
-                icon={<Warning />}
-                label={`Usando crédito: ${Math.abs(wallet.balance).toFixed(2)} Ünits`}
-                size="small"
-                sx={{ mb: 1, backgroundColor: 'rgba(255, 193, 7, 0.2)', color: '#FFC107' }}
-              />
-            )}
-          </Box>
+          <Tooltip title={expanded ? 'Contraer' : 'Expandir'}>
+            <IconButton onClick={() => setExpanded(!expanded)} size="small">
+              {expanded ? <ExpandLess /> : <ExpandMore />}
+            </IconButton>
+          </Tooltip>
+        </Stack>
 
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)', mb: 2 }} />
-            {/* Trust Score */}
-            <Box mb={2}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                <Typography variant="body2" display="flex" alignItems="center" gap={1} sx={{ color: 'rgba(255,255,255,0.8)'}}>
-                  <Security fontSize="small" />
-                  Confianza Comunitaria
-                </Typography>
-                <Typography variant="body2" fontWeight="bold">
-                  {trustPercentage.toFixed(0)}%
-                </Typography>
-              </Box>
-              <LinearProgress
-                variant="determinate"
-                value={trustPercentage}
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  backgroundColor: 'rgba(255,255,255,0.2)',
-                  '& .MuiLinearProgress-bar': {
-                    backgroundColor: 'white'
-                  }
-                }}
-              />
-            </Box>
+        {/* Balance Principal */}
+        <Stack
+          alignItems="center"
+          sx={{
+            py: 3,
+            backgroundColor: (theme) =>
+              isUsingCredit
+                ? alpha(theme.palette.error.main, 0.05)
+                : alpha(theme.palette.success.main, 0.05),
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="overline" color="text.secondary">
+            Balance Actual
+          </Typography>
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            color={isUsingCredit ? 'error.main' : 'success.main'}
+          >
+            {wallet.balance.toFixed(2)} Ü
+          </Typography>
+        </Stack>
 
-            {/* Límite de Crédito */}
-            <Box mb={2}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                <Typography variant="body2" display="flex" alignItems="center" gap={1} sx={{ color: 'rgba(255,255,255,0.8)'}}>
-                  <LocalAtm fontSize="small" />
-                  Crédito Disponible
-                </Typography>
-                <Typography variant="body2" fontWeight="bold">
-                  {availableCredit.toFixed(2)} Ünits
-                </Typography>
-              </Box>
-            </Box>
-
-            {/* Ayni Balance */}
-            <Box>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="body2" display="flex" alignItems="center" gap={1} sx={{ color: 'rgba(255,255,255,0.8)'}}>
-                   <Handshake fontSize="small" />
-                   Balance Ayni (Dar/Recibir)
-                </Typography>
-                <Typography variant="body2" fontWeight="bold" sx={{ color: ayniColor }}>
-                  {ayniValue > 0 && '+'}{ayniValue.toFixed(2)}
-                </Typography>
-              </Box>
-            </Box>
-            <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)', mt: 2 }} />
-          </Collapse>
-
-          {/* Botones de Acción */}
-          {showTransferButton && (
-            <Grid container spacing={1} mt={2}>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  startIcon={<Send />}
-                  onClick={() => setTransferDialogOpen(true)}
-                  sx={{
-                    backgroundColor: 'rgba(255,255,255,0.9)',
-                    color: 'var(--primary-blue, #3b82f6)',
-                    '&:hover': {
-                      backgroundColor: 'white'
-                    }
-                  }}
-                >
-                  Transferir
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  startIcon={<History />}
-                  onClick={() => setHistoryDialogOpen(true)}
-                  sx={{
-                    color: 'white',
-                    borderColor: 'rgba(255,255,255,0.5)',
-                    '&:hover': {
-                      borderColor: 'white',
-                      backgroundColor: 'rgba(255,255,255,0.1)'
-                    }
-                  }}
-                >
-                  Historial
-                </Button>
-              </Grid>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Divider sx={{ my: 2 }} />
+          <Grid container spacing={2} textAlign="center">
+            <Grid item xs={6}>
+              <Typography variant="body2" color="text.secondary">
+                Límite de Crédito
+              </Typography>
+              <Typography fontWeight="bold">{wallet.creditLimit} Ü</Typography>
             </Grid>
-          )}
+            <Grid item xs={6}>
+              <Typography variant="body2" color="text.secondary">
+                Nivel de Confianza
+              </Typography>
+              <Typography fontWeight="bold">
+                {trustPercentage.toFixed(0)}%
+              </Typography>
+            </Grid>
+          </Grid>
+          <Box sx={{ width: '100%', mt: 2 }}>
+            <Typography
+              variant="caption"
+              display="block"
+              color="text.secondary"
+              textAlign="center"
+              sx={{ mb: 0.5 }}
+            >
+              Uso de crédito
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={creditUsagePercentage}
+              color={creditUsagePercentage > 75 ? 'error' : 'warning'}
+            />
+          </Box>
+        </Collapse>
 
-        </CardContent>
-      </Card>
+        <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+          {showTransferButton && (
+            <Button
+              variant="contained"
+              startIcon={<Send />}
+              onClick={() => setTransferDialogOpen(true)}
+              fullWidth
+            >
+              Transferir
+            </Button>
+          )}
+          {showHistory && (
+            <Button
+              variant="outlined"
+              startIcon={<History />}
+              onClick={() => setHistoryDialogOpen(true)}
+              fullWidth
+            >
+              Historial
+            </Button>
+          )}
+        </Stack>
+      </Box>
 
       {/* Dialogo de Transferencia */}
       <Dialog open={transferDialogOpen} onClose={() => setTransferDialogOpen(false)} fullWidth maxWidth="sm">

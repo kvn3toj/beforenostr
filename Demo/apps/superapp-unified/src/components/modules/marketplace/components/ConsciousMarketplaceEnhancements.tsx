@@ -241,7 +241,7 @@ const ConsciousMarketplaceCard: React.FC<{
       <Box sx={{ position: 'relative', height: 200 }}>
         <Box
           component="img"
-          src={item.images[0]}
+          src={item.images[0] || '/images/servicio-domicilio.png'}
           alt={item.title}
           sx={{
             width: '100%',
@@ -249,6 +249,9 @@ const ConsciousMarketplaceCard: React.FC<{
             objectFit: 'cover',
             transition: 'transform 0.3s ease',
             transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+          }}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = '/images/servicio-domicilio.png';
           }}
         />
 

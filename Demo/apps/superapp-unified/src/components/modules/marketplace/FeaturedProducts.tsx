@@ -129,7 +129,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                     }}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
+                      target.src = '/placeholder.jpg';
                     }}
                   />
 

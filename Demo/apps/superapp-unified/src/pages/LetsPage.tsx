@@ -56,7 +56,7 @@ function TabPanel(props: TabPanelProps) {
 const LetsPage: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
   const { user } = useAuth();
-  const { state } = useLetsEducation();
+  const { state, completeOnboarding } = useLetsEducation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -65,6 +65,11 @@ const LetsPage: React.FC = () => {
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
+  };
+
+  const handleCompleteOnboarding = () => {
+    completeOnboarding();
+    setShowOnboarding(false);
   };
 
   // Mock stats - en producción vendrían del backend
@@ -77,125 +82,87 @@ const LetsPage: React.FC = () => {
 
   return (
     <>
-      <LetsOnboardingWizard
-        open={showOnboarding}
-        onClose={() => setShowOnboarding(false)}
-        onComplete={() => setShowOnboarding(false)}
-        data-testid="lets-onboarding-wizard"
-      />
+      <Fade in={showOnboarding} timeout={500} unmountOnExit>
+        <div>
+          <LetsOnboardingWizard
+            open={showOnboarding}
+            onClose={() => setShowOnboarding(false)}
+            onComplete={handleCompleteOnboarding}
+          />
+        </div>
+      </Fade>
 
       <Container maxWidth="xl" sx={{ py: 3 }}>
         {/* Header Hero Section */}
         <Fade in timeout={800}>
           <Box sx={{ mb: 4 }}>
             <Paper
-              elevation={0}
+              variant="outlined"
               sx={{
                 p: 4,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                borderRadius: 3,
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
+                borderRadius: '16px',
+                background: '#ffffff',
+                borderColor: '#e2e8f0',
               }}
             >
-              {/* Decorative background elements */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: -50,
-                  right: -50,
-                  width: 200,
-                  height: 200,
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.1)',
-                  filter: 'blur(40px)',
-                }}
-              />
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: -30,
-                  left: -30,
-                  width: 150,
-                  height: 150,
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.08)',
-                  filter: 'blur(30px)',
-                }}
-              />
-
-              <Grid container spacing={3} alignItems="center" sx={{ position: 'relative', zIndex: 1 }}>
+              <Grid container spacing={3} alignItems="center">
                 <Grid item xs={12} md={8}>
-                  <Typography variant="h3" fontWeight="bold" sx={{ mb: 2 }}>
-                    🔄 Sistema LETS CoomÜnity
+                  <Typography variant="h4" fontWeight="bold" sx={{ mb: 1, color: 'text.primary' }}>
+                    Sistema LETS CoomÜnity
                   </Typography>
-                  <Typography variant="h6" sx={{ mb: 3, opacity: 0.9 }}>
-                    Local Exchange Trading System - Economía Colaborativa basada en Ayni
+                  <Typography variant="h6" sx={{ mb: 2, color: 'text.secondary' }}>
+                    Economía Colaborativa basada en Ayni
                   </Typography>
-                  <Typography variant="body1" sx={{ mb: 3, opacity: 0.8 }}>
+                  <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
                     Intercambia productos, servicios y conocimientos usando Ünits, nuestra moneda local
                     que promueve la reciprocidad y el bien común en la comunidad.
                   </Typography>
-
-                  <Stack direction="row" spacing={2} flexWrap="wrap">
-                    <Chip
-                      label="💰 Sin Intereses"
-                      sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
-                    />
-                    <Chip
-                      label="🤝 Basado en Confianza"
-                      sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
-                    />
-                    <Chip
-                      label="⚖️ Principio CoomÜnity"
-                      sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
-                    />
-                    <Chip
-                      label="🌱 Economía Circular"
-                      sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
-                    />
+                  <Stack direction="row" spacing={1} flexWrap="wrap">
+                    <Chip label="Sin Intereses" variant="outlined" />
+                    <Chip label="Basado en Confianza" variant="outlined" />
+                    <Chip label="Principio CoomÜnity" variant="outlined" />
+                    <Chip label="Economía Circular" variant="outlined" />
                   </Stack>
                 </Grid>
 
                 <Grid item xs={12} md={4}>
                   <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={3} md={6}>
                       <Box textAlign="center">
-                        <Typography variant="h4" fontWeight="bold">
+                        <Typography variant="h5" fontWeight="bold" color="primary">
                           {letsStats.totalTransactions}
                         </Typography>
-                        <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                          Intercambios Realizados
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          Intercambios
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={3} md={6}>
                       <Box textAlign="center">
-                        <Typography variant="h4" fontWeight="bold">
+                        <Typography variant="h5" fontWeight="bold" color="primary">
                           {letsStats.activeUsers}
                         </Typography>
-                        <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                           Usuarios Activos
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={3} md={6}>
                       <Box textAlign="center">
-                        <Typography variant="h4" fontWeight="bold">
+                        <Typography variant="h5" fontWeight="bold" color="primary">
                           {letsStats.totalUnitsCirculating}
                         </Typography>
-                        <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                          Ünits en Circulación
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          Ünits Circulando
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={3} md={6}>
                       <Box textAlign="center">
-                        <Typography variant="h4" fontWeight="bold">
+                        <Typography variant="h5" fontWeight="bold" color="primary">
                           {(letsStats.coomunityIndex * 100).toFixed(0)}%
                         </Typography>
-                        <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                           Índice CoomÜnity
                         </Typography>
                       </Box>

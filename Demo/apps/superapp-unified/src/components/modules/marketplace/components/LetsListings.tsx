@@ -30,7 +30,10 @@ import {
   Autocomplete,
   FormControlLabel,
   Switch,
-  Badge
+  Badge,
+  Stack,
+  CardContent,
+  CardActions
 } from '@mui/material';
 import {
   Add,
@@ -112,230 +115,156 @@ export const LetsListings: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box p={3}>
-        <Typography>Cargando intercambios LETS...</Typography>
+      <Box p={3} textAlign="center">
+        <CircularProgress />
+        <Typography sx={{ mt: 1 }}>Cargando intercambios LETS...</Typography>
       </Box>
     );
   }
 
   return (
-    <Box>
+    <Stack spacing={3}>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={2}
+      >
         <Box>
-          <Typography variant="h4" fontWeight="bold" gutterBottom>
-            🔄 Intercambios LETS Locales
+          <Typography variant="h5" fontWeight="600">
+            Intercambios LETS
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Economía colaborativa basada en principios de Reciprocidad
+          <Typography color="text.secondary">
+            Explora ofertas y demandas en la comunidad
           </Typography>
         </Box>
-
-        <Fab
-          color="primary"
+        <Button
+          variant="contained"
+          startIcon={<Add />}
           onClick={() => setCreateModalOpen(true)}
-          sx={{
-            background: 'linear-gradient(45deg, #FF6B6B, #4ECDC4)',
-            '&:hover': {
-              background: 'linear-gradient(45deg, #FF5252, #26C6DA)',
-            }
-          }}
         >
-          <Add />
-        </Fab>
-      </Box>
+          Crear Publicación
+        </Button>
+      </Stack>
 
       {/* Filtros */}
-      <Card sx={{ p: 3, mb: 3 }}>
-        <Typography variant="h6" mb={2} display="flex" alignItems="center" gap={1}>
-          <FilterList color="primary" />
-          Filtros de Búsqueda
-        </Typography>
-
+      <Paper variant="outlined" sx={{ p: 2 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              placeholder="Buscar por título, descripción o tags..."
+              size="small"
+              variant="outlined"
+              placeholder="Buscar por título o descripción..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               InputProps={{
-                startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} />
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
               }}
             />
           </Grid>
-
-          <Grid item xs={12} md={2}>
-            <FormControl fullWidth>
+          <Grid item xs={6} md={3}>
+            <FormControl fullWidth size="small">
               <InputLabel>Tipo</InputLabel>
               <Select
                 value={filters.type || ''}
                 onChange={(e) => handleFilterChange('type', e.target.value)}
+                label="Tipo"
               >
                 <MenuItem value="">Todos</MenuItem>
-                <MenuItem value="offer">🤲 Ofertas</MenuItem>
-                <MenuItem value="request">🙏 Demandas</MenuItem>
+                <MenuItem value="offer">Ofertas</MenuItem>
+                <MenuItem value="request">Demandas</MenuItem>
               </Select>
             </FormControl>
           </Grid>
-
-          <Grid item xs={12} md={2}>
-            <FormControl fullWidth>
+          <Grid item xs={6} md={3}>
+            <FormControl fullWidth size="small">
               <InputLabel>Categoría</InputLabel>
               <Select
                 value={filters.category || ''}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
+                label="Categoría"
               >
                 <MenuItem value="">Todas</MenuItem>
-                {Object.entries(LETS_CATEGORIES).map(([key, value]) => (
-                  <MenuItem key={key} value={value}>
-                    {value.charAt(0).toUpperCase() + value.slice(1)}
+                {Object.values(LETS_CATEGORIES).map((cat) => (
+                  <MenuItem key={cat} value={cat}>
+                    {cat}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
-
-          <Grid item xs={12} md={2}>
-            <TextField
-              fullWidth
-              label="Ubicación"
-              value={filters.location || ''}
-              onChange={(e) => handleFilterChange('location', e.target.value)}
-              InputProps={{
-                startAdornment: <LocationOn sx={{ mr: 1, color: 'text.secondary' }} />
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={2}>
-            <Box display="flex" gap={1}>
-              <Button
-                variant="contained"
-                onClick={handleSearch}
-                sx={{ minWidth: 'auto', px: 2 }}
-              >
-                <Search />
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={clearFilters}
-                sx={{ minWidth: 'auto', px: 2 }}
-              >
-                Limpiar
-              </Button>
-            </Box>
-          </Grid>
         </Grid>
-      </Card>
+      </Paper>
 
-      {/* Estadísticas rápidas */}
-      <Grid container spacing={2} mb={3}>
-        <Grid item xs={6} md={3}>
-          <Card sx={{ p: 2, textAlign: 'center' }}>
-            <TrendingUp color="success" sx={{ fontSize: 32, mb: 1 }} />
-            <Typography variant="h6" fontWeight="bold">
+      {/* Resumen de Estadísticas */}
+      <Paper variant="outlined">
+        <Grid container>
+          <Grid item xs={6} md={3} sx={{ p: 2, textAlign: 'center' }}>
+            <Typography variant="h5" fontWeight="bold">
               {stats.offers}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               Ofertas Activas
             </Typography>
-          </Card>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <Card sx={{ p: 2, textAlign: 'center' }}>
-            <TrendingDown color="warning" sx={{ fontSize: 32, mb: 1 }} />
-            <Typography variant="h6" fontWeight="bold">
+          </Grid>
+          <Grid item xs={6} md={3} sx={{ p: 2, textAlign: 'center', borderLeft: { xs: 0, md: 1 }, borderColor: 'divider' }}>
+            <Typography variant="h5" fontWeight="bold">
               {stats.requests}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               Demandas Activas
             </Typography>
-          </Card>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <Card sx={{ p: 2, textAlign: 'center' }}>
-            <Handshake color="primary" sx={{ fontSize: 32, mb: 1 }} />
-            <Typography variant="h6" fontWeight="bold">
+          </Grid>
+          <Grid item xs={6} md={3} sx={{ p: 2, textAlign: 'center', borderTop: { xs: 1, md: 0 }, borderLeft: { xs: 0, md: 1 }, borderColor: 'divider' }}>
+            <Typography variant="h5" fontWeight="bold">
               {stats.total}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               Total Intercambios
             </Typography>
-          </Card>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <Card sx={{ p: 2, textAlign: 'center' }}>
-            <Category color="info" sx={{ fontSize: 32, mb: 1 }} />
-            <Typography variant="h6" fontWeight="bold">
+          </Grid>
+          <Grid item xs={6} md={3} sx={{ p: 2, textAlign: 'center', borderTop: { xs: 1, md: 0 }, borderLeft: { xs: 1, md: 1 }, borderColor: 'divider' }}>
+            <Typography variant="h5" fontWeight="bold">
               {stats.categories}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               Categorías Activas
             </Typography>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Lista de intercambios */}
-      <Grid container spacing={2}>
-        {listings && listings.length > 0 ? (
-          listings.map((listing) => (
-            <Grid item xs={12} md={6} lg={4} key={listing.id}>
-              <LetsListingCard
-                listing={listing}
-                onInteract={() => {
-                  console.log('Interactuando con listing:', listing.id);
-                }}
-                currentUserId={user?.id}
-              />
-            </Grid>
-          ))
-        ) : (
-          <Grid item xs={12}>
-            <Card sx={{ p: 4, textAlign: 'center' }}>
-              <Typography variant="h6" color="text.secondary" mb={2}>
-                No se encontraron intercambios
-              </Typography>
-              <Typography variant="body2" color="text.secondary" mb={3}>
-                {Object.keys(filters).length > 0
-                  ? 'Intenta ajustar los filtros de búsqueda'
-                  : 'Sé el primero en crear un intercambio LETS'
-                }
-              </Typography>
-              <Button
-                variant="contained"
-                startIcon={<Add />}
-                onClick={() => setCreateModalOpen(true)}
-              >
-                Crear Intercambio
-              </Button>
-            </Card>
           </Grid>
-        )}
+        </Grid>
+      </Paper>
+
+      {/* Listados */}
+      <Grid container spacing={2}>
+        {listings.map((listing) => (
+          <Grid item key={listing.id} xs={12} sm={6} md={4} lg={3}>
+            <LetsListingCard listing={listing} onInteract={() => {}} currentUserId={user?.id} />
+          </Grid>
+        ))}
       </Grid>
 
-      {/* Modal de creación */}
+      {/* Modal de Creación (estilo base aplicado) */}
       <CreateLetsListingModal
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={async (data) => {
-          try {
-            const dataWithUserId = {
-              ...data,
-              userId: user?.id || 'anonymous'
-            };
-            await createMutation.mutateAsync(dataWithUserId);
-            setCreateModalOpen(false);
-            refetch();
-          } catch (error) {
-            console.error('Error creando listado:', error);
+          if (!user?.id) {
+            console.error("No se puede crear la publicación sin ID de usuario");
+            return;
           }
+          await createMutation.mutateAsync({ ...data, userId: user.id });
+          setCreateModalOpen(false);
         }}
         isLoading={createMutation.isPending}
       />
-    </Box>
+    </Stack>
   );
 };
 
@@ -352,196 +281,53 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
   currentUserId
 }) => {
   const isOffer = listing.type === 'offer';
-  const isOwner = listing.userId === currentUserId;
-  const trustScore = listing.user?.trustScore || 0;
-
   return (
-    <Card
-      sx={{
-        p: 2,
-        height: '100%',
-        border: `2px solid ${isOffer ? '#4CAF50' : '#FF9800'}`,
-        borderRadius: 2,
-        transition: 'all 0.3s ease',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: 4,
-          borderColor: isOffer ? '#2E7D32' : '#F57C00'
-        },
-        position: 'relative',
-        overflow: 'hidden'
-      }}
-    >
-      {/* Indicador de tipo */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: 0,
-          height: 0,
-          borderLeft: '40px solid transparent',
-          borderTop: `40px solid ${isOffer ? '#4CAF50' : '#FF9800'}`,
-        }}
-      />
-
-      {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="start" mb={2}>
-        <Chip
-          label={isOffer ? '🤲 OFREZCO' : '🙏 NECESITO'}
-          size="small"
-          sx={{
-            bgcolor: isOffer ? '#E8F5E8' : '#FFF3E0',
-            color: isOffer ? '#2E7D32' : '#F57C00',
-            fontWeight: 'bold',
-            fontSize: '0.75rem'
-          }}
-        />
-
-        <Box display="flex" alignItems="center" gap={0.5}>
-          <LocationOn sx={{ fontSize: 14, color: 'text.secondary' }} />
-          <Typography variant="caption" color="text.secondary">
-            {listing.location || 'Sin ubicación'}
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* Título y descripción */}
-      <Typography variant="h6" fontWeight="bold" mb={1} noWrap>
-        {listing.title}
-      </Typography>
-
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        mb={2}
-        sx={{
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden'
-        }}
-      >
-        {listing.description}
-      </Typography>
-
-      {/* Información del usuario */}
-      <Box display="flex" alignItems="center" gap={1} mb={2}>
-        <Avatar
-          src={listing.user?.avatar}
-          sx={{ width: 24, height: 24 }}
+    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          spacing={1}
         >
-          {listing.user?.name?.charAt(0)}
-        </Avatar>
-        <Typography variant="caption" color="text.secondary">
-          {listing.user?.name || 'Usuario'}
-        </Typography>
-        <Tooltip title={`Confianza: ${(trustScore * 100).toFixed(0)}%`}>
-          <Box display="flex" alignItems="center" gap={0.5}>
-            <Security sx={{ fontSize: 12, color: 'text.secondary' }} />
-            <Typography variant="caption" color="text.secondary">
-              {(trustScore * 100).toFixed(0)}%
+          <Box>
+            <Chip
+              label={isOffer ? 'Oferta' : 'Demanda'}
+              color={isOffer ? 'success' : 'warning'}
+              size="small"
+              sx={{ mb: 1.5, fontWeight: 600 }}
+            />
+            <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 1 }}>
+              {listing.title}
             </Typography>
           </Box>
-        </Tooltip>
-      </Box>
-
-      {/* Precio y tiempo */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Box>
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            {listing.unitsValue} Ünits
+          <Tooltip title={listing.user.name || 'Usuario'}>
+            <Avatar
+              alt={listing.user.name || 'Usuario'}
+              src={listing.user.avatarUrl || undefined}
+            />
+          </Tooltip>
+        </Stack>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {listing.description}
+        </Typography>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <LocalOffer fontSize="small" color="action" />
+          <Typography variant="caption" color="text.secondary">
+            Categoría: {listing.category}
           </Typography>
-          {listing.estimatedHours && (
-            <Typography variant="caption" color="text.secondary" display="flex" alignItems="center" gap={0.5}>
-              <AccessTime sx={{ fontSize: 12 }} />
-              ≈ {listing.estimatedHours}h
-            </Typography>
-          )}
-        </Box>
-        <Chip
-          label={listing.category}
+        </Stack>
+      </CardContent>
+      <Divider />
+      <CardActions>
+        <Button
           size="small"
-          variant="outlined"
-          sx={{ textTransform: 'capitalize' }}
-        />
-      </Box>
-
-      {/* Tags */}
-      <Box display="flex" gap={0.5} mb={2} flexWrap="wrap">
-        {listing.tags?.slice(0, 3).map((tag: string, index: number) => (
-          <Chip
-            key={index}
-            label={tag}
-            size="small"
-            sx={{
-              fontSize: '0.7rem',
-              height: 20,
-              bgcolor: 'rgba(0,0,0,0.05)'
-            }}
-          />
-        ))}
-        {listing.tags?.length > 3 && (
-          <Chip
-            label={`+${listing.tags.length - 3}`}
-            size="small"
-            sx={{
-              fontSize: '0.7rem',
-              height: 20,
-              bgcolor: 'rgba(0,0,0,0.1)'
-            }}
-          />
-        )}
-      </Box>
-
-      <Divider sx={{ mb: 2 }} />
-
-      {/* Botones de acción */}
-      <Box display="flex" gap={1}>
-        {!isOwner ? (
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={onInteract}
-            sx={{
-              background: isOffer
-                ? 'linear-gradient(45deg, #4CAF50, #81C784)'
-                : 'linear-gradient(45deg, #FF9800, #FFB74D)',
-              color: 'white',
-              '&:hover': {
-                background: isOffer
-                  ? 'linear-gradient(45deg, #2E7D32, #66BB6A)'
-                  : 'linear-gradient(45deg, #F57C00, #FFA726)',
-              }
-            }}
-          >
-            {isOffer ? 'Contactar Proveedor' : 'Ofrecer Ayuda'}
-          </Button>
-        ) : (
-          <>
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ flex: 1 }}
-            >
-              Editar
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              size="small"
-              sx={{ flex: 1 }}
-            >
-              Eliminar
-            </Button>
-          </>
-        )}
-      </Box>
-
-      {/* Fecha de expiración */}
-      <Typography variant="caption" color="text.secondary" mt={1} display="block">
-        Expira: {new Date(listing.expiresAt).toLocaleDateString()}
-      </Typography>
+          onClick={onInteract}
+          startIcon={<Handshake />}
+        >
+          Ver Intercambio
+        </Button>
+      </CardActions>
     </Card>
   );
 };

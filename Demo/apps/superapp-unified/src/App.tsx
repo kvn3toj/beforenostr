@@ -178,7 +178,6 @@ const AppRoutes: React.FC = () => {
 };
 
 // Main App Component
-// FORCING LINTER RE-EVALUATION
 const App: React.FC = () => {
   const [, startTransition] = useTransition();
 
@@ -212,8 +211,6 @@ const App: React.FC = () => {
                             <Suspense fallback={<div>Cargando...</div>}>
                               <AppRoutes />
                             </Suspense>
-
-                            <GuardianThemeSelector />
 
                             <div style={{ position: 'fixed', bottom: '80px', right: '10px', zIndex: 10000 }}>
                               <ThemeSelector />

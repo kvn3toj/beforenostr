@@ -25,6 +25,7 @@ import {
   CircularProgress,
   Fade,
   Skeleton,
+  Paper,
 } from '@mui/material';
 import {
   PlayArrow,
@@ -50,7 +51,7 @@ import {
 import { motion } from 'framer-motion';
 
 // Importar componentes mejorados
-import DynamicMetricsDashboard from './components/DynamicMetricsDashboard';
+import DynamicMetricsDashboard from './DynamicMetricsDashboard';
 import { EnhancedRewardFeedback, useRewardFeedback } from './components/EnhancedRewardFeedback';
 import UnifiedUPlayPlayer from './UnifiedUPlayPlayer';
 
@@ -82,6 +83,9 @@ import { useUPlayProgress } from './hooks/useUPlayProgress';
 
 // [IMPORT] Añadir AchievementBar para barra de progreso global
 import AchievementBar from '../ustats/components/AchievementBar';
+
+// [NUEVO] Integración del nuevo componente de gráfica `MinimalistActivityChart`
+import MinimalistActivityChart from './components/MinimalistActivityChart';
 
 // ============================================================================
 // ADAPTADORES Y HELPERS
@@ -753,533 +757,83 @@ const SessionStatsWidget: React.FC = () => {
   );
 };
 
+const CompactMetricCard = ({ title, value, icon }: { title: string, value: string | number, icon: React.ReactNode }) => (
+  <Paper
+    variant="outlined"
+    sx={{
+      p: 2,
+      display: 'flex',
+      alignItems: 'center',
+      borderRadius: '12px',
+      background: '#ffffff',
+      borderColor: '#e2e8f0',
+    }}
+  >
+    <Box sx={{ mr: 2, color: '#6366f1' }}>{icon}</Box>
+    <Box>
+      <Typography sx={{ fontWeight: 600, color: '#1e293b' }}>{value}</Typography>
+      <Typography variant="body2" sx={{ color: '#64748b' }}>{title}</Typography>
+    </Box>
+  </Paper>
+);
+
 // ============================================================================
-// COMPONENTE PRINCIPAL
+// COMPONENTE PRINCIPAL - VERSIÓN MINIMALISTA
 // ============================================================================
 
 export const UPlayGamifiedDashboard: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const navigate = useNavigate();
-
-  // Estados locales
-  const [tabValue, setTabValue] = useState(0);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-
-  // Zustand store
-  const playerMetrics = usePlayerMetrics();
-  const unreadNotifications = useUnreadNotifications();
-  const currentSession = useCurrentSession();
-  const unlockedAchievements = useUnlockedAchievements();
-  const { showRewardFeedback, setCurrentVideo } = useUPlayStore();
-
-  // Hook de feedback de recompensas
-  const { showReward, hideReward } = useRewardFeedback();
-
-  // Fetch playlists (rutas de aprendizaje)
-  const {
-    data: playlists = [],
-    isLoading: isLoadingPlaylists,
-    isError: isErrorPlaylists,
-    error: errorPlaylists,
-  } = usePlaylists();
-
-  // Fetch videos
-  const {
-    data: videos = [],
-    isLoading: isLoadingVideos,
-    isError: isErrorVideos,
-    error: errorVideos,
-  } = useVideos();
-
-  // [PHOENIX/ANA] Uso de useUPlayProgress para obtener progreso compartido
-  const progress = useUPlayProgress();
-
-  // NUEVO: Adaptar videos del backend al formato VideoItem
-  const adaptedVideos = React.useMemo(() => {
-    console.log('🔄 Adaptando videos del backend al formato VideoItem...');
-    console.log('🔄 Videos crudos del backend:', videos);
-
-    if (!videos) return [];
-
-    const adapted = videos.map((backendVideo: any) => {
-      try {
-        const adaptedVideo = adaptBackendVideoToVideoItem(backendVideo);
-        console.log(`✅ Video "${backendVideo.title}" adaptado exitosamente:`, {
-          original: { id: backendVideo.id, title: backendVideo.title, hasRewards: !!backendVideo.rewards },
-          adapted: { id: adaptedVideo.id, title: adaptedVideo.title, rewards: adaptedVideo.rewards }
-        });
-        return adaptedVideo;
-      } catch (error) {
-        console.error(`❌ Error adaptando video "${backendVideo.title}":`, error);
-        // Retornar video con estructura mínima válida
-        return {
-          id: backendVideo.id?.toString() || 'error',
-          title: backendVideo.title || 'Video con error',
-          description: 'Error al procesar este video',
-          thumbnail: '⚠️',
-          duration: 0,
-          difficulty: 'easy' as const,
-          category: 'Error',
-          rewards: { meritos: 0, ondas: 0 },
-          isCompleted: false,
-          progress: 0,
-          questionsCount: 0,
-        };
-      }
-    });
-
-    console.log('🔄 Videos adaptados finales:', adapted);
-    return adapted;
-  }, [videos]);
-
-  // NUEVO: Preparar datos para DynamicMetricsDashboard con validaciones defensivas
-  const dynamicMetricsData = React.useMemo(() => {
-    // Datos de métricas actuales con validaciones para evitar NaN
-    const metricsData = {
-      meritos: Number(playerMetrics?.meritos) || 340, // fallback para demo
-      ondas: Number(playerMetrics?.ondas) || 125, // fallback para demo
-      nivel: Number(playerMetrics?.level) || 1,
-      precision: Number(playerMetrics?.precision) || 87, // porcentaje de precisión
-      racha: Number(playerMetrics?.currentStreak) || 5, // días consecutivos
-      videosCompletados: Number(playerMetrics?.completedVideos) || 2,
-      tiempoTotal: Number(playerMetrics?.totalWatchTime) || 95, // minutos
-      preguntasRespondidas: Number(playerMetrics?.questionsAnswered) || 18,
-      logrosDesbloqueados: unlockedAchievements?.length || 0,
-      rankingComunidad: 42,
-      // ... otras métricas si es necesario
-    };
-
-    // Historial de progreso (simulado para demo, en producción vendría del backend)
-    const progressHistory = [
-      { date: '15/06', meritos: 200, ondas: 80, precision: 85 },
-      { date: '16/06', meritos: 245, ondas: 95, precision: 89 },
-      { date: '17/06', meritos: 280, ondas: 105, precision: 86 },
-      { date: '18/06', meritos: 320, ondas: 118, precision: 91 },
-      { date: '19/06', meritos: 340, ondas: 125, precision: 87 },
-    ];
-
-    // Distribución por categorías basada en videos disponibles
-    const categoryProgress = (() => {
-      if (!adaptedVideos?.length) {
-        // Datos de fallback para demo
-        return [
-          { name: 'Gamificación', value: 35, color: '#2563eb' },
-          { name: 'Narrativa', value: 25, color: '#10b981' },
-          { name: 'Evaluación', value: 20, color: '#f59e0b' },
-          { name: 'Mecánicas', value: 15, color: '#ef4444' },
-          { name: 'Otros', value: 5, color: '#8b5cf6' },
-        ];
-      }
-
-      // Calcular distribución real basada en videos
-      const categoryCount: Record<string, number> = {};
-      adaptedVideos.forEach(video => {
-        const category = video.category || 'Otros';
-        categoryCount[category] = (categoryCount[category] || 0) + 1;
-      });
-
-      const total = adaptedVideos.length;
-      const categoryColors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
-
-      return Object.entries(categoryCount).map(([name, count], index) => ({
-        name,
-        value: Math.round((count / total) * 100),
-        color: categoryColors[index % categoryColors.length],
-      }));
-    })();
-
-    return {
-      metrics: metricsData,
-      progressHistory,
-      categoryProgress,
-      isLoading: isLoadingVideos || isLoadingPlaylists,
-      showAnimations: true,
-    };
-  }, [playerMetrics, unlockedAchievements, adaptedVideos, isLoadingVideos, isLoadingPlaylists]);
-
-  // Agrupar videos adaptados por playlistId
-  const videosByPlaylist = React.useMemo(() => {
-    console.log('🎪 Agrupando videos adaptados por playlist...');
-    console.log('🎪 Videos adaptados recibidos para agrupar:', adaptedVideos);
-    console.log('🎪 Videos originales para referencia:', videos);
-
-    if (!adaptedVideos || !videos) return {};
-    const grouped: Record<string, VideoItem[]> = {};
-
-    // Usar índice para mapear videos adaptados con originales
-    videos.forEach((originalVideo: any, index: number) => {
-      const adaptedVideo = adaptedVideos[index];
-      if (!adaptedVideo) return;
-
-      const pid = originalVideo.playlistId || 'unassigned';
-      console.log(`🎪 Video ${index + 1} "${adaptedVideo.title}" → playlist: "${pid}"`);
-      if (!grouped[pid]) grouped[pid] = [];
-      grouped[pid].push(adaptedVideo);
-    });
-
-    console.log('🎪 Resultado del agrupamiento:', grouped);
-    console.log('🎪 Playlists con videos:', Object.keys(grouped));
-    return grouped;
-  }, [adaptedVideos, videos]);
-
-  // 🚀 PERFORMANCE: React 18 startTransition para mejor UX
-  const [isPending, startTransition] = useTransition();
-  const [transitionState, setTransitionState] = useState<TransitionState>({
-    isTabChanging: false,
-    isVideoLoading: false,
-    isContentLoading: false,
-  });
-
-  // �� PRELOAD INTELIGENTE - predecir el siguiente tab más probable
-  const [preloadedTabs, setPreloadedTabs] = useState<Set<number>>(new Set([0])); // Dashboard siempre cargado
-
-  const preloadTabContent = useCallback((tabIndex: number) => {
-    if (!preloadedTabs.has(tabIndex)) {
-      setPreloadedTabs(prev => new Set([...prev, tabIndex]));
-      console.log(`🚀 Preloading tab ${tabIndex} content...`);
-
-      // Simular preload según el tipo de tab
-      setTimeout(() => {
-        console.log(`✅ Tab ${tabIndex} content preloaded`);
-      }, 100);
-    }
-  }, [preloadedTabs]);
-
-  // 🎯 PREDICCIÓN INTELIGENTE: precargar tabs adyacentes
-  useEffect(() => {
-    const adjacentTabs = [
-      Math.max(0, tabValue - 1),
-      Math.min(3, tabValue + 1) // Asumiendo 4 tabs (0-3)
-    ];
-
-    adjacentTabs.forEach(tabIndex => {
-      if (tabIndex !== tabValue) {
-        preloadTabContent(tabIndex);
-      }
-    });
-  }, [tabValue, preloadTabContent]);
-
-  // Helper para obtener nombre de playlist
-  const getPlaylistName = (playlistId: string) => {
-    if (playlistId === 'unassigned') return 'Sin ruta asignada';
-    const pl = playlists?.find((p: any) => p.id === playlistId);
-    return pl?.name || 'Ruta desconocida';
-  };
-
-  // 🎯 HANDLERS OPTIMIZADOS CON PRELOAD Y TRANSICIONES MEJORADAS
-  const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
-    // Mostrar indicador inmediatamente
-    setTransitionState(prev => ({ ...prev, isTabChanging: true }));
-
-    // Preload del tab de destino si no está cargado
-    preloadTabContent(newValue);
-
-    startTransition(() => {
-      setTabValue(newValue);
-
-      // Predicar y precargar tabs adyacentes al nuevo tab
-      const adjacentTabs = [
-        Math.max(0, newValue - 1),
-        Math.min(3, newValue + 1)
-      ];
-
-      adjacentTabs.forEach(tabIndex => {
-        if (tabIndex !== newValue) {
-          setTimeout(() => preloadTabContent(tabIndex), 200);
-        }
-      });
-
-      // Resetear indicador después de la transición
-      setTimeout(() => {
-        setTransitionState(prev => ({ ...prev, isTabChanging: false }));
-      }, 400); // Aumentado para transiciones más suaves
-    });
-  }, [preloadTabContent]);
-
-  const handleVideoPlay = useCallback((videoId: string) => {
-    console.log('🎬 Playing video:', videoId);
-
-    // Mostrar indicador de carga inmediatamente
-    setTransitionState(prev => ({ ...prev, isVideoLoading: true }));
-
-    startTransition(() => {
-      // Buscar el video completo en los datos del backend
-      const videoData = videos?.find((v: any) => v.id.toString() === videoId);
-      console.log('🎬 Found video data:', videoData);
-
-      if (videoData) {
-        // Navegar al reproductor con los datos del video
-        navigate(`/uplay/video/${videoId}`, {
-          state: {
-            from: '/uplay',
-            videoData
-          }
-        });
-      } else {
-        console.error('❌ Video not found:', videoId);
-        // Navegar de todas formas, el UPlayVideoPlayer manejará la carga
-        navigate(`/uplay/video/${videoId}`, {
-          state: {
-            from: '/uplay'
-          }
-        });
-      }
-
-      setSelectedVideo(videoId);
-      setCurrentVideo(videoId);
-
-      // Resetear indicador después de un tiempo breve
-      setTimeout(() => {
-        setTransitionState(prev => ({ ...prev, isVideoLoading: false }));
-      }, 500);
-    });
-  }, [setCurrentVideo, videos, navigate]);
-
-  const handleCloseSidebar = useCallback(() => {
-    startTransition(() => {
-      setSidebarOpen(false);
-    });
-  }, []);
-
-  // 🎯 OPTIMIZADOR DE CONTENT LOADING
-  const handleContentLoad = useCallback((loadingFn: () => void) => {
-    setTransitionState(prev => ({ ...prev, isContentLoading: true }));
-
-    startTransition(() => {
-      loadingFn();
-      // Simular tiempo de carga para UX suave
-      setTimeout(() => {
-        setTransitionState(prev => ({ ...prev, isContentLoading: false }));
-      }, 200);
-    });
-  }, []);
-
-  // Loading state con transiciones mejoradas
-  if (isLoadingPlaylists || isLoadingVideos) {
-    return (
-      <Box sx={{ p: 4 }}>
-        <Fade in={true} timeout={800}>
-          <Box>
-            <LinearProgress
-              sx={{
-                mb: 2,
-                '& .MuiLinearProgress-bar': {
-                  background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-                }
-              }}
-            />
-            <Typography sx={{ mt: 2, textAlign: 'center' }}>
-              Cargando rutas de aprendizaje...
-            </Typography>
-            <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-              {[1, 2, 3].map((i) => (
-                <Skeleton
-                  key={i}
-                  variant="rectangular"
-                  width="100%"
-                  height={120}
-                  sx={{ borderRadius: 2 }}
-                />
-              ))}
-            </Box>
-          </Box>
-        </Fade>
-      </Box>
-    );
-  }
-
-  // Error state
-  if (isErrorPlaylists || isErrorVideos) {
-    return <Box sx={{ p: 4 }}><Typography color="error">Error al cargar rutas o videos: {errorPlaylists?.message || errorVideos?.message}</Typography></Box>;
-  }
-
-  // Debug logs (temporal)
-  console.log('🔍 DEBUG Dashboard State:', {
-    playlists,
-    playlistsLength: playlists?.length,
-    videos,
-    videosLength: videos?.length,
-    adaptedVideos,
-    adaptedVideosLength: adaptedVideos?.length,
-    videosByPlaylist,
-    videosByPlaylistKeys: Object.keys(videosByPlaylist),
-    isLoadingPlaylists,
-    isLoadingVideos,
-    isErrorPlaylists,
-    isErrorVideos
-  });
-
-  // Empty state con animación
-  if (!playlists?.length && !Object.keys(videosByPlaylist).length) {
-    return (
-      <Fade in={true} timeout={600}>
-        <Box sx={{ p: 4, textAlign: 'center' }}>
-          <Typography>
-            No hay rutas de aprendizaje ni videos disponibles.
-            (playlists: {playlists?.length}, videos: {Object.keys(videosByPlaylist).length})
-          </Typography>
-        </Box>
-      </Fade>
-    );
-  }
-
-  // --- MÉTRICAS RÁPIDAS ---
-  const metrics = dynamicMetricsData.metrics;
-
-  // --- Definición de tabs cósmicos ---
-  const dashboardTabs = [
-    { label: 'Dashboard', icon: <Dashboard />, id: 0 },
-    { label: 'Videoteca', icon: <VideoLibrary />, id: 1 },
-    { label: 'Logros', icon: <EmojiEvents />, id: 2 },
-    { label: 'Salas de Estudio', icon: <Groups />, id: 3 },
-  ];
+  // Hooks y estado para la funcionalidad que se mantiene
+  const { showRewardFeedback } = useUPlayStore();
+  const { hideReward } = useRewardFeedback();
 
   return (
     <Box
       sx={{
-        p: { xs: 2, md: 6 },
-        background: 'linear-gradient(135deg, #181829 0%, #232347 100%)',
+        p: { xs: 2, md: 3 },
+        backgroundColor: '#f8fafc',
         minHeight: '100vh',
-        borderRadius: 8,
-        boxShadow: '0 0 64px 0 #232347cc, 0 0 0 8px #e5e4e244',
-        position: 'relative',
-        overflow: 'hidden',
-        mt: 2,
-        mb: 6,
-        '::before': {
-          content: '""',
-          position: 'absolute',
-          inset: 0,
-          zIndex: 0,
-          background: 'radial-gradient(circle at 60% 0%, #e5e4e222 0%, transparent 80%)',
-          pointerEvents: 'none',
-        },
+        borderRadius: 4,
       }}
     >
-      {/* Header refinado */}
-      <Box sx={{ mb: 4, textAlign: 'center' }}>
+      {/* Header Minimalista */}
+      <Box sx={{ mb: 4 }}>
         <Typography
           variant="h4"
+          component="h1"
           sx={{
-            fontWeight: 800,
-            color: '#e5e4e2',
-            letterSpacing: 2,
-            textShadow: '0 2px 16px #6366f1cc',
+            fontWeight: 700,
+            color: '#1e293b',
           }}
         >
-          🚀 Dashboard Cósmico
+          Dashboard de Actividad
         </Typography>
-        <Typography sx={{ color: '#e5e4e2cc', fontSize: 18, mb: 2, letterSpacing: 1 }}>
-          ¡Bienvenido a tu centro de evolución! Aquí puedes visualizar tu progreso, recompensas y próximos desafíos en tu viaje por el Bien Común.
+        <Typography sx={{ color: '#475569', mt: 1, fontSize: '1.1rem' }}>
+          Un resumen elegante y directo de tu progreso en CoomÜnity.
         </Typography>
       </Box>
-      {/* Barra de progreso global refinada */}
-      <Box sx={{ mt: 2, mb: 4, display: 'flex', justifyContent: 'center' }}>
-        <Card sx={{
-          background: 'linear-gradient(135deg, #232347 0%, #2d225a 100%)',
-          color: '#e5e4e2',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 4px 24px 0 #23234788',
-          borderRadius: 6,
-          p: 2,
-          minWidth: 320,
-          maxWidth: 420,
-          border: '1.5px solid #e5e4e244',
-        }}>
-          <CardContent sx={{ pb: '8px !important' }}>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="#e5e4e2">
-                  Nivel {dynamicMetricsData.metrics.nivel}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, color: '#e5e4e2' }}>
-                  Progreso hacia el siguiente nivel
-                </Typography>
-              </Box>
-            </Box>
-            <Box sx={{ mt: 2 }}>
-              <LinearProgress
-                variant="determinate"
-                value={dynamicMetricsData.metrics.precision}
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  bgcolor: '#232347',
-                  '& .MuiLinearProgress-bar': {
-                    bgcolor: 'linear-gradient(90deg, #e5e4e2 0%, #bfc9ca 100%)',
-                    boxShadow: '0 0 8px #e5e4e288',
-                  },
-                }}
-              />
-            </Box>
-          </CardContent>
-        </Card>
+
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} sm={4}>
+          <CompactMetricCard title="Nivel Actual" value="5" icon={<Star />} />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <CompactMetricCard title="Racha de Días" value="12" icon={<Whatshot />} />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <CompactMetricCard title="Precisión" value="92%" icon={<TrendingUp />} />
+        </Grid>
+      </Grid>
+
+      <Box sx={{ mb: 4 }}>
+        <MinimalistActivityChart />
       </Box>
-      {/* Métricas rápidas refinadas */}
-      <Box display="flex" flexWrap="wrap" gap={2} mt={3} justifyContent="center">
-        {[
-          { label: 'Mëritos', value: dynamicMetricsData.metrics.meritos, icon: '🏆', color: 'linear-gradient(90deg, #bfc9ca 0%, #e5e4e2 100%)' },
-          { label: 'Öndas', value: dynamicMetricsData.metrics.ondas, icon: '⚡', color: 'linear-gradient(90deg, #232347 0%, #6366f1 100%)' },
-          { label: 'Precisión', value: dynamicMetricsData.metrics.precision + '%', icon: '🎯', color: 'linear-gradient(90deg, #232347 0%, #8b5cf6 100%)' },
-          { label: 'Racha', value: dynamicMetricsData.metrics.racha, icon: '🔥', color: 'linear-gradient(90deg, #bfc9ca 0%, #e5e4e2 100%)' },
-          { label: 'Logros', value: dynamicMetricsData.metrics.logrosDesbloqueados, icon: '🏅', color: 'linear-gradient(90deg, #a1a1aa 0%, #e5e4e2 100%)' },
-          { label: 'Ranking', value: '#' + dynamicMetricsData.metrics.rankingComunidad, icon: '⭐', color: 'linear-gradient(90deg, #232347 0%, #e5e4e2 100%)' },
-        ].map((item, idx) => (
-          <Box key={item.label} sx={{
-            minWidth: 90,
-            minHeight: 70,
-            px: 2,
-            py: 1.5,
-            borderRadius: 6,
-            background: item.color,
-            boxShadow: '0 2px 8px 0 #23234744',
-            textAlign: 'center',
-            color: '#e5e4e2',
-            border: '1.5px solid #e5e4e244',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 700,
-            fontSize: 18,
-            letterSpacing: 1,
-            transition: 'box-shadow 0.22s, transform 0.18s',
-            '&:hover': {
-              boxShadow: '0 8px 32px 0 #e5e4e288',
-              transform: 'scale(1.04)',
-            },
-            '&:focus': {
-              outline: '2px solid #e5e4e2',
-              boxShadow: '0 0 0 6px #e5e4e244',
-            },
-          }}>
-            <span style={{ fontSize: 28, marginBottom: 4, filter: 'drop-shadow(0 0 6px #e5e4e288)' }}>{item.icon}</span>
-            <Typography variant="h5" fontWeight="bold" color="#e5e4e2">{item.value}</Typography>
-            <Typography fontSize={13} color="#bfc9ca">{item.label}</Typography>
-          </Box>
-        ))}
+
+      {/* El nuevo widget de métricas como protagonista */}
+      <Box sx={{ maxWidth: '768px', mx: 'auto' }}>
+        <DynamicMetricsDashboard />
       </Box>
-      {/* Widgets refinados */}
-      <Container maxWidth="xl" sx={{ py: 3 }}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={6} lg={4}><WeeklyProgressWidget /></Grid>
-            <Grid item xs={12} sm={6} lg={4}><StreakWidget /></Grid>
-            <Grid item xs={12} sm={6} lg={4}><RankingWidget /></Grid>
-            <Grid item xs={12} md={8}><UpcomingAchievementsWidget /></Grid>
-            <Grid item xs={12} md={4}><SessionStatsWidget /></Grid>
-            <Grid item xs={12}><DynamicMetricsDashboard metrics={dynamicMetricsData.metrics} progressHistory={dynamicMetricsData.progressHistory} categoryProgress={dynamicMetricsData.categoryProgress} isLoading={dynamicMetricsData.isLoading} showAnimations={dynamicMetricsData.showAnimations} /></Grid>
-          </Grid>
-        </motion.div>
-      </Container>
-      {/* Sistema de feedback de recompensas */}
+
+      {/* Sistema de feedback de recompensas (se mantiene) */}
       {showRewardFeedback && (
         <EnhancedRewardFeedback
           reward={{

@@ -1,27 +1,11 @@
 import React from 'react';
+import { Box } from '@mui/material';
+import { MainModuleCards } from '../MainModuleCards';
 
-// 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
-import Box from '@mui/material/Box';
-
-// 🚀 REUTILIZAR EL COMPONENTE REVOLUCIONARIO EXISTENTE
-import ModuleCardsRevolutionary from '../ModuleCardsRevolutionary';
-
-interface MainModulesWidgetProps {
-  onModuleClick?: (moduleId: string) => void;
-}
-
-export const MainModulesWidget: React.FC<MainModulesWidgetProps> = ({
-  onModuleClick,
-}) => {
+export const MainModulesWidget: React.FC = () => {
   return (
-    <Box
-      sx={{
-        width: '100%',
-        position: 'relative',
-        zIndex: 2,
-      }}
-    >
-      <ModuleCardsRevolutionary onModuleClick={onModuleClick} />
+    <Box sx={{ width: '100%' }}>
+      <MainModuleCards />
     </Box>
   );
 };

@@ -75,10 +75,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { CreateItemModal } from './components/CreateItemModal';
 import UnitsWallet from './components/UnitsWallet';
 import { LetsListings } from './components/LetsListings';
-import SearchBar from './components/SearchBar';
+import MarketplaceFilterBar from './components/MarketplaceFilterBar';
 import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
 import { ConsciousLoadingState } from '../../ui/enhanced/ConsciousLoadingState';
 import { motion } from 'framer-motion';
+import { impactCategories } from './marketplace.constants';
+import { QuickViewModal } from './components/QuickViewModal';
 
 const marketplaceCosmicEffects = {
   enableGlow: true,
@@ -102,39 +104,32 @@ interface MarketplaceItem {
   id: string;
   title: string;
   description: string;
-  price: number;
-  currency: string;
+  priceUSD: number;
+  lukas: number;
   category: string;
   images: string[];
   seller: {
     id: string;
     name: string;
-    username: string;
     avatar: string;
-    verified: boolean;
+    isEmprendedorConfiable: boolean;
+    ayniScore: number;
+    meritos: number;
+  };
+  stats: {
+    views: number;
+    likes: number;
     rating: number;
     reviewCount: number;
-    ayniScore?: number;
-    consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
+    isPopular: boolean;
+    isSustainable: boolean;
   };
-  location: string;
-  rating: number;
-  reviewCount: number;
+  type: 'product' | 'service';
   tags: string[];
-  featured: boolean;
-  trending: boolean;
   createdAt: string;
-  viewCount: number;
-  favoriteCount: number;
+  location?: string;
   isFavorited?: boolean;
-  discount?: number;
-  originalPrice?: number;
-  impactLevel?: 'local' | 'regional' | 'global';
-  sustainabilityScore?: number;
-  ayniScore?: number;
-  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
-  bienComunContribution?: number;
-  reciprocityBalance?: number;
+  stock: number;
 }
 
 interface SearchFilters {
@@ -159,16 +154,6 @@ interface SearchFilters {
   impactLevel?: 'local' | 'regional' | 'global';
   consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
   minimumAyniScore?: number;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  icon: string;
-  color?: string;
-  count?: number;
-  impact?: string;
-  consciousnessAlignment?: number;
 }
 
 const getConsciousnessStyle = (level?: string) => {
@@ -208,169 +193,41 @@ const getConsciousnessStyle = (level?: string) => {
 const mapItemToUIItem = (item: any): MarketplaceItem => {
   const consciousnessStyle = getConsciousnessStyle(item.consciousnessLevel);
 
-  if (item.seller?.firstName && item.seller?.lastName) {
-    return {
-      id: item.id,
-      title: item.title,
-      description: item.description,
-      price: item.priceUnits || item.price,
-      originalPrice: item.originalPrice,
-      currency: item.currency === 'LUKAS' ? 'ü' : item.currency,
-      category: item.category || 'Servicios',
-      images: item.images || [],
-      seller: {
-        id: item.seller?.id || 'unknown',
-        name:
-          `${item.seller?.firstName || ''} ${item.seller?.lastName || ''}`.trim() ||
-          'Usuario',
-        username: item.seller?.username || '@usuario',
-        avatar:
-          item.seller?.avatarUrl ||
-          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-        verified: item.seller?.verified || true,
-        rating: item.seller?.rating || item.rating || 4.5,
-        reviewCount: item.seller?.reviewCount || item.reviewCount || 0,
-        ayniScore: item.seller?.ayniScore || item.ayniScore || 75,
-        consciousnessLevel: item.seller?.consciousnessLevel || item.consciousnessLevel || 'GROWING',
-      },
-      location: item.location || 'Online',
-      rating: item.rating || 4.5,
-      reviewCount: item.reviewCount || 0,
-      tags: item.tags || [],
-      featured: item.featured || false,
-      trending: item.trending || false,
-      createdAt: item.createdAt || new Date().toISOString(),
-      viewCount: item.viewCount || 0,
-      favoriteCount: item.favoriteCount || 0,
-      isFavorited: false,
-      discount: item.originalPrice
-        ? Math.round(
-            ((item.originalPrice - item.price) / item.originalPrice) * 100
-          )
-        : undefined,
-      impactLevel: item.impactLevel || 'local',
-      sustainabilityScore: item.sustainabilityScore || 85,
-      ayniScore: item.ayniScore || 75,
-      consciousnessLevel: item.consciousnessLevel || 'GROWING',
-      bienComunContribution: item.bienComunContribution || 60,
-      reciprocityBalance: item.reciprocityBalance || 80,
-    };
-  }
+  const sellerData = item.seller || {};
+  const isEmprendedorConfiable = (sellerData.rating || 0) >= 4.5 && (sellerData.reviewCount || 0) > 10;
 
   return {
-    id: item.id || 'unknown',
-    title: item.title || 'Producto sin título',
-    description: item.description || 'Sin descripción disponible',
-    price: item.priceUnits || item.price || 0,
-    currency: item.currency === 'LUKAS' ? 'ü' : item.currency || 'ü',
-    category: item.category || 'Servicios',
-    images: item.images || [],
+    id: item.id || 'unknown-product',
+    title: item.title || 'Producto Sin Título',
+    description: item.description || 'No hay descripción disponible.',
+    priceUSD: item.price || 0,
+    lukas: item.price || 0,
+    category: item.category || 'General',
+    images: item.images && item.images.length > 0 ? item.images : ['https://via.placeholder.com/300'],
     seller: {
-      id: item.sellerId || 'unknown',
-      name: 'Usuario CoomÜnity',
-      username: '@coomunity',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-      verified: true,
-      rating: 4.5,
-      reviewCount: 0,
-      ayniScore: item.ayniScore || 75,
-      consciousnessLevel: item.consciousnessLevel || 'GROWING',
+      id: sellerData.id || 'unknown-seller',
+      name: sellerData.name || 'Vendedor Anónimo',
+      avatar: sellerData.avatar || 'https://via.placeholder.com/150',
+      isEmprendedorConfiable,
+      ayniScore: sellerData.ayniScore || Math.floor(Math.random() * 50) + 50,
+      meritos: sellerData.meritos || Math.floor(Math.random() * 1000),
     },
-    location: item.location || 'Online',
-    rating: item.rating || 4.5,
-    reviewCount: item.reviewCount || 0,
+    stats: {
+      views: item.viewCount || 0,
+      likes: item.favoriteCount || 0,
+      rating: item.rating || 0,
+      reviewCount: item.reviewCount || 0,
+      isPopular: item.trending || false,
+      isSustainable: (item.sustainabilityScore || 0) > 70,
+    },
+    type: item.type || 'product',
     tags: item.tags || [],
-    featured: false,
-    trending: false,
     createdAt: item.createdAt || new Date().toISOString(),
-    viewCount: item.viewCount || 0,
-    favoriteCount: item.favoriteCount || 0,
-    isFavorited: false,
-    impactLevel: 'local',
-    sustainabilityScore: 85,
-    ayniScore: item.ayniScore || 75,
-    consciousnessLevel: item.consciousnessLevel || 'GROWING',
-    bienComunContribution: 60,
-    reciprocityBalance: 80,
+    location: item.location || 'Online',
+    isFavorited: item.isFavorited || false,
+    stock: Math.floor(Math.random() * 50),
   };
 };
-
-// Banner Hero Visual Guardianes
-const MarketplaceHeroBanner: React.FC = () => (
-  <Box
-    sx={{
-      mb: 5,
-      p: { xs: 3, md: 5 },
-      borderRadius: 4,
-      background: 'linear-gradient(120deg, #43e97b 0%, #38f9d7 100%)',
-      boxShadow: '0 4px 32px 0 rgba(56,249,215,0.10)',
-      position: 'relative',
-      overflow: 'hidden',
-      minHeight: { xs: 180, md: 200 },
-      display: 'flex',
-      flexDirection: { xs: 'column', md: 'row' },
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: 3,
-    }}
-  >
-    <Box sx={{ zIndex: 2 }}>
-      <Typography
-        variant="h4"
-        sx={{ fontWeight: 800, color: 'white', mb: 1, textShadow: '0 2px 12px #38f9d799' }}
-      >
-        Conectando Propósitos
-      </Typography>
-      <Typography
-        variant="h6"
-        sx={{ color: 'white', opacity: 0.92, mb: 2, maxWidth: 420 }}
-      >
-        Encuentra productos y servicios que regeneran nuestro mundo. Cada intercambio es un acto de <b>Ayni</b> y contribuye al <b>Bien Común</b>.
-      </Typography>
-      <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>
-        <Button
-          variant="contained"
-          size="large"
-          sx={{
-            bgcolor: 'white',
-            color: '#10b981',
-            fontWeight: 700,
-            px: 4,
-            py: 1.5,
-            borderRadius: 3,
-            boxShadow: '0 2px 16px 0 #10b98133',
-            fontSize: '1.1rem',
-            textTransform: 'none',
-            '&:hover': { bgcolor: '#e0ffe6', color: '#059669' },
-          }}
-          aria-label="Descubre sostenibilidad"
-        >
-          Descubre Sostenibilidad
-        </Button>
-      </motion.div>
-    </Box>
-    {/* SVG animado Guardianes */}
-    <Box sx={{ position: 'absolute', right: 0, top: 0, height: '100%', zIndex: 1, opacity: 0.18 }}>
-      <motion.svg
-        width="220" height="180" viewBox="0 0 220 180" fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        initial={{ x: 60, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 1.2 }}
-      >
-        <motion.circle cx="180" cy="60" r="40" fill="#fff" initial={{ scale: 0.7 }} animate={{ scale: 1 }} transition={{ duration: 1.2, delay: 0.2 }} />
-        <motion.polygon points="120,20 140,60 100,60" fill="#fff" initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={{ delay: 0.5 }} />
-        <motion.polygon
-          points="200,130 205,145 220,145 208,155 213,170 200,160 187,170 192,155 180,145 195,145"
-          fill="#fff"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          transition={{ delay: 0.7 }}
-        />
-      </motion.svg>
-    </Box>
-  </Box>
-);
 
 const MarketplaceMain: React.FC = () => {
   const { user } = useAuth();
@@ -491,6 +348,8 @@ const MarketplaceMain: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [displayedItems, setDisplayedItems] = useState<MarketplaceItem[]>([]);
+  const [quickViewItem, setQuickViewItem] = useState<MarketplaceItem | null>(null);
 
   const impactProducts = useMemo(() => {
     if (!marketplaceItemsResponse?.items) {
@@ -499,82 +358,48 @@ const MarketplaceMain: React.FC = () => {
     return marketplaceItemsResponse.items.map(mapItemToUIItem);
   }, [marketplaceItemsResponse]);
 
-  const impactCategories: Category[] = [
-    {
-      id: 'sostenibilidad',
-      name: 'Sostenibilidad',
-      icon: 'eco',
-      impact: 'PROYECTOS ECO-FRIENDLY Y SOSTENIBLES',
-    },
-    {
-      id: 'educacion',
-      name: 'Educación',
-      icon: 'school',
-      impact: 'CONOCIMIENTO ACCESIBLE PARA TODOS',
-    },
-    {
-      id: 'salud-bienestar',
-      name: 'Salud & Bienestar',
-      icon: 'healing',
-      impact: 'BIENESTAR FÍSICO Y MENTAL',
-    },
-    {
-      id: 'desarrollo-comunitario',
-      name: 'Desarrollo Comunitario',
-      icon: 'volunteer',
-      impact: 'FORTALECIMIENTO SOCIAL',
-    },
-    {
-      id: 'tecnologia-social',
-      name: 'Tecnología Social',
-      icon: 'tech',
-      impact: 'TECH PARA IMPACTO POSITIVO',
-    },
-    {
-      id: 'agricultura-consciente',
-      name: 'Agricultura Consciente',
-      icon: 'agriculture',
-      impact: 'ALIMENTACIÓN SOSTENIBLE',
-    },
-    {
-      id: 'economia-circular',
-      name: 'Economía Circular',
-      icon: 'recycling',
-      impact: 'REDUCIR, REUTILIZAR, RECICLAR',
-    },
-    {
-      id: 'inclusion-social',
-      name: 'Inclusión Social',
-      icon: 'inclusion',
-      impact: 'OPORTUNIDADES PARA TODOS',
-    },
-  ];
+  useEffect(() => {
+    if (marketplaceItemsResponse?.items) {
+      setDisplayedItems(marketplaceItemsResponse.items.map(mapItemToUIItem));
+    }
+  }, [marketplaceItemsResponse]);
 
   const handleProductClick = useCallback(
     (productId: string) => {
-      navigate(`/marketplace/product/${productId}`);
+      const item = displayedItems.find(p => p.id === productId);
+      if (item) {
+        setQuickViewItem(item);
+      }
     },
-    [navigate]
+    [displayedItems]
   );
 
   const handleToggleFavorite = useCallback(
     (itemId: string) => {
       if (!user) return;
-      console.log('Toggle favorite:', itemId);
+      setDisplayedItems(currentItems =>
+        currentItems.map(item =>
+          item.id === itemId ? { ...item, isFavorited: !item.isFavorited } : item
+        )
+      );
+      // TODO: API call to persist favorite status
     },
     [user]
   );
 
-  const handleMenuClick = () => {
-    console.log('Menu clicked');
+  const handleQuickViewToggleFavorite = (itemId: string) => {
+    handleToggleFavorite(itemId);
+    setQuickViewItem(prev => (prev ? { ...prev, isFavorited: !prev.isFavorited } : null));
   };
 
-  const handleChatClick = () => {
-    console.log('Chat clicked');
+  const handleShare = (itemId: string) => {
+    console.log('Sharing item:', itemId);
+    // Lógica para compartir aquí
   };
 
-  const handleNotificationsClick = () => {
-    console.log('Notifications clicked');
+  const handleAddToCart = (itemId: string) => {
+    console.log('Adding to cart:', itemId);
+    // Lógica para agregar al carrito aquí
   };
 
   const handleOpenCreateModal = () => {
@@ -618,7 +443,7 @@ const MarketplaceMain: React.FC = () => {
   }, []);
 
   const itemsToDisplay = useMemo(() => {
-    let items = isSearchActive ? searchResults : impactProducts;
+    let items = isSearchActive ? searchResults : displayedItems;
 
     if (selectedCategory && selectedCategory !== '') {
       items = items.filter((item: MarketplaceItem) => item.category === selectedCategory);
@@ -626,13 +451,13 @@ const MarketplaceMain: React.FC = () => {
 
     switch (currentFilters.sortBy) {
       case 'price_asc':
-        items = [...items].sort((a, b) => a.price - b.price);
+        items = [...items].sort((a, b) => a.priceUSD - b.priceUSD);
         break;
       case 'price_desc':
-        items = [...items].sort((a, b) => b.price - a.price);
+        items = [...items].sort((a, b) => b.priceUSD - a.priceUSD);
         break;
       case 'rating':
-        items = [...items].sort((a, b) => b.rating - a.rating);
+        items = [...items].sort((a, b) => b.stats.rating - a.stats.rating);
         break;
       case 'newest':
         items = [...items].sort(
@@ -642,15 +467,15 @@ const MarketplaceMain: React.FC = () => {
         break;
       case 'trending':
         items = [...items].sort((a, b) => {
-          if (a.trending && !b.trending) return -1;
-          if (!a.trending && b.trending) return 1;
-          return b.viewCount - a.viewCount;
+          if (a.stats.isPopular && !b.stats.isPopular) return -1;
+          if (!a.stats.isPopular && b.stats.isPopular) return 1;
+          return b.stats.views - a.stats.views;
         });
         break;
       case 'impact':
         items = [...items].sort((a, b) => {
-          const scoreA = a.sustainabilityScore || 0;
-          const scoreB = b.sustainabilityScore || 0;
+          const scoreA = a.stats.isSustainable ? 1 : 0;
+          const scoreB = b.stats.isSustainable ? 1 : 0;
           return scoreB - scoreA;
         });
         break;
@@ -662,13 +487,13 @@ const MarketplaceMain: React.FC = () => {
   }, [
     isSearchActive,
     searchResults,
-    impactProducts,
+    displayedItems,
     selectedCategory,
     currentFilters.sortBy,
   ]);
 
   const marketplaceStats = {
-    totalProducts: impactProducts.length,
+    totalProducts: displayedItems.length,
     activeProviders: 8,
     totalImpact: '2.4K',
     communitiesServed: 47,
@@ -682,7 +507,7 @@ const MarketplaceMain: React.FC = () => {
       id: item.id || `item-${Date.now()}-${Math.random()}`,
       title: item.title || 'Producto sin título',
       description: item.description || 'Descripción no disponible',
-      price: typeof item.price === 'number' ? item.price : 0,
+      priceUSD: typeof item.price === 'number' ? item.price : 0,
       currency: item.currency || 'LUKAS',
       images: Array.isArray(item.images) && item.images.length > 0
         ? item.images
@@ -879,181 +704,53 @@ const MarketplaceMain: React.FC = () => {
   }
 
   if (isMobile) {
-    return (
-      <MobileMarketplaceView
-        onMenuClick={handleMenuClick}
-        onChatClick={handleChatClick}
-        onNotificationsClick={handleNotificationsClick}
-      />
-    );
+    return <MobileMarketplaceView />;
   }
 
   // 🖥️ Layout de escritorio optimizado
   return (
     <Box data-testid="marketplace-container">
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        <MarketplaceHeroBanner />
-        <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-          Marketplace
-        </Typography>
-
-        {/* Search Bar */}
-        <SearchBar
-          onSearch={(query) => setCurrentFilters(prev => ({ ...prev, query }))}
-          onFilterChange={(newFilters) => setCurrentFilters(prev => ({ ...prev, ...newFilters }))}
+        <MarketplaceFilterBar
+          categories={impactCategories}
+          activeCategory={selectedCategory}
+          onCategoryChange={(category: string) => {
+            setSelectedCategory(category === 'all' ? '' : category);
+          }}
+          onSearch={(query: string) =>
+            handleFiltersChange({ ...currentFilters, query })
+          }
+          onOpenAdvancedFilters={() => setShowAdvancedSearch(true)}
         />
 
-        {/* Categories Section */}
-        <Box sx={{ mb: 6 }}>
-          <Typography variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 4, textAlign: 'center' }}>
-            Categorías de Impacto
-          </Typography>
-          <Grid container spacing={isMobile ? 2 : 3}>
-            {impactCategories.map((category) => {
-              const isSelected = selectedCategory === category.id;
-              return (
-                <Grid item xs={6} sm={4} md={3} key={category.id}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      textAlign: 'center',
-                      bgcolor: 'background.paper',
-                      color: 'text.secondary',
-                      border: isSelected ? '2px solid #3E8638' : '1px solid',
-                      borderColor: isSelected ? '#3E8638' : 'divider',
-                      boxShadow: isSelected ? '0 0 12px 2px #3E863855' : undefined,
-                      transition: 'transform 0.2s, box-shadow 0.2s, border 0.2s',
-                      transform: isSelected ? 'scale(1.06)' : undefined,
-                      '&:hover': {
-                        transform: 'scale(1.04)',
-                        boxShadow: '0 6px 18px rgba(62,134,56,0.12)',
-                        borderColor: '#3E8638',
-                      },
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => setSelectedCategory(category.id)}
-                    tabIndex={0}
-                    aria-label={`Categoría: ${category.name}`}
-                    aria-pressed={isSelected}
-                  >
-                    <span style={{ fontSize: 32, display: 'block', marginBottom: 8 }}>{category.icon}</span>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
-                      {category.name}
-                    </Typography>
-                  </Paper>
-                </Grid>
-              );
-            })}
-          </Grid>
-        </Box>
+        <ItemGrid
+          items={itemsToDisplay}
+          isLoading={isLoadingItems}
+          onToggleFavorite={handleToggleFavorite}
+          onProductClick={handleProductClick}
+          onAddToCart={handleAddToCart}
+          onShare={handleShare}
+          viewMode={viewMode}
+        />
 
-        {/* LETS Integration Section */}
-        <Grid container spacing={4} sx={{ mb: 6 }}>
-          <Grid item xs={12} md={5}>
-            <Paper elevation={0} sx={{ p: 2, border: 1, borderColor: 'divider' }}>
-               <UnitsWallet userId={user?.id || ''} />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={7}>
-             <Paper elevation={0} sx={{ p: 2, border: 1, borderColor: 'divider' }}>
-              <LetsListings />
-             </Paper>
-          </Grid>
-        </Grid>
+        <QuickViewModal
+          open={!!quickViewItem}
+          onClose={() => setQuickViewItem(null)}
+          item={quickViewItem}
+          onAddToCart={handleAddToCart}
+          onToggleFavorite={handleQuickViewToggleFavorite}
+        />
 
-        {/* Items Section */}
-        <Box>
-          <Typography variant="h5" gutterBottom>Todos los Servicios</Typography>
-          {isLoadingItems ? (
-            <Grid container spacing={3}>
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
-                  <Card elevation={0} sx={{ borderRadius: 3, overflow: 'hidden' }}>
-                    <Skeleton variant="rectangular" height={200} />
-                    <CardContent>
-                      <Skeleton variant="text" width="80%" height={24} sx={{ mb: 1 }} />
-                      <Skeleton variant="text" width="60%" height={20} sx={{ mb: 2 }} />
-                      <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Skeleton variant="text" width="40%" height={20} />
-                        <Skeleton variant="circular" width={32} height={32} />
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          ) : itemsToDisplay.length === 0 ? (
-            <Box sx={{ textAlign: 'center', py: 8 }}>
-              <Avatar
-                sx={{
-                  width: 80,
-                  height: 80,
-                  margin: '0 auto 16px',
-                  bgcolor: 'grey.100',
-                  fontSize: '2rem'
-                }}
-              >
-                🔍
-              </Avatar>
-              <Typography variant="h6" gutterBottom>
-                {isSearchActive ? 'No se encontraron resultados' : 'No hay productos disponibles'}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                {isSearchActive
-                  ? 'Intenta ajustar tus filtros de búsqueda'
-                  : 'Sé el primero en crear un producto o servicio'
-                }
-              </Typography>
-              <Stack direction="row" spacing={2} justifyContent="center">
-                {isSearchActive && (
-                  <Button
-                    variant="outlined"
-                    onClick={() => setCurrentFilters(prev => ({ ...prev, query: '' }))}
-                  >
-                    Limpiar búsqueda
-                  </Button>
-                )}
-                <Button
-                  variant="contained"
-                  onClick={handleOpenCreateModal}
-                  startIcon={<AddIcon />}
-                >
-                  Crear item
-                </Button>
-              </Stack>
-            </Box>
-          ) : (
-            <ItemGrid
-              items={itemsToDisplay}
-              onToggleFavorite={handleToggleFavorite}
-              onProductClick={handleProductClick}
-              viewMode={viewMode}
-            />
-          )}
-        </Box>
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
+          onClick={handleOpenCreateModal}
+        >
+          <AddIcon />
+        </Fab>
       </Container>
 
-      {/* FAB para crear item */}
-      <Zoom in timeout={500} style={{ transitionDelay: '300ms' }}>
-        <Tooltip title="Publicar">
-          <Fab
-            color="primary"
-            aria-label="publicar"
-            data-testid="create-item-fab"
-            onClick={handleOpenCreateModal}
-            sx={{
-              position: 'fixed',
-              bottom: 20,
-              right: 20,
-            }}
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      </Zoom>
-
-      {/* Modal de Creación de Items */}
       <CreateItemModal
         open={isCreateModalOpen}
         onClose={handleCloseCreateModal}

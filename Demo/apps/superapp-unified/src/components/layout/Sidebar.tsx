@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   List,
-  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Divider,
   Typography,
-  Chip,
-  useTheme,
   Drawer,
-  useMediaQuery,
+  Stack,
+  alpha,
+  Avatar,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   Home,
@@ -22,351 +23,164 @@ import {
   AccountCircle,
   AccountBalanceWallet,
   Analytics,
-  AdminPanelSettings,
   EmojiEvents,
   Settings,
   Help,
-  PhoneAndroid,
   SwapHoriz,
-  Psychology,
+  Logout,
 } from '@mui/icons-material';
-import { ThemeSelector } from './ThemeSelector';
-import { useDynamicTheme } from '../../context/DynamicThemeContext';
-import { moduleColors } from '../../theme/themeConfig';
+import { useAuth } from '../../contexts/AuthContext';
 
-interface NavigationItem {
-  label: string;
-  icon: React.ReactElement;
-  path: string;
-  badge?: number;
-  section?: string;
-}
+// Simplificamos la lista de navegación
+const mainNavItems = [
+  { label: 'Inicio', icon: <Home />, path: '/' },
+  { label: 'Marketplace', icon: <Store />, path: '/marketplace' },
+  { label: 'LETS', icon: <SwapHoriz />, path: '/lets' },
+  { label: 'ÜPlay', icon: <PlayArrow />, path: '/uplay' },
+  { label: 'Social', icon: <People />, path: '/social' },
+  { label: 'Retos', icon: <EmojiEvents />, path: '/challenges' },
+  { label: 'Billetera', icon: <AccountBalanceWallet />, path: '/wallet' },
+  { label: 'Estadísticas', icon: <Analytics />, path: '/ustats' },
+];
 
-const NAVIGATION_ITEMS: NavigationItem[] = [
-  // Core Navigation
-  {
-    label: 'Inicio',
-    icon: <Home />,
-    path: '/',
-    section: 'main',
-  },
-  {
-    label: 'Mi Perfil',
-    icon: <AccountCircle />,
-    path: '/profile',
-    section: 'main',
-  },
-
-  // Modules
-  {
-    label: 'Marketplace',
-    icon: <Store />,
-    path: '/marketplace',
-    section: 'modules',
-  },
-  {
-    label: 'LETS',
-    icon: <SwapHoriz />,
-    path: '/lets',
-    section: 'modules',
-  },
-  {
-    label: 'ÜPlay',
-    icon: <PlayArrow />,
-    path: '/uplay',
-    section: 'modules',
-  },
-  {
-    label: 'Social',
-    icon: <People />,
-    path: '/social',
-    badge: 2,
-    section: 'modules',
-  },
-  {
-    label: 'Grupos',
-    icon: <People />,
-    path: '/groups',
-    section: 'modules',
-  },
-  {
-    label: 'Desafíos',
-    icon: <EmojiEvents />,
-    path: '/challenges',
-    section: 'modules',
-  },
-  {
-    label: 'Wallet',
-    icon: <AccountBalanceWallet />,
-    path: '/wallet',
-    section: 'modules',
-  },
-  {
-    label: 'ÜStats',
-    icon: <Analytics />,
-    path: '/ustats',
-    section: 'modules',
-  },
-  {
-    label: 'Consciencia',
-    icon: <Psychology />,
-    path: '/consciousness',
-    section: 'modules',
-  },
-  {
-    label: 'Pilgrim',
-    icon: <EmojiEvents />,
-    path: '/pilgrim',
-    section: 'modules',
-  },
-  {
-    label: 'PWA Demo',
-    icon: <PhoneAndroid />,
-    path: '/pwa',
-    section: 'modules',
-  },
-
-  // Settings
-  {
-    label: 'Configuración',
-    icon: <Settings />,
-    path: '/settings',
-    section: 'settings',
-  },
-  {
-    label: 'Ayuda',
-    icon: <Help />,
-    path: '/help',
-    section: 'settings',
-  },
+const secondaryNavItems = [
+  { label: 'Mi Perfil', icon: <AccountCircle />, path: '/profile' },
+  { label: 'Configuración', icon: <Settings />, path: '/settings' },
+  { label: 'Ayuda', icon: <Help />, path: '/help' },
 ];
 
 interface SidebarProps {
   variant?: 'permanent' | 'temporary';
   open?: boolean;
   onClose?: () => void;
+  drawerWidth: number;
 }
+
+const NavItem: React.FC<{item: any, isActive: boolean, onClick: (path: string) => void}> = ({ item, isActive, onClick }) => {
+  return (
+    <ListItemButton
+      selected={isActive}
+      onClick={() => onClick(item.path)}
+      sx={{
+        mx: 2,
+        my: 0.5,
+        borderRadius: 2,
+        '&.Mui-selected': {
+          backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+          color: 'primary.main',
+          '&:hover': {
+            backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.12),
+          },
+          '& .MuiListItemIcon-root': {
+            color: 'primary.main',
+          },
+        },
+         '&:hover': {
+            backgroundColor: (theme) => alpha(theme.palette.text.primary, 0.04),
+          },
+      }}
+    >
+      <ListItemIcon sx={{ minWidth: 40 }}>
+        {item.icon}
+      </ListItemIcon>
+      <ListItemText
+        primary={item.label}
+        primaryTypographyProps={{
+          fontSize: '0.95rem',
+          fontWeight: isActive ? 600 : 500,
+        }}
+      />
+    </ListItemButton>
+  );
+}
+
 
 export const Sidebar: React.FC<SidebarProps> = ({
   variant = 'permanent',
   open = false,
-  onClose
+  onClose,
+  drawerWidth,
 }) => {
-  const theme = useTheme();
-  const { setTheme, theme: dynamicTheme } = useDynamicTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { user, signOut } = useAuth();
 
   const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
+    if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
 
-  useEffect(() => {
-    // Establecer el color principal para la navegación general
-    setTheme({
-      ...dynamicTheme,
-      buttonPrimaryBackground: moduleColors.superappGeneral,
-      navMenuItemActive: moduleColors.superappGeneral
-    });
-  }, []);
-
   const handleNavigation = (path: string) => {
     navigate(path);
-  };
-
-  const renderSection = (section: string, title: string) => {
-    const items = NAVIGATION_ITEMS.filter(item => item.section === section);
-
-    return (
-      <Box key={section}>
-        {title && (
-          <Typography
-            variant="overline"
-            sx={{
-              px: 2,
-              py: 1,
-              display: 'block',
-              color: 'text.secondary',
-              fontWeight: 600,
-              fontSize: '0.75rem',
-            }}
-          >
-            {title}
-          </Typography>
-        )}
-        <List dense>
-          {items.map((item) => (
-            <ListItem key={item.path} disablePadding>
-              <ListItemButton
-                selected={isActive(item.path)}
-                onClick={() => handleNavigation(item.path)}
-                aria-label={`Navegar a ${item.label}`}
-                sx={{
-                  mx: 1,
-                  borderRadius: 2,
-                  '&.Mui-selected': {
-                    backgroundColor: dynamicTheme.navMenuItemActive,
-                    color: dynamicTheme.buttonPrimaryText,
-                    '& .MuiListItemIcon-root': {
-                      color: dynamicTheme.buttonPrimaryText,
-                    },
-                    '&:hover': {
-                      backgroundColor: dynamicTheme.navMenuItemActive,
-                      filter: 'brightness(0.9)',
-                    },
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 40, color: dynamicTheme.secondaryText }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{
-                    fontSize: '0.875rem',
-                    fontWeight: isActive(item.path) ? 600 : 400,
-                  }}
-                />
-                {item.badge && (
-                  <Chip
-                    label={item.badge}
-                    size="small"
-                    color="error"
-                    sx={{ height: 18, fontSize: '0.75rem' }}
-                  />
-                )}
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-    );
+    if (variant === 'temporary' && onClose) {
+      onClose();
+    }
   };
 
   const sidebarContent = (
-    <Box
-      component="nav"
-      role="navigation"
-      aria-label="Navegación lateral"
-      data-testid="sidebar"
-      sx={{
-        width: variant === 'temporary' ? 280 : '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        py: 2,
-        background: dynamicTheme.navMenuBackground,
-        color: dynamicTheme.navMenuText,
-      }}
-    >
-      {/* Navigation Sections */}
-      {renderSection('main', '')}
-      <Divider sx={{ my: 1 }} />
-      {renderSection('modules', 'Módulos')}
-      <Divider sx={{ my: 1 }} />
-      {renderSection('settings', 'Configuración')}
-
-      {/* Theme Selector */}
-      <Box sx={{ mt: 'auto', p: 1 }}>
-        <Typography
-          variant="overline"
-          sx={{
-            px: 1,
-            py: 1,
-            display: 'block',
-            color: 'text.secondary',
-            fontWeight: 600,
-            fontSize: '0.75rem',
-            textAlign: 'center',
-          }}
-        >
-          Tema Elemental
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Stack sx={{ p: 2, pt: 3 }} direction="row" alignItems="center" spacing={1.5}>
+        <img src="/coomunity-logo.svg" alt="CoomÜnity Logo" style={{ height: 40 }} />
+         <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
+          CoomÜnity
         </Typography>
-        <ThemeSelector />
-      </Box>
-
-      {/* Status indicator for system visibility */}
-      <Box
-        className="status sidebar-status"
-        role="status"
-        aria-live="polite"
-        sx={{ px: 2, py: 1, display: 'none' }}
-      >
-        <Typography variant="caption" className="message">
-          Sistema funcionando correctamente
-        </Typography>
-      </Box>
-
-      {/* Admin Section (if admin) */}
-      <Box sx={{ mt: 'auto', pt: 2 }}>
-        <Divider sx={{ mb: 1 }} />
+      </Stack>
+      <Divider sx={{ my: 1 }} />
+      <Box sx={{ flexGrow: 1 }}>
         <List dense>
-          <ListItem disablePadding>
-            <ListItemButton
-              onClick={() => navigate('/admin')}
-              aria-label="Acceder al Panel de Administración"
-              title="Panel de Administración"
-              sx={{
-                mx: 1,
-                borderRadius: 2,
-                color: 'warning.main',
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>
-                <AdminPanelSettings color="warning" />
-              </ListItemIcon>
-              <ListItemText
-                primary="Admin Panel"
-                primaryTypographyProps={{
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                }}
-              />
-            </ListItemButton>
-          </ListItem>
+          {mainNavItems.map((item) => (
+            <NavItem key={item.path} item={item} isActive={isActive(item.path)} onClick={handleNavigation} />
+          ))}
         </List>
+      </Box>
+
+      <Box>
+        <Divider sx={{ my: 1 }} />
+        <Box sx={{ p: 2 }}>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Avatar src={user?.avatarUrl || undefined} alt={user?.fullName || 'Usuario'} />
+            <Stack sx={{ flexGrow: 1 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+                {user?.fullName || 'Coomuner'}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {user?.email}
+              </Typography>
+            </Stack>
+             <Tooltip title="Cerrar Sesión">
+                <IconButton onClick={signOut} size="small">
+                    <Logout />
+                </IconButton>
+            </Tooltip>
+          </Stack>
+        </Box>
+        <Divider sx={{ my: 1 }} />
+        <List dense>
+          {secondaryNavItems.map((item) => (
+             <NavItem key={item.path} item={item} isActive={isActive(item.path)} onClick={handleNavigation} />
+          ))}
+        </List>
+        <Box sx={{ p: 2, textAlign: 'center' }}>
+            <Typography variant="caption" color="text.secondary">
+              v1.0.0 - Claridad Orgánica
+            </Typography>
+        </Box>
       </Box>
     </Box>
   );
 
-  if (variant === 'temporary') {
-    return (
-      <Drawer
-        variant="temporary"
-        open={open}
-        onClose={onClose}
-        ModalProps={{
-          keepMounted: true, // Better open performance on mobile
-        }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': {
-            boxSizing: 'border-box',
-            width: 280,
-          },
-        }}
-      >
-        {sidebarContent}
-      </Drawer>
-    );
-  }
-
-  // Desktop permanent sidebar with proper container
   return (
     <Drawer
-      variant="permanent"
-      sx={{
-        display: { xs: 'none', md: 'block' },
-        width: 280,
-        flexShrink: 0,
-        '& .MuiDrawer-paper': {
-          width: 280,
-          boxSizing: 'border-box',
-          position: 'relative',
+      anchor="left"
+      open={open}
+      onClose={onClose}
+      variant={variant}
+      PaperProps={{
+        sx: {
+          width: drawerWidth,
+          borderRight: '1px solid',
+          borderColor: 'divider',
+          backgroundColor: 'background.paper',
         },
       }}
     >

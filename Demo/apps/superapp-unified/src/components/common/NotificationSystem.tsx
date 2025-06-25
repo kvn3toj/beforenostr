@@ -309,9 +309,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   const enableMock = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
 
   // Cargar notificaciones desde el backend
-  const { data: notificationsData, isLoading } = useQuery<Notification[]>({
+  const { data: notificationsData, isLoading, error } = useQuery<Notification[]>({
     queryKey: ['notifications', user?.id],
-    queryFn: () => apiService.get('/notifications'),
+    queryFn: () => user?.id ? apiService.get(`/notifications/user/${user.id}`) : Promise.resolve([]),
     enabled: !!user && !enableMock,
     placeholderData: [], // ✅ Usar array vacío como placeholder
   });
@@ -326,12 +326,20 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
       // Si no, usar datos de la API si existen
       dataToSet = notificationsData;
     }
-
     // ✅ Validar que sea un array antes de despachar
     if (Array.isArray(dataToSet)) {
       dispatch({ type: 'SET_NOTIFICATIONS', payload: dataToSet });
     }
   }, [notificationsData, enableMock]);
+
+  // Mostrar error amigable si ocurre un 404
+  if (error && (error as any).statusCode === 404) {
+    return (
+      <Alert severity="info" sx={{ m: 2 }}>
+        No tienes notificaciones por el momento.
+      </Alert>
+    );
+  }
 
   // Mark notification as read mutation
   const markAsReadMutation = useMutation({

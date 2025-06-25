@@ -228,6 +228,10 @@ const RelatedProductCard: React.FC<RelatedProductCardProps> = ({
           image={product.mainImage}
           alt={product.title}
           onLoad={() => setImageLoaded(true)}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/placeholder.jpg';
+          }}
           sx={{
             objectFit: 'cover',
             transition: 'transform 0.3s ease',

@@ -3,167 +3,120 @@ import {
   Box,
   Typography,
   IconButton,
-  CardContent,
-  Tooltip,
-  Fade,
-  Stack,
-  Dialog,
-  DialogContent,
-  Button,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  Chip,
-  Rating,
-  DialogActions,
   Card,
   CardMedia,
+  CardContent,
+  CardActions,
+  Chip,
+  Rating,
+  Stack,
+  Tooltip,
 } from '@mui/material';
 import {
-  MoreVert,
-  Edit,
-  Delete,
-  Warning,
-  ChevronLeft,
-  ChevronRight,
   Favorite,
   FavoriteBorder,
   AddShoppingCart,
-  Visibility,
   Share,
+  VerifiedUser,
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
-import Skeleton from '@mui/material/Skeleton';
+import type { Product } from '../../../../types/marketplace';
 
-import { useProductCard } from '../../../../hooks/modules/marketplace/useProductCard';
-import { CosmicCard } from '../../../../design-system/components/cosmic/CosmicCard';
-import StatusBadges from './StatusBadges';
-import PriceDisplay from './PriceDisplay';
-import SellerInfo from './SellerInfo';
-import { EditItemModal } from './EditItemModal';
-import type { Product, Seller } from '../../../../types/marketplace';
-
-type ProductCardProps = Product & {
+interface ProductCardProps extends Product {
   isFavorited?: boolean;
-  image?: string;
-  onRefresh?: () => void;
-  viewMode?: 'grid' | 'list';
-  enableHover?: boolean;
-  size?: 'small' | 'medium' | 'large';
-  loading?: boolean;
-  onToggleFavorite?: () => void;
-};
+}
 
-const ProductCard: React.FC<ProductCardProps> = ({ loading, onToggleFavorite, ...product }) => {
-  if (loading) {
-    return (
-      <Skeleton
-        variant="rectangular"
-        width="100%"
-        height={320}
-        sx={{ borderRadius: 3, mb: 2 }}
-        animation="wave"
-      />
-    );
-  }
+const ProductCard: React.FC<ProductCardProps> = (product) => {
+  const {
+    images,
+    title,
+    seller,
+    price,
+    currency,
+    category,
+    rating,
+    reviewCount,
+    isFavorited,
+  } = product;
+
   return (
-    <motion.div
-      whileHover={{ y: -8, boxShadow: '0 8px 32px rgba(80,80,120,0.18)' }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      tabIndex={0}
-      aria-label={`Ver detalles de ${product.title}`}
-      style={{ outline: 'none' }}
-      className="focus-visible:ring-2 focus-visible:ring-primary-500"
-    >
-      <Card
+    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box sx={{ position: 'relative' }}>
+        <CardMedia
+          component="img"
+          height="200"
+          image={images[0] || '/images/placeholder.png'}
+          alt={title}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/images/placeholder.png';
+          }}
+        />
+        <Chip
+          label={category}
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            left: 8,
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            color: 'white',
+            fontWeight: 600,
+          }}
+        />
+      </Box>
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
+          {title}
+        </Typography>
+
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            Vendido por:
+          </Typography>
+          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+            {seller.name}
+          </Typography>
+          {seller.verified && (
+            <Tooltip title="Vendedor verificado">
+              <VerifiedUser color="primary" sx={{ fontSize: 16 }} />
+            </Tooltip>
+          )}
+        </Stack>
+
+        <Stack direction="row" alignItems="center" spacing={0.5}>
+          <Rating value={rating} precision={0.5} readOnly size="small" />
+          <Typography variant="caption" color="text.secondary">
+            ({reviewCount} opiniones)
+          </Typography>
+        </Stack>
+      </CardContent>
+      <CardActions
+        disableSpacing
         sx={{
-          borderRadius: '18px',
-          boxShadow: '0 2px 12px rgba(80,80,120,0.10)',
-          overflow: 'hidden',
-          position: 'relative',
-          minHeight: 320,
-          display: 'flex',
-          flexDirection: 'column',
+          borderTop: 1,
+          borderColor: 'divider',
+          justifyContent: 'space-between',
+          px: 2,
+          py: 1,
         }}
       >
-        <motion.div
-          whileHover={{ scale: 1.04 }}
-          transition={{ type: 'spring', stiffness: 200 }}
-          style={{ overflow: 'hidden' }}
-        >
-          <CardMedia
-            component="img"
-            height="180"
-            image={product.images[0]}
-            alt={product.title}
-            sx={{ objectFit: 'cover', transition: 'transform 0.3s' }}
-          />
-        </motion.div>
-        <CardContent sx={{ flexGrow: 1 }}>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
-            {product.featured && (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-              >
-                <Chip label="Destacado" color="success" size="small" sx={{ fontWeight: 600 }} />
-              </motion.div>
-            )}
-            {product.trending && (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-              >
-                <Chip label="Tendencia" color="warning" size="small" sx={{ fontWeight: 600 }} />
-              </motion.div>
-            )}
-          </Stack>
-          <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 700 }}>
-            {product.title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            {product.description}
-          </Typography>
-          <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-            <Chip label={product.category} size="small" color="primary" />
-            {product.type && <Chip label={product.type} size="small" variant="outlined" />}
-          </Stack>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6" color="primary">
-              ü {product.price}
-            </Typography>
-            <motion.button
-              whileTap={{ scale: 0.8 }}
-              aria-label={product.isFavorited ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                outline: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                padding: 0,
-              }}
-              className="focus-visible:ring-2 focus-visible:ring-pink-500"
-              onClick={onToggleFavorite}
-            >
-              <span style={{ fontSize: 24, color: product.isFavorited ? '#e91e63' : '#bdbdbd', transition: 'color 0.2s' }}>
-                {product.isFavorited ? '❤️' : '🤍'}
-              </span>
-            </motion.button>
-          </Box>
-        </CardContent>
-        <Box sx={{ bgcolor: 'grey.50', p: 1.5, textAlign: 'center', borderBottomLeftRadius: 18, borderBottomRightRadius: 18 }}>
-          <Typography variant="caption" color="success.main" fontWeight={600}>
-            Contribuyes al Bien Común con cada intercambio
-          </Typography>
-        </Box>
-      </Card>
-    </motion.div>
+        <Typography variant="h5" color="primary" sx={{ fontWeight: 700 }}>
+          {price} <Typography variant="caption" component="span">{currency}</Typography>
+        </Typography>
+        <Stack direction="row">
+          <Tooltip title={isFavorited ? 'Quitar de favoritos' : 'Añadir a favoritos'}>
+            <IconButton aria-label="add to favorites">
+              {isFavorited ? <Favorite color="error" /> : <FavoriteBorder />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Añadir al carrito">
+            <IconButton aria-label="add to cart">
+              <AddShoppingCart />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      </CardActions>
+    </Card>
   );
 };
 

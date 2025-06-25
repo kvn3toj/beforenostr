@@ -192,6 +192,11 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
   const isLastStep = activeStep === ONBOARDING_STEPS.length - 1;
   const progress = ((activeStep + 1) / ONBOARDING_STEPS.length) * 100;
 
+  const handleCloseCelebration = () => {
+    onComplete();
+    onClose();
+  };
+
   const handleNext = () => {
     const newCompletedSteps = new Set(completedSteps);
     newCompletedSteps.add(activeStep);
@@ -200,10 +205,6 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
     startTransition(() => {
       if (isLastStep) {
         setShowCelebration(true);
-        setTimeout(() => {
-          onComplete();
-          onClose();
-        }, 3000);
       } else {
         setActiveStep(prev => prev + 1);
       }
@@ -324,7 +325,7 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
 
   if (showCelebration) {
     return (
-      <Dialog open fullWidth maxWidth="sm">
+      <Dialog open fullWidth maxWidth="sm" onClose={handleCloseCelebration}>
         <DialogContent sx={{ textAlign: 'center', py: 6 }}>
           <Zoom in>
             <EmojiEventsIcon sx={{ fontSize: 120, color: 'warning.main', mb: 2 }} />
@@ -341,6 +342,11 @@ export const LetsOnboardingWizard: React.FC<LetsOnboardingWizardProps> = ({
           </Typography>
           <CheckCircleIcon sx={{ fontSize: 60, color: 'success.main', mt: 2 }} />
         </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
+          <Button onClick={handleCloseCelebration} variant="contained" size="large">
+            ¡Comenzar a Explorar!
+          </Button>
+        </DialogActions>
       </Dialog>
     );
   }

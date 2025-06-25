@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Chip } from '@mui/material';
-import { WorkspacePremium, TrendingUp, FlashOn, Schedule, PlayArrow } from '@mui/icons-material';
+import { Box, Chip, Tooltip } from '@mui/material';
+import { WorkspacePremium, TrendingUp, FlashOn, Schedule, PlayArrow, Handshake, Star, VerifiedUser, Nature } from '@mui/icons-material';
 import { Typography } from '@mui/material';
 
 export interface StatusBadgesProps {
@@ -11,6 +11,10 @@ export interface StatusBadgesProps {
   isUrgent: boolean;
   hasVideo: boolean;
   size: 'small' | 'medium' | 'large';
+  ayniScore?: number;
+  meritos?: number;
+  isSustainable?: boolean;
+  isEmprendedorConfiable?: boolean;
 }
 
 const StatusBadges: React.FC<StatusBadgesProps> = ({
@@ -21,6 +25,10 @@ const StatusBadges: React.FC<StatusBadgesProps> = ({
   isUrgent,
   hasVideo,
   size,
+  ayniScore,
+  meritos,
+  isSustainable,
+  isEmprendedorConfiable,
 }) => {
   const badgeSize = size === 'small' ? 'small' : 'medium';
 
@@ -77,6 +85,66 @@ const StatusBadges: React.FC<StatusBadgesProps> = ({
               '& .MuiChip-icon': { color: 'white' },
             }}
           />
+        )}
+        {typeof ayniScore === 'number' && ayniScore >= 80 && (
+          <Tooltip title="Ayni+: Este producto promueve la reciprocidad y el Bien Común. Cada intercambio suma Öndas positivas.">
+            <Chip
+              icon={<Handshake />}
+              label="Ayni+"
+              size={badgeSize}
+              sx={{
+                background: 'linear-gradient(45deg, #4CAF50, #81C784)',
+                color: 'white',
+                fontWeight: 'bold',
+                '& .MuiChip-icon': { color: 'white' },
+              }}
+            />
+          </Tooltip>
+        )}
+        {typeof meritos === 'number' && meritos >= 10 && (
+          <Tooltip title="Mëritos+: El vendedor ha contribuido al Bien Común y ha ganado Mëritos por su servicio.">
+            <Chip
+              icon={<Star />}
+              label="Mëritos+"
+              size={badgeSize}
+              sx={{
+                background: 'linear-gradient(45deg, #FFD700, #FFB300)',
+                color: 'white',
+                fontWeight: 'bold',
+                '& .MuiChip-icon': { color: 'white' },
+              }}
+            />
+          </Tooltip>
+        )}
+        {isSustainable && (
+          <Tooltip title="Sostenible: Este producto o servicio minimiza su huella ecológica y promueve la regeneración.">
+            <Chip
+              icon={<Nature />}
+              label="Sostenible"
+              size={badgeSize}
+              sx={{
+                background: 'linear-gradient(45deg, #388E3C, #A5D6A7)',
+                color: 'white',
+                fontWeight: 'bold',
+                '& .MuiChip-icon': { color: 'white' },
+              }}
+            />
+          </Tooltip>
+        )}
+        {isEmprendedorConfiable && (
+          <Tooltip title="Emprendedor Confiable: Vendedor verificado por la comunidad, reconocido por su ética y confianza.">
+            <Chip
+              icon={<VerifiedUser />}
+              label="Emprendedor Confiable"
+              size={badgeSize}
+              sx={{
+                background: 'linear-gradient(45deg, #1976D2, #64B5F6)',
+                color: 'white',
+                fontWeight: 'bold',
+                '& .MuiChip-icon': { color: 'white' },
+              }}
+            />
+          </Tooltip>
         )}
       </Box>
 

@@ -1,627 +1,129 @@
-import React, { useRef, useState, useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  IconButton,
-  Chip,
-  Card,
-  Tooltip,
-  Badge,
-  Slide,
-  Zoom,
-  Fade,
-  useTheme,
-  useMediaQuery,
-} from '@mui/material';
-import {
-  Add,
-  ArrowBackIos,
-  ArrowForwardIos,
-  Category as CategoryIcon,
-  TrendingUp,
-  StarBorder as Star,
-  LocalOffer,
-  AutoAwesome,
-  Explore,
-} from '@mui/icons-material';
-import consciousDesignSystem from '../../../../theme/consciousDesignSystem';
+import React from 'react';
+import { Box, Typography, IconButton, Stack, Avatar } from '@mui/material';
+import { Add, ArrowForwardIos } from '@mui/icons-material';
 
 interface Category {
   id: string;
   name: string;
-  icon: string;
-  color?: string;
-  count?: number;
-  trending?: boolean;
-  featured?: boolean;
-  description?: string;
-  gradient?: string;
+  icon: string; // Puede ser una URL o un nombre de ícono de MUI
 }
 
 interface CategoryCarouselProps {
   categories: Category[];
-  onCategoryClick: (categoryId: string) => void;
-  onViewAll: () => void;
+  onSelectCategory: (categoryId: string) => void;
+  onViewAll?: () => void; // onViewAll es opcional
   selectedCategory?: string;
-  showCount?: boolean;
-  showNavigation?: boolean;
-  variant?: 'default' | 'compact' | 'featured';
-  autoScroll?: boolean;
-  enableGestures?: boolean;
 }
+
+const CategoryItem: React.FC<{
+  item: Category;
+  onClick: () => void;
+  isSelected: boolean;
+}> = ({ item, onClick, isSelected }) => (
+  <Stack
+    alignItems="center"
+    spacing={1}
+    onClick={onClick}
+    sx={{ cursor: 'pointer', textAlign: 'center', minWidth: 80 }}
+  >
+    <Avatar
+      src={item.icon}
+      sx={{
+        width: 64,
+        height: 64,
+        bgcolor: isSelected ? 'primary.main' : 'action.hover',
+        color: isSelected ? 'primary.contrastText' : 'text.secondary',
+        border: isSelected ? '2px solid' : 'none',
+        borderColor: 'primary.dark',
+        transition: 'all 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'scale(1.05)',
+          boxShadow: 3,
+        },
+      }}
+    >
+      {/* Fallback si el ícono no es una imagen */}
+      {!item.icon.includes('/') && item.name.charAt(0)}
+    </Avatar>
+    <Typography
+      variant="caption"
+      fontWeight={isSelected ? 'bold' : 'regular'}
+      color={isSelected ? 'primary' : 'text.secondary'}
+      sx={{
+        display: '-webkit-box',
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        minHeight: '2.5em' // Reserva espacio para dos líneas
+      }}
+    >
+      {item.name}
+    </Typography>
+  </Stack>
+);
+
+const ViewAllItem: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+  <Stack
+    alignItems="center"
+    spacing={1}
+    onClick={onClick}
+    sx={{ cursor: 'pointer', textAlign: 'center', minWidth: 80 }}
+  >
+    <Avatar
+      sx={{
+        width: 64,
+        height: 64,
+        bgcolor: 'action.hover',
+        border: '2px dashed',
+        borderColor: 'grey.400',
+        transition: 'all 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'scale(1.05)',
+          boxShadow: 3,
+          borderColor: 'primary.main',
+        },
+      }}
+    >
+      <Add />
+    </Avatar>
+    <Typography variant="caption" color="text.secondary">
+      Ver todo
+    </Typography>
+  </Stack>
+);
 
 export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
   categories,
-  onCategoryClick,
+  onSelectCategory,
   onViewAll,
   selectedCategory,
-  showCount = true,
-  showNavigation = true,
-  variant = 'default',
-  autoScroll = false,
-  enableGestures = true,
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-
-  // Configuraciones por variante
-  const variantConfig = {
-    default: {
-      itemWidth: 120,
-      itemHeight: 100,
-      padding: 16,
-      gap: 24,
-      showDescription: false,
-    },
-    compact: {
-      itemWidth: 80,
-      itemHeight: 80,
-      padding: 8,
-      gap: 8,
-      showDescription: false,
-    },
-    featured: {
-      itemWidth: 140,
-      itemHeight: 120,
-      padding: 20,
-      gap: 24,
-      showDescription: true,
-    },
-  };
-
-  const config = variantConfig[variant];
-
-  // Verificar capacidad de scroll
-  const checkScrollCapability = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  // Scroll suave hacia la izquierda/derecha
-  const scrollTo = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = config.itemWidth + config.gap;
-      const currentScroll = scrollContainerRef.current.scrollLeft;
-      const targetScroll =
-        direction === 'left'
-          ? currentScroll - scrollAmount * 2
-          : currentScroll + scrollAmount * 2;
-
-      scrollContainerRef.current.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  // Gestos táctiles
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (!enableGestures) return;
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!enableGestures) return;
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (!enableGestures || !touchStart || !touchEnd) return;
-
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe && canScrollRight) {
-      scrollTo('right');
-    }
-    if (isRightSwipe && canScrollLeft) {
-      scrollTo('left');
-    }
-  };
-
-  // Auto-scroll effect
-  useEffect(() => {
-    if (!autoScroll) return;
-
-    const interval = setInterval(() => {
-      if (canScrollRight) {
-        scrollTo('right');
-      } else if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-      }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [autoScroll, canScrollRight]);
-
-  // Listener de scroll para actualizar botones de navegación
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      container.addEventListener('scroll', checkScrollCapability);
-      checkScrollCapability(); // Check inicial
-
-      return () => {
-        container.removeEventListener('scroll', checkScrollCapability);
-      };
-    }
-  }, []);
-
-  // Función para obtener el gradiente de una categoría
-  const getCategoryGradient = (category: Category) => {
-    if (category.gradient) return category.gradient;
-    if (category.color) {
-      return `linear-gradient(135deg, ${category.color}20, ${category.color}40)`;
-    }
-    return 'linear-gradient(135deg, #f0f0f0, #e0e0e0)';
-  };
-
-  // Función para formatear el número de items
-  const formatCount = (count: number) => {
-    if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
-    return count.toString();
-  };
-
   return (
-    <Box sx={{ position: 'relative', mb: 2 }}>
-      {/* Header opcional */}
-      {variant === 'featured' && (
-        <Box sx={{ px: config.padding / 8, mb: 2 }}>
-          <Typography variant="h6" fontWeight="bold" sx={{ mb: 0.5 }}>
-            Explora por Categorías
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Encuentra exactamente lo que necesitas
-          </Typography>
-        </Box>
-      )}
-
-      <Box sx={{ position: 'relative' }}>
-        {/* Botón de navegación izquierdo */}
-        {showNavigation && !isMobile && canScrollLeft && (
-          <Fade in={canScrollLeft}>
-            <IconButton
-              onClick={() => scrollTo('left')}
-              sx={{
-                position: 'absolute',
-                left: -20,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                zIndex: 2,
-                backgroundColor: 'white',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                },
-              }}
-              className="icon-micro-interactive"
-            >
-              <ArrowBackIos />
-            </IconButton>
-          </Fade>
-        )}
-
-        {/* Botón de navegación derecho */}
-        {showNavigation && !isMobile && canScrollRight && (
-          <Fade in={canScrollRight}>
-            <IconButton
-              onClick={() => scrollTo('right')}
-              sx={{
-                position: 'absolute',
-                right: -20,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                zIndex: 2,
-                backgroundColor: 'white',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                },
-              }}
-              className="icon-micro-interactive"
-            >
-              <ArrowForwardIos />
-            </IconButton>
-          </Fade>
-        )}
-
-        {/* Container principal del carrusel */}
-        <Box
-          ref={scrollContainerRef}
-          onScroll={checkScrollCapability}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          sx={{
-            display: 'flex',
-            gap: `${config.gap}px`,
-            overflowX: 'auto',
-            overflowY: 'hidden',
-            scrollBehavior: 'smooth',
-            px: config.padding / 8,
-            py: 1,
-            // Ocultar scrollbar pero mantener funcionalidad
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-            // Snap scrolling en navegadores compatibles
-            scrollSnapType: 'x mandatory',
-          }}
-        >
-          {/* Categorías */}
-          {categories.map((category, index) => (
-            <CategoryItem
-              key={category.id}
-              category={category}
-              isSelected={selectedCategory === category.id}
-              onClick={() => onCategoryClick(category.id)}
-              config={config}
-              showCount={showCount}
-              index={index}
-            />
-          ))}
-
-          {/* Botón "Ver todo" */}
-          <ViewAllButton
-            onClick={onViewAll}
-            config={config}
-            index={categories.length}
-          />
-        </Box>
-
-        {/* Indicadores de scroll (solo en móvil) */}
-        {isMobile && (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: 0.5,
-              mt: 1,
-            }}
-          >
-            {Array.from({ length: Math.ceil(categories.length / 3) }).map(
-              (_, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    backgroundColor: index === 0 ? 'primary.main' : 'grey.300',
-                    transition: 'background-color 0.3s ease',
-                  }}
-                />
-              )
-            )}
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
-};
-
-// 🏷️ Componente individual de categoría
-interface CategoryItemProps {
-  category: Category;
-  isSelected: boolean;
-  onClick: () => void;
-  config: any;
-  showCount: boolean;
-  index: number;
-}
-
-const CategoryItem: React.FC<CategoryItemProps> = ({
-  category,
-  isSelected,
-  onClick,
-  config,
-  showCount,
-  index,
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
-
-  // Fondo visual mejorado
-  const background = isDesktop
-    ? (category.gradient || (category.color ? `linear-gradient(135deg, ${category.color}20, ${category.color}60)` : `linear-gradient(135deg, #f0f0f0, #e0e0e0)`))
-    : (isSelected
-      ? `linear-gradient(135deg, ${consciousDesignSystem.colors.primary.main}20, ${consciousDesignSystem.colors.primary.main}35)`
-      : `linear-gradient(135deg, ${consciousDesignSystem.colors.grey[50]}, ${consciousDesignSystem.colors.grey[100]})`);
-
-  return (
-    <Zoom in timeout={300 + index * 100}>
-      <Card
-        onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        aria-label={`Seleccionar categoría ${category.name}`}
-        sx={{
-          minWidth: { xs: 110, md: 130 },
-          maxWidth: { xs: 140, md: 160 },
-          minHeight: { xs: 140, md: 180 },
-          maxHeight: { xs: 180, md: 210 },
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          p: { xs: 1.5, md: 2.5 },
-          borderRadius: 3,
-          boxShadow: isSelected
-            ? consciousDesignSystem.components.card.shadow.consciousness
-            : isHovered && isDesktop
-              ? consciousDesignSystem.components.card.shadow.medium
-              : consciousDesignSystem.components.card.shadow.subtle,
-          background,
-          border: isSelected
-            ? `2px solid ${consciousDesignSystem.colors.primary.main}`
-            : `1px solid ${consciousDesignSystem.colors.grey[200]}`,
-          transition: 'transform 0.22s, box-shadow 0.22s, background 0.22s',
-          transform: isHovered && isDesktop ? 'translateY(-4px) scale(1.04)' : 'none',
-          cursor: 'pointer',
-          position: 'relative',
-          overflow: 'hidden',
-          scrollSnapAlign: 'start',
-          mx: { xs: 0, md: 0.5 },
-          '&:hover, &:focus': isDesktop ? {
-            borderColor: consciousDesignSystem.colors.primary.light,
-            background: category.gradient || (category.color ? `linear-gradient(135deg, ${category.color}40, ${category.color}80)` : consciousDesignSystem.colors.primary.light),
-            boxShadow: consciousDesignSystem.components.card.shadow.consciousness,
-          } : {},
-        }}
-        className="card-micro-interactive"
-      >
-        {/* Chip contador arriba derecha */}
-        {showCount && category.count && (
-          <Chip
-            label={formatCount(category.count)}
-            size="small"
-            sx={{
-              position: 'absolute',
-              top: 10,
-              right: 10,
-              zIndex: 2,
-              height: isDesktop ? 28 : 22,
-              fontSize: isDesktop ? '1rem' : '0.95rem',
-              fontWeight: 600,
-              bgcolor: '#e8f5e9',
-              color: '#388e3c',
-              px: 1.2,
-              boxShadow: 1,
-              border: `1.5px solid #b2dfdb`,
-            }}
-          />
-        )}
-        {/* Emoji/ícono grande y centrado */}
-        <Box
-          sx={{
-            fontSize: { xs: '2.2rem', md: '2.7rem' },
-            mt: { xs: 2.5, md: 3 },
-            mb: { xs: 1.5, md: 2 },
-            textShadow: isHovered ? '0 2px 8px #b2dfdb' : 'none',
-            lineHeight: 1,
-            minHeight: 44,
-            minWidth: 44,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'text-shadow 0.2s, transform 0.2s',
-            transform: isHovered && isDesktop ? 'scale(1.12)' : 'scale(1)',
-          }}
-          aria-hidden
-        >
-          {category.icon.match(/\p{Emoji}/u) ? (
-            <span style={{
-              textShadow: isHovered ? '0 2px 8px #b2dfdb' : 'none',
-              display: 'inline-block',
-              fontSize: isDesktop ? '2.7rem' : '2.2rem',
-              transition: 'text-shadow 0.2s',
-            }}>{category.icon}</span>
-          ) : (
-            <Box
-              component="img"
-              src={category.icon}
-              alt={category.name}
-              sx={{
-                width: isDesktop ? 48 : 36,
-                height: isDesktop ? 48 : 36,
-                objectFit: 'contain',
-                filter: isSelected && isDesktop
-                  ? `drop-shadow(0 4px 12px ${consciousDesignSystem.colors.primary.main}40)`
-                  : isSelected
-                    ? `drop-shadow(0 2px 4px ${consciousDesignSystem.colors.primary.main}40)`
-                    : 'none',
-                transition: 'filter 0.2s',
-              }}
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.parentElement!.innerHTML = '🏷️';
-              }}
-            />
-          )}
-        </Box>
-        {/* Nombre de la categoría */}
-        <Typography
-          variant="body1"
-          sx={{
-            fontWeight: 700,
-            fontSize: { xs: '1.08rem', md: '1.15rem' },
-            textAlign: 'center',
-            color: '#222',
-            letterSpacing: 0.2,
-            mt: 'auto',
-            mb: 0,
-            lineHeight: 1.2,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            width: '100%',
-            px: 1,
-          }}
-          aria-label={category.name}
-        >
-          {category.name}
-        </Typography>
-      </Card>
-    </Zoom>
-  );
-};
-
-// 👀 Botón "Ver todo"
-interface ViewAllButtonProps {
-  onClick: () => void;
-  config: any;
-  index: number;
-}
-
-const ViewAllButton: React.FC<ViewAllButtonProps> = ({
-  onClick,
-  config,
-  index,
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <Zoom in timeout={300 + index * 100}>
-      <Card
-        onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        sx={{
-          minWidth: config.itemWidth,
-          width: config.itemWidth,
-          height: config.itemHeight,
-          cursor: 'pointer',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          transform: isHovered
-            ? 'translateY(-4px) scale(1.02)'
-            : 'translateY(0) scale(1)',
-          boxShadow: isHovered
-            ? '0 8px 25px rgba(0,0,0,0.15)'
-            : '0 2px 8px rgba(0,0,0,0.1)',
-          background: 'linear-gradient(135deg, #f8f9fa, #e9ecef)',
-          border: '2px dashed #79747E',
-          borderRadius: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-          scrollSnapAlign: 'start',
-        }}
-        className="card-micro-interactive"
-      >
-        {/* Icono animado */}
-        <Box
-          sx={{
-            transition: 'transform 0.3s ease',
-            transform: isHovered
-              ? 'scale(1.2) rotate(90deg)'
-              : 'scale(1) rotate(0deg)',
-            mb: 1,
-          }}
-        >
-          <Add
-            sx={{
-              fontSize: config.itemWidth > 100 ? 32 : 24,
-              color: '#79747E',
-            }}
-          />
-        </Box>
-
-        {/* Texto */}
-        <Typography
-          variant={config.itemWidth > 100 ? 'body2' : 'caption'}
-          fontWeight="bold"
-          sx={{
-            textAlign: 'center',
-            color: '#79747E',
-            transition: 'color 0.3s ease',
-          }}
-        >
-          Ver todo
-        </Typography>
-
-        {/* Icono adicional */}
-        <Fade in={isHovered}>
-          <Explore
-            sx={{
-              fontSize: 16,
-              color: '#79747E',
-              mt: 0.5,
-              opacity: isHovered ? 1 : 0,
-              transition: 'opacity 0.3s ease',
-            }}
-          />
-        </Fade>
-
-        {/* Efecto de hover */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background:
-              'linear-gradient(135deg, rgba(121, 116, 126, 0.1), transparent)',
-            opacity: isHovered ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-            pointerEvents: 'none',
-          }}
+    <Stack
+      direction="row"
+      spacing={3}
+      sx={{
+        overflowX: 'auto',
+        py: 1,
+        px: 2,
+        // Ocultar la barra de scroll
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+        '-ms-overflow-style': 'none', // IE and Edge
+        'scrollbar-width': 'none', // Firefox
+      }}
+    >
+      {onViewAll && <ViewAllItem onClick={onViewAll} />}
+      {categories.map((category) => (
+        <CategoryItem
+          key={category.id}
+          item={category}
+          onClick={() => onSelectCategory(category.id)}
+          isSelected={selectedCategory === category.id}
         />
-      </Card>
-    </Zoom>
+      ))}
+    </Stack>
   );
-};
-
-// Función helper para obtener gradiente de categoría
-const getCategoryGradient = (category: Category) => {
-  if (category.gradient) return category.gradient;
-  if (category.color) {
-    return `linear-gradient(135deg, ${category.color}15, ${category.color}25)`;
-  }
-  return 'linear-gradient(135deg, #f0f0f0, #e0e0e0)';
-};
-
-// Función helper para formatear contador
-const formatCount = (count: number) => {
-  if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
-  return count.toString();
 };
