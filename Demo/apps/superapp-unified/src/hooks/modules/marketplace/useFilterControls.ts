@@ -1,42 +1,25 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { MarketplaceFilters } from '../components/modules/marketplace/components/AdvancedFilters';
+import { useState, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { SelectChangeEvent } from '@mui/material';
 
-interface MarketplaceItem {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  originalPrice?: number;
-  currency: string;
-  location: string;
-  rating: number;
-  reviewCount: number;
-  category: string;
-  tags: string[];
-  featured?: boolean;
-  trending?: boolean;
-  discount?: number;
-  seller: {
-    verified: boolean;
-    responseTime?: string;
-  };
-  deliveryTime?: string;
-  createdAt?: Date;
-}
-
+// Note: This SearchFilters interface is simplified and should be aligned with the backend DTOs.
+// It is defined here for clarity, but could be imported from a shared types folder.
 export interface SearchFilters {
   query: string;
   category: string;
   sortBy: 'relevance' | 'newest' | 'price_asc' | 'price_desc' | 'rating' | 'ayni_score' | 'consciousness';
   verified: boolean;
-  // Futuros filtros avanzados
   priceMin?: number;
   priceMax?: number;
 }
 
-export const useMarketplaceFilters = (
+/**
+ * Custom hook to manage the state and logic of marketplace filter controls.
+ * It debounces search actions to prevent excessive API calls while typing.
+ *
+ * @param onSearch - Callback function that is triggered when filters change.
+ */
+export const useFilterControls = (
   onSearch: (filters: Partial<SearchFilters>) => void
 ) => {
   const [query, setQuery] = useState('');
@@ -44,10 +27,12 @@ export const useMarketplaceFilters = (
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [activeCategory, setActiveCategory] = useState('');
 
+  // Debounce the search callback to avoid firing it on every keystroke
   const debouncedSearch = useDebouncedCallback((filters: Partial<SearchFilters>) => {
     onSearch(filters);
   }, 500);
 
+  // Effect to trigger the debounced search when any filter changes
   useEffect(() => {
     debouncedSearch({ query, sortBy, verified: verifiedOnly, category: activeCategory });
   }, [query, sortBy, verifiedOnly, activeCategory, debouncedSearch]);
@@ -68,6 +53,7 @@ export const useMarketplaceFilters = (
     setActiveCategory(categoryId);
   };
 
+  // Return the state and handlers to be used by the component
   return {
     filters: {
       query,
@@ -80,10 +66,7 @@ export const useMarketplaceFilters = (
       handleSortChange,
       handleVerifiedChange,
       handleCategoryChange,
+      setQuery // Expose setQuery for programmatic changes if needed
     },
   };
 };
-
-export type UseMarketplaceFiltersReturn = ReturnType<
-  typeof useMarketplaceFilters
->;

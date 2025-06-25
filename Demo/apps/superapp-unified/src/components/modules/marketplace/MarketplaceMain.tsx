@@ -78,9 +78,13 @@ import { LetsListings } from './components/LetsListings';
 import MarketplaceFilterBar from './components/MarketplaceFilterBar';
 import { RevolutionaryWidget } from '../../../design-system/templates/RevolutionaryWidget';
 import { ConsciousLoadingState } from '../../ui/enhanced/ConsciousLoadingState';
-import { motion } from 'framer-motion';
-import { impactCategories } from './marketplace.constants';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  impactCategories,
+  getConsciousnessStyle,
+} from './marketplace.constants.tsx';
 import { QuickViewModal } from './components/QuickViewModal';
+import MarketplaceAtrium from './components/MarketplaceAtrium';
 
 const marketplaceCosmicEffects = {
   enableGlow: true,
@@ -130,9 +134,10 @@ interface MarketplaceItem {
   location?: string;
   isFavorited?: boolean;
   stock: number;
+  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
 }
 
-interface SearchFilters {
+export interface SearchFilters {
   query: string;
   category: string;
   priceRange: [number, number];
@@ -156,43 +161,7 @@ interface SearchFilters {
   minimumAyniScore?: number;
 }
 
-const getConsciousnessStyle = (level?: string) => {
-  switch (level) {
-    case 'TRANSCENDENT':
-      return {
-        color: '#fbbf24',
-        gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-        glow: '0 0 20px rgba(251, 191, 36, 0.3)',
-        icon: <AutoAwesome />,
-      };
-    case 'FLOURISHING':
-      return {
-        color: '#10b981',
-        gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-        glow: '0 0 15px rgba(16, 185, 129, 0.2)',
-        icon: <EmojiNature />,
-      };
-    case 'GROWING':
-      return {
-        color: '#3b82f6',
-        gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-        glow: '0 0 10px rgba(59, 130, 246, 0.2)',
-        icon: <SelfImprovement />,
-      };
-    case 'SEED':
-    default:
-      return {
-        color: '#6b7280',
-        gradient: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
-        glow: '0 0 5px rgba(107, 114, 128, 0.1)',
-        icon: <WaterDrop />,
-      };
-  }
-};
-
 const mapItemToUIItem = (item: any): MarketplaceItem => {
-  const consciousnessStyle = getConsciousnessStyle(item.consciousnessLevel);
-
   const sellerData = item.seller || {};
   const isEmprendedorConfiable = (sellerData.rating || 0) >= 4.5 && (sellerData.reviewCount || 0) > 10;
 
@@ -226,6 +195,7 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
     location: item.location || 'Online',
     isFavorited: item.isFavorited || false,
     stock: Math.floor(Math.random() * 50),
+    consciousnessLevel: item.consciousnessLevel,
   };
 };
 
@@ -235,6 +205,7 @@ const MarketplaceMain: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const queryClient = useQueryClient();
+  const [hasEntered, setHasEntered] = useState(false);
 
   const {
     data: marketplaceItemsResponse,
@@ -449,6 +420,10 @@ const MarketplaceMain: React.FC = () => {
       items = items.filter((item: MarketplaceItem) => item.category === selectedCategory);
     }
 
+    if (currentFilters.verified) {
+      items = items.filter(item => item.seller.isEmprendedorConfiable);
+    }
+
     switch (currentFilters.sortBy) {
       case 'price_asc':
         items = [...items].sort((a, b) => a.priceUSD - b.priceUSD);
@@ -479,6 +454,23 @@ const MarketplaceMain: React.FC = () => {
           return scoreB - scoreA;
         });
         break;
+      case 'ayni_score':
+        items = [...items].sort((a, b) => b.seller.ayniScore - a.seller.ayniScore);
+        break;
+      case 'consciousness': {
+        const consciousnessOrder = {
+          'SEED': 1,
+          'GROWING': 2,
+          'FLOURISHING': 3,
+          'TRANSCENDENT': 4,
+        };
+        items = [...items].sort((a, b) => {
+            const scoreA = consciousnessOrder[a.consciousnessLevel || 'SEED'] || 0;
+            const scoreB = consciousnessOrder[b.consciousnessLevel || 'SEED'] || 0;
+            return scoreB - scoreA;
+        });
+        break;
+      }
       default:
         break;
     }
@@ -489,7 +481,7 @@ const MarketplaceMain: React.FC = () => {
     searchResults,
     displayedItems,
     selectedCategory,
-    currentFilters.sortBy,
+    currentFilters,
   ]);
 
   const marketplaceStats = {
@@ -707,56 +699,69 @@ const MarketplaceMain: React.FC = () => {
     return <MobileMarketplaceView />;
   }
 
+  if (!hasEntered) {
+    return <MarketplaceAtrium onEnter={() => setHasEntered(true)} />;
+  }
+
   // 🖥️ Layout de escritorio optimizado
   return (
-    <Box data-testid="marketplace-container">
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <MarketplaceFilterBar
-          categories={impactCategories}
-          activeCategory={selectedCategory}
-          onCategoryChange={(category: string) => {
-            setSelectedCategory(category === 'all' ? '' : category);
-          }}
-          onSearch={(query: string) =>
-            handleFiltersChange({ ...currentFilters, query })
-          }
-          onOpenAdvancedFilters={() => setShowAdvancedSearch(true)}
-        />
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <Box data-testid="marketplace-container">
+          <Container maxWidth="xl" sx={{ py: 4 }}>
+            <MarketplaceFilterBar
+              categories={impactCategories}
+              activeCategory={selectedCategory}
+              onCategoryChange={(category: string) => {
+                setSelectedCategory(category === 'all' ? '' : category);
+              }}
+              onSearch={(filters: Partial<SearchFilters>) =>
+                handleFiltersChange({ ...currentFilters, ...filters })
+              }
+              onOpenAdvancedFilters={() => setShowAdvancedSearch(true)}
+            />
 
-        <ItemGrid
-          items={itemsToDisplay}
-          isLoading={isLoadingItems}
-          onToggleFavorite={handleToggleFavorite}
-          onProductClick={handleProductClick}
-          onAddToCart={handleAddToCart}
-          onShare={handleShare}
-          viewMode={viewMode}
-        />
+            <ItemGrid
+              items={itemsToDisplay}
+              isLoading={isLoadingItems}
+              onToggleFavorite={handleToggleFavorite}
+              onProductClick={handleProductClick}
+              onAddToCart={handleAddToCart}
+              onShare={handleShare}
+              viewMode={viewMode}
+            />
 
-        <QuickViewModal
-          open={!!quickViewItem}
-          onClose={() => setQuickViewItem(null)}
-          item={quickViewItem}
-          onAddToCart={handleAddToCart}
-          onToggleFavorite={handleQuickViewToggleFavorite}
-        />
+            <QuickViewModal
+              open={!!quickViewItem}
+              onClose={() => setQuickViewItem(null)}
+              item={quickViewItem}
+              onAddToCart={handleAddToCart}
+              onToggleFavorite={handleQuickViewToggleFavorite}
+            />
 
-        <Fab
-          color="primary"
-          aria-label="add"
-          sx={{ position: 'fixed', bottom: 16, right: 16 }}
-          onClick={handleOpenCreateModal}
-        >
-          <AddIcon />
-        </Fab>
-      </Container>
+            <Fab
+              color="primary"
+              aria-label="add"
+              sx={{ position: 'fixed', bottom: 16, right: 16 }}
+              onClick={handleOpenCreateModal}
+            >
+              <AddIcon />
+            </Fab>
+          </Container>
 
-      <CreateItemModal
-        open={isCreateModalOpen}
-        onClose={handleCloseCreateModal}
-        onSuccess={handleCreateSuccess}
-      />
-    </Box>
+          <CreateItemModal
+            open={isCreateModalOpen}
+            onClose={handleCloseCreateModal}
+            onSuccess={handleCreateSuccess}
+          />
+        </Box>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

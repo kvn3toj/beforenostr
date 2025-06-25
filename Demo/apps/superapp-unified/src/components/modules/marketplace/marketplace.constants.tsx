@@ -1,3 +1,11 @@
+import {
+  AutoAwesome,
+  EmojiNature,
+  SelfImprovement,
+  WaterDrop,
+} from '@mui/icons-material';
+import React from 'react';
+
 export interface Category {
   id: string;
   name: string;
@@ -73,3 +81,41 @@ export const impactCategories: Category[] = [
     bgColor: '#fce4ec',
   },
 ];
+
+export const getConsciousnessStyle = (level?: string) => {
+  switch (level) {
+    case 'TRANSCENDENT':
+      return {
+        name: 'Trascendente',
+        color: '#fbbf24',
+        gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+        glow: '0 0 20px rgba(251, 191, 36, 0.3)',
+        icon: <AutoAwesome />,
+      };
+    case 'FLOURISHING':
+      return {
+        name: 'Floreciente',
+        color: '#10b981',
+        gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        glow: '0 0 15px rgba(16, 185, 129, 0.2)',
+        icon: <EmojiNature />,
+      };
+    case 'GROWING':
+      return {
+        name: 'En Crecimiento',
+        color: '#3b82f6',
+        gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+        glow: '0 0 10px rgba(59, 130, 246, 0.2)',
+        icon: <SelfImprovement />,
+      };
+    case 'SEED':
+    default:
+      return {
+        name: 'Semilla',
+        color: '#6b7280',
+        gradient: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
+        glow: '0 0 5px rgba(107, 114, 128, 0.1)',
+        icon: <WaterDrop />,
+      };
+  }
+};

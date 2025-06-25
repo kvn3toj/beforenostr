@@ -11,6 +11,8 @@ import {
   IconButton,
   alpha,
   useTheme,
+  Avatar,
+  Tooltip,
 } from '@mui/material';
 import {
   FavoriteBorder,
@@ -18,9 +20,11 @@ import {
   Share,
   Star,
   RemoveRedEyeOutlined,
+  VerifiedUser,
+  ShoppingCart,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { impactCategories, Category } from '../marketplace.constants';
+import { impactCategories, Category, getConsciousnessStyle } from '../marketplace.constants';
 import { useAuth } from '../../../../contexts/AuthContext';
 
 // Asumiendo que la moneda de Coomunity se llama Lúkas
@@ -38,14 +42,17 @@ export interface MarketplaceItem {
     avatar: string;
     ayniScore: number;
     meritos: number;
+    isEmprendedorConfiable: boolean;
   };
   stats: {
     views: number;
     rating: number;
+    reviewCount: number;
   };
   category: string;
   stock: number;
   isFavorited?: boolean;
+  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
 }
 
 interface EnhancedMarketplaceCardProps {
@@ -73,6 +80,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
   const { user } = useAuth();
   const controlsRef = useRef<HTMLDivElement>(null);
   const categoryStyle = impactCategories.find(cat => cat.name === item.category);
+  const consciousnessStyle = getConsciousnessStyle(item.consciousnessLevel);
 
   const stockColor = item.stock > 10 ? 'success.main' : item.stock > 0 ? 'warning.main' : 'error.main';
 
@@ -93,10 +101,10 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
           borderRadius: 4,
           boxShadow: '0 8px 32px 0 rgba(0,0,0,0.1)',
           transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          borderTop: `4px solid ${categoryStyle?.color || theme.palette.primary.main}`,
+          borderTop: `4px solid ${consciousnessStyle.color}`,
           '&:hover': {
             transform: 'translateY(-4px)',
-            boxShadow: `0 12px 40px 0 ${alpha(categoryStyle?.color || theme.palette.primary.main, 0.2)}`,
+            boxShadow: `0 12px 40px 0 ${alpha(theme.palette.primary.main, 0.2)}`,
           },
         }}
       >
@@ -106,6 +114,11 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
             height="180"
             image={item.images[0] || 'https://via.placeholder.com/300'}
             alt={item.title}
+            sx={{
+              objectFit: 'cover',
+              transition: 'transform 0.5s ease-in-out',
+              transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+            }}
           />
           <Stack
             direction="row"
@@ -128,11 +141,11 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
                 animate={{ scale: [1, 1.3, 1] }}
                 transition={{ duration: 0.3 }}
               >
-              {item.isFavorited ? (
-                <Favorite sx={{ color: theme.palette.error.main }} fontSize="small" />
-              ) : (
-                <FavoriteBorder fontSize="small" />
-              )}
+                {item.isFavorited ? (
+                  <Favorite sx={{ color: theme.palette.error.main }} fontSize="small" />
+                ) : (
+                  <FavoriteBorder fontSize="small" />
+                )}
               </motion.div>
             </IconButton>
             <IconButton
@@ -174,22 +187,22 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
 
           <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="caption" color="text.secondary" mr={0.5}>
-                    Vendedor:
-                </Typography>
-                <Typography variant="body2" fontWeight="500">{item.seller.name}</Typography>
+              <Typography variant="caption" color="text.secondary" mr={0.5}>
+                Vendedor:
+              </Typography>
+              <Typography variant="body2" fontWeight="500">{item.seller.name}</Typography>
             </Box>
             <Chip label={`Ayni: ${item.seller.ayniScore}%`} size="small" color="success" variant='outlined' />
           </Stack>
 
           <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
             <Stack direction="row" alignItems="center" spacing={1}>
-                <RemoveRedEyeOutlined fontSize="small" color="action" />
-                <Typography variant="caption">{item.stats.views} vistas</Typography>
+              <RemoveRedEyeOutlined fontSize="small" color="action" />
+              <Typography variant="caption">{item.stats.views} vistas</Typography>
             </Stack>
-             <Stack direction="row" alignItems="center" spacing={0.5}>
-                <Star fontSize="small" sx={{color: 'warning.main'}} />
-                <Typography variant="caption">{item.stats.rating} ({item.seller.meritos} méritos)</Typography>
+            <Stack direction="row" alignItems="center" spacing={0.5}>
+              <Star fontSize="small" sx={{ color: 'warning.main' }} />
+              <Typography variant="caption">{item.stats.rating} ({item.seller.meritos} méritos)</Typography>
             </Stack>
           </Stack>
 
@@ -197,7 +210,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
             <Typography variant="h5" component="p" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
               {item.lukas} <Typography variant='caption' component='span'>{LUKAS_SYMBOL}</Typography>
             </Typography>
-             <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               (${item.priceUSD})
             </Typography>
           </Stack>

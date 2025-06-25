@@ -13,11 +13,12 @@ import {
   Rating,
   alpha,
   useTheme,
+  Tooltip,
 } from '@mui/material';
-import { Close, Share, FavoriteBorder, Favorite, ShoppingCart } from '@mui/icons-material';
+import { Close, Share, FavoriteBorder, Favorite, ShoppingCart, VerifiedUser } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { MarketplaceItem } from './EnhancedMarketplaceCard';
-import { impactCategories } from '../marketplace.constants';
+import { impactCategories, getConsciousnessStyle } from '../marketplace.constants';
 
 interface QuickViewModalProps {
   open: boolean;
@@ -39,6 +40,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   if (!item) return null;
 
   const categoryStyle = impactCategories.find(cat => cat.name === item.category);
+  const consciousnessStyle = getConsciousnessStyle(item.consciousnessLevel);
   const stockColor = item.stock > 10 ? 'success.main' : item.stock > 0 ? 'warning.main' : 'error.main';
   const stockText = item.stock > 10 ? 'En stock' : item.stock > 0 ? `¡Solo quedan ${item.stock}!` : 'Agotado';
 
@@ -51,15 +53,37 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
       PaperProps={{ sx: { borderRadius: 4, overflow: 'hidden' } }}
     >
       <DialogTitle sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Chip
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            mb: 1,
+          }}
+        >
+          <Chip
             label={item.category}
             size="small"
             sx={{
-              color: categoryStyle?.color,
               backgroundColor: categoryStyle?.bgColor,
-              fontWeight: 'medium',
+              color: categoryStyle?.color,
+              fontWeight: 'bold',
             }}
           />
+          <Tooltip title={`Nivel de Consciencia: ${consciousnessStyle.name}`}>
+            <Avatar
+              sx={{
+                width: 28,
+                height: 28,
+                background: consciousnessStyle.gradient,
+                boxShadow: `0 0 8px ${consciousnessStyle.glow}`,
+                transform: 'translateY(-2px)'
+              }}
+            >
+              {React.cloneElement(consciousnessStyle.icon, { sx: { color: 'white', fontSize: '0.8rem' } })}
+            </Avatar>
+          </Tooltip>
+        </Box>
         <IconButton onClick={onClose} sx={{ zIndex: 1 }}>
           <Close />
         </IconButton>

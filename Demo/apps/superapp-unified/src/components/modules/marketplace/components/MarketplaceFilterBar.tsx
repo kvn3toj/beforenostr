@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Paper,
   InputBase,
@@ -10,10 +10,19 @@ import {
   useTheme,
   alpha,
   Tooltip,
+  SelectChangeEvent,
+  useMediaQuery,
+  styled,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import { Search, TuneOutlined } from '@mui/icons-material';
 import { motion } from 'framer-motion';
-import { useDebouncedCallback } from 'use-debounce';
+import { useFilterControls, SearchFilters } from '../../../../hooks/modules/marketplace/useFilterControls';
 
 interface Category {
   id: string;
@@ -22,30 +31,91 @@ interface Category {
 
 interface MarketplaceFilterBarProps {
   categories: Category[];
-  activeCategory: string;
-  onCategoryChange: (categoryId: string) => void;
-  onSearch: (query: string) => void;
+  onSearch: (filters: Partial<SearchFilters>) => void;
   onOpenAdvancedFilters: () => void;
 }
 
+const CategoryChip = styled(Chip)(({ theme }) => ({
+  fontWeight: 600,
+  borderRadius: '8px',
+  padding: theme.spacing(2, 1.5),
+  height: 'auto',
+  cursor: 'pointer',
+  '&.Mui-active': {
+    borderColor: theme.palette.primary.main,
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  },
+  '&:not(.Mui-active)': {
+    borderColor: theme.palette.divider,
+    backgroundColor: 'transparent',
+  },
+}));
+
 const MarketplaceFilterBar: React.FC<MarketplaceFilterBarProps> = ({
   categories,
-  activeCategory,
-  onCategoryChange,
   onSearch,
   onOpenAdvancedFilters,
 }) => {
   const theme = useTheme();
-  const [query, setQuery] = useState('');
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { filters, handlers } = useFilterControls(onSearch);
 
-  const debouncedSearch = useDebouncedCallback((value: string) => {
-    onSearch(value);
-  }, 300);
+  const renderCategoryChips = () => (
+    <Stack
+      direction="row"
+      spacing={1}
+      sx={{
+        overflowX: 'auto',
+        pb: 1,
+        '&::-webkit-scrollbar': { display: 'none' },
+        scrollbarWidth: 'none',
+      }}
+    >
+      <CategoryChip
+        label="Todo"
+        variant="outlined"
+        onClick={() => handlers.handleCategoryChange('')}
+        className={filters.activeCategory === '' ? 'Mui-active' : ''}
+      />
+      {categories.map((category) => (
+        <CategoryChip
+          key={category.id}
+          label={category.name}
+          variant="outlined"
+          onClick={() => handlers.handleCategoryChange(category.id)}
+          className={filters.activeCategory === category.id ? 'Mui-active' : ''}
+        />
+      ))}
+    </Stack>
+  );
 
-  const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-    debouncedSearch(event.target.value);
-  };
+  const renderSortingControls = () => (
+    <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" justifyContent="flex-end">
+       <FormControl size="small" sx={{ minWidth: 150, m: 1 }}>
+        <InputLabel>Ordenar por</InputLabel>
+        <Select
+          value={filters.sortBy}
+          label="Ordenar por"
+          onChange={handlers.handleSortChange as (event: SelectChangeEvent<any>) => void}
+        >
+          <MenuItem value="relevance">Relevancia</MenuItem>
+          <MenuItem value="newest">Más Recientes</MenuItem>
+          <MenuItem value="price_asc">Precio: Menor a Mayor</MenuItem>
+          <MenuItem value="price_desc">Precio: Mayor a Menor</MenuItem>
+          <MenuItem value="rating">Mejor Valorados</MenuItem>
+          <MenuItem value="ayni_score">Mayor Ayni Score</MenuItem>
+          <MenuItem value="consciousness">Nivel de Consciencia</MenuItem>
+        </Select>
+      </FormControl>
+      <Tooltip title="Mostrar solo Emprendedores Confiables">
+        <FormControlLabel
+          control={<Switch checked={filters.verifiedOnly} onChange={handlers.handleVerifiedChange} />}
+          label="Verificados"
+          sx={{ mr: 1, m: 0.5 }}
+        />
+      </Tooltip>
+    </Stack>
+  );
 
   return (
     <motion.div
@@ -65,8 +135,8 @@ const MarketplaceFilterBar: React.FC<MarketplaceFilterBarProps> = ({
         }}
       >
         <Stack spacing={2.5}>
-          {/* Search and Advanced Filters */}
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
+            {/* Search and Advanced Filters */}
             <Paper
               component="form"
               onSubmit={(e) => e.preventDefault()}
@@ -76,6 +146,7 @@ const MarketplaceFilterBar: React.FC<MarketplaceFilterBarProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 flexGrow: 1,
+                width: { xs: '100%', sm: 'auto'},
                 borderRadius: '12px',
                 border: '1px solid',
                 borderColor: theme.palette.divider,
@@ -90,24 +161,28 @@ const MarketplaceFilterBar: React.FC<MarketplaceFilterBarProps> = ({
                 sx={{ ml: 1, flex: 1, fontWeight: 500 }}
                 placeholder="Busca en CoomÜnity..."
                 inputProps={{ 'aria-label': 'buscar en coomünity' }}
-                value={query}
-                onChange={handleQueryChange}
+                value={filters.query}
+                onChange={handlers.handleQueryChange}
               />
             </Paper>
-            <Tooltip title="Filtros Avanzados">
-              <IconButton
-                onClick={onOpenAdvancedFilters}
-                aria-label="filtros avanzados"
-                sx={{
-                  border: '1px solid',
-                  borderColor: theme.palette.divider,
-                  borderRadius: '12px',
-                  p: '12px',
-                }}
-              >
-                <TuneOutlined />
-              </IconButton>
-            </Tooltip>
+            <Stack direction="row" spacing={1} alignItems="center" width={{ xs: '100%', sm: 'auto' }}>
+              <Tooltip title="Filtros Avanzados">
+                <IconButton
+                  onClick={onOpenAdvancedFilters}
+                  aria-label="filtros avanzados"
+                  sx={{
+                    border: '1px solid',
+                    borderColor: theme.palette.divider,
+                    borderRadius: '12px',
+                    p: '12px',
+                    flexGrow: { xs: 1, sm: 0 }
+                  }}
+                >
+                  <TuneOutlined />
+                </IconButton>
+              </Tooltip>
+              {!isMobile && renderSortingControls()}
+            </Stack>
           </Stack>
 
           {/* Category Filters */}
@@ -118,63 +193,10 @@ const MarketplaceFilterBar: React.FC<MarketplaceFilterBarProps> = ({
             >
               Categorías Populares
             </Typography>
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{
-                overflowX: 'auto',
-                pb: 1,
-                '&::-webkit-scrollbar': { display: 'none' },
-                scrollbarWidth: 'none',
-              }}
-            >
-              <Chip
-                label="Todo"
-                variant="outlined"
-                clickable
-                onClick={() => onCategoryChange('')}
-                sx={{
-                  fontWeight: 600,
-                  borderRadius: '8px',
-                  px: 1.5,
-                  py: 2, // Aumenta el padding vertical
-                  height: 'auto', // Permite que el padding defina la altura
-                  borderColor:
-                    activeCategory === ''
-                      ? 'primary.main'
-                      : theme.palette.divider,
-                  backgroundColor:
-                    activeCategory === ''
-                      ? alpha(theme.palette.primary.main, 0.1)
-                      : 'transparent',
-                }}
-              />
-              {categories.map((category) => (
-                <Chip
-                  key={category.id}
-                  label={category.name}
-                  variant="outlined"
-                  clickable
-                  onClick={() => onCategoryChange(category.id)}
-                  sx={{
-                    fontWeight: 600,
-                    borderRadius: '8px',
-                    px: 1.5,
-                    py: 2, // Aumenta el padding vertical
-                    height: 'auto', // Permite que el padding defina la altura
-                    borderColor:
-                      activeCategory === category.id
-                        ? 'primary.main'
-                        : theme.palette.divider,
-                    backgroundColor:
-                      activeCategory === category.id
-                        ? alpha(theme.palette.primary.main, 0.1)
-                        : 'transparent',
-                  }}
-                />
-              ))}
-            </Stack>
+            {renderCategoryChips()}
           </Box>
+
+          {isMobile && renderSortingControls()}
         </Stack>
       </Paper>
     </motion.div>
