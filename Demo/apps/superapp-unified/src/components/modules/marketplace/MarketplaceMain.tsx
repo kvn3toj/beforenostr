@@ -85,6 +85,11 @@ import {
 } from './marketplace.constants.tsx';
 import { QuickViewModal } from './components/QuickViewModal';
 import MarketplaceAtrium from './components/MarketplaceAtrium';
+import {
+  MarketplaceItem,
+  MarketplaceSearchFilters,
+} from '../../../types/marketplace';
+import { ChatModal } from './components/ChatModal';
 
 const marketplaceCosmicEffects = {
   enableGlow: true,
@@ -103,63 +108,6 @@ const marketplaceCosmicEffects = {
     ayniMode: true,
   }
 };
-
-interface MarketplaceItem {
-  id: string;
-  title: string;
-  description: string;
-  priceUSD: number;
-  lukas: number;
-  category: string;
-  images: string[];
-  seller: {
-    id: string;
-    name: string;
-    avatar: string;
-    isEmprendedorConfiable: boolean;
-    ayniScore: number;
-    meritos: number;
-  };
-  stats: {
-    views: number;
-    likes: number;
-    rating: number;
-    reviewCount: number;
-    isPopular: boolean;
-    isSustainable: boolean;
-  };
-  type: 'product' | 'service';
-  tags: string[];
-  createdAt: string;
-  location?: string;
-  isFavorited?: boolean;
-  stock: number;
-  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
-}
-
-export interface SearchFilters {
-  query: string;
-  category: string;
-  priceRange: [number, number];
-  location: string;
-  rating: number;
-  verified: boolean;
-  sortBy:
-    | 'relevance'
-    | 'price_asc'
-    | 'price_desc'
-    | 'rating'
-    | 'newest'
-    | 'trending'
-    | 'impact'
-    | 'ayni_score'
-    | 'consciousness';
-  tags: string[];
-  hasDiscount: boolean;
-  impactLevel?: 'local' | 'regional' | 'global';
-  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
-  minimumAyniScore?: number;
-}
 
 const mapItemToUIItem = (item: any): MarketplaceItem => {
   const sellerData = item.seller || {};
@@ -301,18 +249,16 @@ const MarketplaceMain: React.FC = () => {
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<MarketplaceItem[]>([]);
-  const [currentFilters, setCurrentFilters] = useState<SearchFilters>({
+  const [currentFilters, setCurrentFilters] = useState<MarketplaceSearchFilters>({
     query: '',
-    category: 'all',
+    category: '',
     priceRange: [0, 5000],
-    location: 'any',
+    location: '',
     rating: 0,
     verified: false,
     sortBy: 'relevance',
     tags: [],
     hasDiscount: false,
-    impactLevel: undefined,
-    consciousnessLevel: undefined,
   });
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
@@ -320,7 +266,8 @@ const MarketplaceMain: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [displayedItems, setDisplayedItems] = useState<MarketplaceItem[]>([]);
-  const [quickViewItem, setQuickViewItem] = useState<MarketplaceItem | null>(null);
+  const [chatModalOpen, setChatModalOpen] = useState(false);
+  const [currentItemForChat, setCurrentItemForChat] = useState<MarketplaceItem | null>(null);
 
   const impactProducts = useMemo(() => {
     if (!marketplaceItemsResponse?.items) {
@@ -335,16 +282,6 @@ const MarketplaceMain: React.FC = () => {
     }
   }, [marketplaceItemsResponse]);
 
-  const handleProductClick = useCallback(
-    (productId: string) => {
-      const item = displayedItems.find(p => p.id === productId);
-      if (item) {
-        setQuickViewItem(item);
-      }
-    },
-    [displayedItems]
-  );
-
   const handleToggleFavorite = useCallback(
     (itemId: string) => {
       if (!user) return;
@@ -357,11 +294,6 @@ const MarketplaceMain: React.FC = () => {
     },
     [user]
   );
-
-  const handleQuickViewToggleFavorite = (itemId: string) => {
-    handleToggleFavorite(itemId);
-    setQuickViewItem(prev => (prev ? { ...prev, isFavorited: !prev.isFavorited } : null));
-  };
 
   const handleShare = (itemId: string) => {
     console.log('Sharing item:', itemId);
@@ -398,73 +330,77 @@ const MarketplaceMain: React.FC = () => {
     [currentFilters.query]
   );
 
-  const handleFiltersChange = useCallback((filters: SearchFilters) => {
-    setCurrentFilters(filters);
-    setIsSearchActive(
-      filters.query.length > 0 ||
-        filters.category.length > 0 ||
-        filters.location.length > 0 ||
-        filters.rating > 0 ||
-        filters.verified ||
-        filters.tags.length > 0 ||
-        filters.priceRange[0] > 0 ||
-        filters.priceRange[1] < 5000 ||
-        filters.hasDiscount
-    );
-  }, []);
+  const handleFiltersChange = (filters: Partial<MarketplaceSearchFilters>) => {
+    setCurrentFilters((prev) => ({
+      ...prev,
+      ...filters,
+    }));
+  };
 
   const itemsToDisplay = useMemo(() => {
-    let items = isSearchActive ? searchResults : displayedItems;
+    if (!marketplaceItemsResponse?.items) {
+      return [];
+    }
 
-    if (selectedCategory && selectedCategory !== '') {
+    let items = marketplaceItemsResponse.items
+      .map(mapItemToUIItem)
+      .map((item: MarketplaceItem) => ({
+        ...item,
+        isFavorited: displayedItems.some(i => i.id === item.id) ? item.isFavorited : false,
+      }));
+
+    if (currentFilters.query) {
+      items = items.filter((item: MarketplaceItem) =>
+        item.title.toLowerCase().includes(currentFilters.query.toLowerCase())
+      );
+    }
+
+    if (selectedCategory) {
       items = items.filter((item: MarketplaceItem) => item.category === selectedCategory);
     }
 
     if (currentFilters.verified) {
-      items = items.filter(item => item.seller.isEmprendedorConfiable);
+      items = items.filter((item: MarketplaceItem) => item.seller.isEmprendedorConfiable);
     }
 
     switch (currentFilters.sortBy) {
       case 'price_asc':
-        items = [...items].sort((a, b) => a.priceUSD - b.priceUSD);
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => a.priceUSD - b.priceUSD);
         break;
       case 'price_desc':
-        items = [...items].sort((a, b) => b.priceUSD - a.priceUSD);
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => b.priceUSD - a.priceUSD);
         break;
       case 'rating':
-        items = [...items].sort((a, b) => b.stats.rating - a.stats.rating);
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => (b.stats.rating || 0) - (a.stats.rating || 0));
         break;
       case 'newest':
-        items = [...items].sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+         items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
       case 'trending':
-        items = [...items].sort((a, b) => {
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => {
           if (a.stats.isPopular && !b.stats.isPopular) return -1;
           if (!a.stats.isPopular && b.stats.isPopular) return 1;
           return b.stats.views - a.stats.views;
         });
         break;
       case 'impact':
-        items = [...items].sort((a, b) => {
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => {
           const scoreA = a.stats.isSustainable ? 1 : 0;
           const scoreB = b.stats.isSustainable ? 1 : 0;
           return scoreB - scoreA;
         });
         break;
       case 'ayni_score':
-        items = [...items].sort((a, b) => b.seller.ayniScore - a.seller.ayniScore);
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => b.seller.ayniScore - a.seller.ayniScore);
         break;
       case 'consciousness': {
-        const consciousnessOrder = {
+        const consciousnessOrder: Record<string, number> = {
           'SEED': 1,
           'GROWING': 2,
           'FLOURISHING': 3,
           'TRANSCENDENT': 4,
         };
-        items = [...items].sort((a, b) => {
+        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => {
             const scoreA = consciousnessOrder[a.consciousnessLevel || 'SEED'] || 0;
             const scoreB = consciousnessOrder[b.consciousnessLevel || 'SEED'] || 0;
             return scoreB - scoreA;
@@ -477,8 +413,7 @@ const MarketplaceMain: React.FC = () => {
 
     return items;
   }, [
-    isSearchActive,
-    searchResults,
+    marketplaceItemsResponse,
     displayedItems,
     selectedCategory,
     currentFilters,
@@ -518,6 +453,11 @@ const MarketplaceMain: React.FC = () => {
       trending: Boolean(item.trending)
     }));
   }, [marketplaceItemsResponse]);
+
+  const handleOpenChatModal = (item: MarketplaceItem) => {
+    setCurrentItemForChat(item);
+    setChatModalOpen(true);
+  };
 
   if (isLoadingItems) {
     return (
@@ -716,11 +656,7 @@ const MarketplaceMain: React.FC = () => {
           <Container maxWidth="xl" sx={{ py: 4 }}>
             <MarketplaceFilterBar
               categories={impactCategories}
-              activeCategory={selectedCategory}
-              onCategoryChange={(category: string) => {
-                setSelectedCategory(category === 'all' ? '' : category);
-              }}
-              onSearch={(filters: Partial<SearchFilters>) =>
+              onSearch={(filters: Partial<MarketplaceSearchFilters>) =>
                 handleFiltersChange({ ...currentFilters, ...filters })
               }
               onOpenAdvancedFilters={() => setShowAdvancedSearch(true)}
@@ -730,18 +666,10 @@ const MarketplaceMain: React.FC = () => {
               items={itemsToDisplay}
               isLoading={isLoadingItems}
               onToggleFavorite={handleToggleFavorite}
-              onProductClick={handleProductClick}
               onAddToCart={handleAddToCart}
               onShare={handleShare}
+              onOpenChat={handleOpenChatModal}
               viewMode={viewMode}
-            />
-
-            <QuickViewModal
-              open={!!quickViewItem}
-              onClose={() => setQuickViewItem(null)}
-              item={quickViewItem}
-              onAddToCart={handleAddToCart}
-              onToggleFavorite={handleQuickViewToggleFavorite}
             />
 
             <Fab
@@ -759,6 +687,16 @@ const MarketplaceMain: React.FC = () => {
             onClose={handleCloseCreateModal}
             onSuccess={handleCreateSuccess}
           />
+
+          {currentItemForChat && (
+            <ChatModal
+              open={chatModalOpen}
+              onClose={() => setChatModalOpen(false)}
+              matchId={currentItemForChat.id}
+              sellerName={currentItemForChat.seller.name}
+              currentUserId={user?.id || ''}
+            />
+          )}
         </Box>
       </motion.div>
     </AnimatePresence>

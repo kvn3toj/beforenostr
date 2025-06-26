@@ -43,6 +43,7 @@ const VideoPlayer = createLazyPage('VideoPlayer');
 
 // Rutas de Marketplace
 const MarketplaceTest = createLazyPage('MarketplaceTest');
+const ProductDetail = createLazyPage('ProductDetail');
 
 // Rutas Sociales
 const SocialChat = createLazyPage('SocialChat');
@@ -112,6 +113,7 @@ export const LazyPages = {
 
   // Marketplace Routes
   MarketplaceTest,
+  ProductDetail,
 
   // LETS Routes
   LetsPage,

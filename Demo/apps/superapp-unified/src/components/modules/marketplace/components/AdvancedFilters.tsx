@@ -221,14 +221,14 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           Filtros
         </Typography>
         <Button
-          size="small"
+          size="medium"
           onClick={handleClearFilters}
-          sx={{ mr: 1 }}
+          sx={{ mr: 1, minHeight: '48px' }}
         >
           Limpiar Todo
         </Button>
         {onClose && (
-          <Button variant="contained" size="small" onClick={onClose}>
+          <Button variant="contained" size="medium" onClick={onClose} sx={{ minHeight: '48px' }}>
             Hecho
           </Button>
         )}
@@ -242,7 +242,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               key={index}
               label={filter.label}
               onDelete={() => handleRemoveFilter(filter.key as keyof MarketplaceFilters, filter.label.startsWith('Tag: ') ? filter.label.replace('Tag: ', '') : undefined)}
-              size="small"
             />
           ))}
         </Box>
@@ -254,7 +253,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           <Typography fontWeight="medium">Ordenar Por</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 1 }}>
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size="medium">
             <Select
               value={filters.sortBy}
               onChange={(e) => handleFilterChange('sortBy', e.target.value)}
@@ -296,7 +295,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           <Typography fontWeight="medium">Categoría</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 1 }}>
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size="medium">
             <Select
               value={filters.category}
               label="Categoría"
@@ -340,7 +339,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 1 }}>
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size="medium">
             <Select
               value={filters.location}
               label="Ubicación"
@@ -366,7 +365,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           </Box>
         </AccordionSummary>
         <AccordionDetails sx={{ p: 1 }}>
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size="medium">
             <Select
               value={filters.deliveryTime}
               label="Tiempo de Entrega"
@@ -395,7 +394,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             value={filters.tags}
             onChange={(_, newValue) => handleFilterChange('tags', newValue)}
             renderInput={(params) => <TextField {...params} variant="standard" />}
-            size="small"
+            size="medium"
           />
         </AccordionDetails>
       </Accordion>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -7,285 +7,121 @@ import {
   Button,
   Box,
   Typography,
-  Rating,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Stack,
-  useTheme,
   IconButton,
+  TextField,
+  Stack,
   CircularProgress,
+  Rating,
+  Alert,
 } from '@mui/material';
-import {
-  Close,
-  Air,
-  Public,
-  FavoriteBorder,
-  Spa,
-  WbSunny,
-} from '@mui/icons-material';
-import { useMatchReview } from "@/hooks/useMatchReview";
-import { useSubmitMatchReview } from "@/hooks/useSubmitMatchReview";
+import { Close, StarBorder } from '@mui/icons-material';
+import { useMatchReview } from '@/hooks/useMatchReview';
+import { useSubmitMatchReview } from '@/hooks/useSubmitMatchReview';
+import type { Review } from '../../../../types/marketplace';
 
-// Interfaz para las propiedades del modal
-export interface MarketplaceReviewModalProps {
+interface MarketplaceReviewModalProps {
   open: boolean;
   onClose: () => void;
   matchId: string;
-  productName: string;
-  sellerName: string;
 }
 
-// Interfaz para los datos de la reseña
-export interface ReviewData {
-  resonance: number;
-  clarity: number;
-  reciprocity: number;
-  connection: number;
-  publicFeedback: string;
-  privateFeedback?: string;
-}
+export const MarketplaceReviewModal: React.FC<MarketplaceReviewModalProps> = ({ open, onClose, matchId }) => {
+  const [rating, setRating] = useState<number | null>(null);
+  const [comment, setComment] = useState('');
 
-const coomunityColors = {
-  aire: '#81D4FA', // Azul claro para Claridad (Aire)
-  tierra: '#A5D6A7', // Verde para Reciprocidad (Tierra)
-  fuego: '#FFAB91', // Naranja para Conexión (Fuego)
-  agua: '#90CAF9', // Azul agua para Resonancia
-};
+  // Fetch existing review
+  const { review, isLoading: isLoadingReview, error: reviewError } = useMatchReview(matchId);
 
-// Componente para una dimensión de Ayni
-const AyniDimension: React.FC<{
-  label: string;
-  icon: React.ReactNode;
-  value: number;
-  onChange: (newValue: number) => void;
-  color: string;
-}> = ({ label, icon, value, onChange, color }) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-    <Box sx={{ minWidth: 150, display: 'flex', alignItems: 'center' }}>
-      {icon}
-      <Typography variant="body1" sx={{ ml: 1, fontWeight: 500 }}>
-        {label}
-      </Typography>
-    </Box>
-    <Rating
-      value={value}
-      onChange={(_, newValue) => onChange(newValue || 0)}
-      sx={{
-        '& .MuiRating-iconFilled': {
-          color,
-          transition: 'transform 0.2s ease-in-out',
-        },
-        '& .MuiRating-iconHover': {
-          color,
-          transform: 'scale(1.2)',
-        },
-      }}
-    />
-  </Box>
-);
+  // Hook for submitting the review
+  const { submitReview, isPending: isSubmitting, error: submitError } = useSubmitMatchReview();
 
-export const MarketplaceReviewModal: React.FC<MarketplaceReviewModalProps> = ({
-  open,
-  onClose,
-  matchId,
-  productName,
-  sellerName,
-}) => {
-  const theme = useTheme();
-  const [resonance, setResonance] = useState(0);
-  const [clarity, setClarity] = useState(0);
-  const [reciprocity, setReciprocity] = useState(0);
-  const [connection, setConnection] = useState(0);
-  const [publicFeedback, setPublicFeedback] = useState('');
-  const [privateFeedback, setPrivateFeedback] = useState('');
-  const [sendPrivateNote, setSendPrivateNote] = useState(false);
-
-  const { data: reviewData, isLoading, isError } = useMatchReview(matchId);
-  const mutation = useSubmitMatchReview(matchId);
+  useEffect(() => {
+    if (review) {
+      setRating(review.rating);
+      setComment(review.comment);
+    } else {
+      // Reset form if there's no review or when modal opens for a new match
+      setRating(null);
+      setComment('');
+    }
+  }, [review]);
 
   const handleSubmit = () => {
-    mutation.mutate({
-      resonance,
-      clarity,
-      reciprocity,
-      connection,
-      publicFeedback,
-      privateFeedback: sendPrivateNote ? privateFeedback : undefined,
-    });
-    onClose();
+    if (rating !== null) {
+      submitReview({ matchId, rating, comment })
+        .then(() => {
+          onClose();
+        })
+        .catch(console.error);
+    }
   };
-
-  const alreadyReviewed = !!reviewData;
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      aria-labelledby="review-dialog-title"
       fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 4,
-          boxShadow: `0 8px 40px -12px ${theme.palette.primary.main}40`,
-          backdropFilter: 'blur(8px)',
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        },
-      }}
-      TransitionProps={{ timeout: 400 }}
+      maxWidth="sm"
     >
-      <DialogTitle sx={{ p: 2, pb: 1 }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Box>
-            <Typography
-              variant="h4"
-              component="h2"
-              sx={{
-                fontWeight: 700,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              Honrando Nuestro Intercambio
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
-              Tu experiencia con "{productName}" de{' '}
-              <Box component="span" sx={{ fontWeight: 'bold' }}>
-                {sellerName}
-              </Box>
-            </Typography>
-          </Box>
-          <IconButton onClick={onClose} sx={{ '&:hover': { transform: 'rotate(90deg)', transition: 'transform 0.3s ease' }}}>
-            <Close />
-          </IconButton>
-        </Stack>
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Typography variant="h6" component="h2">Calificar Intercambio</Typography>
+        <IconButton aria-label="Cerrar" onClick={onClose}>
+          <Close />
+        </IconButton>
       </DialogTitle>
-      <DialogContent dividers sx={{ p: 3, border: 'none' }}>
-        {isLoading ? (
-          <Typography variant="body2" color="text.secondary">Cargando estado de reseña...</Typography>
-        ) : isError ? (
-          <Typography variant="body2" color="error">Error al cargar la reseña.</Typography>
-        ) : alreadyReviewed ? (
-          <Box sx={{ p: 3, textAlign: 'center' }}>
-            <Typography variant="h6" color="success.main" gutterBottom>
-              ¡Gracias por compartir tu Ayni!
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Ya has calificado esta experiencia. Puedes ver tu reseña en el historial.
-            </Typography>
+      <DialogContent dividers>
+        {isLoadingReview ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+            <CircularProgress />
           </Box>
+        ) : reviewError ? (
+          <Alert severity="error">Error al cargar la calificación existente.</Alert>
         ) : (
-          <>
-            <Box sx={{ mb: 4 }}>
-              <Typography
-                variant="h6"
-                gutterBottom
-                sx={{ display: 'flex', alignItems: 'center', gap: 1, color: coomunityColors.agua, fontWeight: 600 }}
-              >
-                <WbSunny /> Resonancia General (Agua 💧)
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                ¿Cuál fue tu sintonía general con esta experiencia?
-              </Typography>
-              <Rating
-                value={resonance}
-                onChange={(_, newValue) => setResonance(newValue || 0)}
-                size="large"
-                sx={{
-                  '& .MuiRating-iconFilled': {
-                    color: coomunityColors.agua,
-                    transition: 'transform 0.2s ease-in-out',
-                  },
-                  '& .MuiRating-iconHover': {
-                    color: coomunityColors.agua,
-                    transform: 'scale(1.2)',
-                  },
-                }}
-              />
-            </Box>
-
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                Dimensiones del Ayni
-              </Typography>
-              <AyniDimension
-                label="Claridad"
-                icon={<Air sx={{ color: coomunityColors.aire }} />}
-                value={clarity}
-                onChange={setClarity}
-                color={coomunityColors.aire}
-              />
-              <AyniDimension
-                label="Reciprocidad"
-                icon={<Public sx={{ color: coomunityColors.tierra }} />}
-                value={reciprocity}
-                onChange={setReciprocity}
-                color={coomunityColors.tierra}
-              />
-              <AyniDimension
-                label="Conexión"
-                icon={<Spa sx={{ color: coomunityColors.fuego }} />}
-                value={connection}
-                onChange={setConnection}
-                color={coomunityColors.fuego}
-              />
-            </Box>
-
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                Feedback Público
-              </Typography>
-              <TextField
-                label="¿Qué te gustaría compartir públicamente sobre esta experiencia?"
-                multiline
-                minRows={3}
-                fullWidth
-                value={publicFeedback}
-                onChange={e => setPublicFeedback(e.target.value)}
-                sx={{ mb: 2 }}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={sendPrivateNote}
-                    onChange={e => setSendPrivateNote(e.target.checked)}
-                  />
-                }
-                label="Enviar también una nota privada al vendedor"
-              />
-              {sendPrivateNote && (
-                <TextField
-                  label="Nota privada (solo el vendedor la verá)"
-                  multiline
-                  minRows={2}
-                  fullWidth
-                  value={privateFeedback}
-                  onChange={e => setPrivateFeedback(e.target.value)}
-                  sx={{ mt: 2 }}
-                />
-              )}
-            </Box>
-          </>
+          <Stack spacing={3} sx={{ pt: 1 }}>
+            <Typography component="legend">Tu calificación:</Typography>
+            <Rating
+              name="item-rating"
+              value={rating}
+              onChange={(event, newValue) => {
+                setRating(newValue);
+              }}
+              emptyIcon={<StarBorder fontSize="inherit" />}
+              size="large"
+            />
+            <TextField
+              label="Comentario (opcional)"
+              multiline
+              rows={4}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              variant="outlined"
+              fullWidth
+              placeholder="Describe tu experiencia con el intercambio..."
+            />
+          </Stack>
+        )}
+        {submitError && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            Error al enviar la calificación: {submitError.message}
+          </Alert>
         )}
       </DialogContent>
-      {!alreadyReviewed && !isLoading && !isError && (
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button
-            onClick={handleSubmit}
-            color="primary"
-            variant="contained"
-            disabled={mutation.isPending}
-            sx={{
-              fontFamily: "'Baloo 2', cursive",
-              borderRadius: '20px',
-              padding: '10px 30px',
-            }}
-          >
-            {mutation.isPending ? <CircularProgress size={24} /> : 'Enviar Valoración'}
-          </Button>
-        </DialogActions>
-      )}
+      <DialogActions sx={{ px: 3, pb: 2 }}>
+        <Button onClick={onClose} color="inherit">
+          Cancelar
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          color="primary"
+          disabled={rating === null || isSubmitting || isLoadingReview}
+        >
+          {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Enviar Calificación'}
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
+
+export default MarketplaceReviewModal;

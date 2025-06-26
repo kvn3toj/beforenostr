@@ -27,41 +27,18 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { impactCategories, Category, getConsciousnessStyle } from '../marketplace.constants';
 import { useAuth } from '../../../../contexts/AuthContext';
+import { MarketplaceItem } from '../../../../types/marketplace';
+import { Link } from 'react-router-dom';
 
 // Asumiendo que la moneda de Coomunity se llama Lúkas
 const LUKAS_SYMBOL = 'LÜ';
 
-export interface MarketplaceItem {
-  id: string;
-  title: string;
-  description: string;
-  priceUSD: number;
-  lukas: number;
-  images: string[];
-  seller: {
-    name: string;
-    avatar: string;
-    ayniScore: number;
-    meritos: number;
-    isEmprendedorConfiable: boolean;
-  };
-  stats: {
-    views: number;
-    rating: number;
-    reviewCount: number;
-  };
-  category: string;
-  stock: number;
-  isFavorited?: boolean;
-  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
-}
-
 interface EnhancedMarketplaceCardProps {
   item: MarketplaceItem;
   onToggleFavorite: (id: string) => void;
-  onViewDetails: (id: string) => void;
   onAddToCart: (id: string) => void;
   onShare: (id: string) => void;
+  onOpenChat: (item: MarketplaceItem) => void;
 }
 
 const cardVariants = {
@@ -72,9 +49,9 @@ const cardVariants = {
 export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = ({
   item,
   onToggleFavorite,
-  onViewDetails,
   onAddToCart,
   onShare,
+  onOpenChat,
 }) => {
   const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
@@ -85,7 +62,20 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
 
   const stockColor = item.stock > 10 ? 'success.main' : item.stock > 0 ? 'warning.main' : 'error.main';
 
+  const handleActionClick = (e: React.MouseEvent, action: (id: string) => void) => {
+    e.preventDefault();
+    e.stopPropagation();
+    action(item.id);
+  };
+
+  const handleOpenChat = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onOpenChat(item);
+  };
+
   const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     if (user) {
       onToggleFavorite(item.id);
@@ -93,7 +83,8 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
   };
 
   return (
-    <motion.div variants={cardVariants}>
+    <motion.div variants={cardVariants} style={{ height: '100%' }}>
+     <Link to={`/marketplace/item/${item.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}>
       <Card
         sx={{
           display: 'flex',
@@ -108,6 +99,8 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
             boxShadow: `0 12px 40px 0 ${alpha(theme.palette.primary.main, 0.2)}`,
           },
         }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         <Box sx={{ position: 'relative' }}>
           <CardMedia
@@ -151,7 +144,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
             </IconButton>
             <IconButton
               size="small"
-              onClick={() => onShare(item.id)}
+              onClick={(e) => handleActionClick(e, onShare)}
               sx={{
                 backgroundColor: alpha(theme.palette.background.paper, 0.7),
                 '&:hover': {
@@ -164,7 +157,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
             <IconButton
               size="small"
               aria-label="Abrir chat con el vendedor"
-              onClick={() => {/* TODO: Implementar handler de chat */}}
+              onClick={handleOpenChat}
               sx={{
                 backgroundColor: alpha(theme.palette.background.paper, 0.7),
                 '&:hover': {
@@ -241,26 +234,20 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
             </Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} mt="auto">
-            <Button
-              size="medium"
-              variant="outlined"
-              fullWidth
-              onClick={() => onViewDetails(item.id)}
-            >
-              Ver detalles
-            </Button>
+          <Stack direction="row" spacing={1} mt="auto" sx={{ p: 2, pt: 0 }}>
             <Button
               size="medium"
               variant="contained"
               fullWidth
-              onClick={() => onAddToCart(item.id)}
+              onClick={(e) => handleActionClick(e, onAddToCart)}
+              startIcon={<ShoppingCart />}
             >
               Agregar
             </Button>
           </Stack>
         </CardContent>
       </Card>
+      </Link>
     </motion.div>
   );
 };

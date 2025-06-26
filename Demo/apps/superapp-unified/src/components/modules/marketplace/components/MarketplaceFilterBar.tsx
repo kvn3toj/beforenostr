@@ -142,7 +142,7 @@ const MarketplaceFilterBar: React.FC<MarketplaceFilterBarProps> = ({
               onSubmit={(e) => e.preventDefault()}
               elevation={0}
               sx={{
-                p: '8px 16px',
+                p: '14px 16px',
                 display: 'flex',
                 alignItems: 'center',
                 flexGrow: 1,

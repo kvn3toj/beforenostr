@@ -145,6 +145,7 @@ export const queryKeys = {
 
   // Marketplace
   marketplaceData: ['marketplace', 'data'],
+  marketplaceItem: (itemId: string) => ['marketplace', 'item', itemId],
   merchantProfile: ['marketplace', 'profile'],
   products: ['marketplace', 'products'],
 
@@ -2700,4 +2701,15 @@ export function useUpdateChallengeProgress() {
       console.error('Error actualizando progreso del desafío:', error);
     },
   });
+}
+
+export function useMarketplaceItem(itemId: string) {
+  return useStandardQuery(
+    queryKeys.marketplaceItem(itemId),
+    () => marketplaceAPI.getItemById(itemId),
+    {
+      enabled: !!itemId,
+      // Se pueden agregar más opciones, como staleTime o cacheTime si es necesario
+    }
+  );
 }

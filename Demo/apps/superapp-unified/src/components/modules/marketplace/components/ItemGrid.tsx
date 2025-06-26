@@ -2,8 +2,8 @@ import React from 'react';
 import { Grid, Box, Typography } from '@mui/material';
 import {
   EnhancedMarketplaceCard,
-  MarketplaceItem,
 } from './EnhancedMarketplaceCard';
+import type { MarketplaceItem } from '../../../../types/marketplace';
 import { EnhancedMarketplaceCardSkeleton } from './EnhancedMarketplaceCard.skeleton';
 import { motion } from 'framer-motion';
 
@@ -11,9 +11,9 @@ interface ItemGridProps {
   items: MarketplaceItem[];
   isLoading: boolean;
   onToggleFavorite: (id: string) => void;
-  onProductClick: (id: string) => void;
   onAddToCart: (id: string) => void;
   onShare: (id: string) => void;
+  onOpenChat: (item: MarketplaceItem) => void;
   viewMode?: 'grid' | 'list';
 }
 
@@ -31,9 +31,9 @@ export const ItemGrid: React.FC<ItemGridProps> = ({
   items,
   isLoading,
   onToggleFavorite,
-  onProductClick,
   onAddToCart,
   onShare,
+  onOpenChat,
   viewMode = 'grid',
 }) => {
   const getGridColumns = () => {
@@ -85,9 +85,9 @@ export const ItemGrid: React.FC<ItemGridProps> = ({
             <EnhancedMarketplaceCard
               item={item}
               onToggleFavorite={() => onToggleFavorite(item.id)}
-              onViewDetails={() => onProductClick(item.id)}
               onAddToCart={() => onAddToCart(item.id)}
               onShare={() => onShare(item.id)}
+              onOpenChat={() => onOpenChat(item)}
             />
           </Grid>
         ))}

@@ -71,6 +71,7 @@ import { ChatModal } from './ChatModal';
 import { useMatch } from '@/hooks/useMatch';
 import { useConfirmMatch } from '@/hooks/useConfirmMatch';
 import type { Message } from '../../../../types/marketplace';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 interface ProductDetailViewProps {
   product: Product;
@@ -101,11 +102,11 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
 }) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedDeliveryOption, setSelectedDeliveryOption] = useState(
-    product.deliveryOptions[0]?.id || ''
+    product.deliveryOptions && product.deliveryOptions.length > 0 ? product.deliveryOptions[0].id : ''
   );
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { user } = useAuth();
 
   const { data: match, isLoading: matchLoading } = useMatch(matchId || '');
   const buyerConfirmMutation = useConfirmMatch(matchId || '', 'buyer');
@@ -154,24 +155,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       if (role === 'buyer') buyerConfirmMutation.mutate();
       if (role === 'seller') sellerConfirmMutation.mutate();
     }
-  };
-
-  const handleReviewSubmit = (reviewData: any) => {
-    setReviewModalOpen(false);
-  };
-
-  const handleSendMessage = (content: string) => {
-    setMessages([
-      ...messages,
-      {
-        id: Date.now().toString(),
-        senderId: 'yo',
-        senderName: 'Yo',
-        content,
-        createdAt: new Date(),
-        read: false,
-      },
-    ]);
   };
 
   return (
@@ -361,10 +344,10 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
             {/* Acciones principales */}
             <ProductActions
               product={product}
-              selectedDeliveryOption={selectedDeliveryOption}
-              onDeliveryOptionChange={setSelectedDeliveryOption}
               isFavorited={isFavorited}
               onToggleFavorite={onToggleFavorite}
+              selectedDeliveryOption={selectedDeliveryOption}
+              onDeliveryOptionChange={setSelectedDeliveryOption}
             />
 
             {/* Garantías y características destacadas */}
@@ -405,7 +388,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                       variant={match?.buyerConfirmed ? 'contained' : 'outlined'}
                       color="success"
                       onClick={() => handleConfirm('buyer')}
-                      disabled={!!match?.buyerConfirmed || buyerConfirmMutation.isLoading}
+                      disabled={!!match?.buyerConfirmed || buyerConfirmMutation.isPending}
                       aria-label="Confirmar como comprador"
                     >
                       {match?.buyerConfirmed ? 'Confirmado (Comprador)' : 'Confirmar como Comprador'}
@@ -414,7 +397,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                       variant={match?.sellerConfirmed ? 'contained' : 'outlined'}
                       color="info"
                       onClick={() => handleConfirm('seller')}
-                      disabled={!!match?.sellerConfirmed || sellerConfirmMutation.isLoading}
+                      disabled={!!match?.sellerConfirmed || sellerConfirmMutation.isPending}
                       aria-label="Confirmar como vendedor"
                     >
                       {match?.sellerConfirmed ? 'Confirmado (Vendedor)' : 'Confirmar como Vendedor'}
@@ -723,16 +706,14 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       <MarketplaceReviewModal
         open={reviewModalOpen}
         onClose={() => setReviewModalOpen(false)}
-        onSubmit={handleReviewSubmit}
-        productName={product.title}
-        sellerName={product.seller.name}
+        matchId={product.id}
       />
       <ChatModal
         open={chatOpen}
         onClose={() => setChatOpen(false)}
-        messages={messages}
-        onSend={handleSendMessage}
+        matchId={product.id}
         sellerName={product.seller.name}
+        currentUserId={user?.id || ''}
       />
     </Grid>
   );

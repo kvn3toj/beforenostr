@@ -9,6 +9,7 @@ import {
   useTheme,
   useMediaQuery,
   Badge,
+  Stack,
 } from '@mui/material';
 import {
   ChevronLeft,
@@ -98,7 +99,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
   }
 
   return (
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
       {/* Imagen principal */}
       <Box
         ref={mainImageRef}
@@ -262,65 +263,36 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
 
       {/* Miniaturas */}
       {images.length > 1 && (
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 1,
-            mt: 2,
-            overflowX: 'auto',
-            pb: 1,
-            '&::-webkit-scrollbar': {
-              height: 6,
-            },
-            '&::-webkit-scrollbar-track': {
-              backgroundColor: '#f5f5f5',
-              borderRadius: 3,
-            },
-            '&::-webkit-scrollbar-thumb': {
-              backgroundColor: '#ccc',
-              borderRadius: 3,
-              '&:hover': {
-                backgroundColor: '#999',
-              },
-            },
-          }}
-        >
-          {images.map((image, index) => (
-            <Box
-              key={index}
-              onClick={() => handleThumbnailClick(index)}
-              sx={{
-                flexShrink: 0,
-                width: { xs: 60, sm: 80, md: 100 },
-                height: { xs: 60, sm: 80, md: 100 },
-                borderRadius: 1,
-                overflow: 'hidden',
-                cursor: 'pointer',
-                border:
-                  selectedImageIndex === index
-                    ? '3px solid #1976d2'
-                    : '2px solid transparent',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                  borderColor:
-                    selectedImageIndex === index ? '#1976d2' : '#ccc',
-                },
-              }}
-            >
+        <Box sx={{ overflowX: 'auto', pb: 1 }}>
+          <Stack direction="row" spacing={1.5} sx={{ px: 0.5 }}>
+            {images.map((img, index) => (
               <Box
+                key={index}
                 component="img"
-                src={image || '/images/servicio-domicilio.png'}
+                src={img}
                 alt={`${title} - Miniatura ${index + 1}`}
+                onClick={() => handleThumbnailClick(index)}
                 sx={{
-                  width: '100%',
-                  height: '100%',
+                  width: 80,
+                  height: 80,
+                  borderRadius: 1.5,
+                  cursor: 'pointer',
+                  border:
+                    selectedImageIndex === index
+                      ? `3px solid ${theme.palette.primary.main}`
+                      : '3px solid transparent',
+                  opacity: selectedImageIndex === index ? 1 : 0.7,
+                  transition: 'all 0.3s ease',
+                  flexShrink: 0,
                   objectFit: 'cover',
-                  borderRadius: 1,
+                  '&:hover': {
+                    opacity: 1,
+                    transform: 'scale(1.05)',
+                  },
                 }}
               />
-            </Box>
-          ))}
+            ))}
+          </Stack>
         </Box>
       )}
 

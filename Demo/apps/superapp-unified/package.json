@@ -106,6 +106,8 @@
     "lucide-react": "^0.344.0",
     "mathjs": "^14.5.2",
     "postcss": "^8.4.48",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.58.1",
     "react-lazy-load-image-component": "^1.6.3",
@@ -148,8 +150,6 @@
     "expect-type": "^1.2.1",
     "glob": "^7.2.3",
     "globals": "^16.2.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
     "tailwindcss-animate": "^1.0.7",
     "tinyrainbow": "^1.2.0",
     "workbox-window": "^7.3.0"

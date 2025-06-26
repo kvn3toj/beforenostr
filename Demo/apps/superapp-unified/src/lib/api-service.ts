@@ -706,6 +706,9 @@ export const marketplaceAPI = {
   getItems: (filters?: any) =>
     apiService.get('/marketplace/items', { params: filters }),
 
+  getItemById: (itemId: string) =>
+    apiService.get(`/marketplace/items/${itemId}`),
+
   createItem: (itemData: any) =>
     apiService.post('/marketplace/items', itemData),
 

@@ -431,3 +431,61 @@ export interface Match {
   updatedAt: string;
   // ...otros campos si los necesitas
 }
+
+// Types moved from MarketplaceMain.tsx for centralization
+export interface MarketplaceItem {
+  id: string;
+  title: string;
+  description: string;
+  priceUSD: number;
+  lukas: number;
+  category: string;
+  images: string[];
+  seller: {
+    id: string;
+    name: string;
+    avatar: string;
+    isEmprendedorConfiable: boolean;
+    ayniScore: number;
+    meritos: number;
+  };
+  stats: {
+    views: number;
+    likes: number;
+    rating: number;
+    reviewCount: number;
+    isPopular: boolean;
+    isSustainable: boolean;
+  };
+  type: 'product' | 'service';
+  tags: string[];
+  createdAt: string;
+  location?: string;
+  isFavorited?: boolean;
+  stock: number;
+  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
+}
+
+export interface MarketplaceSearchFilters {
+  query: string;
+  category: string;
+  priceRange: [number, number];
+  location: string;
+  rating: number;
+  verified: boolean;
+  sortBy:
+    | 'relevance'
+    | 'price_asc'
+    | 'price_desc'
+    | 'rating'
+    | 'newest'
+    | 'trending'
+    | 'impact'
+    | 'ayni_score'
+    | 'consciousness';
+  tags: string[];
+  hasDiscount: boolean;
+  impactLevel?: 'local' | 'regional' | 'global';
+  consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
+  minimumAyniScore?: number;
+}

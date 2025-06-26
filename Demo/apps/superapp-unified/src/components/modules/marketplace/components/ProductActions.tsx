@@ -317,45 +317,27 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         </Box>
       </Paper>
 
-      {/* Botones de acción principales */}
-      <Stack spacing={2} sx={{ mb: 3 }}>
-        {/* Botón principal de solicitar/comprar */}
+      {/* Botones principales */}
+      <Stack spacing={2}>
         <Button
           variant="contained"
+          color="primary"
           size="large"
           startIcon={<ShoppingCart />}
           onClick={() => setPurchaseDialogOpen(true)}
-          disabled={!product.availability?.available}
-          aria-label={product.type === 'service' ? 'Solicitar Servicio' : 'Comprar Ahora'}
-          sx={{
-            py: 1.5,
-            borderRadius: 2,
-            fontSize: '16px',
-            fontWeight: 'bold',
-            background: 'linear-gradient(45deg, #1976d2, #42a5f5)',
-            '&:hover': {
-              background: 'linear-gradient(45deg, #1565c0, #1976d2)',
-            },
-          }}
+          fullWidth
         >
-          {product.type === 'service' ? 'Solicitar Servicio' : 'Comprar Ahora'}
+          Solicitar Intercambio ({formatPrice(totalPrice, product.currency)})
         </Button>
-
-        {/* Botón de contactar (chat real) */}
         <Button
           variant="outlined"
+          color="secondary"
           size="large"
           startIcon={<Message />}
           onClick={() => setContactDialogOpen(true)}
-          aria-label="Iniciar chat consciente con el vendedor"
-          sx={{
-            py: 1.5,
-            borderRadius: 2,
-            fontSize: '16px',
-            fontWeight: 'bold',
-          }}
+          fullWidth
         >
-          Chatear con el Vendedor
+          Contactar al Vendedor
         </Button>
       </Stack>
 
