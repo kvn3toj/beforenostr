@@ -1,156 +1,155 @@
-import { PrismaClient, MarketplaceItemType, MarketplaceItemStatus } from '../src/generated/prisma';
+import { PrismaClient, MarketplaceItemType, MarketplaceItemStatus } from '../src/generated/prisma/index';
+import { faker } from '@faker-js/faker';
+
 const prisma = new PrismaClient();
 
 async function main() {
-  // 1. Usuarios
-  await prisma.user.createMany({
+  // Create users
+  const regularUser = await prisma.user.create({
+    data: {
+      email: 'user@coomunity.com',
+      password: 'test123',
+      name: faker.person.fullName(),
+      username: faker.internet.userName(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      profile: {
+        create: {
+          bio: faker.lorem.paragraph(),
+          location: faker.location.city(),
+          skills: ['Desarrollo', 'Diseño', 'Marketing'],
+          socialLinks: {
+            linkedin: faker.internet.url(),
+            twitter: faker.internet.url(),
+          },
+        }
+      }
+    }
+  });
+
+  const sellerUser = await prisma.user.create({
+    data: {
+      email: 'seller@coomunity.com',
+      password: 'test123',
+      name: faker.person.fullName(),
+      username: faker.internet.userName(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      profile: {
+        create: {
+          bio: faker.lorem.paragraph(),
+          location: faker.location.city(),
+          skills: ['Consultoría', 'Ventas', 'Emprendimiento'],
+          socialLinks: {
+            linkedin: faker.internet.url(),
+            twitter: faker.internet.url(),
+          },
+        }
+      }
+    }
+  });
+
+  // Create marketplace items
+  const marketplaceItems = await prisma.marketplaceItem.createMany({
     data: [
       {
-        id: 'user-1',
-        email: 'sofia@coomunity.com',
-        password: 'hashedpassword1',
-        name: 'Sofía Rivera',
-        username: 'sofi_riv',
-        avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-        isActive: true,
+        name: 'Consultoría de Desarrollo Web',
+        description: 'Sesión de 1 hora para resolver dudas de desarrollo',
+        fullDescription: 'Ofrezco consultoría especializada en desarrollo web moderno. Puedo ayudarte con React, Node.js, bases de datos y arquitectura de aplicaciones.',
+        itemType: 'SERVICE',
+        price: 50,
+        priceToins: 100,
+        currency: 'LUKAS',
+        category: 'Tecnología',
+        stock: 10,
+        sellerId: sellerUser.id,
       },
       {
-        id: 'user-2',
-        email: 'carlos@coomunity.com',
-        password: 'hashedpassword2',
-        name: 'Carlos Méndez',
-        username: 'carlom',
-        avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-        isActive: true,
+        name: 'Clases de Yoga Online',
+        description: 'Clases grupales de yoga para principiantes',
+        fullDescription: 'Clases de yoga diseñadas para principiantes. Incluye técnicas de respiración, posturas básicas y meditación guiada.',
+        itemType: 'SERVICE',
+        price: 25,
+        priceToins: 50,
+        currency: 'LUKAS',
+        category: 'Bienestar',
+        stock: 20,
+        sellerId: sellerUser.id,
       },
       {
-        id: 'user-3',
-        email: 'luz@coomunity.com',
-        password: 'hashedpassword3',
-        name: 'Luz Martínez',
-        username: 'luzma',
-        avatarUrl: 'https://randomuser.me/api/portraits/women/65.jpg',
-        isActive: true,
+        name: 'Taller de Huerto Orgánico',
+        description: 'Aprende a crear tu propio huerto en casa',
+        fullDescription: 'Taller completo sobre agricultura orgánica urbana. Aprenderás desde la preparación del suelo hasta la cosecha.',
+        itemType: 'SERVICE',
+        price: 40,
+        priceToins: 80,
+        currency: 'LUKAS',
+        category: 'Agricultura',
+        stock: 15,
+        sellerId: sellerUser.id,
       },
     ],
-    skipDuplicates: true,
   });
 
-  // 2. Perfiles
-  await prisma.profile.create({
-    data: {
-      id: 'profile-1',
-      userId: 'user-1',
-      bio: 'Facilitadora de bienestar y yoga. Apasionada por el crecimiento personal.',
-      avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-      location: 'Ciudad de México',
-    },
-  });
-  await prisma.profile.create({
-    data: {
-      id: 'profile-2',
-      userId: 'user-2',
-      bio: 'Emprendedor ecológico. Promotor de la vida sustentable.',
-      avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-      location: 'Guadalajara',
-    },
-  });
-  await prisma.profile.create({
-    data: {
-      id: 'profile-3',
-      userId: 'user-3',
-      bio: 'Mentora de creatividad y arte. Inspirando a través de la expresión.',
-      avatarUrl: 'https://randomuser.me/api/portraits/women/65.jpg',
-      location: 'Monterrey',
-    },
+  // Get created items for adding tags and images
+  const createdItems = await prisma.marketplaceItem.findMany({
+    where: {
+      sellerId: sellerUser.id
+    }
   });
 
-  // 3. Productos y servicios (MarketplaceItem)
-  await prisma.marketplaceItem.create({
-    data: {
-      id: 'item-1',
-      name: 'Clases de Yoga Consciente',
-      description: 'Sesión personalizada de yoga para armonizar cuerpo y mente.',
-      type: MarketplaceItemType.SERVICE,
-      priceUnits: 25,
-      priceToins: 0,
-      tags: ['yoga', 'salud', 'armonía'],
-      imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-      location: 'Online',
-      status: MarketplaceItemStatus.ACTIVE,
-      sellerId: 'user-2',
-    },
-  });
-  await prisma.marketplaceItem.create({
-    data: {
-      id: 'item-2',
-      name: 'Huerto Urbano Starter Kit',
-      description: 'Kit completo para iniciar tu propio huerto en casa.',
-      type: MarketplaceItemType.PRODUCT,
-      priceUnits: 40,
-      priceToins: 0,
-      tags: ['huerto', 'ecología', 'hogar'],
-      imageUrl: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80',
-      location: 'CDMX',
-      status: MarketplaceItemStatus.ACTIVE,
-      sellerId: 'user-1',
-    },
-  });
-  await prisma.marketplaceItem.create({
-    data: {
-      id: 'item-3',
-      name: 'Mentoría Creativa',
-      description: 'Sesión de mentoría para desbloquear tu potencial artístico.',
-      type: MarketplaceItemType.SERVICE,
-      priceUnits: 30,
-      priceToins: 0,
-      tags: ['arte', 'creatividad', 'mentoría'],
-      imageUrl: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=600&q=80',
-      location: 'Monterrey',
-      status: MarketplaceItemStatus.ACTIVE,
-      sellerId: 'user-3',
-    },
-  });
+  // Update items with tags and images
+  for (const item of createdItems) {
+    let updateData: any = {};
 
-  // 4. Reseñas (Review)
-  await prisma.review.create({
-    data: {
-      id: 'review-1',
-      reviewerId: 'user-1',
-      marketplaceItemId: 'item-1',
-      rating: 5,
-      comment: 'La clase fue transformadora, Carlos es muy atento y profesional.',
-    },
-  });
-  await prisma.review.create({
-    data: {
-      id: 'review-2',
-      reviewerId: 'user-2',
-      marketplaceItemId: 'item-2',
-      rating: 5,
-      comment: 'El kit llegó rápido y con instrucciones claras. ¡Muy recomendable!',
-    },
-  });
-  await prisma.review.create({
-    data: {
-      id: 'review-3',
-      reviewerId: 'user-3',
-      marketplaceItemId: 'item-2',
-      rating: 4,
-      comment: 'Me gustó mucho el kit, pero faltaron semillas de más variedades.',
-    },
-  });
-  await prisma.review.create({
-    data: {
-      id: 'review-4',
-      reviewerId: 'user-1',
-      marketplaceItemId: 'item-3',
-      rating: 5,
-      comment: 'Luz es una mentora increíble, me ayudó a desbloquear mi creatividad.',
-    },
-  });
+    if (item.name.includes('Desarrollo Web')) {
+      updateData = {
+        tags: { set: ['desarrollo', 'web', 'programación', 'tecnología'] },
+        images: { set: ['https://images.unsplash.com/photo-1517180102446-f3ece451e9d8'] }
+      };
+    } else if (item.name.includes('Yoga')) {
+      updateData = {
+        tags: { set: ['yoga', 'bienestar', 'salud', 'meditación'] },
+        images: { set: ['https://images.unsplash.com/photo-1544367567-0f2fcb009e0b'] }
+      };
+    } else if (item.name.includes('Huerto')) {
+      updateData = {
+        tags: { set: ['huerto', 'orgánico', 'agricultura', 'sustentable'] },
+        images: { set: ['https://images.unsplash.com/photo-1416879595882-3373a0480b5b'] }
+      };
+    }
 
-  console.log('Seed completado con usuarios, perfiles, productos y reseñas.');
+    await prisma.marketplaceItem.update({
+      where: { id: item.id },
+      data: updateData
+    });
+  }
+
+  // Create reviews for marketplace items
+  const reviews = await Promise.all(
+    createdItems.map(async (item) => {
+      return prisma.review.create({
+        data: {
+          userId: regularUser.id,
+          marketplaceItemId: item.id,
+          rating: Number(faker.number.float({ min: 1, max: 5, fractionDigits: 1 })),
+          comment: faker.lorem.paragraph(),
+          createdAt: faker.date.recent()
+        }
+      });
+    })
+  );
+
+  console.log('Seed data created successfully!');
+
+  // Seed UPLAY videos
+  console.log('\n🎬 Seeding UPLAY videos...');
+  try {
+    const { seedUplayVideos } = await import('./seed-uplay-videos');
+    await seedUplayVideos();
+  } catch (error) {
+    console.error('Error seeding UPLAY videos:', error);
+  }
 }
 
 main()

@@ -1,6 +1,6 @@
 /**
  * 🎮 Experience Console Connected - Backend Integration
- * 
+ *
  * Versión conectada de la Consola que usa datos reales del backend NestJS
  * Incluye error handling, loading states y actualizaciones en tiempo real
  */
@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import {
   Box,
   Typography,
-  Grid2 as Grid,
+  Unstable_Grid2 as Grid,
   Card,
   CardContent,
   CardHeader,
@@ -84,7 +84,7 @@ import {
   Warning as WarningIcon,
   Error as ErrorIcon,
 } from '@mui/icons-material';
-import { 
+import {
   BarChart,
   Bar,
   XAxis,
@@ -102,7 +102,7 @@ import {
 } from 'recharts';
 
 // Import hooks and services
-import { 
+import {
   useDashboardData,
   useConsoleErrorRecovery,
   useCreateContest,
@@ -128,16 +128,16 @@ const ExperienceConsoleConnected: React.FC = () => {
   const [realTimeUpdates, setRealTimeUpdates] = useState(true);
 
   // Hooks para datos del backend
-  const { 
-    analytics, 
-    overview, 
-    notifications, 
-    stages, 
-    contests, 
+  const {
+    analytics,
+    overview,
+    notifications,
+    stages,
+    contests,
     octalysisAnalytics,
-    isLoading, 
-    isError, 
-    refetchAll 
+    isLoading,
+    isError,
+    refetchAll
   } = useDashboardData(realTimeUpdates);
 
   const { retryFailedQueries } = useConsoleErrorRecovery();
@@ -185,11 +185,11 @@ const ExperienceConsoleConnected: React.FC = () => {
   // Error State
   if (isError) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
         height: '100vh',
         gap: 2
       }}>
@@ -200,8 +200,8 @@ const ExperienceConsoleConnected: React.FC = () => {
         <Typography variant="body1" color="textSecondary" textAlign="center">
           No se pudieron cargar los datos del backend. Verifica que el servidor esté ejecutándose.
         </Typography>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={retryFailedQueries}
           startIcon={<RefreshIcon />}
         >
@@ -221,8 +221,8 @@ const ExperienceConsoleConnected: React.FC = () => {
               <DashboardIcon color="primary" />
               Dashboard en Tiempo Real
             </Typography>
-            <Chip 
-              label={realTimeUpdates ? 'Live' : 'Paused'} 
+            <Chip
+              label={realTimeUpdates ? 'Live' : 'Paused'}
               color={realTimeUpdates ? 'success' : 'warning'}
               size="small"
             />
@@ -230,7 +230,7 @@ const ExperienceConsoleConnected: React.FC = () => {
           <Box sx={{ display: 'flex', gap: 1 }}>
             <FormControlLabel
               control={
-                <Switch 
+                <Switch
                   checked={realTimeUpdates}
                   onChange={(e) => setRealTimeUpdates(e.target.checked)}
                 />
@@ -267,9 +267,9 @@ const ExperienceConsoleConnected: React.FC = () => {
                 </Box>
               </>
             )}
-            <LinearProgress 
-              variant="determinate" 
-              value={analytics.data?.activeUsers.growth || 0} 
+            <LinearProgress
+              variant="determinate"
+              value={analytics.data?.activeUsers.growth || 0}
               sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.3)' }}
             />
           </CardContent>
@@ -298,9 +298,9 @@ const ExperienceConsoleConnected: React.FC = () => {
                 </Box>
               </>
             )}
-            <LinearProgress 
-              variant="determinate" 
-              value={analytics.data?.engagement.gplEngagement || 0} 
+            <LinearProgress
+              variant="determinate"
+              value={analytics.data?.engagement.gplEngagement || 0}
               sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.3)' }}
             />
           </CardContent>
@@ -329,9 +329,9 @@ const ExperienceConsoleConnected: React.FC = () => {
                 </Box>
               </>
             )}
-            <LinearProgress 
-              variant="determinate" 
-              value={67} 
+            <LinearProgress
+              variant="determinate"
+              value={67}
               sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.3)' }}
             />
           </CardContent>
@@ -360,9 +360,9 @@ const ExperienceConsoleConnected: React.FC = () => {
                 </Box>
               </>
             )}
-            <LinearProgress 
-              variant="determinate" 
-              value={99.8} 
+            <LinearProgress
+              variant="determinate"
+              value={99.8}
               sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.3)' }}
             />
           </CardContent>
@@ -372,7 +372,7 @@ const ExperienceConsoleConnected: React.FC = () => {
       {/* Stage Flow Visualization */}
       <Grid xs={12} md={8}>
         <Card sx={{ height: 400 }}>
-          <CardHeader 
+          <CardHeader
             title="Customer Journey Flow"
             subheader="Progresión de usuarios entre stages"
             action={
@@ -391,12 +391,12 @@ const ExperienceConsoleConnected: React.FC = () => {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   {stageData.map((stage, index) => (
                     <Box key={stage.id} sx={{ textAlign: 'center', flex: 1 }}>
-                      <Avatar 
-                        sx={{ 
-                          bgcolor: stage.color, 
-                          width: 60, 
-                          height: 60, 
-                          mx: 'auto', 
+                      <Avatar
+                        sx={{
+                          bgcolor: stage.color,
+                          width: 60,
+                          height: 60,
+                          mx: 'auto',
                           mb: 1,
                           cursor: 'pointer'
                         }}
@@ -416,12 +416,12 @@ const ExperienceConsoleConnected: React.FC = () => {
                     </Box>
                   ))}
                 </Box>
-                
+
                 <ResponsiveContainer width="100%" height={200}>
-                  <AreaChart data={stageData.map(stage => ({ 
-                    name: stage.name, 
-                    value: stage.users, 
-                    completion: stage.completionRate 
+                  <AreaChart data={stageData.map(stage => ({
+                    name: stage.name,
+                    value: stage.users,
+                    completion: stage.completionRate
                   }))}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
@@ -439,7 +439,7 @@ const ExperienceConsoleConnected: React.FC = () => {
       {/* Octalysis Radar */}
       <Grid xs={12} md={4}>
         <Card sx={{ height: 400 }}>
-          <CardHeader 
+          <CardHeader
             title="Framework Octalysis"
             subheader="Intensidad de elementos gamificados"
           />
@@ -471,7 +471,7 @@ const ExperienceConsoleConnected: React.FC = () => {
       {/* Real-time Activity Feed */}
       <Grid xs={12}>
         <Card>
-          <CardHeader 
+          <CardHeader
             title="Actividad en Tiempo Real"
             subheader="Últimas acciones en el ecosistema CoomÜnity"
             action={
@@ -500,8 +500,8 @@ const ExperienceConsoleConnected: React.FC = () => {
                 {notifications.data?.map((notification, index) => (
                   <ListItem key={notification.id}>
                     <ListItemAvatar>
-                      <Avatar sx={{ 
-                        bgcolor: notification.type === 'contest' ? '#4ECDC4' : 
+                      <Avatar sx={{
+                        bgcolor: notification.type === 'contest' ? '#4ECDC4' :
                                  notification.type === 'validation' ? '#45B7D1' :
                                  notification.type === 'system' ? '#FECA57' : '#96CEB4'
                       }}>
@@ -567,14 +567,14 @@ const ExperienceConsoleConnected: React.FC = () => {
                   </Avatar>
                 }
               />
-              
+
               <CardContent>
                 <Typography variant="body2" gutterBottom>
                   Progreso del concurso
                 </Typography>
-                <LinearProgress 
-                  variant="determinate" 
-                  value={70} 
+                <LinearProgress
+                  variant="determinate"
+                  value={70}
                   sx={{ height: 8, borderRadius: 4 }}
                 />
                 <Typography variant="caption" color="textSecondary">
@@ -608,7 +608,7 @@ const ExperienceConsoleConnected: React.FC = () => {
   return (
     <Box sx={{ width: '100%', bgcolor: 'background.default', minHeight: '100vh', position: 'relative' }}>
       {/* Header with enhanced styling */}
-      <Box sx={{ 
+      <Box sx={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         color: 'white',
         px: 3,
@@ -620,11 +620,11 @@ const ExperienceConsoleConnected: React.FC = () => {
         <Typography variant="subtitle1">
           Centro de control avanzado para experiencias gamificadas • Conectado con Backend NestJS
         </Typography>
-        
-        <Tabs 
-          value={activeTab} 
-          onChange={handleTabChange} 
-          sx={{ 
+
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          sx={{
             mt: 2,
             '& .MuiTab-root': { color: 'rgba(255,255,255,0.7)' },
             '& .Mui-selected': { color: 'white !important' },
@@ -688,8 +688,8 @@ const ExperienceConsoleConnected: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowCreateContest(false)}>Cancelar</Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             startIcon={<SaveIcon />}
             onClick={() => handleCreateContest({})}
             disabled={createContestMutation.isPending}

@@ -109,6 +109,25 @@ const marketplaceCosmicEffects = {
   }
 };
 
+const FALLBACK_IMGS = [
+  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80', // community garden
+  'https://images.unsplash.com/photo-1584147791147-4e72b042ad2f?w=600&q=80', // seed exchange
+  'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&q=80', // holistic circle
+];
+
+const needsImageReplacement = (url: string) => {
+  if (!url) return true;
+  // Detect common loremflickr domains or obvious cat statue keywords
+  const lower = url.toLowerCase();
+  return lower.includes('loremflickr') || lower.includes('cat') || lower.includes('statue');
+};
+
+const sanitizeImages = (imgs: string[] | undefined): string[] => {
+  if (!imgs || imgs.length === 0) return [FALLBACK_IMGS[0]];
+  const sanitized = imgs.map((url, idx) => (needsImageReplacement(url) ? FALLBACK_IMGS[idx % FALLBACK_IMGS.length] : url));
+  return sanitized;
+};
+
 const mapItemToUIItem = (item: any): MarketplaceItem => {
   const sellerData = item.seller || {};
   const isEmprendedorConfiable = (sellerData.rating || 0) >= 4.5 && (sellerData.reviewCount || 0) > 10;
@@ -120,7 +139,7 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
     priceUSD: item.price || 0,
     lukas: item.price || 0,
     category: item.category || 'General',
-    images: item.images && item.images.length > 0 ? item.images : ['https://via.placeholder.com/300'],
+    images: sanitizeImages(item.images),
     seller: {
       id: sellerData.id || 'unknown-seller',
       name: sellerData.name || 'Vendedor Anónimo',

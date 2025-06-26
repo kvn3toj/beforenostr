@@ -268,6 +268,16 @@ export type Profile = $Result.DefaultSelection<Prisma.$ProfilePayload>
  * 
  */
 export type Review = $Result.DefaultSelection<Prisma.$ReviewPayload>
+/**
+ * Model MarketplaceMatch
+ * 
+ */
+export type MarketplaceMatch = $Result.DefaultSelection<Prisma.$MarketplaceMatchPayload>
+/**
+ * Model MatchMessage
+ * 
+ */
+export type MatchMessage = $Result.DefaultSelection<Prisma.$MatchMessagePayload>
 
 /**
  * Enums
@@ -282,6 +292,17 @@ export namespace $Enums {
 };
 
 export type MarketplaceItemType = (typeof MarketplaceItemType)[keyof typeof MarketplaceItemType]
+
+
+export const Currency: {
+  LUKAS: 'LUKAS',
+  USD: 'USD',
+  EUR: 'EUR',
+  BTC: 'BTC',
+  ETH: 'ETH'
+};
+
+export type Currency = (typeof Currency)[keyof typeof Currency]
 
 
 export const MarketplaceItemStatus: {
@@ -338,11 +359,25 @@ export const FeedbackStatus: {
 
 export type FeedbackStatus = (typeof FeedbackStatus)[keyof typeof FeedbackStatus]
 
+
+export const MatchStatus: {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED'
+};
+
+export type MatchStatus = (typeof MatchStatus)[keyof typeof MatchStatus]
+
 }
 
 export type MarketplaceItemType = $Enums.MarketplaceItemType
 
 export const MarketplaceItemType: typeof $Enums.MarketplaceItemType
+
+export type Currency = $Enums.Currency
+
+export const Currency: typeof $Enums.Currency
 
 export type MarketplaceItemStatus = $Enums.MarketplaceItemStatus
 
@@ -363,6 +398,10 @@ export const FeedbackPriority: typeof $Enums.FeedbackPriority
 export type FeedbackStatus = $Enums.FeedbackStatus
 
 export const FeedbackStatus: typeof $Enums.FeedbackStatus
+
+export type MatchStatus = $Enums.MatchStatus
+
+export const MatchStatus: typeof $Enums.MatchStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -996,6 +1035,26 @@ export class PrismaClient<
     * ```
     */
   get review(): Prisma.ReviewDelegate<ExtArgs>;
+
+  /**
+   * `prisma.marketplaceMatch`: Exposes CRUD operations for the **MarketplaceMatch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MarketplaceMatches
+    * const marketplaceMatches = await prisma.marketplaceMatch.findMany()
+    * ```
+    */
+  get marketplaceMatch(): Prisma.MarketplaceMatchDelegate<ExtArgs>;
+
+  /**
+   * `prisma.matchMessage`: Exposes CRUD operations for the **MatchMessage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MatchMessages
+    * const matchMessages = await prisma.matchMessage.findMany()
+    * ```
+    */
+  get matchMessage(): Prisma.MatchMessageDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1487,7 +1546,9 @@ export namespace Prisma {
     StudyRoomMessage: 'StudyRoomMessage',
     FeedbackReport: 'FeedbackReport',
     Profile: 'Profile',
-    Review: 'Review'
+    Review: 'Review',
+    MarketplaceMatch: 'MarketplaceMatch',
+    MatchMessage: 'MatchMessage'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1503,7 +1564,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "mundo" | "playlist" | "videoItem" | "subtitle" | "question" | "answerOption" | "user" | "role" | "userRole" | "permission" | "videoPermissions" | "rolePermission" | "world" | "stage" | "experience" | "activity" | "gamifiedPlaylist" | "activityQuestion" | "userAnswer" | "token" | "merit" | "wallet" | "transaction" | "group" | "userGroup" | "publication" | "comment" | "like" | "notification" | "invitationTemplate" | "giftCard" | "userInvitation" | "report" | "configuration" | "log" | "analyticsData" | "ranking" | "personality" | "uIComponentTemplate" | "itemType" | "contentItem" | "challenge" | "challengeReward" | "userChallenge" | "marketplaceItem" | "studyRoom" | "studyRoomParticipant" | "studyRoomMessage" | "feedbackReport" | "profile" | "review"
+      modelProps: "mundo" | "playlist" | "videoItem" | "subtitle" | "question" | "answerOption" | "user" | "role" | "userRole" | "permission" | "videoPermissions" | "rolePermission" | "world" | "stage" | "experience" | "activity" | "gamifiedPlaylist" | "activityQuestion" | "userAnswer" | "token" | "merit" | "wallet" | "transaction" | "group" | "userGroup" | "publication" | "comment" | "like" | "notification" | "invitationTemplate" | "giftCard" | "userInvitation" | "report" | "configuration" | "log" | "analyticsData" | "ranking" | "personality" | "uIComponentTemplate" | "itemType" | "contentItem" | "challenge" | "challengeReward" | "userChallenge" | "marketplaceItem" | "studyRoom" | "studyRoomParticipant" | "studyRoomMessage" | "feedbackReport" | "profile" | "review" | "marketplaceMatch" | "matchMessage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5077,6 +5138,146 @@ export namespace Prisma {
           }
         }
       }
+      MarketplaceMatch: {
+        payload: Prisma.$MarketplaceMatchPayload<ExtArgs>
+        fields: Prisma.MarketplaceMatchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MarketplaceMatchFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MarketplaceMatchFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload>
+          }
+          findFirst: {
+            args: Prisma.MarketplaceMatchFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MarketplaceMatchFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload>
+          }
+          findMany: {
+            args: Prisma.MarketplaceMatchFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload>[]
+          }
+          create: {
+            args: Prisma.MarketplaceMatchCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload>
+          }
+          createMany: {
+            args: Prisma.MarketplaceMatchCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MarketplaceMatchCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload>[]
+          }
+          delete: {
+            args: Prisma.MarketplaceMatchDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload>
+          }
+          update: {
+            args: Prisma.MarketplaceMatchUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload>
+          }
+          deleteMany: {
+            args: Prisma.MarketplaceMatchDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MarketplaceMatchUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.MarketplaceMatchUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceMatchPayload>
+          }
+          aggregate: {
+            args: Prisma.MarketplaceMatchAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMarketplaceMatch>
+          }
+          groupBy: {
+            args: Prisma.MarketplaceMatchGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MarketplaceMatchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MarketplaceMatchCountArgs<ExtArgs>
+            result: $Utils.Optional<MarketplaceMatchCountAggregateOutputType> | number
+          }
+        }
+      }
+      MatchMessage: {
+        payload: Prisma.$MatchMessagePayload<ExtArgs>
+        fields: Prisma.MatchMessageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MatchMessageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MatchMessageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload>
+          }
+          findFirst: {
+            args: Prisma.MatchMessageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MatchMessageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload>
+          }
+          findMany: {
+            args: Prisma.MatchMessageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload>[]
+          }
+          create: {
+            args: Prisma.MatchMessageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload>
+          }
+          createMany: {
+            args: Prisma.MatchMessageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MatchMessageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload>[]
+          }
+          delete: {
+            args: Prisma.MatchMessageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload>
+          }
+          update: {
+            args: Prisma.MatchMessageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload>
+          }
+          deleteMany: {
+            args: Prisma.MatchMessageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MatchMessageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.MatchMessageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchMessagePayload>
+          }
+          aggregate: {
+            args: Prisma.MatchMessageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMatchMessage>
+          }
+          groupBy: {
+            args: Prisma.MatchMessageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MatchMessageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MatchMessageCountArgs<ExtArgs>
+            result: $Utils.Optional<MatchMessageCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -5453,6 +5654,9 @@ export namespace Prisma {
     videoPermissions: number
     createdWorlds: number
     marketplaceItems: number
+    buyerMatches: number
+    sellerMatches: number
+    matchMessages: number
     feedbackReports: number
     adminFeedbackResponses: number
     reviews: number
@@ -5487,6 +5691,9 @@ export namespace Prisma {
     videoPermissions?: boolean | UserCountOutputTypeCountVideoPermissionsArgs
     createdWorlds?: boolean | UserCountOutputTypeCountCreatedWorldsArgs
     marketplaceItems?: boolean | UserCountOutputTypeCountMarketplaceItemsArgs
+    buyerMatches?: boolean | UserCountOutputTypeCountBuyerMatchesArgs
+    sellerMatches?: boolean | UserCountOutputTypeCountSellerMatchesArgs
+    matchMessages?: boolean | UserCountOutputTypeCountMatchMessagesArgs
     feedbackReports?: boolean | UserCountOutputTypeCountFeedbackReportsArgs
     adminFeedbackResponses?: boolean | UserCountOutputTypeCountAdminFeedbackResponsesArgs
     reviews?: boolean | UserCountOutputTypeCountReviewsArgs
@@ -5697,6 +5904,27 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountMarketplaceItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MarketplaceItemWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBuyerMatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketplaceMatchWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSellerMatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketplaceMatchWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMatchMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MatchMessageWhereInput
   }
 
   /**
@@ -6206,10 +6434,12 @@ export namespace Prisma {
 
   export type MarketplaceItemCountOutputType = {
     reviews: number
+    matches: number
   }
 
   export type MarketplaceItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reviews?: boolean | MarketplaceItemCountOutputTypeCountReviewsArgs
+    matches?: boolean | MarketplaceItemCountOutputTypeCountMatchesArgs
   }
 
   // Custom InputTypes
@@ -6228,6 +6458,13 @@ export namespace Prisma {
    */
   export type MarketplaceItemCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewWhereInput
+  }
+
+  /**
+   * MarketplaceItemCountOutputType without action
+   */
+  export type MarketplaceItemCountOutputTypeCountMatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketplaceMatchWhereInput
   }
 
 
@@ -6268,6 +6505,37 @@ export namespace Prisma {
    */
   export type StudyRoomCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StudyRoomMessageWhereInput
+  }
+
+
+  /**
+   * Count Type MarketplaceMatchCountOutputType
+   */
+
+  export type MarketplaceMatchCountOutputType = {
+    messages: number
+  }
+
+  export type MarketplaceMatchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | MarketplaceMatchCountOutputTypeCountMessagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MarketplaceMatchCountOutputType without action
+   */
+  export type MarketplaceMatchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatchCountOutputType
+     */
+    select?: MarketplaceMatchCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MarketplaceMatchCountOutputType without action
+   */
+  export type MarketplaceMatchCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MatchMessageWhereInput
   }
 
 
@@ -13177,6 +13445,9 @@ export namespace Prisma {
     wallet?: boolean | User$walletArgs<ExtArgs>
     createdWorlds?: boolean | User$createdWorldsArgs<ExtArgs>
     marketplaceItems?: boolean | User$marketplaceItemsArgs<ExtArgs>
+    buyerMatches?: boolean | User$buyerMatchesArgs<ExtArgs>
+    sellerMatches?: boolean | User$sellerMatchesArgs<ExtArgs>
+    matchMessages?: boolean | User$matchMessagesArgs<ExtArgs>
     feedbackReports?: boolean | User$feedbackReportsArgs<ExtArgs>
     adminFeedbackResponses?: boolean | User$adminFeedbackResponsesArgs<ExtArgs>
     profile?: boolean | User$profileArgs<ExtArgs>
@@ -13260,6 +13531,9 @@ export namespace Prisma {
     wallet?: boolean | User$walletArgs<ExtArgs>
     createdWorlds?: boolean | User$createdWorldsArgs<ExtArgs>
     marketplaceItems?: boolean | User$marketplaceItemsArgs<ExtArgs>
+    buyerMatches?: boolean | User$buyerMatchesArgs<ExtArgs>
+    sellerMatches?: boolean | User$sellerMatchesArgs<ExtArgs>
+    matchMessages?: boolean | User$matchMessagesArgs<ExtArgs>
     feedbackReports?: boolean | User$feedbackReportsArgs<ExtArgs>
     adminFeedbackResponses?: boolean | User$adminFeedbackResponsesArgs<ExtArgs>
     profile?: boolean | User$profileArgs<ExtArgs>
@@ -13303,6 +13577,9 @@ export namespace Prisma {
       wallet: Prisma.$WalletPayload<ExtArgs> | null
       createdWorlds: Prisma.$WorldPayload<ExtArgs>[]
       marketplaceItems: Prisma.$MarketplaceItemPayload<ExtArgs>[]
+      buyerMatches: Prisma.$MarketplaceMatchPayload<ExtArgs>[]
+      sellerMatches: Prisma.$MarketplaceMatchPayload<ExtArgs>[]
+      matchMessages: Prisma.$MatchMessagePayload<ExtArgs>[]
       feedbackReports: Prisma.$FeedbackReportPayload<ExtArgs>[]
       adminFeedbackResponses: Prisma.$FeedbackReportPayload<ExtArgs>[]
       profile: Prisma.$ProfilePayload<ExtArgs> | null
@@ -13722,6 +13999,9 @@ export namespace Prisma {
     wallet<T extends User$walletArgs<ExtArgs> = {}>(args?: Subset<T, User$walletArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     createdWorlds<T extends User$createdWorldsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdWorldsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findMany"> | Null>
     marketplaceItems<T extends User$marketplaceItemsArgs<ExtArgs> = {}>(args?: Subset<T, User$marketplaceItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findMany"> | Null>
+    buyerMatches<T extends User$buyerMatchesArgs<ExtArgs> = {}>(args?: Subset<T, User$buyerMatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findMany"> | Null>
+    sellerMatches<T extends User$sellerMatchesArgs<ExtArgs> = {}>(args?: Subset<T, User$sellerMatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findMany"> | Null>
+    matchMessages<T extends User$matchMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$matchMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "findMany"> | Null>
     feedbackReports<T extends User$feedbackReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedbackReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackReportPayload<ExtArgs>, T, "findMany"> | Null>
     adminFeedbackResponses<T extends User$adminFeedbackResponsesArgs<ExtArgs> = {}>(args?: Subset<T, User$adminFeedbackResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackReportPayload<ExtArgs>, T, "findMany"> | Null>
     profile<T extends User$profileArgs<ExtArgs> = {}>(args?: Subset<T, User$profileArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
@@ -14679,6 +14959,66 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MarketplaceItemScalarFieldEnum | MarketplaceItemScalarFieldEnum[]
+  }
+
+  /**
+   * User.buyerMatches
+   */
+  export type User$buyerMatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    where?: MarketplaceMatchWhereInput
+    orderBy?: MarketplaceMatchOrderByWithRelationInput | MarketplaceMatchOrderByWithRelationInput[]
+    cursor?: MarketplaceMatchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketplaceMatchScalarFieldEnum | MarketplaceMatchScalarFieldEnum[]
+  }
+
+  /**
+   * User.sellerMatches
+   */
+  export type User$sellerMatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    where?: MarketplaceMatchWhereInput
+    orderBy?: MarketplaceMatchOrderByWithRelationInput | MarketplaceMatchOrderByWithRelationInput[]
+    cursor?: MarketplaceMatchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketplaceMatchScalarFieldEnum | MarketplaceMatchScalarFieldEnum[]
+  }
+
+  /**
+   * User.matchMessages
+   */
+  export type User$matchMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    where?: MatchMessageWhereInput
+    orderBy?: MatchMessageOrderByWithRelationInput | MatchMessageOrderByWithRelationInput[]
+    cursor?: MatchMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MatchMessageScalarFieldEnum | MatchMessageScalarFieldEnum[]
   }
 
   /**
@@ -51437,15 +51777,21 @@ export namespace Prisma {
   }
 
   export type MarketplaceItemAvgAggregateOutputType = {
-    priceUnits: number | null
+    price: number | null
     priceToins: number | null
+    stock: number | null
+    rating: number | null
+    reviewCount: number | null
     viewCount: number | null
     favoriteCount: number | null
   }
 
   export type MarketplaceItemSumAggregateOutputType = {
-    priceUnits: number | null
+    price: number | null
     priceToins: number | null
+    stock: number | null
+    rating: number | null
+    reviewCount: number | null
     viewCount: number | null
     favoriteCount: number | null
   }
@@ -51454,66 +51800,100 @@ export namespace Prisma {
     id: string | null
     name: string | null
     description: string | null
-    type: $Enums.MarketplaceItemType | null
-    priceUnits: number | null
+    fullDescription: string | null
+    itemType: $Enums.MarketplaceItemType | null
+    price: number | null
     priceToins: number | null
-    imageUrl: string | null
+    currency: $Enums.Currency | null
+    category: string | null
+    stock: number | null
+    rating: number | null
+    reviewCount: number | null
     location: string | null
     status: $Enums.MarketplaceItemStatus | null
-    sellerId: string | null
-    viewCount: number | null
-    favoriteCount: number | null
+    isActive: boolean | null
+    isDeleted: boolean | null
+    deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    viewCount: number | null
+    favoriteCount: number | null
+    sellerId: string | null
+    metadata: string | null
   }
 
   export type MarketplaceItemMaxAggregateOutputType = {
     id: string | null
     name: string | null
     description: string | null
-    type: $Enums.MarketplaceItemType | null
-    priceUnits: number | null
+    fullDescription: string | null
+    itemType: $Enums.MarketplaceItemType | null
+    price: number | null
     priceToins: number | null
-    imageUrl: string | null
+    currency: $Enums.Currency | null
+    category: string | null
+    stock: number | null
+    rating: number | null
+    reviewCount: number | null
     location: string | null
     status: $Enums.MarketplaceItemStatus | null
-    sellerId: string | null
-    viewCount: number | null
-    favoriteCount: number | null
+    isActive: boolean | null
+    isDeleted: boolean | null
+    deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    viewCount: number | null
+    favoriteCount: number | null
+    sellerId: string | null
+    metadata: string | null
   }
 
   export type MarketplaceItemCountAggregateOutputType = {
     id: number
     name: number
     description: number
-    type: number
-    priceUnits: number
+    fullDescription: number
+    itemType: number
+    price: number
     priceToins: number
+    currency: number
+    category: number
     tags: number
-    imageUrl: number
+    images: number
+    stock: number
+    rating: number
+    reviewCount: number
     location: number
     status: number
-    sellerId: number
-    viewCount: number
-    favoriteCount: number
+    isActive: number
+    isDeleted: number
+    deletedAt: number
     createdAt: number
     updatedAt: number
+    viewCount: number
+    favoriteCount: number
+    sellerId: number
+    metadata: number
     _all: number
   }
 
 
   export type MarketplaceItemAvgAggregateInputType = {
-    priceUnits?: true
+    price?: true
     priceToins?: true
+    stock?: true
+    rating?: true
+    reviewCount?: true
     viewCount?: true
     favoriteCount?: true
   }
 
   export type MarketplaceItemSumAggregateInputType = {
-    priceUnits?: true
+    price?: true
     priceToins?: true
+    stock?: true
+    rating?: true
+    reviewCount?: true
     viewCount?: true
     favoriteCount?: true
   }
@@ -51522,52 +51902,80 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
-    type?: true
-    priceUnits?: true
+    fullDescription?: true
+    itemType?: true
+    price?: true
     priceToins?: true
-    imageUrl?: true
+    currency?: true
+    category?: true
+    stock?: true
+    rating?: true
+    reviewCount?: true
     location?: true
     status?: true
-    sellerId?: true
-    viewCount?: true
-    favoriteCount?: true
+    isActive?: true
+    isDeleted?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    viewCount?: true
+    favoriteCount?: true
+    sellerId?: true
+    metadata?: true
   }
 
   export type MarketplaceItemMaxAggregateInputType = {
     id?: true
     name?: true
     description?: true
-    type?: true
-    priceUnits?: true
+    fullDescription?: true
+    itemType?: true
+    price?: true
     priceToins?: true
-    imageUrl?: true
+    currency?: true
+    category?: true
+    stock?: true
+    rating?: true
+    reviewCount?: true
     location?: true
     status?: true
-    sellerId?: true
-    viewCount?: true
-    favoriteCount?: true
+    isActive?: true
+    isDeleted?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    viewCount?: true
+    favoriteCount?: true
+    sellerId?: true
+    metadata?: true
   }
 
   export type MarketplaceItemCountAggregateInputType = {
     id?: true
     name?: true
     description?: true
-    type?: true
-    priceUnits?: true
+    fullDescription?: true
+    itemType?: true
+    price?: true
     priceToins?: true
+    currency?: true
+    category?: true
     tags?: true
-    imageUrl?: true
+    images?: true
+    stock?: true
+    rating?: true
+    reviewCount?: true
     location?: true
     status?: true
-    sellerId?: true
-    viewCount?: true
-    favoriteCount?: true
+    isActive?: true
+    isDeleted?: true
+    deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    viewCount?: true
+    favoriteCount?: true
+    sellerId?: true
+    metadata?: true
     _all?: true
   }
 
@@ -51660,19 +52068,29 @@ export namespace Prisma {
   export type MarketplaceItemGroupByOutputType = {
     id: string
     name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins: number | null
+    description: string | null
+    fullDescription: string | null
+    itemType: $Enums.MarketplaceItemType
+    price: number
+    priceToins: number
+    currency: $Enums.Currency
+    category: string | null
     tags: string[]
-    imageUrl: string | null
+    images: string[]
+    stock: number
+    rating: number
+    reviewCount: number
     location: string | null
     status: $Enums.MarketplaceItemStatus
-    sellerId: string
-    viewCount: number
-    favoriteCount: number
+    isActive: boolean
+    isDeleted: boolean
+    deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    viewCount: number
+    favoriteCount: number
+    sellerId: string
+    metadata: string | null
     _count: MarketplaceItemCountAggregateOutputType | null
     _avg: MarketplaceItemAvgAggregateOutputType | null
     _sum: MarketplaceItemSumAggregateOutputType | null
@@ -51698,20 +52116,31 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    type?: boolean
-    priceUnits?: boolean
+    fullDescription?: boolean
+    itemType?: boolean
+    price?: boolean
     priceToins?: boolean
+    currency?: boolean
+    category?: boolean
     tags?: boolean
-    imageUrl?: boolean
+    images?: boolean
+    stock?: boolean
+    rating?: boolean
+    reviewCount?: boolean
     location?: boolean
     status?: boolean
-    sellerId?: boolean
-    viewCount?: boolean
-    favoriteCount?: boolean
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    viewCount?: boolean
+    favoriteCount?: boolean
+    sellerId?: boolean
+    metadata?: boolean
     seller?: boolean | UserDefaultArgs<ExtArgs>
     reviews?: boolean | MarketplaceItem$reviewsArgs<ExtArgs>
+    matches?: boolean | MarketplaceItem$matchesArgs<ExtArgs>
     _count?: boolean | MarketplaceItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["marketplaceItem"]>
 
@@ -51719,18 +52148,28 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    type?: boolean
-    priceUnits?: boolean
+    fullDescription?: boolean
+    itemType?: boolean
+    price?: boolean
     priceToins?: boolean
+    currency?: boolean
+    category?: boolean
     tags?: boolean
-    imageUrl?: boolean
+    images?: boolean
+    stock?: boolean
+    rating?: boolean
+    reviewCount?: boolean
     location?: boolean
     status?: boolean
-    sellerId?: boolean
-    viewCount?: boolean
-    favoriteCount?: boolean
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    viewCount?: boolean
+    favoriteCount?: boolean
+    sellerId?: boolean
+    metadata?: boolean
     seller?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["marketplaceItem"]>
 
@@ -51738,23 +52177,34 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    type?: boolean
-    priceUnits?: boolean
+    fullDescription?: boolean
+    itemType?: boolean
+    price?: boolean
     priceToins?: boolean
+    currency?: boolean
+    category?: boolean
     tags?: boolean
-    imageUrl?: boolean
+    images?: boolean
+    stock?: boolean
+    rating?: boolean
+    reviewCount?: boolean
     location?: boolean
     status?: boolean
-    sellerId?: boolean
-    viewCount?: boolean
-    favoriteCount?: boolean
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    viewCount?: boolean
+    favoriteCount?: boolean
+    sellerId?: boolean
+    metadata?: boolean
   }
 
   export type MarketplaceItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     seller?: boolean | UserDefaultArgs<ExtArgs>
     reviews?: boolean | MarketplaceItem$reviewsArgs<ExtArgs>
+    matches?: boolean | MarketplaceItem$matchesArgs<ExtArgs>
     _count?: boolean | MarketplaceItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MarketplaceItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -51766,23 +52216,34 @@ export namespace Prisma {
     objects: {
       seller: Prisma.$UserPayload<ExtArgs>
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      matches: Prisma.$MarketplaceMatchPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
-      description: string
-      type: $Enums.MarketplaceItemType
-      priceUnits: number
-      priceToins: number | null
+      description: string | null
+      fullDescription: string | null
+      itemType: $Enums.MarketplaceItemType
+      price: number
+      priceToins: number
+      currency: $Enums.Currency
+      category: string | null
       tags: string[]
-      imageUrl: string | null
+      images: string[]
+      stock: number
+      rating: number
+      reviewCount: number
       location: string | null
       status: $Enums.MarketplaceItemStatus
-      sellerId: string
-      viewCount: number
-      favoriteCount: number
+      isActive: boolean
+      isDeleted: boolean
+      deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
+      viewCount: number
+      favoriteCount: number
+      sellerId: string
+      metadata: string | null
     }, ExtArgs["result"]["marketplaceItem"]>
     composites: {}
   }
@@ -52149,6 +52610,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     seller<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     reviews<T extends MarketplaceItem$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceItem$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany"> | Null>
+    matches<T extends MarketplaceItem$matchesArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceItem$matchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -52181,18 +52643,28 @@ export namespace Prisma {
     readonly id: FieldRef<"MarketplaceItem", 'String'>
     readonly name: FieldRef<"MarketplaceItem", 'String'>
     readonly description: FieldRef<"MarketplaceItem", 'String'>
-    readonly type: FieldRef<"MarketplaceItem", 'MarketplaceItemType'>
-    readonly priceUnits: FieldRef<"MarketplaceItem", 'Int'>
-    readonly priceToins: FieldRef<"MarketplaceItem", 'Int'>
+    readonly fullDescription: FieldRef<"MarketplaceItem", 'String'>
+    readonly itemType: FieldRef<"MarketplaceItem", 'MarketplaceItemType'>
+    readonly price: FieldRef<"MarketplaceItem", 'Float'>
+    readonly priceToins: FieldRef<"MarketplaceItem", 'Float'>
+    readonly currency: FieldRef<"MarketplaceItem", 'Currency'>
+    readonly category: FieldRef<"MarketplaceItem", 'String'>
     readonly tags: FieldRef<"MarketplaceItem", 'String[]'>
-    readonly imageUrl: FieldRef<"MarketplaceItem", 'String'>
+    readonly images: FieldRef<"MarketplaceItem", 'String[]'>
+    readonly stock: FieldRef<"MarketplaceItem", 'Int'>
+    readonly rating: FieldRef<"MarketplaceItem", 'Float'>
+    readonly reviewCount: FieldRef<"MarketplaceItem", 'Int'>
     readonly location: FieldRef<"MarketplaceItem", 'String'>
     readonly status: FieldRef<"MarketplaceItem", 'MarketplaceItemStatus'>
-    readonly sellerId: FieldRef<"MarketplaceItem", 'String'>
-    readonly viewCount: FieldRef<"MarketplaceItem", 'Int'>
-    readonly favoriteCount: FieldRef<"MarketplaceItem", 'Int'>
+    readonly isActive: FieldRef<"MarketplaceItem", 'Boolean'>
+    readonly isDeleted: FieldRef<"MarketplaceItem", 'Boolean'>
+    readonly deletedAt: FieldRef<"MarketplaceItem", 'DateTime'>
     readonly createdAt: FieldRef<"MarketplaceItem", 'DateTime'>
     readonly updatedAt: FieldRef<"MarketplaceItem", 'DateTime'>
+    readonly viewCount: FieldRef<"MarketplaceItem", 'Int'>
+    readonly favoriteCount: FieldRef<"MarketplaceItem", 'Int'>
+    readonly sellerId: FieldRef<"MarketplaceItem", 'String'>
+    readonly metadata: FieldRef<"MarketplaceItem", 'String'>
   }
     
 
@@ -52528,6 +53000,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceItem.matches
+   */
+  export type MarketplaceItem$matchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    where?: MarketplaceMatchWhereInput
+    orderBy?: MarketplaceMatchOrderByWithRelationInput | MarketplaceMatchOrderByWithRelationInput[]
+    cursor?: MarketplaceMatchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketplaceMatchScalarFieldEnum | MarketplaceMatchScalarFieldEnum[]
   }
 
   /**
@@ -56755,9 +57247,11 @@ export namespace Prisma {
   export type ProfileMinAggregateOutputType = {
     id: string | null
     userId: string | null
+    avatar: string | null
     bio: string | null
-    avatarUrl: string | null
     location: string | null
+    website: string | null
+    isEmprendedorConfiable: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -56765,9 +57259,11 @@ export namespace Prisma {
   export type ProfileMaxAggregateOutputType = {
     id: string | null
     userId: string | null
+    avatar: string | null
     bio: string | null
-    avatarUrl: string | null
     location: string | null
+    website: string | null
+    isEmprendedorConfiable: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -56775,9 +57271,14 @@ export namespace Prisma {
   export type ProfileCountAggregateOutputType = {
     id: number
     userId: number
+    avatar: number
     bio: number
-    avatarUrl: number
     location: number
+    website: number
+    skills: number
+    interests: number
+    isEmprendedorConfiable: number
+    socialLinks: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -56787,9 +57288,11 @@ export namespace Prisma {
   export type ProfileMinAggregateInputType = {
     id?: true
     userId?: true
+    avatar?: true
     bio?: true
-    avatarUrl?: true
     location?: true
+    website?: true
+    isEmprendedorConfiable?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -56797,9 +57300,11 @@ export namespace Prisma {
   export type ProfileMaxAggregateInputType = {
     id?: true
     userId?: true
+    avatar?: true
     bio?: true
-    avatarUrl?: true
     location?: true
+    website?: true
+    isEmprendedorConfiable?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -56807,9 +57312,14 @@ export namespace Prisma {
   export type ProfileCountAggregateInputType = {
     id?: true
     userId?: true
+    avatar?: true
     bio?: true
-    avatarUrl?: true
     location?: true
+    website?: true
+    skills?: true
+    interests?: true
+    isEmprendedorConfiable?: true
+    socialLinks?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -56890,9 +57400,14 @@ export namespace Prisma {
   export type ProfileGroupByOutputType = {
     id: string
     userId: string
+    avatar: string | null
     bio: string | null
-    avatarUrl: string | null
     location: string | null
+    website: string | null
+    skills: string[]
+    interests: string[]
+    isEmprendedorConfiable: boolean
+    socialLinks: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: ProfileCountAggregateOutputType | null
@@ -56917,9 +57432,14 @@ export namespace Prisma {
   export type ProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    avatar?: boolean
     bio?: boolean
-    avatarUrl?: boolean
     location?: boolean
+    website?: boolean
+    skills?: boolean
+    interests?: boolean
+    isEmprendedorConfiable?: boolean
+    socialLinks?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -56928,9 +57448,14 @@ export namespace Prisma {
   export type ProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    avatar?: boolean
     bio?: boolean
-    avatarUrl?: boolean
     location?: boolean
+    website?: boolean
+    skills?: boolean
+    interests?: boolean
+    isEmprendedorConfiable?: boolean
+    socialLinks?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -56939,9 +57464,14 @@ export namespace Prisma {
   export type ProfileSelectScalar = {
     id?: boolean
     userId?: boolean
+    avatar?: boolean
     bio?: boolean
-    avatarUrl?: boolean
     location?: boolean
+    website?: boolean
+    skills?: boolean
+    interests?: boolean
+    isEmprendedorConfiable?: boolean
+    socialLinks?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -56961,9 +57491,14 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
+      avatar: string | null
       bio: string | null
-      avatarUrl: string | null
       location: string | null
+      website: string | null
+      skills: string[]
+      interests: string[]
+      isEmprendedorConfiable: boolean
+      socialLinks: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["profile"]>
@@ -57362,9 +57897,14 @@ export namespace Prisma {
   interface ProfileFieldRefs {
     readonly id: FieldRef<"Profile", 'String'>
     readonly userId: FieldRef<"Profile", 'String'>
+    readonly avatar: FieldRef<"Profile", 'String'>
     readonly bio: FieldRef<"Profile", 'String'>
-    readonly avatarUrl: FieldRef<"Profile", 'String'>
     readonly location: FieldRef<"Profile", 'String'>
+    readonly website: FieldRef<"Profile", 'String'>
+    readonly skills: FieldRef<"Profile", 'String[]'>
+    readonly interests: FieldRef<"Profile", 'String[]'>
+    readonly isEmprendedorConfiable: FieldRef<"Profile", 'Boolean'>
+    readonly socialLinks: FieldRef<"Profile", 'Json'>
     readonly createdAt: FieldRef<"Profile", 'DateTime'>
     readonly updatedAt: FieldRef<"Profile", 'DateTime'>
   }
@@ -57713,38 +58253,58 @@ export namespace Prisma {
 
   export type ReviewAvgAggregateOutputType = {
     rating: number | null
+    communication: number | null
+    quality: number | null
+    delivery: number | null
+    value: number | null
   }
 
   export type ReviewSumAggregateOutputType = {
     rating: number | null
+    communication: number | null
+    quality: number | null
+    delivery: number | null
+    value: number | null
   }
 
   export type ReviewMinAggregateOutputType = {
     id: string | null
-    reviewerId: string | null
     marketplaceItemId: string | null
+    userId: string | null
     rating: number | null
     comment: string | null
+    communication: number | null
+    quality: number | null
+    delivery: number | null
+    value: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type ReviewMaxAggregateOutputType = {
     id: string | null
-    reviewerId: string | null
     marketplaceItemId: string | null
+    userId: string | null
     rating: number | null
     comment: string | null
+    communication: number | null
+    quality: number | null
+    delivery: number | null
+    value: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type ReviewCountAggregateOutputType = {
     id: number
-    reviewerId: number
     marketplaceItemId: number
+    userId: number
     rating: number
     comment: number
+    communication: number
+    quality: number
+    delivery: number
+    value: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -57753,38 +58313,58 @@ export namespace Prisma {
 
   export type ReviewAvgAggregateInputType = {
     rating?: true
+    communication?: true
+    quality?: true
+    delivery?: true
+    value?: true
   }
 
   export type ReviewSumAggregateInputType = {
     rating?: true
+    communication?: true
+    quality?: true
+    delivery?: true
+    value?: true
   }
 
   export type ReviewMinAggregateInputType = {
     id?: true
-    reviewerId?: true
     marketplaceItemId?: true
+    userId?: true
     rating?: true
     comment?: true
+    communication?: true
+    quality?: true
+    delivery?: true
+    value?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type ReviewMaxAggregateInputType = {
     id?: true
-    reviewerId?: true
     marketplaceItemId?: true
+    userId?: true
     rating?: true
     comment?: true
+    communication?: true
+    quality?: true
+    delivery?: true
+    value?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type ReviewCountAggregateInputType = {
     id?: true
-    reviewerId?: true
     marketplaceItemId?: true
+    userId?: true
     rating?: true
     comment?: true
+    communication?: true
+    quality?: true
+    delivery?: true
+    value?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -57878,10 +58458,14 @@ export namespace Prisma {
 
   export type ReviewGroupByOutputType = {
     id: string
-    reviewerId: string
     marketplaceItemId: string
+    userId: string
     rating: number
     comment: string | null
+    communication: number | null
+    quality: number | null
+    delivery: number | null
+    value: number | null
     createdAt: Date
     updatedAt: Date
     _count: ReviewCountAggregateOutputType | null
@@ -57907,59 +58491,75 @@ export namespace Prisma {
 
   export type ReviewSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    reviewerId?: boolean
     marketplaceItemId?: boolean
+    userId?: boolean
     rating?: boolean
     comment?: boolean
+    communication?: boolean
+    quality?: boolean
+    delivery?: boolean
+    value?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    reviewer?: boolean | UserDefaultArgs<ExtArgs>
     marketplaceItem?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    reviewerId?: boolean
     marketplaceItemId?: boolean
+    userId?: boolean
     rating?: boolean
     comment?: boolean
+    communication?: boolean
+    quality?: boolean
+    delivery?: boolean
+    value?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    reviewer?: boolean | UserDefaultArgs<ExtArgs>
     marketplaceItem?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
 
   export type ReviewSelectScalar = {
     id?: boolean
-    reviewerId?: boolean
     marketplaceItemId?: boolean
+    userId?: boolean
     rating?: boolean
     comment?: boolean
+    communication?: boolean
+    quality?: boolean
+    delivery?: boolean
+    value?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    reviewer?: boolean | UserDefaultArgs<ExtArgs>
     marketplaceItem?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    reviewer?: boolean | UserDefaultArgs<ExtArgs>
     marketplaceItem?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ReviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Review"
     objects: {
-      reviewer: Prisma.$UserPayload<ExtArgs>
       marketplaceItem: Prisma.$MarketplaceItemPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      reviewerId: string
       marketplaceItemId: string
+      userId: string
       rating: number
       comment: string | null
+      communication: number | null
+      quality: number | null
+      delivery: number | null
+      value: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["review"]>
@@ -58326,8 +58926,8 @@ export namespace Prisma {
    */
   export interface Prisma__ReviewClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    reviewer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     marketplaceItem<T extends MarketplaceItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceItemDefaultArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -58358,10 +58958,14 @@ export namespace Prisma {
    */ 
   interface ReviewFieldRefs {
     readonly id: FieldRef<"Review", 'String'>
-    readonly reviewerId: FieldRef<"Review", 'String'>
     readonly marketplaceItemId: FieldRef<"Review", 'String'>
+    readonly userId: FieldRef<"Review", 'String'>
     readonly rating: FieldRef<"Review", 'Int'>
     readonly comment: FieldRef<"Review", 'String'>
+    readonly communication: FieldRef<"Review", 'Int'>
+    readonly quality: FieldRef<"Review", 'Int'>
+    readonly delivery: FieldRef<"Review", 'Int'>
+    readonly value: FieldRef<"Review", 'Int'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
     readonly updatedAt: FieldRef<"Review", 'DateTime'>
   }
@@ -58693,6 +59297,1970 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ReviewInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MarketplaceMatch
+   */
+
+  export type AggregateMarketplaceMatch = {
+    _count: MarketplaceMatchCountAggregateOutputType | null
+    _min: MarketplaceMatchMinAggregateOutputType | null
+    _max: MarketplaceMatchMaxAggregateOutputType | null
+  }
+
+  export type MarketplaceMatchMinAggregateOutputType = {
+    id: string | null
+    itemId: string | null
+    buyerId: string | null
+    sellerId: string | null
+    buyerConfirmed: boolean | null
+    sellerConfirmed: boolean | null
+    status: $Enums.MatchStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MarketplaceMatchMaxAggregateOutputType = {
+    id: string | null
+    itemId: string | null
+    buyerId: string | null
+    sellerId: string | null
+    buyerConfirmed: boolean | null
+    sellerConfirmed: boolean | null
+    status: $Enums.MatchStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MarketplaceMatchCountAggregateOutputType = {
+    id: number
+    itemId: number
+    buyerId: number
+    sellerId: number
+    buyerConfirmed: number
+    sellerConfirmed: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type MarketplaceMatchMinAggregateInputType = {
+    id?: true
+    itemId?: true
+    buyerId?: true
+    sellerId?: true
+    buyerConfirmed?: true
+    sellerConfirmed?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MarketplaceMatchMaxAggregateInputType = {
+    id?: true
+    itemId?: true
+    buyerId?: true
+    sellerId?: true
+    buyerConfirmed?: true
+    sellerConfirmed?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MarketplaceMatchCountAggregateInputType = {
+    id?: true
+    itemId?: true
+    buyerId?: true
+    sellerId?: true
+    buyerConfirmed?: true
+    sellerConfirmed?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type MarketplaceMatchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketplaceMatch to aggregate.
+     */
+    where?: MarketplaceMatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketplaceMatches to fetch.
+     */
+    orderBy?: MarketplaceMatchOrderByWithRelationInput | MarketplaceMatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MarketplaceMatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketplaceMatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketplaceMatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MarketplaceMatches
+    **/
+    _count?: true | MarketplaceMatchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MarketplaceMatchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MarketplaceMatchMaxAggregateInputType
+  }
+
+  export type GetMarketplaceMatchAggregateType<T extends MarketplaceMatchAggregateArgs> = {
+        [P in keyof T & keyof AggregateMarketplaceMatch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMarketplaceMatch[P]>
+      : GetScalarType<T[P], AggregateMarketplaceMatch[P]>
+  }
+
+
+
+
+  export type MarketplaceMatchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketplaceMatchWhereInput
+    orderBy?: MarketplaceMatchOrderByWithAggregationInput | MarketplaceMatchOrderByWithAggregationInput[]
+    by: MarketplaceMatchScalarFieldEnum[] | MarketplaceMatchScalarFieldEnum
+    having?: MarketplaceMatchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MarketplaceMatchCountAggregateInputType | true
+    _min?: MarketplaceMatchMinAggregateInputType
+    _max?: MarketplaceMatchMaxAggregateInputType
+  }
+
+  export type MarketplaceMatchGroupByOutputType = {
+    id: string
+    itemId: string
+    buyerId: string
+    sellerId: string
+    buyerConfirmed: boolean
+    sellerConfirmed: boolean
+    status: $Enums.MatchStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: MarketplaceMatchCountAggregateOutputType | null
+    _min: MarketplaceMatchMinAggregateOutputType | null
+    _max: MarketplaceMatchMaxAggregateOutputType | null
+  }
+
+  type GetMarketplaceMatchGroupByPayload<T extends MarketplaceMatchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MarketplaceMatchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MarketplaceMatchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MarketplaceMatchGroupByOutputType[P]>
+            : GetScalarType<T[P], MarketplaceMatchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MarketplaceMatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+    messages?: boolean | MarketplaceMatch$messagesArgs<ExtArgs>
+    _count?: boolean | MarketplaceMatchCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketplaceMatch"]>
+
+  export type MarketplaceMatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketplaceMatch"]>
+
+  export type MarketplaceMatchSelectScalar = {
+    id?: boolean
+    itemId?: boolean
+    buyerId?: boolean
+    sellerId?: boolean
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type MarketplaceMatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+    messages?: boolean | MarketplaceMatch$messagesArgs<ExtArgs>
+    _count?: boolean | MarketplaceMatchCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MarketplaceMatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    seller?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MarketplaceMatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MarketplaceMatch"
+    objects: {
+      /**
+       * Relations
+       */
+      item: Prisma.$MarketplaceItemPayload<ExtArgs>
+      buyer: Prisma.$UserPayload<ExtArgs>
+      seller: Prisma.$UserPayload<ExtArgs>
+      messages: Prisma.$MatchMessagePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      itemId: string
+      buyerId: string
+      sellerId: string
+      buyerConfirmed: boolean
+      sellerConfirmed: boolean
+      status: $Enums.MatchStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["marketplaceMatch"]>
+    composites: {}
+  }
+
+  type MarketplaceMatchGetPayload<S extends boolean | null | undefined | MarketplaceMatchDefaultArgs> = $Result.GetResult<Prisma.$MarketplaceMatchPayload, S>
+
+  type MarketplaceMatchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<MarketplaceMatchFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: MarketplaceMatchCountAggregateInputType | true
+    }
+
+  export interface MarketplaceMatchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MarketplaceMatch'], meta: { name: 'MarketplaceMatch' } }
+    /**
+     * Find zero or one MarketplaceMatch that matches the filter.
+     * @param {MarketplaceMatchFindUniqueArgs} args - Arguments to find a MarketplaceMatch
+     * @example
+     * // Get one MarketplaceMatch
+     * const marketplaceMatch = await prisma.marketplaceMatch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MarketplaceMatchFindUniqueArgs>(args: SelectSubset<T, MarketplaceMatchFindUniqueArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one MarketplaceMatch that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {MarketplaceMatchFindUniqueOrThrowArgs} args - Arguments to find a MarketplaceMatch
+     * @example
+     * // Get one MarketplaceMatch
+     * const marketplaceMatch = await prisma.marketplaceMatch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MarketplaceMatchFindUniqueOrThrowArgs>(args: SelectSubset<T, MarketplaceMatchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first MarketplaceMatch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceMatchFindFirstArgs} args - Arguments to find a MarketplaceMatch
+     * @example
+     * // Get one MarketplaceMatch
+     * const marketplaceMatch = await prisma.marketplaceMatch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MarketplaceMatchFindFirstArgs>(args?: SelectSubset<T, MarketplaceMatchFindFirstArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first MarketplaceMatch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceMatchFindFirstOrThrowArgs} args - Arguments to find a MarketplaceMatch
+     * @example
+     * // Get one MarketplaceMatch
+     * const marketplaceMatch = await prisma.marketplaceMatch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MarketplaceMatchFindFirstOrThrowArgs>(args?: SelectSubset<T, MarketplaceMatchFindFirstOrThrowArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more MarketplaceMatches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceMatchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MarketplaceMatches
+     * const marketplaceMatches = await prisma.marketplaceMatch.findMany()
+     * 
+     * // Get first 10 MarketplaceMatches
+     * const marketplaceMatches = await prisma.marketplaceMatch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const marketplaceMatchWithIdOnly = await prisma.marketplaceMatch.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MarketplaceMatchFindManyArgs>(args?: SelectSubset<T, MarketplaceMatchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a MarketplaceMatch.
+     * @param {MarketplaceMatchCreateArgs} args - Arguments to create a MarketplaceMatch.
+     * @example
+     * // Create one MarketplaceMatch
+     * const MarketplaceMatch = await prisma.marketplaceMatch.create({
+     *   data: {
+     *     // ... data to create a MarketplaceMatch
+     *   }
+     * })
+     * 
+     */
+    create<T extends MarketplaceMatchCreateArgs>(args: SelectSubset<T, MarketplaceMatchCreateArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many MarketplaceMatches.
+     * @param {MarketplaceMatchCreateManyArgs} args - Arguments to create many MarketplaceMatches.
+     * @example
+     * // Create many MarketplaceMatches
+     * const marketplaceMatch = await prisma.marketplaceMatch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MarketplaceMatchCreateManyArgs>(args?: SelectSubset<T, MarketplaceMatchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MarketplaceMatches and returns the data saved in the database.
+     * @param {MarketplaceMatchCreateManyAndReturnArgs} args - Arguments to create many MarketplaceMatches.
+     * @example
+     * // Create many MarketplaceMatches
+     * const marketplaceMatch = await prisma.marketplaceMatch.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MarketplaceMatches and only return the `id`
+     * const marketplaceMatchWithIdOnly = await prisma.marketplaceMatch.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MarketplaceMatchCreateManyAndReturnArgs>(args?: SelectSubset<T, MarketplaceMatchCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a MarketplaceMatch.
+     * @param {MarketplaceMatchDeleteArgs} args - Arguments to delete one MarketplaceMatch.
+     * @example
+     * // Delete one MarketplaceMatch
+     * const MarketplaceMatch = await prisma.marketplaceMatch.delete({
+     *   where: {
+     *     // ... filter to delete one MarketplaceMatch
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MarketplaceMatchDeleteArgs>(args: SelectSubset<T, MarketplaceMatchDeleteArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one MarketplaceMatch.
+     * @param {MarketplaceMatchUpdateArgs} args - Arguments to update one MarketplaceMatch.
+     * @example
+     * // Update one MarketplaceMatch
+     * const marketplaceMatch = await prisma.marketplaceMatch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MarketplaceMatchUpdateArgs>(args: SelectSubset<T, MarketplaceMatchUpdateArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more MarketplaceMatches.
+     * @param {MarketplaceMatchDeleteManyArgs} args - Arguments to filter MarketplaceMatches to delete.
+     * @example
+     * // Delete a few MarketplaceMatches
+     * const { count } = await prisma.marketplaceMatch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MarketplaceMatchDeleteManyArgs>(args?: SelectSubset<T, MarketplaceMatchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketplaceMatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceMatchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MarketplaceMatches
+     * const marketplaceMatch = await prisma.marketplaceMatch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MarketplaceMatchUpdateManyArgs>(args: SelectSubset<T, MarketplaceMatchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MarketplaceMatch.
+     * @param {MarketplaceMatchUpsertArgs} args - Arguments to update or create a MarketplaceMatch.
+     * @example
+     * // Update or create a MarketplaceMatch
+     * const marketplaceMatch = await prisma.marketplaceMatch.upsert({
+     *   create: {
+     *     // ... data to create a MarketplaceMatch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MarketplaceMatch we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MarketplaceMatchUpsertArgs>(args: SelectSubset<T, MarketplaceMatchUpsertArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of MarketplaceMatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceMatchCountArgs} args - Arguments to filter MarketplaceMatches to count.
+     * @example
+     * // Count the number of MarketplaceMatches
+     * const count = await prisma.marketplaceMatch.count({
+     *   where: {
+     *     // ... the filter for the MarketplaceMatches we want to count
+     *   }
+     * })
+    **/
+    count<T extends MarketplaceMatchCountArgs>(
+      args?: Subset<T, MarketplaceMatchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MarketplaceMatchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MarketplaceMatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceMatchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MarketplaceMatchAggregateArgs>(args: Subset<T, MarketplaceMatchAggregateArgs>): Prisma.PrismaPromise<GetMarketplaceMatchAggregateType<T>>
+
+    /**
+     * Group by MarketplaceMatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceMatchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MarketplaceMatchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MarketplaceMatchGroupByArgs['orderBy'] }
+        : { orderBy?: MarketplaceMatchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MarketplaceMatchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketplaceMatchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MarketplaceMatch model
+   */
+  readonly fields: MarketplaceMatchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MarketplaceMatch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MarketplaceMatchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    item<T extends MarketplaceItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceItemDefaultArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    buyer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    seller<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    messages<T extends MarketplaceMatch$messagesArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceMatch$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MarketplaceMatch model
+   */ 
+  interface MarketplaceMatchFieldRefs {
+    readonly id: FieldRef<"MarketplaceMatch", 'String'>
+    readonly itemId: FieldRef<"MarketplaceMatch", 'String'>
+    readonly buyerId: FieldRef<"MarketplaceMatch", 'String'>
+    readonly sellerId: FieldRef<"MarketplaceMatch", 'String'>
+    readonly buyerConfirmed: FieldRef<"MarketplaceMatch", 'Boolean'>
+    readonly sellerConfirmed: FieldRef<"MarketplaceMatch", 'Boolean'>
+    readonly status: FieldRef<"MarketplaceMatch", 'MatchStatus'>
+    readonly createdAt: FieldRef<"MarketplaceMatch", 'DateTime'>
+    readonly updatedAt: FieldRef<"MarketplaceMatch", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MarketplaceMatch findUnique
+   */
+  export type MarketplaceMatchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceMatch to fetch.
+     */
+    where: MarketplaceMatchWhereUniqueInput
+  }
+
+  /**
+   * MarketplaceMatch findUniqueOrThrow
+   */
+  export type MarketplaceMatchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceMatch to fetch.
+     */
+    where: MarketplaceMatchWhereUniqueInput
+  }
+
+  /**
+   * MarketplaceMatch findFirst
+   */
+  export type MarketplaceMatchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceMatch to fetch.
+     */
+    where?: MarketplaceMatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketplaceMatches to fetch.
+     */
+    orderBy?: MarketplaceMatchOrderByWithRelationInput | MarketplaceMatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketplaceMatches.
+     */
+    cursor?: MarketplaceMatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketplaceMatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketplaceMatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketplaceMatches.
+     */
+    distinct?: MarketplaceMatchScalarFieldEnum | MarketplaceMatchScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceMatch findFirstOrThrow
+   */
+  export type MarketplaceMatchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceMatch to fetch.
+     */
+    where?: MarketplaceMatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketplaceMatches to fetch.
+     */
+    orderBy?: MarketplaceMatchOrderByWithRelationInput | MarketplaceMatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketplaceMatches.
+     */
+    cursor?: MarketplaceMatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketplaceMatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketplaceMatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketplaceMatches.
+     */
+    distinct?: MarketplaceMatchScalarFieldEnum | MarketplaceMatchScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceMatch findMany
+   */
+  export type MarketplaceMatchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceMatches to fetch.
+     */
+    where?: MarketplaceMatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketplaceMatches to fetch.
+     */
+    orderBy?: MarketplaceMatchOrderByWithRelationInput | MarketplaceMatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MarketplaceMatches.
+     */
+    cursor?: MarketplaceMatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketplaceMatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketplaceMatches.
+     */
+    skip?: number
+    distinct?: MarketplaceMatchScalarFieldEnum | MarketplaceMatchScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceMatch create
+   */
+  export type MarketplaceMatchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MarketplaceMatch.
+     */
+    data: XOR<MarketplaceMatchCreateInput, MarketplaceMatchUncheckedCreateInput>
+  }
+
+  /**
+   * MarketplaceMatch createMany
+   */
+  export type MarketplaceMatchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MarketplaceMatches.
+     */
+    data: MarketplaceMatchCreateManyInput | MarketplaceMatchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MarketplaceMatch createManyAndReturn
+   */
+  export type MarketplaceMatchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many MarketplaceMatches.
+     */
+    data: MarketplaceMatchCreateManyInput | MarketplaceMatchCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketplaceMatch update
+   */
+  export type MarketplaceMatchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MarketplaceMatch.
+     */
+    data: XOR<MarketplaceMatchUpdateInput, MarketplaceMatchUncheckedUpdateInput>
+    /**
+     * Choose, which MarketplaceMatch to update.
+     */
+    where: MarketplaceMatchWhereUniqueInput
+  }
+
+  /**
+   * MarketplaceMatch updateMany
+   */
+  export type MarketplaceMatchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MarketplaceMatches.
+     */
+    data: XOR<MarketplaceMatchUpdateManyMutationInput, MarketplaceMatchUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketplaceMatches to update
+     */
+    where?: MarketplaceMatchWhereInput
+  }
+
+  /**
+   * MarketplaceMatch upsert
+   */
+  export type MarketplaceMatchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MarketplaceMatch to update in case it exists.
+     */
+    where: MarketplaceMatchWhereUniqueInput
+    /**
+     * In case the MarketplaceMatch found by the `where` argument doesn't exist, create a new MarketplaceMatch with this data.
+     */
+    create: XOR<MarketplaceMatchCreateInput, MarketplaceMatchUncheckedCreateInput>
+    /**
+     * In case the MarketplaceMatch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MarketplaceMatchUpdateInput, MarketplaceMatchUncheckedUpdateInput>
+  }
+
+  /**
+   * MarketplaceMatch delete
+   */
+  export type MarketplaceMatchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+    /**
+     * Filter which MarketplaceMatch to delete.
+     */
+    where: MarketplaceMatchWhereUniqueInput
+  }
+
+  /**
+   * MarketplaceMatch deleteMany
+   */
+  export type MarketplaceMatchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketplaceMatches to delete
+     */
+    where?: MarketplaceMatchWhereInput
+  }
+
+  /**
+   * MarketplaceMatch.messages
+   */
+  export type MarketplaceMatch$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    where?: MatchMessageWhereInput
+    orderBy?: MatchMessageOrderByWithRelationInput | MatchMessageOrderByWithRelationInput[]
+    cursor?: MatchMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MatchMessageScalarFieldEnum | MatchMessageScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceMatch without action
+   */
+  export type MarketplaceMatchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceMatch
+     */
+    select?: MarketplaceMatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceMatchInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MatchMessage
+   */
+
+  export type AggregateMatchMessage = {
+    _count: MatchMessageCountAggregateOutputType | null
+    _min: MatchMessageMinAggregateOutputType | null
+    _max: MatchMessageMaxAggregateOutputType | null
+  }
+
+  export type MatchMessageMinAggregateOutputType = {
+    id: string | null
+    matchId: string | null
+    senderId: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type MatchMessageMaxAggregateOutputType = {
+    id: string | null
+    matchId: string | null
+    senderId: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type MatchMessageCountAggregateOutputType = {
+    id: number
+    matchId: number
+    senderId: number
+    content: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type MatchMessageMinAggregateInputType = {
+    id?: true
+    matchId?: true
+    senderId?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type MatchMessageMaxAggregateInputType = {
+    id?: true
+    matchId?: true
+    senderId?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type MatchMessageCountAggregateInputType = {
+    id?: true
+    matchId?: true
+    senderId?: true
+    content?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type MatchMessageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MatchMessage to aggregate.
+     */
+    where?: MatchMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MatchMessages to fetch.
+     */
+    orderBy?: MatchMessageOrderByWithRelationInput | MatchMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MatchMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MatchMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MatchMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MatchMessages
+    **/
+    _count?: true | MatchMessageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MatchMessageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MatchMessageMaxAggregateInputType
+  }
+
+  export type GetMatchMessageAggregateType<T extends MatchMessageAggregateArgs> = {
+        [P in keyof T & keyof AggregateMatchMessage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMatchMessage[P]>
+      : GetScalarType<T[P], AggregateMatchMessage[P]>
+  }
+
+
+
+
+  export type MatchMessageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MatchMessageWhereInput
+    orderBy?: MatchMessageOrderByWithAggregationInput | MatchMessageOrderByWithAggregationInput[]
+    by: MatchMessageScalarFieldEnum[] | MatchMessageScalarFieldEnum
+    having?: MatchMessageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MatchMessageCountAggregateInputType | true
+    _min?: MatchMessageMinAggregateInputType
+    _max?: MatchMessageMaxAggregateInputType
+  }
+
+  export type MatchMessageGroupByOutputType = {
+    id: string
+    matchId: string
+    senderId: string
+    content: string
+    createdAt: Date
+    _count: MatchMessageCountAggregateOutputType | null
+    _min: MatchMessageMinAggregateOutputType | null
+    _max: MatchMessageMaxAggregateOutputType | null
+  }
+
+  type GetMatchMessageGroupByPayload<T extends MatchMessageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MatchMessageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MatchMessageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MatchMessageGroupByOutputType[P]>
+            : GetScalarType<T[P], MatchMessageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MatchMessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    matchId?: boolean
+    senderId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    match?: boolean | MarketplaceMatchDefaultArgs<ExtArgs>
+    sender?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["matchMessage"]>
+
+  export type MatchMessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    matchId?: boolean
+    senderId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    match?: boolean | MarketplaceMatchDefaultArgs<ExtArgs>
+    sender?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["matchMessage"]>
+
+  export type MatchMessageSelectScalar = {
+    id?: boolean
+    matchId?: boolean
+    senderId?: boolean
+    content?: boolean
+    createdAt?: boolean
+  }
+
+  export type MatchMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    match?: boolean | MarketplaceMatchDefaultArgs<ExtArgs>
+    sender?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MatchMessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    match?: boolean | MarketplaceMatchDefaultArgs<ExtArgs>
+    sender?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MatchMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MatchMessage"
+    objects: {
+      /**
+       * Relations
+       */
+      match: Prisma.$MarketplaceMatchPayload<ExtArgs>
+      sender: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      matchId: string
+      senderId: string
+      content: string
+      createdAt: Date
+    }, ExtArgs["result"]["matchMessage"]>
+    composites: {}
+  }
+
+  type MatchMessageGetPayload<S extends boolean | null | undefined | MatchMessageDefaultArgs> = $Result.GetResult<Prisma.$MatchMessagePayload, S>
+
+  type MatchMessageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<MatchMessageFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: MatchMessageCountAggregateInputType | true
+    }
+
+  export interface MatchMessageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MatchMessage'], meta: { name: 'MatchMessage' } }
+    /**
+     * Find zero or one MatchMessage that matches the filter.
+     * @param {MatchMessageFindUniqueArgs} args - Arguments to find a MatchMessage
+     * @example
+     * // Get one MatchMessage
+     * const matchMessage = await prisma.matchMessage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MatchMessageFindUniqueArgs>(args: SelectSubset<T, MatchMessageFindUniqueArgs<ExtArgs>>): Prisma__MatchMessageClient<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one MatchMessage that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {MatchMessageFindUniqueOrThrowArgs} args - Arguments to find a MatchMessage
+     * @example
+     * // Get one MatchMessage
+     * const matchMessage = await prisma.matchMessage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MatchMessageFindUniqueOrThrowArgs>(args: SelectSubset<T, MatchMessageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MatchMessageClient<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first MatchMessage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchMessageFindFirstArgs} args - Arguments to find a MatchMessage
+     * @example
+     * // Get one MatchMessage
+     * const matchMessage = await prisma.matchMessage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MatchMessageFindFirstArgs>(args?: SelectSubset<T, MatchMessageFindFirstArgs<ExtArgs>>): Prisma__MatchMessageClient<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first MatchMessage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchMessageFindFirstOrThrowArgs} args - Arguments to find a MatchMessage
+     * @example
+     * // Get one MatchMessage
+     * const matchMessage = await prisma.matchMessage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MatchMessageFindFirstOrThrowArgs>(args?: SelectSubset<T, MatchMessageFindFirstOrThrowArgs<ExtArgs>>): Prisma__MatchMessageClient<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more MatchMessages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchMessageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MatchMessages
+     * const matchMessages = await prisma.matchMessage.findMany()
+     * 
+     * // Get first 10 MatchMessages
+     * const matchMessages = await prisma.matchMessage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const matchMessageWithIdOnly = await prisma.matchMessage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MatchMessageFindManyArgs>(args?: SelectSubset<T, MatchMessageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a MatchMessage.
+     * @param {MatchMessageCreateArgs} args - Arguments to create a MatchMessage.
+     * @example
+     * // Create one MatchMessage
+     * const MatchMessage = await prisma.matchMessage.create({
+     *   data: {
+     *     // ... data to create a MatchMessage
+     *   }
+     * })
+     * 
+     */
+    create<T extends MatchMessageCreateArgs>(args: SelectSubset<T, MatchMessageCreateArgs<ExtArgs>>): Prisma__MatchMessageClient<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many MatchMessages.
+     * @param {MatchMessageCreateManyArgs} args - Arguments to create many MatchMessages.
+     * @example
+     * // Create many MatchMessages
+     * const matchMessage = await prisma.matchMessage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MatchMessageCreateManyArgs>(args?: SelectSubset<T, MatchMessageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MatchMessages and returns the data saved in the database.
+     * @param {MatchMessageCreateManyAndReturnArgs} args - Arguments to create many MatchMessages.
+     * @example
+     * // Create many MatchMessages
+     * const matchMessage = await prisma.matchMessage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MatchMessages and only return the `id`
+     * const matchMessageWithIdOnly = await prisma.matchMessage.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MatchMessageCreateManyAndReturnArgs>(args?: SelectSubset<T, MatchMessageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a MatchMessage.
+     * @param {MatchMessageDeleteArgs} args - Arguments to delete one MatchMessage.
+     * @example
+     * // Delete one MatchMessage
+     * const MatchMessage = await prisma.matchMessage.delete({
+     *   where: {
+     *     // ... filter to delete one MatchMessage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MatchMessageDeleteArgs>(args: SelectSubset<T, MatchMessageDeleteArgs<ExtArgs>>): Prisma__MatchMessageClient<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one MatchMessage.
+     * @param {MatchMessageUpdateArgs} args - Arguments to update one MatchMessage.
+     * @example
+     * // Update one MatchMessage
+     * const matchMessage = await prisma.matchMessage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MatchMessageUpdateArgs>(args: SelectSubset<T, MatchMessageUpdateArgs<ExtArgs>>): Prisma__MatchMessageClient<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more MatchMessages.
+     * @param {MatchMessageDeleteManyArgs} args - Arguments to filter MatchMessages to delete.
+     * @example
+     * // Delete a few MatchMessages
+     * const { count } = await prisma.matchMessage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MatchMessageDeleteManyArgs>(args?: SelectSubset<T, MatchMessageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MatchMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchMessageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MatchMessages
+     * const matchMessage = await prisma.matchMessage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MatchMessageUpdateManyArgs>(args: SelectSubset<T, MatchMessageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MatchMessage.
+     * @param {MatchMessageUpsertArgs} args - Arguments to update or create a MatchMessage.
+     * @example
+     * // Update or create a MatchMessage
+     * const matchMessage = await prisma.matchMessage.upsert({
+     *   create: {
+     *     // ... data to create a MatchMessage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MatchMessage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MatchMessageUpsertArgs>(args: SelectSubset<T, MatchMessageUpsertArgs<ExtArgs>>): Prisma__MatchMessageClient<$Result.GetResult<Prisma.$MatchMessagePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of MatchMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchMessageCountArgs} args - Arguments to filter MatchMessages to count.
+     * @example
+     * // Count the number of MatchMessages
+     * const count = await prisma.matchMessage.count({
+     *   where: {
+     *     // ... the filter for the MatchMessages we want to count
+     *   }
+     * })
+    **/
+    count<T extends MatchMessageCountArgs>(
+      args?: Subset<T, MatchMessageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MatchMessageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MatchMessage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchMessageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MatchMessageAggregateArgs>(args: Subset<T, MatchMessageAggregateArgs>): Prisma.PrismaPromise<GetMatchMessageAggregateType<T>>
+
+    /**
+     * Group by MatchMessage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchMessageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MatchMessageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MatchMessageGroupByArgs['orderBy'] }
+        : { orderBy?: MatchMessageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MatchMessageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMatchMessageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MatchMessage model
+   */
+  readonly fields: MatchMessageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MatchMessage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MatchMessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    match<T extends MarketplaceMatchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceMatchDefaultArgs<ExtArgs>>): Prisma__MarketplaceMatchClient<$Result.GetResult<Prisma.$MarketplaceMatchPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    sender<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MatchMessage model
+   */ 
+  interface MatchMessageFieldRefs {
+    readonly id: FieldRef<"MatchMessage", 'String'>
+    readonly matchId: FieldRef<"MatchMessage", 'String'>
+    readonly senderId: FieldRef<"MatchMessage", 'String'>
+    readonly content: FieldRef<"MatchMessage", 'String'>
+    readonly createdAt: FieldRef<"MatchMessage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MatchMessage findUnique
+   */
+  export type MatchMessageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchMessage to fetch.
+     */
+    where: MatchMessageWhereUniqueInput
+  }
+
+  /**
+   * MatchMessage findUniqueOrThrow
+   */
+  export type MatchMessageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchMessage to fetch.
+     */
+    where: MatchMessageWhereUniqueInput
+  }
+
+  /**
+   * MatchMessage findFirst
+   */
+  export type MatchMessageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchMessage to fetch.
+     */
+    where?: MatchMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MatchMessages to fetch.
+     */
+    orderBy?: MatchMessageOrderByWithRelationInput | MatchMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MatchMessages.
+     */
+    cursor?: MatchMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MatchMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MatchMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MatchMessages.
+     */
+    distinct?: MatchMessageScalarFieldEnum | MatchMessageScalarFieldEnum[]
+  }
+
+  /**
+   * MatchMessage findFirstOrThrow
+   */
+  export type MatchMessageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchMessage to fetch.
+     */
+    where?: MatchMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MatchMessages to fetch.
+     */
+    orderBy?: MatchMessageOrderByWithRelationInput | MatchMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MatchMessages.
+     */
+    cursor?: MatchMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MatchMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MatchMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MatchMessages.
+     */
+    distinct?: MatchMessageScalarFieldEnum | MatchMessageScalarFieldEnum[]
+  }
+
+  /**
+   * MatchMessage findMany
+   */
+  export type MatchMessageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchMessages to fetch.
+     */
+    where?: MatchMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MatchMessages to fetch.
+     */
+    orderBy?: MatchMessageOrderByWithRelationInput | MatchMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MatchMessages.
+     */
+    cursor?: MatchMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MatchMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MatchMessages.
+     */
+    skip?: number
+    distinct?: MatchMessageScalarFieldEnum | MatchMessageScalarFieldEnum[]
+  }
+
+  /**
+   * MatchMessage create
+   */
+  export type MatchMessageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MatchMessage.
+     */
+    data: XOR<MatchMessageCreateInput, MatchMessageUncheckedCreateInput>
+  }
+
+  /**
+   * MatchMessage createMany
+   */
+  export type MatchMessageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MatchMessages.
+     */
+    data: MatchMessageCreateManyInput | MatchMessageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MatchMessage createManyAndReturn
+   */
+  export type MatchMessageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many MatchMessages.
+     */
+    data: MatchMessageCreateManyInput | MatchMessageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MatchMessage update
+   */
+  export type MatchMessageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MatchMessage.
+     */
+    data: XOR<MatchMessageUpdateInput, MatchMessageUncheckedUpdateInput>
+    /**
+     * Choose, which MatchMessage to update.
+     */
+    where: MatchMessageWhereUniqueInput
+  }
+
+  /**
+   * MatchMessage updateMany
+   */
+  export type MatchMessageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MatchMessages.
+     */
+    data: XOR<MatchMessageUpdateManyMutationInput, MatchMessageUncheckedUpdateManyInput>
+    /**
+     * Filter which MatchMessages to update
+     */
+    where?: MatchMessageWhereInput
+  }
+
+  /**
+   * MatchMessage upsert
+   */
+  export type MatchMessageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MatchMessage to update in case it exists.
+     */
+    where: MatchMessageWhereUniqueInput
+    /**
+     * In case the MatchMessage found by the `where` argument doesn't exist, create a new MatchMessage with this data.
+     */
+    create: XOR<MatchMessageCreateInput, MatchMessageUncheckedCreateInput>
+    /**
+     * In case the MatchMessage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MatchMessageUpdateInput, MatchMessageUncheckedUpdateInput>
+  }
+
+  /**
+   * MatchMessage delete
+   */
+  export type MatchMessageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
+    /**
+     * Filter which MatchMessage to delete.
+     */
+    where: MatchMessageWhereUniqueInput
+  }
+
+  /**
+   * MatchMessage deleteMany
+   */
+  export type MatchMessageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MatchMessages to delete
+     */
+    where?: MatchMessageWhereInput
+  }
+
+  /**
+   * MatchMessage without action
+   */
+  export type MatchMessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchMessage
+     */
+    select?: MatchMessageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchMessageInclude<ExtArgs> | null
   }
 
 
@@ -59344,18 +61912,28 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
-    type: 'type',
-    priceUnits: 'priceUnits',
+    fullDescription: 'fullDescription',
+    itemType: 'itemType',
+    price: 'price',
     priceToins: 'priceToins',
+    currency: 'currency',
+    category: 'category',
     tags: 'tags',
-    imageUrl: 'imageUrl',
+    images: 'images',
+    stock: 'stock',
+    rating: 'rating',
+    reviewCount: 'reviewCount',
     location: 'location',
     status: 'status',
-    sellerId: 'sellerId',
+    isActive: 'isActive',
+    isDeleted: 'isDeleted',
+    deletedAt: 'deletedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
     viewCount: 'viewCount',
     favoriteCount: 'favoriteCount',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    sellerId: 'sellerId',
+    metadata: 'metadata'
   };
 
   export type MarketplaceItemScalarFieldEnum = (typeof MarketplaceItemScalarFieldEnum)[keyof typeof MarketplaceItemScalarFieldEnum]
@@ -59434,9 +62012,14 @@ export namespace Prisma {
   export const ProfileScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
+    avatar: 'avatar',
     bio: 'bio',
-    avatarUrl: 'avatarUrl',
     location: 'location',
+    website: 'website',
+    skills: 'skills',
+    interests: 'interests',
+    isEmprendedorConfiable: 'isEmprendedorConfiable',
+    socialLinks: 'socialLinks',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -59446,15 +62029,45 @@ export namespace Prisma {
 
   export const ReviewScalarFieldEnum: {
     id: 'id',
-    reviewerId: 'reviewerId',
     marketplaceItemId: 'marketplaceItemId',
+    userId: 'userId',
     rating: 'rating',
     comment: 'comment',
+    communication: 'communication',
+    quality: 'quality',
+    delivery: 'delivery',
+    value: 'value',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+  export const MarketplaceMatchScalarFieldEnum: {
+    id: 'id',
+    itemId: 'itemId',
+    buyerId: 'buyerId',
+    sellerId: 'sellerId',
+    buyerConfirmed: 'buyerConfirmed',
+    sellerConfirmed: 'sellerConfirmed',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type MarketplaceMatchScalarFieldEnum = (typeof MarketplaceMatchScalarFieldEnum)[keyof typeof MarketplaceMatchScalarFieldEnum]
+
+
+  export const MatchMessageScalarFieldEnum: {
+    id: 'id',
+    matchId: 'matchId',
+    senderId: 'senderId',
+    content: 'content',
+    createdAt: 'createdAt'
+  };
+
+  export type MatchMessageScalarFieldEnum = (typeof MatchMessageScalarFieldEnum)[keyof typeof MatchMessageScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -59588,6 +62201,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Currency'
+   */
+  export type EnumCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Currency'>
+    
+
+
+  /**
+   * Reference to a field of type 'Currency[]'
+   */
+  export type ListEnumCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Currency[]'>
+    
+
+
+  /**
    * Reference to a field of type 'MarketplaceItemStatus'
    */
   export type EnumMarketplaceItemStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MarketplaceItemStatus'>
@@ -59661,6 +62288,20 @@ export namespace Prisma {
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'MatchStatus'
+   */
+  export type EnumMatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MatchStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'MatchStatus[]'
+   */
+  export type ListEnumMatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MatchStatus[]'>
     
   /**
    * Deep Input Types
@@ -60280,6 +62921,9 @@ export namespace Prisma {
     wallet?: XOR<WalletNullableRelationFilter, WalletWhereInput> | null
     createdWorlds?: WorldListRelationFilter
     marketplaceItems?: MarketplaceItemListRelationFilter
+    buyerMatches?: MarketplaceMatchListRelationFilter
+    sellerMatches?: MarketplaceMatchListRelationFilter
+    matchMessages?: MatchMessageListRelationFilter
     feedbackReports?: FeedbackReportListRelationFilter
     adminFeedbackResponses?: FeedbackReportListRelationFilter
     profile?: XOR<ProfileNullableRelationFilter, ProfileWhereInput> | null
@@ -60336,6 +62980,9 @@ export namespace Prisma {
     wallet?: WalletOrderByWithRelationInput
     createdWorlds?: WorldOrderByRelationAggregateInput
     marketplaceItems?: MarketplaceItemOrderByRelationAggregateInput
+    buyerMatches?: MarketplaceMatchOrderByRelationAggregateInput
+    sellerMatches?: MarketplaceMatchOrderByRelationAggregateInput
+    matchMessages?: MatchMessageOrderByRelationAggregateInput
     feedbackReports?: FeedbackReportOrderByRelationAggregateInput
     adminFeedbackResponses?: FeedbackReportOrderByRelationAggregateInput
     profile?: ProfileOrderByWithRelationInput
@@ -60395,6 +63042,9 @@ export namespace Prisma {
     wallet?: XOR<WalletNullableRelationFilter, WalletWhereInput> | null
     createdWorlds?: WorldListRelationFilter
     marketplaceItems?: MarketplaceItemListRelationFilter
+    buyerMatches?: MarketplaceMatchListRelationFilter
+    sellerMatches?: MarketplaceMatchListRelationFilter
+    matchMessages?: MatchMessageListRelationFilter
     feedbackReports?: FeedbackReportListRelationFilter
     adminFeedbackResponses?: FeedbackReportListRelationFilter
     profile?: XOR<ProfileNullableRelationFilter, ProfileWhereInput> | null
@@ -63093,41 +65743,63 @@ export namespace Prisma {
     NOT?: MarketplaceItemWhereInput | MarketplaceItemWhereInput[]
     id?: StringFilter<"MarketplaceItem"> | string
     name?: StringFilter<"MarketplaceItem"> | string
-    description?: StringFilter<"MarketplaceItem"> | string
-    type?: EnumMarketplaceItemTypeFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
-    priceUnits?: IntFilter<"MarketplaceItem"> | number
-    priceToins?: IntNullableFilter<"MarketplaceItem"> | number | null
+    description?: StringNullableFilter<"MarketplaceItem"> | string | null
+    fullDescription?: StringNullableFilter<"MarketplaceItem"> | string | null
+    itemType?: EnumMarketplaceItemTypeFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
+    price?: FloatFilter<"MarketplaceItem"> | number
+    priceToins?: FloatFilter<"MarketplaceItem"> | number
+    currency?: EnumCurrencyFilter<"MarketplaceItem"> | $Enums.Currency
+    category?: StringNullableFilter<"MarketplaceItem"> | string | null
     tags?: StringNullableListFilter<"MarketplaceItem">
-    imageUrl?: StringNullableFilter<"MarketplaceItem"> | string | null
+    images?: StringNullableListFilter<"MarketplaceItem">
+    stock?: IntFilter<"MarketplaceItem"> | number
+    rating?: FloatFilter<"MarketplaceItem"> | number
+    reviewCount?: IntFilter<"MarketplaceItem"> | number
     location?: StringNullableFilter<"MarketplaceItem"> | string | null
     status?: EnumMarketplaceItemStatusFilter<"MarketplaceItem"> | $Enums.MarketplaceItemStatus
-    sellerId?: StringFilter<"MarketplaceItem"> | string
-    viewCount?: IntFilter<"MarketplaceItem"> | number
-    favoriteCount?: IntFilter<"MarketplaceItem"> | number
+    isActive?: BoolFilter<"MarketplaceItem"> | boolean
+    isDeleted?: BoolFilter<"MarketplaceItem"> | boolean
+    deletedAt?: DateTimeNullableFilter<"MarketplaceItem"> | Date | string | null
     createdAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
     updatedAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
+    viewCount?: IntFilter<"MarketplaceItem"> | number
+    favoriteCount?: IntFilter<"MarketplaceItem"> | number
+    sellerId?: StringFilter<"MarketplaceItem"> | string
+    metadata?: StringNullableFilter<"MarketplaceItem"> | string | null
     seller?: XOR<UserRelationFilter, UserWhereInput>
     reviews?: ReviewListRelationFilter
+    matches?: MarketplaceMatchListRelationFilter
   }
 
   export type MarketplaceItemOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrder
-    type?: SortOrder
-    priceUnits?: SortOrder
-    priceToins?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    fullDescription?: SortOrderInput | SortOrder
+    itemType?: SortOrder
+    price?: SortOrder
+    priceToins?: SortOrder
+    currency?: SortOrder
+    category?: SortOrderInput | SortOrder
     tags?: SortOrder
-    imageUrl?: SortOrderInput | SortOrder
+    images?: SortOrder
+    stock?: SortOrder
+    rating?: SortOrder
+    reviewCount?: SortOrder
     location?: SortOrderInput | SortOrder
     status?: SortOrder
-    sellerId?: SortOrder
-    viewCount?: SortOrder
-    favoriteCount?: SortOrder
+    isActive?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    viewCount?: SortOrder
+    favoriteCount?: SortOrder
+    sellerId?: SortOrder
+    metadata?: SortOrderInput | SortOrder
     seller?: UserOrderByWithRelationInput
     reviews?: ReviewOrderByRelationAggregateInput
+    matches?: MarketplaceMatchOrderByRelationAggregateInput
   }
 
   export type MarketplaceItemWhereUniqueInput = Prisma.AtLeast<{
@@ -63136,39 +65808,60 @@ export namespace Prisma {
     OR?: MarketplaceItemWhereInput[]
     NOT?: MarketplaceItemWhereInput | MarketplaceItemWhereInput[]
     name?: StringFilter<"MarketplaceItem"> | string
-    description?: StringFilter<"MarketplaceItem"> | string
-    type?: EnumMarketplaceItemTypeFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
-    priceUnits?: IntFilter<"MarketplaceItem"> | number
-    priceToins?: IntNullableFilter<"MarketplaceItem"> | number | null
+    description?: StringNullableFilter<"MarketplaceItem"> | string | null
+    fullDescription?: StringNullableFilter<"MarketplaceItem"> | string | null
+    itemType?: EnumMarketplaceItemTypeFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
+    price?: FloatFilter<"MarketplaceItem"> | number
+    priceToins?: FloatFilter<"MarketplaceItem"> | number
+    currency?: EnumCurrencyFilter<"MarketplaceItem"> | $Enums.Currency
+    category?: StringNullableFilter<"MarketplaceItem"> | string | null
     tags?: StringNullableListFilter<"MarketplaceItem">
-    imageUrl?: StringNullableFilter<"MarketplaceItem"> | string | null
+    images?: StringNullableListFilter<"MarketplaceItem">
+    stock?: IntFilter<"MarketplaceItem"> | number
+    rating?: FloatFilter<"MarketplaceItem"> | number
+    reviewCount?: IntFilter<"MarketplaceItem"> | number
     location?: StringNullableFilter<"MarketplaceItem"> | string | null
     status?: EnumMarketplaceItemStatusFilter<"MarketplaceItem"> | $Enums.MarketplaceItemStatus
-    sellerId?: StringFilter<"MarketplaceItem"> | string
-    viewCount?: IntFilter<"MarketplaceItem"> | number
-    favoriteCount?: IntFilter<"MarketplaceItem"> | number
+    isActive?: BoolFilter<"MarketplaceItem"> | boolean
+    isDeleted?: BoolFilter<"MarketplaceItem"> | boolean
+    deletedAt?: DateTimeNullableFilter<"MarketplaceItem"> | Date | string | null
     createdAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
     updatedAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
+    viewCount?: IntFilter<"MarketplaceItem"> | number
+    favoriteCount?: IntFilter<"MarketplaceItem"> | number
+    sellerId?: StringFilter<"MarketplaceItem"> | string
+    metadata?: StringNullableFilter<"MarketplaceItem"> | string | null
     seller?: XOR<UserRelationFilter, UserWhereInput>
     reviews?: ReviewListRelationFilter
+    matches?: MarketplaceMatchListRelationFilter
   }, "id">
 
   export type MarketplaceItemOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrder
-    type?: SortOrder
-    priceUnits?: SortOrder
-    priceToins?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    fullDescription?: SortOrderInput | SortOrder
+    itemType?: SortOrder
+    price?: SortOrder
+    priceToins?: SortOrder
+    currency?: SortOrder
+    category?: SortOrderInput | SortOrder
     tags?: SortOrder
-    imageUrl?: SortOrderInput | SortOrder
+    images?: SortOrder
+    stock?: SortOrder
+    rating?: SortOrder
+    reviewCount?: SortOrder
     location?: SortOrderInput | SortOrder
     status?: SortOrder
-    sellerId?: SortOrder
-    viewCount?: SortOrder
-    favoriteCount?: SortOrder
+    isActive?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    viewCount?: SortOrder
+    favoriteCount?: SortOrder
+    sellerId?: SortOrder
+    metadata?: SortOrderInput | SortOrder
     _count?: MarketplaceItemCountOrderByAggregateInput
     _avg?: MarketplaceItemAvgOrderByAggregateInput
     _max?: MarketplaceItemMaxOrderByAggregateInput
@@ -63182,19 +65875,29 @@ export namespace Prisma {
     NOT?: MarketplaceItemScalarWhereWithAggregatesInput | MarketplaceItemScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"MarketplaceItem"> | string
     name?: StringWithAggregatesFilter<"MarketplaceItem"> | string
-    description?: StringWithAggregatesFilter<"MarketplaceItem"> | string
-    type?: EnumMarketplaceItemTypeWithAggregatesFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
-    priceUnits?: IntWithAggregatesFilter<"MarketplaceItem"> | number
-    priceToins?: IntNullableWithAggregatesFilter<"MarketplaceItem"> | number | null
+    description?: StringNullableWithAggregatesFilter<"MarketplaceItem"> | string | null
+    fullDescription?: StringNullableWithAggregatesFilter<"MarketplaceItem"> | string | null
+    itemType?: EnumMarketplaceItemTypeWithAggregatesFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
+    price?: FloatWithAggregatesFilter<"MarketplaceItem"> | number
+    priceToins?: FloatWithAggregatesFilter<"MarketplaceItem"> | number
+    currency?: EnumCurrencyWithAggregatesFilter<"MarketplaceItem"> | $Enums.Currency
+    category?: StringNullableWithAggregatesFilter<"MarketplaceItem"> | string | null
     tags?: StringNullableListFilter<"MarketplaceItem">
-    imageUrl?: StringNullableWithAggregatesFilter<"MarketplaceItem"> | string | null
+    images?: StringNullableListFilter<"MarketplaceItem">
+    stock?: IntWithAggregatesFilter<"MarketplaceItem"> | number
+    rating?: FloatWithAggregatesFilter<"MarketplaceItem"> | number
+    reviewCount?: IntWithAggregatesFilter<"MarketplaceItem"> | number
     location?: StringNullableWithAggregatesFilter<"MarketplaceItem"> | string | null
     status?: EnumMarketplaceItemStatusWithAggregatesFilter<"MarketplaceItem"> | $Enums.MarketplaceItemStatus
-    sellerId?: StringWithAggregatesFilter<"MarketplaceItem"> | string
-    viewCount?: IntWithAggregatesFilter<"MarketplaceItem"> | number
-    favoriteCount?: IntWithAggregatesFilter<"MarketplaceItem"> | number
+    isActive?: BoolWithAggregatesFilter<"MarketplaceItem"> | boolean
+    isDeleted?: BoolWithAggregatesFilter<"MarketplaceItem"> | boolean
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"MarketplaceItem"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MarketplaceItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MarketplaceItem"> | Date | string
+    viewCount?: IntWithAggregatesFilter<"MarketplaceItem"> | number
+    favoriteCount?: IntWithAggregatesFilter<"MarketplaceItem"> | number
+    sellerId?: StringWithAggregatesFilter<"MarketplaceItem"> | string
+    metadata?: StringNullableWithAggregatesFilter<"MarketplaceItem"> | string | null
   }
 
   export type StudyRoomWhereInput = {
@@ -63576,9 +66279,14 @@ export namespace Prisma {
     NOT?: ProfileWhereInput | ProfileWhereInput[]
     id?: StringFilter<"Profile"> | string
     userId?: StringFilter<"Profile"> | string
+    avatar?: StringNullableFilter<"Profile"> | string | null
     bio?: StringNullableFilter<"Profile"> | string | null
-    avatarUrl?: StringNullableFilter<"Profile"> | string | null
     location?: StringNullableFilter<"Profile"> | string | null
+    website?: StringNullableFilter<"Profile"> | string | null
+    skills?: StringNullableListFilter<"Profile">
+    interests?: StringNullableListFilter<"Profile">
+    isEmprendedorConfiable?: BoolFilter<"Profile"> | boolean
+    socialLinks?: JsonNullableFilter<"Profile">
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -63587,9 +66295,14 @@ export namespace Prisma {
   export type ProfileOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
+    avatar?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    avatarUrl?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    skills?: SortOrder
+    interests?: SortOrder
+    isEmprendedorConfiable?: SortOrder
+    socialLinks?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -63601,9 +66314,14 @@ export namespace Prisma {
     AND?: ProfileWhereInput | ProfileWhereInput[]
     OR?: ProfileWhereInput[]
     NOT?: ProfileWhereInput | ProfileWhereInput[]
+    avatar?: StringNullableFilter<"Profile"> | string | null
     bio?: StringNullableFilter<"Profile"> | string | null
-    avatarUrl?: StringNullableFilter<"Profile"> | string | null
     location?: StringNullableFilter<"Profile"> | string | null
+    website?: StringNullableFilter<"Profile"> | string | null
+    skills?: StringNullableListFilter<"Profile">
+    interests?: StringNullableListFilter<"Profile">
+    isEmprendedorConfiable?: BoolFilter<"Profile"> | boolean
+    socialLinks?: JsonNullableFilter<"Profile">
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -63612,9 +66330,14 @@ export namespace Prisma {
   export type ProfileOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
+    avatar?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    avatarUrl?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    skills?: SortOrder
+    interests?: SortOrder
+    isEmprendedorConfiable?: SortOrder
+    socialLinks?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProfileCountOrderByAggregateInput
@@ -63628,9 +66351,14 @@ export namespace Prisma {
     NOT?: ProfileScalarWhereWithAggregatesInput | ProfileScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Profile"> | string
     userId?: StringWithAggregatesFilter<"Profile"> | string
+    avatar?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     bio?: StringNullableWithAggregatesFilter<"Profile"> | string | null
-    avatarUrl?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     location?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    website?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    skills?: StringNullableListFilter<"Profile">
+    interests?: StringNullableListFilter<"Profile">
+    isEmprendedorConfiable?: BoolWithAggregatesFilter<"Profile"> | boolean
+    socialLinks?: JsonNullableWithAggregatesFilter<"Profile">
     createdAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
   }
@@ -63640,26 +66368,34 @@ export namespace Prisma {
     OR?: ReviewWhereInput[]
     NOT?: ReviewWhereInput | ReviewWhereInput[]
     id?: StringFilter<"Review"> | string
-    reviewerId?: StringFilter<"Review"> | string
     marketplaceItemId?: StringFilter<"Review"> | string
+    userId?: StringFilter<"Review"> | string
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
+    communication?: IntNullableFilter<"Review"> | number | null
+    quality?: IntNullableFilter<"Review"> | number | null
+    delivery?: IntNullableFilter<"Review"> | number | null
+    value?: IntNullableFilter<"Review"> | number | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
-    reviewer?: XOR<UserRelationFilter, UserWhereInput>
     marketplaceItem?: XOR<MarketplaceItemRelationFilter, MarketplaceItemWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type ReviewOrderByWithRelationInput = {
     id?: SortOrder
-    reviewerId?: SortOrder
     marketplaceItemId?: SortOrder
+    userId?: SortOrder
     rating?: SortOrder
     comment?: SortOrderInput | SortOrder
+    communication?: SortOrderInput | SortOrder
+    quality?: SortOrderInput | SortOrder
+    delivery?: SortOrderInput | SortOrder
+    value?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    reviewer?: UserOrderByWithRelationInput
     marketplaceItem?: MarketplaceItemOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type ReviewWhereUniqueInput = Prisma.AtLeast<{
@@ -63667,22 +66403,30 @@ export namespace Prisma {
     AND?: ReviewWhereInput | ReviewWhereInput[]
     OR?: ReviewWhereInput[]
     NOT?: ReviewWhereInput | ReviewWhereInput[]
-    reviewerId?: StringFilter<"Review"> | string
     marketplaceItemId?: StringFilter<"Review"> | string
+    userId?: StringFilter<"Review"> | string
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
+    communication?: IntNullableFilter<"Review"> | number | null
+    quality?: IntNullableFilter<"Review"> | number | null
+    delivery?: IntNullableFilter<"Review"> | number | null
+    value?: IntNullableFilter<"Review"> | number | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
-    reviewer?: XOR<UserRelationFilter, UserWhereInput>
     marketplaceItem?: XOR<MarketplaceItemRelationFilter, MarketplaceItemWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id">
 
   export type ReviewOrderByWithAggregationInput = {
     id?: SortOrder
-    reviewerId?: SortOrder
     marketplaceItemId?: SortOrder
+    userId?: SortOrder
     rating?: SortOrder
     comment?: SortOrderInput | SortOrder
+    communication?: SortOrderInput | SortOrder
+    quality?: SortOrderInput | SortOrder
+    delivery?: SortOrderInput | SortOrder
+    value?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ReviewCountOrderByAggregateInput
@@ -63697,12 +66441,158 @@ export namespace Prisma {
     OR?: ReviewScalarWhereWithAggregatesInput[]
     NOT?: ReviewScalarWhereWithAggregatesInput | ReviewScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Review"> | string
-    reviewerId?: StringWithAggregatesFilter<"Review"> | string
     marketplaceItemId?: StringWithAggregatesFilter<"Review"> | string
+    userId?: StringWithAggregatesFilter<"Review"> | string
     rating?: IntWithAggregatesFilter<"Review"> | number
     comment?: StringNullableWithAggregatesFilter<"Review"> | string | null
+    communication?: IntNullableWithAggregatesFilter<"Review"> | number | null
+    quality?: IntNullableWithAggregatesFilter<"Review"> | number | null
+    delivery?: IntNullableWithAggregatesFilter<"Review"> | number | null
+    value?: IntNullableWithAggregatesFilter<"Review"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
+  }
+
+  export type MarketplaceMatchWhereInput = {
+    AND?: MarketplaceMatchWhereInput | MarketplaceMatchWhereInput[]
+    OR?: MarketplaceMatchWhereInput[]
+    NOT?: MarketplaceMatchWhereInput | MarketplaceMatchWhereInput[]
+    id?: StringFilter<"MarketplaceMatch"> | string
+    itemId?: StringFilter<"MarketplaceMatch"> | string
+    buyerId?: StringFilter<"MarketplaceMatch"> | string
+    sellerId?: StringFilter<"MarketplaceMatch"> | string
+    buyerConfirmed?: BoolFilter<"MarketplaceMatch"> | boolean
+    sellerConfirmed?: BoolFilter<"MarketplaceMatch"> | boolean
+    status?: EnumMatchStatusFilter<"MarketplaceMatch"> | $Enums.MatchStatus
+    createdAt?: DateTimeFilter<"MarketplaceMatch"> | Date | string
+    updatedAt?: DateTimeFilter<"MarketplaceMatch"> | Date | string
+    item?: XOR<MarketplaceItemRelationFilter, MarketplaceItemWhereInput>
+    buyer?: XOR<UserRelationFilter, UserWhereInput>
+    seller?: XOR<UserRelationFilter, UserWhereInput>
+    messages?: MatchMessageListRelationFilter
+  }
+
+  export type MarketplaceMatchOrderByWithRelationInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    buyerConfirmed?: SortOrder
+    sellerConfirmed?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    item?: MarketplaceItemOrderByWithRelationInput
+    buyer?: UserOrderByWithRelationInput
+    seller?: UserOrderByWithRelationInput
+    messages?: MatchMessageOrderByRelationAggregateInput
+  }
+
+  export type MarketplaceMatchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MarketplaceMatchWhereInput | MarketplaceMatchWhereInput[]
+    OR?: MarketplaceMatchWhereInput[]
+    NOT?: MarketplaceMatchWhereInput | MarketplaceMatchWhereInput[]
+    itemId?: StringFilter<"MarketplaceMatch"> | string
+    buyerId?: StringFilter<"MarketplaceMatch"> | string
+    sellerId?: StringFilter<"MarketplaceMatch"> | string
+    buyerConfirmed?: BoolFilter<"MarketplaceMatch"> | boolean
+    sellerConfirmed?: BoolFilter<"MarketplaceMatch"> | boolean
+    status?: EnumMatchStatusFilter<"MarketplaceMatch"> | $Enums.MatchStatus
+    createdAt?: DateTimeFilter<"MarketplaceMatch"> | Date | string
+    updatedAt?: DateTimeFilter<"MarketplaceMatch"> | Date | string
+    item?: XOR<MarketplaceItemRelationFilter, MarketplaceItemWhereInput>
+    buyer?: XOR<UserRelationFilter, UserWhereInput>
+    seller?: XOR<UserRelationFilter, UserWhereInput>
+    messages?: MatchMessageListRelationFilter
+  }, "id">
+
+  export type MarketplaceMatchOrderByWithAggregationInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    buyerConfirmed?: SortOrder
+    sellerConfirmed?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: MarketplaceMatchCountOrderByAggregateInput
+    _max?: MarketplaceMatchMaxOrderByAggregateInput
+    _min?: MarketplaceMatchMinOrderByAggregateInput
+  }
+
+  export type MarketplaceMatchScalarWhereWithAggregatesInput = {
+    AND?: MarketplaceMatchScalarWhereWithAggregatesInput | MarketplaceMatchScalarWhereWithAggregatesInput[]
+    OR?: MarketplaceMatchScalarWhereWithAggregatesInput[]
+    NOT?: MarketplaceMatchScalarWhereWithAggregatesInput | MarketplaceMatchScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MarketplaceMatch"> | string
+    itemId?: StringWithAggregatesFilter<"MarketplaceMatch"> | string
+    buyerId?: StringWithAggregatesFilter<"MarketplaceMatch"> | string
+    sellerId?: StringWithAggregatesFilter<"MarketplaceMatch"> | string
+    buyerConfirmed?: BoolWithAggregatesFilter<"MarketplaceMatch"> | boolean
+    sellerConfirmed?: BoolWithAggregatesFilter<"MarketplaceMatch"> | boolean
+    status?: EnumMatchStatusWithAggregatesFilter<"MarketplaceMatch"> | $Enums.MatchStatus
+    createdAt?: DateTimeWithAggregatesFilter<"MarketplaceMatch"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"MarketplaceMatch"> | Date | string
+  }
+
+  export type MatchMessageWhereInput = {
+    AND?: MatchMessageWhereInput | MatchMessageWhereInput[]
+    OR?: MatchMessageWhereInput[]
+    NOT?: MatchMessageWhereInput | MatchMessageWhereInput[]
+    id?: StringFilter<"MatchMessage"> | string
+    matchId?: StringFilter<"MatchMessage"> | string
+    senderId?: StringFilter<"MatchMessage"> | string
+    content?: StringFilter<"MatchMessage"> | string
+    createdAt?: DateTimeFilter<"MatchMessage"> | Date | string
+    match?: XOR<MarketplaceMatchRelationFilter, MarketplaceMatchWhereInput>
+    sender?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type MatchMessageOrderByWithRelationInput = {
+    id?: SortOrder
+    matchId?: SortOrder
+    senderId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    match?: MarketplaceMatchOrderByWithRelationInput
+    sender?: UserOrderByWithRelationInput
+  }
+
+  export type MatchMessageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MatchMessageWhereInput | MatchMessageWhereInput[]
+    OR?: MatchMessageWhereInput[]
+    NOT?: MatchMessageWhereInput | MatchMessageWhereInput[]
+    matchId?: StringFilter<"MatchMessage"> | string
+    senderId?: StringFilter<"MatchMessage"> | string
+    content?: StringFilter<"MatchMessage"> | string
+    createdAt?: DateTimeFilter<"MatchMessage"> | Date | string
+    match?: XOR<MarketplaceMatchRelationFilter, MarketplaceMatchWhereInput>
+    sender?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type MatchMessageOrderByWithAggregationInput = {
+    id?: SortOrder
+    matchId?: SortOrder
+    senderId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    _count?: MatchMessageCountOrderByAggregateInput
+    _max?: MatchMessageMaxOrderByAggregateInput
+    _min?: MatchMessageMinOrderByAggregateInput
+  }
+
+  export type MatchMessageScalarWhereWithAggregatesInput = {
+    AND?: MatchMessageScalarWhereWithAggregatesInput | MatchMessageScalarWhereWithAggregatesInput[]
+    OR?: MatchMessageScalarWhereWithAggregatesInput[]
+    NOT?: MatchMessageScalarWhereWithAggregatesInput | MatchMessageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MatchMessage"> | string
+    matchId?: StringWithAggregatesFilter<"MatchMessage"> | string
+    senderId?: StringWithAggregatesFilter<"MatchMessage"> | string
+    content?: StringWithAggregatesFilter<"MatchMessage"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"MatchMessage"> | Date | string
   }
 
   export type MundoCreateInput = {
@@ -64380,10 +67270,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -64435,10 +67328,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -64490,10 +67386,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -64545,10 +67444,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -67389,130 +70291,204 @@ export namespace Prisma {
   export type MarketplaceItemCreateInput = {
     id?: string
     name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins?: number | null
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
     tags?: MarketplaceItemCreatetagsInput | string[]
-    imageUrl?: string | null
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
     location?: string | null
     status?: $Enums.MarketplaceItemStatus
-    viewCount?: number
-    favoriteCount?: number
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    metadata?: string | null
     seller: UserCreateNestedOneWithoutMarketplaceItemsInput
     reviews?: ReviewCreateNestedManyWithoutMarketplaceItemInput
+    matches?: MarketplaceMatchCreateNestedManyWithoutItemInput
   }
 
   export type MarketplaceItemUncheckedCreateInput = {
     id?: string
     name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins?: number | null
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
     tags?: MarketplaceItemCreatetagsInput | string[]
-    imageUrl?: string | null
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
     location?: string | null
     status?: $Enums.MarketplaceItemStatus
-    sellerId: string
-    viewCount?: number
-    favoriteCount?: number
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    sellerId: string
+    metadata?: string | null
     reviews?: ReviewUncheckedCreateNestedManyWithoutMarketplaceItemInput
+    matches?: MarketplaceMatchUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type MarketplaceItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
     seller?: UserUpdateOneRequiredWithoutMarketplaceItemsNestedInput
     reviews?: ReviewUpdateManyWithoutMarketplaceItemNestedInput
+    matches?: MarketplaceMatchUpdateManyWithoutItemNestedInput
   }
 
   export type MarketplaceItemUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    sellerId?: StringFieldUpdateOperationsInput | string
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    sellerId?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
     reviews?: ReviewUncheckedUpdateManyWithoutMarketplaceItemNestedInput
+    matches?: MarketplaceMatchUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type MarketplaceItemCreateManyInput = {
     id?: string
     name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins?: number | null
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
     tags?: MarketplaceItemCreatetagsInput | string[]
-    imageUrl?: string | null
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
     location?: string | null
     status?: $Enums.MarketplaceItemStatus
-    sellerId: string
-    viewCount?: number
-    favoriteCount?: number
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    sellerId: string
+    metadata?: string | null
   }
 
   export type MarketplaceItemUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MarketplaceItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    sellerId?: StringFieldUpdateOperationsInput | string
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    sellerId?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StudyRoomCreateInput = {
@@ -67923,9 +70899,14 @@ export namespace Prisma {
 
   export type ProfileCreateInput = {
     id?: string
+    avatar?: string | null
     bio?: string | null
-    avatarUrl?: string | null
     location?: string | null
+    website?: string | null
+    skills?: ProfileCreateskillsInput | string[]
+    interests?: ProfileCreateinterestsInput | string[]
+    isEmprendedorConfiable?: boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutProfileInput
@@ -67934,18 +70915,28 @@ export namespace Prisma {
   export type ProfileUncheckedCreateInput = {
     id?: string
     userId: string
+    avatar?: string | null
     bio?: string | null
-    avatarUrl?: string | null
     location?: string | null
+    website?: string | null
+    skills?: ProfileCreateskillsInput | string[]
+    interests?: ProfileCreateinterestsInput | string[]
+    isEmprendedorConfiable?: boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ProfileUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: ProfileUpdateskillsInput | string[]
+    interests?: ProfileUpdateinterestsInput | string[]
+    isEmprendedorConfiable?: BoolFieldUpdateOperationsInput | boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProfileNestedInput
@@ -67954,9 +70945,14 @@ export namespace Prisma {
   export type ProfileUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: ProfileUpdateskillsInput | string[]
+    interests?: ProfileUpdateinterestsInput | string[]
+    isEmprendedorConfiable?: BoolFieldUpdateOperationsInput | boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -67964,18 +70960,28 @@ export namespace Prisma {
   export type ProfileCreateManyInput = {
     id?: string
     userId: string
+    avatar?: string | null
     bio?: string | null
-    avatarUrl?: string | null
     location?: string | null
+    website?: string | null
+    skills?: ProfileCreateskillsInput | string[]
+    interests?: ProfileCreateinterestsInput | string[]
+    isEmprendedorConfiable?: boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ProfileUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: ProfileUpdateskillsInput | string[]
+    interests?: ProfileUpdateinterestsInput | string[]
+    isEmprendedorConfiable?: BoolFieldUpdateOperationsInput | boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -67983,9 +70989,14 @@ export namespace Prisma {
   export type ProfileUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: ProfileUpdateskillsInput | string[]
+    interests?: ProfileUpdateinterestsInput | string[]
+    isEmprendedorConfiable?: BoolFieldUpdateOperationsInput | boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -67994,18 +71005,26 @@ export namespace Prisma {
     id?: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewer: UserCreateNestedOneWithoutReviewsInput
     marketplaceItem: MarketplaceItemCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
   }
 
   export type ReviewUncheckedCreateInput = {
     id?: string
-    reviewerId: string
     marketplaceItemId: string
+    userId: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -68014,28 +71033,40 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewer?: UserUpdateOneRequiredWithoutReviewsNestedInput
     marketplaceItem?: MarketplaceItemUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
   }
 
   export type ReviewUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewerId?: StringFieldUpdateOperationsInput | string
     marketplaceItemId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewCreateManyInput = {
     id?: string
-    reviewerId: string
     marketplaceItemId: string
+    userId: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -68044,18 +71075,165 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewerId?: StringFieldUpdateOperationsInput | string
     marketplaceItemId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceMatchCreateInput = {
+    id?: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    item: MarketplaceItemCreateNestedOneWithoutMatchesInput
+    buyer: UserCreateNestedOneWithoutBuyerMatchesInput
+    seller: UserCreateNestedOneWithoutSellerMatchesInput
+    messages?: MatchMessageCreateNestedManyWithoutMatchInput
+  }
+
+  export type MarketplaceMatchUncheckedCreateInput = {
+    id?: string
+    itemId: string
+    buyerId: string
+    sellerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MatchMessageUncheckedCreateNestedManyWithoutMatchInput
+  }
+
+  export type MarketplaceMatchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: MarketplaceItemUpdateOneRequiredWithoutMatchesNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerMatchesNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerMatchesNestedInput
+    messages?: MatchMessageUpdateManyWithoutMatchNestedInput
+  }
+
+  export type MarketplaceMatchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MatchMessageUncheckedUpdateManyWithoutMatchNestedInput
+  }
+
+  export type MarketplaceMatchCreateManyInput = {
+    id?: string
+    itemId: string
+    buyerId: string
+    sellerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceMatchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceMatchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MatchMessageCreateInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    match: MarketplaceMatchCreateNestedOneWithoutMessagesInput
+    sender: UserCreateNestedOneWithoutMatchMessagesInput
+  }
+
+  export type MatchMessageUncheckedCreateInput = {
+    id?: string
+    matchId: string
+    senderId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MatchMessageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    match?: MarketplaceMatchUpdateOneRequiredWithoutMessagesNestedInput
+    sender?: UserUpdateOneRequiredWithoutMatchMessagesNestedInput
+  }
+
+  export type MatchMessageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    matchId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MatchMessageCreateManyInput = {
+    id?: string
+    matchId: string
+    senderId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MatchMessageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MatchMessageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    matchId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -68844,6 +72022,18 @@ export namespace Prisma {
     none?: MarketplaceItemWhereInput
   }
 
+  export type MarketplaceMatchListRelationFilter = {
+    every?: MarketplaceMatchWhereInput
+    some?: MarketplaceMatchWhereInput
+    none?: MarketplaceMatchWhereInput
+  }
+
+  export type MatchMessageListRelationFilter = {
+    every?: MatchMessageWhereInput
+    some?: MatchMessageWhereInput
+    none?: MatchMessageWhereInput
+  }
+
   export type FeedbackReportListRelationFilter = {
     every?: FeedbackReportWhereInput
     some?: FeedbackReportWhereInput
@@ -68946,6 +72136,14 @@ export namespace Prisma {
   }
 
   export type MarketplaceItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MarketplaceMatchOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MatchMessageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -70562,6 +73760,13 @@ export namespace Prisma {
     not?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel> | $Enums.MarketplaceItemType
   }
 
+  export type EnumCurrencyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel>
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCurrencyFilter<$PrismaModel> | $Enums.Currency
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
@@ -70581,23 +73786,36 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    type?: SortOrder
-    priceUnits?: SortOrder
+    fullDescription?: SortOrder
+    itemType?: SortOrder
+    price?: SortOrder
     priceToins?: SortOrder
+    currency?: SortOrder
+    category?: SortOrder
     tags?: SortOrder
-    imageUrl?: SortOrder
+    images?: SortOrder
+    stock?: SortOrder
+    rating?: SortOrder
+    reviewCount?: SortOrder
     location?: SortOrder
     status?: SortOrder
-    sellerId?: SortOrder
-    viewCount?: SortOrder
-    favoriteCount?: SortOrder
+    isActive?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    viewCount?: SortOrder
+    favoriteCount?: SortOrder
+    sellerId?: SortOrder
+    metadata?: SortOrder
   }
 
   export type MarketplaceItemAvgOrderByAggregateInput = {
-    priceUnits?: SortOrder
+    price?: SortOrder
     priceToins?: SortOrder
+    stock?: SortOrder
+    rating?: SortOrder
+    reviewCount?: SortOrder
     viewCount?: SortOrder
     favoriteCount?: SortOrder
   }
@@ -70606,39 +73824,60 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    type?: SortOrder
-    priceUnits?: SortOrder
+    fullDescription?: SortOrder
+    itemType?: SortOrder
+    price?: SortOrder
     priceToins?: SortOrder
-    imageUrl?: SortOrder
+    currency?: SortOrder
+    category?: SortOrder
+    stock?: SortOrder
+    rating?: SortOrder
+    reviewCount?: SortOrder
     location?: SortOrder
     status?: SortOrder
-    sellerId?: SortOrder
-    viewCount?: SortOrder
-    favoriteCount?: SortOrder
+    isActive?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    viewCount?: SortOrder
+    favoriteCount?: SortOrder
+    sellerId?: SortOrder
+    metadata?: SortOrder
   }
 
   export type MarketplaceItemMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    type?: SortOrder
-    priceUnits?: SortOrder
+    fullDescription?: SortOrder
+    itemType?: SortOrder
+    price?: SortOrder
     priceToins?: SortOrder
-    imageUrl?: SortOrder
+    currency?: SortOrder
+    category?: SortOrder
+    stock?: SortOrder
+    rating?: SortOrder
+    reviewCount?: SortOrder
     location?: SortOrder
     status?: SortOrder
-    sellerId?: SortOrder
-    viewCount?: SortOrder
-    favoriteCount?: SortOrder
+    isActive?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    viewCount?: SortOrder
+    favoriteCount?: SortOrder
+    sellerId?: SortOrder
+    metadata?: SortOrder
   }
 
   export type MarketplaceItemSumOrderByAggregateInput = {
-    priceUnits?: SortOrder
+    price?: SortOrder
     priceToins?: SortOrder
+    stock?: SortOrder
+    rating?: SortOrder
+    reviewCount?: SortOrder
     viewCount?: SortOrder
     favoriteCount?: SortOrder
   }
@@ -70651,6 +73890,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel>
     _max?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel>
+  }
+
+  export type EnumCurrencyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel>
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCurrencyWithAggregatesFilter<$PrismaModel> | $Enums.Currency
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCurrencyFilter<$PrismaModel>
+    _max?: NestedEnumCurrencyFilter<$PrismaModel>
   }
 
   export type EnumMarketplaceItemStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -71026,9 +74275,14 @@ export namespace Prisma {
   export type ProfileCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    avatar?: SortOrder
     bio?: SortOrder
-    avatarUrl?: SortOrder
     location?: SortOrder
+    website?: SortOrder
+    skills?: SortOrder
+    interests?: SortOrder
+    isEmprendedorConfiable?: SortOrder
+    socialLinks?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -71036,9 +74290,11 @@ export namespace Prisma {
   export type ProfileMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    avatar?: SortOrder
     bio?: SortOrder
-    avatarUrl?: SortOrder
     location?: SortOrder
+    website?: SortOrder
+    isEmprendedorConfiable?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -71046,9 +74302,11 @@ export namespace Prisma {
   export type ProfileMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    avatar?: SortOrder
     bio?: SortOrder
-    avatarUrl?: SortOrder
     location?: SortOrder
+    website?: SortOrder
+    isEmprendedorConfiable?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -71060,40 +74318,142 @@ export namespace Prisma {
 
   export type ReviewCountOrderByAggregateInput = {
     id?: SortOrder
-    reviewerId?: SortOrder
     marketplaceItemId?: SortOrder
+    userId?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
+    communication?: SortOrder
+    quality?: SortOrder
+    delivery?: SortOrder
+    value?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ReviewAvgOrderByAggregateInput = {
     rating?: SortOrder
+    communication?: SortOrder
+    quality?: SortOrder
+    delivery?: SortOrder
+    value?: SortOrder
   }
 
   export type ReviewMaxOrderByAggregateInput = {
     id?: SortOrder
-    reviewerId?: SortOrder
     marketplaceItemId?: SortOrder
+    userId?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
+    communication?: SortOrder
+    quality?: SortOrder
+    delivery?: SortOrder
+    value?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ReviewMinOrderByAggregateInput = {
     id?: SortOrder
-    reviewerId?: SortOrder
     marketplaceItemId?: SortOrder
+    userId?: SortOrder
     rating?: SortOrder
     comment?: SortOrder
+    communication?: SortOrder
+    quality?: SortOrder
+    delivery?: SortOrder
+    value?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ReviewSumOrderByAggregateInput = {
     rating?: SortOrder
+    communication?: SortOrder
+    quality?: SortOrder
+    delivery?: SortOrder
+    value?: SortOrder
+  }
+
+  export type EnumMatchStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.MatchStatus | EnumMatchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MatchStatus[] | ListEnumMatchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MatchStatus[] | ListEnumMatchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMatchStatusFilter<$PrismaModel> | $Enums.MatchStatus
+  }
+
+  export type MarketplaceMatchCountOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    buyerConfirmed?: SortOrder
+    sellerConfirmed?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MarketplaceMatchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    buyerConfirmed?: SortOrder
+    sellerConfirmed?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MarketplaceMatchMinOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    buyerId?: SortOrder
+    sellerId?: SortOrder
+    buyerConfirmed?: SortOrder
+    sellerConfirmed?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumMatchStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MatchStatus | EnumMatchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MatchStatus[] | ListEnumMatchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MatchStatus[] | ListEnumMatchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.MatchStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMatchStatusFilter<$PrismaModel>
+    _max?: NestedEnumMatchStatusFilter<$PrismaModel>
+  }
+
+  export type MarketplaceMatchRelationFilter = {
+    is?: MarketplaceMatchWhereInput
+    isNot?: MarketplaceMatchWhereInput
+  }
+
+  export type MatchMessageCountOrderByAggregateInput = {
+    id?: SortOrder
+    matchId?: SortOrder
+    senderId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MatchMessageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    matchId?: SortOrder
+    senderId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MatchMessageMinOrderByAggregateInput = {
+    id?: SortOrder
+    matchId?: SortOrder
+    senderId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PlaylistCreateNestedManyWithoutMundoInput = {
@@ -71904,6 +75264,27 @@ export namespace Prisma {
     connect?: MarketplaceItemWhereUniqueInput | MarketplaceItemWhereUniqueInput[]
   }
 
+  export type MarketplaceMatchCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutBuyerInput, MarketplaceMatchUncheckedCreateWithoutBuyerInput> | MarketplaceMatchCreateWithoutBuyerInput[] | MarketplaceMatchUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutBuyerInput | MarketplaceMatchCreateOrConnectWithoutBuyerInput[]
+    createMany?: MarketplaceMatchCreateManyBuyerInputEnvelope
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+  }
+
+  export type MarketplaceMatchCreateNestedManyWithoutSellerInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutSellerInput, MarketplaceMatchUncheckedCreateWithoutSellerInput> | MarketplaceMatchCreateWithoutSellerInput[] | MarketplaceMatchUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutSellerInput | MarketplaceMatchCreateOrConnectWithoutSellerInput[]
+    createMany?: MarketplaceMatchCreateManySellerInputEnvelope
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+  }
+
+  export type MatchMessageCreateNestedManyWithoutSenderInput = {
+    create?: XOR<MatchMessageCreateWithoutSenderInput, MatchMessageUncheckedCreateWithoutSenderInput> | MatchMessageCreateWithoutSenderInput[] | MatchMessageUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: MatchMessageCreateOrConnectWithoutSenderInput | MatchMessageCreateOrConnectWithoutSenderInput[]
+    createMany?: MatchMessageCreateManySenderInputEnvelope
+    connect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+  }
+
   export type FeedbackReportCreateNestedManyWithoutUserInput = {
     create?: XOR<FeedbackReportCreateWithoutUserInput, FeedbackReportUncheckedCreateWithoutUserInput> | FeedbackReportCreateWithoutUserInput[] | FeedbackReportUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedbackReportCreateOrConnectWithoutUserInput | FeedbackReportCreateOrConnectWithoutUserInput[]
@@ -71924,10 +75305,10 @@ export namespace Prisma {
     connect?: ProfileWhereUniqueInput
   }
 
-  export type ReviewCreateNestedManyWithoutReviewerInput = {
-    create?: XOR<ReviewCreateWithoutReviewerInput, ReviewUncheckedCreateWithoutReviewerInput> | ReviewCreateWithoutReviewerInput[] | ReviewUncheckedCreateWithoutReviewerInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutReviewerInput | ReviewCreateOrConnectWithoutReviewerInput[]
-    createMany?: ReviewCreateManyReviewerInputEnvelope
+  export type ReviewCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewCreateWithoutUserInput, ReviewUncheckedCreateWithoutUserInput> | ReviewCreateWithoutUserInput[] | ReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewCreateManyUserInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
@@ -72133,6 +75514,27 @@ export namespace Prisma {
     connect?: MarketplaceItemWhereUniqueInput | MarketplaceItemWhereUniqueInput[]
   }
 
+  export type MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutBuyerInput, MarketplaceMatchUncheckedCreateWithoutBuyerInput> | MarketplaceMatchCreateWithoutBuyerInput[] | MarketplaceMatchUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutBuyerInput | MarketplaceMatchCreateOrConnectWithoutBuyerInput[]
+    createMany?: MarketplaceMatchCreateManyBuyerInputEnvelope
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+  }
+
+  export type MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutSellerInput, MarketplaceMatchUncheckedCreateWithoutSellerInput> | MarketplaceMatchCreateWithoutSellerInput[] | MarketplaceMatchUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutSellerInput | MarketplaceMatchCreateOrConnectWithoutSellerInput[]
+    createMany?: MarketplaceMatchCreateManySellerInputEnvelope
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+  }
+
+  export type MatchMessageUncheckedCreateNestedManyWithoutSenderInput = {
+    create?: XOR<MatchMessageCreateWithoutSenderInput, MatchMessageUncheckedCreateWithoutSenderInput> | MatchMessageCreateWithoutSenderInput[] | MatchMessageUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: MatchMessageCreateOrConnectWithoutSenderInput | MatchMessageCreateOrConnectWithoutSenderInput[]
+    createMany?: MatchMessageCreateManySenderInputEnvelope
+    connect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+  }
+
   export type FeedbackReportUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FeedbackReportCreateWithoutUserInput, FeedbackReportUncheckedCreateWithoutUserInput> | FeedbackReportCreateWithoutUserInput[] | FeedbackReportUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedbackReportCreateOrConnectWithoutUserInput | FeedbackReportCreateOrConnectWithoutUserInput[]
@@ -72153,10 +75555,10 @@ export namespace Prisma {
     connect?: ProfileWhereUniqueInput
   }
 
-  export type ReviewUncheckedCreateNestedManyWithoutReviewerInput = {
-    create?: XOR<ReviewCreateWithoutReviewerInput, ReviewUncheckedCreateWithoutReviewerInput> | ReviewCreateWithoutReviewerInput[] | ReviewUncheckedCreateWithoutReviewerInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutReviewerInput | ReviewCreateOrConnectWithoutReviewerInput[]
-    createMany?: ReviewCreateManyReviewerInputEnvelope
+  export type ReviewUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReviewCreateWithoutUserInput, ReviewUncheckedCreateWithoutUserInput> | ReviewCreateWithoutUserInput[] | ReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
+    createMany?: ReviewCreateManyUserInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
@@ -72572,6 +75974,48 @@ export namespace Prisma {
     deleteMany?: MarketplaceItemScalarWhereInput | MarketplaceItemScalarWhereInput[]
   }
 
+  export type MarketplaceMatchUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutBuyerInput, MarketplaceMatchUncheckedCreateWithoutBuyerInput> | MarketplaceMatchCreateWithoutBuyerInput[] | MarketplaceMatchUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutBuyerInput | MarketplaceMatchCreateOrConnectWithoutBuyerInput[]
+    upsert?: MarketplaceMatchUpsertWithWhereUniqueWithoutBuyerInput | MarketplaceMatchUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: MarketplaceMatchCreateManyBuyerInputEnvelope
+    set?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    disconnect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    delete?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    update?: MarketplaceMatchUpdateWithWhereUniqueWithoutBuyerInput | MarketplaceMatchUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: MarketplaceMatchUpdateManyWithWhereWithoutBuyerInput | MarketplaceMatchUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: MarketplaceMatchScalarWhereInput | MarketplaceMatchScalarWhereInput[]
+  }
+
+  export type MarketplaceMatchUpdateManyWithoutSellerNestedInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutSellerInput, MarketplaceMatchUncheckedCreateWithoutSellerInput> | MarketplaceMatchCreateWithoutSellerInput[] | MarketplaceMatchUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutSellerInput | MarketplaceMatchCreateOrConnectWithoutSellerInput[]
+    upsert?: MarketplaceMatchUpsertWithWhereUniqueWithoutSellerInput | MarketplaceMatchUpsertWithWhereUniqueWithoutSellerInput[]
+    createMany?: MarketplaceMatchCreateManySellerInputEnvelope
+    set?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    disconnect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    delete?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    update?: MarketplaceMatchUpdateWithWhereUniqueWithoutSellerInput | MarketplaceMatchUpdateWithWhereUniqueWithoutSellerInput[]
+    updateMany?: MarketplaceMatchUpdateManyWithWhereWithoutSellerInput | MarketplaceMatchUpdateManyWithWhereWithoutSellerInput[]
+    deleteMany?: MarketplaceMatchScalarWhereInput | MarketplaceMatchScalarWhereInput[]
+  }
+
+  export type MatchMessageUpdateManyWithoutSenderNestedInput = {
+    create?: XOR<MatchMessageCreateWithoutSenderInput, MatchMessageUncheckedCreateWithoutSenderInput> | MatchMessageCreateWithoutSenderInput[] | MatchMessageUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: MatchMessageCreateOrConnectWithoutSenderInput | MatchMessageCreateOrConnectWithoutSenderInput[]
+    upsert?: MatchMessageUpsertWithWhereUniqueWithoutSenderInput | MatchMessageUpsertWithWhereUniqueWithoutSenderInput[]
+    createMany?: MatchMessageCreateManySenderInputEnvelope
+    set?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    disconnect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    delete?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    connect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    update?: MatchMessageUpdateWithWhereUniqueWithoutSenderInput | MatchMessageUpdateWithWhereUniqueWithoutSenderInput[]
+    updateMany?: MatchMessageUpdateManyWithWhereWithoutSenderInput | MatchMessageUpdateManyWithWhereWithoutSenderInput[]
+    deleteMany?: MatchMessageScalarWhereInput | MatchMessageScalarWhereInput[]
+  }
+
   export type FeedbackReportUpdateManyWithoutUserNestedInput = {
     create?: XOR<FeedbackReportCreateWithoutUserInput, FeedbackReportUncheckedCreateWithoutUserInput> | FeedbackReportCreateWithoutUserInput[] | FeedbackReportUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedbackReportCreateOrConnectWithoutUserInput | FeedbackReportCreateOrConnectWithoutUserInput[]
@@ -72610,17 +76054,17 @@ export namespace Prisma {
     update?: XOR<XOR<ProfileUpdateToOneWithWhereWithoutUserInput, ProfileUpdateWithoutUserInput>, ProfileUncheckedUpdateWithoutUserInput>
   }
 
-  export type ReviewUpdateManyWithoutReviewerNestedInput = {
-    create?: XOR<ReviewCreateWithoutReviewerInput, ReviewUncheckedCreateWithoutReviewerInput> | ReviewCreateWithoutReviewerInput[] | ReviewUncheckedCreateWithoutReviewerInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutReviewerInput | ReviewCreateOrConnectWithoutReviewerInput[]
-    upsert?: ReviewUpsertWithWhereUniqueWithoutReviewerInput | ReviewUpsertWithWhereUniqueWithoutReviewerInput[]
-    createMany?: ReviewCreateManyReviewerInputEnvelope
+  export type ReviewUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewCreateWithoutUserInput, ReviewUncheckedCreateWithoutUserInput> | ReviewCreateWithoutUserInput[] | ReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutUserInput | ReviewUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewCreateManyUserInputEnvelope
     set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
     disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
     delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    update?: ReviewUpdateWithWhereUniqueWithoutReviewerInput | ReviewUpdateWithWhereUniqueWithoutReviewerInput[]
-    updateMany?: ReviewUpdateManyWithWhereWithoutReviewerInput | ReviewUpdateManyWithWhereWithoutReviewerInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutUserInput | ReviewUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutUserInput | ReviewUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
@@ -73026,6 +76470,48 @@ export namespace Prisma {
     deleteMany?: MarketplaceItemScalarWhereInput | MarketplaceItemScalarWhereInput[]
   }
 
+  export type MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutBuyerInput, MarketplaceMatchUncheckedCreateWithoutBuyerInput> | MarketplaceMatchCreateWithoutBuyerInput[] | MarketplaceMatchUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutBuyerInput | MarketplaceMatchCreateOrConnectWithoutBuyerInput[]
+    upsert?: MarketplaceMatchUpsertWithWhereUniqueWithoutBuyerInput | MarketplaceMatchUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: MarketplaceMatchCreateManyBuyerInputEnvelope
+    set?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    disconnect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    delete?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    update?: MarketplaceMatchUpdateWithWhereUniqueWithoutBuyerInput | MarketplaceMatchUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: MarketplaceMatchUpdateManyWithWhereWithoutBuyerInput | MarketplaceMatchUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: MarketplaceMatchScalarWhereInput | MarketplaceMatchScalarWhereInput[]
+  }
+
+  export type MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutSellerInput, MarketplaceMatchUncheckedCreateWithoutSellerInput> | MarketplaceMatchCreateWithoutSellerInput[] | MarketplaceMatchUncheckedCreateWithoutSellerInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutSellerInput | MarketplaceMatchCreateOrConnectWithoutSellerInput[]
+    upsert?: MarketplaceMatchUpsertWithWhereUniqueWithoutSellerInput | MarketplaceMatchUpsertWithWhereUniqueWithoutSellerInput[]
+    createMany?: MarketplaceMatchCreateManySellerInputEnvelope
+    set?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    disconnect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    delete?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    update?: MarketplaceMatchUpdateWithWhereUniqueWithoutSellerInput | MarketplaceMatchUpdateWithWhereUniqueWithoutSellerInput[]
+    updateMany?: MarketplaceMatchUpdateManyWithWhereWithoutSellerInput | MarketplaceMatchUpdateManyWithWhereWithoutSellerInput[]
+    deleteMany?: MarketplaceMatchScalarWhereInput | MarketplaceMatchScalarWhereInput[]
+  }
+
+  export type MatchMessageUncheckedUpdateManyWithoutSenderNestedInput = {
+    create?: XOR<MatchMessageCreateWithoutSenderInput, MatchMessageUncheckedCreateWithoutSenderInput> | MatchMessageCreateWithoutSenderInput[] | MatchMessageUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: MatchMessageCreateOrConnectWithoutSenderInput | MatchMessageCreateOrConnectWithoutSenderInput[]
+    upsert?: MatchMessageUpsertWithWhereUniqueWithoutSenderInput | MatchMessageUpsertWithWhereUniqueWithoutSenderInput[]
+    createMany?: MatchMessageCreateManySenderInputEnvelope
+    set?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    disconnect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    delete?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    connect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    update?: MatchMessageUpdateWithWhereUniqueWithoutSenderInput | MatchMessageUpdateWithWhereUniqueWithoutSenderInput[]
+    updateMany?: MatchMessageUpdateManyWithWhereWithoutSenderInput | MatchMessageUpdateManyWithWhereWithoutSenderInput[]
+    deleteMany?: MatchMessageScalarWhereInput | MatchMessageScalarWhereInput[]
+  }
+
   export type FeedbackReportUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<FeedbackReportCreateWithoutUserInput, FeedbackReportUncheckedCreateWithoutUserInput> | FeedbackReportCreateWithoutUserInput[] | FeedbackReportUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedbackReportCreateOrConnectWithoutUserInput | FeedbackReportCreateOrConnectWithoutUserInput[]
@@ -73064,17 +76550,17 @@ export namespace Prisma {
     update?: XOR<XOR<ProfileUpdateToOneWithWhereWithoutUserInput, ProfileUpdateWithoutUserInput>, ProfileUncheckedUpdateWithoutUserInput>
   }
 
-  export type ReviewUncheckedUpdateManyWithoutReviewerNestedInput = {
-    create?: XOR<ReviewCreateWithoutReviewerInput, ReviewUncheckedCreateWithoutReviewerInput> | ReviewCreateWithoutReviewerInput[] | ReviewUncheckedCreateWithoutReviewerInput[]
-    connectOrCreate?: ReviewCreateOrConnectWithoutReviewerInput | ReviewCreateOrConnectWithoutReviewerInput[]
-    upsert?: ReviewUpsertWithWhereUniqueWithoutReviewerInput | ReviewUpsertWithWhereUniqueWithoutReviewerInput[]
-    createMany?: ReviewCreateManyReviewerInputEnvelope
+  export type ReviewUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReviewCreateWithoutUserInput, ReviewUncheckedCreateWithoutUserInput> | ReviewCreateWithoutUserInput[] | ReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
+    upsert?: ReviewUpsertWithWhereUniqueWithoutUserInput | ReviewUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReviewCreateManyUserInputEnvelope
     set?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
     disconnect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
     delete?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-    update?: ReviewUpdateWithWhereUniqueWithoutReviewerInput | ReviewUpdateWithWhereUniqueWithoutReviewerInput[]
-    updateMany?: ReviewUpdateManyWithWhereWithoutReviewerInput | ReviewUpdateManyWithWhereWithoutReviewerInput[]
+    update?: ReviewUpdateWithWhereUniqueWithoutUserInput | ReviewUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReviewUpdateManyWithWhereWithoutUserInput | ReviewUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
@@ -74612,6 +78098,10 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type MarketplaceItemCreateimagesInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutMarketplaceItemsInput = {
     create?: XOR<UserCreateWithoutMarketplaceItemsInput, UserUncheckedCreateWithoutMarketplaceItemsInput>
     connectOrCreate?: UserCreateOrConnectWithoutMarketplaceItemsInput
@@ -74625,6 +78115,13 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type MarketplaceMatchCreateNestedManyWithoutItemInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutItemInput, MarketplaceMatchUncheckedCreateWithoutItemInput> | MarketplaceMatchCreateWithoutItemInput[] | MarketplaceMatchUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutItemInput | MarketplaceMatchCreateOrConnectWithoutItemInput[]
+    createMany?: MarketplaceMatchCreateManyItemInputEnvelope
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+  }
+
   export type ReviewUncheckedCreateNestedManyWithoutMarketplaceItemInput = {
     create?: XOR<ReviewCreateWithoutMarketplaceItemInput, ReviewUncheckedCreateWithoutMarketplaceItemInput> | ReviewCreateWithoutMarketplaceItemInput[] | ReviewUncheckedCreateWithoutMarketplaceItemInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutMarketplaceItemInput | ReviewCreateOrConnectWithoutMarketplaceItemInput[]
@@ -74632,11 +78129,27 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type MarketplaceMatchUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutItemInput, MarketplaceMatchUncheckedCreateWithoutItemInput> | MarketplaceMatchCreateWithoutItemInput[] | MarketplaceMatchUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutItemInput | MarketplaceMatchCreateOrConnectWithoutItemInput[]
+    createMany?: MarketplaceMatchCreateManyItemInputEnvelope
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+  }
+
   export type EnumMarketplaceItemTypeFieldUpdateOperationsInput = {
     set?: $Enums.MarketplaceItemType
   }
 
+  export type EnumCurrencyFieldUpdateOperationsInput = {
+    set?: $Enums.Currency
+  }
+
   export type MarketplaceItemUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type MarketplaceItemUpdateimagesInput = {
     set?: string[]
     push?: string | string[]
   }
@@ -74667,6 +78180,20 @@ export namespace Prisma {
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
   }
 
+  export type MarketplaceMatchUpdateManyWithoutItemNestedInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutItemInput, MarketplaceMatchUncheckedCreateWithoutItemInput> | MarketplaceMatchCreateWithoutItemInput[] | MarketplaceMatchUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutItemInput | MarketplaceMatchCreateOrConnectWithoutItemInput[]
+    upsert?: MarketplaceMatchUpsertWithWhereUniqueWithoutItemInput | MarketplaceMatchUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: MarketplaceMatchCreateManyItemInputEnvelope
+    set?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    disconnect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    delete?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    update?: MarketplaceMatchUpdateWithWhereUniqueWithoutItemInput | MarketplaceMatchUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: MarketplaceMatchUpdateManyWithWhereWithoutItemInput | MarketplaceMatchUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: MarketplaceMatchScalarWhereInput | MarketplaceMatchScalarWhereInput[]
+  }
+
   export type ReviewUncheckedUpdateManyWithoutMarketplaceItemNestedInput = {
     create?: XOR<ReviewCreateWithoutMarketplaceItemInput, ReviewUncheckedCreateWithoutMarketplaceItemInput> | ReviewCreateWithoutMarketplaceItemInput[] | ReviewUncheckedCreateWithoutMarketplaceItemInput[]
     connectOrCreate?: ReviewCreateOrConnectWithoutMarketplaceItemInput | ReviewCreateOrConnectWithoutMarketplaceItemInput[]
@@ -74679,6 +78206,20 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutMarketplaceItemInput | ReviewUpdateWithWhereUniqueWithoutMarketplaceItemInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutMarketplaceItemInput | ReviewUpdateManyWithWhereWithoutMarketplaceItemInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type MarketplaceMatchUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutItemInput, MarketplaceMatchUncheckedCreateWithoutItemInput> | MarketplaceMatchCreateWithoutItemInput[] | MarketplaceMatchUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutItemInput | MarketplaceMatchCreateOrConnectWithoutItemInput[]
+    upsert?: MarketplaceMatchUpsertWithWhereUniqueWithoutItemInput | MarketplaceMatchUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: MarketplaceMatchCreateManyItemInputEnvelope
+    set?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    disconnect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    delete?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    connect?: MarketplaceMatchWhereUniqueInput | MarketplaceMatchWhereUniqueInput[]
+    update?: MarketplaceMatchUpdateWithWhereUniqueWithoutItemInput | MarketplaceMatchUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: MarketplaceMatchUpdateManyWithWhereWithoutItemInput | MarketplaceMatchUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: MarketplaceMatchScalarWhereInput | MarketplaceMatchScalarWhereInput[]
   }
 
   export type VideoItemCreateNestedOneWithoutStudyRoomsInput = {
@@ -74895,10 +78436,28 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAdminFeedbackResponsesInput, UserUpdateWithoutAdminFeedbackResponsesInput>, UserUncheckedUpdateWithoutAdminFeedbackResponsesInput>
   }
 
+  export type ProfileCreateskillsInput = {
+    set: string[]
+  }
+
+  export type ProfileCreateinterestsInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutProfileInput = {
     create?: XOR<UserCreateWithoutProfileInput, UserUncheckedCreateWithoutProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutProfileInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type ProfileUpdateskillsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ProfileUpdateinterestsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type UserUpdateOneRequiredWithoutProfileNestedInput = {
@@ -74909,16 +78468,24 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProfileInput, UserUpdateWithoutProfileInput>, UserUncheckedUpdateWithoutProfileInput>
   }
 
+  export type MarketplaceItemCreateNestedOneWithoutReviewsInput = {
+    create?: XOR<MarketplaceItemCreateWithoutReviewsInput, MarketplaceItemUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: MarketplaceItemCreateOrConnectWithoutReviewsInput
+    connect?: MarketplaceItemWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutReviewsInput = {
     create?: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
     connectOrCreate?: UserCreateOrConnectWithoutReviewsInput
     connect?: UserWhereUniqueInput
   }
 
-  export type MarketplaceItemCreateNestedOneWithoutReviewsInput = {
+  export type MarketplaceItemUpdateOneRequiredWithoutReviewsNestedInput = {
     create?: XOR<MarketplaceItemCreateWithoutReviewsInput, MarketplaceItemUncheckedCreateWithoutReviewsInput>
     connectOrCreate?: MarketplaceItemCreateOrConnectWithoutReviewsInput
+    upsert?: MarketplaceItemUpsertWithoutReviewsInput
     connect?: MarketplaceItemWhereUniqueInput
+    update?: XOR<XOR<MarketplaceItemUpdateToOneWithWhereWithoutReviewsInput, MarketplaceItemUpdateWithoutReviewsInput>, MarketplaceItemUncheckedUpdateWithoutReviewsInput>
   }
 
   export type UserUpdateOneRequiredWithoutReviewsNestedInput = {
@@ -74929,12 +78496,120 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewsInput, UserUpdateWithoutReviewsInput>, UserUncheckedUpdateWithoutReviewsInput>
   }
 
-  export type MarketplaceItemUpdateOneRequiredWithoutReviewsNestedInput = {
-    create?: XOR<MarketplaceItemCreateWithoutReviewsInput, MarketplaceItemUncheckedCreateWithoutReviewsInput>
-    connectOrCreate?: MarketplaceItemCreateOrConnectWithoutReviewsInput
-    upsert?: MarketplaceItemUpsertWithoutReviewsInput
+  export type MarketplaceItemCreateNestedOneWithoutMatchesInput = {
+    create?: XOR<MarketplaceItemCreateWithoutMatchesInput, MarketplaceItemUncheckedCreateWithoutMatchesInput>
+    connectOrCreate?: MarketplaceItemCreateOrConnectWithoutMatchesInput
     connect?: MarketplaceItemWhereUniqueInput
-    update?: XOR<XOR<MarketplaceItemUpdateToOneWithWhereWithoutReviewsInput, MarketplaceItemUpdateWithoutReviewsInput>, MarketplaceItemUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type UserCreateNestedOneWithoutBuyerMatchesInput = {
+    create?: XOR<UserCreateWithoutBuyerMatchesInput, UserUncheckedCreateWithoutBuyerMatchesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBuyerMatchesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSellerMatchesInput = {
+    create?: XOR<UserCreateWithoutSellerMatchesInput, UserUncheckedCreateWithoutSellerMatchesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSellerMatchesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type MatchMessageCreateNestedManyWithoutMatchInput = {
+    create?: XOR<MatchMessageCreateWithoutMatchInput, MatchMessageUncheckedCreateWithoutMatchInput> | MatchMessageCreateWithoutMatchInput[] | MatchMessageUncheckedCreateWithoutMatchInput[]
+    connectOrCreate?: MatchMessageCreateOrConnectWithoutMatchInput | MatchMessageCreateOrConnectWithoutMatchInput[]
+    createMany?: MatchMessageCreateManyMatchInputEnvelope
+    connect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+  }
+
+  export type MatchMessageUncheckedCreateNestedManyWithoutMatchInput = {
+    create?: XOR<MatchMessageCreateWithoutMatchInput, MatchMessageUncheckedCreateWithoutMatchInput> | MatchMessageCreateWithoutMatchInput[] | MatchMessageUncheckedCreateWithoutMatchInput[]
+    connectOrCreate?: MatchMessageCreateOrConnectWithoutMatchInput | MatchMessageCreateOrConnectWithoutMatchInput[]
+    createMany?: MatchMessageCreateManyMatchInputEnvelope
+    connect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+  }
+
+  export type EnumMatchStatusFieldUpdateOperationsInput = {
+    set?: $Enums.MatchStatus
+  }
+
+  export type MarketplaceItemUpdateOneRequiredWithoutMatchesNestedInput = {
+    create?: XOR<MarketplaceItemCreateWithoutMatchesInput, MarketplaceItemUncheckedCreateWithoutMatchesInput>
+    connectOrCreate?: MarketplaceItemCreateOrConnectWithoutMatchesInput
+    upsert?: MarketplaceItemUpsertWithoutMatchesInput
+    connect?: MarketplaceItemWhereUniqueInput
+    update?: XOR<XOR<MarketplaceItemUpdateToOneWithWhereWithoutMatchesInput, MarketplaceItemUpdateWithoutMatchesInput>, MarketplaceItemUncheckedUpdateWithoutMatchesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutBuyerMatchesNestedInput = {
+    create?: XOR<UserCreateWithoutBuyerMatchesInput, UserUncheckedCreateWithoutBuyerMatchesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBuyerMatchesInput
+    upsert?: UserUpsertWithoutBuyerMatchesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBuyerMatchesInput, UserUpdateWithoutBuyerMatchesInput>, UserUncheckedUpdateWithoutBuyerMatchesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutSellerMatchesNestedInput = {
+    create?: XOR<UserCreateWithoutSellerMatchesInput, UserUncheckedCreateWithoutSellerMatchesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSellerMatchesInput
+    upsert?: UserUpsertWithoutSellerMatchesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSellerMatchesInput, UserUpdateWithoutSellerMatchesInput>, UserUncheckedUpdateWithoutSellerMatchesInput>
+  }
+
+  export type MatchMessageUpdateManyWithoutMatchNestedInput = {
+    create?: XOR<MatchMessageCreateWithoutMatchInput, MatchMessageUncheckedCreateWithoutMatchInput> | MatchMessageCreateWithoutMatchInput[] | MatchMessageUncheckedCreateWithoutMatchInput[]
+    connectOrCreate?: MatchMessageCreateOrConnectWithoutMatchInput | MatchMessageCreateOrConnectWithoutMatchInput[]
+    upsert?: MatchMessageUpsertWithWhereUniqueWithoutMatchInput | MatchMessageUpsertWithWhereUniqueWithoutMatchInput[]
+    createMany?: MatchMessageCreateManyMatchInputEnvelope
+    set?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    disconnect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    delete?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    connect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    update?: MatchMessageUpdateWithWhereUniqueWithoutMatchInput | MatchMessageUpdateWithWhereUniqueWithoutMatchInput[]
+    updateMany?: MatchMessageUpdateManyWithWhereWithoutMatchInput | MatchMessageUpdateManyWithWhereWithoutMatchInput[]
+    deleteMany?: MatchMessageScalarWhereInput | MatchMessageScalarWhereInput[]
+  }
+
+  export type MatchMessageUncheckedUpdateManyWithoutMatchNestedInput = {
+    create?: XOR<MatchMessageCreateWithoutMatchInput, MatchMessageUncheckedCreateWithoutMatchInput> | MatchMessageCreateWithoutMatchInput[] | MatchMessageUncheckedCreateWithoutMatchInput[]
+    connectOrCreate?: MatchMessageCreateOrConnectWithoutMatchInput | MatchMessageCreateOrConnectWithoutMatchInput[]
+    upsert?: MatchMessageUpsertWithWhereUniqueWithoutMatchInput | MatchMessageUpsertWithWhereUniqueWithoutMatchInput[]
+    createMany?: MatchMessageCreateManyMatchInputEnvelope
+    set?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    disconnect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    delete?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    connect?: MatchMessageWhereUniqueInput | MatchMessageWhereUniqueInput[]
+    update?: MatchMessageUpdateWithWhereUniqueWithoutMatchInput | MatchMessageUpdateWithWhereUniqueWithoutMatchInput[]
+    updateMany?: MatchMessageUpdateManyWithWhereWithoutMatchInput | MatchMessageUpdateManyWithWhereWithoutMatchInput[]
+    deleteMany?: MatchMessageScalarWhereInput | MatchMessageScalarWhereInput[]
+  }
+
+  export type MarketplaceMatchCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutMessagesInput, MarketplaceMatchUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutMessagesInput
+    connect?: MarketplaceMatchWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutMatchMessagesInput = {
+    create?: XOR<UserCreateWithoutMatchMessagesInput, UserUncheckedCreateWithoutMatchMessagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMatchMessagesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type MarketplaceMatchUpdateOneRequiredWithoutMessagesNestedInput = {
+    create?: XOR<MarketplaceMatchCreateWithoutMessagesInput, MarketplaceMatchUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: MarketplaceMatchCreateOrConnectWithoutMessagesInput
+    upsert?: MarketplaceMatchUpsertWithoutMessagesInput
+    connect?: MarketplaceMatchWhereUniqueInput
+    update?: XOR<XOR<MarketplaceMatchUpdateToOneWithWhereWithoutMessagesInput, MarketplaceMatchUpdateWithoutMessagesInput>, MarketplaceMatchUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutMatchMessagesNestedInput = {
+    create?: XOR<UserCreateWithoutMatchMessagesInput, UserUncheckedCreateWithoutMatchMessagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMatchMessagesInput
+    upsert?: UserUpsertWithoutMatchMessagesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMatchMessagesInput, UserUpdateWithoutMatchMessagesInput>, UserUncheckedUpdateWithoutMatchMessagesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -75190,6 +78865,13 @@ export namespace Prisma {
     not?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel> | $Enums.MarketplaceItemType
   }
 
+  export type NestedEnumCurrencyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel>
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCurrencyFilter<$PrismaModel> | $Enums.Currency
+  }
+
   export type NestedEnumMarketplaceItemStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.MarketplaceItemStatus | EnumMarketplaceItemStatusFieldRefInput<$PrismaModel>
     in?: $Enums.MarketplaceItemStatus[] | ListEnumMarketplaceItemStatusFieldRefInput<$PrismaModel>
@@ -75205,6 +78887,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel>
     _max?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCurrencyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel>
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCurrencyWithAggregatesFilter<$PrismaModel> | $Enums.Currency
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCurrencyFilter<$PrismaModel>
+    _max?: NestedEnumCurrencyFilter<$PrismaModel>
   }
 
   export type NestedEnumMarketplaceItemStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -75327,6 +79019,23 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumMatchStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.MatchStatus | EnumMatchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MatchStatus[] | ListEnumMatchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MatchStatus[] | ListEnumMatchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMatchStatusFilter<$PrismaModel> | $Enums.MatchStatus
+  }
+
+  export type NestedEnumMatchStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MatchStatus | EnumMatchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MatchStatus[] | ListEnumMatchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MatchStatus[] | ListEnumMatchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.MatchStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMatchStatusFilter<$PrismaModel>
+    _max?: NestedEnumMatchStatusFilter<$PrismaModel>
   }
 
   export type PlaylistCreateWithoutMundoInput = {
@@ -77556,37 +81265,59 @@ export namespace Prisma {
   export type MarketplaceItemCreateWithoutSellerInput = {
     id?: string
     name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins?: number | null
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
     tags?: MarketplaceItemCreatetagsInput | string[]
-    imageUrl?: string | null
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
     location?: string | null
     status?: $Enums.MarketplaceItemStatus
-    viewCount?: number
-    favoriteCount?: number
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    metadata?: string | null
     reviews?: ReviewCreateNestedManyWithoutMarketplaceItemInput
+    matches?: MarketplaceMatchCreateNestedManyWithoutItemInput
   }
 
   export type MarketplaceItemUncheckedCreateWithoutSellerInput = {
     id?: string
     name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins?: number | null
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
     tags?: MarketplaceItemCreatetagsInput | string[]
-    imageUrl?: string | null
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
     location?: string | null
     status?: $Enums.MarketplaceItemStatus
-    viewCount?: number
-    favoriteCount?: number
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    metadata?: string | null
     reviews?: ReviewUncheckedCreateNestedManyWithoutMarketplaceItemInput
+    matches?: MarketplaceMatchUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type MarketplaceItemCreateOrConnectWithoutSellerInput = {
@@ -77596,6 +81327,98 @@ export namespace Prisma {
 
   export type MarketplaceItemCreateManySellerInputEnvelope = {
     data: MarketplaceItemCreateManySellerInput | MarketplaceItemCreateManySellerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MarketplaceMatchCreateWithoutBuyerInput = {
+    id?: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    item: MarketplaceItemCreateNestedOneWithoutMatchesInput
+    seller: UserCreateNestedOneWithoutSellerMatchesInput
+    messages?: MatchMessageCreateNestedManyWithoutMatchInput
+  }
+
+  export type MarketplaceMatchUncheckedCreateWithoutBuyerInput = {
+    id?: string
+    itemId: string
+    sellerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MatchMessageUncheckedCreateNestedManyWithoutMatchInput
+  }
+
+  export type MarketplaceMatchCreateOrConnectWithoutBuyerInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    create: XOR<MarketplaceMatchCreateWithoutBuyerInput, MarketplaceMatchUncheckedCreateWithoutBuyerInput>
+  }
+
+  export type MarketplaceMatchCreateManyBuyerInputEnvelope = {
+    data: MarketplaceMatchCreateManyBuyerInput | MarketplaceMatchCreateManyBuyerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MarketplaceMatchCreateWithoutSellerInput = {
+    id?: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    item: MarketplaceItemCreateNestedOneWithoutMatchesInput
+    buyer: UserCreateNestedOneWithoutBuyerMatchesInput
+    messages?: MatchMessageCreateNestedManyWithoutMatchInput
+  }
+
+  export type MarketplaceMatchUncheckedCreateWithoutSellerInput = {
+    id?: string
+    itemId: string
+    buyerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MatchMessageUncheckedCreateNestedManyWithoutMatchInput
+  }
+
+  export type MarketplaceMatchCreateOrConnectWithoutSellerInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    create: XOR<MarketplaceMatchCreateWithoutSellerInput, MarketplaceMatchUncheckedCreateWithoutSellerInput>
+  }
+
+  export type MarketplaceMatchCreateManySellerInputEnvelope = {
+    data: MarketplaceMatchCreateManySellerInput | MarketplaceMatchCreateManySellerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MatchMessageCreateWithoutSenderInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    match: MarketplaceMatchCreateNestedOneWithoutMessagesInput
+  }
+
+  export type MatchMessageUncheckedCreateWithoutSenderInput = {
+    id?: string
+    matchId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MatchMessageCreateOrConnectWithoutSenderInput = {
+    where: MatchMessageWhereUniqueInput
+    create: XOR<MatchMessageCreateWithoutSenderInput, MatchMessageUncheckedCreateWithoutSenderInput>
+  }
+
+  export type MatchMessageCreateManySenderInputEnvelope = {
+    data: MatchMessageCreateManySenderInput | MatchMessageCreateManySenderInput[]
     skipDuplicates?: boolean
   }
 
@@ -77709,18 +81532,28 @@ export namespace Prisma {
 
   export type ProfileCreateWithoutUserInput = {
     id?: string
+    avatar?: string | null
     bio?: string | null
-    avatarUrl?: string | null
     location?: string | null
+    website?: string | null
+    skills?: ProfileCreateskillsInput | string[]
+    interests?: ProfileCreateinterestsInput | string[]
+    isEmprendedorConfiable?: boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ProfileUncheckedCreateWithoutUserInput = {
     id?: string
+    avatar?: string | null
     bio?: string | null
-    avatarUrl?: string | null
     location?: string | null
+    website?: string | null
+    skills?: ProfileCreateskillsInput | string[]
+    interests?: ProfileCreateinterestsInput | string[]
+    isEmprendedorConfiable?: boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -77730,31 +81563,39 @@ export namespace Prisma {
     create: XOR<ProfileCreateWithoutUserInput, ProfileUncheckedCreateWithoutUserInput>
   }
 
-  export type ReviewCreateWithoutReviewerInput = {
+  export type ReviewCreateWithoutUserInput = {
     id?: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     marketplaceItem: MarketplaceItemCreateNestedOneWithoutReviewsInput
   }
 
-  export type ReviewUncheckedCreateWithoutReviewerInput = {
+  export type ReviewUncheckedCreateWithoutUserInput = {
     id?: string
     marketplaceItemId: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type ReviewCreateOrConnectWithoutReviewerInput = {
+  export type ReviewCreateOrConnectWithoutUserInput = {
     where: ReviewWhereUniqueInput
-    create: XOR<ReviewCreateWithoutReviewerInput, ReviewUncheckedCreateWithoutReviewerInput>
+    create: XOR<ReviewCreateWithoutUserInput, ReviewUncheckedCreateWithoutUserInput>
   }
 
-  export type ReviewCreateManyReviewerInputEnvelope = {
-    data: ReviewCreateManyReviewerInput | ReviewCreateManyReviewerInput[]
+  export type ReviewCreateManyUserInputEnvelope = {
+    data: ReviewCreateManyUserInput | ReviewCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -78549,19 +82390,103 @@ export namespace Prisma {
     NOT?: MarketplaceItemScalarWhereInput | MarketplaceItemScalarWhereInput[]
     id?: StringFilter<"MarketplaceItem"> | string
     name?: StringFilter<"MarketplaceItem"> | string
-    description?: StringFilter<"MarketplaceItem"> | string
-    type?: EnumMarketplaceItemTypeFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
-    priceUnits?: IntFilter<"MarketplaceItem"> | number
-    priceToins?: IntNullableFilter<"MarketplaceItem"> | number | null
+    description?: StringNullableFilter<"MarketplaceItem"> | string | null
+    fullDescription?: StringNullableFilter<"MarketplaceItem"> | string | null
+    itemType?: EnumMarketplaceItemTypeFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
+    price?: FloatFilter<"MarketplaceItem"> | number
+    priceToins?: FloatFilter<"MarketplaceItem"> | number
+    currency?: EnumCurrencyFilter<"MarketplaceItem"> | $Enums.Currency
+    category?: StringNullableFilter<"MarketplaceItem"> | string | null
     tags?: StringNullableListFilter<"MarketplaceItem">
-    imageUrl?: StringNullableFilter<"MarketplaceItem"> | string | null
+    images?: StringNullableListFilter<"MarketplaceItem">
+    stock?: IntFilter<"MarketplaceItem"> | number
+    rating?: FloatFilter<"MarketplaceItem"> | number
+    reviewCount?: IntFilter<"MarketplaceItem"> | number
     location?: StringNullableFilter<"MarketplaceItem"> | string | null
     status?: EnumMarketplaceItemStatusFilter<"MarketplaceItem"> | $Enums.MarketplaceItemStatus
-    sellerId?: StringFilter<"MarketplaceItem"> | string
-    viewCount?: IntFilter<"MarketplaceItem"> | number
-    favoriteCount?: IntFilter<"MarketplaceItem"> | number
+    isActive?: BoolFilter<"MarketplaceItem"> | boolean
+    isDeleted?: BoolFilter<"MarketplaceItem"> | boolean
+    deletedAt?: DateTimeNullableFilter<"MarketplaceItem"> | Date | string | null
     createdAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
     updatedAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
+    viewCount?: IntFilter<"MarketplaceItem"> | number
+    favoriteCount?: IntFilter<"MarketplaceItem"> | number
+    sellerId?: StringFilter<"MarketplaceItem"> | string
+    metadata?: StringNullableFilter<"MarketplaceItem"> | string | null
+  }
+
+  export type MarketplaceMatchUpsertWithWhereUniqueWithoutBuyerInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    update: XOR<MarketplaceMatchUpdateWithoutBuyerInput, MarketplaceMatchUncheckedUpdateWithoutBuyerInput>
+    create: XOR<MarketplaceMatchCreateWithoutBuyerInput, MarketplaceMatchUncheckedCreateWithoutBuyerInput>
+  }
+
+  export type MarketplaceMatchUpdateWithWhereUniqueWithoutBuyerInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    data: XOR<MarketplaceMatchUpdateWithoutBuyerInput, MarketplaceMatchUncheckedUpdateWithoutBuyerInput>
+  }
+
+  export type MarketplaceMatchUpdateManyWithWhereWithoutBuyerInput = {
+    where: MarketplaceMatchScalarWhereInput
+    data: XOR<MarketplaceMatchUpdateManyMutationInput, MarketplaceMatchUncheckedUpdateManyWithoutBuyerInput>
+  }
+
+  export type MarketplaceMatchScalarWhereInput = {
+    AND?: MarketplaceMatchScalarWhereInput | MarketplaceMatchScalarWhereInput[]
+    OR?: MarketplaceMatchScalarWhereInput[]
+    NOT?: MarketplaceMatchScalarWhereInput | MarketplaceMatchScalarWhereInput[]
+    id?: StringFilter<"MarketplaceMatch"> | string
+    itemId?: StringFilter<"MarketplaceMatch"> | string
+    buyerId?: StringFilter<"MarketplaceMatch"> | string
+    sellerId?: StringFilter<"MarketplaceMatch"> | string
+    buyerConfirmed?: BoolFilter<"MarketplaceMatch"> | boolean
+    sellerConfirmed?: BoolFilter<"MarketplaceMatch"> | boolean
+    status?: EnumMatchStatusFilter<"MarketplaceMatch"> | $Enums.MatchStatus
+    createdAt?: DateTimeFilter<"MarketplaceMatch"> | Date | string
+    updatedAt?: DateTimeFilter<"MarketplaceMatch"> | Date | string
+  }
+
+  export type MarketplaceMatchUpsertWithWhereUniqueWithoutSellerInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    update: XOR<MarketplaceMatchUpdateWithoutSellerInput, MarketplaceMatchUncheckedUpdateWithoutSellerInput>
+    create: XOR<MarketplaceMatchCreateWithoutSellerInput, MarketplaceMatchUncheckedCreateWithoutSellerInput>
+  }
+
+  export type MarketplaceMatchUpdateWithWhereUniqueWithoutSellerInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    data: XOR<MarketplaceMatchUpdateWithoutSellerInput, MarketplaceMatchUncheckedUpdateWithoutSellerInput>
+  }
+
+  export type MarketplaceMatchUpdateManyWithWhereWithoutSellerInput = {
+    where: MarketplaceMatchScalarWhereInput
+    data: XOR<MarketplaceMatchUpdateManyMutationInput, MarketplaceMatchUncheckedUpdateManyWithoutSellerInput>
+  }
+
+  export type MatchMessageUpsertWithWhereUniqueWithoutSenderInput = {
+    where: MatchMessageWhereUniqueInput
+    update: XOR<MatchMessageUpdateWithoutSenderInput, MatchMessageUncheckedUpdateWithoutSenderInput>
+    create: XOR<MatchMessageCreateWithoutSenderInput, MatchMessageUncheckedCreateWithoutSenderInput>
+  }
+
+  export type MatchMessageUpdateWithWhereUniqueWithoutSenderInput = {
+    where: MatchMessageWhereUniqueInput
+    data: XOR<MatchMessageUpdateWithoutSenderInput, MatchMessageUncheckedUpdateWithoutSenderInput>
+  }
+
+  export type MatchMessageUpdateManyWithWhereWithoutSenderInput = {
+    where: MatchMessageScalarWhereInput
+    data: XOR<MatchMessageUpdateManyMutationInput, MatchMessageUncheckedUpdateManyWithoutSenderInput>
+  }
+
+  export type MatchMessageScalarWhereInput = {
+    AND?: MatchMessageScalarWhereInput | MatchMessageScalarWhereInput[]
+    OR?: MatchMessageScalarWhereInput[]
+    NOT?: MatchMessageScalarWhereInput | MatchMessageScalarWhereInput[]
+    id?: StringFilter<"MatchMessage"> | string
+    matchId?: StringFilter<"MatchMessage"> | string
+    senderId?: StringFilter<"MatchMessage"> | string
+    content?: StringFilter<"MatchMessage"> | string
+    createdAt?: DateTimeFilter<"MatchMessage"> | Date | string
   }
 
   export type FeedbackReportUpsertWithWhereUniqueWithoutUserInput = {
@@ -78635,36 +82560,46 @@ export namespace Prisma {
 
   export type ProfileUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: ProfileUpdateskillsInput | string[]
+    interests?: ProfileUpdateinterestsInput | string[]
+    isEmprendedorConfiable?: BoolFieldUpdateOperationsInput | boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProfileUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: ProfileUpdateskillsInput | string[]
+    interests?: ProfileUpdateinterestsInput | string[]
+    isEmprendedorConfiable?: BoolFieldUpdateOperationsInput | boolean
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ReviewUpsertWithWhereUniqueWithoutReviewerInput = {
+  export type ReviewUpsertWithWhereUniqueWithoutUserInput = {
     where: ReviewWhereUniqueInput
-    update: XOR<ReviewUpdateWithoutReviewerInput, ReviewUncheckedUpdateWithoutReviewerInput>
-    create: XOR<ReviewCreateWithoutReviewerInput, ReviewUncheckedCreateWithoutReviewerInput>
+    update: XOR<ReviewUpdateWithoutUserInput, ReviewUncheckedUpdateWithoutUserInput>
+    create: XOR<ReviewCreateWithoutUserInput, ReviewUncheckedCreateWithoutUserInput>
   }
 
-  export type ReviewUpdateWithWhereUniqueWithoutReviewerInput = {
+  export type ReviewUpdateWithWhereUniqueWithoutUserInput = {
     where: ReviewWhereUniqueInput
-    data: XOR<ReviewUpdateWithoutReviewerInput, ReviewUncheckedUpdateWithoutReviewerInput>
+    data: XOR<ReviewUpdateWithoutUserInput, ReviewUncheckedUpdateWithoutUserInput>
   }
 
-  export type ReviewUpdateManyWithWhereWithoutReviewerInput = {
+  export type ReviewUpdateManyWithWhereWithoutUserInput = {
     where: ReviewScalarWhereInput
-    data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutReviewerInput>
+    data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutUserInput>
   }
 
   export type ReviewScalarWhereInput = {
@@ -78672,10 +82607,14 @@ export namespace Prisma {
     OR?: ReviewScalarWhereInput[]
     NOT?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
     id?: StringFilter<"Review"> | string
-    reviewerId?: StringFilter<"Review"> | string
     marketplaceItemId?: StringFilter<"Review"> | string
+    userId?: StringFilter<"Review"> | string
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
+    communication?: IntNullableFilter<"Review"> | number | null
+    quality?: IntNullableFilter<"Review"> | number | null
+    delivery?: IntNullableFilter<"Review"> | number | null
+    value?: IntNullableFilter<"Review"> | number | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
   }
@@ -78804,10 +82743,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAssignedRolesInput = {
@@ -78858,10 +82800,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssignedRolesInput = {
@@ -78940,10 +82885,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserRolesInput = {
@@ -78994,10 +82942,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserRolesInput = {
@@ -79064,10 +83015,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignedRolesInput = {
@@ -79118,10 +83072,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RoleUpsertWithoutUserRolesInput = {
@@ -79212,10 +83169,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserRolesInput = {
@@ -79266,10 +83226,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RolePermissionCreateWithoutPermissionInput = {
@@ -79358,10 +83321,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutVideoPermissionsInput = {
@@ -79412,10 +83378,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutVideoPermissionsInput = {
@@ -79542,10 +83511,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVideoPermissionsInput = {
@@ -79596,10 +83568,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type VideoItemUpsertWithoutPermissionsInput = {
@@ -79716,10 +83691,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAssignedPermissionsInput = {
@@ -79770,10 +83748,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssignedPermissionsInput = {
@@ -79884,10 +83865,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignedPermissionsInput = {
@@ -79938,10 +83922,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PermissionUpsertWithoutRolePermissionsInput = {
@@ -80109,10 +84096,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsCreateNestedManyWithoutCreatedByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCreatedWorldsInput = {
@@ -80163,10 +84153,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUncheckedCreateNestedManyWithoutCreatedByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedWorldsInput = {
@@ -80299,10 +84292,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUpdateManyWithoutCreatedByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedWorldsInput = {
@@ -80353,10 +84349,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUncheckedUpdateManyWithoutCreatedByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ExperienceCreateWithoutStageInput = {
@@ -80567,10 +84566,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCreatedExperiencesInput = {
@@ -80621,10 +84623,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedExperiencesInput = {
@@ -80732,10 +84737,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedExperiencesInput = {
@@ -80786,10 +84794,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StageUpsertWithoutExperiencesInput = {
@@ -80931,10 +84942,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCreatedActivitiesInput = {
@@ -80985,10 +84999,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedActivitiesInput = {
@@ -81220,10 +85237,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedActivitiesInput = {
@@ -81274,10 +85294,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ExperienceUpsertWithoutActivitiesInput = {
@@ -81779,10 +85802,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserAnswersInput = {
@@ -81833,10 +85859,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserAnswersInput = {
@@ -81980,10 +86009,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAnswersInput = {
@@ -82034,10 +86066,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTokensInput = {
@@ -82088,10 +86123,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTokensInput = {
@@ -82142,10 +86180,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTokensInput = {
@@ -82212,10 +86253,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTokensInput = {
@@ -82266,10 +86310,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutMeritsInput = {
@@ -82320,10 +86367,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMeritsInput = {
@@ -82374,10 +86424,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMeritsInput = {
@@ -82444,10 +86497,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMeritsInput = {
@@ -82498,10 +86554,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TransactionCreateWithoutToWalletInput = {
@@ -82620,10 +86679,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsCreateNestedManyWithoutCreatedByInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWalletInput = {
@@ -82674,10 +86736,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUncheckedCreateNestedManyWithoutCreatedByInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWalletInput = {
@@ -82776,10 +86841,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUpdateManyWithoutCreatedByNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWalletInput = {
@@ -82830,10 +86898,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUncheckedUpdateManyWithoutCreatedByNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type WalletCreateWithoutTransactionsToInput = {
@@ -82942,10 +87013,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsToInput = {
@@ -82996,10 +87070,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsToInput = {
@@ -83055,10 +87132,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsFromInput = {
@@ -83109,10 +87189,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsFromInput = {
@@ -83249,10 +87332,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsToInput = {
@@ -83303,10 +87389,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutTransactionsFromInput = {
@@ -83368,10 +87457,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsFromInput = {
@@ -83422,10 +87514,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutOwnedGroupsInput = {
@@ -83476,10 +87571,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOwnedGroupsInput = {
@@ -83530,10 +87628,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOwnedGroupsInput = {
@@ -83622,10 +87723,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOwnedGroupsInput = {
@@ -83676,10 +87780,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserGroupUpsertWithWhereUniqueWithoutGroupInput = {
@@ -83771,10 +87878,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserGroupsInput = {
@@ -83825,10 +87935,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserGroupsInput = {
@@ -83926,10 +88039,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserGroupsInput = {
@@ -83980,10 +88096,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CommentCreateWithoutPublicationInput = {
@@ -84082,10 +88201,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPublicationsInput = {
@@ -84136,10 +88258,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPublicationsInput = {
@@ -84238,10 +88363,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPublicationsInput = {
@@ -84292,10 +88420,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PublicationCreateWithoutCommentsInput = {
@@ -84371,10 +88502,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCommentsInput = {
@@ -84425,10 +88559,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCommentsInput = {
@@ -84526,10 +88663,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -84580,10 +88720,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PublicationCreateWithoutLikesInput = {
@@ -84659,10 +88802,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLikesInput = {
@@ -84713,10 +88859,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLikesInput = {
@@ -84814,10 +88963,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLikesInput = {
@@ -84868,10 +89020,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -84922,10 +89077,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -84976,10 +89134,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -85046,10 +89207,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -85100,10 +89264,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutCreatedInvitationTemplatesInput = {
@@ -85154,10 +89321,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCreatedInvitationTemplatesInput = {
@@ -85208,10 +89378,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedInvitationTemplatesInput = {
@@ -85278,10 +89451,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedInvitationTemplatesInput = {
@@ -85332,10 +89508,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutInvitationsSentInput = {
@@ -85386,10 +89565,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsSentInput = {
@@ -85440,10 +89622,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsSentInput = {
@@ -85534,10 +89719,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsSentInput = {
@@ -85588,10 +89776,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserInvitationUpsertWithWhereUniqueWithoutGiftCardInput = {
@@ -85658,10 +89849,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsReceivedInput = {
@@ -85712,10 +89906,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsReceivedInput = {
@@ -85811,10 +90008,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsReceivedInput = {
@@ -85865,10 +90065,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GiftCardUpsertWithoutUserInvitationsInput = {
@@ -85954,10 +90157,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCreatedReportsInput = {
@@ -86008,10 +90214,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedReportsInput = {
@@ -86078,10 +90287,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedReportsInput = {
@@ -86132,10 +90344,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPersonalityInput = {
@@ -86186,10 +90401,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPersonalityInput = {
@@ -86240,10 +90458,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPersonalityInput = {
@@ -86345,10 +90566,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCreatedTemplatesInput = {
@@ -86399,10 +90623,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedTemplatesInput = {
@@ -86469,10 +90696,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedTemplatesInput = {
@@ -86523,10 +90753,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContentItemCreateWithoutItemTypeInput = {
@@ -86975,10 +91208,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserChallengesInput = {
@@ -87029,10 +91265,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserChallengesInput = {
@@ -87138,10 +91377,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserChallengesInput = {
@@ -87192,10 +91434,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutMarketplaceItemsInput = {
@@ -87246,10 +91491,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsCreateNestedManyWithoutCreatedByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketplaceItemsInput = {
@@ -87300,10 +91548,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUncheckedCreateNestedManyWithoutCreatedByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketplaceItemsInput = {
@@ -87315,16 +91566,24 @@ export namespace Prisma {
     id?: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewer: UserCreateNestedOneWithoutReviewsInput
+    user: UserCreateNestedOneWithoutReviewsInput
   }
 
   export type ReviewUncheckedCreateWithoutMarketplaceItemInput = {
     id?: string
-    reviewerId: string
+    userId: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -87336,6 +91595,40 @@ export namespace Prisma {
 
   export type ReviewCreateManyMarketplaceItemInputEnvelope = {
     data: ReviewCreateManyMarketplaceItemInput | ReviewCreateManyMarketplaceItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MarketplaceMatchCreateWithoutItemInput = {
+    id?: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    buyer: UserCreateNestedOneWithoutBuyerMatchesInput
+    seller: UserCreateNestedOneWithoutSellerMatchesInput
+    messages?: MatchMessageCreateNestedManyWithoutMatchInput
+  }
+
+  export type MarketplaceMatchUncheckedCreateWithoutItemInput = {
+    id?: string
+    buyerId: string
+    sellerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MatchMessageUncheckedCreateNestedManyWithoutMatchInput
+  }
+
+  export type MarketplaceMatchCreateOrConnectWithoutItemInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    create: XOR<MarketplaceMatchCreateWithoutItemInput, MarketplaceMatchUncheckedCreateWithoutItemInput>
+  }
+
+  export type MarketplaceMatchCreateManyItemInputEnvelope = {
+    data: MarketplaceMatchCreateManyItemInput | MarketplaceMatchCreateManyItemInput[]
     skipDuplicates?: boolean
   }
 
@@ -87398,10 +91691,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUpdateManyWithoutCreatedByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketplaceItemsInput = {
@@ -87452,10 +91748,13 @@ export namespace Prisma {
     videoPermissions?: VideoPermissionsUncheckedUpdateManyWithoutCreatedByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReviewUpsertWithWhereUniqueWithoutMarketplaceItemInput = {
@@ -87472,6 +91771,22 @@ export namespace Prisma {
   export type ReviewUpdateManyWithWhereWithoutMarketplaceItemInput = {
     where: ReviewScalarWhereInput
     data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyWithoutMarketplaceItemInput>
+  }
+
+  export type MarketplaceMatchUpsertWithWhereUniqueWithoutItemInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    update: XOR<MarketplaceMatchUpdateWithoutItemInput, MarketplaceMatchUncheckedUpdateWithoutItemInput>
+    create: XOR<MarketplaceMatchCreateWithoutItemInput, MarketplaceMatchUncheckedCreateWithoutItemInput>
+  }
+
+  export type MarketplaceMatchUpdateWithWhereUniqueWithoutItemInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    data: XOR<MarketplaceMatchUpdateWithoutItemInput, MarketplaceMatchUncheckedUpdateWithoutItemInput>
+  }
+
+  export type MarketplaceMatchUpdateManyWithWhereWithoutItemInput = {
+    where: MarketplaceMatchScalarWhereInput
+    data: XOR<MarketplaceMatchUpdateManyMutationInput, MarketplaceMatchUncheckedUpdateManyWithoutItemInput>
   }
 
   export type VideoItemCreateWithoutStudyRoomsInput = {
@@ -87582,10 +91897,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutHostedStudyRoomsInput = {
@@ -87636,10 +91954,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutHostedStudyRoomsInput = {
@@ -87828,10 +92149,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutHostedStudyRoomsInput = {
@@ -87882,10 +92206,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StudyRoomParticipantUpsertWithWhereUniqueWithoutStudyRoomInput = {
@@ -88005,10 +92332,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudyRoomParticipantsInput = {
@@ -88059,10 +92389,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudyRoomParticipantsInput = {
@@ -88172,10 +92505,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudyRoomParticipantsInput = {
@@ -88226,10 +92562,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StudyRoomCreateWithoutMessagesInput = {
@@ -88317,10 +92656,13 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSentChatMessagesInput = {
@@ -88371,10 +92713,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSentChatMessagesInput = {
@@ -88484,10 +92829,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentChatMessagesInput = {
@@ -88538,10 +92886,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutFeedbackReportsInput = {
@@ -88593,9 +92944,12 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeedbackReportsInput = {
@@ -88647,9 +93001,12 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeedbackReportsInput = {
@@ -88706,9 +93063,12 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAdminFeedbackResponsesInput = {
@@ -88760,9 +93120,12 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAdminFeedbackResponsesInput = {
@@ -88830,9 +93193,12 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeedbackReportsInput = {
@@ -88884,9 +93250,12 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutAdminFeedbackResponsesInput = {
@@ -88949,9 +93318,12 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAdminFeedbackResponsesInput = {
@@ -89003,9 +93375,12 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutProfileInput = {
@@ -89057,9 +93432,12 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
-    reviews?: ReviewCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProfileInput = {
@@ -89111,9 +93489,12 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutReviewerInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProfileInput = {
@@ -89181,9 +93562,12 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProfileInput = {
@@ -89235,9 +93619,75 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MarketplaceItemCreateWithoutReviewsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
+    tags?: MarketplaceItemCreatetagsInput | string[]
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
+    location?: string | null
+    status?: $Enums.MarketplaceItemStatus
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    metadata?: string | null
+    seller: UserCreateNestedOneWithoutMarketplaceItemsInput
+    matches?: MarketplaceMatchCreateNestedManyWithoutItemInput
+  }
+
+  export type MarketplaceItemUncheckedCreateWithoutReviewsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
+    tags?: MarketplaceItemCreatetagsInput | string[]
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
+    location?: string | null
+    status?: $Enums.MarketplaceItemStatus
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    sellerId: string
+    metadata?: string | null
+    matches?: MarketplaceMatchUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type MarketplaceItemCreateOrConnectWithoutReviewsInput = {
+    where: MarketplaceItemWhereUniqueInput
+    create: XOR<MarketplaceItemCreateWithoutReviewsInput, MarketplaceItemUncheckedCreateWithoutReviewsInput>
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -89289,6 +93739,9 @@ export namespace Prisma {
     wallet?: WalletCreateNestedOneWithoutUserInput
     createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
     profile?: ProfileCreateNestedOneWithoutUserInput
@@ -89343,6 +93796,9 @@ export namespace Prisma {
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
     marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
     feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
     adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
@@ -89353,45 +93809,73 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
   }
 
-  export type MarketplaceItemCreateWithoutReviewsInput = {
-    id?: string
-    name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins?: number | null
-    tags?: MarketplaceItemCreatetagsInput | string[]
-    imageUrl?: string | null
-    location?: string | null
-    status?: $Enums.MarketplaceItemStatus
-    viewCount?: number
-    favoriteCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seller: UserCreateNestedOneWithoutMarketplaceItemsInput
-  }
-
-  export type MarketplaceItemUncheckedCreateWithoutReviewsInput = {
-    id?: string
-    name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins?: number | null
-    tags?: MarketplaceItemCreatetagsInput | string[]
-    imageUrl?: string | null
-    location?: string | null
-    status?: $Enums.MarketplaceItemStatus
-    sellerId: string
-    viewCount?: number
-    favoriteCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type MarketplaceItemCreateOrConnectWithoutReviewsInput = {
-    where: MarketplaceItemWhereUniqueInput
+  export type MarketplaceItemUpsertWithoutReviewsInput = {
+    update: XOR<MarketplaceItemUpdateWithoutReviewsInput, MarketplaceItemUncheckedUpdateWithoutReviewsInput>
     create: XOR<MarketplaceItemCreateWithoutReviewsInput, MarketplaceItemUncheckedCreateWithoutReviewsInput>
+    where?: MarketplaceItemWhereInput
+  }
+
+  export type MarketplaceItemUpdateToOneWithWhereWithoutReviewsInput = {
+    where?: MarketplaceItemWhereInput
+    data: XOR<MarketplaceItemUpdateWithoutReviewsInput, MarketplaceItemUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type MarketplaceItemUpdateWithoutReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: MarketplaceItemUpdatetagsInput | string[]
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    seller?: UserUpdateOneRequiredWithoutMarketplaceItemsNestedInput
+    matches?: MarketplaceMatchUpdateManyWithoutItemNestedInput
+  }
+
+  export type MarketplaceItemUncheckedUpdateWithoutReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: MarketplaceItemUpdatetagsInput | string[]
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    sellerId?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    matches?: MarketplaceMatchUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -89454,6 +93938,9 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
@@ -89508,56 +93995,980 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type MarketplaceItemUpsertWithoutReviewsInput = {
-    update: XOR<MarketplaceItemUpdateWithoutReviewsInput, MarketplaceItemUncheckedUpdateWithoutReviewsInput>
-    create: XOR<MarketplaceItemCreateWithoutReviewsInput, MarketplaceItemUncheckedCreateWithoutReviewsInput>
+  export type MarketplaceItemCreateWithoutMatchesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
+    tags?: MarketplaceItemCreatetagsInput | string[]
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
+    location?: string | null
+    status?: $Enums.MarketplaceItemStatus
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    metadata?: string | null
+    seller: UserCreateNestedOneWithoutMarketplaceItemsInput
+    reviews?: ReviewCreateNestedManyWithoutMarketplaceItemInput
+  }
+
+  export type MarketplaceItemUncheckedCreateWithoutMatchesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
+    tags?: MarketplaceItemCreatetagsInput | string[]
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
+    location?: string | null
+    status?: $Enums.MarketplaceItemStatus
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    sellerId: string
+    metadata?: string | null
+    reviews?: ReviewUncheckedCreateNestedManyWithoutMarketplaceItemInput
+  }
+
+  export type MarketplaceItemCreateOrConnectWithoutMatchesInput = {
+    where: MarketplaceItemWhereUniqueInput
+    create: XOR<MarketplaceItemCreateWithoutMatchesInput, MarketplaceItemUncheckedCreateWithoutMatchesInput>
+  }
+
+  export type UserCreateWithoutBuyerMatchesInput = {
+    id?: string
+    email: string
+    password: string
+    name?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    documentType?: string | null
+    documentNumber?: string | null
+    phone?: string | null
+    country?: string | null
+    address?: string | null
+    status?: string
+    topUserCount?: number
+    createdActivities?: ActivityCreateNestedManyWithoutCreatorInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    createdExperiences?: ExperienceCreateNestedManyWithoutCreatorInput
+    invitationsSent?: GiftCardCreateNestedManyWithoutInviterInput
+    ownedGroups?: GroupCreateNestedManyWithoutOwnerInput
+    createdInvitationTemplates?: InvitationTemplateCreateNestedManyWithoutCreatorInput
+    merits?: MeritCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    publications?: PublicationCreateNestedManyWithoutUserInput
+    createdReports?: ReportCreateNestedManyWithoutCreatorInput
+    assignedPermissions?: RolePermissionCreateNestedManyWithoutAssignedByInput
+    tokens?: TokenCreateNestedManyWithoutUserInput
+    transactionsTo?: TransactionCreateNestedManyWithoutToUserInput
+    transactionsFrom?: TransactionCreateNestedManyWithoutFromUserInput
+    createdTemplates?: UIComponentTemplateCreateNestedManyWithoutCreatorInput
+    userAnswers?: UserAnswerCreateNestedManyWithoutUserInput
+    userChallenges?: UserChallengeCreateNestedManyWithoutUserInput
+    userGroups?: UserGroupCreateNestedManyWithoutUserInput
+    invitationsReceived?: UserInvitationCreateNestedManyWithoutInvitedUserInput
+    assignedRoles?: UserRoleCreateNestedManyWithoutAssignedByInput
+    userRoles?: UserRoleCreateNestedManyWithoutUserInput
+    hostedStudyRooms?: StudyRoomCreateNestedManyWithoutHostInput
+    studyRoomParticipants?: StudyRoomParticipantCreateNestedManyWithoutUserInput
+    sentChatMessages?: StudyRoomMessageCreateNestedManyWithoutUserInput
+    personality?: PersonalityCreateNestedOneWithoutUsersInput
+    videoPermissions?: VideoPermissionsCreateNestedManyWithoutCreatedByInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
+    marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
+    feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
+    adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
+    profile?: ProfileCreateNestedOneWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutBuyerMatchesInput = {
+    id?: string
+    email: string
+    password: string
+    name?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    documentType?: string | null
+    documentNumber?: string | null
+    phone?: string | null
+    country?: string | null
+    address?: string | null
+    status?: string
+    topUserCount?: number
+    personalityId?: string | null
+    createdActivities?: ActivityUncheckedCreateNestedManyWithoutCreatorInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    createdExperiences?: ExperienceUncheckedCreateNestedManyWithoutCreatorInput
+    invitationsSent?: GiftCardUncheckedCreateNestedManyWithoutInviterInput
+    ownedGroups?: GroupUncheckedCreateNestedManyWithoutOwnerInput
+    createdInvitationTemplates?: InvitationTemplateUncheckedCreateNestedManyWithoutCreatorInput
+    merits?: MeritUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    publications?: PublicationUncheckedCreateNestedManyWithoutUserInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatorInput
+    assignedPermissions?: RolePermissionUncheckedCreateNestedManyWithoutAssignedByInput
+    tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
+    transactionsTo?: TransactionUncheckedCreateNestedManyWithoutToUserInput
+    transactionsFrom?: TransactionUncheckedCreateNestedManyWithoutFromUserInput
+    createdTemplates?: UIComponentTemplateUncheckedCreateNestedManyWithoutCreatorInput
+    userAnswers?: UserAnswerUncheckedCreateNestedManyWithoutUserInput
+    userChallenges?: UserChallengeUncheckedCreateNestedManyWithoutUserInput
+    userGroups?: UserGroupUncheckedCreateNestedManyWithoutUserInput
+    invitationsReceived?: UserInvitationUncheckedCreateNestedManyWithoutInvitedUserInput
+    assignedRoles?: UserRoleUncheckedCreateNestedManyWithoutAssignedByInput
+    userRoles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    hostedStudyRooms?: StudyRoomUncheckedCreateNestedManyWithoutHostInput
+    studyRoomParticipants?: StudyRoomParticipantUncheckedCreateNestedManyWithoutUserInput
+    sentChatMessages?: StudyRoomMessageUncheckedCreateNestedManyWithoutUserInput
+    videoPermissions?: VideoPermissionsUncheckedCreateNestedManyWithoutCreatedByInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
+    marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
+    feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
+    adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
+    profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutBuyerMatchesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBuyerMatchesInput, UserUncheckedCreateWithoutBuyerMatchesInput>
+  }
+
+  export type UserCreateWithoutSellerMatchesInput = {
+    id?: string
+    email: string
+    password: string
+    name?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    documentType?: string | null
+    documentNumber?: string | null
+    phone?: string | null
+    country?: string | null
+    address?: string | null
+    status?: string
+    topUserCount?: number
+    createdActivities?: ActivityCreateNestedManyWithoutCreatorInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    createdExperiences?: ExperienceCreateNestedManyWithoutCreatorInput
+    invitationsSent?: GiftCardCreateNestedManyWithoutInviterInput
+    ownedGroups?: GroupCreateNestedManyWithoutOwnerInput
+    createdInvitationTemplates?: InvitationTemplateCreateNestedManyWithoutCreatorInput
+    merits?: MeritCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    publications?: PublicationCreateNestedManyWithoutUserInput
+    createdReports?: ReportCreateNestedManyWithoutCreatorInput
+    assignedPermissions?: RolePermissionCreateNestedManyWithoutAssignedByInput
+    tokens?: TokenCreateNestedManyWithoutUserInput
+    transactionsTo?: TransactionCreateNestedManyWithoutToUserInput
+    transactionsFrom?: TransactionCreateNestedManyWithoutFromUserInput
+    createdTemplates?: UIComponentTemplateCreateNestedManyWithoutCreatorInput
+    userAnswers?: UserAnswerCreateNestedManyWithoutUserInput
+    userChallenges?: UserChallengeCreateNestedManyWithoutUserInput
+    userGroups?: UserGroupCreateNestedManyWithoutUserInput
+    invitationsReceived?: UserInvitationCreateNestedManyWithoutInvitedUserInput
+    assignedRoles?: UserRoleCreateNestedManyWithoutAssignedByInput
+    userRoles?: UserRoleCreateNestedManyWithoutUserInput
+    hostedStudyRooms?: StudyRoomCreateNestedManyWithoutHostInput
+    studyRoomParticipants?: StudyRoomParticipantCreateNestedManyWithoutUserInput
+    sentChatMessages?: StudyRoomMessageCreateNestedManyWithoutUserInput
+    personality?: PersonalityCreateNestedOneWithoutUsersInput
+    videoPermissions?: VideoPermissionsCreateNestedManyWithoutCreatedByInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
+    marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    matchMessages?: MatchMessageCreateNestedManyWithoutSenderInput
+    feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
+    adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
+    profile?: ProfileCreateNestedOneWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSellerMatchesInput = {
+    id?: string
+    email: string
+    password: string
+    name?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    documentType?: string | null
+    documentNumber?: string | null
+    phone?: string | null
+    country?: string | null
+    address?: string | null
+    status?: string
+    topUserCount?: number
+    personalityId?: string | null
+    createdActivities?: ActivityUncheckedCreateNestedManyWithoutCreatorInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    createdExperiences?: ExperienceUncheckedCreateNestedManyWithoutCreatorInput
+    invitationsSent?: GiftCardUncheckedCreateNestedManyWithoutInviterInput
+    ownedGroups?: GroupUncheckedCreateNestedManyWithoutOwnerInput
+    createdInvitationTemplates?: InvitationTemplateUncheckedCreateNestedManyWithoutCreatorInput
+    merits?: MeritUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    publications?: PublicationUncheckedCreateNestedManyWithoutUserInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatorInput
+    assignedPermissions?: RolePermissionUncheckedCreateNestedManyWithoutAssignedByInput
+    tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
+    transactionsTo?: TransactionUncheckedCreateNestedManyWithoutToUserInput
+    transactionsFrom?: TransactionUncheckedCreateNestedManyWithoutFromUserInput
+    createdTemplates?: UIComponentTemplateUncheckedCreateNestedManyWithoutCreatorInput
+    userAnswers?: UserAnswerUncheckedCreateNestedManyWithoutUserInput
+    userChallenges?: UserChallengeUncheckedCreateNestedManyWithoutUserInput
+    userGroups?: UserGroupUncheckedCreateNestedManyWithoutUserInput
+    invitationsReceived?: UserInvitationUncheckedCreateNestedManyWithoutInvitedUserInput
+    assignedRoles?: UserRoleUncheckedCreateNestedManyWithoutAssignedByInput
+    userRoles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    hostedStudyRooms?: StudyRoomUncheckedCreateNestedManyWithoutHostInput
+    studyRoomParticipants?: StudyRoomParticipantUncheckedCreateNestedManyWithoutUserInput
+    sentChatMessages?: StudyRoomMessageUncheckedCreateNestedManyWithoutUserInput
+    videoPermissions?: VideoPermissionsUncheckedCreateNestedManyWithoutCreatedByInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
+    marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    matchMessages?: MatchMessageUncheckedCreateNestedManyWithoutSenderInput
+    feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
+    adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
+    profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSellerMatchesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSellerMatchesInput, UserUncheckedCreateWithoutSellerMatchesInput>
+  }
+
+  export type MatchMessageCreateWithoutMatchInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    sender: UserCreateNestedOneWithoutMatchMessagesInput
+  }
+
+  export type MatchMessageUncheckedCreateWithoutMatchInput = {
+    id?: string
+    senderId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MatchMessageCreateOrConnectWithoutMatchInput = {
+    where: MatchMessageWhereUniqueInput
+    create: XOR<MatchMessageCreateWithoutMatchInput, MatchMessageUncheckedCreateWithoutMatchInput>
+  }
+
+  export type MatchMessageCreateManyMatchInputEnvelope = {
+    data: MatchMessageCreateManyMatchInput | MatchMessageCreateManyMatchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MarketplaceItemUpsertWithoutMatchesInput = {
+    update: XOR<MarketplaceItemUpdateWithoutMatchesInput, MarketplaceItemUncheckedUpdateWithoutMatchesInput>
+    create: XOR<MarketplaceItemCreateWithoutMatchesInput, MarketplaceItemUncheckedCreateWithoutMatchesInput>
     where?: MarketplaceItemWhereInput
   }
 
-  export type MarketplaceItemUpdateToOneWithWhereWithoutReviewsInput = {
+  export type MarketplaceItemUpdateToOneWithWhereWithoutMatchesInput = {
     where?: MarketplaceItemWhereInput
-    data: XOR<MarketplaceItemUpdateWithoutReviewsInput, MarketplaceItemUncheckedUpdateWithoutReviewsInput>
+    data: XOR<MarketplaceItemUpdateWithoutMatchesInput, MarketplaceItemUncheckedUpdateWithoutMatchesInput>
   }
 
-  export type MarketplaceItemUpdateWithoutReviewsInput = {
+  export type MarketplaceItemUpdateWithoutMatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
     seller?: UserUpdateOneRequiredWithoutMarketplaceItemsNestedInput
+    reviews?: ReviewUpdateManyWithoutMarketplaceItemNestedInput
   }
 
-  export type MarketplaceItemUncheckedUpdateWithoutReviewsInput = {
+  export type MarketplaceItemUncheckedUpdateWithoutMatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    sellerId?: StringFieldUpdateOperationsInput | string
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    sellerId?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    reviews?: ReviewUncheckedUpdateManyWithoutMarketplaceItemNestedInput
+  }
+
+  export type UserUpsertWithoutBuyerMatchesInput = {
+    update: XOR<UserUpdateWithoutBuyerMatchesInput, UserUncheckedUpdateWithoutBuyerMatchesInput>
+    create: XOR<UserCreateWithoutBuyerMatchesInput, UserUncheckedCreateWithoutBuyerMatchesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBuyerMatchesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBuyerMatchesInput, UserUncheckedUpdateWithoutBuyerMatchesInput>
+  }
+
+  export type UserUpdateWithoutBuyerMatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    topUserCount?: IntFieldUpdateOperationsInput | number
+    createdActivities?: ActivityUpdateManyWithoutCreatorNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    createdExperiences?: ExperienceUpdateManyWithoutCreatorNestedInput
+    invitationsSent?: GiftCardUpdateManyWithoutInviterNestedInput
+    ownedGroups?: GroupUpdateManyWithoutOwnerNestedInput
+    createdInvitationTemplates?: InvitationTemplateUpdateManyWithoutCreatorNestedInput
+    merits?: MeritUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    publications?: PublicationUpdateManyWithoutUserNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatorNestedInput
+    assignedPermissions?: RolePermissionUpdateManyWithoutAssignedByNestedInput
+    tokens?: TokenUpdateManyWithoutUserNestedInput
+    transactionsTo?: TransactionUpdateManyWithoutToUserNestedInput
+    transactionsFrom?: TransactionUpdateManyWithoutFromUserNestedInput
+    createdTemplates?: UIComponentTemplateUpdateManyWithoutCreatorNestedInput
+    userAnswers?: UserAnswerUpdateManyWithoutUserNestedInput
+    userChallenges?: UserChallengeUpdateManyWithoutUserNestedInput
+    userGroups?: UserGroupUpdateManyWithoutUserNestedInput
+    invitationsReceived?: UserInvitationUpdateManyWithoutInvitedUserNestedInput
+    assignedRoles?: UserRoleUpdateManyWithoutAssignedByNestedInput
+    userRoles?: UserRoleUpdateManyWithoutUserNestedInput
+    hostedStudyRooms?: StudyRoomUpdateManyWithoutHostNestedInput
+    studyRoomParticipants?: StudyRoomParticipantUpdateManyWithoutUserNestedInput
+    sentChatMessages?: StudyRoomMessageUpdateManyWithoutUserNestedInput
+    personality?: PersonalityUpdateOneWithoutUsersNestedInput
+    videoPermissions?: VideoPermissionsUpdateManyWithoutCreatedByNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
+    marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
+    feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
+    adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
+    profile?: ProfileUpdateOneWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBuyerMatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    topUserCount?: IntFieldUpdateOperationsInput | number
+    personalityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdActivities?: ActivityUncheckedUpdateManyWithoutCreatorNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    createdExperiences?: ExperienceUncheckedUpdateManyWithoutCreatorNestedInput
+    invitationsSent?: GiftCardUncheckedUpdateManyWithoutInviterNestedInput
+    ownedGroups?: GroupUncheckedUpdateManyWithoutOwnerNestedInput
+    createdInvitationTemplates?: InvitationTemplateUncheckedUpdateManyWithoutCreatorNestedInput
+    merits?: MeritUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    publications?: PublicationUncheckedUpdateManyWithoutUserNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedPermissions?: RolePermissionUncheckedUpdateManyWithoutAssignedByNestedInput
+    tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
+    transactionsTo?: TransactionUncheckedUpdateManyWithoutToUserNestedInput
+    transactionsFrom?: TransactionUncheckedUpdateManyWithoutFromUserNestedInput
+    createdTemplates?: UIComponentTemplateUncheckedUpdateManyWithoutCreatorNestedInput
+    userAnswers?: UserAnswerUncheckedUpdateManyWithoutUserNestedInput
+    userChallenges?: UserChallengeUncheckedUpdateManyWithoutUserNestedInput
+    userGroups?: UserGroupUncheckedUpdateManyWithoutUserNestedInput
+    invitationsReceived?: UserInvitationUncheckedUpdateManyWithoutInvitedUserNestedInput
+    assignedRoles?: UserRoleUncheckedUpdateManyWithoutAssignedByNestedInput
+    userRoles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    hostedStudyRooms?: StudyRoomUncheckedUpdateManyWithoutHostNestedInput
+    studyRoomParticipants?: StudyRoomParticipantUncheckedUpdateManyWithoutUserNestedInput
+    sentChatMessages?: StudyRoomMessageUncheckedUpdateManyWithoutUserNestedInput
+    videoPermissions?: VideoPermissionsUncheckedUpdateManyWithoutCreatedByNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
+    marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
+    feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
+    adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
+    profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutSellerMatchesInput = {
+    update: XOR<UserUpdateWithoutSellerMatchesInput, UserUncheckedUpdateWithoutSellerMatchesInput>
+    create: XOR<UserCreateWithoutSellerMatchesInput, UserUncheckedCreateWithoutSellerMatchesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSellerMatchesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSellerMatchesInput, UserUncheckedUpdateWithoutSellerMatchesInput>
+  }
+
+  export type UserUpdateWithoutSellerMatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    topUserCount?: IntFieldUpdateOperationsInput | number
+    createdActivities?: ActivityUpdateManyWithoutCreatorNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    createdExperiences?: ExperienceUpdateManyWithoutCreatorNestedInput
+    invitationsSent?: GiftCardUpdateManyWithoutInviterNestedInput
+    ownedGroups?: GroupUpdateManyWithoutOwnerNestedInput
+    createdInvitationTemplates?: InvitationTemplateUpdateManyWithoutCreatorNestedInput
+    merits?: MeritUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    publications?: PublicationUpdateManyWithoutUserNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatorNestedInput
+    assignedPermissions?: RolePermissionUpdateManyWithoutAssignedByNestedInput
+    tokens?: TokenUpdateManyWithoutUserNestedInput
+    transactionsTo?: TransactionUpdateManyWithoutToUserNestedInput
+    transactionsFrom?: TransactionUpdateManyWithoutFromUserNestedInput
+    createdTemplates?: UIComponentTemplateUpdateManyWithoutCreatorNestedInput
+    userAnswers?: UserAnswerUpdateManyWithoutUserNestedInput
+    userChallenges?: UserChallengeUpdateManyWithoutUserNestedInput
+    userGroups?: UserGroupUpdateManyWithoutUserNestedInput
+    invitationsReceived?: UserInvitationUpdateManyWithoutInvitedUserNestedInput
+    assignedRoles?: UserRoleUpdateManyWithoutAssignedByNestedInput
+    userRoles?: UserRoleUpdateManyWithoutUserNestedInput
+    hostedStudyRooms?: StudyRoomUpdateManyWithoutHostNestedInput
+    studyRoomParticipants?: StudyRoomParticipantUpdateManyWithoutUserNestedInput
+    sentChatMessages?: StudyRoomMessageUpdateManyWithoutUserNestedInput
+    personality?: PersonalityUpdateOneWithoutUsersNestedInput
+    videoPermissions?: VideoPermissionsUpdateManyWithoutCreatedByNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
+    marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
+    feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
+    adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
+    profile?: ProfileUpdateOneWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSellerMatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    topUserCount?: IntFieldUpdateOperationsInput | number
+    personalityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdActivities?: ActivityUncheckedUpdateManyWithoutCreatorNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    createdExperiences?: ExperienceUncheckedUpdateManyWithoutCreatorNestedInput
+    invitationsSent?: GiftCardUncheckedUpdateManyWithoutInviterNestedInput
+    ownedGroups?: GroupUncheckedUpdateManyWithoutOwnerNestedInput
+    createdInvitationTemplates?: InvitationTemplateUncheckedUpdateManyWithoutCreatorNestedInput
+    merits?: MeritUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    publications?: PublicationUncheckedUpdateManyWithoutUserNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedPermissions?: RolePermissionUncheckedUpdateManyWithoutAssignedByNestedInput
+    tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
+    transactionsTo?: TransactionUncheckedUpdateManyWithoutToUserNestedInput
+    transactionsFrom?: TransactionUncheckedUpdateManyWithoutFromUserNestedInput
+    createdTemplates?: UIComponentTemplateUncheckedUpdateManyWithoutCreatorNestedInput
+    userAnswers?: UserAnswerUncheckedUpdateManyWithoutUserNestedInput
+    userChallenges?: UserChallengeUncheckedUpdateManyWithoutUserNestedInput
+    userGroups?: UserGroupUncheckedUpdateManyWithoutUserNestedInput
+    invitationsReceived?: UserInvitationUncheckedUpdateManyWithoutInvitedUserNestedInput
+    assignedRoles?: UserRoleUncheckedUpdateManyWithoutAssignedByNestedInput
+    userRoles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    hostedStudyRooms?: StudyRoomUncheckedUpdateManyWithoutHostNestedInput
+    studyRoomParticipants?: StudyRoomParticipantUncheckedUpdateManyWithoutUserNestedInput
+    sentChatMessages?: StudyRoomMessageUncheckedUpdateManyWithoutUserNestedInput
+    videoPermissions?: VideoPermissionsUncheckedUpdateManyWithoutCreatedByNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
+    marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
+    feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
+    adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
+    profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MatchMessageUpsertWithWhereUniqueWithoutMatchInput = {
+    where: MatchMessageWhereUniqueInput
+    update: XOR<MatchMessageUpdateWithoutMatchInput, MatchMessageUncheckedUpdateWithoutMatchInput>
+    create: XOR<MatchMessageCreateWithoutMatchInput, MatchMessageUncheckedCreateWithoutMatchInput>
+  }
+
+  export type MatchMessageUpdateWithWhereUniqueWithoutMatchInput = {
+    where: MatchMessageWhereUniqueInput
+    data: XOR<MatchMessageUpdateWithoutMatchInput, MatchMessageUncheckedUpdateWithoutMatchInput>
+  }
+
+  export type MatchMessageUpdateManyWithWhereWithoutMatchInput = {
+    where: MatchMessageScalarWhereInput
+    data: XOR<MatchMessageUpdateManyMutationInput, MatchMessageUncheckedUpdateManyWithoutMatchInput>
+  }
+
+  export type MarketplaceMatchCreateWithoutMessagesInput = {
+    id?: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    item: MarketplaceItemCreateNestedOneWithoutMatchesInput
+    buyer: UserCreateNestedOneWithoutBuyerMatchesInput
+    seller: UserCreateNestedOneWithoutSellerMatchesInput
+  }
+
+  export type MarketplaceMatchUncheckedCreateWithoutMessagesInput = {
+    id?: string
+    itemId: string
+    buyerId: string
+    sellerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceMatchCreateOrConnectWithoutMessagesInput = {
+    where: MarketplaceMatchWhereUniqueInput
+    create: XOR<MarketplaceMatchCreateWithoutMessagesInput, MarketplaceMatchUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type UserCreateWithoutMatchMessagesInput = {
+    id?: string
+    email: string
+    password: string
+    name?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    documentType?: string | null
+    documentNumber?: string | null
+    phone?: string | null
+    country?: string | null
+    address?: string | null
+    status?: string
+    topUserCount?: number
+    createdActivities?: ActivityCreateNestedManyWithoutCreatorInput
+    comments?: CommentCreateNestedManyWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    createdExperiences?: ExperienceCreateNestedManyWithoutCreatorInput
+    invitationsSent?: GiftCardCreateNestedManyWithoutInviterInput
+    ownedGroups?: GroupCreateNestedManyWithoutOwnerInput
+    createdInvitationTemplates?: InvitationTemplateCreateNestedManyWithoutCreatorInput
+    merits?: MeritCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    publications?: PublicationCreateNestedManyWithoutUserInput
+    createdReports?: ReportCreateNestedManyWithoutCreatorInput
+    assignedPermissions?: RolePermissionCreateNestedManyWithoutAssignedByInput
+    tokens?: TokenCreateNestedManyWithoutUserInput
+    transactionsTo?: TransactionCreateNestedManyWithoutToUserInput
+    transactionsFrom?: TransactionCreateNestedManyWithoutFromUserInput
+    createdTemplates?: UIComponentTemplateCreateNestedManyWithoutCreatorInput
+    userAnswers?: UserAnswerCreateNestedManyWithoutUserInput
+    userChallenges?: UserChallengeCreateNestedManyWithoutUserInput
+    userGroups?: UserGroupCreateNestedManyWithoutUserInput
+    invitationsReceived?: UserInvitationCreateNestedManyWithoutInvitedUserInput
+    assignedRoles?: UserRoleCreateNestedManyWithoutAssignedByInput
+    userRoles?: UserRoleCreateNestedManyWithoutUserInput
+    hostedStudyRooms?: StudyRoomCreateNestedManyWithoutHostInput
+    studyRoomParticipants?: StudyRoomParticipantCreateNestedManyWithoutUserInput
+    sentChatMessages?: StudyRoomMessageCreateNestedManyWithoutUserInput
+    personality?: PersonalityCreateNestedOneWithoutUsersInput
+    videoPermissions?: VideoPermissionsCreateNestedManyWithoutCreatedByInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    createdWorlds?: WorldCreateNestedManyWithoutCreatorInput
+    marketplaceItems?: MarketplaceItemCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchCreateNestedManyWithoutSellerInput
+    feedbackReports?: FeedbackReportCreateNestedManyWithoutUserInput
+    adminFeedbackResponses?: FeedbackReportCreateNestedManyWithoutAdminUserInput
+    profile?: ProfileCreateNestedOneWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMatchMessagesInput = {
+    id?: string
+    email: string
+    password: string
+    name?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    documentType?: string | null
+    documentNumber?: string | null
+    phone?: string | null
+    country?: string | null
+    address?: string | null
+    status?: string
+    topUserCount?: number
+    personalityId?: string | null
+    createdActivities?: ActivityUncheckedCreateNestedManyWithoutCreatorInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    createdExperiences?: ExperienceUncheckedCreateNestedManyWithoutCreatorInput
+    invitationsSent?: GiftCardUncheckedCreateNestedManyWithoutInviterInput
+    ownedGroups?: GroupUncheckedCreateNestedManyWithoutOwnerInput
+    createdInvitationTemplates?: InvitationTemplateUncheckedCreateNestedManyWithoutCreatorInput
+    merits?: MeritUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    publications?: PublicationUncheckedCreateNestedManyWithoutUserInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatorInput
+    assignedPermissions?: RolePermissionUncheckedCreateNestedManyWithoutAssignedByInput
+    tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
+    transactionsTo?: TransactionUncheckedCreateNestedManyWithoutToUserInput
+    transactionsFrom?: TransactionUncheckedCreateNestedManyWithoutFromUserInput
+    createdTemplates?: UIComponentTemplateUncheckedCreateNestedManyWithoutCreatorInput
+    userAnswers?: UserAnswerUncheckedCreateNestedManyWithoutUserInput
+    userChallenges?: UserChallengeUncheckedCreateNestedManyWithoutUserInput
+    userGroups?: UserGroupUncheckedCreateNestedManyWithoutUserInput
+    invitationsReceived?: UserInvitationUncheckedCreateNestedManyWithoutInvitedUserInput
+    assignedRoles?: UserRoleUncheckedCreateNestedManyWithoutAssignedByInput
+    userRoles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    hostedStudyRooms?: StudyRoomUncheckedCreateNestedManyWithoutHostInput
+    studyRoomParticipants?: StudyRoomParticipantUncheckedCreateNestedManyWithoutUserInput
+    sentChatMessages?: StudyRoomMessageUncheckedCreateNestedManyWithoutUserInput
+    videoPermissions?: VideoPermissionsUncheckedCreateNestedManyWithoutCreatedByInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    createdWorlds?: WorldUncheckedCreateNestedManyWithoutCreatorInput
+    marketplaceItems?: MarketplaceItemUncheckedCreateNestedManyWithoutSellerInput
+    buyerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutBuyerInput
+    sellerMatches?: MarketplaceMatchUncheckedCreateNestedManyWithoutSellerInput
+    feedbackReports?: FeedbackReportUncheckedCreateNestedManyWithoutUserInput
+    adminFeedbackResponses?: FeedbackReportUncheckedCreateNestedManyWithoutAdminUserInput
+    profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMatchMessagesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMatchMessagesInput, UserUncheckedCreateWithoutMatchMessagesInput>
+  }
+
+  export type MarketplaceMatchUpsertWithoutMessagesInput = {
+    update: XOR<MarketplaceMatchUpdateWithoutMessagesInput, MarketplaceMatchUncheckedUpdateWithoutMessagesInput>
+    create: XOR<MarketplaceMatchCreateWithoutMessagesInput, MarketplaceMatchUncheckedCreateWithoutMessagesInput>
+    where?: MarketplaceMatchWhereInput
+  }
+
+  export type MarketplaceMatchUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: MarketplaceMatchWhereInput
+    data: XOR<MarketplaceMatchUpdateWithoutMessagesInput, MarketplaceMatchUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type MarketplaceMatchUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: MarketplaceItemUpdateOneRequiredWithoutMatchesNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerMatchesNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerMatchesNestedInput
+  }
+
+  export type MarketplaceMatchUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutMatchMessagesInput = {
+    update: XOR<UserUpdateWithoutMatchMessagesInput, UserUncheckedUpdateWithoutMatchMessagesInput>
+    create: XOR<UserCreateWithoutMatchMessagesInput, UserUncheckedCreateWithoutMatchMessagesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMatchMessagesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMatchMessagesInput, UserUncheckedUpdateWithoutMatchMessagesInput>
+  }
+
+  export type UserUpdateWithoutMatchMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    topUserCount?: IntFieldUpdateOperationsInput | number
+    createdActivities?: ActivityUpdateManyWithoutCreatorNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    createdExperiences?: ExperienceUpdateManyWithoutCreatorNestedInput
+    invitationsSent?: GiftCardUpdateManyWithoutInviterNestedInput
+    ownedGroups?: GroupUpdateManyWithoutOwnerNestedInput
+    createdInvitationTemplates?: InvitationTemplateUpdateManyWithoutCreatorNestedInput
+    merits?: MeritUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    publications?: PublicationUpdateManyWithoutUserNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatorNestedInput
+    assignedPermissions?: RolePermissionUpdateManyWithoutAssignedByNestedInput
+    tokens?: TokenUpdateManyWithoutUserNestedInput
+    transactionsTo?: TransactionUpdateManyWithoutToUserNestedInput
+    transactionsFrom?: TransactionUpdateManyWithoutFromUserNestedInput
+    createdTemplates?: UIComponentTemplateUpdateManyWithoutCreatorNestedInput
+    userAnswers?: UserAnswerUpdateManyWithoutUserNestedInput
+    userChallenges?: UserChallengeUpdateManyWithoutUserNestedInput
+    userGroups?: UserGroupUpdateManyWithoutUserNestedInput
+    invitationsReceived?: UserInvitationUpdateManyWithoutInvitedUserNestedInput
+    assignedRoles?: UserRoleUpdateManyWithoutAssignedByNestedInput
+    userRoles?: UserRoleUpdateManyWithoutUserNestedInput
+    hostedStudyRooms?: StudyRoomUpdateManyWithoutHostNestedInput
+    studyRoomParticipants?: StudyRoomParticipantUpdateManyWithoutUserNestedInput
+    sentChatMessages?: StudyRoomMessageUpdateManyWithoutUserNestedInput
+    personality?: PersonalityUpdateOneWithoutUsersNestedInput
+    videoPermissions?: VideoPermissionsUpdateManyWithoutCreatedByNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
+    marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
+    adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
+    profile?: ProfileUpdateOneWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMatchMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    topUserCount?: IntFieldUpdateOperationsInput | number
+    personalityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdActivities?: ActivityUncheckedUpdateManyWithoutCreatorNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    createdExperiences?: ExperienceUncheckedUpdateManyWithoutCreatorNestedInput
+    invitationsSent?: GiftCardUncheckedUpdateManyWithoutInviterNestedInput
+    ownedGroups?: GroupUncheckedUpdateManyWithoutOwnerNestedInput
+    createdInvitationTemplates?: InvitationTemplateUncheckedUpdateManyWithoutCreatorNestedInput
+    merits?: MeritUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    publications?: PublicationUncheckedUpdateManyWithoutUserNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatorNestedInput
+    assignedPermissions?: RolePermissionUncheckedUpdateManyWithoutAssignedByNestedInput
+    tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
+    transactionsTo?: TransactionUncheckedUpdateManyWithoutToUserNestedInput
+    transactionsFrom?: TransactionUncheckedUpdateManyWithoutFromUserNestedInput
+    createdTemplates?: UIComponentTemplateUncheckedUpdateManyWithoutCreatorNestedInput
+    userAnswers?: UserAnswerUncheckedUpdateManyWithoutUserNestedInput
+    userChallenges?: UserChallengeUncheckedUpdateManyWithoutUserNestedInput
+    userGroups?: UserGroupUncheckedUpdateManyWithoutUserNestedInput
+    invitationsReceived?: UserInvitationUncheckedUpdateManyWithoutInvitedUserNestedInput
+    assignedRoles?: UserRoleUncheckedUpdateManyWithoutAssignedByNestedInput
+    userRoles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    hostedStudyRooms?: StudyRoomUncheckedUpdateManyWithoutHostNestedInput
+    studyRoomParticipants?: StudyRoomParticipantUncheckedUpdateManyWithoutUserNestedInput
+    sentChatMessages?: StudyRoomMessageUncheckedUpdateManyWithoutUserNestedInput
+    videoPermissions?: VideoPermissionsUncheckedUpdateManyWithoutCreatedByNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
+    marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
+    adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
+    profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PlaylistCreateManyMundoInput = {
@@ -90424,18 +95835,57 @@ export namespace Prisma {
   export type MarketplaceItemCreateManySellerInput = {
     id?: string
     name: string
-    description: string
-    type: $Enums.MarketplaceItemType
-    priceUnits: number
-    priceToins?: number | null
+    description?: string | null
+    fullDescription?: string | null
+    itemType?: $Enums.MarketplaceItemType
+    price?: number
+    priceToins?: number
+    currency?: $Enums.Currency
+    category?: string | null
     tags?: MarketplaceItemCreatetagsInput | string[]
-    imageUrl?: string | null
+    images?: MarketplaceItemCreateimagesInput | string[]
+    stock?: number
+    rating?: number
+    reviewCount?: number
     location?: string | null
     status?: $Enums.MarketplaceItemStatus
-    viewCount?: number
-    favoriteCount?: number
+    isActive?: boolean
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    viewCount?: number
+    favoriteCount?: number
+    metadata?: string | null
+  }
+
+  export type MarketplaceMatchCreateManyBuyerInput = {
+    id?: string
+    itemId: string
+    sellerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceMatchCreateManySellerInput = {
+    id?: string
+    itemId: string
+    buyerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MatchMessageCreateManySenderInput = {
+    id?: string
+    matchId: string
+    content: string
+    createdAt?: Date | string
   }
 
   export type FeedbackReportCreateManyUserInput = {
@@ -90482,11 +95932,15 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type ReviewCreateManyReviewerInput = {
+  export type ReviewCreateManyUserInput = {
     id?: string
     marketplaceItemId: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -91295,54 +96749,177 @@ export namespace Prisma {
   export type MarketplaceItemUpdateWithoutSellerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
     reviews?: ReviewUpdateManyWithoutMarketplaceItemNestedInput
+    matches?: MarketplaceMatchUpdateManyWithoutItemNestedInput
   }
 
   export type MarketplaceItemUncheckedUpdateWithoutSellerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
     reviews?: ReviewUncheckedUpdateManyWithoutMarketplaceItemNestedInput
+    matches?: MarketplaceMatchUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type MarketplaceItemUncheckedUpdateManyWithoutSellerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
-    priceUnits?: IntFieldUpdateOperationsInput | number
-    priceToins?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    itemType?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    price?: FloatFieldUpdateOperationsInput | number
+    priceToins?: FloatFieldUpdateOperationsInput | number
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: MarketplaceItemUpdatetagsInput | string[]
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: MarketplaceItemUpdateimagesInput | string[]
+    stock?: IntFieldUpdateOperationsInput | number
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMarketplaceItemStatusFieldUpdateOperationsInput | $Enums.MarketplaceItemStatus
-    viewCount?: IntFieldUpdateOperationsInput | number
-    favoriteCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viewCount?: IntFieldUpdateOperationsInput | number
+    favoriteCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MarketplaceMatchUpdateWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: MarketplaceItemUpdateOneRequiredWithoutMatchesNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerMatchesNestedInput
+    messages?: MatchMessageUpdateManyWithoutMatchNestedInput
+  }
+
+  export type MarketplaceMatchUncheckedUpdateWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MatchMessageUncheckedUpdateManyWithoutMatchNestedInput
+  }
+
+  export type MarketplaceMatchUncheckedUpdateManyWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceMatchUpdateWithoutSellerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: MarketplaceItemUpdateOneRequiredWithoutMatchesNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerMatchesNestedInput
+    messages?: MatchMessageUpdateManyWithoutMatchNestedInput
+  }
+
+  export type MarketplaceMatchUncheckedUpdateWithoutSellerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MatchMessageUncheckedUpdateManyWithoutMatchNestedInput
+  }
+
+  export type MarketplaceMatchUncheckedUpdateManyWithoutSellerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MatchMessageUpdateWithoutSenderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    match?: MarketplaceMatchUpdateOneRequiredWithoutMessagesNestedInput
+  }
+
+  export type MatchMessageUncheckedUpdateWithoutSenderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    matchId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MatchMessageUncheckedUpdateManyWithoutSenderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    matchId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeedbackReportUpdateWithoutUserInput = {
@@ -91477,29 +97054,41 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ReviewUpdateWithoutReviewerInput = {
+  export type ReviewUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     marketplaceItem?: MarketplaceItemUpdateOneRequiredWithoutReviewsNestedInput
   }
 
-  export type ReviewUncheckedUpdateWithoutReviewerInput = {
+  export type ReviewUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     marketplaceItemId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ReviewUncheckedUpdateManyWithoutReviewerInput = {
+  export type ReviewUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     marketplaceItemId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -92135,10 +97724,13 @@ export namespace Prisma {
     wallet?: WalletUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPersonalityInput = {
@@ -92189,10 +97781,13 @@ export namespace Prisma {
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     createdWorlds?: WorldUncheckedUpdateManyWithoutCreatorNestedInput
     marketplaceItems?: MarketplaceItemUncheckedUpdateManyWithoutSellerNestedInput
+    buyerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutBuyerNestedInput
+    sellerMatches?: MarketplaceMatchUncheckedUpdateManyWithoutSellerNestedInput
+    matchMessages?: MatchMessageUncheckedUpdateManyWithoutSenderNestedInput
     feedbackReports?: FeedbackReportUncheckedUpdateManyWithoutUserNestedInput
     adminFeedbackResponses?: FeedbackReportUncheckedUpdateManyWithoutAdminUserNestedInput
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPersonalityInput = {
@@ -92350,9 +97945,24 @@ export namespace Prisma {
 
   export type ReviewCreateManyMarketplaceItemInput = {
     id?: string
-    reviewerId: string
+    userId: string
     rating: number
     comment?: string | null
+    communication?: number | null
+    quality?: number | null
+    delivery?: number | null
+    value?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceMatchCreateManyItemInput = {
+    id?: string
+    buyerId: string
+    sellerId: string
+    buyerConfirmed?: boolean
+    sellerConfirmed?: boolean
+    status?: $Enums.MatchStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -92361,25 +97971,72 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewer?: UserUpdateOneRequiredWithoutReviewsNestedInput
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutMarketplaceItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewerId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewUncheckedUpdateManyWithoutMarketplaceItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewerId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
+    communication?: NullableIntFieldUpdateOperationsInput | number | null
+    quality?: NullableIntFieldUpdateOperationsInput | number | null
+    delivery?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceMatchUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyer?: UserUpdateOneRequiredWithoutBuyerMatchesNestedInput
+    seller?: UserUpdateOneRequiredWithoutSellerMatchesNestedInput
+    messages?: MatchMessageUpdateManyWithoutMatchNestedInput
+  }
+
+  export type MarketplaceMatchUncheckedUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MatchMessageUncheckedUpdateManyWithoutMatchNestedInput
+  }
+
+  export type MarketplaceMatchUncheckedUpdateManyWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
+    buyerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    sellerConfirmed?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumMatchStatusFieldUpdateOperationsInput | $Enums.MatchStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -92453,6 +98110,34 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     messageType?: StringFieldUpdateOperationsInput | string
     metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MatchMessageCreateManyMatchInput = {
+    id?: string
+    senderId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MatchMessageUpdateWithoutMatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sender?: UserUpdateOneRequiredWithoutMatchMessagesNestedInput
+  }
+
+  export type MatchMessageUncheckedUpdateWithoutMatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MatchMessageUncheckedUpdateManyWithoutMatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -92545,6 +98230,10 @@ export namespace Prisma {
      * @deprecated Use StudyRoomCountOutputTypeDefaultArgs instead
      */
     export type StudyRoomCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = StudyRoomCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use MarketplaceMatchCountOutputTypeDefaultArgs instead
+     */
+    export type MarketplaceMatchCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MarketplaceMatchCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use MundoDefaultArgs instead
      */
@@ -92749,6 +98438,14 @@ export namespace Prisma {
      * @deprecated Use ReviewDefaultArgs instead
      */
     export type ReviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ReviewDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use MarketplaceMatchDefaultArgs instead
+     */
+    export type MarketplaceMatchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MarketplaceMatchDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use MatchMessageDefaultArgs instead
+     */
+    export type MatchMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MatchMessageDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

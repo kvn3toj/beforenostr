@@ -766,23 +766,34 @@ const InteractiveVideoPlayerOverlay: React.FC<
       }}
     >
       {/* Video Element */}
-      <video
-        ref={videoRef}
-        src={videoUrl}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onEnded={handleVideoEnd}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          backgroundColor: '#000',
-        }}
-        autoPlay={autoplay}
-        playsInline
-      />
+      {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (
+        <iframe
+          src={videoUrl.replace('watch?v=', 'embed/')}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{ width: '100%', height: '100%' }}
+          title="YouTube video player"
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={handleVideoEnd}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            backgroundColor: '#000',
+          }}
+          autoPlay={autoplay}
+          playsInline
+        />
+      )}
 
       {/* Status Bar - Top overlay */}
       <Box
@@ -858,13 +869,13 @@ const InteractiveVideoPlayerOverlay: React.FC<
               Nivel {metrics.level}
             </Typography>
           </Box>
-          
+
           {/* Debug Controls */}
           {showDebugControls && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 1 }}>
               <IconButton
                 size="small"
-                sx={{ 
+                sx={{
                   color: 'white',
                   backgroundColor: 'rgba(99, 102, 241, 0.7)',
                   '&:hover': { backgroundColor: 'rgba(99, 102, 241, 0.9)' },
@@ -1018,7 +1029,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
                         px: 3,
                         textAlign: 'left',
                         justifyContent: 'flex-start',
-                        background: selectedAnswer === option.id 
+                        background: selectedAnswer === option.id
                           ? 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
                           : 'rgba(255, 255, 255, 0.15)',
                         borderColor: 'rgba(255, 255, 255, 0.3)',
@@ -1028,7 +1039,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
                         fontWeight: 500,
                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         '&:hover': {
-                          background: selectedAnswer === option.id 
+                          background: selectedAnswer === option.id
                             ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)'
                             : 'rgba(255, 255, 255, 0.25)',
                           transform: 'translateY(-2px)',
@@ -1039,15 +1050,15 @@ const InteractiveVideoPlayerOverlay: React.FC<
                         }
                       }}
                     >
-                      <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
                         width: '100%',
-                        gap: 2 
+                        gap: 2
                       }}>
-                        <Avatar sx={{ 
-                          width: 36, 
-                          height: 36, 
+                        <Avatar sx={{
+                          width: 36,
+                          height: 36,
                           bgcolor: selectedAnswer === option.id ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.2)',
                           color: selectedAnswer === option.id ? '#10b981' : 'white',
                           fontSize: '16px',
@@ -1136,7 +1147,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
                         backgroundColor: 'rgba(255, 255, 255, 0.2)',
                         '& .MuiLinearProgress-bar': {
                           borderRadius: 4,
-                          background: questionProgress > 30 
+                          background: questionProgress > 30
                             ? 'linear-gradient(90deg, #10b981 0%, #34d399 100%)'
                             : 'linear-gradient(90deg, #ef4444 0%, #f87171 100%)',
                           transition: 'background 0.3s ease',
@@ -1148,10 +1159,10 @@ const InteractiveVideoPlayerOverlay: React.FC<
 
                 {/* Reward Preview */}
                 {activeQuestion.reward && (
-                  <Box sx={{ 
-                    mt: 3, 
-                    p: 2, 
-                    background: 'rgba(255, 255, 255, 0.1)', 
+                  <Box sx={{
+                    mt: 3,
+                    p: 2,
+                    background: 'rgba(255, 255, 255, 0.1)',
                     borderRadius: 2,
                     textAlign: 'center'
                   }}>

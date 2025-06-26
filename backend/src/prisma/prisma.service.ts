@@ -201,9 +201,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     if (itemsToReview.huerto && itemsToReview.kombucha && itemsToReview.sonido && regularUser) {
         await this.review.createMany({
             data: [
-                { rating: 5, comment: '¡Increíble taller! Elena es una maestra maravillosa, explica con una claridad y una pasión que contagian.', itemId: itemsToReview.huerto.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
-                { rating: 5, comment: 'La mejor kombucha que he probado, se nota que está hecha con amor y con ingredientes de primera.', itemId: itemsToReview.kombucha.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
-                { rating: 5, comment: 'La sesión con Marco fue mágica. Sentí una paz profunda y una claridad que no había experimentado antes.', itemId: itemsToReview.sonido.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
+                { rating: 5, comment: '¡Increíble taller! Elena es una maestra maravillosa, explica con una claridad y una pasión que contagian.', marketplaceItemId: itemsToReview.huerto.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
+                { rating: 5, comment: 'La mejor kombucha que he probado, se nota que está hecha con amor y con ingredientes de primera.', marketplaceItemId: itemsToReview.kombucha.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
+                { rating: 5, comment: 'La sesión con Marco fue mágica. Sentí una paz profunda y una claridad que no había experimentado antes.', marketplaceItemId: itemsToReview.sonido.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
             ]
         });
     }

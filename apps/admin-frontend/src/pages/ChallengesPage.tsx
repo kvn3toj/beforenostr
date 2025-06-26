@@ -29,7 +29,7 @@ import {
   TableHead,
   TableRow,
   Avatar,
-  Grid2 as Grid,
+  Unstable_Grid2 as Grid,
 } from '@mui/material'
 import {
   Add as AddIcon,
@@ -354,7 +354,7 @@ export const ChallengesPage: React.FC = () => {
                 <TrophyIcon color="warning" sx={{ mr: 2 }} />
                 <Box>
                   <Typography variant="h4" fontWeight="bold">
-                    {challenges.reduce((acc, c) => 
+                    {challenges.reduce((acc, c) =>
                       acc + c.userChallenges.filter(uc => uc.status === 'COMPLETED').length, 0
                     )}
                   </Typography>
@@ -392,7 +392,7 @@ export const ChallengesPage: React.FC = () => {
                         size="small"
                       />
                     </Box>
-                    
+
                     <Typography variant="body2" color="text.secondary" mb={2}>
                       {challenge.description}
                     </Typography>
@@ -466,7 +466,7 @@ export const ChallengesPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {challenges.flatMap(challenge => 
+                {challenges.flatMap(challenge =>
                   challenge.userChallenges.map(userChallenge => (
                     <TableRow key={userChallenge.id}>
                       <TableCell>
@@ -661,9 +661,9 @@ const ChallengeDialog: React.FC<ChallengeDialogProps> = ({
                 label="Máximo Participantes"
                 type="number"
                 value={formData.maxParticipants || ''}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  maxParticipants: e.target.value ? parseInt(e.target.value) : undefined 
+                onChange={(e) => setFormData({
+                  ...formData,
+                  maxParticipants: e.target.value ? parseInt(e.target.value) : undefined
                 })}
               />
             </Grid>

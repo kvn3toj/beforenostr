@@ -190,6 +190,9 @@ model User {
   wallet                     Wallet?
   createdWorlds              World[]                @relation("WorldCreator")
   marketplaceItems           MarketplaceItem[]
+  buyerMatches               MarketplaceMatch[]     @relation("MatchBuyer")
+  sellerMatches              MarketplaceMatch[]     @relation("MatchSeller")
+  matchMessages              MatchMessage[]
   feedbackReports            FeedbackReport[]       @relation("UserFeedbackReports")
   adminFeedbackResponses     FeedbackReport[]       @relation("AdminFeedbackResponses")
   profile                    Profile?
@@ -863,27 +866,49 @@ enum MarketplaceItemStatus {
 }
 
 model MarketplaceItem {
-  id            String                @id @default(uuid())
-  name          String
-  description   String
-  type          MarketplaceItemType
-  priceUnits    Int
-  priceToins    Int?
-  tags          String[]
-  imageUrl      String?
-  location      String?
-  status        MarketplaceItemStatus @default(DRAFT)
-  sellerId      String
-  viewCount     Int                   @default(0)
-  favoriteCount Int                   @default(0)
-  createdAt     DateTime              @default(now())
-  updatedAt     DateTime              @updatedAt
-  seller        User                  @relation(fields: [sellerId], references: [id])
-  reviews       Review[]              @relation("ItemReviews")
+  id              String                @id @default(uuid())
+  name            String
+  description     String?
+  fullDescription String?
+  itemType        MarketplaceItemType   @default(SERVICE)
+  price           Float                 @default(0)
+  priceToins      Float                 @default(0)
+  currency        Currency              @default(LUKAS)
+  category        String?
+  tags            String[]
+  images          String[]
+  stock           Int                   @default(0)
+  rating          Float                 @default(0)
+  reviewCount     Int                   @default(0)
+  location        String?
+  status          MarketplaceItemStatus @default(ACTIVE)
+  isActive        Boolean               @default(true)
+  isDeleted       Boolean               @default(false)
+  deletedAt       DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  viewCount       Int                   @default(0)
+  favoriteCount   Int                   @default(0)
+  sellerId        String
+  metadata        String?
+  seller          User                  @relation(fields: [sellerId], references: [id])
+  reviews         Review[]
+  matches         MarketplaceMatch[]
 
   @@index([sellerId])
-  @@index([type])
   @@index([status])
+  @@index([isActive])
+  @@index([isDeleted])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([viewCount])
+  @@index([favoriteCount])
+  @@index([itemType])
+  @@index([price])
+  @@index([priceToins])
+  @@index([currency])
+  @@index([category])
+  @@index([location])
   @@map("marketplace_items")
 }
 
@@ -1041,30 +1066,90 @@ enum FeedbackStatus {
 // === NUEVOS MODELOS PARA MARKETPLACE ===
 
 model Profile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  bio       String?
-  avatarUrl String?
-  location  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                     String   @id @default(uuid())
+  userId                 String   @unique
+  user                   User     @relation(fields: [userId], references: [id])
+  avatar                 String?
+  bio                    String?
+  location               String?
+  website                String?
+  skills                 String[]
+  interests              String[]
+  isEmprendedorConfiable Boolean  @default(false)
+  socialLinks            Json?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 
   @@map("profiles")
 }
 
 model Review {
   id                String          @id @default(uuid())
-  reviewerId        String
   marketplaceItemId String
+  marketplaceItem   MarketplaceItem @relation(fields: [marketplaceItemId], references: [id])
+  userId            String
+  user              User            @relation("UserReviews", fields: [userId], references: [id])
   rating            Int
   comment           String?
+  communication     Int?
+  quality           Int?
+  delivery          Int?
+  value             Int?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  reviewer          User            @relation("UserReviews", fields: [reviewerId], references: [id], onDelete: Cascade)
-  marketplaceItem   MarketplaceItem @relation("ItemReviews", fields: [marketplaceItemId], references: [id], onDelete: Cascade)
 
-  @@index([reviewerId])
   @@index([marketplaceItemId])
+  @@index([userId])
   @@map("reviews")
+}
+
+/// --------------------------------------------------
+/// Marketplace transactional match between buyer and seller
+/// Added 2025-06-26 to support /marketplace/match/* endpoints
+/// --------------------------------------------------
+
+enum MatchStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model MarketplaceMatch {
+  id              String      @id @default(uuid())
+  itemId          String      @map("marketplaceItemId")
+  buyerId         String
+  sellerId        String
+  buyerConfirmed  Boolean     @default(false)
+  sellerConfirmed Boolean     @default(false)
+  status          MatchStatus @default(PENDING)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  /// Relations
+  item     MarketplaceItem @relation(fields: [itemId], references: [id])
+  buyer    User            @relation("MatchBuyer", fields: [buyerId], references: [id])
+  seller   User            @relation("MatchSeller", fields: [sellerId], references: [id])
+  messages MatchMessage[]
+
+  @@index([itemId])
+  @@index([buyerId])
+  @@index([sellerId])
+  @@map("marketplace_matches")
+}
+
+model MatchMessage {
+  id        String   @id @default(uuid())
+  matchId   String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  /// Relations
+  match  MarketplaceMatch @relation(fields: [matchId], references: [id])
+  sender User             @relation(fields: [senderId], references: [id])
+
+  @@index([matchId])
+  @@index([senderId])
+  @@map("match_messages")
 }

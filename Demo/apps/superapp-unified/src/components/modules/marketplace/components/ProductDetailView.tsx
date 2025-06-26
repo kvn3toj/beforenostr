@@ -124,6 +124,12 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     return `$${safePrice.toLocaleString()}`;
   };
 
+  const safeTags: string[] = Array.isArray(product.tags)
+    ? product.tags
+    : typeof product.tags === 'string'
+    ? product.tags.split(',').map((t) => t.trim()).filter(Boolean)
+    : [];
+
   const averageAspectRating = product.reviews?.length
     ? product.reviews.reduce(
         (acc, review) => {
@@ -180,7 +186,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 size="medium"
                 ayniScore={product.seller.badges?.some(b => b.name.toLowerCase().includes('ayni')) ? 90 : undefined}
                 meritos={product.seller.badges?.filter(b => b.category === 'achievement').length || 0}
-                isSustainable={product.tags?.some(tag => tag.toLowerCase().includes('sostenible'))}
+                isSustainable={safeTags.some(tag => tag.toLowerCase().includes('sostenible'))}
                 isEmprendedorConfiable={product.seller.badges?.some(b => b.category === 'verification' && b.name.toLowerCase().includes('confiable'))}
               />
             </Box>
@@ -282,7 +288,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
 
               {/* Tags */}
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
-                {product.tags.slice(0, 6).map((tag) => (
+                {safeTags.slice(0, 6).map((tag) => (
                   <Chip
                     key={tag}
                     label={tag}
@@ -291,9 +297,9 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     clickable
                   />
                 ))}
-                {product.tags.length > 6 && (
+                {safeTags.length > 6 && (
                   <Chip
-                    label={`+${product.tags.length - 6} más`}
+                    label={`+${safeTags.length - 6} más`}
                     variant="outlined"
                     size="small"
                     color="primary"

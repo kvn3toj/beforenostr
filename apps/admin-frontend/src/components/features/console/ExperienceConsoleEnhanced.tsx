@@ -1,6 +1,6 @@
 /**
  * 🎮 Enhanced Experience Console - Advanced Gamification Management
- * 
+ *
  * Versión mejorada de la Consola con UX/UI optimizada y funcionalidades avanzadas
  * Incluye visualizaciones de datos, animaciones y mejor organización
  */
@@ -9,7 +9,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  Grid2 as Grid,
+  Unstable_Grid2 as Grid,
   Card,
   CardContent,
   CardHeader,
@@ -106,7 +106,7 @@ import {
   Save as SaveIcon,
   Close as CloseIcon,
 } from '@mui/icons-material';
-import { 
+import {
   BarChart,
   Bar,
   XAxis,
@@ -225,7 +225,7 @@ const ExperienceConsoleEnhanced: React.FC = () => {
     };
 
     generateMockData();
-    
+
     // Simulate real-time updates
     if (realTimeUpdates) {
       const interval = setInterval(generateMockData, 30000);
@@ -352,8 +352,8 @@ const ExperienceConsoleEnhanced: React.FC = () => {
               <DashboardIcon color="primary" />
               Dashboard en Tiempo Real
             </Typography>
-            <Chip 
-              label={realTimeUpdates ? 'Live' : 'Paused'} 
+            <Chip
+              label={realTimeUpdates ? 'Live' : 'Paused'}
               color={realTimeUpdates ? 'success' : 'warning'}
               size="small"
             />
@@ -361,7 +361,7 @@ const ExperienceConsoleEnhanced: React.FC = () => {
           <Box sx={{ display: 'flex', gap: 1 }}>
             <FormControlLabel
               control={
-                <Switch 
+                <Switch
                   checked={realTimeUpdates}
                   onChange={(e) => setRealTimeUpdates(e.target.checked)}
                 />
@@ -392,9 +392,9 @@ const ExperienceConsoleEnhanced: React.FC = () => {
                 +{metrics?.activeUsers.growth}% esta semana
               </Typography>
             </Box>
-            <LinearProgress 
-              variant="determinate" 
-              value={metrics?.activeUsers.growth || 0} 
+            <LinearProgress
+              variant="determinate"
+              value={metrics?.activeUsers.growth || 0}
               sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.3)' }}
             />
           </CardContent>
@@ -417,9 +417,9 @@ const ExperienceConsoleEnhanced: React.FC = () => {
                 {metrics?.engagement.gplViews} views hoy
               </Typography>
             </Box>
-            <LinearProgress 
-              variant="determinate" 
-              value={84} 
+            <LinearProgress
+              variant="determinate"
+              value={84}
               sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.3)' }}
             />
           </CardContent>
@@ -442,9 +442,9 @@ const ExperienceConsoleEnhanced: React.FC = () => {
                 12.7 promedio/día
               </Typography>
             </Box>
-            <LinearProgress 
-              variant="determinate" 
-              value={67} 
+            <LinearProgress
+              variant="determinate"
+              value={67}
               sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.3)' }}
             />
           </CardContent>
@@ -467,9 +467,9 @@ const ExperienceConsoleEnhanced: React.FC = () => {
                 {metrics?.systemHealth.responseTime}ms avg
               </Typography>
             </Box>
-            <LinearProgress 
-              variant="determinate" 
-              value={metrics?.systemHealth.uptime || 0} 
+            <LinearProgress
+              variant="determinate"
+              value={metrics?.systemHealth.uptime || 0}
               sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.3)' }}
             />
           </CardContent>
@@ -479,7 +479,7 @@ const ExperienceConsoleEnhanced: React.FC = () => {
       {/* Stage Flow Visualization */}
       <Grid xs={12} md={8}>
         <Card sx={{ height: 400 }}>
-          <CardHeader 
+          <CardHeader
             title="Customer Journey Flow"
             subheader="Progresión de usuarios entre stages"
             action={
@@ -492,12 +492,12 @@ const ExperienceConsoleEnhanced: React.FC = () => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               {stageData.map((stage, index) => (
                 <Box key={stage.id} sx={{ textAlign: 'center', flex: 1 }}>
-                  <Avatar 
-                    sx={{ 
-                      bgcolor: stage.color, 
-                      width: 60, 
-                      height: 60, 
-                      mx: 'auto', 
+                  <Avatar
+                    sx={{
+                      bgcolor: stage.color,
+                      width: 60,
+                      height: 60,
+                      mx: 'auto',
                       mb: 1,
                       cursor: 'pointer'
                     }}
@@ -515,10 +515,10 @@ const ExperienceConsoleEnhanced: React.FC = () => {
                     {stage.completionRate}% completion
                   </Typography>
                   {index < stageData.length - 1 && (
-                    <Box sx={{ 
-                      position: 'absolute', 
-                      right: '-50px', 
-                      top: '50%', 
+                    <Box sx={{
+                      position: 'absolute',
+                      right: '-50px',
+                      top: '50%',
                       transform: 'translateY(-50%)',
                       color: 'primary.main',
                       fontSize: '24px'
@@ -529,7 +529,7 @@ const ExperienceConsoleEnhanced: React.FC = () => {
                 </Box>
               ))}
             </Box>
-            
+
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={[
                 { name: 'BUYER', value: 561, conversion: 68 },
@@ -551,7 +551,7 @@ const ExperienceConsoleEnhanced: React.FC = () => {
       {/* Octalysis Radar */}
       <Grid xs={12} md={4}>
         <Card sx={{ height: 400 }}>
-          <CardHeader 
+          <CardHeader
             title="Framework Octalysis"
             subheader="Intensidad de elementos gamificados"
           />
@@ -577,7 +577,7 @@ const ExperienceConsoleEnhanced: React.FC = () => {
       {/* Real-time Activity Feed */}
       <Grid xs={12}>
         <Card>
-          <CardHeader 
+          <CardHeader
             title="Actividad en Tiempo Real"
             subheader="Últimas acciones en el ecosistema CoomÜnity"
             action={
@@ -596,8 +596,8 @@ const ExperienceConsoleEnhanced: React.FC = () => {
               ].map((activity, index) => (
                 <ListItem key={index}>
                   <ListItemAvatar>
-                    <Avatar sx={{ 
-                      bgcolor: activity.type === 'gpl' ? '#4ECDC4' : 
+                    <Avatar sx={{
+                      bgcolor: activity.type === 'gpl' ? '#4ECDC4' :
                                activity.type === 'trust' ? '#45B7D1' :
                                activity.type === 'marketplace' ? '#FECA57' : '#96CEB4'
                     }}>
@@ -642,19 +642,19 @@ const ExperienceConsoleEnhanced: React.FC = () => {
       {contestsData.map((contest) => (
         <Grid xs={12} md={6} key={contest.id}>
           <Card sx={{ height: '100%', position: 'relative', overflow: 'visible' }}>
-            <Box sx={{ 
-              position: 'absolute', 
-              top: -10, 
-              right: 10, 
-              zIndex: 1 
+            <Box sx={{
+              position: 'absolute',
+              top: -10,
+              right: 10,
+              zIndex: 1
             }}>
-              <Chip 
+              <Chip
                 label={contest.type.toUpperCase()}
                 color={contest.type === 'weekly' ? 'primary' : contest.type === 'monthly' ? 'secondary' : 'warning'}
                 size="small"
               />
             </Box>
-            
+
             <CardHeader
               title={contest.name}
               subheader={`${contest.participants} participantes • ${contest.duration} días`}
@@ -664,15 +664,15 @@ const ExperienceConsoleEnhanced: React.FC = () => {
                 </Avatar>
               }
             />
-            
+
             <CardContent>
               <Box sx={{ mb: 2 }}>
                 <Typography variant="body2" gutterBottom>
                   Progreso del concurso
                 </Typography>
-                <LinearProgress 
-                  variant="determinate" 
-                  value={contest.progress} 
+                <LinearProgress
+                  variant="determinate"
+                  value={contest.progress}
                   sx={{ height: 8, borderRadius: 4 }}
                 />
                 <Typography variant="caption" color="textSecondary">
@@ -717,8 +717,8 @@ const ExperienceConsoleEnhanced: React.FC = () => {
               <Button size="small" startIcon={<AssessmentIcon />}>
                 Analytics
               </Button>
-              <Button 
-                size="small" 
+              <Button
+                size="small"
                 color={contest.isActive ? 'error' : 'success'}
                 startIcon={contest.isActive ? <PauseIcon /> : <PlayIcon />}
               >
@@ -742,7 +742,7 @@ const ExperienceConsoleEnhanced: React.FC = () => {
   return (
     <Box sx={{ width: '100%', bgcolor: 'background.default', minHeight: '100vh', position: 'relative' }}>
       {/* Header with enhanced styling */}
-      <Box sx={{ 
+      <Box sx={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         color: 'white',
         px: 3,
@@ -754,11 +754,11 @@ const ExperienceConsoleEnhanced: React.FC = () => {
         <Typography variant="subtitle1">
           Centro de control avanzado para experiencias gamificadas • Framework Octalysis aplicado
         </Typography>
-        
-        <Tabs 
-          value={activeTab} 
-          onChange={handleTabChange} 
-          sx={{ 
+
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          sx={{
             mt: 2,
             '& .MuiTab-root': { color: 'rgba(255,255,255,0.7)' },
             '& .Mui-selected': { color: 'white !important' },

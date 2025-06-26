@@ -608,6 +608,12 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     );
   }
 
+  // 🟠 DEBUG LOGS: Estado de carga y error
+  console.log('🟠 Estado de carga:', { isLoading, error, backendVideos });
+  if (error) {
+    console.error('🛑 Error detectado en useVideos:', error, backendVideos);
+  }
+
   // 🎨 Error state mejorado
   if (error) {
     return (

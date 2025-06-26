@@ -30,16 +30,6 @@ const CONSCIOUS_NAV_ITEMS = [
     badge: undefined, // Se podrá añadir dinámicamente
   },
   {
-    label: 'LETS',
-    value: '/lets',
-    icon: <SwapHoriz />,
-    element: 'Agua', // Flujo, intercambio, conexión
-    color: '#4ECDC4',
-    gradient: 'linear-gradient(135deg, #4ECDC4, #44A08D)',
-    description: 'Intercambio consciente',
-    badge: undefined,
-  },
-  {
     label: 'ÜStats',
     value: '/ustats',
     icon: <BarChart />,

@@ -36,7 +36,9 @@ const adaptBackendVideoToVideoItem = (backendVideo: any): VideoItem => {
     id: backendVideo.id?.toString() || 'unknown',
     title: backendVideo.title || 'Video sin título',
     description: backendVideo.description || 'Sin descripción disponible',
-    thumbnail: '🎬', // Placeholder, logic can be enhanced
+    thumbnail: backendVideo.externalId
+      ? `https://img.youtube.com/vi/${backendVideo.externalId}/maxresdefault.jpg`
+      : '🎬',
     duration: backendVideo.duration || 0,
     difficulty,
     category: backendVideo.categories?.[0] || 'General',

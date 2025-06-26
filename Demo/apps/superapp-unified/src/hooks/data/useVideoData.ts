@@ -58,12 +58,22 @@ const adaptBackendVideoData = (backendVideo: any): any => {
 
     if (typeof backendVideo.tags === 'string') {
       try {
-        tags = JSON.parse(backendVideo.tags);
+        const parsed = JSON.parse(backendVideo.tags);
+        if (Array.isArray(parsed)) {
+          tags = parsed;
+        } else if (parsed && typeof parsed === 'object') {
+          // Extrae solo los valores string del objeto
+          tags = Object.values(parsed).map(String);
+        } else {
+          tags = [String(parsed)];
+        }
       } catch {
         tags = [backendVideo.tags];
       }
     } else if (Array.isArray(backendVideo.tags)) {
       tags = backendVideo.tags;
+    } else if (backendVideo.tags && typeof backendVideo.tags === 'object') {
+      tags = Object.values(backendVideo.tags).map(String);
     }
 
     // Adaptar preguntas al formato esperado

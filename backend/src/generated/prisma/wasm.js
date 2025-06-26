@@ -624,18 +624,28 @@ exports.Prisma.MarketplaceItemScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  type: 'type',
-  priceUnits: 'priceUnits',
+  fullDescription: 'fullDescription',
+  itemType: 'itemType',
+  price: 'price',
   priceToins: 'priceToins',
+  currency: 'currency',
+  category: 'category',
   tags: 'tags',
-  imageUrl: 'imageUrl',
+  images: 'images',
+  stock: 'stock',
+  rating: 'rating',
+  reviewCount: 'reviewCount',
   location: 'location',
   status: 'status',
-  sellerId: 'sellerId',
+  isActive: 'isActive',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   viewCount: 'viewCount',
   favoriteCount: 'favoriteCount',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  sellerId: 'sellerId',
+  metadata: 'metadata'
 };
 
 exports.Prisma.StudyRoomScalarFieldEnum = {
@@ -699,21 +709,50 @@ exports.Prisma.FeedbackReportScalarFieldEnum = {
 exports.Prisma.ProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  avatar: 'avatar',
   bio: 'bio',
-  avatarUrl: 'avatarUrl',
   location: 'location',
+  website: 'website',
+  skills: 'skills',
+  interests: 'interests',
+  isEmprendedorConfiable: 'isEmprendedorConfiable',
+  socialLinks: 'socialLinks',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
   id: 'id',
-  reviewerId: 'reviewerId',
   marketplaceItemId: 'marketplaceItemId',
+  userId: 'userId',
   rating: 'rating',
   comment: 'comment',
+  communication: 'communication',
+  quality: 'quality',
+  delivery: 'delivery',
+  value: 'value',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MarketplaceMatchScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  buyerId: 'buyerId',
+  sellerId: 'sellerId',
+  buyerConfirmed: 'buyerConfirmed',
+  sellerConfirmed: 'sellerConfirmed',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MatchMessageScalarFieldEnum = {
+  id: 'id',
+  matchId: 'matchId',
+  senderId: 'senderId',
+  content: 'content',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -751,6 +790,14 @@ exports.MarketplaceItemType = exports.$Enums.MarketplaceItemType = {
   EXPERIENCE: 'EXPERIENCE',
   SKILL_EXCHANGE: 'SKILL_EXCHANGE',
   DIGITAL_CONTENT: 'DIGITAL_CONTENT'
+};
+
+exports.Currency = exports.$Enums.Currency = {
+  LUKAS: 'LUKAS',
+  USD: 'USD',
+  EUR: 'EUR',
+  BTC: 'BTC',
+  ETH: 'ETH'
 };
 
 exports.MarketplaceItemStatus = exports.$Enums.MarketplaceItemStatus = {
@@ -791,6 +838,13 @@ exports.FeedbackStatus = exports.$Enums.FeedbackStatus = {
   RESOLVED: 'RESOLVED',
   REJECTED: 'REJECTED',
   DUPLICATE: 'DUPLICATE'
+};
+
+exports.MatchStatus = exports.$Enums.MatchStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED'
 };
 
 exports.Prisma.ModelName = {
@@ -844,7 +898,9 @@ exports.Prisma.ModelName = {
   StudyRoomMessage: 'StudyRoomMessage',
   FeedbackReport: 'FeedbackReport',
   Profile: 'Profile',
-  Review: 'Review'
+  Review: 'Review',
+  MarketplaceMatch: 'MarketplaceMatch',
+  MatchMessage: 'MatchMessage'
 };
 
 /**

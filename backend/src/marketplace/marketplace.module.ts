@@ -4,12 +4,14 @@ import { MarketplaceService } from './marketplace.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
 import { RbacModule } from '@/rbac/rbac.module';
+import { MatchController } from './match/match.controller';
+import { MatchService } from './match/match.service';
 
 @Module({
   imports: [PrismaModule, AuthModule, RbacModule],
-  controllers: [MarketplaceController],
-  providers: [MarketplaceService],
-  exports: [MarketplaceService],
+  controllers: [MarketplaceController, MatchController],
+  providers: [MarketplaceService, MatchService],
+  exports: [MarketplaceService, MatchService],
 })
 export class MarketplaceModule {
   constructor() {
