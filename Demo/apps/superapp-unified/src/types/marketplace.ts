@@ -417,3 +417,17 @@ export interface MarketplaceNotification {
   actionUrl?: string;
   priority: 'low' | 'medium' | 'high';
 }
+
+export interface Match {
+  id: string;
+  productId: string;
+  buyerId: string;
+  sellerId: string;
+  status: string;
+  buyerConfirmed: boolean;
+  sellerConfirmed: boolean;
+  completedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  // ...otros campos si los necesitas
+}

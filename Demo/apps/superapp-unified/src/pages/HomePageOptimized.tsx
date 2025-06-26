@@ -25,13 +25,13 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 // 🎨 SISTEMA DE COLORES CENTRALIZADO
-import { 
-  getPrimaryGradient, 
+import {
+  getPrimaryGradient,
   getSemanticGradient,
   getPrimaryColor,
   getSemanticColor,
   createGradient,
-  COOMUNITY_ELEMENTS 
+  COOMUNITY_ELEMENTS
 } from '../design-system/color-system';
 
 import { useAuth } from '../contexts/AuthContext';
@@ -39,8 +39,8 @@ import { useIntuitiveBehavior } from '../hooks/home/useIntuitiveBehavior';
 
 // 🚀 WIDGETS OPTIMIZADOS
 import { WelcomeWidget } from '../components/home/widgets/WelcomeWidget';
-import { AyniBalanceFullWidget } from '../components/home/widgets/AyniBalanceFullWidget';
-import { WalletOnlyWidget } from '../components/home/widgets/WalletOnlyWidget';
+import { AyniBalanceWidget } from '../components/home/widgets/AyniBalanceWidget';
+import { WalletWidget } from '../components/home/widgets/WalletWidget';
 import { QuickActionsWidget } from '../components/home/widgets/QuickActionsWidget';
 import { NotificationsWidget } from '../components/home/widgets/NotificationsWidget';
 import { MainModulesWidget } from '../components/home/widgets/MainModulesWidget';
@@ -69,13 +69,13 @@ interface Notification {
 // 🚨 ERROR BOUNDARY OPTIMIZADO
 const OptimizedErrorBoundary = memo(({ children }: { children: React.ReactNode }) => {
   const [hasError, setHasError] = useState(false);
-  
+
   useEffect(() => {
     const handleError = (error: ErrorEvent) => {
       console.error('🚨 HomePage Error:', error.message);
       setHasError(true);
     };
-    
+
     window.addEventListener('error', handleError);
     return () => window.removeEventListener('error', handleError);
   }, []);
@@ -91,9 +91,9 @@ const OptimizedErrorBoundary = memo(({ children }: { children: React.ReactNode }
             onClick={() => window.location.reload()}
             variant="contained"
             size="small"
-            sx={{ 
+            sx={{
               background: getPrimaryGradient(),
-              color: 'white' 
+              color: 'white'
             }}
           >
             Recargar Dashboard
@@ -163,17 +163,17 @@ const OptimizedLoader = memo(() => (
 ));
 
 // 🎛️ PANEL DE CONTROL OPTIMIZADO
-const DashboardControls = memo(({ 
-  onRefresh, 
-  refreshing, 
-  unreadCount 
-}: { 
-  onRefresh: () => void; 
-  refreshing: boolean; 
-  unreadCount: number; 
+const DashboardControls = memo(({
+  onRefresh,
+  refreshing,
+  unreadCount
+}: {
+  onRefresh: () => void;
+  refreshing: boolean;
+  unreadCount: number;
 }) => {
   const navigate = useNavigate();
-  
+
   return (
     <Fade in timeout={600}>
       <Box
@@ -208,7 +208,7 @@ const DashboardControls = memo(({
               sx={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 color: 'white',
-                '&:hover': { 
+                '&:hover': {
                   background: 'rgba(255, 255, 255, 0.2)',
                   transform: 'scale(1.05)',
                 },
@@ -229,7 +229,7 @@ const DashboardControls = memo(({
               sx={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 color: 'white',
-                '&:hover': { 
+                '&:hover': {
                   background: 'rgba(255, 255, 255, 0.2)',
                   transform: 'scale(1.05)',
                 },
@@ -248,7 +248,7 @@ const DashboardControls = memo(({
               sx={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 color: 'white',
-                '&:hover': { 
+                '&:hover': {
                   background: 'rgba(255, 255, 255, 0.2)',
                   transform: 'scale(1.05)',
                 },
@@ -265,12 +265,12 @@ const DashboardControls = memo(({
 });
 
 // 📱 BOTÓN FLOTANTE OPTIMIZADO
-const ScrollToTopFab = memo(({ 
-  visible, 
-  onClick 
-}: { 
-  visible: boolean; 
-  onClick: () => void; 
+const ScrollToTopFab = memo(({
+  visible,
+  onClick
+}: {
+  visible: boolean;
+  onClick: () => void;
 }) => (
   <Fade in={visible} timeout={300} appear={false}>
     <Box>
@@ -300,14 +300,14 @@ const ScrollToTopFab = memo(({
 ));
 
 // 🎊 SNACKBAR OPTIMIZADO
-const OptimizedSnackbar = memo(({ 
-  open, 
-  message, 
-  onClose 
-}: { 
-  open: boolean; 
-  message: string; 
-  onClose: () => void; 
+const OptimizedSnackbar = memo(({
+  open,
+  message,
+  onClose
+}: {
+  open: boolean;
+  message: string;
+  onClose: () => void;
 }) => (
   <Snackbar
     open={open}
@@ -387,7 +387,7 @@ export function HomePageOptimized() {
   // 📜 Scroll handler optimizado
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    
+
     const handleScroll = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
@@ -509,7 +509,7 @@ export function HomePageOptimized() {
           }}
         >
           {/* 🎛️ Panel de Control */}
-          <DashboardControls 
+          <DashboardControls
             onRefresh={handleRefreshDashboard}
             refreshing={refreshing}
             unreadCount={unreadCount}
@@ -533,10 +533,7 @@ export function HomePageOptimized() {
               <Grid item xs={12}>
                 <Fade in timeout={600}>
                   <Box sx={{ mb: { xs: 1, sm: 2, md: 3 } }}>
-                    <WelcomeWidget
-                      onNotificationClick={() => navigate('/notifications')}
-                      totalNotifications={unreadCount}
-                    />
+                    <WelcomeWidget />
                   </Box>
                 </Fade>
               </Grid>
@@ -554,7 +551,7 @@ export function HomePageOptimized() {
                       justifyContent: 'center',
                     }}
                   >
-                    <AyniBalanceFullWidget />
+                    <AyniBalanceWidget />
                   </Box>
                 </Fade>
               </Grid>
@@ -563,7 +560,7 @@ export function HomePageOptimized() {
               <Grid item xs={12} lg={8}>
                 <Fade in timeout={1000}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
-                    <QuickActionsWidget onActionClick={handleActionClick} />
+                    <QuickActionsWidget />
                   </Box>
                 </Fade>
               </Grid>
@@ -571,17 +568,7 @@ export function HomePageOptimized() {
               <Grid item xs={12} lg={4}>
                 <Fade in timeout={1200}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
-                    <NotificationsWidget
-                      onNotificationClick={handleNotificationClick}
-                      onMarkAllRead={() => {
-                        setNotifications((prev) =>
-                          prev.map((n) => ({ ...n, isRead: true }))
-                        );
-                        setSnackbarMessage('✅ Notificaciones marcadas como leídas');
-                        setSnackbarOpen(true);
-                      }}
-                      onViewAll={() => navigate('/notifications')}
-                    />
+                    <NotificationsWidget />
                   </Box>
                 </Fade>
               </Grid>
@@ -590,7 +577,7 @@ export function HomePageOptimized() {
               <Grid item xs={12}>
                 <Fade in timeout={1400}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
-                    <MainModulesWidget onModuleClick={handleModuleClick} />
+                    <MainModulesWidget />
                   </Box>
                 </Fade>
               </Grid>
@@ -599,12 +586,7 @@ export function HomePageOptimized() {
               <Grid item xs={12} md={6}>
                 <Fade in timeout={1600}>
                   <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
-                    <WalletOnlyWidget
-                      onAddFunds={() => navigate('/wallet/add')}
-                      onSend={() => navigate('/wallet/send')}
-                      onExchange={() => navigate('/wallet/exchange')}
-                      onViewTransactions={() => navigate('/wallet/transactions')}
-                    />
+                    <WalletWidget />
                   </Box>
                 </Fade>
               </Grid>

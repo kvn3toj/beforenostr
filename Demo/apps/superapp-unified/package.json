@@ -124,6 +124,7 @@
     "vite": "^6.3.5",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-pwa": "^1.0.0",
+    "vite-tsconfig-paths": "^5.1.4",
     "web-vitals": "^4.2.4",
     "zod": "^3.25.67",
     "zustand": "^4.5.7"
@@ -147,11 +148,11 @@
     "expect-type": "^1.2.1",
     "glob": "^7.2.3",
     "globals": "^16.2.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "tailwindcss-animate": "^1.0.7",
     "tinyrainbow": "^1.2.0",
-    "workbox-window": "^7.3.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "workbox-window": "^7.3.0"
   },
   "peerDependencies": {
     "react": "18.3.1",

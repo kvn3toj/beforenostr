@@ -51,20 +51,21 @@ import { apiService } from '../../../../lib/api-service';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import type { Message } from '../../../../types/marketplace';
 
 // 🔧 SOLUCIÓN: Función segura para formatear fechas
 const formatSafeDate = (dateString?: string, options?: Intl.DateTimeFormatOptions): string => {
   if (!dateString) return 'Fecha no válida';
-  
+
   try {
     const date = new Date(dateString);
-    
+
     // Verificar si la fecha es válida
     if (isNaN(date.getTime())) {
       console.warn(`⚠️ Fecha inválida detectada en chat: ${dateString}`);
       return 'Fecha inválida';
     }
-    
+
     return date.toLocaleDateString('es-ES', options || {
       weekday: 'long',
       year: 'numeric',
@@ -76,41 +77,6 @@ const formatSafeDate = (dateString?: string, options?: Intl.DateTimeFormatOption
     return 'Error en fecha';
   }
 };
-
-interface Message {
-  id: string;
-  content: string;
-  senderId: string;
-  sender: {
-    id: string;
-    name: string;
-    avatar: string;
-    isOnline: boolean;
-  };
-  chatId: string;
-  type: 'text' | 'image' | 'file' | 'audio' | 'system';
-  timestamp: string;
-  status: 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
-  replyTo?: {
-    id: string;
-    content: string;
-    senderName: string;
-  };
-  reactions: {
-    emoji: string;
-    count: number;
-    users: string[];
-  }[];
-  attachments?: {
-    id: string;
-    name: string;
-    url: string;
-    type: string;
-    size: number;
-  }[];
-  isEdited?: boolean;
-  editedAt?: string;
-}
 
 interface Chat {
   id: string;
@@ -255,7 +221,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
       // Handle file upload
       const formData = new FormData();
       formData.append('file', selectedFile);
-      
+
       try {
         const uploadResponse = await apiService.post('/upload', formData, {
           onUploadProgress: (progressEvent) => {
@@ -263,7 +229,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
             setUploadProgress(progress);
           },
         });
-        
+
         messageData.attachments = [uploadResponse.data];
       } catch (error) {
         console.error('File upload failed:', error);
@@ -304,16 +270,16 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
   const formatTimestamp = useCallback((timestamp: string) => {
     try {
       const date = new Date(timestamp);
-      
+
       // Verificar si la fecha es válida
       if (isNaN(date.getTime())) {
         console.warn(`⚠️ Fecha inválida detectada en chat: ${timestamp}`);
         return 'Fecha inválida';
       }
-      
-      return formatDistanceToNow(date, { 
-        addSuffix: true, 
-        locale: es 
+
+      return formatDistanceToNow(date, {
+        addSuffix: true,
+        locale: es
       });
     } catch (error) {
       console.error(`❌ Error al formatear timestamp en chat: ${timestamp}`, error);
@@ -324,25 +290,25 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
   // Group messages by date
   const groupedMessages = useMemo(() => {
     const groups: { [key: string]: Message[] } = {};
-    
+
     messages.forEach((message: Message) => {
       try {
-        const date = new Date(message.timestamp);
+        const date = new Date(message.createdAt);
         const dateString = isNaN(date.getTime()) ? 'Fecha inválida' : date.toDateString();
-        
+
         if (!groups[dateString]) {
           groups[dateString] = [];
         }
         groups[dateString].push(message);
       } catch (error) {
-        console.error(`❌ Error al agrupar mensaje por fecha: ${message.timestamp}`, error);
+        console.error(`❌ Error al agrupar mensaje por fecha: ${message.createdAt}`, error);
         if (!groups['Fecha inválida']) {
           groups['Fecha inválida'] = [];
         }
         groups['Fecha inválida'].push(message);
       }
     });
-    
+
     return groups;
   }, [messages]);
 
@@ -401,7 +367,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
             sx={{ width: 32, height: 32, mr: 1 }}
           />
         )}
-        
+
         <Box sx={{ maxWidth: '70%', minWidth: '120px' }}>
           {/* Reply indicator */}
           {message.replyTo && (
@@ -443,7 +409,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
             {/* Sender name for group chats */}
             {!isOwnMessage && chat?.type === 'group' && (
               <Typography variant="caption" color="primary" fontWeight="bold" display="block">
-                {message.sender.name}
+                {message.senderName}
               </Typography>
             )}
 
@@ -494,10 +460,10 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
               }}
             >
               <Typography variant="caption" sx={{ opacity: 0.7 }}>
-                {formatTimestamp(message.timestamp)}
+                {formatTimestamp(message.createdAt)}
                 {message.isEdited && ' (editado)'}
               </Typography>
-              
+
               {isOwnMessage && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   {renderMessageStatus(message.status)}
@@ -584,16 +550,16 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
                 {chat.name}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                {chat.type === 'direct' 
-                  ? chat.participants[0]?.isOnline 
-                    ? 'En línea' 
+                {chat.type === 'direct'
+                  ? chat.participants[0]?.isOnline
+                    ? 'En línea'
                     : `Visto ${formatTimestamp(chat.participants[0]?.lastSeen || '')}`
                   : `${chat.participants.length} participantes`
                 }
               </Typography>
             </Box>
           </Box>
-          
+
           <Box sx={{ display: 'flex', gap: 1 }}>
             <IconButton>
               <VideoIcon />
@@ -635,12 +601,12 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
                 variant="outlined"
               />
             </Box>
-            
+
             {/* Messages for this date */}
             {dayMessages.map(renderMessage)}
           </Box>
         ))}
-        
+
         {/* Typing indicator */}
         {chat.isTyping.length > 0 && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}>
@@ -650,7 +616,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
             </Typography>
           </Box>
         )}
-        
+
         <div ref={messagesEndRef} />
       </Box>
 
@@ -660,7 +626,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box>
               <Typography variant="caption" color="primary" fontWeight="bold">
-                Respondiendo a {replyingTo?.sender.name}
+                Respondiendo a {replyingTo?.senderName}
               </Typography>
               <Typography variant="caption" display="block" noWrap>
                 {replyingTo?.content}
@@ -709,7 +675,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
           >
             <AttachIcon />
           </IconButton>
-          
+
           <TextField
             fullWidth
             multiline
@@ -726,14 +692,14 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
               },
             }}
           />
-          
+
           <IconButton
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             color="primary"
           >
             <EmojiIcon />
           </IconButton>
-          
+
           <IconButton
             onClick={handleSendMessage}
             disabled={!messageText.trim() && !selectedFile}
@@ -810,7 +776,7 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
               <EditIcon sx={{ mr: 1 }} />
               Editar
             </MenuItem>
-            <MenuItem 
+            <MenuItem
               onClick={() => deleteMessageMutation.mutate(messageMenuAnchor!.message.id)}
               sx={{ color: 'error.main' }}
             >
@@ -836,4 +802,4 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
   );
 };
 
-export default EnhancedChatArea; 
+export default EnhancedChatArea;

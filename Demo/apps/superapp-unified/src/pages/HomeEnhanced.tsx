@@ -59,7 +59,6 @@ import { toSafeNumber } from '../utils/numberUtils';
 
 // 🎯 Componentes modulares del Home TODOS
 import {
-  WelcomeHeader,
   AyniMetricsCard,
   WalletOverview,
   QuickActionsGrid,
@@ -79,7 +78,7 @@ import {
   PersonalProgressWidget,
   ActiveChallengesWidget,
   // 🚀 Componentes revolucionarios
-  AyniMetricsCardRevolutionary,
+  // (AyniMetricsCardRevolutionary eliminado)
 } from '../components/home';
 
 // 🎨 Importar todos los estilos
@@ -873,7 +872,7 @@ export const HomeEnhanced: React.FC = () => {
           <Grid item xs={12} lg={8}>
             <Fade in={animate} timeout={800}>
               <Box className="harmony-section">
-                <AyniMetricsCardRevolutionary
+                <AyniMetricsCard
                   ondas={normalizedGameData.ondas}
                   meritos={normalizedGameData.meritos}
                   ayniLevel={normalizedGameData.ayniLevel}

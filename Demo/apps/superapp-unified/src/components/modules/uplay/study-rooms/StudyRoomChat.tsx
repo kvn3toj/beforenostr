@@ -2,18 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Box, TextField, Button, Avatar, Typography } from '@mui/material';
 import { ChatBubble } from '@mui/icons-material';
-
-interface Message {
-  id: string;
-  user: string;
-  avatar: string;
-  text: string;
-  time: string;
-}
+import type { Message } from '../../../../types/marketplace';
 
 interface StudyRoomChatProps {
   messages: Message[];
   onSendMessage: (message: string) => void;
+}
+
+function formatDate(date: Date | string) {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return isNaN(d.getTime()) ? '' : d.toLocaleString();
 }
 
 const StudyRoomChat: React.FC<StudyRoomChatProps> = ({ messages, onSendMessage }) => {
@@ -55,16 +53,15 @@ const StudyRoomChat: React.FC<StudyRoomChatProps> = ({ messages, onSendMessage }
               style={{ marginBottom: '16px' }}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
-                <Avatar src={message.avatar} />
                 <Box sx={{
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
                   p: 1.5,
                   borderRadius: '12px',
                   borderTopLeftRadius: '0px'
                 }}>
-                  <Typography variant="body2" sx={{ color: 'white' }}>{message.text}</Typography>
+                  <Typography variant="body2" sx={{ color: 'white' }}>{message.content}</Typography>
                   <Typography variant="caption" sx={{ color: 'var(--secondary-text, #9ca3af)', display: 'block', textAlign: 'right', mt: 0.5 }}>
-                    {message.user} - {message.time}
+                    {message.senderName} - {formatDate(message.createdAt)}
                   </Typography>
                 </Box>
               </Box>

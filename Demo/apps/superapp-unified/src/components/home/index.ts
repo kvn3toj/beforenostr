@@ -1,22 +1,11 @@
 // 🏠 Componentes modulares del Home de CoomÜnity SuperApp
 // Exportaciones centralizadas para una mejor organización y mantenimiento
 
-// Import default exports first
-import AyniMetricsCardRevolutionary from './AyniMetricsCardRevolutionary';
-import WelcomeHeaderRevolutionary from './WelcomeHeaderRevolutionary';
-import WalletOverviewRevolutionary from './WalletOverviewRevolutionary';
-import QuickActionsGridRevolutionary from './QuickActionsGridRevolutionary';
-import ModuleCardsRevolutionary from './ModuleCardsRevolutionary';
-import NotificationCenterRevolutionary from './NotificationCenterRevolutionary';
-import PersonalProgressWidgetRevolutionary from './PersonalProgressWidgetRevolutionary';
-import ActiveChallengesWidgetRevolutionary from './ActiveChallengesWidgetRevolutionary';
-
 // Widget components with fixed exports
 export { AyniMetricsCard } from './AyniMetricsCard'; // ✅ AGREGADO: Export faltante
 // ❌ REMOVIDO: SystemSolarIndicator (archivo no existe)
-// ❌ REMOVIDO: SystemSolarIndicatorWrapper (archivo no existe)  
+// ❌ REMOVIDO: SystemSolarIndicatorWrapper (archivo no existe)
 // ❌ REMOVIDO: SystemSolarMiniDashboard (archivo no existe)
-export { WelcomeHeader } from './WelcomeHeader';
 export { WalletOverview } from './WalletOverview'; // ✅ AGREGADO: Export faltante
 export { QuickActionsGrid } from './QuickActionsGrid'; // ✅ AGREGADO: Export faltante
 export { NotificationCenter } from './NotificationCenter'; // ✅ AGREGADO: Export faltante
@@ -33,16 +22,6 @@ export { ActiveChallengesWidget } from './ActiveChallengesWidget';
 export { AyniBalanceVisualization } from './AyniBalanceVisualization';
 // ❌ REMOVIDO: RecentActivity (archivo no existe)
 // ❌ REMOVIDO: QuickStats (archivo no existe)
-
-// Revolutionary components - using imported components to avoid binding conflicts
-export { AyniMetricsCardRevolutionary };
-export { WelcomeHeaderRevolutionary };
-export { WalletOverviewRevolutionary };
-export { QuickActionsGridRevolutionary };
-export { ModuleCardsRevolutionary };
-export { NotificationCenterRevolutionary };
-export { PersonalProgressWidgetRevolutionary };
-export { ActiveChallengesWidgetRevolutionary };
 
 // 🚀 Phase 3: Advanced Visual Components
 export { AdvancedInsightsPanel } from './AdvancedInsightsPanel';

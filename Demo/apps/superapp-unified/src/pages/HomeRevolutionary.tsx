@@ -28,12 +28,12 @@ import { useAuth } from '../contexts/AuthContext';
 import { useIntuitiveBehavior } from '../hooks/home/useIntuitiveBehavior';
 
 // 🚀 IMPORTAR COMPONENTES REVOLUCIONARIOS INDIVIDUALES
-import WelcomeHeaderRevolutionary from '../components/home/WelcomeHeaderRevolutionary';
-import AyniMetricsCardRevolutionary from '../components/home/AyniMetricsCardRevolutionary';
-import WalletOverviewRevolutionary from '../components/home/WalletOverviewRevolutionary';
-import QuickActionsGridRevolutionary from '../components/home/QuickActionsGridRevolutionary';
-import ModuleCardsRevolutionary from '../components/home/ModuleCardsRevolutionary';
-import NotificationCenterRevolutionary from '../components/home/NotificationCenterRevolutionary';
+import { HomeWelcomeHeader } from '../components/home/HomeWelcomeHeader';
+import { AyniMetricsCard } from '../components/home/AyniMetricsCard';
+import { WalletOverview } from '../components/home/WalletOverview';
+import { QuickActionsGrid } from '../components/home/QuickActionsGrid';
+import { ModuleCards } from '../components/home/ModuleCards';
+import { NotificationCenter } from '../components/home/NotificationCenter';
 
 // 🌟 SISTEMA UNIVERSAL GUARDIAN
 import { UniversalIntegrator } from '../components/theme/UniversalIntegrator';
@@ -438,10 +438,7 @@ const HomeRevolutionary: React.FC = () => {
               justifyContent: 'center',
             }}
           >
-            <WelcomeHeaderRevolutionary
-              onNotificationClick={() => navigate('/notifications')}
-              totalNotifications={unreadCount}
-            />
+            <HomeWelcomeHeader />
             {/* Indicador de estado activo */}
             <Box className="enhanced-content-indicator" />
           </Box>
@@ -532,7 +529,7 @@ const HomeRevolutionary: React.FC = () => {
                   },
                 }}
               >
-                <AyniMetricsCardRevolutionary
+                <AyniMetricsCard
                   ondas={mockData.ayni.ondas}
                   meritos={mockData.ayni.meritos}
                   ayniLevel={mockData.ayni.ayniLevel}
@@ -607,7 +604,7 @@ const HomeRevolutionary: React.FC = () => {
                     },
                   }}
                 >
-                  <WalletOverviewRevolutionary
+                  <WalletOverview
                     onAddFunds={() => navigate('/wallet/add')}
                     onSend={() => navigate('/wallet/send')}
                     onExchange={() => navigate('/wallet/exchange')}
@@ -630,7 +627,7 @@ const HomeRevolutionary: React.FC = () => {
                     position: 'relative',
                   }}
                 >
-                  <NotificationCenterRevolutionary
+                  <NotificationCenter
                     onNotificationClick={handleNotificationClick}
                     onMarkAllRead={() => {
                       setNotifications((prev) =>
@@ -656,7 +653,7 @@ const HomeRevolutionary: React.FC = () => {
                     position: 'relative',
                   }}
                 >
-                  <ModuleCardsRevolutionary
+                  <ModuleCards
                     onModuleClick={(moduleId) => {
                       setSnackbarMessage(
                         `🚀 Abriendo módulo: ${moduleId.toUpperCase()}`
@@ -717,7 +714,7 @@ const HomeRevolutionary: React.FC = () => {
                   },
                 }}
               >
-                <QuickActionsGridRevolutionary
+                <QuickActionsGrid
                   onActionClick={(action) => {
                     setSnackbarMessage(
                       `🚀 Navegando a ${action.toUpperCase()}`
@@ -760,7 +757,7 @@ const HomeRevolutionary: React.FC = () => {
                   }}
                   className="enhanced-scroll"
                 >
-                  <ModuleCardsRevolutionary
+                  <ModuleCards
                     onModuleClick={(moduleId) => {
                       setSnackbarMessage(
                         `🚀 Abriendo módulo: ${moduleId.toUpperCase()}`

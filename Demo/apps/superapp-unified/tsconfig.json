@@ -55,6 +55,14 @@
     "**/*.html",
     "**/video_data/**",
     "**/metadata/**",
-    "**/analysis/**"
+    "**/analysis/**",
+    "backups",
+    "playwright-report",
+    "data",
+    "dist",
+    "temp",
+    "_temp",
+    "_temp_frontend_src_files",
+    "docs"
   ]
 }

@@ -22,6 +22,7 @@ import {
   RemoveRedEyeOutlined,
   VerifiedUser,
   ShoppingCart,
+  ChatBubbleOutline,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { impactCategories, Category, getConsciousnessStyle } from '../marketplace.constants';
@@ -159,6 +160,19 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
               }}
             >
               <Share fontSize="small" />
+            </IconButton>
+            <IconButton
+              size="small"
+              aria-label="Abrir chat con el vendedor"
+              onClick={() => {/* TODO: Implementar handler de chat */}}
+              sx={{
+                backgroundColor: alpha(theme.palette.background.paper, 0.7),
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.background.paper, 0.9),
+                },
+              }}
+            >
+              <ChatBubbleOutline fontSize="small" />
             </IconButton>
           </Stack>
         </Box>

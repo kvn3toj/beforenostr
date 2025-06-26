@@ -6,15 +6,24 @@ import { visualizer } from 'rollup-plugin-visualizer'
 // import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 import { resolve } from 'path'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     port: 3001,
     host: true,
+    fs: {
+      // Solo permite acceso a src y node_modules para evitar escaneo de backups y reportes
+      allow: [
+        path.resolve(__dirname, 'src'),
+        path.resolve(__dirname, 'node_modules'),
+      ],
+    },
   },
   plugins: [
     react(),
+    tsconfigPaths(),
     // PWA DISABLED FOR DEBUGGING
     // mode === 'production' && VitePWA({
     //   registerType: 'autoUpdate',
@@ -54,36 +63,40 @@ export default defineConfig(({ mode }) => ({
       external: mode === 'production' ? [
         /.*\.test\.(ts|tsx|js|jsx)$/,
         /.*\.spec\.(ts|tsx|js|jsx)$/
-      ] : [],
+      ] : [
+        /backups\//,
+        /analysis\//,
+        /playwright-report\//,
+        /data\//,
+        /public\//,
+        /dist\//,
+        /temp/,
+        /_temp/,
+        /_temp_frontend_src_files/,
+        /docs\//
+      ],
       output: {
         manualChunks: {
-          // Split Material-UI into smaller chunks
-          'mui-core': ['@mui/material/styles', '@mui/material/CssBaseline'],
-          'mui-components': [
-            '@mui/material/Box',
-            '@mui/material/Typography',
-            '@mui/material/Button',
-            '@mui/material/Card',
-            '@mui/material/CardContent',
-            '@mui/material/Grid'
-          ],
+          // React y ecosistema
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // Material-UI core y estilos
+          'mui-core': ['@mui/material', '@mui/system', '@emotion/react', '@emotion/styled'],
+          // Material-UI iconos
           'mui-icons': ['@mui/icons-material'],
-          // Split React ecosystem
-          'react-vendor': ['react', 'react-dom'],
-          'react-router': ['react-router-dom'],
+          // React Query
           'react-query': ['@tanstack/react-query'],
-          // Split large utilities
+          // Framer Motion
+          'framer-motion': ['framer-motion'],
+          // Utilidades grandes
           'lodash': ['lodash.debounce'],
-          'date-utils': ['date-fns'],
-          // Split Supabase if being used
-          'supabase': ['@supabase/supabase-js', '@supabase/auth-helpers-react']
+          'date-fns': ['date-fns'],
         }
       }
     },
     // Increase chunk size warning limit since we're optimizing manually
     chunkSizeWarningLimit: 1000,
     // Enable source maps for better debugging in production
-    sourcemap: mode === 'production' ? false : true
+    sourcemap: true
   },
   // Optimize dependencies
   optimizeDeps: {

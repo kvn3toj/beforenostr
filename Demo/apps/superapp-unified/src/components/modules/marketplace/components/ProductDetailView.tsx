@@ -37,7 +37,7 @@ import {
   LocationOn,
   AccessTime,
   Language,
-  Message,
+  Message as MessageIcon,
   VideoCall,
   Phone,
   Share,
@@ -66,11 +66,17 @@ import { ProductReviews } from './ProductReviews';
 import { RelatedProducts } from './RelatedProducts';
 import { Product } from '../../../../types/marketplace';
 import StatusBadges from './StatusBadges';
+import { MarketplaceReviewModal } from './MarketplaceReviewModal';
+import { ChatModal } from './ChatModal';
+import { useMatch } from '@/hooks/useMatch';
+import { useConfirmMatch } from '@/hooks/useConfirmMatch';
+import type { Message } from '../../../../types/marketplace';
 
 interface ProductDetailViewProps {
   product: Product;
   isFavorited: boolean;
   onToggleFavorite: () => void;
+  matchId?: string;
 }
 
 interface TabPanelProps {
@@ -91,11 +97,19 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   product,
   isFavorited,
   onToggleFavorite,
+  matchId,
 }) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedDeliveryOption, setSelectedDeliveryOption] = useState(
     product.deliveryOptions[0]?.id || ''
   );
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const { data: match, isLoading: matchLoading } = useMatch(matchId || '');
+  const buyerConfirmMutation = useConfirmMatch(matchId || '', 'buyer');
+  const sellerConfirmMutation = useConfirmMatch(matchId || '', 'seller');
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -134,6 +148,31 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         value: averageAspectRating.value / averageAspectRating.count,
       }
     : null;
+
+  const handleConfirm = (role: 'buyer' | 'seller') => {
+    if (matchId) {
+      if (role === 'buyer') buyerConfirmMutation.mutate();
+      if (role === 'seller') sellerConfirmMutation.mutate();
+    }
+  };
+
+  const handleReviewSubmit = (reviewData: any) => {
+    setReviewModalOpen(false);
+  };
+
+  const handleSendMessage = (content: string) => {
+    setMessages([
+      ...messages,
+      {
+        id: Date.now().toString(),
+        senderId: 'yo',
+        senderName: 'Yo',
+        content,
+        createdAt: new Date(),
+        read: false,
+      },
+    ]);
+  };
 
   return (
     <Grid container spacing={4}>
@@ -351,6 +390,65 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 </ListItem>
               </List>
             </Paper>
+
+            {/* --- SECCIÓN DE CONFIRMACIÓN Y CALIFICACIÓN --- */}
+            {matchId ? (
+              <Paper elevation={2} sx={{ p: 3, mt: 4, borderRadius: 3 }} role="region" aria-label="Confirmación de entrega o finalización">
+                <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+                  Confirmación de Entrega/Finalización
+                </Typography>
+                {matchLoading ? (
+                  <Typography variant="body2">Cargando estado...</Typography>
+                ) : (
+                  <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+                    <Button
+                      variant={match?.buyerConfirmed ? 'contained' : 'outlined'}
+                      color="success"
+                      onClick={() => handleConfirm('buyer')}
+                      disabled={!!match?.buyerConfirmed || buyerConfirmMutation.isLoading}
+                      aria-label="Confirmar como comprador"
+                    >
+                      {match?.buyerConfirmed ? 'Confirmado (Comprador)' : 'Confirmar como Comprador'}
+                    </Button>
+                    <Button
+                      variant={match?.sellerConfirmed ? 'contained' : 'outlined'}
+                      color="info"
+                      onClick={() => handleConfirm('seller')}
+                      disabled={!!match?.sellerConfirmed || sellerConfirmMutation.isLoading}
+                      aria-label="Confirmar como vendedor"
+                    >
+                      {match?.sellerConfirmed ? 'Confirmado (Vendedor)' : 'Confirmar como Vendedor'}
+                    </Button>
+                  </Stack>
+                )}
+                {(match?.buyerConfirmed && match?.sellerConfirmed) && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setReviewModalOpen(true)}
+                    aria-label="Calificar experiencia (Compartir mi Ayni)"
+                  >
+                    Compartir mi Ayni (Calificar experiencia)
+                  </Button>
+                )}
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  sx={{ mt: 2 }}
+                  onClick={() => setChatOpen(true)}
+                  aria-label="Abrir chat con el vendedor"
+                >
+                  Chatear con el vendedor
+                </Button>
+              </Paper>
+            ) : (
+              <Paper elevation={1} sx={{ p: 3, mt: 4, borderRadius: 3 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Para confirmar entrega o calificar, accede desde tu historial de compras o espera a que la transacción esté activa.
+                </Typography>
+              </Paper>
+            )}
+            {/* --- FIN SECCIÓN --- */}
           </Box>
         </Zoom>
       </Grid>
@@ -620,6 +718,22 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           </Box>
         </Fade>
       </Grid>
+
+      {/* Modales globales */}
+      <MarketplaceReviewModal
+        open={reviewModalOpen}
+        onClose={() => setReviewModalOpen(false)}
+        onSubmit={handleReviewSubmit}
+        productName={product.title}
+        sellerName={product.seller.name}
+      />
+      <ChatModal
+        open={chatOpen}
+        onClose={() => setChatOpen(false)}
+        messages={messages}
+        onSend={handleSendMessage}
+        sellerName={product.seller.name}
+      />
     </Grid>
   );
 };
