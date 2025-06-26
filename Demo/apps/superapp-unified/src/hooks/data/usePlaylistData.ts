@@ -5,6 +5,22 @@ import { apiService } from '../../lib/api-service';
 // TIPOS Y INTERFACES
 // ============================================================================
 
+export interface Video {
+  id: string;
+  title: string;
+  description?: string | null;
+  videoUrl: string;
+  duration: number;
+  order: number;
+  isActive: boolean;
+  thumbnailUrl?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  playlistId: string;
+  rewards?: { meritos?: number, ondas?: number };
+  questions: any[]; // Temporalmente any, idealmente definir Question[]
+}
+
 export interface Playlist {
   id: string;
   mundoId: string;
@@ -17,6 +33,7 @@ export interface Playlist {
   updatedAt: string;
   createdById: string;
   version: number;
+  videoItems: Video[];
 }
 
 export interface PlaylistResponse {
@@ -31,9 +48,9 @@ const PlaylistApiService = {
   // Obtener todas las playlists
   async getPlaylists(): Promise<Playlist[]> {
     console.log('🎪 Obteniendo playlists del backend...');
-    const response = await apiService.get('/playlists');
+    const response = await apiService.get<{ data: Playlist[] }>('/playlists?includeItems=true&limit=50');
     console.log('🎪 Respuesta completa del backend:', response);
-    
+
     // La respuesta directa ya contiene la estructura {data: Array, count, pagination}
     const playlists = response.data || [];
     console.log('🎪 Playlists extraídas:', playlists);
@@ -43,7 +60,7 @@ const PlaylistApiService = {
   // Obtener playlist por ID
   async getPlaylistById(playlistId: string): Promise<Playlist | null> {
     try {
-      const response = await apiService.get(`/playlists/${playlistId}`);
+      const response = await apiService.get<{ data: Playlist }>(`/playlists/${playlistId}`);
       return response.data || null;
     } catch (error) {
       console.error(`Error fetching playlist ${playlistId}:`, error);
@@ -90,7 +107,7 @@ export const usePlaylist = (playlistId: string) => {
  */
 export const usePlaylistsWithVideos = () => {
   const { data: playlists, ...playlistQuery } = usePlaylists();
-  
+
   return {
     ...playlistQuery,
     data: playlists,
@@ -101,4 +118,4 @@ export default {
   usePlaylists,
   usePlaylist,
   usePlaylistsWithVideos,
-}; 
+};

@@ -29,10 +29,10 @@ import {
 
 // Hooks y Componentes
 import DynamicMetricsDashboard from './DynamicMetricsDashboard';
-import { EnhancedRewardFeedback, useRewardFeedback } from './components/EnhancedRewardFeedback';
-import { usePlaylists, Playlist as BackendPlaylist, Video as BackendVideo } from '../../../hooks/data/usePlaylistData';
+import { useRewardFeedback } from './components/EnhancedRewardFeedback';
+import { usePlaylists, Playlist, Video } from '../../../hooks/data/usePlaylistData';
 
-// TIPOS LOCALES
+// TIPOS LOCALES (ADAPTADOR)
 interface VideoItem {
   id: string;
   title: string;
@@ -42,7 +42,7 @@ interface VideoItem {
 }
 
 // ADAPTADOR
-const adaptBackendVideoToVideoItem = (backendVideo: BackendVideo): VideoItem => {
+const adaptBackendVideoToVideoItem = (backendVideo: Video): VideoItem => {
     let difficulty: 'easy' | 'medium' | 'hard' = 'easy';
     if (backendVideo.questions?.length >= 5) difficulty = 'medium';
     if (backendVideo.questions?.length >= 10) difficulty = 'hard';
@@ -116,11 +116,11 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const [isPending, startTransition] = useTransition();
-  const { reward, showReward } = useRewardFeedback();
+  const { RewardComponent } = useRewardFeedback();
 
   const { data: playlistsData, isLoading: playlistsLoading, error: playlistsError } = usePlaylists();
 
-  const handlePlayAction = useCallback((playlist: BackendPlaylist, video: BackendVideo) => {
+  const handlePlayAction = useCallback((playlist: Playlist, video: Video) => {
     startTransition(() => {
       navigate(`/uplay/journey/${playlist.id}`, {
         state: {
@@ -129,12 +129,12 @@ export const UPlayGamifiedDashboard: React.FC = () => {
             title: playlist.name,
             inspirationalQuote: playlist.description || 'Un viaje de mil millas comienza con un solo paso.',
             purpose: playlist.description || 'Explora esta colección de videos para expandir tu conciencia.',
-            imageUrl: playlist.thumbnailUrl || `https://via.placeholder.com/400x225/E3F2FD/90CAF9?text=${encodeURIComponent(playlist.name)}`,
+            imageUrl: playlist.imageUrl || `https://via.placeholder.com/400x225/E3F2FD/90CAF9?text=${encodeURIComponent(playlist.name)}`,
             rewards: {
-              meritos: playlist.videos.reduce((acc, v) => acc + (v.rewards?.meritos || 50), 0),
-              ondas: playlist.videos.reduce((acc, v) => acc + (v.rewards?.ondas || 30), 0),
+              meritos: playlist.videoItems.reduce((acc, v) => acc + (v.rewards?.meritos || 50), 0),
+              ondas: playlist.videoItems.reduce((acc, v) => acc + (v.rewards?.ondas || 30), 0),
             },
-            videos: playlist.videos.map(v => ({ id: v.id, title: v.title })),
+            videos: playlist.videoItems.map(v => ({ id: v.id, title: v.title })),
             firstVideoId: video.id
           }
         }
@@ -151,7 +151,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }} data-testid="uplay-dashboard">
       <AppBar position="static" color="transparent" elevation={0}><Toolbar><Typography variant="h6" sx={{ flexGrow: 1 }}>ÜPlay Dashboard</Typography></Toolbar></AppBar>
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         <DynamicMetricsDashboard />
@@ -161,7 +161,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
               <Box>
                 <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>Senda: {playlist.name}</Typography>
                 <Grid container spacing={isMobile ? 2 : 3}>
-                  {playlist.videos.map((video) => (
+                  {playlist.videoItems.map((video) => (
                     <Grid item key={video.id} xs={12} sm={6} md={4} lg={3}>
                       <VideoCard
                         video={adaptBackendVideoToVideoItem(video)}
@@ -175,7 +175,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
           </Box>
         ))}
       </Container>
-      <EnhancedRewardFeedback reward={reward} />
+      {RewardComponent}
     </Box>
   );
 };

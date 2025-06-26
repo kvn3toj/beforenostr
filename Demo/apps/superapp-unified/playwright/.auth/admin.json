@@ -6,15 +6,15 @@
       "localStorage": [
         {
           "name": "COOMUNITY_AUTH_TOKEN",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZmNhOTAxYi0xMzk3LTQ3OTQtOGNjZS0yYTFlYWRlN2Y0OGUiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbiBVc2VyIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTA3NzUwNjEsImV4cCI6MTc1MTM3OTg2MX0.5abpdwwdbZsJZFnGvAl46LAxvfjLkkHn03W0M0h8y1U"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NTZkNGM5Yy0yNjQ4LTQ5NGQtOGRkNy0yYjI5MmE5YjU5OGYiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbiBVc2VyIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTA4OTY2NDgsImV4cCI6MTc1MTUwMTQ0OH0.stjFvRL_XRedRH4Ba1mmPr65M7pXYcKLDV_90msAfBM"
         },
         {
           "name": "lets_education_state",
-          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-24T14:24:20.306Z\"}}"
+          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-26T00:10:47.622Z\"}}"
         },
         {
           "name": "COOMUNITY_USER_DATA",
-          "value": "{\"id\":\"efca901b-1397-4794-8cce-2a1eade7f48e\",\"email\":\"admin@gamifier.com\",\"fullName\":\"Admin User\",\"roles\":[\"admin\"],\"createdAt\":\"2025-06-24T14:24:21.803Z\",\"accessToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZmNhOTAxYi0xMzk3LTQ3OTQtOGNjZS0yYTFlYWRlN2Y0OGUiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbiBVc2VyIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTA3NzUwNjEsImV4cCI6MTc1MTM3OTg2MX0.5abpdwwdbZsJZFnGvAl46LAxvfjLkkHn03W0M0h8y1U\"}"
+          "value": "{\"id\":\"756d4c9c-2648-494d-8dd7-2b292a9b598f\",\"email\":\"admin@gamifier.com\",\"fullName\":\"Admin User\",\"roles\":[\"admin\"],\"createdAt\":\"2025-06-26T00:10:48.938Z\",\"accessToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NTZkNGM5Yy0yNjQ4LTQ5NGQtOGRkNy0yYjI5MmE5YjU5OGYiLCJlbWFpbCI6ImFkbWluQGdhbWlmaWVyLmNvbSIsIm5hbWUiOiJBZG1pbiBVc2VyIiwicm9sZXMiOlsiYWRtaW4iXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTA4OTY2NDgsImV4cCI6MTc1MTUwMTQ0OH0.stjFvRL_XRedRH4Ba1mmPr65M7pXYcKLDV_90msAfBM\"}"
         }
       ]
     }

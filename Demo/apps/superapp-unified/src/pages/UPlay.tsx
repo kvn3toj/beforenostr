@@ -5,10 +5,11 @@ import {
   VideoLibrary,
   EmojiEvents,
   Groups,
+  PlayArrow,
 } from '@mui/icons-material';
 
 // ✅ UPlay Core Components (solo los esenciales)
-import UPlayEnhancedDashboard from '../components/modules/uplay/UPlayGamifiedDashboard';
+import { UPlayGamifiedDashboard as UPlayEnhancedDashboard } from '../components/modules/uplay/UPlayGamifiedDashboard';
 import UPlayInteractiveLibrary from '../components/modules/uplay/UPlayInteractiveLibrary';
 import UPlayAchievementSystem from '../components/modules/uplay/UPlayAchievementSystem';
 import UPlayStudyRooms from '../components/modules/uplay/UPlayStudyRooms';
@@ -40,7 +41,7 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
 const UPlayHeader = () => {
   return (
     <Fade in={true} timeout={1000}>
-      <div className="cosmic-header">
+      <div className="cosmic-header" data-testid="cosmic-container">
         <Container maxWidth="xl" className="relative">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-6">
             <div className="text-center md:text-left">
@@ -57,6 +58,9 @@ const UPlayHeader = () => {
                 <div className="text-sm text-medium-contrast">Estado</div>
                 <div className="font-bold text-gradient-blue">En Línea</div>
               </div>
+              <button data-testid="cosmic-play-button" aria-label="Iniciar experiencia cósmica principal" className="p-2 rounded-full bg-blue-500 text-white shadow-lg">
+                <PlayArrow />
+              </button>
             </div>
           </div>
         </Container>

@@ -490,6 +490,14 @@ const ActivityTimeline: React.FC<{
   </List>
 );
 
+// Utilidad para accesibilidad de tabs
+function a11yProps(index: number) {
+  return {
+    id: `profile-tab-${index}`,
+    'aria-controls': `profile-tabpanel-${index}`,
+  };
+}
+
 const Profile: React.FC = () => {
   const theme = useTheme();
   const { user } = useAuth();
@@ -560,7 +568,7 @@ const Profile: React.FC = () => {
         website: profileData.website || '',
       });
     }
-  }, [profileData]);RU
+  }, [profileData]);
 
   // 🎯 Datos de métricas - usar datos reales del backend o fallback básico
   const metrics = useMemo(() => {
@@ -999,7 +1007,13 @@ const Profile: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             Logros Desbloqueados
           </Typography>
-          <AchievementsGrid achievements={userAchievements} />
+          <Grid container spacing={2}>
+            {userAchievements.map((achievement, idx) => (
+              <Grid item xs={12} sm={6} md={4} key={achievement.id || idx}>
+                <AchievementCard achievement={achievement} />
+              </Grid>
+            ))}
+          </Grid>
         </TabPanel>
 
         <TabPanel value={tabValue} index={3}>

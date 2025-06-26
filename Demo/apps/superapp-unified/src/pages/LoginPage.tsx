@@ -33,9 +33,9 @@ const LoginPage: React.FC = () => {
     if (!loginRateLimiter.isAllowed(data.email)) {
       const remainingAttempts = loginRateLimiter.getRemainingAttempts(data.email);
       const nextReset = loginRateLimiter.getNextResetTime(data.email);
-      
+
       setError(
-        `Demasiados intentos de login. Intentos restantes: ${remainingAttempts}. 
+        `Demasiados intentos de login. Intentos restantes: ${remainingAttempts}.
          Próximo reinicio: ${nextReset?.toLocaleTimeString() || 'N/A'}`
       );
       return;
@@ -46,21 +46,21 @@ const LoginPage: React.FC = () => {
 
     try {
       console.log('🔐 Attempting login with real backend:', { email: data.email });
-      
+
       // ✅ Usar el AuthContext que maneja la conexión real con el backend
       await signIn(data.email, data.password);
-      
+
       setSuccessMessage('¡Login exitoso! Bienvenido a CoomÜnity');
-      
+
       // Redirect to home page after short delay
       setTimeout(() => {
         navigate('/', { replace: true });
       }, 1500);
-      
+
     } catch (error: any) {
       console.error('❌ Login error:', error);
       setError(error.message || 'Error de autenticación. Por favor intenta nuevamente.');
-      
+
       // Record failed attempt for rate limiting
       loginRateLimiter.recordAttempt(data.email);
     } finally {
@@ -87,7 +87,7 @@ const LoginPage: React.FC = () => {
           <Typography variant="h4" component="h1" gutterBottom align="center">
             Iniciar Sesión
           </Typography>
-          
+
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
             <TextField
               fullWidth
@@ -109,18 +109,18 @@ const LoginPage: React.FC = () => {
               required
               data-testid="login-password-input"
             />
-            
+
             {error && (
               <Alert severity="error" sx={{ mt: 2 }}>
                 {error}
               </Alert>
             )}
-            
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, position: 'relative', zIndex: 1 }}
               disabled={isLoading}
               data-testid="login-submit-button"
             >
@@ -137,9 +137,9 @@ const LoginPage: React.FC = () => {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity="success" 
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
           sx={{ width: '100%' }}
         >
           {successMessage}
@@ -149,4 +149,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage; 
+export default LoginPage;
