@@ -190,8 +190,10 @@ model User {
   wallet                     Wallet?
   createdWorlds              World[]                @relation("WorldCreator")
   marketplaceItems           MarketplaceItem[]
-  feedbackReports            FeedbackReport[]
+  feedbackReports            FeedbackReport[]       @relation("UserFeedbackReports")
   adminFeedbackResponses     FeedbackReport[]       @relation("AdminFeedbackResponses")
+  profile                    Profile?
+  reviews                    Review[]               @relation("UserReviews")
 
   @@index([email])
   @@index([isActive])
@@ -861,51 +863,27 @@ enum MarketplaceItemStatus {
 }
 
 model MarketplaceItem {
-  id          String                @id @default(uuid())
-  name        String
-  description String                @db.Text
-  price       Float
-  currency    Currency              @default(LUKAS)
-  itemType    MarketplaceItemType   @default(SERVICE)
-  status      MarketplaceItemStatus @default(ACTIVE)
-
-  // Media and content
-  images   String[] // Array de URLs de imágenes
-  tags     String[]
-  location String?
-
-  // Metadata específico del tipo de item
-  metadata String? @db.Text
-
-  // Pricing adicional (sistema dual)
-  priceToins Float? @default(0)
-
-  // Relaciones
-  seller   User   @relation(fields: [sellerId], references: [id])
-  sellerId String
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Campos de gestión
-  isActive  Boolean   @default(true)
-  isDeleted Boolean   @default(false)
-  deletedAt DateTime?
-
-  // Estadísticas
-  viewCount     Int @default(0)
-  favoriteCount Int @default(0)
+  id            String                @id @default(uuid())
+  name          String
+  description   String
+  type          MarketplaceItemType
+  priceUnits    Int
+  priceToins    Int?
+  tags          String[]
+  imageUrl      String?
+  location      String?
+  status        MarketplaceItemStatus @default(DRAFT)
+  sellerId      String
+  viewCount     Int                   @default(0)
+  favoriteCount Int                   @default(0)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  seller        User                  @relation(fields: [sellerId], references: [id])
+  reviews       Review[]              @relation("ItemReviews")
 
   @@index([sellerId])
-  @@index([itemType])
+  @@index([type])
   @@index([status])
-  @@index([currency])
-  @@index([isActive])
-  @@index([isDeleted])
-  @@index([createdAt])
-  @@index([price])
-  @@index([location])
   @@map("marketplace_items")
 }
 
@@ -1024,7 +1002,7 @@ model FeedbackReport {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User  @relation("UserFeedbackReports", fields: [userId], references: [id], onDelete: Cascade)
   adminUser User? @relation("AdminFeedbackResponses", fields: [adminUserId], references: [id])
 
   @@index([userId])
@@ -1058,4 +1036,35 @@ enum FeedbackStatus {
   RESOLVED
   REJECTED
   DUPLICATE
+}
+
+// === NUEVOS MODELOS PARA MARKETPLACE ===
+
+model Profile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  bio       String?
+  avatarUrl String?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Review {
+  id                String          @id @default(uuid())
+  reviewerId        String
+  marketplaceItemId String
+  rating            Int
+  comment           String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  reviewer          User            @relation("UserReviews", fields: [reviewerId], references: [id], onDelete: Cascade)
+  marketplaceItem   MarketplaceItem @relation("ItemReviews", fields: [marketplaceItemId], references: [id], onDelete: Cascade)
+
+  @@index([reviewerId])
+  @@index([marketplaceItemId])
+  @@map("reviews")
 }

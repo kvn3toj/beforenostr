@@ -190,8 +190,10 @@ model User {
   wallet                     Wallet?
   createdWorlds              World[]               @relation("WorldCreator")
   marketplaceItems           MarketplaceItem[]
-  feedbackReports            FeedbackReport[]
+  feedbackReports            FeedbackReport[]      @relation("UserFeedbackReports")
   adminFeedbackResponses     FeedbackReport[]      @relation("AdminFeedbackResponses")
+  profile                    Profile?
+  reviews                    Review[]              @relation("UserReviews")
 
   @@index([email])
   @@index([isActive])
@@ -877,6 +879,7 @@ model MarketplaceItem {
   createdAt    DateTime              @default(now())
   updatedAt    DateTime              @updatedAt
   seller       User                  @relation(fields: [sellerId], references: [id])
+  reviews      Review[]              @relation("ItemReviews")
 
   @@index([sellerId])
   @@index([type])
@@ -999,7 +1002,7 @@ model FeedbackReport {
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
 
-  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User                 @relation("UserFeedbackReports", fields: [userId], references: [id], onDelete: Cascade)
   adminUser       User?                @relation("AdminFeedbackResponses", fields: [adminUserId], references: [id])
 
   @@index([userId])
@@ -1033,4 +1036,35 @@ enum FeedbackStatus {
   RESOLVED
   REJECTED
   DUPLICATE
+}
+
+// === NUEVOS MODELOS PARA MARKETPLACE ===
+
+model Profile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  bio       String?
+  avatarUrl String?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Review {
+  id               String           @id @default(uuid())
+  reviewerId       String
+  marketplaceItemId String
+  rating           Int
+  comment          String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  reviewer         User             @relation("UserReviews", fields: [reviewerId], references: [id], onDelete: Cascade)
+  marketplaceItem  MarketplaceItem  @relation("ItemReviews", fields: [marketplaceItemId], references: [id], onDelete: Cascade)
+
+  @@index([reviewerId])
+  @@index([marketplaceItemId])
+  @@map("reviews")
 }

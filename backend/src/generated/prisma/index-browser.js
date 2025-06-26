@@ -624,23 +624,18 @@ exports.Prisma.MarketplaceItemScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  price: 'price',
-  currency: 'currency',
-  itemType: 'itemType',
-  status: 'status',
-  images: 'images',
-  tags: 'tags',
-  location: 'location',
-  metadata: 'metadata',
+  type: 'type',
+  priceUnits: 'priceUnits',
   priceToins: 'priceToins',
+  tags: 'tags',
+  imageUrl: 'imageUrl',
+  location: 'location',
+  status: 'status',
   sellerId: 'sellerId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  isActive: 'isActive',
-  isDeleted: 'isDeleted',
-  deletedAt: 'deletedAt',
   viewCount: 'viewCount',
-  favoriteCount: 'favoriteCount'
+  favoriteCount: 'favoriteCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.StudyRoomScalarFieldEnum = {
@@ -701,6 +696,26 @@ exports.Prisma.FeedbackReportScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bio: 'bio',
+  avatarUrl: 'avatarUrl',
+  location: 'location',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReviewScalarFieldEnum = {
+  id: 'id',
+  reviewerId: 'reviewerId',
+  marketplaceItemId: 'marketplaceItemId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -730,14 +745,6 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-exports.Currency = exports.$Enums.Currency = {
-  LUKAS: 'LUKAS',
-  USD: 'USD',
-  EUR: 'EUR',
-  BTC: 'BTC',
-  ETH: 'ETH'
-};
-
 exports.MarketplaceItemType = exports.$Enums.MarketplaceItemType = {
   PRODUCT: 'PRODUCT',
   SERVICE: 'SERVICE',
@@ -835,7 +842,9 @@ exports.Prisma.ModelName = {
   StudyRoom: 'StudyRoom',
   StudyRoomParticipant: 'StudyRoomParticipant',
   StudyRoomMessage: 'StudyRoomMessage',
-  FeedbackReport: 'FeedbackReport'
+  FeedbackReport: 'FeedbackReport',
+  Profile: 'Profile',
+  Review: 'Review'
 };
 
 /**
