@@ -117,6 +117,7 @@ const AppRoutes: React.FC = () => {
 
         {/* 🎮 ÜPlay - GPL Gamified Play List */}
         <Route path="/uplay" element={<LazyPages.UPlay />} />
+        <Route path="/uplay/journey/:journeyId" element={<LazyPages.UPlayJourneyPortal />} />
         <Route path="/uplay/video/:videoId" element={<LazyPages.UPlayVideoPlayer />} />
         <Route path="/video/:videoId" element={<LazyPages.VideoPlayer />} />
         <Route path="/video" element={<LazyPages.VideoHome />} />

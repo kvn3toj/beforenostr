@@ -1,3 +1,6 @@
+import { ENV, EnvironmentHelpers } from '../lib/environment';
+import { AUTH_STORAGE_KEYS, AUTH_CONFIG } from '../config/constants';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
 
 export interface ApiResponse<T = any> {
@@ -13,6 +16,12 @@ export interface ApiError {
 }
 
 class ApiService {
+  private timeout: number;
+
+  constructor() {
+    this.timeout = 30000;
+  }
+
   private getAuthHeaders(): HeadersInit {
     const token = localStorage.getItem('auth_token');
     return {
@@ -24,7 +33,7 @@ class ApiService {
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       let errorData: any = {};
-      
+
       // Intentar parsear JSON solo si hay contenido
       try {
         const text = await response.text();
@@ -35,7 +44,7 @@ class ApiService {
         // Si no se puede parsear el JSON, usar datos por defecto
         console.warn('[ApiService] No se pudo parsear la respuesta de error como JSON:', parseError);
       }
-      
+
       const error: ApiError = {
         message: errorData.message || `Error ${response.status}: ${response.statusText}`,
         statusCode: response.status,
@@ -49,7 +58,7 @@ class ApiService {
     if (!text || !text.trim()) {
       return {} as T; // Retornar objeto vacío si no hay contenido
     }
-    
+
     try {
       return JSON.parse(text);
     } catch (parseError) {
@@ -130,7 +139,62 @@ class ApiService {
       throw error;
     }
   }
+
+  public clearAuthTokens(): void {
+    try {
+      localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
+      localStorage.removeItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN);
+      localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
+      console.log(`${AUTH_CONFIG.LOG_PREFIX} 🧹 Auth tokens cleared from localStorage`);
+    } catch (error) {
+      console.warn(`${AUTH_CONFIG.LOG_PREFIX} ⚠️ Failed to clear auth tokens:`, error);
+    }
+  }
 }
 
-// Exportar una instancia singleton del servicio
-export const apiService = new ApiService(); 
+// Crear una instancia única que no se exporta directamente
+const apiServiceInstance = new ApiService();
+
+// Exportar la instancia con un nombre
+export { apiServiceInstance as apiService };
+
+// Exportar la API de autenticación
+export const authAPI = {
+  login: (credentials: any) =>
+    apiServiceInstance.post('/auth/login', credentials),
+  register: (userData: any) =>
+    apiServiceInstance.post('/auth/register', userData),
+  logout: () => {
+    apiServiceInstance.clearAuthTokens();
+    return Promise.resolve();
+  },
+  refreshToken: (refreshToken: string) =>
+    apiServiceInstance.post('/auth/refresh', { refreshToken }),
+  getMe: () =>
+    apiServiceInstance.get('/auth/me'),
+};
+
+// ... (actualizar TODAS las demás: marketplaceAPI, videosAPI, etc. para que usen apiServiceInstance)
+
+export const marketplaceAPI = {
+  getItems: (filters?: any) => {
+    const params = new URLSearchParams(filters).toString();
+    return apiServiceInstance.get(`/marketplace/items?${params}`);
+  },
+  // ... resto de métodos de marketplaceAPI
+  getTrending: (limit = 6) =>
+    apiServiceInstance.get(`/marketplace/trending?limit=${limit}`),
+};
+
+export const videosAPI = {
+  getCategories: () =>
+    apiServiceInstance.get('/video-items/categories'),
+  getVideos: (category?: string) =>
+    apiServiceInstance.get(`/video-items${category ? `?category=${category}` : ''}`),
+  // ... resto de métodos de videosAPI
+};
+
+// ... y así sucesivamente para statsAPI, formsAPI, mundosAPI, socialAPI
+
+// ELIMINAR COMPLETAMENTE LA EXPORTACIÓN POR DEFECTO
+// export default apiService;

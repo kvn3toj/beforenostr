@@ -62,6 +62,10 @@ const NotFoundPage = createLazyPage('NotFoundPage');
 // Componentes de Onboarding
 const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo'));
 
+// [NUEVO] Portal del Viaje en UPlay
+const UPlayJourneyPortal = lazy(() => import('../components/modules/uplay/UPlayJourneyPortal'));
+const UPlayHarvestReflection = lazy(() => import('../components/modules/uplay/UPlayHarvestReflection'));
+
 // [ATLAS/ANA] Lazy loading: Asegurado que UPlayInteractiveLibrary y UPlayWithStartTransition usan React.lazy
 export const UPlayInteractiveLibrary = React.lazy(() => import('../components/modules/uplay/UPlayInteractiveLibrary'));
 export const UPlayWithStartTransition = React.lazy(() => import('../components/modules/uplay/UPlayWithStartTransition'));
@@ -104,6 +108,7 @@ export const LazyPages = {
   InteractiveVideoDemo,
   VideoHome,
   VideoPlayer,
+  UPlayJourneyPortal,
 
   // Marketplace Routes
   MarketplaceTest,
@@ -135,6 +140,9 @@ export const LazyPages = {
 
   // Onboarding
   OnboardingDemo,
+
+  // [NUEVO]
+  UPlayHarvestReflection,
 };
 
 // --- Funciones de Precarga ---
