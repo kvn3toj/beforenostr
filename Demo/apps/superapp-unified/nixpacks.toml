@@ -1,0 +1,15 @@
+# nixpacks.toml
+
+[phases.build]
+# Instala dependencias y ejecuta el build de Vite con memoria limitada
+cmds = ["npm install --legacy-peer-deps", "NODE_OPTIONS='--max-old-space-size=3072' npm run build"]
+
+[start]
+# Inicia Caddy para servir el directorio 'dist'
+cmd = "caddy file-server --browse --root dist --listen :$PORT"
+
+[phases.install]
+buildInputs = ["nodejs-20_x"]
+
+[variables]
+NODE_VERSION = "20"

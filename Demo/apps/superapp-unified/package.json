@@ -9,9 +9,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:prod": "vite build",
+    "start": "serve -s dist -l $PORT",
+    "build:prod": "tsc && vite build --mode production",
     "build:vercel": "npm install --legacy-peer-deps && vite build",
-    "start": "serve -s dist -l 3001",
     "preview": "serve -s dist -l 3001",
     "render:build": "npm install --legacy-peer-deps && npx vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
@@ -72,7 +72,9 @@
     "credentials:check": "npm run verify:credentials",
     "credentials:help": "echo '🔐 Credenciales Verificadas - Regla Obligatoria:' && echo '' && echo '🎯 Comandos disponibles:' && echo '  npm run verify:credentials    - Verificar credenciales del backend' && echo '  npm run credentials:check     - Alias para verificación' && echo '  npx playwright test verified-credentials-validation.spec.ts - Test E2E completo' && echo '' && echo '📋 Credenciales verificadas:' && echo '  🔑 ADMIN:      admin@gamifier.com / admin123' && echo '  👤 USER:       user@gamifier.com / 123456' && echo '  💎 PREMIUM:    premium@gamifier.com / 123456' && echo '  🎨 CREATOR:    creator@gamifier.com / 123456' && echo '  🛡️ MODERATOR:  moderator@gamifier.com / 123456' && echo '' && echo '🚨 NUNCA usar credenciales inventadas que causan errores 400/401' && echo '📖 Ver: CREDENCIALES_VERIFICADAS.md para más detalles'",
     "builder:dev": "npx @builder.io/cli@latest launch -p 3001 --no-open",
-    "builder:start": "npm run builder:dev"
+    "builder:start": "npm run builder:dev",
+    "build:e2e:ci": "cross-env NODE_ENV=test npm run build:e2e",
+    "deploy:prod": "npm run build:prod && vercel --prod"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
