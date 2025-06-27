@@ -1,0 +1,6 @@
+[build]
+builder = "docker"
+
+[build.args]
+# Path to custom Dockerfile relative to repo root.
+RAILWAY_DOCKERFILE_PATH = "backend/Dockerfile"
