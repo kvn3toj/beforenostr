@@ -60,7 +60,8 @@
     "dm:test": "./scripts/dev-manager.sh test",
     "dm:open": "./scripts/dev-manager.sh open",
     "invoke:guardianes:marketplace": "./scripts/invoke-guardian-marketplace.sh",
-    "stop:guardianes": "source .guardian-pids 2>/dev/null && kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || pkill -f 'npm run dev'"
+    "stop:guardianes": "source .guardian-pids 2>/dev/null && kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || pkill -f 'npm run dev'",
+    "start": "npm run start:prod --workspace=backend"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
