@@ -25,6 +25,9 @@ RUN npx prisma generate
 # Compilar la aplicación TypeScript a JavaScript
 RUN npm run build
 
+# Copiar Prisma Client generado a la carpeta de salida de build
+RUN cp -r src/generated dist/generated
+
 # ================================================================
 # Etapa 2: Production - Crear la imagen final y ligera
 # ================================================================
