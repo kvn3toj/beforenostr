@@ -13,8 +13,8 @@ WORKDIR /usr/src/app
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar TODAS las dependencias (incluyendo devDependencies para el build)
-RUN npm install --legacy-peer-deps
+# Instalar TODAS las dependencias (incluyendo devDependencies para el build) y OpenSSL 1.1 para Prisma
+RUN apk add --no-cache openssl1.1-compat && npm install --legacy-peer-deps
 
 # Copiar todo el código fuente del backend
 COPY . ./
