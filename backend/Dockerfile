@@ -43,7 +43,7 @@ COPY package*.json ./
 COPY --from=builder /usr/src/app/prisma ./prisma
 
 # Instalar SOLO las dependencias de producción
-RUN npm install --only=production --legacy-peer-deps && npm cache clean --force
+RUN apk add --no-cache openssl1.1-compat && npm install --only=production --legacy-peer-deps && npm cache clean --force
 
 # Copiar aplicación compilada desde la etapa de builder
 COPY --from=builder /usr/src/app/dist ./dist
