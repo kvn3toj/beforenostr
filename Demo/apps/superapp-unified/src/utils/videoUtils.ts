@@ -31,24 +31,24 @@ export const extractVideoUrl = (content: string | undefined): string | null => {
     // Intentar parsear como JSON primero
     if (content.startsWith('{') || content.startsWith('[')) {
       const parsedContent = JSON.parse(content);
-      
+
       // Formato JSON con URL directa
       if (parsedContent.url) {
         return parsedContent.url;
       }
-      
+
       // Formato JSON con videoId de YouTube
       if (parsedContent.videoId) {
         return `https://www.youtube.com/watch?v=${parsedContent.videoId}`;
       }
     }
-    
+
     // Si no es JSON, tratar como HTML y extraer iframe
     const iframeSrc = extractIframeSrc(content);
     if (iframeSrc) {
       return iframeSrc;
     }
-    
+
     return null;
   } catch (error) {
     // Si falla el parsing de JSON, intentar como HTML
@@ -141,10 +141,10 @@ export const extractYouTubeVideoId = (urlOrContent: string): string | null => {
  */
 export const getYouTubeThumbnail = (videoId: string, quality: 'default' | 'medium' | 'high' | 'standard' | 'maxres' = 'medium'): string | null => {
   if (!videoId) return null;
-  
+
   const qualityMap = {
     'default': 'default.jpg',
-    'medium': 'mqdefault.jpg', 
+    'medium': 'mqdefault.jpg',
     'high': 'hqdefault.jpg',
     'standard': 'sddefault.jpg',
     'maxres': 'maxresdefault.jpg'
@@ -159,23 +159,73 @@ export const getYouTubeThumbnail = (videoId: string, quality: 'default' | 'mediu
  * @param quality Calidad del thumbnail
  * @returns URL del thumbnail o null si no se puede generar
  */
-export const getVideoThumbnail = (content: string, quality: 'default' | 'medium' | 'high' | 'standard' | 'maxres' = 'medium'): string | null => {
+export const getVideoThumbnail = (
+  contentOrVideoData: string | {
+    thumbnailUrl?: string;
+    externalId?: string;
+    youtubeId?: string;
+    url?: string;
+    youtubeUrl?: string;
+  },
+  quality: 'default' | 'medium' | 'high' | 'standard' | 'maxres' = 'medium'
+): string | null => {
+  // Si es un objeto, procesarlo como tal
+  if (typeof contentOrVideoData === 'object' && contentOrVideoData !== null) {
+    const videoData = contentOrVideoData;
+
+    // 1. Usar thumbnailUrl directa si existe y es válida
+    if (videoData.thumbnailUrl && videoData.thumbnailUrl.includes('img.youtube.com')) {
+      return videoData.thumbnailUrl;
+    }
+
+    // 2. Intentar generar desde externalId (YouTube ID)
+    if (videoData.externalId) {
+      return getYouTubeThumbnail(videoData.externalId, quality);
+    }
+
+    // 3. Intentar generar desde youtubeId
+    if (videoData.youtubeId) {
+      return getYouTubeThumbnail(videoData.youtubeId, quality);
+    }
+
+    // 4. Intentar extraer ID desde las URLs
+    const urls = [videoData.url, videoData.youtubeUrl].filter(Boolean);
+    for (const url of urls) {
+      if (url) {
+        const videoId = extractYouTubeVideoId(url);
+        if (videoId) {
+          return getYouTubeThumbnail(videoId, quality);
+        }
+      }
+    }
+
+    // 5. Si hay thumbnailUrl pero no es de YouTube, devolverla tal como está
+    if (videoData.thumbnailUrl) {
+      return videoData.thumbnailUrl;
+    }
+
+    return null;
+  }
+
+  // Si es un string, usar la lógica original
+  const content = contentOrVideoData as string;
+
   // Intentar extraer URL desde cualquier formato
   const videoUrl = extractVideoUrl(content);
-  
+
   if (videoUrl) {
     const videoId = extractYouTubeVideoId(videoUrl);
     if (videoId) {
       return getYouTubeThumbnail(videoId, quality);
     }
   }
-  
+
   // También intentar extraer directamente el videoId desde el contenido
   const videoId = extractYouTubeVideoId(content);
   if (videoId) {
     return getYouTubeThumbnail(videoId, quality);
   }
-  
+
   return null;
 };
 
@@ -211,7 +261,7 @@ export const checkVideoAvailability = async (url: string): Promise<boolean> => {
       const videoId = extractYouTubeVideoId(url);
       return videoId !== null && videoId.length > 0;
     }
-    
+
     // For other video sources, we could implement a more sophisticated check
     // For now, just validate if it's a valid URL
     return isValidVideoUrl(url);
@@ -219,4 +269,4 @@ export const checkVideoAvailability = async (url: string): Promise<boolean> => {
     console.error('Error checking video availability:', error);
     return false;
   }
-}; 
+};

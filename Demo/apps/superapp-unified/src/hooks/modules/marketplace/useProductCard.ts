@@ -51,7 +51,7 @@ export const useProductCard = ({
     if (onClick) {
       onClick(id);
     } else {
-      navigate(`/marketplace/product/${id}`);
+      navigate(`/marketplace/item/${id}`);
     }
   };
 

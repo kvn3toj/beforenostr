@@ -193,7 +193,7 @@ const RelatedProductCard: React.FC<RelatedProductCardProps> = ({
   };
 
   const handleCardClick = () => {
-    navigate(`/marketplace/product/${product.id}`);
+          navigate(`/marketplace/item/${product.id}`);
   };
 
   const handleFavoriteClick = (e: React.MouseEvent) => {

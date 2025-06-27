@@ -20,12 +20,12 @@ import type {
  */
 export class LetsApiService {
   // 💰 Wallet Operations
-  
+
   /**
    * Obtener wallet de Ünits de un usuario
    */
   async getUnitsWallet(userId: string): Promise<UnitsWallet> {
-    const response = await apiService.get(`/lets/wallet/${userId}`);
+    const response = await apiService.get<any>(`/lets/balance/${userId}`);
     return response.data;
   }
 
@@ -33,7 +33,7 @@ export class LetsApiService {
    * Crear wallet inicial para nuevo usuario
    */
   async createInitialWallet(userId: string): Promise<UnitsWallet> {
-    const response = await apiService.post('/lets/wallet', { userId });
+    const response = await apiService.post<any>('/lets/wallet', { userId });
     return response.data;
   }
 
@@ -41,7 +41,7 @@ export class LetsApiService {
    * Transferir Ünits entre usuarios
    */
   async transferUnits(transferData: TransferUnitsRequest): Promise<UnitsTransaction> {
-    const response = await apiService.post('/lets/transfer', transferData);
+    const response = await apiService.post<any>('/lets/transfer', transferData);
     return response.data;
   }
 
@@ -53,9 +53,11 @@ export class LetsApiService {
     limit: number = 50,
     offset: number = 0
   ): Promise<UnitsTransaction[]> {
-    const response = await apiService.get(`/lets/transactions/${userId}`, {
-      params: { limit, offset },
+    const queryParams = new URLSearchParams({
+      limit: limit.toString(),
+      offset: offset.toString(),
     });
+    const response = await apiService.get<any>(`/lets/history/${userId}?${queryParams}`);
     return response.data;
   }
 
@@ -65,17 +67,17 @@ export class LetsApiService {
    * Buscar listados LETS (ofertas y demandas)
    */
   async searchLetsListings(filters: LetsSearchFilters): Promise<LetsListing[]> {
-    const response = await apiService.get('/lets/listings', {
-      params: filters,
-    });
-    return response.data;
+    console.warn(
+      'searchLetsListings is deprecated and returns mock data. Please update to use a new API.'
+    );
+    return Promise.resolve([]);
   }
 
   /**
    * Crear nuevo listado LETS
    */
   async createLetsListing(listingData: CreateLetsListingRequest & { userId: string }): Promise<LetsListing> {
-    const response = await apiService.post('/lets/listings', listingData);
+    const response = await apiService.post<any>('/lets/listings', listingData);
     return response.data;
   }
 
@@ -83,7 +85,7 @@ export class LetsApiService {
    * Obtener listado LETS por ID
    */
   async getLetsListing(listingId: string): Promise<LetsListing> {
-    const response = await apiService.get(`/lets/listings/${listingId}`);
+    const response = await apiService.get<any>(`/lets/listings/${listingId}`);
     return response.data;
   }
 
@@ -94,7 +96,7 @@ export class LetsApiService {
     listingId: string,
     updateData: Partial<CreateLetsListingRequest>
   ): Promise<LetsListing> {
-    const response = await apiService.put(`/lets/listings/${listingId}`, updateData);
+    const response = await apiService.put<any>(`/lets/listings/${listingId}`, updateData);
     return response.data;
   }
 
@@ -102,7 +104,7 @@ export class LetsApiService {
    * Eliminar listado LETS
    */
   async deleteLetsListing(listingId: string): Promise<void> {
-    await apiService.delete(`/lets/listings/${listingId}`);
+    await apiService.delete<any>(`/lets/listings/${listingId}`);
   }
 
   /**
@@ -114,7 +116,7 @@ export class LetsApiService {
     itemId: string,
     unitsAmount: number
   ): Promise<UnitsTransaction> {
-    const response = await apiService.post('/lets/marketplace/exchange', {
+    const response = await apiService.post<any>('/lets/marketplace/exchange', {
       buyerId,
       sellerId,
       itemId,
@@ -137,7 +139,7 @@ export class LetsApiService {
     qualityRating?: number;
     comments?: string;
   }): Promise<TrustRating> {
-    const response = await apiService.post('/lets/trust/rating', ratingData);
+    const response = await apiService.post<any>('/lets/trust/rating', ratingData);
     return response.data;
   }
 
@@ -145,7 +147,7 @@ export class LetsApiService {
    * Obtener evaluaciones de confianza de un usuario
    */
   async getTrustRatings(userId: string): Promise<TrustRating[]> {
-    const response = await apiService.get(`/lets/trust/ratings/${userId}`);
+    const response = await apiService.get<any>(`/lets/trust/ratings/${userId}`);
     return response.data;
   }
 
@@ -153,7 +155,7 @@ export class LetsApiService {
    * Calcular puntuación de confianza
    */
   async calculateTrustScore(userId: string): Promise<number> {
-    const response = await apiService.get(`/lets/trust/score/${userId}`);
+    const response = await apiService.get<any>(`/lets/trust/score/${userId}`);
     return response.data.trustScore;
   }
 
@@ -161,7 +163,7 @@ export class LetsApiService {
    * Ajustar límite de crédito basado en confianza
    */
   async adjustCreditLimit(userId: string): Promise<void> {
-    await apiService.post(`/lets/trust/adjust-credit/${userId}`);
+    await apiService.post<any>(`/lets/trust/adjust-credit/${userId}`);
   }
 
   // 🎓 Communities of Practice (CoPs) LETS Operations
@@ -170,7 +172,7 @@ export class LetsApiService {
    * Obtener intercambios de conocimiento en una CoP
    */
   async getKnowledgeExchanges(copId: string): Promise<CopKnowledgeExchange[]> {
-    const response = await apiService.get(`/cops/${copId}/knowledge-exchanges`);
+    const response = await apiService.get<any>(`/cops/${copId}/knowledge-exchanges`);
     return response.data;
   }
 
@@ -181,7 +183,7 @@ export class LetsApiService {
     copId: string,
     exchangeData: CreateKnowledgeExchangeRequest
   ): Promise<CopKnowledgeExchange> {
-    const response = await apiService.post(
+    const response = await apiService.post<any>(
       `/cops/${copId}/knowledge-exchanges`,
       exchangeData
     );
@@ -195,7 +197,7 @@ export class LetsApiService {
     exchangeId: string,
     role: 'learner' | 'observer' = 'learner'
   ): Promise<void> {
-    await apiService.post(`/cops/knowledge-exchanges/${exchangeId}/join`, {
+    await apiService.post<any>(`/cops/knowledge-exchanges/${exchangeId}/join`, {
       role,
     });
   }
@@ -209,7 +211,7 @@ export class LetsApiService {
     feedbackRating: number,
     feedbackComment?: string
   ): Promise<void> {
-    await apiService.post(
+    await apiService.post<any>(
       `/cops/knowledge-exchanges/${exchangeId}/evaluate`,
       {
         participantId,
@@ -223,7 +225,7 @@ export class LetsApiService {
    * Obtener nivel jerárquico en CoP
    */
   async getCopHierarchy(userId: string, copId: string): Promise<CopHierarchyLevel> {
-    const response = await apiService.get(`/cops/${copId}/hierarchy/${userId}`);
+    const response = await apiService.get<any>(`/cops/${copId}/hierarchy/${userId}`);
     return response.data;
   }
 
@@ -231,7 +233,7 @@ export class LetsApiService {
    * Evaluar progreso jerárquico
    */
   async evaluateHierarchyProgression(userId: string, copId: string): Promise<void> {
-    await apiService.post(`/cops/${copId}/hierarchy/${userId}/evaluate`);
+    await apiService.post<any>(`/cops/${copId}/hierarchy/${userId}/evaluate`);
   }
 
   // 📊 Analytics and Statistics
@@ -240,7 +242,7 @@ export class LetsApiService {
    * Obtener analytics del sistema LETS
    */
   async getLetsAnalytics(): Promise<LetsAnalytics> {
-    const response = await apiService.get('/lets/analytics');
+    const response = await apiService.get<any>('/lets/analytics');
     return response.data;
   }
 
@@ -255,12 +257,12 @@ export class LetsApiService {
     trustScore: number;
     ayniBalance: number;
   }> {
-    const response = await apiService.get(`/lets/analytics/user/${userId}`);
+    const response = await apiService.get<any>(`/lets/stats/${userId}`);
     return response.data;
   }
 
   /**
-   * Obtener métricas de Ayni (reciprocidad)
+   * Obtener métricas Ayni
    */
   async getAyniMetrics(userId?: string): Promise<{
     globalAyniIndex: number;
@@ -268,16 +270,13 @@ export class LetsApiService {
     communityAyniScore: number;
     recommendations: string[];
   }> {
-    const response = await apiService.get('/lets/analytics/ayni', {
-      params: userId ? { userId } : {},
-    });
+    const url = userId ? `/lets/ayni-metrics/${userId}` : '/lets/ayni-metrics';
+    const response = await apiService.get<any>(url);
     return response.data;
   }
 
-  // 🔍 Search and Discovery
-
   /**
-   * Buscar usuarios por habilidades para intercambio
+   * Buscar usuarios por habilidades
    */
   async searchUsersBySkills(skills: string[]): Promise<{
     id: string;
@@ -287,9 +286,8 @@ export class LetsApiService {
     trustScore: number;
     availableForExchange: boolean;
   }[]> {
-    const response = await apiService.get('/lets/search/users', {
-      params: { skills: skills.join(',') },
-    });
+    const queryParams = new URLSearchParams({ skills: skills.join(',') });
+    const response = await apiService.get<any>(`/users/search/skills?${queryParams}`);
     return response.data;
   }
 
@@ -305,11 +303,9 @@ export class LetsApiService {
       matchScore: number;
     }[];
   }> {
-    const response = await apiService.get(`/lets/recommendations/${userId}`);
+    const response = await apiService.get<any>(`/lets/recommendations/exchange/${userId}`);
     return response.data;
   }
-
-  // 🔔 Notifications
 
   /**
    * Obtener notificaciones LETS
@@ -323,7 +319,7 @@ export class LetsApiService {
     read: boolean;
     createdAt: string;
   }[]> {
-    const response = await apiService.get(`/lets/notifications/${userId}`);
+    const response = await apiService.get<any>(`/lets/notifications/${userId}`);
     return response.data;
   }
 
@@ -331,7 +327,7 @@ export class LetsApiService {
    * Marcar notificación como leída
    */
   async markNotificationAsRead(notificationId: string): Promise<void> {
-    await apiService.put(`/lets/notifications/${notificationId}/read`);
+    await apiService.post<any>(`/lets/notifications/${notificationId}/read`);
   }
 }
 
@@ -339,4 +335,4 @@ export class LetsApiService {
 export const letsApiService = new LetsApiService();
 
 // Export default para compatibilidad
-export default letsApiService; 
+export default letsApiService;

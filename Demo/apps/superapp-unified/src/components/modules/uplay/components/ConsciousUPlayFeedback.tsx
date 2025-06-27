@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Box,
   Chip,
@@ -30,24 +30,34 @@ import {
   Healing,
 } from '@mui/icons-material';
 
+// 🎨 SUPERAPP VIOLET THEME COLORS
+const SUPERAPP_VIOLET_PALETTE = {
+  primary: '#6366f1',      // SuperApp primary violet
+  secondary: '#8b5cf6',    // SuperApp secondary violet
+  light: '#a855f7',        // Light violet
+  dark: '#7c3aed',         // Dark violet
+  accent: '#c084fc',       // Accent violet
+  surface: '#f8fafc',      // Light surface
+};
+
 // 🌟 Animaciones Conscientes para ÜPlay
 const consciousGlow = keyframes`
   0%, 100% {
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 0 20px ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.3)};
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
+    box-shadow: 0 0 30px ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.6)};
     transform: scale(1.02);
   }
 `;
 
 const ayniPulse = keyframes`
   0%, 100% {
-    background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+    background: linear-gradient(135deg, ${SUPERAPP_VIOLET_PALETTE.primary} 0%, ${SUPERAPP_VIOLET_PALETTE.secondary} 100%);
   }
   50% {
-    background: linear-gradient(135deg, #66BB6A 0%, #A5D6A7 100%);
+    background: linear-gradient(135deg, ${SUPERAPP_VIOLET_PALETTE.secondary} 0%, ${SUPERAPP_VIOLET_PALETTE.light} 100%);
   }
 `;
 
@@ -70,6 +80,7 @@ export type ConsciousUPlayFeedbackType =
   | 'system';
 
 export interface ConsciousUPlayFeedbackData {
+  id?: string;
   type: ConsciousUPlayFeedbackType;
   title: string;
   message: string;
@@ -92,70 +103,70 @@ interface ConsciousUPlayFeedbackProps {
   variant?: 'compact' | 'detailed' | 'immersive';
 }
 
-// 🎨 Configuración de Feedback Consciente
+// 🎨 Configuración de Feedback Consciente con colores violeta del SuperApp
 const getFeedbackConfig = (type: ConsciousUPlayFeedbackType) => {
   const configs = {
     'learning-flow': {
       icon: Psychology,
-      color: '#4CAF50',
-      bgGradient: 'linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%)',
-      borderColor: '#4CAF50',
+      color: SUPERAPP_VIOLET_PALETTE.primary,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.primary,
       tooltip: 'Flujo de Aprendizaje Natural: Tu mente está en estado óptimo para absorber conocimiento'
     },
     'wisdom-integration': {
       icon: Lightbulb,
-      color: '#FF9800',
-      bgGradient: 'linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%)',
-      borderColor: '#FF9800',
+      color: SUPERAPP_VIOLET_PALETTE.secondary,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.light, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.secondary,
       tooltip: 'Integración de Sabiduría: Conectando nuevos conocimientos con experiencias previas'
     },
     'conscious-engagement': {
       icon: AutoAwesome,
-      color: '#9C27B0',
-      bgGradient: 'linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%)',
-      borderColor: '#9C27B0',
+      color: SUPERAPP_VIOLET_PALETTE.light,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.light, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.accent, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.light,
       tooltip: 'Compromiso Consciente: Presencia plena en el proceso de aprendizaje'
     },
     'collective-growth': {
       icon: Groups,
-      color: '#2196F3',
-      bgGradient: 'linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%)',
-      borderColor: '#2196F3',
+      color: SUPERAPP_VIOLET_PALETTE.dark,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.dark, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.dark,
       tooltip: 'Crecimiento Colectivo: Tu aprendizaje contribuye al bien común'
     },
     'mindful-progress': {
       icon: Balance,
-      color: '#00BCD4',
-      bgGradient: 'linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%)',
-      borderColor: '#00BCD4',
+      color: SUPERAPP_VIOLET_PALETTE.accent,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.accent, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.light, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.accent,
       tooltip: 'Progreso Consciente: Avanzando con intención y propósito'
     },
     'ayni-learning': {
       icon: Eco,
-      color: '#4CAF50',
-      bgGradient: 'linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%)',
-      borderColor: '#4CAF50',
+      color: SUPERAPP_VIOLET_PALETTE.primary,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.primary,
       tooltip: 'Ayni en Aprendizaje: Dar y recibir conocimiento en equilibrio'
     },
     'bien-comun-knowledge': {
       icon: Diamond,
-      color: '#673AB7',
-      bgGradient: 'linear-gradient(135deg, #EDE7F6 0%, #D1C4E9 100%)',
-      borderColor: '#673AB7',
+      color: SUPERAPP_VIOLET_PALETTE.dark,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.dark, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.dark,
       tooltip: 'Conocimiento para el Bien Común: Aprendiendo para beneficiar a todos'
     },
     'metacognition': {
       icon: School,
-      color: '#795548',
-      bgGradient: 'linear-gradient(135deg, #EFEBE9 0%, #D7CCC8 100%)',
-      borderColor: '#795548',
+      color: SUPERAPP_VIOLET_PALETTE.light,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.light, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.accent, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.light,
       tooltip: 'Metacognición: Reflexionando sobre tu propio proceso de aprendizaje'
     },
     'system': {
       icon: Star,
-      color: '#607D8B',
-      bgGradient: 'linear-gradient(135deg, #ECEFF1 0%, #CFD8DC 100%)',
-      borderColor: '#607D8B',
+      color: SUPERAPP_VIOLET_PALETTE.primary,
+      bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.1)} 100%)`,
+      borderColor: SUPERAPP_VIOLET_PALETTE.primary,
       tooltip: 'Sistema: Mensaje del sistema de aprendizaje'
     }
   };
@@ -172,32 +183,98 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
   const theme = useTheme();
   const [visible, setVisible] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const progressRef = useRef<NodeJS.Timeout | null>(null);
   const config = getFeedbackConfig(feedback.type);
   const IconComponent = config.icon;
 
-  // ⏰ Auto-dismiss y progreso
+  // 🛡️ Handle loading state - resolve immediately on mount
   useEffect(() => {
-    if (feedback.duration && feedback.duration > 0) {
-      const interval = setInterval(() => {
-        setProgress(prev => {
-          const newProgress = prev + (100 / (feedback.duration! / 100));
-          if (newProgress >= 100) {
-            setVisible(false);
-            setTimeout(() => onDismiss?.(), 300);
-            return 100;
-          }
-          return newProgress;
-        });
-      }, 100);
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 200); // Very short loading time
 
-      return () => clearInterval(interval);
+    return () => clearTimeout(loadingTimer);
+  }, []);
+
+  // ⏰ Auto-dismiss y progreso - optimized with useCallback
+  const handleProgressUpdate = useCallback(() => {
+    if (feedback.duration && feedback.duration > 0 && !isLoading) {
+      const increment = 100 / (feedback.duration / 100);
+
+      setProgress(prev => {
+        const newProgress = prev + increment;
+        if (newProgress >= 100) {
+          setVisible(false);
+          setTimeout(() => onDismiss?.(), 300);
+          return 100;
+        }
+        return newProgress;
+      });
     }
-  }, [feedback.duration, onDismiss]);
+  }, [feedback.duration, onDismiss, isLoading]);
 
-  const handleDismiss = () => {
+  useEffect(() => {
+    if (!isLoading && feedback.duration && feedback.duration > 0) {
+      progressRef.current = setInterval(handleProgressUpdate, 100);
+    }
+
+    return () => {
+      if (progressRef.current) {
+        clearInterval(progressRef.current);
+      }
+    };
+  }, [handleProgressUpdate, isLoading, feedback.duration]);
+
+  const handleDismiss = useCallback(() => {
+    if (progressRef.current) {
+      clearInterval(progressRef.current);
+    }
     setVisible(false);
     setTimeout(() => onDismiss?.(), 300);
-  };
+  }, [onDismiss]);
+
+  const handleAction = useCallback(() => {
+    onAction?.();
+    handleDismiss();
+  }, [onAction, handleDismiss]);
+
+  // 🔄 Show loading state briefly
+  if (isLoading) {
+    return (
+      <Fade in={true} timeout={200}>
+        <Card
+          sx={{
+            position: 'fixed',
+            bottom: 24,
+            right: 24,
+            minWidth: 200,
+            zIndex: 2000,
+            background: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.05)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.05)} 100%)`,
+            border: `1px solid ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.2)}`,
+            borderRadius: 3,
+          }}
+        >
+          <CardContent sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+            <LinearProgress
+              sx={{
+                flex: 1,
+                height: 4,
+                borderRadius: 2,
+                backgroundColor: alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.1),
+                '& .MuiLinearProgress-bar': {
+                  backgroundColor: SUPERAPP_VIOLET_PALETTE.primary
+                }
+              }}
+            />
+            <Typography variant="caption" sx={{ color: SUPERAPP_VIOLET_PALETTE.primary }}>
+              Preparando...
+            </Typography>
+          </CardContent>
+        </Card>
+      </Fade>
+    );
+  }
 
   if (!visible) return null;
 
@@ -374,17 +451,17 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
                     <Chip
                       icon={<Star />}
                       label={`${feedback.rewards.meritos} Mëritos`}
-                      sx={{ backgroundColor: alpha('#FFD700', 0.2), color: '#FF8F00' }}
+                      sx={{ backgroundColor: alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.2), color: SUPERAPP_VIOLET_PALETTE.dark }}
                     />
                     <Chip
                       icon={<Diamond />}
                       label={`${feedback.rewards.ondas} Öndas`}
-                      sx={{ backgroundColor: alpha('#00BCD4', 0.2), color: '#00838F' }}
+                      sx={{ backgroundColor: alpha(SUPERAPP_VIOLET_PALETTE.light, 0.2), color: SUPERAPP_VIOLET_PALETTE.dark }}
                     />
                     <Chip
                       icon={<Psychology />}
                       label={`${feedback.rewards.wisdom_points} Sabiduría`}
-                      sx={{ backgroundColor: alpha('#9C27B0', 0.2), color: '#7B1FA2' }}
+                      sx={{ backgroundColor: alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.2), color: SUPERAPP_VIOLET_PALETTE.dark }}
                     />
                   </Box>
                 </Box>
@@ -397,7 +474,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
                     <Chip
                       icon={<PlayArrow />}
                       label={feedback.action}
-                      onClick={onAction}
+                      onClick={handleAction}
                       clickable
                       sx={{
                         backgroundColor: config.color,
@@ -538,7 +615,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
               <Chip
                 icon={<PlayArrow />}
                 label={feedback.action}
-                onClick={onAction}
+                onClick={handleAction}
                 clickable
                 size="small"
                 sx={{
@@ -576,20 +653,34 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
   );
 };
 
-// 🎯 Hook para Feedback Consciente de ÜPlay
+// 🎯 Hook para Feedback Consciente de ÜPlay - optimized with better state management
 export const useConsciousUPlayFeedback = () => {
-  const [feedbacks, setFeedbacks] = useState<ConsciousUPlayFeedbackData[]>([]);
+  const [feedbacks, setFeedbacks] = useState<(ConsciousUPlayFeedbackData & { id: string })[]>([]);
+  const feedbackIdRef = useRef(0);
 
-  const showFeedback = (feedback: ConsciousUPlayFeedbackData) => {
-    setFeedbacks(prev => [...prev, { ...feedback, id: Date.now().toString() } as any]);
-  };
+  const showFeedback = useCallback((feedback: ConsciousUPlayFeedbackData) => {
+    const feedbackWithId = {
+      ...feedback,
+      id: `feedback-${++feedbackIdRef.current}-${Date.now()}`
+    };
 
-  const dismissFeedback = (index: number) => {
+    setFeedbacks(prev => {
+      // Limit to maximum 3 popups to prevent stacking
+      const newFeedbacks = [...prev, feedbackWithId];
+      return newFeedbacks.slice(-3);
+    });
+  }, []);
+
+  const dismissFeedback = useCallback((index: number) => {
     setFeedbacks(prev => prev.filter((_, i) => i !== index));
-  };
+  }, []);
+
+  const dismissAllFeedbacks = useCallback(() => {
+    setFeedbacks([]);
+  }, []);
 
   // 🌟 Feedback Presets para ÜPlay
-  const showLearningFlow = (message: string, progress?: number) => {
+  const showLearningFlow = useCallback((message: string, progress?: number) => {
     showFeedback({
       type: 'learning-flow',
       title: 'Flujo de Aprendizaje Activo',
@@ -598,9 +689,9 @@ export const useConsciousUPlayFeedback = () => {
       philosophical_principle: 'Flujo Natural del Conocimiento',
       progress_value: progress,
     });
-  };
+  }, [showFeedback]);
 
-  const showWisdomIntegration = (insight: string, rewards?: any) => {
+  const showWisdomIntegration = useCallback((insight: string, rewards?: any) => {
     showFeedback({
       type: 'wisdom-integration',
       title: 'Sabiduría Integrada',
@@ -610,9 +701,9 @@ export const useConsciousUPlayFeedback = () => {
       philosophical_principle: 'Integración de Conocimiento',
       rewards,
     });
-  };
+  }, [showFeedback]);
 
-  const showAyniLearning = (reciprocity_action: string) => {
+  const showAyniLearning = useCallback((reciprocity_action: string) => {
     showFeedback({
       type: 'ayni-learning',
       title: 'Aprendizaje Recíproco',
@@ -621,9 +712,9 @@ export const useConsciousUPlayFeedback = () => {
       duration: 5000,
       philosophical_principle: 'Ayni - Reciprocidad Educativa',
     });
-  };
+  }, [showFeedback]);
 
-  const showCollectiveGrowth = (contribution: string) => {
+  const showCollectiveGrowth = useCallback((contribution: string) => {
     showFeedback({
       type: 'collective-growth',
       title: 'Contribución al Bien Común',
@@ -631,9 +722,9 @@ export const useConsciousUPlayFeedback = () => {
       duration: 4000,
       philosophical_principle: 'Crecimiento Colectivo',
     });
-  };
+  }, [showFeedback]);
 
-  const showMetacognition = (reflection: string) => {
+  const showMetacognition = useCallback((reflection: string) => {
     showFeedback({
       type: 'metacognition',
       title: 'Reflexión Metacognitiva',
@@ -642,12 +733,13 @@ export const useConsciousUPlayFeedback = () => {
       duration: 5000,
       philosophical_principle: 'Conciencia del Aprendizaje',
     });
-  };
+  }, [showFeedback]);
 
   return {
     feedbacks,
     showFeedback,
     dismissFeedback,
+    dismissAllFeedbacks,
     // Presets específicos
     showLearningFlow,
     showWisdomIntegration,

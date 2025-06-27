@@ -203,21 +203,29 @@ const UPlay: React.FC = () => {
 
   // 🌟 Session initialization with conscious greeting
   useEffect(() => {
+    let isSessionInitialized = false;
+
     const initializeSession = () => {
-      showWisdomIntegration(
-        'Tu mente está preparada para una experiencia de aprendizaje transformadora.',
-        {
-          meritos: 10,
-          ondas: 5,
-          wisdom_points: 3,
-        }
-      );
+      if (!isSessionInitialized) {
+        isSessionInitialized = true;
+        showWisdomIntegration(
+          'Tu mente está preparada para una experiencia de aprendizaje transformadora.',
+          {
+            meritos: 10,
+            ondas: 5,
+            wisdom_points: 3,
+          }
+        );
+      }
     };
 
-    // Delay to ensure smooth page load
+    // Delay to ensure smooth page load and only initialize once
     const timer = setTimeout(initializeSession, 1500);
-    return () => clearTimeout(timer);
-  }, [showWisdomIntegration]);
+    return () => {
+      clearTimeout(timer);
+      isSessionInitialized = true; // Prevent re-initialization on cleanup
+    };
+  }, []); // Empty dependency array to run only once on mount
 
   // 🧘 Metacognitive reflection trigger
   useEffect(() => {
@@ -273,7 +281,7 @@ const UPlay: React.FC = () => {
       {/* 🛡️ Guardian Conscious Feedback System */}
       {feedbacks.map((feedback, index) => (
         <ConsciousUPlayFeedback
-          key={`feedback-${index}`}
+          key={feedback.id || `feedback-${index}`}
           feedback={feedback}
           onDismiss={() => dismissFeedback(index)}
           variant="detailed"

@@ -21,6 +21,7 @@ import {
   AccountCircle as AccountCircleIcon,
   Logout as LogoutIcon,
   Person as PersonIcon,
+  HelpOutline as HelpOutlineIcon,
 } from '@mui/icons-material';
 
 // Importar los nuevos componentes
@@ -245,6 +246,21 @@ export const MainLayout = () => {
         },
       ],
     }] : []),
+    {
+      id: 'support',
+      label: 'Soporte',
+      icon: <HelpOutlineIcon />,
+      category: 'Soporte',
+      divider: true,
+      children: [
+        {
+          id: 'tutorials',
+          label: 'Tutoriales',
+          icon: <HelpOutlineIcon />,
+          path: '/tutorials',
+        },
+      ],
+    },
     {
       id: 'ai-test',
       label: t('nav_ai_test'),

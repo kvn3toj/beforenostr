@@ -21,7 +21,7 @@ import { UniversalIntegrator } from './components/theme/UniversalIntegrator';
 
 // My new Theme Provider and Selector
 import { DynamicThemeProvider } from './context/DynamicThemeContext';
-import ThemeSelector from './components/theme/ThemeSelector';
+// import ThemeSelector from './components/theme/ThemeSelector';
 
 // 🎓 Tutorial Discovery System
 import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';
@@ -172,6 +172,9 @@ const AppRoutes: React.FC = () => {
 
         {/* 🧭 Pilgrim Journey - Experiencia de Descubrimiento Inicial */}
         <Route path="/pilgrim" element={<LazyPages.UPlay />} /> {/* Reutiliza UPlay como experiencia de descubrimiento */}
+
+        {/* ✨ Discovery Tutorials */}
+        <Route path="/tutorials" element={<LazyPages.DiscoveryTutorialsPage />} />
       </Route>
 
       {/* 404 */}
@@ -215,11 +218,11 @@ const App: React.FC = () => {
                               <AppRoutes />
                             </Suspense>
 
-                            <div style={{ position: 'fixed', bottom: '80px', right: '10px', zIndex: 10000 }}>
+                            {/* <div style={{ position: 'fixed', bottom: '80px', right: '10px', zIndex: 10000 }}>
                               <ThemeSelector />
-                            </div>
+                            </div> */}
 
-                            <TutorialFloatingButton />
+                            {/* <TutorialFloatingButton /> */}
 
                             <FeedbackAgent />
 

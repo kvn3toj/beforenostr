@@ -98,7 +98,7 @@ const adaptBackendVideoData = (backendVideo: any): any => {
       id: String(backendVideo.id), // Convertir número a string
       title: backendVideo.title || '',
       description: backendVideo.description || '',
-      url: backendVideo.url || '',
+      url: backendVideo.externalId ? `https://www.youtube.com/watch?v=${backendVideo.externalId}` : (backendVideo.url || ''),
       thumbnail: backendVideo.thumbnailUrl || backendVideo.thumbnail || '🎬', // Emoji por defecto
       duration: backendVideo.duration || 0,
       questions: adaptedQuestions,

@@ -15,6 +15,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { VideoItemsService } from './video-items.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { VideoItemResponseDto } from './dto/video-item-response.dto';
 
 @ApiTags('video-items')
 @Controller('video-items')
@@ -31,7 +32,7 @@ export class VideoItemsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all video items' })
-  @ApiResponse({ status: 200, description: 'List of video items' })
+  @ApiResponse({ status: 200, description: 'List of video items', type: [VideoItemResponseDto] })
   async findAll() {
     //     console.log('>>> VideoItemsController.findAll: Starting...');
     //     console.log('>>> VideoItemsController.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
@@ -55,9 +56,12 @@ export class VideoItemsController {
         orderBy: { id: 'asc' },
       });
 
-      //       console.log('>>> VideoItemsController.findAll: Query result:', videoItems.length, 'items found');
-      //       console.log('>>> VideoItemsController.findAll: SUCCESS, returning', videoItems.length, 'videoItems');
-      return videoItems;
+      // Mapear externalId a youtubeId y exponer thumbnailUrl
+      return videoItems.map(item => ({
+        ...item,
+        youtubeId: item.externalId,
+        thumbnailUrl: item.thumbnailUrl,
+      }));
     } catch (error) {
       //       console.error('>>> VideoItemsController.findAll: ERROR:', error);
       throw error;
@@ -66,7 +70,7 @@ export class VideoItemsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a video item by ID' })
-  @ApiResponse({ status: 200, description: 'Video item found' })
+  @ApiResponse({ status: 200, description: 'Video item found', type: VideoItemResponseDto })
   @ApiResponse({ status: 404, description: 'Video item not found' })
   async findOne(@Param('id') id: string) {
     //     console.log('>>> VideoItemsController.findOne: Starting with id:', id);
@@ -104,8 +108,12 @@ export class VideoItemsController {
         throw new NotFoundException(`Video item with ID ${id} not found`);
       }
 
-      //       console.log('>>> VideoItemsController.findOne: SUCCESS, returning videoItem');
-      return videoItem;
+      // Mapear externalId a youtubeId y exponer thumbnailUrl
+      return {
+        ...videoItem,
+        youtubeId: videoItem.externalId,
+        thumbnailUrl: videoItem.thumbnailUrl,
+      };
     } catch (error) {
       //       console.error('>>> VideoItemsController.findOne: ERROR:', error);
       throw error;

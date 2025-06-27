@@ -82,10 +82,9 @@ export const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) =
     >
       <Box sx={{ height: 180, background: `linear-gradient(135deg, ${getDifficultyColor(video.difficulty)}30, ${getDifficultyColor(video.difficulty)}20)`, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <img
-          src={getVideoThumbnail({
-            thumbnailUrl: video.thumbnail,
-          })}
-          alt={`Thumbnail de ${video.title}`}
+          src={video.thumbnail}
+          alt={`Miniatura de ${video.title}`}
+          aria-label={`Ver video: ${video.title}`}
           style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.12)' }}
           loading="lazy"
           onError={e => { e.currentTarget.src = '/placeholder-video.png'; }}

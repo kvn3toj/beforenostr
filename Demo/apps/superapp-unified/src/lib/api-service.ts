@@ -163,8 +163,8 @@ class ApiService {
   /**
    * 🎯 Crear headers para las peticiones
    */
-  private createHeaders(includeAuth: boolean = true): RequestHeaders {
-    const headers: RequestHeaders = {
+  private createHeaders(includeAuth: boolean = true): HeadersInit {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
     };
@@ -624,191 +624,25 @@ class ApiService {
 // Create and export the singleton instance
 export const apiService = new ApiService();
 
-// Export the auth API methods for convenience
+// =================================================================
+//  spezifische API-Endpunkte
+// =================================================================
+
 export const authAPI = {
-  login: (credentials: { email: string; password: string }) =>
-    apiService.requestWithoutAuth<AuthUser>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    }),
-
-  register: (email: string, password: string, fullName?: string) =>
-    apiService.requestWithoutAuth<AuthUser>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ email, password, name: fullName }),
-    }),
-
+  login: (credentials: any) => apiService.post('/auth/login', credentials),
+  register: (userData: any) => apiService.post('/auth/register', userData),
   logout: () => apiService.post('/auth/logout'),
-
-  getCurrentUser: () => apiService.get<AuthUser>('/auth/me'),
-
-  updateProfile: (updates: Partial<AuthUser>) =>
-    apiService.patch<AuthUser>('/auth/profile', updates),
+  refreshToken: (token: string) => apiService.post('/auth/refresh', { token }),
+  getMe: () => apiService.get('/auth/me'),
 };
 
-// Export the wallet API methods
-export const walletAPI = {
-  // 🆕 NUEVO: Obtener mi wallet completo desde el backend
-  getMyWallet: () =>
-    apiService.get('/wallets/me'),
-
-  getBalance: (userId: string) =>
-    apiService.get(`/wallets/user/${userId}`),
-
-  getTransactions: (userId: string) =>
-    apiService.get(`/wallets/user/${userId}`), // Usa mismo endpoint que balance por ahora
-
-  getMerits: (userId: string) =>
-    apiService.get(`/wallets/user/${userId}`), // Usa mismo endpoint que balance por ahora
-
-  getAllMerits: () =>
-    apiService.get('/wallets/admin/all'), // Endpoint administrativo
-
-  getMeritsLeaderboard: (limit = 10) =>
-    apiService.get(`/wallets/admin/all?limit=${limit}`), // Endpoint administrativo con límite
-
-  getMeritHistory: (userId: string, page = 0, limit = 20) =>
-    apiService.get(`/wallets/user/${userId}?page=${page}&limit=${limit}`), // Agregar params
-
-  awardMerit: (userId: string, meritType: string, amount: number, description?: string) =>
-    apiService.post('/wallets/admin/award', { userId, meritType, amount, description }),
-
-  transfer: (fromUserId: string, toUserId: string, amount: number, description?: string) =>
-    apiService.post('/wallets/transfer', { fromUserId, toUserId, amount, description }),
-};
-
-// Export the user API methods
-export const userAPI = {
-  getProfile: (userId: string) =>
-    apiService.get(`/users/${userId}`),
-
-  updateProfile: (userId: string, updates: any) =>
-    apiService.patch(`/users/${userId}`, updates),
-
-  getUsers: () =>
-    apiService.get('/users'),
-};
-
-// Export the game API methods
-export const gameAPI = {
-  getGameData: (userId: string) =>
-    apiService.get(`/game/data/${userId}`),
-
-  updateProgress: (userId: string, progress: any) =>
-    apiService.post(`/game/progress/${userId}`, progress),
-
-  getQuests: () =>
-    apiService.get('/game/quests'),
-};
-
-// Export the marketplace API methods
-export const marketplaceAPI = {
-  getItems: (filters?: any) =>
-    apiService.get('/marketplace/items', { params: filters }),
-
-  getItemById: (itemId: string) =>
-    apiService.get(`/marketplace/items/${itemId}`),
-
-  createItem: (itemData: any) =>
-    apiService.post('/marketplace/items', itemData),
-
-  updateItem: (itemId: string, updates: any) =>
-    apiService.patch(`/marketplace/items/${itemId}`, updates),
-
-  deleteItem: (itemId: string) =>
-    apiService.delete(`/marketplace/items/${itemId}`),
-
-  searchItems: (searchTerm: string, filters?: any) =>
-    apiService.get(`/marketplace/search?q=${encodeURIComponent(searchTerm)}`, { params: filters }),
-
-  getCategories: () =>
-    apiService.get('/marketplace/categories'),
-
-  getTrending: (limit = 6) =>
-    apiService.get(`/marketplace/trending?limit=${limit}`),
-};
-
-// Export the videos API methods
-export const videosAPI = {
-  getCategories: () =>
-    apiService.get('/video-items/categories'),
-
-  getVideos: (category?: string) =>
-    apiService.get(`/video-items${category ? `?category=${category}` : ''}`),
-
-  getPlaylists: async () => {
-    // ✅ SOLUCIÓN: Extraer playlists únicos de los videos ya que no existe endpoint directo
-    const videos = await apiService.get('/video-items');
-    const playlistIds = [...new Set(videos.map((video: any) => video.playlistId).filter(Boolean))];
-
-    // Crear objetos de playlist básicos basados en los videos
-    return playlistIds.map((playlistId: string) => {
-      const playlistVideos = videos.filter((video: any) => video.playlistId === playlistId);
-      const firstVideo = playlistVideos[0];
-
-      return {
-        id: playlistId,
-        name: `Ruta de Aprendizaje ${playlistId.slice(0, 8)}...`,
-        description: `Ruta con ${playlistVideos.length} videos`,
-        videoCount: playlistVideos.length,
-        totalDuration: playlistVideos.reduce((sum: number, video: any) => sum + (video.duration || 0), 0),
-        category: firstVideo?.categories ? JSON.parse(firstVideo.categories)[0] : 'General',
-        videos: playlistVideos,
-      };
-    });
-  },
-};
-
-// Export the stats API methods
-export const statsAPI = {
-  getGeneral: () =>
-    apiService.get('/stats/general'),
-
-  getSearch: () =>
-    apiService.get('/stats/search'),
-
-  getUser: (userId: string) =>
-    apiService.get(`/stats/user/${userId}`),
-};
-
-// Export the forms API methods
-export const formsAPI = {
-  submit: (formData: any) =>
-    apiService.post('/forms/submit', formData),
-};
-
-// Export the mundos API methods
-export const mundosAPI = {
-  getMundos: () =>
-    apiService.get('/mundos'),
-
-  getMundo: (mundoId: string) =>
-    apiService.get(`/mundos/${mundoId}`),
-
-  getMundoBySlug: (slug: string) =>
-    apiService.get(`/mundos/slug/${slug}`),
-
-  getMundoPlaylists: (mundoId: string) =>
-    apiService.get(`/mundos/${mundoId}/playlists`),
-};
-
-// Export the social API methods
 export const socialAPI = {
-  // ❌ ENDPOINTS NO IMPLEMENTADOS EN EL BACKEND - Comentados temporalmente
-  // getMatches: () =>
-  //   apiService.get('/social/matches'),
-
-  // getMatch: (matchId: string) =>
-  //   apiService.get(`/social/matches/${matchId}`),
-
-  // getMessages: (matchId: string, page = 0, limit = 50) =>
-  //   apiService.get(`/social/matches/${matchId}/messages?page=${page}&limit=${limit}`),
-
-  // sendMessage: (matchId: string, message: string) =>
-  //   apiService.post(`/social/matches/${matchId}/messages`, { message }),
-
-  // updateUserStatus: (status: string) =>
-  //   apiService.patch('/social/status', { status }),
+  // 🚧 FUNCIONALIDADES FUTURAS - Endpoints que se implementarán más adelante
+  // Matches/Coincidencias - Funcionalidad futura
+  getMatches: () => {
+    console.warn('LETS: Matches functionality not implemented yet. Returning empty array.');
+    return Promise.resolve({ data: [] });
+  },
 
   // ✅ ENDPOINTS CORREGIDOS - Usar las rutas correctas del backend
 
@@ -824,13 +658,6 @@ export const socialAPI = {
 
   getUnreadNotificationsCount: (userId: string) =>
     apiService.get(`/notifications/user/${userId}/unread-count`),
-
-  // Estadísticas sociales - usar endpoint disponible
-  getSocialStats: () =>
-    apiService.get('/social/stats'),
-
-  getRecentActivity: () =>
-    apiService.get('/social/activity/recent'),
 
   // Posts/Publicaciones - usar endpoints disponibles
   getPosts: (page = 0, limit = 20) =>
@@ -871,33 +698,54 @@ export const socialAPI = {
 
   unlikeComment: (commentId: string) =>
     apiService.delete(`/social/comments/${commentId}/like`),
+};
 
-  // 🚧 FUNCIONALIDADES FUTURAS - Endpoints que se implementarán más adelante
-  // Matches/Coincidencias - Funcionalidad futura
-  getMatches: () => {
-    console.warn('🚧 Matches functionality not yet implemented in backend');
-    return Promise.resolve([]);
-  },
+export const walletAPI = {
+  getWallet: () => apiService.get('/wallet/me'),
+  getHistory: () => apiService.get('/wallet/history'), // Asumiendo que esta es la ruta
+};
 
-  getMatch: (matchId: string) => {
-    console.warn('🚧 Match details functionality not yet implemented in backend');
-    return Promise.resolve(null);
-  },
+export const gameAPI = {
+  getGameData: () => apiService.get('/game/data'),
+  updateProgress: (progress: any) => apiService.post('/game/progress', progress),
+  getQuests: () => apiService.get('/quests/all'),
+};
 
-  getMessages: (matchId: string, page = 0, limit = 50) => {
-    console.warn('🚧 Messages functionality not yet implemented in backend');
-    return Promise.resolve([]);
-  },
+export const marketplaceAPI = {
+  getItems: () => apiService.get('/marketplace/items'),
+  getItem: (id: string) => apiService.get(`/marketplace/items/${id}`),
+  getItemById: (id: string) => apiService.get(`/marketplace/items/${id}`),
+  getFavorites: () => apiService.get('/marketplace/favorites'),
+};
 
-  sendMessage: (matchId: string, message: string, type?: string) => {
-    console.warn('🚧 Send message functionality not yet implemented in backend');
-    return Promise.resolve({ success: false, message: 'Not implemented yet' });
-  },
+export const videosAPI = {
+  getVideos: () => apiService.get('/video-items'),
+  getVideo: (id: string) => apiService.get(`/video-items/${id}`),
+  updateVideoProgress: (id: string, progress: number) => apiService.patch(`/video-items/${id}/progress`, { progress }),
+};
 
-  updateUserStatus: (status: string) => {
-    console.warn('🚧 User status functionality not yet implemented in backend');
-    return Promise.resolve({ success: false, message: 'Not implemented yet' });
-  },
+export const formsAPI = {
+  submit: (formData: any) =>
+    apiService.post('/forms/submit', formData),
+};
+
+export const mundosAPI = {
+  getMundos: () => apiService.get('/mundos'),
+  getMundo: (mundoId: string) => apiService.get(`/mundos/${mundoId}`),
+  getMundoBySlug: (slug: string) => apiService.get(`/mundos/slug/${slug}`),
+  getMundoPlaylists: (mundoId: string) => apiService.get(`/mundos/${mundoId}/playlists`),
+};
+
+export const statsAPI = {
+  getUserStats: (userId: string) => apiService.get(`/users/${userId}/stats`),
+  getLeaderboard: () => apiService.get('/analytics/leaderboard'),
+};
+
+export const userAPI = {
+  getUsers: () => apiService.get('/users'),
+  getUser: (userId: string) => apiService.get(`/users/${userId}`),
+  updateUser: (userId: string, data: any) => apiService.patch(`/users/${userId}`, data),
+  getUserProfile: (username: string) => apiService.get(`/users/profile/${username}`),
 };
 
 export default apiService;

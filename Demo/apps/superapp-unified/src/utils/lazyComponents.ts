@@ -51,7 +51,7 @@ const SocialFeed = createLazyPage('SocialFeed');
 
 // Páginas Especiales y de Desarrollo
 const DesignSystemShowcase = createLazyPage('DesignSystemShowcase');
-const WebSocketTest = createLazyPage('StudyRoomsPage');
+const WebSocketTest = createLazyPage('WebSocketTest');
 
 // PWA & Beta
 const PWADemo = createLazyPage('PWADemo');
@@ -64,12 +64,15 @@ const NotFoundPage = createLazyPage('NotFoundPage');
 const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo'));
 
 // [NUEVO] Portal del Viaje en UPlay
-const UPlayJourneyPortal = lazy(() => import('../components/modules/uplay/UPlayJourneyPortal'));
-const UPlayHarvestReflection = lazy(() => import('../components/modules/uplay/UPlayHarvestReflection'));
+const UPlayJourneyPortal = createLazyPage('UPlayJourneyPortal');
+const UPlayHarvestReflection = createLazyPage('UPlayHarvestReflection');
 
 // [ATLAS/ANA] Lazy loading: Asegurado que UPlayInteractiveLibrary y UPlayWithStartTransition usan React.lazy
 export const UPlayInteractiveLibrary = React.lazy(() => import('../components/modules/uplay/UPlayInteractiveLibrary'));
 export const UPlayWithStartTransition = React.lazy(() => import('../components/modules/uplay/UPlayWithStartTransition'));
+
+// Páginas adicionales
+const DiscoveryTutorialsPage = createLazyPage('DiscoveryTutorialsPage');
 
 // --- Mapa de Componentes para el Enrutador ---
 
@@ -145,6 +148,9 @@ export const LazyPages = {
 
   // [NUEVO]
   UPlayHarvestReflection,
+
+  // Páginas adicionales
+  DiscoveryTutorialsPage,
 };
 
 // --- Funciones de Precarga ---

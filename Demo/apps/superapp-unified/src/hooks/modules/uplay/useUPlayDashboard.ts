@@ -9,6 +9,8 @@ export interface VideoItem {
   title: string;
   description: string;
   thumbnail: string;
+  youtubeId?: string;
+  thumbnailUrl?: string;
   duration: number;
   difficulty: 'easy' | 'medium' | 'hard';
   category: string;
@@ -32,13 +34,26 @@ const adaptBackendVideoToVideoItem = (backendVideo: any): VideoItem => {
   if (questionsCount >= 5 || durationMinutes > 30) difficulty = 'medium';
   if (questionsCount >= 10 || durationMinutes > 60) difficulty = 'hard';
 
+  // LÓGICA DE THUMBNAIL MEJORADA
+  let thumbnail = backendVideo.thumbnailUrl;
+
+  // Si no hay thumbnailUrl, intenta construirla con youtubeId
+  if (!thumbnail && backendVideo.youtubeId) {
+    thumbnail = `https://img.youtube.com/vi/${backendVideo.youtubeId}/maxresdefault.jpg`;
+  }
+
+  // Si después de todo no hay thumbnail, usa el placeholder
+  if (!thumbnail) {
+    thumbnail = '/placeholder-video.png'; // Fallback
+  }
+
   return {
     id: backendVideo.id?.toString() || 'unknown',
     title: backendVideo.title || 'Video sin título',
     description: backendVideo.description || 'Sin descripción disponible',
-    thumbnail: backendVideo.externalId
-      ? `https://img.youtube.com/vi/${backendVideo.externalId}/maxresdefault.jpg`
-      : '🎬',
+    thumbnail,
+    youtubeId: backendVideo.youtubeId,
+    thumbnailUrl: backendVideo.thumbnailUrl,
     duration: backendVideo.duration || 0,
     difficulty,
     category: backendVideo.categories?.[0] || 'General',

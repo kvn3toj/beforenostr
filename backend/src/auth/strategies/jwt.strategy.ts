@@ -53,7 +53,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     // //     console.log('>>> JwtStrategy VALIDATE: User found:', { id: user.id, email: user.email, name: user.name });
     //     console.log('>>> JwtStrategy VALIDATE: User roles count:', user.userRoles.length);
 
-    const roles = user.userRoles.map((ur) => ur.role.name);
+    const roles = user.userRoles.map((ur) => ur.role.name.toLowerCase());
     const permissions = user.userRoles
       .flatMap((ur) => ur.role.rolePermissions)
       .map((rp) => rp.permission.name);
