@@ -14,7 +14,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Instalar TODAS las dependencias (incluyendo devDependencies para el build) y OpenSSL 1.1 para Prisma
-RUN apk add --no-cache openssl1.1-compat && npm install --legacy-peer-deps
+RUN apk add --no-cache openssl-dev && npm install --legacy-peer-deps
 
 # Copiar todo el código fuente del backend
 COPY . ./
@@ -42,8 +42,8 @@ COPY package*.json ./
 # Copiar el esquema de Prisma ANTES de instalar para que `postinstall` funcione
 COPY --from=builder /usr/src/app/prisma ./prisma
 
-# Instalar SOLO las dependencias de producción
-RUN apk add --no-cache openssl1.1-compat && npm install --only=production --legacy-peer-deps && npm cache clean --force
+# Instalar SOLO las dependencias de producción y OpenSSL 1.1 para Prisma
+RUN apk add --no-cache openssl-dev && npm install --only=production --legacy-peer-deps && npm cache clean --force
 
 # Copiar aplicación compilada desde la etapa de builder
 COPY --from=builder /usr/src/app/dist ./dist
