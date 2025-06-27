@@ -64,6 +64,7 @@ import {
   Category as CategoryIcon,
   Groups as GroupsIcon,
 } from '@mui/icons-material';
+import { getVideoThumbnail } from '../../../utils/videoUtils';
 
 // Import enhanced mock data hook
 // import {
@@ -93,6 +94,9 @@ interface MockPlaylist {
 // 🔥 Hook para datos reales del backend
 import { useVideos } from '../../../hooks/useRealBackendData';
 import { useGamificationMetrics } from '../../../hooks/useUserProfile';
+
+// 🎯 IMPORT DEL VIDEO DURATION FIXER para corregir duraciones 0:00
+import { useVideosWithCorrectDurations, formatDuration as fixedFormatDuration } from '../../../utils/videoDurationFixer';
 
 // 🌌 IMPORT DEL NUEVO DESIGN SYSTEM CÓSMICO
 import { CosmicCard } from '../../../design-system/components/cosmic/CosmicCard';
@@ -662,10 +666,9 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
     title: 'Introducción a CoomÜnity',
     description: 'Conoce los fundamentos de nuestra plataforma colaborativa'
   };
+  // 🎯 Usar formatDuration mejorado del videoDurationFixer
   const formatDuration = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return fixedFormatDuration(seconds);
   };
   const getProgressText = (progress: number) => `${progress}% completado`;
   const isPreviewEnvironment = false;
@@ -730,9 +733,19 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
 
     console.log('[ÜPLAY DEBUG] ✅ Videos activos filtrados:', activeVideos.length);
     console.log('[ÜPLAY DEBUG] Videos activos:', activeVideos);
+
+    // 🎯 APLICAR CORRECCIÓN DE DURACIONES usando videoDurationFixer
+    const videosWithFixedDurations = useVideosWithCorrectDurations(activeVideos);
+    console.log('[ÜPLAY DEBUG] 🎯 Videos con duraciones corregidas:', videosWithFixedDurations);
+
+    // Log para debug de duraciones
+    videosWithFixedDurations.forEach((video: any) => {
+      console.log(`[ÜPLAY DEBUG] Video "${video.title}": ${video.duration}s (${fixedFormatDuration(video.duration)})`);
+    });
+
     console.log('[ÜPLAY DEBUG] =====================================');
 
-    return activeVideos as BackendVideo[];
+    return videosWithFixedDurations as BackendVideo[];
   }, [backendVideos]);
 
   // Agrupar videos por playlist para mejor organización
@@ -1081,7 +1094,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                           width="100%"
                           height={200}
                           progress={35}
-                          thumbnailUrl={processedVideos[0]?.thumbnailUrl}
+                          thumbnailUrl={getVideoThumbnail(processedVideos[0] || {})}
                         />
                       </Grid>
                       <Grid item xs={7}>
@@ -1219,7 +1232,7 @@ const UPlayMobileHome: React.FC<UPlayMobileHomeProps> = ({ isDesktop = false }) 
                       width="100%"
                       height={220}
                       progress={35}
-                      thumbnailUrl={processedVideos[0]?.thumbnailUrl}
+                      thumbnailUrl={getVideoThumbnail(processedVideos[0] || {})}
                     />
 
                     {/* Enhanced play overlay */}

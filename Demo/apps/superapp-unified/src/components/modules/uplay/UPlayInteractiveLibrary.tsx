@@ -38,6 +38,10 @@ import { RevolutionaryWidget } from '../../../design-system/templates';
 // 🎯 Hook para datos reales del backend
 import { useVideos } from '../../../hooks/data/useVideoData';
 import { useUPlayProgress } from './hooks/useUPlayProgress';
+import { getVideoThumbnail } from '../../../utils/videoUtils';
+
+// 🎯 IMPORT DEL VIDEO DURATION FIXER para corregir duraciones 0:00
+import { useVideosWithCorrectDurations, formatDuration as fixedFormatDuration } from '../../../utils/videoDurationFixer';
 
 // 🎯 Tipos
 interface VideoItem {
@@ -46,6 +50,7 @@ interface VideoItem {
   description: string;
   duration: number;
   thumbnailUrl?: string;
+  externalId?: string; // ID de YouTube para generar thumbnails
   youtubeUrl: string;
   category: string;
   difficulty: 'Principiante' | 'Intermedio' | 'Avanzado';
@@ -89,11 +94,23 @@ export const UPlayInteractiveLibrary: React.FC = () => {
 
   // 🎯 Adaptador Backend → Frontend mejorado
   const adaptBackendVideo = (backendVideo: any): VideoItem => {
-    const duration = backendVideo.duration || 0;
+    // 🎯 Aplicar corrección de duración usando videoDurationFixer
+    const videoWithFixedDuration = {
+      id: backendVideo.id,
+      title: backendVideo.title,
+      content: backendVideo.content || backendVideo.url,
+      duration: backendVideo.duration || 0
+    };
+
+    const fixedVideo = useVideosWithCorrectDurations([videoWithFixedDuration])[0];
+    const duration = fixedVideo ? fixedVideo.duration : (backendVideo.duration || 0);
+
+        console.log(`[ÜPLAY LIBRARY DEBUG] Video "${backendVideo.title}": ${backendVideo.duration}s → ${duration}s (${fixedFormatDuration(duration)})`);
+
     const questionCount = backendVideo.questions?.length || 0;
 
-    // 🎯 CORRECCIÓN CRÍTICA: Usar externalId del backend (no youtubeVideoId)
-    const videoId = backendVideo.externalId || 'dQw4w9WgXcQ';
+    // 🎯 CORRECCIÓN CRÍTICA: Usar externalId del backend (no youtubeVideoId) y evitar conflictos de declaración
+    const extractedVideoId = backendVideo?.externalId;
 
     // Parse categories if it's a JSON string
     let categories = [];
@@ -110,13 +127,30 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     const difficultyMultiplier = mainCategory?.includes('Avanzado') ? 1.5 :
                                 mainCategory?.includes('Intermedio') ? 1.2 : 1.0;
 
+    // 🔧 THUMBNAIL MEJORADO: Usar thumbnailUrl del backend si existe, sino externalId, sino fallback
+    let finalThumbnailUrl = undefined;
+    let finalYoutubeUrl = undefined;
+
+    if (backendVideo.thumbnailUrl) {
+      finalThumbnailUrl = backendVideo.thumbnailUrl;
+    } else if (extractedVideoId) {
+      finalThumbnailUrl = `https://img.youtube.com/vi/${extractedVideoId}/hqdefault.jpg`;
+    }
+
+    if (extractedVideoId) {
+      finalYoutubeUrl = `https://www.youtube.com/watch?v=${extractedVideoId}`;
+    } else if (backendVideo.url) {
+      finalYoutubeUrl = backendVideo.url;
+    }
+
     return {
       id: backendVideo.id.toString(), // Asegurar que sea string para navegación
       title: backendVideo.title || 'Video Sin Título',
       description: backendVideo.description || 'Explora este contenido educativo interactivo.',
       duration,
-      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-      youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
+      thumbnailUrl: finalThumbnailUrl,
+      externalId: extractedVideoId, // Pasar el externalId para generar thumbnails
+      youtubeUrl: finalYoutubeUrl,
       category: mainCategory,
       difficulty: duration > 300 ? 'Avanzado' : duration > 180 ? 'Intermedio' : 'Principiante',
       rewards: {
@@ -138,6 +172,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
       return [];
     }
 
+    // Primero adaptar los videos y luego aplicar corrección de duraciones en el adaptador
     return backendVideos.map(adaptBackendVideo);
   }, [backendVideos]);
 
@@ -158,11 +193,9 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     });
   }, [processedVideos, searchTerm, selectedCategory]);
 
-  // 🎯 Formatear duración
+  // 🎯 Formatear duración usando videoDurationFixer mejorado
   const formatDuration = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return fixedFormatDuration(seconds);
   };
 
   // 🎯 Handlers
@@ -341,11 +374,16 @@ export const UPlayInteractiveLibrary: React.FC = () => {
             <CardMedia
               component="img"
               height="200"
-              image={video.thumbnailUrl}
+              image={getVideoThumbnail({
+                thumbnailUrl: video.thumbnailUrl,
+                externalId: video.externalId,
+                url: video.youtubeUrl,
+              })}
               alt={video.title}
+              data-testid="uplay-video-thumbnail"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.src = 'https://via.placeholder.com/320x180/6366f1/ffffff?text=Video';
+                target.src = '/placeholder-video.svg';
               }}
             />
 

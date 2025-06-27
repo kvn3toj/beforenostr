@@ -46,6 +46,7 @@ import {
 import InteractiveVideoPlayerOverlay from '../components/modules/uplay/components/InteractiveVideoPlayerOverlay';
 import { useVideos } from '../hooks/useRealBackendData'; // Hook del backend real
 import { apiService } from '../lib/api-service'; // Para analytics
+import { getVideoThumbnail } from '../utils/videoUtils';
 
 // Types
 interface VideoData {
@@ -259,12 +260,22 @@ const getUserProgress = (): UserProgress => ({
 
 // Utility to convert YouTube URLs to a format our enhanced player can use
 const convertToVideoPlayerUrl = (url: string): string => {
-  // For YouTube URLs, we'll use a demo video URL since our enhanced player uses HTML5 video
-  // This is temporary until we implement YouTube iframe integration in InteractiveVideoPlayerOverlay
+  // 🎯 CORRECCIÓN: Usar URLs reales de YouTube en lugar de videos de muestra
   if (url && (url.includes('youtube.com') || url.includes('youtu.be'))) {
-    console.log('🎬 YouTube URL detected, using demo video for enhanced player:', url);
-    // Return a demo video URL that works with HTML5 video element (Big Buck Bunny sample)
-    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+    console.log('🎬 YouTube URL detected, using REAL YouTube URL for player:', url);
+
+    // Extract video ID from YouTube URL
+    let videoId = '';
+    if (url.includes('watch?v=')) {
+      videoId = url.split('watch?v=')[1].split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0];
+    }
+
+    if (videoId) {
+      // Return YouTube embed URL for iframe integration
+      return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0&modestbranding=1`;
+    }
   }
   return url;
 };
@@ -325,7 +336,7 @@ const UPlayVideoPlayer: React.FC = () => {
           console.log('✅ [FORZADO] Video encontrado en backendVideos. Usando datos reales:', foundVideo);
 
           // 🎯 CORRECCIÓN CRÍTICA: Procesar correctamente datos del backend
-          const videoExternalId = foundVideo.externalId || 'dQw4w9WgXcQ';
+          const videoExternalId = foundVideo?.externalId;
 
           // Parse categories if it's a JSON string
           let categories = [];
@@ -340,19 +351,19 @@ const UPlayVideoPlayer: React.FC = () => {
             id: foundVideo.id?.toString() || videoId,
             title: foundVideo.title || 'Video sin título',
             description: foundVideo.description || 'Descripción no disponible',
-            url: `https://www.youtube.com/watch?v=${videoExternalId}`, // ✅ Usar externalId para URL
+            url: `https://www.youtube.com/watch?v=${videoExternalId}`,
             duration: foundVideo.duration || 0,
             questions: Array.isArray(foundVideo.questions) ? foundVideo.questions : [],
-            thumbnail: foundVideo.thumbnailUrl || `https://img.youtube.com/vi/${videoExternalId}/maxresdefault.jpg`,
+            thumbnail: getVideoThumbnail(foundVideo),
             category: categories[0] || 'General',
             difficulty: foundVideo.difficulty || 'medium',
             estimatedRewards: {
               merits: 100,
               ondas: 50
             },
-            tags: Array.isArray(foundVideo.tags) ?
-                  (typeof foundVideo.tags === 'string' ? JSON.parse(foundVideo.tags) : foundVideo.tags) :
-                  []
+            tags: Array.isArray(foundVideo.tags)
+              ? (typeof foundVideo.tags === 'string' ? JSON.parse(foundVideo.tags) : foundVideo.tags)
+              : []
           };
 
           console.log('🎯 [PRIORITARIO] Processed video data from backend:', processedVideo);
@@ -376,10 +387,12 @@ const UPlayVideoPlayer: React.FC = () => {
           id: stateVideo.id?.toString() || videoId,
           title: stateVideo.title || 'Video sin título',
           description: stateVideo.description || 'Descripción no disponible',
-          url: stateVideo.youtubeUrl || stateVideo.url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          url: stateVideo?.youtubeUrl || stateVideo?.url,
           duration: stateVideo.duration || 0,
           questions: Array.isArray(stateVideo.questions) ? stateVideo.questions : [],
-          thumbnail: stateVideo.thumbnailUrl || stateVideo.thumbnail || '',
+          thumbnail: stateVideo.thumbnailUrl && stateVideo.thumbnailUrl.includes('img.youtube.com')
+            ? `${stateVideo.thumbnailUrl}?cb=${Date.now()}`
+            : (stateVideo.thumbnailUrl || `https://img.youtube.com/vi/${stateVideo.youtubeId}/hqdefault.jpg?cb=${Date.now()}`),
           category: stateVideo.category || 'General',
           difficulty: stateVideo.difficulty || 'medium',
           estimatedRewards: {
@@ -405,7 +418,7 @@ const UPlayVideoPlayer: React.FC = () => {
           id: videoId || 'fallback-video',
           title: 'Video de Demostración',
           description: 'Este es un video de demostración mientras se carga el contenido real.',
-          url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', // Fallback URL
           duration: 300,
           questions: [],
           thumbnail: '',
