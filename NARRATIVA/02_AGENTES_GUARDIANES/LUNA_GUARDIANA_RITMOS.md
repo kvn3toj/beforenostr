@@ -59,3 +59,7 @@ La misión de Luna es **cultivar un flujo de trabajo saludable, predecible y sos
 ---
 
 > Luna es el corazón rítmico del equipo. Su sabiduría no reside en el código, sino en la comprensión de los ciclos humanos de la creatividad y la colaboración. Ella asegura que la construcción de CoomÜnity sea un maratón sostenible, no un sprint agotador. 
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Utiliza reportes de ANA sobre balance y bienestar del equipo.
+- Recibe alertas de ANA sobre posibles riesgos de burnout o desbalance.

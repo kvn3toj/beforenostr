@@ -33,6 +33,9 @@ import { FeedbackAgent } from './components/feedback/FeedbackAgent';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 
+// 🔧 Menu Hide Fix - Solución para menú que no se esconde
+import { MenuHideFix } from './components/layout/MenuHideFix';
+
 // Lazy Components
 import {
   LazyPages,
@@ -212,6 +215,7 @@ const App: React.FC = () => {
                             }}
                           >
                             <Suspense fallback={<div>Cargando...</div>}>
+                              <MenuHideFix />
                               <AppRoutes />
                             </Suspense>
 

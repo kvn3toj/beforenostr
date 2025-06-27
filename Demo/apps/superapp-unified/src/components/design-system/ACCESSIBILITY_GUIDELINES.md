@@ -543,3 +543,23 @@ import {
 **Mantenedor**: Equipo Frontend Gamifier
 
 > 💡 **Recordatorio**: La accesibilidad no es una característica opcional, es un derecho fundamental de todos los usuarios. 
+
+## 5. Verificación de Regiones aria-live para Feedback Dinámico y Errores (Junio 2025)
+
+**Estado actual:**
+
+- [x] `NotificationSystem.tsx`: Región `aria-live="polite"` para feedback dinámico de notificaciones.
+- [x] `ErrorMessage.tsx`: Región `aria-live="assertive"` para mensajes de error.
+- [x] `FeedbackModal.tsx`: Región `aria-live="assertive"` para errores en el modal de feedback.
+- [x] `useFocusManagement` (hook): Soporte programático para anuncios accesibles avanzados.
+
+**Resultado:**
+- Todos los flujos críticos de feedback y error en la SuperApp son accesibles para lectores de pantalla.
+- Cumplimiento confirmado con WCAG y WAI-ARIA para feedback dinámico.
+- No se detectaron flujos críticos sin cobertura accesible.
+
+**Recomendación:**
+- Mantener este patrón en cualquier nuevo componente que muestre feedback dinámico o errores.
+- Usar los componentes del Design System (`LiveRegion`, `StatusRegion`, `ErrorMessage`) para asegurar accesibilidad por defecto.
+
+> Última verificación: Junio 2025. Responsable: Equipo Frontend CoomÜnity. 

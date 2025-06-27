@@ -21,27 +21,33 @@ export const ErrorMessage = ({
   variant = 'standard'
 }: ErrorMessageProps) => {
   return (
-    <Alert 
-      severity={severity} 
-      variant={variant}
-      sx={{ mt: 2 }}
-      action={
-        showRetry && onRetry ? (
-          <Button
-            color="inherit"
-            size="small"
-            onClick={onRetry}
-            startIcon={<RefreshIcon />}
-          >
-            {retryLabel}
-          </Button>
-        ) : undefined
-      }
-    >
-      {title && <AlertTitle>{title}</AlertTitle>}
-      <Typography component="div" variant="body2">
+    <>
+      {/* Región aria-live accesible para feedback de error */}
+      <Box aria-live="assertive" role="alert" sx={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} data-testid="aria-live-error">
         {message}
-      </Typography>
-    </Alert>
+      </Box>
+      <Alert
+        severity={severity}
+        variant={variant}
+        sx={{ mt: 2 }}
+        action={
+          showRetry && onRetry ? (
+            <Button
+              color="inherit"
+              size="small"
+              onClick={onRetry}
+              startIcon={<RefreshIcon />}
+            >
+              {retryLabel}
+            </Button>
+          ) : undefined
+        }
+      >
+        {title && <AlertTitle>{title}</AlertTitle>}
+        <Typography component="div" variant="body2">
+          {message}
+        </Typography>
+      </Alert>
+    </>
   );
-}; 
+};

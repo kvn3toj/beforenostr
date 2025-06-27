@@ -44,7 +44,7 @@ src/
 
 ```typescript
 // ❌ PROHIBIDO - No existen
-import { Privacy } from '@mui/icons-material';
+// import { Privacy } from '@mui/icons-material';
 import { Configuration } from '@prisma/client';
 import { apiService } from '../../lib/api-service'; // Path incorrecto
 ```
@@ -279,7 +279,7 @@ interface SocialFeatures {
 
 ```typescript
 // ❌ NUNCA hagas esto
-import { Privacy } from '@mui/icons-material';     // No existe
+// import { Privacy } from '@mui/icons-material';     // No existe
 import '../../../lib/api-service';                 // Path incorrecto común
 import { Configuration } from '@prisma/client';    // Modelo incorrecto
 

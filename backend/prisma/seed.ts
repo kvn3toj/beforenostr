@@ -4,49 +4,53 @@ import { faker } from '@faker-js/faker';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Create users
-  const regularUser = await prisma.user.create({
-    data: {
-      email: 'user@coomunity.com',
-      password: 'test123',
+  // Upsert users (evita duplicados por email)
+  const regularUser = await prisma.user.upsert({
+    where: { email: 'user@gamifier.com' },
+    update: {},
+    create: {
+      email: 'user@gamifier.com',
+      password: '123456',
       name: faker.person.fullName(),
       username: faker.internet.userName(),
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      profile: {
-        create: {
-          bio: faker.lorem.paragraph(),
-          location: faker.location.city(),
-          skills: ['Desarrollo', 'Diseño', 'Marketing'],
-          socialLinks: {
-            linkedin: faker.internet.url(),
-            twitter: faker.internet.url(),
-          },
-        }
-      }
-    }
+      // profile: {
+      //   create: {
+      //     bio: faker.lorem.paragraph(),
+      //     location: faker.location.city(),
+      //     skills: ['Desarrollo', 'Diseño', 'Marketing'],
+      //     socialLinks: {
+      //       linkedin: faker.internet.url(),
+      //       twitter: faker.internet.url(),
+      //     },
+      //   }
+      // }
+    },
   });
 
-  const sellerUser = await prisma.user.create({
-    data: {
-      email: 'seller@coomunity.com',
-      password: 'test123',
+  const sellerUser = await prisma.user.upsert({
+    where: { email: 'seller@gamifier.com' },
+    update: {},
+    create: {
+      email: 'seller@gamifier.com',
+      password: '123456',
       name: faker.person.fullName(),
       username: faker.internet.userName(),
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      profile: {
-        create: {
-          bio: faker.lorem.paragraph(),
-          location: faker.location.city(),
-          skills: ['Consultoría', 'Ventas', 'Emprendimiento'],
-          socialLinks: {
-            linkedin: faker.internet.url(),
-            twitter: faker.internet.url(),
-          },
-        }
-      }
-    }
+      // profile: {
+      //   create: {
+      //     bio: faker.lorem.paragraph(),
+      //     location: faker.location.city(),
+      //     skills: ['Consultoría', 'Ventas', 'Emprendimiento'],
+      //     socialLinks: {
+      //       linkedin: faker.internet.url(),
+      //       twitter: faker.internet.url(),
+      //     },
+      //   }
+      // }
+    },
   });
 
   // Create marketplace items
@@ -145,7 +149,7 @@ async function main() {
   // Seed UPLAY videos
   console.log('\n🎬 Seeding UPLAY videos...');
   try {
-    const { seedUplayVideos } = await import('./seed-uplay-videos');
+    const { seedUplayVideos } = await import('./seed-uplay-videos.ts');
     await seedUplayVideos();
   } catch (error) {
     console.error('Error seeding UPLAY videos:', error);

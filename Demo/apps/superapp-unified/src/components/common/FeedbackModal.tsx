@@ -190,6 +190,12 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
       </DialogTitle>
 
       <DialogContent sx={{ p: 3 }}>
+        {/* Región aria-live accesible para feedback de error */}
+        {error && (
+          <Box aria-live="assertive" role="alert" sx={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} data-testid="aria-live-feedback-modal">
+            {error}
+          </Box>
+        )}
         {/* Mensaje de error */}
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>

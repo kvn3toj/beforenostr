@@ -20,6 +20,7 @@ import { ConsciousLoadingState } from '../../../ui/enhanced/ConsciousLoadingStat
 import { impactCategories, getConsciousnessStyle } from '../marketplace.constants.tsx';
 import { QuickViewModal } from './QuickViewModal';
 import { SearchFilters } from '../MarketplaceMain';
+import { sanitizeProductImages } from './ConsciousProductImageSystem';
 
 interface MarketplaceItem {
   id: string;
@@ -59,22 +60,7 @@ interface Category {
   icon: string;
 }
 
-const FALLBACK_IMGS = [
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80',
-  'https://images.unsplash.com/photo-1584147791147-4e72b042ad2f?w=600&q=80',
-  'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&q=80',
-];
-
-const needsImageReplacement = (url: string) => {
-  if (!url) return true;
-  const lower = url.toLowerCase();
-  return lower.includes('loremflickr') || lower.includes('cat') || lower.includes('statue');
-};
-
-const sanitizeImages = (imgs: string[] | undefined): string[] => {
-  if (!imgs || imgs.length === 0) return [FALLBACK_IMGS[0]];
-  return imgs.map((url, idx) => (needsImageReplacement(url) ? FALLBACK_IMGS[idx % FALLBACK_IMGS.length] : url));
-};
+// Image handling now uses the ConsciousProductImageSystem
 
 const mapItemToUIItem = (item: any): MarketplaceItem => {
   const sellerData = item.seller || {};
@@ -87,7 +73,7 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
     priceUSD: item.price || 0,
     lukas: item.price || 0,
     category: item.category || 'General',
-    images: sanitizeImages(item.images),
+    images: sanitizeProductImages(item.images, item.title, item.description, item.category),
     seller: {
       id: sellerData.id || 'unknown-seller',
       name: sellerData.name || 'Vendedor Anónimo',

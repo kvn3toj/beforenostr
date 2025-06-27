@@ -39,8 +39,6 @@ const CACHE_CONFIG = {
  * Adapta los datos del backend al formato esperado por VideoDataSchema
  */
 const adaptBackendVideoData = (backendVideo: any): any => {
-  console.log('🔧 Adaptando video del backend:', backendVideo);
-
   try {
     // Parsear arrays JSON si son strings
     let categories: string[] = [];
@@ -125,10 +123,8 @@ const adaptBackendVideoData = (backendVideo: any): any => {
       isActive: backendVideo.isActive,
     };
 
-    console.log('✅ Video adaptado exitosamente:', adaptedVideo);
     return adaptedVideo;
   } catch (error) {
-    console.error('Error adaptando datos del video:', error, backendVideo);
     // Retornar formato mínimo válido en caso de error
     return {
       id: String(backendVideo.id || 'unknown'),
@@ -215,26 +211,18 @@ const VideoApiService = {
     if (params.offset) queryParams.append('offset', params.offset.toString());
     if (params.search) queryParams.append('search', params.search);
 
-    console.log('🎬 Obteniendo videos del backend...');
     const response: any = await apiService.get(`/video-items?${queryParams.toString()}`);
-    console.log('🎬 Respuesta completa del backend:', response);
 
     // La respuesta directa ya es el array de videos
     const videosArray = response;
-    console.log('🎬 Videos array:', videosArray);
-    console.log('🎬 Es array?', Array.isArray(videosArray));
 
     // Adaptar y validar cada video en la respuesta
     if (Array.isArray(videosArray)) {
-      console.log('🎥 Procesando videos del backend:', videosArray.length, 'videos');
       const processedVideos = videosArray.map((video: unknown, index: number) => {
-        console.log(`📹 Procesando video ${index + 1}:`, video);
         const adaptedVideo = adaptBackendVideoData(video);
         const validatedVideo = validateVideoData(adaptedVideo);
-        console.log(`✅ Video ${index + 1} validado:`, validatedVideo);
         return validatedVideo;
       });
-      console.log('🎬 Videos finales procesados:', processedVideos);
       return processedVideos;
     }
 

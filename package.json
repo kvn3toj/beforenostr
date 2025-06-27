@@ -38,7 +38,7 @@
     "clean-vite-cache": "rm -rf node_modules/.vite",
     "clean:backend": "rm -rf dist",
     "clean:processes": "npm run stop:all",
-    "db:seed": "ts-node prisma/seed.ts",
+    "db:seed": "ts-node backend/prisma/seed.ts",
     "db:reset": "npx prisma migrate reset",
     "start:backend": "node dist/main.js",
     "start:backend:dev": "cd backend && npm run start:dev",
@@ -60,7 +60,7 @@
     "stop:guardianes": "source .guardian-pids 2>/dev/null && kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || pkill -f 'npm run dev'"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node backend/prisma/seed.ts"
   },
   "dependencies": {
     "@builder.io/dev-tools": "latest",

@@ -10,6 +10,7 @@ import {
 import { PlayArrow, Diamond, Bolt } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { VideoItem } from '../../../../hooks/modules/uplay/useUPlayDashboard';
+import { getVideoThumbnail } from '../../../../utils/videoUtils';
 
 // Helper to validate the video item structure
 const isValidVideoItem = (video: any): video is VideoItem => {
@@ -81,10 +82,13 @@ export const VideoCard: React.FC<{ video: VideoItem; onPlay: (videoId: string) =
     >
       <Box sx={{ height: 180, background: `linear-gradient(135deg, ${getDifficultyColor(video.difficulty)}30, ${getDifficultyColor(video.difficulty)}20)`, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <img
-          src={video.thumbnail}
+          src={getVideoThumbnail({
+            thumbnailUrl: video.thumbnail,
+          })}
           alt={`Thumbnail de ${video.title}`}
           style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.12)' }}
           loading="lazy"
+          onError={e => { e.currentTarget.src = '/placeholder-video.png'; }}
         />
         <Box className="play-overlay" sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.8) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transform: 'scale(1.2)', transition: 'all 0.3s ease-in-out' }}>
           <motion.button whileTap={{ scale: 0.85 }} whileHover={{ scale: 1.1, boxShadow: '0 0 20px #ff6b6b' }} style={{ border: 'none', background: 'linear-gradient(45deg, #ff6b6b, #feca57)', borderRadius: '50%', width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer', outline: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }} aria-label="Reproducir video" onClick={(e) => { e.stopPropagation(); onPlay(video.id); }}>

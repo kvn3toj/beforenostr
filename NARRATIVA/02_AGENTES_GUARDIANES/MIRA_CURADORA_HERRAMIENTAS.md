@@ -61,3 +61,8 @@ Un administrador necesita poder buscar, ver y, si es necesario, banear a un usua
 ---
 
 > Mira es la heroína silenciosa que empodera a los héroes visibles. Su dedicación a crear herramientas internas de alta calidad es un pilar fundamental para la escalabilidad y la gestión saludable de la comunidad CoomÜnity. Un universo bien cuidado por fuera requiere un taller bien ordenado por dentro. 
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Trabaja en simbiosis con ANA, quien automatiza la detección de obsolescencia y brechas.
+- Utiliza RAG de ANA para responder preguntas complejas y conectar documentos.
+- Supervisa y valida las acciones automáticas de ANA en la curación del conocimiento.

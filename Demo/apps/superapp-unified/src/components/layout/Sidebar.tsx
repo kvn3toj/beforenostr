@@ -53,7 +53,7 @@ interface SidebarProps {
   variant?: 'permanent' | 'temporary';
   open?: boolean;
   onClose?: () => void;
-  drawerWidth: number;
+  drawerWidth?: number;
 }
 
 const NavItem: React.FC<{item: any, isActive: boolean, onClick: (path: string) => void}> = ({ item, isActive, onClick }) => {
@@ -99,7 +99,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   variant = 'permanent',
   open = false,
   onClose,
-  drawerWidth,
+  drawerWidth = 280,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();

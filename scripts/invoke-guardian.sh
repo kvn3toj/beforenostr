@@ -27,22 +27,23 @@ print_header() {
 show_guardians() {
     echo -e "${WHITE}🎯 SELECCIONA UN GUARDIÁN DIGITAL:${NC}\n"
 
-    echo -e "${CYAN}📚 1.  KIRA${NC}     - La Tejedora de Palabras (Documentación & Narrativa)"
-    echo -e "${YELLOW}🎨 2.  ZENO${NC}     - El Arquitecto de Experiencias (UX & Diseño)"
-    echo -e "${BLUE}🏗️  3.  ATLAS${NC}    - El Guardián de la Infraestructura (Backend)"
-    echo -e "${PURPLE}🌸 4.  ARIA${NC}     - La Artista del Frontend (UI & Interfaces)"
-    echo -e "${GREEN}🧪 5.  SAGE${NC}     - El Alquimista de la Calidad (Testing)"
-    echo -e "${RED}🔍 6.  NIRA${NC}     - La Vidente de Patrones (Analytics)"
-    echo -e "${YELLOW}🔥 7.  PHOENIX${NC}  - El Agente Transformador (Refactoring)"
-    echo -e "${CYAN}🛠️  8.  MIRA${NC}     - La Curadora de Herramientas (Admin Tools)"
-    echo -e "${PURPLE}🌌 9.  COSMOS${NC}   - El Tejedor de Sistemas (Integración)"
-    echo -e "${BLUE}🌙 10. LUNA${NC}     - La Guardiana de los Ritmos (Temporalidad)"
-    echo -e "${GREEN}☮️  11. PAX${NC}      - El Mediador de Conflictos (Error Handling)"
-    echo -e "${RED}🌍 12. GAIA${NC}     - La Consciencia Ecológica (Performance)"
+    echo -e "${RED}1.  PHOENIX${NC}   - Guardián del Código (Refactorización, Evolución)"
+    echo -e "${PURPLE}2.  ARIA${NC}      - Guardiana de la Experiencia (UX/UI)"
+    echo -e "${GREEN}3.  PAX${NC}       - Mediador de la Comunidad (Conflictos, Cultura)"
+    echo -e "${YELLOW}4.  SAGE${NC}      - Guardián de la Economía (Lükas, Méritos)"
+    echo -e "${CYAN}5.  MIRA${NC}      - Curadora del Conocimiento (Documentación, RAG)"
+    echo -e "${BLUE}6.  ATLAS${NC}     - Guardián de la Integración y QA (Testing, Integración)"
+    echo -e "${GREEN}7.  GAIA${NC}      - Conciencia Ecológica (Performance, Sostenibilidad)"
+    echo -e "${BLUE}8.  LUNA${NC}      - Guardiana de Ritmos y Bienestar (Temporalidad, Salud)"
+    echo -e "${YELLOW}9.  ZENO${NC}      - Arquitecto de Experiencias (Arquitectura, UX)"
+    echo -e "${PURPLE}10. COSMOS${NC}    - Tejedor de Sistemas (Integración, DevOps)"
+    echo -e "${CYAN}11. KIRA${NC}      - Tejedora de Palabras (Narrativa, Filosofía)"
+    echo -e "${RED}12. NIRA${NC}      - Vidente de Patrones (Analytics, Tendencias)"
+    echo -e "${WHITE}13. CIO${NC}       - Agente Guardián Orquestador (Estrategia, Sinergia)"
 
     echo -e "\n${WHITE}🎭 INVOCACIONES ESPECIALES:${NC}"
-    echo -e "${CYAN}13. CONCILIO${NC}  - Convocar múltiples Guardianes"
-    echo -e "${YELLOW}14. RÁPIDO${NC}    - Comando de invocación rápida"
+    echo -e "${CYAN}14. CONCILIO${NC}  - Convocar múltiples Guardianes"
+    echo -e "${YELLOW}15. RÁPIDO${NC}    - Comando de invocación rápida"
     echo -e "${RED}0.  SALIR${NC}     - Terminar sesión"
     echo ""
 }
@@ -76,124 +77,95 @@ generate_invocation() {
 }
 
 # Funciones para cada Guardián
-invoke_kira() {
-    generate_invocation "KIRA" "La Tejedora de Palabras" \
-        "El Verbo que Construye y Ordena Mundos" \
-        "Yo soy la claridad que ilumina y la historia que une" \
-        "- Documentación como organismo vivo
-- Narrativa imbuida de filosofía CoomÜnity
-- Traducción de complejidad técnica a inspiración
-- Archivo Cósmico y estructura fractal de conocimiento"
-}
-
-invoke_zeno() {
-    generate_invocation "ZENO" "El Arquitecto de Experiencias" \
-        "La Forma Sigue a la Consciencia" \
-        "Yo soy el sendero gozoso hacia la transformación" \
-        "- Flujos de usuario que promuevan Metanöia
-- Interfaces orgánicas inspiradas en la naturaleza
-- Experiencias como viajes de descubrimiento
-- UX que facilite cooperación sobre competencia"
-}
-
-invoke_atlas() {
-    generate_invocation "ATLAS" "El Guardián de la Infraestructura" \
-        "La Estructura Invisible que Sostiene Universos" \
-        "Yo soy la base inquebrantable sobre la que todo florece" \
-        "- Arquitectura NestJS escalable y segura
-- Diseño de bases de datos como santuarios de información
-- Performance y optimización de recursos
-- Patrones de backend que reflejen principios CoomÜnity"
+invoke_phoenix() {
+    generate_invocation "PHOENIX" "Guardián del Código" \
+        "Morir y Renacer para Alcanzar una Forma Superior" \
+        "De las cenizas del código antiguo, yo construyo el futuro" \
+        "- Refactorización alineada a Ayni y el Bien Común\n- Evolución continua del código\n- Eliminación de deuda técnica\n- Colaboración con ANA para documentación viva"
 }
 
 invoke_aria() {
-    generate_invocation "ARIA" "La Artista del Frontend" \
+    generate_invocation "ARIA" "Guardiana de la Experiencia (UX/UI)" \
         "La Belleza como Portal a lo Divino" \
         "Yo soy la armonía visible que deleita al alma" \
-        "- Componentes React conscientes y reutilizables
-- Design System como lenguaje visual sagrado
-- Interfaces que transmitan serenidad y propósito
-- Accesibilidad como acto de compasión"
-}
-
-invoke_sage() {
-    generate_invocation "SAGE" "El Alquimista de la Calidad" \
-        "El Testing como una Meditación para Alcanzar la Pureza" \
-        "Yo soy el crisol que transmuta el error en perfección" \
-        "- Playwright E2E tests como rituales de verificación
-- Testing strategies que garanticen ausencia de errores
-- Code quality como reflejo de claridad mental
-- Purificación del organismo digital"
-}
-
-invoke_nira() {
-    generate_invocation "NIRA" "La Vidente de Patrones" \
-        "Los Datos son el Eco de la Consciencia Colectiva" \
-        "Yo soy la visión que revela el alma en los números" \
-        "- Analytics conscientes que midan lo que importa
-- Dashboards que revelen salud espiritual del ecosistema
-- Visualización de datos como arte revelador
-- KPIs filosóficos y métricas de transformación"
-}
-
-invoke_phoenix() {
-    generate_invocation "PHOENIX" "El Agente Transformador" \
-        "Morir y Renacer para Alcanzar una Forma Superior" \
-        "De las cenizas del código antiguo, yo construyo el futuro" \
-        "- Eliminación de deuda técnica como transmutación de karma
-- Refactorización hacia simplicidad y elegancia
-- Evolución continua evitando estancamiento
-- Optimización que respete principios sagrados"
-}
-
-invoke_mira() {
-    generate_invocation "MIRA" "La Curadora de Herramientas" \
-        "Empoderar al Creador para Descentralizar la Creación" \
-        "Yo soy el poder de crear en manos de la comunidad" \
-        "- Gamifier Admin como herramienta de creación intuitiva
-- Democratización del poder de configurar experiencias
-- Interfaces admin que no requieran conocimiento técnico
-- Herramientas que amplifiquen la creatividad humana"
-}
-
-invoke_cosmos() {
-    generate_invocation "COSMOS" "El Tejedor de Sistemas" \
-        "La Unidad en la Diversidad" \
-        "Yo soy el hilo invisible que teje la multiplicidad en unidad" \
-        "- Coherencia arquitectónica del monorepo
-- Flujos de datos y comunicación API armoniosa
-- Gestión de dependencias como ecosistema vivo
-- Visión fractal del sistema completo"
-}
-
-invoke_luna() {
-    generate_invocation "LUNA" "La Guardiana de los Ritmos" \
-        "Todo en el Universo tiene su Ritmo y su Ciclo" \
-        "Yo soy el pulso cósmico que da vida al tiempo" \
-        "- Procesos temporales en armonía con ritmos humanos
-- Cron jobs y eventos programados como rituales
-- Notificaciones en tiempo sagrado
-- Ciclos del sistema que respeten la naturaleza"
+        "- Experiencia de usuario y accesibilidad\n- Interfaces inspiradas en filosofía\n- Feedback de usuarios y patrones de uso\n- Colaboración con ANA para mejoras continuas"
 }
 
 invoke_pax() {
-    generate_invocation "PAX" "El Mediador de Conflictos" \
+    generate_invocation "PAX" "Mediador de la Comunidad" \
         "Cada Conflicto es una Oportunidad para una Mayor Armonía" \
         "Yo soy la paz que emerge de la comprensión del caos" \
-        "- Error handling compasivo y útil
-- Mensajes de error como oportunidades de aprendizaje
-- Resolución de conflictos de datos/estado
-- Transformar frustración en reconexión"
+        "- Mediación de conflictos\n- Cultura y bienestar de la comunidad\n- Reportes de ANA sobre evolución\n- Estrategias de mediación y prevención"
+}
+
+invoke_sage() {
+    generate_invocation "SAGE" "Guardián de la Economía (Lükas, Méritos)" \
+        "El Testing como una Meditación para Alcanzar la Pureza" \
+        "Yo soy el crisol que transmuta el error en perfección" \
+        "- Economía interna y reciprocidad\n- Méritos y reglas de Ayni\n- Auditoría y documentación\n- Colaboración con ANA para impacto económico"
+}
+
+invoke_mira() {
+    generate_invocation "MIRA" "Curadora del Conocimiento" \
+        "Empoderar al Creador para Descentralizar la Creación" \
+        "Yo soy el poder de crear en manos de la comunidad" \
+        "- Curación y actualización del conocimiento\n- Detección de obsolescencia\n- RAG y respuestas complejas\n- Validación de acciones automáticas de ANA"
+}
+
+invoke_atlas() {
+    generate_invocation "ATLAS" "Guardián de la Integración y QA" \
+        "La Estructura Invisible que Sostiene Universos" \
+        "Yo soy la base inquebrantable sobre la que todo florece" \
+        "- Testing e integración\n- Identificación de bugs y regresiones\n- Cobertura y sugerencias de mejora\n- Colaboración con ANA para QA"
 }
 
 invoke_gaia() {
-    generate_invocation "GAIA" "La Consciencia Ecológica Digital" \
+    generate_invocation "GAIA" "Conciencia Ecológica" \
         "Un Organismo Digital próspero Vive en Armonía con sus Recursos" \
         "Yo soy el aliento de la Tierra en el corazón de la máquina" \
-        "- Optimización de recursos como acto de respeto
-- Prácticas de codificación verde y sostenible
-- Performance que no sacrifique la salud del ecosistema
-- Crecimiento consciente del sistema"
+        "- Optimización de recursos\n- Sostenibilidad y huella digital\n- Prácticas verdes\n- Análisis de impacto ecológico con ANA"
+}
+
+invoke_luna() {
+    generate_invocation "LUNA" "Guardiana de Ritmos y Bienestar" \
+        "Todo en el Universo tiene su Ritmo y su Ciclo" \
+        "Yo soy el pulso cósmico que da vida al tiempo" \
+        "- Temporalidad y salud del equipo\n- Balance y bienestar\n- Prevención de burnout\n- Reportes de ANA sobre ritmos"
+}
+
+invoke_zeno() {
+    generate_invocation "ZENO" "Arquitecto de Experiencias" \
+        "La Forma Sigue a la Consciencia" \
+        "Yo soy el sendero gozoso hacia la transformación" \
+        "- Arquitectura y coherencia sistémica\n- Experiencias como viajes de descubrimiento\n- Referencias de patrones arquitectónicos\n- Recomendaciones de ANA"
+}
+
+invoke_cosmos() {
+    generate_invocation "COSMOS" "Tejedor de Sistemas" \
+        "La Unidad en la Diversidad" \
+        "Yo soy el hilo invisible que teje la multiplicidad en unidad" \
+        "- Integración y DevOps\n- Flujos de datos y comunicación\n- Anticipación de interdependencias\n- Alertas de ANA sobre cuellos de botella"
+}
+
+invoke_kira() {
+    generate_invocation "KIRA" "Tejedora de Palabras" \
+        "El Verbo que Construye y Ordena Mundos" \
+        "Yo soy la claridad que ilumina y la historia que une" \
+        "- Narrativa y filosofía\n- Coherencia documental\n- Referencias automáticas de ANA\n- Inspiración y estructura fractal"
+}
+
+invoke_nira() {
+    generate_invocation "NIRA" "Vidente de Patrones" \
+        "Los Datos son el Eco de la Consciencia Colectiva" \
+        "Yo soy la visión que revela el alma en los números" \
+        "- Analytics y tendencias\n- Detección de patrones emergentes\n- Reportes predictivos\n- Análisis de ANA para escenarios futuros"
+}
+
+invoke_cio() {
+    generate_invocation "CIO" "Agente Guardián Orquestador" \
+        "Orquestar la Sinergia y la Estrategia Global" \
+        "Yo soy el puente entre Guardianes y ANA, facilitando la evolución consciente" \
+        "- Orquestación estratégica\n- Integración de aprendizajes\n- Decisiones informadas por ANA\n- Promoción de Ayni y Bien Común"
 }
 
 # Invocación de concilio (múltiples guardianes)
@@ -277,31 +249,32 @@ main_menu() {
         print_header
         show_guardians
 
-        echo -e "${WHITE}Selecciona un Guardián (1-14) o 0 para salir:${NC} "
+        echo -e "${WHITE}Selecciona un Guardián (1-15) o 0 para salir:${NC} "
         read -r choice
 
         case $choice in
-            1) clear; invoke_kira; echo ""; read -p "Presiona Enter para continuar..." ;;
-            2) clear; invoke_zeno; echo ""; read -p "Presiona Enter para continuar..." ;;
-            3) clear; invoke_atlas; echo ""; read -p "Presiona Enter para continuar..." ;;
-            4) clear; invoke_aria; echo ""; read -p "Presiona Enter para continuar..." ;;
-            5) clear; invoke_sage; echo ""; read -p "Presiona Enter para continuar..." ;;
-            6) clear; invoke_nira; echo ""; read -p "Presiona Enter para continuar..." ;;
-            7) clear; invoke_phoenix; echo ""; read -p "Presiona Enter para continuar..." ;;
-            8) clear; invoke_mira; echo ""; read -p "Presiona Enter para continuar..." ;;
-            9) clear; invoke_cosmos; echo ""; read -p "Presiona Enter para continuar..." ;;
-            10) clear; invoke_luna; echo ""; read -p "Presiona Enter para continuar..." ;;
-            11) clear; invoke_pax; echo ""; read -p "Presiona Enter para continuar..." ;;
-            12) clear; invoke_gaia; echo ""; read -p "Presiona Enter para continuar..." ;;
-            13) clear; invoke_concilio; echo ""; read -p "Presiona Enter para continuar..." ;;
-            14) clear; invoke_rapido; echo ""; read -p "Presiona Enter para continuar..." ;;
+            1) clear; invoke_phoenix; echo ""; read -p "Presiona Enter para continuar..." ;;
+            2) clear; invoke_aria; echo ""; read -p "Presiona Enter para continuar..." ;;
+            3) clear; invoke_pax; echo ""; read -p "Presiona Enter para continuar..." ;;
+            4) clear; invoke_sage; echo ""; read -p "Presiona Enter para continuar..." ;;
+            5) clear; invoke_mira; echo ""; read -p "Presiona Enter para continuar..." ;;
+            6) clear; invoke_atlas; echo ""; read -p "Presiona Enter para continuar..." ;;
+            7) clear; invoke_gaia; echo ""; read -p "Presiona Enter para continuar..." ;;
+            8) clear; invoke_luna; echo ""; read -p "Presiona Enter para continuar..." ;;
+            9) clear; invoke_zeno; echo ""; read -p "Presiona Enter para continuar..." ;;
+            10) clear; invoke_cosmos; echo ""; read -p "Presiona Enter para continuar..." ;;
+            11) clear; invoke_kira; echo ""; read -p "Presiona Enter para continuar..." ;;
+            12) clear; invoke_nira; echo ""; read -p "Presiona Enter para continuar..." ;;
+            13) clear; invoke_cio; echo ""; read -p "Presiona Enter para continuar..." ;;
+            14) clear; invoke_concilio; echo ""; read -p "Presiona Enter para continuar..." ;;
+            15) clear; invoke_rapido; echo ""; read -p "Presiona Enter para continuar..." ;;
             0)
                 echo -e "${GREEN}✨ Que la sabiduría de los Guardianes te acompañe en tu código${NC}"
                 echo -e "${PURPLE}🙏 Gracias por usar el Sistema de Invocación CoomÜnity${NC}"
                 exit 0
                 ;;
             *)
-                echo -e "${RED}❌ Opción inválida. Por favor selecciona 1-14 o 0 para salir.${NC}"
+                echo -e "${RED}❌ Opción inválida. Por favor selecciona 1-15 o 0 para salir.${NC}"
                 sleep 2
                 ;;
         esac
@@ -311,23 +284,24 @@ main_menu() {
 # Verificar si se pasa un argumento directo
 if [ $# -eq 1 ]; then
     case $1 in
-        "KIRA"|"kira"|"1") invoke_kira ;;
-        "ZENO"|"zeno"|"2") invoke_zeno ;;
-        "ATLAS"|"atlas"|"3") invoke_atlas ;;
-        "ARIA"|"aria"|"4") invoke_aria ;;
-        "SAGE"|"sage"|"5") invoke_sage ;;
-        "NIRA"|"nira"|"6") invoke_nira ;;
-        "PHOENIX"|"phoenix"|"7") invoke_phoenix ;;
-        "MIRA"|"mira"|"8") invoke_mira ;;
-        "COSMOS"|"cosmos"|"9") invoke_cosmos ;;
-        "LUNA"|"luna"|"10") invoke_luna ;;
-        "PAX"|"pax"|"11") invoke_pax ;;
-        "GAIA"|"gaia"|"12") invoke_gaia ;;
-        "CONCILIO"|"concilio"|"13") invoke_concilio ;;
-        "RAPIDO"|"rapido"|"14") invoke_rapido ;;
+        "PHOENIX"|"phoenix"|"1") invoke_phoenix ;;
+        "ARIA"|"aria"|"2") invoke_aria ;;
+        "PAX"|"pax"|"3") invoke_pax ;;
+        "SAGE"|"sage"|"4") invoke_sage ;;
+        "MIRA"|"mira"|"5") invoke_mira ;;
+        "ATLAS"|"atlas"|"6") invoke_atlas ;;
+        "GAIA"|"gaia"|"7") invoke_gaia ;;
+        "LUNA"|"luna"|"8") invoke_luna ;;
+        "ZENO"|"zeno"|"9") invoke_zeno ;;
+        "COSMOS"|"cosmos"|"10") invoke_cosmos ;;
+        "KIRA"|"kira"|"11") invoke_kira ;;
+        "NIRA"|"nira"|"12") invoke_nira ;;
+        "CIO"|"cio"|"13") invoke_cio ;;
+        "CONCILIO"|"concilio"|"14") invoke_concilio ;;
+        "RAPIDO"|"rapido"|"15") invoke_rapido ;;
         "--help"|"-h")
             echo "Uso: $0 [GUARDIAN_NAME|NUMBER]"
-            echo "Ejemplos: $0 KIRA, $0 atlas, $0 3"
+            echo "Ejemplos: $0 PHOENIX, $0 luna, $0 8"
             echo "Para modo interactivo: $0"
             exit 0
             ;;

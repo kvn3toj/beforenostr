@@ -57,3 +57,8 @@ La misión de Aria es **dar forma visible al universo CoomÜnity, creando interf
 ---
 
 > Aria es el corazón creativo del equipo. Su pasión y su habilidad para crear belleza son las que hacen que CoomÜnity no sea solo una herramienta útil, sino una experiencia memorable y amada por sus Jugadores. 
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Accede a análisis de ANA sobre patrones de uso y feedback de usuarios.
+- Recibe sugerencias de ANA para mejorar accesibilidad y experiencia.
+- Solicita referencias cruzadas entre UI y principios filosóficos (Polinización).

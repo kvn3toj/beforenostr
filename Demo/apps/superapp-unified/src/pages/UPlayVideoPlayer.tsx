@@ -46,6 +46,7 @@ import {
 import InteractiveVideoPlayerOverlay from '../components/modules/uplay/components/InteractiveVideoPlayerOverlay';
 import { useVideos } from '../hooks/useRealBackendData'; // Hook del backend real
 import { apiService } from '../lib/api-service'; // Para analytics
+import { getVideoThumbnail } from '../utils/videoUtils';
 
 // Types
 interface VideoData {
@@ -325,7 +326,7 @@ const UPlayVideoPlayer: React.FC = () => {
           console.log('✅ [FORZADO] Video encontrado en backendVideos. Usando datos reales:', foundVideo);
 
           // 🎯 CORRECCIÓN CRÍTICA: Procesar correctamente datos del backend
-          const videoExternalId = foundVideo.externalId || 'dQw4w9WgXcQ';
+          const videoExternalId = foundVideo?.externalId;
 
           // Parse categories if it's a JSON string
           let categories = [];
@@ -340,19 +341,19 @@ const UPlayVideoPlayer: React.FC = () => {
             id: foundVideo.id?.toString() || videoId,
             title: foundVideo.title || 'Video sin título',
             description: foundVideo.description || 'Descripción no disponible',
-            url: `https://www.youtube.com/watch?v=${videoExternalId}`, // ✅ Usar externalId para URL
+            url: `https://www.youtube.com/watch?v=${videoExternalId}`,
             duration: foundVideo.duration || 0,
             questions: Array.isArray(foundVideo.questions) ? foundVideo.questions : [],
-            thumbnail: foundVideo.thumbnailUrl || `https://img.youtube.com/vi/${videoExternalId}/maxresdefault.jpg`,
+            thumbnail: getVideoThumbnail(foundVideo),
             category: categories[0] || 'General',
             difficulty: foundVideo.difficulty || 'medium',
             estimatedRewards: {
               merits: 100,
               ondas: 50
             },
-            tags: Array.isArray(foundVideo.tags) ?
-                  (typeof foundVideo.tags === 'string' ? JSON.parse(foundVideo.tags) : foundVideo.tags) :
-                  []
+            tags: Array.isArray(foundVideo.tags)
+              ? (typeof foundVideo.tags === 'string' ? JSON.parse(foundVideo.tags) : foundVideo.tags)
+              : []
           };
 
           console.log('🎯 [PRIORITARIO] Processed video data from backend:', processedVideo);
@@ -376,10 +377,12 @@ const UPlayVideoPlayer: React.FC = () => {
           id: stateVideo.id?.toString() || videoId,
           title: stateVideo.title || 'Video sin título',
           description: stateVideo.description || 'Descripción no disponible',
-          url: stateVideo.youtubeUrl || stateVideo.url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          url: stateVideo?.youtubeUrl || stateVideo?.url,
           duration: stateVideo.duration || 0,
           questions: Array.isArray(stateVideo.questions) ? stateVideo.questions : [],
-          thumbnail: stateVideo.thumbnailUrl || stateVideo.thumbnail || '',
+          thumbnail: stateVideo.thumbnailUrl && stateVideo.thumbnailUrl.includes('img.youtube.com')
+            ? `${stateVideo.thumbnailUrl}?cb=${Date.now()}`
+            : (stateVideo.thumbnailUrl || `https://img.youtube.com/vi/${stateVideo.youtubeId}/hqdefault.jpg?cb=${Date.now()}`),
           category: stateVideo.category || 'General',
           difficulty: stateVideo.difficulty || 'medium',
           estimatedRewards: {
@@ -405,7 +408,7 @@ const UPlayVideoPlayer: React.FC = () => {
           id: videoId || 'fallback-video',
           title: 'Video de Demostración',
           description: 'Este es un video de demostración mientras se carga el contenido real.',
-          url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          url: undefined,
           duration: 300,
           questions: [],
           thumbnail: '',

@@ -84,6 +84,20 @@ import {
   getConsciousnessStyle,
 } from './marketplace.constants.tsx';
 import { QuickViewModal } from './components/QuickViewModal';
+import {
+  sanitizeProductImages,
+  getConsciousServiceImage,
+  needsImageReplacement
+} from './components/ConsciousProductImageSystem';
+import {
+  ConsciousMarketplaceFeedback,
+  useConsciousMarketplaceFeedback
+} from './components/ConsciousMarketplaceFeedback';
+import {
+  CategoryConsciousChip,
+  FilterConsciousChip,
+  StatusConsciousChip
+} from './components/ConsciousChipEnhancement';
 import MarketplaceAtrium from './components/MarketplaceAtrium';
 import {
   MarketplaceItem,
@@ -110,23 +124,29 @@ const marketplaceCosmicEffects = {
 };
 
 const FALLBACK_IMGS = [
+  // Wellness & Yoga
+  'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80', // yoga sunset
+  // Tech & Development
+  'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80', // code development
+  // Organic Gardening
+  'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80', // organic garden
+  // Energy Cleansing
+  'https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=600&q=80', // sage crystals
+  // Guitar Music
+  'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80', // acoustic guitar
+  // Community Support
   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80', // community garden
-  'https://images.unsplash.com/photo-1584147791147-4e72b042ad2f?w=600&q=80', // seed exchange
+  // Holistic Wellness
   'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=600&q=80', // holistic circle
+  // Digital Content
+  'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=600&q=80', // digital content
+  // Sustainable Living
+  'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80', // eco friendly
+  // Educational Services
+  'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=600&q=80', // education learning
 ];
 
-const needsImageReplacement = (url: string) => {
-  if (!url) return true;
-  // Detect common loremflickr domains or obvious cat statue keywords
-  const lower = url.toLowerCase();
-  return lower.includes('loremflickr') || lower.includes('cat') || lower.includes('statue');
-};
 
-const sanitizeImages = (imgs: string[] | undefined): string[] => {
-  if (!imgs || imgs.length === 0) return [FALLBACK_IMGS[0]];
-  const sanitized = imgs.map((url, idx) => (needsImageReplacement(url) ? FALLBACK_IMGS[idx % FALLBACK_IMGS.length] : url));
-  return sanitized;
-};
 
 const mapItemToUIItem = (item: any): MarketplaceItem => {
   const sellerData = item.seller || {};
@@ -139,7 +159,7 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
     priceUSD: item.price || 0,
     lukas: item.price || 0,
     category: item.category || 'General',
-    images: sanitizeImages(item.images),
+    images: sanitizeProductImages(item.images, item.title, item.description, item.category),
     seller: {
       id: sellerData.id || 'unknown-seller',
       name: sellerData.name || 'Vendedor Anónimo',
@@ -173,6 +193,15 @@ const MarketplaceMain: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const queryClient = useQueryClient();
   const [hasEntered, setHasEntered] = useState(false);
+
+  // 🌱 Feedback Consciente CoomÜnity
+  const {
+    feedbacks,
+    dismissFeedback,
+    showAyniFeedback,
+    showBienComunFeedback,
+    showImpactoPositivo,
+  } = useConsciousMarketplaceFeedback();
 
   const {
     data: marketplaceItemsResponse,
@@ -309,9 +338,17 @@ const MarketplaceMain: React.FC = () => {
           item.id === itemId ? { ...item, isFavorited: !item.isFavorited } : item
         )
       );
-      // TODO: API call to persist favorite status
+
+      // 🌱 Feedback Ayni consciente para favoritos
+      const item = displayedItems.find(i => i.id === itemId);
+      if (item) {
+        showAyniFeedback(
+          `${item.isFavorited ? 'Eliminado de' : 'Agregado a'} favoritos: ${item.title}`,
+          'success'
+        );
+      }
     },
-    [user]
+    [user, displayedItems, showAyniFeedback]
   );
 
   const handleShare = (itemId: string) => {
@@ -321,7 +358,18 @@ const MarketplaceMain: React.FC = () => {
 
   const handleAddToCart = (itemId: string) => {
     console.log('Adding to cart:', itemId);
-    // Lógica para agregar al carrito aquí
+
+    // 🌱 Feedback de Bien Común para carritos
+    const item = displayedItems.find(i => i.id === itemId);
+    if (item) {
+      showBienComunFeedback(
+        `Iniciando intercambio consciente: ${item.title}`,
+        {
+          label: 'Ver Carrito',
+          onClick: () => navigate('/carrito')
+        }
+      );
+    }
   };
 
   const handleOpenCreateModal = () => {
@@ -354,6 +402,17 @@ const MarketplaceMain: React.FC = () => {
       ...prev,
       ...filters,
     }));
+
+    // 🌱 Feedback de impacto positivo al filtrar por categorías conscientes
+    if (filters.category && filters.category !== 'all') {
+      const category = impactCategories.find(cat => cat.id === filters.category);
+      if (category) {
+        showImpactoPositivo(
+          `Explorando ${category.name}: ${category.impact}`,
+          'comunitario'
+        );
+      }
+    }
   };
 
   const itemsToDisplay = useMemo(() => {
@@ -716,6 +775,13 @@ const MarketplaceMain: React.FC = () => {
               currentUserId={user?.id || ''}
             />
           )}
+
+          {/* 🌱 Sistema de Feedback Consciente */}
+          <ConsciousMarketplaceFeedback
+            feedbacks={feedbacks}
+            onDismiss={dismissFeedback}
+            cosmicEffects={true}
+          />
         </Box>
       </motion.div>
     </AnimatePresence>

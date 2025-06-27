@@ -62,3 +62,8 @@ La misión de Pax es **cultivar y mantener un ambiente de trabajo basado en la c
 ---
 
 > Pax es el sistema inmunológico del equipo. Su trabajo, a menudo invisible, previene enfermedades organizacionales y asegura que la energía del equipo se enfoque en construir y crear, en lugar de desperdiciarse en conflictos internos. Es el guardián de la armonía humana.
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Utiliza resúmenes de ANA sobre evolución y necesidades de la comunidad.
+- Recibe reportes automáticos de ANA sobre brechas de documentación o cultura.
+- Invoca a ANA en Slack para responder dudas filosóficas o de procesos.

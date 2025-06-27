@@ -31,24 +31,24 @@ export const extractVideoUrl = (content: string | undefined): string | null => {
     // Intentar parsear como JSON primero
     if (content.startsWith('{') || content.startsWith('[')) {
       const parsedContent = JSON.parse(content);
-      
+
       // Formato JSON con URL directa
       if (parsedContent.url) {
         return parsedContent.url;
       }
-      
+
       // Formato JSON con videoId de YouTube
       if (parsedContent.videoId) {
         return `https://www.youtube.com/watch?v=${parsedContent.videoId}`;
       }
     }
-    
+
     // Si no es JSON, tratar como HTML y extraer iframe
     const iframeSrc = extractIframeSrc(content);
     if (iframeSrc) {
       return iframeSrc;
     }
-    
+
     return null;
   } catch (error) {
     // Si falla el parsing de JSON, intentar como HTML
@@ -141,10 +141,10 @@ export const extractYouTubeVideoId = (urlOrContent: string): string | null => {
  */
 export const getYouTubeThumbnail = (videoId: string, quality: 'default' | 'medium' | 'high' | 'standard' | 'maxres' = 'medium'): string | null => {
   if (!videoId) return null;
-  
+
   const qualityMap = {
     'default': 'default.jpg',
-    'medium': 'mqdefault.jpg', 
+    'medium': 'mqdefault.jpg',
     'high': 'hqdefault.jpg',
     'standard': 'sddefault.jpg',
     'maxres': 'maxresdefault.jpg'
@@ -154,30 +154,104 @@ export const getYouTubeThumbnail = (videoId: string, quality: 'default' | 'mediu
 };
 
 /**
- * Genera la URL del thumbnail desde contenido de video (HTML con iframe, JSON o URL directa)
- * @param content Contenido del video (HTML con iframe, JSON o URL)
- * @param quality Calidad del thumbnail
- * @returns URL del thumbnail o null si no se puede generar
+ * Obtiene el thumbnail real y correspondiente para cualquier video (YouTube, Vumbnail, custom, fallback)
+ * - Si hay thumbnailUrl y es de YouTube, añade cache busting con videoId
+ * - Si hay thumbnailUrl custom, úsalo
+ * - Si hay externalId (YouTube), genera la URL oficial
+ * - Si hay url, intenta extraer videoId y generar thumbnail
+ * - Si no hay nada, retorna un placeholder
+ * @param video Objeto video con posibles campos: thumbnailUrl, externalId, url
+ * @param quality Calidad del thumbnail (default: 'high')
+ * @returns URL del thumbnail
  */
-export const getVideoThumbnail = (content: string, quality: 'default' | 'medium' | 'high' | 'standard' | 'maxres' = 'medium'): string | null => {
-  // Intentar extraer URL desde cualquier formato
-  const videoUrl = extractVideoUrl(content);
-  
-  if (videoUrl) {
-    const videoId = extractYouTubeVideoId(videoUrl);
+export function getVideoThumbnail(
+  video: { thumbnailUrl?: string; externalId?: string; url?: string },
+  quality: 'default' | 'medium' | 'high' | 'standard' | 'maxres' = 'high'
+): string {
+  // 1. Si hay thumbnailUrl y es de YouTube, añade cache busting
+  if (video.thumbnailUrl) {
+    if (video.thumbnailUrl.includes('img.youtube.com')) {
+      // Extraer videoId si es posible
+      const match = video.thumbnailUrl.match(/\/vi\/([^/]+)\//);
+      const videoId = match ? match[1] : Date.now();
+      return `${video.thumbnailUrl}?cb=${videoId}`;
+    }
+    // Si es Vumbnail (https://vumbnail.com/VIDEOID.jpg)
+    if (video.thumbnailUrl.includes('vumbnail.com')) {
+      const match = video.thumbnailUrl.match(/vumbnail.com\/([^./?&]+)/);
+      const videoId = match ? match[1] : Date.now();
+      return `${video.thumbnailUrl}?cb=${videoId}`;
+    }
+    // Si es custom, úsalo tal cual
+    return video.thumbnailUrl;
+  }
+  // 2. Si hay externalId (YouTube), genera la URL
+  if (video.externalId) {
+    return `https://img.youtube.com/vi/${video.externalId}/hqdefault.jpg?cb=${video.externalId}`;
+  }
+  // 3. Si hay url, intenta extraer videoId y generar thumbnail
+  if (video.url) {
+    const videoId = extractYouTubeVideoId(video.url);
     if (videoId) {
-      return getYouTubeThumbnail(videoId, quality);
+      return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg?cb=${videoId}`;
+    }
+    // Soporte para Vumbnail
+    const vumbnailId = video.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)?.[1];
+    if (vumbnailId) {
+      return `https://vumbnail.com/${vumbnailId}.jpg?cb=${vumbnailId}`;
     }
   }
-  
-  // También intentar extraer directamente el videoId desde el contenido
-  const videoId = extractYouTubeVideoId(content);
-  if (videoId) {
-    return getYouTubeThumbnail(videoId, quality);
+  // 4. Crear placeholders específicos para diferentes plataformas
+  if (video.url) {
+    if (video.url.includes('netflix.com')) {
+      // Placeholder para Netflix con un color distintivo
+      return 'data:image/svg+xml;base64,' + btoa(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="480" height="270" viewBox="0 0 480 270">
+          <defs>
+            <linearGradient id="netflix" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#E50914;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#B20710;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="480" height="270" fill="url(#netflix)" />
+          <circle cx="240" cy="135" r="35" fill="rgba(255,255,255,0.9)" />
+          <polygon points="230,120 230,150 255,135" fill="#E50914" />
+          <text x="240" y="190" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="600">
+            Netflix Content
+          </text>
+          <text x="240" y="210" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="12">
+            Disponible en plataforma
+          </text>
+        </svg>
+      `);
+    }
+    if (video.url.includes('vimeo.com')) {
+      // Placeholder para Vimeo
+      return 'data:image/svg+xml;base64,' + btoa(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="480" height="270" viewBox="0 0 480 270">
+          <defs>
+            <linearGradient id="vimeo" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#1ab7ea;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#0088cc;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="480" height="270" fill="url(#vimeo)" />
+          <circle cx="240" cy="135" r="35" fill="rgba(255,255,255,0.9)" />
+          <polygon points="230,120 230,150 255,135" fill="#1ab7ea" />
+          <text x="240" y="190" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="600">
+            Vimeo Content
+          </text>
+          <text x="240" y="210" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial" font-size="12">
+            Video educativo
+          </text>
+        </svg>
+      `);
+    }
   }
-  
-  return null;
-};
+
+  // 5. Fallback general
+  return '/placeholder-video.svg';
+}
 
 /**
  * Finds a working video URL from an array of video sources
@@ -211,7 +285,7 @@ export const checkVideoAvailability = async (url: string): Promise<boolean> => {
       const videoId = extractYouTubeVideoId(url);
       return videoId !== null && videoId.length > 0;
     }
-    
+
     // For other video sources, we could implement a more sophisticated check
     // For now, just validate if it's a valid URL
     return isValidVideoUrl(url);
@@ -219,4 +293,4 @@ export const checkVideoAvailability = async (url: string): Promise<boolean> => {
     console.error('Error checking video availability:', error);
     return false;
   }
-}; 
+};

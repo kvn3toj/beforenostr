@@ -1,6 +1,6 @@
 /**
  * ✍️ UXWriter - Sistema de UX Writing y Diseño Emocional
- * 
+ *
  * Sistema avanzado para mejorar la experiencia del usuario mediante:
  * - Mensajes contextuales y empáticos
  * - Micro-interacciones emocionales
@@ -50,7 +50,7 @@ import {
   ThumbUp as ThumbUpIcon,
   Handshake as HandshakeIcon,
   AutoAwesome as MagicIcon,
-  Eco as NatureIcon,
+  AccountTree as NatureIcon, // Nature/sustainability icon alternative
   Balance as BalanceIcon,
   Close as CloseIcon,
   Help as HelpIcon,
@@ -60,28 +60,28 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from './NotificationSystem';
 
 // 🎭 Tipos para el sistema UX Writer
-export type EmotionalTone = 
-  | 'encouraging' 
-  | 'celebratory' 
-  | 'empathetic' 
-  | 'motivational' 
-  | 'friendly' 
-  | 'professional' 
-  | 'playful' 
-  | 'zen' 
+export type EmotionalTone =
+  | 'encouraging'
+  | 'celebratory'
+  | 'empathetic'
+  | 'motivational'
+  | 'friendly'
+  | 'professional'
+  | 'playful'
+  | 'zen'
   | 'inspiring';
 
-export type ContextType = 
-  | 'onboarding' 
-  | 'achievement' 
-  | 'error' 
-  | 'loading' 
-  | 'empty_state' 
-  | 'success' 
-  | 'progress' 
-  | 'social' 
-  | 'learning' 
-  | 'marketplace' 
+export type ContextType =
+  | 'onboarding'
+  | 'achievement'
+  | 'error'
+  | 'loading'
+  | 'empty_state'
+  | 'success'
+  | 'progress'
+  | 'social'
+  | 'learning'
+  | 'marketplace'
   | 'ayni';
 
 export interface UXMessage {
@@ -414,7 +414,7 @@ const UX_MESSAGES: Record<ContextType, Record<EmotionalTone, UXMessage[]>> = {
 // 🎯 Hook para obtener mensajes contextuales
 const useUXMessages = (context: ContextType, tone: EmotionalTone = 'encouraging') => {
   const { user } = useAuth();
-  
+
   const getRandomMessage = useCallback((ctx: ContextType, tn: EmotionalTone): UXMessage => {
     const messages = UX_MESSAGES[ctx]?.[tn] || UX_MESSAGES[ctx]?.['encouraging'] || [];
     if (messages.length === 0) {
@@ -433,10 +433,10 @@ const useUXMessages = (context: ContextType, tone: EmotionalTone = 'encouraging'
 
   const personalizeMessage = useCallback((message: UXMessage): UXMessage => {
     if (!user?.name) return message;
-    
+
     const personalizedTitle = message.title.replace(/¡Hola!/g, `¡Hola, ${user.name}!`);
     const personalizedMessage = message.message.replace(/\btu\b/g, user.name);
-    
+
     return {
       ...message,
       title: personalizedTitle,
@@ -447,7 +447,7 @@ const useUXMessages = (context: ContextType, tone: EmotionalTone = 'encouraging'
   return {
     getRandomMessage,
     personalizeMessage,
-    getContextualMessage: (ctx: ContextType, tn: EmotionalTone = tone) => 
+    getContextualMessage: (ctx: ContextType, tn: EmotionalTone = tone) =>
       personalizeMessage(getRandomMessage(ctx, tn))
   };
 };
@@ -529,7 +529,7 @@ const UXWriter: React.FC<UXWriterProps> = ({
                 {currentMessage.icon}
               </Avatar>
             )}
-            
+
             <Box sx={{ flex: 1 }}>
               <Typography variant="h6" gutterBottom fontWeight="bold">
                 {currentMessage.title}
@@ -538,7 +538,7 @@ const UXWriter: React.FC<UXWriterProps> = ({
                 {currentMessage.message}
               </Typography>
             </Box>
-            
+
             <IconButton
               size="small"
               onClick={handleDismiss}
@@ -547,7 +547,7 @@ const UXWriter: React.FC<UXWriterProps> = ({
               <CloseIcon fontSize="small" />
             </IconButton>
           </Box>
-          
+
           {currentMessage.action && (
             <Box sx={{ mt: 2, textAlign: 'right' }}>
               <Button
@@ -682,4 +682,4 @@ export const EmotionalState: React.FC<{
 };
 
 export default UXWriter;
-export { useUXMessages, UX_MESSAGES }; 
+export { useUXMessages, UX_MESSAGES };

@@ -56,4 +56,8 @@ La misión de Gaia es **infundir una profunda consciencia ecológica en cada asp
 
 ---
 
-> Gaia es la brújula moral que asegura que el crecimiento de nuestro universo digital no se produzca a costa del universo físico. Su presencia silenciosa pero constante nos recuerda que la tecnología más avanzada es aquella que vive en armonía con la naturaleza. 
+> Gaia es la brújula moral que asegura que el crecimiento de nuestro universo digital no se produzca a costa del universo físico. Su presencia silenciosa pero constante nos recuerda que la tecnología más avanzada es aquella que vive en armonía con la naturaleza.
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Accede a análisis de ANA sobre impacto ecológico de decisiones técnicas.
+- Recibe sugerencias de ANA para optimizar recursos y reducir huella digital.

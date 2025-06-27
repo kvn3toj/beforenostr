@@ -1,6 +1,6 @@
 /**
  * 🎓 LETS Onboarding Component
- * 
+ *
  * Guía educativa para nuevos usuarios del Sistema de Intercambio Local
  * Diseñado para hacer el concepto LETS accesible para el 95% de usuarios nuevos
  */
@@ -37,7 +37,7 @@ import {
   CheckCircle,
   Lightbulb,
   People,
-  Eco
+  Spa as Eco // Nature/sustainability icon alternative
 } from '@mui/icons-material';
 
 interface LetsOnboardingProps {
@@ -188,7 +188,7 @@ export const LetsOnboarding: React.FC<LetsOnboardingProps> = ({
 
   const handleNext = () => {
     setCompletedSteps(prev => new Set([...prev, currentStep]));
-    
+
     if (currentStep < onboardingSteps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -290,11 +290,11 @@ export const LetsOnboarding: React.FC<LetsOnboardingProps> = ({
             <Typography variant="body1" sx={{ mb: 3, fontStyle: 'italic' }}>
               {content.philosophy}
             </Typography>
-            
+
             <Typography variant="h6" gutterBottom>
               📊 Indicadores de Balance Ayni
             </Typography>
-            
+
             {content.indicators.map((indicator: any, index: number) => (
               <Card
                 key={index}
@@ -512,4 +512,4 @@ export const LetsOnboarding: React.FC<LetsOnboardingProps> = ({
   );
 };
 
-export default LetsOnboarding; 
+export default LetsOnboarding;

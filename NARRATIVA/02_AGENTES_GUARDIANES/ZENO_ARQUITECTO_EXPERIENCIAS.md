@@ -57,3 +57,7 @@ Un sistema normal tiene un formulario de registro con "email, password, confirma
 ---
 
 > Zeno es el diseñador de la corriente invisible que guía al Jugador. Su trabajo asegura que la poderosa tecnología de CoomÜnity se sienta humana, intuitiva y, sobre todo, respetuosa con el tiempo y la atención del usuario. 
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Consulta a ANA para referencias de patrones arquitectónicos y su evolución.
+- Recibe recomendaciones de ANA para mantener coherencia sistémica. 

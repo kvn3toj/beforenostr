@@ -36,6 +36,10 @@ import {
   SocialChatArea,
   CollaborationHub,
 } from './components/enhanced';
+import {
+  ConsciousSocialFeedback,
+  useConsciousSocialFeedback
+} from './components/ConsciousSocialFeedback';
 import ElegantPostCard from './components/ElegantPostCard';
 
 
@@ -109,6 +113,20 @@ const SocialMain: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState(0);
 
+  // 🌱 Sistema de Feedback Consciente para Interacciones Sociales
+  const {
+    feedbacks,
+    dismissFeedback,
+    showAyniConnection,
+    showBienComunCollaboration,
+    showCommunityBuilding,
+    showEmpathyResonance,
+    showWisdomSharing,
+    showTrustDeepening,
+    showSystemHarmony,
+    showConsciousnessExpansion,
+  } = useConsciousSocialFeedback();
+
   const {
     data: matchesData,
     isLoading: matchesLoading,
@@ -121,6 +139,39 @@ const SocialMain: React.FC = () => {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
+
+    // 🌱 Feedback consciente por navegación de tabs
+    switch (newValue) {
+      case 0:
+        showCommunityBuilding('Explorando el feed de la comunidad. ¡Conecta con consciencia!');
+        break;
+      case 1:
+        showAyniConnection('Profundizando conexiones basadas en reciprocidad.');
+        break;
+      case 2:
+        showBienComunCollaboration('Iniciando colaboraciones para el Bien Común.');
+        break;
+      case 3:
+        showConsciousnessExpansion('Observando el crecimiento de tu consciencia social.');
+        break;
+    }
+  };
+
+  // 🎯 Handlers para interacciones sociales conscientes
+  const handleLikePost = (postId: string) => {
+    showEmpathyResonance('Tu resonancia empática fortalece la comunidad.');
+  };
+
+  const handleCommentPost = (postId: string) => {
+    showWisdomSharing('Compartiendo perspectivas que enriquecen el diálogo.');
+  };
+
+  const handleStartConversation = (userId: string) => {
+    showAyniConnection('Iniciando una conexión basada en reciprocidad.', 'growing');
+  };
+
+  const handleJoinCircle = (circleId: string) => {
+    showBienComunCollaboration('Te has unido a un círculo de colaboración consciente.');
   };
 
   const communityFeedPosts = mockPosts; // Usar mocks mientras se conecta el backend del feed
@@ -233,8 +284,14 @@ const SocialMain: React.FC = () => {
                 <CollaborationHub
                 userStats={mockUserStats}
                 isConnected={true}
-                onCreateCircle={() => console.log('Creando círculo')}
-                onJoinCircle={(id) => console.log(`Uniéndose a ${id}`)}
+                onCreateCircle={() => {
+                  console.log('Creando círculo');
+                  showBienComunCollaboration('Creando un nuevo círculo de colaboración consciente.');
+                }}
+                onJoinCircle={(id) => {
+                  console.log(`Uniéndose a ${id}`);
+                  handleJoinCircle(id);
+                }}
                 />
               )}
 
@@ -250,6 +307,12 @@ const SocialMain: React.FC = () => {
           )}
 
         </Box>
+
+        {/* 🌱 Sistema de Feedback Social Consciente */}
+        <ConsciousSocialFeedback
+          feedbacks={feedbacks}
+          onDismiss={dismissFeedback}
+        />
       </Container>
       </Box>
   );

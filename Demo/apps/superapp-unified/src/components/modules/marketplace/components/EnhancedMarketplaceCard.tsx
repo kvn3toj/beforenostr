@@ -28,7 +28,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { impactCategories, Category, getConsciousnessStyle } from '../marketplace.constants';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { MarketplaceItem } from '../../../../types/marketplace';
-import { Link } from 'react-router-dom';
+// Navigation handled via onClick handler
+import { ConsciousProductImage } from './ConsciousProductImageSystem';
 
 // Asumiendo que la moneda de Coomunity se llama Lúkas
 const LUKAS_SYMBOL = 'LÜ';
@@ -82,9 +83,14 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
     }
   };
 
+  const handleCardClick = () => {
+    // Navigate to product detail page - implement navigation logic here
+    console.log(`Navigate to /marketplace/item/${item.id}`);
+  };
+
   return (
     <motion.div variants={cardVariants} style={{ height: '100%' }}>
-     <Link to={`/marketplace/item/${item.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}>
+     <div onClick={handleCardClick} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%', cursor: 'pointer' }}>
       <Card
         sx={{
           display: 'flex',
@@ -103,16 +109,19 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
         onMouseLeave={() => setIsHovered(false)}
       >
         <Box sx={{ position: 'relative' }}>
-          <CardMedia
-            component="img"
-            height="180"
-            image={item.images[0] || 'https://via.placeholder.com/300'}
-            alt={item.title}
-            sx={{
-              objectFit: 'cover',
-              transition: 'transform 0.5s ease-in-out',
-              transform: isHovered ? 'scale(1.1)' : 'scale(1)',
-            }}
+          <ConsciousProductImage
+            images={item.images}
+            title={item.title}
+            description={item.description}
+            category={item.category}
+            height={180}
+            width="100%"
+            showBadges={true}
+            showHoverEffects={true}
+            isPopular={item.stats?.isPopular}
+            isSustainable={item.stats?.isSustainable}
+            rating={item.stats?.rating}
+            borderRadius={0}
           />
           <Stack
             direction="row"
@@ -247,7 +256,7 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
           </Stack>
         </CardContent>
       </Card>
-      </Link>
+      </div>
     </motion.div>
   );
 };

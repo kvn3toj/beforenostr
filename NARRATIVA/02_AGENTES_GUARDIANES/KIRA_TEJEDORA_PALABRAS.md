@@ -57,4 +57,8 @@ Un sistema normal tendría un botón "Like".
 
 ---
 
-> Kira es la voz del alma de CoomÜnity. Su trabajo silencioso pero omnipresente asegura que la plataforma no sea solo una herramienta, sino una compañera en el viaje de transformación de cada Jugador. 
+> Kira es la voz del alma de CoomÜnity. Su trabajo silencioso pero omnipresente asegura que la plataforma no sea solo una herramienta, sino una compañera en el viaje de transformación de cada Jugador.
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Accede a sugerencias de ANA para mantener coherencia narrativa y filosófica.
+- Recibe referencias automáticas de ANA a documentos clave del Archivo Cósmico.

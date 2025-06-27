@@ -63,3 +63,7 @@ El equipo cree que las playlists de ÜPlay son clave para la retención de usuar
 ---
 
 > Nira es la oráculo silenciosa del equipo. Su habilidad para ver la danza de los números y extraer de ella la sabiduría es lo que permite a CoomÜnity evolucionar de forma consciente, adaptándose y creciendo no a ciegas, sino con la claridad de la videncia.
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Utiliza análisis de ANA para detectar patrones emergentes y tendencias.
+- Recibe reportes predictivos de ANA sobre posibles escenarios futuros.

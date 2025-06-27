@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { initializeErrorHandling } from './utils/errorHandler';
 import { initMonitoring } from './lib/monitoring';
+import { initCacheCleaner } from './utils/cacheCleaner';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import App from './App';
 import { ThemeProvider } from './context/ThemeContext';
@@ -11,6 +12,9 @@ import './styles/orbital-planets-3d.css';
 
 // 🛡️ CRÍTICO: Inicializar manejo de errores PRIMERO para interceptar errores de conversión
 initializeErrorHandling();
+
+// 🧹 LIMPIEZA: Eliminar cachés inapropiados de ÜPlay
+initCacheCleaner();
 
 // Inicializar monitoreo después del manejo de errores
 initMonitoring();

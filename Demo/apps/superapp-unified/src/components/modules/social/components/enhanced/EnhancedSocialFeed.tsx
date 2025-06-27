@@ -20,7 +20,7 @@ import {
   Share,
   MoreVert,
   Verified,
-  Eco,
+  Spa as Eco, // Nature/sustainability icon alternative
   Star,
   TrendingUp,
   GroupWork,
@@ -94,13 +94,13 @@ const feedVariants = {
 };
 
 const postVariants = {
-  hidden: { 
-    opacity: 0, 
+  hidden: {
+    opacity: 0,
     y: 30,
-    scale: 0.95 
+    scale: 0.95
   },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     scale: 1,
     transition: {
@@ -119,7 +119,7 @@ const postVariants = {
 
 const ayniFlowVariants = {
   initial: { scale: 1, opacity: 0.7 },
-  animate: { 
+  animate: {
     scale: [1, 1.2, 1],
     opacity: [0.7, 1, 0.7],
     transition: {
@@ -325,7 +325,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 />
               </motion.div>
             )}
-            
+
             {post.metadata.isBienComun && (
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
@@ -400,7 +400,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 >
                   {post.author.name}
                 </Typography>
-                
+
                 {/* Ayni Score */}
                 <Chip
                   label={`Ayni: ${post.author.ayniScore}%`}
@@ -508,7 +508,7 @@ const PostCard: React.FC<PostCardProps> = ({
               <span>{post.engagement.comments} comentarios</span>
               <span>{post.engagement.shares} compartidos</span>
             </Box>
-            
+
             {/* Ayni Points Earned */}
             <Box className="flex items-center gap-1">
               <motion.div
@@ -632,4 +632,4 @@ const PostCard: React.FC<PostCardProps> = ({
   );
 };
 
-export default EnhancedSocialFeed; 
+export default EnhancedSocialFeed;

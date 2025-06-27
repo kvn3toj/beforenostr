@@ -6,24 +6,24 @@ import 'dotenv/config';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   outputDir: 'test-results/artifacts',
-  
+
   // ✅ TIMEOUT CONFIGURATION - Aumentado según recomendaciones
   timeout: 60 * 1000, // 60 segundos para cada test (era 30s por defecto)
   expect: {
     timeout: 10 * 1000, // 10 segundos para assertions (era 5s por defecto)
   },
-  
+
   reporter: [
     ['html', { outputFolder: 'playwright-report' }],
     ['json', { outputFile: 'test-results/results.json' }]
   ],
-  
+
   // Configuración dinámica de baseURL
   use: {
     // El baseURL se configurará dinámicamente en globalSetup, fallback a VITE_BASE_URL
@@ -31,7 +31,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    
+
     // ✅ ACTION TIMEOUTS - Configuración adicional para acciones lentas
     actionTimeout: 15 * 1000, // 15 segundos para acciones (clicks, fills, etc.)
     navigationTimeout: 30 * 1000, // 30 segundos para navegación
@@ -42,8 +42,8 @@ export default defineConfig({
 
   projects: [
     // Setup project para autenticación persistente
-    { 
-      name: 'setup', 
+    {
+      name: 'setup',
       testMatch: /.*\.setup\.ts/,
       // ✅ Timeout específico para setup (puede ser más lento)
       timeout: 90 * 1000, // 90 segundos para setup de autenticación
@@ -52,7 +52,7 @@ export default defineConfig({
     // Projects principales con autenticación persistente
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         // ✅ FORZAR VIEWPORT DESKTOP para evitar layout móvil
         viewport: { width: 1280, height: 720 }, // Asegurar que sea > 768px (breakpoint md)
@@ -63,7 +63,7 @@ export default defineConfig({
     },
     {
       name: 'firefox',
-      use: { 
+      use: {
         ...devices['Desktop Firefox'],
         // ✅ FORZAR VIEWPORT DESKTOP
         viewport: { width: 1280, height: 720 },
@@ -73,7 +73,7 @@ export default defineConfig({
     },
     {
       name: 'webkit',
-      use: { 
+      use: {
         ...devices['Desktop Safari'],
         // ✅ FORZAR VIEWPORT DESKTOP
         viewport: { width: 1280, height: 720 },
@@ -83,7 +83,7 @@ export default defineConfig({
     },
     {
       name: 'mobile-chrome',
-      use: { 
+      use: {
         ...devices['Pixel 5'],
         storageState: 'playwright/.auth/admin.json',
       },
@@ -91,17 +91,17 @@ export default defineConfig({
     },
     {
       name: 'mobile-safari',
-      use: { 
+      use: {
         ...devices['iPhone 12'],
         storageState: 'playwright/.auth/admin.json',
       },
       dependencies: ['setup'],
     },
-    
+
     // ✅ PROJECT SIN AUTENTICACIÓN para tests simples
     {
       name: 'no-auth',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
         // Sin storageState ni dependencies - no requiere autenticación
@@ -117,4 +117,4 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 120 * 1000,
   } : undefined,
-}); 
+});

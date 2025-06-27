@@ -20,6 +20,9 @@ export const AppLayout: React.FC = () => {
   const [performanceInitialized, setPerformanceInitialized] = useState(false);
   const { setupLazyLoading } = useLazyImage();
 
+  // Constante para el ancho del drawer
+  const drawerWidth = 280;
+
   useEffect(() => {
     const initializePerformanceOptimizations = () => {
       preloadCriticalResources();
@@ -53,7 +56,7 @@ export const AppLayout: React.FC = () => {
       <UniversalCosmicBackground />
 
       {/* Desktop Sidebar */}
-      {!isMobile && <Sidebar variant="permanent" />}
+      {!isMobile && <Sidebar variant="permanent" drawerWidth={drawerWidth} />}
 
       {/* Main Content Area */}
       <Box
@@ -90,6 +93,7 @@ export const AppLayout: React.FC = () => {
           variant="temporary"
           open={mobileDrawerOpen}
           onClose={handleDrawerToggle}
+          drawerWidth={drawerWidth}
         />
       )}
 

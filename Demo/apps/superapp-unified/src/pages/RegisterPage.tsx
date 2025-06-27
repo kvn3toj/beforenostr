@@ -7,12 +7,12 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'sonner'
 
 export const RegisterPage = () => {
   const navigate = useNavigate()
-  const { isAuthenticated, register, isLoading: authLoading } = useAuth()
+  const { isAuthenticated, signUp, loading: authLoading } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -28,11 +28,10 @@ export const RegisterPage = () => {
     }
   }, [isAuthenticated, authLoading, navigate])
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
 
-    // Validaciones básicas
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden')
       return
@@ -47,63 +46,34 @@ export const RegisterPage = () => {
 
     try {
       console.log('[RegisterPage] Intentando registrar usuario con:', { email, name })
-      
-      await register({ 
-        email, 
-        password, 
-        name: name.trim() || undefined 
-      })
+
+      await signUp(email, password, name)
 
       console.log('[RegisterPage] Registro exitoso')
-      toast.success('Registro exitoso. ¡Bienvenido!')
-      
-      // La navegación se manejará automáticamente por el useEffect
-      
-    } catch (error) {
-      console.error('[RegisterPage] Error de registro:', error)
-      
-      let errorMessage = 'Error al registrar usuario'
-      
-      if (error instanceof Error) {
-        // Personalizar mensajes de error comunes
-        if (error.message.includes('El email ya está registrado') || error.message.includes('already exists')) {
-          errorMessage = 'Este email ya está registrado. Intenta iniciar sesión.'
-        } else if (error.message.includes('Invalid email')) {
-          errorMessage = 'El formato del email no es válido.'
-        } else if (error.message.includes('Password')) {
-          errorMessage = 'La contraseña no cumple con los requisitos mínimos.'
-        } else if (error.message.includes('400')) {
-          errorMessage = 'Datos inválidos. Verifica la información ingresada.'
-        } else if (error.message.includes('500')) {
-          errorMessage = 'Error del servidor. Por favor intenta más tarde.'
-        } else {
-          errorMessage = error.message
-        }
-      }
-      
-      setError(errorMessage)
-      toast.error(errorMessage)
+      toast.success('¡Registro exitoso! Bienvenido a CoomÜnity')
+
+      // No necesitamos navegar manualmente, el useEffect lo hará cuando isAuthenticated cambie
+    } catch (error: any) {
+      console.error('[RegisterPage] Error en registro:', error)
+      setError(error.message || 'Error al registrar usuario')
+      toast.error('Error al registrar usuario')
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Mostrar loading mientras se inicializa la autenticación
   if (authLoading) {
     return (
       <Container maxWidth="sm">
         <Box
           sx={{
-            marginTop: 8,
+            minHeight: '100vh',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <CircularProgress />
-          <Typography variant="body2" sx={{ mt: 2 }}>
-            Verificando autenticación...
-          </Typography>
         </Box>
       </Container>
     )
@@ -113,95 +83,126 @@ export const RegisterPage = () => {
     <Container maxWidth="sm">
       <Box
         sx={{
-          marginTop: 8,
+          minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <Typography component="h1" variant="h4" gutterBottom>
-          Crear Cuenta
-        </Typography>
-        
-        {error && (
-          <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            width: '100%',
+            maxWidth: 400,
+            bgcolor: 'background.paper',
+            p: 4,
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="h1"
+            align="center"
+            gutterBottom
+            sx={{
+              fontWeight: 700,
+              background: 'linear-gradient(45deg, #6366f1 30%, #8b5cf6 90%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            CoomÜnity
+          </Typography>
+          <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 3 }}>
+            Únete a la SuperApp
+          </Typography>
 
-        <Box component="form" onSubmit={handleRegister} sx={{ mt: 1, width: '100%' }}>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
           <TextField
-            margin="normal"
             fullWidth
-            id="name"
-            label="Nombre (opcional)"
-            name="name"
-            autoComplete="name"
-            autoFocus
+            label="Nombre completo"
+            variant="outlined"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
+            sx={{ mb: 2 }}
             disabled={isLoading}
           />
+
           <TextField
-            margin="normal"
-            required
             fullWidth
-            id="email"
-            label="Correo Electrónico"
-            name="email"
-            autoComplete="email"
+            label="Email"
+            type="email"
+            variant="outlined"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+            sx={{ mb: 2 }}
             disabled={isLoading}
           />
+
           <TextField
-            margin="normal"
-            required
             fullWidth
-            name="password"
             label="Contraseña"
             type="password"
-            id="password"
-            autoComplete="new-password"
+            variant="outlined"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
-            helperText="Mínimo 6 caracteres"
-          />
-          <TextField
-            margin="normal"
             required
+            sx={{ mb: 2 }}
+            disabled={isLoading}
+          />
+
+          <TextField
             fullWidth
-            name="confirmPassword"
-            label="Confirmar Contraseña"
+            label="Confirmar contraseña"
             type="password"
-            id="confirmPassword"
+            variant="outlined"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            sx={{ mb: 3 }}
             disabled={isLoading}
           />
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading || !email || !password || !confirmPassword}
+            size="large"
+            disabled={isLoading}
+            sx={{
+              mb: 2,
+              py: 1.5,
+              background: 'linear-gradient(45deg, #6366f1 30%, #8b5cf6 90%)',
+              '&:hover': {
+                background: 'linear-gradient(45deg, #5b5ff1 30%, #8553f6 90%)',
+              },
+            }}
           >
-            {isLoading ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Creando cuenta...
-              </>
-            ) : (
-              'Crear Cuenta'
-            )}
+            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Registrarse'}
           </Button>
-          
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography variant="body2">
-              ¿Ya tienes una cuenta?{' '}
-              <Link to="/login" style={{ textDecoration: 'none' }}>
-                Iniciar Sesión
+
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="body2" color="text.secondary">
+              ¿Ya tienes cuenta?{' '}
+              <Link
+                to="/login"
+                style={{
+                  color: 'inherit',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                }}
+              >
+                Inicia sesión aquí
               </Link>
             </Typography>
           </Box>
@@ -211,4 +212,4 @@ export const RegisterPage = () => {
   )
 }
 
-export default RegisterPage; 
+export default RegisterPage;

@@ -27,7 +27,7 @@ import LetsAssistant from './LetsAssistant';
 import { useLetsEducation, LetsEducationProvider } from '../../../contexts/LetsEducationContext';
 
 import { useLetsListings } from '../../../hooks/useLetsIntegration';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface LetsListingCardProps {
   listing: any;

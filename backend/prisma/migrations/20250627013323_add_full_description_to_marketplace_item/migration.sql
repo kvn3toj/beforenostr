@@ -19,6 +19,9 @@ CREATE TYPE "FeedbackPriority" AS ENUM ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL');
 -- CreateEnum
 CREATE TYPE "FeedbackStatus" AS ENUM ('SUBMITTED', 'REVIEWING', 'IN_PROGRESS', 'RESOLVED', 'REJECTED', 'DUPLICATE');
 
+-- CreateEnum
+CREATE TYPE "MatchStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED');
+
 -- CreateTable
 CREATE TABLE "mundos" (
     "id" TEXT NOT NULL,
@@ -143,6 +146,7 @@ CREATE TABLE "users" (
     "status" TEXT NOT NULL DEFAULT 'ACTIVE',
     "topUserCount" INTEGER NOT NULL DEFAULT 0,
     "personalityId" TEXT,
+    "temp_field" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -653,24 +657,29 @@ CREATE TABLE "user_challenges" (
 CREATE TABLE "marketplace_items" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
-    "currency" "Currency" NOT NULL DEFAULT 'LUKAS',
+    "description" TEXT,
+    "fullDescription" TEXT,
     "itemType" "MarketplaceItemType" NOT NULL DEFAULT 'SERVICE',
-    "status" "MarketplaceItemStatus" NOT NULL DEFAULT 'ACTIVE',
-    "images" TEXT[],
+    "price" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "priceToins" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "currency" "Currency" NOT NULL DEFAULT 'LUKAS',
+    "category" TEXT,
     "tags" TEXT[],
+    "images" TEXT[],
+    "stock" INTEGER NOT NULL DEFAULT 0,
+    "rating" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "reviewCount" INTEGER NOT NULL DEFAULT 0,
     "location" TEXT,
-    "metadata" TEXT,
-    "priceToins" DOUBLE PRECISION DEFAULT 0,
-    "sellerId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "status" "MarketplaceItemStatus" NOT NULL DEFAULT 'ACTIVE',
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "deletedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "viewCount" INTEGER NOT NULL DEFAULT 0,
     "favoriteCount" INTEGER NOT NULL DEFAULT 0,
+    "sellerId" TEXT NOT NULL,
+    "metadata" TEXT,
 
     CONSTRAINT "marketplace_items_pkey" PRIMARY KEY ("id")
 );
@@ -743,6 +752,67 @@ CREATE TABLE "feedback_reports" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "feedback_reports_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "profiles" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "avatar" TEXT,
+    "bio" TEXT,
+    "location" TEXT,
+    "website" TEXT,
+    "skills" TEXT[],
+    "interests" TEXT[],
+    "isEmprendedorConfiable" BOOLEAN NOT NULL DEFAULT false,
+    "socialLinks" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "profiles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "reviews" (
+    "id" TEXT NOT NULL,
+    "marketplaceItemId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "rating" INTEGER NOT NULL,
+    "comment" TEXT,
+    "communication" INTEGER,
+    "quality" INTEGER,
+    "delivery" INTEGER,
+    "value" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "marketplace_matches" (
+    "id" TEXT NOT NULL,
+    "marketplaceItemId" TEXT NOT NULL,
+    "buyerId" TEXT NOT NULL,
+    "sellerId" TEXT NOT NULL,
+    "buyerConfirmed" BOOLEAN NOT NULL DEFAULT false,
+    "sellerConfirmed" BOOLEAN NOT NULL DEFAULT false,
+    "status" "MatchStatus" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "marketplace_matches_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "match_messages" (
+    "id" TEXT NOT NULL,
+    "matchId" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "match_messages_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -1130,13 +1200,7 @@ CREATE UNIQUE INDEX "user_challenges_userId_challengeId_key" ON "user_challenges
 CREATE INDEX "marketplace_items_sellerId_idx" ON "marketplace_items"("sellerId");
 
 -- CreateIndex
-CREATE INDEX "marketplace_items_itemType_idx" ON "marketplace_items"("itemType");
-
--- CreateIndex
 CREATE INDEX "marketplace_items_status_idx" ON "marketplace_items"("status");
-
--- CreateIndex
-CREATE INDEX "marketplace_items_currency_idx" ON "marketplace_items"("currency");
 
 -- CreateIndex
 CREATE INDEX "marketplace_items_isActive_idx" ON "marketplace_items"("isActive");
@@ -1148,7 +1212,28 @@ CREATE INDEX "marketplace_items_isDeleted_idx" ON "marketplace_items"("isDeleted
 CREATE INDEX "marketplace_items_createdAt_idx" ON "marketplace_items"("createdAt");
 
 -- CreateIndex
+CREATE INDEX "marketplace_items_updatedAt_idx" ON "marketplace_items"("updatedAt");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_viewCount_idx" ON "marketplace_items"("viewCount");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_favoriteCount_idx" ON "marketplace_items"("favoriteCount");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_itemType_idx" ON "marketplace_items"("itemType");
+
+-- CreateIndex
 CREATE INDEX "marketplace_items_price_idx" ON "marketplace_items"("price");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_priceToins_idx" ON "marketplace_items"("priceToins");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_currency_idx" ON "marketplace_items"("currency");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_category_idx" ON "marketplace_items"("category");
 
 -- CreateIndex
 CREATE INDEX "marketplace_items_location_idx" ON "marketplace_items"("location");
@@ -1206,6 +1291,30 @@ CREATE INDEX "feedback_reports_priority_idx" ON "feedback_reports"("priority");
 
 -- CreateIndex
 CREATE INDEX "feedback_reports_createdAt_idx" ON "feedback_reports"("createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "profiles_userId_key" ON "profiles"("userId");
+
+-- CreateIndex
+CREATE INDEX "reviews_marketplaceItemId_idx" ON "reviews"("marketplaceItemId");
+
+-- CreateIndex
+CREATE INDEX "reviews_userId_idx" ON "reviews"("userId");
+
+-- CreateIndex
+CREATE INDEX "marketplace_matches_marketplaceItemId_idx" ON "marketplace_matches"("marketplaceItemId");
+
+-- CreateIndex
+CREATE INDEX "marketplace_matches_buyerId_idx" ON "marketplace_matches"("buyerId");
+
+-- CreateIndex
+CREATE INDEX "marketplace_matches_sellerId_idx" ON "marketplace_matches"("sellerId");
+
+-- CreateIndex
+CREATE INDEX "match_messages_matchId_idx" ON "match_messages"("matchId");
+
+-- CreateIndex
+CREATE INDEX "match_messages_senderId_idx" ON "match_messages"("senderId");
 
 -- AddForeignKey
 ALTER TABLE "playlists" ADD CONSTRAINT "playlists_mundoId_fkey" FOREIGN KEY ("mundoId") REFERENCES "mundos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1398,3 +1507,27 @@ ALTER TABLE "feedback_reports" ADD CONSTRAINT "feedback_reports_userId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "feedback_reports" ADD CONSTRAINT "feedback_reports_adminUserId_fkey" FOREIGN KEY ("adminUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "profiles" ADD CONSTRAINT "profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_marketplaceItemId_fkey" FOREIGN KEY ("marketplaceItemId") REFERENCES "marketplace_items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "marketplace_matches" ADD CONSTRAINT "marketplace_matches_marketplaceItemId_fkey" FOREIGN KEY ("marketplaceItemId") REFERENCES "marketplace_items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "marketplace_matches" ADD CONSTRAINT "marketplace_matches_buyerId_fkey" FOREIGN KEY ("buyerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "marketplace_matches" ADD CONSTRAINT "marketplace_matches_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "match_messages" ADD CONSTRAINT "match_messages_matchId_fkey" FOREIGN KEY ("matchId") REFERENCES "marketplace_matches"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "match_messages" ADD CONSTRAINT "match_messages_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

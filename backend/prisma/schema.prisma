@@ -1,7 +1,6 @@
 generator client {
-  provider      = "prisma-client-js"
-  output        = "../src/generated/prisma"
-  binaryTargets = ["native", "debian-openssl-1.0.x", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -197,6 +196,8 @@ model User {
   adminFeedbackResponses     FeedbackReport[]      @relation("AdminFeedbackResponses")
   profile                    Profile?
   reviews                    Review[]              @relation("UserReviews")
+  // Campo temporal para forzar migración
+  tempField                  String?               @map("temp_field")
 
   @@index([email])
   @@index([isActive])

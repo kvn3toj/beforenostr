@@ -88,10 +88,9 @@ import {
   Notifications as NotificationsIcon,
   AutoGraph as GraphIcon,
   Psychology as PsychologyIcon,
-  Gamepad2 as GamepadIcon,
+  Gamepad as GamepadIcon,
   Rocket as RocketIcon,
   Diamond as DiamondIcon,
-  Energy as EnergyIcon,
   Security as SecurityIcon,
   Speed as SpeedIcon,
   Celebration as CelebrationIcon,
@@ -687,7 +686,7 @@ const ExperienceConsoleEnhanced: React.FC = () => {
                 <Stack direction="row" spacing={1}>
                   <Chip icon={<DiamondIcon />} label={`1° ${contest.rewards.first}`} color="warning" size="small" />
                   <Chip icon={<StarIcon />} label={`2° ${contest.rewards.second}`} color="default" size="small" />
-                  <Chip icon={<EnergyIcon />} label={`3° ${contest.rewards.third}`} color="default" size="small" />
+                  <Chip icon={<DiamondIcon />} label={`3° ${contest.rewards.third}`} color="default" size="small" />
                 </Stack>
               </Box>
 

@@ -1,6 +1,6 @@
 /**
  * 📊 LETS Analytics Dashboard - Sistema de Métricas Avanzadas
- * 
+ *
  * Dashboard completo para monitorear el sistema LETS con métricas
  * de Ayni, confianza, circulación de Ünits y salud del ecosistema
  */
@@ -41,16 +41,16 @@ import {
   Star as StarIcon,
   Timeline as TimelineIcon,
   Assessment as AssessmentIcon,
-  Eco as EcoIcon,
+  Spa as EcoIcon, // Nature/sustainability icon alternative
   Balance as BalanceIcon,
   Security as SecurityIcon,
   Speed as SpeedIcon,
   Insights as InsightsIcon
 } from '@mui/icons-material';
 
-import { 
-  useLetsAnalytics, 
-  useLetsSystemHealth 
+import {
+  useLetsAnalytics,
+  useLetsSystemHealth
 } from '../../../../hooks/useLetsMarketplace';
 
 interface TabPanelProps {
@@ -90,13 +90,13 @@ const LetsAnalyticsDashboard: React.FC = () => {
   };
 
   // Componente para métricas principales
-  const MetricCard = ({ 
-    title, 
-    value, 
-    subtitle, 
-    icon, 
-    color, 
-    trend 
+  const MetricCard = ({
+    title,
+    value,
+    subtitle,
+    icon,
+    color,
+    trend
   }: {
     title: string;
     value: string | number;
@@ -135,17 +135,17 @@ const LetsAnalyticsDashboard: React.FC = () => {
             )}
             {trend !== undefined && (
               <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 1 }}>
-                <TrendingUpIcon 
-                  sx={{ 
-                    fontSize: 16, 
-                    color: trend >= 0 ? 'success.main' : 'error.main' 
-                  }} 
+                <TrendingUpIcon
+                  sx={{
+                    fontSize: 16,
+                    color: trend >= 0 ? 'success.main' : 'error.main'
+                  }}
                 />
-                <Typography 
-                  variant="caption" 
-                  sx={{ 
+                <Typography
+                  variant="caption"
+                  sx={{
                     color: trend >= 0 ? 'success.main' : 'error.main',
-                    fontWeight: 600 
+                    fontWeight: 600
                   }}
                 >
                   {trend >= 0 ? '+' : ''}{trend.toFixed(1)}% vs período anterior
@@ -184,11 +184,11 @@ const LetsAnalyticsDashboard: React.FC = () => {
             </Stack>
 
             <Box sx={{ textAlign: 'center' }}>
-              <Typography 
-                variant="h2" 
-                sx={{ 
-                  fontWeight: 700, 
-                  color: `${getAyniColor(ayniPercentage)}.main` 
+              <Typography
+                variant="h2"
+                sx={{
+                  fontWeight: 700,
+                  color: `${getAyniColor(ayniPercentage)}.main`
                 }}
               >
                 {ayniPercentage.toFixed(1)}%
@@ -218,8 +218,8 @@ const LetsAnalyticsDashboard: React.FC = () => {
               </Typography>
             </Stack>
 
-            <Alert 
-              severity={getAyniColor(ayniPercentage)} 
+            <Alert
+              severity={getAyniColor(ayniPercentage)}
               sx={{ mt: 2 }}
             >
               {ayniPercentage >= 80 && "¡Excelente! La comunidad mantiene un equilibrio saludable de reciprocidad."}
@@ -344,9 +344,9 @@ const LetsAnalyticsDashboard: React.FC = () => {
                 <Typography variant="h6" sx={{ mb: 3 }}>
                   🤝 Métricas de Ayni y Confianza
                 </Typography>
-                
+
                 <Alert severity="info" sx={{ mb: 3 }}>
-                  El sistema Ayni mide el equilibrio entre dar y recibir en la comunidad. 
+                  El sistema Ayni mide el equilibrio entre dar y recibir en la comunidad.
                   Un índice alto indica una economía colaborativa saludable.
                 </Alert>
 
@@ -365,7 +365,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
                 <Typography variant="h6" sx={{ mb: 3 }}>
                   📈 Tendencias y Crecimiento
                 </Typography>
-                
+
                 <Box sx={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Stack alignItems="center" spacing={2}>
                     <TimelineIcon sx={{ fontSize: 64, color: 'text.secondary' }} />
@@ -395,29 +395,29 @@ const LetsAnalyticsDashboard: React.FC = () => {
                 <Typography variant="h6" sx={{ mb: 2 }}>
                   ⚡ Métricas de Performance
                 </Typography>
-                
+
                 <Stack spacing={2}>
                   <Box>
                     <Typography variant="body2" sx={{ mb: 1 }}>
                       Tiempo de Respuesta API
                     </Typography>
-                    <LinearProgress 
-                      variant="determinate" 
-                      value={75} 
+                    <LinearProgress
+                      variant="determinate"
+                      value={75}
                       sx={{ height: 8, borderRadius: 4 }}
                     />
                     <Typography variant="caption" color="text.secondary">
                       {systemHealth?.averageResponseTime || 0}ms (Objetivo: &lt;200ms)
                     </Typography>
                   </Box>
-                  
+
                   <Box>
                     <Typography variant="body2" sx={{ mb: 1 }}>
                       Disponibilidad del Sistema
                     </Typography>
-                    <LinearProgress 
-                      variant="determinate" 
-                      value={99.5} 
+                    <LinearProgress
+                      variant="determinate"
+                      value={99.5}
                       color="success"
                       sx={{ height: 8, borderRadius: 4 }}
                     />
@@ -425,14 +425,14 @@ const LetsAnalyticsDashboard: React.FC = () => {
                       99.5% (Objetivo: &gt;99%)
                     </Typography>
                   </Box>
-                  
+
                   <Box>
                     <Typography variant="body2" sx={{ mb: 1 }}>
                       Tasa de Éxito de Transacciones
                     </Typography>
-                    <LinearProgress 
-                      variant="determinate" 
-                      value={98.2} 
+                    <LinearProgress
+                      variant="determinate"
+                      value={98.2}
                       color="success"
                       sx={{ height: 8, borderRadius: 4 }}
                     />
@@ -450,4 +450,4 @@ const LetsAnalyticsDashboard: React.FC = () => {
   );
 };
 
-export default LetsAnalyticsDashboard; 
+export default LetsAnalyticsDashboard;

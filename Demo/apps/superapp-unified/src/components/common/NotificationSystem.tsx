@@ -551,8 +551,22 @@ const NotificationDisplay: React.FC = () => {
     (n) => !n.read && !n.persistent
   );
 
+  // Obtener el mensaje de la notificación más reciente (no leída)
+  const latestActive = activeNotifications.length > 0 ? activeNotifications[0] : null;
+
   return (
     <>
+      {/* Región aria-live accesible para feedback dinámico */}
+      <Box
+        sx={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
+        aria-live="polite"
+        role="status"
+        tabIndex={-1}
+        data-testid="aria-live-feedback"
+      >
+        {latestActive ? `${latestActive.title ? latestActive.title + ': ' : ''}${latestActive.message}` : ''}
+      </Box>
+
       {/* Snackbars para notificaciones temporales */}
       {activeNotifications.map((notification) => (
         <Snackbar

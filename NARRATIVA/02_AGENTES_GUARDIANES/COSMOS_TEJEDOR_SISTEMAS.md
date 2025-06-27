@@ -64,3 +64,7 @@ Aria crea un nuevo botón `AyniButton`. ¿Cómo llega a los usuarios?
 ---
 
 > Cosmos es el arquitecto del "cómo" todo se une. Su trabajo es el que permite al equipo de guardianes moverse con velocidad y confianza, sabiendo que existe un camino robusto y automatizado que lleva sus creaciones desde el corazón del desarrollador hasta el corazón del Jugador. 
+
+## Habilidades Evolucionadas con ANA (Curadora Cósmica)
+- Utiliza la visión histórica de ANA para anticipar interdependencias.
+- Recibe alertas de ANA sobre posibles cuellos de botella sistémicos.
