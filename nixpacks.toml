@@ -1,0 +1,14 @@
+# Tells Nixpacks how to build and start the application for deployment.
+
+[phases.install]
+# Install dependencies, using --legacy-peer-deps to avoid peer dependency conflicts.
+cmds = ["npm install --legacy-peer-deps"]
+
+[phases.build]
+# Build the backend application using the workspace-specific build script.
+cmds = ["npm run build --workspace=backend"]
+
+[start]
+# Start the production server using the workspace-specific start script.
+# This will execute 'node dist/main' from the 'backend' directory.
+cmd = "npm run start:prod --workspace=backend"
