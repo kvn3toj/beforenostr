@@ -40,6 +40,8 @@ interface EnhancedMarketplaceCardProps {
   onAddToCart: (id: string) => void;
   onShare: (id: string) => void;
   onOpenChat: (item: MarketplaceItem) => void;
+  onProductClick?: (id: string) => void; // Vista rápida (QuickView)
+  onNavigateToDetail?: (id: string) => void; // Navegación a página completa
 }
 
 const cardVariants = {
@@ -53,6 +55,8 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
   onAddToCart,
   onShare,
   onOpenChat,
+  onProductClick,
+  onNavigateToDetail,
 }) => {
   const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
@@ -84,8 +88,23 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
   };
 
   const handleCardClick = () => {
-    // Navigate to product detail page - implement navigation logic here
-    console.log(`Navigate to /marketplace/item/${item.id}`);
+    // 🎯 Zeno: Quick view (vista rápida) - modal overlay
+    if (onProductClick) {
+      onProductClick(item.id);
+    } else {
+      console.log(`Quick view for ${item.id}`);
+    }
+  };
+
+  const handleNavigateToDetail = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // 🎯 Zeno: Navigate to full product page
+    if (onNavigateToDetail) {
+      onNavigateToDetail(item.id);
+    } else {
+      console.log(`Navigate to /marketplace/item/${item.id}`);
+    }
   };
 
   return (
@@ -244,6 +263,23 @@ export const EnhancedMarketplaceCard: React.FC<EnhancedMarketplaceCardProps> = (
           </Stack>
 
           <Stack direction="row" spacing={1} mt="auto" sx={{ p: 2, pt: 0 }}>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={handleNavigateToDetail}
+              sx={{
+                minWidth: 'auto',
+                px: 1,
+                borderColor: alpha(theme.palette.primary.main, 0.3),
+                color: theme.palette.primary.main,
+                '&:hover': {
+                  borderColor: theme.palette.primary.main,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.04),
+                }
+              }}
+            >
+              Ver detalles
+            </Button>
             <Button
               size="medium"
               variant="contained"

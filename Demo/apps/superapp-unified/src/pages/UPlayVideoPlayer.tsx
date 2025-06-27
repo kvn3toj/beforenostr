@@ -260,12 +260,22 @@ const getUserProgress = (): UserProgress => ({
 
 // Utility to convert YouTube URLs to a format our enhanced player can use
 const convertToVideoPlayerUrl = (url: string): string => {
-  // For YouTube URLs, we'll use a demo video URL since our enhanced player uses HTML5 video
-  // This is temporary until we implement YouTube iframe integration in InteractiveVideoPlayerOverlay
+  // 🎯 CORRECCIÓN: Usar URLs reales de YouTube en lugar de videos de muestra
   if (url && (url.includes('youtube.com') || url.includes('youtu.be'))) {
-    console.log('🎬 YouTube URL detected, using demo video for enhanced player:', url);
-    // Return a demo video URL that works with HTML5 video element (Big Buck Bunny sample)
-    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+    console.log('🎬 YouTube URL detected, using REAL YouTube URL for player:', url);
+
+    // Extract video ID from YouTube URL
+    let videoId = '';
+    if (url.includes('watch?v=')) {
+      videoId = url.split('watch?v=')[1].split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0];
+    }
+
+    if (videoId) {
+      // Return YouTube embed URL for iframe integration
+      return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0&modestbranding=1`;
+    }
   }
   return url;
 };
@@ -408,7 +418,7 @@ const UPlayVideoPlayer: React.FC = () => {
           id: videoId || 'fallback-video',
           title: 'Video de Demostración',
           description: 'Este es un video de demostración mientras se carga el contenido real.',
-          url: undefined,
+          url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', // Fallback URL
           duration: 300,
           questions: [],
           thumbnail: '',

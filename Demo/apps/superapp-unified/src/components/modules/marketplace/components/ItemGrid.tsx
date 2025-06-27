@@ -14,6 +14,8 @@ interface ItemGridProps {
   onAddToCart: (id: string) => void;
   onShare: (id: string) => void;
   onOpenChat: (item: MarketplaceItem) => void;
+  onProductClick: (id: string) => void; // Vista rápida (QuickView)
+  onNavigateToDetail?: (id: string) => void; // Navegación a página completa
   viewMode?: 'grid' | 'list';
 }
 
@@ -34,6 +36,8 @@ export const ItemGrid: React.FC<ItemGridProps> = ({
   onAddToCart,
   onShare,
   onOpenChat,
+  onProductClick,
+  onNavigateToDetail,
   viewMode = 'grid',
 }) => {
   const getGridColumns = () => {
@@ -88,6 +92,8 @@ export const ItemGrid: React.FC<ItemGridProps> = ({
               onAddToCart={() => onAddToCart(item.id)}
               onShare={() => onShare(item.id)}
               onOpenChat={() => onOpenChat(item)}
+              onProductClick={() => onProductClick(item.id)}
+              onNavigateToDetail={onNavigateToDetail ? () => onNavigateToDetail(item.id) : undefined}
             />
           </Grid>
         ))}

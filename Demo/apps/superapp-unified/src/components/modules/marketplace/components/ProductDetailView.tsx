@@ -105,6 +105,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   onToggleFavorite,
   matchId,
 }) => {
+  const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
   const [selectedDeliveryOption, setSelectedDeliveryOption] = useState(
     product.deliveryOptions && product.deliveryOptions.length > 0 ? product.deliveryOptions[0].id : ''

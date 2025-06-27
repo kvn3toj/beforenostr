@@ -15,7 +15,7 @@ import {
   Stack,
 } from '@mui/material';
 import {
-  Eco,
+  Spa as Eco, // Nature/sustainability icon alternative
   Star,
   Verified,
   PhotoCamera,

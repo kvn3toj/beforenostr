@@ -55,6 +55,99 @@ import {
 // Importar servicios para integración con backend
 import { apiService } from '../../../../lib/api-service';
 
+// Estilos CSS globales para animaciones de accesibilidad
+const accessibilityStyles = `
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes pulse-gentle {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.02); opacity: 0.95; }
+  }
+
+  @keyframes focus-ring {
+    0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.8); }
+    50% { box-shadow: 0 0 0 6px rgba(251, 191, 36, 0.4); }
+    100% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0.1); }
+  }
+
+  @keyframes slide-up-fade {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateY(10px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Mejoras de accesibilidad para lectores de pantalla */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Animación específica para preguntas */
+  .question-appear {
+    animation: slide-up-fade 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Mejor contraste para modo alto contraste */
+  @media (prefers-contrast: high) {
+    .question-option {
+      border-width: 3px !important;
+      font-weight: 800 !important;
+    }
+
+    .question-header {
+      text-shadow: 0 0 4px rgba(0,0,0,0.9) !important;
+    }
+  }
+
+  /* Respeto por preferencias de movimiento reducido */
+  @media (prefers-reduced-motion: reduce) {
+    .question-appear,
+    .shimmer,
+    .pulse-gentle {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* Mejoras para modo oscuro */
+  @media (prefers-color-scheme: dark) {
+    .question-card {
+      border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    }
+  }
+`;
+
+// Insertar estilos en el head si no existen
+if (typeof document !== 'undefined') {
+  const styleId = 'uplay-accessibility-styles';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = accessibilityStyles;
+    document.head.appendChild(style);
+  }
+}
+
 // Types for the interactive video player
 interface QuestionOverlay {
   id: number;
@@ -226,6 +319,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
   const [volume, setVolume] = useState(0.8);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isLargeViewport, setIsLargeViewport] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
 
@@ -531,7 +625,8 @@ const InteractiveVideoPlayerOverlay: React.FC<
         });
       } catch (error) {
         // Gracefully handle missing analytics endpoints during development
-        if (error.statusCode === 404) {
+        const apiError = error as any;
+        if (apiError?.statusCode === 404) {
           console.info('📊 Video question analytics endpoint not yet implemented - this is expected during development');
         } else {
           console.warn('Failed to send question analytics:', error);
@@ -654,6 +749,17 @@ const InteractiveVideoPlayerOverlay: React.FC<
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
+  // Large viewport detection
+  useEffect(() => {
+    const checkViewportSize = () => {
+      setIsLargeViewport(window.innerWidth >= 1920); // 4K/Ultra-wide detection
+    };
+
+    checkViewportSize();
+    window.addEventListener('resize', checkViewportSize);
+    return () => window.removeEventListener('resize', checkViewportSize);
+  }, []);
+
   // Video completion handler
   const handleVideoEnd = useCallback(async () => {
     setIsPlaying(false);
@@ -680,7 +786,8 @@ const InteractiveVideoPlayerOverlay: React.FC<
         });
       } catch (error) {
         // Gracefully handle missing analytics endpoints during development
-        if (error.statusCode === 404) {
+        const apiError = error as any;
+        if (apiError?.statusCode === 404) {
           console.info('📊 Video completion analytics endpoint not yet implemented - this is expected during development');
         } else {
           console.warn('Failed to send completion analytics:', error);
@@ -952,174 +1059,543 @@ const InteractiveVideoPlayerOverlay: React.FC<
         </Box>
       )}
 
-      {/* Enhanced Question Overlay */}
+      {/* Interactive Question Overlay */}
       <Fade in={!!activeQuestion} timeout={500}>
         <Box
           sx={{
             position: 'absolute',
-            bottom: 120,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '90%',
-            maxWidth: 700,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(12px)',
             zIndex: 20,
-            display: activeQuestion ? 'block' : 'none',
+            opacity: activeQuestion ? 1 : 0,
+            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+            px: { xs: 1, sm: 2, md: 3 },
+            py: { xs: 2, md: 3 },
           }}
         >
           {activeQuestion && (
             <Card
+              className="question-card question-appear"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="question-title"
+              aria-describedby="question-content"
               sx={{
-                borderRadius: 4,
-                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(139, 92, 246, 0.95) 100%)',
+                width: '100%',
+                maxWidth: {
+                  xs: '95vw',
+                  sm: '85vw',
+                  md: '75vw',
+                  lg: '65vw',
+                  xl: '60vw',
+                  ...(isFullscreen && {
+                    xs: '90vw',
+                    sm: '80vw',
+                    md: '70vw',
+                    lg: '60vw',
+                    xl: '55vw',
+                  })
+                },
+                maxHeight: {
+                  xs: '85vh',
+                  sm: '80vh',
+                  md: '75vh',
+                  ...(isFullscreen && {
+                    xs: '90vh',
+                    sm: '85vh',
+                    md: '80vh',
+                  })
+                },
+                background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.95) 0%, rgba(101, 67, 33, 0.95) 50%, rgba(160, 82, 45, 0.95) 100%)',
                 backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4)',
-                overflow: 'hidden',
+                borderRadius: { xs: 4, md: 6 },
+                border: '2px solid rgba(255, 255, 255, 0.25)',
+                boxShadow: '0 25px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1)',
                 position: 'relative',
+                overflow: 'hidden',
+                // Mejor enfoque para lectores de pantalla
+                '&:focus-within': {
+                  outline: '3px solid #fbbf24',
+                  outlineOffset: '4px',
+                },
                 '&::before': {
                   content: '""',
                   position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)',
+                  top: -50,
+                  left: { xs: -30, md: -50 },
+                  width: { xs: 60, md: 100 },
+                  height: { xs: 60, md: 100 },
+                  background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+                  pointerEvents: 'none',
+                },
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  bottom: -50,
+                  right: { xs: -30, md: -50 },
+                  width: { xs: 60, md: 100 },
+                  height: { xs: 60, md: 100 },
+                  background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
                   pointerEvents: 'none',
                 }
               }}
             >
-              <CardContent sx={{ p: 4, position: 'relative', zIndex: 2 }}>
-                {/* Question Header */}
-                <Box sx={{ textAlign: 'center', mb: 4 }}>
+              {/* Texto oculto para lectores de pantalla */}
+              <Typography className="sr-only" id="question-title">
+                Pregunta interactiva número {activeQuestion.id}
+              </Typography>
+
+              <CardContent sx={{
+                p: {
+                  xs: 2,
+                  sm: 2.5,
+                  md: 3,
+                  lg: 4,
+                  ...(isFullscreen && { xs: 2.5, sm: 3, md: 4, lg: 5 })
+                },
+                position: 'relative',
+                zIndex: 2
+              }}>
+                {/* Question Header - Mejorado para accesibilidad */}
+                <Box sx={{ textAlign: 'center', mb: { xs: 2.5, md: 3.5 } }}>
                   <Typography
                     variant="h5"
+                    component="h2"
+                    className="question-header"
                     sx={{
                       color: 'white',
-                      fontWeight: 700,
-                      textShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                      mb: 1,
+                      fontWeight: 800,
+                      textShadow: '0 2px 10px rgba(0,0,0,0.6)',
+                      mb: { xs: 1.5, md: 2 },
+                      fontSize: {
+                        xs: '1.1rem',
+                        sm: '1.2rem',
+                        md: '1.35rem',
+                        lg: '1.5rem',
+                        xl: '1.6rem',
+                        ...(isFullscreen && {
+                          xs: '1.2rem',
+                          sm: '1.35rem',
+                          md: '1.5rem',
+                          lg: '1.65rem',
+                          xl: '1.8rem',
+                        })
+                      },
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: { xs: 1.5, md: 2 },
+                      flexWrap: 'wrap',
                     }}
                   >
-                    🤔 Pregunta Interactiva
+                    <Box
+                      sx={{
+                        width: { xs: 42, md: 48, ...(isFullscreen && { xs: 48, md: 54 }) },
+                        height: { xs: 42, md: 48, ...(isFullscreen && { xs: 48, md: 54 }) },
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: { xs: '1.3rem', md: '1.5rem' },
+                        boxShadow: '0 6px 20px rgba(245, 158, 11, 0.5)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      🧠
+                    </Box>
+                    Pregunta Interactiva
                   </Typography>
                   <Typography
                     variant="h6"
+                    component="p"
+                    id="question-content"
                     sx={{
                       color: 'white',
-                      fontWeight: 500,
-                      textShadow: '0 1px 4px rgba(0,0,0,0.2)',
-                      lineHeight: 1.4,
+                      fontWeight: 600,
+                      textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+                      lineHeight: { xs: 1.5, md: 1.6 },
+                      fontSize: {
+                        xs: '1rem',
+                        sm: '1.1rem',
+                        md: '1.2rem',
+                        lg: '1.3rem',
+                        xl: '1.4rem',
+                        ...(isFullscreen && {
+                          xs: '1.1rem',
+                          sm: '1.2rem',
+                          md: '1.3rem',
+                          lg: '1.4rem',
+                          xl: '1.5rem',
+                        })
+                      },
+                      px: { xs: 1, md: 2 },
+                      maxWidth: { xs: '100%', sm: '95%', md: '90%' },
+                      mx: 'auto',
+                      // Mejores contrastes para WCAG AAA
+                      background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 100%)',
+                      borderRadius: 2,
+                      py: { xs: 1, md: 1.5 },
+                      border: '1px solid rgba(255,255,255,0.2)',
                     }}
                   >
                     {activeQuestion.question}
                   </Typography>
                 </Box>
 
-                {/* Question Options */}
-                <Stack spacing={2} sx={{ mb: 3 }}>
-                  {(activeQuestion?.options || []).map((option) => (
+                {/* Question Options - Mejorado para accesibilidad y responsive */}
+                <Stack
+                  spacing={{ xs: 1.5, sm: 2, md: 2.5 }}
+                  sx={{
+                    mb: { xs: 3, md: 4 },
+                    ...(isFullscreen && {
+                      spacing: { xs: 2, sm: 2.5, md: 3 }
+                    })
+                  }}
+                  role="radiogroup"
+                  aria-labelledby="question-content"
+                  aria-required="true"
+                >
+                  {(activeQuestion?.options || []).map((option, index) => (
                     <Button
                       key={option.id}
                       variant={selectedAnswer === option.id ? 'contained' : 'outlined'}
                       onClick={() => setSelectedAnswer(option.id)}
                       disabled={!!selectedAnswer}
+                      className="question-option"
+                      role="radio"
+                      aria-checked={selectedAnswer === option.id}
+                      aria-label={`Opción ${option.label}: ${option.text}`}
+                      aria-describedby={selectedAnswer === option.id ? `option-${option.id}-selected` : undefined}
+                      tabIndex={selectedAnswer ? -1 : 0}
                       sx={{
-                        borderRadius: 3,
-                        py: 2,
-                        px: 3,
+                        borderRadius: { xs: 4, sm: 5, md: 6 },
+                        // Garantizar área táctil mínima de 48x48px (WCAG AAA)
+                        minHeight: {
+                          xs: 56, // 8px más que el mínimo para mejor UX
+                          sm: 64,
+                          md: 72,
+                          lg: 80,
+                          xl: 88,
+                          ...(isFullscreen && { xs: 64, sm: 72, md: 84, lg: 92, xl: 100 })
+                        },
+                        py: {
+                          xs: 1.5,
+                          sm: 2,
+                          md: 2.5,
+                          lg: 3,
+                          ...(isFullscreen && { xs: 2, sm: 2.5, md: 3, lg: 3.5 })
+                        },
+                        px: {
+                          xs: 2,
+                          sm: 2.5,
+                          md: 3.5,
+                          lg: 4,
+                          ...(isFullscreen && { xs: 2.5, sm: 3, md: 4, lg: 4.5 })
+                        },
                         textAlign: 'left',
                         justifyContent: 'flex-start',
                         background: selectedAnswer === option.id
-                          ? 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
+                          ? 'linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)'
                           : 'rgba(255, 255, 255, 0.15)',
-                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                        borderColor: selectedAnswer === option.id
+                          ? 'rgba(16, 185, 129, 0.8)'
+                          : 'rgba(255, 255, 255, 0.4)',
+                        borderWidth: { xs: '2px', md: '2.5px' },
                         color: 'white',
                         textTransform: 'none',
-                        fontSize: '16px',
-                        fontWeight: 500,
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        fontSize: {
+                          xs: '0.95rem',
+                          sm: '1rem',
+                          md: '1.1rem',
+                          lg: '1.2rem',
+                          ...(isFullscreen && {
+                            xs: '1rem',
+                            sm: '1.1rem',
+                            md: '1.2rem',
+                            lg: '1.3rem',
+                          })
+                        },
+                        fontWeight: 600,
+                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        // Mejorar estados de focus para accesibilidad
+                        '&:focus-visible': {
+                          outline: '3px solid #fbbf24',
+                          outlineOffset: '2px',
+                          boxShadow: '0 0 0 6px rgba(251, 191, 36, 0.3)',
+                          animation: 'focus-ring 2s infinite',
+                        },
+                        '&::before': selectedAnswer === option.id ? {
+                          content: '""',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)',
+                          animation: 'shimmer 2.5s infinite',
+                        } : {},
                         '&:hover': {
                           background: selectedAnswer === option.id
-                            ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)'
+                            ? 'linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%)'
                             : 'rgba(255, 255, 255, 0.25)',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
+                          transform: 'translateY(-4px) scale(1.02)',
+                          boxShadow: selectedAnswer === option.id
+                            ? '0 16px 40px rgba(16, 185, 129, 0.5)'
+                            : '0 12px 30px rgba(255, 255, 255, 0.2)',
+                          borderColor: selectedAnswer === option.id
+                            ? 'rgba(16, 185, 129, 1)'
+                            : 'rgba(255, 255, 255, 0.6)',
                         },
                         '&:disabled': {
-                          opacity: selectedAnswer === option.id ? 1 : 0.6,
+                          opacity: selectedAnswer === option.id ? 1 : 0.7,
+                          transform: selectedAnswer === option.id ? 'scale(1.02)' : 'scale(1)',
                         }
                       }}
                     >
+                      {/* Indicador de selección oculto para lectores de pantalla */}
+                      {selectedAnswer === option.id && (
+                        <Typography className="sr-only" id={`option-${option.id}-selected`}>
+                          Opción seleccionada
+                        </Typography>
+                      )}
+
                       <Box sx={{
                         display: 'flex',
                         alignItems: 'center',
                         width: '100%',
-                        gap: 2
+                        gap: { xs: 1.5, md: 2.5 }
                       }}>
                         <Avatar sx={{
-                          width: 36,
-                          height: 36,
-                          bgcolor: selectedAnswer === option.id ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.2)',
-                          color: selectedAnswer === option.id ? '#10b981' : 'white',
-                          fontSize: '16px',
+                          width: {
+                            xs: 32,
+                            sm: 36,
+                            md: 40,
+                            lg: 44,
+                            ...(isFullscreen && { xs: 36, sm: 40, md: 44, lg: 48 })
+                          },
+                          height: {
+                            xs: 32,
+                            sm: 36,
+                            md: 40,
+                            lg: 44,
+                            ...(isFullscreen && { xs: 36, sm: 40, md: 44, lg: 48 })
+                          },
+                          bgcolor: selectedAnswer === option.id
+                            ? 'rgba(255, 255, 255, 0.9)'
+                            : 'rgba(255, 255, 255, 0.2)',
+                          color: selectedAnswer === option.id ? '#059669' : 'white',
                           fontWeight: 800,
-                          transition: 'all 0.3s ease',
+                          fontSize: {
+                            xs: '0.9rem',
+                            sm: '1rem',
+                            md: '1.1rem',
+                            lg: '1.2rem'
+                          },
+                          border: selectedAnswer === option.id
+                            ? '2px solid rgba(255, 255, 255, 0.8)'
+                            : '2px solid rgba(255, 255, 255, 0.3)',
+                          flexShrink: 0,
                         }}>
                           {option.label}
                         </Avatar>
-                        <Typography variant="body1" sx={{ fontWeight: 500, flex: 1 }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: 600,
+                            lineHeight: 1.5,
+                            flex: 1,
+                            // Mejor contraste para legibilidad
+                            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                          }}
+                        >
                           {option.text}
                         </Typography>
                         {selectedAnswer === option.id && (
-                          <CheckIcon sx={{ color: 'white', fontSize: 24 }} />
+                          <Box sx={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: '50%',
+                            background: 'rgba(255, 255, 255, 0.95)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                            animation: 'pulse-gentle 2s infinite',
+                          }}>
+                            <CheckIcon sx={{ color: '#059669', fontSize: 24, fontWeight: 'bold' }} />
+                          </Box>
                         )}
                       </Box>
                     </Button>
                   ))}
                 </Stack>
 
-                {/* Action Buttons */}
-                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+                {/* Action Buttons - Mejorado para accesibilidad */}
+                <Box sx={{
+                  display: 'flex',
+                  gap: { xs: 2, md: 3 },
+                  justifyContent: 'center',
+                  flexWrap: 'wrap',
+                  ...(isFullscreen && {
+                    gap: { xs: 2.5, md: 3.5 }
+                  })
+                }}>
                   <Button
                     variant="contained"
                     onClick={handleAnswerSubmit}
                     disabled={!selectedAnswer}
+                    aria-label="Confirmar respuesta seleccionada"
                     sx={{
-                      borderRadius: 3,
-                      py: 1.5,
-                      px: 4,
-                      background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
-                      boxShadow: '0 8px 25px rgba(16, 185, 129, 0.3)',
-                      fontWeight: 700,
-                      fontSize: '16px',
+                      borderRadius: { xs: 4, sm: 5, md: 6 },
+                      // Garantizar área táctil accesible
+                      minHeight: {
+                        xs: 48,
+                        sm: 52,
+                        md: 56,
+                        lg: 60,
+                        ...(isFullscreen && { xs: 52, sm: 56, md: 60, lg: 64 })
+                      },
+                      py: {
+                        xs: 1.5,
+                        sm: 2,
+                        md: 2.5,
+                        lg: 3,
+                        ...(isFullscreen && { xs: 2, sm: 2.5, md: 3, lg: 3.5 })
+                      },
+                      px: {
+                        xs: 3,
+                        sm: 4,
+                        md: 6,
+                        lg: 7,
+                        ...(isFullscreen && { xs: 4, sm: 5, md: 7, lg: 8 })
+                      },
+                      background: !selectedAnswer
+                        ? 'rgba(255, 255, 255, 0.2)'
+                        : 'linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)',
+                      boxShadow: !selectedAnswer
+                        ? 'none'
+                        : '0 10px 30px rgba(16, 185, 129, 0.5)',
+                      fontWeight: 800,
+                      fontSize: {
+                        xs: '0.9rem',
+                        sm: '1rem',
+                        md: '1.1rem',
+                        lg: '1.2rem',
+                        xl: '1.25rem',
+                        ...(isFullscreen && {
+                          xs: '1rem',
+                          sm: '1.1rem',
+                          md: '1.2rem',
+                          lg: '1.3rem',
+                          xl: '1.35rem',
+                        })
+                      },
                       textTransform: 'none',
-                      '&:hover': {
-                        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                        boxShadow: '0 12px 35px rgba(16, 185, 129, 0.4)',
-                        transform: 'translateY(-2px)',
+                      color: 'white',
+                      minWidth: {
+                        xs: 120,
+                        sm: 140,
+                        md: 170,
+                        lg: 190,
+                        xl: 210,
+                        ...(isFullscreen && { xs: 140, sm: 160, md: 190, lg: 210, xl: 230 })
+                      },
+                      transition: 'all 0.4s ease',
+                      // Estados de focus mejorados
+                      '&:focus-visible': {
+                        outline: '3px solid #fbbf24',
+                        outlineOffset: '3px',
+                        boxShadow: '0 0 0 6px rgba(251, 191, 36, 0.3)',
+                      },
+                      '&:hover': !selectedAnswer ? {} : {
+                        background: 'linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%)',
+                        boxShadow: '0 16px 45px rgba(16, 185, 129, 0.6)',
+                        transform: 'translateY(-4px) scale(1.05)',
                       },
                       '&:disabled': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        background: 'rgba(255, 255, 255, 0.15)',
                         color: 'rgba(255, 255, 255, 0.5)',
+                        cursor: 'not-allowed',
                       }
                     }}
                   >
-                    ✅ Confirmar Respuesta
+                    ✅ Confirmar
                   </Button>
                   <Button
                     variant="outlined"
                     onClick={handleSkipQuestion}
+                    aria-label="Omitir esta pregunta"
                     sx={{
-                      borderRadius: 3,
-                      py: 1.5,
-                      px: 3,
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                      borderRadius: { xs: 4, sm: 5, md: 6 },
+                      minHeight: {
+                        xs: 48,
+                        sm: 52,
+                        md: 56,
+                        lg: 60,
+                        ...(isFullscreen && { xs: 52, sm: 56, md: 60, lg: 64 })
+                      },
+                      py: {
+                        xs: 1.5,
+                        sm: 2,
+                        md: 2.5,
+                        lg: 3,
+                        ...(isFullscreen && { xs: 2, sm: 2.5, md: 3, lg: 3.5 })
+                      },
+                      px: {
+                        xs: 3,
+                        sm: 4,
+                        md: 5,
+                        lg: 6,
+                        ...(isFullscreen && { xs: 4, sm: 5, md: 6, lg: 7 })
+                      },
+                      borderColor: 'rgba(255, 255, 255, 0.5)',
+                      borderWidth: { xs: '2px', md: '2.5px' },
                       color: 'white',
-                      fontWeight: 600,
+                      fontWeight: 700,
+                      fontSize: {
+                        xs: '0.85rem',
+                        sm: '0.9rem',
+                        md: '1rem',
+                        lg: '1.1rem',
+                        xl: '1.15rem',
+                        ...(isFullscreen && {
+                          xs: '0.9rem',
+                          sm: '1rem',
+                          md: '1.1rem',
+                          lg: '1.2rem',
+                          xl: '1.25rem',
+                        })
+                      },
                       textTransform: 'none',
+                      minWidth: {
+                        xs: 110,
+                        sm: 120,
+                        md: 140,
+                        lg: 160,
+                        xl: 180,
+                        ...(isFullscreen && { xs: 120, sm: 140, md: 160, lg: 180, xl: 200 })
+                      },
+                      transition: 'all 0.3s ease',
+                      '&:focus-visible': {
+                        outline: '3px solid #fbbf24',
+                        outlineOffset: '3px',
+                        boxShadow: '0 0 0 6px rgba(251, 191, 36, 0.3)',
+                      },
                       '&:hover': {
-                        borderColor: 'rgba(255, 255, 255, 0.5)',
-                        background: 'rgba(255, 255, 255, 0.1)',
+                        borderColor: 'rgba(255, 255, 255, 0.8)',
+                        background: 'rgba(255, 255, 255, 0.2)',
+                        transform: 'translateY(-3px) scale(1.03)',
+                        boxShadow: '0 8px 25px rgba(255, 255, 255, 0.2)',
                       }
                     }}
                   >

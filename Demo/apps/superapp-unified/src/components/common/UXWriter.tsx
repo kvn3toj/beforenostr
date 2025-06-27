@@ -50,7 +50,7 @@ import {
   ThumbUp as ThumbUpIcon,
   Handshake as HandshakeIcon,
   AutoAwesome as MagicIcon,
-  AccountTree as NatureIcon, // Nature/sustainability icon alternative
+  Spa as NatureIcon, // Nature/sustainability icon alternative
   Balance as BalanceIcon,
   Close as CloseIcon,
   Help as HelpIcon,

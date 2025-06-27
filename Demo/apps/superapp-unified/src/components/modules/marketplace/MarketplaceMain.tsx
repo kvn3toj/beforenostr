@@ -316,6 +316,7 @@ const MarketplaceMain: React.FC = () => {
   const [displayedItems, setDisplayedItems] = useState<MarketplaceItem[]>([]);
   const [chatModalOpen, setChatModalOpen] = useState(false);
   const [currentItemForChat, setCurrentItemForChat] = useState<MarketplaceItem | null>(null);
+  const [quickViewItem, setQuickViewItem] = useState<MarketplaceItem | null>(null);
 
   const impactProducts = useMemo(() => {
     if (!marketplaceItemsResponse?.items) {
@@ -537,6 +538,19 @@ const MarketplaceMain: React.FC = () => {
     setChatModalOpen(true);
   };
 
+  // 🎯 Zeno: Quick view (modal) para vista rápida
+  const handleProductClick = useCallback((itemId: string) => {
+    const item = itemsToDisplay.find((item: MarketplaceItem) => item.id === itemId);
+    if (item) {
+      setQuickViewItem(item);
+    }
+  }, [itemsToDisplay]);
+
+  // 🎯 Zeno: Navigation to full product detail page
+  const handleNavigateToDetail = useCallback((itemId: string) => {
+    navigate(`/marketplace/item/${itemId}`);
+  }, [navigate]);
+
   if (isLoadingItems) {
     return (
       <RevolutionaryWidget
@@ -551,11 +565,10 @@ const MarketplaceMain: React.FC = () => {
           {/* 🌊 Estado de carga consciente principal */}
           <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center' }}>
             <ConsciousLoadingState
-              element="agua"
-              variant="meditation"
+              phase="processing"
+              variant="inline"
               size="large"
-              context="marketplace"
-              showProgress={false}
+              showPhilosophy={true}
             />
           </Box>
 
@@ -747,6 +760,8 @@ const MarketplaceMain: React.FC = () => {
               onAddToCart={handleAddToCart}
               onShare={handleShare}
               onOpenChat={handleOpenChatModal}
+              onProductClick={handleProductClick}
+              onNavigateToDetail={handleNavigateToDetail}
               viewMode={viewMode}
             />
 
@@ -775,6 +790,17 @@ const MarketplaceMain: React.FC = () => {
               currentUserId={user?.id || ''}
             />
           )}
+
+          <QuickViewModal
+            open={!!quickViewItem}
+            onClose={() => setQuickViewItem(null)}
+            item={quickViewItem}
+            onAddToCart={handleAddToCart}
+            onToggleFavorite={(itemId: string) => {
+              handleToggleFavorite(itemId);
+              setQuickViewItem(prev => (prev ? { ...prev, isFavorited: !prev.isFavorited } : null));
+            }}
+          />
 
           {/* 🌱 Sistema de Feedback Consciente */}
           <ConsciousMarketplaceFeedback
