@@ -4,7 +4,7 @@
   "type": "module",
   "description": "CoomÜnity SuperApp - Plataforma Unificada",
   "engines": {
-    "node": ">=18.17.0"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "vite",
