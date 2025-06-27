@@ -19,9 +19,6 @@ RUN apk add --no-cache openssl-dev && npm install --legacy-peer-deps
 # Copiar todo el código fuente del backend
 COPY . ./
 
-# Generar el cliente de Prisma ANTES de compilar
-RUN npx prisma generate
-
 # Compilar la aplicación TypeScript a JavaScript
 RUN npm run build
 
@@ -39,10 +36,10 @@ WORKDIR /usr/src/app
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Copiar el esquema de Prisma ANTES de instalar para que `postinstall` funcione
-COPY --from=builder /usr/src/app/prisma ./prisma
+# ❗ CORRECCIÓN CRÍTICA: Copiar el esquema de Prisma ANTES de instalar para que `postinstall` funcione con el binaryTarget correcto
+COPY prisma ./prisma
 
-# Instalar SOLO las dependencias de producción y OpenSSL 1.1 para Prisma
+# Instalar SOLO las dependencias de producción y OpenSSL para Prisma
 RUN apk add --no-cache openssl-dev && npm install --only=production --legacy-peer-deps && npm cache clean --force
 
 # Copiar aplicación compilada desde la etapa de builder
