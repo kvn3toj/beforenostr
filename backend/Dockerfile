@@ -11,13 +11,13 @@ FROM node:20-alpine AS builder
 WORKDIR /usr/src/app
 
 # Copiar archivos de dependencias
-COPY backend/package*.json ./
+COPY package*.json ./
 
 # Instalar TODAS las dependencias (incluyendo devDependencies para el build)
 RUN npm install --legacy-peer-deps
 
 # Copiar todo el código fuente del backend
-COPY backend/ ./
+COPY . ./
 
 # Generar el cliente de Prisma ANTES de compilar
 RUN npx prisma generate
@@ -37,7 +37,7 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 # Copiar archivos de dependencias
-COPY backend/package*.json ./
+COPY package*.json ./
 
 # Copiar el esquema de Prisma ANTES de instalar para que `postinstall` funcione
 COPY --from=builder /usr/src/app/prisma ./prisma
