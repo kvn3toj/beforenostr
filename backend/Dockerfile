@@ -48,6 +48,7 @@ RUN npm install --only=production --legacy-peer-deps && npm cache clean --force
 # Copiar aplicación compilada y Prisma Client desde builder
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /usr/src/app/dist/generated ./dist/generated
 
 # Exponer el puerto
 EXPOSE 3002
