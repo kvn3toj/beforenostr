@@ -66,11 +66,11 @@
     "rxjs": "^7.8.1",
     "socket.io": "^4.8.1",
     "swagger-ui-express": "^5.0.1",
-    "winston": "^3.15.0"
+    "winston": "^3.15.0",
+    "@nestjs/cli": "^11.0.7"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.8.0",
-    "@nestjs/cli": "^11.0.7",
     "@nestjs/schematics": "^11.0.5",
     "@nestjs/testing": "^11.1.3",
     "@types/bcrypt": "^5.0.2",
