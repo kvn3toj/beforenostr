@@ -5,18 +5,14 @@ databases:
     plan: free
 
 services:
-  #--------------------------------
   # Redis Cache
-  #--------------------------------
   - type: redis
     name: coomunity-redis
     plan: free
     ipAllowList: []
     maxmemoryPolicy: allkeys-lru
 
-  #--------------------------------
-  # Backend - NestJS
-  #--------------------------------
+  # Backend - NestJS (Docker, recomendado)
   - type: web
     name: coomunity-backend
     plan: free
@@ -39,10 +35,14 @@ services:
         generateValue: true
       - key: NODE_ENV
         value: production
+    buildFilter:
+      paths:
+        - backend/**
+        - shared/**
+      ignoredPaths:
+        - backend/**/*.test.ts
 
-  #--------------------------------
   # Frontend - SuperApp (Vite)
-  #--------------------------------
   - type: web
     name: coomunity-superapp
     plan: free
@@ -74,3 +74,7 @@ services:
         value: "G-XXXXXXXXXX"
       - key: VITE_HOTJAR_ID
         value: "0000000"
+    buildFilter:
+      paths:
+        - Demo/apps/superapp-unified/**
+        - shared/**
