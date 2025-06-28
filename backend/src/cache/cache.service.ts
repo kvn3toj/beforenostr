@@ -417,7 +417,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
         await this.client.set(key, value);
       }
     } else {
-      await this.cacheManager.set(key, value, ttl ? { ttl: ttl * 1000 } : undefined);
+      await this.cacheManager.set(key, value, undefined, ttl);
     }
   }
 }
