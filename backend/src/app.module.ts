@@ -22,6 +22,7 @@ import { ChallengesModule } from './challenges/challenges.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CacheService } from './cache/cache.service';
+import { MetricsModule } from './common/metrics/metrics.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { CacheService } from './cache/cache.service';
     FeedbackModule, // 🤖 Feedback Agent Module - sistema de recolección de reportes
     ConsoleModule, // 🎮 Módulo de la Consola de Experiencias
     CacheModule.register({ isGlobal: true }),
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [AppService, CacheService],

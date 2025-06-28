@@ -1,4 +1,9 @@
 import { apiService } from './api.service';
+import { mockApiService } from '../mocks/mockApiService';
+
+const isMockMode = () => {
+  return import.meta.env.VITE_ENABLE_MOCK_DATA === 'true';
+};
 
 export interface SocialStats {
   totalPosts: number;
@@ -100,5 +105,12 @@ export const socialService = {
         sharesGiven: 0
       };
     }
+  },
+
+  async getPosts() {
+    if (isMockMode()) {
+      return mockApiService.getSocialPosts();
+    }
+    return apiService.get('/social/posts');
   }
-}; 
+};

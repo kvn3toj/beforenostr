@@ -28,7 +28,9 @@
     "db:studio": "prisma studio",
     "migration:generate": "npx prisma migrate dev",
     "migration:deploy": "npx prisma migrate deploy",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prestart:dev": "cp .env.local .env",
+    "prestart:prod": "cp .env.production .env"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

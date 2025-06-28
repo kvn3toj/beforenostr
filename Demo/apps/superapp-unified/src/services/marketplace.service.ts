@@ -7,6 +7,7 @@
  * 🚨 MODO MOCK ACTIVADO TEMPORALMENTE PARA PRUEBAS DE USUARIO
  */
 import { apiService } from './api.service';
+import { mockApiService } from '../mocks/mockApiService';
 import { MOCK_MARKETPLACE_ITEMS, getMockData } from '../lib/mock-data';
 
 // 🔧 Detectar modo mock
@@ -130,50 +131,12 @@ export class MarketplaceService {
    * 📋 Obtener todos los items del marketplace
    */
   async getItems(filters?: MarketplaceFilters): Promise<MarketplaceResponse> {
-    try {
-      if (isMockMode()) {
-        console.log(`${this.logPrefix} 🟡 Using MOCK data for getItems`);
-        await this.simulateNetworkDelay();
-
-        let items = [...MOCK_MARKETPLACE_ITEMS];
-
-        // Aplicar filtros a los datos mock
-        if (filters) {
-          items = this.applyFiltersToMockData(items, filters);
-        }
-
-        const limit = filters?.limit || 20;
-        const offset = filters?.offset || 0;
-
-        const paginatedItems = items.slice(offset, offset + limit);
-
-        return {
-          items: paginatedItems,
-          total: items.length,
-          limit,
-          offset,
-          hasMore: offset + limit < items.length
-        };
-      }
-
-      // Modo real: llamar al backend
-      console.log(`${this.logPrefix} 🌍 Using REAL backend for getItems`);
-      const response = await apiService.get<MarketplaceResponse>('/marketplace/items', {
-        ...(filters && { params: filters })
-      });
-
-      return response;
-    } catch (error) {
-      console.error(`${this.logPrefix} ❌ Error getting items:`, error);
-
-      // Fallback a datos mock en caso de error del backend
-      if (!isMockMode()) {
-        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error`);
-        return this.getItems({ ...filters, __forceMock: true } as any);
-      }
-
-      throw error;
+    if (isMockMode()) {
+      return mockApiService.getMarketplaceItems(filters);
     }
+    return apiService.get<MarketplaceResponse>('/marketplace/items', {
+      ...(filters && { params: filters })
+    });
   }
 
   /**

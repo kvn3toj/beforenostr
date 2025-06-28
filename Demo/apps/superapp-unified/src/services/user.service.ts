@@ -1,4 +1,5 @@
 import { apiService } from './api.service';
+import { mockApiService } from '../mocks/mockApiService';
 import { AyniMetrics } from '../types/ayni.types';
 
 // Interfaces aligned with backend DTOs
@@ -53,6 +54,26 @@ export interface UsersResponse {
   pageSize: number;
 }
 
+const isMockMode = () => {
+  return import.meta.env.VITE_ENABLE_MOCK_DATA === 'true';
+};
+
+export class UserService {
+  async getUserProfile() {
+    if (isMockMode()) {
+      return mockApiService.getUserProfile();
+    }
+    return apiService.get('/users/me');
+  }
+
+  async getUserStats() {
+    if (isMockMode()) {
+      return mockApiService.getUserStats();
+    }
+    return apiService.get('/users/me/stats');
+  }
+}
+
 export const userAPI = {
   fetchUsers: async (params: FetchUsersParams): Promise<UsersResponse> => {
     try {
@@ -95,15 +116,6 @@ export const userAPI = {
       return await apiService.get<User>(`/users/${id}`);
     } catch (error) {
       console.error(`Error fetching user ${id}:`, error);
-      throw error;
-    }
-  },
-
-  fetchCurrentUserProfile: async (): Promise<User> => {
-    try {
-      return await apiService.get<User>('/users/me');
-    } catch (error) {
-      console.error('Error fetching current user profile:', error);
       throw error;
     }
   },

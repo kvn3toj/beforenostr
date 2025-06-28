@@ -1,4 +1,9 @@
 import { apiService } from './api.service';
+import { mockApiService } from '../mocks/mockApiService';
+
+const isMockMode = () => {
+  return import.meta.env.VITE_ENABLE_MOCK_DATA === 'true';
+};
 
 export interface VideoItem {
   id: number;
@@ -23,7 +28,7 @@ export const fetchVideoItemById = async (id: string): Promise<VideoItem> => {
     console.log(`✅ fetchVideoItemById: Video item fetched successfully`);
     console.log(`📹 fetchVideoItemById: Title: "${videoItem.title}"`);
     console.log(`⏱️ fetchVideoItemById: Duration: ${videoItem.duration || 'undefined'} seconds`);
-    
+
     return videoItem;
   } catch (error) {
     console.error('❌ fetchVideoItemById: Error fetching video item by ID:', error);
@@ -39,17 +44,17 @@ export const fetchVideoItemById = async (id: string): Promise<VideoItem> => {
  */
 const getVideoDurationFallback = (content: string, title: string): number => {
   console.log(`🔄 getVideoDurationFallback: Using fallback estimation...`);
-  
+
   // Extraer el video ID para clasificar el tipo de contenido
   const videoId = extractYouTubeVideoId(content);
   if (videoId) {
     console.log(`📹 getVideoDurationFallback: YouTube video detected: ${videoId}`);
   }
-  
+
   // Analizar el título para estimar duración
   const titleLower = title.toLowerCase();
   console.log(`📝 getVideoDurationFallback: Analyzing title: "${title}"`);
-  
+
   // Buscar patrones de duración en el título
   const durationPatterns = [
     /\[(\d+):(\d+):(\d+)\]/, // [HH:MM:SS]
@@ -59,7 +64,7 @@ const getVideoDurationFallback = (content: string, title: string): number => {
     /(\d+):(\d+):(\d+)/, // HH:MM:SS
     /(\d+):(\d+)/, // MM:SS
   ];
-  
+
   for (const pattern of durationPatterns) {
     const match = title.match(pattern);
     if (match) {
@@ -76,14 +81,14 @@ const getVideoDurationFallback = (content: string, title: string): number => {
       }
     }
   }
-  
+
   // Patrones de texto en el título
   const textPatterns = [
     { pattern: /(\d+)\s*min/i, multiplier: 60 },
     { pattern: /(\d+)\s*hour/i, multiplier: 3600 },
     { pattern: /(\d+)\s*hr/i, multiplier: 3600 },
   ];
-  
+
   for (const { pattern, multiplier } of textPatterns) {
     const match = titleLower.match(pattern);
     if (match) {
@@ -94,28 +99,28 @@ const getVideoDurationFallback = (content: string, title: string): number => {
       }
     }
   }
-  
+
   // Estimación por palabras clave en el título
   if (titleLower.includes('short')) {
     console.log(`📱 getVideoDurationFallback: Short content detected: 60s`);
     return 60;
   }
-  
+
   if (titleLower.includes('tutorial') || titleLower.includes('how to') || titleLower.includes('cómo')) {
     console.log(`📚 getVideoDurationFallback: Tutorial detected: 600s`);
     return 600;
   }
-  
+
   if (titleLower.includes('música') || titleLower.includes('music') || titleLower.includes('canción') || titleLower.includes('song')) {
     console.log(`🎵 getVideoDurationFallback: Music detected: 240s`);
     return 240;
   }
-  
+
   if (titleLower.includes('mecánica') || titleLower.includes('recompensa') || titleLower.includes('gamificación') || titleLower.includes('educativ')) {
     console.log(`🎓 getVideoDurationFallback: Educational content detected: 480s`);
     return 480;
   }
-  
+
   // Por defecto: contenido educativo de duración media
   console.log(`🔄 getVideoDurationFallback: Default educational duration: 480s`);
   return 480;
@@ -142,11 +147,11 @@ export const getVideoDurationFromContent = async (content: string): Promise<numb
     // Usar diferentes métodos para obtener la duración con timeout
     const duration = await Promise.race([
       getYouTubeVideoDuration(videoId),
-      new Promise<null>((_, reject) => 
+      new Promise<null>((_, reject) =>
         setTimeout(() => reject(new Error('Timeout')), 5000) // 5 segundos timeout
       )
     ]);
-    
+
     console.log(`🎯 getVideoDurationFromContent: Final duration result: ${duration}`);
     return duration;
   } catch (error) {
@@ -163,7 +168,7 @@ export const getVideoDurationFromContent = async (content: string): Promise<numb
 export const getYouTubeVideoDuration = async (videoId: string): Promise<number | null> => {
   try {
     console.log(`🔍 getYouTubeVideoDuration: Getting duration for video ${videoId}...`);
-    
+
     // Método 1: Intentar usar la API no oficial de YouTube (más precisa)
     console.log(`1️⃣ getYouTubeVideoDuration: Trying YouTube Data API...`);
     const duration1 = await getYouTubeDurationFromAPI(videoId);
@@ -198,10 +203,10 @@ const getYouTubeDurationFromAPI = async (videoId: string): Promise<number | null
   try {
     // Este método usa el endpoint público de YouTube que a veces funciona sin API key
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=AIzaSyDummy`;
-    
+
     // Como no tenemos API key real, esto no funcionará, pero la estructura está lista
     // En producción, necesitarías una API key válida de YouTube Data API v3
-    
+
     console.log('⚠️ getYouTubeDurationFromAPI: YouTube Data API no disponible sin API key');
     return null;
   } catch (error) {
@@ -218,9 +223,9 @@ const getYouTubeDurationFromAPI = async (videoId: string): Promise<number | null
 const getYouTubeDurationFromOembed = async (videoId: string): Promise<number | null> => {
   try {
     const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-    
+
     console.log(`🔍 getYouTubeDurationFromOembed: Fetching from ${oembedUrl}`);
-    
+
     // Añadir modo CORS para intentar evitar problemas
     const response = await fetch(oembedUrl, {
       mode: 'cors',
@@ -228,21 +233,21 @@ const getYouTubeDurationFromOembed = async (videoId: string): Promise<number | n
         'Accept': 'application/json',
       },
     });
-    
+
     console.log(`📡 getYouTubeDurationFromOembed: Response status: ${response.status}`);
-    
+
     if (response.ok) {
       const data = await response.json();
-      
+
       console.log(`✅ getYouTubeDurationFromOembed: Video encontrado: "${data.title}" por ${data.author_name}`);
-      
+
       // Intentar extraer duración del título
       const durationFromTitle = extractDurationFromTitle(data.title);
       if (durationFromTitle > 0) {
         console.log(`⏱️ getYouTubeDurationFromOembed: Duración extraída del título: ${durationFromTitle} segundos`);
         return durationFromTitle;
       }
-      
+
       // Si no hay duración en el título, usar estimación inteligente
       const smartEstimate = estimateVideoDurationSmart(data.title, data.author_name);
       console.log(`🤖 getYouTubeDurationFromOembed: Duración estimada inteligentemente: ${smartEstimate} segundos`);
@@ -250,7 +255,7 @@ const getYouTubeDurationFromOembed = async (videoId: string): Promise<number | n
     } else {
       console.log(`❌ getYouTubeDurationFromOembed: Response not OK: ${response.status} ${response.statusText}`);
     }
-    
+
     return null;
   } catch (error) {
     console.warn('❌ getYouTubeDurationFromOembed: Error con YouTube oembed (posible CORS):', error);
@@ -272,7 +277,7 @@ const extractDurationFromTitle = (title: string): number => {
     /(\d+):(\d+):(\d+)/, // HH:MM:SS
     /(\d+):(\d+)/, // MM:SS (debe ir al final para no interferir con HH:MM:SS)
   ];
-  
+
   for (const pattern of durationPatterns) {
     const match = title.match(pattern);
     if (match) {
@@ -286,7 +291,7 @@ const extractDurationFromTitle = (title: string): number => {
       }
     }
   }
-  
+
   return 0;
 };
 
@@ -299,7 +304,7 @@ const extractDurationFromTitle = (title: string): number => {
 const estimateVideoDurationSmart = (title: string, author: string = ''): number => {
   const titleLower = title.toLowerCase();
   const authorLower = author.toLowerCase();
-  
+
   // Patrones de texto que indican duración
   const textPatterns = [
     { pattern: /(\d+)\s*hours?/, multiplier: 3600 },
@@ -312,7 +317,7 @@ const estimateVideoDurationSmart = (title: string, author: string = ''): number 
     { pattern: /(\d+)\s*secs?/, multiplier: 1 },
     { pattern: /(\d+)\s*s(?!\w)/, multiplier: 1 }, // 's' no seguido de letra
   ];
-  
+
   for (const { pattern, multiplier } of textPatterns) {
     const match = titleLower.match(pattern);
     if (match) {
@@ -322,41 +327,50 @@ const estimateVideoDurationSmart = (title: string, author: string = ''): number 
       }
     }
   }
-  
+
   // Estimaciones basadas en el tipo de contenido
   if (titleLower.includes('short') || titleLower.includes('shorts')) {
     return 60; // YouTube Shorts: ~1 minuto
   }
-  
+
   if (titleLower.includes('trailer') || titleLower.includes('teaser')) {
     return 120; // Trailers: ~2 minutos
   }
-  
+
   if (titleLower.includes('tutorial') || titleLower.includes('how to')) {
     return 600; // Tutoriales: ~10 minutos
   }
-  
+
   if (titleLower.includes('podcast') || titleLower.includes('interview')) {
     return 2400; // Podcasts/Entrevistas: ~40 minutos
   }
-  
+
   if (titleLower.includes('live') || titleLower.includes('stream')) {
     return 3600; // Streams: ~1 hora
   }
-  
+
   if (titleLower.includes('full movie') || titleLower.includes('película completa')) {
     return 6000; // Películas: ~100 minutos
   }
-  
+
   // Estimaciones basadas en el canal
   if (authorLower.includes('music') || authorLower.includes('records')) {
     return 240; // Música: ~4 minutos
   }
-  
+
   if (authorLower.includes('news') || authorLower.includes('noticias')) {
     return 300; // Noticias: ~5 minutos
   }
-  
+
   // Duración por defecto para videos educativos/corporativos
   return 480; // 8 minutos (duración común para contenido educativo)
-}; 
+};
+
+export class VideoItemService {
+  async getUPlayVideos() {
+    if (isMockMode()) {
+      return mockApiService.getUPlayVideos();
+    }
+    return apiService.get('/uplay/videos');
+  }
+}

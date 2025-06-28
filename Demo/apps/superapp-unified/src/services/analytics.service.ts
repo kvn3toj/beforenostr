@@ -1,4 +1,5 @@
 import { apiService } from './api.service';
+import { mockApiService } from '../mocks/mockApiService';
 import {
   TotalCountMetric,
   UsersCreatedOverTimeMetric,
@@ -55,25 +56,18 @@ export const fetchSystemHealth = async () => {
   }
 };
 
-export const fetchUserStats = async () => {
-  try {
-    return await apiService.get('/analytics/user-stats');
-  } catch (error) {
-    return handleAnalyticsError('fetchUserStats', error, {
-      activeUsers: 0,
-      newUsers: 0,
-      totalUsers: 0,
-      userGrowth: 0,
-      topUsers: [],
-      userActivity: [],
-      demographics: {
-        byAge: [],
-        byLocation: [],
-        byRole: []
-      }
-    });
-  }
+const isMockMode = () => {
+  return import.meta.env.VITE_ENABLE_MOCK_DATA === 'true';
 };
+
+export class AnalyticsService {
+  async getUserStats() {
+    if (isMockMode()) {
+      return mockApiService.getUserStats();
+    }
+    return apiService.get('/analytics/user-stats');
+  }
+}
 
 // Funciones principales de métricas
 export const fetchTotalUsers = async (): Promise<TotalCountMetric> => {
@@ -110,10 +104,10 @@ export const fetchUsersCreatedOverTime = async ({
     if (interval) params.append('interval', interval);
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    
+
     const queryString = params.toString();
     const url = queryString ? `/analytics/users-created-over-time?${queryString}` : '/analytics/users-created-over-time';
-    
+
     return await apiService.get<UsersCreatedOverTimeMetric>(url);
   } catch (error) {
     return handleAnalyticsError('fetchUsersCreatedOverTime', error, []);
@@ -130,10 +124,10 @@ export const fetchPlaylistsCreatedOverTime = async ({
     if (interval) params.append('interval', interval);
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    
+
     const queryString = params.toString();
     const url = queryString ? `/analytics/playlists-created-over-time?${queryString}` : '/analytics/playlists-created-over-time';
-    
+
     return await apiService.get<TimeSeriesDataPoint[]>(url);
   } catch (error) {
     return handleAnalyticsError('fetchPlaylistsCreatedOverTime', error, []);
@@ -150,10 +144,10 @@ export const fetchMundosCreatedOverTime = async ({
     if (interval) params.append('interval', interval);
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    
+
     const queryString = params.toString();
     const url = queryString ? `/analytics/mundos-created-over-time?${queryString}` : '/analytics/mundos-created-over-time';
-    
+
     return await apiService.get<TimeSeriesDataPoint[]>(url);
   } catch (error) {
     return handleAnalyticsError('fetchMundosCreatedOverTime', error, []);
@@ -186,10 +180,10 @@ export const fetchActiveUsersOverTime = async ({
     if (interval) params.append('interval', interval);
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    
+
     const queryString = params.toString();
     const url = queryString ? `/analytics/active-users-over-time?${queryString}` : '/analytics/active-users-over-time';
-    
+
     return await apiService.get<ActiveUsersOverTimeMetric>(url);
   } catch (error) {
     return handleAnalyticsError('fetchActiveUsersOverTime', error, []);
@@ -288,18 +282,6 @@ export const getSystemStats = async () => {
   }
 };
 
-export const getUserStats = async () => {
-  try {
-    return await apiService.get('/analytics/user-stats');
-  } catch (error) {
-    return handleAnalyticsError('getUserStats', error, {
-      activeUsers: 0,
-      newUsers: 0,
-      topUsers: []
-    });
-  }
-};
-
 export const getContentStats = async () => {
   try {
     return await apiService.get('/analytics/content-stats');
@@ -323,4 +305,4 @@ export const getTopInteractedContent = fetchTopInteractedContent;
 export const getLeastViewedPlaylists = fetchLeastViewedPlaylists;
 export const getLeastViewedMundos = fetchLeastViewedMundos;
 export const getLeastInteractedPlaylists = fetchLeastInteractedPlaylists;
-export const getLeastInteractedMundos = fetchLeastInteractedMundos; 
+export const getLeastInteractedMundos = fetchLeastInteractedMundos;
