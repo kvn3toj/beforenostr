@@ -30,7 +30,7 @@
     "migration:deploy": "npx prisma migrate deploy",
     "postinstall": "prisma generate",
     "prestart:dev": "cp .env.local .env",
-    "prestart:prod": "cp .env.production .env"
+    "prestart:prod": "[ -f .env.production ] && cp .env.production .env || echo 'Using environment variables from platform (Render/Production)'"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
