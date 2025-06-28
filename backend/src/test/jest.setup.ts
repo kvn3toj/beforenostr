@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import type {} from 'jest';
 
 // Global test setup
 beforeAll(() => {
