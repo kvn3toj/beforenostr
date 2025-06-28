@@ -23,12 +23,17 @@ async function bootstrap() {
     'https://admin-frontend-git-main-kvn3tojs-projects-9cd69e29.vercel.app',   // Admin Vercel main
     'http://localhost:3001',          // Para desarrollo local
     'http://localhost:3000',          // Admin local
+    'https://superapp-unified-git-main-kvn3tojs-projects-642e52c0.vercel.app',
   ];
 
   app.enableCors({
     origin: (origin, callback) => {
       // Permite peticiones sin origin (ej: Postman) o desde la lista blanca
-      if (!origin || whiteList.indexOf(origin) !== -1) {
+      if (
+        !origin ||
+        whiteList.includes(origin) ||
+        origin?.endsWith('.vercel.app')
+      ) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
