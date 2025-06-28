@@ -3,54 +3,51 @@ import {
   OnModuleInit,
   OnModuleDestroy,
   Logger,
+  Inject,
 } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { createClient, RedisClientType } from 'redis';
 import { MetricsService } from '../common/metrics/metrics.service';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class CacheService implements OnModuleInit, OnModuleDestroy {
-  private client: RedisClientType;
+  private client: RedisClientType | null = null;
+  private useRedis = true;
   private readonly defaultTTL = 7 * 24 * 60 * 60; // 7 días en segundos
   private cacheStats = { hits: 0, misses: 0 };
   private readonly logger = new Logger(CacheService.name);
 
-  constructor(private readonly metricsService: MetricsService) {
+  constructor(
+    private readonly metricsService: MetricsService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
+  ) {
     this.logger.log('Initializing Redis client...', 'CacheService');
 
-    this.client = createClient({
-      socket: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379', 10),
-      },
-      password: process.env.REDIS_PASSWORD || undefined,
-    });
+    this.client = createClient({ url: process.env.REDIS_URL });
 
-    // Configurar event listeners para Redis
     this.client.on('error', (err) => {
-      this.logger.error('Redis Client Error', err.stack, 'CacheService', {
-        error: err.message,
-        host: process.env.REDIS_HOST || 'localhost',
-        port: process.env.REDIS_PORT || '6379',
-      });
+      console.error('Redis Client Error:', err);
+      this.useRedis = false;
     });
 
-    this.client.on('connect', () => {
-      this.logger.log('Redis Client Connected', 'CacheService');
-    });
+    this.connect();
+  }
 
-    this.client.on('ready', () => {
-      this.logger.log('Redis Client Ready', 'CacheService');
-    });
-
-    this.client.on('end', () => {
-      this.logger.log('Redis Client Connection Ended', 'CacheService');
-    });
+  async connect() {
+    try {
+      await this.client?.connect();
+      this.logger.log('Connected to Redis', 'CacheService');
+    } catch (err) {
+      console.error('Redis Connection Failed:', err);
+      this.useRedis = false;
+    }
   }
 
   async onModuleInit() {
     try {
       this.logger.log('Connecting to Redis...', 'CacheService');
-      await this.client.connect();
+      await this.client?.connect();
       this.logger.log('Redis connection established', 'CacheService');
     } catch (error) {
       this.logger.error('Failed to connect to Redis', error, 'CacheService');
@@ -61,7 +58,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy() {
     try {
       this.logger.log('Disconnecting from Redis...', 'CacheService');
-      await this.client.disconnect();
+      await this.client?.disconnect();
       this.logger.log('Redis disconnected', 'CacheService');
     } catch (error) {
       this.logger.error(
@@ -79,7 +76,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
    */
   async getDuration(videoId: string): Promise<number | null> {
     try {
-      if (!this.client.isReady) {
+      if (!this.client || !this.client.isReady) {
         this.logger.log(
           'Redis client not ready, skipping cache',
           'CacheService'
@@ -138,7 +135,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
     ttl?: number
   ): Promise<void> {
     try {
-      if (!this.client.isReady) {
+      if (!this.client || !this.client.isReady) {
         this.logger.log(
           'Redis client not ready, skipping cache',
           'CacheService'
@@ -173,7 +170,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
    */
   async deleteDuration(videoId: string): Promise<void> {
     try {
-      if (!this.client.isReady) {
+      if (!this.client || !this.client.isReady) {
         this.logger.log(
           'Redis client not ready, skipping cache',
           'CacheService'
@@ -197,7 +194,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
    */
   async isHealthy(): Promise<boolean> {
     try {
-      if (!this.client.isReady) {
+      if (!this.client || !this.client.isReady) {
         return false;
       }
 
@@ -214,7 +211,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
    */
   async getCacheStats(): Promise<{ totalKeys: number; memoryUsage: string }> {
     try {
-      if (!this.client.isReady) {
+      if (!this.client || !this.client.isReady) {
         return { totalKeys: 0, memoryUsage: 'N/A - Redis not connected' };
       }
 
@@ -262,7 +259,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       const value = JSON.stringify(metadata);
       const cacheTTL = ttl || this.defaultTTL;
 
-      await this.client.setEx(key, cacheTTL, value);
+      await this.client?.setEx(key, cacheTTL, value);
 
       this.logger.log(`Metadata cached for video ${videoId}`, 'CacheService', {
         key,
@@ -287,7 +284,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   async getMetadata(videoId: string): Promise<any | null> {
     try {
       const key = this.generateMetadataCacheKey(videoId);
-      const value = await this.client.get(key);
+      const value = await this.client?.get(key);
 
       if (value && typeof value === 'string') {
         this.cacheStats.hits++;
@@ -331,7 +328,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   async deleteMetadata(videoId: string): Promise<void> {
     try {
       const key = this.generateMetadataCacheKey(videoId);
-      await this.client.del(key);
+      await this.client?.del(key);
 
       this.logger.log(
         `Metadata cache deleted for video ${videoId}`,
@@ -356,7 +353,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   async hasMetadata(videoId: string): Promise<boolean> {
     try {
       const key = this.generateMetadataCacheKey(videoId);
-      const exists = await this.client.exists(key);
+      const exists = await this.client?.exists(key);
       return exists === 1;
     } catch (error) {
       this.logger.error(
@@ -386,14 +383,14 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       const basicStats = await this.getCacheStats();
 
       // Contar claves de metadatos
-      const metadataKeys = await this.client.keys('gamifier:video:metadata:*');
-      const durationKeys = await this.client.keys('gamifier:video:duration:*');
+      const metadataKeys = await this.client?.keys('gamifier:video:metadata:*');
+      const durationKeys = await this.client?.keys('gamifier:video:duration:*');
 
       return {
         ...basicStats,
-        metadataKeys: metadataKeys.length,
-        durationKeys: durationKeys.length,
-        totalVideoKeys: metadataKeys.length + durationKeys.length,
+        metadataKeys: metadataKeys?.length || 0,
+        durationKeys: durationKeys?.length || 0,
+        totalVideoKeys: (metadataKeys?.length || 0) + (durationKeys?.length || 0),
       };
     } catch (error) {
       this.logger.error(
@@ -402,6 +399,25 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
         'CacheService'
       );
       return this.getCacheStats();
+    }
+  }
+
+  async get(key: string) {
+    if (this.useRedis && this.client) {
+      return await this.client.get(key);
+    }
+    return await this.cacheManager.get(key);
+  }
+
+  async set(key: string, value: string, ttl?: number) {
+    if (this.useRedis && this.client && this.client.isReady) {
+      if (ttl) {
+        await this.client.setEx(key, ttl, value);
+      } else {
+        await this.client.set(key, value);
+      }
+    } else {
+      await this.cacheManager.set(key, value, ttl ? { ttl: ttl * 1000 } : undefined);
     }
   }
 }

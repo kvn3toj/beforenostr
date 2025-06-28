@@ -20,6 +20,8 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
 import { ChallengesModule } from './challenges/challenges.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { CacheService } from './cache/cache.service';
 
 @Module({
   imports: [
@@ -42,9 +44,11 @@ import { FeedbackModule } from './feedback/feedback.module';
     ChallengesModule, // 🏆 Challenges Module - gamified challenges and tasks
     FeedbackModule, // 🤖 Feedback Agent Module - sistema de recolección de reportes
     ConsoleModule, // 🎮 Módulo de la Consola de Experiencias
+    CacheModule.register({ isGlobal: true }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CacheService],
+  exports: [CacheService],
 })
 export class AppModule {
   constructor() {
