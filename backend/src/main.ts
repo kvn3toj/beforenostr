@@ -19,7 +19,10 @@ async function bootstrap() {
   // Lista blanca de dominios permitidos
   const whiteList = [
     'https://superapp-unified-iota.vercel.app',
+    'https://superapp-unified-git-main-kvn3tojs-projects-9cd69e29.vercel.app', // SuperApp Vercel main
+    'https://admin-frontend-git-main-kvn3tojs-projects-9cd69e29.vercel.app',   // Admin Vercel main
     'http://localhost:3001',          // Para desarrollo local
+    'http://localhost:3000',          // Admin local
   ];
 
   app.enableCors({
