@@ -27,21 +27,20 @@ async function bootstrap() {
   ];
 
   app.enableCors({
-    origin: (origin, callback) => {
-      // Permite peticiones sin origin (ej: Postman) o desde la lista blanca
-      if (
-        !origin ||
-        whiteList.includes(origin) ||
-        origin?.endsWith('.vercel.app')
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: 'GET,POST,PUT,DELETE,OPTIONS',
-    credentials: true,
-    allowedHeaders: 'Content-Type, Authorization',
+    origin: [
+      'https://myfrontend.com',           // Producción
+      'https://myfrontend.vercel.app',    // (Opcional) Vercel preview
+      'http://localhost:3001',            // (Opcional) Local dev
+    ],
+    credentials: true, // Si usas cookies/JWT
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With', // <-- CRÍTICO
+      'Content-Type',
+      'Accept',
+      'Authorization',
+    ],
   });
 
   // Global validation pipe
