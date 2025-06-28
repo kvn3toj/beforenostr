@@ -6,54 +6,39 @@
 # ================================================================
 # Etapa 1: Builder - Construir la aplicación
 # ================================================================
-FROM node:20-slim AS builder
+FROM node:lts-alpine AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copiar archivos de dependencias
-COPY package*.json ./
+# Instala dependencias
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Instalar TODAS las dependencias (incluyendo devDependencies para el build)
-RUN npm install --legacy-peer-deps
+# Copia el resto del código fuente
+COPY . .
 
-# Copiar todo el código fuente del backend
-COPY . ./
+# Genera Prisma Client para Linux dentro del contenedor
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
-# Generar Prisma Client (importante para engines correctos)
-RUN npx prisma generate
-
-# Compilar la aplicación TypeScript a JavaScript
+# Compila la app (NestJS)
 RUN npm run build
 
-# Copiar Prisma Client generado a la carpeta de salida de build
-RUN cp -r src/generated dist/generated
+# Etapa 2: Producción
+FROM node:lts-alpine AS production
 
-# ================================================================
-# Etapa 2: Production - Crear la imagen final y ligera
-# ================================================================
-FROM node:20-slim AS production
+WORKDIR /app
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+# Copia solo lo necesario desde la etapa de build
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/generated ./generated
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-WORKDIR /usr/src/app
+ENV NODE_ENV=production
 
-# Copiar archivos de dependencias
-COPY package*.json ./
-COPY prisma ./prisma
-
-# Instalar SOLO las dependencias de producción
-RUN npm install --only=production --legacy-peer-deps && npm cache clean --force
-
-# Copiar aplicación compilada y Prisma Client desde builder
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /usr/src/app/dist/generated ./dist/generated
-
-# Exponer el puerto
-EXPOSE 3002
-
-# Iniciar la aplicación después de ejecutar las migraciones
-CMD ["npm", "run", "start:prod:migrate"]
+# Railway inyecta DATABASE_URL y otras variables automáticamente
+CMD ["node", "dist/main.js"]
 
 # Trigger re-deploy v3

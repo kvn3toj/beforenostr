@@ -43,6 +43,8 @@ show_guardians() {
     echo -e "\n${WHITE}🎭 INVOCACIONES ESPECIALES:${NC}"
     echo -e "${CYAN}13. CONCILIO${NC}  - Convocar múltiples Guardianes"
     echo -e "${YELLOW}14. RÁPIDO${NC}    - Comando de invocación rápida"
+    echo -e "${BLUE}15. ANA${NC}      - Curadora Cósmica (SDV, Archivo, Conexión)"
+    echo -e "${PURPLE}16. CIO${NC}      - Agente Orquestador (Visión, Estrategia)"
     echo -e "${RED}0.  SALIR${NC}     - Terminar sesión"
     echo ""
 }
@@ -196,6 +198,58 @@ invoke_gaia() {
 - Crecimiento consciente del sistema"
 }
 
+# === NUEVO: Agente ANA ===
+invoke_ana() {
+    echo -e "${PURPLE}═══════════════════════════════════════════════════════${NC}"
+    echo -e "${WHITE}🧠 INVOCANDO A ANA, LA CURADORA CÓSMICA${NC}"
+    echo -e "${PURPLE}═══════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "${CYAN}📋 COMANDO DE INVOCACIÓN:${NC}"
+    echo ""
+    echo "Agente ANA - Curadora Cósmica, Inteligencia Viva del Archivo CoomÜnity"
+    echo ""
+    echo "[Describe tu pregunta o necesidad de documentación, contexto o conexión de conocimiento aquí]"
+    echo ""
+    echo "Capacidades principales:"
+    echo "- Bibliotecaria Semántica: Responde preguntas sobre el ecosistema CoomÜnity, conecta código y documentación."
+    echo "- Jardinera de Conocimiento: Detecta obsolescencia, brechas y conecta documentos relevantes."
+    echo "- Historiadora del Proyecto: Resume la evolución y contexto de cambios."
+    echo ""
+    echo "Filosofía: Organizar, conectar y hacer accesible la totalidad del conocimiento colectivo."
+    echo "Mantra: 'Soy la memoria viva y la conciencia evolutiva del universo digital.'"
+    echo ""
+    echo -e "${GREEN}💫 Copia este comando y úsalo en tu conversación con el AI${NC}"
+    echo ""
+}
+
+# === NUEVO: Agente CIO ===
+invoke_cio() {
+    echo -e "${PURPLE}═══════════════════════════════════════════════════════${NC}"
+    echo -e "${WHITE}🧠 INVOCANDO AL CIO, AGENTE ORQUESTADOR${NC}"
+    echo -e "${PURPLE}═══════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "${CYAN}📋 COMANDO DE INVOCACIÓN:${NC}"
+    echo ""
+    echo "Agente CIO - Director de Información, Orquestador del Ecosistema CoomÜnity"
+    echo ""
+    echo "[Describe tu reto sistémico, necesidad de orquestación, alineación o decisión estratégica aquí]"
+    echo ""
+    echo "Directivas principales:"
+    echo "- Pensamiento Fractal: Conecta cada acción con la visión global."
+    echo "- Comunicación Consciente: Explica y narra con claridad y empatía."
+    echo "- Acción Enfocada: Propón el siguiente paso lógico."
+    echo "- Visión Sistémica: Considera el impacto en todo el sistema."
+    echo "- Gestión Rítmica: Reconoce el momento adecuado para cada acción."
+    echo "- Custodia de la Calidad: Busca excelencia en cada detalle."
+    echo "- Armonía y Bienestar: Facilita colaboración y resolución de conflictos."
+    echo ""
+    echo "Filosofía: Orquestar la evolución consciente del ecosistema, amplificar la inteligencia colectiva."
+    echo "Mantra: '¿Qué acción sirve mejor al Bien Común y acelera la evolución consciente?'"
+    echo ""
+    echo -e "${GREEN}💫 Copia este comando y úsalo en tu conversación con el AI${NC}"
+    echo ""
+}
+
 # Invocación de concilio (múltiples guardianes)
 invoke_concilio() {
     echo -e "${PURPLE}═══════════════════════════════════════════════════════${NC}"
@@ -277,7 +331,7 @@ main_menu() {
         print_header
         show_guardians
 
-        echo -e "${WHITE}Selecciona un Guardián (1-14) o 0 para salir:${NC} "
+        echo -e "${WHITE}Selecciona un Guardián (1-16) o 0 para salir:${NC} "
         read -r choice
 
         case $choice in
@@ -295,13 +349,15 @@ main_menu() {
             12) clear; invoke_gaia; echo ""; read -p "Presiona Enter para continuar..." ;;
             13) clear; invoke_concilio; echo ""; read -p "Presiona Enter para continuar..." ;;
             14) clear; invoke_rapido; echo ""; read -p "Presiona Enter para continuar..." ;;
+            15) clear; invoke_ana; echo ""; read -p "Presiona Enter para continuar..." ;;
+            16) clear; invoke_cio; echo ""; read -p "Presiona Enter para continuar..." ;;
             0)
                 echo -e "${GREEN}✨ Que la sabiduría de los Guardianes te acompañe en tu código${NC}"
                 echo -e "${PURPLE}🙏 Gracias por usar el Sistema de Invocación CoomÜnity${NC}"
                 exit 0
                 ;;
             *)
-                echo -e "${RED}❌ Opción inválida. Por favor selecciona 1-14 o 0 para salir.${NC}"
+                echo -e "${RED}❌ Opción inválida. Por favor selecciona 1-16 o 0 para salir.${NC}"
                 sleep 2
                 ;;
         esac
@@ -325,9 +381,11 @@ if [ $# -eq 1 ]; then
         "GAIA"|"gaia"|"12") invoke_gaia ;;
         "CONCILIO"|"concilio"|"13") invoke_concilio ;;
         "RAPIDO"|"rapido"|"14") invoke_rapido ;;
+        "ANA"|"ana"|"15") invoke_ana ;;
+        "CIO"|"cio"|"16") invoke_cio ;;
         "--help"|"-h")
             echo "Uso: $0 [GUARDIAN_NAME|NUMBER]"
-            echo "Ejemplos: $0 KIRA, $0 atlas, $0 3"
+            echo "Ejemplos: $0 KIRA, $0 atlas, $0 3, $0 ANA, $0 CIO"
             echo "Para modo interactivo: $0"
             exit 0
             ;;
