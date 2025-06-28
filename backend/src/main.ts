@@ -17,30 +17,26 @@ async function bootstrap() {
   //   console.log('>>> Bootstrap: NestFactory created successfully');
 
   // Lista blanca de dominios permitidos
-  const whiteList = [
-    'https://superapp-unified-iota.vercel.app',
-    'https://superapp-unified-git-main-kvn3tojs-projects-9cd69e29.vercel.app', // SuperApp Vercel main
-    'https://admin-frontend-git-main-kvn3tojs-projects-9cd69e29.vercel.app',   // Admin Vercel main
-    'http://localhost:3001',          // Para desarrollo local
-    'http://localhost:3000',          // Admin local
-    'https://superapp-unified-git-main-kvn3tojs-projects-642e52c0.vercel.app',
-  ];
-
   app.enableCors({
-    origin: [
-      'https://myfrontend.com',           // Producción
-      'https://myfrontend.vercel.app',    // (Opcional) Vercel preview
-      'http://localhost:3001',            // (Opcional) Local dev
-    ],
-    credentials: true, // Si usas cookies/JWT
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Origin',
-      'X-Requested-With', // <-- CRÍTICO
-      'Content-Type',
-      'Accept',
-      'Authorization',
-    ],
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        /http:\/\/localhost:\d+$/,
+        'https://godsplan.onrender.com',
+        'https://tu-dominio-frontend.com',
+        'https://superapp-unified-iota.vercel.app',
+        'https://superapp-unified-git-main-kvn3tojs-projects-9cd69e29.vercel.app',
+        'https://admin-frontend-git-main-kvn3tojs-projects-9cd69e29.vercel.app',
+        'https://superapp-unified-git-main-kvn3tojs-projects-642e52c0.vercel.app',
+      ];
+      if (!origin || allowedOrigins.some((regex) => (typeof regex === 'string' ? regex === origin : regex.test(origin)))) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization, X-Requested-With',
+    credentials: true,
   });
 
   // Global validation pipe
