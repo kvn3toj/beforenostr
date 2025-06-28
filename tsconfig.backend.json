@@ -1,0 +1,29 @@
+{
+  "extends": "./config/json/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/backend",
+    "baseUrl": "./backend/src",
+    "paths": {
+      "@/*": ["*"]
+    },
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2021",
+    "sourceMap": true,
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "include": [
+    "backend/src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/*.spec.ts"
+  ]
+}
