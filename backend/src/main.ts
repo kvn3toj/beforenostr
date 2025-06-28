@@ -16,45 +16,24 @@ async function bootstrap() {
 
   //   console.log('>>> Bootstrap: NestFactory created successfully');
 
-  // Enable CORS for frontend communication
+  // Lista blanca de dominios permitidos
+  const whiteList = [
+    'https://superapp-unified-iota.vercel.app',
+    'http://localhost:3001',          // Para desarrollo local
+  ];
+
   app.enableCors({
-    origin: [
-      // Localhost origins
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://localhost:3002',
-      'http://localhost:3003',
-      'http://localhost:5173',
-
-      // 🌐 NETWORK ACCESS - Red local completa
-      'http://192.168.1.37:3001',
-      'http://192.168.1.37:3000',
-      'http://192.168.1.37:5173',
-
-      // Production & Staging origins
-      'https://coomunity-backend.onrender.com',
-      /^https:\/\/.*--kvn3toj\.netlify\.app$/,
-      /^https:\/\/superapp-.*\.vercel\.app$/,
-      'https://beforenostr.vercel.app',
-
-      // Regex patterns para todas las redes locales privadas
-      /^http:\/\/192\.168\.\d+\.\d+:\d+$/, // 192.168.x.x:any_port
-      /^http:\/\/10\.\d+\.\d+\.\d+:\d+$/, // 10.x.x.x:any_port
-      /^http:\/\/172\.(1[6-9]|2\d|3[01])\.\d+\.\d+:\d+$/, // 172.16-31.x.x:any_port
-
-      // Para desarrollo con Vite en red
-      /^http:\/\/\d+\.\d+\.\d+\.\d+:\d+$/, // Cualquier IP:puerto para desarrollo
-    ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    origin: (origin, callback) => {
+      // Permite peticiones sin origin (ej: Postman) o desde la lista blanca
+      if (!origin || whiteList.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Accept',
-      'Origin',
-      'X-Requested-With',
-    ],
-    exposedHeaders: ['Authorization'],
+    allowedHeaders: 'Content-Type, Authorization',
   });
 
   // Global validation pipe
