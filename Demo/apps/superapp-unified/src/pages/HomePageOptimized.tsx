@@ -39,7 +39,7 @@ import { useIntuitiveBehavior } from '../hooks/home/useIntuitiveBehavior';
 
 // 🚀 WIDGETS OPTIMIZADOS
 import { WelcomeWidget } from '../components/home/widgets/WelcomeWidget';
-import { AyniBalanceWidget } from '../components/home/widgets/AyniBalanceWidget';
+import { ReciprocidadBalanceWidget } from '../components/home/widgets/ReciprocidadBalanceWidget';
 import { WalletWidget } from '../components/home/widgets/WalletWidget';
 import { QuickActionsWidget } from '../components/home/widgets/QuickActionsWidget';
 import { NotificationsWidget } from '../components/home/widgets/NotificationsWidget';
@@ -50,13 +50,13 @@ import UniversalCosmicBackground from '../components/home/UniversalCosmicBackgro
 
 // 🎨 CSS CONSOLIDADO (SOLO LOS ESENCIALES)
 import '../styles/home-revolutionary-system.css';
-import '../styles/cosmic-ayni-effects.css';
+import '../styles/cosmic-reciprocidad-effects.css';
 import '../styles/performance-optimizations.css';
 
 // 🏷️ TIPOS OPTIMIZADOS
 interface Notification {
   id: string;
-  type: 'ayni' | 'achievement' | 'social' | 'marketplace' | 'system' | 'education';
+  type: 'reciprocidad' | 'achievement' | 'social' | 'marketplace' | 'system' | 'education';
   title: string;
   message: string;
   timestamp: Date;
@@ -538,7 +538,7 @@ export function HomePageOptimized() {
                 </Fade>
               </Grid>
 
-              {/* === BALANCE AYNI - PROTAGONISTA === */}
+              {/* === BALANCE RECIPROCIDAD - PROTAGONISTA === */}
               <Grid item xs={12}>
                 <Fade in timeout={800}>
                   <Box
@@ -551,7 +551,7 @@ export function HomePageOptimized() {
                       justifyContent: 'center',
                     }}
                   >
-                    <AyniBalanceWidget />
+                    <ReciprocidadBalanceWidget />
                   </Box>
                 </Fade>
               </Grid>
@@ -619,7 +619,7 @@ export function HomePageOptimized() {
                       }}
                     >
                       <AutoAwesomeIcon sx={{ color: getSemanticColor('warning', 'main'), mr: 1 }} />
-                      "El equilibrio Ayni transforma cada interacción en un paso hacia el bien común"
+                      "El equilibrio de Reciprocidad transforma cada interacción en un paso hacia el bien común"
                       <AutoAwesomeIcon sx={{ color: getSemanticColor('warning', 'main'), ml: 1 }} />
                     </Typography>
                   </Box>

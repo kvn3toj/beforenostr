@@ -124,7 +124,7 @@ test.describe('🧠 Personality Module Verification - Fase A.10', () => {
       const quizElements = [
         'text=Quiz Filosófico',
         'text=Psychology',
-        'text=Ayni',
+        'text=Reciprocidad',
         'text=Bien Común',
         'text=reciprocidad consciente'
       ];
@@ -238,7 +238,7 @@ test.describe('🧠 Personality Module Verification - Fase A.10', () => {
       const betaContent = await page.content();
       if (betaContent.includes('Quiz Filosófico') || 
           betaContent.includes('Psychology') || 
-          betaContent.includes('Ayni')) {
+          betaContent.includes('Reciprocidad')) {
         report.foundInOnboarding = true;
         report.relatedFeatures.push('Quiz Filosófico en registro beta');
       }

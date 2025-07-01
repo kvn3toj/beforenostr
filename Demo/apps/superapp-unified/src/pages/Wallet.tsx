@@ -16,11 +16,11 @@ import {
   Button,
   Chip,
 } from '@mui/material';
-import { 
-  Refresh, 
-  Add, 
-  Send, 
-  Settings, 
+import {
+  Refresh,
+  Add,
+  Send,
+  Settings,
   Analytics,
   CreditCard,
 } from '@mui/icons-material';
@@ -38,6 +38,8 @@ import { WalletOverview } from '../components/modules/wallet/WalletOverview';
 import { WalletActions } from '../components/modules/wallet/WalletActions';
 import { TransactionHistory } from '../components/modules/wallet/TransactionHistory';
 import { motion, AnimatePresence } from 'framer-motion';
+import { UNIFIED_COLORS } from '../theme/colors';
+import { alpha } from '@mui/material/styles';
 
 // 🎯 Interfaces para TabPanel
 interface TabPanelProps {
@@ -142,10 +144,22 @@ const Wallet: React.FC = () => {
   const isRealTime = backendAvailability.isAvailable;
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <Container maxWidth="lg" sx={{
+      py: 3,
+      backgroundColor: UNIFIED_COLORS.brand.white,
+      minHeight: '100vh'
+    }}>
       {/* 🔗 Estado de conexión del backend */}
       {!isRealTime && (
-        <Alert severity="warning" sx={{ mb: 3 }}>
+        <Alert
+          severity="warning"
+          sx={{
+            mb: 3,
+            backgroundColor: alpha(UNIFIED_COLORS.semantic.warning, 0.1),
+            borderColor: UNIFIED_COLORS.semantic.warning,
+            color: UNIFIED_COLORS.themes.minimalist.text.primary
+          }}
+        >
           <Stack
             direction="row"
             alignItems="center"
@@ -153,7 +167,7 @@ const Wallet: React.FC = () => {
             sx={{ width: '100%' }}
           >
             <Typography variant="body2">
-              🔌 Modo Offline - Mostrando datos simulados del wallet
+              🔌 Modo Offline - Mostrando datos simulados del ecosistema de abundancia
             </Typography>
             <Button
               size="small"
@@ -161,7 +175,7 @@ const Wallet: React.FC = () => {
               onClick={handleRefresh}
               color="inherit"
             >
-              Reintentar conexión
+              Reconectar con el cosmos
             </Button>
           </Stack>
         </Alert>
@@ -169,12 +183,23 @@ const Wallet: React.FC = () => {
 
       {/* 🔄 Indicador de carga global */}
       {isLoading && (
-        <Card sx={{ mb: 3 }}>
+        <Card sx={{
+          mb: 3,
+          backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+          borderColor: UNIFIED_COLORS.themes.minimalist.divider
+        }}>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
-              🔄 Sincronizando datos del wallet...
+            <Typography variant="h6" gutterBottom sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.primary
+            }}>
+              🔄 Sincronizando energías del wallet...
             </Typography>
-            <LinearProgress />
+            <LinearProgress sx={{
+              backgroundColor: UNIFIED_COLORS.themes.minimalist.divider,
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: UNIFIED_COLORS.modules.wallet
+              }
+            }} />
           </CardContent>
         </Card>
       )}
@@ -191,7 +216,7 @@ const Wallet: React.FC = () => {
               ondas: 0,
               pendingBalance: 0,
               monthlyChange: 0,
-              ayniLevel: 25,
+              reciprocidadLevel: 25,
               collaborationScore: 5.0,
               communityRank: '#1,247',
             }
@@ -217,25 +242,43 @@ const Wallet: React.FC = () => {
       </Box>
 
       {/* 📋 Contenido con pestañas */}
-      <Card>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={handleTabChange}>
-            <Tab label="📊 Resumen" />
-            <Tab label="📝 Transacciones" />
-            <Tab label="💳 Métodos de Pago" />
-            <Tab label="⚙️ Configuración" />
+      <Card sx={{
+        backgroundColor: UNIFIED_COLORS.brand.white,
+        borderColor: UNIFIED_COLORS.themes.minimalist.divider
+      }}>
+        <Box sx={{ borderBottom: 1, borderColor: UNIFIED_COLORS.themes.minimalist.divider }}>
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            sx={{
+              '& .MuiTabs-indicator': {
+                backgroundColor: UNIFIED_COLORS.modules.wallet,
+              },
+              '& .Mui-selected': {
+                color: UNIFIED_COLORS.modules.wallet
+              }
+            }}
+          >
+            <Tab label="📊 Visión Integral" />
+            <Tab label="📝 Flujos de Abundancia" />
+            <Tab label="💳 Canales de Intercambio" />
+            <Tab label="⚙️ Configuración Sagrada" />
           </Tabs>
         </Box>
 
         <AnimatePresence mode="wait">
           {/* Panel de Resumen */}
           <TabPanel value={tabValue} index={0}>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-              📊 Resumen de Cuentas CoomÜnity
+            <Typography variant="h6" fontWeight="bold" gutterBottom sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.primary
+            }}>
+              📊 Ecosistema de Abundancia CoomÜnity
             </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Gestiona tus diferentes cuentas y balances en el ecosistema
-              CoomÜnity.
+            <Typography variant="body2" color="text.secondary" paragraph sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.secondary
+            }}>
+              Gestiona tus diferentes flujos energéticos y balances en el ecosistema
+              de reciprocidad consciente.
             </Typography>
 
             <Grid container spacing={3}>
@@ -251,9 +294,10 @@ const Wallet: React.FC = () => {
                       sx={{
                         border: account.primary ? 2 : 1,
                         borderColor: account.primary
-                          ? 'primary.main'
-                          : 'divider',
+                          ? UNIFIED_COLORS.modules.wallet
+                          : UNIFIED_COLORS.themes.minimalist.divider,
                         transition: 'all 0.2s ease',
+                        backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
                         '&:hover': {
                           transform: 'translateY(-2px)',
                           boxShadow: 3,
@@ -265,13 +309,14 @@ const Wallet: React.FC = () => {
                           variant="subtitle1"
                           fontWeight="bold"
                           gutterBottom
+                          sx={{ color: UNIFIED_COLORS.themes.minimalist.text.primary }}
                         >
                           {account.name}
                         </Typography>
                         <Typography
                           variant="h6"
                           fontWeight="bold"
-                          color="primary.main"
+                          sx={{ color: UNIFIED_COLORS.modules.wallet }}
                         >
                           {account.currency === 'UC'
                             ? `${account.balance} ÜCoins`
@@ -281,19 +326,24 @@ const Wallet: React.FC = () => {
                                 minimumFractionDigits: 0,
                               }).format(account.balance)}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                          color: UNIFIED_COLORS.themes.minimalist.text.secondary
+                        }}>
                           {account.type === 'checking'
-                            ? 'Cuenta corriente'
+                            ? 'Flujo de intercambio'
                             : account.type === 'savings'
-                              ? 'Cuenta de ahorros'
-                              : 'Moneda digital'}
+                              ? 'Reserva de abundancia'
+                              : 'Moneda del corazón'}
                         </Typography>
                         {account.primary && (
                           <Chip
                             label="Principal"
                             size="small"
-                            color="primary"
-                            sx={{ mt: 1 }}
+                            sx={{
+                              mt: 1,
+                              backgroundColor: UNIFIED_COLORS.modules.wallet,
+                              color: UNIFIED_COLORS.brand.white
+                            }}
                           />
                         )}
                       </CardContent>
@@ -316,107 +366,132 @@ const Wallet: React.FC = () => {
 
           {/* Panel de Métodos de Pago */}
           <TabPanel value={tabValue} index={2}>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-              💳 Métodos de Pago
+            <Typography variant="h6" fontWeight="bold" gutterBottom sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.primary
+            }}>
+              💳 Canales de Intercambio Consciente
             </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Gestiona tus métodos de pago y tarjetas vinculadas a tu wallet
-              CoomÜnity.
+            <Typography variant="body2" paragraph sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.secondary
+            }}>
+              Gestiona tus canales de intercambio y conexiones financieras alineadas
+              con la filosofía de abundancia compartida.
             </Typography>
 
             <Grid container spacing={2}>
               {paymentMethodsQuery.data?.map((method, index) => (
-                <Grid item xs={12} sm={6} key={method.id}>
+                <Grid item xs={12} sm={6} md={4} key={method.id}>
                   <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <Card variant="outlined">
-                      <CardContent>
-                        <Box
-                          sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
-                        >
-                          <CreditCard sx={{ mr: 2, color: 'primary.main' }} />
-                          <Box>
-                            <Typography variant="subtitle1" fontWeight="bold">
-                              {method.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              •••• •••• •••• {method.lastFour}
-                            </Typography>
-                          </Box>
+                    <Card
+                      variant="outlined"
+                      sx={{
+                        p: 2,
+                        backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+                        borderColor: UNIFIED_COLORS.themes.minimalist.divider,
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          transform: 'translateY(-2px)',
+                          boxShadow: 2,
+                        },
+                      }}
+                    >
+                      <Stack direction="row" alignItems="center" spacing={2}>
+                        <CreditCard sx={{
+                          color: UNIFIED_COLORS.modules.wallet,
+                          fontSize: 32
+                        }} />
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight="bold"
+                            sx={{ color: UNIFIED_COLORS.themes.minimalist.text.primary }}
+                          >
+                            {method.name}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: UNIFIED_COLORS.themes.minimalist.text.secondary }}
+                          >
+                            ****{method.lastFour}
+                          </Typography>
                         </Box>
-                        {method.primary && (
-                          <Chip
-                            label="Principal"
-                            size="small"
-                            color="primary"
-                          />
-                        )}
-                      </CardContent>
+                      </Stack>
                     </Card>
                   </motion.div>
                 </Grid>
               ))}
             </Grid>
-
-            <Button variant="outlined" startIcon={<Add />} sx={{ mt: 3 }}>
-              Agregar Método de Pago
-            </Button>
           </TabPanel>
 
           {/* Panel de Configuración */}
           <TabPanel value={tabValue} index={3}>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-              ⚙️ Configuración del Wallet CoomÜnity
+            <Typography variant="h6" fontWeight="bold" gutterBottom sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.primary
+            }}>
+              ⚙️ Configuración Sagrada del Wallet
             </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Personaliza la configuración y seguridad de tu wallet siguiendo
-              los principios Ayni.
+            <Typography variant="body2" paragraph sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.secondary
+            }}>
+              Personaliza la configuración y seguridad de tu ecosistema financiero
+              siguiendo los principios de Reciprocidad y Bien Común.
             </Typography>
 
             <Stack spacing={3}>
-              <Alert severity="info" icon={<Settings />}>
+              <Alert
+                severity="info"
+                icon={<Settings />}
+                sx={{
+                  backgroundColor: alpha(UNIFIED_COLORS.semantic.info, 0.1),
+                  borderColor: UNIFIED_COLORS.semantic.info
+                }}
+              >
                 <Typography variant="body2" fontWeight="bold">
-                  🔐 Seguridad del Wallet
+                  🔐 Protección Energética del Wallet
                 </Typography>
                 <Typography variant="body2">
-                  Tu wallet está protegido con encriptación de extremo a extremo
-                  y autenticación multifactor.
+                  Tu ecosistema está protegido con encriptación cósmica
+                  y autenticación multidimensional.
                 </Typography>
               </Alert>
 
-              <Alert severity="success" icon={<Analytics />}>
+              <Alert
+                severity="success"
+                icon={<Analytics />}
+                sx={{
+                  backgroundColor: alpha(UNIFIED_COLORS.semantic.success, 0.1),
+                  borderColor: UNIFIED_COLORS.semantic.success
+                }}
+              >
                 <Typography variant="body2" fontWeight="bold">
                   ✅ Sincronización en Tiempo Real
                 </Typography>
                 <Typography variant="body2">
                   Estado:{' '}
                   {isRealTime
-                    ? 'Activa - Conectado al backend CoomÜnity'
-                    : 'Modo offline - Datos locales simulados'}
+                    ? 'Activa - Conectado al ecosistema CoomÜnity'
+                    : 'Modo contemplativo - Datos locales temporales'}
                 </Typography>
               </Alert>
 
-              <Alert severity="warning">
+              <Alert
+                severity="warning"
+                sx={{
+                  backgroundColor: alpha(UNIFIED_COLORS.semantic.warning, 0.1),
+                  borderColor: UNIFIED_COLORS.semantic.warning
+                }}
+              >
                 <Typography variant="body2" fontWeight="bold">
-                  🌟 Filosofía Ayni
+                  🌟 Filosofía de Abundancia Consciente
                 </Typography>
                 <Typography variant="body2">
-                  Las transacciones en ÜCoins y Mëritos fortalecen el ecosistema
+                  Las transacciones en ÜCoins y Mëritos fortalecen el tejido
                   de reciprocidad. Cada intercambio contribuye al Bien Común de
-                  la comunidad CoomÜnity.
-                </Typography>
-              </Alert>
-
-              <Alert severity="info">
-                <Typography variant="body2" fontWeight="bold">
-                  🔗 Tecnología Blockchain
-                </Typography>
-                <Typography variant="body2">
-                  Las transacciones en ÜCoins utilizan tecnología blockchain
-                  para máxima seguridad y transparencia.
+                  la comunidad consciente.
                 </Typography>
               </Alert>
             </Stack>
@@ -424,11 +499,16 @@ const Wallet: React.FC = () => {
         </AnimatePresence>
       </Card>
 
-      {/* 💳 Modal para crear nueva transacción */}
+      {/* Modal para crear transacciones */}
       <CreateTransactionModal
         open={createTransactionModalOpen}
         onClose={() => setCreateTransactionModalOpen(false)}
         walletBalance={walletBalance}
+        onTransactionCreated={() => {
+          setCreateTransactionModalOpen(false);
+          refetchChallenges();
+          refetchUserChallenges();
+        }}
       />
 
       {/* 🚀 Botón flotante para acciones rápidas */}

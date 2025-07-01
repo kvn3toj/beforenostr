@@ -100,8 +100,8 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Crear tabla de transacciones Ayni
-CREATE TABLE ayni_transactions (
+-- Crear tabla de transacciones Reciprocidad
+CREATE TABLE reciprocidad_transactions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   from_user UUID REFERENCES users(id),
   to_user UUID REFERENCES users(id),
@@ -113,7 +113,7 @@ CREATE TABLE ayni_transactions (
 
 -- Habilitar RLS (Row Level Security)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE ayni_transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE reciprocidad_transactions ENABLE ROW LEVEL SECURITY;
 ```
 
 ### Authentication Setup
@@ -235,7 +235,7 @@ graph TD
    - Videos UPlay
 
 3. **Analytics Avanzados**
-   - Métricas de Ayni
+   - Métricas de Reciprocidad
    - Dashboard de Mëritos
    - Reportes de Bien Común
 

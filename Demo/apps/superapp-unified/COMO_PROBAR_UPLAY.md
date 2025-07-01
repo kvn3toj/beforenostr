@@ -109,7 +109,7 @@ npm run dev
 - [ ] Celebraciones por completar objetivos
 
 ### 🌟 **Filosofía CoomÜnity**
-- [ ] Terminología correcta (Mëritos, Öndas, Ayni)
+- [ ] Terminología correcta (Mëritos, Öndas, Reciprocidad)
 - [ ] Enfoque en Bien Común y colaboración
 - [ ] Salas de estudio colaborativas
 - [ ] Reciprocidad en el aprendizaje

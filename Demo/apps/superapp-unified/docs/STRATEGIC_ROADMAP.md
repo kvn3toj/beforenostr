@@ -84,7 +84,7 @@ Tras alcanzar un estado de **excelencia UX inmejorable** en el frontend de Coom�
 - [ ] Conectar Gamifier API desde backend/
 - [ ] Sincronizar datos de gamificación
 - [ ] Implementar real-time updates
-- [ ] Validar lógica de Ayni con datos reales
+- [ ] Validar lógica de Reciprocidad con datos reales
 - [ ] Performance testing con carga real
 
 **Entregables:**
@@ -139,7 +139,7 @@ Tras alcanzar un estado de **excelencia UX inmejorable** en el frontend de Coom�
 - [ ] Notificaciones push inteligentes
 
 #### **Módulo 3: Gamificación Avanzada**
-- [ ] Mecánicas de Ayni más complejas
+- [ ] Mecánicas de Reciprocidad más complejas
 - [ ] Objetivos colaborativos grupales
 - [ ] Sistema de logros y certificaciones
 - [ ] Leaderboards comunitarios
@@ -191,7 +191,7 @@ Tras alcanzar un estado de **excelencia UX inmejorable** en el frontend de Coom�
 
 ### **🎯 KPIs de Usuario**
 - **User Engagement:** > 80% retention rate (7 días)
-- **Ayni Score Average:** > 75% happiness level
+- **Reciprocidad Score Average:** > 75% happiness level
 - **Feature Adoption:** > 60% uso de nuevas funcionalidades
 - **Support Tickets:** < 2% de usuarios requieren soporte
 - **Net Promoter Score:** > 70 NPS
@@ -263,7 +263,7 @@ Security: Auth0/Supabase Auth + OWASP compliance
 
 ## 🌟 FILOSOFÍA COOMUNITY INTEGRADA
 
-### **🔄 Principios de Ayni en el Desarrollo**
+### **🔄 Principios de Reciprocidad en el Desarrollo**
 - **Reciprocidad:** Cada feature debe aportar valor bidireccional
 - **Bien Común:** Priorizar beneficio comunitario sobre individual
 - **Tecnología Consciente:** UX humanizada, no adictiva

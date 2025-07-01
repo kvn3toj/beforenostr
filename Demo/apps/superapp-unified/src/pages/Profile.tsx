@@ -104,6 +104,7 @@ import {
   MarketplaceReviewModal,
   ReviewData,
 } from '../components/modules/marketplace/components/MarketplaceReviewModal';
+import { alpha } from '@mui/material/styles';
 
 // 🔧 SOLUCIÓN: Función segura para formatear fechas
 const formatSafeDate = (
@@ -140,7 +141,7 @@ interface ProfileMetrics {
   level: number;
   meritos: number;
   ondas: number;
-  ayniLevel: number;
+  reciprocidadLevel: number;
   completedChallenges: number;
   socialConnections: number;
   marketplaceRating: number;
@@ -173,57 +174,7 @@ interface Achievement {
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
 }
 
-// 🎨 Utilidades para temas y colores CoomÜnity
-const coomunityColors = {
-  merito: '#FFD700', // Dorado para Mëritos
-  onda: '#00CED1', // Turquesa para Öndas
-  ayni: '#9C27B0', // Púrpura para Ayni
-  pilgrim: '#FF6B35', // Naranja para Pilgrim Journey
-  marketplace: '#4CAF50', // Verde para Marketplace
-  social: '#2196F3', // Azul para Social
-  uplay: '#FF5722', // Rojo para ÜPlay
-  wallet: '#FFC107', // Ámbar para Wallet
-};
-
-// 🏆 Función para obtener color según nivel de Ayni
-const getAyniColor = (level: number): string => {
-  if (level >= 90) return '#FFD700'; // Oro
-  if (level >= 70) return '#C0C0C0'; // Plata
-  if (level >= 50) return '#CD7F32'; // Bronce
-  return '#9E9E9E'; // Gris
-};
-
-// 📊 Función para calcular progreso de nivel
-const calculateLevelProgress = (level: number, points: number): number => {
-  const basePoints = level * 1000;
-  const nextLevelPoints = (level + 1) * 1000;
-  const currentProgress = points - basePoints;
-  const totalNeeded = nextLevelPoints - basePoints;
-  return Math.min(Math.max((currentProgress / totalNeeded) * 100, 0), 100);
-};
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`profile-tabpanel-${index}`}
-      aria-labelledby={`profile-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
-// 🎨 Componente para métricas con animación
+// 🎨 Componente para métricas con animación - REFACTORIZADO PARA USAR TEMA
 const MetricCard: React.FC<{
   title: string;
   value: number | string;
@@ -231,35 +182,37 @@ const MetricCard: React.FC<{
   color: string;
   subtitle?: string;
   progress?: number;
-}> = ({ title, value, icon, color, subtitle, progress }) => (
+}> = ({ title, value, icon, color, subtitle, progress }) => {
+  const theme = useTheme();
+  return (
   <Card
     sx={{
       height: '100%',
-      background: `linear-gradient(135deg, ${color}15 0%, ${color}25 100%)`,
-      border: `1px solid ${color}30`,
+        // Usa alpha para crear un gradiente sutil y un borde del color del tema
+        background: `linear-gradient(135deg, ${alpha(color, 0.1)} 0%, ${alpha(color, 0.15)} 100%)`,
+        border: `1px solid ${alpha(color, 0.2)}`,
       transition: 'all 0.3s ease',
       '&:hover': {
         transform: 'translateY(-4px)',
-        boxShadow: `0 8px 32px ${color}40`,
+          boxShadow: `0 8px 32px ${alpha(color, 0.2)}`,
       },
     }}
   >
     <CardContent sx={{ textAlign: 'center', py: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-        <Avatar sx={{ bgcolor: color, width: 56, height: 56 }}>{icon}</Avatar>
+          {/* El avatar del icono usa el color directamente */}
+          <Avatar sx={{ bgcolor: color, color: theme.palette.getContrastText(color), width: 56, height: 56 }}>
+            {icon}
+          </Avatar>
       </Box>
-      <Typography
-        variant="h4"
-        component="div"
-        sx={{ fontWeight: 'bold', color, mb: 1 }}
-      >
+        <Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 'bold' }}>
         {value}
       </Typography>
-      <Typography variant="body1" color="text.primary" sx={{ fontWeight: 500 }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
         {title}
       </Typography>
       {subtitle && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+          <Typography variant="caption" sx={{ color: 'text.muted', display: 'block', mt: 0.5 }}>
           {subtitle}
         </Typography>
       )}
@@ -269,16 +222,19 @@ const MetricCard: React.FC<{
           value={progress}
           sx={{
             mt: 2,
-            height: 6,
-            borderRadius: 3,
-            backgroundColor: `${color}20`,
-            '& .MuiLinearProgress-bar': { backgroundColor: color },
+              height: 8,
+              borderRadius: 4,
+              bgcolor: (theme) => alpha(theme.palette.grey[500], 0.3),
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: color,
+              }
           }}
         />
       )}
     </CardContent>
   </Card>
-);
+  )
+};
 
 // 🏆 Componente para achievements
 const AchievementCard: React.FC<{ achievement: Achievement }> = ({
@@ -480,7 +436,7 @@ const ActivityTimeline: React.FC<{
                 onClick={() => onReview(activity)}
                 sx={{ ml: 2, alignSelf: 'center' }}
               >
-                Compartir Ayni
+                Compartir Reciprocidad
               </Button>
             )}
         </ListItem>
@@ -498,9 +454,39 @@ function a11yProps(index: number) {
   };
 }
 
+// 📊 Función para calcular progreso de nivel
+const calculateLevelProgress = (level: number, points: number): number => {
+  const basePoints = level * 1000;
+  const nextLevelPoints = (level + 1) * 1000;
+  const currentProgress = points - basePoints;
+  const totalNeeded = nextLevelPoints - basePoints;
+  return Math.min(Math.max((currentProgress / totalNeeded) * 100, 0), 100);
+};
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`profile-tabpanel-${index}`}
+      aria-labelledby={`profile-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
 const Profile: React.FC = () => {
   const theme = useTheme();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 🎯 Hooks de datos usando Smart Query
@@ -581,7 +567,7 @@ const Profile: React.FC = () => {
       level: 1,
       meritos: 0,
       ondas: 0,
-      ayniLevel: 0,
+      reciprocidadLevel: 0,
       completedChallenges: 0,
       socialConnections: 0,
       marketplaceRating: 0,
@@ -713,7 +699,7 @@ const Profile: React.FC = () => {
       `Enviando valoración para la actividad ${selectedActivity.id}:`,
       reviewData
     );
-    showNotification('Gracias por compartir tu Ayni y nutrir la CoomÜnity.', 'success');
+    showNotification('Gracias por compartir tu Reciprocidad y nutrir la CoomÜnity.', 'success');
     // Idealmente, se debería actualizar el estado de la actividad a `isReviewed: true`
   };
 
@@ -872,7 +858,7 @@ const Profile: React.FC = () => {
                     title="Nivel"
                     value={metrics.level}
                     icon={<TrendingUp />}
-                    color={coomunityColors.ayni}
+                    color={theme.palette.warning.main}
                     subtitle="Siguiente: +250 puntos"
                     progress={levelProgress}
                   />
@@ -882,7 +868,7 @@ const Profile: React.FC = () => {
                     title="Mëritos"
                     value={safeToLocaleString(metrics.meritos)}
                     icon={<Stars />}
-                    color={coomunityColors.merito}
+                    color={theme.palette.warning.main}
                     subtitle="Bien Común"
                   />
                 </Grid>
@@ -891,16 +877,16 @@ const Profile: React.FC = () => {
                     title="Öndas"
                     value={safeToLocaleString(metrics.ondas)}
                     icon={<WaterDrop />}
-                    color={coomunityColors.onda}
+                    color={theme.palette.warning.main}
                     subtitle="Energía Vibracional"
                   />
                 </Grid>
                 <Grid item xs={6} sm={4} md={2}>
                   <MetricCard
-                    title="Ayni"
-                    value={`${metrics.ayniLevel}%`}
+                    title="Reciprocidad"
+                    value={`${metrics.reciprocidadLevel}%`}
                     icon={<Balance />}
-                    color={getAyniColor(metrics.ayniLevel)}
+                    color={theme.palette.secondary.main}
                     subtitle="Reciprocidad"
                   />
                 </Grid>
@@ -909,7 +895,7 @@ const Profile: React.FC = () => {
                     title="Conexiones"
                     value={safeToLocaleString(metrics.socialConnections)}
                     icon={<Group />}
-                    color={coomunityColors.social}
+                    color={theme.palette.info.main}
                     subtitle="Red CoomÜnity"
                   />
                 </Grid>
@@ -918,7 +904,7 @@ const Profile: React.FC = () => {
                     title="Rating"
                     value={metrics.marketplaceRating || 0}
                     icon={<Star />}
-                    color={coomunityColors.marketplace}
+                    color={theme.palette.warning.main}
                     subtitle="Marketplace"
                   />
                 </Grid>

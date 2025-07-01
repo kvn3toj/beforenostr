@@ -26,7 +26,7 @@ import {
   Handshake as HandshakeIcon,
   EmojiEvents as AchievementIcon,
 } from '@mui/icons-material';
-import { useUnitsWallet, useAyniBalance } from '../../../hooks/useLetsIntegration';
+import { useUnitsWallet, useReciprocidadBalance } from '../../../hooks/useLetsIntegration';
 
 type UserExperience = 'newcomer' | 'beginner' | 'intermediate' | 'advanced';
 
@@ -79,7 +79,7 @@ const HUMANIZED_MESSAGES = {
       newcomer: {
         title: 'La comunidad te está apoyando 💙',
         message: '¡No te preocupes! Es normal y necesario recibir ayuda mientras creces.',
-        tip: 'Cuando puedas, comparte tus talentos para equilibrar tu Ayni.',
+        tip: 'Cuando puedas, comparte tus talentos para equilibrar tu Reciprocidad.',
         emotion: 'supportive' as const,
       },
       beginner: {
@@ -103,7 +103,7 @@ const HUMANIZED_MESSAGES = {
       newcomer: {
         title: '¡Perfecto equilibrio! ⚖️',
         message: 'Estás en armonía entre dar y recibir.',
-        tip: 'Este es el ideal del Ayni: equilibrio perfecto.',
+        tip: 'Este es el ideal del Reciprocidad: equilibrio perfecto.',
         emotion: 'positive' as const,
       },
     },
@@ -119,7 +119,7 @@ const ProgressStoryBar: React.FC<{
   const givePercentage = total > 0 ? (given / total) * 100 : 50;
   const receivePercentage = total > 0 ? (received / total) * 100 : 50;
 
-  const getAyniMessage = () => {
+  const getReciprocidadMessage = () => {
     const ratio = received > 0 ? given / received : given > 0 ? Infinity : 1;
     
     if (userLevel === 'newcomer') {
@@ -128,7 +128,7 @@ const ProgressStoryBar: React.FC<{
       return '¡Equilibrio perfecto! Estás en armonía';
     }
     
-    if (ratio >= 0.8 && ratio <= 1.2) return 'Excelente balance Ayni';
+    if (ratio >= 0.8 && ratio <= 1.2) return 'Excelente balance Reciprocidad';
     if (ratio > 1.2) return 'Podrías recibir más de la comunidad';
     return 'Considera ofrecer más cuando puedas';
   };
@@ -162,7 +162,7 @@ const ProgressStoryBar: React.FC<{
       </Box>
       
       <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-        {getAyniMessage()}
+        {getReciprocidadMessage()}
       </Typography>
     </Box>
   );
@@ -207,10 +207,10 @@ const TrustVisualization: React.FC<{
 
 const SimpleWalletView: React.FC<{
   wallet: any;
-  ayniBalance: any;
+  reciprocidadBalance: any;
   userLevel: UserExperience;
   onExploreOpportunities?: () => void;
-}> = ({ wallet, ayniBalance, userLevel, onExploreOpportunities }) => {
+}> = ({ wallet, reciprocidadBalance, userLevel, onExploreOpportunities }) => {
   const getMessage = (): HumanizedMessage => {
     if (wallet.balance === 0) {
       return HUMANIZED_MESSAGES.wallet.zeroBalance.newcomer;
@@ -268,8 +268,8 @@ const SimpleWalletView: React.FC<{
 
         {/* Explicación visual del balance */}
         <ProgressStoryBar
-          given={ayniBalance.given}
-          received={ayniBalance.received}
+          given={reciprocidadBalance.given}
+          received={reciprocidadBalance.received}
           userLevel={userLevel}
         />
 
@@ -316,9 +316,9 @@ const SimpleWalletView: React.FC<{
 
 const AdvancedWalletView: React.FC<{
   wallet: any;
-  ayniBalance: any;
+  reciprocidadBalance: any;
   onExploreOpportunities?: () => void;
-}> = ({ wallet, ayniBalance, onExploreOpportunities }) => {
+}> = ({ wallet, reciprocidadBalance, onExploreOpportunities }) => {
   return (
     <Card>
       <CardContent>
@@ -360,24 +360,24 @@ const AdvancedWalletView: React.FC<{
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
           <Box textAlign="center">
             <Typography variant="h6" color="success.main">
-              +{ayniBalance.given}
+              +{reciprocidadBalance.given}
             </Typography>
             <Typography variant="caption">Has dado</Typography>
           </Box>
           <Box textAlign="center">
             <Typography variant="h6" color="info.main">
-              -{ayniBalance.received}
+              -{reciprocidadBalance.received}
             </Typography>
             <Typography variant="caption">Has recibido</Typography>
           </Box>
         </Box>
 
         <Alert 
-          severity={ayniBalance.isBalanced ? 'success' : 'warning'}
+          severity={reciprocidadBalance.isBalanced ? 'success' : 'warning'}
           sx={{ mb: 2 }}
         >
           <Typography variant="body2">
-            {ayniBalance.recommendation}
+            {reciprocidadBalance.recommendation}
           </Typography>
         </Alert>
 
@@ -401,7 +401,7 @@ export const UnitsWalletHumanized: React.FC<UnitsWalletHumanizedProps> = ({
   simplified = true,
 }) => {
   const { data: wallet, isLoading, error } = useUnitsWallet(userId);
-  const ayniBalance = useAyniBalance(userId);
+  const reciprocidadBalance = useReciprocidadBalance(userId);
   
   const [showOnboardingPrompt, setShowOnboardingPrompt] = useState(false);
 
@@ -491,14 +491,14 @@ export const UnitsWalletHumanized: React.FC<UnitsWalletHumanizedProps> = ({
       {shouldShowSimplified ? (
         <SimpleWalletView
           wallet={wallet}
-          ayniBalance={ayniBalance}
+          reciprocidadBalance={reciprocidadBalance}
           userLevel={userExperience}
           onExploreOpportunities={onExploreOpportunities}
         />
       ) : (
         <AdvancedWalletView
           wallet={wallet}
-          ayniBalance={ayniBalance}
+          reciprocidadBalance={reciprocidadBalance}
           onExploreOpportunities={onExploreOpportunities}
         />
       )}

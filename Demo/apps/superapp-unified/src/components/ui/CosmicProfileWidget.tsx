@@ -70,7 +70,7 @@ interface CosmicProfileWidgetProps {
     level: number;
     meritos: number;
     ondas: number;
-    ayniScore: number;
+    reciprocidadScore: number;
     currentStreak: number;
     nextLevelProgress: number;
     etherEnergy: number; // New cosmic element
@@ -81,7 +81,7 @@ interface CosmicProfileWidgetProps {
     title: string;
     rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'cosmic';
     unlockedAt: Date;
-    category: 'learning' | 'ayni' | 'community' | 'wisdom' | 'transcendence';
+    category: 'learning' | 'reciprocidad' | 'community' | 'wisdom' | 'transcendence';
   }>;
   compact?: boolean;
 }
@@ -306,7 +306,7 @@ export const CosmicProfileWidget: React.FC<CosmicProfileWidgetProps> = ({
             </Card>
           </Grid>
 
-          {/* Ayni Score */}
+          {/* Reciprocidad Score */}
           <Grid item xs={6} md={3}>
             <Card
               sx={{
@@ -330,10 +330,10 @@ export const CosmicProfileWidget: React.FC<CosmicProfileWidgetProps> = ({
             >
               <FavoriteOutlined sx={{ fontSize: 32, mb: 1 }} />
               <Typography variant="h6" fontWeight="bold">
-                {user.ayniScore}%
+                {user.reciprocidadScore}%
               </Typography>
               <Typography variant="caption">
-                Balance Ayni
+                Balance Reciprocidad
               </Typography>
             </Card>
           </Grid>

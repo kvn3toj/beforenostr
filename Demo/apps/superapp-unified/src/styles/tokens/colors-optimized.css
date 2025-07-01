@@ -4,27 +4,27 @@
    =============================================================================== */
 
 :root {
-  /* ===== COLORES PRIMARIOS - Balance Ayni ===== */
-  --ayni-primary: #6366f1; /* Azul principal */
-  --ayni-primary-dark: #4f46e5; /* Azul oscuro para hover */
-  --ayni-primary-light: #a5b4fc; /* Azul claro para backgrounds */
+  /* ===== COLORES PRIMARIOS - Balance Reciprocidad ===== */
+  --reciprocidad-primary: #6366f1; /* Azul principal */
+  --reciprocidad-primary-dark: #4f46e5; /* Azul oscuro para hover */
+  --reciprocidad-primary-light: #a5b4fc; /* Azul claro para backgrounds */
 
-  --ayni-secondary: #8b5cf6; /* Púrpura balance */
-  --ayni-secondary-dark: #7c3aed; /* Púrpura oscuro para hover */
-  --ayni-secondary-light: #c4b5fd; /* Púrpura claro para backgrounds */
+  --reciprocidad-secondary: #8b5cf6; /* Púrpura balance */
+  --reciprocidad-secondary-dark: #7c3aed; /* Púrpura oscuro para hover */
+  --reciprocidad-secondary-light: #c4b5fd; /* Púrpura claro para backgrounds */
 
   /* ===== COLORES SEMÁNTICOS ===== */
-  --success-ayni: #10b981; /* Verde éxito - Contraste 4.5:1 */
-  --success-ayni-dark: #059669; /* Verde oscuro para hover */
-  --success-ayni-light: #d1fae5; /* Verde claro para backgrounds */
+  --success-reciprocidad: #10b981; /* Verde éxito - Contraste 4.5:1 */
+  --success-reciprocidad-dark: #059669; /* Verde oscuro para hover */
+  --success-reciprocidad-light: #d1fae5; /* Verde claro para backgrounds */
 
-  --warning-ayni: #f59e0b; /* Ámbar atención - Contraste 4.5:1 */
-  --warning-ayni-dark: #d97706; /* Ámbar oscuro para hover */
-  --warning-ayni-light: #fef3c7; /* Ámbar claro para backgrounds */
+  --warning-reciprocidad: #f59e0b; /* Ámbar atención - Contraste 4.5:1 */
+  --warning-reciprocidad-dark: #d97706; /* Ámbar oscuro para hover */
+  --warning-reciprocidad-light: #fef3c7; /* Ámbar claro para backgrounds */
 
-  --error-ayni: #ef4444; /* Rojo error - Contraste 4.5:1 */
-  --error-ayni-dark: #dc2626; /* Rojo oscuro para hover */
-  --error-ayni-light: #fecaca; /* Rojo claro para backgrounds */
+  --error-reciprocidad: #ef4444; /* Rojo error - Contraste 4.5:1 */
+  --error-reciprocidad-dark: #dc2626; /* Rojo oscuro para hover */
+  --error-reciprocidad-light: #fecaca; /* Rojo claro para backgrounds */
 
   /* ===== ESCALA DE GRISES ACCESIBLE ===== */
   --gray-50: #f9fafb; /* Backgrounds muy claros */
@@ -69,8 +69,8 @@
   /* ===== GRADIENTES SIMPLIFICADOS ===== */
   --gradient-primary: linear-gradient(
     135deg,
-    var(--ayni-primary) 0%,
-    var(--ayni-secondary) 100%
+    var(--reciprocidad-primary) 0%,
+    var(--reciprocidad-secondary) 100%
   );
   --gradient-soft: linear-gradient(
     135deg,
@@ -108,15 +108,15 @@
 }
 
 .text-success {
-  color: var(--success-ayni);
+  color: var(--success-reciprocidad);
 }
 
 .text-warning {
-  color: var(--warning-ayni);
+  color: var(--warning-reciprocidad);
 }
 
 .text-error {
-  color: var(--error-ayni);
+  color: var(--error-reciprocidad);
 }
 
 /* ===== 🆕 UTILIDADES ESPECÍFICAS PARA HOME ===== */
@@ -160,23 +160,23 @@
 }
 
 .bg-primary {
-  background-color: var(--ayni-primary);
+  background-color: var(--reciprocidad-primary);
 }
 
 .bg-secondary {
-  background-color: var(--ayni-secondary);
+  background-color: var(--reciprocidad-secondary);
 }
 
 .bg-success {
-  background-color: var(--success-ayni-light);
+  background-color: var(--success-reciprocidad-light);
 }
 
 .bg-warning {
-  background-color: var(--warning-ayni-light);
+  background-color: var(--warning-reciprocidad-light);
 }
 
 .bg-error {
-  background-color: var(--error-ayni-light);
+  background-color: var(--error-reciprocidad-light);
 }
 
 /* ===== VERIFICACIÓN DE CONTRASTE ===== */
@@ -197,20 +197,20 @@
 
 .contrast-check-interactive {
   /* Elementos interactivos: mínimo 4.5:1 */
-  color: var(--ayni-primary);
+  color: var(--reciprocidad-primary);
   background-color: var(--gray-50);
 }
 
 .contrast-check-interactive:hover {
-  color: var(--ayni-primary-dark);
-  background-color: var(--ayni-primary-light);
+  color: var(--reciprocidad-primary-dark);
+  background-color: var(--reciprocidad-primary-light);
 }
 
 /* ===== HIGH CONTRAST MODE ===== */
 @media (prefers-contrast: high) {
   :root {
-    --ayni-primary: #0000ff;
-    --ayni-secondary: #800080;
+    --reciprocidad-primary: #0000ff;
+    --reciprocidad-secondary: #800080;
     --gray-600: #000000;
     --gray-800: #000000;
     --gray-900: #000000;

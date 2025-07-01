@@ -186,11 +186,11 @@ const REWARD_TYPES = [
   { value: 'ITEM', label: 'Objeto', icon: Star, color: '#FF5722' },
 ];
 
-const AYNI_TAGS = [
+const RECIPROCIDAD_TAGS = [
   'reciprocidad',
   'bien común',
   'cooperación',
-  'ayni',
+  'reciprocidad',
   'minga',
   'colaborativo',
   'comunitario',
@@ -362,7 +362,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
               label="Título del Desafío *"
               error={!!errors.title}
               helperText={errors.title?.message}
-              placeholder="Ej: Práctica Diaria de Ayni"
+              placeholder="Ej: Práctica Diaria de Reciprocidad"
             />
           )}
         />
@@ -593,7 +593,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
               {...field}
               multiple
               freeSolo
-              options={AYNI_TAGS}
+              options={RECIPROCIDAD_TAGS}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
                   <Chip
@@ -608,7 +608,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                 <TextField
                   {...params}
                   label="Etiquetas"
-                  placeholder="Agregar etiquetas relacionadas con Ayni..."
+                  placeholder="Agregar etiquetas relacionadas con Reciprocidad..."
                 />
               )}
               onChange={(_, value) => field.onChange(value)}
@@ -621,7 +621,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
         <Alert severity="info" sx={{ mt: 2 }}>
           <Typography variant="body2">
             💡 <strong>Filosofía CoomÜnity:</strong> Los desafíos deben fomentar
-            la reciprocidad (Ayni) y contribuir al Bien Común. Considera cómo
+            la reciprocidad (Reciprocidad) y contribuir al Bien Común. Considera cómo
             este desafío beneficiará tanto al individuo como a la comunidad.
           </Typography>
         </Alert>
@@ -878,7 +878,7 @@ export const ChallengeCreator: React.FC<ChallengeCreatorProps> = ({
                           fullWidth
                           size="small"
                           label="Descripción"
-                          placeholder="Ej: Por completar el desafío de Ayni"
+                          placeholder="Ej: Por completar el desafío de Reciprocidad"
                         />
                       )}
                     />

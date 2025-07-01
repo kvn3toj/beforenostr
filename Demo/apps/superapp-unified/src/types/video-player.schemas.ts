@@ -63,7 +63,7 @@ export const RewardCalculationSchema = z.object({
   difficultyMultiplier: z.number().min(0.5).max(2.0).default(1.0),
   levelMultiplier: z.number().min(1.0).max(5.0).default(1.0),
   streakMultiplier: z.number().min(1.0).max(3.0).default(1.0),
-  ayniBonus: z.number().min(0).default(0),
+  reciprocidadBonus: z.number().min(0).default(0),
   finalPoints: z.number().min(0),
   ondas: z.number().min(0).default(0),
 });
@@ -176,7 +176,7 @@ export const AchievementSchema = z.object({
   name: z.string(),
   description: z.string(),
   icon: z.string(),
-  category: z.enum(['learning', 'engagement', 'social', 'ayni', 'bien_comun']),
+  category: z.enum(['learning', 'engagement', 'social', 'reciprocidad', 'bien_comun']),
   rarity: z.enum(['common', 'rare', 'epic', 'legendary']).default('common'),
   points: z.number().min(0),
   ondas: z.number().min(0).default(0),

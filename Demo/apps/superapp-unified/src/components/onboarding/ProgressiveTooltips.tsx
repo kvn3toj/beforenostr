@@ -426,7 +426,7 @@ export const getStageTooltips = (stage: string): TooltipStep[] => {
           id: 'uplay_intro',
           target: '[data-testid="uplay-nav-link"]',
           title: 'Descubre ÜPlay',
-          content: 'Aquí encontrarás videos interactivos que te enseñarán sobre Ayni y el Bien Común mientras ganas Öndas.',
+          content: 'Aquí encontrarás videos interactivos que te enseñarán sobre Reciprocidad y el Bien Común mientras ganas Öndas.',
           action: {
             label: 'Explorar ÜPlay',
             onClick: () => window.location.href = '/uplay'

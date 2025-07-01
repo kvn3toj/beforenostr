@@ -22,6 +22,10 @@ import {
   TrendingUp as TrendingIcon,
   Refresh,
 } from '@mui/icons-material';
+
+// 🌌 IMPORT DEL SISTEMA DE COLORES CÓSMICO
+import { UNIFIED_COLORS } from '../../../theme/colors';
+
 import { useAuth } from '../../../contexts/AuthContext';
 import {
   useSocialMatches,
@@ -30,7 +34,7 @@ import {
 } from '../../../hooks/useRealBackendData';
 import {
   SocialWelcomeHeader,
-  AyniSocialMetrics,
+  ReciprocidadSocialMetrics,
   CommunityFeed,
   ConnectionsManager,
   SocialChatArea,
@@ -52,7 +56,7 @@ const mockPosts = [
         merit: 'Guía Estelar',
       },
       timestamp: 'Hace 2 horas',
-      content: 'Reflexionando sobre la interconexión universal y el principio de Ayni. Cada acción es un eco en el cosmos. ✨ #BienComún',
+      content: 'Reflexionando sobre la interconexión universal y el principio de Reciprocidad. Cada acción es un eco en el cosmos. ✨ #BienComún',
       likes: 125,
       comments: 18,
     },
@@ -76,7 +80,6 @@ const mockUserStats = {
     connectionsCount: 42,
     collaborationsCount: 8,
     socialMeritos: 1250,
-    ayniBalance: 0.85,
     trustScore: 4.5,
     dailyInteractions: 12,
     activeCircles: 3,
@@ -95,7 +98,7 @@ const mockCommunityMetrics = {
     activeConnections: 150,
     onlineMembers: 24,
     dailyInteractions: 120,
-    ayniExchanges: 45,
+    reciprocidadExchanges: 45,
     activeCircles: 5,
     weeklyGrowth: 10,
 };
@@ -126,7 +129,11 @@ const SocialMain: React.FC = () => {
   const communityFeedPosts = mockPosts; // Usar mocks mientras se conecta el backend del feed
 
   return (
-    <Box sx={{ backgroundColor: '#f8fafc', minHeight: '100vh', py: 4 }}>
+    <Box sx={{
+      backgroundColor: UNIFIED_COLORS.brand.white,
+      minHeight: '100vh',
+      py: 4
+    }}>
       <Container maxWidth="xl">
         {/* Header */}
             <Box sx={{ mb: 4 }}>
@@ -149,9 +156,10 @@ const SocialMain: React.FC = () => {
             zIndex: 1100,
                 mb: 4,
             borderRadius: '16px',
-            background: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(10px)',
-            borderColor: '#e2e8f0',
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(12px)',
+            borderColor: UNIFIED_COLORS.themes.minimalist.divider,
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           }}
         >
           <Tabs
@@ -164,22 +172,22 @@ const SocialMain: React.FC = () => {
               '& .MuiTabs-indicator': {
                 height: '4px',
                 borderRadius: '2px',
-                backgroundColor: '#6366f1',
+                backgroundColor: UNIFIED_COLORS.modules.social,
               },
               '& .MuiTab-root': {
                 textTransform: 'none',
                 fontWeight: 600,
-                color: '#475569'
+                color: UNIFIED_COLORS.themes.minimalist.text.secondary
               },
               '& .Mui-selected': {
-                color: '#6366f1'
+                color: UNIFIED_COLORS.modules.social
               }
                 }}
               >
-            <Tab icon={<PeopleIcon />} iconPosition="start" label="Comunidad" />
-            <Tab icon={<ChatIcon />} iconPosition="start" label="Conexiones" />
-            <Tab icon={<GroupsIcon />} iconPosition="start" label="Colaboración" />
-            <Tab icon={<TrendingIcon />} iconPosition="start" label="Métricas" />
+            <Tab icon={<PeopleIcon />} iconPosition="start" label="Círculo Sagrado" />
+            <Tab icon={<ChatIcon />} iconPosition="start" label="Conexiones Conscientes" />
+            <Tab icon={<GroupsIcon />} iconPosition="start" label="Colaboración Creativa" />
+            <Tab icon={<TrendingIcon />} iconPosition="start" label="Métricas Reciprocidad" />
           </Tabs>
             </Paper>
 
@@ -197,61 +205,41 @@ const SocialMain: React.FC = () => {
                   </Grid>
               <Grid item xs={12} md={4}>
                 {/* Widgets de la derecha */}
-                    <AyniSocialMetrics
+                    <ReciprocidadSocialMetrics
                   userStats={mockUserStats}
                   communityMetrics={mockCommunityMetrics}
-                  notifications={notificationsData?.data || []}
-                      isLoading={notificationsLoading}
-                  isConnected={true}
-                    />
-                  </Grid>
-                </Grid>
+                />
+              </Grid>
+            </Grid>
               )}
 
               {activeTab === 1 && (
-             <Grid container spacing={4}>
-                  <Grid item xs={12} md={4}>
-                    <ConnectionsManager
-                        connections={matchesData?.data || []}
-                      isLoading={matchesLoading}
-                      isError={matchesError}
-                      onRefresh={refetchMatches}
-                        userStats={mockUserStats}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={8}>
-                    <SocialChatArea
-                        connections={matchesData?.data || []}
-                      isLoading={matchesLoading}
-                        isConnected={true}
-                    />
-                  </Grid>
-                </Grid>
+                <ConnectionsManager />
               )}
 
               {activeTab === 2 && (
-                <CollaborationHub
-                userStats={mockUserStats}
-                isConnected={true}
-                onCreateCircle={() => console.log('Creando círculo')}
-                onJoinCircle={(id) => console.log(`Uniéndose a ${id}`)}
-                />
+                <CollaborationHub />
               )}
 
               {activeTab === 3 && (
-                    <AyniSocialMetrics
-                userStats={mockUserStats}
-                communityMetrics={mockCommunityMetrics}
-                notifications={notificationsData?.data || []}
-                      isLoading={notificationsLoading}
-                isConnected={true}
-                      showDetailedView={true}
-                    />
-          )}
-
-        </Box>
+                <Box>
+                  <Typography variant="h5" sx={{
+                    mb: 3,
+                    color: UNIFIED_COLORS.themes.minimalist.text.primary,
+                    fontWeight: 'bold'
+                  }}>
+                    📊 Análisis Profundo de Reciprocidad Social
+                  </Typography>
+                  <ReciprocidadSocialMetrics
+                    userStats={mockUserStats}
+                    communityMetrics={mockCommunityMetrics}
+                    detailed={true}
+                  />
+                </Box>
+              )}
+            </Box>
       </Container>
-      </Box>
+    </Box>
   );
 };
 

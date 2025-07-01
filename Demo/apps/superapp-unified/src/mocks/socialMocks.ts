@@ -8,13 +8,13 @@ export const MOCK_SOCIAL_POSTS = [
       name: 'Ana Sabia',
       avatarUrl: '/avatars/ana.png'
     },
-    content: '¡Hoy compartí mi primer acto de Ayni en la comunidad!',
+    content: '¡Hoy compartí mi primer acto de Reciprocidad en la comunidad!',
     createdAt: '2024-06-10T09:00:00Z',
     likes: 12,
     comments: [
       { id: 'c1', author: 'Luis Consciente', text: '¡Inspirador!' }
     ],
-    tags: ['ayni', 'comunidad']
+    tags: ['reciprocidad', 'comunidad']
   },
   {
     id: 'post-2',

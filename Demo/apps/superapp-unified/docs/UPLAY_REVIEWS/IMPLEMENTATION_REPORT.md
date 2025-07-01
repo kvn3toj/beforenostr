@@ -95,7 +95,7 @@ Se han implementado exitosamente **3 de las 4 fases** recomendadas en el review 
 
 1. **Tipos de Misiones Diferenciadas**
    - **Misiones Individuales**: Progreso personal con metas específicas
-   - **Misiones Colaborativas**: Requieren trabajo en equipo (ej. "Círculo de Ayni")
+   - **Misiones Colaborativas**: Requieren trabajo en equipo (ej. "Círculo de Reciprocidad")
    - **Misiones Temporales**: Eventos con countdown y recompensas exclusivas
 
 2. **Sistema de Recompensas Mejorado**
@@ -104,14 +104,14 @@ Se han implementado exitosamente **3 de las 4 fases** recomendadas en el review 
    - Recompensas temporales con urgencia
 
 3. **Filosofía CoomÜnity Integrada**
-   - Misiones que reflejan principios de Ayni y Bien Común
-   - Nomenclatura específica: "Círculo de Ayni", "Evento Solsticio"
+   - Misiones que reflejan principios de Reciprocidad y Bien Común
+   - Nomenclatura específica: "Círculo de Reciprocidad", "Evento Solsticio"
    - Balance entre crecimiento individual y colaborativo
 
 #### **Ejemplos de Misiones Implementadas:**
 
 - **Explorador Curioso** (Individual): 2/3 categorías completadas
-- **Círculo de Ayni** (Colaborativa): 3/5 participantes unidos
+- **Círculo de Reciprocidad** (Colaborativa): 3/5 participantes unidos
 - **Evento Solsticio** (Temporal): 2 días 14h restantes
 
 ---
@@ -224,7 +224,7 @@ Se han implementado exitosamente **3 de las 4 fases** recomendadas en el review 
    - Celebraciones animadas
 
 4. ✅ **Filosofía CoomÜnity integrada**
-   - Principios de Ayni en misiones
+   - Principios de Reciprocidad en misiones
    - Enfoque en Bien Común
    - Vocabulario específico usado
 

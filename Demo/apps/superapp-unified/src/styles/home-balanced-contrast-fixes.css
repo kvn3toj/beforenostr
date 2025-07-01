@@ -56,7 +56,7 @@ div[css*='fontSize: "96px"'] h1 {
   }
 }
 
-/* Títulos H2 - Balance Ayni Personal */
+/* Títulos H2 - Balance Reciprocidad Personal */
 [data-loc*='Home.tsx'] h2,
 div[css*='fontSize: "24px"'] h2 {
   color: var(--balanced-dark) !important;

@@ -59,7 +59,7 @@ export class CriticalCSSExtractor {
     this.criticalRoutes = [
       {
         route: '/',
-        components: ['WelcomeWidget', 'QuickActionsGrid', 'AyniMetricsCard', 'NotificationCenter'],
+        components: ['WelcomeWidget', 'QuickActionsGrid', 'ReciprocidadMetricsCard', 'NotificationCenter'],
         aboveFold: true,
         inline: true,
         priority: 10,

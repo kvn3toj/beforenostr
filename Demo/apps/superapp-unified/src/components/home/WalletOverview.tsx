@@ -26,20 +26,20 @@ import { cn } from '../../utils/styles';
 
 interface WalletOverviewProps {
   lukas: number;
-  ayniCredits: number;
+  creditosReciprocidad: number;
   monthlyChange: number;
   pendingTransactions?: number;
-  ayniBalance: number;
+  balanceReciprocidad: number;
   isLoading?: boolean;
   isConnected?: boolean;
 }
 
 export const WalletOverview: React.FC<WalletOverviewProps> = ({
   lukas,
-  ayniCredits,
+  creditosReciprocidad,
   monthlyChange,
   pendingTransactions = 0,
-  ayniBalance,
+  balanceReciprocidad,
   isLoading = false,
   isConnected = true,
 }) => {
@@ -59,7 +59,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
   };
 
   const getBalanceMessage = (balance: number) => {
-    if (balance >= 0.8) return 'Excelente equilibrio Ayni';
+    if (balance >= 0.8) return 'Excelente equilibrio de Reciprocidad';
     if (balance >= 0.6) return 'Buen balance, considera dar más';
     return 'Necesitas dar más para equilibrar';
   };
@@ -111,8 +111,8 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
             alignItems="center"
             sx={{ mb: 2 }}
           >
-            <Typography 
-              variant="h6" 
+            <Typography
+              variant="h6"
               className="coomunity-h3 text-coomunity-primary-700"
               fontWeight="bold"
             >
@@ -143,24 +143,24 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
           >
             <Box sx={{ mb: 2 }}>
               <Stack direction="row" alignItems="baseline" spacing={1}>
-                <Typography 
-                  variant="h4" 
+                <Typography
+                  variant="h4"
                   className="coomunity-h1 text-coomunity-primary-600"
-                  fontWeight="bold" 
+                  fontWeight="bold"
                   color="success.main"
                 >
                   {formatCurrency(lukas)}
                 </Typography>
-                <Typography 
-                  variant="h6" 
+                <Typography
+                  variant="h6"
                   className="coomunity-body-lg text-gray-600"
                   color="text.secondary"
                 >
                   Lükas
                 </Typography>
               </Stack>
-              <Typography 
-                variant="caption" 
+              <Typography
+                variant="caption"
                 className="coomunity-caption text-gray-500"
                 color="text.secondary"
               >
@@ -197,7 +197,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
             </Stack>
           </motion.div>
 
-          {/* Créditos Ayni */}
+          {/* Créditos Reciprocidad */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -211,12 +211,12 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
             >
               <Box>
                 <Typography variant="body2" color="text.secondary">
-                  Créditos Ayni
+                  Créditos Reciprocidad
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={1}>
                   <Stars sx={{ color: 'warning.main', fontSize: 18 }} />
                   <Typography variant="h6" fontWeight="bold" color="warning.main">
-                    {ayniCredits}
+                    {creditosReciprocidad}
                   </Typography>
                 </Stack>
               </Box>
@@ -233,7 +233,7 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
 
           <Divider sx={{ my: 2 }} />
 
-          {/* Equilibrio Ayni */}
+          {/* Equilibrio Reciprocidad */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -246,33 +246,34 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
                 alignItems="center"
                 sx={{ mb: 0.5 }}
               >
-                <Typography 
-                  variant="caption" 
-                  className="coomunity-label text-gray-600"
+                <Typography
+                  variant="caption"
+                  className="coomunity-caption text-gray-500"
                   color="text.secondary"
                 >
-                  Equilibrio Ayni
+                  Equilibrio Reciprocidad
                 </Typography>
-                <Chip
-                  label={getBalanceMessage(ayniBalance)}
-                  color={getBalanceColor(ayniBalance)}
-                  size="small"
-                  variant="outlined"
-                />
+                <Typography
+                  variant="caption"
+                  fontWeight="bold"
+                  color={`${getBalanceColor(balanceReciprocidad)}.main`}
+                >
+                  {Math.round(balanceReciprocidad * 100)}%
+                </Typography>
               </Stack>
               <LinearProgress
                 variant="determinate"
-                value={ayniBalance * 100}
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  bgcolor: alpha(theme.palette.grey[500], 0.2),
-                  '& .MuiLinearProgress-bar': {
-                    bgcolor: `${getBalanceColor(ayniBalance)}.main`,
-                    borderRadius: 4,
-                  },
-                }}
+                value={balanceReciprocidad * 100}
+                color={getBalanceColor(balanceReciprocidad)}
+                sx={{ height: 6, borderRadius: 3 }}
               />
+              <Typography
+                variant="caption"
+                className="coomunity-caption text-xs text-gray-500"
+                sx={{ mt: 0.5, display: 'block' }}
+              >
+                {getBalanceMessage(balanceReciprocidad)}
+              </Typography>
             </Box>
           </motion.div>
 
@@ -304,12 +305,12 @@ export const WalletOverview: React.FC<WalletOverviewProps> = ({
                   <Typography variant="body2" fontWeight="bold" color="info.main">
                     {pendingTransactions} transacciones pendientes
                   </Typography>
-                  <Typography 
-                    variant="caption" 
+                  <Typography
+                    variant="caption"
                     className="coomunity-caption text-gray-500"
                     color="text.secondary"
                   >
-                    Esperando confirmación de intercambios Ayni
+                    Esperando confirmación de intercambios Reciprocidad
                   </Typography>
                 </Box>
               </Stack>

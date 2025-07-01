@@ -60,7 +60,7 @@ Este documento resume la planificación estratégica y colaborativa para la tran
   - Definir eventos clave a trackear (progreso, interacción, logros)
   - Implementar tracking granular en UPlay
   - Crear dashboards de insights para admins
-  - Desarrollar métricas de Ayni, Bien Común y Mëritos
+  - Desarrollar métricas de Reciprocidad, Bien Común y Mëritos
 - **Dependencias:** Integración con COSMOS (backend) y SAGE (validación de datos)
 - **Criterios de Éxito:** Dashboards funcionales, métricas filosóficas cuantificables
 

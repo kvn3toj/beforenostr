@@ -470,7 +470,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ reviews }) => {
     try {
       // Ajusta la URL si el endpoint real es diferente
       const response = await apiService.post('/marketplace/reviews', reviewData);
-      setSnackbar({ open: true, message: '¡Reseña enviada! Gracias por contribuir al Bien Común y practicar el Ayni.', severity: 'success' });
+      setSnackbar({ open: true, message: '¡Reseña enviada! Gracias por contribuir al Bien Común y practicar el Reciprocidad.', severity: 'success' });
       setWriteReviewOpen(false);
       // Refrescar la lista localmente (idealmente, refetch desde backend)
       const newId = (response && typeof response === 'object' && 'data' in response && response.data && typeof response.data === 'object' && 'id' in response.data)

@@ -1,30 +1,22 @@
-import React, { useEffect, Suspense, useTransition, createContext, useState, useContext, ReactNode, useCallback } from 'react';
+import React, { useEffect, Suspense, useTransition } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CssBaseline, Box } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'sonner';
-import { AnimatePresence } from 'framer-motion';
-import { AchievementNotification } from './components/notifications/AchievementNotification';
+
 
 // Contexts
-import { ThemeProvider } from './contexts/ThemeContext';
-import { ThemeProvider as StylesThemeProvider } from './styles/theme.context';
 import { AuthProvider } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
 import { FeedbackProvider } from './contexts/FeedbackContext';
 import { NotificationProvider } from './components/common/NotificationSystem';
 
 // 🌟 GUARDIAN AGENTS - Universal Harmony System
-import { GuardianColorProvider, GuardianThemeSelector } from './components/theme/GuardianColorProvider';
-import { UniversalIntegrator } from './components/theme/UniversalIntegrator';
-
-// My new Theme Provider and Selector
-import { DynamicThemeProvider } from './context/DynamicThemeContext';
-// import ThemeSelector from './components/theme/ThemeSelector';
+import { GuardianColorProvider } from './components/theme/GuardianColorProvider';
 
 // 🎓 Tutorial Discovery System
-import { DiscoveryTutorialProvider, TutorialFloatingButton } from './components/tutorials';
+import { DiscoveryTutorialProvider } from './components/tutorials';
 
 // 🔍 Guardian Feedback System - Para recopilación de información de usuarios
 import { FeedbackAgent } from './components/feedback/FeedbackAgent';
@@ -198,56 +190,52 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <Router>
         <QueryClientProvider client={queryClient}>
-          <DynamicThemeProvider>
-            <StylesThemeProvider>
-              <GuardianColorProvider initialTheme="guardian">
-                <CssBaseline />
-                <AuthProvider>
-                  <FeedbackProvider>
-                    <NotificationProvider>
-                      <LetsEducationProvider>
-                        <DiscoveryTutorialProvider>
-                          <Box
-                            sx={{
-                              minHeight: '100vh',
-                              background: 'var(--guardian-bg-primary)',
-                              transition: 'background 300ms ease',
-                            }}
-                          >
-                            <Suspense fallback={<div>Cargando...</div>}>
-                              <AppRoutes />
-                            </Suspense>
+          <GuardianColorProvider initialTheme="minimalist">
+            <CssBaseline />
+            <AuthProvider>
+              <FeedbackProvider>
+                <NotificationProvider>
+                  <LetsEducationProvider>
+                    <DiscoveryTutorialProvider>
+                      <Box
+                        sx={{
+                          minHeight: '100vh',
+                          background: 'var(--guardian-background)',
+                          color: 'var(--guardian-text-primary)',
+                          transition: 'background 300ms ease, color 300ms ease',
+                        }}
+                      >
+                        <Suspense fallback={<div>Cargando...</div>}>
+                          <AppRoutes />
+                        </Suspense>
 
-                            {/* <div style={{ position: 'fixed', bottom: '80px', right: '10px', zIndex: 10000 }}>
-                              <ThemeSelector />
-                            </div> */}
+                        {/* Selector de tema (opcional - descomentar para activar) */}
+                        {/* <GuardianThemeSelector /> */}
 
-                            {/* <TutorialFloatingButton /> */}
+                        {/* <TutorialFloatingButton /> */}
 
-                            <FeedbackAgent />
+                        <FeedbackAgent />
 
-                            <EnvironmentBanner />
+                        <EnvironmentBanner />
 
-                            <Toaster
-                              position="top-right"
-                              toastOptions={{
-                                style: {
-                                  background: 'var(--guardian-bg-surface)',
-                                  color: 'var(--guardian-text-primary)',
-                                  border: '1px solid var(--guardian-primary)',
-                                  borderRadius: '16px',
-                                },
-                              }}
-                            />
-                          </Box>
-                        </DiscoveryTutorialProvider>
-                      </LetsEducationProvider>
-                    </NotificationProvider>
-                  </FeedbackProvider>
-                </AuthProvider>
-              </GuardianColorProvider>
-            </StylesThemeProvider>
-          </DynamicThemeProvider>
+                        <Toaster
+                          position="top-right"
+                          toastOptions={{
+                            style: {
+                              background: 'var(--guardian-surface)',
+                              color: 'var(--guardian-text-primary)',
+                              border: '1px solid var(--guardian-primary)',
+                              borderRadius: '16px',
+                            },
+                          }}
+                        />
+                      </Box>
+                    </DiscoveryTutorialProvider>
+                  </LetsEducationProvider>
+                </NotificationProvider>
+              </FeedbackProvider>
+            </AuthProvider>
+          </GuardianColorProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </Router>

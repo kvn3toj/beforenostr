@@ -54,7 +54,7 @@ interface MarketplaceItem {
   tags: string[];
   featured: boolean;
   trending: boolean;
-  ayniScore: number; // 🌱 Puntuación de reciprocidad
+  reciprocidadScore: number; // 🌱 Puntuación de reciprocidad
   bienComunScore: number; // 🌍 Contribución al bien común
   images: string[];
   createdAt: string;
@@ -218,14 +218,14 @@ const MarketplaceItemCard = memo<{
             </Typography>
           </Box>
 
-          {/* 🌱 SCORES DE AYNI Y BIEN COMÚN */}
+          {/* 🌱 SCORES DE RECIPROCIDAD Y BIEN COMÚN */}
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <Tooltip title={`Ayni Score: ${item.ayniScore}/100`}>
+            <Tooltip title={`Reciprocidad Score: ${item.reciprocidadScore}/100`}>
               <Chip
-                label={`A:${item.ayniScore}`}
+                label={`A:${item.reciprocidadScore}`}
                 size="small"
                 sx={{
-                  backgroundColor: `rgba(76, 175, 80, ${item.ayniScore / 100})`,
+                  backgroundColor: `rgba(76, 175, 80, ${item.reciprocidadScore / 100})`,
                   color: 'white',
                   fontSize: '11px'
                 }}
@@ -314,7 +314,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
   // 🎯 ESTADO LOCAL OPTIMIZADO
   const [filters, setFilters] = useState(initialFilters);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'newest' | 'price' | 'ayni' | 'popular'>('newest');
+  const [sortBy, setSortBy] = useState<'newest' | 'price' | 'reciprocidad' | 'popular'>('newest');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   // 🔄 DATOS SIMULADOS MEJORADOS
@@ -322,7 +322,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
     {
       id: '1',
       title: 'Curso de Permacultura Avanzada',
-      description: 'Aprende técnicas avanzadas de permacultura para crear sistemas sustentables que honren los principios de Ayni y Bien Común.',
+      description: 'Aprende técnicas avanzadas de permacultura para crear sistemas sustentables que honren los principios de Reciprocidad y Bien Común.',
       type: 'service',
       price: 150,
       currency: 'lukas',
@@ -333,10 +333,10 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
         meritos: 2500,
         trustLevel: 'gold'
       },
-      tags: ['permacultura', 'sustentabilidad', 'ayni', 'pachamama'],
+      tags: ['permacultura', 'sustentabilidad', 'reciprocidad', 'pachamama'],
       featured: true,
       trending: true,
-      ayniScore: 95,
+      reciprocidadScore: 95,
       bienComunScore: 88,
       images: ['/images/permacultura.jpg'],
       createdAt: '2024-01-15',
@@ -359,7 +359,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
       tags: ['miel', 'orgánico', 'abejas', 'regenerativo'],
       featured: false,
       trending: true,
-      ayniScore: 92,
+      reciprocidadScore: 92,
       bienComunScore: 94,
       images: ['/images/miel.jpg'],
       createdAt: '2024-01-10',
@@ -382,7 +382,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
       tags: ['reforestación', 'colaboración', 'cordillera', 'nativo'],
       featured: true,
       trending: false,
-      ayniScore: 98,
+      reciprocidadScore: 98,
       bienComunScore: 97,
       images: ['/images/reforestacion.jpg'],
       createdAt: '2024-01-08',
@@ -414,10 +414,10 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
       switch (sortBy) {
         case 'price':
           return a.price - b.price;
-        case 'ayni':
-          return b.ayniScore - a.ayniScore;
+        case 'reciprocidad':
+          return b.reciprocidadScore - a.reciprocidadScore;
         case 'popular':
-          return (b.seller.meritos + b.ayniScore) - (a.seller.meritos + a.ayniScore);
+          return (b.seller.meritos + b.reciprocidadScore) - (a.seller.meritos + a.reciprocidadScore);
         case 'newest':
         default:
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -449,7 +449,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
         {/* 🌌 HEADER PRINCIPAL CON EFECTOS CÓSMICOS */}
         <RevolutionaryWidget
           title="🏪 GMP - Gamified Match Place"
-          subtitle="Intercambio de Valor basado en Ayni y Bien Común"
+          subtitle="Intercambio de Valor basado en Reciprocidad y Bien Común"
           variant="elevated"
           element="tierra" // Verde/marrón para marketplace/comercio
           cosmicEffects={cosmicEffectsEnabled ? {
@@ -545,7 +545,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
               >
                 <option value="newest">Más recientes</option>
                 <option value="price">Precio menor</option>
-                <option value="ayni">Mayor Ayni</option>
+                <option value="reciprocidad">Mayor Reciprocidad</option>
                 <option value="popular">Más populares</option>
               </select>
             </Box>
@@ -605,7 +605,7 @@ const EnhancedMarketplace: React.FC<EnhancedMarketplaceProps> = ({
           style={{ marginTop: '3rem' }}
         >
           <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-            En el Marketplace CoomÜnity, cada intercambio fortalece los lazos de <strong>Ayni</strong> (reciprocidad equilibrada)
+            En el Marketplace CoomÜnity, cada intercambio fortalece los lazos de <strong>Reciprocidad</strong> (reciprocidad equilibrada)
             y contribuye al <strong>Bien Común</strong>. Los <strong>Lükas</strong>, <strong>Öndas</strong> y <strong>Mëritos</strong>
             no son solo monedas, sino manifestaciones de valor regenerativo que nutren nuestra comunidad.
           </Typography>

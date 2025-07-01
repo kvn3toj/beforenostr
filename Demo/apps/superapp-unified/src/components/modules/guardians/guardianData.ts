@@ -76,11 +76,11 @@ export const GUARDIANS: GuardianExtended[] = [
     id: 'nira',
     name: 'NIRA',
     specialization: 'Analytics',
-    mission: 'Medir el balance de Ayni, el crecimiento del Bien Común y la Metanöia. Crear dashboards que revelen la salud espiritual del ecosistema. Interpretar patrones de datos para guiar la evolución consciente.',
+    mission: 'Medir el balance de Reciprocidad, el crecimiento del Bien Común y la Metanöia. Crear dashboards que revelen la salud espiritual del ecosistema. Interpretar patrones de datos para guiar la evolución consciente.',
     philosophy: 'Los Datos son el Eco de la Consciencia Colectiva.',
     mantra: 'Yo soy la visión que revela el alma en los números.',
     functions: [
-      'Medir lo que realmente importa: el balance de Ayni, el crecimiento del Bien Común, los momentos de Metanöia.',
+      'Medir lo que realmente importa: el balance de Reciprocidad, el crecimiento del Bien Común, los momentos de Metanöia.',
       'Crear dashboards que no solo muestren números, sino que revelen la salud espiritual del ecosistema.',
       'Interpretar los patrones de datos para guiar la evolución consciente de CoomÜnity.'
     ]

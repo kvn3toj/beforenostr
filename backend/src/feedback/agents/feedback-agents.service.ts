@@ -4,7 +4,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 /**
  * 🔮 CoP ORÁCULO - Sistema Multi-Agente
  * Inspirado en CrewAI para transformar feedback en sabiduría colectiva
- * Implementa agentes especializados que colaboran según principios de Ayni
+ * Implementa agentes especializados que colaboran según principios de Reciprocidad
  */
 
 // Interfaces para el sistema de agentes
@@ -103,7 +103,7 @@ export class FeedbackAgentsService {
         priority: 'CRITICAL',
         estimatedResolution: '2 hours',
         resourcesNeeded: ['backend-dev', 'qa-tester'],
-        ayniImpact: 'HIGH', // Impacto en el Bien Común
+        reciprocidadImpact: 'HIGH', // Impacto en el Bien Común
       },
       lukasGenerated: 50,
     };
@@ -135,7 +135,7 @@ export class FeedbackAgentsService {
         stakeholdersNotified: ['admin-team', 'ux-team'],
         collaborationChannels: ['slack-cop-oraculo', 'feedback-board'],
         consensusLevel: 0.85,
-        ayniFlow: 'BALANCED', // Flujo equilibrado de Ayni
+        reciprocidadFlow: 'BALANCED', // Flujo equilibrado de Reciprocidad
       },
       lukasGenerated: 30,
     };
@@ -212,7 +212,7 @@ export class FeedbackAgentsService {
   }
 
   /**
-   * 🤝 COORDINADOR DE COLABORACIÓN AYNI
+   * 🤝 COORDINADOR DE COLABORACIÓN RECIPROCIDAD
    * Orchestor principal que gestiona la colaboración entre todos los agentes
    */
   async orchestrateCollaboration(
@@ -221,7 +221,7 @@ export class FeedbackAgentsService {
   ): Promise<{
     tasks: CollaborationTask[];
     totalLukasGenerated: number;
-    ayniBalance: number;
+    reciprocidadBalance: number;
     collaborationScore: number;
   }> {
     this.logger.log(
@@ -254,17 +254,17 @@ export class FeedbackAgentsService {
       (sum, task) => sum + task.lukasGenerated,
       0
     );
-    const ayniBalance = this.calculateAyniBalance(tasks);
+    const reciprocidadBalance = this.calculateReciprocidadBalance(tasks);
     const collaborationScore = this.calculateCollaborationScore(tasks);
 
     this.logger.log(
-      `🏆 [COORDINADOR] Colaboración completada - Lükas total: ${totalLukasGenerated}, Ayni: ${ayniBalance}`
+      `🏆 [COORDINADOR] Colaboración completada - Lükas total: ${totalLukasGenerated}, Reciprocidad: ${reciprocidadBalance}`
     );
 
     return {
       tasks,
       totalLukasGenerated,
-      ayniBalance,
+      reciprocidadBalance,
       collaborationScore,
     };
   }
@@ -274,14 +274,14 @@ export class FeedbackAgentsService {
    */
   async calculateCommunityMetrics(): Promise<{
     wisdomQuotient: number;
-    ayniIndex: number;
+    reciprocidadIndex: number;
     collaborationVelocity: number;
     innovationScore: number;
   }> {
     // Simulación de métricas comunitarias
     return {
       wisdomQuotient: 8.7, // Calidad de la sabiduría generada
-      ayniIndex: 0.92, // Balance de reciprocidad
+      reciprocidadIndex: 0.92, // Balance de reciprocidad
       collaborationVelocity: 15.3, // Velocidad de colaboración
       innovationScore: 7.8, // Nivel de innovación
     };
@@ -343,8 +343,8 @@ export class FeedbackAgentsService {
     return Math.round(reward);
   }
 
-  private calculateAyniBalance(tasks: CollaborationTask[]): number {
-    // Cálculo del balance de Ayni (reciprocidad)
+  private calculateReciprocidadBalance(tasks: CollaborationTask[]): number {
+    // Cálculo del balance de Reciprocidad (reciprocidad)
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter(
       (task) => task.status === 'COMPLETED'

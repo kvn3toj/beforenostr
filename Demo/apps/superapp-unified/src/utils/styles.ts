@@ -1,14 +1,175 @@
-// ===== COOMUNITY SUPERAPP - STYLE UTILITIES =====
+/**
+ * Utilidades de estilo para la SuperApp CoomÜnity
+ * ===============================================================================
+ * Este archivo proporciona funciones y constantes para aplicar estilos consistentes
+ * en toda la aplicación, siguiendo el sistema de diseño unificado.
+ */
 
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { ELEMENT_COLORS, CONCEPT_COLORS } from '../theme/colors';
 
 /**
- * Utility function to merge Tailwind CSS classes with proper conflict resolution
- * Uses clsx for conditional classes and tailwind-merge for conflict resolution
+ * Utilidad para combinar nombres de clase de manera eficiente
+ * Combina clsx (para condicionales) con tailwind-merge (para resolver conflictos)
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+/**
+ * Colores de los elementos filosóficos para fácil acceso
+ */
+export const elementColors = {
+  fuego: {
+    primary: ELEMENT_COLORS.fuego.primary,
+    light: ELEMENT_COLORS.fuego.light,
+    dark: ELEMENT_COLORS.fuego.dark,
+  },
+  agua: {
+    primary: ELEMENT_COLORS.agua.primary,
+    light: ELEMENT_COLORS.agua.light,
+    dark: ELEMENT_COLORS.agua.dark,
+  },
+  tierra: {
+    primary: ELEMENT_COLORS.tierra.primary,
+    light: ELEMENT_COLORS.tierra.light,
+    dark: ELEMENT_COLORS.tierra.dark,
+  },
+  aire: {
+    primary: ELEMENT_COLORS.aire.primary,
+    light: ELEMENT_COLORS.aire.light,
+    dark: ELEMENT_COLORS.aire.dark,
+  },
+  eter: {
+    primary: ELEMENT_COLORS.eter.primary,
+    light: ELEMENT_COLORS.eter.light,
+    dark: ELEMENT_COLORS.eter.dark,
+  },
+};
+
+/**
+ * Colores de conceptos filosóficos para fácil acceso
+ */
+export const conceptColors = {
+  reciprocidad: CONCEPT_COLORS.reciprocidad,
+  meritos: CONCEPT_COLORS.meritos,
+  ondas: CONCEPT_COLORS.ondas,
+  lukas: CONCEPT_COLORS.lukas,
+  bienComun: CONCEPT_COLORS.bienComun,
+};
+
+/**
+ * Obtiene las clases CSS para un botón según su variante y tamaño
+ */
+export function getButtonClasses(
+  variant: keyof typeof buttonVariants.variant = 'primary',
+  size: keyof typeof buttonVariants.size = 'md',
+  className?: string
+): string {
+  return cn(
+    buttonVariants.base,
+    buttonVariants.size[size],
+    buttonVariants.variant[variant],
+    className
+  );
+}
+
+/**
+ * Obtiene las clases CSS para una tarjeta según su variante y padding
+ */
+export function getCardClasses(
+  variant: keyof typeof cardVariants.variant = 'elevated',
+  padding: keyof typeof cardVariants.padding = 'md',
+  interactive: boolean = false,
+  className?: string
+): string {
+  return cn(
+    cardVariants.base,
+    cardVariants.variant[variant],
+    cardVariants.padding[padding],
+    interactive ? cardVariants.interactive.true : cardVariants.interactive.false,
+    className
+  );
+}
+
+/**
+ * Genera un color con opacidad para superposiciones
+ */
+export function withOpacity(color: string, opacity: number): string {
+  // Validar que el color esté en formato hexadecimal
+  if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
+    return color; // Devolver el color original si no es hexadecimal
+  }
+
+  // Convertir color hex a RGB
+  let r = 0, g = 0, b = 0;
+  if (color.length === 4) {
+    // #RGB format
+    r = parseInt(color[1] + color[1], 16);
+    g = parseInt(color[2] + color[2], 16);
+    b = parseInt(color[3] + color[3], 16);
+  } else {
+    // #RRGGBB format
+    r = parseInt(color.slice(1, 3), 16);
+    g = parseInt(color.slice(3, 5), 16);
+    b = parseInt(color.slice(5, 7), 16);
+  }
+
+  // Devolver color en formato rgba
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+/**
+ * Genera un degradado basado en un color base
+ */
+export function generateGradient(baseColor: string, direction: 'to-r' | 'to-b' | 'to-br' = 'to-r'): string {
+  // Validar que el color esté en formato hexadecimal
+  if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(baseColor)) {
+    return `linear-gradient(${direction === 'to-r' ? '90deg' : direction === 'to-b' ? '180deg' : '135deg'}, ${baseColor}, ${baseColor})`;
+  }
+
+  // Convertir color hex a RGB
+  let r = 0, g = 0, b = 0;
+  if (baseColor.length === 4) {
+    // #RGB format
+    r = parseInt(baseColor[1] + baseColor[1], 16);
+    g = parseInt(baseColor[2] + baseColor[2], 16);
+    b = parseInt(baseColor[3] + baseColor[3], 16);
+  } else {
+    // #RRGGBB format
+    r = parseInt(baseColor.slice(1, 3), 16);
+    g = parseInt(baseColor.slice(3, 5), 16);
+    b = parseInt(baseColor.slice(5, 7), 16);
+  }
+
+  // Crear una versión más oscura del color (para el final del gradiente)
+  const darkenFactor = 0.2;
+  const r2 = Math.max(0, Math.floor(r * (1 - darkenFactor)));
+  const g2 = Math.max(0, Math.floor(g * (1 - darkenFactor)));
+  const b2 = Math.max(0, Math.floor(b * (1 - darkenFactor)));
+
+  // Convertir de nuevo a hex
+  const darkColor = `#${r2.toString(16).padStart(2, '0')}${g2.toString(16).padStart(2, '0')}${b2.toString(16).padStart(2, '0')}`;
+
+  // Devolver el gradiente
+  const directionMap = {
+    'to-r': '90deg',
+    'to-b': '180deg',
+    'to-br': '135deg'
+  };
+
+  return `linear-gradient(${directionMap[direction]}, ${baseColor}, ${darkColor})`;
+}
+
+/**
+ * Obtiene el color de un elemento específico
+ */
+export function getElementColor(
+  element: keyof typeof elementColors,
+  type: keyof typeof elementColors.tierra = 'primary'
+): string {
+  return elementColors[element][type];
 }
 
 // ===== PREDEFINED COMPONENT VARIANTS =====
@@ -18,23 +179,23 @@ export function cn(...inputs: ClassValue[]) {
  */
 export const buttonVariants = {
   variant: {
-    primary: 'bg-coomunity-500 text-white hover:bg-coomunity-600 focus:ring-2 focus:ring-coomunity-500 focus:ring-offset-2',
-    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2',
-    outline: 'border border-coomunity-500 text-coomunity-500 hover:bg-coomunity-50 focus:ring-2 focus:ring-coomunity-500 focus:ring-offset-2',
-    ghost: 'text-coomunity-500 hover:bg-coomunity-50 focus:ring-2 focus:ring-coomunity-500 focus:ring-offset-2',
-    success: 'bg-success-500 text-white hover:bg-success-600 focus:ring-2 focus:ring-success-500 focus:ring-offset-2',
-    warning: 'bg-warning-500 text-white hover:bg-warning-600 focus:ring-2 focus:ring-warning-500 focus:ring-offset-2',
-    error: 'bg-error-500 text-white hover:bg-error-600 focus:ring-2 focus:ring-error-500 focus:ring-offset-2',
-    gold: 'bg-gold-500 text-white hover:bg-gold-600 focus:ring-2 focus:ring-gold-500 focus:ring-offset-2',
+    primary: 'bg-primary text-white hover:bg-primary/90 shadow-sm',
+    secondary: 'bg-secondary text-white hover:bg-secondary/90 shadow-sm',
+    outline: 'border-2 border-input bg-transparent hover:bg-accent hover:text-accent-foreground',
+    ghost: 'bg-transparent hover:bg-accent hover:text-accent-foreground',
+    success: 'bg-green-600 text-white hover:bg-green-700 shadow-sm',
+    warning: 'bg-amber-500 text-white hover:bg-amber-600 shadow-sm',
+    error: 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
+    gold: 'bg-gradient-to-r from-amber-400 to-yellow-500 text-white hover:from-amber-500 hover:to-yellow-600 shadow-sm',
   },
   size: {
-    xs: 'px-2 py-1 text-xs',
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
-    xl: 'px-8 py-4 text-xl',
+    xs: 'h-7 px-2 text-xs rounded',
+    sm: 'h-8 px-3 text-sm rounded-md',
+    md: 'h-10 px-4 text-sm rounded-md',
+    lg: 'h-12 px-6 text-base rounded-lg',
+    xl: 'h-14 px-8 text-lg rounded-lg',
   },
-  base: 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
+  base: 'inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
 };
 
 /**
@@ -42,24 +203,24 @@ export const buttonVariants = {
  */
 export const cardVariants = {
   variant: {
-    elevated: 'bg-white shadow-md border border-gray-100',
-    outlined: 'bg-white border border-gray-200',
-    ghost: 'bg-gray-50 border border-transparent',
-    coomunity: 'bg-gradient-to-br from-coomunity-50 to-coomunity-100 border border-coomunity-200',
-    gold: 'bg-gradient-to-br from-gold-50 to-gold-100 border border-gold-200',
+    elevated: 'bg-white shadow-md dark:bg-gray-800',
+    outlined: 'bg-white border-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700',
+    ghost: 'bg-gray-50 dark:bg-gray-900',
+    coomunity: 'bg-white border-l-4 border-l-primary shadow-sm dark:bg-gray-800',
+    gold: 'bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 shadow-sm dark:from-amber-900/30 dark:to-amber-800/30 dark:border-amber-700/50',
   },
   padding: {
     none: 'p-0',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
-    xl: 'p-10',
+    sm: 'p-3',
+    md: 'p-5',
+    lg: 'p-7',
+    xl: 'p-9',
   },
   interactive: {
-    true: 'hover:shadow-lg hover:-translate-y-1 cursor-pointer transition-all duration-200',
+    true: 'transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary',
     false: '',
   },
-  base: 'rounded-lg transition-all duration-200',
+  base: 'rounded-xl overflow-hidden',
 };
 
 /**
@@ -118,25 +279,25 @@ export const animations = {
   slideLeft: 'animate-slide-left',
   slideRight: 'animate-slide-right',
   scaleIn: 'animate-scale-in',
-  
+
   // Exit animations
   fadeOut: 'animate-fade-out',
   scaleOut: 'animate-scale-out',
-  
+
   // Continuous animations
   pulse: 'animate-pulse-slow',
   glow: 'animate-glow',
   goldGlow: 'animate-gold-glow',
-  ayniFlow: 'animate-ayni-flow',
-  
+  reciprocidadFlow: 'animate-reciprocidad-flow',
+
   // Interactive animations
   bounce: 'animate-bounce-soft',
   wiggle: 'animate-wiggle',
-  
+
   // CoomÜnity specific
   meritosCount: 'animate-meritos-count',
   ondasRipple: 'animate-ondas-ripple',
-  
+
   // Hover effects
   hoverLift: 'coomunity-hover-lift',
   hoverScale: 'hover:scale-105 transition-transform duration-200',
@@ -179,7 +340,7 @@ export const gradients = {
   gold: 'coomunity-gradient-gold',
   elements: 'coomunity-gradient-elements',
   textCoomunity: 'coomunity-text-gradient',
-  
+
   // Custom gradients
   sunset: 'bg-gradient-to-r from-fire-400 via-warning-400 to-gold-400',
   ocean: 'bg-gradient-to-r from-water-400 via-info-400 to-coomunity-400',
@@ -219,40 +380,6 @@ export const responsive = {
 // ===== HELPER FUNCTIONS =====
 
 /**
- * Generate button classes with variants
- */
-export function getButtonClasses(
-  variant: keyof typeof buttonVariants.variant = 'primary',
-  size: keyof typeof buttonVariants.size = 'md',
-  className?: string
-) {
-  return cn(
-    buttonVariants.base,
-    buttonVariants.variant[variant],
-    buttonVariants.size[size],
-    className
-  );
-}
-
-/**
- * Generate card classes with variants
- */
-export function getCardClasses(
-  variant: keyof typeof cardVariants.variant = 'elevated',
-  padding: keyof typeof cardVariants.padding = 'md',
-  interactive: boolean = false,
-  className?: string
-) {
-  return cn(
-    cardVariants.base,
-    cardVariants.variant[variant],
-    cardVariants.padding[padding],
-    interactive ? cardVariants.interactive.true : cardVariants.interactive.false,
-    className
-  );
-}
-
-/**
  * Generate badge classes with variants
  */
 export function getBadgeClasses(
@@ -290,27 +417,27 @@ export function getInputClasses(
  * CoomÜnity philosophy-aligned color utilities
  */
 export const coomunityColors = {
-  // Ayni (Reciprocity) - Balanced colors
-  ayni: {
+  // Reciprocidad (Reciprocity) - Balanced colors
+  reciprocidad: {
     primary: 'text-coomunity-600 bg-coomunity-50',
     secondary: 'text-coomunity-500 bg-coomunity-25',
     accent: 'text-coomunity-700 bg-coomunity-100',
   },
-  
+
   // Bien Común (Common Good) - Community colors
   bienComun: {
     primary: 'text-success-600 bg-success-50',
     secondary: 'text-success-500 bg-success-25',
     accent: 'text-success-700 bg-success-100',
   },
-  
+
   // Mëritos - Achievement colors
   meritos: {
     primary: 'text-gold-600 bg-gold-50',
     secondary: 'text-gold-500 bg-gold-25',
     accent: 'text-gold-700 bg-gold-100',
   },
-  
+
   // Öndas - Energy colors
   ondas: {
     primary: 'text-info-600 bg-info-50',
@@ -353,66 +480,6 @@ export const elements = {
   },
 };
 
-/**
- * Element-based color system aligned with CoomÜnity philosophy
- * Each element represents different aspects of growth and contribution
- */
-export const elementColors = {
-  tierra: {
-    // Earth: Stability, trust, foundation
-    primary: '#92400e', // Warm brown
-    secondary: '#d97706', // Amber
-    light: '#fef3c7', // Light amber
-    text: 'text-amber-800',
-    bg: 'bg-amber-50',
-    border: 'border-amber-200',
-    chip: 'bg-amber-100 text-amber-800 border-amber-200',
-  },
-  agua: {
-    // Water: Flow, adaptability, clarity
-    primary: '#0891b2', // Deep cyan
-    secondary: '#06b6d4', // Cyan
-    light: '#cffafe', // Light cyan
-    text: 'text-cyan-800',
-    bg: 'bg-cyan-50',
-    border: 'border-cyan-200',
-    chip: 'bg-cyan-100 text-cyan-800 border-cyan-200',
-  },
-  fuego: {
-    // Fire: Passion, action, transformation
-    primary: '#dc2626', // Red
-    secondary: '#f97316', // Orange
-    light: '#fed7d7', // Light red
-    text: 'text-red-800',
-    bg: 'bg-red-50',
-    border: 'border-red-200',
-    chip: 'bg-red-100 text-red-800 border-red-200',
-  },
-  aire: {
-    // Air: Vision, communication, ideas
-    primary: '#7c3aed', // Purple (consistent with CoomÜnity primary)
-    secondary: '#8b5cf6', // Violet
-    light: '#f3e8ff', // Light purple
-    text: 'text-purple-800',
-    bg: 'bg-purple-50',
-    border: 'border-purple-200',
-    chip: 'bg-purple-100 text-purple-800 border-purple-200',
-  },
-};
-
-/**
- * Get element-based color classes
- * @param element - The element type (tierra, agua, fuego, aire)
- * @param type - The type of color class needed
- * @returns The appropriate Tailwind CSS class
- */
-export function getElementColor(
-  element: keyof typeof elementColors,
-  type: keyof typeof elementColors.tierra
-): string {
-  return elementColors[element]?.[type] || elementColors.aire[type];
-}
-
 export default {
   cn,
   buttonVariants,
@@ -433,4 +500,4 @@ export default {
   elements,
   elementColors,
   getElementColor,
-}; 
+};

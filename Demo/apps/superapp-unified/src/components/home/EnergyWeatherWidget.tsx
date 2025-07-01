@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -12,6 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import Grid from '@mui/material/Grid';
 import { useTheme, alpha } from '@mui/material';
+
+// 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
+import { RevolutionaryWidget } from '../../design-system';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -58,7 +59,7 @@ interface EnergyWeatherWidgetProps {
       tierra: number;
       aire: number;
     };
-    balanceAyni: number;
+    balanceReciprocidad: number;
     socialConnections: number;
   };
   className?: string;
@@ -75,7 +76,7 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
 
   // 🌤️ Calcular el clima energético basado en métricas del usuario
   const weatherData = useMemo((): EnergyWeatherData => {
-    const { ondas, meritos, elementos, balanceAyni, socialConnections } =
+    const { ondas, meritos, elementos, balanceReciprocidad, socialConnections } =
       userMetrics;
 
     // Calcular temperatura energética (0-100)
@@ -91,7 +92,7 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
 
     // Determinar condición climática
     let condition: EnergyWeatherData['condition'] = 'clear';
-    if (temperature >= 80 && humidity >= 80 && balanceAyni >= 0.8) {
+    if (temperature >= 80 && humidity >= 80 && balanceReciprocidad >= 0.8) {
       condition = 'energetic';
     } else if (temperature >= 60 && humidity >= 70) {
       condition = 'sunny';
@@ -288,78 +289,55 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
   );
 
   return (
-    <Card
-      className={`glassmorphism-card interactive-card-advanced energy-weather-widget ${className}`}
-      sx={{
-        background: `linear-gradient(135deg, ${alpha(currentWeather.color, 0.1)} 0%, ${alpha(theme.palette.background.paper, 0.8)} 100%)`,
-        border: `1px solid ${alpha(currentWeather.color, 0.3)}`,
-        borderRadius: 3,
-        overflow: 'hidden',
-        position: 'relative',
-        minHeight: 280,
-        transition: 'all 0.4s ease-in-out',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: `0 8px 32px ${alpha(currentWeather.color, 0.3)}`,
-        },
+    <RevolutionaryWidget
+      title="🌤️ Clima Energético"
+      subtitle={currentWeather.description}
+      variant="elevated"
+      element="aire"
+      cosmicIntensity="medium"
+      cosmicEffects={{
+        enableGlow: true,
+        enableAnimations: true,
+        enableParticles: true,
+        glowIntensity: 1.1,
+        particleConfig: {
+          count: 6,
+          size: 4,
+          color: currentWeather.color,
+          speed: 1.2,
+          opacity: 0.7,
+          blur: true
+        }
       }}
+      interactionMode="hover"
+      className={`energy-weather-widget ${className}`}
+      style={{ minHeight: '320px' }}
+      onRefresh={() => console.log('🔄 Refreshing weather...')}
+      onExpand={() => setExpanded(!expanded)}
     >
       {/* Partículas flotantes */}
       {renderParticles()}
 
-      <CardContent sx={{ p: 3, position: 'relative', zIndex: 1 }}>
-        {/* Header con estado climático */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mb: 3,
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: 2,
-                background: currentWeather.gradient,
-                color: 'white',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: `0 4px 16px ${alpha(currentWeather.color, 0.4)}`,
-                animation: 'pulse 2s ease-in-out infinite',
-              }}
-            >
-              {currentWeather.icon}
-            </Box>
-            <Box>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 'bold', color: 'white' }}
-              >
-                Clima Energético
-              </Typography>
-              <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
-                {currentWeather.description}
-              </Typography>
-            </Box>
-          </Box>
-
-          <IconButton
-            onClick={handleExpandToggle}
+      <Box sx={{ p: 3, position: 'relative', zIndex: 1 }}>
+        {/* Estado actual con chip dinámico */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+          <Box
             sx={{
-              color: currentWeather.color,
-              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.3s ease',
+              p: 1.5,
+              borderRadius: 2,
+              background: currentWeather.gradient,
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: `0 4px 16px ${alpha(currentWeather.color, 0.4)}`,
+              animation: 'pulse 2s ease-in-out infinite',
+              mr: 1
             }}
           >
-            <ExpandMoreIcon />
-          </IconButton>
-        </Box>
+            {currentWeather.icon}
+          </Box>
 
-        {/* Estado actual con chip */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
           <Chip
             label={currentWeather.label}
             sx={{
@@ -373,18 +351,22 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
               },
             }}
           />
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <ThermostatIcon
-              sx={{ color: currentWeather.color, fontSize: '1.2rem' }}
-            />
-            <Typography
-              variant="h6"
-              sx={{ color: 'white', fontWeight: 'bold' }}
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 'auto' }}>
+            <IconButton
+              onClick={handleExpandToggle}
+              sx={{
+                color: currentWeather.color,
+                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease',
+              }}
             >
-              {Math.round(weatherData.temperature)}°
-            </Typography>
+              <ExpandMoreIcon />
+            </IconButton>
           </Box>
         </Box>
+
+
 
         {/* Métricas atmosféricas compactas */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -546,8 +528,8 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
             </Box>
           </Box>
         </Collapse>
-      </CardContent>
-    </Card>
+      </Box>
+    </RevolutionaryWidget>
   );
 };
 

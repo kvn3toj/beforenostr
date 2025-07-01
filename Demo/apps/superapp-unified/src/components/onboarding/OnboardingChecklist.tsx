@@ -468,7 +468,7 @@ const getChecklistForStage = (stage: string): ChecklistItem[] => {
     {
       id: 'philosophy_assessment',
       title: 'Completa el assessment de filosofía',
-      description: 'Demuestra tu comprensión de los principios de Ayni',
+      description: 'Demuestra tu comprensión de los principios de Reciprocidad',
       ondas: 15,
       meritos: 10,
       completed: false,

@@ -34,7 +34,7 @@ test.describe('Marketplace Discovery Tutorial - Complete Flow', () => {
     const expectedSteps = [
       {
         title: 'Filosofía del Marketplace',
-        content: 'principio andino de AYNI',
+        content: 'principio andino de RECIPROCIDAD',
         tips: 'reciprocidad balanceada'
       },
       {
@@ -167,7 +167,7 @@ test.describe('Marketplace Discovery Tutorial - Complete Flow', () => {
 
     // Verificar conceptos clave de CoomÜnity
     const keyTerms = [
-      'AYNI',
+      'RECIPROCIDAD',
       'reciprocidad balanceada',
       'Bien Común',
       'Lükas',

@@ -194,7 +194,7 @@ const UPlayModuleTest: React.FC = () => {
           }}
         >
           <Typography variant="subtitle2" mb={1}>
-            Progreso Ayni
+            Progreso Reciprocidad
           </Typography>
           <Box display="flex" gap={2}>
             <Box textAlign="center">
@@ -250,7 +250,7 @@ const SocialModuleTest: React.FC = () => {
             </Box>
           </Box>
           <Typography variant="body2" mb={2}>
-            Compartiendo valor a través del Ayni 🌟 #BienComún #Reciprocidad
+            Compartiendo valor a través del Reciprocidad 🌟 #BienComún #Reciprocidad
           </Typography>
           <Box display="flex" gap={1}>
             <CoomunityButton variant="ghost" size="sm">👍 12</CoomunityButton>

@@ -841,11 +841,13 @@ model UserChallenge {
 // =====================================================================
 
 enum Currency {
-  LUKAS
-  USD
-  EUR
-  BTC
-  ETH
+  UNIT      // Moneda de reciprocidad Ayni (Ünits)
+  LUKAS     // Puntos de contribución Lükas
+  MERITOS   // Recompensas Mëritos
+  USD       // Moneda fiduciaria
+  EUR       // Moneda fiduciaria
+  BTC       // Criptomoneda
+  ETH       // Criptomoneda
 }
 
 enum MarketplaceItemType {
@@ -873,7 +875,7 @@ model MarketplaceItem {
   itemType       MarketplaceItemType   @default(SERVICE)
   price          Float                 @default(0)
   priceToins     Float                 @default(0)
-  currency       Currency              @default(LUKAS)
+  currency       Currency              @default(UNIT)
   category       String?
   tags           String[]
   images         String[]

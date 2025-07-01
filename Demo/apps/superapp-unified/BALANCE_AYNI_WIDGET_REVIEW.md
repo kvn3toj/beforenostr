@@ -1,8 +1,8 @@
-# 📊 REVIEW WIDGET "TU BALANCE AYNI" - ANÁLISIS Y MEJORAS
+# 📊 REVIEW WIDGET "TU BALANCE RECIPROCIDAD" - ANÁLISIS Y MEJORAS
 
 ## 🎯 RESUMEN EJECUTIVO
 
-El widget "Tu Balance Ayni" es actualmente uno de los componentes más sofisticados del sistema, implementado en múltiples variantes. Sin embargo, presenta oportunidades de mejora significativas en unificación de esferas elementales y expansión de información en la sección inferior.
+El widget "Tu Balance Reciprocidad" es actualmente uno de los componentes más sofisticados del sistema, implementado en múltiples variantes. Sin embargo, presenta oportunidades de mejora significativas en unificación de esferas elementales y expansión de información en la sección inferior.
 
 ---
 
@@ -10,27 +10,27 @@ El widget "Tu Balance Ayni" es actualmente uno de los componentes más sofistica
 
 ### 📂 Componentes Identificados
 
-#### 1. **Componente Principal**: `AyniBalanceVisualization.tsx`
+#### 1. **Componente Principal**: `ReciprocidadBalanceVisualization.tsx`
 
-- **Ubicación**: `src/components/home/AyniBalanceVisualization.tsx`
+- **Ubicación**: `src/components/home/ReciprocidadBalanceVisualization.tsx`
 - **Características**: Sistema solar 3D con esferas orbitales elementales
 - **Estado**: Completamente implementado con efectos 3D avanzados
 
-#### 2. **Widget Completo**: `AyniBalanceFullWidget.tsx`
+#### 2. **Widget Completo**: `ReciprocidadBalanceFullWidget.tsx`
 
-- **Ubicación**: `src/components/home/widgets/AyniBalanceFullWidget.tsx`
-- **Características**: Wrapper que utiliza `AyniMetricsCardRevolutionary`
+- **Ubicación**: `src/components/home/widgets/ReciprocidadBalanceFullWidget.tsx`
+- **Características**: Wrapper que utiliza `ReciprocidadMetricsCardRevolutionary`
 - **Estado**: Implementado como widget independiente
 
-#### 3. **Widget Combinado**: `AyniWalletWidget.tsx`
+#### 3. **Widget Combinado**: `ReciprocidadWalletWidget.tsx`
 
-- **Ubicación**: `src/components/home/widgets/AyniWalletWidget.tsx`
-- **Características**: Combina Balance Ayni con información de cartera
+- **Ubicación**: `src/components/home/widgets/ReciprocidadWalletWidget.tsx`
+- **Características**: Combina Balance Reciprocidad con información de cartera
 - **Estado**: Implementado con doble funcionalidad
 
-#### 4. **Componente Revolucionario**: `AyniMetricsCardRevolutionary.tsx`
+#### 4. **Componente Revolucionario**: `ReciprocidadMetricsCardRevolutionary.tsx`
 
-- **Ubicación**: `src/components/home/AyniMetricsCardRevolutionary.tsx`
+- **Ubicación**: `src/components/home/ReciprocidadMetricsCardRevolutionary.tsx`
 - **Características**: Sistema avanzado con distribución Fibonacci y efectos físicos
 - **Estado**: Más de 300 líneas con funcionalidad completa
 
@@ -102,7 +102,7 @@ tierra: {
 ```typescript
 // Panel superior izquierdo actual
 <Box className="info-panel-floating">
-  - Balance Ayni Solar
+  - Balance Reciprocidad Solar
   - Nivel de usuario
   - Días consecutivos
   - Estado del balance
@@ -196,7 +196,7 @@ const EnhancedBottomPanel = {
       title: 'Métricas Comparativas',
       content: [
         'Ranking en la comunidad',
-        'Percentil de balance Ayni',
+        'Percentil de balance Reciprocidad',
         'Comparación con pares de nivel',
       ],
     },
@@ -216,9 +216,9 @@ const EnhancedBottomPanel = {
 
 ```typescript
 // Propuesta: Datos adicionales para mostrar
-interface EnhancedAyniData {
+interface EnhancedReciprocidadData {
   // Datos actuales
-  balanceAyni: number;
+  balanceReciprocidad: number;
   elementos: ElementStats;
 
   // NUEVOS: Datos históricos
@@ -283,7 +283,7 @@ const EnhancedInteractions = {
 ### 📅 Fase 2: Expansión de Información (2-3 días)
 
 1. **Diseñar panel inferior expandido** con métricas detalladas
-2. **Implementar gráficos históricos** de balance Ayni
+2. **Implementar gráficos históricos** de balance Reciprocidad
 3. **Agregar métricas comunitarias** y ranking
 
 ### 📅 Fase 3: Mejoras Interactivas (1-2 días)
@@ -338,7 +338,7 @@ const EnhancedInteractions = {
 
 ## 📋 CONCLUSIONES
 
-El widget "Tu Balance Ayni" tiene una base técnica **excelente** con efectos 3D avanzados y física realista. Las mejoras propuestas se enfocan en:
+El widget "Tu Balance Reciprocidad" tiene una base técnica **excelente** con efectos 3D avanzados y física realista. Las mejoras propuestas se enfocan en:
 
 1. **Unificar** la configuración de esferas elementales
 2. **Expandir** la información mostrada en la parte inferior
@@ -349,4 +349,4 @@ La implementaci��n de estas mejoras posicionará el widget como un **referen
 
 ---
 
-_Documento generado el ${new Date().toLocaleDateString()} - Review técnico del sistema Balance Ayni_
+_Documento generado el ${new Date().toLocaleDateString()} - Review técnico del sistema Balance Reciprocidad_

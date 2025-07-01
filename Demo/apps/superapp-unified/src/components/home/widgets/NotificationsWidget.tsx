@@ -24,7 +24,7 @@ import {
 // Definición simplificada
 interface Notification {
   id: string;
-  type: 'ayni' | 'achievement' | 'social' | 'marketplace' | 'education' | 'system';
+  type: 'reciprocidad' | 'achievement' | 'social' | 'marketplace' | 'education' | 'system';
   title: string;
   timestamp: Date;
   isRead: boolean;
@@ -33,13 +33,13 @@ interface Notification {
 const mockNotifications: Notification[] = [
   { id: '1', type: 'achievement', title: 'Nuevo Logro: Maestro del Agua', timestamp: new Date(Date.now() - 300000), isRead: false },
   { id: '2', type: 'social', title: 'María Elena quiere conectar contigo', timestamp: new Date(Date.now() - 900000), isRead: false },
-  { id: '3', type: 'ayni', title: '+250 Öndas recibidas', timestamp: new Date(Date.now() - 1800000), isRead: false },
+  { id: '3', type: 'reciprocidad', title: '+250 Öndas recibidas', timestamp: new Date(Date.now() - 1800000), isRead: false },
   { id: '4', type: 'marketplace', title: 'Oferta Especial en cursos', timestamp: new Date(Date.now() - 3600000), isRead: true },
   { id: '5', type: 'system', title: 'Nuevas funciones en UPlay', timestamp: new Date(Date.now() - 7200000), isRead: true },
 ];
 
 const notificationConfig = {
-  ayni: { icon: <Favorite />, color: 'error.main' },
+  reciprocidad: { icon: <Favorite />, color: 'error.main' },
   achievement: { icon: <EmojiEvents />, color: 'warning.main' },
   social: { icon: <Groups />, color: 'primary.main' },
   marketplace: { icon: <ShoppingCart />, color: 'info.main' },

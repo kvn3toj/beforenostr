@@ -268,7 +268,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
               />
               <Chip
                 size="small"
-                label="⚖️ Ayni Balance"
+                label="⚖️ Reciprocidad Balance"
                 sx={{ bgcolor: 'rgba(156, 39, 176, 0.3)', color: 'white' }}
               />
             </Stack>
@@ -286,7 +286,7 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
     const sentAmount = validatedTransactions.filter((tx: any) => tx.fromUserId === userId)
       .reduce((sum: number, tx: any) => sum + tx.amount, 0) || 0;
 
-    const ayniBalance = receivedAmount - sentAmount;
+    const reciprocidadBalance = receivedAmount - sentAmount;
 
     return (
       <Card sx={{ height: '100%' }}>
@@ -324,29 +324,29 @@ const UnitsWalletDashboard: React.FC<UnitsWalletDashboardProps> = ({ userId }) =
               <Box sx={{ textAlign: 'center' }}>
                 <TransferIcon sx={{
                   fontSize: 32,
-                  color: ayniBalance >= 0 ? 'success.main' : 'warning.main',
+                  color: reciprocidadBalance >= 0 ? 'success.main' : 'warning.main',
                   mb: 1
                 }} />
                 <Typography variant="h5" sx={{
                   fontWeight: 700,
-                  color: ayniBalance >= 0 ? 'success.main' : 'warning.main'
+                  color: reciprocidadBalance >= 0 ? 'success.main' : 'warning.main'
                 }}>
-                  {ayniBalance >= 0 ? '+' : ''}{ayniBalance.toFixed(2)}
+                  {reciprocidadBalance >= 0 ? '+' : ''}{reciprocidadBalance.toFixed(2)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Balance Ayni
+                  Balance Reciprocidad
                 </Typography>
               </Box>
             </Grid>
           </Grid>
 
           <Alert
-            severity={Math.abs(ayniBalance) <= 5 ? 'success' : 'info'}
+            severity={Math.abs(reciprocidadBalance) <= 5 ? 'success' : 'info'}
             sx={{ mt: 3 }}
           >
-            {Math.abs(ayniBalance) <= 5
-              ? "¡Excelente! Mantienes un buen equilibrio Ayni en tus intercambios."
-              : ayniBalance > 5
+            {Math.abs(reciprocidadBalance) <= 5
+              ? "¡Excelente! Mantienes un buen equilibrio Reciprocidad en tus intercambios."
+              : reciprocidadBalance > 5
                 ? "Has recibido más de lo que has dado. Considera ofrecer más servicios."
                 : "Has dado más de lo que has recibido. ¡Busca oportunidades para recibir!"
             }

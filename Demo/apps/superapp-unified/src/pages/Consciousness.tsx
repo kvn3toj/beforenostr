@@ -13,7 +13,7 @@ import ConsciousMetricsDashboard from '../components/dashboard/ConsciousMetricsD
  * en forma de métricas y dashboard interactivo.
  *
  * 🌌 FILOSOFÍA APLICADA:
- * - Ayni: Balance de reciprocidad visible
+ * - Reciprocidad: Balance de reciprocidad visible
  * - Bien Común: Métricas de contribución colectiva
  * - Cooperación: Medición de colaboración vs competencia
  * - Metanöia: Transformación consciente cuantificada
@@ -30,7 +30,7 @@ const ConsciousnessPage: React.FC = () => {
   // Biblioteca de Sabiduría extraída de ÜPlay
   const wisdomLibrary = [
     { 
-      title: 'Fundamentos de Ayni', 
+      title: 'Fundamentos de Reciprocidad', 
       category: 'Filosofía', 
       progress: 85,
       description: 'Descubre la sabiduría ancestral de la reciprocidad equilibrada',
@@ -54,7 +54,7 @@ const ConsciousnessPage: React.FC = () => {
       title: 'Reciprocidad en Acción', 
       category: 'Práctica', 
       progress: 92,
-      description: 'Implementa el Ayni en tu vida diaria y relaciones',
+      description: 'Implementa el Reciprocidad en tu vida diaria y relaciones',
       color: '#f5576c'
     },
     { 

@@ -30,7 +30,7 @@ Se ha implementado una **nueva paleta de colores unificada y amigable** para el 
 
 ```css
 --coomunity-primary-500: #6366f1; /* Azul principal más suave */
---coomunity-secondary-500: #22c55e; /* Verde equilibrado para balance Ayni */
+--coomunity-secondary-500: #22c55e; /* Verde equilibrado para balance Reciprocidad */
 ```
 
 ### **Textos (Jerarquía Clara)**

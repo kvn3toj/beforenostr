@@ -96,9 +96,9 @@
   font-weight: 500 !important;
 }
 
-/* ===== MÉTRICAS AYNI CARD OTOÑAL ===== */
+/* ===== MÉTRICAS RECIPROCIDAD CARD OTOÑAL ===== */
 .home-metrics-card,
-.ayni-metrics-card,
+.reciprocidad-metrics-card,
 .autumn-metrics-card {
   background: var(--card-bg-autumn) !important;
   border: 2px solid var(--card-border-autumn) !important;
@@ -112,7 +112,7 @@
 }
 
 .home-metrics-card::after,
-.ayni-metrics-card::after,
+.reciprocidad-metrics-card::after,
 .autumn-metrics-card::after {
   content: '';
   position: absolute;
@@ -126,7 +126,7 @@
 }
 
 .home-metrics-card:hover,
-.ayni-metrics-card:hover,
+.reciprocidad-metrics-card:hover,
 .autumn-metrics-card:hover {
   box-shadow: var(--card-shadow-hover-autumn) !important;
   transform: translateY(-3px) !important;
@@ -137,7 +137,7 @@
 .home-metrics-card h2,
 .home-metrics-card .MuiTypography-h2,
 .home-metrics-card .MuiTypography-h3,
-.ayni-metrics-card .MuiTypography-h3,
+.reciprocidad-metrics-card .MuiTypography-h3,
 .autumn-metrics-card .MuiTypography-h3 {
   color: var(--home-heading-primary-autumn) !important;
   font-weight: 800 !important;
@@ -147,16 +147,16 @@
 
 /* Valores de métricas principales otoñales */
 .home-metrics-card .metric-value,
-.ayni-metrics-card .metric-value,
+.reciprocidad-metrics-card .metric-value,
 .autumn-metrics-card .metric-value,
 .home-metrics-card .MuiTypography-h1,
-.ayni-metrics-card .MuiTypography-h1,
+.reciprocidad-metrics-card .MuiTypography-h1,
 .autumn-metrics-card .MuiTypography-h1 {
   background: var(--gradient-autumn-primary) !important;
   background-clip: text !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  color: var(--metric-ayni-autumn) !important; /* Fallback */
+  color: var(--metric-reciprocidad-autumn) !important; /* Fallback */
   font-weight: 900 !important;
   font-size: clamp(2.5rem, 6vw, 4rem) !important;
   line-height: 1.1 !important;
@@ -166,10 +166,10 @@
 
 /* Etiquetas de métricas otoñales */
 .home-metrics-card .metric-label,
-.ayni-metrics-card .metric-label,
+.reciprocidad-metrics-card .metric-label,
 .autumn-metrics-card .metric-label,
 .home-metrics-card .MuiTypography-body2,
-.ayni-metrics-card .MuiTypography-body2,
+.reciprocidad-metrics-card .MuiTypography-body2,
 .autumn-metrics-card .MuiTypography-body2 {
   color: var(--home-text-secondary-autumn) !important;
   font-weight: 600 !important;
@@ -566,7 +566,7 @@
 /* ===== RESPONSIVE OTOÑAL ===== */
 @media (max-width: 768px) {
   .home-metrics-card,
-  .ayni-metrics-card,
+  .reciprocidad-metrics-card,
   .autumn-metrics-card {
     padding: 24px !important;
     margin-bottom: 20px !important;
@@ -632,7 +632,7 @@
   .home-welcome-header,
   .autumn-welcome-header,
   .home-metrics-card,
-  .ayni-metrics-card,
+  .reciprocidad-metrics-card,
   .autumn-metrics-card,
   .wallet-card,
   .action-card,
@@ -654,7 +654,7 @@
   .home-welcome-header,
   .autumn-welcome-header,
   .home-metrics-card,
-  .ayni-metrics-card,
+  .reciprocidad-metrics-card,
   .autumn-metrics-card {
     background: #ffffff !important;
     border: 1px solid #8b4513 !important;

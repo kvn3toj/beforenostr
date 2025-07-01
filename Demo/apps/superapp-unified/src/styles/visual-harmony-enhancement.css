@@ -69,10 +69,10 @@
 
 /* ===== 🌈 COLORES SEMÁNTICOS GUARDIAN - PRINCIPIOS COOMUNITY ===== */
 :root {
-  /* 🤝 AYNI - Reciprocidad (Verde equilibrado) */
-  --guardian-ayni: var(--guardian-tierra-500);
-  --guardian-ayni-light: var(--guardian-tierra-100);
-  --guardian-ayni-dark: var(--guardian-tierra-700);
+  /* 🤝 RECIPROCIDAD - Reciprocidad (Verde equilibrado) */
+  --guardian-reciprocidad: var(--guardian-tierra-500);
+  --guardian-reciprocidad-light: var(--guardian-tierra-100);
+  --guardian-reciprocidad-dark: var(--guardian-tierra-700);
 
   /* 🏆 MÉRITOS - Logro (Dorado del fuego) */
   --guardian-meritos: var(--guardian-fuego-500);
@@ -126,7 +126,7 @@
   --guardian-text-muted: #595959;
 
   /* Textos de elementos específicos con contraste optimizado */
-  --guardian-text-ayni: #0d4012; /* Verde muy oscuro */
+  --guardian-text-reciprocidad: #0d4012; /* Verde muy oscuro */
   --guardian-text-meritos: #7d3c00; /* Naranja muy oscuro */
   --guardian-text-ondas: #4c1d95; /* Violeta muy oscuro */
   --guardian-text-lukas: #0c4a6e; /* Azul muy oscuro */
@@ -215,9 +215,9 @@ body {
 }
 
 /* Porcentaje principal - Máximo impacto visual */
-.ayni-metrics-card .percentage-display,
-.ayni-metrics-card .MuiTypography-h1,
-.ayni-metrics-card .MuiTypography-h2,
+.reciprocidad-metrics-card .percentage-display,
+.reciprocidad-metrics-card .MuiTypography-h1,
+.reciprocidad-metrics-card .MuiTypography-h2,
 [data-testid*='percentage'],
 .percentage-main,
 [data-testid*='primary-dashboard'] .MuiTypography-h1 {
@@ -300,11 +300,11 @@ body {
 
 /* ===== 🎯 MÉTRICAS ESPECÍFICAS - COLORES SEMÁNTICOS ===== */
 
-/* Métricas Ayni - Verde equilibrio */
-.metric-ayni,
-.ayni-metric,
-[data-metric='ayni'] {
-  color: var(--guardian-text-ayni) !important;
+/* Métricas Reciprocidad - Verde equilibrio */
+.metric-reciprocidad,
+.reciprocidad-metric,
+[data-metric='reciprocidad'] {
+  color: var(--guardian-text-reciprocidad) !important;
   font-weight: 700 !important;
 }
 
@@ -413,7 +413,7 @@ body {
 
 .MuiAlert-standardSuccess {
   background-color: var(--guardian-tierra-50) !important;
-  color: var(--guardian-text-ayni) !important;
+  color: var(--guardian-text-reciprocidad) !important;
   border-color: var(--guardian-tierra-200) !important;
 }
 
@@ -509,7 +509,7 @@ body {
 }
 
 /* Aplicar animaciones sutiles a elementos importantes */
-.ayni-metrics-card {
+.reciprocidad-metrics-card {
   animation: guardianFloat 6s ease-in-out infinite !important;
 }
 
@@ -527,7 +527,7 @@ body {
     font-size: 2rem !important;
   }
 
-  .ayni-metrics-card .MuiTypography-h1 {
+  .reciprocidad-metrics-card .MuiTypography-h1 {
     font-size: 4rem !important;
   }
 
@@ -541,7 +541,7 @@ body {
     font-size: 1.5rem !important;
   }
 
-  .ayni-metrics-card .MuiTypography-h1 {
+  .reciprocidad-metrics-card .MuiTypography-h1 {
     font-size: 3rem !important;
   }
 }
@@ -609,7 +609,7 @@ body {
 /* ===== 🔧 UTILIDADES GUARDIAN - HERRAMIENTAS RÁPIDAS ===== */
 .guardian-text-primary { color: var(--guardian-text-primary) !important; }
 .guardian-text-heading { color: var(--guardian-text-heading) !important; }
-.guardian-text-ayni { color: var(--guardian-text-ayni) !important; }
+.guardian-text-reciprocidad { color: var(--guardian-text-reciprocidad) !important; }
 .guardian-text-meritos { color: var(--guardian-text-meritos) !important; }
 .guardian-text-ondas { color: var(--guardian-text-ondas) !important; }
 .guardian-text-lukas { color: var(--guardian-text-lukas) !important; }

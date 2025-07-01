@@ -8,13 +8,13 @@ export const MOCK_PROFILE = {
   roles: ['jugador'],
   meritos: 150,
   ondas: 320,
-  bio: 'Aprendiz del Ayni y guardiana del bien común.',
+  bio: 'Aprendiz del Reciprocidad y guardiana del bien común.',
   joinedAt: '2024-05-01T10:00:00Z',
   location: 'Qosqo',
-  badges: ['Ayni Starter', 'Guardian del Bien Común'],
+  badges: ['Reciprocidad Starter', 'Guardian del Bien Común'],
   stats: {
     questsCompleted: 12,
-    ayniScore: 87,
+    reciprocidadScore: 87,
     bienComunScore: 92
   }
 };

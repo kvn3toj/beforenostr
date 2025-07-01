@@ -17,14 +17,14 @@ test.describe('Home Module - Backend Integration', () => {
     await page.waitForSelector('#root', { timeout: 10000 });
   });
 
-  test('should load real Ayni metrics from backend', async ({ page }) => {
+  test('should load real Reciprocidad metrics from backend', async ({ page }) => {
     console.log('🧪 Testing Home module with real backend data...');
     
     // Wait for the home page to load completely
     await page.waitForSelector('text=Dashboard Semántico', { timeout: 10000 });
     
-    // Wait for the Ayni Balance widget to appear
-    await page.waitForSelector('text=Tu Balance Ayni', { timeout: 10000 });
+    // Wait for the Reciprocidad Balance widget to appear
+    await page.waitForSelector('text=Tu Balance Reciprocidad', { timeout: 10000 });
     
     // Check that metrics are displayed (they should be real values from backend)
     const ondasElement = await page.waitForSelector('text=/Öndas/', { timeout: 10000 });
@@ -33,14 +33,14 @@ test.describe('Home Module - Backend Integration', () => {
     const meritosElement = await page.waitForSelector('text=/Mëritos/', { timeout: 10000 });
     expect(meritosElement).toBeTruthy();
     
-    // Check for the Ayni level (should be dynamic from backend)
-    const ayniLevelElement = await page.waitForSelector('text=/Guardián del Bien Común|Emprendedor Confiable|Colaborador Activo/', { timeout: 10000 });
-    expect(ayniLevelElement).toBeTruthy();
+    // Check for the Reciprocidad level (should be dynamic from backend)
+    const reciprocidadLevelElement = await page.waitForSelector('text=/Guardián del Bien Común|Emprendedor Confiable|Colaborador Activo/', { timeout: 10000 });
+    expect(reciprocidadLevelElement).toBeTruthy();
     
     // Verify elemental balance is displayed
     await page.waitForSelector('text=/Fuego|Agua|Tierra|Aire/', { timeout: 10000 });
     
-    console.log('✅ Real Ayni metrics loaded successfully from backend');
+    console.log('✅ Real Reciprocidad metrics loaded successfully from backend');
   });
 
   test('should display dynamic elemental configuration', async ({ page }) => {
@@ -50,14 +50,14 @@ test.describe('Home Module - Backend Integration', () => {
     await page.waitForSelector('text=Dashboard Semántico', { timeout: 10000 });
     
     // Wait for elemental system to load
-    await page.waitForSelector('text=Tu Balance Ayni', { timeout: 10000 });
+    await page.waitForSelector('text=Tu Balance Reciprocidad', { timeout: 10000 });
     
     // Check that elemental icons are displayed (should come from backend config)
     const elementalIndicators = await page.locator('[class*="elemental"], [class*="element"]').count();
     expect(elementalIndicators).toBeGreaterThan(0);
     
     // Verify that the elemental balance visualization is working
-    const balanceVisualization = await page.locator('[class*="ayni"], [class*="balance"]').first();
+    const balanceVisualization = await page.locator('[class*="reciprocidad"], [class*="balance"]').first();
     expect(balanceVisualization).toBeTruthy();
     
     console.log('✅ Elemental configuration loaded successfully from backend');
@@ -68,7 +68,7 @@ test.describe('Home Module - Backend Integration', () => {
     
     // Wait for initial load
     await page.waitForSelector('text=Dashboard Semántico', { timeout: 10000 });
-    await page.waitForSelector('text=Tu Balance Ayni', { timeout: 10000 });
+    await page.waitForSelector('text=Tu Balance Reciprocidad', { timeout: 10000 });
     
     // Check for the "Datos actualizados" timestamp indicator
     const timestampElement = await page.waitForSelector('text=/Datos actualizados/', { timeout: 10000 });
@@ -77,13 +77,13 @@ test.describe('Home Module - Backend Integration', () => {
     // Get initial timestamp
     const initialTimestamp = await timestampElement.textContent();
     
-    // Wait for the data to potentially refresh (2 minutes in useAyniMetrics)
+    // Wait for the data to potentially refresh (2 minutes in useReciprocidadMetrics)
     // For test purposes, we'll just check that the data is being fetched dynamically
     await page.waitForTimeout(2000);
     
     // Verify the data is still there and the component is interactive
-    const ayniWidget = await page.locator('text=Tu Balance Ayni').first();
-    expect(ayniWidget).toBeTruthy();
+    const reciprocidadWidget = await page.locator('text=Tu Balance Reciprocidad').first();
+    expect(reciprocidadWidget).toBeTruthy();
     
     console.log('✅ Real-time metrics system verified');
     console.log(`📊 Initial timestamp: ${initialTimestamp}`);
@@ -101,7 +101,7 @@ test.describe('Home Module - Backend Integration', () => {
     
     // Then should transition to loaded state
     await page.waitForSelector('text=Dashboard Semántico', { timeout: 15000 });
-    await page.waitForSelector('text=Tu Balance Ayni', { timeout: 10000 });
+    await page.waitForSelector('text=Tu Balance Reciprocidad', { timeout: 10000 });
     
     // Should not show error states
     const errorElement = await page.locator('text=/Error|error/').count();
@@ -121,10 +121,10 @@ test.describe('Home Module - Backend Integration', () => {
     expect(connectionWarnings).toBe(0); // Should not show connection warnings when backend is working
     
     // Verify that data is actually loaded (not just placeholder)
-    await page.waitForSelector('text=Tu Balance Ayni', { timeout: 10000 });
+    await page.waitForSelector('text=Tu Balance Reciprocidad', { timeout: 10000 });
     
     // Check that we have numerical values (indicating real data from backend)
-    const metricsContainer = await page.locator('[class*="ayni"], [class*="metrics"]').first();
+    const metricsContainer = await page.locator('[class*="reciprocidad"], [class*="metrics"]').first();
     expect(metricsContainer).toBeTruthy();
     
     console.log('✅ Backend connection is healthy and data is flowing');

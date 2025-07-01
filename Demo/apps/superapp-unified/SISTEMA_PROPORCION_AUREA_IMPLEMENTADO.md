@@ -92,7 +92,7 @@ Todos los elementos usan radios basados en la secuencia:
 --golden-radius-xl: 21px; /* Fibonacci 21 */
 ```
 
-## 🎭 **APLICACIÓN EN EL BALANCE AYNI REVOLUCIONARIO**
+## 🎭 **APLICACIÓN EN EL BALANCE RECIPROCIDAD REVOLUCIONARIO**
 
 ### 💎 **Orb Central:**
 
@@ -185,7 +185,7 @@ Escala tipográfica basada en proporción áurea:
 ┌─────────────────────────────────────────────────────┐
 │ 🏠 HERO SECTION (100% × φ⁻¹ height)                 │
 ├─────────────────────────────┬───────────────────────┤
-│ 💎 BALANCE AYNI            │ 💰 WALLET             │
+│ 💎 BALANCE RECIPROCIDAD            │ 💰 WALLET             │
 │ (61.8% width)              │ (38.2% width)         │
 │ - Orb central áureo        │ - Métricas áureas     │
 │ - Métricas grid Fibonacci  │ - Proporciones φ      │
@@ -254,7 +254,7 @@ Escala tipográfica basada en proporción áurea:
 ### 🎯 **Aplicado en:**
 
 - `src/pages/HomeRevolutionary.tsx` - Layout principal
-- `src/components/home/AyniMetricsCardRevolutionary.tsx` - Widget principal
+- `src/components/home/ReciprocidadMetricsCardRevolutionary.tsx` - Widget principal
 - Todos los widgets revolucionarios
 
 ### 🔧 **Uso Técnico:**

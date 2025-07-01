@@ -70,7 +70,7 @@ const MarketplaceCreateService: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
-  
+
   const [serviceData, setServiceData] = useState<ServiceData>({
     title: '',
     description: '',
@@ -99,7 +99,7 @@ const MarketplaceCreateService: React.FC = () => {
 
   const steps = [
     'Información Básica',
-    'Detalles del Servicio', 
+    'Detalles del Servicio',
     'Precio y Entrega',
     'Multimedia',
     'Vista Previa'
@@ -122,14 +122,14 @@ const MarketplaceCreateService: React.FC = () => {
     try {
       // Aquí se conectaría con el backend real
       console.log('📤 Creando servicio:', serviceData);
-      
+
       // Simular creación exitosa
       setTimeout(() => {
         setIsSubmitting(false);
-        navigate('/marketplace', { 
-          state: { 
+        navigate('/marketplace', {
+          state: {
             message: '¡Servicio creado exitosamente! 🎉',
-            type: 'success' 
+            type: 'success'
           }
         });
       }, 2000);
@@ -309,7 +309,7 @@ const MarketplaceCreateService: React.FC = () => {
                     value={serviceData.currency}
                     onChange={(e) => setServiceData(prev => ({ ...prev, currency: e.target.value }))}
                   >
-                    <MenuItem value="ü">ü Lükas</MenuItem>
+                    <MenuItem value="ü">ü Ünits</MenuItem>
                     <MenuItem value="USD">USD</MenuItem>
                     <MenuItem value="COP">COP</MenuItem>
                   </Select>
@@ -333,7 +333,7 @@ const MarketplaceCreateService: React.FC = () => {
             />
 
             <Alert severity="info" sx={{ mt: 2 }}>
-              💡 <strong>Ayni Tip:</strong> Considera ofrecer descuentos por intercambios 
+              💡 <strong>Reciprocidad Tip:</strong> Considera ofrecer descuentos por intercambios
               colaborativos o contribuciones al Bien Común.
             </Alert>
           </Stack>
@@ -365,7 +365,7 @@ const MarketplaceCreateService: React.FC = () => {
                   Subir Imágenes (máximo 5)
                 </Button>
               </label>
-              
+
               <Grid container spacing={2}>
                 {serviceData.images.map((file, index) => (
                   <Grid item xs={6} sm={4} key={index}>
@@ -412,7 +412,7 @@ const MarketplaceCreateService: React.FC = () => {
                 <Typography variant="h5" fontWeight="bold">
                   {serviceData.title || 'Título del servicio'}
                 </Typography>
-                
+
                 <Typography variant="body1">
                   {serviceData.description || 'Descripción del servicio'}
                 </Typography>
@@ -569,8 +569,8 @@ const MarketplaceCreateService: React.FC = () => {
 
         {/* Tips CoomÜnity */}
         <Alert severity="info" sx={{ mt: 3 }}>
-          💡 <strong>Principio Ayni:</strong> Los servicios más valorados en CoomÜnity 
-          son aquellos que buscan el equilibrio entre dar y recibir, contribuyendo 
+          💡 <strong>Principio Reciprocidad:</strong> Los servicios más valorados en CoomÜnity
+          son aquellos que buscan el equilibrio entre dar y recibir, contribuyendo
           al crecimiento colectivo de la comunidad.
         </Alert>
       </Container>

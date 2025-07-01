@@ -7,7 +7,7 @@ import { SelectChangeEvent } from '@mui/material';
 export interface SearchFilters {
   query: string;
   category: string;
-  sortBy: 'relevance' | 'newest' | 'price_asc' | 'price_desc' | 'rating' | 'ayni_score' | 'consciousness';
+  sortBy: 'relevance' | 'newest' | 'price_asc' | 'price_desc' | 'rating' | 'reciprocidad_score' | 'consciousness';
   verified: boolean;
   priceMin?: number;
   priceMax?: number;

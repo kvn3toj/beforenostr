@@ -29,7 +29,7 @@ import {
   Favorite as LikeIcon,
   Celebration as CelebrateIcon,
   Psychology as InsightIcon,
-  Handshake as AyniIcon,
+  Handshake as ReciprocidadIcon,
   ExpandMore as ExpandIcon,
   ExpandLess as CollapseIcon,
   Person as PersonIcon,
@@ -53,7 +53,7 @@ const EMOJI_REACTIONS = {
   like: { icon: LikeIcon, label: 'Me gusta', color: '#ef4444' },
   celebrate: { icon: CelebrateIcon, label: 'Celebrar', color: '#f59e0b' },
   insight: { icon: InsightIcon, label: 'Insight', color: '#8b5cf6' },
-  ayni: { icon: AyniIcon, label: 'Ayni', color: '#10b981' },
+  reciprocidad: { icon: ReciprocidadIcon, label: 'Reciprocidad', color: '#10b981' },
 } as const;
 
 // Tipos de mensajes del sistema

@@ -31,6 +31,9 @@ import RecommendIcon from '@mui/icons-material/Recommend';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 
+// 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
+import { RevolutionaryWidget, REVOLUTIONARY_PRESETS } from '../../design-system';
+
 interface SmartAction {
   id: string;
   icon: React.ReactElement;
@@ -38,7 +41,7 @@ interface SmartAction {
   path: string;
   color: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info';
   description: string;
-  category: 'ayni' | 'modules' | 'create' | 'discover';
+  category: 'reciprocidad' | 'modules' | 'create' | 'discover';
   urgency: 'high' | 'medium' | 'low';
   completionRate?: number;
   timeEstimate?: string;
@@ -58,7 +61,7 @@ interface SmartQuickActionsProps {
 
 // 🎯 Configuración de acciones inteligentes
 const smartActions: SmartAction[] = [
-  // Acciones Ayni (Reciprocidad)
+  // Acciones Reciprocidad (Reciprocidad)
   {
     id: 'give-help',
     icon: <AutoAwesomeIcon />,
@@ -66,7 +69,7 @@ const smartActions: SmartAction[] = [
     path: '/social/give-help',
     color: 'success',
     description: 'Ofrece tu conocimiento o servicios a la comunidad',
-    category: 'ayni',
+    category: 'reciprocidad',
     urgency: 'high',
     completionRate: 85,
     timeEstimate: '10-30 min',
@@ -80,7 +83,7 @@ const smartActions: SmartAction[] = [
     path: '/social/ask-help',
     color: 'primary',
     description: 'Solicita apoyo de otros miembros de CoomÜnity',
-    category: 'ayni',
+    category: 'reciprocidad',
     urgency: 'medium',
     completionRate: 70,
     timeEstimate: '5-15 min',
@@ -93,7 +96,7 @@ const smartActions: SmartAction[] = [
     path: '/social/share-knowledge',
     color: 'secondary',
     description: 'Comparte una experiencia o lección aprendida',
-    category: 'ayni',
+    category: 'reciprocidad',
     urgency: 'medium',
     completionRate: 60,
     timeEstimate: '15-45 min',
@@ -106,7 +109,7 @@ const smartActions: SmartAction[] = [
     path: '/social/create-circle',
     color: 'warning',
     description: 'Crea un círculo temático para colaborar',
-    category: 'ayni',
+    category: 'reciprocidad',
     urgency: 'low',
     completionRate: 45,
     timeEstimate: '30-60 min',
@@ -366,7 +369,7 @@ export const SmartQuickActions: React.FC<SmartQuickActionsProps> = ({
 
   // 🎯 Filtrar acciones según nivel de usuario y modo de performance
   const filteredActions = useMemo(() => {
-    let actions = smartActions.filter((action) => {
+    const actions = smartActions.filter((action) => {
       // En modo optimizado, mostrar solo acciones de alta prioridad
       if (performanceMode === 'optimized' && action.urgency === 'low') {
         return false;
@@ -413,15 +416,24 @@ export const SmartQuickActions: React.FC<SmartQuickActionsProps> = ({
   }, [onToggleExpanded]);
 
   return (
-    <Box className={className}>
-      <Card
-        elevation={1}
-        sx={{
-          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.03)} 100%)`,
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-        }}
-      >
-        <CardContent>
+    <RevolutionaryWidget
+      title="💡 Acciones Inteligentes"
+      subtitle={`Personalizadas para tu nivel: ${userLevel}`}
+      variant="primary"
+      element="agua"
+      cosmicIntensity="medium"
+      cosmicEffects={{
+        enableGlow: true,
+        enableAnimations: true,
+        enableParticles: false,
+        glowIntensity: 1.0,
+      }}
+      interactionMode="hover"
+      className={`smart-quick-actions ${className}`}
+      style={{ minHeight: '320px' }}
+      onRefresh={() => console.log('🔄 Refreshing actions...')}
+      onExpand={filteredActions.length > 4 ? toggleExpanded : undefined}
+    >
           {/* Header */}
           <Stack
             direction="row"

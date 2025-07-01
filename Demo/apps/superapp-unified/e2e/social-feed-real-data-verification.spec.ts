@@ -84,7 +84,7 @@ test.describe('🤝 Feed Social - Verificación de Datos Reales', () => {
       const mockContent = [
         'Juan Manuel Escobar', // Nombre de usuario mock
         'María González',      // Otro nombre de usuario mock
-        'El Ayni no es solo un intercambio' // Contenido mock típico
+        'El Reciprocidad no es solo un intercambio' // Contenido mock típico
       ];
       
       let mockContentFound = false;

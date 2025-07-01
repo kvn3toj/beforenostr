@@ -9,7 +9,7 @@
 
 ## 🧭 RESUMEN EJECUTIVO
 
-CoomÜnity es un **ecosistema de transformación consciente** que trasciende la funcionalidad digital para crear un espacio de crecimiento personal y colectivo. Basado en principios universales (Ayni, Bien Común, HambrE), utiliza gamificación avanzada para catalizar el desarrollo humano.
+CoomÜnity es un **ecosistema de transformación consciente** que trasciende la funcionalidad digital para crear un espacio de crecimiento personal y colectivo. Basado en principios universales (Reciprocidad, Bien Común, HambrE), utiliza gamificación avanzada para catalizar el desarrollo humano.
 
 ### 🏗️ Estado Técnico Actual (Base Sólida)
 - ✅ **Backend NestJS:** Puerto 3002 - Arquitectura robusta con JWT, RBAC, Prisma, PostgreSQL
@@ -28,10 +28,10 @@ La infraestructura técnica está **95% completada**, pero falta la **infusión 
 
 ### Pilares Fundamentales (El Alma del Sistema)
 
-1. **Ayni (Reciprocidad Sagrada):** "En el dar está el recibir" - El motor principal del intercambio de valor
+1. **Reciprocidad (Reciprocidad Sagrada):** "En el dar está el recibir" - El motor principal del intercambio de valor
 2. **Bien Común:** La meta trascendente de todas las acciones e interacciones
 3. **Confianza:** La moneda más valiosa, construida a través de acciones consistentes
-4. **Armonía/Equilibrio:** Representada por el Balance Ayni y los 4 Elementos (Fuego, Agua, Tierra, Aire)
+4. **Armonía/Equilibrio:** Representada por el Balance Reciprocidad y los 4 Elementos (Fuego, Agua, Tierra, Aire)
 5. **Transformación:** "Tu Misión es acompañar al compañero para que lo logre"
 6. **"HambrE":** Motor de curiosidad y acción que impulsa el crecimiento
 7. **Lemniscata (∞):** Símbolo del equilibrio, interconexión infinita y dualidad unificada
@@ -55,13 +55,13 @@ La infraestructura técnica está **95% completada**, pero falta la **infusión 
 - **Despliegue:** Pipeline configurado (Render/Railway)
 
 #### Filosofía en UI (Base Implementada)
-- **Terminología:** "CoomÜnity", "ÜPlay", "ÜMarket", "LETS", "Mëritos", "Öndas", "Lükas"
-- **Dashboard HOME:** Visualización 3D del Balance Ayni y 4 Elementos (logro masivo)
+- **Terminología:** "CoomÜnity", "ÜPlay", "ÜMarket", "LETS", "Mëritos", "Öndas", "Ünits"
+- **Dashboard HOME:** Visualización 3D del Balance Reciprocidad y 4 Elementos (logro masivo)
 - **Design System Cósmico:** Glassmorphism, efectos 3D, paleta cósmica
 
 #### Módulos Principales (Funcionalidad Básica)
 - **Autenticación:** Login/Logout con persistencia de sesión
-- **Wallet:** Visualización de balance Ünits/Lükas/Mëritos
+- **Wallet:** Visualización de balance Ünits/Ünits/Mëritos
 - **ÜPlay:** Lista de videos y reproducción básica
 - **Marketplace:** Listado de productos y categorías
 - **Social:** Feed de publicaciones
@@ -84,7 +84,7 @@ La infraestructura técnica está **95% completada**, pero falta la **infusión 
 - **Asistente LETS:** Chatbot contextual no implementado
 
 #### Social Avanzado (La Red Vívida)
-- **Conexiones Ayni:** Métricas de "Comunicación, Empatía, Confianza, Inspiración" ausentes
+- **Conexiones Reciprocidad:** Métricas de "Comunicación, Empatía, Confianza, Inspiración" ausentes
 - **Círculos de Colaboración:** Grupos sin funcionalidad completa
 - **Mensajería Cósmica:** Chat integrado sin diseño estético coherente
 - **Gamificación Social:** Rangos y reputación dentro de la red
@@ -116,8 +116,8 @@ La infraestructura técnica está **95% completada**, pero falta la **infusión 
 ### 🌐 FASE 2: PROFUNDIZACIÓN DE CONEXIONES (Semanas 5-8)
 **Objetivo:** Desarrollar las dimensiones social y relacional, y humanizar el sistema LETS.
 
-#### Semana 5-6: La Red Vívida y Ayni Aplicado
-- **Task 2.1:** **[BACKEND]** Implementar APIs para gestión de "Conexiones Ayni"
+#### Semana 5-6: La Red Vívida y Reciprocidad Aplicado
+- **Task 2.1:** **[BACKEND]** Implementar APIs para gestión de "Conexiones Reciprocidad"
 - **Task 2.2:** **[SUPERAPP]** Visualizar red social con métricas de "Comunicación, Empatía, Confianza, Inspiración"
 - **Task 2.3:** **[SUPERAPP]** Implementar Wallet Adaptativo (`AdaptiveWallet.tsx`)
 - **Task 2.4:** **[LETS]** Rehabilitar y finalizar `LetsOnboardingWizard`
@@ -191,7 +191,7 @@ La infraestructura técnica está **95% completada**, pero falta la **infusión 
 ### KPIs Filosóficos CoomÜnity
 - **Colaboración:** Interacciones entre usuarios +30%
 - **Bien Común:** Contribuciones compartidas +50%
-- **Ayni Balance:** Ratio dar/recibir más equilibrado
+- **Reciprocidad Balance:** Ratio dar/recibir más equilibrado
 - **Öndas Positivas:** Feedback positivo de usuarios +35%
 
 ---
@@ -202,7 +202,7 @@ CoomÜnity es más que una aplicación; es la manifestación de una filosofía p
 
 ### 🌟 Impacto Esperado:
 - **Transformación Personal:** Usuarios que evolucionan de "Principiante a Decidido"
-- **Comunidad Vívida:** Red de conexiones basadas en Ayni y confianza
+- **Comunidad Vívida:** Red de conexiones basadas en Reciprocidad y confianza
 - **Economía Colaborativa:** Sistema LETS funcional que reduce dependencia del FIAT
 - **Bien Común:** Contribuciones que benefician a toda la comunidad
 
@@ -211,7 +211,7 @@ CoomÜnity es más que una aplicación; es la manifestación de una filosofía p
 2. Configurar métricas de "HambrE" y progreso
 3. Implementar sistema de logros interconectado
 4. Desarrollar Wallet Adaptativo
-5. Crear visualización de Conexiones Ayni
+5. Crear visualización de Conexiones Reciprocidad
 
 **¡La Plataforma CoomÜnity está lista para cambiar el mundo!** 🌍✨
 

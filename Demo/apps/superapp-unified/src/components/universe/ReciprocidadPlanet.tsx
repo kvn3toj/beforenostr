@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../styles/solar-system-svg.css';
 
-interface AyniPlanetProps {
+interface ReciprocidadPlanetProps {
   size?: number;
   color?: string;
   haloColor?: string;
@@ -9,7 +9,7 @@ interface AyniPlanetProps {
   children?: React.ReactNode;
 }
 
-const AyniPlanet: React.FC<AyniPlanetProps> = ({
+const ReciprocidadPlanet: React.FC<ReciprocidadPlanetProps> = ({
   size = 90,
   color = '#FFD700',
   haloColor = 'rgba(255, 215, 0, 0.45)',
@@ -18,7 +18,7 @@ const AyniPlanet: React.FC<AyniPlanetProps> = ({
 }) => {
   return (
     <div
-      className={`ayni-planet-wrapper`}
+      className={`reciprocidad-planet-wrapper`}
       style={{
         position: 'absolute',
         left: '50%',
@@ -29,7 +29,7 @@ const AyniPlanet: React.FC<AyniPlanetProps> = ({
     >
       {/* Halo animado */}
       <div
-        className={`ayni-planet-halo${pulse ? ' ayni-planet-halo-pulse' : ''}`}
+        className={`reciprocidad-planet-halo${pulse ? ' reciprocidad-planet-halo-pulse' : ''}`}
         style={{
           width: size * 2.1,
           height: size * 2.1,
@@ -44,7 +44,7 @@ const AyniPlanet: React.FC<AyniPlanetProps> = ({
       />
       {/* Esfera central */}
       <div
-        className="ayni-planet-core"
+        className="reciprocidad-planet-core"
         style={{
           width: size,
           height: size,
@@ -79,7 +79,7 @@ const AyniPlanet: React.FC<AyniPlanetProps> = ({
       </div>
       {/* Sombra */}
       <div
-        className="ayni-planet-shadow"
+        className="reciprocidad-planet-shadow"
         style={{
           position: 'absolute',
           left: '50%',
@@ -96,4 +96,4 @@ const AyniPlanet: React.FC<AyniPlanetProps> = ({
   );
 };
 
-export default AyniPlanet; 
+export default ReciprocidadPlanet;

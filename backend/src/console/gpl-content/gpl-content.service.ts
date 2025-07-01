@@ -19,7 +19,7 @@ export class GplContentService {
             title: 'Introducción a CoomÜnity',
             duration: 240,
             category: 'Fundamentos',
-            philosophyAlignment: 'ayni',
+            philosophyAlignment: 'reciprocidad',
             isEpicContent: false,
           },
         ],

@@ -134,7 +134,7 @@ export const DesignSystemShowcase: React.FC = () => {
             Heading 2 - Economía Colaborativa
           </Typography>
           <Typography variant="h3" className="mb-2">
-            Heading 3 - Ayni y Reciprocidad
+            Heading 3 - Reciprocidad y Reciprocidad
           </Typography>
           <Typography variant="h4" className="mb-2">
             Heading 4 - Mëritos y Öndas
@@ -153,7 +153,7 @@ export const DesignSystemShowcase: React.FC = () => {
         <Typography variant="h6" className="mb-3">Terminología CoomÜnity</Typography>
         <Grid container spacing={2}>
           {[
-            { term: 'Ayni', definition: 'Principio de reciprocidad equilibrada', color: 'primary' },
+            { term: 'Reciprocidad', definition: 'Principio de reciprocidad equilibrada', color: 'primary' },
             { term: 'Mëritos', definition: 'Recompensas por contribuir al Bien Común', color: 'warning' },
             { term: 'Öndas', definition: 'Unidades de energía vibracional positiva', color: 'info' },
             { term: 'Lükas', definition: 'Moneda interna de CoomÜnity', color: 'success' },
@@ -224,7 +224,7 @@ export const DesignSystemShowcase: React.FC = () => {
             </CoomunityButton>
             <CoomunityButton variant="error">
               <Handshake className="w-4 h-4 mr-2" />
-              Ayni
+              Reciprocidad
             </CoomunityButton>
           </Box>
         </CoomunityCard>

@@ -1,6 +1,6 @@
 # 🏪⚜️ Marketplace CoomÜnity - Centro Sagrado de Intercambio Consciente
 
-*"Un espacio donde el valor fluye según los principios del Ayni, donde cada transacción es un acto de reciprocidad y cada intercambio contribuye al Bien Común."*
+*"Un espacio donde el valor fluye según los principios del Reciprocidad, donde cada transacción es un acto de reciprocidad y cada intercambio contribuye al Bien Común."*
 
 ## 🌟 Visión Transformadora
 
@@ -8,7 +8,7 @@ El **Marketplace CoomÜnity** no es solo una plataforma de comercio; es un **eco
 
 ### 🔮 Filosofía del Intercambio Consciente
 
-- **Ayni (Reciprocidad)**: Cada intercambio mantiene el equilibrio energético entre dar y recibir
+- **Reciprocidad (Reciprocidad)**: Cada intercambio mantiene el equilibrio energético entre dar y recibir
 - **Bien Común**: Las decisiones priorizan el beneficio colectivo sobre el individual
 - **Metanöia**: Cada interacción es una oportunidad de transformación personal
 - **Vocación**: Los productos y servicios están alineados con el propósito superior
@@ -20,14 +20,14 @@ El **Marketplace CoomÜnity** no es solo una plataforma de comercio; es un **eco
 ### 🔹 ATLAS - Infraestructura Inquebrantable
 **Backend NestJS Optimizado** (`backend/src/marketplace/`)
 - ✅ **Performance Metrics**: Monitoreo en tiempo real < 200ms
-- ✅ **Logging Consciente**: Rastreo de métricas de Ayni y Bien Común  
+- ✅ **Logging Consciente**: Rastreo de métricas de Reciprocidad y Bien Común  
 - ✅ **Caching Inteligente**: Redis para respuestas instantáneas
 - ✅ **Escalabilidad**: Preparado para millones de items y usuarios
 
 ```typescript
 // Ejemplo de métrica de consciencia integrada
 interface ConsciousnessMetrics {
-  ayniScore: number;           // 0-100 equilibrio de reciprocidad
+  reciprocidadScore: number;           // 0-100 equilibrio de reciprocidad
   consciousnessLevel: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
   bienComunContribution: number; // Contribución al Bien Común
   reciprocityBalance: number;   // Balance de dar/recibir
@@ -37,22 +37,22 @@ interface ConsciousnessMetrics {
 ### 🔹 COSMOS - Tejedor de Sistemas Integrados
 **API Integration** (`/marketplace/*`)
 - ✅ **Unified Data Flow**: Estado sincronizado entre componentes
-- ✅ **Consciousness APIs**: Endpoints para métricas de Ayni
+- ✅ **Consciousness APIs**: Endpoints para métricas de Reciprocidad
 - ✅ **Cross-Module Harmony**: Integración con UPlay, Social, Wallet
 
 ```typescript
 // Endpoints Conscientes Disponibles
 GET /marketplace/items              // Items con métricas de consciencia
 GET /marketplace/consciousness-stats // Estadísticas del ecosistema
-POST /marketplace/items             // Crear con validación de Ayni
-PUT /marketplace/items/:id/ayni     // Actualizar score de reciprocidad
+POST /marketplace/items             // Crear con validación de Reciprocidad
+PUT /marketplace/items/:id/reciprocidad     // Actualizar score de reciprocidad
 ```
 
 ### 🎨 ARIA - Artista de la Experiencia Visual
 **Frontend Components** (`src/components/modules/marketplace/`)
 - ✅ **Design System Consciente**: Colores y tipografía alineados con consciencia
 - ✅ **Accessibility WCAG AAA**: Inclusión universal garantizada
-- ✅ **Consciousness Indicators**: Visualización de niveles de Ayni
+- ✅ **Consciousness Indicators**: Visualización de niveles de Reciprocidad
 - ✅ **Responsive Harmony**: Experiencia fluida en todos los dispositivos
 
 ### 🔹 ZENO - Arquitecto de Flujos Orgánicos  
@@ -68,7 +68,7 @@ PUT /marketplace/items/:id/ayni     // Actualizar score de reciprocidad
 
 ### 🌟 KPIs Filosóficos
 
-#### **Ayni Score (Reciprocidad)**
+#### **Reciprocidad Score (Reciprocidad)**
 - **Rango**: 0-100 puntos
 - **Cálculo**: 
   - Base: 10 puntos por participación activa
@@ -88,7 +88,7 @@ PUT /marketplace/items/:id/ayni     // Actualizar score de reciprocidad
 #### **Métricas del Ecosistema**
 ```typescript
 interface EcosystemConsciousness {
-  averageAyniScore: number;         // Score promedio del marketplace
+  averageReciprocidadScore: number;         // Score promedio del marketplace
   transcendentItems: number;        // Items en nivel TRANSCENDENT
   consciousnessDistribution: {      // Distribución por niveles
     SEED: number;
@@ -106,10 +106,10 @@ interface EcosystemConsciousness {
 ## 🛠️ Funcionalidades Conscientes
 
 ### 🏪 **Core Marketplace**
-- **Búsqueda Inteligente**: Filtros por consciencia, Ayni score, impacto
+- **Búsqueda Inteligente**: Filtros por consciencia, Reciprocidad score, impacto
 - **Categorías Sagradas**: Organización por elementos y propósitos
 - **Consciousness Sorting**: Ordenamiento por nivel de consciencia
-- **Featured Transcendent**: Destacado de items con mayor Ayni
+- **Featured Transcendent**: Destacado de items con mayor Reciprocidad
 
 ### 💎 **Sistema de Intercambio**
 - **Lükas Currency**: Moneda interna basada en valor consciente
@@ -118,7 +118,7 @@ interface EcosystemConsciousness {
 - **Trust Network**: Red de confianza entre Emprendedores Confiables
 
 ### 🎯 **Gamificación Consciente**
-- **Ayni Challenges**: Desafíos para mejorar balance de reciprocidad
+- **Reciprocidad Challenges**: Desafíos para mejorar balance de reciprocidad
 - **Consciousness Levels**: Progresión visible del nivel de consciencia
 - **Impact Tracking**: Seguimiento del impacto en Bien Común
 - **Sacred Economy Badges**: Insignias por logros en economía sagrada
@@ -129,12 +129,12 @@ interface EcosystemConsciousness {
 
 ### 👨‍💼 **Panel de Administración**
 - **Content Curation**: Herramientas de moderación consciente
-- **Consciousness Moderation**: Validación de métricas de Ayni
+- **Consciousness Moderation**: Validación de métricas de Reciprocidad
 - **Featured Management**: Gestión de contenido destacado
 - **Analytics Dashboard**: Métricas del ecosistema en tiempo real
 
 ### ⚙️ **Configuración del Sistema**
-- **Ayni Parameters**: Ajuste de algoritmos de reciprocidad
+- **Reciprocidad Parameters**: Ajuste de algoritmos de reciprocidad
 - **Consciousness Thresholds**: Umbrales para niveles de consciencia
 - **Currency Settings**: Configuración de Lükas y Öndas
 - **Trust Verification**: Verificación de Emprendedores Confiables
@@ -150,7 +150,7 @@ interface EcosystemConsciousness {
 - **Cleanup Rituals**: Mantenimiento automático del ecosistema
 
 ### 🔔 **Sistema de Notificaciones**
-- **Ayni Alerts**: Avisos sobre oportunidades de reciprocidad
+- **Reciprocidad Alerts**: Avisos sobre oportunidades de reciprocidad
 - **Consciousness Updates**: Notificaciones de progreso personal
 - **Community Rhythms**: Sincronización con eventos de la comunidad
 - **Sacred Reminders**: Recordatorios para follow-ups conscientes
@@ -206,7 +206,7 @@ npm run test:e2e -- --grep "COSMOS"    # Integration
 ### 📈 **Métricas de Calidad**
 - **Performance**: < 5s load time, < 200ms API response
 - **Accessibility**: WCAG AAA compliance
-- **Consciousness**: >75% items con Ayni score >60
+- **Consciousness**: >75% items con Reciprocidad score >60
 - **User Satisfaction**: >90% completion rate en workflows críticos
 
 ---
@@ -218,8 +218,8 @@ npm run test:e2e -- --grep "COSMOS"    # Integration
 // Buscar items con alta consciencia
 const consciousItems = await marketplaceAPI.search({
   consciousnessLevel: 'FLOURISHING',
-  minimumAyniScore: 70,
-  sortBy: 'ayni_score'
+  minimumReciprocidadScore: 70,
+  sortBy: 'reciprocidad_score'
 });
 
 // Crear item con propósito consciente
@@ -228,7 +228,7 @@ const newItem = await marketplaceAPI.create({
   description: "Aprende a crear tu huerto urbano sostenible...",
   type: "EXPERIENCE",
   priceUnits: 50,
-  tags: ["sostenibilidad", "educación", "ayni"],
+  tags: ["sostenibilidad", "educación", "reciprocidad"],
   location: "Local - Ciudad de México"
 });
 ```
@@ -238,8 +238,8 @@ const newItem = await marketplaceAPI.create({
 // Monitorear salud del ecosistema
 const ecosystemHealth = await marketplaceAPI.getConsciousnessStats();
 
-// Moderar contenido basado en Ayni
-const pendingReview = await marketplaceAPI.getItemsByAyniScore(0, 40);
+// Moderar contenido basado en Reciprocidad
+const pendingReview = await marketplaceAPI.getItemsByReciprocidadScore(0, 40);
 
 // Promover items transcendentes
 await marketplaceAPI.featureTranscendentItems();
@@ -291,7 +291,7 @@ await marketplaceAPI.featureTranscendentItems();
 - ✅ Microcopy inspirador
 - ✅ Documentación completa y consciente
 - ✅ Narrativa coherente del ecosystem
-- ✅ Textos educativos sobre Ayni
+- ✅ Textos educativos sobre Reciprocidad
 
 **📊 NIRA - Metrics**
 - ✅ KPIs filosóficos definidos
@@ -333,4 +333,4 @@ await marketplaceAPI.featureTranscendentItems();
 
 ---
 
-*Para el Bien Común, con Ayni en el corazón* 💫⚜️
+*Para el Bien Común, con Reciprocidad en el corazón* 💫⚜️

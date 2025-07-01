@@ -81,9 +81,9 @@ const ASSISTANT_TIPS: Record<AssistantContext, Record<string, AssistantTip[]>> =
         category: 'achievement',
       },
       {
-        id: 'ayni_balance_tip',
-        message: 'Intenta mantener un equilibrio entre dar y recibir. ¡El Ayni es reciprocidad!',
-        actionButton: 'Aprender sobre Ayni',
+        id: 'reciprocidad_balance_tip',
+        message: 'Intenta mantener un equilibrio entre dar y recibir. ¡El Reciprocidad es reciprocidad!',
+        actionButton: 'Aprender sobre Reciprocidad',
         priority: 'medium',
         emoji: '⚖️',
         category: 'tip',
@@ -212,8 +212,8 @@ const ACHIEVEMENT_MESSAGES = {
     message: '¡75% de confianza! Eres una persona en la que otros pueden confiar.',
     emoji: '⭐',
   },
-  balanced_ayni: {
-    message: '¡Perfecto equilibrio Ayni! Das y recibes en armonía con la comunidad.',
+  balanced_reciprocidad: {
+    message: '¡Perfecto equilibrio Reciprocidad! Das y recibes en armonía con la comunidad.',
     emoji: '⚖️',
   },
 };
@@ -258,10 +258,10 @@ export const LetsAssistant: React.FC<LetsAssistantProps> = ({
       markFeatureAsDiscovered('achievement_trust_75');
     }
 
-    if (Math.abs(userBalance) < 5 && userBalance !== 0 && !isFeatureDiscovered('achievement_balanced_ayni')) {
-      setAchievementType('balanced_ayni');
+    if (Math.abs(userBalance) < 5 && userBalance !== 0 && !isFeatureDiscovered('achievement_balanced_reciprocidad')) {
+      setAchievementType('balanced_reciprocidad');
       setShowAchievement(true);
-      markFeatureAsDiscovered('achievement_balanced_ayni');
+      markFeatureAsDiscovered('achievement_balanced_reciprocidad');
     }
   }, [userTrustScore, userBalance, isFeatureDiscovered, markFeatureAsDiscovered]);
 

@@ -4,18 +4,18 @@
 
 **Fecha de Implementación:** Enero 2025  
 **Equipo Guardian:** Aria (UX/UI), Kira (Word Weaver), ANA (Cosmic Curator), Zeno (Experience Architect)  
-**Filosofía Aplicada:** Ayni, Bien Común, Metanöia, Neguentropía  
+**Filosofía Aplicada:** Reciprocidad, Bien Común, Metanöia, Neguentropía  
 
 ---
 
 ## 📋 **Resumen Ejecutivo**
 
-El **ÜPlay Conscious Enhancement System** representa la evolución del módulo de aprendizaje interactivo hacia una experiencia que integra **consciencia educativa** con **principios filosóficos de CoomÜnity**. Esta implementación transforma cada interacción de aprendizaje en una oportunidad para practicar Ayni, contribuir al Bien Común, y desarrollar metacognición.
+El **ÜPlay Conscious Enhancement System** representa la evolución del módulo de aprendizaje interactivo hacia una experiencia que integra **consciencia educativa** con **principios filosóficos de CoomÜnity**. Esta implementación transforma cada interacción de aprendizaje en una oportunidad para practicar Reciprocidad, contribuir al Bien Común, y desarrollar metacognición.
 
 ### 🎯 **Objetivos Alcanzados**
 
 1. **Aprendizaje Consciente**: Sistema de feedback que refleja estados de consciencia del usuario
-2. **Gamificación Filosófica**: Integración de principios Ayni en mecánicas de juego educativo
+2. **Gamificación Filosófica**: Integración de principios Reciprocidad en mecánicas de juego educativo
 3. **Accesibilidad Completa**: WCAG AAA compliance con touch areas mínimas de 44-48px
 4. **Metacognición Activa**: Reflexión automática sobre el proceso de aprendizaje
 5. **Colaboración Consciente**: Fomento del aprendizaje recíproco y el crecimiento colectivo
@@ -34,7 +34,7 @@ export type ConsciousUPlayFeedbackType =
   | 'conscious-engagement'   // Compromiso consciente
   | 'collective-growth'      // Crecimiento colectivo
   | 'mindful-progress'       // Progreso consciente
-  | 'ayni-learning'          // Aprendizaje recíproco
+  | 'reciprocidad-learning'          // Aprendizaje recíproco
   | 'bien-comun-knowledge'   // Conocimiento para el bien común
   | 'metacognition'          // Metacognición
   | 'system';
@@ -125,13 +125,13 @@ export type ConsciousUPlayFeedbackType =
 - **Passive** → "Observar": Aprendizaje a través de observación
 - **Interactive** → "Interactuar": Participación activa con el contenido
 - **Immersive** → "Inmersivo": Experiencia de aprendizaje profunda
-- **Collaborative** → "Colaborativo": Aprendizaje en comunidad (Ayni)
+- **Collaborative** → "Colaborativo": Aprendizaje en comunidad (Reciprocidad)
 
 ### **Mensajes Filosóficos Integrados**
 ```typescript
 // Ejemplos de integración narrativa consciente
 "Navegando hacia Videoteca - Manteniendo el flujo de aprendizaje consciente"
-"Entrando al espacio de aprendizaje colaborativo. Aquí practicamos el Ayni: dar y recibir conocimiento en equilibrio."
+"Entrando al espacio de aprendizaje colaborativo. Aquí practicamos el Reciprocidad: dar y recibir conocimiento en equilibrio."
 "Tus logros contribuyen al crecimiento colectivo. Cada avance individual fortalece el Bien Común."
 ```
 
@@ -141,7 +141,7 @@ export type ConsciousUPlayFeedbackType =
 
 ### **Alineación con Principios CoomÜnity**
 
-#### **1. Ayni (Reciprocidad) en ÜPlay**
+#### **1. Reciprocidad (Reciprocidad) en ÜPlay**
 - **Implementación**: Modo colaborativo enfatiza intercambio de conocimiento
 - **Feedback Específico**: "Aprendizaje Recíproco" aparece en salas de estudio
 - **Mecánica**: Recompensas por contribuir al aprendizaje de otros
@@ -168,7 +168,7 @@ interface ConsciousMetrics {
   ondas: number;            // Energía positiva generada
   wisdom_points: number;    // Sabiduría integrada
   learning_flow_score: number;  // Fluidez de aprendizaje
-  ayni_balance: number;     // Equilibrio de dar/recibir
+  reciprocidad_balance: number;     // Equilibrio de dar/recibir
 }
 ```
 
@@ -198,7 +198,7 @@ const {
   dismissFeedback,
   showLearningFlow,
   showWisdomIntegration,
-  showAyniLearning,
+  showReciprocidadLearning,
   showCollectiveGrowth,
   showMetacognition,
 } = useConsciousUPlayFeedback();
@@ -286,7 +286,7 @@ describe('Accessibility Compliance', () => {
 - ✅ **Screen Reader**: Todas las etiquetas aria descriptivas
 
 ### **Integración Filosófica**
-- ✅ **Ayni Integration**: 4 puntos de feedback recíproco
+- ✅ **Reciprocidad Integration**: 4 puntos de feedback recíproco
 - ✅ **Bien Común Messages**: 3 mensajes de contribución colectiva
 - ✅ **Metacognitive Triggers**: Reflexión automática cada 25% progreso
 - ✅ **Conscious Navigation**: Feedback en 100% de transiciones
@@ -315,7 +315,7 @@ describe('Accessibility Compliance', () => {
 4. **Calidad de Contenido**: Feedback para mejora continua
 5. **Escalabilidad Consciente**: Patrones replicables en otros módulos
 
-### **Para el Desarrollo (Ayni Técnico)**
+### **Para el Desarrollo (Reciprocidad Técnico)**
 1. **Código Consciente**: Comentarios y estructuras alineadas con filosofía
 2. **Reusabilidad**: Componentes aplicables en otros módulos
 3. **Mantenibilidad**: Separación clara de responsabilidades
@@ -390,19 +390,19 @@ ConsciousUPlayFeedbackType (9 tipos de consciencia)
 
 ---
 
-## 🎯 **Código Ayni Alcanzado**
+## 🎯 **Código Reciprocidad Alcanzado**
 
-Este enhancement ejemplifica los **4 niveles de Ayni técnico**:
+Este enhancement ejemplifica los **4 niveles de Reciprocidad técnico**:
 
-1. **Code Ayni**: Documentación clara para futuros desarrolladores
-2. **System Ayni**: Performance optimizada, sin desperdicio de recursos
-3. **Module Ayni**: Bajo acoplamiento, alta cohesión entre componentes
-4. **User Ayni**: Feedback inmediato, manejo compasivo de errores
+1. **Code Reciprocidad**: Documentación clara para futuros desarrolladores
+2. **System Reciprocidad**: Performance optimizada, sin desperdicio de recursos
+3. **Module Reciprocidad**: Bajo acoplamiento, alta cohesión entre componentes
+4. **User Reciprocidad**: Feedback inmediato, manejo compasivo de errores
 
 ### **Métricas de Reciprocidad Técnica**
 - **Dado al Sistema**: 1,382 líneas de código consciente
 - **Recibido del Sistema**: Plataforma robusta para ÜPlay enhancement
-- **Balance Ayni**: Contribución neta positiva al ecosistema CoomÜnity
+- **Balance Reciprocidad**: Contribución neta positiva al ecosistema CoomÜnity
 
 ---
 

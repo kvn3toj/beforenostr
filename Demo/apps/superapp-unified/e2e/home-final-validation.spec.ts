@@ -64,16 +64,16 @@ test.describe('Home Page - Final Comprehensive Validation', () => {
       }
     }
 
-    // 4. Verify Ayni Metrics Card
-    console.log('4️⃣ Checking Ayni Metrics...');
+    // 4. Verify Reciprocidad Metrics Card
+    console.log('4️⃣ Checking Reciprocidad Metrics...');
     
-    // Look for Ayni-related content
-    const ayniText = page.locator('text=/Ayni|Mëritos|Lükas|Öndas/').first();
-    const hasAyniContent = await ayniText.isVisible().catch(() => false);
-    if (hasAyniContent) {
-      console.log('✅ Ayni metrics content found');
+    // Look for Reciprocidad-related content
+    const reciprocidadText = page.locator('text=/Reciprocidad|Mëritos|Lükas|Öndas/').first();
+    const hasReciprocidadContent = await reciprocidadText.isVisible().catch(() => false);
+    if (hasReciprocidadContent) {
+      console.log('✅ Reciprocidad metrics content found');
     } else {
-      console.log('⚠️ Ayni metrics content not visible');
+      console.log('⚠️ Reciprocidad metrics content not visible');
     }
 
     // 5. Verify overall page structure

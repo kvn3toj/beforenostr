@@ -285,7 +285,7 @@ export function useGameData(userId: string) {
           experience: 1250,
           nextLevelExp: 2000,
           title: 'Colaborador Equilibrado',
-          achievements: ['Primer Video', 'Ayni Básico', 'Colaborador'],
+          achievements: ['Primer Video', 'Reciprocidad Básico', 'Colaborador'],
           currentQuests: [
             { id: '1', title: 'Ver 3 videos', progress: 2, total: 3 },
             { id: '2', title: 'Responder preguntas', progress: 5, total: 10 }
@@ -405,7 +405,7 @@ export function useWalletData(userId: string) {
           ondas: 1250,
           pendingBalance: 25000,
           monthlyChange: 12.5,
-          ayniLevel: 68,
+          reciprocidadLevel: 68,
           collaborationScore: 8.7,
           communityRank: '#1,247',
           accounts: [
@@ -559,8 +559,8 @@ export function useUserMerits(userId: string) {
             },
             {
               id: '2',
-              type: 'ayni',
-              name: 'Espíritu Ayni',
+              type: 'reciprocidad',
+              name: 'Espíritu Reciprocidad',
               amount: Math.floor(baseAmount * 0.5),
               description: 'Por demostrar reciprocidad en intercambios',
               earnedAt: new Date(Date.now() - 172800000).toISOString(),
@@ -604,8 +604,8 @@ export function useAllMerits() {
             color: '#4CAF50',
           },
           {
-            id: 'ayni',
-            name: 'Ayni',
+            id: 'reciprocidad',
+            name: 'Reciprocidad',
             description: 'Méritos por demostrar reciprocidad y equilibrio',
             icon: '⚖️',
             color: '#2196F3',
@@ -656,7 +656,7 @@ export function useMeritsLeaderboard(limit = 10) {
             userName: 'Carlos López',
             avatar: '/assets/images/avatars/carlos.jpg',
             totalMerits: 380,
-            level: 'Facilitador Ayni',
+            level: 'Facilitador Reciprocidad',
             rank: 2,
           },
           {
@@ -700,7 +700,7 @@ export function useMeritHistory(userId: string, page = 0, limit = 20) {
             },
             {
               id: '2',
-              type: 'ayni',
+              type: 'reciprocidad',
               amount: 50,
               description:
                 'Intercambio equilibrado de servicios con otro miembro',
@@ -2413,10 +2413,10 @@ export function useChallenge(challengeId: string) {
         // Mock data temporal para desarrollo
         const mockChallenge = {
           id: challengeId,
-          title: 'Desafío de Ayni Diario',
+          title: 'Desafío de Reciprocidad Diario',
           description:
-            'Practica el principio de Ayni (reciprocidad) realizando una acción de bien común cada día durante una semana. Este desafío te ayudará a integrar la filosofía CoomÜnity en tu vida diaria.',
-          shortDescription: 'Practica Ayni durante 7 días consecutivos',
+            'Practica el principio de Reciprocidad (reciprocidad) realizando una acción de bien común cada día durante una semana. Este desafío te ayudará a integrar la filosofía CoomÜnity en tu vida diaria.',
+          shortDescription: 'Practica Reciprocidad durante 7 días consecutivos',
           type: 'DAILY',
           status: 'ACTIVE',
           difficulty: 'BEGINNER',
@@ -2426,12 +2426,12 @@ export function useChallenge(challengeId: string) {
           startDate: '2025-01-01T00:00:00Z',
           endDate: '2025-01-31T23:59:59Z',
           duration: 7,
-          imageUrl: '/assets/images/challenges/ayni-daily.jpg',
-          tags: ['ayni', 'reciprocidad', 'bien común', 'comunidad'],
+          imageUrl: '/assets/images/challenges/reciprocidad-daily.jpg',
+          tags: ['reciprocidad', 'reciprocidad', 'bien común', 'comunidad'],
           requirements: [
             'Ser miembro activo de CoomÜnity',
             'Completar perfil básico',
-            'Leer y aceptar los principios de Ayni',
+            'Leer y aceptar los principios de Reciprocidad',
           ],
           rewards: [
             {
@@ -2443,7 +2443,7 @@ export function useChallenge(challengeId: string) {
             {
               id: 'reward-2',
               type: 'BADGE',
-              description: 'Insignia "Practicante de Ayni"',
+              description: 'Insignia "Practicante de Reciprocidad"',
             },
           ],
           tasks: [
@@ -2525,7 +2525,7 @@ export function useUserChallenges(userId: string) {
           activeChallenges: [
             {
               id: 'challenge-1',
-              title: 'Desafío de Ayni Diario',
+              title: 'Desafío de Reciprocidad Diario',
               progress: 57,
               status: 'ACTIVE',
               daysLeft: 3,

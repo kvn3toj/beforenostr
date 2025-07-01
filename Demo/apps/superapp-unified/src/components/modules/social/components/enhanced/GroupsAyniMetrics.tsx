@@ -48,19 +48,19 @@ interface GroupElement {
   inspiracion: number; // Fuego - Pasión e inspiración
 }
 
-interface GroupAyniData {
+interface GroupReciprocidadData {
   id: string;
   name: string;
-  ayniBalance: number; // Balance general de reciprocidad del grupo
-  ayniGiving: number; // Lo que el grupo da a la comunidad
-  ayniReceiving: number; // Lo que el grupo recibe
+  reciprocidadBalance: number; // Balance general de reciprocidad del grupo
+  reciprocidadGiving: number; // Lo que el grupo da a la comunidad
+  reciprocidadReceiving: number; // Lo que el grupo recibe
   meritos: number; // Méritos totales generados
   ondas: number; // Ondas de energía positiva
   impactoBienComun: number; // Impacto en el bien común (0-100)
   nivelColaboracion: string; // Nivel textual
   elementos: GroupElement;
   proyectosActivos: number;
-  intercambiosAyni: number;
+  intercambiosReciprocidad: number;
   miembrosActivos: number;
   crecimientoSemanal: number;
   fechaCreacion: string;
@@ -69,8 +69,8 @@ interface GroupAyniData {
   especialidades: string[];
 }
 
-interface GroupsAyniMetricsProps {
-  groupData: GroupAyniData;
+interface GroupsReciprocidadMetricsProps {
+  groupData: GroupReciprocidadData;
   isExpanded?: boolean;
   onToggleExpanded?: () => void;
   showCompactView?: boolean;
@@ -278,7 +278,7 @@ const ImpactoBienComunIndicator: React.FC<{
   );
 };
 
-export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
+export const GroupsReciprocidadMetrics: React.FC<GroupsReciprocidadMetricsProps> = ({
   groupData,
   isExpanded = false,
   onToggleExpanded,
@@ -287,14 +287,14 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
 }) => {
   const theme = useTheme();
 
-  const getAyniBalanceColor = (balance: number) => {
+  const getReciprocidadBalanceColor = (balance: number) => {
     if (balance >= 0.8) return theme.palette.success.main;
     if (balance >= 0.6) return theme.palette.warning.main;
     return theme.palette.error.main;
   };
 
-  const getAyniMessage = (balance: number) => {
-    if (balance >= 0.9) return 'Ayni en excelente equilibrio';
+  const getReciprocidadMessage = (balance: number) => {
+    if (balance >= 0.9) return 'Reciprocidad en excelente equilibrio';
     if (balance >= 0.8) return 'Muy buen equilibrio de reciprocidad';
     if (balance >= 0.6) return 'Equilibrio moderado, puede mejorar';
     return 'Necesita fortalecer la reciprocidad';
@@ -329,7 +329,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
             </Avatar>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="subtitle1" fontWeight="bold">
-                Balance Ayni: {Math.round(groupData.ayniBalance * 100)}%
+                Balance Reciprocidad: {Math.round(groupData.reciprocidadBalance * 100)}%
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 {groupData.meritos} Mëritos • {groupData.ondas} Öndas
@@ -369,7 +369,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
           </Avatar>
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="h6" fontWeight="bold">
-              Métricas Ayni del Grupo
+              Métricas Reciprocidad del Grupo
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Reciprocidad y colaboración en {groupData.name}
@@ -391,14 +391,14 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
                 fontWeight="bold"
                 className="guardian-text-mystic"
               >
-                {Math.round(groupData.ayniBalance * 100)}%
+                {Math.round(groupData.reciprocidadBalance * 100)}%
               </Typography>
               <Typography
                 variant="body2"
                 color="text.secondary"
                 fontWeight="bold"
               >
-                Balance Ayni
+                Balance Reciprocidad
               </Typography>
             </Box>
           </Grid>
@@ -482,7 +482,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
 
           <LinearProgress
             variant="determinate"
-            value={groupData.ayniBalance * 100}
+            value={groupData.reciprocidadBalance * 100}
             sx={{
               height: 8,
               borderRadius: 5,
@@ -498,7 +498,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
             color="text.secondary"
             sx={{ mt: 0.5, display: 'block' }}
           >
-            {getAyniMessage(groupData.ayniBalance)}
+            {getReciprocidadMessage(groupData.reciprocidadBalance)}
           </Typography>
         </Box>
 
@@ -573,8 +573,8 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
               <Stack direction="row" alignItems="center" spacing={1}>
                 <ForumOutlined color="primary" />
                 <Typography variant="body2">
-                  <strong>{groupData.intercambiosAyni}</strong> intercambios
-                  Ayni realizados
+                  <strong>{groupData.intercambiosReciprocidad}</strong> intercambios
+                  Reciprocidad realizados
                 </Typography>
               </Stack>
               <Stack direction="row" alignItems="center" spacing={1}>
@@ -627,7 +627,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
           <>
             <Divider sx={{ my: 3 }} />
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              Detalles de Reciprocidad Ayni
+              Detalles de Reciprocidad Reciprocidad
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -638,7 +638,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
                     fontWeight="bold"
                     color="success.main"
                   >
-                    {Math.round(groupData.ayniGiving * 100)}%
+                    {Math.round(groupData.reciprocidadGiving * 100)}%
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
                     Lo que el grupo aporta
@@ -649,7 +649,7 @@ export const GroupsAyniMetrics: React.FC<GroupsAyniMetricsProps> = ({
                 <Paper sx={{ p: 2, textAlign: 'center' }}>
                   <Bolt sx={{ color: 'info.main', mb: 1 }} />
                   <Typography variant="h6" fontWeight="bold" color="info.main">
-                    {Math.round(groupData.ayniReceiving * 100)}%
+                    {Math.round(groupData.reciprocidadReceiving * 100)}%
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
                     Lo que el grupo recibe

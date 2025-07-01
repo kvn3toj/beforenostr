@@ -11,7 +11,7 @@
 }
 
 /* Gradientes específicos de CoomÜnity */
-.coomunity-gradient-ayni {
+.coomunity-gradient-reciprocidad {
   background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
 }
 
@@ -191,13 +191,13 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Indicadores de Ayni */
-.ayni-indicator {
+/* Indicadores de Reciprocidad */
+.reciprocidad-indicator {
   position: relative;
   overflow: hidden;
 }
 
-.ayni-indicator::after {
+.reciprocidad-indicator::after {
   content: '';
   position: absolute;
   top: 0;
@@ -210,10 +210,10 @@
     rgba(255, 255, 255, 0.1) 50%,
     transparent 60%
   );
-  animation: ayni-shine 3s infinite;
+  animation: reciprocidad-shine 3s infinite;
 }
 
-@keyframes ayni-shine {
+@keyframes reciprocidad-shine {
   0% {
     transform: translateX(-100%);
   }

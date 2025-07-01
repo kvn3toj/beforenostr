@@ -19,7 +19,7 @@ const ACHIEVEMENT_CONFIG = {
   NOTIFICATION_DURATION: 5000, // 5 segundos
   MAX_CONCURRENT_NOTIFICATIONS: 3,
   CELEBRATION_DURATION: 3000, // 3 segundos
-  AYNI_BONUS_MULTIPLIER: 1.5,
+  RECIPROCIDAD_BONUS_MULTIPLIER: 1.5,
   BIEN_COMUN_THRESHOLD: 0.7, // 70% de contribución al bien común
 } as const;
 
@@ -74,14 +74,14 @@ const COOMUNITY_ACHIEVEMENTS = {
     },
   ],
 
-  // Categoría: Ayni (Reciprocidad)
-  AYNI: [
+  // Categoría: Reciprocidad (Reciprocidad)
+  RECIPROCIDAD: [
     {
-      id: 'ayni_balance',
-      name: 'Equilibrio Ayni',
+      id: 'reciprocidad_balance',
+      name: 'Equilibrio Reciprocidad',
       description: 'Mantén un balance perfecto entre dar y recibir',
       icon: '⚖️',
-      category: 'ayni' as const,
+      category: 'reciprocidad' as const,
       rarity: 'rare' as const,
       points: 300,
       ondas: 100,
@@ -94,9 +94,9 @@ const COOMUNITY_ACHIEVEMENTS = {
     {
       id: 'reciprocity_master',
       name: 'Maestro de la Reciprocidad',
-      description: 'Practica Ayni durante 30 días consecutivos',
+      description: 'Practica Reciprocidad durante 30 días consecutivos',
       icon: '🔄',
-      category: 'ayni' as const,
+      category: 'reciprocidad' as const,
       rarity: 'epic' as const,
       points: 750,
       ondas: 250,
@@ -336,15 +336,15 @@ const AchievementUtils = {
         const videosWithExcellentPrecision = customData?.videosWithExcellentPrecision || 0;
         return Math.min((videosWithExcellentPrecision / 50) * 100, 100);
       
-      case 'ayni_balance':
+      case 'reciprocidad_balance':
         // Balance perfecto entre dar y recibir
-        const ayniBalance = customData?.ayniBalance || 0;
-        return Math.min(ayniBalance * 100, 100);
+        const reciprocidadBalance = customData?.reciprocidadBalance || 0;
+        return Math.min(reciprocidadBalance * 100, 100);
       
       case 'reciprocity_master':
-        // 30 días consecutivos de Ayni
-        const consecutiveAyniDays = customData?.consecutiveAyniDays || 0;
-        return Math.min((consecutiveAyniDays / 30) * 100, 100);
+        // 30 días consecutivos de Reciprocidad
+        const consecutiveReciprocidadDays = customData?.consecutiveReciprocidadDays || 0;
+        return Math.min((consecutiveReciprocidadDays / 30) * 100, 100);
       
       case 'community_contributor':
         // Contribución al Bien Común
@@ -383,23 +383,23 @@ const AchievementUtils = {
     return progress >= 100;
   },
 
-  // Calcular recompensas con bonificaciones Ayni
-  calculateRewards(achievement: Achievement, ayniMultiplier: number = 1): {
+  // Calcular recompensas con bonificaciones Reciprocidad
+  calculateRewards(achievement: Achievement, reciprocidadMultiplier: number = 1): {
     points: number;
     ondas: number;
-    ayniBonus: number;
+    reciprocidadBonus: number;
   } {
     const basePoints = achievement.points;
     const baseOndas = achievement.ondas;
     
-    const ayniBonus = ayniMultiplier > 1 ? (ayniMultiplier - 1) * basePoints : 0;
-    const finalPoints = Math.floor(basePoints * ayniMultiplier);
-    const finalOndas = Math.floor(baseOndas * ayniMultiplier);
+    const reciprocidadBonus = reciprocidadMultiplier > 1 ? (reciprocidadMultiplier - 1) * basePoints : 0;
+    const finalPoints = Math.floor(basePoints * reciprocidadMultiplier);
+    const finalOndas = Math.floor(baseOndas * reciprocidadMultiplier);
     
     return {
       points: finalPoints,
       ondas: finalOndas,
-      ayniBonus,
+      reciprocidadBonus,
     };
   },
 

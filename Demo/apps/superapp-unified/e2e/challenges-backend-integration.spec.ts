@@ -131,7 +131,7 @@ test.describe('Challenges Backend Integration E2E', () => {
     const challengeIndicators = [
       page.locator('h1:has-text("Challenges"), h2:has-text("Challenges"), h1:has-text("Desafíos"), h2:has-text("Desafíos")'),
       page.locator('text="Desafío"').first(),
-      page.locator('text="Ayni"').first(),
+      page.locator('text="Reciprocidad"').first(),
       page.locator('text="Innovación"').first(),
       page.locator('text="Colaboración"').first()
     ];

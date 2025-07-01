@@ -658,7 +658,7 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 exports.Currency = exports.$Enums.Currency = {
-  LUKAS: 'LUKAS',
+  UNIT: 'UNIT',
   USD: 'USD',
   EUR: 'EUR',
   BTC: 'BTC',

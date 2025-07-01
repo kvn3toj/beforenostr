@@ -180,7 +180,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         itemType: MarketplaceItemType.SERVICE,
         price: 0,
         category: 'Educación',
-        tags: ['trueque', 'música', 'diseño', 'ayni'],
+        tags: ['trueque', 'música', 'diseño', 'reciprocidad'],
         images: ['https://source.unsplash.com/800x600/?guitar,lesson', 'https://source.unsplash.com/800x600/?graphic,design'],
         stock: 1, sellerId: sellerUser2.id, rating: 0, reviewCount: 0,
       }

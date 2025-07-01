@@ -1,6 +1,6 @@
 /**
  * 🎮 Console API Service - Backend Integration
- * 
+ *
  * Servicio para conectar el frontend de la Consola con los endpoints del backend NestJS
  * Implementa todos los endpoints definidos en el backend Console Module
  */
@@ -49,7 +49,7 @@ export interface Stage {
   isActive: boolean;
   completionRate: number;
   timeframe: string;
-  philosophyAlignment?: 'ayni' | 'bien_comun' | 'metanoia';
+  philosophyAlignment?: 'reciprocidad' | 'bien_comun' | 'metanoia';
 }
 
 export interface StageAnalytics {

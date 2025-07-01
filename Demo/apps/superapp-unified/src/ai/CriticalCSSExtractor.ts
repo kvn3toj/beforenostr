@@ -13,7 +13,7 @@
  * - Métricas de performance
  */
 
-import { WebVitals } from 'web-vitals';
+
 
 interface CriticalCSSConfig {
   route: string;
@@ -87,7 +87,7 @@ export class CriticalCSSExtractor {
     this.routeConfigs.set('/', {
       route: '/',
       components: [
-        'WelcomeWidget', 'QuickActionsGrid', 'AyniMetricsCard',
+        'WelcomeWidget', 'QuickActionsGrid', 'ReciprocidadMetricsCard',
         'ModuleCards', 'WalletOverview', 'NotificationCenter'
       ],
       aboveFold: true,
@@ -130,7 +130,7 @@ export class CriticalCSSExtractor {
       route: '/social',
       components: [
         'SocialFeed', 'PostCard', 'UserProfile',
-        'ChatInterface', 'CommunityStats', 'AyniIndicators'
+        'ChatInterface', 'CommunityStats', 'ReciprocidadIndicators'
       ],
       aboveFold: true,
       inline: true,
@@ -522,8 +522,8 @@ body {
   box-shadow: var(--shadow-md);
 }
 `,
-      'AyniMetricsCard': `
-.ayni-metrics-card {
+      'ReciprocidadMetricsCard': `
+.reciprocidad-metrics-card {
   background: var(--coomunity-surface);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
@@ -531,7 +531,7 @@ body {
   margin-bottom: var(--space-6);
 }
 
-.ayni-balance-score {
+.reciprocidad-balance-score {
   font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--coomunity-primary);
@@ -539,7 +539,7 @@ body {
   margin-bottom: var(--space-4);
 }
 
-.ayni-elements-grid {
+.reciprocidad-elements-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-3);

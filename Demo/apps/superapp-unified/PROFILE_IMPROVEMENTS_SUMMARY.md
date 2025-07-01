@@ -6,7 +6,7 @@
 
 #### Header del Perfil Rediseñado
 
-- **Gradiente CoomÜnity**: Combinación de colores Ayni, Social y Onda
+- **Gradiente CoomÜnity**: Combinación de colores Reciprocidad, Social y Onda
 - **Avatar Mejorado**: Tamaño aumentado (140px) con borde blanco y sombra
 - **Badge de Verificación**: Icono verificado para administradores
 - **Información Contextual**: Bio, ubicación, fecha de membresía
@@ -14,7 +14,7 @@
 
 #### Sistema de Métricas Gamificadas
 
-- **6 Métricas Principales**: Nivel, Mëritos, Öndas, Ayni, Conexiones, Rating
+- **6 Métricas Principales**: Nivel, Mëritos, Öndas, Reciprocidad, Conexiones, Rating
 - **Colores Temáticos**: Cada métrica tiene su color específico de CoomÜnity
 - **Animaciones Hover**: Efecto de elevación y sombra al pasar el mouse
 - **Progreso Visual**: Barras de progreso para el siguiente nivel
@@ -46,7 +46,7 @@
 #### Tab 4: Red Social
 
 - **Impacto Social**: Métricas de conexiones y colaboraciones
-- **Score Ayni**: Indicador del nivel de reciprocidad
+- **Score Reciprocidad**: Indicador del nivel de reciprocidad
 - **Proyectos Colaborativos**: Contador de proyectos en equipo
 
 #### Tab 5: Configuración
@@ -107,7 +107,7 @@
 
 ```css
 --merito-color: #ffd700 /* Dorado para Mëritos */ --onda-color: #00ced1
-  /* Turquesa para Öndas */ --ayni-color: #9c27b0 /* Púrpura para Ayni */
+  /* Turquesa para Öndas */ --reciprocidad-color: #9c27b0 /* Púrpura para Reciprocidad */
   --pilgrim-color: #ff6b35 /* Naranja para Pilgrim Journey */
   --marketplace-color: #4caf50 /* Verde para Marketplace */
   --social-color: #2196f3 /* Azul para Social */ --uplay-color: #ff5722
@@ -209,7 +209,7 @@
 
 ### Para CoomÜnity
 
-- **Filosofía Integrada**: Valores de Ayni y Bien Común en la UI
+- **Filosofía Integrada**: Valores de Reciprocidad y Bien Común en la UI
 - **Engagement**: Gamificación que motiva la participación
 - **Comunidad**: Herramientas para fortalecer conexiones
 - **Diferenciación**: Experiencia única alineada con los valores

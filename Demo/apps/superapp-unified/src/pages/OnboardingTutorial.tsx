@@ -16,6 +16,7 @@ import {
   LinearProgress,
   Zoom,
   Slide,
+  AvatarGroup,
 } from '@mui/material'
 import {
   PlayArrow as StartIcon,
@@ -43,7 +44,7 @@ interface TutorialStep {
   action: string
   reward: {
     meritos: number
-    lukas: number
+    units: number
     message: string
   }
   component: React.ReactNode
@@ -53,7 +54,7 @@ interface OnboardingProgress {
   currentStep: number
   completedSteps: string[]
   totalMeritos: number
-  totalLukas: number
+  totalUnits: number
   startTime: Date
 }
 
@@ -64,7 +65,7 @@ const OnboardingTutorial: React.FC = () => {
     currentStep: 0,
     completedSteps: [],
     totalMeritos: 0,
-    totalLukas: 0,
+    totalUnits: 0,
     startTime: new Date()
   })
   const [showCelebration, setShowCelebration] = useState(false)
@@ -77,17 +78,17 @@ const OnboardingTutorial: React.FC = () => {
       description: 'Descubre un mundo donde cada acción construye el Bien Común',
       icon: <HeartIcon sx={{ fontSize: 48, color: '#CDAB5A' }} />,
       action: 'Comenzar Aventura',
-      reward: { meritos: 10, lukas: 5, message: '¡Primer paso hacia el Bien Común!' },
+      reward: { meritos: 10, units: 5, message: '¡Primer paso hacia el Bien Común!' },
       component: <WelcomeStep />
     },
     {
-      id: 'ayni',
-      title: 'Principio de Ayni',
+      id: 'reciprocidad',
+      title: 'Principio de Reciprocidad',
       description: 'Aprende sobre reciprocidad: dar y recibir en equilibrio perfecto',
       icon: <MagicIcon sx={{ fontSize: 48, color: '#10B981' }} />,
-      action: 'Practicar Ayni',
-      reward: { meritos: 25, lukas: 10, message: '¡Has comprendido la reciprocidad!' },
-      component: <AyniStep />
+      action: 'Practicar la Reciprocidad',
+      reward: { meritos: 25, units: 10, message: '¡Has comprendido la reciprocidad!' },
+      component: <ReciprocidadStep />
     },
     {
       id: 'meritos',
@@ -95,7 +96,7 @@ const OnboardingTutorial: React.FC = () => {
       description: 'Los Méritos reconocen tus contribuciones al Bien Común',
       icon: <TrophyIcon sx={{ fontSize: 48, color: '#F59E0B' }} />,
       action: 'Ganar Méritos',
-      reward: { meritos: 50, lukas: 20, message: '¡Méritos bien ganados!' },
+      reward: { meritos: 50, units: 20, message: '¡Méritos bien ganados!' },
       component: <MeritosStep />
     },
     {
@@ -104,16 +105,16 @@ const OnboardingTutorial: React.FC = () => {
       description: 'Conecta con otros miembros que comparten tus valores',
       icon: <CommunityIcon sx={{ fontSize: 48, color: '#8B5CF6' }} />,
       action: 'Conocer Comunidad',
-      reward: { meritos: 30, lukas: 15, message: '¡Bienvenido a la tribu!' },
+      reward: { meritos: 30, units: 15, message: '¡Bienvenido a la tribu!' },
       component: <CommunityStep />
     },
     {
       id: 'marketplace',
       title: 'Explora el Marketplace',
-      description: 'Intercambia productos y servicios usando Lükas',
+      description: 'Intercambia productos y servicios usando Ünits',
       icon: <MarketplaceIcon sx={{ fontSize: 48, color: '#3B82F6' }} />,
       action: 'Explorar Intercambios',
-      reward: { meritos: 40, lukas: 25, message: '¡Primer intercambio exitoso!' },
+      reward: { meritos: 40, units: 25, message: '¡Primer intercambio exitoso!' },
       component: <MarketplaceStep />
     },
     {
@@ -122,7 +123,7 @@ const OnboardingTutorial: React.FC = () => {
       description: 'Has completado tu iniciación en CoomÜnity',
       icon: <CompleteIcon sx={{ fontSize: 48, color: '#EF4444' }} />,
       action: 'Comenzar Aventura',
-      reward: { meritos: 100, lukas: 50, message: '¡Aventura CoomÜnity desbloqueada!' },
+      reward: { meritos: 100, units: 50, message: '¡Aventura CoomÜnity desbloqueada!' },
       component: <CompleteStep />
     }
   ]
@@ -131,22 +132,22 @@ const OnboardingTutorial: React.FC = () => {
 
   const handleStepComplete = async () => {
     const step = steps[currentStep]
-    
+
     // Animate reward
     setShowCelebration(true)
-    
+
     // Update progress
     setProgress(prev => ({
       ...prev,
       currentStep: currentStep + 1,
       completedSteps: [...prev.completedSteps, step.id],
       totalMeritos: prev.totalMeritos + step.reward.meritos,
-      totalLukas: prev.totalLukas + step.reward.lukas
+      totalUnits: prev.totalUnits + step.reward.units
     }))
 
     // Show reward toast
     toast.success(step.reward.message, {
-      description: `+${step.reward.meritos} Méritos, +${step.reward.lukas} Lükas`,
+      description: `+${step.reward.meritos} Méritos, +${step.reward.units} Ünits`,
       duration: 3000,
     })
 
@@ -162,16 +163,16 @@ const OnboardingTutorial: React.FC = () => {
 
   const handleTutorialComplete = () => {
     const duration = (new Date().getTime() - progress.startTime.getTime()) / 1000
-    
+
     // Save tutorial completion
     localStorage.setItem('coomunity_tutorial_completed', 'true')
     localStorage.setItem('coomunity_tutorial_time', duration.toString())
-    
+
     toast.success('¡Tutorial Completado!', {
       description: `Completado en ${Math.round(duration / 60)} minutos`,
       duration: 5000,
     })
-    
+
     setIsOpen(false)
     navigate('/')
   }
@@ -185,8 +186,8 @@ const OnboardingTutorial: React.FC = () => {
   if (!isOpen) return null
 
   return (
-    <Dialog 
-      open={isOpen} 
+    <Dialog
+      open={isOpen}
       fullScreen
       PaperProps={{
         sx: {
@@ -216,10 +217,10 @@ const OnboardingTutorial: React.FC = () => {
         {/* Skip Button */}
         <IconButton
           onClick={handleSkip}
-          sx={{ 
-            position: 'absolute', 
-            top: 16, 
-            right: 16, 
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
             color: 'rgba(255,255,255,0.7)',
             zIndex: 10
           }}
@@ -229,10 +230,10 @@ const OnboardingTutorial: React.FC = () => {
 
         {/* Progress Bar */}
         <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 5 }}>
-          <LinearProgress 
-            variant="determinate" 
+          <LinearProgress
+            variant="determinate"
             value={(currentStep / (steps.length - 1)) * 100}
-            sx={{ 
+            sx={{
               height: 6,
               '& .MuiLinearProgress-bar': {
                 backgroundColor: '#CDAB5A'
@@ -257,8 +258,8 @@ const OnboardingTutorial: React.FC = () => {
           {/* Step Counter */}
           <Chip
             label={`Paso ${currentStep + 1} de ${steps.length}`}
-            sx={{ 
-              mb: 3, 
+            sx={{
+              mb: 3,
               backgroundColor: 'rgba(255,255,255,0.2)',
               color: 'white',
               backdropFilter: 'blur(10px)'
@@ -299,7 +300,7 @@ const OnboardingTutorial: React.FC = () => {
               <Typography variant="h3" component="h1" fontWeight="bold" sx={{ mb: 2 }}>
                 {currentTutorialStep.title}
               </Typography>
-              
+
               <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
                 {currentTutorialStep.description}
               </Typography>
@@ -337,10 +338,10 @@ const OnboardingTutorial: React.FC = () => {
           </AnimatePresence>
 
           {/* Progress Stats */}
-          <Box 
-            sx={{ 
-              position: 'absolute', 
-              bottom: 30, 
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 30,
               left: 30,
               display: 'flex',
               gap: 2
@@ -349,7 +350,7 @@ const OnboardingTutorial: React.FC = () => {
             <Chip
               icon={<TrophyIcon />}
               label={`${progress.totalMeritos} Méritos`}
-              sx={{ 
+              sx={{
                 backgroundColor: 'rgba(245, 158, 11, 0.2)',
                 color: '#F59E0B',
                 backdropFilter: 'blur(10px)'
@@ -357,8 +358,8 @@ const OnboardingTutorial: React.FC = () => {
             />
             <Chip
               icon={<WalletIcon />}
-              label={`${progress.totalLukas} Lükas`}
-              sx={{ 
+              label={`${progress.totalUnits} Ünits`}
+              sx={{
                 backgroundColor: 'rgba(16, 185, 129, 0.2)',
                 color: '#10B981',
                 backdropFilter: 'blur(10px)'
@@ -399,7 +400,7 @@ const OnboardingTutorial: React.FC = () => {
                     ¡Excelente!
                   </Typography>
                   <Typography variant="h6">
-                    +{currentTutorialStep.reward.meritos} Méritos, +{currentTutorialStep.reward.lukas} Lükas
+                    +{currentTutorialStep.reward.meritos} Méritos, +{currentTutorialStep.reward.units} Ünits
                   </Typography>
                 </Box>
               </motion.div>
@@ -428,7 +429,7 @@ const WelcomeStep: React.FC = () => (
   </Card>
 )
 
-const AyniStep: React.FC = () => (
+const ReciprocidadStep: React.FC = () => (
   <Box textAlign="center">
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 3 }}>
       <motion.div
@@ -463,7 +464,7 @@ const AyniStep: React.FC = () => (
       </motion.div>
     </Box>
     <Typography variant="body1" sx={{ mb: 2 }}>
-      <strong>Ayni</strong> significa "reciprocidad sagrada"
+      <strong>Reciprocidad</strong> es nuestro principio sagrado.
     </Typography>
     <Typography variant="body2" sx={{ opacity: 0.8 }}>
       Cuando das, recibes. Cuando recibes, das. El equilibrio perfecto.
@@ -499,9 +500,9 @@ const CommunityStep: React.FC = () => (
     <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
       <AvatarGroup max={4}>
         {['Ana', 'Carlos', 'María', 'Luis'].map((name, i) => (
-          <Avatar 
+          <Avatar
             key={name}
-            sx={{ 
+            sx={{
               backgroundColor: ['#CDAB5A', '#10B981', '#3B82F6', '#8B5CF6'][i],
               border: '2px solid white'
             }}
@@ -528,7 +529,7 @@ const MarketplaceStep: React.FC = () => (
           Verduras Orgánicas
         </Typography>
         <Typography variant="h6" sx={{ color: '#10B981', fontWeight: 'bold' }}>
-          50 Lükas
+          50 Ünits
         </Typography>
       </Card>
       <Card sx={{ p: 2, backgroundColor: 'rgba(255,255,255,0.1)', minWidth: 100 }}>
@@ -536,12 +537,12 @@ const MarketplaceStep: React.FC = () => (
           Taller Meditación
         </Typography>
         <Typography variant="h6" sx={{ color: '#3B82F6', fontWeight: 'bold' }}>
-          25 Lükas
+          25 Ünits
         </Typography>
       </Card>
     </Box>
     <Typography variant="body1" sx={{ mb: 2 }}>
-      Intercambia productos y servicios usando Lükas, nuestra moneda comunitaria
+      Intercambia productos y servicios usando Ünits, nuestra moneda comunitaria
     </Typography>
     <Typography variant="body2" sx={{ opacity: 0.8 }}>
       Todo en el marketplace está alineado con valores de sostenibilidad

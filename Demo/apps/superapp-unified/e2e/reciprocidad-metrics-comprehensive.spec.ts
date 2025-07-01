@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
+test.describe('ReciprocidadMetricsCard - Comprehensive Functionality Test', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to home page where AyniMetricsCard is displayed
+    // Navigate to home page where ReciprocidadMetricsCard is displayed
     await page.goto('/');
     
     // Wait for the component to load completely
-    await page.waitForSelector('[aria-label="Tarjeta de métricas Ayni"]', { timeout: 10000 });
+    await page.waitForSelector('[aria-label="Tarjeta de métricas Reciprocidad"]', { timeout: 10000 });
     
     // Wait for any loading states to complete
     await page.waitForTimeout(1000);
@@ -15,12 +15,12 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
   test.describe('Core Functionality', () => {
     test('should display all main components with proper structure', async ({ page }) => {
       // Check main container
-      const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+      const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
       await expect(mainCard).toBeVisible();
       await expect(mainCard).toHaveAttribute('role', 'region');
 
       // Check main heading
-      const heading = page.locator('h2:has-text("Tu Balance Ayni")');
+      const heading = page.locator('h2:has-text("Tu Balance Reciprocidad")');
       await expect(heading).toBeVisible();
 
       // Check toolbar controls
@@ -28,7 +28,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
       await expect(toolbar).toBeVisible();
 
       // Check main balance display
-      const balanceRegion = page.locator('[aria-label="Balance Ayni Principal"]');
+      const balanceRegion = page.locator('[aria-label="Balance Reciprocidad Principal"]');
       await expect(balanceRegion).toBeVisible();
 
       // Check compact metrics
@@ -37,7 +37,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
     });
 
     test('should display balance percentage with proper formatting', async ({ page }) => {
-      const balanceRegion = page.locator('[aria-label="Balance Ayni Principal"]');
+      const balanceRegion = page.locator('[aria-label="Balance Reciprocidad Principal"]');
       const balanceText = balanceRegion.locator('h1');
       
       await expect(balanceText).toBeVisible();
@@ -51,7 +51,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
     });
 
     test('should show level progression information', async ({ page }) => {
-      const balanceRegion = page.locator('[aria-label="Balance Ayni Principal"]');
+      const balanceRegion = page.locator('[aria-label="Balance Reciprocidad Principal"]');
       
       // Check current level is displayed
       const levelText = balanceRegion.locator('text=Nivel');
@@ -154,7 +154,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
       await expandButton.click();
 
       // Check elemental balance section
-      const elementalGroup = page.locator('[aria-label="Elementos del balance Ayni"]');
+      const elementalGroup = page.locator('[aria-label="Elementos del balance Reciprocidad"]');
       await expect(elementalGroup).toBeVisible();
       await expect(elementalGroup).toHaveAttribute('role', 'group');
 
@@ -236,7 +236,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
 
     test('should have proper ARIA labels and roles', async ({ page }) => {
       // Main container
-      const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+      const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
       await expect(mainCard).toHaveAttribute('role', 'region');
 
       // Toolbar
@@ -244,7 +244,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
       await expect(toolbar).toBeVisible();
 
       // Balance region
-      const balanceRegion = page.locator('[aria-label="Balance Ayni Principal"]');
+      const balanceRegion = page.locator('[aria-label="Balance Reciprocidad Principal"]');
       await expect(balanceRegion).toHaveAttribute('role', 'region');
 
       // Compact metrics region
@@ -254,7 +254,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
 
     test('should have proper heading hierarchy', async ({ page }) => {
       // Main heading (h2)
-      const mainHeading = page.locator('h2:has-text("Tu Balance Ayni")');
+      const mainHeading = page.locator('h2:has-text("Tu Balance Reciprocidad")');
       await expect(mainHeading).toBeVisible();
 
       // Expand to check sub-headings
@@ -270,7 +270,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
       const statusMessage = page.locator('[role="status"][aria-live="polite"]');
       
       // Status message should exist in the balance region
-      const balanceRegion = page.locator('[aria-label="Balance Ayni Principal"]');
+      const balanceRegion = page.locator('[aria-label="Balance Reciprocidad Principal"]');
       const statusInBalance = balanceRegion.locator('[role="status"][aria-live="polite"]');
       
       if (await statusInBalance.count() > 0) {
@@ -281,7 +281,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
 
   test.describe('Refresh Functionality', () => {
     test('should handle refresh button correctly', async ({ page }) => {
-      const refreshButton = page.locator('[aria-label="Actualizar métricas Ayni"]');
+      const refreshButton = page.locator('[aria-label="Actualizar métricas Reciprocidad"]');
       await expect(refreshButton).toBeVisible();
       await expect(refreshButton).toBeEnabled();
 
@@ -297,7 +297,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
     });
 
     test('should show refresh animation during update', async ({ page }) => {
-      const refreshButton = page.locator('[aria-label="Actualizar métricas Ayni"]');
+      const refreshButton = page.locator('[aria-label="Actualizar métricas Reciprocidad"]');
       
       await refreshButton.click();
       
@@ -331,7 +331,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
       // Set mobile viewport
       await page.setViewportSize({ width: 375, height: 667 });
 
-      const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+      const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
       await expect(mainCard).toBeVisible();
 
       // Compact metrics should still be visible
@@ -339,14 +339,14 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
       await expect(compactMetrics).toBeVisible();
 
       // Balance display should adapt
-      const balanceRegion = page.locator('[aria-label="Balance Ayni Principal"]');
+      const balanceRegion = page.locator('[aria-label="Balance Reciprocidad Principal"]');
       await expect(balanceRegion).toBeVisible();
     });
 
     test('should work on tablet viewport', async ({ page }) => {
       await page.setViewportSize({ width: 768, height: 1024 });
 
-      const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+      const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
       await expect(mainCard).toBeVisible();
 
       // Test expand functionality on tablet
@@ -360,14 +360,14 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
     test('should work on desktop viewport', async ({ page }) => {
       await page.setViewportSize({ width: 1200, height: 800 });
 
-      const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+      const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
       await expect(mainCard).toBeVisible();
 
       // All functionality should work on desktop
       const expandButton = page.locator('[aria-label*="vista detallada"]');
       await expandButton.click();
       
-      const elementalGroup = page.locator('[aria-label="Elementos del balance Ayni"]');
+      const elementalGroup = page.locator('[aria-label="Elementos del balance Reciprocidad"]');
       await expect(elementalGroup).toBeVisible();
     });
   });
@@ -391,7 +391,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
 
     test('should display balance with fade-in effect', async ({ page }) => {
       // The balance display should be visible after fade-in
-      const balanceDisplay = page.locator('[aria-label="Balance Ayni Principal"]');
+      const balanceDisplay = page.locator('[aria-label="Balance Reciprocidad Principal"]');
       await expect(balanceDisplay).toBeVisible();
       
       // Check that the main balance number is visible
@@ -403,11 +403,11 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
   test.describe('Error Handling & Edge Cases', () => {
     test('should handle missing or invalid data gracefully', async ({ page }) => {
       // Component should render without crashing even with potential missing data
-      const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+      const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
       await expect(mainCard).toBeVisible();
 
       // Basic elements should be present
-      const balanceDisplay = page.locator('[aria-label="Balance Ayni Principal"]');
+      const balanceDisplay = page.locator('[aria-label="Balance Reciprocidad Principal"]');
       await expect(balanceDisplay).toBeVisible();
 
       const compactMetrics = page.locator('[aria-label="Métricas compactas de CoomÜnity"]');
@@ -416,8 +416,8 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
 
     test('should show loading state when appropriate', async ({ page }) => {
       // Check for loading state (might be brief)
-      const loadingState = page.locator('[aria-label="Cargando métricas Ayni"]');
-      const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+      const loadingState = page.locator('[aria-label="Cargando métricas Reciprocidad"]');
+      const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
 
       // Either loading or main card should be visible
       const isLoadingVisible = await loadingState.isVisible();
@@ -445,7 +445,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
       const startTime = Date.now();
       
       await page.goto('/');
-      await page.waitForSelector('[aria-label="Tarjeta de métricas Ayni"]');
+      await page.waitForSelector('[aria-label="Tarjeta de métricas Reciprocidad"]');
       
       const loadTime = Date.now() - startTime;
       expect(loadTime).toBeLessThan(5000); // Should load within 5 seconds
@@ -468,7 +468,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
     });
 
     test('should handle rapid refresh clicks gracefully', async ({ page }) => {
-      const refreshButton = page.locator('[aria-label="Actualizar métricas Ayni"]');
+      const refreshButton = page.locator('[aria-label="Actualizar métricas Reciprocidad"]');
       
       // Click refresh multiple times rapidly
       await refreshButton.click();
@@ -487,7 +487,7 @@ test.describe('AyniMetricsCard - Comprehensive Functionality Test', () => {
   test.describe('Integration with Home Page', () => {
     test('should integrate properly with home page layout', async ({ page }) => {
       // Check that the component doesn't interfere with other page elements
-      const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+      const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
       await expect(mainCard).toBeVisible();
       
       // Check that page navigation still works

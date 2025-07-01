@@ -23,7 +23,7 @@ test.describe('Reproductor Horizontal ÜPlay - Video de Reciprocidad', () => {
     await page.waitForTimeout(2000);
 
     // Verificar título del video
-    await expect(page.locator('text=La Reciprocidad: Principio Universal del Ayni')).toBeVisible();
+    await expect(page.locator('text=La Reciprocidad: Principio Universal del Reciprocidad')).toBeVisible();
     
     // Verificar descripción
     await expect(page.locator('text=Explora el concepto ancestral de reciprocidad')).toBeVisible();
@@ -40,10 +40,10 @@ test.describe('Reproductor Horizontal ÜPlay - Video de Reciprocidad', () => {
     await page.waitForTimeout(2000);
 
     // Verificar que muestra la sección de preguntas
-    await expect(page.locator('text=Preguntas sobre Reciprocidad y Ayni')).toBeVisible();
+    await expect(page.locator('text=Preguntas sobre Reciprocidad y Reciprocidad')).toBeVisible();
     
     // Verificar que muestra las 4 preguntas
-    await expect(page.locator('text=¿Qué significa "Ayni" en la filosofía andina?')).toBeVisible();
+    await expect(page.locator('text=¿Qué significa "Reciprocidad" en la filosofía andina?')).toBeVisible();
     await expect(page.locator('text=¿cómo se aplica la reciprocidad en CoomÜnity?')).toBeVisible();
     await expect(page.locator('text=¿Cuál es el resultado de practicar la reciprocidad consciente?')).toBeVisible();
     await expect(page.locator('text=¿Cómo se relaciona la reciprocidad con la economía colaborativa?')).toBeVisible();
@@ -65,7 +65,7 @@ test.describe('Reproductor Horizontal ÜPlay - Video de Reciprocidad', () => {
     await expect(iframe).toBeVisible();
     
     // Verificar que tiene el título correcto
-    await expect(iframe).toHaveAttribute('title', 'La Reciprocidad: Principio Universal del Ayni');
+    await expect(iframe).toHaveAttribute('title', 'La Reciprocidad: Principio Universal del Reciprocidad');
   });
 
   test('Debe mostrar las métricas de gamificación', async ({ page }) => {
@@ -87,7 +87,7 @@ test.describe('Reproductor Horizontal ÜPlay - Video de Reciprocidad', () => {
 
     // Verificar características
     await expect(page.locator('text=Preguntas Interactivas')).toBeVisible();
-    await expect(page.locator('text=Sistema de Recompensas Ayni')).toBeVisible();
+    await expect(page.locator('text=Sistema de Recompensas Reciprocidad')).toBeVisible();
     await expect(page.locator('text=Gamificación con Mérit')).toBeVisible();
     await expect(page.locator('text=Diseño Adaptativo')).toBeVisible();
   });
@@ -102,7 +102,7 @@ test.describe('Reproductor Horizontal ÜPlay - Video de Reciprocidad', () => {
 
     // Verificar que el contenido es visible en móvil
     await expect(page.locator('text=Reproductor Horizontal ÜPlay')).toBeVisible();
-    await expect(page.locator('text=La Reciprocidad: Principio Universal del Ayni')).toBeVisible();
+    await expect(page.locator('text=La Reciprocidad: Principio Universal del Reciprocidad')).toBeVisible();
     
     // Verificar que el iframe está presente
     const iframe = page.locator('iframe[src*="youtube.com"]');

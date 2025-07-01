@@ -141,7 +141,7 @@ useEffect(() => {
 - **Mëritos** (no "points" o "credits")
 - **Öndas** (energía vibracional)
 - **Lükas** (moneda interna)
-- **Ayni** (reciprocidad)
+- **Reciprocidad** (reciprocidad)
 - **Bien Común** (no "common good")
 - **Emprendedores Confiables** (no "trusted sellers")
 
@@ -214,7 +214,7 @@ Antes de generar código, verificar:
 ## 🎯 FILOSOFÍA COOMUNITY
 
 Cada componente debe reflejar:
-1. **Ayni (Reciprocidad):** Equilibrio entre dar y recibir
+1. **Reciprocidad (Reciprocidad):** Equilibrio entre dar y recibir
 2. **Bien Común:** Beneficio colectivo sobre individual
 3. **Cooperación:** Facilitar colaboración vs competencia
 4. **Transparencia:** Código claro y mantenible

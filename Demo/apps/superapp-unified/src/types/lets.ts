@@ -1,5 +1,5 @@
 // 🔄 Tipos para el Sistema LETS (Local Exchange Trading System)
-// Implementación de economía colaborativa basada en Ayni y reciprocidad
+// Implementación de economía colaborativa basada en Reciprocidad y reciprocidad
 
 // ============================================================================
 // CORE LETS CURRENCY SYSTEM
@@ -185,7 +185,7 @@ export interface LetsAnalytics {
     newUsersThisMonth: number;
     retentionRate: number;
   };
-  ayniBalance: {
+  reciprocidadBalance: {
     giversCount: number;
     receiversCount: number;
     balanceRatio: number; // Ideal: 1.0 (equilibrio perfecto)
@@ -207,7 +207,7 @@ export interface UserLetsProfile {
   transactionHistory: {
     totalGiven: number;
     totalReceived: number;
-    ayniRatio: number; // Ratio de reciprocidad
+    reciprocidadRatio: number; // Ratio de reciprocidad
   };
   activeListings: LetsListing[];
   copParticipation: Array<{

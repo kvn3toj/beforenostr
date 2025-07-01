@@ -8,7 +8,7 @@ import { ElementType } from '../../types';
  * en todo el ecosistema CoomÜnity SuperApp.
  *
  * Basado en análisis de:
- * - AyniMetricsCardRevolutionary.tsx (920 líneas)
+ * - ReciprocidadMetricsCardRevolutionary.tsx (920 líneas)
  * - ModuleCardsRevolutionary.tsx
  * - NotificationCenterRevolutionary.tsx
  * - LiveActivityFeed.tsx (glassmorphism patterns)
@@ -19,8 +19,8 @@ export const homeGradients = {
   // Gradiente principal del fondo HOME
   primaryBackground: 'linear-gradient(135deg, #fffefb 0%, #f8f6f0 50%, #f1ede3 100%)',
 
-  // Gradiente de las métricas Ayni revolucionarias
-  ayniMetrics: 'linear-gradient(145deg, rgba(255,223,186,0.4) 0%, rgba(255,183,77,0.6) 50%, rgba(255,152,0,0.3) 100%)',
+  // Gradiente de las métricas Reciprocidad revolucionarias
+  reciprocidadMetrics: 'linear-gradient(145deg, rgba(255,223,186,0.4) 0%, rgba(255,183,77,0.6) 50%, rgba(255,152,0,0.3) 100%)',
 
   // Gradiente del balance cósmico central
   cosmicBalance: 'radial-gradient(circle at center, rgba(255,183,77,0.8) 0%, rgba(255,152,0,0.4) 40%, rgba(139,69,19,0.2) 100%)',
@@ -96,7 +96,7 @@ export const homeStateGradients = {
 
 // 🔮 GRADIENTES CÓSMICOS ESPECÍFICOS
 export const cosmicHomeGradients = {
-  // Sistema solar del balance Ayni
+  // Sistema solar del balance Reciprocidad
   solarSystem: {
     center: 'radial-gradient(circle, rgba(255,183,77,1) 0%, rgba(255,152,0,0.8) 30%, rgba(255,193,7,0.4) 70%, transparent 100%)',
     orbit1: 'radial-gradient(circle, rgba(255,241,118,0.6) 0%, transparent 60%)',
@@ -111,7 +111,7 @@ export const cosmicHomeGradients = {
     accent: 'radial-gradient(circle, rgba(255,193,7,0.4) 0%, rgba(255,193,7,0.1) 50%, transparent 100%)'
   },
 
-  // Ondas de energía Ayni
+  // Ondas de energía Reciprocidad
   energyWaves: {
     wave1: 'linear-gradient(45deg, transparent 0%, rgba(255,183,77,0.1) 50%, transparent 100%)',
     wave2: 'linear-gradient(135deg, transparent 0%, rgba(255,152,0,0.1) 50%, transparent 100%)',
@@ -146,13 +146,13 @@ export const responsiveHomeGradients = {
   mobile: {
     // Gradientes simplificados para móvil
     primaryBackground: 'linear-gradient(180deg, #fffefb 0%, #f8f6f0 100%)',
-    ayniMetrics: 'linear-gradient(135deg, rgba(255,183,77,0.3) 0%, rgba(255,152,0,0.2) 100%)'
+    reciprocidadMetrics: 'linear-gradient(135deg, rgba(255,183,77,0.3) 0%, rgba(255,152,0,0.2) 100%)'
   },
 
   tablet: {
     // Gradientes intermedio para tablet
     primaryBackground: 'linear-gradient(135deg, #fffefb 0%, #f8f6f0 70%, #f1ede3 100%)',
-    ayniMetrics: 'linear-gradient(145deg, rgba(255,183,77,0.35) 0%, rgba(255,152,0,0.4) 100%)'
+    reciprocidadMetrics: 'linear-gradient(145deg, rgba(255,183,77,0.35) 0%, rgba(255,152,0,0.4) 100%)'
   },
 
   desktop: homeGradients // Gradientes completos para desktop

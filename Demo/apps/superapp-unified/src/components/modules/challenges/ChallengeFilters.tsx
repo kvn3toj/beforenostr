@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Card,
   CardContent,
   Typography,
   Grid,
@@ -48,6 +47,10 @@ import {
   ChallengeFilters as IFilters,
 } from '../../../types/challenges';
 
+// 🌌 ARIA (Frontend Artist) - Cosmic Design System
+import { CosmicCard } from '../../../design-system';
+import { UNIFIED_COLORS } from '../../../theme/colors';
+
 interface ChallengeFiltersProps {
   filters: IFilters;
   onFiltersChange: (filters: IFilters) => void;
@@ -60,61 +63,68 @@ interface ChallengeFiltersProps {
 }
 
 const DIFFICULTY_OPTIONS = [
-  { value: 'BEGINNER', label: 'Principiante', icon: '🌱', color: '#4CAF50' },
-  { value: 'INTERMEDIATE', label: 'Intermedio', icon: '⚡', color: '#FF9800' },
-  { value: 'ADVANCED', label: 'Avanzado', icon: '🔥', color: '#F44336' },
-  { value: 'EXPERT', label: 'Experto', icon: '💎', color: '#9C27B0' },
+  { value: 'BEGINNER', label: '🌱 Iniciante', color: UNIFIED_COLORS.elements.tierra.primary },
+  { value: 'INTERMEDIATE', label: '⚡ Intermedio', color: UNIFIED_COLORS.elements.fuego.primary },
+  { value: 'ADVANCED', label: '🔥 Avanzado', color: UNIFIED_COLORS.elements.aire.primary },
+  { value: 'EXPERT', label: '🌟 Experto', color: UNIFIED_COLORS.elements.eter.primary },
 ];
 
 const CATEGORY_OPTIONS = [
   {
-    value: 'LEARNING',
-    label: 'Aprendizaje',
-    icon: '📚',
-    color: '#2196F3',
-    description: 'Expande tu conocimiento',
+    value: 'PERSONAL_DEVELOPMENT',
+    label: 'Desarrollo Personal',
+    icon: '🧠',
+    color: UNIFIED_COLORS.elements.eter.primary,
+    description: 'Expande tu conciencia',
   },
   {
-    value: 'SOCIAL',
-    label: 'Social',
-    icon: '👥',
-    color: '#FF9800',
-    description: 'Conecta con la comunidad',
-  },
-  {
-    value: 'WELLNESS',
-    label: 'Bienestar',
-    icon: '💚',
-    color: '#4CAF50',
-    description: 'Cuida tu bienestar',
+    value: 'FITNESS',
+    label: 'Fitness',
+    icon: '💪',
+    color: UNIFIED_COLORS.elements.tierra.primary,
+    description: 'Fortalece tu cuerpo',
   },
   {
     value: 'CREATIVITY',
     label: 'Creatividad',
     icon: '🎨',
-    color: '#9C27B0',
-    description: 'Expresa tu creatividad',
+    color: UNIFIED_COLORS.elements.fuego.primary,
+    description: 'Expresa tu arte',
+  },
+  {
+    value: 'SOCIAL',
+    label: 'Social',
+    icon: '👥',
+    color: UNIFIED_COLORS.elements.agua.primary,
+    description: 'Conecta con otros',
+  },
+  {
+    value: 'LEARNING',
+    label: 'Aprendizaje',
+    icon: '📚',
+    color: UNIFIED_COLORS.elements.aire.primary,
+    description: 'Expande tu conocimiento',
+  },
+  {
+    value: 'HEALTH',
+    label: 'Salud',
+    icon: '🌿',
+    color: UNIFIED_COLORS.elements.tierra.primary,
+    description: 'Cuida tu bienestar',
+  },
+  {
+    value: 'MINDFULNESS',
+    label: 'Mindfulness',
+    icon: '🧘',
+    color: UNIFIED_COLORS.elements.eter.primary,
+    description: 'Cultiva la consciencia',
   },
   {
     value: 'COMMUNITY',
     label: 'Comunidad',
     icon: '🌍',
-    color: '#FF5722',
+    color: UNIFIED_COLORS.elements.agua.primary,
     description: 'Bien Común',
-  },
-  {
-    value: 'SUSTAINABILITY',
-    label: 'Sostenibilidad',
-    icon: '🌱',
-    color: '#8BC34A',
-    description: 'Protege el planeta',
-  },
-  {
-    value: 'INNOVATION',
-    label: 'Innovación',
-    icon: '💡',
-    color: '#607D8B',
-    description: 'Innova y transforma',
   },
 ];
 
@@ -128,10 +138,10 @@ const TYPE_OPTIONS = [
 ];
 
 const STATUS_OPTIONS = [
-  { value: 'ACTIVE', label: 'Activo', color: '#4CAF50' },
-  { value: 'INACTIVE', label: 'Inactivo', color: '#757575' },
-  { value: 'COMPLETED', label: 'Completado', color: '#2196F3' },
-  { value: 'EXPIRED', label: 'Expirado', color: '#F44336' },
+  { value: 'ACTIVE', label: 'Activo', color: UNIFIED_COLORS.elements.tierra.primary },
+  { value: 'INACTIVE', label: 'Inactivo', color: UNIFIED_COLORS.elements.aire.primary },
+  { value: 'COMPLETED', label: 'Completado', color: UNIFIED_COLORS.elements.agua.primary },
+  { value: 'EXPIRED', label: 'Expirado', color: UNIFIED_COLORS.elements.fuego.primary },
 ];
 
 export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
@@ -244,26 +254,61 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
   };
 
   return (
-    <Card
-      sx={{
-        mb: 3,
-        background:
-          'linear-gradient(135deg, rgba(33, 150, 243, 0.05), rgba(156, 39, 176, 0.05))',
-        border: '1px solid rgba(33, 150, 243, 0.1)',
-      }}
+    <CosmicCard
+      variant="elevated"
+      element="aire" // Aire para filtros (ideas, organización)
+      enableGlow={true}
+      enableAnimations={true}
+      cosmicIntensity="subtle"
+      sx={{ mb: 3 }}
     >
       <CardContent sx={{ pb: 2 }}>
+        {/* Header con estadísticas */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Tune sx={{ color: UNIFIED_COLORS.elements.aire.primary }} />
+            <Typography variant="h6" fontWeight="bold">
+              🌊 Filtros Cósmicos
+            </Typography>
+            {hasActiveFilters() && (
+              <Chip
+                label={`${getFilterCount()} filtros activos`}
+                size="small"
+                color="primary"
+                variant="outlined"
+              />
+            )}
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {totalResults !== undefined && (
+              <Typography variant="body2" color="text.secondary">
+                {totalResults.toLocaleString()} resultados
+              </Typography>
+            )}
+            <IconButton
+              size="small"
+              onClick={() => setExpanded(!expanded)}
+              sx={{
+                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease',
+              }}
+            >
+              <ExpandMore />
+            </IconButton>
+          </Box>
+        </Box>
+
         {/* Quick Search */}
         <Box sx={{ mb: 3 }}>
           <TextField
             fullWidth
-            placeholder="Buscar desafíos por título, descripción o etiquetas..."
+            placeholder="🔍 Buscar desafíos por título, descripción o etiquetas..."
             value={filters.search || ''}
             onChange={(e) => handleFilterChange('search', e.target.value)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search color="action" />
+                  <Search sx={{ color: UNIFIED_COLORS.elements.aire.primary }} />
                 </InputAdornment>
               ),
               endAdornment: filters.search && (
@@ -281,6 +326,13 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
               '& .MuiOutlinedInput-root': {
                 borderRadius: 3,
                 bgcolor: 'background.paper',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  boxShadow: `0 0 20px ${UNIFIED_COLORS.elements.aire.primary}20`,
+                },
+                '&.Mui-focused': {
+                  boxShadow: `0 0 25px ${UNIFIED_COLORS.elements.aire.primary}30`,
+                },
               },
             }}
           />
@@ -288,116 +340,122 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
 
         {/* Quick Filters */}
         <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" gutterBottom color="text.secondary">
-            Filtros Rápidos
+          <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+            ⚡ Filtros Rápidos
           </Typography>
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-            <FormControlLabel
-              control={
-                <Switch
-                  size="small"
-                  checked={quickFilters.myParticipating}
-                  onChange={(e) =>
-                    handleQuickFilterChange('myParticipating', e.target.checked)
-                  }
-                />
-              }
-              label="Mis Desafíos"
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            <Chip
+              icon={<Group />}
+              label="Mis Challenges"
+              clickable
+              color={quickFilters.myParticipating ? 'primary' : 'default'}
+              variant={quickFilters.myParticipating ? 'filled' : 'outlined'}
+              onClick={() => handleQuickFilterChange('myParticipating', !quickFilters.myParticipating)}
+              sx={{
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                },
+              }}
             />
-            <FormControlLabel
-              control={
-                <Switch
-                  size="small"
-                  checked={quickFilters.trending}
-                  onChange={(e) =>
-                    handleQuickFilterChange('trending', e.target.checked)
-                  }
-                />
-              }
-              label="Tendencia"
+            <Chip
+              icon={<TrendingUp />}
+              label="Trending"
+              clickable
+              color={quickFilters.trending ? 'primary' : 'default'}
+              variant={quickFilters.trending ? 'filled' : 'outlined'}
+              onClick={() => handleQuickFilterChange('trending', !quickFilters.trending)}
+              sx={{
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                },
+              }}
             />
-            <FormControlLabel
-              control={
-                <Switch
-                  size="small"
-                  checked={quickFilters.newThisWeek}
-                  onChange={(e) =>
-                    handleQuickFilterChange('newThisWeek', e.target.checked)
-                  }
-                />
-              }
+            <Chip
+              icon={<Schedule />}
               label="Nuevos"
+              clickable
+              color={quickFilters.newThisWeek ? 'primary' : 'default'}
+              variant={quickFilters.newThisWeek ? 'filled' : 'outlined'}
+              onClick={() => handleQuickFilterChange('newThisWeek', !quickFilters.newThisWeek)}
+              sx={{
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                },
+              }}
             />
-            <FormControlLabel
-              control={
-                <Switch
-                  size="small"
-                  checked={quickFilters.highReward}
-                  onChange={(e) =>
-                    handleQuickFilterChange('highReward', e.target.checked)
-                  }
-                />
-              }
-              label="Alta Recompensa"
+            <Chip
+              icon={<Star />}
+              label="Alto Reward"
+              clickable
+              color={quickFilters.highReward ? 'primary' : 'default'}
+              variant={quickFilters.highReward ? 'filled' : 'outlined'}
+              onClick={() => handleQuickFilterChange('highReward', !quickFilters.highReward)}
+              sx={{
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                },
+              }}
             />
-          </Stack>
-        </Box>
-
-        {/* Advanced Filters Toggle */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mb: expanded ? 2 : 0,
-          }}
-        >
-          <Button
-            startIcon={<Tune />}
-            endIcon={
-              <ExpandMore
-                sx={{ transform: expanded ? 'rotate(180deg)' : 'none' }}
-              />
-            }
-            onClick={() => setExpanded(!expanded)}
-            sx={{ transition: 'all 0.3s ease' }}
-          >
-            Filtros Avanzados {getFilterCount() > 0 && `(${getFilterCount()})`}
-          </Button>
-
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            {totalResults !== undefined && (
-              <Typography variant="caption" color="text.secondary">
-                {totalResults} resultados
-              </Typography>
-            )}
-            {hasActiveFilters() && (
-              <Button
-                size="small"
-                startIcon={<Clear />}
-                onClick={clearAllFilters}
-                color="error"
-                variant="outlined"
-              >
-                Limpiar
-              </Button>
-            )}
           </Box>
         </Box>
 
-        {/* Advanced Filters */}
+        {/* Toggle para filtros avanzados */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={() => setExpanded(!expanded)}
+            startIcon={<FilterList />}
+            endIcon={<ExpandMore sx={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }} />}
+            sx={{
+              borderColor: UNIFIED_COLORS.elements.aire.primary,
+              color: UNIFIED_COLORS.elements.aire.primary,
+              '&:hover': {
+                bgcolor: `${UNIFIED_COLORS.elements.aire.primary}15`,
+                borderColor: UNIFIED_COLORS.elements.aire.primary,
+              },
+            }}
+          >
+            Filtros Avanzados
+          </Button>
+
+          {hasActiveFilters() && (
+            <Button
+              variant="text"
+              onClick={clearAllFilters}
+              startIcon={<Clear />}
+              sx={{
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'error.main',
+                },
+              }}
+            >
+              Limpiar Todo
+            </Button>
+          )}
+        </Box>
+
+        {/* Filtros avanzados expandibles */}
         <Accordion
           expanded={expanded}
           onChange={() => setExpanded(!expanded)}
           elevation={0}
+          sx={{
+            bgcolor: 'transparent',
+            '&:before': { display: 'none' },
+          }}
         >
           <AccordionSummary sx={{ display: 'none' }} />
           <AccordionDetails sx={{ px: 0, pt: 0 }}>
             <Grid container spacing={3}>
               {/* Status Filter */}
               <Grid item xs={12} sm={6} md={3}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Estado
+                <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                  🔄 Estado
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   {STATUS_OPTIONS.map((option) => (
@@ -418,6 +476,14 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                               e.target.checked
                             )
                           }
+                          sx={{
+                            '& .MuiSwitch-switchBase.Mui-checked': {
+                              color: option.color,
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                              backgroundColor: option.color,
+                            },
+                          }}
                         />
                       }
                       label={
@@ -442,8 +508,8 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
 
               {/* Difficulty Filter */}
               <Grid item xs={12} sm={6} md={3}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Dificultad
+                <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                  💪 Dificultad
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   {DIFFICULTY_OPTIONS.map((option) => (
@@ -464,14 +530,21 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                               e.target.checked
                             )
                           }
+                          sx={{
+                            '& .MuiSwitch-switchBase.Mui-checked': {
+                              color: option.color,
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                              backgroundColor: option.color,
+                            },
+                          }}
                         />
                       }
                       label={
                         <Box
                           sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
                         >
-                          <Typography>{option.icon}</Typography>
-                          {option.label}
+                          <Typography>{option.label}</Typography>
                         </Box>
                       }
                     />
@@ -481,10 +554,10 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
 
               {/* Category Filter */}
               <Grid item xs={12} sm={6} md={3}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Categoría
+                <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                  🎯 Categoría
                 </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 200, overflowY: 'auto' }}>
                   {CATEGORY_OPTIONS.map((option) => (
                     <FormControlLabel
                       key={option.value}
@@ -503,21 +576,28 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                               e.target.checked
                             )
                           }
+                          sx={{
+                            '& .MuiSwitch-switchBase.Mui-checked': {
+                              color: option.color,
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                              backgroundColor: option.color,
+                            },
+                          }}
                         />
                       }
                       label={
-                        <Tooltip title={option.description} arrow>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 1,
-                            }}
-                          >
-                            <Typography>{option.icon}</Typography>
-                            {option.label}
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                        >
+                          <Typography>{option.icon}</Typography>
+                          <Box>
+                            <Typography variant="body2">{option.label}</Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {option.description}
+                            </Typography>
                           </Box>
-                        </Tooltip>
+                        </Box>
                       }
                     />
                   ))}
@@ -526,8 +606,8 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
 
               {/* Type Filter */}
               <Grid item xs={12} sm={6} md={3}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Tipo
+                <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                  ⏰ Tipo
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   {TYPE_OPTIONS.map((option) => (
@@ -566,8 +646,8 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
               {/* Sorting Options */}
               <Grid item xs={12}>
                 <Divider sx={{ my: 2 }} />
-                <Typography variant="subtitle2" gutterBottom>
-                  Ordenar por
+                <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                  📊 Ordenar por
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
@@ -610,43 +690,54 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
               {savedPresets && savedPresets.length > 0 && (
                 <Grid item xs={12}>
                   <Divider sx={{ my: 2 }} />
-                  <Typography variant="subtitle2" gutterBottom>
-                    Filtros Guardados
+                  <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                    💾 Presets Guardados
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     {savedPresets.map((preset, index) => (
                       <Chip
                         key={index}
                         label={preset.name}
-                        icon={<Bookmark />}
-                        onClick={() => onLoadPreset?.(preset.filters)}
-                        variant="outlined"
                         clickable
+                        onClick={() => onLoadPreset?.(preset.filters)}
+                        icon={<Bookmark />}
+                        sx={{
+                          '&:hover': {
+                            transform: 'scale(1.05)',
+                            boxShadow: `0 0 15px ${UNIFIED_COLORS.elements.aire.primary}30`,
+                          },
+                        }}
                       />
                     ))}
                   </Box>
                 </Grid>
               )}
 
-              {/* Save Current Filters */}
-              {onSavePreset && hasActiveFilters() && (
+              {/* Save New Preset */}
+              {onSavePreset && (
                 <Grid item xs={12}>
-                  <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <TextField
                       size="small"
-                      placeholder="Nombre del preset"
+                      placeholder="Nombre del preset..."
                       value={presetName}
                       onChange={(e) => setPresetName(e.target.value)}
-                      sx={{ minWidth: 200 }}
+                      sx={{ flexGrow: 1 }}
                     />
                     <Button
-                      startIcon={<BookmarkBorder />}
+                      variant="outlined"
                       onClick={savePreset}
                       disabled={!presetName.trim()}
-                      variant="outlined"
-                      size="small"
+                      startIcon={<BookmarkBorder />}
+                      sx={{
+                        borderColor: UNIFIED_COLORS.elements.aire.primary,
+                        color: UNIFIED_COLORS.elements.aire.primary,
+                        '&:hover': {
+                          bgcolor: `${UNIFIED_COLORS.elements.aire.primary}15`,
+                        },
+                      }}
                     >
-                      Guardar Filtros
+                      Guardar Preset
                     </Button>
                   </Box>
                 </Grid>
@@ -655,7 +746,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
           </AccordionDetails>
         </Accordion>
 
-        {/* Applied Filters Summary */}
+        {/* Active Filters Summary */}
         {hasActiveFilters() && (
           <Box
             sx={{
@@ -666,7 +757,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
             }}
           >
             <Typography variant="caption" color="text.secondary" gutterBottom>
-              Filtros aplicados:
+              🌊 Filtros aplicados:
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
               {filters.search && (
@@ -676,6 +767,11 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                   onDelete={() => handleFilterChange('search', '')}
                   color="primary"
                   variant="outlined"
+                  sx={{
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                    },
+                  }}
                 />
               )}
               {filters.status?.map((status) => (
@@ -691,6 +787,11 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                   }
                   color="default"
                   variant="outlined"
+                  sx={{
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                    },
+                  }}
                 />
               ))}
               {filters.difficulty?.map((difficulty) => (
@@ -706,6 +807,11 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                   }
                   color="default"
                   variant="outlined"
+                  sx={{
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                    },
+                  }}
                 />
               ))}
               {filters.category?.map((category) => (
@@ -721,12 +827,17 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                   }
                   color="default"
                   variant="outlined"
+                  sx={{
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                    },
+                  }}
                 />
               ))}
             </Box>
           </Box>
         )}
       </CardContent>
-    </Card>
+    </CosmicCard>
   );
 };

@@ -138,7 +138,7 @@ const getChallengeImage = (challenge: Challenge) => {
     SOCIAL: '/assets/images/challenges/social-challenge.jpg',
     WELLNESS: '/assets/images/challenges/wellness-challenge.jpg',
     CREATIVITY: '/assets/images/challenges/creativity-challenge.jpg',
-    COMMUNITY: '/assets/images/challenges/ayni-daily.jpg', // Use the Ayni image for community
+    COMMUNITY: '/assets/images/challenges/reciprocidad-daily.jpg', // Use the Reciprocidad image for community
     SUSTAINABILITY: '/assets/images/challenges/sustainability-challenge.jpg',
     INNOVATION: '/assets/images/challenges/innovation-challenge.jpg',
   };
@@ -252,7 +252,7 @@ export const ChallengeDetail: React.FC<ChallengeDetailProps> = ({
       challengeId: challenge.id,
       title: 'Completar lectura introductoria',
       description:
-        'Lee la introducción sobre los principios de Ayni y reciprocidad',
+        'Lee la introducción sobre los principios de Reciprocidad y reciprocidad',
       order: 1,
       type: 'ACTION',
       isRequired: true,

@@ -175,7 +175,7 @@ const ViralSystem: React.FC = () => {
       },
       {
         id: '2',
-        username: 'AyniMaster',
+        username: 'ReciprocidadMaster',
         avatar: '⚖️',
         referrals: 18,
         totalShares: 120,
@@ -280,9 +280,9 @@ const ViralSystem: React.FC = () => {
   const mockShareableContent: ShareableContent = {
     id: '1',
     type: 'ACHIEVEMENT',
-    title: '¡Logré el equilibrio Ayni!',
+    title: '¡Logré el equilibrio Reciprocidad!',
     description: 'Completé mi primer intercambio perfecto en CoomÜnity',
-    url: 'https://coomunity.com/achievement/ayni-balance',
+    url: 'https://coomunity.com/achievement/reciprocidad-balance',
     shareCount: 45,
     viralScore: 120
   }

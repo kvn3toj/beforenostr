@@ -53,11 +53,11 @@ VITE_MOCK_UPLAY=true
 
 ### 🎮 ÜPlay (GPL - Gamified Play List)
 - **3 Videos educativos** con filosofía CoomÜnity:
-  - "Introducción al Ayni y la Reciprocidad"
+  - "Introducción al Reciprocidad y la Reciprocidad"
   - "El Bien Común como Norte"  
   - "Generando Öndas Positivas"
 - **Preguntas interactivas** con gamificación
-- **Métricas**: views, likes, ayniScore
+- **Métricas**: views, likes, reciprocidadScore
 
 ### 🏆 Challenges
 - **2 Desafíos activos**:
@@ -156,7 +156,7 @@ VITE_ENABLE_MOCK_DATA=false
 
 ### Realismo
 - **Datos auténticos** basados en la filosofía CoomÜnity
-- **Interacciones reales** (Ayni, Bien Común, Öndas)
+- **Interacciones reales** (Reciprocidad, Bien Común, Öndas)
 - **Flujos completos** de usuario
 
 ### Performance

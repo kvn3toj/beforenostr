@@ -52,10 +52,10 @@ test.describe('Home Visual Improvements', () => {
 
   test('should display metrics relationships component', async ({ page }) => {
     // Wait for the metrics relationships section
-    await page.waitForSelector('text=/Eficiencia Ayni|Impacto Comunitario/i', { timeout: 10000 });
+    await page.waitForSelector('text=/Eficiencia Reciprocidad|Impacto Comunitario/i', { timeout: 10000 });
 
     // Check for efficiency metric
-    const efficiencyMetric = page.locator('text=/Eficiencia Ayni/i');
+    const efficiencyMetric = page.locator('text=/Eficiencia Reciprocidad/i');
     await expect(efficiencyMetric).toBeVisible();
 
     // Check for community impact metric
@@ -107,9 +107,9 @@ test.describe('Home Visual Improvements', () => {
     const meritos = page.locator('text=/Mëritos/i').first();
     await expect(meritos).toBeVisible();
 
-    // Check for Ayni (use first() to avoid strict mode violation)
-    const ayni = page.locator('text=/Ayni/i').first();
-    await expect(ayni).toBeVisible();
+    // Check for Reciprocidad (use first() to avoid strict mode violation)
+    const reciprocidad = page.locator('text=/Reciprocidad/i').first();
+    await expect(reciprocidad).toBeVisible();
 
     // Check for Bien Común (use first() to avoid strict mode violation)
     const bienComun = page.locator('text=/Bien Común/i').first();
@@ -159,7 +159,7 @@ test.describe('Home Visual Improvements', () => {
     }
 
     // Test hover on metrics cards
-    const metricsCard = page.locator('text=/Eficiencia Ayni/i').locator('..').locator('..');
+    const metricsCard = page.locator('text=/Eficiencia Reciprocidad/i').locator('..').locator('..');
     if (await metricsCard.isVisible()) {
       await metricsCard.hover();
       // Hover effects should be applied via CSS

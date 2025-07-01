@@ -32,7 +32,7 @@ export interface StudyRoom {
   chatEnabled: boolean;
   maxParticipants: number;
   isPrivate: boolean;
-  studyFocus: 'filosofia' | 'gamificacion' | 'colaboracion' | 'ayni' | 'bien-común';
+  studyFocus: 'filosofia' | 'gamificacion' | 'colaboracion' | 'reciprocidad' | 'bien-común';
   status: 'waiting' | 'active' | 'paused' | 'completed';
   createdAt: Date;
   scheduledStartTime?: Date;
@@ -51,7 +51,7 @@ export interface ChatMessage {
   timestamp: Date;
   type: 'message' | 'system' | 'question' | 'reaction';
   questionId?: number;
-  reactionType?: 'like' | 'celebrate' | 'insight' | 'ayni';
+  reactionType?: 'like' | 'celebrate' | 'insight' | 'reciprocidad';
 }
 
 export interface VideoParty {

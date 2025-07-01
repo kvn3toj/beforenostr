@@ -82,7 +82,7 @@ ALTER TABLE wallets ENABLE ROW LEVEL SECURITY;
 ### **Gamifier API Integration**
 - [ ] Health check endpoints
 - [ ] Real-time score updates
-- [ ] Ayni logic validation
+- [ ] Reciprocidad logic validation
 - [ ] Performance stress testing
 
 ---
@@ -96,7 +96,7 @@ gtag('event', 'purchase', {
   transaction_id: 'T12345',
   value: 25.42,
   currency: 'USD',
-  ayni_score: 95,
+  reciprocidad_score: 95,
   element_type: 'agua'
 });
 ```

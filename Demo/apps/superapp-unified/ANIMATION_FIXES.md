@@ -30,7 +30,7 @@ El Home de la SuperApp CoomÜnity presentaba un efecto visual no deseado donde m
 
 ### 2. **Componentes Corregidos**
 
-#### `AyniMetricsCard.tsx`
+#### `ReciprocidadMetricsCard.tsx`
 ```diff
 - <Box className="ml-2 animate-energy-flicker">
 + <Box className="ml-2">
@@ -63,7 +63,7 @@ El Home de la SuperApp CoomÜnity presentaba un efecto visual no deseado donde m
 + className="recommendation-card interactive-card-advanced"
 ```
 
-#### `AyniBalanceVisualization.tsx`
+#### `ReciprocidadBalanceVisualization.tsx`
 ```diff
 - className="glassmorphism-card interactive-card-advanced floating-element"
 + className="glassmorphism-card interactive-card-advanced"

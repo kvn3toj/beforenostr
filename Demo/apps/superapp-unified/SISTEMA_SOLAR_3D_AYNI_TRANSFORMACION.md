@@ -1,4 +1,4 @@
-# 🌌 Transformación del Sistema Solar 3D Ayni - Implementación Completa
+# 🌌 Transformación del Sistema Solar 3D Reciprocidad - Implementación Completa
 
 ## 📋 Resumen de Cambios Implementados
 
@@ -49,13 +49,13 @@
 
 ### 🔧 Componente Principal
 
-- `src/components/home/AyniBalanceVisualization.tsx` - Completamente transformado
+- `src/components/home/ReciprocidadBalanceVisualization.tsx` - Completamente transformado
 - `src/pages/HomeEnhanced.tsx` - Integración como fondo de página completa
 
 ### 🎨 Estilos CSS
 
 - `src/styles/home-effects-advanced.css` - Animaciones del sistema solar 3D
-- `src/styles/ayni-solar-system-fullscreen.css` - Estilos específicos para fondo
+- `src/styles/reciprocidad-solar-system-fullscreen.css` - Estilos específicos para fondo
 - `src/main.tsx` - Import del CSS del sistema solar
 
 ## 🎯 Especificaciones Técnicas
@@ -95,7 +95,7 @@
 
 ### 📊 Información Mostrada
 
-- **Balance Ayni**: Porcentaje central en tiempo real
+- **Balance Reciprocidad**: Porcentaje central en tiempo real
 - **Elementos**: Progreso individual de Fuego, Agua, Tierra, Aire
 - **Análisis IA**: Insights personalizados y recomendaciones
 - **Estado orbital**: Velocidades y posiciones relativas
@@ -136,7 +136,7 @@
 
 ## ✨ Resultado Final
 
-El sistema solar 3D Ayni ahora proporciona:
+El sistema solar 3D Reciprocidad ahora proporciona:
 
 - 🌍 Experiencia visual inmersiva de página completa
 - 🪐 Simulación realista del sistema solar interior
@@ -145,7 +145,7 @@ El sistema solar 3D Ayni ahora proporciona:
 - 🎨 Efectos visuales de alta calidad
 - 📱 Compatibilidad móvil completa
 
-La transformación convierte el Balance Ayni en una experiencia cósmica única que mantiene toda la funcionalidad original mientras añade una dimensión visual espectacular.
+La transformación convierte el Balance Reciprocidad en una experiencia cósmica única que mantiene toda la funcionalidad original mientras añade una dimensión visual espectacular.
 
 ---
 

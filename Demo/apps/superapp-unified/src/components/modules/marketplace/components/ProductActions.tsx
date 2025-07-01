@@ -535,7 +535,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
           />
 
           <Alert severity="info" sx={{ mb: 2 }}>
-            Al contratar este servicio, contribuyes al Bien Común y practicas el Ayni. El pago se procesará una vez que ambos confirmen los detalles del proyecto.
+            Al contratar este servicio, contribuyes al Bien Común y practicas el Reciprocidad. El pago se procesará una vez que ambos confirmen los detalles del proyecto.
           </Alert>
         </DialogContent>
 
@@ -711,7 +711,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
         <DialogContent>
           <div style={{ marginBottom: 12 }}>
             <strong>¡Gracias por contribuir al Bien Común!</strong><br />
-            Tu compra es un acto de <b>Ayni</b> y confianza. Recibirás notificaciones sobre el avance de tu pedido.
+            Tu compra es un acto de <b>Reciprocidad</b> y confianza. Recibirás notificaciones sobre el avance de tu pedido.
           </div>
         </DialogContent>
         <DialogActions>

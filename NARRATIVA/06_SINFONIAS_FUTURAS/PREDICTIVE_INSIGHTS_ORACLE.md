@@ -29,7 +29,7 @@ El Oráculo se construye sobre la base de nuestros datos actuales, pero los enri
 
 2.  **El Simulador de Ecosistema:**
     -   **Función:** Crear modelos de simulación para prever el impacto a largo plazo de los cambios en el sistema.
-    -   **Implementación:** Usando modelado basado en agentes (Agent-Based Modeling), podríamos simular cambios en el algoritmo de Méritos y observar su efecto en la "distribución de la riqueza" (Lükas) o en la "salud de la colaboración" a lo largo de seis meses virtuales.
+    -   **Implementación:** Usando modelado basado en agentes (Agent-Based Modeling), podríamos simular cambios en el algoritmo de Méritos y observar su efecto en la "distribución de la riqueza" (Ünits) o en la "salud de la colaboración" a lo largo de seis meses virtuales.
     -   **Perspicacia Predictiva:** Esto nos permite probar ideas de alto impacto en un "universo de bolsillo" digital antes de arriesgarnos a implementarlas en el mundo real.
 
 3.  **El Detector de Oportunidades Emergentes:**
@@ -37,7 +37,7 @@ El Oráculo se construye sobre la base de nuestros datos actuales, pero los enri
     -   **Implementación:** Procesamiento de Lenguaje Natural (PLN) sobre los comentarios, chats y descripciones de proyectos para identificar temas y habilidades recurrentes.
     -   **Perspicacia Predictiva:** El Oráculo podría reportar: "Hemos detectado un aumento del 300% en conversaciones sobre 'permacultura'. Hay una demanda latente de contenido y proyectos sobre este tema. Sugerimos crear un 'quest' comunitario al respecto."
 
-4.  **El Sistema de Alerta Temprana de "Salud del Ayni":**
+4.  **El Sistema de Alerta Temprana de "Salud de la Reciprocidad":**
     -   **Función:** Monitorear el equilibrio de la reciprocidad en la plataforma.
     -   **Implementación:** Un modelo que rastrea el flujo de valor. ¿Hay usuarios que solo "toman" (consumen) sin nunca "dar" (crear, comentar, ayudar)? ¿Hay creadores que producen mucho valor pero reciben poco reconocimiento?
     -   **Perspicacia Predictiva:** El Oráculo puede identificar a los miembros de la comunidad que están en riesgo de "agotamiento" por dar demasiado sin recibir lo suficiente, permitiendo una intervención proactiva para apoyarlos.

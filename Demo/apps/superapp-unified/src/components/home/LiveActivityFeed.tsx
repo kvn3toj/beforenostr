@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
@@ -13,6 +11,9 @@ import Tooltip from '@mui/material/Tooltip';
 import LinearProgress from '@mui/material/LinearProgress';
 import Divider from '@mui/material/Divider';
 import { useTheme, alpha } from '@mui/material';
+
+// 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
+import { RevolutionaryWidget } from '../../design-system';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
@@ -31,7 +32,7 @@ interface ActivityUser {
   name: string;
   avatar: string;
   level: string;
-  ayniScore: number;
+  reciprocidadScore: number;
 }
 
 interface CommunityActivity {
@@ -79,56 +80,56 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
         name: 'María Paz',
         avatar: '👩‍🌾',
         level: 'Guardiana del Equilibrio',
-        ayniScore: 95,
+        reciprocidadScore: 95,
       },
       {
         id: '2',
         name: 'Carlos Andrés',
         avatar: '👨‍💻',
         level: 'Colaborador Experimentado',
-        ayniScore: 87,
+        reciprocidadScore: 87,
       },
       {
         id: '3',
         name: 'Ana Sofía',
         avatar: '👩‍🎨',
         level: 'Creadora Confiable',
-        ayniScore: 92,
+        reciprocidadScore: 92,
       },
       {
         id: '4',
         name: 'Luis Miguel',
         avatar: '👨‍🔧',
         level: 'Constructor de Puentes',
-        ayniScore: 89,
+        reciprocidadScore: 89,
       },
       {
         id: '5',
         name: 'Isabella',
         avatar: '👩‍🏫',
         level: 'Mentora Sabia',
-        ayniScore: 93,
+        reciprocidadScore: 93,
       },
       {
         id: '6',
         name: 'Fernando',
         avatar: '👨‍🌾',
         level: 'Guardián de la Tierra',
-        ayniScore: 85,
+        reciprocidadScore: 85,
       },
       {
         id: '7',
         name: 'Camila',
         avatar: '👩‍⚕️',
         level: 'Sanadora Comunitaria',
-        ayniScore: 91,
+        reciprocidadScore: 91,
       },
       {
         id: '8',
         name: 'Diego',
         avatar: '👨‍🚀',
         level: 'Innovador del Bien Común',
-        ayniScore: 88,
+        reciprocidadScore: 88,
       },
     ],
     []
@@ -170,7 +171,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
       icon: <HandshakeIcon />,
       color: '#FF8A65',
       actions: [
-        'completó un Ayni con {collaborator}',
+        'completó un Reciprocidad con {collaborator}',
         'compartió conocimiento en "{topic}"',
         'colaboró en el proyecto "{project}"',
         'facilitó un intercambio comunitario',
@@ -417,7 +418,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
   };
 
   return (
-    <Card
+    <RevolutionaryWidget
       className={`glassmorphism-card interactive-card-advanced live-activity-feed ${className}`}
       sx={{
         background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.default, 0.8)} 100%)`,
@@ -428,308 +429,304 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
         position: 'relative',
       }}
     >
-      <CardContent sx={{ p: 0 }}>
-        {/* Header con indicador LIVE */}
+      <Box
+        sx={{
+          p: 3,
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
+          borderBottom: `1px solid ${alpha('#fff', 0.1)}`,
+        }}
+      >
         <Box
           sx={{
-            p: 3,
-            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
-            borderBottom: `1px solid ${alpha('#fff', 0.1)}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Badge
-                  badgeContent={
-                    <FiberManualRecordIcon
-                      sx={{
-                        fontSize: '0.8rem',
-                        color: isLive ? '#4CAF50' : '#757575',
-                        animation: isLive
-                          ? 'pulse 1.5s ease-in-out infinite'
-                          : 'none',
-                      }}
-                    />
-                  }
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Badge
+                badgeContent={
+                  <FiberManualRecordIcon
+                    sx={{
+                      fontSize: '0.8rem',
+                      color: isLive ? '#4CAF50' : '#757575',
+                      animation: isLive
+                        ? 'pulse 1.5s ease-in-out infinite'
+                        : 'none',
+                    }}
+                  />
+                }
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 'bold', color: 'white' }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 'bold', color: 'white' }}
-                  >
-                    Actividad Comunitaria
-                  </Typography>
-                </Badge>
-              </Box>
-
-              <Chip
-                label={isLive ? 'EN VIVO' : 'PAUSADO'}
-                size="small"
-                sx={{
-                  bgcolor: isLive
-                    ? alpha('#4CAF50', 0.2)
-                    : alpha('#757575', 0.2),
-                  color: isLive ? '#4CAF50' : '#757575',
-                  fontWeight: 'bold',
-                  fontSize: '0.7rem',
-                  animation: isLive ? 'pulse 2s ease-in-out infinite' : 'none',
-                }}
-              />
+                  Actividad Comunitaria
+                </Typography>
+              </Badge>
             </Box>
 
-            <Tooltip title={isLive ? 'Pausar feed' : 'Activar feed en vivo'}>
-              <IconButton onClick={handleToggleLive} size="small">
-                <AutoAwesomeIcon
-                  sx={{
-                    color: isLive
-                      ? theme.palette.primary.main
-                      : alpha('#fff', 0.5),
-                    fontSize: '1.2rem',
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
+            <Chip
+              label={isLive ? 'EN VIVO' : 'PAUSADO'}
+              size="small"
+              sx={{
+                bgcolor: isLive
+                  ? alpha('#4CAF50', 0.2)
+                  : alpha('#757575', 0.2),
+                color: isLive ? '#4CAF50' : '#757575',
+                fontWeight: 'bold',
+                fontSize: '0.7rem',
+                animation: isLive ? 'pulse 2s ease-in-out infinite' : 'none',
+              }}
+            />
           </Box>
 
-          <Typography
-            variant="caption"
-            sx={{ color: alpha('#fff', 0.7), mt: 1, display: 'block' }}
-          >
-            Última actualización: {lastUpdate.toLocaleTimeString()}
-          </Typography>
+          <Tooltip title={isLive ? 'Pausar feed' : 'Activar feed en vivo'}>
+            <IconButton onClick={handleToggleLive} size="small">
+              <AutoAwesomeIcon
+                sx={{
+                  color: isLive
+                    ? theme.palette.primary.main
+                    : alpha('#fff', 0.5),
+                  fontSize: '1.2rem',
+                }}
+              />
+            </IconButton>
+          </Tooltip>
         </Box>
 
-        {/* Lista de actividades */}
-        <Box
-          sx={{
-            maxHeight: 480,
-            overflowY: 'auto',
-            '&::-webkit-scrollbar': {
-              width: 6,
-            },
-            '&::-webkit-scrollbar-track': {
-              background: alpha('#fff', 0.1),
-            },
-            '&::-webkit-scrollbar-thumb': {
-              background: alpha('#fff', 0.3),
-              borderRadius: 3,
-            },
-          }}
+        <Typography
+          variant="caption"
+          sx={{ color: alpha('#fff', 0.7), mt: 1, display: 'block' }}
         >
-          {activities.map((activity, index) => {
-            const config = activityConfig[activity.type];
+          Última actualización: {lastUpdate.toLocaleTimeString()}
+        </Typography>
+      </Box>
 
-            return (
-              <Box key={activity.id}>
-                <Box
-                  sx={{
-                    p: 2.5,
-                    position: 'relative',
-                    background: activity.isNew
-                      ? `linear-gradient(90deg, ${alpha(config.color, 0.1)} 0%, transparent 100%)`
-                      : 'transparent',
-                    borderLeft: activity.isNew
-                      ? `3px solid ${config.color}`
-                      : 'none',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      background: alpha('#fff', 0.05),
-                    },
-                  }}
-                >
-                  {/* Badge NUEVO */}
-                  {activity.isNew && (
-                    <Chip
-                      label="NUEVO"
-                      size="small"
+      <Box
+        sx={{
+          maxHeight: 480,
+          overflowY: 'auto',
+          '&::-webkit-scrollbar': {
+            width: 6,
+          },
+          '&::-webkit-scrollbar-track': {
+            background: alpha('#fff', 0.1),
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: alpha('#fff', 0.3),
+            borderRadius: 3,
+          },
+        }}
+      >
+        {activities.map((activity, index) => {
+          const config = activityConfig[activity.type];
+
+          return (
+            <Box key={activity.id}>
+              <Box
+                sx={{
+                  p: 2.5,
+                  position: 'relative',
+                  background: activity.isNew
+                    ? `linear-gradient(90deg, ${alpha(config.color, 0.1)} 0%, transparent 100%)`
+                    : 'transparent',
+                  borderLeft: activity.isNew
+                    ? `3px solid ${config.color}`
+                    : 'none',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    background: alpha('#fff', 0.05),
+                  },
+                }}
+              >
+                {/* Badge NUEVO */}
+                {activity.isNew && (
+                  <Chip
+                    label="NUEVO"
+                    size="small"
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      bgcolor: alpha(config.color, 0.2),
+                      color: config.color,
+                      fontWeight: 'bold',
+                      fontSize: '0.6rem',
+                      height: 20,
+                      animation: 'pulse 1s ease-in-out infinite',
+                    }}
+                  />
+                )}
+
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  {/* Avatar y nivel */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 0.5,
+                    }}
+                  >
+                    <Avatar
                       sx={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
+                        width: 44,
+                        height: 44,
                         bgcolor: alpha(config.color, 0.2),
-                        color: config.color,
-                        fontWeight: 'bold',
-                        fontSize: '0.6rem',
-                        height: 20,
-                        animation: 'pulse 1s ease-in-out infinite',
+                        border: `2px solid ${alpha(config.color, 0.3)}`,
+                        fontSize: '1.5rem',
                       }}
-                    />
-                  )}
+                    >
+                      {activity.user.avatar}
+                    </Avatar>
+                    <Box
+                      sx={{
+                        color: config.color,
+                        fontSize: '1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {config.icon}
+                    </Box>
+                  </Box>
 
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    {/* Avatar y nivel */}
+                  {/* Contenido de la actividad */}
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Box
                       sx={{
                         display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: 0.5,
+                        alignItems: 'flex-start',
+                        justifyContent: 'space-between',
+                        mb: 1,
                       }}
                     >
-                      <Avatar
-                        sx={{
-                          width: 44,
-                          height: 44,
-                          bgcolor: alpha(config.color, 0.2),
-                          border: `2px solid ${alpha(config.color, 0.3)}`,
-                          fontSize: '1.5rem',
-                        }}
-                      >
-                        {activity.user.avatar}
-                      </Avatar>
-                      <Box
-                        sx={{
-                          color: config.color,
-                          fontSize: '1rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        {config.icon}
-                      </Box>
-                    </Box>
-
-                    {/* Contenido de la actividad */}
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          justifyContent: 'space-between',
-                          mb: 1,
-                        }}
-                      >
-                        <Box>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ color: 'white', fontWeight: 'bold' }}
-                          >
-                            {activity.user.name}
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{ color: alpha('#fff', 0.6) }}
-                          >
-                            {activity.user.level}
-                          </Typography>
-                        </Box>
-
+                      <Box>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ color: 'white', fontWeight: 'bold' }}
+                        >
+                          {activity.user.name}
+                        </Typography>
                         <Typography
                           variant="caption"
-                          sx={{ color: alpha('#fff', 0.5) }}
+                          sx={{ color: alpha('#fff', 0.6) }}
                         >
-                          {formatTimeAgo(activity.timestamp)}
+                          {activity.user.level}
                         </Typography>
                       </Box>
 
                       <Typography
-                        variant="body2"
-                        sx={{ color: alpha('#fff', 0.9), mb: 2 }}
+                        variant="caption"
+                        sx={{ color: alpha('#fff', 0.5) }}
                       >
-                        {activity.action}
+                        {formatTimeAgo(activity.timestamp)}
                       </Typography>
+                    </Box>
 
-                      {/* Ayni Score Bar */}
-                      <Box sx={{ mb: 2 }}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            mb: 0.5,
-                          }}
-                        >
-                          <Typography
-                            variant="caption"
-                            sx={{ color: alpha('#fff', 0.7) }}
-                          >
-                            Score Ayni
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{ color: config.color, fontWeight: 'bold' }}
-                          >
-                            {activity.user.ayniScore}%
-                          </Typography>
-                        </Box>
-                        <LinearProgress
-                          variant="determinate"
-                          value={activity.user.ayniScore}
-                          sx={{
-                            height: 4,
-                            borderRadius: 2,
-                            bgcolor: alpha('#fff', 0.1),
-                            '& .MuiLinearProgress-bar': {
-                              borderRadius: 2,
-                              bgcolor: config.color,
-                            },
-                          }}
-                        />
-                      </Box>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: alpha('#fff', 0.9), mb: 2 }}
+                    >
+                      {activity.action}
+                    </Typography>
 
-                      {/* Engagement actions */}
+                    {/* Reciprocidad Score Bar */}
+                    <Box sx={{ mb: 2 }}>
                       <Box
-                        sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          mb: 0.5,
+                        }}
                       >
-                        <Tooltip title="Me gusta">
-                          <IconButton
-                            size="small"
-                            onClick={() => handleLike(activity.id)}
-                            sx={{ color: alpha('#fff', 0.6) }}
-                          >
-                            <FavoriteIcon sx={{ fontSize: '1rem' }} />
-                            <Typography variant="caption" sx={{ ml: 0.5 }}>
-                              {activity.engagement.likes}
-                            </Typography>
-                          </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="Comentar">
-                          <IconButton
-                            size="small"
-                            onClick={() => handleComment(activity.id)}
-                            sx={{ color: alpha('#fff', 0.6) }}
-                          >
-                            <ChatBubbleIcon sx={{ fontSize: '1rem' }} />
-                            <Typography variant="caption" sx={{ ml: 0.5 }}>
-                              {activity.engagement.comments}
-                            </Typography>
-                          </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="Compartir">
-                          <IconButton
-                            size="small"
-                            onClick={() => handleShare(activity.id)}
-                            sx={{ color: alpha('#fff', 0.6) }}
-                          >
-                            <ShareIcon sx={{ fontSize: '1rem' }} />
-                            <Typography variant="caption" sx={{ ml: 0.5 }}>
-                              {activity.engagement.shares}
-                            </Typography>
-                          </IconButton>
-                        </Tooltip>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: alpha('#fff', 0.7) }}
+                        >
+                          Score Reciprocidad
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: config.color, fontWeight: 'bold' }}
+                        >
+                          {activity.user.reciprocidadScore}%
+                        </Typography>
                       </Box>
+                      <LinearProgress
+                        variant="determinate"
+                        value={activity.user.reciprocidadScore}
+                        sx={{
+                          height: 4,
+                          borderRadius: 2,
+                          bgcolor: alpha('#fff', 0.1),
+                          '& .MuiLinearProgress-bar': {
+                            borderRadius: 2,
+                            bgcolor: config.color,
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    {/* Engagement actions */}
+                    <Box
+                      sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
+                    >
+                      <Tooltip title="Me gusta">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleLike(activity.id)}
+                          sx={{ color: alpha('#fff', 0.6) }}
+                        >
+                          <FavoriteIcon sx={{ fontSize: '1rem' }} />
+                          <Typography variant="caption" sx={{ ml: 0.5 }}>
+                            {activity.engagement.likes}
+                          </Typography>
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip title="Comentar">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleComment(activity.id)}
+                          sx={{ color: alpha('#fff', 0.6) }}
+                        >
+                          <ChatBubbleIcon sx={{ fontSize: '1rem' }} />
+                          <Typography variant="caption" sx={{ ml: 0.5 }}>
+                            {activity.engagement.comments}
+                          </Typography>
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip title="Compartir">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleShare(activity.id)}
+                          sx={{ color: alpha('#fff', 0.6) }}
+                        >
+                          <ShareIcon sx={{ fontSize: '1rem' }} />
+                          <Typography variant="caption" sx={{ ml: 0.5 }}>
+                            {activity.engagement.shares}
+                          </Typography>
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                   </Box>
                 </Box>
-
-                {index < activities.length - 1 && (
-                  <Divider sx={{ bgcolor: alpha('#fff', 0.05) }} />
-                )}
               </Box>
-            );
-          })}
-        </Box>
-      </CardContent>
-    </Card>
+
+              {index < activities.length - 1 && (
+                <Divider sx={{ bgcolor: alpha('#fff', 0.05) }} />
+              )}
+            </Box>
+          );
+        })}
+      </Box>
+    </RevolutionaryWidget>
   );
 };
 

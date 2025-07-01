@@ -231,8 +231,8 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  async getAyniMetrics(userId: string) {
-    //     console.log('>>> UsersService.getAyniMetrics: Starting for user:', userId);
+  async getReciprocidadMetrics(userId: string) {
+    //     console.log('>>> UsersService.getReciprocidadMetrics: Starting for user:', userId);
 
     // Verificar que el usuario existe
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
@@ -240,17 +240,17 @@ export class UsersService {
       throw new NotFoundException('Usuario no encontrado');
     }
 
-    // 🌟 GENERAR MÉTRICAS AYNI DINÁMICAS BASADAS EN DATOS REALES
+    // 🌟 GENERAR MÉTRICAS RECIPROCIDAD DINÁMICAS BASADAS EN DATOS REALES
     // Por ahora, generamos métricas realistas basadas en el usuario
     // En el futuro, estas se calcularán desde transacciones, actividades, etc.
 
     const baseMetrics = {
       ondas: 1000 + user.id.length * 47, // Base de 1000 + variación por usuario
       meritos: 50 + user.id.length * 7, // Base de 50 + variación
-      balanceAyni: Math.min(1, 0.6 + user.id.length * 0.02), // Entre 0.6 y 1.0
-      ayniLevel: this.calculateAyniLevel(user),
-      nextLevel: this.getNextAyniLevel(user),
-      ayniProgress: this.calculateAyniProgress(user),
+      balanceReciprocidad: Math.min(1, 0.6 + user.id.length * 0.02), // Entre 0.6 y 1.0
+      reciprocidadLevel: this.calculateReciprocidadLevel(user),
+      nextLevel: this.getNextReciprocidadLevel(user),
+      reciprocidadProgress: this.calculateReciprocidadProgress(user),
       bienComunContributions: 10 + user.id.length * 3,
       reciprocityScore: Math.min(10, 7 + user.id.length * 0.15),
       elementos: this.calculateElementalBalance(user),
@@ -263,27 +263,27 @@ export class UsersService {
       joinedDate: user.createdAt.toISOString(),
     };
 
-    //       console.log('>>> UsersService.getAyniMetrics: Generated metrics for user:', user.email);
+    //       console.log('>>> UsersService.getReciprocidadMetrics: Generated metrics for user:', user.email);
     return baseMetrics;
   }
 
-  private calculateAyniLevel(user: User): string {
+  private calculateReciprocidadLevel(user: User): string {
     // Calcular nivel basado en características del usuario
     const userScore = user.id.length + user.email.length * 2;
 
     if (userScore > 60) return 'Guardián del Bien Común';
     if (userScore > 50) return 'Emprendedor Confiable';
     if (userScore > 40) return 'Colaborador Activo';
-    if (userScore > 30) return 'Aprendiz del Ayni';
+    if (userScore > 30) return 'Aprendiz de la Reciprocidad';
     return 'Iniciado en CoomÜnity';
   }
 
-  private getNextAyniLevel(user: User): string {
-    const currentLevel = this.calculateAyniLevel(user);
+  private getNextReciprocidadLevel(user: User): string {
+    const currentLevel = this.calculateReciprocidadLevel(user);
 
     const levelProgression = {
-      'Iniciado en CoomÜnity': 'Aprendiz del Ayni',
-      'Aprendiz del Ayni': 'Colaborador Activo',
+      'Iniciado en CoomÜnity': 'Aprendiz de la Reciprocidad',
+      'Aprendiz de la Reciprocidad': 'Colaborador Activo',
       'Colaborador Activo': 'Emprendedor Confiable',
       'Emprendedor Confiable': 'Guardián del Bien Común',
       'Guardián del Bien Común': 'Maestro Cósmico',
@@ -292,7 +292,7 @@ export class UsersService {
     return levelProgression[currentLevel] || 'Maestro Cósmico';
   }
 
-  private calculateAyniProgress(user: User): number {
+  private calculateReciprocidadProgress(user: User): number {
     // Progreso basado en el tiempo desde creación y características del usuario
     const daysSinceJoined = Math.floor(
       (Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24)

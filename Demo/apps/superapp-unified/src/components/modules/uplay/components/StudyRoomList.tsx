@@ -37,7 +37,7 @@ import {
   Psychology as PhilosofiaIcon,
   SportsEsports as GamificacionIcon,
   Handshake as ColaboracionIcon,
-  Favorite as AyniIcon,
+  Favorite as ReciprocidadIcon,
   Public as BienComunIcon,
   Star as StarIcon,
   Visibility as VisibilityIcon,

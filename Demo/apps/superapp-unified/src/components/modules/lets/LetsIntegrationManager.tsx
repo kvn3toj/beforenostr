@@ -46,7 +46,7 @@ import {
   useTrustRatings,
   useLetsNotifications,
   useLetsRecommendations,
-  useAyniBalance,
+  useReciprocidadBalance,
   useLetsAnalytics
 } from '../../../hooks/useLetsIntegration';
 
@@ -75,7 +75,7 @@ export const LetsIntegrationManager: React.FC<LetsIntegrationManagerProps> = ({
   const { data: notifications, isLoading: notificationsLoading } = useLetsNotifications(userId);
   const { data: recommendations, isLoading: recommendationsLoading } = useLetsRecommendations(userId);
   const { data: analytics, isLoading: analyticsLoading } = useLetsAnalytics();
-  const ayniBalance = useAyniBalance(userId);
+  const reciprocidadBalance = useReciprocidadBalance(userId);
 
   // Estado de usuario nuevo
   const isNewUser = !hasCompletedOnboarding && (!wallet || wallet.totalTransactions === 0);
@@ -120,7 +120,7 @@ export const LetsIntegrationManager: React.FC<LetsIntegrationManagerProps> = ({
     const issues = [];
     if (wallet.balance < -wallet.creditLimit * 0.8) issues.push('Balance bajo');
     if (trustScore < 20) issues.push('Necesita mejorar confianza');
-    if (!ayniBalance.isBalanced) issues.push('Balance Ayni desequilibrado');
+    if (!reciprocidadBalance.isBalanced) issues.push('Balance Reciprocidad desequilibrado');
     
     if (issues.length === 0) return { status: 'success', message: 'Sistema funcionando perfectamente' };
     if (issues.length <= 1) return { status: 'warning', message: `Atención: ${issues[0]}` };
@@ -189,7 +189,7 @@ export const LetsIntegrationManager: React.FC<LetsIntegrationManagerProps> = ({
         </Card>
       </Grid>
 
-      {/* Ayni Balance */}
+      {/* Reciprocidad Balance */}
       <Grid item xs={12} sm={6} md={3}>
         <Card 
           sx={{ 
@@ -203,14 +203,14 @@ export const LetsIntegrationManager: React.FC<LetsIntegrationManagerProps> = ({
                 <Handshake sx={{ fontSize: 18 }} />
               </Avatar>
               <Typography variant="body2" color="text.secondary">
-                Balance Ayni
+                Balance Reciprocidad
               </Typography>
             </Box>
-            <Typography variant="h6" color={ayniBalance.isBalanced ? 'success.main' : 'warning.main'}>
-              {ayniBalance.ayniRatio.toFixed(2)}
+            <Typography variant="h6" color={reciprocidadBalance.isBalanced ? 'success.main' : 'warning.main'}>
+              {reciprocidadBalance.reciprocidadRatio.toFixed(2)}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              {ayniBalance.isBalanced ? 'Balanceado' : 'Desequilibrado'}
+              {reciprocidadBalance.isBalanced ? 'Balanceado' : 'Desequilibrado'}
             </Typography>
           </CardContent>
         </Card>
@@ -323,7 +323,7 @@ export const LetsIntegrationManager: React.FC<LetsIntegrationManagerProps> = ({
             💡 Recomendaciones Personalizadas
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            {ayniBalance.recommendation}
+            {reciprocidadBalance.recommendation}
           </Typography>
           
           {recommendations.recommendedListings?.length > 0 && (

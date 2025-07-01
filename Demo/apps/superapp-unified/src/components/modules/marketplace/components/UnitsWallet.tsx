@@ -1,6 +1,6 @@
 // UnitsWallet Component - LETS Currency Management
 // Wallet de Ünits para el sistema de economía colaborativa CoomÜnity
-// Basado en principios de Ayni (reciprocidad) y confianza comunitaria
+// Basado en principios de Reciprocidad (reciprocidad) y confianza comunitaria
 
 import React, { useState } from 'react';
 import {
@@ -52,7 +52,7 @@ import {
   useUnitsTransactions,
   useTransferUnits,
   useCanTransferUnits,
-  useAyniBalance
+  useReciprocidadBalance
 } from '../../../../hooks/useLetsIntegration';
 import { UnitsWalletProps } from '../../../../types/lets';
 
@@ -75,7 +75,7 @@ const UnitsWallet: React.FC<UnitsWalletProps> = ({
   const { data: transactions, isLoading: transactionsLoading } = useUnitsTransactions(userId, { limit: 10 });
   const transferMutation = useTransferUnits();
   const canTransferData = useCanTransferUnits(userId, parseFloat(transferAmount) || 0);
-  const ayniBalance = useAyniBalance(userId);
+  const reciprocidadBalance = useReciprocidadBalance(userId);
 
   // Estados de carga y error
   if (walletLoading) {
@@ -135,8 +135,8 @@ const UnitsWallet: React.FC<UnitsWalletProps> = ({
   const availableCredit = wallet.creditLimit + wallet.balance;
   const trustPercentage = wallet.trustScore * 100;
 
-  const ayniValue = ayniBalance ? ayniBalance.given - ayniBalance.received : 0;
-  const ayniColor = ayniBalance ? (ayniBalance.isBalanced ? 'lightgreen' : 'orange') : 'white';
+  const reciprocidadValue = reciprocidadBalance ? reciprocidadBalance.given - reciprocidadBalance.received : 0;
+  const reciprocidadColor = reciprocidadBalance ? (reciprocidadBalance.isBalanced ? 'lightgreen' : 'orange') : 'white';
 
   return (
     <>

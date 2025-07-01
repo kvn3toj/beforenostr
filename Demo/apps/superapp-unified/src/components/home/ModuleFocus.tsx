@@ -63,7 +63,7 @@ interface ModuleData {
 }
 
 interface ModuleFocusProps {
-  ayniBalance: number;
+  reciprocidadBalance: number;
   userLevel: string;
   elementos: {
     fuego: number;
@@ -113,10 +113,10 @@ const allModules: ModuleData[] = [
   {
     id: 'marketplace',
     name: 'Marketplace',
-    subtitle: 'Intercambio Ayni',
+    subtitle: 'Intercambio Reciprocidad',
     description: 'Ecosistema de intercambio basado en reciprocidad',
     detailedDescription:
-      'Participa en una economía alternativa donde el valor se mide por la contribución al Bien Común. Intercambia servicios, conocimientos y productos siguiendo los principios ancestrales del Ayni.',
+      'Participa en una economía alternativa donde el valor se mide por la contribución al Bien Común. Intercambia servicios, conocimientos y productos siguiendo los principios ancestrales del Reciprocidad.',
     icon: <StoreIcon />,
     color: moduleColors.marketplace.primary,
     gradient: moduleColors.marketplace.gradient,
@@ -127,7 +127,7 @@ const allModules: ModuleData[] = [
       { label: 'Valor generado', value: '1,240 Ł', trend: 'up' },
     ],
     benefits: [
-      'Equilibra tu balance Ayni',
+      'Equilibra tu balance Reciprocidad',
       'Expande tu red de confianza',
       'Acceso a recursos únicos',
       'Contribución al Bien Común',
@@ -224,7 +224,7 @@ const calculateRelevanceScore = (
 ): number => {
   let score = 0;
 
-  // Factor 1: Balance Ayni (40% del peso)
+  // Factor 1: Balance Reciprocidad (40% del peso)
   if (module.id === 'marketplace' && balance < 0.6) {
     score += 40; // Marketplace es crítico para balance bajo
   } else if (module.id === 'social' && balance >= 0.6 && balance < 0.8) {
@@ -303,7 +303,7 @@ const getTrendIcon = (trend?: string) => {
 };
 
 export const ModuleFocus: React.FC<ModuleFocusProps> = ({
-  ayniBalance,
+  reciprocidadBalance,
   userLevel,
   elementos,
   onModuleClick,
@@ -318,10 +318,10 @@ export const ModuleFocus: React.FC<ModuleFocusProps> = ({
     return allModules
       .map((module) => ({
         ...module,
-        relevanceScore: calculateRelevanceScore(module, ayniBalance, elementos),
+        relevanceScore: calculateRelevanceScore(module, reciprocidadBalance, elementos),
       }))
       .sort((a, b) => b.relevanceScore - a.relevanceScore);
-  }, [ayniBalance, elementos]);
+  }, [reciprocidadBalance, elementos]);
 
   const recommendedModule = modulesWithScores[0];
   const otherModules = modulesWithScores.slice(1);
@@ -336,7 +336,7 @@ export const ModuleFocus: React.FC<ModuleFocusProps> = ({
 
   const getRecommendationReason = (module: ModuleData, balance: number) => {
     if (module.id === 'marketplace' && balance < 0.6) {
-      return 'Recomendado para equilibrar tu balance Ayni';
+      return 'Recomendado para equilibrar tu balance Reciprocidad';
     } else if (module.id === 'social' && balance >= 0.6 && balance < 0.8) {
       return 'Perfecto para expandir tu red mientras mantienes balance';
     } else if (module.id === 'uplay' && balance >= 0.8) {
@@ -462,7 +462,7 @@ export const ModuleFocus: React.FC<ModuleFocusProps> = ({
               opacity: 0.9,
             }}
           >
-            💡 {getRecommendationReason(recommendedModule, ayniBalance)}
+            💡 {getRecommendationReason(recommendedModule, reciprocidadBalance)}
           </Typography>
 
           {/* Stats */}

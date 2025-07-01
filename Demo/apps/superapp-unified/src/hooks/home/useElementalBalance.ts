@@ -16,8 +16,9 @@ export interface ElementalBalance {
   balanceScore: number;
   recommendations: string[];
   weatherElement: ElementType;
-  ayniEfficiency: number;
+  reciprocidadEfficiency: number;
   communityImpact: number;
+  picture: any; // TODO: Definir el tipo correcto para la visualización
 }
 
 export const elementConfig: Record<ElementType, ElementConfig> = {
@@ -47,7 +48,7 @@ export const elementConfig: Record<ElementType, ElementConfig> = {
     icon: '💨',
     color: '#87CEEB',
     description: 'Comunicación e ideas',
-    philosophy: 'La conexión que une a todos los seres en la red de Ayni',
+    philosophy: 'La conexión que une a todos los seres en la red de Reciprocidad',
   },
 };
 
@@ -69,8 +70,8 @@ export const useElementalBalance = (
     const variance = values.reduce((sum, val) => sum + Math.pow(val - average, 2), 0) / values.length;
     const balanceScore = Math.max(0, 100 - Math.sqrt(variance));
 
-    // Calcular eficiencia Ayni
-    const ayniEfficiency = ondas > 0 ? (meritos / ondas) * 100 : 0;
+    // Calcular eficiencia de Reciprocidad
+    const reciprocidadEfficiency = meritos > 0 ? (meritos / ondas) * 100 : 0;
 
     // Calcular impacto comunitario
     const communityImpact = (balanceScore * meritos) / 100;
@@ -84,8 +85,9 @@ export const useElementalBalance = (
       balanceScore,
       recommendations,
       weatherElement: weatherElement || dominantElement,
-      ayniEfficiency,
+      reciprocidadEfficiency,
       communityImpact,
+      picture: null, // TODO: Implementar la lógica de la imagen
     };
   }, [elementos, ondas, meritos, weatherElement]);
 };
@@ -141,12 +143,26 @@ const generateRecommendations = (
 };
 
 // Utility functions for calculations
-export const calculateAyniEfficiency = (meritos: number, ondas: number): number => {
-  return ondas > 0 ? (meritos / ondas) * 100 : 0;
+
+/**
+ * Calcula la eficiencia de Reciprocidad basada en méritos, ondas y balance de elementos
+ * @param meritos - Cantidad de méritos acumulados
+ * @param ondas - Cantidad de ondas generadas
+ * @param balanceScore - Puntuación de balance elemental (0-100)
+ * @returns Porcentaje de eficiencia de Reciprocidad (0-100)
+ */
+export const calculateReciprocidadEfficiency = (meritos: number, ondas: number, balanceScore: number = 100): number => {
+  // La eficiencia de Reciprocidad considera tanto la relación méritos/ondas como el balance elemental
+  const baseEfficiency = ondas > 0 ? (meritos / ondas) * 100 : 0;
+  // El balance elemental actúa como un multiplicador (0.5-1.5)
+  const balanceMultiplier = 0.5 + (balanceScore / 100);
+
+  return Math.min(100, baseEfficiency * balanceMultiplier);
 };
 
-export const calculateCommunityImpact = (balanceScore: number, meritos: number): number => {
-  return (balanceScore * meritos) / 100;
+export const calculateCommunityImpact = (balanceScore: number, meritos: number, bienComun: number = 1): number => {
+  // Se incorpora el bienComun como un factor multiplicador
+  return (balanceScore * meritos * (bienComun > 0 ? Math.log(bienComun + 1) : 1)) / 100;
 };
 
 export const getElementAnimation = (element: ElementType): string => {
@@ -158,4 +174,4 @@ export const getElementAnimation = (element: ElementType): string => {
     aire: '',
   };
   return animations[element];
-}; 
+};

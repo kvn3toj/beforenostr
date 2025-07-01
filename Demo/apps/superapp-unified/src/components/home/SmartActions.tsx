@@ -46,7 +46,7 @@ interface SmartAction {
 }
 
 interface SmartActionsProps {
-  ayniBalance: number;
+  reciprocidadBalance: number;
   userLevel: string;
   onActionClick?: (path: string, action: SmartAction) => void;
 }
@@ -153,7 +153,7 @@ const generateSmartActions = (
       label: 'Intercambiar',
       description: 'Realiza un intercambio equilibrado',
       path: '/marketplace',
-      benefit: 'Balance Ayni',
+      benefit: 'Balance Reciprocidad',
       estimatedTime: '8 min',
       urgency: 'medium',
       color: successColors[600],
@@ -259,7 +259,7 @@ const getCategoryEmoji = (category: string) => {
 };
 
 export const SmartActions: React.FC<SmartActionsProps> = ({
-  ayniBalance,
+  reciprocidadBalance,
   userLevel,
   onActionClick,
 }) => {
@@ -268,8 +268,8 @@ export const SmartActions: React.FC<SmartActionsProps> = ({
   const navigate = useNavigate();
 
   const smartActions = useMemo(
-    () => generateSmartActions(ayniBalance, userLevel),
-    [ayniBalance, userLevel]
+    () => generateSmartActions(reciprocidadBalance, userLevel),
+    [reciprocidadBalance, userLevel]
   );
 
   const handleActionClick = (action: SmartAction) => {
@@ -282,7 +282,7 @@ export const SmartActions: React.FC<SmartActionsProps> = ({
 
   const getBalanceMessage = (balance: number) => {
     if (balance < 0.4) {
-      return 'Enfócate en dar ayuda para equilibrar tu Ayni';
+      return 'Enfócate en dar ayuda para equilibrar tu Reciprocidad';
     } else if (balance < 0.6) {
       return 'Sigue dando ayuda y aprende nuevas habilidades';
     } else if (balance < 0.8) {
@@ -325,21 +325,21 @@ export const SmartActions: React.FC<SmartActionsProps> = ({
             Acciones Recomendadas
           </Typography>
           <Chip
-            label={`Balance: ${Math.round(ayniBalance * 100)}%`}
+            label={`Balance: ${Math.round(reciprocidadBalance * 100)}%`}
             size="small"
             sx={{
               backgroundColor: alpha(
-                ayniBalance >= 0.8
+                reciprocidadBalance >= 0.8
                   ? successColors[500]
-                  : ayniBalance >= 0.6
+                  : reciprocidadBalance >= 0.6
                     ? warningColors[500]
                     : errorColors[500],
                 0.1
               ),
               color:
-                ayniBalance >= 0.8
+                reciprocidadBalance >= 0.8
                   ? successColors[500]
-                  : ayniBalance >= 0.6
+                  : reciprocidadBalance >= 0.6
                     ? warningColors[500]
                     : errorColors[500],
               fontWeight: 'var(--font-semibold)',
@@ -351,7 +351,7 @@ export const SmartActions: React.FC<SmartActionsProps> = ({
           variant="body2"
           sx={{ color: grayColors[600], fontStyle: 'italic' }}
         >
-          {getBalanceMessage(ayniBalance)}
+          {getBalanceMessage(reciprocidadBalance)}
         </Typography>
       </Box>
 
@@ -548,7 +548,7 @@ export const SmartActions: React.FC<SmartActionsProps> = ({
             display: 'block',
           }}
         >
-          💡 Las acciones se actualizan automáticamente según tu balance Ayni
+          💡 Las acciones se actualizan automáticamente según tu balance Reciprocidad
         </Typography>
       </Box>
     </Card>

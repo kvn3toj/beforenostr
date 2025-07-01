@@ -58,7 +58,7 @@ const onboardingSteps = [
       points: [
         'LETS = Sistema de Intercambio Local (Local Exchange Trading System)',
         'Intercambia servicios y conocimientos sin dinero tradicional',
-        'Basado en los principios de Ayni (reciprocidad) de CoomÜnity',
+        'Basado en los principios de Reciprocidad (reciprocidad) de CoomÜnity',
         'Construye confianza mientras ayudas a tu comunidad'
       ]
     }
@@ -90,13 +90,13 @@ const onboardingSteps = [
     }
   },
   {
-    id: 'ayni',
-    title: 'El Principio de Ayni ⚖️',
+    id: 'reciprocidad',
+    title: 'El Principio de Reciprocidad ⚖️',
     description: 'Equilibrio entre dar y recibir',
     icon: <Handshake />,
     content: {
-      type: 'ayni_balance',
-      philosophy: 'Ayni es el principio andino de reciprocidad. En LETS, significa mantener un equilibrio saludable entre lo que ofreces y lo que recibes.',
+      type: 'reciprocidad_balance',
+      philosophy: 'Reciprocidad es el principio andino de reciprocidad. En LETS, significa mantener un equilibrio saludable entre lo que ofreces y lo que recibes.',
       indicators: [
         {
           range: '0.8 - 1.2',
@@ -284,7 +284,7 @@ export const LetsOnboarding: React.FC<LetsOnboardingProps> = ({
           </Box>
         );
 
-      case 'ayni_balance':
+      case 'reciprocidad_balance':
         return (
           <Box sx={{ py: 2 }}>
             <Typography variant="body1" sx={{ mb: 3, fontStyle: 'italic' }}>
@@ -292,7 +292,7 @@ export const LetsOnboarding: React.FC<LetsOnboardingProps> = ({
             </Typography>
             
             <Typography variant="h6" gutterBottom>
-              📊 Indicadores de Balance Ayni
+              📊 Indicadores de Balance Reciprocidad
             </Typography>
             
             {content.indicators.map((indicator: any, index: number) => (

@@ -331,30 +331,30 @@
   }
 }
 
-/* === AYNI COSMIC BACKGROUND ROTATION === */
-@keyframes ayni-cosmic-reverse-rotation {
+/* === RECIPROCIDAD COSMIC BACKGROUND ROTATION === */
+@keyframes reciprocidad-cosmic-reverse-rotation {
   0% { transform: translate(-50%, -50%) rotate(360deg); }
   100% { transform: translate(-50%, -50%) rotate(0deg); }
 }
 
-/* === AYNI PLANET HALO & PULSE === */
-.ayni-planet-halo {
+/* === RECIPROCIDAD PLANET HALO & PULSE === */
+.reciprocidad-planet-halo {
   pointer-events: none;
   opacity: 0.7;
   transition: opacity 0.3s;
 }
-.ayni-planet-halo-pulse {
-  animation: ayni-halo-pulse 2.2s infinite cubic-bezier(0.4,0,0.2,1);
+.reciprocidad-planet-halo-pulse {
+  animation: reciprocidad-halo-pulse 2.2s infinite cubic-bezier(0.4,0,0.2,1);
 }
-@keyframes ayni-halo-pulse {
+@keyframes reciprocidad-halo-pulse {
   0% { opacity: 0.7; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.12); }
   100% { opacity: 0.7; transform: scale(1); }
 }
-.ayni-planet-core {
+.reciprocidad-planet-core {
   transition: box-shadow 0.3s, filter 0.2s;
 }
-.ayni-planet-shadow {
+.reciprocidad-planet-shadow {
   opacity: 0.5;
 }
 

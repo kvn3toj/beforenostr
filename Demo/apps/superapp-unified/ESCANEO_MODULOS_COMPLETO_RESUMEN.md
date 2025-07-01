@@ -42,7 +42,7 @@
 **Archivos principales corregidos:**
 - `ColorSystemDemo.tsx`
 - `CosmicProfileWidget.tsx` 
-- `AyniBalanceVisualization.tsx`
+- `ReciprocidadBalanceVisualization.tsx`
 - `EnergyWeatherWidget.tsx`
 - `PerformanceMonitor.tsx`
 - `UStatsMain.tsx`

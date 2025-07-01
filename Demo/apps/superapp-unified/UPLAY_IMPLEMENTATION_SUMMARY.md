@@ -113,7 +113,7 @@ Se ha completado exitosamente la implementación de todos los cambios visuales a
 - ✅ Accesibilidad integrada
 
 ### Filosofía CoomÜnity
-- **Ayni:** Reciprocidad en el aprendizaje colaborativo
+- **Reciprocidad:** Reciprocidad en el aprendizaje colaborativo
 - **Bien Común:** Conocimiento compartido para todos
 - **Mëritos:** Reconocimiento por contribuciones valiosas
 - **Öndas:** Energía positiva del aprendizaje
@@ -207,7 +207,7 @@ La implementación del UPlay representa un hito significativo en la evolución d
 - **Tecnología Avanzada:** React 18+ con Material UI v7
 - **Diseño Inmersivo:** Efectos glassmorphism y animaciones cósmicas
 - **Gamificación Integral:** Sistema completo de recompensas y progresión
-- **Filosofía CoomÜnity:** Ayni, Bien Común y colaboración auténtica
+- **Filosofía CoomÜnity:** Reciprocidad, Bien Común y colaboración auténtica
 
 El resultado es una experiencia de aprendizaje revolucionaria que transforma el consumo de contenido educativo en una aventura interactiva y colaborativa, estableciendo nuevos estándares en plataformas de educación gamificada.
 

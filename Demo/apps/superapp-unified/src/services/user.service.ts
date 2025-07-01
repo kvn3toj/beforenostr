@@ -1,6 +1,6 @@
 import { apiService } from './api.service';
 import { mockApiService } from '../mocks/mockApiService';
-import { AyniMetrics } from '../types/ayni.types';
+import { ReciprocidadMetricsDTO } from '../types/reciprocidad.types';
 
 // Interfaces aligned with backend DTOs
 export interface User {
@@ -120,11 +120,17 @@ export const userAPI = {
     }
   },
 
-  fetchUserAyniMetrics: async (userId: string): Promise<AyniMetrics> => {
+  /**
+   * Fetches the reciprocity metrics for a specific user from the backend.
+   * This includes data on contributions, balance, and community standing.
+   * @param userId The ID of the user to fetch metrics for.
+   * @returns A promise that resolves to the user's reciprocity metrics.
+   */
+  fetchUserReciprocidadMetrics: async (userId: string): Promise<ReciprocidadMetricsDTO> => {
     try {
-      return await apiService.get<AyniMetrics>(`/users/${userId}/ayni-metrics`);
+      return await apiService.get<ReciprocidadMetricsDTO>(`/users/${userId}/reciprocidad-metrics`);
     } catch (error) {
-      console.error(`Error fetching Ayni metrics for user ${userId}:`, error);
+      console.error(`Error fetching Reciprocidad metrics for user ${userId}:`, error);
       throw error;
     }
   },

@@ -163,7 +163,7 @@ test.describe('Tutorial Discovery TOINS - E2E Tests', () => {
     const toinsConcepts = [
       'Tokens de Intercambio Nutritivo Sostenible',
       'Sistema Dual: Lükas + TOINS',
-      'principio Ayni',
+      'principio Reciprocidad',
       'Bien Común',
       'moneda complementaria'
     ];

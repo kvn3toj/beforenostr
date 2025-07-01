@@ -86,14 +86,14 @@ export class MarketplaceService {
       updatedAt: item.updatedAt,
       viewCount: item.viewCount,
       favoriteCount: item.favoriteCount,
-      // 🌟 COSMOS: Ayni metrics
-      ayniScore: this.calculateAyniScore(item),
+      // 🌟 COSMOS: Reciprocidad metrics
+      reciprocidadScore: this.calculateReciprocidadScore(item),
       consciousnessLevel: this.calculateConsciousnessLevel(item),
     };
   }
 
-  // 🌟 COSMOS: Calculate Ayni (reciprocity) score
-  private calculateAyniScore(item: any): number {
+  // 🌟 COSMOS: Calculate Reciprocidad (reciprocity) score
+  private calculateReciprocidadScore(item: any): number {
     let score = 0;
 
     // Base score for active participation
@@ -122,11 +122,11 @@ export class MarketplaceService {
 
   // 🌟 COSMOS: Calculate consciousness level
   private calculateConsciousnessLevel(item: any): 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT' {
-    const ayniScore = this.calculateAyniScore(item);
+    const reciprocidadScore = this.calculateReciprocidadScore(item);
 
-    if (ayniScore >= 80) return 'TRANSCENDENT';
-    if (ayniScore >= 60) return 'FLOURISHING';
-    if (ayniScore >= 40) return 'GROWING';
+    if (reciprocidadScore >= 80) return 'TRANSCENDENT';
+    if (reciprocidadScore >= 60) return 'FLOURISHING';
+    if (reciprocidadScore >= 40) return 'GROWING';
     return 'SEED';
   }
 
@@ -240,7 +240,7 @@ export class MarketplaceService {
         hasMore: offset + limit < total,
         // 🌟 COSMOS: Consciousness insights
         consciousnessMetrics: {
-          averageAyniScore: processedItems.reduce((sum, item) => sum + item.ayniScore, 0) / processedItems.length,
+          averageReciprocidadScore: processedItems.reduce((sum, item) => sum + item.reciprocidadScore, 0) / processedItems.length,
           transcendentItems: processedItems.filter(item => item.consciousnessLevel === 'TRANSCENDENT').length,
           totalConsciousnessDistribution: {
             SEED: processedItems.filter(item => item.consciousnessLevel === 'SEED').length,

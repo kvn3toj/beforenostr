@@ -122,8 +122,8 @@ interface UnifiedUPlayPlayerProps {
 // Mock data for demo - Updated with working video URLs
 const mockVideoData: VideoData = {
   id: 'unified-demo',
-  title: 'La Reciprocidad: Principio Universal del Ayni',
-  description: 'Explora los fundamentos del Ayni en la filosofía CoomÜnity a través de una experiencia interactiva gamificada',
+  title: 'La Reciprocidad: Principio Universal del Reciprocidad',
+  description: 'Explora los fundamentos del Reciprocidad en la filosofía CoomÜnity a través de una experiencia interactiva gamificada',
   // Use a working video URL for testing
   url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
   duration: 596, // Big Buck Bunny duration in seconds
@@ -136,19 +136,19 @@ const mockVideoData: VideoData = {
       timestamp: 15,
       endTimestamp: 45,
       type: 'binary-choice',
-      question: '¿El Ayni representa el principio de reciprocidad equilibrada en la filosofía CoomÜnity?',
+      question: '¿El Reciprocidad representa el principio de reciprocidad equilibrada en la filosofía CoomÜnity?',
       timeLimit: 25,
       difficulty: 'easy',
       options: [
         {
           id: 'a',
           label: 'A',
-          text: 'Sí, el Ayni es el fundamento de la reciprocidad justa y equilibrada',
+          text: 'Sí, el Reciprocidad es el fundamento de la reciprocidad justa y equilibrada',
         },
         {
           id: 'b',
           label: 'B',
-          text: 'No, el Ayni se refiere únicamente a intercambios comerciales',
+          text: 'No, el Reciprocidad se refiere únicamente a intercambios comerciales',
         },
       ],
       correctAnswer: 'a',

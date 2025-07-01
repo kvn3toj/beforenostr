@@ -112,7 +112,7 @@ test.describe('🎫 Invitation Flow - Beta Registration', () => {
     
     // Verificar que llegamos al quiz filosófico
     await expect(page.locator('h4')).toContainText('Quiz Filosófico');
-    await expect(page.locator('text=Ayni')).toBeVisible();
+    await expect(page.locator('text=Reciprocidad')).toBeVisible();
     await expect(page.locator('text=Bien Común')).toBeVisible();
     await expect(page.locator('text=cooperación')).toBeVisible();
   });
@@ -159,7 +159,7 @@ test.describe('🎫 Invitation Flow - Beta Registration', () => {
     
     // Paso 3: Quiz filosófico
     const textareas = page.locator('textarea');
-    await textareas.nth(0).fill('Ayni significa reciprocidad consciente y equilibrada en todas las relaciones.');
+    await textareas.nth(0).fill('Reciprocidad significa reciprocidad consciente y equilibrada en todas las relaciones.');
     await textareas.nth(1).fill('Priorizo el bien común colaborando y compartiendo recursos para el beneficio colectivo.');
     await textareas.nth(2).fill('La cooperación es fundamental para construir un mundo más justo y sostenible.');
     

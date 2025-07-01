@@ -35,11 +35,11 @@ test.describe('🏪⚜️ Marketplace Consciousness - Guardian Integration Tests
       await expect(consciousnessMetrics).toBeVisible();
     }
 
-    // Check for Ayni score indicators
-    const ayniScores = page.locator('[data-testid*="ayni-score"]');
-    const ayniCount = await ayniScores.count();
-    if (ayniCount > 0) {
-      expect(ayniCount).toBeGreaterThan(0);
+    // Check for Reciprocidad score indicators
+    const reciprocidadScores = page.locator('[data-testid*="reciprocidad-score"]');
+    const reciprocidadCount = await reciprocidadScores.count();
+    if (reciprocidadCount > 0) {
+      expect(reciprocidadCount).toBeGreaterThan(0);
     }
   });
 
@@ -121,7 +121,7 @@ test.describe('🏪⚜️ Marketplace Consciousness - Guardian Integration Tests
     }
   });
 
-  test('🌟 COSMOS: Ayni and consciousness integration', async ({ page }) => {
+  test('🌟 COSMOS: Reciprocidad and consciousness integration', async ({ page }) => {
     await page.goto('/marketplace');
     await page.waitForLoadState('networkidle');
 
@@ -130,10 +130,10 @@ test.describe('🏪⚜️ Marketplace Consciousness - Guardian Integration Tests
     if (await productCards.isVisible()) {
       await expect(productCards).toBeVisible();
 
-      // Check for Ayni score display
-      const ayniElement = page.locator('[data-testid*="ayni"], [title*="Ayni"], [aria-label*="Ayni"]').first();
-      if (await ayniElement.isVisible()) {
-        await expect(ayniElement).toBeVisible();
+      // Check for Reciprocidad score display
+      const reciprocidadElement = page.locator('[data-testid*="reciprocidad"], [title*="Reciprocidad"], [aria-label*="Reciprocidad"]').first();
+      if (await reciprocidadElement.isVisible()) {
+        await expect(reciprocidadElement).toBeVisible();
       }
 
       // Check for consciousness level indicators

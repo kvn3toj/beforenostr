@@ -25,7 +25,7 @@ interface ReflectionData {
   message: string;
   author?: string;
   element: 'fire' | 'water' | 'earth' | 'air' | 'universal';
-  category: 'ayni' | 'wisdom' | 'community' | 'growth' | 'balance';
+  category: 'reciprocidad' | 'wisdom' | 'community' | 'growth' | 'balance';
   timeOfDay: 'morning' | 'afternoon' | 'evening' | 'universal';
 }
 
@@ -37,7 +37,7 @@ const dailyReflections: ReflectionData[] = [
     message:
       'Cada acción que realizas con pasión genuina enciende la llama del progreso colectivo',
     element: 'fire',
-    category: 'ayni',
+    category: 'reciprocidad',
     timeOfDay: 'morning',
   },
   {
@@ -63,7 +63,7 @@ const dailyReflections: ReflectionData[] = [
     message:
       'En cada fluir de tu generosidad, se tejen las ondas del bienestar compartido',
     element: 'water',
-    category: 'ayni',
+    category: 'reciprocidad',
     timeOfDay: 'universal',
   },
 
@@ -107,9 +107,9 @@ const dailyReflections: ReflectionData[] = [
   {
     id: 'universal-1',
     message:
-      'En cada acción de Ayni, equilibras tu camino y contribuyes al tejido sagrado del Bien Común',
+      'En cada acción de Reciprocidad, equilibras tu camino y contribuyes al tejido sagrado del Bien Común',
     element: 'universal',
-    category: 'ayni',
+    category: 'reciprocidad',
     timeOfDay: 'universal',
   },
   {

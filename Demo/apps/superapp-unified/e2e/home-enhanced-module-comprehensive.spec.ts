@@ -32,10 +32,10 @@ test.describe('🏠 HOME ENHANCED MODULE - COMPREHENSIVE VALIDATION', () => {
     await expect(greetingElement).toBeVisible({ timeout: 5000 });
     console.log('✅ Personalized greeting displayed');
 
-    // 3. Verify Ayni balance indicator
-    const ayniIndicator = page.locator('text=/balance|equilibrio|ayni/i').first();
-    await expect(ayniIndicator).toBeVisible({ timeout: 5000 });
-    console.log('✅ Ayni balance indicator present');
+    // 3. Verify Reciprocidad balance indicator
+    const reciprocidadIndicator = page.locator('text=/balance|equilibrio|reciprocidad/i').first();
+    await expect(reciprocidadIndicator).toBeVisible({ timeout: 5000 });
+    console.log('✅ Reciprocidad balance indicator present');
 
     // 4. Verify notification badge functionality
     const notificationButton = page.locator('[data-testid*="notification"], button:has-text("notif")').first();
@@ -82,10 +82,10 @@ test.describe('🏠 HOME ENHANCED MODULE - COMPREHENSIVE VALIDATION', () => {
     await expect(meritosMetric).toBeVisible({ timeout: 5000 });
     console.log('✅ Mëritos metrics displayed');
 
-    // 4. Verify Ayni level progression
-    const ayniLevel = page.locator('text=/colaborador|guardián|nivel/i').first();
-    await expect(ayniLevel).toBeVisible({ timeout: 5000 });
-    console.log('✅ Ayni level progression shown');
+    // 4. Verify Reciprocidad level progression
+    const reciprocidadLevel = page.locator('text=/colaborador|guardián|nivel/i').first();
+    await expect(reciprocidadLevel).toBeVisible({ timeout: 5000 });
+    console.log('✅ Reciprocidad level progression shown');
 
     // 5. Verify Element Progress Rings (Fuego, Agua, Tierra, Aire)
     const elementRings = await page.locator('svg circle[stroke]:not([stroke="#e5e7eb"])').count();
@@ -153,23 +153,23 @@ test.describe('🏠 HOME ENHANCED MODULE - COMPREHENSIVE VALIDATION', () => {
       console.log('✅ Advanced Insights Panel rendered');
     }
 
-    // 2. Verify AyniBalanceVisualization
+    // 2. Verify ReciprocidadBalanceVisualization
     const balanceViz = page.locator('.balance-visualization, [class*="balance"]').first();
     if (await balanceViz.isVisible()) {
-      console.log('✅ Ayni Balance Visualization rendered');
+      console.log('✅ Reciprocidad Balance Visualization rendered');
     }
 
     // 3. Verify enhanced color system implementation
     const colorSystemTest = await page.evaluate(() => {
       const computedStyle = getComputedStyle(document.documentElement);
       return {
-        ayniPrimary: computedStyle.getPropertyValue('--ayni-primary').trim(),
-        ayniSecondary: computedStyle.getPropertyValue('--ayni-secondary').trim(),
-        ayniSuccess: computedStyle.getPropertyValue('--ayni-success').trim(),
+        reciprocidadPrimary: computedStyle.getPropertyValue('--reciprocidad-primary').trim(),
+        reciprocidadSecondary: computedStyle.getPropertyValue('--reciprocidad-secondary').trim(),
+        reciprocidadSuccess: computedStyle.getPropertyValue('--reciprocidad-success').trim(),
       };
     });
     
-    expect(colorSystemTest.ayniPrimary).toBeTruthy();
+    expect(colorSystemTest.reciprocidadPrimary).toBeTruthy();
     console.log('🎨 Enhanced color system applied');
 
     // 4. Verify micro-interactions
@@ -344,10 +344,10 @@ test.describe('🏠 HOME ENHANCED MODULE - COMPREHENSIVE VALIDATION', () => {
   test('🧪 PHASE 9: CoomÜnity Philosophy Integration', async ({ page }) => {
     console.log('🧪 Validating CoomÜnity Philosophy Integration...');
 
-    // 1. Verify Ayni terminology usage
-    const ayniTerms = await page.locator('text=/ayni|reciprocidad|equilibrio/i').count();
-    expect(ayniTerms).toBeGreaterThan(0);
-    console.log(`⚖️ Ayni terminology instances: ${ayniTerms}`);
+    // 1. Verify Reciprocidad terminology usage
+    const reciprocidadTerms = await page.locator('text=/reciprocidad|reciprocidad|equilibrio/i').count();
+    expect(reciprocidadTerms).toBeGreaterThan(0);
+    console.log(`⚖️ Reciprocidad terminology instances: ${reciprocidadTerms}`);
 
     // 2. Verify Mëritos system representation
     const meritosTerms = await page.locator('text=/mëritos|logros|bien común/i').count();

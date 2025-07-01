@@ -28,7 +28,7 @@
 8. **ModuleFocus:** Textos con opacidad reducida y colores `rgb(249, 250, 251)`
 9. **NotificationCenter:** Elementos con `opacity: 0.7-0.9` que reducían la legibilidad
 10. **AdvancedInsightsPanel:** Textos sobre glassmorphism con contraste insuficiente
-11. **AyniBalanceVisualization:** Elementos semitransparentes difíciles de leer
+11. **ReciprocidadBalanceVisualization:** Elementos semitransparentes difíciles de leer
 12. **Imports masivos MUI:** Violaciones de reglas Builder.io en 4 componentes adicionales
 
 ### Metodología de Mejora
@@ -58,7 +58,7 @@ Corregidos problemas específicos en insights y tarjetas grises.
 - ✅ `Home.tsx` - Componente principal
 - ✅ `SmartHeader.tsx` - Header inteligente
 - ✅ `PrimaryDashboard.tsx` - Dashboard principal
-- ✅ `AyniMetricsCard.tsx` - Métricas de Ayni
+- ✅ `ReciprocidadMetricsCard.tsx` - Métricas de Reciprocidad
 - ✅ `WelcomeHeader.tsx` - Bienvenida
 - ✅ `QuickActionsGrid.tsx` - Acciones rápidas
 - ✅ `ModuleCards.tsx` - Cards de módulos
@@ -67,7 +67,7 @@ Corregidos problemas específicos en insights y tarjetas grises.
 - ✅ **🆕 ModuleFocus.tsx** - Enfoque de módulos
 - ✅ **🆕 NotificationCenter.tsx** - Centro de notificaciones
 - ✅ **🆕 AdvancedInsightsPanel.tsx** - Panel de insights
-- ✅ **🆕 AyniBalanceVisualization.tsx** - Visualización de balance
+- ✅ **🆕 ReciprocidadBalanceVisualization.tsx** - Visualización de balance
 
 #### Problemas Críticos Encontrados:
 
@@ -99,7 +99,7 @@ Después del análisis de la imagen proporcionada, se identificaron problemas ad
 --home-text-primary: #0f172a; /* Contraste 19:1 ✅ */
 --metric-ondas-text: #1e3a8a; /* Contraste 8.2:1 ✅ */
 --metric-meritos-text: #92400e; /* Contraste 8.1:1 ✅ */
---metric-ayni-text: #14532d; /* Contraste 8.3:1 ✅ */
+--metric-reciprocidad-text: #14532d; /* Contraste 8.3:1 ✅ */
 --metric-bien-comun-text: #7c2d12; /* Contraste 7.8:1 ✅ */
 ```
 
@@ -115,7 +115,7 @@ Después del análisis de la imagen proporcionada, se identificaron problemas ad
 
 - Öndas: Blue-900 (#1e3a8a) - Contraste 8.2:1
 - Mëritos: Orange-800 (#92400e) - Contraste 8.1:1
-- Ayni: Green-900 (#14532d) - Contraste 8.3:1
+- Reciprocidad: Green-900 (#14532d) - Contraste 8.3:1
 - Bien Común: Red-800 (#7c2d12) - Contraste 7.8:1
 
 **✅ Gradientes con Fallback**
@@ -154,8 +154,8 @@ Después del análisis de la imagen proporcionada, se identificaron problemas ad
 .metric-meritos {
   color: var(--metric-meritos-text) !important;
 }
-.metric-ayni {
-  color: var(--metric-ayni-text) !important;
+.metric-reciprocidad {
+  color: var(--metric-reciprocidad-text) !important;
 }
 .metric-bien-comun {
   color: var(--metric-bien-comun-text) !important;
@@ -269,7 +269,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 - ✅ Métricas numéricas: Colores específicos por tipo con contraste 8:1+
 - ✅ Títulos: Peso de fuente aumentado a 700 para mejor legibilidad
 
-#### AyniMetricsCard.tsx
+#### ReciprocidadMetricsCard.tsx
 
 ```typescript
 // Imports específicos implementados
@@ -295,8 +295,8 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 | ----------------------------- | -------- | -------- | ------ | ------------------------ |
 | Porcentaje principal          | 2.8:1 ❌ | 21:1 ✅  | +650%  | PrimaryDashboard         |
 | Títulos H1-H6                 | 3.2:1 ❌ | 21:1 ✅  | +556%  | Todos                    |
-| Métricas Öndas                | 3.1:1 ❌ | 8.2:1 ✅ | +165%  | AyniMetricsCard          |
-| Métricas Mëritos              | 2.9:1 ❌ | 8.1:1 ✅ | +179%  | AyniMetricsCard          |
+| Métricas Öndas                | 3.1:1 ❌ | 8.2:1 ✅ | +165%  | ReciprocidadMetricsCard          |
+| Métricas Mëritos              | 2.9:1 ❌ | 8.1:1 ✅ | +179%  | ReciprocidadMetricsCard          |
 | Texto secundario              | 4.1:1 ⚠️ | 15:1 ✅  | +266%  | Todos                    |
 | Iconos interactivos           | 3.5:1 ❌ | 8.0:1 ✅ | +129%  | Todos                    |
 | **🆕 Insights tarjetas**      | 2.1:1 ❌ | 15:1 ✅  | +614%  | AdvancedInsightsPanel    |
@@ -306,7 +306,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 | **🆕 Elementos opacidad**     | 1.8:1 ❌ | 15:1 ✅  | +733%  | Todos                    |
 | **🆕 WalletOverview texto**   | 2.5:1 ❌ | 15:1 ✅  | +500%  | WalletOverview           |
 | **🆕 NotificationCenter**     | 3.1:1 ❌ | 15:1 ✅  | +384%  | NotificationCenter       |
-| **🆕 Balance Visualization**  | 2.8:1 ❌ | 21:1 ✅  | +650%  | AyniBalanceVisualization |
+| **🆕 Balance Visualization**  | 2.8:1 ❌ | 21:1 ✅  | +650%  | ReciprocidadBalanceVisualization |
 | **🆕 RGB colors específicos** | 1.9:1 ❌ | 21:1 ✅  | +1005% | Todos                    |
 | **🆕 Clases CSS grises**      | 2.3:1 ❌ | 7:1 ✅   | +204%  | Todos                    |
 
@@ -328,7 +328,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 1. **SmartHeader**: Contraste mejorado sobre gradientes
 2. **PrimaryDashboard**: Porcentajes y métricas con contraste AAA
-3. **AyniMetricsCard**: Valores numéricos optimizados
+3. **ReciprocidadMetricsCard**: Valores numéricos optimizados
 4. **Variables CSS**: Sistema centralizado de colores
 
 ### Clases CSS Nuevas
@@ -339,7 +339,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 .home-metric-enhanced        /* Valores numéricos mejorados */
 .metric-ondas                /* Específico para Öndas */
 .metric-meritos              /* Específico para Mëritos */
-.metric-ayni                 /* Específico para Ayni */
+.metric-reciprocidad                 /* Específico para Reciprocidad */
 .metric-bien-comun           /* Específico para Bien Común */
 ```
 
@@ -355,7 +355,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 - ✅ `SmartHeader.tsx` - Imports específicos implementados
 - ✅ `PrimaryDashboard.tsx` - Imports específicos implementados
-- ✅ `AyniMetricsCard.tsx` - Imports específicos implementados y iconos corregidos
+- ✅ `ReciprocidadMetricsCard.tsx` - Imports específicos implementados y iconos corregidos
 
 ### Imports Específicos Implementados
 
@@ -544,7 +544,7 @@ Existe un error de build preexistente en `LetsOnboardingWizard.tsx` (módulo mar
    - ✅ Porcentaje principal negro puro (21:1 contraste)
    - ✅ Métricas con colores específicos optimizados
 
-5. **`src/components/home/AyniMetricsCard.tsx`**
+5. **`src/components/home/ReciprocidadMetricsCard.tsx`**
 
    - ✅ Imports específicos MUI implementados
    - ✅ Todos los iconos corregidos

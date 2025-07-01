@@ -108,9 +108,9 @@ test.describe('🚀 Home Page - Phase 3 Enhancements Verification', () => {
     console.log('✅ Estados de carga sin errores críticos');
   });
 
-  test('🎯 Verificar Métricas Ayni sin errores', async ({ page }) => {
-    // Buscar el componente de métricas Ayni
-    const metricsCard = page.locator('[class*="ayni"], [class*="metrics"]').first();
+  test('🎯 Verificar Métricas Reciprocidad sin errores', async ({ page }) => {
+    // Buscar el componente de métricas Reciprocidad
+    const metricsCard = page.locator('[class*="reciprocidad"], [class*="metrics"]').first();
     
     // Si no se encuentra por clase, buscar por contenido
     const ondasElement = page.locator('text=/Öndas|ondas/i').first();
@@ -120,7 +120,7 @@ test.describe('🚀 Home Page - Phase 3 Enhancements Verification', () => {
     const hasMetrics = await ondasElement.isVisible() || await meritosElement.isVisible();
     expect(hasMetrics).toBe(true);
     
-    console.log('✅ Métricas Ayni se muestran correctamente');
+    console.log('✅ Métricas Reciprocidad se muestran correctamente');
   });
 
   test('🔄 Verificar funcionalidad de refresh', async ({ page }) => {
@@ -145,7 +145,7 @@ test.describe('🚀 Home Page - Phase 3 Enhancements Verification', () => {
 
   test('🌟 Verificar mensaje inspiracional', async ({ page }) => {
     // Buscar el mensaje inspiracional flotante
-    const inspirationalMessage = page.locator('text=/Reflexión del día|En cada acción de Ayni/i');
+    const inspirationalMessage = page.locator('text=/Reflexión del día|En cada acción de Reciprocidad/i');
     
     // Esperar a que aparezca (tiene delay de animación)
     await page.waitForTimeout(3000);
@@ -233,13 +233,13 @@ test.describe('Home Page Phase 3 - Advanced Visual Enhancements', () => {
     await expect(glassmorphismCards.first()).toBeVisible();
   });
 
-  test('should display Ayni Balance Visualization component', async ({ page }) => {
-    // Check if the Ayni Balance Visualization is present
-    const ayniVisualization = page.locator('text=Balance Ayni');
-    await expect(ayniVisualization).toBeVisible();
+  test('should display Reciprocidad Balance Visualization component', async ({ page }) => {
+    // Check if the Reciprocidad Balance Visualization is present
+    const reciprocidadVisualization = page.locator('text=Balance Reciprocidad');
+    await expect(reciprocidadVisualization).toBeVisible();
 
     // Check for the circular progress indicator
-    const balanceCircle = page.locator('.ayni-balance-circle');
+    const balanceCircle = page.locator('.reciprocidad-balance-circle');
     await expect(balanceCircle).toBeVisible();
 
     // Check for elemental indicators
@@ -318,8 +318,8 @@ test.describe('Home Page Phase 3 - Advanced Visual Enhancements', () => {
   });
 
   test('should verify CoomÜnity terminology in Phase 3 components', async ({ page }) => {
-    // Check for Ayni-related terminology
-    await expect(page.locator('text=Ayni')).toBeVisible();
+    // Check for Reciprocidad-related terminology
+    await expect(page.locator('text=Reciprocidad')).toBeVisible();
     
     // Check for elemental terminology
     const elements = ['Fuego', 'Agua', 'Tierra', 'Aire'];
@@ -349,15 +349,15 @@ test.describe('Home Page Phase 3 - Advanced Visual Enhancements', () => {
     const container = page.locator('.gradient-mesh-bg').first();
     await expect(container).toBeVisible();
 
-    const ayniVisualization = page.locator('text=Balance Ayni');
-    await expect(ayniVisualization).toBeVisible();
+    const reciprocidadVisualization = page.locator('text=Balance Reciprocidad');
+    await expect(reciprocidadVisualization).toBeVisible();
 
     // Test tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.waitForTimeout(1000);
 
     await expect(container).toBeVisible();
-    await expect(ayniVisualization).toBeVisible();
+    await expect(reciprocidadVisualization).toBeVisible();
 
     // Reset to desktop
     await page.setViewportSize({ width: 1280, height: 720 });

@@ -122,7 +122,7 @@ const ExchangeModal: React.FC<{
         <Stack spacing={3} sx={{ mt: 1 }}>
           <Alert severity="info">
             <Typography variant="body2">
-              🌟 Los intercambios en CoomÜnity siguen el principio Ayni de
+              🌟 Los intercambios en CoomÜnity siguen el principio Reciprocidad de
               reciprocidad equilibrada
             </Typography>
           </Alert>
@@ -224,7 +224,7 @@ const ExchangeModal: React.FC<{
           {fromCurrency === 'MERITOS' && (
             <Alert severity="warning">
               Los Mëritos son recompensas por contribuir al Bien Común.
-              Intercambiarlos reduce tu nivel Ayni.
+              Intercambiarlos reduce tu nivel Reciprocidad.
             </Alert>
           )}
         </Stack>
@@ -325,7 +325,7 @@ const WalletSpeedDial: React.FC<{
 
   const actions = [
     { icon: <QrCode />, name: 'Código QR', onClick: onQRCode },
-    { icon: <Groups />, name: 'Ahorros Ayni', onClick: onSavings },
+    { icon: <Groups />, name: 'Ahorros Reciprocidad', onClick: onSavings },
     { icon: <TrendingUp />, name: 'Analytics', onClick: onAnalytics },
   ];
 
@@ -394,7 +394,7 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
       color: '#f57c00',
       gradient: 'linear-gradient(135deg, #f57c00 0%, #ef6c00 100%)',
       action: () => setExchangeModalOpen(true),
-      badge: 'Ayni',
+      badge: 'Reciprocidad',
     },
     {
       id: 'history',
@@ -413,8 +413,8 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
   };
 
   const handleSavings = () => {
-    // TODO: Implementar página de ahorros Ayni
-    console.log('🏦 Abriendo ahorros Ayni');
+    // TODO: Implementar página de ahorros Reciprocidad
+    console.log('🏦 Abriendo ahorros Reciprocidad');
   };
 
   const handleAnalytics = () => {

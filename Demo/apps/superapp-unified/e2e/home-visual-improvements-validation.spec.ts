@@ -19,11 +19,11 @@ test.describe('🎨 HOME VISUAL IMPROVEMENTS VALIDATION', () => {
     console.log(`📊 Elementos con sistema de prioridad encontrados: ${priorityElements}`);
 
     // 3. Verificar nueva paleta de colores optimizada
-    const ayniPrimaryElements = await page.evaluate(() => {
+    const reciprocidadPrimaryElements = await page.evaluate(() => {
       const computedStyle = getComputedStyle(document.documentElement);
-      return computedStyle.getPropertyValue('--ayni-primary').trim();
+      return computedStyle.getPropertyValue('--reciprocidad-primary').trim();
     });
-    expect(ayniPrimaryElements).toBe('#6366f1');
+    expect(reciprocidadPrimaryElements).toBe('#6366f1');
     console.log('🎨 Paleta de colores optimizada aplicada correctamente');
 
     // 4. Verificar sistema tipográfico jerárquico
@@ -154,7 +154,7 @@ test.describe('🎨 HOME VISUAL IMPROVEMENTS VALIDATION', () => {
     const welcomeElements = await page.locator('[class*="welcome"], [class*="Welcome"]').count();
     console.log(`👋 Elementos Welcome encontrados: ${welcomeElements}`);
 
-    // 2. Verificar AyniMetricsCard optimizado (si existe en vista pública)
+    // 2. Verificar ReciprocidadMetricsCard optimizado (si existe en vista pública)
     const metricsElements = await page.locator('[class*="metrics"], [class*="Metrics"]').count();
     console.log(`📊 Elementos Metrics encontrados: ${metricsElements}`);
 
@@ -248,13 +248,13 @@ test.describe('🎨 PERFORMANCE VALIDATION', () => {
     const cssVariables = await page.evaluate(() => {
       const styles = getComputedStyle(document.documentElement);
       return {
-        ayniPrimary: styles.getPropertyValue('--ayni-primary').trim(),
+        reciprocidadPrimary: styles.getPropertyValue('--reciprocidad-primary').trim(),
         textPrimary: styles.getPropertyValue('--text-primary').trim(),
         homeGridGap: styles.getPropertyValue('--home-grid-gap').trim(),
       };
     });
 
-    expect(cssVariables.ayniPrimary).toBe('#6366f1');
+    expect(cssVariables.reciprocidadPrimary).toBe('#6366f1');
     expect(cssVariables.textPrimary).toBe('var(--gray-900)');
     expect(cssVariables.homeGridGap).toBe('24px');
     
@@ -278,10 +278,10 @@ test.describe('🎯 INTEGRATION VALIDATION', () => {
       return {
         // Sistema de colores
         colors: {
-          ayniPrimary: styles.getPropertyValue('--ayni-primary').trim(),
-          successAyni: styles.getPropertyValue('--success-ayni').trim(),
-          warningAyni: styles.getPropertyValue('--warning-ayni').trim(),
-          errorAyni: styles.getPropertyValue('--error-ayni').trim(),
+          reciprocidadPrimary: styles.getPropertyValue('--reciprocidad-primary').trim(),
+          successReciprocidad: styles.getPropertyValue('--success-reciprocidad').trim(),
+          warningReciprocidad: styles.getPropertyValue('--warning-reciprocidad').trim(),
+          errorReciprocidad: styles.getPropertyValue('--error-reciprocidad').trim(),
         },
         // Sistema de layout
         layout: {
@@ -299,10 +299,10 @@ test.describe('🎯 INTEGRATION VALIDATION', () => {
     });
 
     // Verificar sistema de colores
-    expect(systemsCheck.colors.ayniPrimary).toBe('#6366f1');
-    expect(systemsCheck.colors.successAyni).toBe('#10b981');
-    expect(systemsCheck.colors.warningAyni).toBe('#f59e0b');
-    expect(systemsCheck.colors.errorAyni).toBe('#ef4444');
+    expect(systemsCheck.colors.reciprocidadPrimary).toBe('#6366f1');
+    expect(systemsCheck.colors.successReciprocidad).toBe('#10b981');
+    expect(systemsCheck.colors.warningReciprocidad).toBe('#f59e0b');
+    expect(systemsCheck.colors.errorReciprocidad).toBe('#ef4444');
     console.log('🎨 Sistema de colores integrado ✅');
 
     // Verificar sistema de layout

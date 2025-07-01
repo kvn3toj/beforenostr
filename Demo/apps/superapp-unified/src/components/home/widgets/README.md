@@ -27,7 +27,7 @@ Funciona perfectamente en escritorio y móvil sin esfuerzo adicional.
 
 ### Alineación Filosófica
 
-La estructura guía al usuario desde su estado personal (Welcome) hacia la acción comunitaria (Módulos) y la consulta de su balance (Ayni), terminando con un momento de introspección (Reflexión).
+La estructura guía al usuario desde su estado personal (Welcome) hacia la acción comunitaria (Módulos) y la consulta de su balance (Reciprocidad), terminando con un momento de introspección (Reflexión).
 
 ## 🏗️ Estructura de Capas
 
@@ -48,7 +48,7 @@ La estructura guía al usuario desde su estado personal (Welcome) hacia la acci�
 
 #### Columna Secundaria (Derecha)
 
-- **AyniWalletWidget**: Estado económico y de valor (métricas + cartera)
+- **ReciprocidadWalletWidget**: Estado económico y de valor (métricas + cartera)
 - **NotificationsWidget**: Alertas y eventos que requieren atención
 
 ### Capa 3: Reflexión y Cierre
@@ -77,12 +77,12 @@ La estructura guía al usuario desde su estado personal (Welcome) hacia la acci�
 - **Características:** Grilla completa de módulos con efectos visuales
 - **Adaptativo:** Layout horizontal en móvil, vertical en desktop
 
-### `AyniWalletWidget`
+### `ReciprocidadWalletWidget`
 
-- **Componentes:** Combina `AyniMetricsCardRevolutionary` + `WalletOverviewRevolutionary`
+- **Componentes:** Combina `ReciprocidadMetricsCardRevolutionary` + `WalletOverviewRevolutionary`
 - **Características:**
   - Balance elemental (Fuego, Agua, Tierra, Aire)
-  - Métricas Ayni (Öndas, Mëritos, contribuciones)
+  - Métricas Reciprocidad (Öndas, Mëritos, contribuciones)
   - Overview de cartera multidivisa
   - Acciones de cartera (añadir, enviar, intercambiar)
 
@@ -90,7 +90,7 @@ La estructura guía al usuario desde su estado personal (Welcome) hacia la acci�
 
 - **Base:** Reutiliza `NotificationCenterRevolutionary`
 - **Características:** Centro inteligente de notificaciones con categorización
-- **Tipos:** Ayni, logros, social, marketplace, educación, sistema
+- **Tipos:** Reciprocidad, logros, social, marketplace, educación, sistema
 
 ### `DailyReflectionWidget`
 
@@ -127,7 +127,7 @@ Cada widget usa gradientes específicos basados en los 4 elementos:
 ┌─────────────────────────────────────────┐
 │              WelcomeWidget              │
 ├─────────────────────────┬───────────────┤
-│     QuickActions        │  AyniWallet   │
+│     QuickActions        │  ReciprocidadWallet   │
 ├─────────────────────────┼───────────────┤
 │     MainModules         │ Notifications │
 ├─────────────────────────┴───────────────┤
@@ -145,7 +145,7 @@ Cada widget usa gradientes específicos basados en los 4 elementos:
 ├─────────────────────────┤
 │     MainModules         │
 ├─────────────────────────┤
-│      AyniWallet         │
+│      ReciprocidadWallet         │
 ├─────────────────────────┤
 │     Notifications       │
 ├���────────────────────────┤

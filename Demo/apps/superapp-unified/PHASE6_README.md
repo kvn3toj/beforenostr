@@ -20,7 +20,7 @@
 **Content Analysis Engine**
 
 - Real-time sentiment analysis
-- CoomÜnity philosophy detection (Ayni, Bien Común, cooperation)
+- CoomÜnity philosophy detection (Reciprocidad, Bien Común, cooperation)
 - Emotional tone recognition
 - Topic extraction and categorization
 

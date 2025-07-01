@@ -13,13 +13,13 @@ He integrado **TODOS** los componentes valiosos que existían antes:
 ```typescript
 // ✅ COMPONENTES RESTAURADOS:
 -WelcomeHeader - // ✅ Integrado
-  AyniMetricsCard - // ✅ Integrado
+  ReciprocidadMetricsCard - // ✅ Integrado
   WalletOverview - // ✅ Integrado
   QuickActionsGrid - // ✅ Integrado como SmartQuickActions
   ModuleCards - // ✅ Integrado
   NotificationCenter - // ✅ Integrado como IntelligentNotificationCenter
   AdvancedInsightsPanel - // ✅ Integrado
-  AyniBalanceVisualization - // ✅ Mejorado con efectos 3D
+  ReciprocidadBalanceVisualization - // ✅ Mejorado con efectos 3D
   PerformanceMonitor - // ✅ Integrado
   SmartQuickActions; // ✅ Integrado
 ```
@@ -57,7 +57,7 @@ He integrado **TODOS** los componentes valiosos que existían antes:
 ```typescript
 const heroFeatures = {
   personalizedGreeting: 'Buenos días/tardes/noches según hora',
-  dynamicProgress: 'Círculo 3D animado con balance Ayni',
+  dynamicProgress: 'Círculo 3D animado con balance Reciprocidad',
   achievementChips: 'Öndas, Mëritos, Racha con iconos coloridos',
   backgroundEffects: 'Gradientes animados + patrones flotantes',
   responsiveDesign: 'Adaptado a móvil y desktop',
@@ -77,7 +77,7 @@ const heroFeatures = {
 
 ┌─ COLUMNA PRINCIPAL (8/12) ──┬─ COLUMNA LATERAL (4/12) ──┐
 │                             │                           │
-│ 📊 AyniMetricsCard          │ 💰 WalletOverview         │
+│ 📊 ReciprocidadMetricsCard          │ 💰 WalletOverview         │
 │ (Métricas principales)      │ (Balance y transacciones) │
 │                             │                           │
 │ 🌊 LiveActivityFeed         │ ⚡ SmartQuickActions      │
@@ -92,7 +92,7 @@ const heroFeatures = {
 
 ┌─ FILA COMPLETA ─────────────────────────────────────────┐
 │                                                         │
-│ 🚀 AyniBalanceVisualization │ 🏆 ActiveChallengesWidget│
+│ 🚀 ReciprocidadBalanceVisualization │ 🏆 ActiveChallengesWidget│
 │ (Balance 3D con IA)         │ (Retos gamificados)       │
 │                             │                           │
 │ 🎯 ModuleCards             │ 📊 PerformanceMonitor     │

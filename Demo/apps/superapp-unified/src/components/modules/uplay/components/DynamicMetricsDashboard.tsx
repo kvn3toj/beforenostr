@@ -567,7 +567,7 @@ const DynamicMetricsDashboard: React.FC<DynamicMetricsDashboardProps> = ({
             </Box>
             <Grid container spacing={2}>
               {[
-                { title: 'Maestro Ayni', description: 'Equilibrio perfecto en dar y recibir', rarity: 'legendary' },
+                { title: 'Maestro Reciprocidad', description: 'Equilibrio perfecto en dar y recibir', rarity: 'legendary' },
                 { title: 'Sabio Colaborativo', description: '100 respuestas correctas consecutivas', rarity: 'epic' },
                 { title: 'Explorador Curioso', description: 'Completó todas las categorías', rarity: 'rare' },
                 { title: 'Mentor Öndas', description: 'Generó 1000 Öndas positivas', rarity: 'common' },

@@ -15,7 +15,7 @@ Tu Dashboard de CoomÜnity SuperApp ha sido transformado en una **experiencia in
 │          HEADER COMPACTO        │ ← Información contextual
 ├─────────────────┬───────────────┤
 │                 │   WALLET      │ ← Gestión financiera
-│   BALANCE AYNI  │   OVERVIEW    │
+│   BALANCE RECIPROCIDAD  │   OVERVIEW    │
 │   (Foco Principal) ├───────────────┤
 │                 │ NOTIFICACIONES│ ← Información contextual
 │                 ├───────────────┤
@@ -31,7 +31,7 @@ Tu Dashboard de CoomÜnity SuperApp ha sido transformado en una **experiencia in
 ┌─────────────────────────────────┐
 │          HEADER COMPACTO        │
 ├─────────────────────────────────┤
-│         BALANCE AYNI            │ ← Widget principal
+│         BALANCE RECIPROCIDAD            │ ← Widget principal
 │        (Altura optimizada)      │
 ├─────────────────────────────────┤
 │    WALLET   │  NOTIFS  │ MODS   │ ← Scroll horizontal
@@ -70,7 +70,7 @@ Tu Dashboard de CoomÜnity SuperApp ha sido transformado en una **experiencia in
 
 ## 🎨 JERARQUÍA VISUAL OPTIMIZADA
 
-### 💎 **Widget Principal (Balance Ayni)**
+### 💎 **Widget Principal (Balance Reciprocidad)**
 
 - **Posición**: Centro-izquierda (punto focal natural)
 - **Tamaño**: 65% del ancho en desktop
@@ -105,14 +105,14 @@ Tu Dashboard de CoomÜnity SuperApp ha sido transformado en una **experiencia in
 - **Notificaciones**: Contador visual de alerts pendientes
 - **Interacción**: Hover para revelar más información
 
-### 💎 **Balance Ayni Central**
+### 💎 **Balance Reciprocidad Central**
 
 **Qué hace**: Tu panel principal de métricas elementales
 
 - **Orb Central**: Tu balance áureo principal (85% en la imagen)
 - **Elementos Orbitales**: Fuego, Agua, Tierra, Aire con valores
 - **Métricas Grid**: Öndas, Mëritos, Bien Común, Poder Total
-- **Progreso**: Barra hacia tu próximo nivel de Ayni
+- **Progreso**: Barra hacia tu próximo nivel de Reciprocidad
 - **Interacción**:
   - Hover en orb = highlight y scale sutil
   - Click en elementos = información detallada
@@ -162,7 +162,7 @@ Tu Dashboard de CoomÜnity SuperApp ha sido transformado en una **experiencia in
 ### ⚡ **Navegación Rápida**
 
 1. **Usa el Centro de Acciones** como tu hub principal
-2. **El Widget Balance Ayni** para revisar tu progreso diario
+2. **El Widget Balance Reciprocidad** para revisar tu progreso diario
 3. **Sidebar** para gestión rápida (wallet + notificaciones)
 4. **Header** para contexto temporal y estado general
 

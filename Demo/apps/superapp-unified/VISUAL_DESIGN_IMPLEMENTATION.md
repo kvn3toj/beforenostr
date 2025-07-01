@@ -42,11 +42,11 @@
 - Improved accessibility with semantic color classes
 - Reduced CSS complexity by 60%
 
-#### 2. AyniMetricsCard Component  
-**File:** `src/components/home/AyniMetricsCard.tsx`
+#### 2. ReciprocidadMetricsCard Component  
+**File:** `src/components/home/ReciprocidadMetricsCard.tsx`
 **Status:** ✅ Refactored
 **Improvements:**
-- Migrated from MUI Card to custom AyniCard component
+- Migrated from MUI Card to custom ReciprocidadCard component
 - Implemented element-based color system for Fuego, Agua, Tierra, Aire
 - Added text gradient utilities for brand consistency
 - Improved spacing using design tokens (`space-y-6`, `space-y-3`)
@@ -166,7 +166,7 @@ aire: {
 }}>
 
 // After: Clean design system usage
-<AyniCard className="bg-gradient-to-br from-coomunity-50 via-white to-purple-50">
+<ReciprocidadCard className="bg-gradient-to-br from-coomunity-50 via-white to-purple-50">
 ```
 
 ```tsx
@@ -199,7 +199,7 @@ const elementConfig = {
 
 // Semantic color usage
 <Typography className="coomunity-h5 text-coomunity-900">
-  Balance Ayni y Contribución al Bien Común
+  Balance Reciprocidad y Contribución al Bien Común
 </Typography>
 ```
 
@@ -239,4 +239,4 @@ const elementConfig = {
 
 ---
 
-*Last Updated: Phase 2 Progress - Component refactoring in progress with ModuleCards and AyniMetricsCard completed* 
+*Last Updated: Phase 2 Progress - Component refactoring in progress with ModuleCards and ReciprocidadMetricsCard completed* 

@@ -1,22 +1,24 @@
 import React from 'react';
 import { safeToLocaleString } from '../../../utils/numberUtils';
-import { calculateAyniEfficiency, calculateCommunityImpact } from '../../../hooks/home';
+import { calculateReciprocidadEfficiency, calculateCommunityImpact } from '../../../hooks/home';
 
 interface MetricsRelationshipsProps {
   ondas: number;
   meritos: number;
-  ayniBalance: number;
+  reciprocidadBalance: number;
+  bienComun: number;
   className?: string;
 }
 
 export const MetricsRelationships: React.FC<MetricsRelationshipsProps> = ({
   ondas,
   meritos,
-  ayniBalance,
+  reciprocidadBalance,
+  bienComun,
   className,
 }) => {
-  const ayniEfficiency = calculateAyniEfficiency(meritos, ondas);
-  const communityImpact = calculateCommunityImpact(ayniBalance * 100, meritos);
+  const reciprocidadEfficiency = calculateReciprocidadEfficiency(meritos, ondas);
+  const communityImpact = calculateCommunityImpact(reciprocidadBalance * 100, meritos, bienComun);
 
   const getEfficiencyColor = (efficiency: number) => {
     if (efficiency >= 80) return 'text-green-600 bg-green-50 border-green-200';
@@ -34,7 +36,7 @@ export const MetricsRelationships: React.FC<MetricsRelationshipsProps> = ({
 
   const getEfficiencyMessage = (efficiency: number) => {
     if (efficiency >= 80) return 'Excelente conversión de energía';
-    if (efficiency >= 60) return 'Buena eficiencia en Ayni';
+    if (efficiency >= 60) return 'Buena eficiencia en Reciprocidad';
     if (efficiency >= 40) return 'Oportunidad de mejora';
     return 'Enfócate en generar más Mëritos';
   };
@@ -48,26 +50,26 @@ export const MetricsRelationships: React.FC<MetricsRelationshipsProps> = ({
 
   return (
     <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 ${className || ''}`}>
-      {/* Eficiencia Ayni */}
+      {/* Eficiencia Reciprocidad */}
       <div
         className={`
           relative p-4 rounded-xl border-2 transition-all duration-300
           hover:scale-105 hover:shadow-lg group cursor-pointer
-          ${getEfficiencyColor(ayniEfficiency)}
+          ${getEfficiencyColor(reciprocidadEfficiency)}
         `}
       >
         <div className="text-center">
           <div className="text-2xl font-bold mb-1">
-            {ayniEfficiency.toFixed(1)}%
+            {reciprocidadEfficiency.toFixed(1)}%
           </div>
           <div className="text-sm font-semibold mb-1">
-            Eficiencia Ayni
+            Eficiencia de Reciprocidad
           </div>
           <div className="text-xs opacity-75 mb-2">
             Mëritos generados por Öndas
           </div>
           <div className="text-xs font-medium">
-            {getEfficiencyMessage(ayniEfficiency)}
+            {getEfficiencyMessage(reciprocidadEfficiency)}
           </div>
         </div>
 
@@ -75,7 +77,7 @@ export const MetricsRelationships: React.FC<MetricsRelationshipsProps> = ({
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-black bg-opacity-10 rounded-b-xl">
           <div
             className="h-full bg-current rounded-b-xl transition-all duration-1000 ease-out"
-            style={{ width: `${Math.min(100, ayniEfficiency)}%` }}
+            style={{ width: `${Math.min(100, reciprocidadEfficiency)}%` }}
           />
         </div>
 
@@ -93,6 +95,14 @@ export const MetricsRelationships: React.FC<MetricsRelationshipsProps> = ({
             <div className="flex justify-between">
               <span>Ratio de conversión:</span>
               <span className="font-semibold">1:{(ondas / Math.max(meritos, 1)).toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Balance de Reciprocidad:</span>
+              <span className="font-semibold">{(reciprocidadBalance * 100).toFixed(1)}%</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Factor multiplicador:</span>
+              <span className="font-semibold">x{reciprocidadBalance.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -133,8 +143,8 @@ export const MetricsRelationships: React.FC<MetricsRelationshipsProps> = ({
         <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-white rounded-lg shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 pointer-events-none">
           <div className="text-xs space-y-1">
             <div className="flex justify-between">
-              <span>Balance Ayni:</span>
-              <span className="font-semibold">{(ayniBalance * 100).toFixed(1)}%</span>
+              <span>Balance de Reciprocidad:</span>
+              <span className="font-semibold">{(reciprocidadBalance * 100).toFixed(1)}%</span>
             </div>
             <div className="flex justify-between">
               <span>Mëritos totales:</span>
@@ -142,7 +152,7 @@ export const MetricsRelationships: React.FC<MetricsRelationshipsProps> = ({
             </div>
             <div className="flex justify-between">
               <span>Factor multiplicador:</span>
-              <span className="font-semibold">x{ayniBalance.toFixed(2)}</span>
+              <span className="font-semibold">x{reciprocidadBalance.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -154,4 +164,4 @@ export const MetricsRelationships: React.FC<MetricsRelationshipsProps> = ({
       </div>
     </div>
   );
-}; 
+};

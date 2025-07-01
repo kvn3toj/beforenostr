@@ -22,10 +22,10 @@ interface RouteMapping {
 }
 
 const ROUTE_MAPPINGS: Record<string, RouteMapping> = {
-  // 🏠 PÁGINA PRINCIPAL - AIRE (Vision) + AYNI (Reciprocidad)
+  // 🏠 PÁGINA PRINCIPAL - AIRE (Vision) + RECIPROCIDAD (Reciprocidad)
   '/': {
     element: 'aire',
-    concept: 'ayni',
+    concept: 'reciprocidad',
     themeVariant: 'cosmic-harmony',
     philosophical: {
       essence: 'El hogar donde convergen todas las energías cósmicas',
@@ -35,7 +35,7 @@ const ROUTE_MAPPINGS: Record<string, RouteMapping> = {
   },
   '/home': {
     element: 'aire',
-    concept: 'ayni',
+    concept: 'reciprocidad',
     themeVariant: 'cosmic-harmony',
     philosophical: {
       essence: 'El hogar donde convergen todas las energías cósmicas',
@@ -68,10 +68,10 @@ const ROUTE_MAPPINGS: Record<string, RouteMapping> = {
     }
   },
 
-  // 🌊 SOCIAL - AGUA (Flow) + AYNI (Reciprocidad)
+  // 🌊 SOCIAL - AGUA (Flow) + RECIPROCIDAD (Reciprocidad)
   '/social': {
     element: 'agua',
-    concept: 'ayni',
+    concept: 'reciprocidad',
     themeVariant: 'aquatic-flow',
     philosophical: {
       essence: 'El río social donde las relaciones fluyen con reciprocidad natural',
@@ -116,10 +116,10 @@ const ROUTE_MAPPINGS: Record<string, RouteMapping> = {
     }
   },
 
-  // 🔍 DISCOVERY/PILGRIM - ÉTER (Transcendence) + AYNI (Guía)
+  // 🔍 DISCOVERY/PILGRIM - ÉTER (Transcendence) + RECIPROCIDAD (Guía)
   '/discovery': {
     element: 'eter',
-    concept: 'ayni',
+    concept: 'reciprocidad',
     themeVariant: 'cosmic-initiation',
     philosophical: {
       essence: 'El umbral etérico hacia el despertar de consciencia',
@@ -129,7 +129,7 @@ const ROUTE_MAPPINGS: Record<string, RouteMapping> = {
   },
   '/pilgrim': {
     element: 'eter',
-    concept: 'ayni',
+    concept: 'reciprocidad',
     themeVariant: 'cosmic-initiation',
     philosophical: {
       essence: 'El umbral etérico hacia el despertar de consciencia',
@@ -178,7 +178,7 @@ const UniversalIntegratorInner: React.FC<UniversalIntegratorProps> = ({
     : ROUTE_MAPPINGS[location.pathname] || ROUTE_MAPPINGS['/'];
 
   const activeElement = forceElement || currentMapping?.element || 'aire';
-  const activeConcept = forceConcept || currentMapping?.concept || 'ayni';
+  const activeConcept = forceConcept || currentMapping?.concept || 'reciprocidad';
   const activeTheme = forceTheme || currentMapping?.themeVariant || 'cosmic-harmony';
 
   // Aplicar el tema automáticamente cuando cambie la ruta

@@ -320,7 +320,7 @@ export const useLetsAnalytics = (timeRange?: '7d' | '30d' | '90d' | '1y') => {
           totalUnitsCirculating: 0,
           dailyTransactions: 0,
           activeUsers: 0,
-          ayniIndex: 0,
+          reciprocidadIndex: 0,
           topCategories: [],
           transactionTrends: [],
           trustDistribution: [],

@@ -2,7 +2,7 @@
 
 ## 🌟 Visión General
 
-Los componentes del Home han sido completamente rediseñados siguiendo la filosofía CoomÜnity, integrando conceptos de **Ayni** (reciprocidad), **Bien Común**, **Mëritos**, **Lükas**, y **Öndas** para crear una experiencia auténtica y significativa.
+Los componentes del Home han sido completamente rediseñados siguiendo la filosofía CoomÜnity, integrando conceptos de **Reciprocidad** (reciprocidad), **Bien Común**, **Mëritos**, **Lükas**, y **Öndas** para crear una experiencia auténtica y significativa.
 
 ## 🎯 Componentes Implementados
 
@@ -16,13 +16,13 @@ Los componentes del Home han sido completamente rediseñados siguiendo la filoso
   - Diseño con gradientes y elementos decorativos
   - Animaciones suaves de hover
 
-### 2. **AyniMetricsCard**
+### 2. **ReciprocidadMetricsCard**
 
 - **Propósito**: Panel principal de métricas de progreso CoomÜnity
 - **Características**:
   - **Öndas Acumuladas**: Energía vibracional del usuario
   - **Mëritos**: Logros por contribución al Bien Común
-  - **Balance Ayni**: Proporción de dar/recibir (0-100%)
+  - **Balance Reciprocidad**: Proporción de dar/recibir (0-100%)
   - **Contribuciones al Bien Común**: Contador de acciones comunitarias
   - **Equilibrio Elemental**: Representación visual de los 4 elementos
   - Progreso hacia el siguiente nivel con barra animada
@@ -33,9 +33,9 @@ Los componentes del Home han sido completamente rediseñados siguiendo la filoso
 - **Propósito**: Resumen del estado financiero y de reciprocidad
 - **Características**:
   - **Lükas**: Moneda interna de CoomÜnity
-  - **Créditos Ayni**: Puntos de reciprocidad acumulados
+  - **Créditos Reciprocidad**: Puntos de reciprocidad acumulados
   - Cambio porcentual mensual con indicadores visuales
-  - Balance Ayni con recomendaciones dinámicas
+  - Balance Reciprocidad con recomendaciones dinámicas
   - Transacciones pendientes con alertas
   - Estados de carga y conexión
 
@@ -43,7 +43,7 @@ Los componentes del Home han sido completamente rediseñados siguiendo la filoso
 
 - **Propósito**: Acciones rápidas organizadas por categorías
 - **Características**:
-  - **Acciones Ayni**: Dar ayuda, pedir ayuda, compartir sabiduría, formar círculos
+  - **Acciones Reciprocidad**: Dar ayuda, pedir ayuda, compartir sabiduría, formar círculos
   - **Acceso a Módulos**: Enlaces directos a ÜPlay, Marketplace, Social, ÜStats
   - Botones con animaciones de hover y efectos de brillo
   - Categorización visual por colores y tipos
@@ -66,7 +66,7 @@ Los componentes del Home han sido completamente rediseñados siguiendo la filoso
 
 - **Propósito**: Centro de notificaciones contextual y organizativo
 - **Características**:
-  - Tipos específicos: Ayni, Mëritos, Social, Marketplace, Sistema
+  - Tipos específicos: Reciprocidad, Mëritos, Social, Marketplace, Sistema
   - Prioridades visuales (alta, media, baja)
   - Estados de lectura/no lectura
   - Acciones contextualess para cada notificación
@@ -80,13 +80,13 @@ Los componentes del Home han sido completamente rediseñados siguiendo la filoso
 - **Öndas**: Energía vibracional acumulada por participación
 - **Mëritos**: Reconocimientos por contribuir al Bien Común
 - **Lükas**: Moneda interna para intercambios justos
-- **Ayni**: Principio de reciprocidad equilibrada
+- **Reciprocidad**: Principio de reciprocidad equilibrada
 - **Bien Común**: Filosofía central de todas las acciones
 
 ### Elementos Visuales
 
 - **Gradientes**: Representan la fluidez y conexión energética
-- **Elementos Circulares**: Simbolizan la naturaleza cíclica del Ayni
+- **Elementos Circulares**: Simbolizan la naturaleza cíclica del Reciprocidad
 - **Colores Elementales**: Fuego (rojo), Agua (azul), Tierra (marrón), Aire (púrpura)
 - **Animaciones Suaves**: Reflejan el fluir natural de la energía
 
@@ -139,7 +139,7 @@ Los componentes del Home han sido completamente rediseñados siguiendo la filoso
 
 - Saludo personalizado por usuario
 - Métricas adaptadas al progreso individual
-- Recomendaciones basadas en el balance Ayni
+- Recomendaciones basadas en el balance Reciprocidad
 - Notificaciones contextuales
 
 ### 4. **Diseño Inclusivo**
@@ -191,7 +191,7 @@ Los componentes del Home han sido completamente rediseñados siguiendo la filoso
 src/components/home/
 ├── index.ts                 # Exportaciones centralizadas
 ├── WelcomeHeader.tsx        # Header principal
-├── AyniMetricsCard.tsx      # Métricas de progreso
+├── ReciprocidadMetricsCard.tsx      # Métricas de progreso
 ├── WalletOverview.tsx       # Estado del wallet
 ├── QuickActionsGrid.tsx     # Acciones rápidas
 ├── ModuleCards.tsx          # Tarjetas de módulos
@@ -217,7 +217,7 @@ src/components/home/
 
 ## 🌟 Conclusión
 
-El nuevo Home de CoomÜnity representa un salto cualitativo hacia una experiencia que realmente refleja los valores y filosofía de la plataforma. Cada componente ha sido diseñado no solo para ser funcional y hermoso, sino para educar y inspirar a los usuarios sobre los principios del Ayni y el Bien Común.
+El nuevo Home de CoomÜnity representa un salto cualitativo hacia una experiencia que realmente refleja los valores y filosofía de la plataforma. Cada componente ha sido diseñado no solo para ser funcional y hermoso, sino para educar y inspirar a los usuarios sobre los principios del Reciprocidad y el Bien Común.
 
 La arquitectura modular facilita el mantenimiento y la evolución futura, mientras que la integración inteligente entre backend y frontend asegura una experiencia fluida independientemente de las condiciones de conectividad.
 

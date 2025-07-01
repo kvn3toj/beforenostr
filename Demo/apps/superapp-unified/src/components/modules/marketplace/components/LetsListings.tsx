@@ -530,10 +530,10 @@ const CreateLetsListingModal: React.FC<CreateLetsListingModalProps> = ({
             )}
           </Box>
 
-          {/* Información sobre Ayni */}
+          {/* Información sobre Reciprocidad */}
           <Alert severity="info">
             <Typography variant="body2">
-              <strong>Principio Ayni:</strong> Los intercambios LETS se basan en reciprocidad justa.
+              <strong>Principio Reciprocidad:</strong> Los intercambios LETS se basan en reciprocidad justa.
               El valor en Ünits debe reflejar el tiempo, esfuerzo y valor real del intercambio.
             </Typography>
           </Alert>

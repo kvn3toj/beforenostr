@@ -66,7 +66,7 @@ interface SubscriptionTier {
   price: {
     monthly: number
     yearly: number
-    lukas?: number
+    units?: number
   }
   discount?: number
   description: string
@@ -90,7 +90,7 @@ interface SubscriptionFeature {
 
 interface SubscriptionLimits {
   dailyMeritos: number
-  monthlyLukas: number
+  monthlyUnits: number
   marketplaceListings: number
   videoUploads: number
   groupsCreated: number
@@ -102,11 +102,11 @@ interface SubscriptionLimits {
 interface SubscriptionRewards {
   onboardingBonus: {
     meritos: number
-    lukas: number
+    units: number
   }
   monthlyBonus: {
     meritos: number
-    lukas: number
+    units: number
   }
   loyaltyMultiplier: number
   exclusiveBadges: string[]
@@ -136,7 +136,7 @@ const SubscriptionPage: React.FC = () => {
     {
       id: 'explorer',
       name: 'Explorador',
-      price: { monthly: 0, yearly: 0, lukas: 0 },
+      price: { monthly: 0, yearly: 0, units: 0 },
       description: 'Perfecto para comenzar tu aventura en CoomÜnity',
       icon: <RocketIcon sx={{ fontSize: 40 }} />,
       color: '#10B981',
@@ -150,7 +150,7 @@ const SubscriptionPage: React.FC = () => {
       ],
       limits: {
         dailyMeritos: 50,
-        monthlyLukas: 100,
+        monthlyUnits: 100,
         marketplaceListings: 3,
         videoUploads: 5,
         groupsCreated: 1,
@@ -159,8 +159,8 @@ const SubscriptionPage: React.FC = () => {
         advancedAnalytics: false
       },
       rewards: {
-        onboardingBonus: { meritos: 25, lukas: 10 },
-        monthlyBonus: { meritos: 0, lukas: 0 },
+        onboardingBonus: { meritos: 25, units: 10 },
+        monthlyBonus: { meritos: 0, units: 0 },
         loyaltyMultiplier: 1.0,
         exclusiveBadges: ['🚀']
       }
@@ -168,7 +168,7 @@ const SubscriptionPage: React.FC = () => {
     {
       id: 'emprendedor',
       name: 'Emprendedor Confiable',
-      price: { monthly: 19, yearly: 190, lukas: 400 },
+      price: { monthly: 19, yearly: 190, units: 400 },
       discount: 20,
       description: 'Para emprendedores que buscan maximizar su impacto',
       icon: <StarIcon sx={{ fontSize: 40 }} />,
@@ -186,7 +186,7 @@ const SubscriptionPage: React.FC = () => {
       ],
       limits: {
         dailyMeritos: 150,
-        monthlyLukas: 500,
+        monthlyUnits: 500,
         marketplaceListings: 15,
         videoUploads: 25,
         groupsCreated: 5,
@@ -195,8 +195,8 @@ const SubscriptionPage: React.FC = () => {
         advancedAnalytics: true
       },
       rewards: {
-        onboardingBonus: { meritos: 100, lukas: 50 },
-        monthlyBonus: { meritos: 200, lukas: 100 },
+        onboardingBonus: { meritos: 100, units: 50 },
+        monthlyBonus: { meritos: 200, units: 100 },
         loyaltyMultiplier: 1.5,
         exclusiveBadges: ['⭐', '🏆', '✨']
       }
@@ -204,7 +204,7 @@ const SubscriptionPage: React.FC = () => {
     {
       id: 'guardian',
       name: 'Guardián del Bien Común',
-      price: { monthly: 49, yearly: 490, lukas: 1000 },
+      price: { monthly: 49, yearly: 490, units: 1000 },
       discount: 20,
       description: 'Para líderes que transforman comunidades enteras',
       icon: <DiamondIcon sx={{ fontSize: 40 }} />,
@@ -222,7 +222,7 @@ const SubscriptionPage: React.FC = () => {
       ],
       limits: {
         dailyMeritos: 500,
-        monthlyLukas: 2000,
+        monthlyUnits: 2000,
         marketplaceListings: -1, // unlimited
         videoUploads: -1, // unlimited
         groupsCreated: -1, // unlimited
@@ -231,8 +231,8 @@ const SubscriptionPage: React.FC = () => {
         advancedAnalytics: true
       },
       rewards: {
-        onboardingBonus: { meritos: 500, lukas: 250 },
-        monthlyBonus: { meritos: 1000, lukas: 500 },
+        onboardingBonus: { meritos: 500, units: 250 },
+        monthlyBonus: { meritos: 1000, units: 500 },
         loyaltyMultiplier: 2.0,
         exclusiveBadges: ['💎', '👑', '🌟', '🔥']
       }
@@ -450,9 +450,9 @@ const SubscriptionPage: React.FC = () => {
                           </Typography>
                         )}
 
-                        {tier.price.lukas && (
+                        {tier.price.units && (
                           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                            o {tier.price.lukas} Lükas
+                            o {tier.price.units} Ünits
                           </Typography>
                         )}
                       </Box>
@@ -497,7 +497,7 @@ const SubscriptionPage: React.FC = () => {
                     </Typography>
                     <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap">
                       <Chip size="small" label={`+${tier.rewards.onboardingBonus.meritos} Méritos`} />
-                      <Chip size="small" label={`+${tier.rewards.onboardingBonus.lukas} Lükas`} />
+                      <Chip size="small" label={`+${tier.rewards.onboardingBonus.units} Ünits`} />
                       <Chip size="small" label={`${tier.rewards.loyaltyMultiplier}x Multiplicador`} />
                     </Stack>
                     <Box sx={{ mt: 1 }}>
@@ -623,7 +623,7 @@ const SubscriptionPage: React.FC = () => {
                         />
                         <Chip
                           icon={<WalletIcon />}
-                          label={`${selectedTier.rewards.onboardingBonus.lukas} Lükas`}
+                          label={`${selectedTier.rewards.onboardingBonus.units} Ünits`}
                           color="success"
                         />
                         <Chip

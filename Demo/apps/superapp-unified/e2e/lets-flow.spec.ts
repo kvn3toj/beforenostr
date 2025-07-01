@@ -48,7 +48,7 @@ test.describe('LETS Module End-to-End Flow', () => {
 
       // Ir al siguiente paso
       await page.click('button:has-text("Siguiente")');
-      await expect(page.locator('h2:has-text("¿Qué es Ayni?")')).toBeVisible();
+      await expect(page.locator('h2:has-text("¿Qué es Reciprocidad?")')).toBeVisible();
 
       // Ir al siguiente paso
       await page.click('button:has-text("Siguiente")');

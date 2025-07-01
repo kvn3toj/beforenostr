@@ -42,6 +42,9 @@ import {
 } from '@mui/icons-material';
 import { toast } from 'sonner';
 
+// 🌌 IMPORT DEL SISTEMA DE COLORES CÓSMICO
+import { UNIFIED_COLORS } from '../theme/colors';
+
 // Componentes mejorados
 import {
   ChallengeCard,
@@ -90,7 +93,11 @@ const formatSafeDate = (dateString?: string): string => {
 
 // Loading skeleton components
 const ChallengeCardSkeleton: React.FC = () => (
-  <Card sx={{ height: 400 }}>
+  <Card sx={{
+    height: 400,
+    backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+    borderColor: UNIFIED_COLORS.themes.minimalist.divider
+  }}>
     <Skeleton variant="rectangular" height={120} />
     <CardContent>
       <Skeleton variant="text" height={32} />
@@ -106,7 +113,10 @@ const ChallengeCardSkeleton: React.FC = () => (
 );
 
 const StatsCardSkeleton: React.FC = () => (
-  <Card>
+  <Card sx={{
+    backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+    borderColor: UNIFIED_COLORS.themes.minimalist.divider
+  }}>
     <CardContent sx={{ textAlign: 'center', py: 2 }}>
       <Skeleton variant="text" height={32} width={60} sx={{ mx: 'auto' }} />
       <Skeleton variant="text" height={16} width={80} sx={{ mx: 'auto' }} />
@@ -161,8 +171,8 @@ export const ChallengesPage: React.FC = () => {
   const handleJoinChallenge = async (challengeId: string) => {
     try {
       await joinChallengeMutation.mutateAsync(challengeId);
-      toast.success('¡Te has unido al desafío exitosamente!', {
-        description: 'Comienza a participar y gana Mëritos por tus logros.',
+      toast.success('¡Te has sumado al desafío cósmico exitosamente!', {
+        description: 'Comienza tu viaje de transformación y acumula Mëritos de crecimiento.',
       });
       refetchChallenges();
       refetchUserChallenges();
@@ -180,7 +190,7 @@ export const ChallengesPage: React.FC = () => {
 
   const handleLikeChallenge = (challengeId: string) => {
     // TODO: Implementar sistema de likes
-    toast.info('¡Funcionalidad de likes próximamente!');
+    toast.info('¡Funcionalidad de resonancia próximamente!');
   };
 
   const handleShareChallenge = (challengeId: string) => {
@@ -188,8 +198,8 @@ export const ChallengesPage: React.FC = () => {
     if (navigator.share) {
       navigator
         .share({
-          title: 'Desafío CoomÜnity',
-          text: 'Únete a este increíble desafío en CoomÜnity',
+          title: 'Desafío de Transformación CoomÜnity',
+          text: 'Únete a este increíble viaje de crecimiento consciente',
           url: `${window.location.origin}/challenges/${challengeId}`,
         })
         .catch(console.error);
@@ -198,7 +208,10 @@ export const ChallengesPage: React.FC = () => {
       navigator.clipboard
         .writeText(`${window.location.origin}/challenges/${challengeId}`)
         .then(() => {
-          toast.success('Enlace copiado al portapapeles');
+          toast.success('¡Enlace copiado al portapapeles!');
+        })
+        .catch(() => {
+          toast.error('Error al copiar enlace');
         });
     }
   };
@@ -210,7 +223,6 @@ export const ChallengesPage: React.FC = () => {
   const handleRefresh = () => {
     refetchChallenges();
     refetchUserChallenges();
-    toast.success('Datos actualizados');
   };
 
   const handleFiltersChange = (newFilters: IFilters) => {
@@ -229,496 +241,476 @@ export const ChallengesPage: React.FC = () => {
     });
   };
 
-  // Filtrar desafíos según la pestaña seleccionada
-  const filteredChallenges = useMemo(() => {
-    if (
-      !challengesData?.challenges ||
-      !Array.isArray(challengesData.challenges)
-    )
-      return [];
+  // Datos combinados y filtros aplicados
+  const allChallenges = useMemo(() => {
+    return challengesData?.data || [];
+  }, [challengesData]);
 
-    let filtered = challengesData.challenges.filter((c) => c && c.id); // Filter out invalid challenges
-
-    // Filtrar por pestaña
-    switch (selectedTab) {
-      case 0: // Todos
-        break;
-      case 1: // Activos
-        filtered = filtered.filter((c) => c.status === 'ACTIVE');
-        break;
-      case 2: // Mis Desafíos
-        filtered = filtered.filter((c) => c.isParticipating);
-        break;
-      case 3: // Completados
-        filtered = filtered.filter((c) => c.isCompleted);
-        break;
-      case 4: // Favoritos
-        // TODO: Implementar sistema de favoritos
-        break;
-    }
-
-    return filtered;
-  }, [challengesData?.challenges, selectedTab]);
-
-  // Estadísticas computadas
-  const stats = useMemo(() => {
-    const challenges = Array.isArray(challengesData?.challenges)
-      ? challengesData.challenges.filter((c) => c && c.id) // Filter out invalid challenges
-      : [];
-    return {
-      total: challenges.length,
-      active: challenges.filter((c) => c.status === 'ACTIVE').length,
-      participating: challenges.filter((c) => c.isParticipating).length,
-      completed: challenges.filter((c) => c.isCompleted).length,
-      totalPoints: challenges.reduce((sum, c) => sum + (c.points || 0), 0),
-      totalParticipants: challenges.reduce(
-        (sum, c) => sum + (c._count?.participants || 0),
-        0
-      ),
-      successRate: challenges.length
-        ? (challenges.filter((c) => c.isCompleted).length / challenges.length) *
-          100
-        : 0,
-      averageRating: 4.2, // Mock data - implementar cuando esté disponible
-      weeklyCompleted: userChallengesData?.weeklyCompleted || 0,
-      currentStreak: userChallengesData?.currentStreak || 0,
-    };
-  }, [challengesData, userChallengesData]);
-
-  // User stats mock data (TODO: implementar con datos reales)
-  const userStats = useMemo(() => {
-    if (!userChallengesData) return undefined;
-    return {
-      totalMerits: userChallengesData.totalPoints || 0,
-      totalLukas: 1250, // Mock
-      totalOndas: 890, // Mock
-      level: 12, // Mock
-      currentExp: 2400, // Mock
-      nextLevelExp: 3000, // Mock
-      badges: 8, // Mock
-      rank: 156, // Mock
-      weeklyProgress: 75, // Mock
-    };
+  const userChallenges = useMemo(() => {
+    return userChallengesData?.data || [];
   }, [userChallengesData]);
 
-  if (challengesError) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert
-          severity="error"
-          sx={{ mb: 3 }}
-          action={
-            <Button color="inherit" size="small" onClick={handleRefresh}>
-              Reintentar
-            </Button>
-          }
-        >
-          Error al cargar los desafíos:{' '}
-          {challengesError instanceof Error
-            ? challengesError.message
-            : 'Error desconocido'}
-        </Alert>
-      </Container>
+  const activeChallenges = useMemo(() => {
+    return userChallenges.filter(
+      (challenge) => challenge.status === 'ACTIVE'
     );
-  }
+  }, [userChallenges]);
+
+  const completedChallenges = useMemo(() => {
+    return userChallenges.filter(
+      (challenge) => challenge.status === 'COMPLETED'
+    );
+  }, [userChallenges]);
+
+  // Estados de carga y error
+  const isLoading = challengesLoading || userChallengesLoading;
+  const hasError = challengesError;
+
+  // Renderizado de estadísticas
+  const renderStatsCards = () => (
+    <Grid container spacing={2} sx={{ mb: 3 }}>
+      <Grid item xs={6} sm={3}>
+        {isLoading ? (
+          <StatsCardSkeleton />
+        ) : (
+          <Card sx={{
+            backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+            borderColor: UNIFIED_COLORS.themes.minimalist.divider
+          }}>
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" fontWeight="bold" sx={{
+                color: UNIFIED_COLORS.concepts.meritos
+              }}>
+                {allChallenges.length}
+              </Typography>
+              <Typography variant="body2" sx={{
+                color: UNIFIED_COLORS.themes.minimalist.text.secondary
+              }}>
+                Desafíos Disponibles
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+      </Grid>
+      <Grid item xs={6} sm={3}>
+        {isLoading ? (
+          <StatsCardSkeleton />
+        ) : (
+          <Card sx={{
+            backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+            borderColor: UNIFIED_COLORS.themes.minimalist.divider
+          }}>
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" fontWeight="bold" sx={{
+                color: UNIFIED_COLORS.semantic.info
+              }}>
+                {activeChallenges.length}
+              </Typography>
+              <Typography variant="body2" sx={{
+                color: UNIFIED_COLORS.themes.minimalist.text.secondary
+              }}>
+                En Progreso
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+      </Grid>
+      <Grid item xs={6} sm={3}>
+        {isLoading ? (
+          <StatsCardSkeleton />
+        ) : (
+          <Card sx={{
+            backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+            borderColor: UNIFIED_COLORS.themes.minimalist.divider
+          }}>
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" fontWeight="bold" sx={{
+                color: UNIFIED_COLORS.semantic.success
+              }}>
+                {completedChallenges.length}
+              </Typography>
+              <Typography variant="body2" sx={{
+                color: UNIFIED_COLORS.themes.minimalist.text.secondary
+              }}>
+                Completados
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+      </Grid>
+      <Grid item xs={6} sm={3}>
+        {isLoading ? (
+          <StatsCardSkeleton />
+        ) : (
+          <Card sx={{
+            backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+            borderColor: UNIFIED_COLORS.themes.minimalist.divider
+          }}>
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" fontWeight="bold" sx={{
+                color: UNIFIED_COLORS.concepts.reciprocidad
+              }}>
+                {completedChallenges.reduce(
+                  (total, challenge) => total + (challenge.points || 0),
+                  0
+                )}
+              </Typography>
+              <Typography variant="body2" sx={{
+                color: UNIFIED_COLORS.themes.minimalist.text.secondary
+              }}>
+                Mëritos Ganados
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+      </Grid>
+    </Grid>
+  );
 
   return (
-    <Container 
-      maxWidth="lg" 
-      sx={{ py: 4, position: 'relative' }}
-      data-testid="challenges-page"
-    >
-      {/* Header mejorado */}
-      <Paper
-        elevation={0}
-        sx={{
-          p: 4,
-          mb: 4,
-          background:
-            'linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(156, 39, 176, 0.1))',
-          border: '1px solid rgba(33, 150, 243, 0.2)',
-          borderRadius: 3,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Background decoration */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: -50,
-            right: -50,
-            width: 200,
-            height: 200,
-            background:
-              'linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.1))',
-            borderRadius: '50%',
-            zIndex: 0,
-          }}
-        />
-
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              mb: 3,
-            }}
-          >
-            <Box>
-              <Typography
-                variant="h3"
-                component="h1"
-                gutterBottom
-                sx={{
-                  fontWeight: 800,
-                  background:
-                    'linear-gradient(135deg, #2196F3, #9C27B0, #FF6B35)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  color: 'transparent',
-                  display: 'inline-block',
-                }}
-              >
-                🏆 Desafíos CoomÜnity
-              </Typography>
-              <Typography
-                variant="h6"
-                color="text.secondary"
-                sx={{ maxWidth: 600, lineHeight: 1.6 }}
-              >
-                Participa en desafíos que fomentan el{' '}
-                <strong>Bien Común</strong>, la reciprocidad (
-                <strong>Ayni</strong>) y el crecimiento personal. Gana{' '}
-                <strong>Mëritos</strong>, <strong>Lükas</strong> y
-                reconocimientos por tus contribuciones a la comunidad.
-              </Typography>
-            </Box>
-
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton
-                onClick={handleRefresh}
-                disabled={challengesLoading}
-                sx={{
-                  bgcolor: 'background.paper',
-                  '&:hover': { bgcolor: 'background.default' },
-                }}
-              >
-                <Refresh />
-              </IconButton>
-              <IconButton
-                onClick={(e) => setMenuAnchor(e.currentTarget)}
-                sx={{
-                  bgcolor: 'background.paper',
-                  '&:hover': { bgcolor: 'background.default' },
-                }}
-              >
-                <MoreVert />
-              </IconButton>
-            </Box>
-          </Box>
-
-          {/* Vista rápida de acciones */}
-          <Stack direction="row" spacing={2}>
-            <Button
-              variant="contained"
-              startIcon={<Add />}
-              onClick={() => {
-                toast.info('Creación de desafíos próximamente');
-              }}
-              sx={{
-                background: 'linear-gradient(45deg, #FF6B35, #F7931E)',
-                '&:hover': {
-                  background: 'linear-gradient(45deg, #E55A2E, #E8841A)',
-                },
-              }}
-            >
-              Crear Desafío
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<FilterList />}
-              onClick={() => setShowFilters(!showFilters)}
-              color={showFilters ? 'primary' : 'inherit'}
-            >
-              Filtros
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<TrendingUp />}
-              onClick={() => {
-                setFilters((prev) => ({
-                  ...prev,
-                  sortBy: 'participants',
-                  sortOrder: 'desc',
-                }));
-              }}
-            >
-              Tendencias
-            </Button>
-          </Stack>
-        </Box>
-      </Paper>
-
-      {/* Estadísticas mejoradas */}
-      {challengesLoading ? (
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          {Array.from({ length: 4 }).map((_, index) => (
-            <Grid item xs={6} sm={3} key={index}>
-              <StatsCardSkeleton />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <ChallengeStats
-          stats={stats}
-          userStats={userStats}
-          loading={challengesLoading || userChallengesLoading}
-          onRefresh={handleRefresh}
-        />
-      )}
-
-      {/* Filtros avanzados */}
-      {showFilters && (
-        <ChallengeFilters
-          filters={filters}
-          onFiltersChange={handleFiltersChange}
-          onReset={handleResetFilters}
-          totalResults={filteredChallenges.length}
-          isLoading={challengesLoading}
-        />
-      )}
-
-      {/* Pestañas mejoradas */}
-      <Paper elevation={0} sx={{ mb: 3, borderRadius: 2 }}>
+    <Box sx={{
+      backgroundColor: UNIFIED_COLORS.brand.white,
+      minHeight: '100vh'
+    }}>
+      <Container maxWidth="xl" sx={{ py: 3 }}>
+        {/* Header con título y acciones */}
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            px: 2,
-            py: 1,
+            mb: 4,
+          }}
+        >
+          <Box>
+            <Typography variant="h4" fontWeight="bold" gutterBottom sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.primary
+            }}>
+              🏆 Desafíos de Transformación Consciente
+            </Typography>
+            <Typography variant="body1" sx={{
+              color: UNIFIED_COLORS.themes.minimalist.text.secondary
+            }}>
+              Expande tu potencial y contribuye al Bien Común a través de misiones significativas
+            </Typography>
+          </Box>
+
+          <Stack direction="row" spacing={1}>
+            <IconButton
+              onClick={() => setMenuAnchor(null)}
+              sx={{
+                backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+                color: UNIFIED_COLORS.themes.minimalist.text.primary,
+                '&:hover': {
+                  backgroundColor: UNIFIED_COLORS.themes.minimalist.divider,
+                },
+              }}
+            >
+              <Refresh />
+            </IconButton>
+          </Stack>
+        </Box>
+
+        {/* Estadísticas rápidas */}
+        {renderStatsCards()}
+
+        {/* Alert de error si existe */}
+        {hasError && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            <Typography variant="body2">
+              Error al cargar desafíos. Por favor, intenta nuevamente.
+            </Typography>
+            <Button
+              size="small"
+              onClick={handleRefresh}
+              sx={{ mt: 1 }}
+              variant="outlined"
+            >
+              Reintentar
+            </Button>
+          </Alert>
+        )}
+
+        {/* Navegación por pestañas */}
+        <Paper
+          elevation={0}
+          sx={{
+            mb: 3,
+            borderRadius: 2,
+            backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+            borderColor: UNIFIED_COLORS.themes.minimalist.divider,
           }}
         >
           <Tabs
             value={selectedTab}
             onChange={handleTabChange}
-            variant="scrollable"
-            scrollButtons="auto"
             sx={{
+              '& .MuiTabs-indicator': {
+                backgroundColor: UNIFIED_COLORS.concepts.reciprocidad,
+              },
+              '& .Mui-selected': {
+                color: UNIFIED_COLORS.concepts.reciprocidad,
+                fontWeight: 'bold',
+              },
               '& .MuiTab-root': {
                 textTransform: 'none',
-                fontWeight: 600,
-                minHeight: 48,
+                fontWeight: 500,
+                color: UNIFIED_COLORS.themes.minimalist.text.secondary,
               },
             }}
           >
             <Tab
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <AutoAwesome sx={{ fontSize: 20 }} />
-                  Todos ({stats.total})
-                </Box>
-              }
+              label={`🌍 Explorar (${allChallenges.length})`}
+              icon={<AutoAwesome />}
+              iconPosition="start"
             />
             <Tab
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  🔥 Activos ({stats.active})
-                </Box>
-              }
+              label={`⚡ Activos (${activeChallenges.length})`}
+              icon={<TrendingUp />}
+              iconPosition="start"
             />
             <Tab
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  🎯 Mis Desafíos ({stats.participating})
-                </Box>
-              }
-            />
-            <Tab
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  ✅ Completados ({stats.completed})
-                </Box>
-              }
-            />
-            <Tab
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  ⭐ Favoritos
-                </Box>
-              }
+              label={`✨ Completados (${completedChallenges.length})`}
+              icon={<EmojiEvents />}
+              iconPosition="start"
             />
           </Tabs>
-
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton
-              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              color={viewMode === 'grid' ? 'primary' : 'default'}
-            >
-              {viewMode === 'grid' ? <ViewModule /> : <ViewList />}
-            </IconButton>
-          </Box>
-        </Box>
-      </Paper>
-
-      {/* Lista de desafíos mejorada */}
-      {challengesLoading ? (
-        <Grid container spacing={3}>
-          {Array.from({ length: 6 }).map((_, index) => (
-            <Grid item xs={12} sm={viewMode === 'grid' ? 6 : 12}
-              md={viewMode === 'grid' ? 4 : 12}
-              key={index}>
-              <ChallengeCardSkeleton />
-            </Grid>
-          ))}
-        </Grid>
-      ) : filteredChallenges.length > 0 ? (
-        <Grid container spacing={3}>
-          {filteredChallenges.map((challenge, index) => (
-            <Grid item xs={12} sm={viewMode === 'grid' ? 6 : 12}
-              md={viewMode === 'grid' ? 4 : 12}
-              key={challenge.id}>
-              <ChallengeCard
-                challenge={challenge}
-                onJoin={handleJoinChallenge}
-                onView={handleViewChallenge}
-                onLike={handleLikeChallenge}
-                onShare={handleShareChallenge}
-                showActions={true}
-                compact={viewMode === 'list'}
-                variant={index < 2 ? 'featured' : 'default'}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Paper
-          sx={{
-            textAlign: 'center',
-            py: 8,
-            px: 4,
-            background:
-              'linear-gradient(135deg, rgba(33, 150, 243, 0.05), rgba(156, 39, 176, 0.05))',
-          }}
-        >
-          <EmojiEvents sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-          <Typography variant="h5" color="text.secondary" gutterBottom>
-            No se encontraron desafíos
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}
-          >
-            {filters.search ||
-            filters.status?.length ||
-            filters.difficulty?.length ||
-            filters.category?.length
-              ? 'Intenta ajustar los filtros de búsqueda para encontrar más desafíos.'
-              : 'Aún no hay desafíos disponibles. ¡Sé el primero en crear uno!'}
-          </Typography>
-          <Stack direction="row" spacing={2} justifyContent="center">
-            {(filters.search ||
-              filters.status?.length ||
-              filters.difficulty?.length ||
-              filters.category?.length) && (
-              <Button variant="outlined" onClick={handleResetFilters}>
-                Limpiar filtros
-              </Button>
-            )}
-            <Button
-              variant="contained"
-              startIcon={<Add />}
-              onClick={() => {
-                toast.info('Creación de desafíos próximamente');
-              }}
-            >
-              Crear Primer Desafío
-            </Button>
-          </Stack>
         </Paper>
-      )}
 
-      {/* Floating Action Button */}
-      <Zoom in={trigger}>
-        <Fab
-          color="primary"
-          aria-label="crear desafío"
-          sx={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
-            background: 'linear-gradient(45deg, #FF6B35, #F7931E)',
-            '&:hover': {
-              background: 'linear-gradient(45deg, #E55A2E, #E8841A)',
-            },
-          }}
-          onClick={() => {
-            toast.info('Creación de desafíos próximamente');
-          }}
-        >
-          <Add />
-        </Fab>
-      </Zoom>
+        {/* Contenido de las pestañas */}
+        <Box>
+          {selectedTab === 0 && (
+            <Box>
+              {/* Filtros */}
+              <ChallengeFilters
+                filters={filters}
+                onFiltersChange={handleFiltersChange}
+                onResetFilters={handleResetFilters}
+                showFilters={showFilters}
+                onToggleFilters={() => setShowFilters(!showFilters)}
+              />
 
-      {/* Loading Backdrop */}
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={joinChallengeMutation.isPending}
-      >
-        <Box sx={{ textAlign: 'center' }}>
-          <CircularProgress color="inherit" />
-          <Typography variant="body2" sx={{ mt: 2 }}>
-            Uniéndote al desafío...
-          </Typography>
+              {/* Grid de desafíos */}
+              {isLoading ? (
+                <Grid container spacing={3}>
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <ChallengeCardSkeleton />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Grid container spacing={3}>
+                  {allChallenges.map((challenge) => (
+                    <Grid item xs={12} sm={6} md={4} key={challenge.id}>
+                      <ChallengeCard
+                        challenge={challenge}
+                        onJoin={handleJoinChallenge}
+                        onView={handleViewChallenge}
+                        onLike={handleLikeChallenge}
+                        onShare={handleShareChallenge}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </Box>
+          )}
+
+          {selectedTab === 1 && (
+            <Box>
+              <Typography variant="h6" gutterBottom sx={{
+                color: UNIFIED_COLORS.themes.minimalist.text.primary,
+                fontWeight: 'bold'
+              }}>
+                ⚡ Tus Desafíos Activos
+              </Typography>
+              <Typography variant="body2" sx={{
+                mb: 3,
+                color: UNIFIED_COLORS.themes.minimalist.text.secondary
+              }}>
+                Continúa tu viaje de crecimiento personal y contribución comunitaria
+              </Typography>
+
+              {isLoading ? (
+                <Grid container spacing={3}>
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <ChallengeCardSkeleton />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : activeChallenges.length > 0 ? (
+                <Grid container spacing={3}>
+                  {activeChallenges.map((challenge) => (
+                    <Grid item xs={12} sm={6} md={4} key={challenge.id}>
+                      <ChallengeCard
+                        challenge={challenge}
+                        onView={handleViewChallenge}
+                        onLike={handleLikeChallenge}
+                        onShare={handleShareChallenge}
+                        variant="featured"
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Paper
+                  sx={{
+                    p: 6,
+                    textAlign: 'center',
+                    backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+                    borderColor: UNIFIED_COLORS.themes.minimalist.divider,
+                  }}
+                >
+                  <AutoAwesome sx={{
+                    fontSize: 48,
+                    color: UNIFIED_COLORS.themes.minimalist.text.muted,
+                    mb: 2
+                  }} />
+                  <Typography variant="h6" gutterBottom sx={{
+                    color: UNIFIED_COLORS.themes.minimalist.text.primary
+                  }}>
+                    ¡Tiempo de comenzar tu aventura!
+                  </Typography>
+                  <Typography variant="body2" sx={{
+                    mb: 3,
+                    color: UNIFIED_COLORS.themes.minimalist.text.secondary
+                  }}>
+                    Explora desafíos que resuenen con tu alma y propósito
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={() => setSelectedTab(0)}
+                    sx={{
+                      backgroundColor: UNIFIED_COLORS.concepts.reciprocidad,
+                      '&:hover': {
+                        backgroundColor: UNIFIED_COLORS.brand.burgundy,
+                      },
+                    }}
+                  >
+                    Explorar Desafíos
+                  </Button>
+                </Paper>
+              )}
+            </Box>
+          )}
+
+          {selectedTab === 2 && (
+            <Box>
+              <Typography variant="h6" gutterBottom sx={{
+                color: UNIFIED_COLORS.themes.minimalist.text.primary,
+                fontWeight: 'bold'
+              }}>
+                ✨ Desafíos Completados
+              </Typography>
+              <Typography variant="body2" sx={{
+                mb: 3,
+                color: UNIFIED_COLORS.themes.minimalist.text.secondary
+              }}>
+                Celebra tus logros y reflexiona sobre tu crecimiento
+              </Typography>
+
+              {isLoading ? (
+                <Grid container spacing={3}>
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <ChallengeCardSkeleton />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : completedChallenges.length > 0 ? (
+                <Grid container spacing={3}>
+                  {completedChallenges.map((challenge) => (
+                    <Grid item xs={12} sm={6} md={4} key={challenge.id}>
+                      <ChallengeCard
+                        challenge={challenge}
+                        onView={handleViewChallenge}
+                        onShare={handleShareChallenge}
+                        variant="minimal"
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Paper
+                  sx={{
+                    p: 6,
+                    textAlign: 'center',
+                    backgroundColor: UNIFIED_COLORS.themes.minimalist.surface,
+                    borderColor: UNIFIED_COLORS.themes.minimalist.divider,
+                  }}
+                >
+                  <EmojiEvents sx={{
+                    fontSize: 48,
+                    color: UNIFIED_COLORS.themes.minimalist.text.muted,
+                    mb: 2
+                  }} />
+                  <Typography variant="h6" gutterBottom sx={{
+                    color: UNIFIED_COLORS.themes.minimalist.text.primary
+                  }}>
+                    Tu primera medalla te espera
+                  </Typography>
+                  <Typography variant="body2" sx={{
+                    mb: 3,
+                    color: UNIFIED_COLORS.themes.minimalist.text.secondary
+                  }}>
+                    Completa desafíos para desbloquear logros y ganar Mëritos
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={() => setSelectedTab(0)}
+                    sx={{
+                      backgroundColor: UNIFIED_COLORS.concepts.reciprocidad,
+                      '&:hover': {
+                        backgroundColor: UNIFIED_COLORS.brand.burgundy,
+                      },
+                    }}
+                  >
+                    Comenzar Aventura
+                  </Button>
+                </Paper>
+              )}
+            </Box>
+          )}
         </Box>
-      </Backdrop>
 
-      {/* Menu de opciones */}
-      <Menu
-        anchorEl={menuAnchor}
-        open={Boolean(menuAnchor)}
-        onClose={() => setMenuAnchor(null)}
-      >
-        <MenuItem
-          onClick={() => {
-            setMenuAnchor(null);
-            toast.info('Función próximamente');
-          }}
-        >
-          <ListItemIcon>
-            <BookmarkBorder />
-          </ListItemIcon>
-          <ListItemText>Guardar vista actual</ListItemText>
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setMenuAnchor(null);
-            handleShareChallenge('general');
-          }}
-        >
-          <ListItemIcon>
-            <Share />
-          </ListItemIcon>
-          <ListItemText>Compartir página</ListItemText>
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setMenuAnchor(null);
-            navigate('/challenges/create');
-          }}
-        >
-          <ListItemIcon>
+        {/* FAB para crear nuevo desafío */}
+        <Zoom in={trigger}>
+          <Fab
+            sx={{
+              position: 'fixed',
+              bottom: 24,
+              right: 24,
+              backgroundColor: UNIFIED_COLORS.concepts.reciprocidad,
+              color: UNIFIED_COLORS.brand.white,
+              '&:hover': {
+                backgroundColor: UNIFIED_COLORS.brand.burgundy,
+              },
+            }}
+            onClick={() => navigate('/challenges/create')}
+          >
             <Add />
-          </ListItemIcon>
-          <ListItemText>Crear desafío</ListItemText>
-        </MenuItem>
-      </Menu>
-    </Container>
+          </Fab>
+        </Zoom>
+
+        {/* Backdrop de carga */}
+        {joinChallengeMutation.isPending && (
+          <Backdrop
+            open
+            sx={{
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            }}
+          >
+            <CircularProgress sx={{
+              color: UNIFIED_COLORS.concepts.reciprocidad
+            }} />
+          </Backdrop>
+        )}
+      </Container>
+    </Box>
   );
 };
 
-// Exportación por defecto para lazy loading
 export default ChallengesPage;

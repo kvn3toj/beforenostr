@@ -29,7 +29,7 @@ import { UPlayGamifiedDashboard } from './UPlayGamifiedDashboard';
  * - Estados de progreso y recompensas
  *
  * Philosophy Integration:
- * - Ayni: Balanced exchange through learning and engagement
+ * - Reciprocidad: Balanced exchange through learning and engagement
  * - Bien Común: Educational content that benefits the community
  * - Öndas: Positive energy generated through correct answers
  * - Mëritos: Recognition for contributing to collective knowledge

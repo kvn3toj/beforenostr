@@ -18,7 +18,7 @@ export interface CoomUnityEvent {
   module: 'pilgrim' | 'wallet' | 'marketplace' | 'social' | 'uplay' | 'ustats' | 'core';
   action: string;
   value?: number;
-  ayni_context?: 'giving' | 'receiving' | 'collaborating';
+  reciprocidad_context?: 'giving' | 'receiving' | 'collaborating';
   element_type?: 'fuego' | 'tierra' | 'agua' | 'aire';
   custom_parameters?: Record<string, any>;
 }
@@ -58,7 +58,7 @@ export class CoomUnityAnalytics {
         this.initializeHotjar(),
         this.initializeSentry(),
       ]);
-      
+
       this.isInitialized = true;
       console.log('📊 All analytics services initialized successfully');
     } catch (error) {
@@ -87,7 +87,7 @@ export class CoomUnityAnalytics {
       page_title: 'CoomÜnity SuperApp',
       page_location: window.location.href,
       custom_map: {
-        'custom_ayni_score': 'ayni_score',
+        'custom_reciprocidad_score': 'reciprocidad_score',
         'custom_ondas': 'ondas_count',
         'custom_happiness': 'happiness_level',
       }
@@ -117,7 +117,7 @@ export class CoomUnityAnalytics {
 
     // Importación dinámica de Sentry
     const Sentry = await import('@sentry/browser');
-    
+
     Sentry.init({
       dsn: SENTRY_DSN,
       environment: import.meta.env.VITE_APP_ENV,
@@ -193,7 +193,7 @@ export class CoomUnityAnalytics {
         event_category: event.module,
         event_label: event.event_name,
         value: event.value,
-        ayni_context: event.ayni_context,
+        reciprocidad_context: event.reciprocidad_context,
         element_type: event.element_type,
         user_id: this.userId,
       });
@@ -316,14 +316,14 @@ export class CoomUnityAnalytics {
     }
   }
 
-  // 🔄 Ayni específico - Tracking de reciprocidad
-  trackAyniAction(action: 'give' | 'receive' | 'collaborate', value: number, context?: any) {
+  // 🔄 Reciprocidad específico - Tracking de dar y recibir
+  trackReciprocidadAction(action: 'give' | 'receive' | 'collaborate', value: number, context?: any) {
     this.trackCoomUnityEvent({
-      event_name: 'ayni_action',
+      event_name: 'reciprocidad_action',
       module: 'core',
       action,
       value,
-      ayni_context: action === 'give' ? 'giving' : action === 'receive' ? 'receiving' : 'collaborating',
+      reciprocidad_context: action === 'give' ? 'giving' : action === 'receive' ? 'receiving' : 'collaborating',
       custom_parameters: context,
     });
   }
@@ -345,14 +345,18 @@ export class CoomUnityAnalytics {
     session_duration: number;
     page_views: number;
     interactions: number;
-    ayni_score: number;
+    reciprocidad_score: number;
   }> {
+    if (!IS_PRODUCTION) {
+      return { session_duration: 120, page_views: 15, interactions: 50, reciprocidad_score: 85 };
+    }
+
     // Implementar lógica para obtener métricas del dashboard
     return {
       session_duration: Date.now() - parseInt(this.sessionId.split('_')[1]),
       page_views: 0, // Implementar contador
       interactions: 0, // Implementar contador
-      ayni_score: this.userProfile?.game_data?.happiness || 0,
+      reciprocidad_score: this.userProfile?.game_data?.happiness || 0,
     };
   }
 }
@@ -366,14 +370,14 @@ export function useAnalytics() {
     analytics,
     trackEvent: (event: CoomUnityEvent) => analytics.trackCoomUnityEvent(event),
     trackUX: (metric: UXMetric) => analytics.trackUXMetric(metric),
-    trackGame: (action: string, value?: number, context?: any) => 
+    trackGame: (action: string, value?: number, context?: any) =>
       analytics.trackGameAction(action, value, context),
-    trackWallet: (action: string, amount?: number, currency?: string) => 
+    trackWallet: (action: string, amount?: number, currency?: string) =>
       analytics.trackWalletAction(action, amount, currency),
-    trackNavigation: (from: string, to: string, method: 'click' | 'swipe' | 'keyboard') => 
+    trackNavigation: (from: string, to: string, method: 'click' | 'swipe' | 'keyboard') =>
       analytics.trackNavigation(from, to, method),
-    trackAyni: (action: 'give' | 'receive' | 'collaborate', value: number, context?: any) => 
-      analytics.trackAyniAction(action, value, context),
+    trackReciprocidad: (action: 'give' | 'receive' | 'collaborate', value: number, context?: any) =>
+      analytics.trackReciprocidadAction(action, value, context),
   };
 }
 
@@ -385,4 +389,4 @@ declare global {
     hj: (...args: any[]) => void;
     Sentry: any;
   }
-} 
+}

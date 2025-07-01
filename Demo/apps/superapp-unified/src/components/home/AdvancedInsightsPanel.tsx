@@ -26,7 +26,7 @@ import {
 
 interface InsightData {
   id: string;
-  type: 'ayni' | 'meritos' | 'social' | 'growth' | 'opportunity';
+  type: 'reciprocidad' | 'meritos' | 'social' | 'growth' | 'opportunity';
   title: string;
   description: string;
   impact: 'high' | 'medium' | 'low';
@@ -60,12 +60,12 @@ export const AdvancedInsightsPanel: React.FC<AdvancedInsightsPanelProps> = ({
     const generateInsights = (): InsightData[] => {
       const newInsights: InsightData[] = [];
 
-      // Insight de balance Ayni
-      if (gameData?.balanceAyni < 0.7) {
+      // Insight de balance Reciprocidad
+      if (gameData?.balanceReciprocidad < 0.7) {
         newInsights.push({
-          id: 'ayni-balance',
-          type: 'ayni',
-          title: 'Oportunidad de Equilibrio Ayni',
+          id: 'reciprocidad-balance',
+          type: 'reciprocidad',
+          title: 'Oportunidad de Equilibrio Reciprocidad',
           description: 'Tu balance de dar/recibir está por debajo del ideal. Considera ofrecer más servicios a la comunidad.',
           impact: 'high',
           confidence: 85,
@@ -73,7 +73,7 @@ export const AdvancedInsightsPanel: React.FC<AdvancedInsightsPanelProps> = ({
           icon: <AutoAwesome />,
           color: theme.palette.warning.main,
           trend: 'down',
-          value: `${Math.round(gameData.balanceAyni * 100)}%`,
+          value: `${Math.round(gameData.balanceReciprocidad * 100)}%`,
         });
       }
 

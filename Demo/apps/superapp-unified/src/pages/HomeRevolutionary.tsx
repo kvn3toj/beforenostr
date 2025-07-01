@@ -29,7 +29,7 @@ import { useIntuitiveBehavior } from '../hooks/home/useIntuitiveBehavior';
 
 // 🚀 IMPORTAR COMPONENTES REVOLUCIONARIOS INDIVIDUALES
 import { HomeWelcomeHeader } from '../components/home/HomeWelcomeHeader';
-import { AyniMetricsCard } from '../components/home/AyniMetricsCard';
+import { ReciprocidadMetricsCard } from '../components/home/ReciprocidadMetricsCard';
 import { WalletOverview } from '../components/home/WalletOverview';
 import { QuickActionsGrid } from '../components/home/QuickActionsGrid';
 import { ModuleCards } from '../components/home/ModuleCards';
@@ -51,7 +51,7 @@ import '../styles/dashboard-enhancements.css';
 interface Notification {
   id: string;
   type:
-    | 'ayni'
+    | 'reciprocidad'
     | 'achievement'
     | 'social'
     | 'marketplace'
@@ -149,22 +149,22 @@ const HomeRevolutionary: React.FC = () => {
       totalBalance: 2847.5,
     },
     notifications: 3,
-    // 🔥 Datos elementales para Balance Ayni
+    // 🔥 Datos elementales para Balance de Reciprocidad
     elementos: {
       fuego: 85, // Pasión y acción
       agua: 92, // Fluir y adaptabilidad
       tierra: 78, // Estabilidad y confianza
       aire: 88, // Comunicación e ideas
     },
-    // 💎 Métricas Ayni
-    ayni: {
+    // 💎 Métricas de Reciprocidad
+    reciprocidad: {
       ondas: 1250,
       meritos: 485,
-      ayniLevel: 'Colaborador Equilibrado',
-      nextLevel: 'Guardián del Bien Común',
-      ayniProgress: 78,
-      bienComunContributions: 23,
-      balanceAyni: 0.85,
+      nivel: 'Colaborador Equilibrado',
+      siguienteNivel: 'Guardián del Bien Común',
+      progreso: 78,
+      contribucionesBienComun: 23,
+      balance: 85, // Corresponde a balanceReciprocidad (0.85 * 100)
     },
   };
 
@@ -504,7 +504,7 @@ const HomeRevolutionary: React.FC = () => {
                 },
               }}
             >
-              {/* 💎 WIDGET PRINCIPAL - BALANCE AYNI OPTIMIZADO */}
+              {/* 💎 WIDGET PRINCIPAL - BALANCE DE RECIPROCIDAD OPTIMIZADO */}
               <Box
                 gridArea="main"
                 className="enhanced-main-widget enhanced-glow enhanced-scale enhanced-delay-2"
@@ -529,17 +529,17 @@ const HomeRevolutionary: React.FC = () => {
                   },
                 }}
               >
-                <AyniMetricsCard
-                  ondas={mockData.ayni.ondas}
-                  meritos={mockData.ayni.meritos}
-                  ayniLevel={mockData.ayni.ayniLevel}
-                  nextLevel={mockData.ayni.nextLevel}
-                  ayniProgress={mockData.ayni.ayniProgress}
-                  bienComunContributions={mockData.ayni.bienComunContributions}
-                  balanceAyni={mockData.ayni.balanceAyni}
+                <ReciprocidadMetricsCard
+                  ondas={mockData.reciprocidad.ondas}
+                  meritos={mockData.reciprocidad.meritos}
+                  nivel={mockData.reciprocidad.nivel}
+                  siguienteNivel={mockData.reciprocidad.siguienteNivel}
+                  progreso={mockData.reciprocidad.progreso}
+                  contribucionesBienComun={mockData.reciprocidad.contribucionesBienComun}
+                  balance={mockData.reciprocidad.balance}
                   elementos={mockData.elementos}
                   isLoading={isLoading}
-                  isConnected={true}
+                  isConnected={!intuitive.isOffline}
                 />
 
                 {/* Overlay sutil para mejor legibilidad */}
@@ -795,8 +795,7 @@ const HomeRevolutionary: React.FC = () => {
                 }}
               >
                 <AutoAwesomeIcon sx={{ color: '#FFD700' }} />
-                "En cada acción de Ayni, equilibras tu camino y contribuyes al
-                tejido sagrado del Bien Común"
+                "En cada acción de Reciprocidad, equilibras tu camino y contribuyes al Bien Común. ¡Sigue así!"
                 <AutoAwesomeIcon sx={{ color: '#FFD700' }} />
               </Typography>
             </Box>

@@ -456,15 +456,15 @@ test.describe('ÜPlay Cosmic Transformation Validation', () => {
 
   // ===== 🔮 PHILOSOPHICAL ALIGNMENT TESTS ===== //
   test.describe('CoomÜnity Philosophy Alignment', () => {
-    test('should embody Ayni (Reciprocity)', async () => {
+    test('should embody Reciprocidad (Reciprocity)', async () => {
       // Check for reciprocal interactions
-      const ayniElements = await page.locator('[data-philosophy="ayni"]');
-      expect(await ayniElements.count()).toBeGreaterThan(0);
+      const reciprocidadElements = await page.locator('[data-philosophy="reciprocidad"]');
+      expect(await reciprocidadElements.count()).toBeGreaterThan(0);
 
       // Giving should enable receiving
       await page.click('[data-testid="share-knowledge"]');
 
-      const rewardReceived = await page.locator('[data-testid="ayni-reward"]');
+      const rewardReceived = await page.locator('[data-testid="reciprocidad-reward"]');
       expect(await rewardReceived.isVisible()).toBeTruthy();
     });
 

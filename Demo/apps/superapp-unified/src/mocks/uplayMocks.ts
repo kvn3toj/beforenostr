@@ -3,15 +3,15 @@
 export const MOCK_UPLAY_VIDEOS = [
   {
     id: 'video-1',
-    title: 'El Camino del Ayni',
+    title: 'El Camino del Reciprocidad',
     description: 'Descubre el principio de reciprocidad en la vida cotidiana.',
-    url: 'https://videos.coomunity.com/ayni.mp4',
-    thumbnail: '/thumbnails/ayni.jpg',
+    url: 'https://videos.coomunity.com/reciprocidad.mp4',
+    thumbnail: '/thumbnails/reciprocidad.jpg',
     duration: 900,
     questions: [
-      { id: 'q1', text: '¿Qué significa Ayni?', options: ['Reciprocidad', 'Competencia', 'Individualismo'], answer: 0 }
+      { id: 'q1', text: '¿Qué significa Reciprocidad?', options: ['Reciprocidad', 'Competencia', 'Individualismo'], answer: 0 }
     ],
-    tags: ['ayni', 'filosofía', 'bien común'],
+    tags: ['reciprocidad', 'filosofía', 'bien común'],
     createdAt: '2024-06-01T12:00:00Z',
     author: {
       id: 'user-1',

@@ -124,7 +124,7 @@ test.describe('ÜPlay Unified System - Complete Verification', () => {
     await page.waitForTimeout(2000);
 
     // Verificar terminología CoomÜnity (usar first() para evitar strict mode)
-    await expect(page.locator('text=Ayni').first()).toBeVisible();
+    await expect(page.locator('text=Reciprocidad').first()).toBeVisible();
     await expect(page.locator('text=Bien Común')).toBeVisible();
     await expect(page.locator('text=Öndas')).toBeVisible();
     await expect(page.locator('text=Mëritos')).toBeVisible();

@@ -59,14 +59,14 @@ import { toSafeNumber } from '../utils/numberUtils';
 
 // 🎯 Componentes modulares del Home TODOS
 import {
-  AyniMetricsCard,
+  ReciprocidadMetricsCard,
   WalletOverview,
   QuickActionsGrid,
   ModuleCards,
   NotificationCenter,
   // 🚀 Phase 3: Advanced Visual Components
   AdvancedInsightsPanel,
-  AyniBalanceVisualization,
+  ReciprocidadBalanceVisualization,
   PerformanceMonitor,
   SmartQuickActions,
   IntelligentNotificationCenter,
@@ -78,7 +78,7 @@ import {
   PersonalProgressWidget,
   ActiveChallengesWidget,
   // 🚀 Componentes revolucionarios
-  // (AyniMetricsCardRevolutionary eliminado)
+  // (ReciprocidadMetricsCardRevolutionary eliminado)
 } from '../components/home';
 
 // 🎨 Importar todos los estilos
@@ -86,7 +86,7 @@ import '../styles/home-enhanced.css';
 import '../styles/home-effects-advanced.css';
 import '../styles/home-renovated.css';
 import '../styles/home-harmony.css';
-import '../styles/ayni-revolutionary.css';
+import '../styles/reciprocidad-revolutionary.css';
 // 🌟 NUEVO: Sistema Visual Guardian - Armonía unificada
 import '../styles/guardian-visual-system.css';
 // 🌟 GUARDIAN: Armonía visual mejorada
@@ -96,7 +96,7 @@ import '../styles/visual-harmony-enhancement.css';
 interface Notification {
   id: string;
   type:
-    | 'ayni'
+    | 'reciprocidad'
     | 'meritos'
     | 'social'
     | 'marketplace'
@@ -123,11 +123,11 @@ const enhancedMockData = {
   gamification: {
     ondas: 1250,
     meritos: 485,
-    ayniLevel: 'Colaborador Equilibrado',
+    reciprocidadLevel: 'Colaborador Equilibrado',
     nextLevel: 'Guardián del Bien Común',
-    ayniProgress: 78,
+    reciprocidadProgress: 78,
     bienComunContributions: 23,
-    balanceAyni: 0.85,
+    balanceReciprocidad: 0.85,
     streak: 12,
     elementos: {
       fuego: 85,
@@ -137,25 +137,25 @@ const enhancedMockData = {
     },
   },
   wallet: {
-    lukas: 125075,
-    ayniCredits: 480,
+    units: 125075,
+    reciprocidadCredits: 480,
     monthlyChange: 15.2,
     pendingTransactions: 3,
-    ayniBalance: 0.85,
+    reciprocidadBalance: 0.85,
   },
   notifications: [
     {
       id: '1',
-      type: 'ayni' as const,
-      title: 'Ayni completado',
+      type: 'reciprocidad' as const,
+      title: 'Reciprocidad completado',
       message:
-        'Has completado un intercambio equilibrado con María. Tu balance Ayni ha mejorado.',
+        'Has completado un intercambio equilibrado con María. Tu balance Reciprocidad ha mejorado.',
       time: '2h',
       icon: <AutoAwesomeIcon />,
       color: 'success' as const,
       priority: 'high' as const,
       actionLabel: 'Ver detalles',
-      onAction: () => console.log('Viewing Ayni details'),
+      onAction: () => console.log('Viewing Reciprocidad details'),
       category: 'achievement' as const,
       aiScore: 95,
       userEngagement: 90,
@@ -266,7 +266,7 @@ export const HomeEnhanced: React.FC = () => {
 
   // 🚀 Estados avanzados
   const [insightsPanelOpen, setInsightsPanelOpen] = useState(false);
-  const [showAyniVisualization, setShowAyniVisualization] = useState(false);
+  const [showReciprocidadVisualization, setShowReciprocidadVisualization] = useState(false);
   const [quickActionsExpanded, setQuickActionsExpanded] = useState(false);
   const [performanceMode, setPerformanceMode] = useState<
     'normal' | 'optimized'
@@ -335,7 +335,7 @@ export const HomeEnhanced: React.FC = () => {
     ) / total;
 
     const byType = {
-      ayni: enhancedMockData.notifications.filter((n) => n.type === 'ayni').length,
+      reciprocidad: enhancedMockData.notifications.filter((n) => n.type === 'reciprocidad').length,
       meritos: enhancedMockData.notifications.filter((n) => n.type === 'meritos').length,
       social: enhancedMockData.notifications.filter((n) => n.type === 'social').length,
       marketplace: enhancedMockData.notifications.filter((n) => n.type === 'marketplace').length,
@@ -366,14 +366,14 @@ export const HomeEnhanced: React.FC = () => {
     return {
       ondas: experience,
       meritos: wisdom > 0 ? wisdom * 10 : enhancedMockData.gamification.meritos,
-      ayniLevel: gameData?.title || enhancedMockData.gamification.ayniLevel,
+      reciprocidadLevel: gameData?.title || enhancedMockData.gamification.reciprocidadLevel,
       nextLevel: enhancedMockData.gamification.nextLevel,
-      ayniProgress:
+      reciprocidadProgress:
         Math.floor((experience / nextLevelExp) * 100) ||
-        enhancedMockData.gamification.ayniProgress,
+        enhancedMockData.gamification.reciprocidadProgress,
       bienComunContributions:
         enhancedMockData.gamification.bienComunContributions,
-      balanceAyni: enhancedMockData.gamification.balanceAyni,
+      balanceReciprocidad: enhancedMockData.gamification.balanceReciprocidad,
       streak: enhancedMockData.gamification.streak,
       elementos: enhancedMockData.gamification.elementos,
     };
@@ -381,14 +381,14 @@ export const HomeEnhanced: React.FC = () => {
 
   const normalizedWalletData = useMemo(() => {
     return {
-      lukas: toSafeNumber(walletData?.balance, enhancedMockData.wallet.lukas),
-      ayniCredits: toSafeNumber(
+      units: toSafeNumber(walletData?.balance, enhancedMockData.wallet.units),
+      reciprocidadCredits: toSafeNumber(
         walletData?.ucoins,
-        enhancedMockData.wallet.ayniCredits
+        enhancedMockData.wallet.reciprocidadCredits
       ),
       monthlyChange: enhancedMockData.wallet.monthlyChange,
       pendingTransactions: enhancedMockData.wallet.pendingTransactions,
-      ayniBalance: enhancedMockData.wallet.ayniBalance,
+      reciprocidadBalance: enhancedMockData.wallet.reciprocidadBalance,
     };
   }, [walletData]);
 
@@ -410,7 +410,7 @@ export const HomeEnhanced: React.FC = () => {
     return {
       greeting,
       userName,
-      level: normalizedGameData.ayniLevel,
+      level: normalizedGameData.reciprocidadLevel,
       progress: Math.min(95, (normalizedGameData.ondas / 2000) * 100),
       streak: normalizedGameData.streak,
     };
@@ -690,7 +690,7 @@ export const HomeEnhanced: React.FC = () => {
                       textAlign: 'center',
                     }}
                   >
-                    Progreso Ayni
+                    Progreso Reciprocidad
                   </Typography>
                 </Box>
               </Box>
@@ -791,12 +791,12 @@ export const HomeEnhanced: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      {/* 🌌 FONDO CÓSMICO - Widget Ayni Balance como fondo de pantalla */}
+      {/* 🌌 FONDO CÓSMICO - Widget Reciprocidad Balance como fondo de pantalla */}
       {/* TEMPORALMENTE DESHABILITADO PARA EVITAR DUPLICACIÓN */}
       {/*
       <Fade in={animate} timeout={600}>
         <Box
-          className="background-ayni-visualization"
+          className="background-reciprocidad-visualization"
           sx={{
             position: 'fixed',
             top: 0,
@@ -807,10 +807,10 @@ export const HomeEnhanced: React.FC = () => {
             pointerEvents: 'none', // No interfiere con navegación
           }}
         >
-          <AyniBalanceVisualization
-            balanceAyni={normalizedGameData.balanceAyni}
+          <ReciprocidadBalanceVisualization
+            balanceReciprocidad={normalizedGameData.balanceReciprocidad}
             elementos={normalizedGameData.elementos}
-            userLevel={normalizedGameData.ayniLevel}
+            userLevel={normalizedGameData.reciprocidadLevel}
             recentActivity={{
               streak: normalizedGameData.streak,
               lastInteraction: lastInteraction,
@@ -861,27 +861,27 @@ export const HomeEnhanced: React.FC = () => {
           </Fade>
         )}
 
-        {/* 🚀 Sistema Solar Ayni 3D - TEMPORALMENTE DESHABILITADO PARA EVITAR DUPLICACIÓN */}
-        {/* Balance Ayni como fondo - Comentado para evitar duplicación */}
+        {/* 🚀 Sistema Solar Reciprocidad 3D - TEMPORALMENTE DESHABILITADO PARA EVITAR DUPLICACIÓN */}
+        {/* Balance Reciprocidad como fondo - Comentado para evitar duplicación */}
 
         {/*  Hero Section Mejorado */}
         {renderEnhancedHero()}
 
         <Grid container className="harmony-grid">
-          {/* 🎯 Panel principal - Métricas Ayni mejoradas */}
+          {/* 🎯 Panel principal - Métricas Reciprocidad mejoradas */}
           <Grid item xs={12} lg={8}>
             <Fade in={animate} timeout={800}>
               <Box className="harmony-section">
-                <AyniMetricsCard
+                <ReciprocidadMetricsCard
                   ondas={normalizedGameData.ondas}
                   meritos={normalizedGameData.meritos}
-                  ayniLevel={normalizedGameData.ayniLevel}
+                  reciprocidadLevel={normalizedGameData.reciprocidadLevel}
                   nextLevel={normalizedGameData.nextLevel}
-                  ayniProgress={normalizedGameData.ayniProgress}
+                  reciprocidadProgress={normalizedGameData.reciprocidadProgress}
                   bienComunContributions={
                     normalizedGameData.bienComunContributions
                   }
-                  balanceAyni={normalizedGameData.balanceAyni}
+                  balanceReciprocidad={normalizedGameData.balanceReciprocidad}
                   elementos={normalizedGameData.elementos}
                   isLoading={dashboardData.isLoading}
                   isConnected={backendAvailability.isAvailable}
@@ -909,20 +909,20 @@ export const HomeEnhanced: React.FC = () => {
                 <Grid item xs={12}>
                   <Box className="harmony-widget-compact">
                     <WalletOverview
-                      lukas={normalizedWalletData.lukas}
-                      ayniCredits={normalizedWalletData.ayniCredits}
+                      units={normalizedWalletData.units}
+                      reciprocidadCredits={normalizedWalletData.reciprocidadCredits}
                       monthlyChange={normalizedWalletData.monthlyChange}
                       pendingTransactions={
                         normalizedWalletData.pendingTransactions
                       }
-                      ayniBalance={normalizedWalletData.ayniBalance}
+                      reciprocidadBalance={normalizedWalletData.reciprocidadBalance}
                       isLoading={dashboardData.isLoading}
                       isConnected={backendAvailability.isAvailable}
                     />
                   </Box>
                 </Grid>
 
-                {/* 🚀 Acciones Ayni mejoradas */}
+                {/* 🚀 Acciones Reciprocidad mejoradas */}
                 <Grid item xs={12}>
                   <Box className="harmony-widget">
                     <SmartQuickActions
@@ -933,9 +933,9 @@ export const HomeEnhanced: React.FC = () => {
                       onToggleExpanded={handleQuickActionsToggle}
                       performanceMode={performanceMode}
                       userLevel={
-                        normalizedGameData.ayniProgress > 80
+                        normalizedGameData.reciprocidadProgress > 80
                           ? 'advanced'
-                          : normalizedGameData.ayniProgress > 40
+                          : normalizedGameData.reciprocidadProgress > 40
                             ? 'intermediate'
                             : 'beginner'
                       }
@@ -951,7 +951,7 @@ export const HomeEnhanced: React.FC = () => {
                         ondas: normalizedGameData.ondas,
                         meritos: normalizedGameData.meritos,
                         elementos: normalizedGameData.elementos,
-                        balanceAyni: normalizedGameData.balanceAyni,
+                        balanceReciprocidad: normalizedGameData.balanceReciprocidad,
                         socialConnections: 28,
                       }}
                       className=""
@@ -963,7 +963,7 @@ export const HomeEnhanced: React.FC = () => {
                 <Grid item xs={12}>
                   <Box className="harmony-widget-expanded">
                     <PersonalProgressWidget
-                      userLevel={normalizedGameData.ayniLevel}
+                      userLevel={normalizedGameData.reciprocidadLevel}
                       currentXP={normalizedGameData.ondas}
                       nextLevelXP={2000}
                       dailyGoals={3}
@@ -985,7 +985,7 @@ export const HomeEnhanced: React.FC = () => {
                         {
                           id: 'daily-2',
                           title: 'Conector Social',
-                          description: 'Realiza 3 intercambios Ayni',
+                          description: 'Realiza 3 intercambios Reciprocidad',
                           icon: <HandshakeIcon />,
                           color: '#4FC3F7',
                           progress: 2,
@@ -998,7 +998,7 @@ export const HomeEnhanced: React.FC = () => {
                           id: 'weekly-1',
                           title: 'Maestro del Equilibrio',
                           description:
-                            'Mantén balance Ayni > 80% toda la semana',
+                            'Mantén balance Reciprocidad > 80% toda la semana',
                           icon: <AutoAwesomeIcon />,
                           color: '#8BC34A',
                           progress: 5,
@@ -1084,7 +1084,7 @@ export const HomeEnhanced: React.FC = () => {
                       ...notificationStats,
                       avgEngagement: 82,
                       byType: {
-                        ayni: 1,
+                        reciprocidad: 1,
                         meritos: 1,
                         social: 1,
                         marketplace: 0,

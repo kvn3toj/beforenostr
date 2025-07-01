@@ -113,13 +113,13 @@ test.describe('Tutorial Discovery TOINS - Tests E2E Completos', () => {
     await page.click('button:has-text("Siguiente")');
     await page.waitForTimeout(1000);
 
-    // Paso 7: TOINS y el Principio Ayni
-    await expect(page.locator('text=🔄 TOINS y el Principio Ayni')).toBeVisible();
+    // Paso 7: TOINS y el Principio Reciprocidad
+    await expect(page.locator('text=🔄 TOINS y el Principio Reciprocidad')).toBeVisible();
     await expect(page.locator('text=reciprocidad')).toBeVisible();
 
-    // Verificar botón de balance Ayni
-    const ayniButton = page.locator('button:has-text("⚖️ Evaluar Mi Balance Ayni")');
-    await expect(ayniButton).toBeVisible();
+    // Verificar botón de balance Reciprocidad
+    const reciprocidadButton = page.locator('button:has-text("⚖️ Evaluar Mi Balance Reciprocidad")');
+    await expect(reciprocidadButton).toBeVisible();
 
     // Continuar al paso final
     await page.click('button:has-text("Siguiente")');
@@ -378,15 +378,15 @@ test.describe('Tutorial Discovery TOINS - Tests E2E Completos', () => {
     await expect(exploreButton).toBeVisible();
     await expect(exploreButton).toBeEnabled();
 
-    // Avanzar al paso con botón de Ayni
+    // Avanzar al paso con botón de Reciprocidad
     await page.click('button:has-text("Siguiente")');
     await page.click('button:has-text("Siguiente")');
     await page.waitForTimeout(1000);
 
-    // Paso 7: Probar botón "Evaluar Mi Balance Ayni"
-    const ayniButton = page.locator('button:has-text("⚖️ Evaluar Mi Balance Ayni")');
-    await expect(ayniButton).toBeVisible();
-    await expect(ayniButton).toBeEnabled();
+    // Paso 7: Probar botón "Evaluar Mi Balance Reciprocidad"
+    const reciprocidadButton = page.locator('button:has-text("⚖️ Evaluar Mi Balance Reciprocidad")');
+    await expect(reciprocidadButton).toBeVisible();
+    await expect(reciprocidadButton).toBeEnabled();
 
     console.log('✅ Todos los botones de acción son clickeables y funcionales');
   });

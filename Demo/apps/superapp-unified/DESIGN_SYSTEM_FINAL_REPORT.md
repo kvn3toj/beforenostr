@@ -21,7 +21,7 @@
 ### ✅ **Objetivos Secundarios - 95% Completados**
 
 1. **Integración Filosófica CoomÜnity** - Excelente
-   - Terminología integrada (Ayni, Mëritos, Öndas, Lükas)
+   - Terminología integrada (Reciprocidad, Mëritos, Öndas, Lükas)
    - Colores y gradientes alineados con valores
    - Animaciones que reflejan principios de reciprocidad
    - Micro-interacciones conscientes
@@ -79,7 +79,7 @@
 
 #### **CoomunityButton** - 10 variantes, 5 tamaños
 - Estados de loading, iconos, animaciones
-- Niveles Ayni (1-5) con efectos especiales
+- Niveles Reciprocidad (1-5) con efectos especiales
 - Adaptación completa dark mode
 
 #### **CoomunityCard** - 4 variantes, 3 paddings
@@ -213,7 +213,7 @@ src/
 - ✅ Estados de loading con spinner
 - ✅ Iconos start/end integrados
 - ✅ Animaciones micro-interacciones
-- ✅ Niveles Ayni (1-5) con efectos especiales
+- ✅ Niveles Reciprocidad (1-5) con efectos especiales
 - ✅ Elevación dinámica
 - ✅ Efectos pulse y glow
 - ✅ Adaptación completa dark mode
@@ -300,7 +300,7 @@ LazyPages: {
 
 // Módulos específicos
 LazyModules: {
-  ModuleCards, AyniMetrics, RecentActivity,
+  ModuleCards, ReciprocidadMetrics, RecentActivity,
   ProductGrid, ServicesList, VideoPlayer,
   SocialFeed, NotificationCenter
 }
@@ -392,7 +392,7 @@ LazyComplexComponents: {
 ## 🎯 Integración Filosófica CoomÜnity
 
 ### **Conceptos Implementados:**
-- **Ayni** - Reciprocidad en interacciones
+- **Reciprocidad** - Reciprocidad en interacciones
 - **Mëritos** - Sistema de recompensas
 - **Öndas** - Energía vibracional
 - **Bien Común** - Beneficio colectivo
@@ -400,20 +400,20 @@ LazyComplexComponents: {
 ### **Elementos Filosóficos en Código:**
 
 ```typescript
-// Ejemplo: Niveles Ayni en botones
+// Ejemplo: Niveles Reciprocidad en botones
 <CoomunityButton 
   variant="primary" 
-  ayniLevel={3}  // Nivel de reciprocidad
+  reciprocidadLevel={3}  // Nivel de reciprocidad
   size="md"
 >
-  Dar Ayni
+  Dar Reciprocidad
 </CoomunityButton>
 
 // Ejemplo: Gradientes elementales
 className="coomunity-gradient-elements" // Tierra-Agua-Fuego-Aire
 
 // Ejemplo: Animaciones conscientes
-className="ayni-flow-animation" // Flujo de reciprocidad
+className="reciprocidad-flow-animation" // Flujo de reciprocidad
 ```
 
 ---
@@ -446,7 +446,7 @@ className="ayni-flow-animation" // Flujo de reciprocidad
 
 ### **🌟 Logros Filosóficos:**
 
-1. **Integración Ayni** - Reciprocidad en UI/UX
+1. **Integración Reciprocidad** - Reciprocidad en UI/UX
 2. **Terminología CoomÜnity** - Conceptos nativos
 3. **Colores Elementales** - Tierra, Agua, Fuego, Aire
 4. **Micro-interacciones Conscientes** - Feedback positivo

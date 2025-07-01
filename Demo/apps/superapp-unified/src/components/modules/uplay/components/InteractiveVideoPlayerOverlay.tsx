@@ -126,7 +126,7 @@ const mockQuestions: QuestionOverlay[] = [
     timestamp: 5, // Pregunta muy temprana para testing
     endTimestamp: 35,
     type: 'multiple-choice',
-    question: '¿Cuál es el principio fundamental de Ayni en CoomÜnity?',
+    question: '¿Cuál es el principio fundamental de Reciprocidad en CoomÜnity?',
     timeLimit: 20,
     difficulty: 'medium',
     reward: { merits: 15, ondas: 5 },

@@ -13,7 +13,7 @@ interface ParticleEffect {
 }
 
 interface RewardAnimation {
-  type: 'MERITOS' | 'LUKAS' | 'AYNI' | 'ACHIEVEMENT' | 'LEVEL_UP'
+  type: 'MERITOS' | 'LUKAS' | 'RECIPROCIDAD' | 'ACHIEVEMENT' | 'LEVEL_UP'
   amount: number
   element?: HTMLElement
   callback?: () => void
@@ -62,8 +62,8 @@ const SOUND_EFFECTS: Record<string, SoundEffect> = {
     url: '/sounds/victory-chord.mp3',
     volume: 0.7
   },
-  AYNI_BALANCE: {
-    name: 'ayni',
+  RECIPROCIDAD_BALANCE: {
+    name: 'reciprocidad',
     url: '/sounds/harmony-chime.mp3',
     volume: 0.6
   }
@@ -261,8 +261,8 @@ class GameFeelSystem {
       case 'LUKAS':
         this.animateLukasGain(centerX, centerY, reward.amount)
         break
-      case 'AYNI':
-        this.animateAyniBalance(centerX, centerY)
+      case 'RECIPROCIDAD':
+        this.animateReciprocidadBalance(centerX, centerY)
         break
       case 'ACHIEVEMENT':
         this.animateAchievement(centerX, centerY)
@@ -320,9 +320,9 @@ class GameFeelSystem {
     this.createFloatingNumber(`+${amount}`, x, y, '#10B981', '💰')
   }
 
-  private animateAyniBalance(x: number, y: number) {
+  private animateReciprocidadBalance(x: number, y: number) {
     this.triggerHaptic('light')
-    this.playSound('AYNI_BALANCE')
+    this.playSound('RECIPROCIDAD_BALANCE')
     
     // Create rainbow particle effect
     const colors = ['#CDAB5A', '#10B981', '#3B82F6', '#8B5CF6', '#EF4444']
@@ -332,7 +332,7 @@ class GameFeelSystem {
       }, i * 100)
     })
 
-    toast.success('¡Equilibrio Ayni alcanzado!', {
+    toast.success('¡Equilibrio Reciprocidad alcanzado!', {
       description: 'Has encontrado el balance perfecto entre dar y recibir',
       duration: 4000,
       style: {

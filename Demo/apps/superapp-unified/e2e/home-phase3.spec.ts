@@ -30,13 +30,13 @@ test.describe('Home Page Phase 3 - Advanced Visual Enhancements', () => {
     }
   });
 
-  test('should display Ayni Balance Visualization component', async ({ page }) => {
-    // Check if the Ayni Balance Visualization is present - use more specific selector
-    const ayniVisualization = page.locator('h6:has-text("Balance Ayni")').first();
-    await expect(ayniVisualization).toBeVisible();
+  test('should display Reciprocidad Balance Visualization component', async ({ page }) => {
+    // Check if the Reciprocidad Balance Visualization is present - use more specific selector
+    const reciprocidadVisualization = page.locator('h6:has-text("Balance Reciprocidad")').first();
+    await expect(reciprocidadVisualization).toBeVisible();
 
     // Check for the circular progress indicator
-    const balanceCircle = page.locator('.ayni-balance-circle');
+    const balanceCircle = page.locator('.reciprocidad-balance-circle');
     if (await balanceCircle.count() > 0) {
       await expect(balanceCircle.first()).toBeVisible();
     }
@@ -140,10 +140,10 @@ test.describe('Home Page Phase 3 - Advanced Visual Enhancements', () => {
   });
 
   test('should verify CoomÜnity terminology in Phase 3 components', async ({ page }) => {
-    // Check for Ayni-related terminology - use first() to avoid strict mode
-    const ayniElements = page.locator('text=Ayni');
-    if (await ayniElements.count() > 0) {
-      await expect(ayniElements.first()).toBeVisible();
+    // Check for Reciprocidad-related terminology - use first() to avoid strict mode
+    const reciprocidadElements = page.locator('text=Reciprocidad');
+    if (await reciprocidadElements.count() > 0) {
+      await expect(reciprocidadElements.first()).toBeVisible();
     }
     
     // Check for elemental terminology
@@ -164,8 +164,8 @@ test.describe('Home Page Phase 3 - Advanced Visual Enhancements', () => {
       }
     }
 
-    // At least Ayni should be present
-    expect(await ayniElements.count()).toBeGreaterThan(0);
+    // At least Reciprocidad should be present
+    expect(await reciprocidadElements.count()).toBeGreaterThan(0);
   });
 
   test('should handle responsive design for Phase 3 components', async ({ page }) => {
@@ -177,9 +177,9 @@ test.describe('Home Page Phase 3 - Advanced Visual Enhancements', () => {
     const container = page.locator('.home-container, .coomunity-container').first();
     await expect(container).toBeVisible();
 
-    const ayniVisualization = page.locator('h6:has-text("Balance Ayni")').first();
-    if (await ayniVisualization.count() > 0) {
-      await expect(ayniVisualization).toBeVisible();
+    const reciprocidadVisualization = page.locator('h6:has-text("Balance Reciprocidad")').first();
+    if (await reciprocidadVisualization.count() > 0) {
+      await expect(reciprocidadVisualization).toBeVisible();
     }
 
     // Reset to desktop

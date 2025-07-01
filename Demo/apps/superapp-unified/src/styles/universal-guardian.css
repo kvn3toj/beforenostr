@@ -42,7 +42,7 @@
   --universal-eter-gradient: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
 
   /* 🎯 CONCEPTOS COOMUNITY */
-  --universal-ayni: #10b981;        /* Reciprocidad */
+  --universal-reciprocidad: #10b981;        /* Reciprocidad */
   --universal-meritos: #f59e0b;     /* Méritos */
   --universal-ondas: #8b5cf6;       /* Energía vibracional */
   --universal-lukas: #06b6d4;       /* Moneda interna */
@@ -69,7 +69,7 @@
     var(--universal-eter-primary) 100%);
 
   --universal-gradient-concepts: linear-gradient(135deg,
-    var(--universal-ayni) 0%,
+    var(--universal-reciprocidad) 0%,
     var(--universal-meritos) 25%,
     var(--universal-ondas) 50%,
     var(--universal-lukas) 75%,
@@ -79,7 +79,7 @@
   --universal-effect-glow: 0 0 20px rgba(168, 85, 247, 0.3);
   --universal-effect-cosmic-glow: 0 0 30px rgba(59, 130, 246, 0.4);
   --universal-effect-elemental-glow: 0 0 25px rgba(16, 185, 129, 0.35);
-  --universal-effect-ayni-glow: 0 0 20px rgba(16, 185, 129, 0.5);
+  --universal-effect-reciprocidad-glow: 0 0 20px rgba(16, 185, 129, 0.5);
 
   /* 📏 ESPACIADO UNIVERSAL (Golden Ratio) */
   --universal-space-xs: 0.5rem;    /* 8px */
@@ -307,19 +307,19 @@
 
 /* ===== 🎯 VARIANTES POR CONCEPTO COOMUNITY ===== */
 
-/* Ayni (Reciprocidad) */
-.universal-ayni-card {
+/* Reciprocidad (Reciprocidad) */
+.universal-reciprocidad-card {
   border-color: rgba(16, 185, 129, 0.3);
 }
 
-.universal-ayni-card::before {
-  background: linear-gradient(135deg, var(--universal-ayni) 0%, var(--universal-agua-primary) 100%);
+.universal-reciprocidad-card::before {
+  background: linear-gradient(135deg, var(--universal-reciprocidad) 0%, var(--universal-agua-primary) 100%);
 }
 
-.universal-ayni-chip {
+.universal-reciprocidad-chip {
   background: rgba(16, 185, 129, 0.1);
   border-color: rgba(16, 185, 129, 0.2);
-  color: var(--universal-ayni);
+  color: var(--universal-reciprocidad);
 }
 
 /* Méritos */

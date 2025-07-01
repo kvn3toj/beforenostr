@@ -176,7 +176,7 @@ return response?.data || [];
 
 1. **Arquitectura Sólida**: Sistema modular y escalable
 2. **Integración Fluida**: Se integra perfectamente con la UI existente
-3. **Filosofía Ayni**: Respeta los principios de reciprocidad y bien común
+3. **Filosofía Reciprocidad**: Respeta los principios de reciprocidad y bien común
 4. **UX Intuitiva**: Interfaz clara y fácil de usar
 5. **Preparado para Escalar**: Estructura lista para funcionalidades avanzadas
 

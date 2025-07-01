@@ -22,28 +22,20 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/styles';
-
-interface AyniAction {
-  icon: React.ReactElement;
-  label: string;
-  path: string;
-  color: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info';
-  description: string;
-  category: 'ayni' | 'modules' | 'create';
-}
+import type { ReciprocidadAction } from './index';
 
 interface QuickActionsGridProps {
-  onActionClick?: (path: string, action: AyniAction) => void;
+  onActionClick?: (path: string, action: ReciprocidadAction) => void;
 }
 
-const ayniActions: AyniAction[] = [
+const reciprocidadActions: ReciprocidadAction[] = [
   {
     icon: <Send />,
     label: 'Dar Ayuda',
     path: '/social/offer-help',
     color: 'success',
     description: 'Ofrece tu conocimiento o servicio',
-    category: 'ayni',
+    category: 'reciprocidad',
   },
   {
     icon: <Favorite />,
@@ -51,7 +43,7 @@ const ayniActions: AyniAction[] = [
     path: '/social/request-help',
     color: 'error',
     description: 'Solicita apoyo de la comunidad',
-    category: 'ayni',
+    category: 'reciprocidad',
   },
   {
     icon: <Psychology />,
@@ -71,7 +63,7 @@ const ayniActions: AyniAction[] = [
   },
 ];
 
-const moduleActions: AyniAction[] = [
+const moduleActions: ReciprocidadAction[] = [
   {
     icon: <VideoLibrary />,
     label: 'ÜPlay',
@@ -107,8 +99,8 @@ const moduleActions: AyniAction[] = [
 ];
 
 const ActionButton: React.FC<{
-  action: AyniAction;
-  onClick: (path: string, action: AyniAction) => void;
+  action: ReciprocidadAction;
+  onClick: (path: string, action: ReciprocidadAction) => void;
   index: number;
 }> = ({ action, onClick, index }) => {
   const theme = useTheme();
@@ -117,8 +109,8 @@ const ActionButton: React.FC<{
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        delay: index * 0.1, 
+      transition={{
+        delay: index * 0.1,
         duration: 0.4,
         ease: "easeOut"
       }}
@@ -207,7 +199,7 @@ export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const handleActionClick = (path: string, action: AyniAction) => {
+  const handleActionClick = (path: string, action: ReciprocidadAction) => {
     if (onActionClick) {
       onActionClick(path, action);
     } else {
@@ -243,25 +235,25 @@ export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.4 }}
           >
-            <Typography 
-              variant="h6" 
+            <Typography
+              variant="h6"
               className="coomunity-h3 text-coomunity-primary-700 mb-1"
-              fontWeight="bold" 
+              fontWeight="bold"
               gutterBottom
             >
-              Acciones Ayni
+              Acciones de Reciprocidad
             </Typography>
-            <Typography 
-              variant="body2" 
+            <Typography
+              variant="body2"
               className="coomunity-body text-gray-600 mb-4"
-              color="text.secondary" 
+              color="text.secondary"
               sx={{ mb: 2 }}
             >
               Equilibra tu dar y recibir en la comunidad
             </Typography>
           </motion.div>
 
-          {/* Acciones principales de Ayni */}
+          {/* Acciones principales de Reciprocidad */}
           <Box sx={{ mb: 3 }}>
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -275,17 +267,13 @@ export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
                 color="text.secondary"
                 sx={{ mb: 1 }}
               >
-                🤝 PRINCIPIO AYNI
+                🤝 PRINCIPIO RECIPROCIDAD
               </Typography>
             </motion.div>
-            <Grid container spacing={1}>
-              {ayniActions.map((action, index) => (
-                <Grid item xs={6} key={index}>
-                  <ActionButton 
-                    action={action} 
-                    onClick={handleActionClick} 
-                    index={index}
-                  />
+            <Grid container spacing={2}>
+              {reciprocidadActions.map((action, index) => (
+                <Grid item xs={6} sm={6} md={3} key={action.path}>
+                  <ActionButton action={action} onClick={handleActionClick} index={index} />
                 </Grid>
               ))}
             </Grid>
@@ -311,10 +299,10 @@ export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
             <Grid container spacing={1}>
               {moduleActions.map((action, index) => (
                 <Grid item xs={6} key={index}>
-                  <ActionButton 
-                    action={action} 
-                    onClick={handleActionClick} 
-                    index={index + ayniActions.length}
+                  <ActionButton
+                    action={action}
+                    onClick={handleActionClick}
+                    index={index + reciprocidadActions.length}
                   />
                 </Grid>
               ))}
@@ -347,7 +335,7 @@ export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
                 color="text.secondary"
                 sx={{ fontStyle: 'italic', textAlign: 'center', display: 'block' }}
               >
-                💫 "En el Ayni perfecto, dar y recibir son la misma acción"
+                💫 "En el Reciprocidad perfecto, dar y recibir son la misma acción"
               </Typography>
             </Box>
           </motion.div>

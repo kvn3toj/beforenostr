@@ -159,7 +159,7 @@ export const BRAND_GRADIENTS = {
     COOMUNITY_BRAND_COLORS.gold,      // Éter
     '45deg'
   ),
-  ayni: createBrandGradient(
+  reciprocidad: createBrandGradient(
     COOMUNITY_BRAND_COLORS.green,     // Armonía
     COOMUNITY_BRAND_COLORS.gold,      // Reciprocidad
     '135deg'

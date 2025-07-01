@@ -7,7 +7,7 @@
  * - Onboarding Cosmic Journey (Pilgrim Experience)
  * - Discovery Path Orchestration (Five Elements Progression)
  * - Mastery Flow Management (Achievement-driven Growth)
- * - Philosophy Integration UX (Ayni, Bien Común, Metanöia)
+ * - Philosophy Integration UX (Reciprocidad, Bien Común, Metanöia)
  * - Adaptive Experience Based on User Consciousness Level
  * - Cosmic Transitions & Micro-moments
  * - Gamified Learning Journey Optimization
@@ -95,7 +95,7 @@ interface ExperienceStep {
     data: any;
   };
   philosophy: {
-    principle: 'Ayni' | 'Bien Común' | 'Metanöia' | 'Reciprocidad' | 'Cooperación';
+    principle: 'Reciprocidad' | 'Bien Común' | 'Metanöia' | 'Reciprocidad' | 'Cooperación';
     teaching: string;
     practice: string;
   };
@@ -187,7 +187,7 @@ const COSMIC_JOURNEY_STEPS: ExperienceStep[] = [
       data: { simulationType: 'adaptation_challenges', scenarios: 5 }
     },
     philosophy: {
-      principle: 'Ayni',
+      principle: 'Reciprocidad',
       teaching: 'La reciprocidad fluye naturalmente cuando nos adaptamos conscientemente',
       practice: 'Practica dar y recibir en equilibrio perfecto'
     }
@@ -367,7 +367,7 @@ const useJourneyManager = (initialJourney?: Partial<UserJourney>) => {
         eter: 0,
       },
       byPrinciple: {
-        'Ayni': 0,
+        'Reciprocidad': 0,
         'Bien Común': 0,
         'Metanöia': 0,
         'Reciprocidad': 0,

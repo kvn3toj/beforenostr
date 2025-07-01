@@ -339,7 +339,7 @@
 ### **Principios CoomÜnity Implementados:**
 
 1. **🔷 Elementos Naturales** - Gradientes orgánicos, proporciones áureas
-2. **🤝 Ayni (Reciprocidad)** - Balance visual entre elementos
+2. **🤝 Reciprocidad (Reciprocidad)** - Balance visual entre elementos
 3. **🌟 Bien Común** - Accesibilidad y usabilidad mejoradas
 4. **⚡ Neguentropía** - Orden visual y jerarquía clara
 5. **🎯 Metanöia** - Transformación gradual hacia la excelencia

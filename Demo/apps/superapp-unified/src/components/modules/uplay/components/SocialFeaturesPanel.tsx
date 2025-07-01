@@ -46,7 +46,7 @@ import {
   Psychology as PhilosofiaIcon,
   SportsEsports as GamificacionIcon,
   Handshake as ColaboracionIcon,
-  Favorite as AyniIcon,
+  Favorite as ReciprocidadIcon,
   Public as BienComunIcon,
   PlayArrow as PlayIcon,
   Schedule as ScheduleIcon,
@@ -76,7 +76,7 @@ const STUDY_FOCUS_ICONS = {
   filosofia: PhilosofiaIcon,
   gamificacion: GamificacionIcon,
   colaboracion: ColaboracionIcon,
-  ayni: AyniIcon,
+  reciprocidad: ReciprocidadIcon,
   'bien-común': BienComunIcon,
 } as const;
 
@@ -84,7 +84,7 @@ const STUDY_FOCUS_COLORS = {
   filosofia: '#8b5cf6',
   gamificacion: '#10b981',
   colaboracion: '#f59e0b',
-  ayni: '#ef4444',
+  reciprocidad: '#ef4444',
   'bien-común': '#3b82f6',
 } as const;
 

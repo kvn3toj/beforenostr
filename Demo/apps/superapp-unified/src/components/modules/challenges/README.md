@@ -2,7 +2,7 @@
 
 ## 📋 Resumen de Mejoras Implementadas
 
-Este documento detalla las mejoras significativas implementadas en el módulo de Desafíos de CoomÜnity, diseñadas para crear una experiencia más atractiva, funcional y alineada con la filosofía de reciprocidad (Ayni) y Bien Común.
+Este documento detalla las mejoras significativas implementadas en el módulo de Desafíos de CoomÜnity, diseñadas para crear una experiencia más atractiva, funcional y alineada con la filosofía de reciprocidad (Reciprocidad) y Bien Común.
 
 ## 🆕 Componentes Nuevos y Mejorados
 
@@ -43,7 +43,7 @@ showDetails: boolean;
 - 📈 **Progreso semanal** con visualización de anillos
 - 🌍 **Estadísticas de la comunidad** global
 - ⚡ **Métricas en tiempo real** con actualización automática
-- 💡 **Filosofía Ayni** integrada en las métricas
+- 💡 **Filosofía Reciprocidad** integrada en las métricas
 
 **Métricas incluidas:**
 
@@ -177,7 +177,7 @@ abandonChallenge(): void;
 
 ## 🎯 Filosofía CoomÜnity Integrada
 
-### Principios de Ayni (Reciprocidad)
+### Principios de Reciprocidad (Reciprocidad)
 
 - **Equilibrio** en recompensas y esfuerzo requerido
 - **Intercambio justo** de valor entre participantes
@@ -400,7 +400,7 @@ npm run test:e2e -- --grep="challenges"
 
 ## 🌟 Filosofía de Desarrollo
 
-> "Cada línea de código debe servir al **Bien Común** de la comunidad CoomÜnity, promoviendo la **reciprocidad (Ayni)** y el **crecimiento colectivo**."
+> "Cada línea de código debe servir al **Bien Común** de la comunidad CoomÜnity, promoviendo la **reciprocidad (Reciprocidad)** y el **crecimiento colectivo**."
 
 Este módulo de desafíos está diseñado no solo como una funcionalidad técnica, sino como una herramienta para fomentar la transformación social positiva a través de la gamificación consciente y la colaboración comunitaria.
 

@@ -351,7 +351,7 @@ const AdvancedVideoPage = () => {
 
 ### Principios Aplicados:
 
-1. **Ayni (Reciprocidad)**: El sistema recompensa la participación activa
+1. **Reciprocidad (Reciprocidad)**: El sistema recompensa la participación activa
 2. **Bien Común**: Las preguntas educan sobre valores comunitarios
 3. **Öndas Positivas**: Feedback positivo y celebración de logros
 4. **Mëritos**: Reconocimiento tangible de contribuciones valiosas
@@ -423,6 +423,6 @@ const AdvancedVideoPage = () => {
 
 El reproductor interactivo mejorado representa un paso significativo hacia una experiencia de aprendizaje verdaderamente gamificada y alineada con los valores de CoomÜnity. La combinación de preguntas fugaces, recompensas inmediatas, métricas en tiempo real y un sistema de logros crea un entorno que no solo educa sino que también celebra y motiva la participación activa.
 
-La arquitectura modular permite futuras expansiones mientras mantiene la compatibilidad con el ecosistema existente de CoomÜnity. Cada elemento ha sido diseñado pensando en la filosofía de reciprocidad (Ayni) y el bien común, asegurando que la tecnología sirva a los valores humanos fundamentales que guían nuestra comunidad.
+La arquitectura modular permite futuras expansiones mientras mantiene la compatibilidad con el ecosistema existente de CoomÜnity. Cada elemento ha sido diseñado pensando en la filosofía de reciprocidad (Reciprocidad) y el bien común, asegurando que la tecnología sirva a los valores humanos fundamentales que guían nuestra comunidad.
 
 _"En CoomÜnity, cada pregunta respondida es una Önda positiva que se expande por toda la comunidad, creando conocimiento colectivo y fortaleciendo nuestros lazos de reciprocidad."_

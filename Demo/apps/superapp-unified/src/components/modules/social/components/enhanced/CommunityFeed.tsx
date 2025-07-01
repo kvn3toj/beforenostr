@@ -54,7 +54,7 @@ interface QuickAction {
   id: string;
   label: string;
   description: string;
-  category: 'ayni' | 'collaboration' | 'knowledge';
+  category: 'reciprocidad' | 'collaboration' | 'knowledge';
   path: string;
 }
 
@@ -62,7 +62,7 @@ interface CommunityMetrics {
   activeConnections: number;
   onlineMembers: number;
   dailyInteractions: number;
-  ayniExchanges: number;
+  reciprocidadExchanges: number;
   activeCircles: number;
   weeklyGrowth: number;
 }
@@ -77,13 +77,13 @@ interface CommunityPost {
   };
   content: string;
   timestamp: string;
-  category: 'ayni' | 'knowledge' | 'collaboration' | 'celebration';
-  ayniType?: 'offer' | 'request' | 'exchange';
+  category: 'reciprocidad' | 'knowledge' | 'collaboration' | 'celebration';
+  reciprocidadType?: 'offer' | 'request' | 'exchange';
   interactions: {
     likes: number;
     comments: number;
     shares: number;
-    ayniOffers: number;
+    reciprocidadOffers: number;
   };
   merits: number;
   tags: string[];
@@ -115,7 +115,7 @@ const mockPosts: CommunityPost[] = [
       likes: 24,
       comments: 8,
       shares: 12,
-      ayniOffers: 5,
+      reciprocidadOffers: 5,
     },
     merits: 50,
     tags: ['agricultura', 'sostenibilidad', 'comunidad'],
@@ -129,15 +129,15 @@ const mockPosts: CommunityPost[] = [
       trustScore: 4.7,
     },
     content:
-      '🤝 Necesito ayuda para traducir un manual de permacultura al quechua. A cambio, ofrezco sesiones de diseño gráfico ecológico. ¡Busquemos el equilibrio Ayni!',
+      '🤝 Necesito ayuda para traducir un manual de permacultura al quechua. A cambio, ofrezco sesiones de diseño gráfico ecológico. ¡Busquemos el equilibrio Reciprocidad!',
     timestamp: '4h',
-    category: 'ayni',
-    ayniType: 'exchange',
+    category: 'reciprocidad',
+    reciprocidadType: 'exchange',
     interactions: {
       likes: 18,
       comments: 12,
       shares: 6,
-      ayniOffers: 8,
+      reciprocidadOffers: 8,
     },
     merits: 35,
     tags: ['traducción', 'permacultura', 'diseño'],
@@ -150,14 +150,14 @@ const mockPosts: CommunityPost[] = [
       trustScore: 4.8,
     },
     content:
-      '🎉 ¡Celebremos! Nuestro círculo "Emprendedores Sostenibles" completó 50 intercambios Ayni este mes. Cada colaboración es una semilla para un futuro más justo.',
+      '🎉 ¡Celebremos! Nuestro círculo "Emprendedores Sostenibles" completó 50 intercambios Reciprocidad este mes. Cada colaboración es una semilla para un futuro más justo.',
     timestamp: '1d',
     category: 'celebration',
     interactions: {
       likes: 47,
       comments: 15,
       shares: 23,
-      ayniOffers: 0,
+      reciprocidadOffers: 0,
     },
     merits: 25,
     tags: ['celebración', 'emprendimiento', 'logros'],
@@ -173,7 +173,7 @@ const PostCard: React.FC<{
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'ayni':
+      case 'reciprocidad':
         return '#E91E63';
       case 'knowledge':
         return '#9C27B0';
@@ -188,8 +188,8 @@ const PostCard: React.FC<{
 
   const getCategoryLabel = (category: string) => {
     switch (category) {
-      case 'ayni':
-        return 'Intercambio Ayni';
+      case 'reciprocidad':
+        return 'Intercambio Reciprocidad';
       case 'knowledge':
         return 'Compartir Sabiduría';
       case 'collaboration':
@@ -277,19 +277,19 @@ const PostCard: React.FC<{
             }}
             size="small"
           />
-          {post.ayniType && (
+          {post.reciprocidadType && (
             <Chip
               label={
-                post.ayniType === 'offer'
+                post.reciprocidadType === 'offer'
                   ? 'Ofrezco'
-                  : post.ayniType === 'request'
+                  : post.reciprocidadType === 'request'
                     ? 'Necesito'
                     : 'Intercambio'
               }
               color={
-                post.ayniType === 'offer'
+                post.reciprocidadType === 'offer'
                   ? 'success'
-                  : post.ayniType === 'request'
+                  : post.reciprocidadType === 'request'
                     ? 'error'
                     : 'warning'
               }
@@ -377,17 +377,17 @@ const PostCard: React.FC<{
             >
               {post.interactions.shares}
             </Button>
-            {post.category === 'ayni' && (
+            {post.category === 'reciprocidad' && (
               <Button
                 size="small"
                 startIcon={<Handshake />}
-                onClick={() => onInteraction(post.id, 'ayni')}
+                onClick={() => onInteraction(post.id, 'reciprocidad')}
                 sx={{
                   color: 'text.secondary',
                   '&:hover': { color: '#E91E63' },
                 }}
               >
-                {post.interactions.ayniOffers}
+                {post.interactions.reciprocidadOffers}
               </Button>
             )}
           </Stack>
@@ -442,10 +442,10 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
                     action === 'share'
                       ? post.interactions.shares + 1
                       : post.interactions.shares,
-                  ayniOffers:
-                    action === 'ayni'
-                      ? post.interactions.ayniOffers + 1
-                      : post.interactions.ayniOffers,
+                  reciprocidadOffers:
+                    action === 'reciprocidad'
+                      ? post.interactions.reciprocidadOffers + 1
+                      : post.interactions.reciprocidadOffers,
                 },
               }
             : post
@@ -473,7 +473,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
         likes: 0,
         comments: 0,
         shares: 0,
-        ayniOffers: 0,
+        reciprocidadOffers: 0,
       },
       merits: 10,
       tags: ['nuevo'],
@@ -509,7 +509,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
                 Feed Comunitario CoomÜnity
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                Donde el Bien Común cobra vida a través del Ayni
+                Donde el Bien Común cobra vida a través del Reciprocidad
               </Typography>
             </Box>
             <Stack direction="row" spacing={1}>
@@ -538,9 +538,9 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
             <Grid item xs={3}>
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
-                  {communityMetrics.ayniExchanges}
+                  {communityMetrics.reciprocidadExchanges}
                 </Typography>
-                <Typography variant="caption">Intercambios Ayni</Typography>
+                <Typography variant="caption">Intercambios Reciprocidad</Typography>
               </Box>
             </Grid>
             <Grid item xs={3}>
@@ -567,7 +567,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Acciones Ayni Rápidas
+            Acciones Reciprocidad Rápidas
           </Typography>
           <Grid container spacing={2}>
             {quickActions.map((action, index) => (
@@ -647,7 +647,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
                 size="small"
               >
                 <ToggleButton value="all">Todos</ToggleButton>
-                <ToggleButton value="ayni">Ayni</ToggleButton>
+                <ToggleButton value="reciprocidad">Reciprocidad</ToggleButton>
                 <ToggleButton value="knowledge">Sabiduría</ToggleButton>
                 <ToggleButton value="collaboration">Colaboración</ToggleButton>
                 <ToggleButton value="celebration">Celebración</ToggleButton>
@@ -700,7 +700,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
               rows={4}
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
-              placeholder="Comparte conocimiento, haz una propuesta Ayni, celebra un logro..."
+              placeholder="Comparte conocimiento, haz una propuesta Reciprocidad, celebra un logro..."
               fullWidth
             />
             <Box>
@@ -716,7 +716,7 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({
                 <ToggleButton value="knowledge">
                   Compartir Sabiduría
                 </ToggleButton>
-                <ToggleButton value="ayni">Intercambio Ayni</ToggleButton>
+                <ToggleButton value="reciprocidad">Intercambio Reciprocidad</ToggleButton>
                 <ToggleButton value="collaboration">Colaboración</ToggleButton>
                 <ToggleButton value="celebration">Celebración</ToggleButton>
               </ToggleButtonGroup>

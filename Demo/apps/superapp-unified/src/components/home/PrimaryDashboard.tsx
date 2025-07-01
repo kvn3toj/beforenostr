@@ -47,11 +47,11 @@ interface ElementStats {
 interface PrimaryDashboardProps {
   ondas: number;
   meritos: number;
-  ayniLevel: string;
+  reciprocidadLevel: string;
   nextLevel: string;
-  ayniProgress: number;
+  reciprocidadProgress: number;
   bienComunContributions: number;
-  balanceAyni: number;
+  balanceReciprocidad: number;
   elementos: ElementStats;
   isLoading?: boolean;
 }
@@ -79,7 +79,7 @@ const generateSmartInsights = (
     insights.push({
       id: 'excellent-balance',
       icon: <AutoAwesomeIcon sx={{ color: successColors[500] }} />,
-      title: 'Excelente Balance Ayni',
+      title: 'Excelente Balance Reciprocidad',
       message:
         'Mantienes un equilibrio perfecto entre dar y recibir. ¡Sigue así!',
       actionLabel: 'Explorar nuevas oportunidades',
@@ -90,7 +90,7 @@ const generateSmartInsights = (
       id: 'good-balance',
       icon: <TrendingUpIcon sx={{ color: warningColors[500] }} />,
       title: 'Buen Balance, Puede Mejorar',
-      message: 'Considera dar un poco más de ayuda para equilibrar tu Ayni.',
+      message: 'Considera dar un poco más de ayuda para equilibrar tu Reciprocidad.',
       actionLabel: 'Dar ayuda a la comunidad',
       priority: 'high',
     });
@@ -99,7 +99,7 @@ const generateSmartInsights = (
       id: 'needs-balance',
       icon: <PsychologyIcon sx={{ color: errorColors[500] }} />,
       title: 'Oportunidad de Crecimiento',
-      message: 'Tu balance Ayni mejorará ofreciendo más ayuda a otros.',
+      message: 'Tu balance Reciprocidad mejorará ofreciendo más ayuda a otros.',
       actionLabel: 'Empezar a ayudar',
       priority: 'high',
     });
@@ -240,11 +240,11 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
   ({
     ondas,
     meritos,
-    ayniLevel,
+    reciprocidadLevel,
     nextLevel,
-    ayniProgress,
+    reciprocidadProgress,
     bienComunContributions,
-    balanceAyni,
+    balanceReciprocidad,
     elementos,
     isLoading = false,
   }) => {
@@ -258,13 +258,13 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
 
     // Memoizar cálculos costosos
     const balancePercentage = useMemo(
-      () => Math.round(balanceAyni * 100),
-      [balanceAyni]
+      () => Math.round(balanceReciprocidad * 100),
+      [balanceReciprocidad]
     );
 
     const insights = useMemo(
-      () => generateSmartInsights(balanceAyni, elementos, ondas, meritos),
-      [balanceAyni, elementos, ondas, meritos]
+      () => generateSmartInsights(balanceReciprocidad, elementos, ondas, meritos),
+      [balanceReciprocidad, elementos, ondas, meritos]
     );
 
     const formatNumber = useCallback((num: number) => {
@@ -283,7 +283,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
         <Card className="p-6 rounded-3xl">
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
-              Calculando tu balance Ayni...
+              Calculando tu balance Reciprocidad...
             </Typography>
           </Box>
         </Card>
@@ -295,7 +295,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
         className="home-card-enhanced interactive focus-outline"
         tabIndex={0}
         role="region"
-        aria-label="Dashboard principal de Balance Ayni"
+        aria-label="Dashboard principal de Balance Reciprocidad"
         data-testid="primary-dashboard"
         sx={{
           p: 'var(--space-6)',
@@ -352,7 +352,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
               fontWeight: 700,
             }}
           >
-            Balance Ayni Personal
+            Balance Reciprocidad Personal
           </Typography>
 
           {/* Smart Progress Indicator */}
@@ -368,9 +368,9 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
                 '& .MuiLinearProgress-bar': {
                   borderRadius: 'var(--radius-full)',
                   backgroundColor:
-                    balanceAyni >= 0.8
+                    balanceReciprocidad >= 0.8
                       ? 'var(--progress-fill-success)'
-                      : balanceAyni >= 0.6
+                      : balanceReciprocidad >= 0.6
                         ? 'var(--progress-fill-warning)'
                         : 'var(--progress-fill-error)',
                   transition: 'var(--transition-normal)',
@@ -387,7 +387,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
                 fontSize: 'var(--text-xs)',
               }}
             >
-              {ayniLevel} → {nextLevel}
+              {reciprocidadLevel} → {nextLevel}
             </Typography>
           </Box>
         </Box>
@@ -614,7 +614,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
                   sx={{ mb: 'var(--space-1)' }}
                 >
                   <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                    {ayniLevel}
+                    {reciprocidadLevel}
                   </Typography>
                   <Chip
                     label={`Próximo: ${nextLevel}`}
@@ -635,7 +635,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
                 </Stack>
                 <LinearProgress
                   variant="determinate"
-                  value={ayniProgress}
+                  value={reciprocidadProgress}
                   sx={{
                     height: 6,
                     borderRadius: 'var(--radius-full)',
@@ -655,7 +655,7 @@ export const PrimaryDashboard: React.FC<PrimaryDashboardProps> = memo(
                     color: 'var(--gray-500)',
                   }}
                 >
-                  {ayniProgress}% completado
+                  {reciprocidadProgress}% completado
                 </Typography>
               </Box>
             </Box>

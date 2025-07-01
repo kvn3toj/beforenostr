@@ -55,14 +55,14 @@ test.describe('Home Phase 2: Component-Level Enhancements', () => {
 
   test('should display enhanced metrics with animations', async ({ page }) => {
     // Wait for metrics card to load
-    await page.waitForSelector('[data-testid="ayni-metrics-card"]', { timeout: 5000 });
+    await page.waitForSelector('[data-testid="reciprocidad-metrics-card"]', { timeout: 5000 });
     
     // Check for animated metrics
     const animatedMetrics = page.locator('.animate-fade-in, .animate-energy-flicker, .animate-gentle-pulse');
     await expect(animatedMetrics.first()).toBeVisible();
     
     // Check for hover effects on metrics
-    const metricsCard = page.locator('[data-testid="ayni-metrics-card"]');
+    const metricsCard = page.locator('[data-testid="reciprocidad-metrics-card"]');
     await metricsCard.hover();
     
     // Should have hover-lift class

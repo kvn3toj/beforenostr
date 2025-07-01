@@ -21,7 +21,7 @@ import { AireComponent } from '../universal/UniversalComponent';
 
 // ===== 🧠 TIPOS Y CONCEPTOS COOMUNITY ===== //
 export type CoomunityConcept =
-  | 'ayni'
+  | 'reciprocidad'
   | 'trust'
   | 'community'
   | 'balance'
@@ -50,31 +50,31 @@ const TOOLTIP_CONTENT: Record<CoomunityConcept, Record<UserLevel, {
   icon: React.ReactNode;
   color: string;
 }>> = {
-  ayni: {
+  reciprocidad: {
     newcomer: {
-      title: "🤝 Ayni - Reciprocidad",
-      description: "Ayni es el principio andino de reciprocidad: cuando das, recibes. En CoomÜnity, cada intercambio busca el equilibrio.",
+      title: "🤝 Reciprocidad - Reciprocidad",
+      description: "Reciprocidad es el principio andino de reciprocidad: cuando das, recibes. En CoomÜnity, cada intercambio busca el equilibrio.",
       tip: "💡 Tip: Ofrecer tu ayuda es la mejor forma de recibir apoyo de la comunidad.",
       icon: <Handshake />,
       color: "#E91E63"
     },
     beginner: {
-      title: "🤝 Principio de Ayni",
+      title: "🤝 Principio de Reciprocidad",
       description: "La reciprocidad equilibrada crea confianza comunitaria. Cada acción positiva genera ondas de bien común.",
       tip: "💡 Observa cómo tus contribuciones afectan tu balance de confianza.",
       icon: <Handshake />,
       color: "#E91E63"
     },
     intermediate: {
-      title: "🤝 Sistema Ayni Avanzado",
-      description: "Ayni trasciende el intercambio material: incluye conocimiento, tiempo, energía y propósito compartido.",
+      title: "🤝 Sistema Reciprocidad Avanzado",
+      description: "Reciprocidad trasciende el intercambio material: incluye conocimiento, tiempo, energía y propósito compartido.",
       tip: "💡 Explora formas creativas de contribuir al bien común.",
       icon: <Handshake />,
       color: "#E91E63"
     },
     advanced: {
-      title: "🤝 Maestría en Ayni",
-      description: "Como guardián de reciprocidad, tu ejemplo inspira a otros. Ayni se convierte en tu filosofía de vida.",
+      title: "🤝 Maestría en Reciprocidad",
+      description: "Como guardián de reciprocidad, tu ejemplo inspira a otros. Reciprocidad se convierte en tu filosofía de vida.",
       tip: "💡 Mentora a nuevos miembros en los principios de reciprocidad.",
       icon: <Handshake />,
       color: "#E91E63"
@@ -145,7 +145,7 @@ const TOOLTIP_CONTENT: Record<CoomunityConcept, Record<UserLevel, {
 
   balance: {
     newcomer: {
-      title: "⚖️ Balance Ayni",
+      title: "⚖️ Balance Reciprocidad",
       description: "Tu balance muestra la armonía entre lo que das y recibes en la comunidad.",
       tip: "💡 Tip: Un balance equilibrado refleja participación sana en la comunidad.",
       icon: <AutoAwesome />,
@@ -331,7 +331,7 @@ const TOOLTIP_CONTENT: Record<CoomunityConcept, Record<UserLevel, {
 
   exchanges: {
     newcomer: {
-      title: "🔄 Intercambios Ayni",
+      title: "🔄 Intercambios Reciprocidad",
       description: "Los intercambios van más allá del comercio: son oportunidades de conexión y crecimiento mutuo.",
       tip: "💡 Tip: Cada intercambio es una oportunidad de practicar reciprocidad.",
       icon: <Handshake />,

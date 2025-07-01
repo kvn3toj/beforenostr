@@ -482,5 +482,5 @@ export interface CopLetsStats {
     count: number;
   }>;
   monthlyGrowth: number;
-  ayniBalance: number; // Índice de reciprocidad
+  reciprocidadBalance: number; // Índice de reciprocidad
 } 

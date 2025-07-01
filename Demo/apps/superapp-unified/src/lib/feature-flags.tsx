@@ -20,7 +20,7 @@ export interface FeatureFlags {
   
   // 🎮 Gamificación Avanzada
   advancedGamification: boolean;
-  ayniScoring: boolean;
+  reciprocidadScoring: boolean;
   collaborativeGoals: boolean;
   elementalBadges: boolean;
 
@@ -136,9 +136,9 @@ const defaultFeatureConfigs: Record<keyof FeatureFlags, FeatureConfig> = {
     rolloutPercentage: 100,
     category: 'stable',
   },
-  ayniScoring: {
+  reciprocidadScoring: {
     enabled: true,
-    description: 'Sistema de puntuación Ayni',
+    description: 'Sistema de puntuación Reciprocidad',
     rolloutPercentage: 100,
     category: 'stable',
   },

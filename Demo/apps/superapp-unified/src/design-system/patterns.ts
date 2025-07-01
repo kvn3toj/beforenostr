@@ -6,7 +6,7 @@
  * Centralizados para escalabilidad a todos los módulos
  * 
  * Basado en análisis de componentes HOME:
- * - AyniMetricsCardRevolutionary.tsx (920 líneas)
+ * - ReciprocidadMetricsCardRevolutionary.tsx (920 líneas)
  * - ModuleCardsRevolutionary.tsx (663 líneas) 
  * - NotificationCenterRevolutionary.tsx (747 líneas)
  * - LiveActivityFeed.tsx (737 líneas - glassmorphism)

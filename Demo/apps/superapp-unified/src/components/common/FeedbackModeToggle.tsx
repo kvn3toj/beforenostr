@@ -29,7 +29,7 @@ interface FeedbackModeToggleProps {
  *
  * Este componente permite a los administradores activar/desactivar
  * el modo de recopilación de feedback, siguiendo los principios
- * de Ayni y contribuyendo al Bien Común.
+ * de Reciprocidad y contribuyendo al Bien Común.
  */
 const FeedbackModeToggle: React.FC = () => {
   const { isFeedbackModeActive, toggleFeedbackMode } = useFeedback();

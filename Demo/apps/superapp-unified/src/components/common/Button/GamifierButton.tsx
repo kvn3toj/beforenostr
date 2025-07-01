@@ -11,9 +11,9 @@ export interface GamifierButtonProps extends Omit<ButtonProps, 'variant' | 'size
   iconPosition?: 'left' | 'right';
 }
 
-const StyledButton = styled(Button)<GamifierButtonProps>(({ theme, variant: customVariant, size: customSize }) => {
+const StyledButton = styled(Button)<GamifierButtonProps>(({ theme, variant, size }) => {
   const getVariantStyles = () => {
-    switch (customVariant) {
+    switch (variant) {
       case 'primary':
         return {
           backgroundColor: theme.palette.primary.main,
@@ -80,12 +80,19 @@ const StyledButton = styled(Button)<GamifierButtonProps>(({ theme, variant: cust
           },
         };
       default:
-        return {};
+        return {
+          backgroundColor: theme.palette.primary.main,
+          color: '#FFFFFF',
+          '&:hover': {
+            backgroundColor: theme.palette.primary.dark,
+            boxShadow: '0 4px 12px rgba(205, 171, 90, 0.3)',
+          },
+        };
     }
   };
 
   const getSizeStyles = () => {
-    switch (customSize) {
+    switch (size) {
       case 'small':
         return {
           padding: '6px 16px',
@@ -175,8 +182,8 @@ export const GamifierButton: React.FC<GamifierButtonProps> = ({
 
   return (
     <StyledButton
-      variant={customVariant}
-      size={customSize}
+      variant={variant}
+      size={size}
       fullWidth={fullWidth}
       disabled={disabled || isLoading}
       {...props}

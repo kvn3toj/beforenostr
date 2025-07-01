@@ -139,8 +139,8 @@ export class CoomUnityLoggerService implements LoggerService {
     });
   }
 
-  ayni(message: string, context?: LogContext) {
-    this.info(`🌿 AYNI: ${message}`, { module: 'AyniService', ...context });
+  reciprocidad(message: string, context?: LogContext) {
+    this.info(`🌿 RECIPROCIDAD: ${message}`, { module: 'ReciprocidadService', ...context });
   }
 
   /**

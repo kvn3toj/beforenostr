@@ -4,47 +4,65 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { ReciprocidadMetricsUI } from '@/hooks/home/useReciprocidadMetrics';
 
 // 🚀 REUTILIZAR LOS COMPONENTES REVOLUCIONARIOS EXISTENTES
-import AyniMetricsCardRevolutionary from '../AyniMetricsCardRevolutionary';
-import WalletOverviewRevolutionary from '../WalletOverviewRevolutionary';
+import { ReciprocidadMetricsCard } from '@/components/home/ReciprocidadMetricsCard';
+import { WalletOverview } from '@/components/home/WalletOverview';
 
-interface AyniWalletWidgetProps {
+interface ReciprocidadWalletWidgetProps {
   onAddFunds?: () => void;
   onSend?: () => void;
   onExchange?: () => void;
   onViewTransactions?: () => void;
 }
 
-// 📊 Mock data completo para el widget
-const mockAyniData = {
-  ondas: 1250,
-  meritos: 485,
-  ayniLevel: 'Colaborador Equilibrado',
-  nextLevel: 'Guardián del Bien Común',
-  ayniProgress: 78,
-  bienComunContributions: 23,
-  balanceAyni: 0.85,
+// 📊 Mock data completo para el widget, estructurado como ReciprocidadMetricsUI
+const mockReciprocidadData: ReciprocidadMetricsUI = {
+  metricas: {
+    ondas: 1250,
+    meritos: 485,
+    balance: 0.85,
+    contribucionesBienComun: 23,
+    puntuacion: 8.7,
+    transaccionesTotales: 58,
+    impactoPositivo: 950,
+    rangoComunidad: 112,
+    crecimientoSemanal: 15.2,
+  },
+  nivel: {
+    actual: 'Colaborador Equilibrado',
+    siguiente: 'Guardián del Bien Común',
+    progreso: 78,
+  },
   elementos: {
     fuego: 85, // Pasión y acción
     agua: 92, // Fluir y adaptabilidad
     tierra: 78, // Estabilidad y confianza
     aire: 88, // Comunicación e ideas
   },
+  fechas: {
+    ultimaActualizacion: new Date().toISOString(),
+    fechaUnion: '2024-01-20T00:00:00.000Z',
+  },
+  _raw: {} as any,
 };
 
-export const AyniWalletWidget: React.FC<AyniWalletWidgetProps> = ({
-  onAddFunds,
-  onSend,
-  onExchange,
-  onViewTransactions,
-}) => {
+const mockWalletData = {
+  lukas: 1500000,
+  creditosReciprocidad: 350,
+  monthlyChange: 5.2,
+  pendingTransactions: 2,
+  balanceReciprocidad: 0.85,
+};
+
+export const ReciprocidadWalletWidget: React.FC<ReciprocidadWalletWidgetProps> = () => {
   return (
     <Box
       sx={{
         width: '100%',
         position: 'relative',
-        zIndex: 1100, // 🌍 Z-INDEX SUPREMO PARA EL BALANCE AYNI
+        zIndex: 1100, // 🌍 Z-INDEX SUPREMO PARA EL BALANCE RECIPROCIDAD
         background:
           'radial-gradient(circle at center, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.95) 50%, rgba(15, 23, 42, 0.98) 100%)',
         borderRadius: '32px',
@@ -123,7 +141,7 @@ export const AyniWalletWidget: React.FC<AyniWalletWidgetProps> = ({
         </Typography>
       </Box>
 
-      {/* 🌍 Balance Ayni Cósmico - El Mundo Principal */}
+      {/* 🌍 Balance Reciprocidad Cósmico - El Mundo Principal */}
       <Box
         sx={{
           position: 'relative',
@@ -140,15 +158,8 @@ export const AyniWalletWidget: React.FC<AyniWalletWidgetProps> = ({
           overflow: 'visible',
         }}
       >
-        <AyniMetricsCardRevolutionary
-          ondas={mockAyniData.ondas}
-          meritos={mockAyniData.meritos}
-          ayniLevel={mockAyniData.ayniLevel}
-          nextLevel={mockAyniData.nextLevel}
-          ayniProgress={mockAyniData.ayniProgress}
-          bienComunContributions={mockAyniData.bienComunContributions}
-          balanceAyni={mockAyniData.balanceAyni}
-          elementos={mockAyniData.elementos}
+        <ReciprocidadMetricsCard
+          metrics={mockReciprocidadData}
           isLoading={false}
           isConnected={true}
         />
@@ -167,11 +178,12 @@ export const AyniWalletWidget: React.FC<AyniWalletWidgetProps> = ({
           backdropFilter: 'blur(15px)',
         }}
       >
-        <WalletOverviewRevolutionary
-          onAddFunds={onAddFunds}
-          onSend={onSend}
-          onExchange={onExchange}
-          onViewTransactions={onViewTransactions}
+        <WalletOverview
+          lukas={mockWalletData.lukas}
+          creditosReciprocidad={mockWalletData.creditosReciprocidad}
+          monthlyChange={mockWalletData.monthlyChange}
+          pendingTransactions={mockWalletData.pendingTransactions}
+          balanceReciprocidad={mockWalletData.balanceReciprocidad}
         />
       </Box>
 

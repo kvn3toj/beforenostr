@@ -24,7 +24,7 @@ export const consciousDesignSystem = {
       contrastText: '#FFFFFF',
     },
 
-    // Colores de Estado - Alineados con el Ayni
+    // Colores de Estado - Alineados con el Reciprocidad
     success: {
       main: '#10B981',        // Verde del crecimiento consciente
       light: '#6EE7B7',       // Verde claro de la abundancia
@@ -56,7 +56,7 @@ export const consciousDesignSystem = {
     },
 
     // Colores Especiales CoomÜnity
-    ayni: {
+    reciprocidad: {
       main: '#8B5CF6',        // Violeta del intercambio sagrado
       light: '#A78BFA',       // Violeta claro de la reciprocidad
       dark: '#7C3AED',        // Violeta profundo del equilibrio

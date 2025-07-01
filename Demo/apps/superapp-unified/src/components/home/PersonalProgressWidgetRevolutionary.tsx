@@ -91,7 +91,7 @@ const PersonalProgressWidgetRevolutionary: React.FC<
     {
       id: '2', 
       title: 'Colaborador Activo',
-      description: 'Participa en 10 intercambios Ayni',
+      description: 'Participa en 10 intercambios Reciprocidad',
       progress: 7,
       maxProgress: 10,
       icon: '🤝',

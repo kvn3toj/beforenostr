@@ -2,7 +2,7 @@
  * 🏆 Challenges Module - Enhanced Components
  *
  * Módulo de desafíos mejorado con componentes más ricos en funcionalidad
- * y alineados con la filosofía CoomÜnity (Ayni, Bien Común, etc.)
+ * y alineados con la filosofía CoomÜnity (Reciprocidad, Bien Común, etc.)
  *
  * COMPONENTES DISPONIBLES:
  * - ChallengeCard: Tarjeta mejorada con variantes y funcionalidades sociales

@@ -16,22 +16,24 @@ import {
   Typography,
   Divider,
   Grid,
+  alpha,
 } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 import { Controller, useForm, FieldValues, Path } from 'react-hook-form';
+import { useGuardianColors } from '../../theme/GuardianColorProvider';
 
-export type FormFieldType = 
-  | 'text' 
-  | 'email' 
-  | 'password' 
-  | 'number' 
-  | 'textarea' 
-  | 'select' 
+export type FormFieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'textarea'
+  | 'select'
   | 'multiselect'
-  | 'checkbox' 
-  | 'switch' 
-  | 'radio' 
-  | 'date' 
+  | 'checkbox'
+  | 'switch'
+  | 'radio'
+  | 'date'
   | 'datetime'
   | 'file'
   | 'divider'
@@ -115,14 +117,15 @@ export const FormBuilder = <T extends FieldValues = FieldValues>({
     defaultValues: defaultValues as any,
   });
 
+  const { palette } = useGuardianColors();
   const watchedValues = watch();
 
   const shouldShowField = (field: FormField): boolean => {
     if (!field.conditional) return true;
-    
+
     const { field: conditionField, value: conditionValue, operator = 'equals' } = field.conditional;
     const fieldValue = watchedValues[conditionField as keyof T];
-    
+
     switch (operator) {
       case 'equals':
         return fieldValue === conditionValue;
@@ -153,7 +156,7 @@ export const FormBuilder = <T extends FieldValues = FieldValues>({
       case 'section':
         return (
           <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{ color: palette.text.primary }}>
               {field.label}
             </Typography>
             {field.helperText && (
@@ -202,7 +205,33 @@ export const FormBuilder = <T extends FieldValues = FieldValues>({
                   inputProps: {
                     min: field.validation?.min,
                     max: field.validation?.max,
+                  },
+                  sx: {
+                    borderRadius: 1,
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      borderColor: palette.primary,
+                    },
                   }
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: alpha(palette.divider, 0.8),
+                    },
+                    '&:hover fieldset': {
+                      borderColor: palette.primary,
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: palette.primary,
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: palette.text.secondary,
+                    '&.Mui-focused': {
+                      color: palette.primary,
+                    },
+                  },
                 }}
               />
             )}
@@ -251,8 +280,8 @@ export const FormBuilder = <T extends FieldValues = FieldValues>({
                   size={field.size || 'medium'}
                 >
                   {field.options?.map((option) => (
-                    <MenuItem 
-                      key={option.value} 
+                    <MenuItem
+                      key={option.value}
                       value={option.value}
                       disabled={option.disabled}
                     >
@@ -352,8 +381,8 @@ export const FormBuilder = <T extends FieldValues = FieldValues>({
   const renderFields = (fieldsToRender: FormField[]) => (
     <Grid container spacing={2}>
       {fieldsToRender.map((field, index) => (
-        <Grid 
-          item 
+        <Grid
+          item
           key={field.name || index}
           xs={field.gridProps?.xs || 12}
           sm={field.gridProps?.sm}
@@ -372,7 +401,7 @@ export const FormBuilder = <T extends FieldValues = FieldValues>({
       {sections.length > 0 ? (
         sections.map((section, index) => (
           <Box key={index} sx={{ mb: 4 }}>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ color: palette.text.primary }}>
               {section.title}
             </Typography>
             {section.description && (
@@ -393,6 +422,16 @@ export const FormBuilder = <T extends FieldValues = FieldValues>({
             variant="outlined"
             onClick={onCancel}
             disabled={loading}
+            sx={{
+              borderRadius: 1,
+              textTransform: 'none',
+              borderColor: alpha(palette.divider, 0.8),
+              color: palette.text.primary,
+              '&:hover': {
+                borderColor: palette.primary,
+                backgroundColor: alpha(palette.divider, 0.1),
+              },
+            }}
           >
             {cancelLabel}
           </Button>
@@ -401,10 +440,20 @@ export const FormBuilder = <T extends FieldValues = FieldValues>({
           type="submit"
           variant="contained"
           disabled={loading}
+          sx={{
+            borderRadius: 1,
+            textTransform: 'none',
+            backgroundColor: palette.primary,
+            color: '#fff',
+            fontWeight: 500,
+            '&:hover': {
+              backgroundColor: alpha(palette.primary, 0.9),
+            },
+          }}
         >
           {submitLabel}
         </Button>
       </Box>
     </Box>
   );
-}; 
+};

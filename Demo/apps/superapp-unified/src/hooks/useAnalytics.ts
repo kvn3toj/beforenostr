@@ -69,7 +69,7 @@ export interface DashboardMetrics {
       name: string;
     };
   }>;
-  ayniMetrics: {
+  reciprocidadMetrics: {
     totalMerits: number;
     meritsEarned: number;
     reciprocityScore: number;

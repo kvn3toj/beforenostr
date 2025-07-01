@@ -16,40 +16,23 @@ import {
   ToggleButtonGroup,
   LinearProgress,
   CircularProgress,
-  Zoom,
-  Grow,
-  Slide,
+
 } from '@mui/material';
 import {
   Timeline,
   TrendingUp,
-  Insights,
-  AutoAwesome,
-  FilterList,
+
   Refresh,
   Download,
   FullscreenExit,
   Fullscreen,
-  PieChart,
   ShowChart,
-  BarChart,
-  ScatterPlot,
   Radar,
-  Hexagon,
   Psychology,
-  Groups,
-  EmojiEvents,
-  Favorite,
-  Star,
-  WbSunny,
-  Water,
-  Terrain,
-  Air,
-  FlightTakeoff,
 } from '@mui/icons-material';
 
 import { COSMIC_ELEMENTS, CosmicElement } from '../ui/CosmicThemeSwitcher';
-import { useAyniIntelligence } from '../../hooks/useAyniIntelligence';
+import { useReciprocidadIntelligence } from '../../hooks/useReciprocidadIntelligence';
 
 // Tipos para Analytics Cósmicos
 interface CosmicMetric {
@@ -86,7 +69,7 @@ interface CosmicInsight {
 interface TimeSeriesData {
   timestamp: Date;
   values: Record<CosmicElement, number>;
-  totalAyni: number;
+  totalReciprocidad: number;
   bienComun: number;
 }
 
@@ -109,23 +92,23 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
   const [selectedElement, setSelectedElement] = useState<CosmicElement | 'all'>('all');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   // Refs para gráficos D3
   const radarChartRef = useRef<SVGSVGElement>(null);
   const flowChartRef = useRef<SVGSVGElement>(null);
   const timelineRef = useRef<SVGSVGElement>(null);
   const networkRef = useRef<SVGSVGElement>(null);
 
-  // Hook de inteligencia Ayni
-  const { data: ayniData, recordAction } = useAyniIntelligence(userId);
+  // Hook de inteligencia Reciprocidad
+  const { data: reciprocidadData, recordAction } = useReciprocidadIntelligence(userId);
 
   // Mock data para analytics cósmicos
   const cosmicMetrics = useMemo((): CosmicMetric[] => [
     {
-      id: 'ayni_balance',
-      name: 'Balance Ayni',
+      id: 'reciprocidad_balance',
+      name: 'Balance Reciprocidad',
       element: 'ether',
-      value: ayniData?.ayniBalance?.overall || 85,
+      value: reciprocidadData?.reciprocidadBalance?.overall || 85,
       trend: 'ascending',
       impact: 'cosmic',
       lastUpdated: new Date(),
@@ -176,11 +159,11 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
       unit: 'conexiones',
       description: 'Calidad de las conexiones emocionales'
     }
-  ], [ayniData]);
+  ], [reciprocidadData]);
 
   // Balance elemental
   const elementalBalance = useMemo((): ElementalBalance[] => {
-    if (!ayniData) {
+    if (!reciprocidadData) {
       return Object.keys(COSMIC_ELEMENTS).map(element => ({
         element: element as CosmicElement,
         current: Math.floor(Math.random() * 100),
@@ -190,14 +173,14 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
       }));
     }
 
-    return Object.entries(ayniData.ayniBalance.elements).map(([element, value]) => ({
+    return Object.entries(reciprocidadData.reciprocidadBalance.elements).map(([element, value]) => ({
       element: element as CosmicElement,
       current: value,
       optimal: 80,
       growth: Math.floor(Math.random() * 20) - 10,
       interactions: Math.floor(Math.random() * 50)
     }));
-  }, [ayniData]);
+  }, [reciprocidadData]);
 
   // Insights cósmicos
   const cosmicInsights = useMemo((): CosmicInsight[] => [
@@ -235,14 +218,14 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
 
   // Time series data simulada
   const timeSeriesData = useMemo((): TimeSeriesData[] => {
-    const days = selectedTimeRange === '7d' ? 7 : 
-                 selectedTimeRange === '30d' ? 30 : 
+    const days = selectedTimeRange === '7d' ? 7 :
+                 selectedTimeRange === '30d' ? 30 :
                  selectedTimeRange === '90d' ? 90 : 365;
-    
+
     return Array.from({ length: days }, (_, i) => {
       const date = new Date();
       date.setDate(date.getDate() - (days - i));
-      
+
       return {
         timestamp: date,
         values: {
@@ -252,7 +235,7 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
           aire: 75 + Math.cos(i * 0.12) * 18 + Math.random() * 10,
           ether: 85 + Math.sin(i * 0.05) * 12 + Math.random() * 10
         },
-        totalAyni: 70 + Math.sin(i * 0.1) * 20 + Math.random() * 10,
+        totalReciprocidad: 70 + Math.sin(i * 0.1) * 20 + Math.random() * 10,
         bienComun: 80 + Math.cos(i * 0.08) * 15 + Math.random() * 10
       };
     });
@@ -263,18 +246,18 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
     if (radarChartRef.current && elementalBalance.length > 0) {
       const svg = radarChartRef.current;
       svg.innerHTML = ''; // Limpiar contenido anterior
-      
+
       const width = 300;
       const height = 300;
       const centerX = width / 2;
       const centerY = height / 2;
       const radius = Math.min(width, height) / 2 - 40;
-      
+
       // Configurar SVG
       svg.setAttribute('width', width.toString());
       svg.setAttribute('height', height.toString());
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-      
+
       // Crear círculos concéntricos
       for (let i = 1; i <= 5; i++) {
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -286,15 +269,15 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
         circle.setAttribute('stroke-width', '1');
         svg.appendChild(circle);
       }
-      
+
       // Crear líneas radiales y polígono de datos
       const angleStep = (2 * Math.PI) / elementalBalance.length;
       const points: string[] = [];
-      
+
       elementalBalance.forEach((balance, index) => {
         const angle = angleStep * index - Math.PI / 2;
         const elementConfig = COSMIC_ELEMENTS[balance.element];
-        
+
         // Línea radial
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', centerX.toString());
@@ -304,13 +287,13 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
         line.setAttribute('stroke', alpha(theme.palette.primary.main, 0.1));
         line.setAttribute('stroke-width', '1');
         svg.appendChild(line);
-        
+
         // Punto de datos
         const value = balance.current / 100;
         const x = centerX + Math.cos(angle) * radius * value;
         const y = centerY + Math.sin(angle) * radius * value;
         points.push(`${x},${y}`);
-        
+
         // Círculo del elemento
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', x.toString());
@@ -320,7 +303,7 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
         circle.setAttribute('stroke', 'white');
         circle.setAttribute('stroke-width', '2');
         svg.appendChild(circle);
-        
+
         // Label del elemento
         const labelX = centerX + Math.cos(angle) * (radius + 20);
         const labelY = centerY + Math.sin(angle) * (radius + 20);
@@ -335,7 +318,7 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
         text.textContent = elementConfig.name;
         svg.appendChild(text);
       });
-      
+
       // Polígono de datos
       const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
       polygon.setAttribute('points', points.join(' '));
@@ -358,7 +341,7 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
         skillCategory: 'data_analysis'
       }
     });
-    
+
     // Simular carga de datos
     await new Promise(resolve => setTimeout(resolve, 2000));
     setRefreshing(false);
@@ -391,7 +374,7 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
               Visualiza tu evolución multidimensional en tiempo real
             </Typography>
           </Box>
-          
+
           <Stack direction="row" spacing={1} alignItems="center">
             {/* Selector de rango temporal */}
             <ToggleButtonGroup
@@ -405,13 +388,13 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
               <ToggleButton value="90d">90D</ToggleButton>
               <ToggleButton value="1y">1A</ToggleButton>
             </ToggleButtonGroup>
-            
+
             {/* Controles */}
             <Tooltip title="Actualizar datos">
-              <IconButton 
-                onClick={handleRefresh} 
+              <IconButton
+                onClick={handleRefresh}
                 disabled={refreshing}
-                sx={{ 
+                sx={{
                   background: alpha(theme.palette.primary.main, 0.1),
                   '&:hover': { background: alpha(theme.palette.primary.main, 0.2) }
                 }}
@@ -419,11 +402,11 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
                 {refreshing ? <CircularProgress size={20} /> : <Refresh />}
               </IconButton>
             </Tooltip>
-            
+
             <Tooltip title={isFullscreen ? "Salir pantalla completa" : "Pantalla completa"}>
-              <IconButton 
+              <IconButton
                 onClick={() => setIsFullscreen(!isFullscreen)}
-                sx={{ 
+                sx={{
                   background: alpha(theme.palette.secondary.main, 0.1),
                   '&:hover': { background: alpha(theme.palette.secondary.main, 0.2) }
                 }}
@@ -446,7 +429,7 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
               {cosmicMetrics.map((metric) => {
                 const elementConfig = COSMIC_ELEMENTS[metric.element];
                 const IconComponent = elementConfig.icon;
-                
+
                 return (
                   <Grid item xs={12} sm={6} md={4} lg={2.4} key={metric.id}>
                     <Box textAlign="center">
@@ -475,12 +458,12 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
                         {metric.name}
                       </Typography>
                       <Stack direction="row" justifyContent="center" alignItems="center" spacing={0.5} mt={0.5}>
-                        <TrendingUp 
-                          sx={{ 
-                            fontSize: 16, 
-                            color: metric.trend === 'ascending' ? '#4CAF50' : 
-                                   metric.trend === 'stable' ? '#FF9800' : '#F44336' 
-                          }} 
+                        <TrendingUp
+                          sx={{
+                            fontSize: 16,
+                            color: metric.trend === 'ascending' ? '#4CAF50' :
+                                   metric.trend === 'stable' ? '#FF9800' : '#F44336'
+                          }}
                         />
                         <Chip
                           label={metric.impact}
@@ -624,24 +607,24 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
           <Card sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
               <Timeline color="primary" />
-              Evolución Temporal de Balance Ayni
+              Evolución Temporal de Balance Reciprocidad
             </Typography>
             <Box sx={{ height: 200 }}>
               {timeSeriesData.length > 0 && (
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Últimos {selectedTimeRange} - Tendencia general: 
-                    <Chip 
-                      label="Crecimiento Exponencial" 
-                      size="small" 
-                      color="success" 
-                      sx={{ ml: 1 }} 
+                    Últimos {selectedTimeRange} - Tendencia general:
+                    <Chip
+                      label="Crecimiento Exponencial"
+                      size="small"
+                      color="success"
+                      sx={{ ml: 1 }}
                     />
                   </Typography>
                   {Object.entries(COSMIC_ELEMENTS).map(([key, element]) => {
                     const elementKey = key as CosmicElement;
                     const latestValue = timeSeriesData[timeSeriesData.length - 1]?.values[elementKey] || 0;
-                    
+
                     return (
                       <Box key={elementKey} mb={1}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={0.5}>

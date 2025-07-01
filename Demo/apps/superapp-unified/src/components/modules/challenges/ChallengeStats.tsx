@@ -542,7 +542,7 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
         </Grid>
       </Card>
 
-      {/* Ayni Philosophy Note */}
+      {/* Reciprocidad Philosophy Note */}
       <Box
         sx={{
           mt: 3,
@@ -558,7 +558,7 @@ export const ChallengeStats: React.FC<ChallengeStatsProps> = ({
       >
         <InfoOutlined color="primary" />
         <Typography variant="body2" color="text.secondary">
-          <strong>Filosofía Ayni:</strong> Los desafíos en CoomÜnity están
+          <strong>Filosofía Reciprocidad:</strong> Los desafíos en CoomÜnity están
           diseñados para fomentar la reciprocidad y el Bien Común. Cada
           participación contribuye al crecimiento colectivo de nuestra
           comunidad. 🌱

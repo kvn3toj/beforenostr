@@ -82,7 +82,7 @@ export type ContextType =
   | 'social' 
   | 'learning' 
   | 'marketplace' 
-  | 'ayni';
+  | 'reciprocidad';
 
 export interface UXMessage {
   id: string;
@@ -248,13 +248,13 @@ const UX_MESSAGES: Record<ContextType, Record<EmotionalTone, UXMessage[]>> = {
       }
     ]
   },
-  ayni: {
+  reciprocidad: {
     zen: [
       {
-        id: 'ayni_balance',
-        context: 'ayni',
+        id: 'reciprocidad_balance',
+        context: 'reciprocidad',
         tone: 'zen',
-        title: 'El equilibrio del Ayni ⚖️',
+        title: 'El equilibrio del Reciprocidad ⚖️',
         message: 'Dar y recibir en armonía. Tu contribución al Bien Común se refleja en la abundancia que recibes.',
         icon: <BalanceIcon />,
         color: 'success'
@@ -262,11 +262,11 @@ const UX_MESSAGES: Record<ContextType, Record<EmotionalTone, UXMessage[]>> = {
     ],
     inspiring: [
       {
-        id: 'ayni_reciprocity',
-        context: 'ayni',
+        id: 'reciprocidad_reciprocity',
+        context: 'reciprocidad',
         tone: 'inspiring',
         title: 'La magia de la reciprocidad ✨',
-        message: 'Cuando das desde el corazón, el universo conspira para devolverte multiplicado. Así funciona el Ayni.',
+        message: 'Cuando das desde el corazón, el universo conspira para devolverte multiplicado. Así funciona el Reciprocidad.',
         icon: <HeartIcon />,
         color: 'error'
       }

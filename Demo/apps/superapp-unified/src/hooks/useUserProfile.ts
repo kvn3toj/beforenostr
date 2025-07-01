@@ -527,7 +527,7 @@ export function useGamificationMetrics(userId?: string) {
           level: 1,
           meritos: 0,
           ondas: 0,
-          ayniLevel: 0,
+          reciprocidadLevel: 0,
           completedChallenges: 0,
           socialConnections: 0,
           marketplaceRating: 0,
@@ -629,7 +629,7 @@ export const profileValidation = {
 //   {
 //     id: '1',
 //     type: 'challenge',
-//     title: 'Completaste "Desafío Ayni Diario"',
+//     title: 'Completaste "Desafío Reciprocidad Diario"',
 //     description: 'Ayudaste a 3 miembros de la CoomÜnidad',
 //     timestamp: '2024-12-18T10:30:00Z',
 //     points: 150,
@@ -656,7 +656,7 @@ export const profileValidation = {
 // const mockUserAchievements: UserAchievement[] = [
 //   {
 //     id: '1',
-//     name: 'Maestro del Ayni',
+//     name: 'Maestro del Reciprocidad',
 //     description: 'Mantuviste equilibrio perfecto por 30 días',
 //     unlockedAt: '2024-12-15T12:00:00Z',
 //     rarity: 'legendary',

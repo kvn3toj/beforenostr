@@ -23,7 +23,7 @@
 - [x] **Five Elements Rotating Circle**: Animated conic gradient representing elemental balance
 - [x] **Floating Element Icons**: Dynamic animations for each philosophical element
 - [x] **Guardian Typography**: Gradient text effects using sacred color combinations
-- [x] **Progress Visualization**: Ayni progress elegantly displayed in center
+- [x] **Progress Visualization**: Reciprocidad progress elegantly displayed in center
 - [x] **Guardian Theme Selector**: Real-time theme preview (top-right corner)
 
 #### 🎯 **Technical Excellence**
@@ -38,12 +38,12 @@
 #### **Core Elements Active:**
 - **Fuego (Fire)**: #f5a623 - Action, passion, transformation
 - **Agua (Water)**: #0891b2 - Flow, trust, adaptability
-- **Tierra (Earth)**: #16a34a - Stability, growth, Ayni
+- **Tierra (Earth)**: #16a34a - Stability, growth, Reciprocidad
 - **Aire (Air)**: #a855f7 - Vision, inspiration, wisdom
 - **Éter (Ether)**: #f59e0b - Transcendence, unity, illumination
 
 #### **CoomÜnity Concepts Mapped:**
-- **Ayni (Reciprocity)**: Earth green for balance
+- **Reciprocidad (Reciprocity)**: Earth green for balance
 - **Mëritos (Merit)**: Fire gold for achievement
 - **Öndas (Energy)**: Air violet for vibration
 - **Lukas (Currency)**: Water blue for flow
@@ -129,7 +129,7 @@
 
 The Guardian Visual System in production embodies:
 
-1. **Ayni (Reciprocity)**: Balanced color relationships across all UI elements
+1. **Reciprocidad (Reciprocity)**: Balanced color relationships across all UI elements
 2. **Metanöia (Transformation)**: Dynamic theme switching for personal growth
 3. **Neguentropía (Order)**: Organized, harmonious color hierarchies
 4. **Bien Común (Common Good)**: Accessible design benefiting all users

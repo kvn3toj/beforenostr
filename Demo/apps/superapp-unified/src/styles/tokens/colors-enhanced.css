@@ -27,7 +27,7 @@
   /* Valores de métricas - Contraste optimizado mejorado 8:1+ */
   --metric-ondas-text: #1e3a8a; /* Blue-900 - Contraste 8.2:1 */
   --metric-meritos-text: #92400e; /* Orange-800 - Contraste 8.1:1 */
-  --metric-ayni-text: #14532d; /* Green-900 - Contraste 8.3:1 */
+  --metric-reciprocidad-text: #14532d; /* Green-900 - Contraste 8.3:1 */
   --metric-bien-comun-text: #7c2d12; /* Red-800 - Contraste 7.8:1 */
   --metric-value: #0f172a; /* Para valores numéricos principales */
 
@@ -286,8 +286,8 @@
   color: var(--metric-meritos-text) !important;
 }
 
-.metric-ayni {
-  color: var(--metric-ayni-text) !important;
+.metric-reciprocidad {
+  color: var(--metric-reciprocidad-text) !important;
 }
 
 .metric-bien-comun {

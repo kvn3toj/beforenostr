@@ -266,8 +266,8 @@ export const EterComponent: React.FC<Omit<UniversalComponentProps, 'element'>> =
 
 // ===== 🎯 COMPONENTES ESPECIALIZADOS POR CONCEPTO ===== //
 
-export const AyniComponent: React.FC<Omit<UniversalComponentProps, 'concept'>> = (props) => (
-  <UniversalComponent concept="ayni" {...props} />
+export const ReciprocidadComponent: React.FC<Omit<UniversalComponentProps, 'concept'>> = (props) => (
+  <UniversalComponent concept="reciprocidad" {...props} />
 );
 
 export const MeritosComponent: React.FC<Omit<UniversalComponentProps, 'concept'>> = (props) => (

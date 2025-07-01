@@ -6,12 +6,12 @@
 :root {
   /* ===== JERARQUÍA TIPOGRÁFICA ===== */
 
-  /* Hero - Balance principal Ayni */
+  /* Hero - Balance principal Reciprocidad */
   --text-hero-size: 3rem; /* 48px */
   --text-hero-weight: 800;
   --text-hero-line-height: 1.1;
 
-  /* H1 - Nivel Ayni */
+  /* H1 - Nivel Reciprocidad */
   --text-h1-size: 2rem; /* 32px */
   --text-h1-weight: 700;
   --text-h1-line-height: 1.2;
@@ -149,8 +149,8 @@
 .text-gradient-primary {
   background: linear-gradient(
     45deg,
-    var(--ayni-primary),
-    var(--ayni-secondary)
+    var(--reciprocidad-primary),
+    var(--reciprocidad-secondary)
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -211,11 +211,11 @@
 }
 
 .text-interactive:hover {
-  color: var(--ayni-primary);
+  color: var(--reciprocidad-primary);
 }
 
 .text-interactive:focus-visible {
-  outline: 2px solid var(--ayni-primary);
+  outline: 2px solid var(--reciprocidad-primary);
   outline-offset: 2px;
   border-radius: 2px;
 }

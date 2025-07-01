@@ -140,12 +140,12 @@ const UPlayAdvancedVideoPlayer: React.FC<UPlayAdvancedVideoPlayerProps> = ({
       question: '¿Qué principio de CoomÜnity se refleja mejor en la gamificación colaborativa?',
       options: [
         'Competencia individual',
-        'Ayni (reciprocidad)',
+        'Reciprocidad (reciprocidad)',
         'Acumulación de riqueza',
         'Jerarquías rígidas'
       ],
       correctAnswer: 1,
-      explanation: 'El Ayni representa la reciprocidad y el equilibrio, valores fundamentales en el aprendizaje colaborativo.',
+      explanation: 'El Reciprocidad representa la reciprocidad y el equilibrio, valores fundamentales en el aprendizaje colaborativo.',
       rewards: { meritos: 30, ondas: 20 },
     },
     {

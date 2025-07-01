@@ -42,7 +42,7 @@ test.describe('SuperApp CoomÜnity - Verificación Integral Post-Mock-Eliminatio
     
     // Verificar que los componentes del dashboard cargan
     await expect(page.locator('h6:has-text("CoomÜnity")')).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('[data-testid="ayni-balance-card"], .ayni-balance-card')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('[data-testid="reciprocidad-balance-card"], .reciprocidad-balance-card')).toBeVisible({ timeout: 5000 });
     
     // Verificar ausencia de banners de mock/desarrollo
     await expect(page.locator(':has-text("MODO MOCK ACTIVADO")')).not.toBeVisible();

@@ -96,7 +96,7 @@ test.describe('Páginas Recuperadas - Verificación', () => {
     await expect(page.locator('text=Probar Reproductor Horizontal')).toBeVisible();
     
     // Verificar que hay videos mock
-    await expect(page.locator('text=Ayni: Principios de Reciprocidad')).toBeVisible();
+    await expect(page.locator('text=Reciprocidad: Principios de Reciprocidad')).toBeVisible();
     await expect(page.locator('text=Introducción a CoomÜnity')).toBeVisible();
     
     // Probar navegación entre tabs

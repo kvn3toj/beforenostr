@@ -31,7 +31,7 @@ export const videoQuestionsDatabase: Record<string, VideoQuestion[]> = {
       timestamp: 15,
       endTimestamp: 45,
       type: 'multiple-choice',
-      question: '¿Cuál es el principio fundamental de Ayni en CoomÜnity?',
+      question: '¿Cuál es el principio fundamental de Reciprocidad en CoomÜnity?',
       timeLimit: 25,
       difficulty: 'medium',
       reward: { merits: 20, ondas: 8 },
@@ -149,14 +149,14 @@ export const videoQuestionsDatabase: Record<string, VideoQuestion[]> = {
     },
   ],
 
-  'ayni-deep-dive': [
+  'reciprocidad-deep-dive': [
     {
       id: 5,
-      videoId: 'ayni-deep-dive',
+      videoId: 'reciprocidad-deep-dive',
       timestamp: 20,
       endTimestamp: 40,
       type: 'multiple-choice',
-      question: '¿Cómo se manifiesta el Ayni en las interacciones diarias?',
+      question: '¿Cómo se manifiesta el Reciprocidad en las interacciones diarias?',
       timeLimit: 22,
       difficulty: 'medium',
       reward: { merits: 25, ondas: 12 },
@@ -189,12 +189,12 @@ export const videoQuestionsDatabase: Record<string, VideoQuestion[]> = {
     },
     {
       id: 6,
-      videoId: 'ayni-deep-dive',
+      videoId: 'reciprocidad-deep-dive',
       timestamp: 90,
       endTimestamp: 110,
       type: 'true-false',
       question:
-        '¿El Ayni implica que siempre debemos recibir exactamente lo mismo que damos?',
+        '¿El Reciprocidad implica que siempre debemos recibir exactamente lo mismo que damos?',
       timeLimit: 15,
       difficulty: 'hard',
       reward: { merits: 30, ondas: 18 },
@@ -210,11 +210,11 @@ export const videoQuestionsDatabase: Record<string, VideoQuestion[]> = {
     },
     {
       id: 7,
-      videoId: 'ayni-deep-dive',
+      videoId: 'reciprocidad-deep-dive',
       timestamp: 150,
       endTimestamp: 170,
       type: 'quick-response',
-      question: '¿Cuál es la consecuencia de romper el Ayni?',
+      question: '¿Cuál es la consecuencia de romper el Reciprocidad?',
       timeLimit: 10,
       difficulty: 'medium',
       reward: { merits: 20, ondas: 10 },

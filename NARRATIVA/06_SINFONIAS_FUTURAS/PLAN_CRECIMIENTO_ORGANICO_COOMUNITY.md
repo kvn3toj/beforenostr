@@ -67,7 +67,7 @@ curl http://localhost:3002/health -v  # Verificar backend
 
 ### **2.2 Estrategia de Selección de Beta Users**
 **Criterios de selección:**
-- Alineación con filosofía CoomÜnity (Ayni, Bien Común)
+- Alineación con filosofía CoomÜnity (Reciprocidad, Bien Común)
 - Experiencia previa en cooperativas/economía colaborativa
 - Capacidad de dar feedback constructivo
 - Diversidad geográfica y cultural
@@ -134,7 +134,7 @@ Semana 9-12: Completar hasta 1000 usuarios
 
 ### **4.1 Desarrollo de Contenido Core**
 **Módulos educativos principales:**
-1. **Introducción a Ayni** (Reciprocidad consciente)
+1. **Introducción a Reciprocidad** (Reciprocidad consciente)
 2. **Bien Común vs Bien Particular** (Cambio de paradigma)
 3. **Economía Colaborativa/Sagrada** (Nuevos modelos económicos)
 4. **Metanöia** (Transformación de consciencia)
@@ -178,7 +178,7 @@ Semana 9-12: Completar hasta 1000 usuarios
 - **Formación especializada** en filosofía CoomÜnity
 - **Networking exclusivo** con otros embajadores
 - **Reconocimiento público** en la plataforma
-- **Incentivos económicos** (Lükas, tokens, etc.)
+- **Incentivos económicos** (Ünits, tokens, etc.)
 
 **Responsabilidades:**
 - **Evangelización** de la plataforma en sus redes

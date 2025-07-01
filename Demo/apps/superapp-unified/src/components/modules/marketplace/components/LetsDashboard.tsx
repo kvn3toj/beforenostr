@@ -94,7 +94,7 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
     totalUnitsCirculating: rawAnalytics.totalUnitsInCirculation,
     dailyTransactions: rawAnalytics.totalTransactions,
     activeUsers: rawAnalytics.userEngagement.activeUsers,
-    ayniIndex: rawAnalytics.ayniBalance.balanceRatio,
+    reciprocidadIndex: rawAnalytics.reciprocidadBalance.balanceRatio,
     topCategories: rawAnalytics.topCategories.map(cat => ({
       name: cat.category,
       count: cat.transactionCount
@@ -157,13 +157,13 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
     }).format(num);
   };
 
-  const getAyniColor = (index: number) => {
+  const getReciprocidadColor = (index: number) => {
     if (index >= 0.8) return theme.palette.success.main;
     if (index >= 0.6) return theme.palette.warning.main;
     return theme.palette.error.main;
   };
 
-  const getAyniLabel = (index: number) => {
+  const getReciprocidadLabel = (index: number) => {
     if (index >= 0.8) return 'Excelente';
     if (index >= 0.6) return 'Bueno';
     return 'Mejorable';
@@ -223,11 +223,11 @@ const LetsDashboard: React.FC<LetsDashboardProps> = ({ userId }) => {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <StatCard
-              title="Balance Ayni"
-              value={`${(analytics.ayniIndex * 100).toFixed(0)}%`}
+              title="Balance Reciprocidad"
+              value={`${(analytics.reciprocidadIndex * 100).toFixed(0)}%`}
               icon={<TrendingUp color="action" />}
-              details={getAyniLabel(analytics.ayniIndex)}
-              color={getAyniColor(analytics.ayniIndex)}
+              details={getReciprocidadLabel(analytics.reciprocidadIndex)}
+              color={getReciprocidadColor(analytics.reciprocidadIndex)}
             />
           </Grid>
         </Grid>

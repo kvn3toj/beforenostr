@@ -150,7 +150,7 @@ El marketplace de CoomÜnity ha sido completamente mejorado con las siguientes i
 - Categorías enfocadas en impacto social
 - Métricas de sostenibilidad
 - Agentes de cambio y bien común
-- Reciprocidad (Ayni) en interacciones
+- Reciprocidad (Reciprocidad) en interacciones
 
 ## 📊 Métricas de Performance Logradas
 
@@ -243,7 +243,7 @@ El marketplace de CoomÜnity ahora ofrece una experiencia de usuario premium con
 
 Cada mejora implementada refleja los valores de CoomÜnity:
 
-- **Ayni (Reciprocidad)**: Interacciones equilibradas y justas
+- **Reciprocidad (Reciprocidad)**: Interacciones equilibradas y justas
 - **Bien Común**: Prioridad en impacto social y sostenibilidad
 - **Cooperación**: Facilita la colaboración entre usuarios
 - **Transparencia**: Información clara y accesible

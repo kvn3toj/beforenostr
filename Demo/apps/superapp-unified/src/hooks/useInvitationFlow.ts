@@ -13,7 +13,7 @@ export interface BetaRegistrationData {
   experience: string;
   motivation: string;
   philosophyAnswers: {
-    ayni: string;
+    reciprocidad: string;
     bienComun: string;
     cooperacion: string;
   };

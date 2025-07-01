@@ -791,7 +791,9 @@ exports.MarketplaceItemType = exports.$Enums.MarketplaceItemType = {
 };
 
 exports.Currency = exports.$Enums.Currency = {
+  UNIT: 'UNIT',
   LUKAS: 'LUKAS',
+  MERITOS: 'MERITOS',
   USD: 'USD',
   EUR: 'EUR',
   BTC: 'BTC',

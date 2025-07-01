@@ -377,7 +377,7 @@ export const LearningModeChip: React.FC<LearningModeChipProps> = ({
       icon: Groups,
       color: '#4CAF50',
       bgColor: '#E8F5E8',
-      description: 'Aprendizaje en comunidad (Ayni)'
+      description: 'Aprendizaje en comunidad (Reciprocidad)'
     }
   };
 

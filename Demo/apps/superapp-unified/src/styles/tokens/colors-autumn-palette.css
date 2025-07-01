@@ -180,9 +180,9 @@
   /* ===== MÉTRICAS OTOÑALES ===== */
   --metric-ondas-autumn: var(--autumn-gold-600); /* Dorado para Öndas */
   --metric-meritos-autumn: var(--autumn-primary-600); /* Naranja para Mëritos */
-  --metric-ayni-autumn: var(
+  --metric-reciprocidad-autumn: var(
     --autumn-olive-600
-  ); /* Verde oliva para balance Ayni */
+  ); /* Verde oliva para balance Reciprocidad */
   --metric-balance-autumn: var(
     --autumn-burgundy-500
   ); /* Burgundy para balance */
@@ -320,8 +320,8 @@
   font-weight: 700;
 }
 
-.autumn-metric-ayni {
-  color: var(--metric-ayni-autumn);
+.autumn-metric-reciprocidad {
+  color: var(--metric-reciprocidad-autumn);
   font-weight: 700;
 }
 

@@ -88,7 +88,7 @@ interface CosmicInsight {
   title: string;
   content: string;
   element: 'fuego' | 'agua' | 'tierra' | 'aire' | 'eter';
-  principle: 'Ayni' | 'Bien Común' | 'Metanöia' | 'Reciprocidad' | 'Cooperación';
+  principle: 'Reciprocidad' | 'Bien Común' | 'Metanöia' | 'Reciprocidad' | 'Cooperación';
   depth: 'basic' | 'intermediate' | 'advanced' | 'master';
   keywords: string[];
   relatedInsights: string[];
@@ -142,20 +142,20 @@ interface CosmicDocumentationProps {
 // ===== 🌟 COSMIC INSIGHTS DATABASE ===== //
 const COSMIC_INSIGHTS: CosmicInsight[] = [
   {
-    id: 'ayni_reciprocity_essence',
-    title: 'La Esencia Cósmica del Ayni',
-    content: `El Ayni no es simplemente dar y recibir, es la danza cósmica del equilibrio perfecto.
+    id: 'reciprocidad_reciprocity_essence',
+    title: 'La Esencia Cósmica del Reciprocidad',
+    content: `El Reciprocidad no es simplemente dar y recibir, es la danza cósmica del equilibrio perfecto.
     Cuando damos conscientemente, creamos ondas de transformación que regresan a nosotros multiplicadas.
     El universo mismo opera bajo este principio: cada acción consciente genera una reacción equivalente
     que eleva la consciencia colectiva.`,
     element: 'agua',
-    principle: 'Ayni',
+    principle: 'Reciprocidad',
     depth: 'advanced',
     keywords: ['reciprocidad', 'equilibrio', 'consciencia', 'transformación'],
     relatedInsights: ['bien_comun_manifestation', 'metanoia_transformation'],
     practicalApplication: 'Antes de cada acción, pregúntate: ¿Cómo puede esto servir al bien común? Luego actúa desde esa consciencia.',
     meditation: 'Medita en el flujo circular de energía: lo que das regresa, lo que recibes se multiplica cuando lo compartes.',
-    personalReflection: '¿En qué áreas de mi vida puedo practicar un Ayni más consciente?'
+    personalReflection: '¿En qué áreas de mi vida puedo practicar un Reciprocidad más consciente?'
   },
   {
     id: 'bien_comun_manifestation',
@@ -167,7 +167,7 @@ const COSMIC_INSIGHTS: CosmicInsight[] = [
     principle: 'Bien Común',
     depth: 'intermediate',
     keywords: ['bien común', 'prosperidad', 'consciencia colectiva', 'manifestación'],
-    relatedInsights: ['ayni_reciprocity_essence', 'cooperacion_cosmic_force'],
+    relatedInsights: ['reciprocidad_reciprocity_essence', 'cooperacion_cosmic_force'],
     practicalApplication: 'En cada decisión importante, considera el impacto en las próximas 7 generaciones.',
     meditation: 'Visualiza tu energía conectándose con la red cósmica de todos los seres conscientes.',
     personalReflection: '¿Cómo puedo alinear mis objetivos personales con el bienestar de todos?'
@@ -182,7 +182,7 @@ const COSMIC_INSIGHTS: CosmicInsight[] = [
     principle: 'Metanöia',
     depth: 'master',
     keywords: ['transformación', 'alquimia', 'consciencia', 'sabiduría'],
-    relatedInsights: ['ayni_reciprocity_essence', 'cosmic_integration_mastery'],
+    relatedInsights: ['reciprocidad_reciprocity_essence', 'cosmic_integration_mastery'],
     practicalApplication: 'Cuando enfrentes resistencia al cambio, pregúntate: ¿Qué nueva perspectiva me está invitando a nacer?',
     meditation: 'Respira conscientemente mientras visualizas tu consciencia expandiéndose como ondas en un lago cósmico.',
     personalReflection: '¿Qué aspectos de mi ser están pidiendo transformación consciente?'
@@ -344,7 +344,7 @@ const ContextualHelpSystem: React.FC = () => {
       ],
       deepDive: 'El viaje cósmico en ÜPlay está diseñado siguiendo los principios de transformación consciente de CoomÜnity. Cada elemento (Fuego, Agua, Tierra, Aire, Éter) corresponde a una dimensión de desarrollo interior que, cuando se integra armoniosamente, crea un ser multidimensional capaz de servir al Bien Común.',
       relatedConcepts: ['Metanöia', 'Integración', 'Consciencia Multidimensional'],
-      philosophicalConnection: 'Este viaje refleja el principio del Ayni: lo que inviertes en tu propio crecimiento regresa multiplicado en tu capacidad de servir.',
+      philosophicalConnection: 'Este viaje refleja el principio del Reciprocidad: lo que inviertes en tu propio crecimiento regresa multiplicado en tu capacidad de servir.',
       practicalExercise: 'Antes de cada paso, medita 3 minutos en silencio, conectando con la intención de crecer para servir mejor.'
     },
     five_elements: {

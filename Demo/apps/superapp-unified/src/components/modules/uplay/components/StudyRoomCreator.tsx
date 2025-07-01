@@ -37,7 +37,7 @@ import {
   Psychology as PhilosofiaIcon,
   SportsEsports as GamificacionIcon,
   Handshake as ColaboracionIcon,
-  Favorite as AyniIcon,
+  Favorite as ReciprocidadIcon,
   Public as BienComunIcon,
   Visibility as PublicIcon,
   VisibilityOff as PrivateIcon,
@@ -78,9 +78,9 @@ const STUDY_FOCUS_CONFIG = {
     description: 'Fortalece habilidades de trabajo en equipo',
     gradient: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
   },
-  ayni: {
-    label: 'Principio Ayni',
-    icon: AyniIcon,
+  reciprocidad: {
+    label: 'Principio Reciprocidad',
+    icon: ReciprocidadIcon,
     color: '#ef4444',
     description: 'Reciprocidad y equilibrio en el intercambio',
     gradient: 'linear-gradient(135deg, #ef4444, #f87171)',
@@ -194,7 +194,7 @@ export const StudyRoomCreator: React.FC<StudyRoomCreatorProps> = ({
               onChange={(e) => handleInputChange('name', e.target.value)}
               fullWidth
               variant="outlined"
-              placeholder="ej: Filosofía Ayni - Sesión Matutina"
+              placeholder="ej: Filosofía Reciprocidad - Sesión Matutina"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 3,

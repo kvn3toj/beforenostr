@@ -72,10 +72,10 @@ const Home: React.FC = () => {
   // ✅ Navegación por teclado - ANTES del return condicional
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Alt + 1: Ir a Balance Ayni
+      // Alt + 1: Ir a Balance Reciprocidad
       if (e.altKey && e.key === '1') {
         e.preventDefault();
-        const balanceElement = document.querySelector('[aria-label="Balance Ayni personal"]') as HTMLElement;
+        const balanceElement = document.querySelector('[aria-label="Balance Reciprocidad personal"]') as HTMLElement;
         balanceElement?.focus();
       }
       // ... resto de shortcuts
@@ -146,7 +146,7 @@ import {
 
 Para evitar dependencias problemáticas, se simplificaron componentes complejos:
 
-**En AyniMetricsCard.tsx:**
+**En ReciprocidadMetricsCard.tsx:**
 
 - Reemplazados imports de `../ui/enhanced` con componentes inline
 - Simplificado `AdvancedElementalProgress` con Box + CSS
@@ -165,7 +165,7 @@ Para evitar dependencias problemáticas, se simplificaron componentes complejos:
 2. **✅ Navegación por teclado:** Alt+1/2/3 funcionan correctamente
 3. **✅ Primary action:** Botón se muestra y funciona
 4. **✅ Módulos:** Cards se muestran correctamente
-5. **✅ Balance Ayni:** Métricas se calculan y muestran
+5. **✅ Balance Reciprocidad:** Métricas se calculan y muestran
 6. **✅ Skeleton loading:** Se muestra durante carga inicial
 
 ### Código de Verificación
@@ -256,9 +256,9 @@ console.log('✅ Primary action funcional');
 
 - ✅ **Home loading:** Sin errores de hooks
 - ✅ **Navegación teclado:** Alt+1/2/3 + Escape funcionales
-- ✅ **Primary action:** Botón dinámico según balance Ayni
+- ✅ **Primary action:** Botón dinámico según balance Reciprocidad
 - ✅ **Module cards:** Visualización correcta de 4 módulos
-- ✅ **Balance Ayni:** Cálculo y display funcional
+- ✅ **Balance Reciprocidad:** Cálculo y display funcional
 
 ## 🔍 LECCIONES APRENDIDAS
 
@@ -295,7 +295,7 @@ console.log('✅ Primary action funcional');
 - [x] ✅ Navegación por teclado funcional
 - [x] ✅ Primary action se muestra correctamente
 - [x] ✅ Module cards se renderizan
-- [x] ✅ Balance Ayni se calcula
+- [x] ✅ Balance Reciprocidad se calcula
 
 ### Prevención Implementada
 
@@ -317,7 +317,7 @@ console.log('✅ Primary action funcional');
 1. `src/pages/Home.tsx` - Reordenación de hooks
 2. `src/components/home/ModuleCards.tsx` - Imports corregidos
 3. `src/components/home/WelcomeHeader.tsx` - Import agregado
-4. `src/components/home/AyniMetricsCard.tsx` - Simplificaciones temporales
+4. `src/components/home/ReciprocidadMetricsCard.tsx` - Simplificaciones temporales
 
 **Tiempo total de resolución:** 15 minutos  
 **Riesgo de regresión:** Muy bajo  

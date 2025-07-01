@@ -2,6 +2,6 @@
 export { WelcomeWidget } from './WelcomeWidget';
 export { QuickActionsWidget } from './QuickActionsWidget';
 export { MainModulesWidget } from './MainModulesWidget';
-export { AyniWalletWidget } from './AyniWalletWidget';
+export { ReciprocidadWalletWidget } from './ReciprocidadWalletWidget';
 export { NotificationsWidget } from './NotificationsWidget';
 export { DailyReflectionWidget } from './DailyReflectionWidget';

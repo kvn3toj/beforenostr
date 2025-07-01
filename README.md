@@ -20,14 +20,14 @@
 
 ## 🎯 Descripción del Proyecto:
 
-CoomÜnity es una plataforma revolucionaria que implementa los principios del **Bien Común** y la **reciprocidad (Ayni)** a través de una experiencia gamificada. Combina un marketplace colaborativo, un sistema de video interactivo, funcionalidades sociales y una economía interna basada en **Lükas** y **Mëritos**.
+CoomÜnity es una plataforma revolucionaria que implementa los principios del **Bien Común** y la **reciprocidad (Ayni)** a través de una experiencia gamificada. Combina un marketplace colaborativo, un sistema de video interactivo, funcionalidades sociales y una economía interna basada en **Ünits** y **Mëritos**.
 
 ### 🌟 Módulos Principales
 
 - **🎮 ÜPlay (GPL)** - Video player gamificado interactivo
 - **🛒 Marketplace (GMP)** - Intercambio de productos y servicios
 - **👥 Social** - Comunidad y colaboración
-- **💰 Wallet** - Gestión de Lükas (moneda interna)
+- **💰 Wallet** - Gestión de Ünits (moneda interna)
 - **📊 Analytics** - Métricas y seguimiento de progreso
 
 ## 🏗️ Arquitectura
@@ -156,132 +156,3 @@ npm run build              # Build completo
 npm run build:backend      # Build solo backend
 npm run start:backend:prod # Producción backend
 ```
-
-### 🧪 Testing
-
-```bash
-npm run test               # Tests unitarios
-npm run test:e2e           # Tests E2E con Playwright
-npm run test:e2e --workspace=coomunity-superapp  # E2E específico
-```
-
-### 🔧 Utilidades
-
-```bash
-npm run clean:processes    # Limpiar procesos
-npm run port:status        # Estado de puertos
-npm run db:reset           # Reset base de datos
-npm run db:seed           # Poblar con datos de prueba
-```
-
-## 🧪 Testing
-
-### 🎭 Tests E2E (Playwright)
-
-El proyecto incluye +50 tests E2E que cubren:
-
-- ✅ Autenticación completa
-- ✅ Navegación entre módulos
-- ✅ CRUD operations (Marketplace)
-- ✅ Video player interactivo
-- ✅ Funcionalidades sociales
-- ✅ Wallet y transacciones
-
-**Ejecutar tests**:
-
-```bash
-# Todos los tests
-npm run test:e2e
-
-# Test específico
-npx playwright test --project=chromium --headed
-
-# Modo debug
-npx playwright test --debug
-
-# Reporte HTML
-npx playwright show-report
-```
-
-### 🔑 Credenciales de Testing
-
-```typescript
-// Credenciales verificadas para desarrollo y testing
-admin@gamifier.com / admin123      // Administrador
-user@gamifier.com / 123456         // Usuario regular
-premium@gamifier.com / 123456      // Usuario premium
-creator@gamifier.com / 123456      // Content creator
-moderator@gamifier.com / 123456    // Moderador
-```
-
-## 🔧 Configuración
-
-### 🌐 Variables de Entorno
-
-**SuperApp** (`Demo/apps/superapp-unified/.env`):
-
-```env
-VITE_API_BASE_URL=http://localhost:3002
-VITE_BASE_URL=http://localhost:3001
-VITE_ENABLE_MOCK_AUTH=false
-VITE_APP_ENV=development
-```
-
-**Backend** (`backend/.env`):
-
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/coomunity"
-REDIS_URL="redis://localhost:6379"
-JWT_SECRET="your-jwt-secret"
-PORT=3002
-```
-
-### 🐳 Docker
-
-```bash
-# Desarrollo con Docker
-docker-compose -f docker-compose.dev.yml up
-
-# Producción
-docker-compose -f docker-compose.prod.yml up
-```
-
-## 📖 Documentación
-
-### 📚 Documentación Adicional
-
-- [📋 Guía de Desarrollo](docs/guides/DEVELOPMENT_GUIDE.md)
-- [🏗️ Arquitectura Detallada](docs/architecture/ARCHITECTURE.md)
-- [🧪 Guía de Testing](docs/testing/TESTING_GUIDE.md)
-- [🚀 Deploy &amp; CI/CD](docs/deployment/DEPLOYMENT.md)
-- [🎨 Design System](docs/design/DESIGN_SYSTEM.md)
-
-### 🔗 Enlaces Útiles
-
-- [API Documentation](http://localhost:3002/api) (Swagger)
-- [Storybook](http://localhost:6006) (Component Library)
-- [Admin Panel](http://localhost:3000)
-
-## 🏆 Estado del Proyecto
-
-- ✅ **SuperApp**: 95% completado
-- ✅ **Backend**: 100% funcional
-- ✅ **Testing**: Cobertura E2E extensa
-- ✅ **Integración**: Frontend-Backend conectado
-- ✅ **Arquitectura**: Limpia y escalable
-
-## 🤝 Contribuir
-
-1. Fork el proyecto
-2. Crear rama feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit cambios (`git commit -m 'Add: nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abrir Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para detalles.
-
----
-
-**🌟 CoomÜnity - Construyendo el futuro de la economía colaborativa**

@@ -41,7 +41,7 @@ interface AgentStatus {
 
 interface CommunityMetrics {
   wisdomQuotient: number;
-  ayniIndex: number;
+  reciprocidadIndex: number;
   collaborationVelocity: number;
   innovationScore: number;
 }
@@ -111,7 +111,7 @@ const OracleAgentsDashboard: React.FC = () => {
   const createMockData = (): DashboardData => ({
     communityMetrics: {
       wisdomQuotient: 8.7,
-      ayniIndex: 0.92,
+      reciprocidadIndex: 0.92,
       collaborationVelocity: 15.3,
       innovationScore: 7.8
     },
@@ -131,7 +131,7 @@ const OracleAgentsDashboard: React.FC = () => {
     },
     leaderboard: [
       { username: 'SabioAdmin', lukasBalance: 2500, level: 'Oráculo Maestro' },
-      { username: 'ColaboradorAyni', lukasBalance: 1800, level: 'Visionario Elemental' },
+      { username: 'ColaboradorReciprocidad', lukasBalance: 1800, level: 'Visionario Elemental' },
       { username: 'TuUsuario', lukasBalance: 450, level: 'Oráculo Aprendiz' }
     ],
     achievements: {
@@ -145,8 +145,8 @@ const OracleAgentsDashboard: React.FC = () => {
       ],
       available: [
         {
-          name: '🌟 Maestro del Ayni',
-          description: 'Mantén un balance de Ayni > 0.9 por 30 días',
+          name: '🌟 Maestro del Reciprocidad',
+          description: 'Mantén un balance de Reciprocidad > 0.9 por 30 días',
           lukasReward: 200,
           progress: 0.73
         }
@@ -219,8 +219,8 @@ const OracleAgentsDashboard: React.FC = () => {
           <Card sx={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
             <CardContent sx={{ color: 'white', textAlign: 'center' }}>
               <Group sx={{ fontSize: 40, mb: 1 }} />
-              <Typography variant="h4">{(dashboardData.communityMetrics.ayniIndex * 100).toFixed(0)}%</Typography>
-              <Typography variant="body2">Índice de Ayni</Typography>
+              <Typography variant="h4">{(dashboardData.communityMetrics.reciprocidadIndex * 100).toFixed(0)}%</Typography>
+              <Typography variant="body2">Índice de Reciprocidad</Typography>
             </CardContent>
           </Card>
         </Grid>

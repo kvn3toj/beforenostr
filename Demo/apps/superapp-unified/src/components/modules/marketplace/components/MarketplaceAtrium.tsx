@@ -78,7 +78,7 @@ const MarketplaceAtrium: React.FC<MarketplaceAtriumProps> = ({ onEnter }) => {
           <motion.div variants={itemVariants}>
             <Typography variant="h6" color="text.secondary" maxWidth="600px">
               Estás entrando a un ecosistema de intercambio basado en la
-              Reciprocidad (Ayni) y el Bien Común. Cada producto y servicio aquí
+              Reciprocidad (Reciprocidad) y el Bien Común. Cada producto y servicio aquí
               es una semilla para un mundo más consciente.
             </Typography>
           </motion.div>

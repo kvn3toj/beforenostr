@@ -17,9 +17,9 @@
 
 ```
 ┌─ WelcomeHeader ────────────────┐
-├─ AyniMetricsCard ─┬─ WalletOverview ─┤
+├─ ReciprocidadMetricsCard ─┬─ WalletOverview ─┤
 ├─ (8+ elementos   │  QuickActionsGrid │
-│   simultáneos)   └─ AyniVisualization┤
+│   simultáneos)   └─ ReciprocidadVisualization┤
 ├─ ModuleCards (6+ módulos) ──────────┤
 ├─ NotificationCenter ─────────────────┤
 ├─ AdvancedInsightsPanel ──────────────┤
@@ -35,7 +35,7 @@ Tiempo comprensión: >5 segundos ❌
 └─────────────────────────────────────────┘
 
 ┌─ PrimaryDashboard (FOCO TOTAL) ──────┐
-├─ • Balance Ayni HERO                │
+├─ • Balance Reciprocidad HERO                │
 ├─ • Insights inteligentes            │
 └─ • Progressive disclosure           ┘
 
@@ -58,7 +58,7 @@ Tiempo comprensión: <2 segundos ✅
 /* Antes: Inconsistente */
 spacing={3} vs spacing={4} vs sx={{ mb: 2 }}
 borderRadius: 2 vs borderRadius: 3 vs classes CSS
-alpha('#6366f1', 0.08) vs var(--ayni-primary)
+alpha('#6366f1', 0.08) vs var(--reciprocidad-primary)
 
 /* Después: Unificado */
 --space-4: 1rem
@@ -81,7 +81,7 @@ alpha('#6366f1', 0.08) vs var(--ayni-primary)
 **Funcionalidad:**
 
 - ✅ **Saludo contextual** que cambia según balance y hora
-- ✅ **Balance Ayni integrado** visualmente prominente
+- ✅ **Balance Reciprocidad integrado** visualmente prominente
 - ✅ **Primary action dinámico** con urgencia visual
 - ✅ **Notificaciones y settings** minimizados
 - ✅ **Animaciones glassmorphism** para premium feel
@@ -101,7 +101,7 @@ const getSmartGreeting = (userName: string, balance: number) => {
 **Archivo:** `src/components/home/PrimaryDashboard.tsx`  
 **Funcionalidad:**
 
-- ✅ **Balance Ayni HERO** (texto 5xl, gradiente)
+- ✅ **Balance Reciprocidad HERO** (texto 5xl, gradiente)
 - ✅ **Insights inteligentes** generados automáticamente
 - ✅ **Progressive disclosure** perfeccionado
 - ✅ **Element progress rings** animados
@@ -168,7 +168,7 @@ if (balance < 0.4) {
 const calculateRelevanceScore = (module, balance, elementos) => {
   let score = 0;
 
-  // Factor 1: Balance Ayni (40% peso)
+  // Factor 1: Balance Reciprocidad (40% peso)
   if (module.id === 'marketplace' && balance < 0.6) score += 40;
 
   // Factor 2: Elemento dominante (25% peso)
@@ -330,7 +330,7 @@ const generateSmartActions = (balance: number, userLevel: string) => {
 const calculateRelevanceScore = (module, balance, elementos) => {
   let score = 0;
 
-  // Factor 1: Balance Ayni crítico (40% peso)
+  // Factor 1: Balance Reciprocidad crítico (40% peso)
   if (module.id === 'marketplace' && balance < 0.6) score += 40;
 
   // Factor 2: Elemento dominante usuario (25% peso)
@@ -405,7 +405,7 @@ const generateSmartInsights = (balance, elementos, ondas, meritos) => {
 
 ```
 Nivel 1: Información crítica (siempre visible)
-├─ Balance Ayni actual
+├─ Balance Reciprocidad actual
 ├─ Primary action recomendada
 └─ 2 insights más importantes
 

@@ -134,9 +134,9 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* ===== AYNI SOLAR SYSTEM 3D - SISTEMA COMPLETO ===== */
+/* ===== RECIPROCIDAD SOLAR SYSTEM 3D - SISTEMA COMPLETO ===== */
 
-.ayni-solar-system-universe {
+.reciprocidad-solar-system-universe {
   transform-style: preserve-3d;
   perspective: 2000px;
   perspective-origin: center center;
@@ -318,7 +318,7 @@
 
 /* ===== OPTIMIZACIONES DE PERFORMANCE ===== */
 
-.ayni-solar-system-universe *,
+.reciprocidad-solar-system-universe *,
 .orbital-element-sphere *,
 .central-planet-sphere * {
   backface-visibility: hidden;
@@ -349,7 +349,7 @@
 }
 
 @media (max-width: 480px) {
-  .ayni-solar-system-universe {
+  .reciprocidad-solar-system-universe {
     height: 80vh !important;
   }
 
@@ -621,7 +621,7 @@
 /* ===== RESPONSIVE DESIGN ===== */
 
 @media (max-width: 768px) {
-  .ayni-balance-3d-container {
+  .reciprocidad-balance-3d-container {
     width: 200px !important;
     height: 200px !important;
   }
@@ -657,7 +657,7 @@
 /* ===== ACCESIBILIDAD ===== */
 
 @media (prefers-reduced-motion: reduce) {
-  .ayni-balance-3d-container,
+  .reciprocidad-balance-3d-container,
   .weather-particle,
   .enhanced-particles .particle,
   .gradient-mesh-bg {

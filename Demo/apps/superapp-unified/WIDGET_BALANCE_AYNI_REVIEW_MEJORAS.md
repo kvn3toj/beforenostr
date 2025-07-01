@@ -1,8 +1,8 @@
-# 🌟 REVIEW COMPLETO: WIDGET "TU BALANCE AYNI" - MEJORAS PROPUESTAS
+# 🌟 REVIEW COMPLETO: WIDGET "TU BALANCE RECIPROCIDAD" - MEJORAS PROPUESTAS
 
 ## 📋 RESUMEN EJECUTIVO
 
-El widget **AyniMetricsCardRevolutionary.tsx** es actualmente un componente técnicamente avanzado con un sistema solar 3D, distribución Fibonacci y física elemental. Sin embargo, presenta oportunidades significativas de mejora en UX, performance, accesibilidad y funcionalidad.
+El widget **ReciprocidadMetricsCardRevolutionary.tsx** es actualmente un componente técnicamente avanzado con un sistema solar 3D, distribución Fibonacci y física elemental. Sin embargo, presenta oportunidades significativas de mejora en UX, performance, accesibilidad y funcionalidad.
 
 ---
 
@@ -58,7 +58,7 @@ El widget **AyniMetricsCardRevolutionary.tsx** es actualmente un componente téc
 
 ```typescript
 // ❌ Componente monolítico de 979 líneas
-const AyniMetricsCardRevolutionary: React.FC = (
+const ReciprocidadMetricsCardRevolutionary: React.FC = (
   {
     /* 12 props */
   }
@@ -73,22 +73,22 @@ const AyniMetricsCardRevolutionary: React.FC = (
 
 ```typescript
 // ✅ Arquitectura modular
-const AyniBalanceWidget: React.FC = () => {
+const ReciprocidadBalanceWidget: React.FC = () => {
   return (
-    <AyniWidgetContainer>
-      <AyniHeader />
-      <AyniSolarSystem />
-      <AyniMetricsPanel />
-      <AyniControls />
-    </AyniWidgetContainer>
+    <ReciprocidadWidgetContainer>
+      <ReciprocidadHeader />
+      <ReciprocidadSolarSystem />
+      <ReciprocidadMetricsPanel />
+      <ReciprocidadControls />
+    </ReciprocidadWidgetContainer>
   );
 };
 
 // Componentes separados:
-// - AyniSolarSystem.tsx (sistema 3D)
-// - AyniMetricsPanel.tsx (información)
-// - AyniControls.tsx (configuración)
-// - hooks/useAyniPhysics.ts (lógica)
+// - ReciprocidadSolarSystem.tsx (sistema 3D)
+// - ReciprocidadMetricsPanel.tsx (información)
+// - ReciprocidadControls.tsx (configuración)
+// - hooks/useReciprocidadPhysics.ts (lógica)
 ```
 
 ### 📱 **2. USER EXPERIENCE (UX)**
@@ -104,10 +104,10 @@ const AyniBalanceWidget: React.FC = () => {
 ##### **A. Panel de Información Contextual**
 
 ```typescript
-interface AyniInfoPanel {
+interface ReciprocidadInfoPanel {
   sections: {
-    'que-es-ayni': {
-      title: 'Qué es tu Balance Ayni';
+    'que-es-reciprocidad': {
+      title: 'Qué es tu Balance Reciprocidad';
       description: 'Medida de equilibrio entre dar y recibir';
       tips: string[];
     };
@@ -127,11 +127,11 @@ interface AyniInfoPanel {
 ##### **B. Estados de Progresión Clara**
 
 ```typescript
-interface AyniProgressionStates {
+interface ReciprocidadProgressionStates {
   principiante: {
     range: [0, 25];
     title: 'Explorador Cósmico';
-    description: 'Comenzando tu viaje Ayni';
+    description: 'Comenzando tu viaje Reciprocidad';
     nextGoal: 'Alcanza 25% para ser Equilibrista';
   };
   equilibrista: {
@@ -148,7 +148,7 @@ interface AyniProgressionStates {
   };
   maestro: {
     range: [75, 100];
-    title: 'Maestro del Balance Ayni';
+    title: 'Maestro del Balance Reciprocidad';
     description: 'Líder en reciprocidad consciente';
   };
 }
@@ -181,7 +181,7 @@ const ElementTooltips = {
 ##### **A. Panel de Métricas Detalladas**
 
 ```typescript
-interface AyniMetricsDisplay {
+interface ReciprocidadMetricsDisplay {
   current: {
     balance: number;
     trend: 'up' | 'down' | 'stable';
@@ -211,7 +211,7 @@ interface AyniMetricsDisplay {
 ##### **B. Gráfico de Tendencia Temporal**
 
 ```typescript
-const AyniTrendChart = () => {
+const ReciprocidadTrendChart = () => {
   return (
     <ResponsiveContainer>
       <LineChart data={historicalData}>
@@ -238,7 +238,7 @@ const AyniTrendChart = () => {
 ##### **A. Panel de Controles Intuitivo**
 
 ```typescript
-const AyniControlPanel = () => {
+const ReciprocidadControlPanel = () => {
   return (
     <ControlsContainer>
       <ViewModeToggle
@@ -479,7 +479,7 @@ const KeyboardNavigation = () => {
   return (
     <div
       role="application"
-      aria-label="Widget Balance Ayni"
+      aria-label="Widget Balance Reciprocidad"
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
@@ -494,9 +494,9 @@ const KeyboardNavigation = () => {
 ```typescript
 const AccessibleMetrics = () => {
   return (
-    <div role="region" aria-label="Métricas Balance Ayni">
-      <h3>Tu Balance Ayni: {balance}%</h3>
-      <p>Nivel: {ayniLevel}</p>
+    <div role="region" aria-label="Métricas Balance Reciprocidad">
+      <h3>Tu Balance Reciprocidad: {balance}%</h3>
+      <p>Nivel: {reciprocidadLevel}</p>
       <ul aria-label="Elementos">
         <li>Fuego: {fuego}% - {getFuegoDescription(fuego)}</li>
         <li>Agua: {agua}% - {getAguaDescription(agua)}</li>
@@ -520,12 +520,12 @@ const AccessibleMetrics = () => {
 ##### **A. Debug Panel**
 
 ```typescript
-const AyniDebugPanel = () => {
+const ReciprocidadDebugPanel = () => {
   if (process.env.NODE_ENV !== 'development') return null;
 
   return (
     <DebugContainer>
-      <h4>Ayni Widget Debug</h4>
+      <h4>Reciprocidad Widget Debug</h4>
       <div>FPS: {currentFPS}</div>
       <div>Render Time: {renderTime}ms</div>
       <div>Physics Calculations: {physicsCalcs}/s</div>
@@ -540,7 +540,7 @@ const AyniDebugPanel = () => {
 ##### **B. Testing Utilities**
 
 ```typescript
-const createAyniTestUtils = () => {
+const createReciprocidadTestUtils = () => {
   return {
     setBalance: (value: number) => (mockState.balance = value),
     setElement: (element: string, value: number) =>
@@ -632,7 +632,7 @@ const createAyniTestUtils = () => {
 
 **Transformar de "componente técnicamente impresionante" a "widget útil y comprensible"**
 
-El widget actual es una demostración técnica excelente, pero necesita evolucionar hacia una herramienta que realmente ayude al usuario a entender y mejorar su Balance Ayni.
+El widget actual es una demostración técnica excelente, pero necesita evolucionar hacia una herramienta que realmente ayude al usuario a entender y mejorar su Balance Reciprocidad.
 
 ### **🔧 Enfoque Recomendado:**
 
@@ -646,11 +646,11 @@ El widget actual es una demostración técnica excelente, pero necesita evolucio
 Un widget que mantenga su belleza visual única pero que sea:
 
 - **Comprensible** por cualquier usuario
-- **Útil** para mejorar el Balance Ayni
+- **Útil** para mejorar el Balance Reciprocidad
 - **Rápido** en cualquier dispositivo
 - **Accesible** para todos
 - **Mantenible** para el equipo de desarrollo
 
 ---
 
-_Review completado el ${new Date().toLocaleDateString()} - Análisis exhaustivo del Widget Balance Ayni con roadmap de mejoras específicas_
+_Review completado el ${new Date().toLocaleDateString()} - Análisis exhaustivo del Widget Balance Reciprocidad con roadmap de mejoras específicas_

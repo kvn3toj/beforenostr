@@ -15,7 +15,7 @@
 - ✅ Creado `videoQuestions.ts` con configuración completa de preguntas por video
 - ✅ Actualizado `useInteractiveVideo` hook para usar preguntas locales como fallback
 - ✅ Implementado sistema robusto de carga de preguntas (backend → local → mock)
-- ✅ Agregadas preguntas específicas sobre filosofía CoomÜnity (Ayni, Öndas, Bien Común)
+- ✅ Agregadas preguntas específicas sobre filosofía CoomÜnity (Reciprocidad, Öndas, Bien Común)
 
 ### 2. **Problema: Navegación y UX del reproductor**
 
@@ -113,11 +113,11 @@
 - **ID:** `coomunity-intro`
 - **Preguntas:** 4 preguntas sobre principios fundamentales
 - **Recompensas:** 95 Mëritos, 45 Öndas totales
-- **Temas:** Ayni, Öndas, Bien Común, Metanöia
+- **Temas:** Reciprocidad, Öndas, Bien Común, Metanöia
 
-### Video 2: "Ayni: El Arte de la Reciprocidad"
+### Video 2: "Reciprocidad: El Arte de la Reciprocidad"
 
-- **ID:** `ayni-deep-dive`
+- **ID:** `reciprocidad-deep-dive`
 - **Preguntas:** 3 preguntas sobre aplicación práctica
 - **Recompensas:** 75 Mëritos, 40 Öndas totales
 - **Temas:** Reciprocidad, Equilibrio, Intercambio
@@ -170,7 +170,7 @@ Question Appears → Timer Starts → User Answers → Feedback + Rewards → Co
 ```typescript
 const videoIdMap: Record<number, string> = {
   1: 'coomunity-intro',
-  2: 'ayni-deep-dive',
+  2: 'reciprocidad-deep-dive',
   3: 'ondas-energia',
 };
 ```
@@ -180,13 +180,13 @@ const videoIdMap: Record<number, string> = {
 ```typescript
 // Total: 11 preguntas configuradas
 'coomunity-intro': 4 preguntas  // Fundamentos
-'ayni-deep-dive': 3 preguntas   // Reciprocidad
+'reciprocidad-deep-dive': 3 preguntas   // Reciprocidad
 'ondas-energia': 4 preguntas    // Energía
 ```
 
 ## 🎨 Filosofía CoomÜnity Integrada
 
-### Ayni (Reciprocidad)
+### Reciprocidad (Reciprocidad)
 
 - Los usuarios reciben Mëritos y Öndas por responder correctamente
 - El sistema recompensa el equilibrio entre aprendizaje y contribución
@@ -254,7 +254,7 @@ POST / analytics / video - progress; // Enviar progreso
 
 **✅ UX Mejorada:** Navegación fluida desde el home hacia páginas dedicadas del reproductor con mejor organización y controls.
 
-**✅ Filosofía Integrada:** Todas las preguntas están alineadas con los principios de CoomÜnity (Ayni, Bien Común, Öndas).
+**✅ Filosofía Integrada:** Todas las preguntas están alineadas con los principios de CoomÜnity (Reciprocidad, Bien Común, Öndas).
 
 **✅ Sistema Escalable:** Arquitectura preparada para agregar más videos, preguntas y funcionalidades avanzadas.
 

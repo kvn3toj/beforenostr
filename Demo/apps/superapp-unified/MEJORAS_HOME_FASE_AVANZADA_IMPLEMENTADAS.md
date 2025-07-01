@@ -75,9 +75,9 @@ const engagement = { likes, comments, shares };
 
 ### 🔄 COMPONENTES MEJORADOS
 
-#### 1. 🌟 AyniBalanceVisualization MEJORADO
+#### 1. 🌟 ReciprocidadBalanceVisualization MEJORADO
 
-**Archivo:** `src/components/home/AyniBalanceVisualization.tsx`
+**Archivo:** `src/components/home/ReciprocidadBalanceVisualization.tsx`
 
 **Mejoras implementadas:**
 
@@ -155,7 +155,7 @@ interface CommunityActivity {
 }
 ```
 
-#### 3. 🤖 Balance Ayni 3D con IA
+#### 3. 🤖 Balance Reciprocidad 3D con IA
 
 - Análisis inteligente de fortalezas y oportunidades
 - Recomendaciones personalizadas por elemento
@@ -187,7 +187,7 @@ src/components/home/
 ├── EnergyWeatherWidget.tsx     (nuevo)
 ├── LiveActivityFeed.tsx        (nuevo)
 ├── EnhancedParticles.tsx      (nuevo)
-└── AyniBalanceVisualization.tsx (mejorado)
+└── ReciprocidadBalanceVisualization.tsx (mejorado)
 ```
 
 ### 🚀 INTEGRACIÓN EN HOME.tsx
@@ -199,7 +199,7 @@ src/components/home/
 <EnhancedParticles type="sparkle" />
 
 // Widgets en orden optimizado
-<AyniBalanceVisualization />  // Mejorado 3D
+<ReciprocidadBalanceVisualization />  // Mejorado 3D
 <EnergyWeatherWidget />       // Nuevo
 <LiveActivityFeed />          // Nuevo
 ```
@@ -262,7 +262,7 @@ El Home ahora se siente como un **dashboard futurista** y **altamente interactiv
 
 | Funcionalidad               | Estado        | Detalles                              |
 | --------------------------- | ------------- | ------------------------------------- |
-| AyniBalanceVisualization 3D | ✅ Completo   | Efectos 3D, partículas, análisis IA   |
+| ReciprocidadBalanceVisualization 3D | ✅ Completo   | Efectos 3D, partículas, análisis IA   |
 | EnergyWeatherWidget         | ✅ Completo   | 5 climas, partículas, recomendaciones |
 | LiveActivityFeed            | ✅ Completo   | 8 usuarios, engagement, tiempo real   |
 | EnhancedParticles           | ✅ Completo   | 5 tipos, interactivo, optimizado      |

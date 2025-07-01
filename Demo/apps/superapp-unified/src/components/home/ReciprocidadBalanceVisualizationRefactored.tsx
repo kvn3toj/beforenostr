@@ -24,23 +24,20 @@ import DiamondIcon from '@mui/icons-material/Diamond';
 import {
   RevolutionaryWidget,
   createRevolutionaryWidget,
-  createElementalWidget,
-  REVOLUTIONARY_PRESETS,
   elementalPatterns,
-  cosmicUtils
 } from '../../design-system';
 
-// 🌟 IMPORTS DEL SISTEMA ELEMENTAL ORIGINAL (mantener compatibilidad)
-import { ElementStats, AyniMetrics } from '../../design-system/types';
+// 🌟 IMPORTS DE TIPOS DEL DESIGN SYSTEM
+import { ElementStats, ReciprocidadMetrics } from '../../design-system/types';
 
 /**
- * 🌌 AYNI BALANCE VISUALIZATION - REFACTORED
+ * 🌌 RECIPROCIDAD BALANCE VISUALIZATION - REFACTORED
  * =========================================
  *
- * Versión refactorizada del widget Balance Ayni usando el
+ * Versión refactorizada del widget Balance de Reciprocidad usando el
  * Design System revolucionario centralizado.
  *
- * ANTES: AyniBalanceVisualization.tsx (1236 líneas)
+ * ANTES: ReciprocidadBalanceVisualization.tsx (1236 líneas)
  * DESPUÉS: Uso de RevolutionaryWidget + patrones centralizados
  *
  * Mejoras implementadas:
@@ -54,28 +51,21 @@ import { ElementStats, AyniMetrics } from '../../design-system/types';
  * Fase 2, Semana 1 - Plan Maestro Material UI
  */
 
-interface AyniBalanceVisualizationProps {
-  ondas: number;
-  meritos: number;
-  ayniLevel: string;
-  nextLevel: string;
-  ayniProgress: number;
-  bienComunContributions: number;
-  balanceAyni: number;
+interface ReciprocidadBalanceVisualizationProps extends ReciprocidadMetrics {
   elementos: ElementStats;
   isLoading?: boolean;
   isConnected?: boolean;
   className?: string;
 }
 
-export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizationProps> = ({
+export const ReciprocidadBalanceVisualizationRefactored: React.FC<ReciprocidadBalanceVisualizationProps> = ({
   ondas,
   meritos,
-  ayniLevel,
-  nextLevel,
-  ayniProgress,
-  bienComunContributions,
-  balanceAyni,
+  nivel,
+  siguienteNivel,
+  progreso,
+  contribucionesBienComun,
+  balance,
   elementos,
   isLoading = false,
   isConnected = true,
@@ -90,19 +80,19 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
 
   // 🌟 Configuración del widget usando el design system
   const widgetConfig = useMemo(() => {
-    // Usar preset heroWidget para el Balance Ayni (elemento principal)
+    // Usar preset heroWidget para el Balance de Reciprocidad (elemento principal)
     const baseConfig = createRevolutionaryWidget('heroWidget', {
       // Habilitar efectos cósmicos para el protagonista único
       cosmicEffects: {
         enableGlow: true,
         enableAnimations: !isMobile, // Optimización móvil
         enableParticles: !isMobile && isConnected,
-        enableOrbitalEffects: !isMobile && balanceAyni > 80, // Solo si hay buen balance
-        glowIntensity: balanceAyni / 100, // Intensidad basada en balance
+        enableOrbitalEffects: !isMobile && balance > 80, // Solo si hay buen balance
+        glowIntensity: balance / 100, // Intensidad basada en balance
         orbitalRadius: 120,
         orbitalSpeed: 0.8,
         particleConfig: {
-          count: Math.min(5, Math.floor(balanceAyni / 20)),
+          count: Math.min(5, Math.floor(balance / 20)),
           size: 6,
           color: '#FFB74D',
           speed: 1,
@@ -113,7 +103,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
     });
 
     return baseConfig;
-  }, [isMobile, isConnected, balanceAyni]);
+  }, [isMobile, isConnected, balance]);
 
   // 🔄 Manejador de refresh optimizado
   const handleRefresh = async () => {
@@ -178,7 +168,7 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
         </Box>
       </Grid>
 
-      {/* ⚖️ Balance Ayni */}
+      {/* ⚖️ Balance de Reciprocidad */}
       <Grid xs={12} sm={6}>
         <Box sx={{ textAlign: 'center' }}>
           <AutoAwesomeIcon sx={{ color: elementalPatterns.espiritu.particleColor, mb: 1 }} />
@@ -189,16 +179,16 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            {balanceAyni}%
+            {balance}%
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Balance Ayni
+            Balance de Reciprocidad
           </Typography>
 
           {/* Barra de progreso cósmica */}
           <LinearProgress
             variant="determinate"
-            value={balanceAyni}
+            value={balance}
             sx={{
               mt: 1,
               height: 8,
@@ -248,32 +238,16 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
                   borderRadius: 2,
                   background: pattern.bgGradient,
                   border: `1px solid ${pattern.particleColor}20`,
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
-                    boxShadow: pattern.shadow
-                  }
+                  color: pattern.particleColor,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%'
                 }}>
-                  <Box sx={{ color: pattern.particleColor, mb: 1 }}>
-                    {elementIcons[elementKey]}
-                  </Box>
-
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 600,
-                      background: pattern.gradient,
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}
-                  >
-                    {value || 0}%
-                  </Typography>
-
-                  <Typography variant="caption" sx={{ textTransform: 'capitalize' }}>
-                    {element}
-                  </Typography>
+                  {React.cloneElement(elementIcons[elementKey], { sx: { fontSize: 32, mb: 1 }})}
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>{pattern.name}</Typography>
+                  <Typography variant="h6">{value}%</Typography>
                 </Box>
               </Grid>
             );
@@ -283,86 +257,49 @@ export const AyniBalanceVisualizationRefactored: React.FC<AyniBalanceVisualizati
     );
   };
 
-  // 🎯 Renderizar información de nivel
   const renderLevelInfo = () => (
-    <Box sx={{ mt: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Chip
-          label={ayniLevel}
-          color="primary"
-          sx={{
-            background: elementalPatterns[dominantElement].gradient,
-            color: 'white',
-            fontWeight: 600
-          }}
-        />
-        <Typography variant="body2" color="text.secondary">
-          Siguiente: {nextLevel}
-        </Typography>
-      </Box>
-
+    <Box sx={{ textAlign: 'center', mt: 3 }}>
+      <Typography variant="h6">{nivel}</Typography>
       <LinearProgress
         variant="determinate"
-        value={ayniProgress}
-        sx={{
-          height: 6,
-          borderRadius: 3,
-          backgroundColor: 'rgba(255, 183, 77, 0.1)',
-          '& .MuiLinearProgress-bar': {
-            background: elementalPatterns[dominantElement].gradient,
-            borderRadius: 3
-          }
-        }}
+        value={progreso}
+        sx={{ my: 1, height: 6, borderRadius: 3 }}
       />
-
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-        Progreso: {ayniProgress}% hacia {nextLevel}
+      <Typography variant="caption" color="text.secondary">
+        {progreso}% para {siguienteNivel}
       </Typography>
     </Box>
   );
 
+  const widgetActions = (
+    <>
+      <IconButton onClick={handleRefresh} disabled={refreshing}>
+        <RefreshIcon sx={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
+      </IconButton>
+      <IconButton onClick={handleExpand}>
+        <ExpandMoreIcon sx={{ transform: expandedDetails ? 'rotate(180deg)' : 'none' }} />
+      </IconButton>
+    </>
+  );
+
   return (
     <RevolutionaryWidget
-      title="🌟 Tu Balance CoomÜnity"
-      subtitle="Sistema solar personal de equilibrio cósmico"
-      variant={widgetConfig.variant}
+      title="Balance de Reciprocidad"
+      subtitle="Tu centro de equilibrio energético"
+      actions={widgetActions}
       element={dominantElement}
-      cosmicIntensity={widgetConfig.cosmicIntensity}
-      cosmicEffects={widgetConfig.cosmicEffects}
-      isLoading={isLoading || refreshing}
+      isLoading={isLoading}
       isConnected={isConnected}
-      onRefresh={handleRefresh}
-      onExpand={handleExpand}
       className={className}
-      actions={
-        <IconButton size="small" color="primary">
-          <ExpandMoreIcon />
-        </IconButton>
-      }
+      {...widgetConfig}
     >
-      {/* 📊 Métricas principales */}
       {renderMainMetrics()}
-
-      {/* 🌟 Distribución elemental */}
-      {renderElementalDistribution()}
-
-      {/* 🎯 Información de nivel */}
-      {renderLevelInfo()}
-
-      {/* 🏆 Contribuciones al Bien Común */}
-      <Box sx={{ mt: 3, textAlign: 'center' }}>
-        <Typography variant="body2" color="text.secondary">
-          🤝 Contribuciones al Bien Común
-        </Typography>
-        <Typography variant="h5" sx={{
-          fontWeight: 600,
-          color: elementalPatterns.agua.particleColor
-        }}>
-          {bienComunContributions.toLocaleString()}
-        </Typography>
-      </Box>
+      {expandedDetails && (
+        <>
+          {renderElementalDistribution()}
+          {renderLevelInfo()}
+        </>
+      )}
     </RevolutionaryWidget>
   );
 };
-
-export default AyniBalanceVisualizationRefactored;

@@ -39,8 +39,8 @@ interface ChatMessage {
     isCurrentUser: boolean;
   };
   timestamp: string;
-  type: 'text' | 'ayni_proposal' | 'system' | 'celebration';
-  ayniData?: {
+  type: 'text' | 'reciprocidad_proposal' | 'system' | 'celebration';
+  reciprocidadData?: {
     offer: string;
     request: string;
     status: 'pending' | 'accepted' | 'completed';
@@ -82,15 +82,15 @@ const mockMessages: ChatMessage[] = [
   {
     id: '2',
     content:
-      '¡Perfecto! Te propongo un intercambio Ayni: yo te enseño sobre compostaje y tú me ayudas con el diseño del espacio.',
+      '¡Perfecto! Te propongo un intercambio Reciprocidad: yo te enseño sobre compostaje y tú me ayudas con el diseño del espacio.',
     sender: {
       id: 'current',
       name: 'Tú',
       isCurrentUser: true,
     },
     timestamp: '10:35',
-    type: 'ayni_proposal',
-    ayniData: {
+    type: 'reciprocidad_proposal',
+    reciprocidadData: {
       offer: 'Conocimiento sobre compostaje urbano',
       request: 'Diseño de espacios para huerto',
       status: 'pending',
@@ -111,7 +111,7 @@ const mockMessages: ChatMessage[] = [
   },
   {
     id: '4',
-    content: '🎉 ¡Intercambio Ayni completado con éxito! +25 Mëritos ganados.',
+    content: '🎉 ¡Intercambio Reciprocidad completado con éxito! +25 Mëritos ganados.',
     sender: {
       id: 'system',
       name: 'Sistema CoomÜnity',
@@ -134,11 +134,11 @@ const mockSelectedConnection: Connection = {
 
 const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
   const theme = useTheme();
-  const { sender, content, timestamp, type, ayniData } = message;
+  const { sender, content, timestamp, type, reciprocidadData } = message;
 
   const getMessageColor = () => {
     if (type === 'system' || type === 'celebration') return '#4CAF50';
-    if (type === 'ayni_proposal') return '#E91E63';
+    if (type === 'reciprocidad_proposal') return '#E91E63';
     return sender.isCurrentUser ? '#2196F3' : '#757575';
   };
 
@@ -181,7 +181,7 @@ const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
 
         <Paper
           sx={{
-            p: type === 'ayni_proposal' ? 2 : 1.5,
+            p: type === 'reciprocidad_proposal' ? 2 : 1.5,
             bgcolor: isSystem
               ? alpha('#4CAF50', 0.1)
               : isCurrentUser
@@ -191,14 +191,14 @@ const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
             borderRadius: isSystem ? 3 : 2,
             border: isSystem
               ? `1px solid ${alpha('#4CAF50', 0.3)}`
-              : type === 'ayni_proposal'
+              : type === 'reciprocidad_proposal'
                 ? `2px solid ${alpha('#E91E63', 0.3)}`
                 : 'none',
             position: 'relative',
           }}
         >
-          {/* Mensaje de propuesta Ayni */}
-          {type === 'ayni_proposal' && ayniData && (
+          {/* Mensaje de propuesta Reciprocidad */}
+          {type === 'reciprocidad_proposal' && reciprocidadData && (
             <Box>
               <Stack
                 direction="row"
@@ -208,7 +208,7 @@ const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
               >
                 <Handshake sx={{ color: '#E91E63' }} />
                 <Typography variant="subtitle2" fontWeight="bold">
-                  Propuesta de Intercambio Ayni
+                  Propuesta de Intercambio Reciprocidad
                 </Typography>
               </Stack>
               <Box sx={{ mb: 2 }}>
@@ -216,25 +216,25 @@ const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
                   💝 Ofrezco:
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 1 }}>
-                  {ayniData.offer}
+                  {reciprocidadData.offer}
                 </Typography>
                 <Typography variant="body2" fontWeight="bold" gutterBottom>
                   🙏 Necesito:
                 </Typography>
-                <Typography variant="body2">{ayniData.request}</Typography>
+                <Typography variant="body2">{reciprocidadData.request}</Typography>
               </Box>
               <Chip
                 label={
-                  ayniData.status === 'pending'
+                  reciprocidadData.status === 'pending'
                     ? 'Esperando respuesta'
-                    : ayniData.status === 'accepted'
+                    : reciprocidadData.status === 'accepted'
                       ? 'Aceptado'
                       : 'Completado'
                 }
                 color={
-                  ayniData.status === 'pending'
+                  reciprocidadData.status === 'pending'
                     ? 'warning'
-                    : ayniData.status === 'accepted'
+                    : reciprocidadData.status === 'accepted'
                       ? 'primary'
                       : 'success'
                 }
@@ -331,9 +331,9 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
     }
   };
 
-  const handleAyniProposal = () => {
-    // Abrir modal para crear propuesta Ayni
-    console.log('🤝 Crear propuesta Ayni');
+  const handleReciprocidadProposal = () => {
+    // Abrir modal para crear propuesta Reciprocidad
+    console.log('🤝 Crear propuesta Reciprocidad');
   };
 
   if (!selectedConnection) {
@@ -364,7 +364,7 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
               Selecciona una conexión
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Elige una conexión para comenzar una conversación basada en Ayni
+              Elige una conexión para comenzar una conversación basada en Reciprocidad
             </Typography>
           </Box>
         </CardContent>
@@ -436,9 +436,9 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
             </Box>
           </Stack>
           <Stack direction="row" spacing={1}>
-            <Tooltip title="Proponer intercambio Ayni">
+            <Tooltip title="Proponer intercambio Reciprocidad">
               <IconButton
-                onClick={handleAyniProposal}
+                onClick={handleReciprocidadProposal}
                 sx={{
                   bgcolor: alpha('#E91E63', 0.1),
                   '&:hover': { bgcolor: alpha('#E91E63', 0.2) },
@@ -482,7 +482,7 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
         )}
       </Box>
 
-      {/* Información de Ayni */}
+      {/* Información de Reciprocidad */}
       <Paper
         sx={{
           mx: 2,
@@ -496,7 +496,7 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
           <Handshake sx={{ color: '#4CAF50' }} />
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="body2" fontWeight="bold">
-              Balance Ayni con{' '}
+              Balance Reciprocidad con{' '}
               {(selectedConnection.name || 'Usuario').split(' ')[0]}
             </Typography>
             <Typography variant="caption" color="text.secondary">
@@ -519,7 +519,7 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
             fullWidth
             multiline
             maxRows={3}
-            placeholder="Escribe tu mensaje siguiendo el espíritu Ayni..."
+            placeholder="Escribe tu mensaje siguiendo el espíritu Reciprocidad..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -556,7 +556,7 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
           </Stack>
         </Stack>
 
-        {/* Sugerencias de respuesta Ayni */}
+        {/* Sugerencias de respuesta Reciprocidad */}
         <Stack direction="row" spacing={1} sx={{ mt: 1 }} flexWrap="wrap">
           <Chip
             label="¿Puedo ayudarte con algo? 🤝"
@@ -566,10 +566,10 @@ export const SocialChatArea: React.FC<SocialChatAreaProps> = ({
             sx={{ cursor: 'pointer' }}
           />
           <Chip
-            label="Proponer intercambio Ayni"
+            label="Proponer intercambio Reciprocidad"
             size="small"
             variant="outlined"
-            onClick={handleAyniProposal}
+            onClick={handleReciprocidadProposal}
             sx={{ cursor: 'pointer' }}
           />
           <Chip

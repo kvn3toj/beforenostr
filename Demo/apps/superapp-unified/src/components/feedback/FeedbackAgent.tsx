@@ -30,7 +30,7 @@ import { useFeedbackContext } from '../../contexts/FeedbackContext';
  * - Context API para gestión centralizada del estado
  *
  * 🧙‍♂️ FILOSOFÍA COOMUNITY:
- * - Ayni: Reciprocidad entre usuarios reportando y desarrolladores mejorando
+ * - Reciprocidad: Reciprocidad entre usuarios reportando y desarrolladores mejorando
  * - Bien Común: Feedback colectivo para mejorar la experiencia de todos
  * - Neguentropía: Organización inteligente del caos de bugs en mejoras sistemáticas
  */

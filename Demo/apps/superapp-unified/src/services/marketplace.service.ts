@@ -35,7 +35,7 @@ export interface MarketplaceItem {
   type: 'PRODUCT' | 'SERVICE' | 'EXPERIENCE' | 'SKILL_EXCHANGE';
   price: number;
   originalPrice?: number;
-  currency: 'LUKAS' | 'ONDAS' | 'MERITOS';
+  currency: 'UNIT' | 'ONDAS' | 'MERITOS';
   category: string;
   subcategory?: string;
   tags: string[];
@@ -88,7 +88,7 @@ export interface MarketplaceItem {
     reservations?: number;
     nextAvailable?: string;
   };
-  ayniScore?: number;
+  reciprocidadScore?: number;
   bienComunScore?: number;
   impactLevel?: 'local' | 'regional' | 'global';
   sustainabilityScore?: number;

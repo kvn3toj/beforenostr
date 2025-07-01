@@ -31,7 +31,7 @@ import {
 
 interface Notification {
   id: string;
-  type: 'ayni' | 'meritos' | 'social' | 'marketplace' | 'system';
+  type: 'reciprocidad' | 'meritos' | 'social' | 'marketplace' | 'system';
   title: string;
   message: string;
   time: string;
@@ -275,8 +275,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             <Chip
               icon={<Favorite />}
               label={`${
-                notifications.filter((n) => n.type === 'ayni').length
-              } Ayni`}
+                notifications.filter((n) => n.type === 'reciprocidad').length
+              } Reciprocidad`}
               color="success"
               variant="outlined"
               size="small"

@@ -18,7 +18,7 @@ Transformación exitosa del ÜPlay Horizontal Player de un componente monolític
 ### **Componentes Creados:**
 1. **`useVideoPlayer`** - Gestión de estado del video, controles, eventos, cleanup
 2. **`useQuestionSystem`** - Lógica de preguntas, timing, selección, envío
-3. **`useGamificationMetrics`** - Sistema de recompensas Ayni, logros, progresión
+3. **`useGamificationMetrics`** - Sistema de recompensas Reciprocidad, logros, progresión
 4. **`QuestionOverlay`** - Overlay de preguntas memoizado, accesible, navegación por teclado
 5. **`RewardFeedback`** - Feedback emocional, celebración de logros
 6. **`PlayerMetrics`** - Métricas compactas/detalladas, seguimiento de progreso
@@ -113,7 +113,7 @@ Transformación exitosa del ÜPlay Horizontal Player de un componente monolític
 
 ### **Implementaciones Clave:**
 1. **`useVideoAnalytics`** - Sistema completo de analytics con batch processing
-2. **`useAdvancedAchievements`** - Logros basados en Ayni, Bien Común, aprendizaje
+2. **`useAdvancedAchievements`** - Logros basados en Reciprocidad, Bien Común, aprendizaje
 3. **`AchievementNotifications`** - Notificaciones visuales con celebraciones
 4. **Métricas Avanzadas** - Engagement, completion rate, response time
 
@@ -125,7 +125,7 @@ Transformación exitosa del ÜPlay Horizontal Player de un componente monolític
 
 ### **Logros Implementados por Categoría:**
 - **Aprendizaje**: Primer Paso, Buscador de Conocimiento, Guardián de Sabiduría
-- **Ayni**: Equilibrio Ayni, Maestro de la Reciprocidad
+- **Reciprocidad**: Equilibrio Reciprocidad, Maestro de la Reciprocidad
 - **Bien Común**: Contribuyente Comunitario, Campeón del Bien Común
 - **Engagement**: Aprendiz Diario, Maestro de la Constancia
 - **Social**: Compartidor de Conocimiento
@@ -199,10 +199,10 @@ Transformación exitosa del ÜPlay Horizontal Player de un componente monolític
 - 🏆 **15+ Logros**: Basados en filosofía CoomÜnity
 - 🎉 **Celebraciones Visuales**: Animaciones por rareza
 - 📈 **Analytics Completos**: Tracking de engagement
-- ⚖️ **Principios Ayni**: Reciprocidad y Bien Común integrados
+- ⚖️ **Principios Reciprocidad**: Reciprocidad y Bien Común integrados
 
 ### **Filosofía CoomÜnity:**
-- ⚖️ **Ayni (Reciprocidad)**: Sistema de recompensas equilibrado
+- ⚖️ **Reciprocidad (Reciprocidad)**: Sistema de recompensas equilibrado
 - 🤝 **Bien Común**: Priorización de beneficio colectivo
 - 🌱 **Crecimiento Consciente**: Gamificación no adictiva
 - 💡 **Aprendizaje Colaborativo**: Fomento de conocimiento compartido
@@ -228,7 +228,7 @@ Transformación exitosa del ÜPlay Horizontal Player de un componente monolític
 
 El ÜPlay Horizontal Player ha sido **exitosamente transformado** de un componente funcional básico a un **sistema de clase mundial** que:
 
-- ✅ **Embody la Filosofía CoomÜnity** (Ayni, Bien Común, Crecimiento Consciente)
+- ✅ **Embody la Filosofía CoomÜnity** (Reciprocidad, Bien Común, Crecimiento Consciente)
 - ✅ **Cumple Estándares Internacionales** (WCAG 2.1, Performance, Seguridad)
 - ✅ **Escala para Millones de Usuarios** (Arquitectura modular, optimizada)
 - ✅ **Proporciona Experiencia Excepcional** (Accesible, gamificada, intuitiva)

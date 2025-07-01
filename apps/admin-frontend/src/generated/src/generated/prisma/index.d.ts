@@ -244,7 +244,7 @@ export type MarketplaceItem = $Result.DefaultSelection<Prisma.$MarketplaceItemPa
  */
 export namespace $Enums {
   export const Currency: {
-  LUKAS: 'LUKAS',
+  UNIT: 'UNIT',
   USD: 'USD',
   EUR: 'EUR',
   BTC: 'BTC',

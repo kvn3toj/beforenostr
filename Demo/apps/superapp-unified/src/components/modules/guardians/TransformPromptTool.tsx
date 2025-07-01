@@ -72,7 +72,7 @@ function buildTransformation(prompt: string, guardian: GuardianExtended, mode: s
 }
 
 const EXAMPLES: Record<string, string> = {
-  inspirador: '¿Cómo puedo aplicar el principio de Ayni en mi equipo de trabajo?',
+  inspirador: '¿Cómo puedo aplicar el principio de Reciprocidad en mi equipo de trabajo?',
   practico: 'Genera una checklist para asegurar la calidad en un módulo React.',
   narrativo: 'Cuéntame una historia sobre la transformación de un sistema legacy.',
   ai: '¿Cómo puede la IA ayudar a la evolución consciente de una comunidad digital?'

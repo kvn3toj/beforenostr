@@ -18,7 +18,7 @@
 - **Componente:** `BetaRegister.tsx` (líneas 380-420)
 - **Funcionalidad:** Quiz de 3 preguntas filosóficas sobre valores CoomÜnity
 - **Preguntas Implementadas:**
-  - ¿Qué significa para ti la reciprocidad consciente (Ayni)?
+  - ¿Qué significa para ti la reciprocidad consciente (Reciprocidad)?
   - ¿Cómo priorizas el Bien Común sobre el beneficio individual?
   - ¿Qué papel juega la cooperación en la construcción de un mundo mejor?
 - **Estado:** ✅ **COMPLETAMENTE FUNCIONAL**
@@ -30,7 +30,7 @@
 - **Estado:** ✅ **INTEGRADO EN UI**
 
 #### **3. Almacenamiento de Respuestas (IMPLEMENTADO)**
-- **Estructura:** `philosophyAnswers` object with keys: `ayni`, `bienComun`, `cooperacion`
+- **Estructura:** `philosophyAnswers` object with keys: `reciprocidad`, `bienComun`, `cooperacion`
 - **Validación:** Campos obligatorios antes de continuar
 - **Analytics:** Tracking de completación del quiz
 - **Estado:** ✅ **FUNCIONAL**
@@ -68,7 +68,7 @@
 // En BetaRegister.tsx
 interface BetaRegistrationData {
   philosophyAnswers: {
-    ayni: string;
+    reciprocidad: string;
     bienComun: string;
     cooperacion: string;
   };
@@ -92,7 +92,7 @@ interface BetaRegistrationData {
 ## 🎨 ELEMENTOS FILOSÓFICOS COOMÜNITY PRESENTES
 
 ### **Conceptos Integrados en el Quiz:**
-- ✅ **Ayni (Reciprocidad Consciente)**
+- ✅ **Reciprocidad (Reciprocidad Consciente)**
 - ✅ **Bien Común vs Beneficio Individual**
 - ✅ **Cooperación como Motor de Cambio**
 
@@ -223,7 +223,7 @@ El módulo de personalidades está en **estado embrionario** con fundamentos só
 El quiz existente proporciona una **base excelente** para expandir hacia un sistema completo de personalidades basado en los elementos CoomÜnity (Fuego, Agua, Tierra, Aire).
 
 ### **Alineación Filosófica:**
-✅ **PERFECTA** - Los conceptos de Ayni, Bien Común y Cooperación están correctamente integrados y alineados con la filosofía CoomÜnity.
+✅ **PERFECTA** - Los conceptos de Reciprocidad, Bien Común y Cooperación están correctamente integrados y alineados con la filosofía CoomÜnity.
 
 ### **Prioridad de Desarrollo:**
 **MEDIA-ALTA** - Aunque no es crítico para el funcionamiento básico, un sistema de personalidades robusto agregaría valor significativo a la experiencia del usuario y la diferenciación de la plataforma.

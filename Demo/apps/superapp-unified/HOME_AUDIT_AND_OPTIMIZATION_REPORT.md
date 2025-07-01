@@ -24,7 +24,7 @@ import '../styles/golden-color-system.css';
 import '../styles/intuitive-interactions.css';
 import '../styles/smart-layout.css';
 import '../styles/dashboard-enhancements.css';
-import '../styles/cosmic-ayni-effects.css';
+import '../styles/cosmic-reciprocidad-effects.css';
 import '../styles/home-responsive-layout.css';
 
 // DESPUÉS: 1 import consolidado
@@ -131,7 +131,7 @@ color: getSemanticColor('warning', 'main')
 #### **Componentes CSS Principales:**
 - **`.revolutionary-container`** - Container principal optimizado
 - **`.home-card-revolutionary`** - Cards con glassmorphism avanzado
-- **`.home-orb-central`** - Orb 3D del Balance Ayni
+- **`.home-orb-central`** - Orb 3D del Balance Reciprocidad
 - **`.home-metrics-grid`** - Grid responsive para métricas
 - **`.home-fab-optimized`** - Botones flotantes optimizados
 

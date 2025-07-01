@@ -52,7 +52,7 @@ const HeroSection = {
   gradientBackground: "135deg, primary → secondary → primary.dark",
   animations: ["float-pattern", "rotate-slow", "bg-move"],
   personalizedGreeting: "basado en hora del día",
-  progressCircle: "3D animado con balance Ayni",
+  progressCircle: "3D animado con balance Reciprocidad",
   achievements: "chips dinámicos con iconos",
   streakCounter: "días consecutivos destacados"
 }
@@ -75,7 +75,7 @@ const HeroSection = {
 // DESPUÉS: Cards interactivas con hover effects
 const QuickStats = [
   { label: "Lükas", value: "125K", icon: <Wallet />, color: "#FFD54F" },
-  { label: "Ayni Créditos", value: 480, icon: <Handshake />, color: "#4FC3F7" },
+  { label: "Reciprocidad Créditos", value: 480, icon: <Handshake />, color: "#4FC3F7" },
   { label: "Elementos", value: "88%", icon: <AutoAwesome />, color: "#8BC34A" },
   { label: "Nivel Social", value: "Alto", icon: <Groups />, color: "#BA68C8" }
 ];

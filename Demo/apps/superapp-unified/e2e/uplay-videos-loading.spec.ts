@@ -23,7 +23,7 @@ test.describe('UPlay Videos Loading - Mock System Fixed', () => {
     const hasVideoContent = await page.evaluate(() => {
       const bodyText = document.body.textContent || '';
       return {
-        hasAyni: bodyText.includes('Ayni'),
+        hasReciprocidad: bodyText.includes('Reciprocidad'),
         hasBienComun: bodyText.includes('Bien Común'),
         hasOndas: bodyText.includes('Öndas'),
         hasVideoTitles: bodyText.includes('Introducción') || bodyText.includes('Principios'),
@@ -39,7 +39,7 @@ test.describe('UPlay Videos Loading - Mock System Fixed', () => {
     await page.screenshot({ path: 'test-results/uplay-videos-loading.png', fullPage: true });
 
     // Check that we have CoomÜnity content
-    expect(hasVideoContent.hasAyni || hasVideoContent.hasBienComun || hasVideoContent.hasOndas).toBe(true);
+    expect(hasVideoContent.hasReciprocidad || hasVideoContent.hasBienComun || hasVideoContent.hasOndas).toBe(true);
 
     // The page should have substantial content
     expect(hasVideoContent.bodyTextLength).toBeGreaterThan(100);

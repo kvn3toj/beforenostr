@@ -33,7 +33,7 @@ interface ConcilioCardProps extends Omit<CardProps, 'elevation'> {
   // Contenido especial
   headerGradient?: boolean;
   elementsBorder?: boolean;
-  ayniIndicator?: boolean;
+  reciprocidadIndicator?: boolean;
 
   // Props de motion (para animaciones fluidas)
   motionProps?: MotionProps;
@@ -121,7 +121,7 @@ export const ConcilioCard: React.FC<ConcilioCardProps> = ({
   floatingHeader = false,
   headerGradient = false,
   elementsBorder = false,
-  ayniIndicator = false,
+  reciprocidadIndicator = false,
   motionProps = {},
   sx = {},
   ...cardProps
@@ -173,8 +173,8 @@ export const ConcilioCard: React.FC<ConcilioCardProps> = ({
       },
     }),
 
-    // Indicador Ayni
-    ...(ayniIndicator && {
+    // Indicador Reciprocidad
+    ...(reciprocidadIndicator && {
       '&::after': {
         content: '""',
         position: 'absolute',
@@ -278,7 +278,7 @@ export const MarketplaceCard: React.FC<ConcilioCardProps> = (props) => (
     variant="filled"
     hoverEffect="lift"
     consciousnessLevel="base"
-    ayniIndicator
+    reciprocidadIndicator
     {...props}
   />
 );
@@ -308,11 +308,11 @@ export const ConsciousnessCard: React.FC<ConcilioCardProps> = (props) => (
 
 export const ProfileCard: React.FC<ConcilioCardProps> = (props) => (
   <ConcilioCard
-    elementTheme="ayni-balance"
+    elementTheme="reciprocidad-balance"
     variant="glass"
     hoverEffect="scale"
     consciousnessLevel="elevated"
-    ayniIndicator
+    reciprocidadIndicator
     {...props}
   />
 );

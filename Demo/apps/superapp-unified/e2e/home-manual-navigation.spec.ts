@@ -19,11 +19,11 @@ test.describe('Home Manual Navigation - Animation Fixes Verification', () => {
     await expect(page.locator('[data-testid="welcome-header"]')).toBeVisible();
     console.log('✅ Welcome Header visible');
     
-    // 2. Verificar métricas de Ayni
-    const ayniMetrics = page.locator('[data-testid="ayni-metrics-card"]');
-    if (await ayniMetrics.count() > 0) {
-      await expect(ayniMetrics).toBeVisible();
-      console.log('✅ Ayni Metrics Card visible');
+    // 2. Verificar métricas de Reciprocidad
+    const reciprocidadMetrics = page.locator('[data-testid="reciprocidad-metrics-card"]');
+    if (await reciprocidadMetrics.count() > 0) {
+      await expect(reciprocidadMetrics).toBeVisible();
+      console.log('✅ Reciprocidad Metrics Card visible');
       
       // Verificar que NO hay animaciones automáticas problemáticas
       const animatedElements = page.locator('.animate-gentle-pulse, .animate-flowing-wave, .animate-energy-flicker, .animate-light-float');

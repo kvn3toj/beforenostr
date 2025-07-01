@@ -281,7 +281,7 @@ const angle = (index * goldenAngle + animationPhase * 0.5) % 360;
 
 ## 🎯 APLICACIONES ESPECÍFICAS EN COMPONENTES
 
-### Widget Balance Ayni Principal
+### Widget Balance Reciprocidad Principal
 
 - **Container**: Aspect ratio φ:1 en desktop, 1:φ en móvil
 - **Orb Central**: Tamaños basados en Fibonacci (144px, 233px, 377px)

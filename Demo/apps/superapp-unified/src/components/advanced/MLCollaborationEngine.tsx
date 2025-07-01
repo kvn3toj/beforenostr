@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Card,
   Typography,
   Avatar,
-  AvatarGroup,
+
   Button,
   Chip,
   Stack,
@@ -15,8 +15,7 @@ import {
   Fade,
   CircularProgress,
   LinearProgress,
-  Rating,
-  Divider,
+
   Badge,
 } from '@mui/material';
 import {
@@ -46,7 +45,7 @@ import {
 } from '@mui/icons-material';
 
 import { COSMIC_ELEMENTS, CosmicElement } from '../ui/CosmicThemeSwitcher';
-import { useAyniIntelligence } from '../../hooks/useAyniIntelligence';
+import { useReciprocidadIntelligence } from '../../hooks/useReciprocidadIntelligence';
 
 // Tipos para el Motor de Colaboración ML
 interface CollaborationProfile {
@@ -60,7 +59,7 @@ interface CollaborationProfile {
   availableTime: number; // horas por semana
   collaborationHistory: CollaborationRecord[];
   trustScore: number; // 0-100
-  ayniBalance: number; // -100 a 100
+  reciprocidadBalance: number; // -100 a 100
   preferredCollaborationTypes: CollaborationType[];
   location: GeographicInfo;
   languages: string[];
@@ -98,7 +97,7 @@ interface CollaborationRecord {
   partnerId: string;
   duration: number; // días
   outcome: 'excellent' | 'good' | 'neutral' | 'challenging';
-  ayniFlow: number; // balance final -100 a 100
+  reciprocidadFlow: number; // balance final -100 a 100
   skillsShared: string[];
   skillsLearned: string[];
   impactLevel: 'local' | 'regional' | 'global' | 'cosmic';
@@ -121,7 +120,7 @@ interface MLMatch {
   estimatedCollaborationSuccess: number; // 0-100
   recommendedProject: ProjectRecommendation;
   cosmicAlignment: number; // 0-100
-  ayniPotential: number; // 0-100
+  reciprocidadPotential: number; // 0-100
   energeticSynergy: number; // 0-100
 }
 
@@ -176,8 +175,8 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
   const [selectedMatch, setSelectedMatch] = useState<MLMatch | null>(null);
   const [viewMode, setViewMode] = useState<'matches' | 'analytics' | 'history'>('matches');
 
-  // Hook de inteligencia Ayni
-  const { data: ayniData, recordAction } = useAyniIntelligence(userId);
+  // Hook de inteligencia Reciprocidad
+  const { data: reciprocidadData, recordAction } = useReciprocidadIntelligence(userId);
 
   // Simular perfil del usuario actual
   const userProfile = useMemo((): CollaborationProfile => ({
@@ -186,13 +185,13 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
     name: 'Tu Perfil Cósmico',
     avatar: '',
     cosmicSignature: {
-      dominantElement: ayniData?.dominantElement || 'aire',
-      elementDistribution: ayniData?.ayniBalance?.elements || {
+      dominantElement: reciprocidadData?.dominantElement || 'aire',
+      elementDistribution: reciprocidadData?.reciprocidadBalance?.elements || {
         fuego: 75, agua: 60, tierra: 80, aire: 90, ether: 70
       },
       evolutionStage: 'bloom',
       resonanceFrequency: 432,
-      manifestationPower: ayniData?.ayniBalance?.overall || 85
+      manifestationPower: reciprocidadData?.reciprocidadBalance?.overall || 85
     },
     skills: [
       { name: 'Facilitación', category: 'social', level: 85, element: 'agua', verified: true, endorsements: 12 },
@@ -207,7 +206,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
     availableTime: 15,
     collaborationHistory: [],
     trustScore: 88,
-    ayniBalance: 15,
+    reciprocidadBalance: 15,
     preferredCollaborationTypes: ['peer_learning', 'project_partnership', 'consciousness_work'],
     location: {
       continent: 'América',
@@ -218,7 +217,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
     languages: ['Español', 'English'],
     timezone: 'UTC-6',
     lastActive: new Date()
-  }), [userId, ayniData]);
+  }), [userId, reciprocidadData]);
 
   // Simular matches ML generados
   const mlMatches = useMemo((): MLMatch[] => [
@@ -251,7 +250,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
             partnerId: 'healer_maya',
             duration: 90,
             outcome: 'excellent',
-            ayniFlow: 25,
+            reciprocidadFlow: 25,
             skillsShared: ['Sanación', 'Ceremonias'],
             skillsLearned: ['Plantas Maestras'],
             impactLevel: 'regional',
@@ -259,7 +258,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
           }
         ],
         trustScore: 96,
-        ayniBalance: 30,
+        reciprocidadBalance: 30,
         preferredCollaborationTypes: ['consciousness_work', 'mentorship', 'skill_exchange'],
         location: {
           continent: 'América',
@@ -316,7 +315,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
         bienComunAlignment: 96
       },
       cosmicAlignment: 94,
-      ayniPotential: 90,
+      reciprocidadPotential: 90,
       energeticSynergy: 96
     },
     {
@@ -344,7 +343,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
         availableTime: 25,
         collaborationHistory: [],
         trustScore: 91,
-        ayniBalance: 20,
+        reciprocidadBalance: 20,
         preferredCollaborationTypes: ['project_partnership', 'skill_exchange', 'mentorship'],
         location: {
           continent: 'América',
@@ -389,7 +388,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
         bienComunAlignment: 92
       },
       cosmicAlignment: 87,
-      ayniPotential: 85,
+      reciprocidadPotential: 85,
       energeticSynergy: 83
     },
     {
@@ -417,7 +416,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
         availableTime: 30,
         collaborationHistory: [],
         trustScore: 83,
-        ayniBalance: 10,
+        reciprocidadBalance: 10,
         preferredCollaborationTypes: ['project_partnership', 'peer_learning'],
         location: {
           continent: 'América',
@@ -456,7 +455,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
         bienComunAlignment: 88
       },
       cosmicAlignment: 79,
-      ayniPotential: 75,
+      reciprocidadPotential: 75,
       energeticSynergy: 77
     }
   ], []);
@@ -476,7 +475,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
     });
 
     onMatchConnect?.(match.profile.id);
-    
+
     // Simular conexión establecida
     setLoading(true);
     setTimeout(() => {
@@ -505,7 +504,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
         <Typography variant="subtitle1" color="text.secondary" gutterBottom>
           Inteligencia artificial para matching perfecto basado en afinidades cósmicas
         </Typography>
-        
+
         {/* Estadísticas del usuario */}
         <Card sx={{ p: 2, mt: 2, background: alpha(theme.palette.primary.main, 0.05) }}>
           <Stack direction="row" spacing={3} alignItems="center" flexWrap="wrap">
@@ -526,11 +525,11 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
               </Typography>
             </Box>
             <Box textAlign="center">
-              <Typography variant="h6" fontWeight="bold" sx={{ color: userProfile.ayniBalance >= 0 ? '#4CAF50' : '#FF9800' }}>
-                {userProfile.ayniBalance > 0 ? '+' : ''}{userProfile.ayniBalance}
+              <Typography variant="h6" fontWeight="bold" sx={{ color: userProfile.reciprocidadBalance >= 0 ? '#4CAF50' : '#FF9800' }}>
+                {userProfile.reciprocidadBalance > 0 ? '+' : ''}{userProfile.reciprocidadBalance}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                Balance Ayni
+                Balance Reciprocidad
               </Typography>
             </Box>
             <Box textAlign="center">
@@ -555,7 +554,7 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
         {mlMatches.map((match, index) => {
           const profile = match.profile;
           const ElementIcon = getElementIcon(profile.cosmicSignature.dominantElement);
-          
+
           return (
             <Fade key={profile.id} in={true} timeout={500 + index * 200}>
               <Card
@@ -619,11 +618,11 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
                         {profile.name.charAt(0)}
                       </Avatar>
                     </Badge>
-                    
+
                     <Typography variant="h6" fontWeight="bold" mt={1} textAlign="center">
                       {profile.name}
                     </Typography>
-                    
+
                     <Chip
                       label={profile.cosmicSignature.evolutionStage}
                       size="small"
@@ -655,10 +654,10 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
                         </Box>
                         <Box textAlign="center">
                           <Typography variant="h6" fontWeight="bold" sx={{ color: '#2196F3' }}>
-                            {match.ayniPotential}%
+                            {match.reciprocidadPotential}%
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            Potencial Ayni
+                            Potencial Reciprocidad
                           </Typography>
                         </Box>
                         <Box textAlign="center">
@@ -780,18 +779,18 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
                       >
                         {loading ? <CircularProgress size={20} /> : '🤝 Conectar'}
                       </Button>
-                      
+
                       <Button variant="outlined" startIcon={<Message />}>
                         Mensaje
                       </Button>
-                      
+
                       <Button variant="outlined" startIcon={<Share />}>
                         Compartir
                       </Button>
 
                       <Tooltip title="Me gusta este match">
-                        <IconButton 
-                          sx={{ 
+                        <IconButton
+                          sx={{
                             color: '#E91E63',
                             '&:hover': { background: alpha('#E91E63', 0.1) }
                           }}
@@ -817,19 +816,19 @@ export const MLCollaborationEngine: React.FC<MLCollaborationEngineProps> = ({
         <Stack spacing={2}>
           <Box>
             <Typography variant="body2" gutterBottom>
-              🎯 <strong>Análisis de Patrones:</strong> Tu perfil muestra alta compatibilidad con personas en etapa de "transcendencia" y "mastery". 
+              🎯 <strong>Análisis de Patrones:</strong> Tu perfil muestra alta compatibilidad con personas en etapa de "transcendencia" y "mastery".
               El algoritmo detecta que tu elemento Aire armoniza especialmente bien con Éter y Tierra.
             </Typography>
           </Box>
           <Box>
             <Typography variant="body2" gutterBottom>
-              ⚡ <strong>Optimización Sugerida:</strong> Para aumentar tu score de matches, considera desarrollar más habilidades en la categoría "healing" 
+              ⚡ <strong>Optimización Sugerida:</strong> Para aumentar tu score de matches, considera desarrollar más habilidades en la categoría "healing"
               y participa en proyectos con alto impacto de Bien Común (&gt;85%).
             </Typography>
           </Box>
           <Box>
             <Typography variant="body2">
-              🌟 <strong>Predicción IA:</strong> Tu próxima colaboración más exitosa será con alguien del elemento Éter en los próximos 30 días. 
+              🌟 <strong>Predicción IA:</strong> Tu próxima colaboración más exitosa será con alguien del elemento Éter en los próximos 30 días.
               Probabilidad: 87%.
             </Typography>
           </Box>

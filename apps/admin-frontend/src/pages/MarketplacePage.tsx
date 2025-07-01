@@ -89,7 +89,7 @@ const fetchMarketplaceItems = async (): Promise<MarketplaceItem[]> => {
       price: 0,
       currency: 'LUKAS',
       category: 'Educación',
-      tags: ['programación', 'web', 'react', 'typescript', 'ayni'],
+      tags: ['programación', 'web', 'react', 'typescript', 'reciprocidad'],
       images: [],
       isShippingAvailable: false,
       createdAt: '2024-01-15',
@@ -473,10 +473,10 @@ export const MarketplacePage: React.FC = () => {
                         size="small"
                       />
                     </Box>
-                    
+
                     <Typography variant="body2" color="text.secondary" mb={2}>
-                      {item.description.length > 100 
-                        ? `${item.description.substring(0, 100)}...` 
+                      {item.description.length > 100
+                        ? `${item.description.substring(0, 100)}...`
                         : item.description
                       }
                     </Typography>
@@ -850,9 +850,9 @@ const MarketplaceItemDialog: React.FC<MarketplaceItemDialogProps> = ({
                 label="Precio"
                 type="number"
                 value={formData.price || 0}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  price: parseFloat(e.target.value) || 0 
+                onChange={(e) => setFormData({
+                  ...formData,
+                  price: parseFloat(e.target.value) || 0
                 })}
               />
             </Grid>

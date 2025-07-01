@@ -10,14 +10,14 @@ import MarketplaceMain from '../components/modules/marketplace/MarketplaceMain';
  * 🔹 ATLAS: Performance metrics y logging consciente
  * 🎨 ARIA: Sistema de colores por niveles de consciencia
  * 🔹 ZENO: Experiencia de usuario optimizada
- * 🌟 COSMOS: Métricas de Ayni y niveles de consciencia
+ * 🌟 COSMOS: Métricas de Reciprocidad y niveles de consciencia
  * 🧪 SAGE: Calidad y testing integrado
  * 🔥 PHOENIX: Transformación del marketplace tradicional
  * 📚 KIRA: Narrativa consciente integrada
  * 📊 NIRA: Métricas filosóficas implementadas
  *
  * Filosofía CoomÜnity implementada:
- * - Ayni Score (0-100 puntos de reciprocidad)
+ * - Reciprocidad Score (0-100 puntos de reciprocidad)
  * - Niveles de Consciencia (SEED, GROWING, FLOURISHING, TRANSCENDENT)
  * - Métricas de Bien Común
  * - Intercambio de valor consciente

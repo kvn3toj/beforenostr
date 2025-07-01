@@ -6,12 +6,12 @@ import { Box, Grid, Typography, ButtonBase } from '@mui/material';
 
 // ===== 🌟 TIPOS UNIVERSALES GUARDIAN =====
 export type UniversalGuardianTheme =
-  | 'cosmic-harmony' | 'elemental-balance' | 'ayni-flow' | 'bien-comun'
+  | 'cosmic-harmony' | 'elemental-balance' | 'reciprocidad-flow' | 'bien-comun'
   | 'transcendent' | 'guardian-elements' | 'autumn-warmth' | 'cosmic-vision'
   | 'universal-harmony' | 'ethereal-unity';
 
 export type CosmicElement = 'fuego' | 'agua' | 'tierra' | 'aire' | 'eter';
-export type CoomunityConcept = 'ayni' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun';
+export type CoomunityConcept = 'reciprocidad' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun';
 
 // ===== 🎨 PALETAS UNIVERSALES GUARDIAN MEJORADAS =====
 const UNIVERSAL_GUARDIAN_PALETTES = {
@@ -56,7 +56,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#10b981',
+      reciprocidad: '#10b981',
       meritos: '#f59e0b',
       ondas: '#8b5cf6',
       lukas: '#06b6d4',
@@ -78,7 +78,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(168, 85, 247, 0.3)',
       cosmicGlow: '0 0 30px rgba(59, 130, 246, 0.4)',
       elementalGlow: '0 0 25px rgba(16, 185, 129, 0.35)',
-      ayniGlow: '0 0 20px rgba(16, 185, 129, 0.5)'
+      reciprocidadGlow: '0 0 20px rgba(16, 185, 129, 0.5)'
     }
   },
   'elemental-balance': {
@@ -122,7 +122,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#059669',
+      reciprocidad: '#059669',
       meritos: '#dc2626',
       ondas: '#7c3aed',
       lukas: '#1d4ed8',
@@ -144,11 +144,11 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(124, 58, 237, 0.3)',
       cosmicGlow: '0 0 30px rgba(29, 78, 216, 0.4)',
       elementalGlow: '0 0 25px rgba(5, 150, 105, 0.35)',
-      ayniGlow: '0 0 20px rgba(5, 150, 105, 0.5)'
+      reciprocidadGlow: '0 0 20px rgba(5, 150, 105, 0.5)'
     }
   },
-  'ayni-flow': {
-    name: 'Flujo de Ayni',
+  'reciprocidad-flow': {
+    name: 'Flujo de Reciprocidad',
     description: 'Reciprocidad y equilibrio en movimiento constante',
     elements: {
       fuego: {
@@ -188,7 +188,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#65a30d',
+      reciprocidad: '#65a30d',
       meritos: '#ea580c',
       ondas: '#9333ea',
       lukas: '#0284c7',
@@ -210,7 +210,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(147, 51, 234, 0.3)',
       cosmicGlow: '0 0 30px rgba(2, 132, 199, 0.4)',
       elementalGlow: '0 0 25px rgba(101, 163, 13, 0.35)',
-      ayniGlow: '0 0 20px rgba(101, 163, 13, 0.5)'
+      reciprocidadGlow: '0 0 20px rgba(101, 163, 13, 0.5)'
     }
   },
   'bien-comun': {
@@ -254,7 +254,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#047857',
+      reciprocidad: '#047857',
       meritos: '#b91c1c',
       ondas: '#6d28d9',
       lukas: '#1e40af',
@@ -276,7 +276,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(109, 40, 217, 0.3)',
       cosmicGlow: '0 0 30px rgba(30, 64, 175, 0.4)',
       elementalGlow: '0 0 25px rgba(4, 120, 87, 0.35)',
-      ayniGlow: '0 0 20px rgba(4, 120, 87, 0.5)'
+      reciprocidadGlow: '0 0 20px rgba(4, 120, 87, 0.5)'
     }
   },
   'transcendent': {
@@ -320,7 +320,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#84cc16',
+      reciprocidad: '#84cc16',
       meritos: '#f97316',
       ondas: '#a855f7',
       lukas: '#0ea5e9',
@@ -342,7 +342,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(168, 85, 247, 0.3)',
       cosmicGlow: '0 0 30px rgba(14, 165, 233, 0.4)',
       elementalGlow: '0 0 25px rgba(132, 204, 22, 0.35)',
-      ayniGlow: '0 0 20px rgba(132, 204, 22, 0.5)'
+      reciprocidadGlow: '0 0 20px rgba(132, 204, 22, 0.5)'
     }
   },
   'guardian-elements': {
@@ -386,7 +386,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#10b981',
+      reciprocidad: '#10b981',
       meritos: '#f59e0b',
       ondas: '#8b5cf6',
       lukas: '#06b6d4',
@@ -408,7 +408,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(245, 166, 35, 0.3)',
       cosmicGlow: '0 0 30px rgba(8, 145, 178, 0.4)',
       elementalGlow: '0 0 25px rgba(22, 163, 74, 0.35)',
-      ayniGlow: '0 0 20px rgba(168, 85, 247, 0.5)'
+      reciprocidadGlow: '0 0 20px rgba(168, 85, 247, 0.5)'
     }
   },
   'autumn-warmth': {
@@ -452,7 +452,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#16a34a',
+      reciprocidad: '#16a34a',
       meritos: '#f97316',
       ondas: '#dc2626',
       lukas: '#0891b2',
@@ -474,7 +474,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(249, 115, 22, 0.3)',
       cosmicGlow: '0 0 30px rgba(220, 38, 38, 0.4)',
       elementalGlow: '0 0 25px rgba(22, 163, 74, 0.35)',
-      ayniGlow: '0 0 20px rgba(22, 163, 74, 0.5)'
+      reciprocidadGlow: '0 0 20px rgba(22, 163, 74, 0.5)'
     }
   },
   'cosmic-vision': {
@@ -518,7 +518,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#10b981',
+      reciprocidad: '#10b981',
       meritos: '#f59e0b',
       ondas: '#8b5cf6',
       lukas: '#06b6d4',
@@ -540,7 +540,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(139, 92, 246, 0.5)',
       cosmicGlow: '0 0 30px rgba(6, 182, 212, 0.6)',
       elementalGlow: '0 0 25px rgba(16, 185, 129, 0.5)',
-      ayniGlow: '0 0 20px rgba(16, 185, 129, 0.7)'
+      reciprocidadGlow: '0 0 20px rgba(16, 185, 129, 0.7)'
     }
   },
   'universal-harmony': {
@@ -584,7 +584,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#10b981',
+      reciprocidad: '#10b981',
       meritos: '#f59e0b',
       ondas: '#8b5cf6',
       lukas: '#3b82f6',
@@ -606,7 +606,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(139, 92, 246, 0.3)',
       cosmicGlow: '0 0 30px rgba(59, 130, 246, 0.4)',
       elementalGlow: '0 0 25px rgba(16, 185, 129, 0.35)',
-      ayniGlow: '0 0 20px rgba(16, 185, 129, 0.5)'
+      reciprocidadGlow: '0 0 20px rgba(16, 185, 129, 0.5)'
     }
   },
   'ethereal-unity': {
@@ -650,7 +650,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       }
     },
     concepts: {
-      ayni: '#84cc16',
+      reciprocidad: '#84cc16',
       meritos: '#f472b6',
       ondas: '#a855f7',
       lukas: '#06b6d4',
@@ -672,7 +672,7 @@ const UNIVERSAL_GUARDIAN_PALETTES = {
       glow: '0 0 20px rgba(168, 85, 247, 0.4)',
       cosmicGlow: '0 0 30px rgba(244, 114, 182, 0.5)',
       elementalGlow: '0 0 25px rgba(132, 204, 22, 0.4)',
-      ayniGlow: '0 0 20px rgba(132, 204, 22, 0.6)'
+      reciprocidadGlow: '0 0 20px rgba(132, 204, 22, 0.6)'
     }
   }
 };
@@ -685,7 +685,7 @@ interface UniversalGuardianContextType {
   getElementColor: (element: CosmicElement) => string;
   getElementGradient: (element: CosmicElement) => string;
   getConceptColor: (concept: CoomunityConcept) => string;
-  getEffectStyle: (effect: 'glow' | 'cosmicGlow' | 'elementalGlow' | 'ayniGlow') => string;
+  getEffectStyle: (effect: 'glow' | 'cosmicGlow' | 'elementalGlow' | 'reciprocidadGlow') => string;
   applyElementClass: (element: CosmicElement) => string;
   applyConceptClass: (concept: CoomunityConcept) => string;
   createMuiTheme: () => Theme;
@@ -921,7 +921,7 @@ export const UniversalGuardianProvider: React.FC<UniversalGuardianProviderProps>
       `linear-gradient(135deg, ${palette.elements.fuego.primary} 0%, ${palette.elements.agua.primary} 25%, ${palette.elements.tierra.primary} 50%, ${palette.elements.aire.primary} 75%, ${palette.elements.eter.primary} 100%)`);
 
     root.style.setProperty('--universal-gradient-concepts',
-      `linear-gradient(135deg, ${palette.concepts.ayni} 0%, ${palette.concepts.meritos} 25%, ${palette.concepts.ondas} 50%, ${palette.concepts.lukas} 75%, ${palette.concepts['bien-comun']} 100%)`);
+      `linear-gradient(135deg, ${palette.concepts.reciprocidad} 0%, ${palette.concepts.meritos} 25%, ${palette.concepts.ondas} 50%, ${palette.concepts.lukas} 75%, ${palette.concepts['bien-comun']} 100%)`);
 
     // Aplicar clase de tema al body
     document.body.className = `universal-guardian-theme-${currentTheme} universal-guardian-system`;
@@ -949,7 +949,7 @@ export const UniversalGuardianProvider: React.FC<UniversalGuardianProviderProps>
     return UNIVERSAL_GUARDIAN_PALETTES[currentTheme].concepts[concept];
   };
 
-  const getEffectStyle = (effect: 'glow' | 'cosmicGlow' | 'elementalGlow' | 'ayniGlow'): string => {
+  const getEffectStyle = (effect: 'glow' | 'cosmicGlow' | 'elementalGlow' | 'reciprocidadGlow'): string => {
     return UNIVERSAL_GUARDIAN_PALETTES[currentTheme].effects[effect];
   };
 

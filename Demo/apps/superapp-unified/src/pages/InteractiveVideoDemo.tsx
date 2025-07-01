@@ -26,7 +26,7 @@ import InteractiveVideoPlayerOverlay from '../components/modules/uplay/component
 const demoVideos = [
   {
     id: 1,
-    title: 'Introducción a CoomÜnity: Principios de Ayni',
+    title: 'Introducción a CoomÜnity: Principios de Reciprocidad',
     description:
       'Aprende sobre el principio fundamental de reciprocidad en nuestra comunidad',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
@@ -70,7 +70,7 @@ const demoQuestions = {
       timestamp: 10,
       endTimestamp: 40,
       type: 'multiple-choice' as const,
-      question: '¿Qué significa el principio de Ayni en CoomÜnity?',
+      question: '¿Qué significa el principio de Reciprocidad en CoomÜnity?',
       options: [
         {
           id: 'option_a',

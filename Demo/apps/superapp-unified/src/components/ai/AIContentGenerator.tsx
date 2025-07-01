@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   Typography,
   Button,
   Card,
   CardContent,
-  CardActions,
+
   Grid,
   Chip,
   TextField,
@@ -13,10 +13,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+
   LinearProgress,
   Avatar,
   Stack,
@@ -71,7 +68,7 @@ interface AIGenerationRequest {
   type: 'QUESTION' | 'CHALLENGE' | 'ARTICLE' | 'VIDEO_SCRIPT' | 'QUIZ'
   topic: string
   difficulty: 'BASIC' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT'
-  philosophy: ('AYNI' | 'BIEN_COMUN' | 'MERITOS' | 'SOSTENIBILIDAD')[]
+  philosophy: ('RECIPROCIDAD' | 'BIEN_COMUN' | 'MERITOS' | 'SOSTENIBILIDAD')[]
   tone: 'FRIENDLY' | 'PROFESSIONAL' | 'INSPIRING' | 'EDUCATIONAL'
   length: 'SHORT' | 'MEDIUM' | 'LONG'
   audience: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT'
@@ -117,7 +114,7 @@ const AIContentGenerator: React.FC = () => {
     type: 'QUESTION',
     topic: '',
     difficulty: 'INTERMEDIATE',
-    philosophy: ['AYNI'],
+    philosophy: ['RECIPROCIDAD'],
     tone: 'EDUCATIONAL',
     length: 'MEDIUM',
     audience: 'INTERMEDIATE'
@@ -127,7 +124,7 @@ const AIContentGenerator: React.FC = () => {
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [generationStep, setGenerationStep] = useState(0)
-  
+
   const queryClient = useQueryClient()
 
   // Available AI models
@@ -142,10 +139,10 @@ const AIContentGenerator: React.FC = () => {
       premium: false
     },
     {
-      id: 'claude-ayni',
-      name: 'Claude Ayni',
+      id: 'claude-reciprocidad',
+      name: 'Claude Reciprocidad',
       description: 'Experto en reciprocidad y balance para generar contenido equilibrado',
-      capabilities: ['Análisis de balance', 'Contenido de intercambio', 'Reflexiones Ayni'],
+      capabilities: ['Análisis de balance', 'Contenido de intercambio', 'Reflexiones Reciprocidad'],
       speed: 'FAST',
       quality: 'EXCELLENT',
       premium: true
@@ -177,13 +174,13 @@ const AIContentGenerator: React.FC = () => {
       {
         id: '1',
         type: 'QUESTION',
-        title: '¿Cómo puedes aplicar el principio de Ayni en tu vida diaria?',
+        title: '¿Cómo puedes aplicar el principio de Reciprocidad en tu vida diaria?',
         content: 'Esta pregunta invita a reflexionar sobre la reciprocidad sagrada en acciones cotidianas...',
         metadata: {
-          topic: 'Ayni en la vida cotidiana',
+          topic: 'Reciprocidad en la vida cotidiana',
           difficulty: 'INTERMEDIATE',
           estimatedTime: 10,
-          philosophyAlignment: ['AYNI', 'BIEN_COMUN'],
+          philosophyAlignment: ['RECIPROCIDAD', 'BIEN_COMUN'],
           aiModel: 'gpt-4-coomunity',
           generatedAt: new Date(),
           version: 1
@@ -204,8 +201,8 @@ const AIContentGenerator: React.FC = () => {
           topic: 'Intercambio sostenible',
           difficulty: 'BASIC',
           estimatedTime: 7,
-          philosophyAlignment: ['AYNI', 'SOSTENIBILIDAD'],
-          aiModel: 'claude-ayni',
+          philosophyAlignment: ['RECIPROCIDAD', 'SOSTENIBILIDAD'],
+          aiModel: 'claude-reciprocidad',
           generatedAt: new Date(),
           version: 1
         },
@@ -287,7 +284,7 @@ const AIContentGenerator: React.FC = () => {
       CHALLENGE: [
         `Desafío: ${request.topic} Sostenible`,
         `Reto de 7 días: ${request.topic} Consciente`,
-        `Transformando ${request.topic} con Ayni`
+        `Transformando ${request.topic} con Reciprocidad`
       ],
       ARTICLE: [
         `Guía completa: ${request.topic} y el Bien Común`,
@@ -305,14 +302,14 @@ const AIContentGenerator: React.FC = () => {
         `Test de conocimiento: ${request.topic} Consciente`
       ]
     }
-    
+
     const typeTemplates = templates[request.type]
     return typeTemplates[Math.floor(Math.random() * typeTemplates.length)]
   }
 
   const generateMockContent = (request: AIGenerationRequest): string => {
-    const philosophyContext = request.philosophy.includes('AYNI') 
-      ? 'Desde el principio de reciprocidad sagrada (Ayni)'
+    const philosophyContext = request.philosophy.includes('RECIPROCIDAD')
+      ? 'Desde el principio de reciprocidad sagrada (Reciprocidad)'
       : request.philosophy.includes('BIEN_COMUN')
       ? 'Priorizando siempre el Bien Común sobre el bien particular'
       : 'Aplicando los valores fundamentales de CoomÜnity'
@@ -325,7 +322,7 @@ En el contexto de CoomÜnity, ${request.topic} representa una oportunidad para c
 
 1. **Conexión con el propósito**: ¿Cómo se alinea ${request.topic} con tu vocación personal y el servicio al Bien Común?
 
-2. **Reciprocidad consciente**: ¿De qué manera puedes aplicar el principio de Ayni en este contexto?
+2. **Reciprocidad consciente**: ¿De qué manera puedes aplicar el principio de Reciprocidad en este contexto?
 
 3. **Impacto sostenible**: ¿Cuál es el efecto a largo plazo de tus acciones en la comunidad y el ecosistema?
 
@@ -333,7 +330,7 @@ En el contexto de CoomÜnity, ${request.topic} representa una oportunidad para c
 
 Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de transformar no solo tu realidad, sino la de toda la comunidad. ¡Juntos construimos un mundo más consciente y equitativo!`
 
-    return request.length === 'SHORT' 
+    return request.length === 'SHORT'
       ? baseContent.substring(0, 300) + '...'
       : request.length === 'LONG'
       ? baseContent + '\n\n**Ejercicio práctico:** [Contenido específico del ejercicio]\n\n**Recursos adicionales:** [Enlaces y referencias]'
@@ -345,14 +342,14 @@ Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de
       toast.error('Por favor ingresa un tema para generar contenido')
       return
     }
-    
+
     triggerHapticFeedback('light')
     generateContentMutation.mutate(generationRequest)
   }
 
   const handleSaveContent = () => {
     if (!generatedContent) return
-    
+
     // Simulate saving to library
     triggerReward('MERITOS', 5)
     toast.success('Contenido guardado en tu biblioteca')
@@ -415,7 +412,7 @@ Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de
                         variant={generationRequest.type === type.id ? 'contained' : 'outlined'}
                         startIcon={type.icon}
                         onClick={() => setGenerationRequest(prev => ({ ...prev, type: type.id as any }))}
-                        sx={{ 
+                        sx={{
                           backgroundColor: generationRequest.type === type.id ? '#CDAB5A' : 'transparent',
                           py: 1.5
                         }}
@@ -454,7 +451,7 @@ Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de
                     </Select>
                   </FormControl>
                 </Grid>
-                
+
                 <Grid item xs={12} sm={6} md={3}>
                   <FormControl fullWidth>
                     <InputLabel>Extensión</InputLabel>
@@ -506,7 +503,7 @@ Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de
                   Alineación filosófica:
                 </Typography>
                 <Stack direction="row" spacing={1} flexWrap="wrap">
-                  {['AYNI', 'BIEN_COMUN', 'MERITOS', 'SOSTENIBILIDAD'].map((phil) => (
+                  {['RECIPROCIDAD', 'BIEN_COMUN', 'MERITOS', 'SOSTENIBILIDAD'].map((phil) => (
                     <Chip
                       key={phil}
                       label={phil}
@@ -534,7 +531,7 @@ Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de
                 >
                   Configuración Avanzada
                 </Button>
-                
+
                 <Collapse in={showAdvancedSettings}>
                   <Box sx={{ mt: 2, p: 2, backgroundColor: 'grey.50', borderRadius: 2 }}>
                     {/* AI Model Selection */}
@@ -641,7 +638,7 @@ Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>
                     Métricas de Calidad:
                   </Typography>
-                  
+
                   <Grid container spacing={1} sx={{ mb: 2 }}>
                     {[
                       { label: 'IA Score', value: generatedContent.metrics.aiScore },
@@ -710,7 +707,7 @@ Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de
               <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
                 Acciones Rápidas
               </Typography>
-              
+
               <Stack spacing={1}>
                 <Button
                   fullWidth
@@ -759,11 +756,11 @@ Recuerda que en CoomÜnity, cada pequeña acción cuenta y tiene el potencial de
                           {content.metadata.generatedAt.toLocaleDateString()}
                         </Typography>
                       </Box>
-                      
+
                       <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
                         {content.title}
                       </Typography>
-                      
+
                       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                         {content.content.substring(0, 100)}...
                       </Typography>

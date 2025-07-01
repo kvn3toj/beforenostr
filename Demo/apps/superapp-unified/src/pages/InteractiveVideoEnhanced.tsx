@@ -8,9 +8,9 @@ import {
   Grid,
   Button,
   Stack,
-  Chip,
-  Divider,
-  Paper,
+      Chip,
+    Divider,
+    Paper,
   Alert,
   Tabs,
   Tab,
@@ -42,7 +42,7 @@ const enhancedQuestions = [
     timestamp: 10,
     endTimestamp: 35,
     type: 'multiple-choice' as const,
-    question: '¿Cuál es el principio fundamental de Ayni en CoomÜnity?',
+    question: '¿Cuál es el principio fundamental de Reciprocidad en CoomÜnity?',
     timeLimit: 25,
     difficulty: 'medium' as const,
     reward: { merits: 20, ondas: 8 },
@@ -495,7 +495,7 @@ const InteractiveVideoEnhanced: React.FC = () => {
                   sx={{ mb: 3, lineHeight: 1.6 }}
                 >
                   Descubre los principios fundamentales que guían nuestra
-                  comunidad: Ayni (reciprocidad), Bien Común, cooperación, y
+                  comunidad: Reciprocidad (reciprocidad), Bien Común, cooperación, y
                   cómo las Öndas representan la energía positiva que generamos
                   juntos. Este video interactivo te permitirá aprender
                   participando activamente y ganando recompensas por tu
@@ -529,7 +529,7 @@ const InteractiveVideoEnhanced: React.FC = () => {
                         Conceptos Clave:
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        • <strong>Ayni:</strong> Principio de reciprocidad y
+                        • <strong>Reciprocidad:</strong> Principio de reciprocidad y
                         equilibrio energético
                         <br />• <strong>Mëritos:</strong> Moneda del ecosistema
                         que reconoce contribuciones

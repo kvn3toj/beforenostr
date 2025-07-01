@@ -298,35 +298,35 @@ export const ACTIVE_PALETTE: PaletteType = 'autumn'; // 👈 REGRESADO A AUTUMN 
 export const activePalette = COLOR_PALETTES[ACTIVE_PALETTE];
 
 // 🔧 FUNCIONES HELPER PARA USAR EN COMPONENTES
-export const getPrimaryColor = (shade: keyof ColorScale = '500'): string => 
+export const getPrimaryColor = (shade: keyof ColorScale = '500'): string =>
   activePalette.primary[shade];
 
-export const getSecondaryColor = (shade: keyof ColorScale = '500'): string => 
+export const getSecondaryColor = (shade: keyof ColorScale = '500'): string =>
   activePalette.secondary[shade];
 
-export const getBackgroundColor = (type: keyof BackgroundColors = 'default'): string => 
+export const getBackgroundColor = (type: keyof BackgroundColors = 'default'): string =>
   activePalette.background[type];
 
-export const getTextColor = (type: keyof TextColors = 'primary'): string => 
+export const getTextColor = (type: keyof TextColors = 'primary'): string =>
   activePalette.text[type];
 
 export const getSemanticColor = (
-  type: keyof ColorPalette['semantic'], 
+  type: keyof ColorPalette['semantic'],
   variant: 'main' | 'light' | 'dark' = 'main'
 ): string => activePalette.semantic[type][variant];
 
 // 🌈 GENERADOR DE GRADIENTES AUTOMÁTICO
 export const createGradient = (
-  color1: string, 
-  color2: string, 
+  color1: string,
+  color2: string,
   direction: string = '135deg'
 ): string => `linear-gradient(${direction}, ${color1} 0%, ${color2} 100%)`;
 
-export const getPrimaryGradient = (direction: string = '135deg'): string => 
+export const getPrimaryGradient = (direction: string = '135deg'): string =>
   createGradient(getPrimaryColor('400'), getPrimaryColor('600'), direction);
 
 export const getSemanticGradient = (
-  type: keyof ColorPalette['semantic'], 
+  type: keyof ColorPalette['semantic'],
   direction: string = '135deg'
 ): string => createGradient(
   getSemanticColor(type, 'light'),
@@ -337,7 +337,7 @@ export const getSemanticGradient = (
 // 🎭 FUNCIONES DE TRANSPARENCIA
 export const alphaColor = (color: string, opacity: number): string => alpha(color, opacity);
 
-export const getPrimaryAlpha = (shade: keyof ColorScale, opacity: number): string => 
+export const getPrimaryAlpha = (shade: keyof ColorScale, opacity: number): string =>
   alphaColor(getPrimaryColor(shade), opacity);
 
 // 🎯 ELEMENTOS ESPECÍFICOS COOMUNITY
@@ -368,9 +368,9 @@ export const COOMUNITY_ELEMENTS = {
 export const COOMUNITY_METRICS = {
   ondas: getPrimaryColor('600' as unknown as keyof ColorScale),
   meritos: getSemanticColor('success', 'main'),
-  ayni: getSemanticColor('info', 'main'),
+  reciprocidad: getSemanticColor('info', 'main'),
   balance: getPrimaryColor('500' as unknown as keyof ColorScale),
-  lükas: getSemanticColor('warning', 'main'),
+  units: getSemanticColor('warning', 'main'),
 } as const;
 
 // 🎨 EXPORTAR CONFIGURACIÓN PARA MATERIAL UI
@@ -441,7 +441,7 @@ export const debugColorSystem = () => {
   console.log('Secondary Color:', getSecondaryColor());
   console.log('Available Palettes:', Object.keys(COLOR_PALETTES));
   console.groupEnd();
-  
+
   return {
     activePalette: ACTIVE_PALETTE,
     paletteInfo: activePalette,
@@ -452,16 +452,16 @@ export const debugColorSystem = () => {
 /**
  * 🎯 CÓMO CAMBIAR LA PALETA COMPLETA:
  * ===================================
- * 
+ *
  * 1. Cambiar ACTIVE_PALETTE arriba (línea 295)
  * 2. Automáticamente se aplicará en TODA la app
  * 3. Usar las funciones helper en componentes:
- *    - getPrimaryColor('500') 
+ *    - getPrimaryColor('500')
  *    - getSemanticColor('success', 'main')
  *    - createGradient(color1, color2)
- * 
+ *
  * 4. Para Material UI: importar getMaterialUIThemeColors()
  * 5. Para elementos específicos: usar COOMUNITY_ELEMENTS
- * 
+ *
  * ¡Un solo cambio = toda la app actualizada! 🎉
  */

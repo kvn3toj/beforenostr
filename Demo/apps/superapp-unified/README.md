@@ -50,7 +50,7 @@ src/
 
 Esta SuperApp encarna los valores fundamentales:
 - **Bien Común** sobre interés particular
-- **Ayni** (reciprocidad justa)
+- **Reciprocidad** (reciprocidad justa)
 - **Vocación** y desarrollo personal
 - **Tecnología Consciente** al servicio de la humanidad
 

@@ -213,7 +213,7 @@
   }
 }
 
-@keyframes ayniFlow {
+@keyframes reciprocidadFlow {
   0% {
     background-position: 0% 50%;
   }
@@ -309,7 +309,7 @@
   animation: goldGlow 2s var(--ease-in-out) infinite;
 }
 
-.coomunity-ayni-flow {
+.coomunity-reciprocidad-flow {
   background: linear-gradient(-45deg,
     var(--coomunity-primary-400),
     var(--coomunity-primary-500),
@@ -317,7 +317,7 @@
     var(--coomunity-primary-500)
   );
   background-size: 400% 400%;
-  animation: ayniFlow 3s var(--ease-in-out) infinite;
+  animation: reciprocidadFlow 3s var(--ease-in-out) infinite;
 }
 
 .coomunity-meritos-count {
@@ -564,7 +564,7 @@
   .coomunity-bounce,
   .coomunity-glow,
   .coomunity-gold-glow,
-  .coomunity-ayni-flow {
+  .coomunity-reciprocidad-flow {
     animation: none !important;
   }
 }
@@ -639,7 +639,7 @@
   }
 }
 
-@keyframes ayniFlow {
+@keyframes reciprocidadFlow {
   0%, 100% {
     transform: scale(1) rotate(0deg);
     opacity: 0.8;
@@ -741,8 +741,8 @@
   animation: slideUp 0.4s ease-out forwards;
 }
 
-.animate-ayni-flow {
-  animation: ayniFlow 3s ease-in-out infinite;
+.animate-reciprocidad-flow {
+  animation: reciprocidadFlow 3s ease-in-out infinite;
 }
 
 .animate-meritos-count {
@@ -913,7 +913,7 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-slide-up,
-  .animate-ayni-flow,
+  .animate-reciprocidad-flow,
   .animate-meritos-count,
   .animate-ondas-ripple,
   .animate-glow,

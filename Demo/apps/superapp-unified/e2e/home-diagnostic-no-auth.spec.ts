@@ -24,8 +24,8 @@ test.describe('🏠 Home Page - Diagnostic Test (No Auth)', () => {
     console.log(`🎯 Elementos de bienvenida encontrados: ${welcomeElements}`);
 
     // 4. Buscar componentes específicos
-    const ayniElements = await page.locator('text=/ayni|öndas|mëritos|balance/i').count();
-    console.log(`🌟 Elementos de Ayni encontrados: ${ayniElements}`);
+    const reciprocidadElements = await page.locator('text=/reciprocidad|öndas|mëritos|balance/i').count();
+    console.log(`🌟 Elementos de Reciprocidad encontrados: ${reciprocidadElements}`);
 
     // 5. Verificar estructura de navegación
     const navElements = await page.locator('nav, [role="navigation"]').count();

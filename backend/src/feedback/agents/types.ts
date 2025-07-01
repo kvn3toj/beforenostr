@@ -28,14 +28,14 @@ interface FuegoTaskResults {
   priority: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
   estimatedResolution: string;
   resourcesNeeded: string[];
-  ayniImpact: 'HIGH' | 'MEDIUM' | 'LOW';
+  reciprocidadImpact: 'HIGH' | 'MEDIUM' | 'LOW';
 }
 
 interface AguaTaskResults {
   stakeholdersNotified: string[];
   collaborationChannels: string[];
   consensusLevel: number;
-  ayniFlow: 'BALANCED' | 'UNBALANCED';
+  reciprocidadFlow: 'BALANCED' | 'UNBALANCED';
 }
 
 interface TierraTaskResults {
@@ -73,13 +73,13 @@ export interface CollaborationTask {
 export interface CollaborationResult {
   tasks: CollaborationTask[];
   totalLukasGenerated: number;
-  ayniBalance: number;
+  reciprocidadBalance: number;
   collaborationScore: number;
 }
 
 export interface CommunityMetrics {
   wisdomQuotient: number;
-  ayniIndex: number;
+  reciprocidadIndex: number;
   collaborationVelocity: number;
   innovationScore: number;
 }

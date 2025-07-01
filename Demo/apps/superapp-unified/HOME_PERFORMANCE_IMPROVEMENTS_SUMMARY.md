@@ -104,7 +104,7 @@ transition: var(--transition-normal);
 
 - **4 elementos principales** vs 8+ anterior
 - **Contenedor más estrecho** (maxWidth="md")
-- **Focus mejorado** en balance Ayni
+- **Focus mejorado** en balance Reciprocidad
 - **Navegación simplificada**
 
 ##### B. Vista Clásica (Compatibilidad)

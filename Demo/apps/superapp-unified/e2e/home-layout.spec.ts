@@ -30,11 +30,11 @@ test.describe('Home Layout Tests', () => {
     
     // ✅ Verificar que el contenido principal esté presente
     await expect(page.locator('text=¡Hola, Administrador!')).toBeVisible();
-    await expect(page.locator('text=Bien Común y Ayni')).toBeVisible();
+    await expect(page.locator('text=Bien Común y Reciprocidad')).toBeVisible();
     
-    // ✅ Verificar que las métricas Ayni estén visibles
+    // ✅ Verificar que las métricas Reciprocidad estén visibles
     await expect(page.locator('text=Mëritos')).toBeVisible();
-    await expect(page.locator('text=Balance Ayni')).toBeVisible();
+    await expect(page.locator('text=Balance Reciprocidad')).toBeVisible();
     await expect(page.locator('text=Bien Común')).toBeVisible();
   });
 
@@ -56,12 +56,12 @@ test.describe('Home Layout Tests', () => {
     // ✅ Verificar que el wallet overview esté visible
     await expect(page.locator('text=125.075')).toBeVisible(); // Lükas
     await expect(page.locator('text=Lükas')).toBeVisible();
-    await expect(page.locator('text=480')).toBeVisible(); // Créditos Ayni
+    await expect(page.locator('text=480')).toBeVisible(); // Créditos Reciprocidad
     await expect(page.locator('text=+15.2% este mes')).toBeVisible();
   });
 
-  test('should display ayni metrics correctly', async ({ page }) => {
-    // ✅ Verificar métricas Ayni (más específicos)
+  test('should display reciprocidad metrics correctly', async ({ page }) => {
+    // ✅ Verificar métricas Reciprocidad (más específicos)
     await expect(page.locator('text=485')).toBeVisible(); // Mëritos
     await expect(page.locator('text=23')).toBeVisible(); // Contribuciones Bien Común
     

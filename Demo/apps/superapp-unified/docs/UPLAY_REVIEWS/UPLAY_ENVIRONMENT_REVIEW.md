@@ -211,7 +211,7 @@ interface StudyRoom {
 
 **B. Misiones Colaborativas**
 
-- "Ayni Partner": Completar videos con un compañero
+- "Reciprocidad Partner": Completar videos con un compañero
 - "Maestro Mentor": Ayudar a 3 usuarios nuevos
 - "Círculo de Sabiduría": Crear grupo de estudio activo
 
@@ -336,7 +336,7 @@ interface VideoParty {
 
 **Comenzar con FASE 1** implementando el diseño exacto de Figma y dashboards dinámicos, lo cual proporcionará foundation visual sólida para las funcionalidades sociales avanzadas que seguirán.
 
-El módulo UPlay tiene un foundation técnico excelente que puede escalarse efectivamente hacia las funcionalidades solicitadas, manteniendo la filosofía CoomÜnity de Ayni, Bien Común y colaboración.
+El módulo UPlay tiene un foundation técnico excelente que puede escalarse efectivamente hacia las funcionalidades solicitadas, manteniendo la filosofía CoomÜnity de Reciprocidad, Bien Común y colaboración.
 
 ---
 

@@ -49,11 +49,11 @@ interface ConsciousMarketplaceItem {
     verified: boolean;
     rating: number;
     reviewCount: number;
-    ayniScore: number;
+    reciprocidadScore: number;
     consciousnessLevel: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
   };
   tags: string[];
-  ayniScore: number;
+  reciprocidadScore: number;
   consciousnessLevel: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
   bienComunContribution: number;
   sustainabilityScore: number;
@@ -125,7 +125,7 @@ const useConsciousChat = () => {
           source: 'conscious_marketplace',
           itemTitle,
           sellerName,
-          welcomeMessage: `¡Hola ${sellerName}! Me interesa "${itemTitle}". Me encantaría conocer más sobre cómo tu trabajo contribuye al Bien Común y cómo podemos crear un intercambio que honre el principio del Ayni. 🌱`,
+          welcomeMessage: `¡Hola ${sellerName}! Me interesa "${itemTitle}". Me encantaría conocer más sobre cómo tu trabajo contribuye al Bien Común y cómo podemos crear un intercambio que honre el principio del Reciprocidad. 🌱`,
           timestamp: new Date().toISOString(),
         }
       });
@@ -139,7 +139,7 @@ const useConsciousChat = () => {
             chatType: 'conscious_marketplace',
             sellerName,
             itemTitle,
-            philosophy: 'ayni'
+            philosophy: 'reciprocidad'
           }
         });
       }
@@ -340,15 +340,15 @@ const ConsciousMarketplaceCard: React.FC<{
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
             <Balance sx={{ fontSize: 16, color: consciousness.color }} />
             <Typography variant="caption" color="text.secondary">
-              Ayni Score
+              Reciprocidad Score
             </Typography>
             <Typography variant="caption" sx={{ fontWeight: 600, color: consciousness.color }}>
-              {item.ayniScore}/100
+              {item.reciprocidadScore}/100
             </Typography>
           </Box>
           <LinearProgress
             variant="determinate"
-            value={item.ayniScore}
+            value={item.reciprocidadScore}
             sx={{
               height: 6,
               borderRadius: 3,
@@ -377,7 +377,7 @@ const ConsciousMarketplaceCard: React.FC<{
           </Box>
           <WaterDrop sx={{ fontSize: 16, color: consciousness.color }} />
           <Typography variant="caption" sx={{ fontWeight: 600, color: consciousness.color }}>
-            {item.seller.ayniScore}
+            {item.seller.reciprocidadScore}
           </Typography>
         </Box>
 
@@ -419,13 +419,13 @@ const ConsciousMarketplaceEnhancements: React.FC<ConsciousMarketplaceProps> = ({
   // 🔍 NIRA: Análisis de métricas conscientes
   const consciousnessMetrics = useMemo(() => {
     const totalItems = items.length;
-    const avgAyniScore = items.reduce((sum, item) => sum + item.ayniScore, 0) / totalItems;
+    const avgReciprocidadScore = items.reduce((sum, item) => sum + item.reciprocidadScore, 0) / totalItems;
     const avgSustainability = items.reduce((sum, item) => sum + item.sustainabilityScore, 0) / totalItems;
     const avgBienComun = items.reduce((sum, item) => sum + item.bienComunContribution, 0) / totalItems;
 
     return {
       totalItems,
-      avgAyniScore: Math.round(avgAyniScore),
+      avgReciprocidadScore: Math.round(avgReciprocidadScore),
       avgSustainability: Math.round(avgSustainability),
       avgBienComun: Math.round(avgBienComun),
     };
@@ -444,10 +444,10 @@ const ConsciousMarketplaceEnhancements: React.FC<ConsciousMarketplaceProps> = ({
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h4" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
-                {consciousnessMetrics.avgAyniScore}
+                {consciousnessMetrics.avgReciprocidadScore}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                Promedio Ayni Score
+                Promedio Reciprocidad Score
               </Typography>
             </Box>
 

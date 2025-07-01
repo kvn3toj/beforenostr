@@ -1,17 +1,17 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('AyniMetricsCard Enhanced Features', () => {
+test.describe('ReciprocidadMetricsCard Enhanced Features', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to home page where AyniMetricsCard is displayed
+    // Navigate to home page where ReciprocidadMetricsCard is displayed
     await page.goto('/');
     
     // Wait for the component to load
-    await page.waitForSelector('[aria-label="Tarjeta de métricas Ayni"]');
+    await page.waitForSelector('[aria-label="Tarjeta de métricas Reciprocidad"]');
   });
 
   test('should display main balance with proper accessibility', async ({ page }) => {
     // Check main balance display
-    const balanceRegion = page.locator('[aria-label="Balance Ayni Principal"]');
+    const balanceRegion = page.locator('[aria-label="Balance Reciprocidad Principal"]');
     await expect(balanceRegion).toBeVisible();
     
     // Verify balance percentage is displayed
@@ -46,7 +46,7 @@ test.describe('AyniMetricsCard Enhanced Features', () => {
 
   test('should have proper ARIA attributes', async ({ page }) => {
     // Check main container has proper role
-    const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+    const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
     await expect(mainCard).toHaveAttribute('role', 'region');
     
     // Check toolbar has proper role
@@ -90,7 +90,7 @@ test.describe('AyniMetricsCard Enhanced Features', () => {
     await expandButton.click();
     
     // Check elemental balance section
-    const elementalGroup = page.locator('[aria-label="Elementos del balance Ayni"]');
+    const elementalGroup = page.locator('[aria-label="Elementos del balance Reciprocidad"]');
     await expect(elementalGroup).toBeVisible();
     await expect(elementalGroup).toHaveAttribute('role', 'group');
     
@@ -108,7 +108,7 @@ test.describe('AyniMetricsCard Enhanced Features', () => {
 
   test('should handle refresh functionality', async ({ page }) => {
     // Find refresh button
-    const refreshButton = page.locator('[aria-label="Actualizar métricas Ayni"]');
+    const refreshButton = page.locator('[aria-label="Actualizar métricas Reciprocidad"]');
     await expect(refreshButton).toBeVisible();
     
     // Click refresh button
@@ -155,7 +155,7 @@ test.describe('AyniMetricsCard Enhanced Features', () => {
 
   test('should have proper heading hierarchy', async ({ page }) => {
     // Check main heading
-    const mainHeading = page.locator('h2:has-text("Tu Balance Ayni")');
+    const mainHeading = page.locator('h2:has-text("Tu Balance Reciprocidad")');
     await expect(mainHeading).toBeVisible();
     
     // Expand detailed view to check sub-headings
@@ -169,7 +169,7 @@ test.describe('AyniMetricsCard Enhanced Features', () => {
 
   test('should handle animations smoothly', async ({ page }) => {
     // Check that main balance display fades in
-    const balanceDisplay = page.locator('[aria-label="Balance Ayni Principal"]');
+    const balanceDisplay = page.locator('[aria-label="Balance Reciprocidad Principal"]');
     await expect(balanceDisplay).toBeVisible();
     
     // Test expand/collapse animation
@@ -189,7 +189,7 @@ test.describe('AyniMetricsCard Enhanced Features', () => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     
-    const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+    const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
     await expect(mainCard).toBeVisible();
     
     // Check that compact metrics are still visible
@@ -206,17 +206,17 @@ test.describe('AyniMetricsCard Enhanced Features', () => {
   });
 });
 
-test.describe('AyniMetricsCard Error Handling', () => {
+test.describe('ReciprocidadMetricsCard Error Handling', () => {
   test('should handle missing data gracefully', async ({ page }) => {
     // This test would need to mock API responses with missing data
     // For now, we verify the component renders without crashing
     await page.goto('/');
     
-    const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+    const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
     await expect(mainCard).toBeVisible();
     
     // Check that even with potential missing data, basic elements are present
-    const balanceDisplay = page.locator('[aria-label="Balance Ayni Principal"]');
+    const balanceDisplay = page.locator('[aria-label="Balance Reciprocidad Principal"]');
     await expect(balanceDisplay).toBeVisible();
   });
 
@@ -225,10 +225,10 @@ test.describe('AyniMetricsCard Error Handling', () => {
     await page.goto('/');
     
     // The loading state might be brief, but we can check if it exists
-    const loadingState = page.locator('[aria-label="Cargando métricas Ayni"]');
+    const loadingState = page.locator('[aria-label="Cargando métricas Reciprocidad"]');
     
     // Either loading state or main card should be visible
-    const mainCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
+    const mainCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
     
     // At least one should be visible
     const isLoadingVisible = await loadingState.isVisible();

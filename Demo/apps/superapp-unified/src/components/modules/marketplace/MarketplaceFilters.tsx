@@ -86,7 +86,7 @@ const SORT_OPTIONS = [
 ];
 
 const POPULAR_TAGS = [
-  'ayni', 'sostenible', 'colaborativo', 'educación', 'tecnología',
+  'reciprocidad', 'sostenible', 'colaborativo', 'educación', 'tecnología',
   'salud', 'bienestar', 'arte', 'música', 'deporte', 'cocina',
   'idiomas', 'programación', 'diseño', 'consultoría', 'mindfulness'
 ];

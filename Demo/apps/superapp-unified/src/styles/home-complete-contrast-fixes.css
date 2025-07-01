@@ -146,15 +146,15 @@ h6,
   font-weight: 500 !important;
 }
 
-/* ===== AYNI BALANCE VISUALIZATION - CORRECCIONES ESPECÍFICAS ===== */
-.AyniBalanceVisualization .MuiTypography-h6,
-.AyniBalanceVisualization .MuiTypography-h4 {
+/* ===== RECIPROCIDAD BALANCE VISUALIZATION - CORRECCIONES ESPECÍFICAS ===== */
+.ReciprocidadBalanceVisualization .MuiTypography-h6,
+.ReciprocidadBalanceVisualization .MuiTypography-h4 {
   color: var(--pure-white) !important;
   font-weight: 700 !important;
 }
 
-.AyniBalanceVisualization .MuiTypography-subtitle2,
-.AyniBalanceVisualization .MuiTypography-caption {
+.ReciprocidadBalanceVisualization .MuiTypography-subtitle2,
+.ReciprocidadBalanceVisualization .MuiTypography-caption {
   color: var(--pure-white) !important;
   font-weight: 500 !important;
 }
@@ -1132,7 +1132,7 @@ div#smart-actions.MuiBox-root .MuiStack-root .MuiTypography-root {
 /* Selectores específicos para elementos con texto "Oportunidad de Crecimiento" */
 *:has(.MuiTypography-root:contains("Oportunidad de Crecimiento")) .MuiTypography-root,
 *:has(.MuiTypography-root:contains("Elemento Agua Dominante")) .MuiTypography-root,
-*:has(.MuiTypography-root:contains("Balance Ayni")) .MuiTypography-root {
+*:has(.MuiTypography-root:contains("Balance Reciprocidad")) .MuiTypography-root {
   color: #000000 !important;
   font-weight: 600 !important;
   opacity: 1 !important;

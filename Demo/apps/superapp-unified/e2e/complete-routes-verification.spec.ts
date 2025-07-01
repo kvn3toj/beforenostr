@@ -165,7 +165,7 @@ test.describe('Complete Routes Verification - All Pages Working', () => {
       const pageContent = await page.textContent('body');
       const hasCoomunityTerms = 
         pageContent?.includes('CoomÜnity') ||
-        pageContent?.includes('Ayni') ||
+        pageContent?.includes('Reciprocidad') ||
         pageContent?.includes('Mëritos') ||
         pageContent?.includes('Bien Común') ||
         pageContent?.includes('ÜPlay');

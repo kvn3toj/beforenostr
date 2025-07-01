@@ -62,7 +62,7 @@ interface FeedbackModalProps {
  *
  * Este componente proporciona una interfaz intuitiva para que los usuarios
  * puedan reportar feedback de manera estructurada, siguiendo los principios
- * de Ayni (reciprocidad) y contribuyendo al Bien Común.
+ * de Reciprocidad (reciprocidad) y contribuyendo al Bien Común.
  */
 const FeedbackModal: React.FC<FeedbackModalProps> = ({
   isOpen,

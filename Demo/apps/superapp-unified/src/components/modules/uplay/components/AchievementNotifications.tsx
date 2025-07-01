@@ -90,7 +90,7 @@ const RARITY_COLORS = {
 
 const CATEGORY_ICONS = {
   learning: '🧠',
-  ayni: '⚖️',
+  reciprocidad: '⚖️',
   bien_comun: '🤝',
   engagement: '🔥',
   social: '💡',

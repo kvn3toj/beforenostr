@@ -199,20 +199,20 @@ export class UsersController {
     return req.user;
   }
 
-  @Get(':id/ayni-metrics')
-  @ApiOperation({ summary: 'Obtener métricas Ayni del usuario' })
+  @Get(':id/reciprocidad-metrics')
+  @ApiOperation({ summary: 'Obtener métricas Reciprocidad del usuario' })
   @ApiResponse({
     status: 200,
-    description: 'Métricas Ayni del usuario obtenidas exitosamente',
+    description: 'Métricas Reciprocidad del usuario obtenidas exitosamente',
     schema: {
       type: 'object',
       properties: {
         ondas: { type: 'number', description: 'Öndas acumuladas del usuario' },
         meritos: { type: 'number', description: 'Mëritos ganados' },
-        balanceAyni: { type: 'number', description: 'Balance Ayni (0-1)' },
-        ayniLevel: { type: 'string', description: 'Nivel actual de Ayni' },
+        balanceReciprocidad: { type: 'number', description: 'Balance Reciprocidad (0-1)' },
+        reciprocidadLevel: { type: 'string', description: 'Nivel actual de Reciprocidad' },
         nextLevel: { type: 'string', description: 'Próximo nivel' },
-        ayniProgress: {
+        reciprocidadProgress: {
           type: 'number',
           description: 'Progreso hacia el siguiente nivel (%)',
         },
@@ -257,7 +257,7 @@ export class UsersController {
       },
     },
   })
-  async getAyniMetrics(@Param('id') id: string, @Req() req) {
+  async getReciprocidadMetrics(@Param('id') id: string, @Req() req) {
     // Verificar que el usuario puede acceder a estas métricas
     const canAccess = req.user.id === id || req.user.roles.includes('admin');
 
@@ -268,7 +268,7 @@ export class UsersController {
       };
     }
 
-    return this.usersService.getAyniMetrics(id);
+    return this.usersService.getReciprocidadMetrics(id);
   }
 
   @Get('debug-roles')

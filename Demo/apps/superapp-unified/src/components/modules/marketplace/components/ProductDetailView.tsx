@@ -184,7 +184,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 isUrgent={!!product.urgent}
                 hasVideo={!!product.hasVideo}
                 size="medium"
-                ayniScore={product.seller.badges?.some(b => b.name.toLowerCase().includes('ayni')) ? 90 : undefined}
+                reciprocidadScore={product.seller.badges?.some(b => b.name.toLowerCase().includes('reciprocidad')) ? 90 : undefined}
                 meritos={product.seller.badges?.filter(b => b.category === 'achievement').length || 0}
                 isSustainable={safeTags.some(tag => tag.toLowerCase().includes('sostenible'))}
                 isEmprendedorConfiable={product.seller.badges?.some(b => b.category === 'verification' && b.name.toLowerCase().includes('confiable'))}
@@ -206,7 +206,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               </Typography>
               {/* MICROCOPY FILOSÓFICO */}
               <Typography variant="subtitle2" color="success.main" fontWeight={600} sx={{ mb: 1 }}>
-                Cada intercambio aquí es un acto de Ayni: reciprocidad y Bien Común. Los Mëritos y Lükas reflejan tu contribución al ecosistema.
+                Cada intercambio aquí es un acto de Reciprocidad: reciprocidad y Bien Común. Los Mëritos y Lükas reflejan tu contribución al ecosistema.
               </Typography>
               {/* Rating y estadísticas */}
               <Box
@@ -415,9 +415,9 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     variant="contained"
                     color="primary"
                     onClick={() => setReviewModalOpen(true)}
-                    aria-label="Calificar experiencia (Compartir mi Ayni)"
+                    aria-label="Calificar experiencia (Compartir mi Reciprocidad)"
                   >
-                    Compartir mi Ayni (Calificar experiencia)
+                    Compartir mi Reciprocidad (Calificar experiencia)
                   </Button>
                 )}
                 <Button

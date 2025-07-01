@@ -325,7 +325,7 @@ export class AnalyticsController {
         totalContent: { type: 'number' },
         engagement: { type: 'object' },
         recentActivity: { type: 'array' },
-        ayniMetrics: { type: 'object' },
+        reciprocidadMetrics: { type: 'object' },
       },
     },
   })

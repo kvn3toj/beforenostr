@@ -231,7 +231,7 @@ import { CoomunityButton } from '@/components/ui/CoomunityButton';
 <CoomunityButton 
   variant="primary"
   size="md"
-  ayniLevel={3}           // Nivel de reciprocidad (1-5)
+  reciprocidadLevel={3}           // Nivel de reciprocidad (1-5)
   loading={isLoading}     // Estado de carga
   startIcon={<Icon />}    // Icono inicial
   endIcon={<Icon />}      // Icono final
@@ -581,11 +581,11 @@ module.exports = {
  * 
  * @param variant - Estilo visual del botón
  * @param size - Tamaño del botón
- * @param ayniLevel - Nivel de reciprocidad (1-5)
+ * @param reciprocidadLevel - Nivel de reciprocidad (1-5)
  * @param loading - Estado de carga
  * @example
- * <CoomunityButton variant="primary" size="md" ayniLevel={3}>
- *   Acción Ayni
+ * <CoomunityButton variant="primary" size="md" reciprocidadLevel={3}>
+ *   Acción Reciprocidad
  * </CoomunityButton>
  */
 ```
@@ -605,7 +605,7 @@ Cada componente incluye documentación inline con:
 ### **Integración de Conceptos**
 
 #### **Terminología Nativa**
-- **Ayni** - Reciprocidad en interacciones
+- **Reciprocidad** - Reciprocidad en interacciones
 - **Mëritos** - Sistema de recompensas por contribuir al Bien Común
 - **Öndas** - Energía vibracional positiva
 - **Lükas** - Moneda interna para intercambios
@@ -614,13 +614,13 @@ Cada componente incluye documentación inline con:
 
 #### **Implementación Visual**
 ```tsx
-// Ejemplo: Niveles Ayni en componentes
+// Ejemplo: Niveles Reciprocidad en componentes
 <CoomunityButton 
   variant="primary" 
-  ayniLevel={3}  // Nivel de reciprocidad
+  reciprocidadLevel={3}  // Nivel de reciprocidad
   size="md"
 >
-  Dar Ayni
+  Dar Reciprocidad
 </CoomunityButton>
 
 // Ejemplo: Gradientes elementales
@@ -629,7 +629,7 @@ Cada componente incluye documentación inline con:
 </div>
 
 // Ejemplo: Animaciones conscientes
-<div className="ayni-flow-animation">
+<div className="reciprocidad-flow-animation">
   {/* Flujo de reciprocidad */}
 </div>
 ```

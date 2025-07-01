@@ -13,7 +13,7 @@
 
 #### 🔧 **1. Corrección de Overflow (LA CORRECCIÓN CLAVE)**
 
-**Archivo:** `src/components/home/AyniMetricsCardRevolutionary.tsx`
+**Archivo:** `src/components/home/ReciprocidadMetricsCardRevolutionary.tsx`
 
 ```tsx
 // Contenedor principal

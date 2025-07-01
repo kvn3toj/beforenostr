@@ -98,7 +98,7 @@ const fetchAvailableRooms = async (): Promise<StudyRoom[]> => {
         { id: '2', username: 'Carlos', avatar: '/avatars/carlos.jpg', isActive: true },
         { id: '3', username: 'María', avatar: '/avatars/maria.jpg', isActive: false },
       ],
-      tags: ['Meditación', 'Bien Común', 'Ayni']
+      tags: ['Meditación', 'Bien Común', 'Reciprocidad']
     },
     {
       id: '2',

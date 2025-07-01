@@ -110,7 +110,7 @@ test.describe('Video Loading Verification', () => {
       console.log('✅ Reproductor cargado después de navegación');
     } else {
       console.log('⚠️ No se encontraron tarjetas de video, probando navegación directa');
-      await page.goto('/uplay/video/ayni-deep-dive');
+      await page.goto('/uplay/video/reciprocidad-deep-dive');
       await page.waitForTimeout(3000);
       await expect(page.locator('text=🎬 ÜPlay Unificado')).toBeVisible();
       console.log('✅ Navegación directa exitosa');
@@ -145,7 +145,7 @@ test.describe('Video Loading Verification', () => {
     console.log('🔍 Verificando URLs de video...');
     
     // Lista de videos que deberían estar disponibles
-    const videoIds = ['coomunity-intro', 'ayni-deep-dive', 'ondas-energia'];
+    const videoIds = ['coomunity-intro', 'reciprocidad-deep-dive', 'ondas-energia'];
     
     for (const videoId of videoIds) {
       console.log(`📹 Probando video: ${videoId}`);

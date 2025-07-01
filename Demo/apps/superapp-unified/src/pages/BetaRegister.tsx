@@ -49,7 +49,7 @@ interface BetaRegistrationData {
   experience: string;
   motivation: string;
   philosophyAnswers: {
-    ayni: string;
+    reciprocidad: string;
     bienComun: string;
     cooperacion: string;
   };
@@ -60,8 +60,8 @@ interface BetaRegistrationData {
 // Preguntas filosóficas para evaluar alineación
 const PHILOSOPHY_QUESTIONS = [
   {
-    key: 'ayni',
-    question: '¿Qué significa para ti la reciprocidad consciente (Ayni)?',
+    key: 'reciprocidad',
+    question: '¿Qué significa para ti la Reciprocidad Consciente?',
     placeholder: 'Comparte tu comprensión sobre dar y recibir de manera equilibrada...'
   },
   {
@@ -87,11 +87,11 @@ const BetaRegister: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { trackEvent } = useAnalytics();
-  
+
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [codeValidated, setCodeValidated] = useState(false);
-  
+
   const [formData, setFormData] = useState<BetaRegistrationData>({
     invitationCode: searchParams.get('invite') || '',
     email: '',
@@ -100,7 +100,7 @@ const BetaRegister: React.FC = () => {
     experience: '',
     motivation: '',
     philosophyAnswers: {
-      ayni: '',
+      reciprocidad: '',
       bienComun: '',
       cooperacion: '',
     },
@@ -124,14 +124,14 @@ const BetaRegister: React.FC = () => {
   // Validar código de invitación
   const validateInvitationCode = async (code: string): Promise<boolean> => {
     setLoading(true);
-    
+
     try {
       // Simular validación de código (en producción sería API call)
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Validación básica de formato
       const isValid = code.startsWith('BETA-') && code.length === 13;
-      
+
       if (isValid) {
         setCodeValidated(true);
         trackEvent({
@@ -168,7 +168,7 @@ const BetaRegister: React.FC = () => {
         toast.error('Por favor ingresa tu código de invitación');
         return;
       }
-      
+
       const isValid = await validateInvitationCode(formData.invitationCode);
       if (!isValid) return;
     }
@@ -179,7 +179,7 @@ const BetaRegister: React.FC = () => {
         toast.error('Por favor completa todos los campos obligatorios');
         return;
       }
-      
+
       trackEvent({
         event_name: 'beta_personal_data_completed',
         module: 'core',
@@ -190,12 +190,12 @@ const BetaRegister: React.FC = () => {
 
     if (activeStep === 2) {
       // Validar respuestas filosóficas
-      const { ayni, bienComun, cooperacion } = formData.philosophyAnswers;
-      if (!ayni || !bienComun || !cooperacion) {
+      const { reciprocidad, bienComun, cooperacion } = formData.philosophyAnswers;
+      if (!reciprocidad || !bienComun || !cooperacion) {
         toast.error('Por favor responde todas las preguntas filosóficas');
         return;
       }
-      
+
       if (!formData.acceptTerms) {
         toast.error('Debes aceptar los términos y condiciones');
         return;
@@ -205,9 +205,9 @@ const BetaRegister: React.FC = () => {
         event_name: 'beta_philosophy_quiz_completed',
         module: 'core',
         action: 'quiz_completed',
-        custom_parameters: { 
+        custom_parameters: {
           step: 'philosophy',
-          answers_length: ayni.length + bienComun.length + cooperacion.length
+          answers_length: reciprocidad.length + bienComun.length + cooperacion.length
         }
       });
     }
@@ -223,11 +223,11 @@ const BetaRegister: React.FC = () => {
   // Enviar registro final
   const handleSubmitRegistration = async () => {
     setLoading(true);
-    
+
     try {
       // Simular envío de registro (en producción sería API call)
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       trackEvent({
         event_name: 'beta_registration_completed',
         module: 'core',
@@ -240,17 +240,17 @@ const BetaRegister: React.FC = () => {
       });
 
       toast.success('¡Registro completado exitosamente! 🎉');
-      
+
       // Redirigir al login o dashboard
       setTimeout(() => {
-        navigate('/login', { 
-          state: { 
+        navigate('/login', {
+          state: {
             message: 'Registro beta completado. ¡Bienvenido a CoomÜnity!',
-            email: formData.email 
+            email: formData.email
           }
         });
       }, 2000);
-      
+
     } catch (error) {
       toast.error('Error al completar registro');
       trackEvent({
@@ -279,7 +279,7 @@ const BetaRegister: React.FC = () => {
                 Ingresa el código único que recibiste en tu invitación
               </Typography>
             </Box>
-            
+
             <TextField
               fullWidth
               label="Código de Invitación"
@@ -292,7 +292,7 @@ const BetaRegister: React.FC = () => {
               helperText="El código tiene formato: BETA-XXXXXXXX"
               disabled={loading}
             />
-            
+
             {codeValidated && (
               <Alert severity="success" icon={<CheckCircle />}>
                 ¡Código validado! Estás invitado al programa beta de CoomÜnity 🌱
@@ -381,45 +381,34 @@ const BetaRegister: React.FC = () => {
           <Stack spacing={3}>
             <Box textAlign="center">
               <Psychology sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
-              <Typography variant="h4" gutterBottom>
+              <Typography variant="h6" gutterBottom>
+                <QuestionAnswer sx={{ mr: 1, verticalAlign: 'middle' }} />
                 Quiz Filosófico
               </Typography>
-              <Typography variant="body1" color="text.secondary">
-                Estas preguntas nos ayudan a entender tu alineación con los valores CoomÜnity
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Tus respuestas nos ayudan a construir una comunidad alineada con nuestros valores.
               </Typography>
-            </Box>
-
-            {PHILOSOPHY_QUESTIONS.map((question, index) => (
-              <Card key={question.key} variant="outlined">
-                <CardContent>
-                  <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <QuestionAnswer color="primary" />
-                    Pregunta {index + 1}
-                  </Typography>
-                  <Typography variant="body1" gutterBottom sx={{ fontWeight: 500 }}>
-                    {question.question}
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    placeholder={question.placeholder}
-                    value={formData.philosophyAnswers[question.key as keyof typeof formData.philosophyAnswers]}
-                    onChange={(e) => setFormData({
-                      ...formData,
+              {PHILOSOPHY_QUESTIONS.map(({ key, question, placeholder }) => (
+                <TextField
+                  key={key}
+                  fullWidth
+                  multiline
+                  rows={3}
+                  label={question}
+                  placeholder={placeholder}
+                  value={formData.philosophyAnswers[key as keyof typeof formData.philosophyAnswers]}
+                  onChange={(e) =>
+                    setFormData(prev => ({
+                      ...prev,
                       philosophyAnswers: {
-                        ...formData.philosophyAnswers,
-                        [question.key]: e.target.value
-                      }
-                    })}
-                    variant="outlined"
-                    sx={{ mt: 2 }}
-                  />
-                </CardContent>
-              </Card>
-            ))}
-
-            <Box>
+                        ...prev.philosophyAnswers,
+                        [key]: e.target.value,
+                      },
+                    }))
+                  }
+                  sx={{ mb: 3 }}
+                />
+              ))}
               <FormControlLabel
                 control={
                   <Checkbox
@@ -434,7 +423,7 @@ const BetaRegister: React.FC = () => {
                   </Typography>
                 }
               />
-              
+
               <FormControlLabel
                 control={
                   <Checkbox
@@ -483,10 +472,10 @@ const BetaRegister: React.FC = () => {
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="body2">Discord:</Typography>
-                  <Chip 
-                    label={formData.joinDiscord ? 'Sí, me uno' : 'No por ahora'} 
-                    size="small" 
-                    color={formData.joinDiscord ? 'success' : 'default'} 
+                  <Chip
+                    label={formData.joinDiscord ? 'Sí, me uno' : 'No por ahora'}
+                    size="small"
+                    color={formData.joinDiscord ? 'success' : 'default'}
                   />
                 </Box>
               </Stack>
@@ -506,8 +495,8 @@ const BetaRegister: React.FC = () => {
   };
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
+    <Box sx={{
+      minHeight: '100vh',
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       display: 'flex',
       alignItems: 'center',
@@ -516,11 +505,11 @@ const BetaRegister: React.FC = () => {
     }}>
       <Card sx={{ maxWidth: 800, width: '100%', borderRadius: 3, overflow: 'hidden' }}>
         {loading && <LinearProgress />}
-        
+
         <CardContent sx={{ p: 4 }}>
           {/* Header */}
           <Box textAlign="center" mb={4}>
-            <Typography variant="h2" gutterBottom sx={{ 
+            <Typography variant="h2" gutterBottom sx={{
               background: 'linear-gradient(45deg, #2196F3, #21CBF3)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
@@ -532,9 +521,9 @@ const BetaRegister: React.FC = () => {
             <Typography variant="h5" color="text.secondary" gutterBottom>
               Programa Beta Exclusivo
             </Typography>
-            <Chip 
-              label="Invitación Especial" 
-              color="primary" 
+            <Chip
+              label="Invitación Especial"
+              color="primary"
               sx={{ fontSize: '0.9rem', fontWeight: 600 }}
             />
           </Box>
@@ -562,9 +551,9 @@ const BetaRegister: React.FC = () => {
             >
               Anterior
             </Button>
-            
+
             <Box sx={{ flex: '1 1 auto' }} />
-            
+
             {activeStep === STEPS.length - 1 ? (
               <Button
                 variant="contained"
@@ -593,4 +582,4 @@ const BetaRegister: React.FC = () => {
   );
 };
 
-export default BetaRegister; 
+export default BetaRegister;

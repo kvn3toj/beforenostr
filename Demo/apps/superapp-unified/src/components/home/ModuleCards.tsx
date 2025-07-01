@@ -80,13 +80,13 @@ const modules: ModuleData[] = [
     name: 'Marketplace',
     subtitle: 'GMP - Gamified Match Place',
     description:
-      'Intercambio de productos y servicios basado en principios de Ayni y Bien Común',
+      'Intercambio de productos y servicios basado en principios de Reciprocidad y Bien Común',
     icon: <Store />,
     color: '#2196f3',
     gradient: 'linear-gradient(135deg, #2196f3 0%, #21cbf3 100%)',
     path: '/marketplace',
     stats: [
-      { label: 'Intercambios Ayni', value: '8', icon: <Store /> },
+      { label: 'Intercambios Reciprocidad', value: '8', icon: <Store /> },
       { label: 'Confianza', value: '95%', icon: <Star /> },
     ],
     isActive: true,

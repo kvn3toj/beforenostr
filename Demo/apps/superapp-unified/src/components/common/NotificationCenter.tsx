@@ -44,7 +44,7 @@ import { cn } from '../../utils/styles';
 
 interface Notification {
   id: string;
-  type: 'ayni' | 'transaction' | 'social' | 'system' | 'achievement';
+  type: 'reciprocidad' | 'transaction' | 'social' | 'system' | 'achievement';
   title: string;
   message: string;
   timestamp: Date;
@@ -68,7 +68,7 @@ interface NotificationCenterProps {
 
 const getNotificationIcon = (type: Notification['type']) => {
   switch (type) {
-    case 'ayni':
+    case 'reciprocidad':
       return <Star sx={{ color: 'warning.main' }} />;
     case 'transaction':
       return <AttachMoney sx={{ color: 'success.main' }} />;
@@ -83,7 +83,7 @@ const getNotificationIcon = (type: Notification['type']) => {
 
 const getNotificationColor = (type: Notification['type']) => {
   switch (type) {
-    case 'ayni':
+    case 'reciprocidad':
       return 'warning';
     case 'transaction':
       return 'success';

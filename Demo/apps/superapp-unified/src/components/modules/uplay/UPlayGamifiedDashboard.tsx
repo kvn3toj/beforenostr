@@ -11,7 +11,6 @@ import {
   IconButton,
   AppBar,
   Toolbar,
-  useTheme,
   useMediaQuery,
   Chip,
   Divider,
@@ -19,6 +18,8 @@ import {
   Fade,
   Skeleton,
   Paper,
+  useTheme,
+  Theme,
 } from '@mui/material';
 import {
   PlayArrow,
@@ -66,44 +67,83 @@ const getDifficultyLabel = (difficulty: 'easy' | 'medium' | 'hard') => {
 };
 
 const getDifficultyColor = (difficulty: 'easy' | 'medium' | 'hard') => {
-    if (difficulty === 'easy') return '#2ecc71';
-    if (difficulty === 'medium') return '#f1c40f';
-    return '#e74c3c';
+    if (difficulty === 'easy') return '#3E8638'; // Verde - success
+    if (difficulty === 'medium') return '#FBBA00'; // Amarillo - warning
+    return '#5D1626'; // Rojo oscuro - error
 };
 
 // COMPONENTE VideoCard
 const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({ video, onPlay }) => {
+  const theme = useTheme();
+
   return (
     <Card
       onClick={onPlay}
       sx={{
-        height: '100%', cursor: 'pointer', transition: 'all 0.3s',
-        position: 'relative', overflow: 'hidden', background: 'rgba(40,40,80,0.85)',
-        backdropFilter: 'blur(8px)', border: '1.5px solid rgba(99,102,241,0.18)',
-        borderRadius: 3, boxShadow: '0 4px 24px 0 rgba(99,102,241,0.10)',
+        height: '100%',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+        position: 'relative',
+        overflow: 'hidden',
+        background: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 2,
+        boxShadow: 'none',
         '&:hover': {
-          transform: 'translateY(-8px) scale(1.04)',
-          boxShadow: `0 12px 32px rgba(99,102,241,0.18), 0 0 24px ${getDifficultyColor(video.difficulty)}70`,
+          transform: 'translateY(-2px)',
+          boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
+          borderColor: 'rgba(92, 36, 131, 0.1)',
         },
       }}
     >
-      <Box sx={{ p: 2.5, height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, color: '#fff', flexGrow: 1 }}>
+      <Box sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Typography variant="h6" sx={{ fontWeight: 500, mb: 1, color: theme.palette.text.primary, flexGrow: 1 }}>
           {video.thumbnail} {video.title}
         </Typography>
-        <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.2)' }} />
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item><Chip icon={<Diamond />} label={`${video.rewards.meritos} Mëritos`} size="small" sx={{ background: '#3498db20', color: '#3498db' }} /></Grid>
-          <Grid item><Chip icon={<Bolt />} label={`${video.rewards.ondas} Öndas`} size="small" sx={{ background: '#9b59b620', color: '#9b59b6' }} /></Grid>
+        <Divider sx={{ my: 1.5, borderColor: theme.palette.divider }} />
+        <Grid container justifyContent="space-between" alignItems="center" spacing={1}>
+          <Grid item>
+            <Chip
+              icon={<Diamond fontSize="small" />}
+              label={`${video.rewards.meritos}`}
+              size="small"
+              sx={{
+                background: 'rgba(92, 36, 131, 0.02)',
+                border: 'none',
+                color: theme.palette.text.secondary,
+                fontWeight: 400,
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <Chip
+              icon={<Bolt fontSize="small" />}
+              label={`${video.rewards.ondas}`}
+              size="small"
+              sx={{
+                background: 'rgba(92, 36, 131, 0.02)',
+                border: 'none',
+                color: theme.palette.text.secondary,
+                fontWeight: 400,
+              }}
+            />
+          </Grid>
         </Grid>
       </Box>
       <Chip
         label={getDifficultyLabel(video.difficulty)}
         size="small"
         sx={{
-            position: 'absolute', top: 12, left: 12,
-            background: 'linear-gradient(90deg, #7e22ce 0%, #2563eb 100%)',
-            color: '#fff', fontWeight: 'bold', px: 2, py: 1, borderRadius: 2
+          position: 'absolute',
+          top: 8,
+          right: 8,
+          background: 'white',
+          color: getDifficultyColor(video.difficulty),
+          fontWeight: 500,
+          border: `1px solid ${getDifficultyColor(video.difficulty)}10`,
+          borderRadius: 1,
+          height: 20,
+          fontSize: '0.7rem',
         }}
       />
     </Card>
@@ -113,10 +153,10 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({ video, 
 // DASHBOARD PRINCIPAL
 export const UPlayGamifiedDashboard: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery('(max-width: 600px)');
   const navigate = useNavigate();
   const [isPending, startTransition] = useTransition();
-  const { RewardComponent } = useRewardFeedback();
+  const { showReward } = useRewardFeedback();
 
   const { data: playlistsData, isLoading: playlistsLoading, error: playlistsError } = usePlaylists();
 
@@ -143,39 +183,81 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   }, [navigate]);
 
   if (playlistsLoading) {
-    return <Container sx={{ py: 4 }}><Grid container spacing={3}>{[...Array(6)].map((_, i) => <Grid item key={i} xs={12} sm={6} md={4}><Skeleton variant="rectangular" height={200} sx={{ borderRadius: 3 }}/></Grid>)}</Grid></Container>;
+    return (
+      <Container sx={{ py: 4 }}>
+        <Grid container spacing={2}>
+          {[...Array(6)].map((_, i) => (
+            <Grid item key={i} xs={12} sm={6} md={4}>
+              <Skeleton variant="rectangular" height={160} sx={{ borderRadius: 2 }}/>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    );
   }
 
   if (playlistsError) {
-    return <Container sx={{ py: 4 }}><Paper sx={{p: 3, bgcolor: 'error.light'}}><Typography color="error.contrastText">Error al cargar las Sendas.</Typography></Paper></Container>;
+    return (
+      <Container sx={{ py: 4 }}>
+        <Paper sx={{ p: 3, bgcolor: 'rgba(93, 22, 38, 0.02)', border: '1px solid rgba(93, 22, 38, 0.1)', borderRadius: 2 }}>
+          <Typography color="#5D1626">Error al cargar las Sendas.</Typography>
+        </Paper>
+      </Container>
+    );
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }} data-testid="uplay-dashboard">
-      <AppBar position="static" color="transparent" elevation={0}><Toolbar><Typography variant="h6" sx={{ flexGrow: 1 }}>ÜPlay Dashboard</Typography></Toolbar></AppBar>
-      <Container maxWidth="xl" sx={{ mt: 4 }}>
+    <Box sx={{ flexGrow: 1, bgcolor: theme.palette.background.default, minHeight: '100%' }} data-testid="uplay-dashboard">
+      {/* Contenido principal */}
+      <Container maxWidth="xl" sx={{ mt: 2 }}>
         <DynamicMetricsDashboard />
-        {playlistsData?.map((playlist) => (
-          <Box key={playlist.id} sx={{ my: 5 }}>
-            <Fade in={true} timeout={800}>
-              <Box>
-                <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>Senda: {playlist.name}</Typography>
-                <Grid container spacing={isMobile ? 2 : 3}>
-                  {playlist.videoItems.map((video) => (
-                    <Grid item key={video.id} xs={12} sm={6} md={4} lg={3}>
-                      <VideoCard
-                        video={adaptBackendVideoToVideoItem(video)}
-                        onPlay={() => handlePlayAction(playlist, video)}
-                      />
-                    </Grid>
-                  ))}
+
+        {/* Sendas de Aprendizaje */}
+        <Typography variant="h4" sx={{ mt: 5, mb: 3, fontWeight: 600, color: theme.palette.text.primary }}>
+          Sendas de Aprendizaje
+        </Typography>
+        <Grid container spacing={3}>
+          {playlistsData?.map((playlist) => (
+            <React.Fragment key={playlist.id}>
+              <Grid item xs={12}>
+                <Typography variant="h5" sx={{ mt: 2, mb: 1, fontWeight: 500, color: theme.palette.text.primary }}>
+                  {playlist.name}
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 2, color: theme.palette.text.secondary }}>
+                  {playlist.description || 'Explora esta colección de videos para expandir tu conciencia.'}
+                </Typography>
+              </Grid>
+              {playlist.videoItems.map((video) => (
+                <Grid item xs={12} sm={6} md={4} key={video.id}>
+                  <VideoCard
+                    video={adaptBackendVideoToVideoItem(video)}
+                    onPlay={() => handlePlayAction(playlist, video)}
+                  />
                 </Grid>
-              </Box>
-            </Fade>
-          </Box>
-        ))}
+              ))}
+            </React.Fragment>
+          ))}
+        </Grid>
+
+        <Box sx={{ position: 'fixed', bottom: 24, right: 24 }}>
+          <Fab
+            color="primary"
+            aria-label="play"
+            sx={{
+              width: 48,
+              height: 48,
+              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.05)',
+              bgcolor: theme.palette.primary.main,
+              '&:hover': {
+                bgcolor: theme.palette.primary.dark,
+                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+              }
+            }}
+          >
+            <PlayArrow />
+          </Fab>
+        </Box>
       </Container>
-      {RewardComponent}
     </Box>
   );
 };

@@ -37,7 +37,7 @@ interface SocialPost {
     name: string;
     avatar: string;
     isEmprendedorConfiable: boolean;
-    ayniScore: number;
+    reciprocidadScore: number;
     meritos: number;
     specialties: string[];
   };
@@ -51,7 +51,7 @@ interface SocialPost {
     likes: number;
     comments: number;
     shares: number;
-    ayniPoints: number;
+    reciprocidadPoints: number;
   };
   metadata: {
     createdAt: string;
@@ -65,7 +65,7 @@ interface SocialPost {
     isLiked: boolean;
     hasCommented: boolean;
     hasShared: boolean;
-    ayniGiven: number;
+    reciprocidadGiven: number;
   };
 }
 
@@ -74,7 +74,7 @@ interface EnhancedSocialFeedProps {
   onLike?: (postId: string) => void;
   onComment?: (postId: string) => void;
   onShare?: (postId: string) => void;
-  onGiveAyni?: (postId: string, points: number) => void;
+  onGiveReciprocidad?: (postId: string, points: number) => void;
   onCollaborate?: (postId: string) => void;
   className?: string;
 }
@@ -108,7 +108,7 @@ const postVariants = {
   }
 };
 
-const ayniFlowVariants = {
+const reciprocidadFlowVariants = {
   initial: { scale: 1, opacity: 0.7 },
   animate: { 
     scale: [1, 1.2, 1],
@@ -127,7 +127,7 @@ export const EnhancedSocialFeed: React.FC<EnhancedSocialFeedProps> = ({
   onLike,
   onComment,
   onShare,
-  onGiveAyni,
+  onGiveReciprocidad,
   onCollaborate,
   className,
 }) => {
@@ -157,7 +157,7 @@ export const EnhancedSocialFeed: React.FC<EnhancedSocialFeedProps> = ({
     }
   };
 
-  const getAyniColor = (score: number) => {
+  const getReciprocidadColor = (score: number) => {
     if (score >= 80) return 'success';
     if (score >= 60) return 'warning';
     return 'error';
@@ -197,12 +197,12 @@ export const EnhancedSocialFeed: React.FC<EnhancedSocialFeedProps> = ({
             onLike={onLike}
             onComment={onComment}
             onShare={onShare}
-            onGiveAyni={onGiveAyni}
+            onGiveReciprocidad={onGiveReciprocidad}
             onCollaborate={onCollaborate}
             onMenuClick={handleMenuClick}
             getPostTypeIcon={getPostTypeIcon}
             getPostTypeColor={getPostTypeColor}
-            getAyniColor={getAyniColor}
+            getReciprocidadColor={getReciprocidadColor}
             getCollaborationBadge={getCollaborationBadge}
           />
         ))}
@@ -240,12 +240,12 @@ interface PostCardProps {
   onLike?: (postId: string) => void;
   onComment?: (postId: string) => void;
   onShare?: (postId: string) => void;
-  onGiveAyni?: (postId: string, points: number) => void;
+  onGiveReciprocidad?: (postId: string, points: number) => void;
   onCollaborate?: (postId: string) => void;
   onMenuClick: (event: React.MouseEvent<HTMLElement>, postId: string) => void;
   getPostTypeIcon: (type: SocialPost['content']['type']) => React.ReactNode;
   getPostTypeColor: (type: SocialPost['content']['type']) => string;
-  getAyniColor: (score: number) => string;
+  getReciprocidadColor: (score: number) => string;
   getCollaborationBadge: (level: SocialPost['metadata']['collaborationLevel']) => { label: string; color: string };
 }
 
@@ -255,23 +255,23 @@ const PostCard: React.FC<PostCardProps> = ({
   onLike,
   onComment,
   onShare,
-  onGiveAyni,
+  onGiveReciprocidad,
   onCollaborate,
   onMenuClick,
   getPostTypeIcon,
   getPostTypeColor,
-  getAyniColor,
+  getReciprocidadColor,
   getCollaborationBadge,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [showAyniFlow, setShowAyniFlow] = useState(false);
+  const [showReciprocidadFlow, setShowReciprocidadFlow] = useState(false);
 
   const collaborationBadge = getCollaborationBadge(post.metadata.collaborationLevel);
 
-  const handleAyniGive = () => {
-    setShowAyniFlow(true);
-    onGiveAyni?.(post.id, 1);
-    setTimeout(() => setShowAyniFlow(false), 2000);
+  const handleReciprocidadGive = () => {
+    setShowReciprocidadFlow(true);
+    onGiveReciprocidad?.(post.id, 1);
+    setTimeout(() => setShowReciprocidadFlow(false), 2000);
   };
 
   return (
@@ -391,11 +391,11 @@ const PostCard: React.FC<PostCardProps> = ({
                   {post.author.name}
                 </Typography>
                 
-                {/* Ayni Score */}
+                {/* Reciprocidad Score */}
                 <Chip
-                  label={`Ayni: ${post.author.ayniScore}%`}
+                  label={`Reciprocidad: ${post.author.reciprocidadScore}%`}
                   size="small"
-                  color={getAyniColor(post.author.ayniScore) as any}
+                  color={getReciprocidadColor(post.author.reciprocidadScore) as any}
                   className="h-6"
                 />
 
@@ -499,17 +499,17 @@ const PostCard: React.FC<PostCardProps> = ({
               <span>{post.engagement.shares} compartidos</span>
             </Box>
             
-            {/* Ayni Points Earned */}
+            {/* Reciprocidad Points Earned */}
             <Box className="flex items-center gap-1">
               <motion.div
-                variants={ayniFlowVariants}
+                variants={reciprocidadFlowVariants}
                 initial="initial"
-                animate={showAyniFlow ? "animate" : "initial"}
+                animate={showReciprocidadFlow ? "animate" : "initial"}
               >
                 <Handshake className="w-4 h-4 text-coomunity-500" />
               </motion.div>
               <span className="text-coomunity-600 font-medium">
-                +{post.engagement.ayniPoints} Ayni
+                +{post.engagement.reciprocidadPoints} Reciprocidad
               </span>
             </Box>
           </Box>
@@ -567,25 +567,25 @@ const PostCard: React.FC<PostCardProps> = ({
             </Box>
 
             <Box className="flex items-center gap-2">
-              {/* Give Ayni Button */}
-              <Tooltip title="Dar Ayni (Reciprocidad)">
+              {/* Give Reciprocidad Button */}
+              <Tooltip title="Dar Reciprocidad (Reciprocidad)">
                 <CoomunityButton
                   variant="outline"
                   size="sm"
-                  onClick={handleAyniGive}
+                  onClick={handleReciprocidadGive}
                   className={cn(
                     'gap-2 border-coomunity-300',
-                    showAyniFlow && 'bg-coomunity-50',
+                    showReciprocidadFlow && 'bg-coomunity-50',
                     animations.hoverScale
                   )}
                 >
                   <motion.div
-                    animate={showAyniFlow ? { rotate: 360 } : {}}
+                    animate={showReciprocidadFlow ? { rotate: 360 } : {}}
                     transition={{ duration: 0.5 }}
                   >
                     <Handshake className="w-4 h-4" />
                   </motion.div>
-                  Ayni
+                  Reciprocidad
                 </CoomunityButton>
               </Tooltip>
 

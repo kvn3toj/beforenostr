@@ -11,7 +11,7 @@ const wisdoms = [
   'El sistema debe recompensar la colaboración, la sinergia y la creación conjunta.',
   'La misión es manifestar el ecosistema digital CoomÜnity como un organismo vivo, auto-consciente y auto-evolutivo.',
   'El conocimiento es la luz que guía la transformación.',
-  'La reciprocidad (Ayni) es el equilibrio sagrado de toda acción.',
+  'La reciprocidad (Reciprocidad) es el equilibrio sagrado de toda acción.',
   'El Bien Común trasciende el bien individual.',
   'La metanöia es el arte de transformarse conscientemente.',
   'La armonía de los cinco elementos crea orden en el caos.'

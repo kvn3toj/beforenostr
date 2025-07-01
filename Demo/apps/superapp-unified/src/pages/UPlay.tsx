@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Tabs, Tab, useTheme, Fade } from '@mui/material';
+import { Box, Container, Tabs, Tab, Fade, Paper, Typography, IconButton, useTheme } from '@mui/material';
 import {
   Dashboard,
   VideoLibrary,
@@ -61,20 +61,30 @@ interface UPlayHeaderProps {
 }
 
 const UPlayHeader: React.FC<UPlayHeaderProps> = ({ learningState }) => {
-  return (
-    <Fade in={true} timeout={1000}>
-      <div className="cosmic-header" data-testid="cosmic-container">
-        <Container maxWidth="xl" className="relative">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-6">
-            <div className="text-center md:text-left">
-              <h1 className="text-4xl md:text-5xl font-black mb-2 text-gradient-cosmic">
-                ÜPlay
-              </h1>
-              <p className="text-lg md:text-xl font-medium text-medium-contrast">
-                Gamified Play List - Experiencia de Aprendizaje Interactiva
-              </p>
+  const theme = useTheme();
 
-              {/* 🛡️ Guardian Conscious Learning State */}
+  return (
+    <Fade in={true} timeout={800}>
+      <Paper elevation={0} sx={{
+        background: theme.palette.background.default,
+        borderRadius: 2,
+        border: `1px solid ${theme.palette.divider}`,
+        mb: 3,
+        p: { xs: 2, md: 3 },
+      }}>
+        <Container maxWidth="xl">
+          <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="center" justifyContent="space-between" gap={3} py={1}>
+            <Box textAlign={{ xs: 'center', md: 'left' }}>
+              <Typography variant="h3" fontWeight="600" sx={{
+                mb: 0.5,
+                color: theme.palette.primary.main,
+                fontSize: { xs: '1.5rem', md: '1.75rem' }
+              }}>
+                ÜPlay
+              </Typography>
+              <Typography variant="body2" color={theme.palette.text.secondary} sx={{ fontSize: { xs: '0.85rem', md: '0.9rem' } }}>
+                Gamified Play List - Experiencia de Aprendizaje Interactiva
+              </Typography>
               <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap', justifyContent: { xs: 'center', md: 'flex-start' } }}>
                 <LearningLevelChip
                   level={learningState.level}
@@ -95,20 +105,38 @@ const UPlayHeader: React.FC<UPlayHeaderProps> = ({ learningState }) => {
                   data-testid="learning-mode-indicator"
                 />
               </Box>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="glass-card px-4 py-2">
-                <div className="text-sm text-medium-contrast">Estado</div>
-                <div className="font-bold text-gradient-blue">En Línea</div>
-              </div>
-              <button data-testid="cosmic-play-button" aria-label="Iniciar experiencia cósmica principal" className="p-2 rounded-full bg-blue-500 text-white shadow-lg">
+            </Box>
+            <Box display="flex" alignItems="center" gap={2}>
+              <Paper elevation={0} sx={{
+                px: 2.5,
+                py: 1,
+                borderRadius: 2,
+                background: 'rgba(92, 36, 131, 0.02)',
+                border: `1px solid ${theme.palette.divider}`
+              }}>
+                <Typography variant="caption" color={theme.palette.text.disabled}>Estado</Typography>
+                <Typography variant="subtitle2" fontWeight="500" color={theme.palette.primary.main}>En Línea</Typography>
+              </Paper>
+              <IconButton
+                data-testid="cosmic-play-button"
+                aria-label="Iniciar experiencia cósmica principal"
+                sx={{
+                  bgcolor: 'rgba(92, 36, 131, 0.04)',
+                  color: theme.palette.primary.main,
+                  width: 48,
+                  height: 48,
+                  '&:hover': {
+                    bgcolor: 'rgba(92, 36, 131, 0.08)',
+                    transform: 'scale(1.05)'
+                  }
+                }}
+              >
                 <PlayArrow />
-              </button>
-            </div>
-          </div>
+              </IconButton>
+            </Box>
+          </Box>
         </Container>
-      </div>
+      </Paper>
     </Fade>
   );
 };
@@ -153,7 +181,7 @@ const UPlay: React.FC = () => {
     dismissFeedback,
     showLearningFlow,
     showWisdomIntegration,
-    showAyniLearning,
+    showReciprocidadLearning,
     showCollectiveGrowth,
     showMetacognition,
   } = useConsciousUPlayFeedback();
@@ -188,8 +216,8 @@ const UPlay: React.FC = () => {
 
     // Special feedback for collaboration (Study Rooms)
     if (newValue === 3) { // Study Rooms tab
-      showAyniLearning(
-        'Entrando al espacio de aprendizaje colaborativo. Aquí practicamos el Ayni: dar y recibir conocimiento en equilibrio.'
+      showReciprocidadLearning(
+        'Entrando al espacio de aprendizaje colaborativo. Aquí practicamos el Reciprocidad: dar y recibir conocimiento en equilibrio.'
       );
     }
 
@@ -219,75 +247,109 @@ const UPlay: React.FC = () => {
       }
     };
 
-    // Delay to ensure smooth page load and only initialize once
-    const timer = setTimeout(initializeSession, 1500);
+    // Initialize session after a small delay for better UX
+    const timer = setTimeout(initializeSession, 1200);
+
     return () => {
       clearTimeout(timer);
-      isSessionInitialized = true; // Prevent re-initialization on cleanup
     };
-  }, []); // Empty dependency array to run only once on mount
+  }, [showWisdomIntegration]);
 
-  // 🧘 Metacognitive reflection trigger
-  useEffect(() => {
-    if (learningState.sessionProgress > 0 && learningState.sessionProgress % 25 === 0) {
-      showMetacognition(
-        `Has progresado ${learningState.sessionProgress}% en tu sesión. Tómate un momento para reflexionar sobre lo que has aprendido y cómo lo puedes aplicar.`
-      );
-    }
-  }, [learningState.sessionProgress, showMetacognition]);
+  // Handle dismissal of feedback with index parameter
+  const handleDismissFeedback = (index: number) => {
+    dismissFeedback(index);
+  };
 
   return (
-    <div data-testid="uplay-page" className="min-h-screen">
-      {/* ✅ Header Section */}
+    <Box
+      sx={{
+        flexGrow: 1,
+        bgcolor: theme.palette.background.default,
+        minHeight: '100vh',
+        pb: 10,
+      }}
+      data-testid="uplay-page"
+    >
+      {/* Header */}
       <UPlayHeader learningState={learningState} />
 
-      <Container maxWidth="xl" className="py-4 md:py-8">
-        {/* ✅ Tabs Navigation */}
-        <Fade in={true} timeout={1200}>
-          <div className="tab-container-advanced">
+      {/* Navigation Tabs */}
+      <Container maxWidth="xl">
+        <Paper
+          elevation={0}
+          sx={{
+            bgcolor: theme.palette.background.default,
+            borderRadius: 2,
+            border: `1px solid ${theme.palette.divider}`,
+            mb: 3,
+            overflow: 'hidden',
+          }}
+        >
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            aria-label="UPlay navigation tabs"
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
+            sx={{
+              minHeight: 56,
+              '& .MuiTabs-flexContainer': {
+                borderBottom: 'none',
+              },
+              '& .MuiTabs-indicator': {
+                height: 2,
+                borderRadius: '2px 2px 0 0',
+              },
+              '& .MuiTab-root': {
+                minHeight: 56,
+                fontSize: { xs: '0.8rem', md: '0.875rem' },
+                fontWeight: 500,
+                color: theme.palette.text.secondary,
+                '&.Mui-selected': {
+                  color: theme.palette.primary.main,
+                  fontWeight: 600,
+                },
+                '&:hover': {
+                  color: theme.palette.primary.main,
+                  opacity: 0.8,
+                }
+              }
+            }}
+          >
             {tabs.map((tab, index) => (
-              <button
+              <Tab
                 key={tab.id}
-                onClick={() => setActiveTab(index)}
-                className={`${
-                  activeTab === index ? 'tab-active' : 'tab-inactive'
-                } flex items-center relative`}
-                aria-label={`Navegación a ${tab.label}`}
-              >
-                <tab.icon sx={{ fontSize: 20 }} />
-                {tab.label}
-                {tab.notifications && (
-                  <span className="tab-badge">
-                    {tab.notifications}
-                  </span>
-                )}
-              </button>
+                icon={<tab.icon sx={{ fontSize: { xs: '1.2rem', md: '1.4rem' } }} />}
+                iconPosition="start"
+                label={tab.label}
+                id={`uplay-tab-${index}`}
+                aria-controls={`uplay-tabpanel-${index}`}
+                data-testid={`uplay-tab-${tab.id}`}
+                sx={{
+                  textTransform: 'none',
+                  px: { xs: 1.5, md: 2.5 },
+                  py: 1.5,
+                }}
+              />
             ))}
-          </div>
-        </Fade>
+          </Tabs>
+        </Paper>
 
-        {/* ✅ Tab Content */}
-        <Box sx={{ mt: 3 }}>
-          {tabs.map((tab, index) => (
-            <TabPanel key={tab.id} value={activeTab} index={index}>
-              <div className="section-background-blue animate-fade-in">
-                {tab.component}
-              </div>
-            </TabPanel>
-          ))}
-        </Box>
+        {/* Tab Content */}
+        {tabs.map((tab, index) => (
+          <TabPanel key={tab.id} value={activeTab} index={index}>
+            {tab.component}
+          </TabPanel>
+        ))}
       </Container>
 
-      {/* 🛡️ Guardian Conscious Feedback System */}
-      {feedbacks.map((feedback, index) => (
-        <ConsciousUPlayFeedback
-          key={feedback.id || `feedback-${index}`}
-          feedback={feedback}
-          onDismiss={() => dismissFeedback(index)}
-          variant="detailed"
-        />
-      ))}
-    </div>
+      {/* Conscious Feedback System */}
+      <ConsciousUPlayFeedback
+        feedbacks={feedbacks}
+        onDismiss={handleDismissFeedback}
+      />
+    </Box>
   );
 };
 

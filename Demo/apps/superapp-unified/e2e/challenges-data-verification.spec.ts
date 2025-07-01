@@ -132,7 +132,7 @@ test.describe('Challenges Data Verification', () => {
     console.log('🔍 Verificando ausencia de datos mock antiguos...');
     
     const mockChallengeTitles = [
-      'Desafío de Ayni Diario',
+      'Desafío de Reciprocidad Diario',
       'Innovación Sostenible', 
       'Maestría en Colaboración'
     ];

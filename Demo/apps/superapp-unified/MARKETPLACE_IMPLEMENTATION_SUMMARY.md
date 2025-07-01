@@ -39,7 +39,7 @@
 
 - ✅ Moneda: Lükas (ü) en lugar de USD/EUR
 - ✅ Conceptos: Emprendedores Confiables, Mëritos, Öndas
-- ✅ Categorías Ayni: reciprocidad, bien-común, cooperación, educación, sostenibilidad
+- ✅ Categorías Reciprocidad: reciprocidad, bien-común, cooperación, educación, sostenibilidad
 - ✅ Scores de sostenibilidad e impacto social
 
 ### 6. **Página de Prueba**
@@ -137,7 +137,7 @@ etc.
 
 - Cada producto/servicio está alineado con el bien común
 - Scores de sostenibilidad (80-96%)
-- Categorías Ayni específicas
+- Categorías Reciprocidad específicas
 - Mëritos y Öndas por contribución social
 
 ### 2. **Diversidad Real**

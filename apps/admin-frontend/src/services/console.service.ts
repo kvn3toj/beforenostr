@@ -1,6 +1,6 @@
 /**
  * 🎮 Console Service - Experience Management API
- * 
+ *
  * Servicio para gestionar todas las funcionalidades de la Consola de Experiencias
  * Conecta con el backend NestJS para operaciones CRUD de gamificación avanzada
  */
@@ -140,7 +140,7 @@ export interface GPLVideo {
   title: string;
   duration: number;
   category: string;
-  philosophyAlignment: 'ayni' | 'bien_comun' | 'metanoia';
+  philosophyAlignment: 'reciprocidad' | 'bien_comun' | 'metanoia';
   activationTime?: Date;
   isEpicContent: boolean;
 }

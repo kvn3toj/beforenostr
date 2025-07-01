@@ -1,62 +1,62 @@
-/* 🚀 AYNI BALANCE REVOLUTIONARY - ESTILOS AVANZADOS
+/* 🚀 RECIPROCIDAD BALANCE REVOLUTIONARY - ESTILOS AVANZADOS
    Colores, espaciado y efectos para el widget revolucionario */
 
 /* ===== PALETA DE COLORES REVOLUCIONARIA ===== */
 
 :root {
   /* Gradientes primarios revolucionarios */
-  --ayni-fire: linear-gradient(135deg, #ff6b35 0%, #ff8a65 100%);
-  --ayni-water: linear-gradient(135deg, #00bcd4 0%, #4fc3f7 100%);
-  --ayni-earth: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
-  --ayni-air: linear-gradient(135deg, #ffd54f 0%, #ffeb3b 100%);
+  --reciprocidad-fire: linear-gradient(135deg, #ff6b35 0%, #ff8a65 100%);
+  --reciprocidad-water: linear-gradient(135deg, #00bcd4 0%, #4fc3f7 100%);
+  --reciprocidad-earth: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
+  --reciprocidad-air: linear-gradient(135deg, #ffd54f 0%, #ffeb3b 100%);
 
   /* Gradientes secundarios */
-  --ayni-power: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
-  --ayni-love: linear-gradient(135deg, #e91e63 0%, #ec407a 100%);
-  --ayni-energy: linear-gradient(135deg, #ffd54f 0%, #ffeb3b 100%);
-  --ayni-balance: linear-gradient(135deg, #00bcd4 0%, #9c27b0 100%);
+  --reciprocidad-power: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+  --reciprocidad-love: linear-gradient(135deg, #e91e63 0%, #ec407a 100%);
+  --reciprocidad-energy: linear-gradient(135deg, #ffd54f 0%, #ffeb3b 100%);
+  --reciprocidad-balance: linear-gradient(135deg, #00bcd4 0%, #9c27b0 100%);
 
   /* Fondos revolucionarios */
-  --ayni-bg-primary: linear-gradient(
+  --reciprocidad-bg-primary: linear-gradient(
     135deg,
     rgba(10, 14, 39, 0.95) 0%,
     rgba(26, 31, 58, 0.9) 50%,
     rgba(10, 14, 39, 0.95) 100%
   );
-  --ayni-bg-card: linear-gradient(
+  --reciprocidad-bg-card: linear-gradient(
     135deg,
     rgba(0, 188, 212, 0.15) 0%,
     rgba(156, 39, 176, 0.15) 100%
   );
 
   /* Sombras mágicas */
-  --ayni-shadow-fire: 0 4px 20px rgba(255, 107, 53, 0.4);
-  --ayni-shadow-water: 0 4px 20px rgba(0, 188, 212, 0.4);
-  --ayni-shadow-earth: 0 4px 20px rgba(102, 187, 106, 0.4);
-  --ayni-shadow-air: 0 4px 20px rgba(255, 213, 79, 0.4);
-  --ayni-shadow-magical: 0 8px 32px rgba(0, 188, 212, 0.3);
+  --reciprocidad-shadow-fire: 0 4px 20px rgba(255, 107, 53, 0.4);
+  --reciprocidad-shadow-water: 0 4px 20px rgba(0, 188, 212, 0.4);
+  --reciprocidad-shadow-earth: 0 4px 20px rgba(102, 187, 106, 0.4);
+  --reciprocidad-shadow-air: 0 4px 20px rgba(255, 213, 79, 0.4);
+  --reciprocidad-shadow-magical: 0 8px 32px rgba(0, 188, 212, 0.3);
 
   /* Efectos de glow */
-  --ayni-glow-primary: 0 0 30px rgba(0, 188, 212, 0.5);
-  --ayni-glow-secondary: 0 0 20px rgba(156, 39, 176, 0.4);
-  --ayni-glow-success: 0 0 25px rgba(102, 187, 106, 0.5);
+  --reciprocidad-glow-primary: 0 0 30px rgba(0, 188, 212, 0.5);
+  --reciprocidad-glow-secondary: 0 0 20px rgba(156, 39, 176, 0.4);
+  --reciprocidad-glow-success: 0 0 25px rgba(102, 187, 106, 0.5);
 }
 
 /* ===== ANIMACIONES REVOLUCIONARIAS ===== */
 
-@keyframes ayni-orb-pulse {
+@keyframes reciprocidad-orb-pulse {
   0%,
   100% {
     transform: scale(1);
-    box-shadow: var(--ayni-glow-primary);
+    box-shadow: var(--reciprocidad-glow-primary);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: var(--ayni-glow-primary), var(--ayni-glow-secondary);
+    box-shadow: var(--reciprocidad-glow-primary), var(--reciprocidad-glow-secondary);
   }
 }
 
-@keyframes ayni-orbital-rotation {
+@keyframes reciprocidad-orbital-rotation {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
   }
@@ -65,7 +65,7 @@
   }
 }
 
-@keyframes ayni-element-hover {
+@keyframes reciprocidad-element-hover {
   0%,
   100% {
     transform: scale(1) rotate(0deg);
@@ -75,7 +75,7 @@
   }
 }
 
-@keyframes ayni-metric-pulse {
+@keyframes reciprocidad-metric-pulse {
   0%,
   100% {
     transform: translateY(0) scale(1);
@@ -85,7 +85,7 @@
   }
 }
 
-@keyframes ayni-gradient-flow {
+@keyframes reciprocidad-gradient-flow {
   0% {
     background-position: 0% 50%;
   }
@@ -97,7 +97,7 @@
   }
 }
 
-@keyframes ayni-sparkle {
+@keyframes reciprocidad-sparkle {
   0%,
   100% {
     opacity: 0.3;
@@ -109,7 +109,7 @@
   }
 }
 
-@keyframes ayni-energy-wave {
+@keyframes reciprocidad-energy-wave {
   0% {
     transform: translateX(-100%) scaleY(1);
   }
@@ -123,8 +123,8 @@
 
 /* ===== COMPONENTE PRINCIPAL REVOLUCIONARIO ===== */
 
-.ayni-revolutionary-card {
-  background: var(--ayni-bg-primary) !important;
+.reciprocidad-revolutionary-card {
+  background: var(--reciprocidad-bg-primary) !important;
   border: 1px solid rgba(0, 188, 212, 0.3) !important;
   border-radius: 24px !important;
   overflow: hidden !important;
@@ -133,13 +133,13 @@
   transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
-.ayni-revolutionary-card:hover {
+.reciprocidad-revolutionary-card:hover {
   transform: translateY(-8px) scale(1.01) !important;
-  box-shadow: var(--ayni-shadow-magical) !important;
+  box-shadow: var(--reciprocidad-shadow-magical) !important;
   border-color: #00bcd4 !important;
 }
 
-.ayni-revolutionary-card::before {
+.reciprocidad-revolutionary-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -154,14 +154,14 @@
 
 /* ===== ORB CENTRAL REVOLUCIONARIO ===== */
 
-.ayni-central-orb {
+.reciprocidad-central-orb {
   position: relative;
   width: 200px;
   height: 200px;
   margin: 0 auto 32px auto;
 }
 
-.ayni-orb-outer {
+.reciprocidad-orb-outer {
   position: absolute;
   top: 0;
   left: 0;
@@ -179,7 +179,7 @@
   animation: rotate-continuous 20s linear infinite;
 }
 
-.ayni-orb-outer::before {
+.reciprocidad-orb-outer::before {
   content: '';
   position: absolute;
   top: 8px;
@@ -195,7 +195,7 @@
   backdrop-filter: blur(10px);
 }
 
-.ayni-orb-content {
+.reciprocidad-orb-content {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -204,7 +204,7 @@
   z-index: 2;
 }
 
-.ayni-balance-percentage {
+.reciprocidad-balance-percentage {
   font-size: 3rem !important;
   font-weight: 800 !important;
   background: linear-gradient(45deg, #ff6b35 30%, #00bcd4 90%) !important;
@@ -217,7 +217,7 @@
 
 /* ===== ELEMENTOS ORBITALES ===== */
 
-.ayni-orbital-element {
+.reciprocidad-orbital-element {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -226,43 +226,43 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.ayni-orbital-element:hover {
+.reciprocidad-orbital-element:hover {
   transform: scale(1.15) !important;
   z-index: 4;
 }
 
-.ayni-element-avatar {
+.reciprocidad-element-avatar {
   transition: all 0.4s ease !important;
   box-shadow: 0 4px 20px rgba(0, 188, 212, 0.4) !important;
 }
 
-.ayni-element-avatar:hover {
-  animation: ayni-element-hover 2s ease-in-out infinite !important;
+.reciprocidad-element-avatar:hover {
+  animation: reciprocidad-element-hover 2s ease-in-out infinite !important;
 }
 
-.ayni-element-avatar.fire {
-  background: var(--ayni-fire) !important;
-  box-shadow: var(--ayni-shadow-fire) !important;
+.reciprocidad-element-avatar.fire {
+  background: var(--reciprocidad-fire) !important;
+  box-shadow: var(--reciprocidad-shadow-fire) !important;
 }
 
-.ayni-element-avatar.water {
-  background: var(--ayni-water) !important;
-  box-shadow: var(--ayni-shadow-water) !important;
+.reciprocidad-element-avatar.water {
+  background: var(--reciprocidad-water) !important;
+  box-shadow: var(--reciprocidad-shadow-water) !important;
 }
 
-.ayni-element-avatar.earth {
-  background: var(--ayni-earth) !important;
-  box-shadow: var(--ayni-shadow-earth) !important;
+.reciprocidad-element-avatar.earth {
+  background: var(--reciprocidad-earth) !important;
+  box-shadow: var(--reciprocidad-shadow-earth) !important;
 }
 
-.ayni-element-avatar.air {
-  background: var(--ayni-air) !important;
-  box-shadow: var(--ayni-shadow-air) !important;
+.reciprocidad-element-avatar.air {
+  background: var(--reciprocidad-air) !important;
+  box-shadow: var(--reciprocidad-shadow-air) !important;
 }
 
 /* ===== MÉTRICAS PRINCIPALES ===== */
 
-.ayni-metric-card {
+.reciprocidad-metric-card {
   background: rgba(0, 188, 212, 0.1) !important;
   border: 1px solid rgba(0, 188, 212, 0.3) !important;
   border-radius: 16px !important;
@@ -274,7 +274,7 @@
   overflow: hidden !important;
 }
 
-.ayni-metric-card::before {
+.reciprocidad-metric-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -290,17 +290,17 @@
   transition: left 0.6s ease;
 }
 
-.ayni-metric-card:hover {
+.reciprocidad-metric-card:hover {
   transform: translateY(-6px) !important;
   box-shadow: 0 12px 40px rgba(0, 188, 212, 0.4) !important;
   background: rgba(0, 188, 212, 0.15) !important;
 }
 
-.ayni-metric-card:hover::before {
+.reciprocidad-metric-card:hover::before {
   left: 100%;
 }
 
-.ayni-metric-icon {
+.reciprocidad-metric-icon {
   width: 60px !important;
   height: 60px !important;
   border-radius: 50% !important;
@@ -309,17 +309,17 @@
   justify-content: center !important;
   margin: 0 auto 16px auto !important;
   color: white !important;
-  animation: ayni-metric-pulse 3s ease-in-out infinite !important;
+  animation: reciprocidad-metric-pulse 3s ease-in-out infinite !important;
 }
 
-.ayni-metric-value {
+.reciprocidad-metric-value {
   font-size: 2.5rem !important;
   font-weight: 800 !important;
   margin-bottom: 8px !important;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
-.ayni-metric-label {
+.reciprocidad-metric-label {
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 1.2px !important;
@@ -329,8 +329,8 @@
 
 /* ===== PROGRESO DE NIVEL ===== */
 
-.ayni-level-progress {
-  background: var(--ayni-bg-card) !important;
+.reciprocidad-level-progress {
+  background: var(--reciprocidad-bg-card) !important;
   border: 1px solid rgba(0, 188, 212, 0.3) !important;
   border-radius: 16px !important;
   padding: 24px !important;
@@ -339,7 +339,7 @@
   overflow: hidden !important;
 }
 
-.ayni-level-progress::before {
+.reciprocidad-level-progress::before {
   content: '';
   position: absolute;
   top: 0;
@@ -348,10 +348,10 @@
   height: 2px;
   background: linear-gradient(90deg, #00bcd4, #9c27b0, #00bcd4);
   background-size: 200% 100%;
-  animation: ayni-gradient-flow 3s ease-in-out infinite;
+  animation: reciprocidad-gradient-flow 3s ease-in-out infinite;
 }
 
-.ayni-progress-bar {
+.reciprocidad-progress-bar {
   height: 12px !important;
   border-radius: 6px !important;
   background-color: rgba(255, 255, 255, 0.1) !important;
@@ -359,13 +359,13 @@
   position: relative !important;
 }
 
-.ayni-progress-bar .MuiLinearProgress-bar {
+.reciprocidad-progress-bar .MuiLinearProgress-bar {
   border-radius: 6px !important;
   background: linear-gradient(90deg, #00bcd4 0%, #9c27b0 100%) !important;
   position: relative !important;
 }
 
-.ayni-progress-bar .MuiLinearProgress-bar::after {
+.reciprocidad-progress-bar .MuiLinearProgress-bar::after {
   content: '';
   position: absolute;
   top: 0;
@@ -378,12 +378,12 @@
     rgba(255, 255, 255, 0.3) 50%,
     transparent 100%
   );
-  animation: ayni-energy-wave 2s ease-in-out infinite;
+  animation: reciprocidad-energy-wave 2s ease-in-out infinite;
 }
 
 /* ===== ELEMENTOS EXPANDIDOS ===== */
 
-.ayni-expanded-section {
+.reciprocidad-expanded-section {
   background: rgba(0, 0, 0, 0.2) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 16px !important;
@@ -391,7 +391,7 @@
   margin-top: 24px !important;
 }
 
-.ayni-element-detail {
+.reciprocidad-element-detail {
   padding: 16px !important;
   border-radius: 12px !important;
   transition: all 0.3s ease !important;
@@ -399,7 +399,7 @@
   overflow: hidden !important;
 }
 
-.ayni-element-detail::before {
+.reciprocidad-element-detail::before {
   content: '';
   position: absolute;
   top: 0;
@@ -415,118 +415,118 @@
   transition: opacity 0.3s ease;
 }
 
-.ayni-element-detail:hover::before {
+.reciprocidad-element-detail:hover::before {
   opacity: 1;
 }
 
-.ayni-element-detail:hover {
+.reciprocidad-element-detail:hover {
   transform: translateY(-4px) !important;
 }
 
 /* ===== RESPONSIVE DESIGN REVOLUCIONARIO ===== */
 
 @media (max-width: 1200px) {
-  .ayni-central-orb {
+  .reciprocidad-central-orb {
     width: 180px;
     height: 180px;
   }
 
-  .ayni-balance-percentage {
+  .reciprocidad-balance-percentage {
     font-size: 2.5rem !important;
   }
 
-  .ayni-metric-icon {
+  .reciprocidad-metric-icon {
     width: 50px !important;
     height: 50px !important;
   }
 }
 
 @media (max-width: 768px) {
-  .ayni-revolutionary-card {
+  .reciprocidad-revolutionary-card {
     min-height: 500px !important;
   }
 
-  .ayni-central-orb {
+  .reciprocidad-central-orb {
     width: 160px;
     height: 160px;
     margin-bottom: 24px;
   }
 
-  .ayni-balance-percentage {
+  .reciprocidad-balance-percentage {
     font-size: 2rem !important;
   }
 
-  .ayni-metric-card {
+  .reciprocidad-metric-card {
     padding: 12px !important;
   }
 
-  .ayni-metric-icon {
+  .reciprocidad-metric-icon {
     width: 40px !important;
     height: 40px !important;
     margin-bottom: 12px !important;
   }
 
-  .ayni-metric-value {
+  .reciprocidad-metric-value {
     font-size: 2rem !important;
   }
 }
 
 @media (max-width: 480px) {
-  .ayni-central-orb {
+  .reciprocidad-central-orb {
     width: 140px;
     height: 140px;
   }
 
-  .ayni-balance-percentage {
+  .reciprocidad-balance-percentage {
     font-size: 1.75rem !important;
   }
 
-  .ayni-level-progress {
+  .reciprocidad-level-progress {
     padding: 16px !important;
   }
 
-  .ayni-expanded-section {
+  .reciprocidad-expanded-section {
     padding: 16px !important;
   }
 }
 
 /* ===== EFECTOS ESPECIALES ===== */
 
-.ayni-magical-sparkle {
+.reciprocidad-magical-sparkle {
   position: absolute;
   width: 4px;
   height: 4px;
   background: #00bcd4;
   border-radius: 50%;
-  animation: ayni-sparkle 3s ease-in-out infinite;
+  animation: reciprocidad-sparkle 3s ease-in-out infinite;
 }
 
-.ayni-energy-pulse {
-  animation: ayni-orb-pulse 4s ease-in-out infinite;
+.reciprocidad-energy-pulse {
+  animation: reciprocidad-orb-pulse 4s ease-in-out infinite;
 }
 
-.ayni-gradient-text {
+.reciprocidad-gradient-text {
   background: linear-gradient(45deg, #ff6b35 30%, #00bcd4 70%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;
-  animation: ayni-gradient-flow 3s ease-in-out infinite;
+  animation: reciprocidad-gradient-flow 3s ease-in-out infinite;
 }
 
 /* ===== ACCESIBILIDAD MEJORADA ===== */
 
-.ayni-revolutionary-card:focus-within {
+.reciprocidad-revolutionary-card:focus-within {
   outline: 2px solid #00bcd4;
   outline-offset: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ayni-revolutionary-card,
-  .ayni-orb-outer,
-  .ayni-orbital-element,
-  .ayni-metric-card,
-  .ayni-element-detail {
+  .reciprocidad-revolutionary-card,
+  .reciprocidad-orb-outer,
+  .reciprocidad-orbital-element,
+  .reciprocidad-metric-card,
+  .reciprocidad-element-detail {
     animation: none !important;
     transition: none !important;
   }
@@ -536,7 +536,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ayni-bg-primary: linear-gradient(
+    --reciprocidad-bg-primary: linear-gradient(
       135deg,
       rgba(5, 8, 20, 0.98) 0%,
       rgba(15, 18, 35, 0.95) 50%,
@@ -544,7 +544,7 @@
     );
   }
 
-  .ayni-revolutionary-card {
+  .reciprocidad-revolutionary-card {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
   }
 }

@@ -215,7 +215,7 @@ URL: http://localhost:3001/uplay
 - 📊 **Progress visualization** avanzada
 
 ### **🤝 CoomÜnity Philosophy Integration**
-- 🌱 **Ayni principles** en diseño colaborativo
+- 🌱 **Reciprocidad principles** en diseño colaborativo
 - 🌍 **Bien Común** enfoque en progreso compartido
 - 💜 **Community colors** consistentes
 - ✨ **Positive reinforcement** visual

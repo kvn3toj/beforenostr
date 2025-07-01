@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchUserAyniMetrics } from '../../../services/user.service';
+import { fetchUserReciprocidadMetrics } from '../../../services/user.service';
 import { useCurrentUserQuery } from '../../useCurrentUserQuery';
-import { AyniMetrics } from '../../../types/ayni.types';
+import { ReciprocidadMetrics } from '../../../types/reciprocidad.types';
 
 // A simplified version for the widgets, can be expanded.
 export interface UPlayMetrics {
@@ -16,18 +16,18 @@ export const useUPlayMetrics = () => {
   const { data: currentUser } = useCurrentUserQuery();
   const userId = currentUser?.id;
 
-  const { data, isLoading, error, ...rest } = useQuery<AyniMetrics, Error, UPlayMetrics>({
+  const { data, isLoading, error, ...rest } = useQuery<ReciprocidadMetrics, Error, UPlayMetrics>({
     queryKey: ['uplay-metrics', userId],
     queryFn: () => {
       if (!userId) {
         throw new Error('User not found');
       }
-      return fetchUserAyniMetrics(userId);
+      return fetchUserReciprocidadMetrics(userId);
     },
     enabled: !!userId, // The query will not run until the userId is available
     staleTime: 1000 * 60 * 5, // Cache data for 5 minutes
     select: (data) => ({
-        // This is a placeholder for data that might not be in AyniMetrics
+        // This is a placeholder for data that might not be in ReciprocidadMetrics
         weeklyProgress: data.weeklyGrowth || 0,
         currentStreak: 5, // Mocked until available from backend
         rank: data.communityRank || 0,

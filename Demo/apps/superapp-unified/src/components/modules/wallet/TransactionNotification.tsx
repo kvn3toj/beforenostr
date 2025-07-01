@@ -176,10 +176,10 @@ export const TransactionNotification: React.FC<TransactionNotificationProps> = (
           </Box>
         )}
 
-        {/* 🎯 Mensaje adicional para ÜCoins (filosofía Ayni) */}
+        {/* 🎯 Mensaje adicional para ÜCoins (filosofía Reciprocidad) */}
         {transaction?.currency === 'UC' && type === 'success' && (
           <Typography variant="caption" sx={{ mt: 1, display: 'block', fontStyle: 'italic' }}>
-            🌟 Esta transacción en ÜCoins fortalece el ecosistema de reciprocidad (Ayni) de CoomÜnity
+            🌟 Esta transacción en ÜCoins fortalece el ecosistema de reciprocidad (Reciprocidad) de CoomÜnity
           </Typography>
         )}
       </Alert>

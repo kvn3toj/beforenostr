@@ -66,7 +66,7 @@ const CURRENCIES = [
 ];
 
 const SUGGESTED_TAGS = [
-  'ayni', 'colaborativo', 'sostenible', 'educación', 'tecnología',
+  'reciprocidad', 'colaborativo', 'sostenible', 'educación', 'tecnología',
   'salud', 'arte', 'música', 'deporte', 'cocina', 'idiomas',
   'programación', 'diseño', 'escritura', 'consultoría', 'coaching',
   'bienestar', 'mindfulness', 'agricultura', 'ecología',

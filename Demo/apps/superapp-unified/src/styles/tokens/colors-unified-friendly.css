@@ -17,7 +17,7 @@
   --coomunity-primary-800: #3730a3;
   --coomunity-primary-900: #312e81;
 
-  /* Paleta secundaria complementaria - Verdes para balance Ayni */
+  /* Paleta secundaria complementaria - Verdes para balance Reciprocidad */
   --coomunity-secondary-50: #f0fdf4;
   --coomunity-secondary-100: #dcfce7;
   --coomunity-secondary-200: #bbf7d0;
@@ -104,7 +104,7 @@
   /* Métricas con colores significativos */
   --metric-ondas: var(--coomunity-primary-600);
   --metric-meritos: var(--color-warning-dark);
-  --metric-ayni: var(--coomunity-secondary-600);
+  --metric-reciprocidad: var(--coomunity-secondary-600);
   --metric-balance: var(--element-agua);
 
   /* Cards con gradientes suaves */
@@ -256,8 +256,8 @@
   font-weight: 600;
 }
 
-.metric-ayni {
-  color: var(--metric-ayni);
+.metric-reciprocidad {
+  color: var(--metric-reciprocidad);
   font-weight: 600;
 }
 

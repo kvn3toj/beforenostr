@@ -12,19 +12,19 @@ export interface TimeOfDayData {
 }
 
 export const useTimeOfDay = (
-  ayniLevel: string = 'Colaborador Equilibrado'
+  reciprocidadLevel: string = 'Colaborador Equilibrado'
 ): TimeOfDayData => {
   const [timeData, setTimeData] = useState<TimeOfDayData>(() => {
     const now = new Date();
     const hour = now.getHours();
-    return generateTimeData(hour, ayniLevel);
+    return generateTimeData(hour, reciprocidadLevel);
   });
 
   useEffect(() => {
     const updateTimeData = () => {
       const now = new Date();
       const hour = now.getHours();
-      setTimeData(generateTimeData(hour, ayniLevel));
+      setTimeData(generateTimeData(hour, reciprocidadLevel));
     };
 
     // Update immediately
@@ -34,15 +34,15 @@ export const useTimeOfDay = (
     const interval = setInterval(updateTimeData, 60 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [ayniLevel]);
+  }, [reciprocidadLevel]);
 
   return timeData;
 };
 
-const generateTimeData = (hour: number, ayniLevel: string): TimeOfDayData => {
+const generateTimeData = (hour: number, reciprocidadLevel: string): TimeOfDayData => {
   const timeOfDay = getTimeOfDay(hour);
-  const greeting = getTimeBasedGreeting(timeOfDay, ayniLevel);
-  const contextualMessage = getContextualMessage(timeOfDay, ayniLevel);
+  const greeting = getTimeBasedGreeting(timeOfDay, reciprocidadLevel);
+  const contextualMessage = getContextualMessage(timeOfDay, reciprocidadLevel);
   const weatherElement = getWeatherElement(timeOfDay);
   const formattedTime = new Date().toLocaleTimeString('es-ES', {
     hour: '2-digit',
@@ -68,11 +68,11 @@ const getTimeOfDay = (hour: number): TimeOfDay => {
 
 const getTimeBasedGreeting = (
   timeOfDay: TimeOfDay,
-  ayniLevel: string
+  reciprocidadLevel: string
 ): string => {
   const greetings = {
-    morning: `🌅 Buenos días! Que este nuevo amanecer traiga equilibrio a tu Ayni`,
-    afternoon: `☀️ ¡Tarde productiva! Tu energía ${ayniLevel} está en pleno flujo`,
+    morning: `🌅 Buenos días! Que este nuevo amanecer traiga equilibrio a tu Reciprocidad`,
+    afternoon: `☀️ ¡Tarde productiva! Tu energía ${reciprocidadLevel} está en pleno flujo`,
     evening: `🌅 Buenas tardes! Momento perfecto para reflexionar sobre el Bien Común`,
     night: `🌙 Buenas noches! Tu día de contribuciones ha nutrido la comunidad`,
   };
@@ -82,13 +82,13 @@ const getTimeBasedGreeting = (
 
 const getContextualMessage = (
   timeOfDay: TimeOfDay,
-  ayniLevel: string
+  reciprocidadLevel: string
 ): string => {
   const messages = {
     morning: `Es un buen momento para establecer intenciones de reciprocidad para el día`,
     afternoon: `Tu energía está en su punto más alto, ideal para contribuir al Bien Común`,
     evening: `Tiempo de reflexión sobre los intercambios del día y planificar el mañana`,
-    night: `Descansa sabiendo que tus acciones han fortalecido la red de Ayni`,
+    night: `Descansa sabiendo que tus acciones han fortalecido la red de Reciprocidad`,
   };
 
   return messages[timeOfDay];

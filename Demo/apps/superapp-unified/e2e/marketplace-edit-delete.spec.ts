@@ -118,7 +118,7 @@ test.describe('Marketplace Edit/Delete Functionality', () => {
     console.log(`🏪 Page contains marketplace content: ${hasMarketplaceContent}`);
     
     // Check for specific CoomÜnity terminology
-    const hasCommunityTerms = bodyContent?.includes('CoomÜnity') || bodyContent?.includes('Ayni') || bodyContent?.includes('Méritos');
+    const hasCommunityTerms = bodyContent?.includes('CoomÜnity') || bodyContent?.includes('Reciprocidad') || bodyContent?.includes('Méritos');
     console.log(`🌟 Page contains CoomÜnity terms: ${hasCommunityTerms}`);
     
     // Take a screenshot for debugging

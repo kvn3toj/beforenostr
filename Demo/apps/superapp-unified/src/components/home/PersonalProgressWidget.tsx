@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE MATERIAL UI
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import Chip from '@mui/material/Chip';
@@ -13,6 +11,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import { useTheme, alpha } from '@mui/material';
+
+// 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
+import { RevolutionaryWidget } from '../../design-system';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -430,107 +431,115 @@ export const PersonalProgressWidget: React.FC<PersonalProgressWidgetProps> = ({
   );
 
   return (
-    <Card
-      className={`glassmorphism-card interactive-card-advanced personal-progress-widget ${className}`}
-      sx={{
-        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.background.paper, 0.8)} 100%)`,
-        border: `1px solid ${alpha('#fff', 0.1)}`,
-        borderRadius: 3,
-        overflow: 'hidden',
-        position: 'relative',
-        transition: 'all 0.4s ease-in-out',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.3)}`,
-        },
+    <RevolutionaryWidget
+      title="🚀 Progreso Personal"
+      subtitle="Tu evolución en CoomÜnity"
+      variant="elevated"
+      element="fuego"
+      cosmicIntensity="medium"
+      cosmicEffects={{
+        enableGlow: true,
+        enableAnimations: true,
+        enableParticles: true,
+        glowIntensity: 1.3,
+        particleConfig: {
+          count: 8,
+          size: 5,
+          color: '#FF6B35',
+          speed: 0.9,
+          opacity: 0.8,
+          blur: false
+        }
       }}
+      interactionMode="hover"
+      className={`personal-progress-widget ${className}`}
+      style={{ minHeight: '380px' }}
+      onRefresh={() => console.log('🔄 Refreshing progress...')}
+      onExpand={() => setExpanded(!expanded)}
     >
-      <CardContent sx={{ p: 3 }}>
-        {/* Header */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mb: 3,
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: 2,
-                background: 'linear-gradient(135deg, #8BC34A 0%, #4FC3F7 100%)',
-                color: 'white',
-                animation: 'pulse 2s ease-in-out infinite',
-              }}
-            >
-              <TrendingUpIcon />
-            </Box>
-            <Box>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 'bold', color: 'white' }}
-              >
-                Progreso Personal
-              </Typography>
-              <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
-                Tu evolución en CoomÜnity
-              </Typography>
-            </Box>
-          </Box>
-
-          <IconButton
-            onClick={handleExpandToggle}
-            sx={{
-              color: theme.palette.primary.main,
-              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.3s ease',
-            }}
-          >
-            <ExpandMoreIcon />
-          </IconButton>
-        </Box>
-
-        {/* Progreso de nivel */}
-        {renderLevelProgress()}
-
-        <Divider sx={{ bgcolor: alpha('#fff', 0.1), my: 3 }} />
-
-        {/* Selector de período */}
-        {renderPeriodSelector()}
-
-        {/* Progreso de objetivos */}
-        {renderGoalsProgress()}
-
-        {/* Achievements expandibles */}
-        {expanded && (
-          <>
-            <Divider sx={{ bgcolor: alpha('#fff', 0.1), my: 3 }} />
-            {renderAchievements()}
-          </>
-        )}
-
-        {/* Estadísticas de logros compacta */}
-        {!expanded && (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mb: 3,
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Box
             sx={{
-              p: 2,
+              p: 1.5,
               borderRadius: 2,
-              background: alpha(theme.palette.success.main, 0.1),
-              border: `1px solid ${alpha(theme.palette.success.main, 0.3)}`,
-              textAlign: 'center',
+              background: 'linear-gradient(135deg, #8BC34A 0%, #4FC3F7 100%)',
+              color: 'white',
+              animation: 'pulse 2s ease-in-out infinite',
             }}
           >
-            <Typography variant="caption" sx={{ color: alpha('#fff', 0.9) }}>
-              🏆 {achievementStats.completed} logros completados hoy
-              {achievementStats.percentage > 0 &&
-                ` (${Math.round(achievementStats.percentage)}%)`}
+            <TrendingUpIcon />
+          </Box>
+          <Box>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 'bold', color: 'white' }}
+            >
+              Progreso Personal
+            </Typography>
+            <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
+              Tu evolución en CoomÜnity
             </Typography>
           </Box>
-        )}
-      </CardContent>
-    </Card>
+        </Box>
+
+        <IconButton
+          onClick={handleExpandToggle}
+          sx={{
+            color: theme.palette.primary.main,
+            transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.3s ease',
+          }}
+        >
+          <ExpandMoreIcon />
+        </IconButton>
+      </Box>
+
+      {/* Progreso de nivel */}
+      {renderLevelProgress()}
+
+      <Divider sx={{ bgcolor: alpha('#fff', 0.1), my: 3 }} />
+
+      {/* Selector de período */}
+      {renderPeriodSelector()}
+
+      {/* Progreso de objetivos */}
+      {renderGoalsProgress()}
+
+      {/* Achievements expandibles */}
+      {expanded && (
+        <>
+          <Divider sx={{ bgcolor: alpha('#fff', 0.1), my: 3 }} />
+          {renderAchievements()}
+        </>
+      )}
+
+      {/* Estadísticas de logros compacta */}
+      {!expanded && (
+        <Box
+          sx={{
+            p: 2,
+            borderRadius: 2,
+            background: alpha(theme.palette.success.main, 0.1),
+            border: `1px solid ${alpha(theme.palette.success.main, 0.3)}`,
+            textAlign: 'center',
+          }}
+        >
+          <Typography variant="caption" sx={{ color: alpha('#fff', 0.9) }}>
+            🏆 {achievementStats.completed} logros completados hoy
+            {achievementStats.percentage > 0 &&
+              ` (${Math.round(achievementStats.percentage)}%)`}
+          </Typography>
+        </Box>
+      )}
+    </RevolutionaryWidget>
   );
 };
 

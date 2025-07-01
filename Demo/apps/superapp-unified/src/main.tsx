@@ -4,9 +4,8 @@ import { initializeErrorHandling } from './utils/errorHandler';
 import { initMonitoring } from './lib/monitoring';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import App from './App';
-import { ThemeProvider } from './context/ThemeContext';
 import './index.css';
-import './styles/ayni-solar-system-fullscreen.css';
+import './styles/reciprocidad-solar-system-fullscreen.css';
 import './styles/orbital-planets-3d.css';
 
 // 🛡️ CRÍTICO: Inicializar manejo de errores PRIMERO para interceptar errores de conversión
@@ -37,9 +36,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   // Temporalmente deshabilitado para debugging de errores React DOM
   // <React.StrictMode>
     <ErrorBoundary>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
+      <App />
     </ErrorBoundary>
   // </React.StrictMode>
 );

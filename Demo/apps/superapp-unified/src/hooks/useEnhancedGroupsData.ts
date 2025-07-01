@@ -9,12 +9,15 @@ export interface GroupElement {
   inspiracion: number; // Fuego - Pasión e inspiración
 }
 
-export interface GroupAyniMetrics {
-  ayniBalance: number; // Balance general de reciprocidad del grupo
-  ayniGiving: number; // Lo que el grupo da a la comunidad
-  ayniReceiving: number; // Lo que el grupo recibe
-  ayniExchanges: number; // Número de intercambios realizados
-  ayniTrend: 'increasing' | 'stable' | 'decreasing'; // Tendencia del balance
+import { GroupReciprocidadData } from '@/types/reciprocidad.types';
+
+// Definir interface compatible con el uso actual del hook
+export interface GroupReciprocidadMetrics {
+  reciprocidadBalance: number;
+  reciprocidadGiving: number;
+  reciprocidadReceiving: number;
+  reciprocidadExchanges: number; // Mapeado a intercambiosReciprocidad
+  reciprocidadTrend: 'increasing' | 'stable' | 'decreasing';
 }
 
 export interface GroupImpactMetrics {
@@ -63,9 +66,9 @@ export interface EnhancedGroup {
   events: number;
   isActive: boolean;
 
-  // Nuevas métricas Ayni y colaboración
+  // Nuevas métricas Reciprocidad y colaboración
   elementos: GroupElement;
-  ayniMetrics: GroupAyniMetrics;
+  reciprocidadMetrics: GroupReciprocidadMetrics;
   impactMetrics: GroupImpactMetrics;
   collaborationMetrics: GroupCollaborationMetrics;
 
@@ -88,7 +91,7 @@ export interface EnhancedGroup {
   proximoEvento?: {
     titulo: string;
     fecha: string;
-    tipo: 'meeting' | 'workshop' | 'celebration' | 'ayni_ceremony';
+    tipo: 'meeting' | 'workshop' | 'celebration' | 'reciprocidad_ceremony';
   };
 
   // Oportunidades de colaboración
@@ -116,7 +119,7 @@ export interface GroupCreationData {
   maxMembers: number;
   rules: string;
   enfoqueBienComun: string;
-  objetivosAyni: string[];
+  objetivosReciprocidad: string[];
   especialidadesRequeridas: string[];
 }
 
@@ -126,7 +129,7 @@ export interface GroupCollaborationProject {
   title: string;
   description: string;
   category:
-    | 'ayni_exchange'
+    | 'reciprocidad_exchange'
     | 'knowledge_sharing'
     | 'joint_venture'
     | 'mentoring'
@@ -143,7 +146,7 @@ export interface GroupCollaborationProject {
   progress: number;
   startDate: string;
   endDate?: string;
-  ayniExchanges: number;
+  reciprocidadExchanges: number;
   meritosGenerated: number;
   skillsNeeded: string[];
   skillsOffered: string[];
@@ -184,7 +187,7 @@ export function useEnhancedGroupsData() {
             id: 'group-enhanced-1',
             name: 'Emprendedores Conscientes CoomÜnity',
             description:
-              'Comunidad de emprendedores enfocados en el Bien Común y la Economía Colaborativa. Practicamos el Ayni en todos nuestros intercambios y colaboramos en proyectos que generen impacto positivo para la humanidad.',
+              'Comunidad de emprendedores enfocados en el Bien Común y la Economía Colaborativa. Practicamos el Reciprocidad en todos nuestros intercambios y colaboramos en proyectos que generen impacto positivo para la humanidad.',
             type: 'public',
             category: 'Emprendimiento Consciente',
             memberCount: 156,
@@ -198,7 +201,7 @@ export function useEnhancedGroupsData() {
             tags: [
               'emprendimiento',
               'bien común',
-              'ayni',
+              'reciprocidad',
               'economía colaborativa',
             ],
             meritos: 3840,
@@ -215,12 +218,12 @@ export function useEnhancedGroupsData() {
               inspiracion: 94,
             },
 
-            ayniMetrics: {
-              ayniBalance: 0.89,
-              ayniGiving: 0.92,
-              ayniReceiving: 0.86,
-              ayniExchanges: 47,
-              ayniTrend: 'increasing',
+            reciprocidadMetrics: {
+              reciprocidadBalance: 0.89,
+              reciprocidadGiving: 0.92,
+              reciprocidadReceiving: 0.86,
+              reciprocidadExchanges: 47,
+              reciprocidadTrend: 'increasing',
             },
 
             impactMetrics: {
@@ -280,9 +283,9 @@ export function useEnhancedGroupsData() {
             ],
 
             proximoEvento: {
-              titulo: 'Círculo de Ayni Mensual',
+              titulo: 'Círculo de Reciprocidad Mensual',
               fecha: '2025-01-28T19:00:00Z',
-              tipo: 'ayni_ceremony',
+              tipo: 'reciprocidad_ceremony',
             },
 
             oportunidadesColaboracion: {
@@ -308,7 +311,7 @@ export function useEnhancedGroupsData() {
                   'Reconocido por su contribución excepcional al Bien Común',
               },
               {
-                tipoReconocimiento: 'Maestros del Ayni',
+                tipoReconocimiento: 'Maestros del Reciprocidad',
                 fecha: '2024-12-20',
                 descripcion:
                   'Por mantener un balance perfecto de reciprocidad durante 6 meses',
@@ -345,12 +348,12 @@ export function useEnhancedGroupsData() {
               inspiracion: 89,
             },
 
-            ayniMetrics: {
-              ayniBalance: 0.83,
-              ayniGiving: 0.85,
-              ayniReceiving: 0.81,
-              ayniExchanges: 34,
-              ayniTrend: 'stable',
+            reciprocidadMetrics: {
+              reciprocidadBalance: 0.83,
+              reciprocidadGiving: 0.85,
+              reciprocidadReceiving: 0.81,
+              reciprocidadExchanges: 34,
+              reciprocidadTrend: 'stable',
             },
 
             impactMetrics: {
@@ -435,9 +438,9 @@ export function useEnhancedGroupsData() {
 
           {
             id: 'group-enhanced-3',
-            name: 'Círculo Sagrado del Ayni',
+            name: 'Círculo Sagrado del Reciprocidad',
             description:
-              'Practicantes dedicados del principio ancestral del Ayni. Exploramos la reciprocidad consciente en todas las dimensiones de la vida, organizamos ceremonias de intercambio y tejemos redes de apoyo mutuo basadas en la sabiduría indígena.',
+              'Practicantes dedicados del principio ancestral del Reciprocidad. Exploramos la reciprocidad consciente en todas las dimensiones de la vida, organizamos ceremonias de intercambio y tejemos redes de apoyo mutuo basadas en la sabiduría indígena.',
             type: 'private',
             category: 'Sabiduría Ancestral',
             memberCount: 45,
@@ -445,10 +448,10 @@ export function useEnhancedGroupsData() {
             isJoined: true,
             isOwner: true,
             isModerator: true,
-            avatar: '/assets/images/groups/ayni.jpg',
+            avatar: '/assets/images/groups/reciprocidad.jpg',
             createdAt: '2024-10-20T16:00:00Z',
             lastActivity: '2025-01-22T09:15:00Z',
-            tags: ['ayni', 'reciprocidad', 'sabiduría ancestral', 'ceremonias'],
+            tags: ['reciprocidad', 'reciprocidad', 'sabiduría ancestral', 'ceremonias'],
             meritos: 2890,
             ondas: 3240, // Alto en ondas por la naturaleza espiritual
             level: 6,
@@ -463,12 +466,12 @@ export function useEnhancedGroupsData() {
               inspiracion: 98, // Muy alta inspiración espiritual
             },
 
-            ayniMetrics: {
-              ayniBalance: 0.95, // Balance casi perfecto
-              ayniGiving: 0.97,
-              ayniReceiving: 0.93,
-              ayniExchanges: 78, // Muchos intercambios Ayni
-              ayniTrend: 'increasing',
+            reciprocidadMetrics: {
+              reciprocidadBalance: 0.95, // Balance casi perfecto
+              reciprocidadGiving: 0.97,
+              reciprocidadReceiving: 0.93,
+              reciprocidadExchanges: 78, // Muchos intercambios Reciprocidad
+              reciprocidadTrend: 'increasing',
             },
 
             impactMetrics: {
@@ -500,7 +503,7 @@ export function useEnhancedGroupsData() {
               id: 'user-current',
               name: 'Juan Manuel Escobar',
               avatar: '/assets/images/avatars/juan.jpg',
-              nivel: 'Guardián del Ayni Sagrado',
+              nivel: 'Guardián del Reciprocidad Sagrado',
             },
 
             recentMembers: [
@@ -521,9 +524,9 @@ export function useEnhancedGroupsData() {
             ],
 
             proximoEvento: {
-              titulo: 'Luna Nueva: Ceremonia de Ayni',
+              titulo: 'Luna Nueva: Ceremonia de Reciprocidad',
               fecha: '2025-01-25T19:00:00Z',
-              tipo: 'ayni_ceremony',
+              tipo: 'reciprocidad_ceremony',
             },
 
             oportunidadesColaboracion: {
@@ -543,7 +546,7 @@ export function useEnhancedGroupsData() {
 
             certificaciones: [
               {
-                tipoReconocimiento: 'Círculo de Excelencia en Ayni',
+                tipoReconocimiento: 'Círculo de Excelencia en Reciprocidad',
                 fecha: '2025-01-01',
                 descripcion:
                   'Por mantener la reciprocidad perfecta durante un año completo',
@@ -568,22 +571,22 @@ export function useEnhancedGroupsData() {
 }
 
 // 🎯 Hook para métricas específicas de un grupo
-export function useGroupAyniMetrics(groupId: string) {
+export function useGroupReciprocidadMetrics(groupId: string) {
   return useQuery({
-    queryKey: ['group-ayni-metrics', groupId],
+    queryKey: ['group-reciprocidad-metrics', groupId],
     queryFn: async () => {
       try {
         const response = await apiService.get(
-          `/groups/${groupId}/ayni-metrics`
+          `/groups/${groupId}/reciprocidad-metrics`
         );
         return response;
       } catch (error) {
         // Mock de métricas detalladas para desarrollo
         return {
-          ayniBalance: 0.87,
-          ayniGiving: 0.89,
-          ayniReceiving: 0.85,
-          ayniExchanges: 42,
+          reciprocidadBalance: 0.87,
+          reciprocidadGiving: 0.89,
+          reciprocidadReceiving: 0.85,
+          reciprocidadExchanges: 42,
           recentExchanges: [
             {
               date: '2025-01-22',
@@ -623,8 +626,8 @@ export function useGroupCollaborationProjects(groupId: string) {
     queryKey: ['group-collaboration-projects', groupId],
     queryFn: async (): Promise<GroupCollaborationProject[]> => {
       try {
-        const response = await apiService.get(`/groups/${groupId}/projects`);
-        return response;
+        const response = await apiService.get(`/groups/${groupId}/projects`) as any;
+        return response.projects || response;
       } catch (error) {
         // Mock data para desarrollo
         return [
@@ -656,7 +659,7 @@ export function useGroupCollaborationProjects(groupId: string) {
             progress: 65,
             startDate: '2025-01-15',
             endDate: '2025-03-15',
-            ayniExchanges: 23,
+            reciprocidadExchanges: 23,
             meritosGenerated: 340,
             skillsNeeded: ['carpintería ecológica', 'educación ambiental'],
             skillsOffered: ['permacultura', 'bioconstrucción'],
@@ -763,14 +766,14 @@ function transformToEnhancedGroup(backendGroup: any): EnhancedGroup {
     inspiracion: Math.min(80 + Math.random() * 15, 100),
   };
 
-  // Calcular métricas Ayni basadas en actividad
-  const ayniMetrics: GroupAyniMetrics = {
-    ayniBalance: 0.7 + Math.random() * 0.25,
-    ayniGiving: 0.75 + Math.random() * 0.2,
-    ayniReceiving: 0.65 + Math.random() * 0.3,
-    ayniExchanges:
+  // Calcular métricas Reciprocidad basadas en actividad
+  const reciprocidadMetrics: GroupReciprocidadMetrics = {
+    reciprocidadBalance: 0.7 + Math.random() * 0.25,
+    reciprocidadGiving: 0.75 + Math.random() * 0.2,
+    reciprocidadReceiving: 0.65 + Math.random() * 0.3,
+    reciprocidadExchanges:
       Math.floor(memberCount * 0.3) + Math.floor(Math.random() * 20),
-    ayniTrend:
+    reciprocidadTrend:
       Math.random() > 0.7
         ? 'increasing'
         : Math.random() > 0.3
@@ -801,7 +804,7 @@ function transformToEnhancedGroup(backendGroup: any): EnhancedGroup {
     events: Math.floor(Math.random() * 15) + 5,
     isActive: true,
     elementos,
-    ayniMetrics,
+    reciprocidadMetrics,
     impactMetrics: {
       impactoBienComun: Math.floor(50 + Math.random() * 40),
       categoriaImpacto:

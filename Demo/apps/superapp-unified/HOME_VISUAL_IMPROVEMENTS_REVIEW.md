@@ -45,7 +45,7 @@ El Home de CoomÜnity SuperApp tiene una arquitectura sólida y un buen sistema 
    - Sistema de actualización en tiempo real
 
 4. **Filosofía CoomÜnity Bien Implementada**
-   - Terminología consistente (Öndas, Mëritos, Ayni)
+   - Terminología consistente (Öndas, Mëritos, Reciprocidad)
    - Balance elemental bien conceptualizado
    - Enfoque en Bien Común claramente expresado
 
@@ -90,8 +90,8 @@ El Home de CoomÜnity SuperApp tiene una arquitectura sólida y un buen sistema 
 
 ```
 PRIORIDAD 1 (Información crítica):
-- Saludo personalizado y nivel Ayni actual
-- Balance Ayni principal (número + indicador visual)
+- Saludo personalizado y nivel Reciprocidad actual
+- Balance Reciprocidad principal (número + indicador visual)
 - Una acción principal sugerida
 
 PRIORIDAD 2 (Métricas importantes):
@@ -113,12 +113,12 @@ PRIORIDAD 3 (Información contextual):
 ┌─────────────────────────────────────┐
 │  WelcomeHeader (Simplificado)       │
 │  - Saludo + Avatar                  │
-│  - Nivel Ayni + Progreso           │
+│  - Nivel Reciprocidad + Progreso           │
 │  - CTA Principal                    │
 └─────────────────────────────────────┘
 
 ┌──────────────────┐ ┌──────────────────┐
-│  Balance Ayni    │ │  Acciones Rápidas│
+│  Balance Reciprocidad    │ │  Acciones Rápidas│
 │  (Visual Focus)  │ │  (3 max)         │
 │                  │ │                  │
 └──────────────────┘ └──────────────────┘
@@ -149,7 +149,7 @@ PRIORIDAD 3 (Información contextual):
 // Reducir información mostrada
 interface SimplifiedWelcomeProps {
   userName: string;
-  ayniLevel: string;
+  reciprocidadLevel: string;
   primaryAction: {
     label: string;
     onClick: () => void;
@@ -163,13 +163,13 @@ interface SimplifiedWelcomeProps {
 <WelcomeHeader>
   <Avatar /> {/* Solo si tiene función específica */}
   <Greeting>¡Hola, {userName}!</Greeting>
-  <Level>{ayniLevel}</Level>
+  <Level>{reciprocidadLevel}</Level>
   <PrimaryAction />
   <NotificationBadge />
 </WelcomeHeader>
 ```
 
-#### **B. AyniMetricsCard.tsx - Focus en Balance Principal**
+#### **B. ReciprocidadMetricsCard.tsx - Focus en Balance Principal**
 
 **Problemas Actuales:**
 
@@ -181,10 +181,10 @@ interface SimplifiedWelcomeProps {
 
 ```typescript
 // Estructura de prioridad clara
-<AyniMetricsCard>
+<ReciprocidadMetricsCard>
   {/* PRIORIDAD 1: Balance Principal */}
   <PrimaryBalance>
-    <BalanceVisualization value={balanceAyni} />
+    <BalanceVisualization value={balanceReciprocidad} />
     <BalanceDescription />
   </PrimaryBalance>
 
@@ -202,7 +202,7 @@ interface SimplifiedWelcomeProps {
     <Contributions />
     <Insights />
   </ExpandableDetails>
-</AyniMetricsCard>
+</ReciprocidadMetricsCard>
 ```
 
 #### **C. ModuleCards.tsx - Reducción de Opciones**
@@ -283,14 +283,14 @@ interface SimplifiedWelcomeProps {
 
 ```css
 :root {
-  /* Colores Primarios - Balance Ayni */
-  --ayni-primary: #6366f1; /* Azul principal */
-  --ayni-secondary: #8b5cf6; /* Púrpura balance */
+  /* Colores Primarios - Balance Reciprocidad */
+  --reciprocidad-primary: #6366f1; /* Azul principal */
+  --reciprocidad-secondary: #8b5cf6; /* Púrpura balance */
 
   /* Colores Semánticos */
-  --success-ayni: #10b981; /* Verde éxito */
-  --warning-ayni: #f59e0b; /* Ámbar atención */
-  --error-ayni: #ef4444; /* Rojo error */
+  --success-reciprocidad: #10b981; /* Verde éxito */
+  --warning-reciprocidad: #f59e0b; /* Ámbar atención */
+  --error-reciprocidad: #ef4444; /* Rojo error */
 
   /* Escala de Grises */
   --gray-50: #f9fafb;
@@ -319,14 +319,14 @@ interface SimplifiedWelcomeProps {
 ```css
 /* Jerarquía Clara */
 .text-hero {
-  /* Balance principal Ayni */
+  /* Balance principal Reciprocidad */
   font-size: 3rem;
   font-weight: 800;
   line-height: 1.1;
 }
 
 .text-h1 {
-  /* Nivel Ayni */
+  /* Nivel Reciprocidad */
   font-size: 2rem;
   font-weight: 700;
   line-height: 1.2;
@@ -390,7 +390,7 @@ const contrastRequirements = {
 
 // 3. Estados de focus visibles
 .focus-visible {
-  outline: 2px solid var(--ayni-primary);
+  outline: 2px solid var(--reciprocidad-primary);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
@@ -407,7 +407,7 @@ const contrastRequirements = {
 
 // Keyboard shortcuts
 const keyboardShortcuts = {
-  'Alt + 1': 'Ir a Balance Ayni',
+  'Alt + 1': 'Ir a Balance Reciprocidad',
   'Alt + 2': 'Ir a Acciones Rápidas',
   'Alt + 3': 'Ir a Módulos',
   'Escape': 'Cerrar modales/overlays'
@@ -415,7 +415,7 @@ const keyboardShortcuts = {
 
 // ARIA landmarks
 <main role="main" aria-label="Panel principal del dashboard">
-<section role="region" aria-label="Balance Ayni personal">
+<section role="region" aria-label="Balance Reciprocidad personal">
 <aside role="complementary" aria-label="Acciones rápidas">
 ```
 
@@ -478,7 +478,7 @@ const ComponentSkeleton = () => (
 ### 🔥 FASE 1: MEJORAS CRÍTICAS (1-2 semanas)
 
 1. **Reestructurar WelcomeHeader** - Simplificar información mostrada
-2. **Optimizar AyniMetricsCard** - Focus en balance principal
+2. **Optimizar ReciprocidadMetricsCard** - Focus en balance principal
 3. **Implementar estados de focus** accesibles
 4. **Reducir gradientes** y efectos visuales
 5. **Auditoría de contraste** y corrección
@@ -505,7 +505,7 @@ const ComponentSkeleton = () => (
 
 ### Objetivos Medibles Post-Implementación
 
-1. **Tiempo de comprensión** del estado Ayni: < 3 segundos
+1. **Tiempo de comprensión** del estado Reciprocidad: < 3 segundos
 2. **Tasa de interacción** con acciones principales: +40%
 3. **Score de accesibilidad** (Lighthouse): 95+
 4. **Performance score** (Lighthouse): 90+
@@ -517,7 +517,7 @@ const ComponentSkeleton = () => (
 ```typescript
 // Tests de usabilidad recomendados
 const usabilityTests = [
-  'Encontrar balance Ayni actual en < 5 segundos',
+  'Encontrar balance Reciprocidad actual en < 5 segundos',
   'Completar acción rápida en < 3 clicks',
   'Navegar solo con teclado sin perderse',
   'Entender estado general en < 10 segundos',
@@ -565,7 +565,7 @@ const AdvancedInsightsPanel = lazy(() => import('./AdvancedInsightsPanel'));
 const ElementalBalance = lazy(() => import('./ElementalBalance'));
 
 // Memoización de componentes pesados
-const AyniMetricsCard = memo(AyniMetricsCardComponent);
+const ReciprocidadMetricsCard = memo(ReciprocidadMetricsCardComponent);
 const ModuleCards = memo(ModuleCardsComponent);
 ```
 
@@ -574,7 +574,7 @@ const ModuleCards = memo(ModuleCardsComponent);
 ```typescript
 // Analytics events para medir mejoras
 analytics.track('home_interaction', {
-  component: 'balance_ayni',
+  component: 'balance_reciprocidad',
   action: 'click',
   timeToInteraction: performance.now(),
 });

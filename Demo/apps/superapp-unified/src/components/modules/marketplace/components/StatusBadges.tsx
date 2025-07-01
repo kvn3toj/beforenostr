@@ -11,7 +11,7 @@ export interface StatusBadgesProps {
   isUrgent: boolean;
   hasVideo: boolean;
   size: 'small' | 'medium' | 'large';
-  ayniScore?: number;
+  reciprocidadScore?: number;
   meritos?: number;
   isSustainable?: boolean;
   isEmprendedorConfiable?: boolean;
@@ -25,7 +25,7 @@ const StatusBadges: React.FC<StatusBadgesProps> = ({
   isUrgent,
   hasVideo,
   size,
-  ayniScore,
+  reciprocidadScore,
   meritos,
   isSustainable,
   isEmprendedorConfiable,
@@ -86,11 +86,11 @@ const StatusBadges: React.FC<StatusBadgesProps> = ({
             }}
           />
         )}
-        {typeof ayniScore === 'number' && ayniScore >= 80 && (
-          <Tooltip title="Ayni+: Este producto promueve la reciprocidad y el Bien Común. Cada intercambio suma Öndas positivas.">
+        {typeof reciprocidadScore === 'number' && reciprocidadScore >= 80 && (
+          <Tooltip title="Reciprocidad+: Este producto promueve la reciprocidad y el Bien Común. Cada intercambio suma Öndas positivas.">
             <Chip
               icon={<Handshake />}
-              label="Ayni+"
+              label="Reciprocidad+"
               size={badgeSize}
               sx={{
                 background: 'linear-gradient(45deg, #4CAF50, #81C784)',

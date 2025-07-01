@@ -247,7 +247,7 @@ Enhanced User Experience
 
 ### **Principios Implementados:**
 
-1. **🔄 Ayni (Reciprocidad):**
+1. **🔄 Reciprocidad (Reciprocidad):**
    - Sistema de rewards basado en contribución
    - Cross-user help and mentoring
    - Balanced give-and-take mechanics

@@ -62,7 +62,7 @@ const modeConfigs: ModeConfig[] = [
       { icon: <EmojiEventsIcon />, label: 'Sistema de Logros', color: '#FF9800' },
       { icon: <AccessibilityIcon />, label: 'Totalmente Accesible', color: '#10b981' },
       { icon: <TrendingUpIcon />, label: 'Analytics Integrados', color: '#f59e0b' },
-      { icon: <BoltIcon />, label: 'Filosofía Ayni', color: '#ec4899' },
+      { icon: <BoltIcon />, label: 'Filosofía Reciprocidad', color: '#ec4899' },
     ],
   },
 ];
@@ -272,7 +272,7 @@ const UPlayModeSelector: React.FC<UPlayModeSelectorProps> = ({
       <Box sx={{ mt: 4, textAlign: 'center' }}>
         <Typography variant="body1" color="text.secondary" sx={{ fontStyle: 'italic' }}>
           💜 Cada modo está diseñado siguiendo los principios de{' '}
-          <strong>Ayni (reciprocidad)</strong>, <strong>Bien Común</strong> y{' '}
+          <strong>Reciprocidad (reciprocidad)</strong>, <strong>Bien Común</strong> y{' '}
           <strong>crecimiento consciente</strong> de CoomÜnity
         </Typography>
       </Box>

@@ -232,7 +232,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     visualDemo: <UnitsFlowAnimation />,
     userAction: 'practice',
     emotionalContext: 'Cada Ünit representa una historia de ayuda mutua y crecimiento',
-    coomunityPhilosophy: 'Las Ünits honran el principio ancestral del Ayni: la reciprocidad sagrada'
+    coomunityPhilosophy: 'Las Ünits honran el principio ancestral del Reciprocidad: la reciprocidad sagrada'
   },
   {
     id: 'wallet_simple',

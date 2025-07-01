@@ -119,7 +119,7 @@ export const useVideoQuestions = (
       if (isCorrect) {
         const messages = [
           '¡Excelente! Tu conocimiento sobre CoomÜnity es impresionante.',
-          '¡Correcto! Sigues demostrando tu comprensión del Ayni.',
+          '¡Correcto! Sigues demostrando tu comprensión del Reciprocidad.',
           '¡Muy bien! Tu sabiduría contribuye al Bien Común.',
           '¡Perfecto! Las Öndas positivas fluyen a través de ti.',
         ];

@@ -88,7 +88,7 @@ interface CollaborationProject {
   title: string;
   description: string;
   category:
-    | 'ayni_exchange'
+    | 'reciprocidad_exchange'
     | 'knowledge_sharing'
     | 'joint_venture'
     | 'mentoring'
@@ -105,7 +105,7 @@ interface CollaborationProject {
   progress: number;
   startDate: string;
   endDate?: string;
-  ayniExchanges: number;
+  reciprocidadExchanges: number;
   meritosGenerated: number;
   skillsNeeded: string[];
   skillsOffered: string[];
@@ -128,7 +128,7 @@ interface KnowledgeExchange {
   dateScheduled?: string;
   duration: string;
   format: 'virtual' | 'presencial' | 'hybrid';
-  ayniValue: number;
+  reciprocidadValue: number;
   description: string;
 }
 
@@ -140,7 +140,7 @@ interface GroupEvent {
     | 'workshop'
     | 'celebration'
     | 'project_kickoff'
-    | 'ayni_ceremony';
+    | 'reciprocidad_ceremony';
   date: string;
   duration: string;
   facilitator: string;
@@ -192,7 +192,7 @@ const mockProjects: CollaborationProject[] = [
     progress: 65,
     startDate: '2025-01-15',
     endDate: '2025-03-15',
-    ayniExchanges: 23,
+    reciprocidadExchanges: 23,
     meritosGenerated: 340,
     skillsNeeded: ['carpintería', 'diseño gráfico', 'gestión comunitaria'],
     skillsOffered: ['permacultura', 'sistemas de riego', 'compostaje'],
@@ -218,7 +218,7 @@ const mockProjects: CollaborationProject[] = [
     ],
     progress: 25,
     startDate: '2025-02-01',
-    ayniExchanges: 8,
+    reciprocidadExchanges: 8,
     meritosGenerated: 120,
     skillsNeeded: ['desarrollo móvil', 'backend', 'marketing digital'],
     skillsOffered: ['diseño UX/UI', 'investigación de usuarios'],
@@ -247,7 +247,7 @@ const mockExchanges: KnowledgeExchange[] = [
     dateScheduled: '2025-01-30T18:00:00',
     duration: '2 horas',
     format: 'hybrid',
-    ayniValue: 25,
+    reciprocidadValue: 25,
     description:
       'Aprende técnicas avanzadas de facilitación para reuniones más efectivas y armoniosas.',
   },
@@ -265,7 +265,7 @@ const mockExchanges: KnowledgeExchange[] = [
     status: 'matched',
     duration: '1 mes (sesiones semanales)',
     format: 'virtual',
-    ayniValue: 50,
+    reciprocidadValue: 50,
     description:
       'Mentoría personalizada para emprendedores que buscan crear impacto positivo.',
   },
@@ -274,15 +274,15 @@ const mockExchanges: KnowledgeExchange[] = [
 const mockEvents: GroupEvent[] = [
   {
     id: 'event-1',
-    title: 'Círculo de Ayni Mensual',
-    type: 'ayni_ceremony',
+    title: 'Círculo de Reciprocidad Mensual',
+    type: 'reciprocidad_ceremony',
     date: '2025-01-25T19:00:00',
     duration: '1.5 horas',
     facilitator: 'Ana María Rodríguez',
     attendees: 12,
     maxAttendees: 20,
     description:
-      'Espacio sagrado para compartir, reflexionar y equilibrar nuestros intercambios de ayni.',
+      'Espacio sagrado para compartir, reflexionar y equilibrar nuestros intercambios de reciprocidad.',
     objectives: [
       'Reflexionar sobre reciprocidad',
       'Planificar colaboraciones',
@@ -364,7 +364,7 @@ export const GroupsCollaborationTools: React.FC<
   // 🎨 Función para obtener color según categoría de proyecto
   const getCategoryColor = (category: CollaborationProject['category']) => {
     switch (category) {
-      case 'ayni_exchange':
+      case 'reciprocidad_exchange':
         return '#E91E63';
       case 'knowledge_sharing':
         return '#9C27B0';
@@ -381,8 +381,8 @@ export const GroupsCollaborationTools: React.FC<
 
   const getCategoryLabel = (category: CollaborationProject['category']) => {
     switch (category) {
-      case 'ayni_exchange':
-        return 'Intercambio Ayni';
+      case 'reciprocidad_exchange':
+        return 'Intercambio Reciprocidad';
       case 'knowledge_sharing':
         return 'Compartir Conocimiento';
       case 'joint_venture':
@@ -509,12 +509,12 @@ export const GroupsCollaborationTools: React.FC<
           </AvatarGroup>
         </Box>
 
-        {/* Métricas Ayni */}
+        {/* Métricas Reciprocidad */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
           <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h6" color="primary" fontWeight="bold">
-                {project.ayniExchanges}
+                {project.reciprocidadExchanges}
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 Intercambios
@@ -625,7 +625,7 @@ export const GroupsCollaborationTools: React.FC<
             variant="outlined"
           />
           <Chip
-            label={`${exchange.ayniValue} Ayni`}
+            label={`${exchange.reciprocidadValue} Reciprocidad`}
             size="small"
             sx={{
               bgcolor: alpha('#E91E63', 0.1),
@@ -885,7 +885,7 @@ export const GroupsCollaborationTools: React.FC<
                   Ofrecer Conocimiento
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Comparte tu sabiduría en intercambio Ayni
+                  Comparte tu sabiduría en intercambio Reciprocidad
                 </Typography>
               </CardContent>
             </Card>
@@ -1078,7 +1078,7 @@ export const GroupsCollaborationTools: React.FC<
                     <MenuItem value="joint_venture">
                       Emprendimiento Conjunto
                     </MenuItem>
-                    <MenuItem value="ayni_exchange">Intercambio Ayni</MenuItem>
+                    <MenuItem value="reciprocidad_exchange">Intercambio Reciprocidad</MenuItem>
                     <MenuItem value="mentoring">Mentoría</MenuItem>
                   </Select>
                 </FormControl>

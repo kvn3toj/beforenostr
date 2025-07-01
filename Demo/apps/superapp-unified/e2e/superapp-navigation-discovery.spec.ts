@@ -96,7 +96,7 @@ test.describe('🔍 Descubrimiento de Navegación SuperApp', () => {
     console.log(pageText?.substring(0, 500) + '...');
     
     // Buscar patrones de CoomÜnity
-    const coomunityTerms = ['CoomÜnity', 'Ayni', 'Mëritos', 'Öndas', 'Lükas'];
+    const coomunityTerms = ['CoomÜnity', 'Reciprocidad', 'Mëritos', 'Öndas', 'Lükas'];
     console.log('\n🏷️ Buscando terminología CoomÜnity...');
     
     for (const term of coomunityTerms) {

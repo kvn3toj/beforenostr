@@ -34,8 +34,8 @@
 
 /* ===== 🎭 ANIMACIONES SIGNATURE GUARDIAN ===== */
 
-/* 🔥 Ayni Breathing - Respiración de reciprocidad */
-@keyframes guardian-ayni-breathe {
+/* 🔥 Reciprocidad Breathing - Respiración de reciprocidad */
+@keyframes guardian-reciprocidad-breathe {
   0%, 100% {
     transform: scale(1);
     opacity: 0.8;
@@ -180,8 +180,8 @@
   animation: guardian-levitate 6s ease-in-out infinite;
 }
 
-.guardian-card.ayni-card {
-  animation: guardian-ayni-breathe 4s ease-in-out infinite;
+.guardian-card.reciprocidad-card {
+  animation: guardian-reciprocidad-breathe 4s ease-in-out infinite;
 }
 
 .guardian-card.meritos-card:hover {

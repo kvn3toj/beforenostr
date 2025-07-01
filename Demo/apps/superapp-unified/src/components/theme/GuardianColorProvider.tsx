@@ -2,36 +2,22 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { ThemeProvider as MuiThemeProvider, createTheme, Theme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-// ===== 🎨 TIPOS DE TEMAS GUARDIAN =====
-export type GuardianTheme = 'monochrome'; // Forzar un único tema
+// Importar sistema de colores unificado
+import { THEME_PALETTES, ELEMENT_COLORS, CONCEPT_COLORS } from '../../theme/colors';
 
-// ===== 🌟 PALETAS DE COLORES GUARDIAN =====
-const GUARDIAN_PALETTES = {
-  monochrome: {
-    name: 'Pure Monochrome',
-    description: 'Elegancia atemporal en escala de grises',
-    primary: '#000000', // Negro puro
-    secondary: '#555555', // Gris oscuro
-    accent: '#888888', // Gris medio
-    mystic: '#bbbbbb', // Gris claro
-    neutral: '#eeeeee', // Gris muy claro
-    background: '#ffffff',
-    surface: '#fafafa',
-    text: {
-      primary: '#000000',
-      secondary: '#333333',
-      muted: '#777777'
-    }
-  }
-};
+// ===== 🎨 TIPOS DE TEMAS GUARDIAN =====
+export type GuardianTheme = 'minimalist' | 'monochrome'; // Tipos de temas disponibles
+
+// Asegurarse de que siempre haya un tema por defecto
+const DEFAULT_THEME: GuardianTheme = 'minimalist';
 
 // ===== 🎯 INTERFAZ DEL CONTEXTO =====
 interface GuardianColorContextType {
   currentTheme: GuardianTheme;
-  palette: typeof GUARDIAN_PALETTES[GuardianTheme];
-  switchTheme: () => void;
-  getElementColor: (element: 'fuego' | 'agua' | 'tierra' | 'aire' | 'eter') => string;
-  getConceptColor: (concept: 'ayni' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun') => string;
+  palette: typeof THEME_PALETTES[GuardianTheme];
+  switchTheme: (theme: GuardianTheme) => void;
+  getElementColor: (element: keyof typeof ELEMENT_COLORS) => string;
+  getConceptColor: (concept: 'reciprocidad' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun') => string;
   applyColorClass: (element: string) => string;
 }
 
@@ -39,33 +25,41 @@ interface GuardianColorContextType {
 const GuardianColorContext = createContext<GuardianColorContextType | undefined>(undefined);
 
 // ===== 🌈 MAPEO DE ELEMENTOS A COLORES =====
-const getElementColor = (element: 'fuego' | 'agua' | 'tierra' | 'aire' | 'eter', palette: any): string => {
-  const mapping = {
-    fuego: palette.primary,
-    agua: palette.secondary,
-    tierra: palette.accent,
-    aire: palette.mystic,
-    eter: palette.neutral
-  };
-  return mapping[element] || palette.primary;
+const getElementColor = (element: keyof typeof ELEMENT_COLORS, palette: any): string => {
+  // Usar los colores elementales del sistema unificado
+  return ELEMENT_COLORS[element]?.primary || palette.primary;
 };
 
 // ===== 🤝 MAPEO DE CONCEPTOS COOMUNITY =====
-const getConceptColor = (concept: 'ayni' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun', palette: any): string => {
-  const mapping = {
-    ayni: palette.accent, // Tierra - Equilibrio
-    meritos: palette.primary, // Fuego - Logro
-    ondas: palette.mystic, // Aire - Energía
-    lukas: palette.secondary, // Agua - Flujo
-    'bien-comun': palette.neutral // Éter - Unidad
+const getConceptColor = (concept: 'reciprocidad' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun', palette: any): string => {
+  // Transformar el concepto al formato adecuado para el objeto CONCEPT_COLORS
+  const conceptMapping: Record<string, keyof typeof CONCEPT_COLORS> = {
+    'reciprocidad': 'reciprocidad',
+    'meritos': 'meritos',
+    'ondas': 'ondas',
+    'lukas': 'lukas',
+    'bien-comun': 'bienComun'
   };
-  return mapping[concept] || palette.primary;
+
+  const conceptKey = conceptMapping[concept];
+  return CONCEPT_COLORS[conceptKey] || palette.primary;
 };
 
 // ===== 🎨 CREACIÓN DEL TEMA MATERIAL-UI GUARDIAN =====
 const createGuardianTheme = (themeName: GuardianTheme): Theme => {
-  const palette = GUARDIAN_PALETTES[themeName];
-  const isDark = false; // El modo monocromático es claro por defecto
+  // Asegurarse de que themeName sea válido, si no, usar el tema por defecto
+  const validThemeName = THEME_PALETTES[themeName] ? themeName : DEFAULT_THEME;
+
+  // Asegurarse de que la paleta exista
+  const palette = THEME_PALETTES[validThemeName];
+
+  // Verificación adicional para asegurarse de que palette no sea undefined
+  if (!palette) {
+    console.error(`Guardian theme palette not found for theme: ${themeName}, using default theme`);
+    return createTheme(); // Tema MUI por defecto como fallback
+  }
+
+  const isDark = false; // El tema minimalista es claro
 
   return createTheme({
     palette: {
@@ -73,13 +67,13 @@ const createGuardianTheme = (themeName: GuardianTheme): Theme => {
       primary: {
         main: palette.primary,
         light: isDark ? palette.primary : '#fef7e1',
-        dark: isDark ? '#4338ca' : '#c17d15',
+        dark: isDark ? '#392768' : '#5C2483',
         contrastText: isDark ? '#ffffff' : '#ffffff'
       },
       secondary: {
         main: palette.secondary,
-        light: isDark ? palette.secondary : '#e0f2fe',
-        dark: isDark ? '#7c3aed' : '#155e75',
+        light: palette.accent,
+        dark: palette.mystic,
         contrastText: '#ffffff'
       },
       background: {
@@ -92,149 +86,289 @@ const createGuardianTheme = (themeName: GuardianTheme): Theme => {
         disabled: palette.text.muted
       },
       success: {
-        main: palette.accent,
-        light: isDark ? '#86efac' : '#dcfce7',
-        dark: isDark ? '#059669' : '#166534'
+        main: palette.success,
+        light: ELEMENT_COLORS.tierra.light,
+        dark: ELEMENT_COLORS.tierra.dark,
       },
       warning: {
-        main: '#f59e0b',
-        light: '#fef3c7',
-        dark: '#d97706'
+        main: palette.warning,
+        light: CONCEPT_COLORS.meritos,
+        dark: '#975A16',
       },
       error: {
-        main: '#ef4444',
+        main: palette.error,
         light: '#fee2e2',
-        dark: '#dc2626'
+        dark: '#5D1626',
       },
       info: {
-        main: palette.mystic,
-        light: isDark ? '#e9d5ff' : '#f3e8ff',
-        dark: isDark ? '#7c3aed' : '#6b21a8'
-      }
+        main: palette.info,
+        light: ELEMENT_COLORS.agua.light,
+        dark: ELEMENT_COLORS.agua.dark,
+      },
+      divider: palette.divider,
     },
     typography: {
-      fontFamily: '"Inter", "Roboto", -apple-system, BlinkMacSystemFont, sans-serif',
+      fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
       h1: {
+        fontWeight: 600,
         fontSize: '2.5rem',
-        fontWeight: 800,
         lineHeight: 1.2,
-        color: palette.text.primary
+        letterSpacing: '-0.01em',
       },
       h2: {
+        fontWeight: 600,
         fontSize: '2rem',
-        fontWeight: 700,
-        lineHeight: 1.3,
-        color: palette.text.primary
+        lineHeight: 1.2,
+        letterSpacing: '-0.01em',
       },
       h3: {
+        fontWeight: 600,
         fontSize: '1.75rem',
-        fontWeight: 700,
-        lineHeight: 1.3,
-        color: palette.text.primary
+        lineHeight: 1.2,
+        letterSpacing: '-0.01em',
       },
       h4: {
-        fontSize: '1.5rem',
         fontWeight: 600,
-        lineHeight: 1.4,
-        color: palette.text.primary
+        fontSize: '1.5rem',
+        lineHeight: 1.2,
+        letterSpacing: '-0.01em',
       },
       h5: {
-        fontSize: '1.25rem',
         fontWeight: 600,
-        lineHeight: 1.4,
-        color: palette.text.primary
+        fontSize: '1.25rem',
+        lineHeight: 1.2,
+        letterSpacing: '-0.01em',
       },
       h6: {
-        fontSize: '1rem',
         fontWeight: 600,
+        fontSize: '1rem',
+        lineHeight: 1.2,
+        letterSpacing: '-0.01em',
+      },
+      subtitle1: {
+        fontWeight: 500,
+        fontSize: '1rem',
         lineHeight: 1.5,
-        color: palette.text.primary
+        letterSpacing: '0.00938em',
+      },
+      subtitle2: {
+        fontWeight: 500,
+        fontSize: '0.875rem',
+        lineHeight: 1.57,
+        letterSpacing: '0.00714em',
       },
       body1: {
+        fontWeight: 400,
         fontSize: '1rem',
-        lineHeight: 1.6,
-        color: palette.text.secondary,
-        fontWeight: 500
+        lineHeight: 1.5,
+        letterSpacing: '0.00938em',
       },
       body2: {
+        fontWeight: 400,
         fontSize: '0.875rem',
-        lineHeight: 1.5,
-        color: palette.text.secondary,
-        fontWeight: 500
+        lineHeight: 1.43,
+        letterSpacing: '0.01071em',
+      },
+      button: {
+        fontWeight: 500,
+        fontSize: '0.875rem',
+        lineHeight: 1.75,
+        letterSpacing: '0.02857em',
+        textTransform: 'none',
       },
       caption: {
+        fontWeight: 400,
         fontSize: '0.75rem',
-        lineHeight: 1.4,
-        color: palette.text.muted,
-        fontWeight: 500
-      }
+        lineHeight: 1.66,
+        letterSpacing: '0.03333em',
+      },
+      overline: {
+        fontWeight: 500,
+        fontSize: '0.75rem',
+        lineHeight: 2.66,
+        letterSpacing: '0.08333em',
+        textTransform: 'uppercase',
+      },
     },
     shape: {
-      borderRadius: 16
+      borderRadius: 8,
     },
     shadows: [
       'none',
-      '0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)',
-      '0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)',
-      '0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08)',
-      '0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08)',
-      '0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08)',
-      '0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08)',
-      '0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08)',
-      '0 12px 32px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
-      '0 12px 32px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
-      '0 12px 32px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
-      '0 12px 32px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
-      '0 12px 32px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
-      '0 12px 32px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
-      '0 12px 32px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
-      '0 12px 32px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
-      '0 16px 48px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.12)',
-      '0 16px 48px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.12)',
-      '0 16px 48px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.12)',
-      '0 16px 48px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.12)',
-      '0 16px 48px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.12)',
-      '0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.15)',
-      '0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.15)',
-      '0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.15)',
-      '0 24px 72px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.18)'
+      '0px 2px 4px rgba(0, 0, 0, 0.03)',
+      '0px 3px 6px rgba(0, 0, 0, 0.04)',
+      '0px 4px 8px rgba(0, 0, 0, 0.05)',
+      '0px 5px 10px rgba(0, 0, 0, 0.06)',
+      '0px 6px 12px rgba(0, 0, 0, 0.07)',
+      '0px 7px 14px rgba(0, 0, 0, 0.08)',
+      '0px 8px 16px rgba(0, 0, 0, 0.09)',
+      '0px 9px 18px rgba(0, 0, 0, 0.10)',
+      '0px 10px 20px rgba(0, 0, 0, 0.11)',
+      '0px 11px 22px rgba(0, 0, 0, 0.12)',
+      '0px 12px 24px rgba(0, 0, 0, 0.13)',
+      '0px 13px 26px rgba(0, 0, 0, 0.14)',
+      '0px 14px 28px rgba(0, 0, 0, 0.15)',
+      '0px 15px 30px rgba(0, 0, 0, 0.16)',
+      '0px 16px 32px rgba(0, 0, 0, 0.17)',
+      '0px 17px 34px rgba(0, 0, 0, 0.18)',
+      '0px 18px 36px rgba(0, 0, 0, 0.19)',
+      '0px 19px 38px rgba(0, 0, 0, 0.20)',
+      '0px 20px 40px rgba(0, 0, 0, 0.21)',
+      '0px 21px 42px rgba(0, 0, 0, 0.22)',
+      '0px 22px 44px rgba(0, 0, 0, 0.23)',
+      '0px 23px 46px rgba(0, 0, 0, 0.24)',
+      '0px 24px 48px rgba(0, 0, 0, 0.25)',
     ],
     components: {
-      MuiCard: {
+      MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 20,
-            border: `2px solid rgba(245, 166, 35, 0.15)`,
-            transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+            fontWeight: 500,
+            borderRadius: '8px',
+            textTransform: 'none',
+            padding: '0.5rem 1.25rem',
+            boxShadow: 'none',
+            transition: 'all 0.2s ease-in-out',
             '&:hover': {
-              transform: 'translateY(-4px) scale(1.02)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08)'
+              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.05)',
+              transform: 'translateY(-1px)',
+            }
+          },
+          containedPrimary: {
+            backgroundColor: palette.primary,
+            color: '#ffffff',
+            '&:hover': {
+              backgroundColor: '#5C2483',
+            }
+          },
+          containedSecondary: {
+            backgroundColor: palette.secondary,
+            '&:hover': {
+              backgroundColor: '#392768',
+            }
+          },
+          outlined: {
+            borderWidth: '1px',
+            '&:hover': {
+              borderWidth: '1px',
+              backgroundColor: 'rgba(92, 36, 131, 0.04)'
+            }
+          },
+          text: {
+            '&:hover': {
+              backgroundColor: 'rgba(92, 36, 131, 0.04)'
             }
           }
         }
       },
-      MuiButton: {
+      MuiCard: {
         styleOverrides: {
           root: {
-            borderRadius: 16,
-            fontWeight: 600,
-            textTransform: 'none',
-            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+            borderRadius: '12px',
+            boxShadow: 'none',
+            border: `1px solid ${palette.divider}`,
+            transition: 'all 0.2s ease-in-out',
+            backgroundColor: palette.background,
             '&:hover': {
-              transform: 'translateY(-2px) scale(1.05)'
+              boxShadow: '0 1px 6px rgba(0, 0, 0, 0.03)',
+              borderColor: 'rgba(92, 36, 131, 0.1)',
             }
           }
+        }
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: 'none',
+            boxShadow: 'none',
+            borderRadius: '12px',
+          },
+          elevation1: {
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)',
+            border: `1px solid ${palette.divider}`,
+          },
+          elevation2: {
+            boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
+          },
         }
       },
       MuiChip: {
         styleOverrides: {
           root: {
-            borderRadius: 20,
-            fontWeight: 600,
-            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-            '&:hover': {
-              transform: 'translateY(-1px) scale(1.05)'
+            height: 'auto',
+            borderRadius: '6px',
+            fontWeight: 500,
+            fontSize: '0.75rem',
+            padding: '0.1rem 0',
+            backgroundColor: 'rgba(92, 36, 131, 0.04)',
+            border: 'none',
+            '&.MuiChip-outlined': {
+              backgroundColor: 'transparent',
+              border: `1px solid ${palette.divider}`,
             }
+          },
+          label: {
+            padding: '0.25rem 0.5rem',
+          },
+          icon: {
+            fontSize: '0.875rem',
+          },
+          deleteIcon: {
+            fontSize: '0.875rem',
+          }
+        }
+      },
+      MuiDivider: {
+        styleOverrides: {
+          root: {
+            borderColor: palette.divider,
+          }
+        }
+      },
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            textTransform: 'none',
+            fontWeight: 500,
+            fontSize: '0.875rem',
+            minHeight: '48px',
+            padding: '0.5rem 1rem',
+            '&.Mui-selected': {
+              color: palette.primary,
+              fontWeight: 600
+            }
+          }
+        }
+      },
+      MuiTabs: {
+        styleOverrides: {
+          root: {
+            minHeight: '48px',
+            borderBottom: `1px solid ${palette.divider}`,
+          },
+          indicator: {
+            height: '2px',
+            backgroundColor: palette.primary,
+          }
+        }
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            transition: 'all 0.2s',
+            '&:hover': {
+              backgroundColor: 'rgba(92, 36, 131, 0.04)',
+              transform: 'translateY(-1px)',
+            }
+          }
+        }
+      },
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            scrollBehavior: 'smooth',
+            fontFeatureSettings: '"cv02", "cv03", "cv04", "cv11"',
+            backgroundColor: palette.background
           }
         }
       }
@@ -242,56 +376,84 @@ const createGuardianTheme = (themeName: GuardianTheme): Theme => {
   });
 };
 
-// ===== 🔧 PROVIDER COMPONENT =====
+// ===== 🎨 FUNCIÓN PARA APLICAR TEMA AL DOCUMENTO =====
+const applyThemeToDocument = (theme: any) => {
+  // Verificar que theme no sea null o undefined antes de procesar
+  if (!theme) return;
+
+  // Aplicar CSS variables al :root para acceso global
+  Object.entries(theme).forEach(([key, value]) => {
+    if (typeof value === 'string') {
+      document.documentElement.style.setProperty(`--guardian-${key}`, value);
+    } else if (key === 'text' && typeof value === 'object' && value !== null) {
+      Object.entries(value).forEach(([textKey, textValue]) => {
+        document.documentElement.style.setProperty(`--guardian-text-${textKey}`, textValue as string);
+      });
+    }
+  });
+};
+
+// ===== 🎭 PROPS DEL PROVIDER =====
 interface GuardianColorProviderProps {
   children: ReactNode;
+  initialTheme?: GuardianTheme; // Permitir un tema inicial
 }
 
+// ===== 🌟 COMPONENTE PROVIDER =====
 export const GuardianColorProvider: React.FC<GuardianColorProviderProps> = ({
   children,
+  initialTheme = 'minimalist' // Establecer 'minimalist' como defecto
 }) => {
-  // Forzar el tema monocromático
-  const [currentTheme, setCurrentTheme] = useState<GuardianTheme>('monochrome');
+  // Validar que el tema inicial sea válido
+  const validInitialTheme = THEME_PALETTES[initialTheme] ? initialTheme : DEFAULT_THEME;
+
+  const [currentTheme, setCurrentTheme] = useState<GuardianTheme>(validInitialTheme);
+
+  // Asegurarse de que la paleta siempre exista
+  const currentPalette = THEME_PALETTES[currentTheme] || THEME_PALETTES[DEFAULT_THEME];
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', 'monochrome');
-    // Aplicar variables CSS para el tema monocromático
-    const palette = GUARDIAN_PALETTES.monochrome;
-    const root = document.documentElement;
-    root.style.setProperty('--guardian-bg-primary', palette.background);
-    root.style.setProperty('--guardian-bg-surface', palette.surface);
-    root.style.setProperty('--guardian-text-primary', palette.text.primary);
-    root.style.setProperty('--guardian-text-secondary', palette.text.secondary);
-    root.style.setProperty('--guardian-primary', palette.primary);
-    root.style.setProperty('--guardian-secondary', palette.secondary);
-    root.style.setProperty('--guardian-accent', palette.accent);
-    // ...y así sucesivamente para todas las variables que uses.
-    // Esto es un reinicio completo.
-    root.style.setProperty('--guardian-gradient-cosmic', 'linear-gradient(180deg, #FFFFFF 0%, #F0F0F0 100%)');
+    // Aplicar CSS variables al :root para acceso global
+    Object.entries(currentPalette).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        document.documentElement.style.setProperty(`--guardian-${key}`, value);
+      } else if (key === 'text' && typeof value === 'object') {
+        Object.entries(value).forEach(([textKey, textValue]) => {
+          document.documentElement.style.setProperty(`--guardian-text-${textKey}`, textValue as string);
+        });
+      }
+    });
+  }, [currentTheme, currentPalette]);
 
-
-  }, []);
-
-
-  const switchTheme = () => {
-    // La función de cambio de tema se deshabilita para forzar el monocromático.
-    console.log("El cambio de tema está deshabilitado en el modo de reinicio monocromático.");
+  const switchTheme = (newTheme: GuardianTheme) => {
+    // Validar que el nuevo tema sea válido
+    if (THEME_PALETTES[newTheme]) {
+      setCurrentTheme(newTheme);
+      localStorage.setItem('guardian-theme', newTheme);
+    } else {
+      console.error(`Invalid theme: ${newTheme}, using default theme`);
+      setCurrentTheme(DEFAULT_THEME);
+    }
   };
 
-  const muiTheme = createGuardianTheme('monochrome');
-
-  const value = {
-    currentTheme: 'monochrome' as GuardianTheme,
-    palette: GUARDIAN_PALETTES.monochrome,
-    switchTheme,
-    getElementColor: (element: 'fuego' | 'agua' | 'tierra' | 'aire' | 'eter') => getElementColor(element, GUARDIAN_PALETTES.monochrome),
-    getConceptColor: (concept: 'ayni' | 'meritos' | 'ondas' | 'lukas' | 'bien-comun') => getConceptColor(concept, GUARDIAN_PALETTES.monochrome),
-    applyColorClass: (element: string): string => `guardian-${element}-monochrome`,
+  const applyColorClass = (element: string) => {
+    return `guardian-${element}`;
   };
 
+  // Crear el tema MUI basado en la paleta Guardian
+  const muiTheme = createGuardianTheme(currentTheme);
 
   return (
-    <GuardianColorContext.Provider value={value}>
+    <GuardianColorContext.Provider
+      value={{
+        currentTheme,
+        palette: currentPalette,
+        switchTheme,
+        getElementColor: (element) => getElementColor(element, currentPalette),
+        getConceptColor: (concept) => getConceptColor(concept, currentPalette),
+        applyColorClass
+      }}
+    >
       <MuiThemeProvider theme={muiTheme}>
         <CssBaseline />
         {children}
@@ -300,7 +462,7 @@ export const GuardianColorProvider: React.FC<GuardianColorProviderProps> = ({
   );
 };
 
-// ===== 🪝 HOOK PERSONALIZADO =====
+// ===== 🎣 HOOK PARA USAR EL CONTEXTO =====
 export const useGuardianColors = (): GuardianColorContextType => {
   const context = useContext(GuardianColorContext);
   if (!context) {
@@ -309,41 +471,43 @@ export const useGuardianColors = (): GuardianColorContextType => {
   return context;
 };
 
-// ===== 🎛️ COMPONENTE SELECTOR DE TEMA MEJORADO =====
+// ===== 🎚️ SELECTOR DE TEMAS =====
 export const GuardianThemeSelector: React.FC = () => {
-  // El selector de temas se deshabilita y se oculta.
-  return null;
+  const { currentTheme, switchTheme } = useGuardianColors();
+
+  const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    switchTheme(e.target.value as GuardianTheme);
+  };
+
+  return (
+    <div className="fixed bottom-4 right-4 z-50 bg-white p-2 rounded-lg shadow-lg">
+      <select
+        value={currentTheme}
+        onChange={handleThemeChange}
+        className="p-2 border border-gray-300 rounded"
+      >
+        {Object.keys(THEME_PALETTES).map((theme) => (
+          <option key={theme} value={theme}>
+            {THEME_PALETTES[theme as GuardianTheme].name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
 };
 
-// ===== 🎨 HOOK PARA CLASES DE UTILIDAD =====
+// ===== 🎨 HOOK PARA CLASES CSS =====
 export const useGuardianClasses = () => {
   const { currentTheme, palette } = useGuardianColors();
 
+  const getElementClass = (element: string): string => {
+    return `guardian-${element} guardian-theme-${currentTheme}`;
+  };
+
   return {
-    textPrimary: 'guardian-text-primary',
-    textSecondary: 'guardian-text-secondary',
-    textMuted: 'guardian-text-muted',
-    bgPrimary: 'guardian-bg-primary',
-    bgCard: 'guardian-bg-card',
-    bgSoft: 'guardian-bg-soft',
-    border: 'guardian-border',
-    borderAccent: 'guardian-border-accent',
-    shadow: 'guardian-shadow',
-    shadowHover: 'guardian-shadow-hover',
-    transition: 'guardian-transition',
-    glow: 'guardian-glow',
-    float: 'guardian-float',
-    gradientText: 'guardian-gradient-text',
-    // Elementos
-    ayni: 'guardian-text-ayni',
-    meritos: 'guardian-text-meritos',
-    ondas: 'guardian-text-ondas',
-    lukas: 'guardian-text-lukas',
-    // Chips por elemento
-    chipAyni: 'chip-ayni',
-    chipMeritos: 'chip-meritos',
-    chipOndas: 'chip-ondas',
-    chipLukas: 'chip-lukas'
+    getElementClass,
+    currentTheme,
+    palette
   };
 };
 

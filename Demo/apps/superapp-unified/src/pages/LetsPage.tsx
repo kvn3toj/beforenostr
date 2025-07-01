@@ -111,7 +111,7 @@ const LetsPage: React.FC = () => {
                     Sistema LETS CoomÜnity
                   </Typography>
                   <Typography variant="h6" sx={{ mb: 2, color: 'text.secondary' }}>
-                    Economía Colaborativa basada en Ayni
+                    Economía Colaborativa basada en Reciprocidad
                   </Typography>
                   <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
                     Intercambia productos, servicios y conocimientos usando Ünits, nuestra moneda local

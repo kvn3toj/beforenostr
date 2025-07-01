@@ -57,7 +57,7 @@ export const useGamificationMetrics = ({
     return Math.floor(Math.sqrt(experiencePoints / 100)) + 1;
   }, []);
 
-  // Calculate speed bonus for Ayni (reciprocity = efficiency + consciousness)
+  // Calculate speed bonus for Reciprocidad (reciprocity = efficiency + consciousness)
   const calculateSpeedBonus = useCallback((responseTime: number, timeLimit: number): number => {
     const ratio = responseTime / timeLimit;
     if (ratio <= 0.3) return 1.5; // Very fast response
@@ -78,7 +78,7 @@ export const useGamificationMetrics = ({
 
   // Get streak multiplier
   const getStreakMultiplier = useCallback((streak: number): number => {
-    if (streak >= 10) return 2.0; // Ayni Master
+    if (streak >= 10) return 2.0; // Reciprocidad Master
     if (streak >= 5) return 1.5;  // Strong flow
     if (streak >= 3) return 1.2;  // Building momentum
     return 1.0; // Base level
@@ -95,11 +95,11 @@ export const useGamificationMetrics = ({
 
   // Check for achievements
   const checkAchievements = useCallback((newMetrics: PlayerMetrics): Achievement | undefined => {
-    // Ayni Master - 10 correct answers in a row
+    // Reciprocidad Master - 10 correct answers in a row
     if (newMetrics.currentStreak === 10 && metrics.currentStreak < 10) {
       return {
-        id: 'ayni-master',
-        name: 'Maestro del Ayni',
+        id: 'reciprocidad-master',
+        name: 'Maestro del Reciprocidad',
         description: 'Responde 10 preguntas consecutivas correctamente',
         icon: '⚖️',
         rarity: 'epic',
@@ -158,7 +158,7 @@ export const useGamificationMetrics = ({
 
     const baseReward = question.reward;
     
-    // Apply multipliers following Ayni principles
+    // Apply multipliers following Reciprocidad principles
     const speedMultiplier = calculateSpeedBonus(responseTime, question.timeLimit);
     const difficultyMultiplier = getDifficultyMultiplier(question.difficulty);
     const levelMultiplier = 1 + (metrics.level - 1) * 0.1; // 10% bonus per level

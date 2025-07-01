@@ -6,7 +6,7 @@
  * 
  * Funcionalidades verificadas:
  * ✅ Autenticación con Backend NestJS (puerto 3002)
- * ✅ Dashboard gamificado con métricas (Ayni, Mëritos, Öndas)
+ * ✅ Dashboard gamificado con métricas (Reciprocidad, Mëritos, Öndas)
  * ✅ Módulo ÜPlay (GPL Gamified Play List)
  * ✅ Módulo Marketplace (GMP Gamified Match Place)
  * ✅ Módulo Social
@@ -29,7 +29,7 @@ const ADMIN_CREDENTIALS = {
 
 // 🏷️ TERMINOLOGÍA COOMUNITY A VERIFICAR
 const COOMUNITY_TERMS = [
-  'Ayni', 'Mëritos', 'Öndas', 'Lükas', 'Bien Común', 
+  'Reciprocidad', 'Mëritos', 'Öndas', 'Lükas', 'Bien Común', 
   'CoomÜnity', 'ÜPlay', 'Emprendedores Confiables'
 ];
 
@@ -182,12 +182,12 @@ test.describe('🚀 SuperApp CoomÜnity - Verificación Completa con Admin', () 
       console.log('✅ Concepto "Bien Común" encontrado');
     }
     
-    const ayniElements = await page.locator('text=/Ayni|ayni/i').count();
-    if (ayniElements > 0) {
-      console.log('✅ Concepto "Ayni" encontrado');
+    const reciprocidadElements = await page.locator('text=/Reciprocidad|reciprocidad/i').count();
+    if (reciprocidadElements > 0) {
+      console.log('✅ Concepto "Reciprocidad" encontrado');
     }
 
-    // Verificar métricas gamificadas (Ayni, Mëritos, Öndas)
+    // Verificar métricas gamificadas (Reciprocidad, Mëritos, Öndas)
     const metricsSection = page.locator('[data-testid="gamification-metrics"], .metrics-container, .dashboard-stats');
     
     // Buscar términos de CoomÜnity en el dashboard
@@ -298,7 +298,7 @@ test.describe('🚀 SuperApp CoomÜnity - Verificación Completa con Admin', () 
     }
 
     // Buscar términos de colaboración
-    const socialTerms = ['Comunidad', 'Colaboración', 'Bien Común', 'Ayni'];
+    const socialTerms = ['Comunidad', 'Colaboración', 'Bien Común', 'Reciprocidad'];
     let foundSocialTerms = 0;
     
     for (const term of socialTerms) {

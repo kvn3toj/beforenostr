@@ -57,7 +57,7 @@ import { es } from 'date-fns/locale';
 // 🎯 Tipos para transacciones CoomÜnity
 interface Transaction {
   id: string;
-  type: 'income' | 'expense' | 'transfer' | 'exchange' | 'reward' | 'ayni';
+  type: 'income' | 'expense' | 'transfer' | 'exchange' | 'reward' | 'reciprocidad';
   amount: number;
   currency: 'COP' | 'UC' | 'MERITOS' | 'ONDAS';
   description: string;
@@ -65,7 +65,7 @@ interface Transaction {
   status: 'completed' | 'pending' | 'failed' | 'processing';
   from?: string;
   to?: string;
-  ayniScore?: number;
+  reciprocidadScore?: number;
   bienComunContribution?: boolean;
   category?: string;
   metadata?: {
@@ -115,10 +115,10 @@ const TRANSACTION_TYPES = {
     label: 'Recompensa',
     description: 'Mëritos por contribución',
   },
-  ayni: {
+  reciprocidad: {
     icon: <Nature />,
     color: 'info',
-    label: 'Ayni',
+    label: 'Reciprocidad',
     description: 'Intercambio equilibrado',
   },
 } as const;
@@ -167,7 +167,7 @@ const TransactionItem: React.FC<{
   const typeConfig = TRANSACTION_TYPES[transaction.type];
   const statusConfig = STATUS_CONFIG[transaction.status];
 
-  const isPositive = ['income', 'reward', 'ayni'].includes(transaction.type);
+  const isPositive = ['income', 'reward', 'reciprocidad'].includes(transaction.type);
   const displayAmount = Math.abs(transaction.amount);
 
   return (
@@ -279,12 +279,12 @@ const TransactionItem: React.FC<{
                 </Box>
               )}
 
-              {/* 🌟 Métricas Ayni */}
-              {transaction.ayniScore && (
+              {/* 🌟 Métricas Reciprocidad */}
+              {transaction.reciprocidadScore && (
                 <Box sx={{ mt: 1 }}>
                   <Chip
                     icon={<Nature />}
-                    label={`Ayni Score: ${transaction.ayniScore}/10`}
+                    label={`Reciprocidad Score: ${transaction.reciprocidadScore}/10`}
                     size="small"
                     sx={{
                       bgcolor: 'info.50',
@@ -471,14 +471,14 @@ const TransactionStats: React.FC<{
       )
       .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
-    const ayniTransactions = transactions.filter(
-      (t) => t.type === 'ayni'
+    const reciprocidadTransactions = transactions.filter(
+      (t) => t.type === 'reciprocidad'
     ).length;
     const bienComunContributions = transactions.filter(
       (t) => t.bienComunContribution
     ).length;
 
-    return { income, expenses, ayniTransactions, bienComunContributions };
+    return { income, expenses, reciprocidadTransactions, bienComunContributions };
   }, [transactions]);
 
   return (
@@ -518,10 +518,10 @@ const TransactionStats: React.FC<{
           </Box>
           <Box>
             <Typography variant="h6" fontWeight="bold" color="info.main">
-              {stats.ayniTransactions}
+              {stats.reciprocidadTransactions}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Intercambios Ayni
+              Intercambios Reciprocidad
             </Typography>
           </Box>
           <Box>

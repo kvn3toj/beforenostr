@@ -44,7 +44,7 @@ DELETE /study-rooms/:id          # Eliminar sala
 - ✅ **Rankings** (top/least viewed content)
 - ✅ **System health** monitoring
 - ✅ **Dashboard metrics** agregadas
-- ✅ **Ayni metrics** específicos
+- ✅ **Reciprocidad metrics** específicos
 
 **Endpoints Disponibles:**
 ```

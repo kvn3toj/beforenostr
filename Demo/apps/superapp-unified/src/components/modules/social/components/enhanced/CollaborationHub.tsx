@@ -62,7 +62,7 @@ interface CollaborationCircle {
     | 'business'
     | 'arts';
   memberCount: number;
-  ayniExchanges: number;
+  reciprocidadExchanges: number;
   trustLevel: number;
   isPublic: boolean;
   isJoined: boolean;
@@ -100,7 +100,7 @@ const mockCircles: CollaborationCircle[] = [
       'Unimos fuerzas para crear negocios que generen impacto positivo en nuestra ciudad y el planeta.',
     category: 'sustainability',
     memberCount: 34,
-    ayniExchanges: 127,
+    reciprocidadExchanges: 127,
     trustLevel: 4.8,
     isPublic: true,
     isJoined: true,
@@ -121,7 +121,7 @@ const mockCircles: CollaborationCircle[] = [
       'Desarrolladores y tecnólogos comprometidos con crear soluciones que sirvan a la humanidad.',
     category: 'technology',
     memberCount: 28,
-    ayniExchanges: 89,
+    reciprocidadExchanges: 89,
     trustLevel: 4.6,
     isPublic: true,
     isJoined: false,
@@ -142,7 +142,7 @@ const mockCircles: CollaborationCircle[] = [
       'Pedagogos y educadores explorando nuevas formas de enseñar basadas en sabiduría ancestral.',
     category: 'education',
     memberCount: 42,
-    ayniExchanges: 156,
+    reciprocidadExchanges: 156,
     trustLevel: 4.9,
     isPublic: true,
     isJoined: true,
@@ -313,7 +313,7 @@ const CircleCard: React.FC<{
           <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h6" fontWeight="bold" color="success.main">
-                {circle.ayniExchanges}
+                {circle.reciprocidadExchanges}
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 Intercambios
@@ -510,7 +510,7 @@ export const CollaborationHub: React.FC<CollaborationHubProps> = ({
       description: newCircleDescription,
       category: newCircleCategory as any,
       memberCount: 1,
-      ayniExchanges: 0,
+      reciprocidadExchanges: 0,
       trustLevel: 0,
       isPublic: true,
       isJoined: true,
@@ -577,7 +577,7 @@ export const CollaborationHub: React.FC<CollaborationHubProps> = ({
               <Box textAlign="center">
                 <Typography variant="h6" fontWeight="bold">
                   {joinedCircles.reduce(
-                    (sum, circle) => sum + circle.ayniExchanges,
+                    (sum, circle) => sum + circle.reciprocidadExchanges,
                     0
                   )}
                 </Typography>

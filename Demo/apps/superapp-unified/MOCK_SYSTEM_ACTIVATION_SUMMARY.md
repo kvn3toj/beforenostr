@@ -37,7 +37,7 @@ Se ha activado exitosamente el **sistema mock completo** para la CoomÜnity Supe
 #### 🛒 Marketplace (GMP - Gamified Match Place)
 - **5 Items Completos** con datos realistas
 - Tipos: Servicios, Productos, Experiencias, Intercambios
-- Vendedores con perfiles detallados (Ayni scores, Méritos, badges)
+- Vendedores con perfiles detallados (Reciprocidad scores, Méritos, badges)
 - Precios en múltiples monedas (LUKAS, ONDAS, MÉRITOS)
 
 #### 💰 Wallet CoomÜnity
@@ -48,7 +48,7 @@ Se ha activado exitosamente el **sistema mock completo** para la CoomÜnity Supe
 #### 🎮 ÜPlay (GPL - Gamified Play List)  
 - **3 Videos educativos** con filosofía CoomÜnity
 - Preguntas interactivas gamificadas
-- Métricas (views, likes, ayniScore)
+- Métricas (views, likes, reciprocidadScore)
 
 #### 🏆 Challenges Activos
 - **2 Desafíos**: "Reciprocidad Semanal" y "Mes del Bien Común"

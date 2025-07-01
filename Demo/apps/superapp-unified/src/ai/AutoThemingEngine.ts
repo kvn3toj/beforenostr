@@ -8,10 +8,27 @@
 
 import * as React from 'react';
 
+// 🔮 Definición de UserContext para el sistema de Auto-theming
+interface UserContext {
+  userId?: string;
+  route: string;
+  timeZone?: string;
+  preferences?: {
+    theme?: string;
+    accessibility?: boolean;
+    reducedMotion?: boolean;
+  };
+  previousSessions?: {
+    averageTimeSpent: number;
+    preferredElements: string[];
+    lastThemeUsed?: string;
+  };
+}
+
 interface ContentAnalysis {
   sentiment: 'positive' | 'neutral' | 'negative';
   topics: string[];
-  philosophy: 'ayni' | 'reciprocity' | 'growth' | 'balance' | 'transformation';
+  philosophy: 'reciprocidad' | 'reciprocity' | 'growth' | 'balance' | 'transformation';
   timeContext: 'morning' | 'afternoon' | 'evening' | 'night';
   userEnergy: number; // 0-100
   dominantEmotion: 'joy' | 'peace' | 'focus' | 'curiosity' | 'determination';
@@ -52,7 +69,7 @@ interface ThemeAdaptationSettings {
 
 export class AutoThemingEngine {
   private static instance: AutoThemingEngine;
-  private isInitialized: boolean = false;
+
   private behaviorPatterns: UserBehaviorPattern[] = [];
   private currentRecommendation: AIThemeRecommendation | null = null;
   private adaptationSettings: ThemeAdaptationSettings;
@@ -84,7 +101,6 @@ export class AutoThemingEngine {
     // Configurar observadores de comportamiento
     this.setupBehaviorTracking();
 
-    this.isInitialized = true;
     console.log('🤖 AutoThemingEngine initialized with AI foundation');
   }
 
@@ -133,7 +149,7 @@ export class AutoThemingEngine {
 
     // Mapeo filosófico inteligente
     switch (analysis.philosophy) {
-      case 'ayni':
+      case 'reciprocidad':
         element = 'espiritu'; // Balance y reciprocidad espiritual
         break;
       case 'growth':
@@ -188,7 +204,7 @@ export class AutoThemingEngine {
    */
   private analyzeSentiment(words: string[]): 'positive' | 'neutral' | 'negative' {
     const positiveWords = [
-      'ayni', 'balance', 'harmony', 'growth', 'love', 'peace', 'joy',
+      'reciprocidad', 'balance', 'harmony', 'growth', 'love', 'peace', 'joy',
       'abundance', 'success', 'grateful', 'amazing', 'wonderful',
       'beautiful', 'excellent', 'perfect', 'brilliant', 'fantastic',
       'cooperation', 'collaboration', 'unity', 'wisdom', 'transformation'
@@ -241,7 +257,7 @@ export class AutoThemingEngine {
    */
   private detectPhilosophy(words: string[], route: string): ContentAnalysis['philosophy'] {
     const philosophyKeywords = {
-      'ayni': ['ayni', 'reciprocity', 'balance', 'give', 'receive', 'exchange'],
+      'reciprocidad': ['reciprocidad', 'reciprocity', 'balance', 'give', 'receive', 'exchange'],
       'reciprocity': ['mutual', 'shared', 'together', 'cooperation', 'collaboration'],
       'growth': ['grow', 'develop', 'learn', 'improve', 'progress', 'evolution'],
       'balance': ['balance', 'harmony', 'equilibrium', 'centered', 'stable'],
@@ -253,7 +269,7 @@ export class AutoThemingEngine {
       '/': 'balance',
       '/uplay': 'growth',
       '/marketplace': 'reciprocity',
-      '/social': 'ayni',
+      '/social': 'reciprocidad',
       '/wallet': 'transformation'
     };
 
@@ -407,11 +423,68 @@ export class AutoThemingEngine {
   }
 
   /**
-   * Ajustar saturación de color
+   * Ajustar saturación de color - Versión mejorada que acepta multiplier
    */
-  private adjustColorSaturation(color: string, multiplier: number): string {
-    // Implementación simplificada - en producción usar biblioteca de colores
-    return color; // Por ahora retornar el color original
+  private adjustColorSaturation(color: string, saturationMultiplier: number = 1.0): string {
+    // 🎨 Implementación mejorada para ajustar saturación con HSL
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16) / 255;
+    const g = parseInt(hex.substr(2, 2), 16) / 255;
+    const b = parseInt(hex.substr(4, 2), 16) / 255;
+
+    // Convertir RGB a HSL
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h: number, s: number, l: number;
+
+    l = (max + min) / 2;
+
+    if (max === min) {
+      h = s = 0; // achromatic
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+        default: h = 0;
+      }
+      h /= 6;
+    }
+
+    // Ajustar saturación
+    s = Math.min(1, Math.max(0, s * saturationMultiplier));
+
+    // Convertir HSL de vuelta a RGB
+    const hue2rgb = (p: number, q: number, t: number) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+
+    let newR: number, newG: number, newB: number;
+
+    if (s === 0) {
+      newR = newG = newB = l; // achromatic
+    } else {
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      newR = hue2rgb(p, q, h + 1/3);
+      newG = hue2rgb(p, q, h);
+      newB = hue2rgb(p, q, h - 1/3);
+    }
+
+    // Convertir de vuelta a hex
+    const toHex = (c: number) => {
+      const hex = Math.round(c * 255).toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    };
+
+    return `#${toHex(newR)}${toHex(newG)}${toHex(newB)}`;
   }
 
   /**
@@ -499,7 +572,7 @@ export class AutoThemingEngine {
     });
 
     // Observar tiempo en página
-    let startTime = Date.now();
+    const startTime = Date.now();
     window.addEventListener('beforeunload', () => {
       this.recordTimeSpent(Date.now() - startTime);
     });
@@ -614,14 +687,57 @@ export class AutoThemingEngine {
   }
 
   /**
+   * 🌟 Método estático para análisis de contenido
+   */
+  static async analyzeContent(pageContent: string, userContext?: UserContext): Promise<ContentAnalysis> {
+    const instance = AutoThemingEngine.getInstance();
+    return instance.analyzeContent(pageContent, userContext?.route || window.location.pathname);
+  }
+
+  /**
+   * 🌟 Método estático para generar recomendación
+   */
+  static async generateThemeRecommendation(analysis: ContentAnalysis): Promise<AIThemeRecommendation> {
+    const instance = AutoThemingEngine.getInstance();
+    return instance.generateThemeRecommendation(analysis);
+  }
+
+  /**
+   * 🌟 Método estático para aplicar tema
+   */
+  static async applyTheme(recommendation: AIThemeRecommendation): Promise<void> {
+    const instance = AutoThemingEngine.getInstance();
+
+    // Aplicar propiedades CSS customizadas
+    const root = document.documentElement;
+    for (const [property, value] of Object.entries(recommendation.customProperties)) {
+      root.style.setProperty(property, value);
+    }
+
+    // Agregar clase de elemento
+    document.body.className = document.body.className.replace(/element-\w+/, '');
+    document.body.classList.add(`element-${recommendation.element}`);
+
+    console.log(`🎨 Applied theme: ${recommendation.element} (${(recommendation.confidence * 100).toFixed(1)}% confidence)`);
+  }
+
+  /**
    * Utilidades auxiliares
    */
   private recordTimeSpent(time: number): void {
     // Implementar registro de tiempo
+    if (this.behaviorPatterns.length > 0) {
+      const lastPattern = this.behaviorPatterns[this.behaviorPatterns.length - 1];
+      lastPattern.timeSpent = time;
+    }
   }
 
   private updateScrollDepth(depth: number): void {
     // Implementar actualización de scroll depth
+    if (this.behaviorPatterns.length > 0) {
+      const lastPattern = this.behaviorPatterns[this.behaviorPatterns.length - 1];
+      lastPattern.scrollDepth = depth;
+    }
   }
 
   private trimBehaviorPatterns(): void {
@@ -704,7 +820,7 @@ export class AutoThemingEngine {
 }
 
 /**
- * Hook React para usar Auto-theming
+ * 🎨 Hook React para usar Auto-theming - Versión corregida
  */
 export const useAutoTheming = (pageContent: string, userContext?: UserContext) => {
   const [analysis, setAnalysis] = React.useState<ContentAnalysis | null>(null);

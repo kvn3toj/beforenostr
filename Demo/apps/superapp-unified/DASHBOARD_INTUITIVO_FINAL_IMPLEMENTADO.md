@@ -53,7 +53,7 @@ Hemos elevado el Dashboard de CoomÜnity SuperApp a un **nivel de excelencia vis
 - Animación: Slide-up con delay escalonado
 ```
 
-### 💎 **Widget Principal (Balance Ayni)**
+### 💎 **Widget Principal (Balance Reciprocidad)**
 
 ```css
 - Proporción: 1.8:1 en desktop, stack en mobile
@@ -202,7 +202,7 @@ Hemos elevado el Dashboard de CoomÜnity SuperApp a un **nivel de excelencia vis
 #### 🏗️ **Componentes Revolucionarios**
 
 - `src/pages/HomeRevolutionary.tsx` - Layout principal optimizado
-- `src/components/home/AyniMetricsCardRevolutionary.tsx` - Widget central perfecto
+- `src/components/home/ReciprocidadMetricsCardRevolutionary.tsx` - Widget central perfecto
 - `src/components/home/WelcomeHeaderRevolutionary.tsx` - Header elemental
 - `src/components/home/WalletOverviewRevolutionary.tsx` - Cartera 3D
 - `src/components/home/QuickActionsGridRevolutionary.tsx` - Centro de comando

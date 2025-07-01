@@ -15,7 +15,7 @@
 
 - [x] ✅ **Interface primaryAction** agregado
 - [x] ✅ **Saludo simplificado** (¡Hola, {userName}!)
-- [x] ✅ **CTA principal dinámico** basado en balance Ayni
+- [x] ✅ **CTA principal dinámico** basado en balance Reciprocidad
 - [x] ✅ **ARIA labels** descriptivos
 - [x] ✅ **Button import** corregido
 - [x] ✅ **Transiciones 200ms** aplicadas
@@ -46,11 +46,11 @@ interface WelcomeHeaderProps {
 )}
 ```
 
-#### 2. AyniMetricsCard con Sistema 3-2-1 ✅
+#### 2. ReciprocidadMetricsCard con Sistema 3-2-1 ✅
 
-**Archivo:** `src/components/home/AyniMetricsCard.tsx`
+**Archivo:** `src/components/home/ReciprocidadMetricsCard.tsx`
 
-- [x] ✅ **PRIORIDAD 1:** Balance Ayni como focal point (3rem, hero display)
+- [x] ✅ **PRIORIDAD 1:** Balance Reciprocidad como focal point (3rem, hero display)
 - [x] ✅ **PRIORIDAD 2:** Öndas y Mëritos agrupados (2rem display)
 - [x] ✅ **PRIORIDAD 3:** Detalles expandibles (progressive disclosure)
 - [x] ✅ **Botón "Ver detalles"** implementado
@@ -60,7 +60,7 @@ interface WelcomeHeaderProps {
 **Código verificado:**
 
 ```typescript
-// ✅ PRIORIDAD 1: Balance Principal Ayni
+// ✅ PRIORIDAD 1: Balance Principal Reciprocidad
 <Typography
   variant="h1"
   sx={{
@@ -72,7 +72,7 @@ interface WelcomeHeaderProps {
     WebkitTextFillColor: 'transparent',
   }}
 >
-  {safeToLocaleString(balanceAyni)}%
+  {safeToLocaleString(balanceReciprocidad)}%
 </Typography>
 
 // ✅ PRIORIDAD 3: Progressive Disclosure
@@ -143,7 +143,7 @@ const mainModules: ModuleData[] = [
 
 **Archivo:** `src/styles/tokens/colors-optimized.css`
 
-- [x] ✅ **Variables CSS** definidas (--ayni-primary, --success-ayni)
+- [x] ✅ **Variables CSS** definidas (--reciprocidad-primary, --success-reciprocidad)
 - [x] ✅ **Contraste WCAG AA** (4.5:1 mínimo)
 - [x] ✅ **Escala de grises** accesible
 - [x] ✅ **Dark mode** support
@@ -155,7 +155,7 @@ const mainModules: ModuleData[] = [
 
 **Archivo:** `src/pages/Home.tsx`
 
-- [x] ✅ **Alt + 1:** Ir a Balance Ayni
+- [x] ✅ **Alt + 1:** Ir a Balance Reciprocidad
 - [x] ✅ **Alt + 2:** Ir a Acciones Rápidas
 - [x] ✅ **Alt + 3:** Ir a Módulos
 - [x] ✅ **Escape:** Cerrar modales/overlays
@@ -168,11 +168,11 @@ const mainModules: ModuleData[] = [
 // ✅ Navegación por teclado ANTES del return condicional
 useEffect(() => {
   const handleKeyDown = (e: KeyboardEvent) => {
-    // Alt + 1: Ir a Balance Ayni
+    // Alt + 1: Ir a Balance Reciprocidad
     if (e.altKey && e.key === '1') {
       e.preventDefault();
       const balanceElement = document.querySelector(
-        '[aria-label="Balance Ayni personal"]'
+        '[aria-label="Balance Reciprocidad personal"]'
       ) as HTMLElement;
       balanceElement?.focus();
     }
@@ -198,7 +198,7 @@ useEffect(() => {
 **Archivo:** `src/pages/Home.tsx`
 
 - [x] ✅ **role="main"** en container principal
-- [x] ✅ **role="region"** en Balance Ayni
+- [x] ✅ **role="region"** en Balance Reciprocidad
 - [x] ✅ **role="complementary"** en acciones rápidas
 - [x] ✅ **aria-label** descriptivos
 - [x] ✅ **IDs únicos** para skip links
@@ -218,7 +218,7 @@ useEffect(() => {
 **Archivo:** `src/styles/tokens/typography-hierarchy.css`
 
 - [x] ✅ **text-hero** (3rem, 800 weight) - Balance principal
-- [x] ✅ **text-h1** (2rem, 700 weight) - Nivel Ayni
+- [x] ✅ **text-h1** (2rem, 700 weight) - Nivel Reciprocidad
 - [x] ✅ **text-h2** (1.5rem, 600 weight) - Títulos sección
 - [x] ✅ **text-body** (1rem, 400 weight) - Contenido general
 - [x] ✅ **text-caption** (0.875rem, 500 weight) - Métricas
@@ -237,7 +237,7 @@ useEffect(() => {
 
 **Archivo:** `src/pages/Home.tsx`
 
-- [x] ✅ **Balance < 60%:** "Equilibrar Ayni" → Marketplace
+- [x] ✅ **Balance < 60%:** "Equilibrar Reciprocidad" → Marketplace
 - [x] ✅ **Balance >= 80%:** "Explorar ÜPlay" → UPlay
 - [x] ✅ **Balance 60-80%:** "Conectar en Social" → Social
 - [x] ✅ **Iconos dinámicos** según acción
@@ -267,7 +267,7 @@ import { Button } from '@mui/material';
 // src/components/home/ModuleCards.tsx
 import { Button } from '@mui/material';
 
-// src/components/home/AyniMetricsCard.tsx
+// src/components/home/ReciprocidadMetricsCard.tsx
 import { Button } from '@mui/material';
 ```
 
@@ -277,7 +277,7 @@ import { Button } from '@mui/material';
 
 - [x] ✅ **Primary action** se muestra y cambia según balance
 - [x] ✅ **Module cards** son clickeables y navigables
-- [x] ✅ **Balance Ayni** se calcula y muestra correctamente
+- [x] ✅ **Balance Reciprocidad** se calcula y muestra correctamente
 - [x] ✅ **Detalles expandibles** funcionan (Ver/Ocultar detalles)
 - [x] ✅ **Keyboard shortcuts** responden correctamente
 - [x] ✅ **Skip links** navegan a las secciones correctas
@@ -323,7 +323,7 @@ import { Button } from '@mui/material';
 
 1. **`src/pages/Home.tsx`** - ✅ Completo
 2. **`src/components/home/WelcomeHeader.tsx`** - ✅ Completo
-3. **`src/components/home/AyniMetricsCard.tsx`** - ✅ Completo
+3. **`src/components/home/ReciprocidadMetricsCard.tsx`** - ✅ Completo
 4. **`src/components/home/ModuleCards.tsx`** - ✅ Completo
 5. **`src/styles/home-enhanced.css`** - ✅ Completo
 6. **`src/styles/micro-interactions.css`** - ✅ Completo
@@ -350,7 +350,7 @@ Todas las mejoras visuales especificadas en el documento de review han sido impl
 - **Accesibilidad WCAG AA** completa
 - **Performance optimizada** con gradientes reducidos
 - **Navegación por teclado** completa
-- **Primary action inteligente** basado en balance Ayni
+- **Primary action inteligente** basado en balance Reciprocidad
 - **Progressive disclosure** para información secundaria
 - **Design system coherente** con tokens CSS optimizados
 

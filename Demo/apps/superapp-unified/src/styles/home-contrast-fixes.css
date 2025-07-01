@@ -33,9 +33,9 @@
 }
 
 /* ===== CORRECCIÓN 2: PORCENTAJE PRINCIPAL - MÁXIMO CONTRASTE ===== */
-.ayni-metrics-card .percentage-display,
-.ayni-metrics-card .MuiTypography-h2,
-.ayni-metrics-card .MuiTypography-h1,
+.reciprocidad-metrics-card .percentage-display,
+.reciprocidad-metrics-card .MuiTypography-h2,
+.reciprocidad-metrics-card .MuiTypography-h1,
 [data-testid*='percentage'],
 .percentage-main,
 [data-testid*='primary-dashboard'] .MuiTypography-h1 {
@@ -95,7 +95,7 @@
 
 /* ===== CORRECCIÓN 4: VALORES DE MÉTRICAS - CONTRASTE MEJORADO ===== */
 .metrics-value,
-.ayni-metrics .metric-number,
+.reciprocidad-metrics .metric-number,
 .stats-value,
 [data-testid*='metric-value'],
 .MuiTypography-h3,
@@ -116,8 +116,8 @@
   font-weight: 700 !important;
 }
 
-.metric-ayni {
-  color: var(--metric-ayni-text) !important;
+.metric-reciprocidad {
+  color: var(--metric-reciprocidad-text) !important;
   font-weight: 700 !important;
 }
 
@@ -127,8 +127,8 @@
 }
 
 /* Números específicos en métricas */
-.ayni-metrics-card .MuiTypography-h6,
-.ayni-metrics-card .metric-display,
+.reciprocidad-metrics-card .MuiTypography-h6,
+.reciprocidad-metrics-card .metric-display,
 [data-testid*='primary-dashboard'] .MuiTypography-h4 {
   color: var(--metric-value) !important;
   font-weight: 700 !important;
@@ -187,14 +187,14 @@
 }
 
 .MuiLinearProgress-bar {
-  background-color: var(--ayni-primary) !important;
+  background-color: var(--reciprocidad-primary) !important;
 }
 
 /* ===== CORRECCIÓN 9: CARDS Y CONTAINERS ===== */
 .home-card,
 .module-card,
 .metrics-card,
-.ayni-metrics-card {
+.reciprocidad-metrics-card {
   background-color: var(--home-card-bg) !important;
   border: 1px solid var(--home-card-border) !important;
 }
@@ -281,7 +281,7 @@
   .home-card,
   .module-card,
   .metrics-card,
-  .ayni-metrics-card {
+  .reciprocidad-metrics-card {
     background-color: var(--home-card-bg) !important;
     border-color: var(--home-card-border) !important;
   }
@@ -304,7 +304,7 @@
   .home-card,
   .module-card,
   .metrics-card,
-  .ayni-metrics-card {
+  .reciprocidad-metrics-card {
     background-color: #ffffff !important;
     border: 2px solid #000000 !important;
   }
@@ -330,7 +330,7 @@
 .enhanced-focus:focus-visible,
 .MuiButton-root:focus-visible,
 .MuiIconButton-root:focus-visible {
-  outline: 2px solid var(--ayni-primary) !important;
+  outline: 2px solid var(--reciprocidad-primary) !important;
   outline-offset: 2px !important;
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2) !important;
 }
@@ -343,9 +343,9 @@
   font-weight: 700 !important;
 }
 
-/* AyniMetricsCard específico */
-[data-testid*='ayni-metrics'] .MuiTypography-h2,
-[data-testid*='ayni-metrics'] .MuiTypography-h1 {
+/* ReciprocidadMetricsCard específico */
+[data-testid*='reciprocidad-metrics'] .MuiTypography-h2,
+[data-testid*='reciprocidad-metrics'] .MuiTypography-h1 {
   color: var(--home-percentage-text) !important;
   font-weight: 800 !important;
 }

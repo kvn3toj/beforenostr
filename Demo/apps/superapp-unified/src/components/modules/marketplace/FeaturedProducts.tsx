@@ -8,7 +8,8 @@ import {
   Grid,
   Chip,
   IconButton,
-  Rating
+  Rating,
+  alpha
 } from '@mui/material';
 import {
   Favorite as FavoriteIcon,
@@ -18,6 +19,7 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { formatPrice, safeToLocaleString } from '../../../utils/numberUtils';
+import { BRAND_COLORS } from '../../../theme/colors';
 
 interface Product {
   id: string;
@@ -25,7 +27,7 @@ interface Product {
   description: string;
   image: string;
   price: number;
-  ayniRating: number;
+  reciprocidadRating: number;
   category: string;
   seller: string;
   featured?: boolean;
@@ -40,10 +42,10 @@ const sampleProducts: Product[] = [
   {
     id: '1',
     title: 'Café Orgánico CoomÜnity',
-    description: 'Café cultivado por cooperativas locales con principios de Ayni',
+    description: 'Café cultivado por cooperativas locales con principios de Reciprocidad',
     image: '/images/productos/cafe-organico.jpg',
     price: 25000,
-    ayniRating: 4.8,
+    reciprocidadRating: 4.8,
     category: 'Alimentos',
     seller: 'Cooperativa Valle Verde',
     featured: true
@@ -54,7 +56,7 @@ const sampleProducts: Product[] = [
     description: 'Tejidos tradicionales elaborados por artesanas de la comunidad',
     image: '/images/productos/textiles.jpg',
     price: 85000,
-    ayniRating: 4.9,
+    reciprocidadRating: 4.9,
     category: 'Artesanías',
     seller: 'Tejedoras Unidos',
     featured: true
@@ -65,7 +67,7 @@ const sampleProducts: Product[] = [
     description: 'Miel pura extraída respetando el equilibrio natural',
     image: '/images/productos/miel.jpg',
     price: 35000,
-    ayniRating: 4.7,
+    reciprocidadRating: 4.7,
     category: 'Alimentos',
     seller: 'Apiarios Sostenibles',
     featured: true
@@ -79,53 +81,50 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
   const featuredProducts = products.filter(p => p.featured).slice(0, maxItems);
 
   return (
-    <Box sx={{ py: 3 }}>
+    <Box sx={{ py: 2.5 }}>
       <Typography
         variant="h5"
         gutterBottom
         sx={{
-          mb: 3,
-          fontWeight: 'bold',
-          background: 'linear-gradient(45deg, #667eea, #764ba2)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
+          mb: 2.5,
+          fontWeight: '600',
+          color: BRAND_COLORS.deepPurple,
+          fontSize: '1.25rem'
         }}
       >
         ⭐ Productos Destacados
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={2.5}>
         {featuredProducts.map((product, index) => (
           <Grid item xs={12} sm={6} md={4} key={product.id}>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: index * 0.1, duration: 0.4 }}
             >
               <Card
                 sx={{
                   height: '100%',
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 3,
-                  transition: 'all 0.3s ease',
+                  backgroundColor: BRAND_COLORS.white,
+                  border: `1px solid ${BRAND_COLORS.gray100}`,
+                  borderRadius: 1.5,
+                  boxShadow: '0 1px 8px rgba(0,0,0,0.03)',
+                  transition: 'transform 0.25s ease, box-shadow 0.25s ease',
                   '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 8px 25px rgba(0,0,0,0.2)'
+                    transform: 'translateY(-3px)',
+                    boxShadow: `0 6px 16px ${alpha(BRAND_COLORS.gray300, 0.2)}`,
                   }
                 }}
               >
                 <Box sx={{ position: 'relative' }}>
                   <CardMedia
                     component="img"
-                    height="200"
+                    height="180"
                     image={product.image}
                     alt={product.title}
                     sx={{
                       objectFit: 'cover',
-                      background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)'
                     }}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -134,16 +133,21 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                   />
 
                   <Chip
-                    icon={<VerifiedIcon />}
+                    icon={<VerifiedIcon sx={{ fontSize: '0.85rem' }} />}
                     label="Destacado"
                     size="small"
                     sx={{
                       position: 'absolute',
                       top: 8,
                       right: 8,
-                      background: 'linear-gradient(45deg, #f093fb, #f5576c)',
-                      color: 'white',
-                      fontWeight: 'bold'
+                      backgroundColor: alpha(BRAND_COLORS.deepBlue, 0.8),
+                      color: BRAND_COLORS.white,
+                      fontWeight: 500,
+                      fontSize: '0.7rem',
+                      borderRadius: '3px',
+                      '& .MuiChip-label': {
+                        px: 0.8,
+                      },
                     }}
                   />
 
@@ -152,39 +156,91 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                     top: 8,
                     left: 8,
                     display: 'flex',
-                    gap: 1
+                    gap: 0.8
                   }}>
-                    <IconButton size="small" sx={{ color: 'white', bgcolor: 'rgba(0,0,0,0.3)' }}>
-                      <FavoriteIcon />
+                    <IconButton
+                      size="small"
+                      sx={{
+                        color: BRAND_COLORS.white,
+                        bgcolor: alpha(BRAND_COLORS.black, 0.2),
+                        width: 28,
+                        height: 28,
+                        '&:hover': {
+                          bgcolor: alpha(BRAND_COLORS.black, 0.3),
+                        }
+                      }}
+                    >
+                      <FavoriteIcon sx={{ fontSize: 16 }} />
                     </IconButton>
-                    <IconButton size="small" sx={{ color: 'white', bgcolor: 'rgba(0,0,0,0.3)' }}>
-                      <ShareIcon />
+                    <IconButton
+                      size="small"
+                      sx={{
+                        color: BRAND_COLORS.white,
+                        bgcolor: alpha(BRAND_COLORS.black, 0.2),
+                        width: 28,
+                        height: 28,
+                        '&:hover': {
+                          bgcolor: alpha(BRAND_COLORS.black, 0.3),
+                        }
+                      }}
+                    >
+                      <ShareIcon sx={{ fontSize: 16 }} />
                     </IconButton>
                   </Box>
                 </Box>
 
-                <CardContent sx={{ flexGrow: 1, p: 2 }}>
-                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                <CardContent sx={{ p: 2, pb: 1.5 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: '0.95rem',
+                      lineHeight: 1.3,
+                      mb: 1.2,
+                      color: BRAND_COLORS.black,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                  >
                     {product.title}
                   </Typography>
 
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{ mb: 2, minHeight: 40 }}
+                    sx={{
+                      mb: 1.2,
+                      fontSize: '0.8rem',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                    }}
                   >
                     {product.description}
                   </Typography>
 
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.2 }}>
                     <Rating
-                      value={product.ayniRating}
+                      value={product.reciprocidadRating}
                       precision={0.1}
                       readOnly
                       size="small"
+                      sx={{
+                        '& .MuiRating-iconFilled': {
+                          color: BRAND_COLORS.gold,
+                        },
+                        '& .MuiRating-iconEmpty': {
+                          color: alpha(BRAND_COLORS.gold, 0.3),
+                        },
+                      }}
                     />
-                    <Typography variant="caption" sx={{ ml: 1, fontWeight: 'bold' }}>
-                      {product.ayniRating} Ayni
+                    <Typography variant="caption" sx={{ ml: 0.8, fontWeight: 500, fontSize: '0.7rem' }}>
+                      {product.reciprocidadRating} Reciprocidad
                     </Typography>
                   </Box>
 
@@ -192,14 +248,15 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                     <Typography
                       variant="h6"
                       sx={{
-                        fontWeight: 'bold',
-                        color: 'primary.main',
+                        fontWeight: 700,
+                        color: BRAND_COLORS.deepPurple,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 0.5
+                        gap: 0.3,
+                        fontSize: '1.15rem',
                       }}
                     >
-                      <AttachMoneyIcon fontSize="small" />
+                      <AttachMoneyIcon sx={{ fontSize: 18 }} />
                       {safeToLocaleString(product.price, 0, 'es-CO')}
                     </Typography>
 
@@ -207,14 +264,22 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
                       label={product.category}
                       size="small"
                       variant="outlined"
-                      sx={{ borderColor: 'primary.main', color: 'primary.main' }}
+                      sx={{
+                        borderColor: BRAND_COLORS.deepBlue,
+                        color: BRAND_COLORS.deepBlue,
+                        fontSize: '0.7rem',
+                        borderRadius: '3px',
+                        '& .MuiChip-label': {
+                          px: 0.8,
+                        },
+                      }}
                     />
                   </Box>
 
                   <Typography
                     variant="caption"
                     color="text.secondary"
-                    sx={{ mt: 1, display: 'block' }}
+                    sx={{ mt: 0.8, display: 'block', fontSize: '0.7rem' }}
                   >
                     Por: {product.seller}
                   </Typography>

@@ -1,7 +1,7 @@
 /* ===============================================================================
    🧠 GUARDIAN INTELLIGENT LAYOUT SYSTEM - COOMUNITY SUPERAPP
    Sistema de diseño adaptativo e inteligente basado en principios Guardian
-   Layout que se auto-organiza según importancia de contenido y filosofía Ayni
+   Layout que se auto-organiza según importancia de contenido y filosofía Reciprocidad
    =============================================================================== */
 
 /* ===== 🎯 LAYOUT TOKENS GUARDIAN - PROPORCIONES SAGRADAS ===== */
@@ -222,10 +222,10 @@
   opacity: 0.9;
 }
 
-/* ===== 📊 LAYOUT ESPECÍFICO PARA MÉTRICAS AYNI ===== */
+/* ===== 📊 LAYOUT ESPECÍFICO PARA MÉTRICAS RECIPROCIDAD ===== */
 
 /* Contenedor principal de métricas */
-.ayni-metrics-layout {
+.reciprocidad-metrics-layout {
   display: grid;
   grid-template-areas:
     "percentage percentage"
@@ -241,7 +241,7 @@
 }
 
 /* Porcentaje principal */
-.ayni-percentage-area {
+.reciprocidad-percentage-area {
   grid-area: percentage;
   display: flex;
   flex-direction: column;
@@ -253,8 +253,8 @@
   position: relative;
 }
 
-/* Balance Ayni */
-.ayni-balance-area {
+/* Balance Reciprocidad */
+.reciprocidad-balance-area {
   grid-area: balance;
   padding: var(--space-medium);
   background: var(--guardian-tierra-50);
@@ -263,7 +263,7 @@
 }
 
 /* Progreso */
-.ayni-progress-area {
+.reciprocidad-progress-area {
   grid-area: progress;
   padding: var(--space-medium);
   background: var(--guardian-agua-50);
@@ -272,7 +272,7 @@
 }
 
 /* Detalles adicionales */
-.ayni-details-area {
+.reciprocidad-details-area {
   grid-area: details;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -287,7 +287,7 @@
   display: grid;
   grid-template-areas:
     "welcome welcome welcome"
-    "ayni wallet quick-actions"
+    "reciprocidad wallet quick-actions"
     "modules modules modules"
     "insights notifications feed";
   grid-template-columns: 2fr 1fr 1fr;
@@ -301,7 +301,7 @@
   .home-layout {
     grid-template-areas:
       "welcome welcome"
-      "ayni wallet"
+      "reciprocidad wallet"
       "quick-actions quick-actions"
       "modules modules"
       "insights notifications"
@@ -315,7 +315,7 @@
   .home-layout {
     grid-template-areas:
       "welcome"
-      "ayni"
+      "reciprocidad"
       "wallet"
       "quick-actions"
       "modules"

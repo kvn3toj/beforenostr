@@ -33,20 +33,20 @@ Tarea: "Implementa el módulo Marketplace (GMP) completo con productos y servici
 Contexto:
 - Marketplace = GMP (Gamified Match Place)
 - Debe manejar tanto productos físicos como servicios
-- Basado en principios de Ayni (reciprocidad justa)
+- Basado en principios de Reciprocidad (reciprocidad justa)
 - Integración con sistema de Méritos para confianza
 
 Componentes necesarios:
 - ProductServiceListing
 - MarketplaceSearch
-- AyniCalculator
+- ReciprocidadCalculator
 - TrustMeritSystem
 - TransactionFlow
 
 Características:
 - Filtros por tipo (producto/servicio)
 - Sistema de confianza basado en Méritos
-- Cálculo automático de Ayni
+- Cálculo automático de Reciprocidad
 - Integration con wallet de Lükas
 ```
 
@@ -138,7 +138,7 @@ Features:
 
 2. **Implementar Marketplace** (Tarea #2)  
    - Funcionalidad core de intercambio de valor
-   - Demuestra principios de Ayni en acción
+   - Demuestra principios de Reciprocidad en acción
 
 3. **Optimizar ÜPlay** (Tarea #3)
    - Experiencia de usuario diferenciada

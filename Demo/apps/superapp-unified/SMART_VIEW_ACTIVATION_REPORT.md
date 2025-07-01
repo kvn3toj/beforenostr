@@ -103,13 +103,13 @@ const [useSmartInterface, setUseSmartInterface] = useState(true); // ✅ ACTIVA 
 └─────────────────────────────────────────────────┘
 
 ┌─ PrimaryDashboard (FOCO TOTAL) ──────────────┐
-├─ • Balance Ayni HERO (3rem, gradiente)      │
+├─ • Balance Reciprocidad HERO (3rem, gradiente)      │
 ├─ • Insights inteligentes generados          │
 ├─ • Progressive disclosure optimizado        │
 └─────────────────────────────────────────────────┘
 
 ┌─ SmartActions (CONTEXTUALES) ────────────────┐
-├─ • Solo 3 acciones según balance Ayni       │
+├─ • Solo 3 acciones según balance Reciprocidad       │
 ├─ • Algoritmo ML de recomendación            │
 ├─ • Urgency indicators visuales              │
 └─────────────────────────────────────────────────┘
@@ -146,10 +146,10 @@ const getSmartGreeting = (userName, balance, level) => {
 ### **2. Primary Action Algorithm:**
 ```typescript
 const primaryAction = useMemo(() => {
-  const balance = normalizedGameData.balanceAyni;
+  const balance = normalizedGameData.balanceReciprocidad;
   
   if (balance < 60) return {
-    label: 'Equilibrar Ayni',
+    label: 'Equilibrar Reciprocidad',
     onClick: () => navigate('/marketplace'),
     icon: <AutoAwesome />,
     urgency: 'high'
@@ -168,7 +168,7 @@ const primaryAction = useMemo(() => {
     icon: <Groups />,
     urgency: 'medium'
   };
-}, [normalizedGameData.balanceAyni, navigate]);
+}, [normalizedGameData.balanceReciprocidad, navigate]);
 ```
 
 ### **3. Smart Actions Selection:**
@@ -193,7 +193,7 @@ if (balance < 0.4) {
 const calculateRelevanceScore = (module, balance, elementos) => {
   let score = 0;
   
-  // Factor 1: Balance Ayni crítico (40% peso)
+  // Factor 1: Balance Reciprocidad crítico (40% peso)
   if (module.id === 'marketplace' && balance < 0.6) score += 40;
   
   // Factor 2: Elemento dominante (25% peso)
@@ -247,7 +247,7 @@ const calculateRelevanceScore = (module, balance, elementos) => {
 ## 🔧 **NAVEGACIÓN POR TECLADO ACTIVA**
 
 ### **Shortcuts Implementados:**
-- **Alt + 1:** Ir a Balance Ayni (Smart Header)
+- **Alt + 1:** Ir a Balance Reciprocidad (Smart Header)
 - **Alt + 2:** Ir a Acciones Recomendadas (Smart Actions)
 - **Alt + 3:** Ir a Módulos (Module Focus)
 - **Escape:** Cerrar modales/overlays
@@ -284,7 +284,7 @@ const calculateRelevanceScore = (module, balance, elementos) => {
 
 ### **1. Contexto Inteligente:**
 - **Saludo dinámico** según hora del día y balance
-- **Primary action** cambia automáticamente según balance Ayni
+- **Primary action** cambia automáticamente según balance Reciprocidad
 - **Insights generados** basados en datos del usuario
 
 ### **2. Progressive Disclosure:**

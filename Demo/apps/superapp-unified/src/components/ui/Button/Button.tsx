@@ -11,47 +11,47 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * Visual variant of the button
    */
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'success' | 'warning' | 'error' | 'gold';
-  
+
   /**
    * Size of the button
    */
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  
+
   /**
    * Whether the button is in a loading state
    */
   loading?: boolean;
-  
+
   /**
    * Icon to display before the text
    */
   leftIcon?: React.ReactNode;
-  
+
   /**
    * Icon to display after the text
    */
   rightIcon?: React.ReactNode;
-  
+
   /**
    * Whether the button should take full width
    */
   fullWidth?: boolean;
-  
+
   /**
    * Whether the button should have rounded corners
    */
   rounded?: boolean;
-  
+
   /**
    * CoomÜnity-specific animation
    */
   animation?: 'none' | 'hover-lift' | 'hover-glow' | 'bounce' | 'wiggle';
-  
+
   /**
    * Additional CSS classes
    */
   className?: string;
-  
+
   /**
    * Children content
    */
@@ -62,16 +62,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 /**
  * CoomÜnity Button Component
- * 
+ *
  * A comprehensive button component following the CoomÜnity design system.
  * Supports multiple variants, sizes, states, and accessibility features.
- * 
+ *
  * @example
  * ```tsx
  * <Button variant="primary" size="md" onClick={handleClick}>
  *   Click me
  * </Button>
- * 
+ *
  * <Button variant="outline" leftIcon={<PlusIcon />} loading>
  *   Add Item
  * </Button>
@@ -96,35 +96,35 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     // ===== COMPUTED CLASSES =====
-    
+
     const buttonClasses = cn(
       // Base classes from design system
       getButtonClasses(variant, size),
-      
+
       // Full width
       fullWidth && 'w-full',
-      
+
       // Rounded corners
       rounded && 'rounded-full',
-      
+
       // Animation classes
       animation === 'hover-lift' && 'coomunity-hover-lift',
       animation === 'hover-glow' && 'hover:shadow-coomunity-glow transition-shadow duration-200',
       animation === 'bounce' && 'hover:animate-bounce-soft',
       animation === 'wiggle' && 'hover:animate-wiggle',
-      
+
       // Loading state
       loading && 'cursor-wait',
-      
+
       // Disabled state
       (disabled || loading) && 'opacity-50 cursor-not-allowed',
-      
+
       // Custom classes
       className
     );
 
     // ===== LOADING SPINNER =====
-    
+
     const LoadingSpinner = () => (
       <svg
         className="animate-spin h-4 w-4"
@@ -149,7 +149,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     // ===== RENDER =====
-    
+
     return (
       <button
         ref={ref}
@@ -165,7 +165,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : leftIcon ? (
           <span className="mr-2 flex-shrink-0">{leftIcon}</span>
         ) : null}
-        
+
         {/* Button Content */}
         {children && (
           <span className={cn(
@@ -175,7 +175,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {children}
           </span>
         )}
-        
+
         {/* Right Icon */}
         {rightIcon && !loading && (
           <span className="ml-2 flex-shrink-0">{rightIcon}</span>
@@ -208,33 +208,33 @@ export const GoldButton = forwardRef<HTMLButtonElement, Omit<ButtonProps, 'varia
 GoldButton.displayName = 'GoldButton';
 
 /**
- * Ayni Button - For reciprocity actions
+ * Reciprocidad Button - For reciprocity actions
  */
-export const AyniButton = forwardRef<HTMLButtonElement, Omit<ButtonProps, 'variant' | 'animation'>>(
+export const ReciprocidadButton = forwardRef<HTMLButtonElement, Omit<ButtonProps, 'variant' | 'animation'>>(
   (props, ref) => (
-    <Button 
-      ref={ref} 
-      variant="primary" 
+    <Button
+      ref={ref}
+      variant="primary"
       animation="bounce"
       className="bg-gradient-to-r from-coomunity-500 to-coomunity-600 hover:from-coomunity-600 hover:to-coomunity-700"
-      {...props} 
+      {...props}
     />
   )
 );
 
-AyniButton.displayName = 'AyniButton';
+ReciprocidadButton.displayName = 'ReciprocidadButton';
 
 /**
  * Mëritos Button - For merit-based actions
  */
 export const MeritosButton = forwardRef<HTMLButtonElement, Omit<ButtonProps, 'variant'>>(
   (props, ref) => (
-    <Button 
-      ref={ref} 
-      variant="gold" 
+    <Button
+      ref={ref}
+      variant="gold"
       animation="hover-glow"
       className="animate-meritos-count"
-      {...props} 
+      {...props}
     />
   )
 );
@@ -246,12 +246,12 @@ MeritosButton.displayName = 'MeritosButton';
  */
 export const OndasButton = forwardRef<HTMLButtonElement, Omit<ButtonProps, 'variant'>>(
   (props, ref) => (
-    <Button 
-      ref={ref} 
-      variant="outline" 
+    <Button
+      ref={ref}
+      variant="outline"
       animation="hover-glow"
       className="border-info-500 text-info-600 hover:bg-info-50 animate-ondas-ripple"
-      {...props} 
+      {...props}
     />
   )
 );
@@ -261,5 +261,3 @@ OndasButton.displayName = 'OndasButton';
 // ===== EXPORTS =====
 
 export default Button;
-
-export type { ButtonProps }; 

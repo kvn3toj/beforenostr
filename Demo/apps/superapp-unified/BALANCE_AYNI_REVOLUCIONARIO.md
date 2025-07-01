@@ -1,8 +1,8 @@
-# 🚀 BALANCE AYNI REVOLUCIONARIO - WIDGET TRANSFORMADO
+# 🚀 BALANCE RECIPROCIDAD REVOLUCIONARIO - WIDGET TRANSFORMADO
 
 ## ✨ **TRANSFORMACIÓN TOTAL COMPLETADA**
 
-He creado una versión **completamente revolucionaria** del widget "Tu Balance Ayni" que es infinitamente más atractiva, moderna y funcional que la versión original.
+He creado una versión **completamente revolucionaria** del widget "Tu Balance Reciprocidad" que es infinitamente más atractiva, moderna y funcional que la versión original.
 
 ### 🎯 **ANTES vs DESPUÉS - Comparación Dramática**
 
@@ -43,7 +43,7 @@ background: conic-gradient(from {animationPhase}deg,
 **Características:**
 
 - **Rotación continua** a 20s por ciclo
-- **Balance Ayni central** con tipografía gradiente
+- **Balance Reciprocidad central** con tipografía gradiente
 - **Glassmorphism** en el interior
 - **Efectos de pulso** y glow dinámicos
 
@@ -83,14 +83,14 @@ const y = Math.sin((angle * Math.PI) / 180) * radius;
 
 ```css
 /* Barra de progreso con efecto de onda */
-.ayni-progress-bar .MuiLinearProgress-bar::after {
+.reciprocidad-progress-bar .MuiLinearProgress-bar::after {
   background: linear-gradient(
     90deg,
     transparent 0%,
     rgba(255, 255, 255, 0.3) 50%,
     transparent 100%
   );
-  animation: ayni-energy-wave 2s ease-in-out infinite;
+  animation: reciprocidad-energy-wave 2s ease-in-out infinite;
 }
 ```
 
@@ -119,12 +119,12 @@ const y = Math.sin((angle * Math.PI) / 180) * radius;
 ```css
 :root {
   /* Elementos naturales */
-  --ayni-fire: #ff6b35 /* Fuego - Energía y pasión */ --ayni-water: #00bcd4
-    /* Agua - Fluidez y adaptación */ --ayni-earth: #66bb6a
-    /* Tierra - Estabilidad */ --ayni-air: #ffd54f /* Aire - Comunicación */
-    /* Métricas especiales */ --ayni-power: #9c27b0
-    /* Poder - Púrpura místico */ --ayni-love: #e91e63
-    /* Amor - Rosa vibrante */ --ayni-balance: #00bcd4
+  --reciprocidad-fire: #ff6b35 /* Fuego - Energía y pasión */ --reciprocidad-water: #00bcd4
+    /* Agua - Fluidez y adaptación */ --reciprocidad-earth: #66bb6a
+    /* Tierra - Estabilidad */ --reciprocidad-air: #ffd54f /* Aire - Comunicación */
+    /* Métricas especiales */ --reciprocidad-power: #9c27b0
+    /* Poder - Púrpura místico */ --reciprocidad-love: #e91e63
+    /* Amor - Rosa vibrante */ --reciprocidad-balance: #00bcd4
     /* Balance - Cian espiritual */;
 }
 ```
@@ -133,13 +133,13 @@ const y = Math.sin((angle * Math.PI) / 180) * radius;
 
 ```css
 /* Gradientes para cada elemento */
---ayni-fire: linear-gradient(135deg, #ff6b35 0%, #ff8a65 100%);
---ayni-water: linear-gradient(135deg, #00bcd4 0%, #4fc3f7 100%);
---ayni-earth: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
---ayni-air: linear-gradient(135deg, #ffd54f 0%, #ffeb3b 100%);
+--reciprocidad-fire: linear-gradient(135deg, #ff6b35 0%, #ff8a65 100%);
+--reciprocidad-water: linear-gradient(135deg, #00bcd4 0%, #4fc3f7 100%);
+--reciprocidad-earth: linear-gradient(135deg, #66bb6a 0%, #81c784 100%);
+--reciprocidad-air: linear-gradient(135deg, #ffd54f 0%, #ffeb3b 100%);
 
 /* Fondo místico */
---ayni-bg-primary: linear-gradient(
+--reciprocidad-bg-primary: linear-gradient(
   135deg,
   rgba(10, 14, 39, 0.95) 0%,
   rgba(26, 31, 58, 0.9) 50%,
@@ -154,26 +154,26 @@ const y = Math.sin((angle * Math.PI) / 180) * radius;
 ### ⚡ **Animaciones Principales:**
 
 1. **`rotate-continuous`** - Rotación del orb central (20s)
-2. **`ayni-orb-pulse`** - Pulso del orb con glow dinámico
-3. **`ayni-orbital-rotation`** - Rotación de elementos orbitales
-4. **`ayni-element-hover`** - Efecto hover con rotación
-5. **`ayni-metric-pulse`** - Pulso sutil en métricas
-6. **`ayni-gradient-flow`** - Flujo de gradientes animados
-7. **`ayni-energy-wave`** - Onda de energía en barras
-8. **`ayni-sparkle`** - Partículas mágicas flotantes
+2. **`reciprocidad-orb-pulse`** - Pulso del orb con glow dinámico
+3. **`reciprocidad-orbital-rotation`** - Rotación de elementos orbitales
+4. **`reciprocidad-element-hover`** - Efecto hover con rotación
+5. **`reciprocidad-metric-pulse`** - Pulso sutil en métricas
+6. **`reciprocidad-gradient-flow`** - Flujo de gradientes animados
+7. **`reciprocidad-energy-wave`** - Onda de energía en barras
+8. **`reciprocidad-sparkle`** - Partículas mágicas flotantes
 
 ### 🌊 **Efectos de Hover:**
 
 ```css
-.ayni-metric-card:hover {
+.reciprocidad-metric-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 40px rgba(0, 188, 212, 0.4);
   background: rgba(0, 188, 212, 0.15);
 }
 
-.ayni-orbital-element:hover {
+.reciprocidad-orbital-element:hover {
   transform: scale(1.15);
-  animation: ayni-element-hover 2s ease-in-out infinite;
+  animation: reciprocidad-element-hover 2s ease-in-out infinite;
 }
 ```
 
@@ -281,8 +281,8 @@ const advancedStats = {
 
 ---
 
-**¡El widget "Tu Balance Ayni" es ahora una experiencia COMPLETAMENTE REVOLUCIONARIA!** 🚀✨
+**¡El widget "Tu Balance Reciprocidad" es ahora una experiencia COMPLETAMENTE REVOLUCIONARIA!** 🚀✨
 
-El contraste con la versión anterior es **dramático** - hemos pasado de un widget básico a un **dashboard energético inmersivo** que realmente representa la magia y el poder del sistema Ayni de CoomÜnity.
+El contraste con la versión anterior es **dramático** - hemos pasado de un widget básico a un **dashboard energético inmersivo** que realmente representa la magia y el poder del sistema Reciprocidad de CoomÜnity.
 
 ¡Es una transformación **ESPECTACULAR**! 🌟

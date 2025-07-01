@@ -255,22 +255,22 @@ export class LetsApiService {
     totalUnitsSpent: number;
     averageRating: number;
     trustScore: number;
-    ayniBalance: number;
+    reciprocidadBalance: number;
   }> {
     const response = await apiService.get<any>(`/lets/stats/${userId}`);
     return response.data;
   }
 
   /**
-   * Obtener métricas Ayni
+   * Obtener métricas Reciprocidad
    */
-  async getAyniMetrics(userId?: string): Promise<{
-    globalAyniIndex: number;
-    userAyniBalance?: number;
-    communityAyniScore: number;
+  async getReciprocidadMetrics(userId?: string): Promise<{
+    globalReciprocidadIndex: number;
+    userReciprocidadBalance?: number;
+    communityReciprocidadScore: number;
     recommendations: string[];
   }> {
-    const url = userId ? `/lets/ayni-metrics/${userId}` : '/lets/ayni-metrics';
+    const url = userId ? `/lets/reciprocidad-metrics/${userId}` : '/lets/reciprocidad-metrics';
     const response = await apiService.get<any>(url);
     return response.data;
   }

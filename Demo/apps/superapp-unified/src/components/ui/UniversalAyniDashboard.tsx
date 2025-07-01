@@ -34,7 +34,7 @@ import {
   AllInclusive,
 } from '@mui/icons-material';
 
-import { useAyniIntelligence } from '../../hooks/useAyniIntelligence';
+import { useReciprocidadIntelligence } from '../../hooks/useReciprocidadIntelligence';
 import { CosmicThemeSwitcher, COSMIC_ELEMENTS, CosmicElement } from './CosmicThemeSwitcher';
 
 // Configuración de módulos integrados
@@ -101,14 +101,14 @@ const MODULES_CONFIG = {
   }
 } as const;
 
-interface UniversalAyniDashboardProps {
+interface UniversalReciprocidadDashboardProps {
   userId: string;
   compact?: boolean;
   showRecommendations?: boolean;
   currentModule?: keyof typeof MODULES_CONFIG;
 }
 
-export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
+export const UniversalReciprocidadDashboard: React.FC<UniversalReciprocidadDashboardProps> = ({
   userId,
   compact = false,
   showRecommendations = true,
@@ -118,32 +118,32 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
   const [selectedElement, setSelectedElement] = useState<CosmicElement>('fuego');
   const [activeView, setActiveView] = useState<'overview' | 'modules' | 'analytics'>('overview');
 
-  // Hook de inteligencia Ayni
+  // Hook de inteligencia Reciprocidad
   const {
-    data: ayniData,
+    data: reciprocidadData,
     isLoading,
     recordAction,
     applyRecommendation,
     preferences
-  } = useAyniIntelligence(userId);
+  } = useReciprocidadIntelligence(userId);
 
   // Mock data para usuario (en producción viene del backend)
   // 🔗 Usando datos reales del backend via AuthContext
   const { user } = useAuth();
   // Métricas cross-module en tiempo real
   const crossModuleMetrics = useMemo(() => {
-    if (!ayniData) return null;
+    if (!reciprocidadData) return null;
 
     return {
       totalActions: 247,
       weeklyGrowth: 23,
-      communityImpact: ayniData.communityImpact.bienComunScore,
-      nextMilestone: ayniData.personalizedInsights.nextMilestone,
+      communityImpact: reciprocidadData.communityImpact.bienComunScore,
+      nextMilestone: reciprocidadData.personalizedInsights.nextMilestone,
       activeModules: Object.keys(MODULES_CONFIG).length,
-      collaborations: ayniData.collaborationMatches.length,
-      recommendations: ayniData.recommendations.length
+      collaborations: reciprocidadData.collaborationMatches.length,
+      recommendations: reciprocidadData.recommendations.length
     };
-  }, [ayniData]);
+  }, [reciprocidadData]);
 
   // Navegar a módulo con registro de acción
   const navigateToModule = (moduleId: keyof typeof MODULES_CONFIG) => {
@@ -166,7 +166,7 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
 
   // Aplicar recomendación inteligente
   const handleRecommendationClick = (recommendationId: string) => {
-    const recommendation = ayniData?.recommendations.find(r => r.id === recommendationId);
+    const recommendation = reciprocidadData?.recommendations.find(r => r.id === recommendationId);
     if (recommendation) {
       applyRecommendation(recommendationId);
       navigateToModule(recommendation.module as keyof typeof MODULES_CONFIG);
@@ -178,7 +178,7 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
       <Box display="flex" justifyContent="center" alignItems="center" minHeight={300}>
         <CircularProgress />
         <Typography variant="h6" sx={{ ml: 2 }}>
-          Calculando tu universo Ayni...
+          Calculando tu universo Reciprocidad...
         </Typography>
       </Box>
     );
@@ -191,7 +191,7 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Box>
             <Typography variant="h4" fontWeight="bold" gutterBottom>
-              🌌 Dashboard Universal Ayni
+              🌌 Dashboard Universal Reciprocidad
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
               Centro de comando para tu viaje cósmico en CoomÜnity
@@ -202,7 +202,7 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
           <CosmicThemeSwitcher
             currentElement={selectedElement}
             onElementChange={setSelectedElement}
-            userBalance={ayniData?.ayniBalance.elements}
+            userBalance={reciprocidadData?.reciprocidadBalance.elements}
             compact={true}
             position="inline"
             showProgress={true}
@@ -225,8 +225,8 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
           
           <Card sx={{ p: 2, minWidth: 120, background: 'linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%)', color: 'white' }}>
             <Favorite />
-            <Typography variant="h6" fontWeight="bold">{mockUser.ayniScore}%</Typography>
-            <Typography variant="caption">Balance Ayni</Typography>
+            <Typography variant="h6" fontWeight="bold">{mockUser.reciprocidadScore}%</Typography>
+            <Typography variant="caption">Balance Reciprocidad</Typography>
           </Card>
           
           <Card sx={{ p: 2, minWidth: 120, background: COSMIC_ELEMENTS.ether.gradient, color: 'white' }}>
@@ -267,13 +267,13 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
         <Fade in={true}>
           <Box>
             {/* Recomendaciones inteligentes */}
-            {showRecommendations && ayniData?.recommendations && (
+            {showRecommendations && reciprocidadData?.recommendations && (
               <Card sx={{ p: 3, mb: 3, background: `linear-gradient(135deg, ${alpha(COSMIC_ELEMENTS[selectedElement].color, 0.05)} 0%, ${alpha(COSMIC_ELEMENTS[selectedElement].color, 0.1)} 100%)` }}>
                 <Typography variant="h6" fontWeight="bold" gutterBottom>
-                  🧠 Recomendaciones Inteligentes Ayni
+                  🧠 Recomendaciones Inteligentes Reciprocidad
                 </Typography>
                 <Stack spacing={2}>
-                  {ayniData.recommendations.slice(0, 3).map((rec) => (
+                  {reciprocidadData.recommendations.slice(0, 3).map((rec) => (
                     <Box
                       key={rec.id}
                       sx={{
@@ -305,7 +305,7 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
                               color={rec.priority === 'high' ? 'error' : rec.priority === 'medium' ? 'warning' : 'info'} 
                             />
                             <Typography variant="caption" color="text.secondary">
-                              {rec.estimatedTimeToComplete} min • +{rec.action.expectedImpact} Ayni
+                              {rec.estimatedTimeToComplete} min • +{rec.action.expectedImpact} Reciprocidad
                             </Typography>
                           </Stack>
                         </Box>
@@ -488,7 +488,7 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
               </Typography>
               <Typography variant="body1" color="text.secondary">
                 Aquí aparecerán métricas avanzadas, gráficos de crecimiento, 
-                patrones de uso cross-module, y predicciones de evolución Ayni.
+                patrones de uso cross-module, y predicciones de evolución Reciprocidad.
               </Typography>
               
               {/* Placeholder for charts */}
@@ -506,4 +506,4 @@ export const UniversalAyniDashboard: React.FC<UniversalAyniDashboardProps> = ({
   );
 };
 
-export default UniversalAyniDashboard;
+export default UniversalReciprocidadDashboard;

@@ -5,7 +5,7 @@
 Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity SuperApp siguiendo exactamente las especificaciones del documento `HOME_VISUAL_IMPROVEMENTS_REVIEW.md`. Las mejoras se enfocaron en:
 
 - ✅ **Reestructuración de jerarquía visual** (Sistema 3-2-1 implementado)
-- ✅ **Simplificación de componentes** (WelcomeHeader, AyniMetricsCard, ModuleCards)
+- ✅ **Simplificación de componentes** (WelcomeHeader, ReciprocidadMetricsCard, ModuleCards)
 - ✅ **Mejoras de accesibilidad** (WCAG AA compliance)
 - ✅ **Optimización de performance visual** (Gradientes reducidos, animaciones optimizadas)
 - ✅ **Sistema tipográfico jerárquico** (Implementación completa)
@@ -19,7 +19,7 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 
 **Cambios Implementados:**
 
-- ✅ Agregado `primaryAction` dinámico basado en balance Ayni
+- ✅ Agregado `primaryAction` dinámico basado en balance Reciprocidad
 - ✅ Implementada navegación por teclado (Alt+1, Alt+2, Alt+3, Escape)
 - ✅ Agregados ARIA landmarks (`role="main"`, `aria-label`)
 - ✅ Skeleton loaders optimizados con dimensiones exactas
@@ -29,7 +29,7 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 **Líneas modificadas:** ~50 líneas de código
 **Funcionalidades agregadas:**
 
-- Primary action inteligente basado en balance Ayni
+- Primary action inteligente basado en balance Reciprocidad
 - Keyboard shortcuts (Alt+1/2/3, Escape)
 - Skip links accesibles
 - ARIA landmarks completos
@@ -52,11 +52,11 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 - Estados de focus visibles
 - Navegación por teclado funcional
 
-#### 3. `src/components/home/AyniMetricsCard.tsx` ⭐ **COMPONENTE CRÍTICO**
+#### 3. `src/components/home/ReciprocidadMetricsCard.tsx` ⭐ **COMPONENTE CRÍTICO**
 
 **Cambios Implementados:**
 
-- ✅ **PRIORIDAD 1:** Balance Ayni como elemento focal (3rem, 800 weight)
+- ✅ **PRIORIDAD 1:** Balance Reciprocidad como elemento focal (3rem, 800 weight)
 - ✅ **PRIORIDAD 2:** Öndas y Mëritos agrupados (2rem, 700 weight)
 - ✅ **PRIORIDAD 3:** Detalles expandibles (progressive disclosure)
 - ✅ Botón "Ver detalles" / "Ocultar detalles"
@@ -66,7 +66,7 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 **Líneas modificadas:** Archivo completamente reescrito (~450 líneas)
 **Sistema de prioridad implementado:**
 
-1. Balance Ayni principal (hero display)
+1. Balance Reciprocidad principal (hero display)
 2. Métricas clave (Öndas + Mëritos)
 3. Detalles expandibles (elementos, contribuciones, insights)
 
@@ -95,7 +95,7 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 **Contenido Implementado:**
 
 - ✅ Paleta de colores WCAG AA compliance (contraste 4.5:1)
-- ✅ Variables CSS optimizadas (`--ayni-primary`, `--success-ayni`, etc.)
+- ✅ Variables CSS optimizadas (`--reciprocidad-primary`, `--success-reciprocidad`, etc.)
 - ✅ Escala de grises accesible (15 niveles de contraste)
 - ✅ Soporte para dark mode y high contrast
 - ✅ Gradientes simplificados (solo 2: `--gradient-primary`, `--gradient-soft`)
@@ -121,8 +121,8 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 **Líneas de código:** ~320 líneas
 **Jerarquía implementada:**
 
-- `.text-hero` (3rem, 800 weight) - Balance principal Ayni
-- `.text-h1` (2rem, 700 weight) - Nivel Ayni
+- `.text-hero` (3rem, 800 weight) - Balance principal Reciprocidad
+- `.text-h1` (2rem, 700 weight) - Nivel Reciprocidad
 - `.text-h2` (1.5rem, 600 weight) - Títulos de sección
 - `.text-body` (1rem, 400 weight) - Contenido general
 - `.text-caption` (0.875rem, 500 weight) - Métricas pequeñas
@@ -168,14 +168,14 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 
 **PRIORIDAD 1 - Información Crítica:**
 
-- ✅ Balance Ayni principal (hero display, 3rem)
+- ✅ Balance Reciprocidad principal (hero display, 3rem)
 - ✅ Saludo personalizado simplificado
 - ✅ Primary action inteligente basado en balance
 
 **PRIORIDAD 2 - Métricas Importantes:**
 
 - ✅ Öndas y Mëritos agrupados (2rem display)
-- ✅ Nivel Ayni actual
+- ✅ Nivel Reciprocidad actual
 - ✅ Notificaciones importantes
 
 **PRIORIDAD 3 - Información Contextual:**
@@ -188,7 +188,7 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 
 **Navegación por Teclado:**
 
-- ✅ `Alt + 1`: Ir a Balance Ayni
+- ✅ `Alt + 1`: Ir a Balance Reciprocidad
 - ✅ `Alt + 2`: Ir a Acciones Rápidas
 - ✅ `Alt + 3`: Ir a Módulos
 - ✅ `Escape`: Cerrar modales/overlays
@@ -266,7 +266,7 @@ Se han implementado exitosamente las mejoras visuales del Home de CoomÜnity Sup
 
 ### Cumplimiento de Objetivos
 
-- ✅ **Tiempo de comprensión** balance Ayni: < 3 segundos (**LOGRADO**)
+- ✅ **Tiempo de comprensión** balance Reciprocidad: < 3 segundos (**LOGRADO**)
 - ✅ **Score de accesibilidad**: WCAG AA compliance (**LOGRADO**)
 - ✅ **Jerarquía visual clara**: Sistema 3-2-1 implementado (**LOGRADO**)
 - ✅ **Navegación por teclado**: Completa y funcional (**LOGRADO**)
@@ -292,7 +292,7 @@ const accessibilityTests = [
 
 ```typescript
 const usabilityTests = [
-  '✅ Encontrar balance Ayni en < 3 segundos: PASADO',
+  '✅ Encontrar balance Reciprocidad en < 3 segundos: PASADO',
   '✅ Identificar próxima acción recomendada: PASADO',
   '✅ Acceder a módulo deseado en < 2 clicks: PASADO',
   '✅ Comprender estado general en < 5 segundos: PASADO',
@@ -320,7 +320,7 @@ src/styles/tokens/typography-hierarchy.css
 # Archivos modificados (compatibles con otras páginas)
 src/pages/Home.tsx
 src/components/home/WelcomeHeader.tsx
-src/components/home/AyniMetricsCard.tsx
+src/components/home/ReciprocidadMetricsCard.tsx
 src/components/home/ModuleCards.tsx
 src/styles/home-enhanced.css
 src/styles/micro-interactions.css
@@ -381,11 +381,11 @@ src/styles/micro-interactions.css
 1. **A/B Testing:**
 
    - Diferentes primary actions
-   - Variaciones de balance Ayni display
+   - Variaciones de balance Reciprocidad display
    - Módulos recomendados rotativos
 
 2. **Personalización:**
-   - Dashboard adaptativo por nivel Ayni
+   - Dashboard adaptativo por nivel Reciprocidad
    - Métricas personalizadas por usuario
    - Insights inteligentes
 
@@ -420,7 +420,7 @@ src/styles/micro-interactions.css
 ### Implementación Completada ✅
 
 - [x] ✅ Reestructuración WelcomeHeader (simplificación)
-- [x] ✅ Optimización AyniMetricsCard (sistema 3-2-1)
+- [x] ✅ Optimización ReciprocidadMetricsCard (sistema 3-2-1)
 - [x] ✅ Rediseño ModuleCards (máximo 4 módulos)
 - [x] ✅ Estados de focus accesibles
 - [x] ✅ Paleta de colores WCAG AA

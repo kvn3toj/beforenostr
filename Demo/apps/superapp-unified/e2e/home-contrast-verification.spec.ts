@@ -59,14 +59,14 @@ test.describe('🎨 Home Contrast Improvements Verification', () => {
       expect(meritosColor).toMatch(/rgb\(146,\s*64,\s*14\)|#92400e/);
     }
 
-    // Verificar métricas Ayni (verde oscuro)
-    const ayniMetric = page.locator('.metric-ayni').first();
-    if (await ayniMetric.count() > 0) {
-      const ayniColor = await ayniMetric.evaluate((el) => {
+    // Verificar métricas Reciprocidad (verde oscuro)
+    const reciprocidadMetric = page.locator('.metric-reciprocidad').first();
+    if (await reciprocidadMetric.count() > 0) {
+      const reciprocidadColor = await reciprocidadMetric.evaluate((el) => {
         return window.getComputedStyle(el).color;
       });
       // Debe ser verde oscuro para contraste 8:1+
-      expect(ayniColor).toMatch(/rgb\(20,\s*83,\s*45\)|#14532d/);
+      expect(reciprocidadColor).toMatch(/rgb\(20,\s*83,\s*45\)|#14532d/);
     }
 
     // Verificar métricas Bien Común (rojo oscuro)
@@ -227,7 +227,7 @@ test.describe('🎨 Home Contrast Improvements Verification', () => {
         textPrimary: style.getPropertyValue('--home-text-primary').trim(),
         ondasText: style.getPropertyValue('--metric-ondas-text').trim(),
         meritosText: style.getPropertyValue('--metric-meritos-text').trim(),
-        ayniText: style.getPropertyValue('--metric-ayni-text').trim(),
+        reciprocidadText: style.getPropertyValue('--metric-reciprocidad-text').trim(),
         bienComunText: style.getPropertyValue('--metric-bien-comun-text').trim(),
       };
     });
@@ -237,7 +237,7 @@ test.describe('🎨 Home Contrast Improvements Verification', () => {
     console.log(`   - Texto Principal: ${cssVariables.textPrimary} (Objetivo: #0f172a)`);
     console.log(`   - Öndas: ${cssVariables.ondasText} (Objetivo: #1e3a8a)`);
     console.log(`   - Mëritos: ${cssVariables.meritosText} (Objetivo: #92400e)`);
-    console.log(`   - Ayni: ${cssVariables.ayniText} (Objetivo: #14532d)`);
+    console.log(`   - Reciprocidad: ${cssVariables.reciprocidadText} (Objetivo: #14532d)`);
     console.log(`   - Bien Común: ${cssVariables.bienComunText} (Objetivo: #7c2d12)`);
     
     // Verificar elementos críticos

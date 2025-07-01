@@ -409,9 +409,9 @@ export const useCanTransferUnits = (userId: string, amount: number) => {
 };
 
 /**
- * Hook para obtener estadísticas de Ayni (reciprocidad) de un usuario
+ * Hook para obtener estadísticas de Reciprocidad de un usuario
  */
-export const useAyniBalance = (userId: string) => {
+export const useReciprocidadBalance = (userId: string) => {
   const { data: transactions } = useUnitsTransactions(userId);
 
   // 🛡️ SOLUCIÓN: Validación robusta de arrays para prevenir errores de filter
@@ -435,7 +435,7 @@ export const useAyniBalance = (userId: string) => {
     return {
       given: 0,
       received: 0,
-      ayniRatio: 0,
+      reciprocidadRatio: 0,
       isBalanced: false,
       recommendation: 'Cargando...'
     };
@@ -450,13 +450,13 @@ export const useAyniBalance = (userId: string) => {
     .filter((t: any) => t && t.toUserId === userId)
     .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
 
-  const ayniRatio = received > 0 ? given / received : given > 0 ? Infinity : 1;
-  const isBalanced = ayniRatio >= 0.8 && ayniRatio <= 1.2;
+  const reciprocidadRatio = received > 0 ? given / received : given > 0 ? Infinity : 1;
+  const isBalanced = reciprocidadRatio >= 0.8 && reciprocidadRatio <= 1.2;
 
   let recommendation = '';
-  if (ayniRatio < 0.8) {
-    recommendation = 'Considera ofrecer más servicios para equilibrar tu Ayni';
-  } else if (ayniRatio > 1.2) {
+  if (reciprocidadRatio < 0.8) {
+    recommendation = 'Considera ofrecer más servicios para equilibrar tu Reciprocidad';
+  } else if (reciprocidadRatio > 1.2) {
     recommendation = 'Podrías recibir más servicios de la comunidad';
   } else {
     recommendation = '¡Excelente balance de reciprocidad!';
@@ -465,8 +465,19 @@ export const useAyniBalance = (userId: string) => {
   return {
     given,
     received,
-    ayniRatio,
+    reciprocidadRatio,
     isBalanced,
     recommendation
   };
 };
+
+// ============================================================================
+// ALIAS PARA COMPATIBILIDAD CON COMPONENTES EXISTENTES
+// ============================================================================
+
+/**
+ * Alias para useReciprocidadBalance - Mantiene compatibilidad con componentes
+ * que todavía usan la terminología "Reciprocidad" en lugar de "Reciprocidad"
+ * @deprecated Use useReciprocidadBalance instead
+ */
+export const useReciprocidadBalance = useReciprocidadBalance;

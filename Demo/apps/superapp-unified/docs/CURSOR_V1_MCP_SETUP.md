@@ -111,7 +111,7 @@ En Cursor Chat, pregunta:
 
 #### **Custom MCP Servers**
 - **CoomÜnity Backend MCP**: Integración directa con nuestro NestJS API
-- **Gamification MCP**: Acceso directo a métricas de Ayni, Méritos, etc.
+- **Gamification MCP**: Acceso directo a métricas de Reciprocidad, Méritos, etc.
 
 ---
 

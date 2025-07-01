@@ -1,4 +1,5 @@
 // Demo/apps/superapp-unified/src/theme/themeConfig.ts
+import { MODULE_COLORS } from './colors';
 
 export interface ThemePalette {
   uplayPrimary: string;
@@ -18,29 +19,17 @@ export interface ThemePalette {
   loadingPlaceholderBackground: string;
 }
 
-export interface ModuleColors {
-  uplay: string;
-  superappGeneral: string;
-  marketplace: string;
-}
-
-export const moduleColors: ModuleColors = {
-  uplay: '#2563eb', // Blue
-  superappGeneral: '#5B21B6', // Violet
-  marketplace: '#059669', // Green
-};
-
 export const defaultTheme: ThemePalette = {
-  uplayPrimary: moduleColors.uplay,
+  uplayPrimary: MODULE_COLORS.uplay,
   headerBackground: '#1E1B24', // Dark violet/blue
   headerText: '#FFFFFF',
   navMenuBackground: '#110F18',
   navMenuText: '#A0A0A0',
-  navMenuItemActive: moduleColors.superappGeneral,
+  navMenuItemActive: MODULE_COLORS.social,
   mainBackground: '#111111',
   primaryText: '#FFFFFF',
   secondaryText: '#A0A0A0',
-  buttonPrimaryBackground: moduleColors.superappGeneral,
+  buttonPrimaryBackground: MODULE_COLORS.social,
   buttonPrimaryText: '#FFFFFF',
   buttonSecondaryBackground: '#333333',
   buttonSecondaryText: '#FFFFFF',
@@ -49,16 +38,16 @@ export const defaultTheme: ThemePalette = {
 };
 
 export const lightTheme: ThemePalette = {
-    uplayPrimary: moduleColors.uplay,
+    uplayPrimary: MODULE_COLORS.uplay,
     headerBackground: '#FFFFFF',
     headerText: '#111111',
     navMenuBackground: '#F0F0F0',
     navMenuText: '#333333',
-    navMenuItemActive: moduleColors.superappGeneral,
+    navMenuItemActive: MODULE_COLORS.social,
     mainBackground: '#FAFAFA',
     primaryText: '#111111',
     secondaryText: '#555555',
-    buttonPrimaryBackground: moduleColors.superappGeneral,
+    buttonPrimaryBackground: MODULE_COLORS.social,
     buttonPrimaryText: '#FFFFFF',
     buttonSecondaryBackground: '#E0E0E0',
     buttonSecondaryText: '#111111',

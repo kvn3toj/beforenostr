@@ -15,16 +15,16 @@ El error ocurrió debido a un problema de **Temporal Dead Zone** en JavaScript, 
 
 ### Causa Raíz
 
-En el archivo `src/pages/Home.tsx`, la declaración del `primaryAction` useMemo estaba posicionada **antes** de la declaración de `normalizedGameData`, pero el `primaryAction` dependía de `normalizedGameData.balanceAyni`.
+En el archivo `src/pages/Home.tsx`, la declaración del `primaryAction` useMemo estaba posicionada **antes** de la declaración de `normalizedGameData`, pero el `primaryAction` dependía de `normalizedGameData.balanceReciprocidad`.
 
 ### Código Problemático
 
 ```typescript
 // ❌ PROBLEMA: primaryAction definido antes que normalizedGameData
 const primaryAction = useMemo(() => {
-  const balance = normalizedGameData.balanceAyni; // ERROR: Variable no inicializada
+  const balance = normalizedGameData.balanceReciprocidad; // ERROR: Variable no inicializada
   // ...
-}, [normalizedGameData.balanceAyni, navigate]);
+}, [normalizedGameData.balanceReciprocidad, navigate]);
 
 // normalizedGameData definido después
 const normalizedGameData = useMemo(() => {
@@ -52,11 +52,11 @@ const normalizedGameData = useMemo(() => {
   return {
     ondas: experience,
     meritos: wisdom > 0 ? wisdom * 10 : mockDashboardData.gamification.meritos,
-    ayniLevel: gameData?.title || mockDashboardData.gamification.ayniLevel,
+    reciprocidadLevel: gameData?.title || mockDashboardData.gamification.reciprocidadLevel,
     nextLevel: mockDashboardData.gamification.nextLevel,
-    ayniProgress: Math.floor((experience / nextLevelExp) * 100) || mockDashboardData.gamification.ayniProgress,
+    reciprocidadProgress: Math.floor((experience / nextLevelExp) * 100) || mockDashboardData.gamification.reciprocidadProgress,
     bienComunContributions: mockDashboardData.gamification.bienComunContributions,
-    balanceAyni: mockDashboardData.gamification.balanceAyni,
+    balanceReciprocidad: mockDashboardData.gamification.balanceReciprocidad,
     streak: mockDashboardData.gamification.streak,
     elementos: mockDashboardData.gamification.elementos,
   };
@@ -65,20 +65,20 @@ const normalizedGameData = useMemo(() => {
 const normalizedWalletData = useMemo(() => {
   return {
     lukas: toSafeNumber(walletData?.balance, mockDashboardData.wallet.lukas),
-    ayniCredits: toSafeNumber(walletData?.ucoins, mockDashboardData.wallet.ayniCredits),
+    reciprocidadCredits: toSafeNumber(walletData?.ucoins, mockDashboardData.wallet.reciprocidadCredits),
     monthlyChange: mockDashboardData.wallet.monthlyChange,
     pendingTransactions: mockDashboardData.wallet.pendingTransactions,
-    ayniBalance: mockDashboardData.wallet.ayniBalance,
+    reciprocidadBalance: mockDashboardData.wallet.reciprocidadBalance,
   };
 }, [walletData]);
 
 // ✅ SOLUCIÓN: primaryAction definido después de normalizedGameData
 const primaryAction = useMemo(() => {
-  const balance = normalizedGameData.balanceAyni; // ✅ OK: Variable ya inicializada
+  const balance = normalizedGameData.balanceReciprocidad; // ✅ OK: Variable ya inicializada
 
   if (balance < 60) {
     return {
-      label: 'Equilibrar Ayni',
+      label: 'Equilibrar Reciprocidad',
       onClick: () => navigate('/marketplace'),
       icon: <AutoAwesome />,
     };
@@ -95,7 +95,7 @@ const primaryAction = useMemo(() => {
       icon: <Groups />,
     };
   }
-}, [normalizedGameData.balanceAyni, navigate]);
+}, [normalizedGameData.balanceReciprocidad, navigate]);
 ```
 
 ## ✅ VALIDACIÓN DE LA CORRECCIÓN
@@ -104,7 +104,7 @@ const primaryAction = useMemo(() => {
 
 1. **✅ Carga inicial del Home:** Sin errores
 2. **✅ Primary action funcional:** Botón se muestra correctamente
-3. **✅ Lógica de balance Ayni:** Acciones cambian según balance
+3. **✅ Lógica de balance Reciprocidad:** Acciones cambian según balance
 4. **✅ Navegación:** Clicks a los módulos funcionan
 5. **✅ Otras páginas:** No afectadas por el cambio
 
@@ -163,9 +163,9 @@ Para evitar futuros errores de Temporal Dead Zone:
 
 ### Funcionalidad Preservada
 
-- ✅ **Primary Action:** Funciona según balance Ayni
+- ✅ **Primary Action:** Funciona según balance Reciprocidad
 - ✅ **WelcomeHeader:** Muestra correctamente
-- ✅ **AyniMetricsCard:** Balance se calcula bien
+- ✅ **ReciprocidadMetricsCard:** Balance se calcula bien
 - ✅ **ModuleCards:** Recomendaciones funcionan
 - ✅ **Navegación:** Sin interrupciones
 

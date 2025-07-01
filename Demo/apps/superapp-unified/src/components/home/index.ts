@@ -2,7 +2,7 @@
 // Exportaciones centralizadas para una mejor organización y mantenimiento
 
 // Widget components with fixed exports
-export { AyniMetricsCard } from './AyniMetricsCard'; // ✅ AGREGADO: Export faltante
+export { ReciprocidadMetricsCard } from './ReciprocidadMetricsCard'; // ✅ AGREGADO: Export faltante
 // ❌ REMOVIDO: SystemSolarIndicator (archivo no existe)
 // ❌ REMOVIDO: SystemSolarIndicatorWrapper (archivo no existe)
 // ❌ REMOVIDO: SystemSolarMiniDashboard (archivo no existe)
@@ -19,7 +19,7 @@ export { ActiveChallengesWidget } from './ActiveChallengesWidget';
 // ❌ REMOVIDO: SidebarProgressSection (archivo no existe)
 // ❌ REMOVIDO: SidebarActivitySection (archivo no existe)
 // ❌ REMOVIDO: SidebarRecommendationsSection (archivo no existe)
-export { AyniBalanceVisualization } from './AyniBalanceVisualization';
+export { ReciprocidadBalanceVisualization } from './ReciprocidadBalanceVisualization';
 // ❌ REMOVIDO: RecentActivity (archivo no existe)
 // ❌ REMOVIDO: QuickStats (archivo no existe)
 
@@ -57,18 +57,18 @@ export interface ModuleData {
   userLevel?: string;
 }
 
-export interface AyniAction {
+export interface ReciprocidadAction {
   icon: React.ReactElement;
   label: string;
   path: string;
   color: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info';
   description: string;
-  category: 'ayni' | 'modules' | 'create';
+  category: 'reciprocidad' | 'modules' | 'create';
 }
 
 export interface NotificationData {
   id: string;
-  type: 'ayni' | 'meritos' | 'social' | 'marketplace' | 'system';
+  type: 'reciprocidad' | 'meritos' | 'social' | 'marketplace' | 'system';
   title: string;
   message: string;
   time: string;

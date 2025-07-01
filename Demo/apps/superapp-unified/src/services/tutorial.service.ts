@@ -1,6 +1,6 @@
 /**
  * 🎓 Tutorial Service - Gestión de completación de tutoriales discovery
- * 
+ *
  * Servicio específico para manejar la completación de tutoriales discovery
  * y la integración con el sistema de recompensas del backend NestJS
  */
@@ -38,7 +38,7 @@ const TUTORIAL_ENDPOINTS = {
   complete: '/tutorials/complete',
   progress: '/tutorials/progress',
   rewards: '/merits',
-  userMetrics: (userId: string) => `/users/${userId}/ayni-metrics`
+  userMetrics: (userId: string) => `/users/${userId}/reciprocidad-metrics`
 } as const;
 
 class TutorialService {
@@ -51,7 +51,7 @@ class TutorialService {
   ): Promise<TutorialCompletionResponse> {
     try {
       console.log(`🎓 TutorialService: Completing tutorial ${tutorialId}...`);
-      
+
       const payload: TutorialCompletionData = {
         tutorialId,
         completedAt: new Date(),
@@ -60,7 +60,7 @@ class TutorialService {
 
       // 1. Registrar completación del tutorial
       const completionResponse = await this.recordTutorialCompletion(payload);
-      
+
       // 2. Otorgar recompensas
       const rewards = this.calculateRewards(tutorialId, completionData.stepsCompleted, completionData.totalSteps);
       const rewardResponse = await this.awardTutorialRewards(completionData.userId, rewards);
@@ -82,7 +82,8 @@ class TutorialService {
 
     } catch (error) {
       console.error(`❌ TutorialService: Error completing tutorial ${tutorialId}:`, error);
-      throw new Error(`Failed to complete tutorial ${tutorialId}: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to complete tutorial ${tutorialId}: ${errorMessage}`);
     }
   }
 
@@ -93,16 +94,18 @@ class TutorialService {
     try {
       // Por ahora guardamos en localStorage, pero esto debería ir al backend
       const completionKey = `tutorial-completion-${data.tutorialId}`;
-      const completionRecord = {
+      const completionRecordForStorage = {
         ...data,
         completedAt: data.completedAt.toISOString()
       };
-      
-      localStorage.setItem(completionKey, JSON.stringify(completionRecord));
-      
+
+      localStorage.setItem(completionKey, JSON.stringify(completionRecordForStorage));
+
       // También guardamos un registro de todos los tutoriales completados
       const allCompletions = this.getAllCompletedTutorials();
-      allCompletions.push(completionRecord);
+      // Se pushea el objeto original `data` con el tipo Date correcto
+      allCompletions.push(data);
+      // JSON.stringify convertirá el objeto Date a string para el almacenamiento
       localStorage.setItem('tutorial-completions-all', JSON.stringify(allCompletions));
 
       console.log(`📝 Tutorial completion recorded for ${data.tutorialId}`);
@@ -110,7 +113,7 @@ class TutorialService {
 
       // 🔮 INTEGRACIÓN FUTURA CON BACKEND:
       // return await apiService.post(TUTORIAL_ENDPOINTS.complete, data);
-      
+
     } catch (error) {
       console.error('❌ Error recording tutorial completion:', error);
       throw error;
@@ -131,7 +134,7 @@ class TutorialService {
     };
 
     const baseReward = baseRewards[tutorialId] || { ondas: 10, meritos: 2 };
-    
+
     // Aplicar multiplicador de completación
     const completionMultiplier = stepsCompleted / totalSteps;
     const ondasAwarded = Math.round(baseReward.ondas * completionMultiplier);
@@ -168,9 +171,9 @@ class TutorialService {
         ondas: currentRewards.ondas + rewards.ondas,
         meritos: currentRewards.meritos + rewards.meritos
       };
-      
+
       localStorage.setItem('user-rewards', JSON.stringify(newRewards));
-      
+
       console.log(`✅ Tutorial rewards awarded successfully:`, newRewards);
       return true;
 
@@ -206,7 +209,15 @@ class TutorialService {
   getAllCompletedTutorials(): TutorialCompletionData[] {
     try {
       const stored = localStorage.getItem('tutorial-completions-all');
-      return stored ? JSON.parse(stored) : [];
+      if (!stored) {
+        return [];
+      }
+      const parsed = JSON.parse(stored) as any[];
+      // Los datos de fecha se guardan como string en JSON, se convierten de nuevo a Date.
+      return parsed.map(item => ({
+        ...item,
+        completedAt: new Date(item.completedAt)
+      }));
     } catch (error) {
       console.error('❌ Error getting completed tutorials:', error);
       return [];
@@ -233,7 +244,7 @@ class TutorialService {
     try {
       const completionKey = `tutorial-completion-${tutorialId}`;
       const stored = localStorage.getItem(completionKey);
-      
+
       if (stored) {
         const data = JSON.parse(stored);
         return {
@@ -241,7 +252,7 @@ class TutorialService {
           completedAt: data.completedAt
         };
       }
-      
+
       return { completed: false };
     } catch (error) {
       console.error(`❌ Error getting tutorial progress for ${tutorialId}:`, error);
@@ -268,13 +279,13 @@ class TutorialService {
   async syncWithBackend(userId: string): Promise<boolean> {
     try {
       console.log(`🔄 Syncing tutorial progress with backend for user ${userId}...`);
-      
+
       // 🔮 IMPLEMENTACIÓN FUTURA:
       // 1. Obtener completaciones locales
       // 2. Enviar al backend para sincronización
       // 3. Recibir estado actualizado
       // 4. Actualizar localStorage con datos del backend
-      
+
       console.log(`✅ Tutorial sync completed (mock implementation)`);
       return true;
 
@@ -293,7 +304,7 @@ class TutorialService {
         'tutorial-completions-all',
         'user-rewards'
       ];
-      
+
       // Limpiar completaciones específicas
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -301,10 +312,10 @@ class TutorialService {
           localStorage.removeItem(key);
         }
       }
-      
+
       // Limpiar otros datos
       keys.forEach(key => localStorage.removeItem(key));
-      
+
       console.log('🧹 Tutorial data cleared successfully');
     } catch (error) {
       console.error('❌ Error clearing tutorial data:', error);
@@ -314,4 +325,4 @@ class TutorialService {
 
 // 🎯 Export singleton instance
 export const tutorialService = new TutorialService();
-export default tutorialService; 
+export default tutorialService;

@@ -16,7 +16,7 @@ export interface CreateTransactionData {
   amount: number;
   currency: 'COP' | 'UC' | 'MERITOS' | 'ONDAS';
   description: string;
-  type: 'transfer' | 'payment' | 'reward' | 'ayni';
+  type: 'transfer' | 'payment' | 'reward' | 'reciprocidad';
 }
 
 export interface ExchangeData {
@@ -278,7 +278,7 @@ const mapTransactionTypeToBackend = (type: Transaction['type']): string => {
     payment: 'PAY',
     reward: 'AWARD',
     exchange: 'EXCHANGE',
-    ayni: 'PAY',
+    reciprocidad: 'PAY',
     income: 'PAY',
     expense: 'PAY',
   };
@@ -302,7 +302,7 @@ const generateMockTransactions = (): Transaction[] => {
     'transfer',
     'exchange',
     'reward',
-    'ayni',
+    'reciprocidad',
   ];
   const currencies: Transaction['currency'][] = [
     'COP',
@@ -323,7 +323,7 @@ const generateMockTransactions = (): Transaction[] => {
     'Conversión ÜCoins a pesos',
     'Transferencia de Carlos',
     'Mëritos por contribuir al Bien Común',
-    'Intercambio Ayni equilibrado',
+    'Intercambio Reciprocidad equilibrado',
     'Pago de servicios digitales',
     'Recompensa por video completado',
     'Donación a proyecto comunitario',
@@ -340,7 +340,7 @@ const generateMockTransactions = (): Transaction[] => {
   return Array.from({ length: 15 }, (_, i) => {
     const type = types[Math.floor(Math.random() * types.length)];
     const currency = currencies[Math.floor(Math.random() * currencies.length)];
-    const isPositive = ['income', 'reward', 'ayni'].includes(type);
+    const isPositive = ['income', 'reward', 'reciprocidad'].includes(type);
 
     return {
       id: `mock-tx-${i + 1}`,
@@ -361,7 +361,7 @@ const generateMockTransactions = (): Transaction[] => {
       to: !isPositive
         ? names[Math.floor(Math.random() * names.length)]
         : undefined,
-      ayniScore: Math.floor(Math.random() * 10) + 1,
+      reciprocidadScore: Math.floor(Math.random() * 10) + 1,
       bienComunContribution: Math.random() > 0.6,
       category: 'general',
       metadata:

@@ -9,6 +9,7 @@ import {
   Typography,
   CircularProgress,
   Paper,
+  useTheme,
 } from '@mui/material';
 
 // Hooks
@@ -16,20 +17,11 @@ import { useAuth } from '../contexts/AuthContext';
 
 // Widgets
 import { WelcomeWidget } from '../components/home/widgets/WelcomeWidget';
-import { AyniBalanceWidget } from '../components/home/widgets/AyniBalanceWidget';
+import { ReciprocidadBalanceWidget } from '../components/home/widgets/ReciprocidadBalanceWidget';
 import { WalletWidget } from '../components/home/widgets/WalletWidget';
 import { QuickActionsWidget } from '../components/home/widgets/QuickActionsWidget';
 import { NotificationsWidget } from '../components/home/widgets/NotificationsWidget';
 import { MainModulesWidget } from '../components/home/widgets/MainModulesWidget';
-
-// Tipos
-interface Notification {
-  id: string;
-  type: 'achievement' | 'social' | 'marketplace';
-  title: string;
-  message: string;
-  isRead: boolean;
-}
 
 // Error Boundary
 class HomePageErrorBoundary extends React.Component<
@@ -73,6 +65,7 @@ class HomePageErrorBoundary extends React.Component<
 export function HomePage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const theme = useTheme();
 
   if (!isAuthenticated) {
      return (
@@ -107,7 +100,7 @@ export function HomePage() {
 
   return (
     <HomePageErrorBoundary>
-      <Box sx={{ backgroundColor: '#f8fafc', minHeight: '100vh' }}>
+      <Box sx={{ backgroundColor: theme.palette.background.default, minHeight: '100vh' }}>
         <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 } }}>
           <Grid container spacing={{ xs: 2, md: 3 }}>
 
@@ -118,13 +111,23 @@ export function HomePage() {
                   <WelcomeWidget />
                 </Grid>
                 <Grid item xs={12}>
-                  <Paper variant="outlined" sx={{ p: {xs: 2, md: 3}, borderRadius: '16px', borderColor: '#e2e8f0', backgroundColor: 'white' }}>
+                  <Paper variant="outlined" sx={{
+                    p: {xs: 2, md: 3},
+                    borderRadius: theme.shape.borderRadius,
+                    borderColor: theme.palette.divider,
+                    backgroundColor: theme.palette.background.paper
+                  }}>
                     <MainModulesWidget />
                   </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                   <Paper variant="outlined" sx={{ p: {xs: 2, md: 3}, borderRadius: '16px', borderColor: '#e2e8f0', backgroundColor: 'white' }}>
-                    <AyniBalanceWidget />
+                   <Paper variant="outlined" sx={{
+                     p: {xs: 2, md: 3},
+                     borderRadius: theme.shape.borderRadius,
+                     borderColor: theme.palette.divider,
+                     backgroundColor: theme.palette.background.paper
+                   }}>
+                    <ReciprocidadBalanceWidget />
                    </Paper>
                 </Grid>
               </Grid>
@@ -134,17 +137,32 @@ export function HomePage() {
             <Grid item xs={12} lg={4}>
               <Grid container spacing={{ xs: 2, md: 3 }}>
                 <Grid item xs={12}>
-                  <Paper variant="outlined" sx={{ p: {xs: 2, md: 3}, borderRadius: '16px', borderColor: '#e2e8f0', backgroundColor: 'white' }}>
+                  <Paper variant="outlined" sx={{
+                    p: {xs: 2, md: 3},
+                    borderRadius: theme.shape.borderRadius,
+                    borderColor: theme.palette.divider,
+                    backgroundColor: theme.palette.background.paper
+                  }}>
                     <WalletWidget />
                   </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                  <Paper variant="outlined" sx={{ p: {xs: 2, md: 3}, borderRadius: '16px', borderColor: '#e2e8f0', backgroundColor: 'white' }}>
+                  <Paper variant="outlined" sx={{
+                    p: {xs: 2, md: 3},
+                    borderRadius: theme.shape.borderRadius,
+                    borderColor: theme.palette.divider,
+                    backgroundColor: theme.palette.background.paper
+                  }}>
                     <QuickActionsWidget />
                   </Paper>
                 </Grid>
                  <Grid item xs={12}>
-                  <Paper variant="outlined" sx={{ p: {xs: 2, md: 3}, borderRadius: '16px', borderColor: '#e2e8f0', backgroundColor: 'white' }}>
+                  <Paper variant="outlined" sx={{
+                    p: {xs: 2, md: 3},
+                    borderRadius: theme.shape.borderRadius,
+                    borderColor: theme.palette.divider,
+                    backgroundColor: theme.palette.background.paper
+                  }}>
                     <NotificationsWidget />
                   </Paper>
                 </Grid>

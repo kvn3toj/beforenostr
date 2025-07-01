@@ -61,14 +61,14 @@
   --gradient-fuego-agua: linear-gradient(135deg, var(--guardian-fuego-primary) 0%, var(--guardian-agua-primary) 100%);
   --gradient-tierra-aire: linear-gradient(135deg, var(--guardian-tierra-primary) 0%, var(--guardian-aire-primary) 100%);
   --gradient-cósmico: linear-gradient(135deg, var(--guardian-fuego-primary) 0%, var(--guardian-eter-primary) 50%, var(--guardian-aire-primary) 100%);
-  --gradient-ayni: linear-gradient(135deg, var(--guardian-agua-primary) 0%, var(--guardian-tierra-primary) 100%);
+  --gradient-reciprocidad: linear-gradient(135deg, var(--guardian-agua-primary) 0%, var(--guardian-tierra-primary) 100%);
 
   /* ===== 🎨 COLORES ESPECÍFICOS COOMUNITY ===== */
 
-  /* Ayni (Reciprocidad) - Agua + Tierra */
-  --guardian-ayni-primary: var(--guardian-agua-primary);
-  --guardian-ayni-secondary: var(--guardian-tierra-primary);
-  --guardian-ayni-gradient: var(--gradient-ayni);
+  /* Reciprocidad (Reciprocidad) - Agua + Tierra */
+  --guardian-reciprocidad-primary: var(--guardian-agua-primary);
+  --guardian-reciprocidad-secondary: var(--guardian-tierra-primary);
+  --guardian-reciprocidad-gradient: var(--gradient-reciprocidad);
 
   /* Mëritos (Reconocimientos) - Fuego + Éter */
   --guardian-meritos-primary: var(--guardian-fuego-primary);
@@ -181,8 +181,8 @@
 }
 
 /* Especialización por Tipo de Card */
-.guardian-card.ayni-card::before {
-  background: var(--guardian-ayni-gradient);
+.guardian-card.reciprocidad-card::before {
+  background: var(--guardian-reciprocidad-gradient);
 }
 
 .guardian-card.meritos-card::before {

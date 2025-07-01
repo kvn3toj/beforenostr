@@ -31,7 +31,7 @@ interface SocialPostCardWithTooltipsProps {
   post: {
     author: {
       name: string;
-      ayniScore: number;
+      reciprocidadScore: number;
       meritos: number;
       trustScore: number;
     };
@@ -39,7 +39,7 @@ interface SocialPostCardWithTooltipsProps {
       likes: number;
       comments: number;
       shares: number;
-      ayniPoints: number;
+      reciprocidadPoints: number;
     };
     metadata: {
       isBienComun: boolean;
@@ -102,7 +102,7 @@ export const SocialPostCardWithTooltips: React.FC<SocialPostCardWithTooltipsProp
             />
           </SmartTooltip>
 
-          {/* Ayni Balance with Tooltip */}
+          {/* Reciprocidad Balance with Tooltip */}
           <SmartTooltip
             concept="balance"
             userLevel={state.userLevel}
@@ -110,7 +110,7 @@ export const SocialPostCardWithTooltips: React.FC<SocialPostCardWithTooltipsProp
           >
             <Chip
               icon={<Balance sx={{ color: '#9C27B0' }} />}
-              label={`${post.author.ayniScore}% Balance`}
+              label={`${post.author.reciprocidadScore}% Balance`}
               size="small"
               sx={{
                 bgcolor: 'rgba(156, 39, 176, 0.1)',
@@ -216,9 +216,9 @@ export const SocialPostCardWithTooltips: React.FC<SocialPostCardWithTooltipsProp
             </IconButton>
           </SmartTooltip>
 
-          {/* Ayni Points with Ayni Tooltip */}
+          {/* Reciprocidad Points with Reciprocidad Tooltip */}
           <SmartTooltip
-            concept="ayni"
+            concept="reciprocidad"
             userLevel={state.userLevel}
             placement="bottom"
           >
@@ -236,7 +236,7 @@ export const SocialPostCardWithTooltips: React.FC<SocialPostCardWithTooltipsProp
             >
               <TrendingUp sx={{ color: '#E91E63', fontSize: 18 }} />
               <Typography variant="caption" sx={{ color: '#E91E63', fontWeight: 600 }}>
-                {post.engagement.ayniPoints} Ayni
+                {post.engagement.reciprocidadPoints} Reciprocidad
               </Typography>
             </Box>
           </SmartTooltip>
@@ -250,7 +250,7 @@ export const SocialPostCardWithTooltips: React.FC<SocialPostCardWithTooltipsProp
 interface SocialMetricsWithTooltipsProps {
   userStats: {
     dailyInteractions: number;
-    ayniExchanges: number;
+    reciprocidadExchanges: number;
     communityTrust: number;
     activeCircles: number;
   };
@@ -297,7 +297,7 @@ export const SocialMetricsWithTooltips: React.FC<SocialMetricsWithTooltipsProps>
           </Box>
         </SmartTooltip>
 
-        {/* Ayni Exchanges with Smart Tooltip */}
+        {/* Reciprocidad Exchanges with Smart Tooltip */}
         <SmartTooltip
           concept="exchanges"
           userLevel={state.userLevel}
@@ -318,10 +318,10 @@ export const SocialMetricsWithTooltips: React.FC<SocialMetricsWithTooltipsProps>
             }}
           >
             <Typography variant="h4" sx={{ color: '#E91E63', fontWeight: 'bold' }}>
-              {userStats.ayniExchanges}
+              {userStats.reciprocidadExchanges}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Intercambios Ayni
+              Intercambios Reciprocidad
             </Typography>
           </Box>
         </SmartTooltip>
@@ -396,7 +396,7 @@ export const SocialTooltipIntegrationDemo: React.FC = () => {
   const mockPost = {
     author: {
       name: "María González",
-      ayniScore: 85,
+      reciprocidadScore: 85,
       meritos: 127,
       trustScore: 4.7,
     },
@@ -404,7 +404,7 @@ export const SocialTooltipIntegrationDemo: React.FC = () => {
       likes: 23,
       comments: 8,
       shares: 5,
-      ayniPoints: 15,
+      reciprocidadPoints: 15,
     },
     metadata: {
       isBienComun: true,
@@ -413,7 +413,7 @@ export const SocialTooltipIntegrationDemo: React.FC = () => {
 
   const mockStats = {
     dailyInteractions: 89,
-    ayniExchanges: 23,
+    reciprocidadExchanges: 23,
     communityTrust: 85,
     activeCircles: 5,
   };

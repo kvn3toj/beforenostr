@@ -21,11 +21,11 @@ NC='\033[0m' # No Color
 # Banner principal
 show_banner() {
   echo -e "${CYAN}"
-  echo "     ⚜️ ════════════════════════════════════════════ ⚜️"
-  echo "                 🌌 GUARDIANES DIGITALES 🌌"
-  echo "               Sistema de Invocación CoomÜnity"
-  echo "     ⚜️ ════════════════════════════════════════════ ⚜️"
-  echo -e "${NC}"
+    echo "     ⚜️ ════════════════════════════════════════════ ⚜️"
+    echo "                 🌌 GUARDIANES DIGITALES 🌌"
+    echo "               Sistema de Invocación CoomÜnity"
+    echo "     ⚜️ ════════════════════════════════════════════ ⚜️"
+    echo -e "${NC}"
 }
 
 # Menú interactivo de guardianes
@@ -49,7 +49,7 @@ show_menu() {
   echo "15. ANA      - Curadora Cósmica (SDV, Archivo, Conexión)"
   echo "16. CIO      - Agente Orquestador (Visión, Estrategia)"
   echo "0.  SALIR     - Terminar sesión"
-  echo ""
+    echo ""
   echo -n "Selecciona un Guardián (1-16) o 0 para salir: "
 }
 
@@ -92,19 +92,19 @@ show_missions() {
   echo " 10. FEEDBACK_DASHBOARD   - Crear dashboard de feedback"
   echo " 11. SECURITY_AUDIT       - Revisión de seguridad y accesibilidad"
   echo " 12. OTRA                - Especificar manualmente"
-  echo ""
+    echo ""
   echo -n "Selecciona una misión (1-12): "
 }
 
 # Main loop
 show_banner
-while true; do
+    while true; do
   show_menu
   read guardian_option
   guardian=$(get_guardian_by_option $guardian_option)
   if [[ "$guardian" == "SALIR" ]]; then
     echo -e "${GREEN}¡Hasta pronto, Guardián Digital!${NC}"
-    exit 0
+                exit 0
   fi
   if [[ -z "$guardian" ]]; then
     echo -e "${RED}Opción inválida. Intenta de nuevo.${NC}"
@@ -132,8 +132,8 @@ while true; do
     *)
       echo -e "${RED}Opción de misión inválida. Intenta de nuevo.${NC}"
       continue
-      ;;
-  esac
+                ;;
+        esac
   echo -e "\n${PURPLE}▶️  Invocando a $guardian para la misión: $mission ...${NC}"
   # Aquí se puede integrar la lógica real de invocación (placeholder)
   echo -e "${CYAN}Comando ejecutado:${NC} ./scripts/invoke-guardian.sh $guardian + $mission"

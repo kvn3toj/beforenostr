@@ -105,7 +105,7 @@ export interface LetsAnalytics {
   totalUnitsCirculating: number;
   dailyTransactions: number;
   activeUsers: number;
-  ayniIndex: number;
+  reciprocidadIndex: number;
   topCategories: Array<{ name: string; count: number }>;
   transactionTrends: Array<{ date: string; count: number; volume: number }>;
   trustDistribution: Array<{ range: string; count: number }>;

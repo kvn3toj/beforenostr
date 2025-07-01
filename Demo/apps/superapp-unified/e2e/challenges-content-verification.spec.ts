@@ -54,7 +54,7 @@ test.describe('Fase A.8 - Verificación de Contenido del Módulo de Challenges',
     // Buscar términos específicos de CoomÜnity en el contenido
     const pageContent = await page.textContent('body');
     const coomUnityTerms = [
-      'Ayni', 'ayni',
+      'Reciprocidad', 'reciprocidad',
       'Innovación', 'innovación',
       'Colaboración', 'colaboración',
       'Desafío', 'desafío', 'Challenge', 'challenge',
@@ -100,12 +100,12 @@ test.describe('Fase A.8 - Verificación de Contenido del Módulo de Challenges',
         searchFound = true;
         
         // Probar escribir en el campo de búsqueda
-        await searchInput.fill('Ayni');
+        await searchInput.fill('Reciprocidad');
         await page.waitForTimeout(1000);
         
         // Verificar que el valor se escribió
         const value = await searchInput.inputValue();
-        expect(value).toBe('Ayni');
+        expect(value).toBe('Reciprocidad');
         
         console.log('✅ A.8.7 - Funcionalidad de búsqueda funciona correctamente');
         break;

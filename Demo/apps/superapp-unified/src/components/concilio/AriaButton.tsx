@@ -30,7 +30,7 @@ interface AriaButtonProps extends Omit<ButtonProps, 'variant' | 'color'> {
   element?: ElementType;
   consciousness?: ConsciousnessType;
   glowing?: boolean;
-  ayniAnimated?: boolean;
+  reciprocidadAnimated?: boolean;
 }
 
 
@@ -43,7 +43,7 @@ export const AriaButton = forwardRef<HTMLButtonElement, AriaButtonProps>(
     element,
     consciousness,
     glowing = false,
-    ayniAnimated = false,
+    reciprocidadAnimated = false,
     disabled = false,
     onClick,
     ...props
@@ -51,7 +51,7 @@ export const AriaButton = forwardRef<HTMLButtonElement, AriaButtonProps>(
 
     // ✨ Configuración de animaciones ARIA
     const ariaAnimations: MotionProps = {
-      initial: ayniAnimated ? { scale: 0.95, opacity: 0.8 } : { scale: 1 },
+      initial: reciprocidadAnimated ? { scale: 0.95, opacity: 0.8 } : { scale: 1 },
       animate: { scale: 1, opacity: 1 },
       whileHover: !disabled ? {
         scale: 1.02,

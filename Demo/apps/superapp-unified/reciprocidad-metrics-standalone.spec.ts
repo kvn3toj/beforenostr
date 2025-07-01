@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Standalone test that doesn't require authentication
-test.describe('AyniMetricsCard - Standalone Component Test', () => {
+test.describe('ReciprocidadMetricsCard - Standalone Component Test', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate directly to home page
     await page.goto('/');
@@ -32,42 +32,42 @@ test.describe('AyniMetricsCard - Standalone Component Test', () => {
     await page.waitForTimeout(2000);
   });
 
-  test('should display Ayni Metrics card structure', async ({ page }) => {
-    // Look for the main Ayni Metrics card or any metrics-related content
-    const ayniCard = page.locator('[aria-label="Tarjeta de métricas Ayni"]');
-    const metricsContent = page.locator('text=/Balance|Ayni|Öndas|Mëritos|Bien Común/i').first();
+  test('should display Reciprocidad Metrics card structure', async ({ page }) => {
+    // Look for the main Reciprocidad Metrics card or any metrics-related content
+    const reciprocidadCard = page.locator('[aria-label="Tarjeta de métricas Reciprocidad"]');
+    const metricsContent = page.locator('text=/Balance|Reciprocidad|Öndas|Mëritos|Bien Común/i').first();
     
     // Check if either the specific card or any metrics content is visible
-    const cardExists = await ayniCard.count() > 0;
+    const cardExists = await reciprocidadCard.count() > 0;
     const metricsExists = await metricsContent.count() > 0;
     
     if (cardExists) {
-      await expect(ayniCard).toBeVisible();
-      console.log('✅ Found specific Ayni Metrics card');
+      await expect(reciprocidadCard).toBeVisible();
+      console.log('✅ Found specific Reciprocidad Metrics card');
     } else if (metricsExists) {
       await expect(metricsContent).toBeVisible();
       console.log('✅ Found metrics-related content');
     } else {
       // Take a screenshot to see what's actually on the page
-      await page.screenshot({ path: 'test-results/ayni-metrics-debug.png', fullPage: true });
+      await page.screenshot({ path: 'test-results/reciprocidad-metrics-debug.png', fullPage: true });
       
       // Log the page content for debugging
       const pageContent = await page.locator('body').textContent();
       console.log('Page content:', pageContent?.substring(0, 500));
       
       // Check what elements are actually present
-      const allElements = await page.locator('*[aria-label*="metric"], *[aria-label*="Ayni"], *[aria-label*="balance"]').count();
-      console.log('Found elements with metrics/Ayni/balance labels:', allElements);
+      const allElements = await page.locator('*[aria-label*="metric"], *[aria-label*="Reciprocidad"], *[aria-label*="balance"]').count();
+      console.log('Found elements with metrics/Reciprocidad/balance labels:', allElements);
       
       // Fail with informative message
-      throw new Error('No Ayni Metrics card or metrics content found on the page');
+      throw new Error('No Reciprocidad Metrics card or metrics content found on the page');
     }
   });
 
   test('should handle basic interaction with metrics display', async ({ page }) => {
     // Look for any interactive elements related to metrics
     const interactiveElements = page.locator('button, [role="button"], [tabindex="0"]').filter({
-      hasText: /Balance|Ayni|Öndas|Mëritos|Bien|refresh|actualizar|expand|detail/i
+      hasText: /Balance|Reciprocidad|Öndas|Mëritos|Bien|refresh|actualizar|expand|detail/i
     });
     
     const elementCount = await interactiveElements.count();

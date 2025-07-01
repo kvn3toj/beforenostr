@@ -2,7 +2,7 @@
  * 👥 Página de Grupos (CoPs - Comunidades de Práctica) Mejorada
  *
  * Funcionalidades CoomÜnity:
- * - Listado de grupos con métricas Ayni
+ * - Listado de grupos con métricas Reciprocidad
  * - Sistema de reciprocidad y colaboración
  * - Herramientas avanzadas de colaboración
  * - Métricas de impacto en el Bien Común
@@ -96,7 +96,7 @@ import {
 } from '../hooks/useEnhancedGroupsData';
 
 // Componentes mejorados CoomÜnity
-import { GroupsAyniMetrics } from '../components/modules/social/components/enhanced/GroupsAyniMetrics';
+import { GroupsReciprocidadMetrics } from '../components/modules/social/components/enhanced/GroupsReciprocidadMetrics';
 import { GroupsCollaborationTools } from '../components/modules/social/components/enhanced/GroupsCollaborationTools';
 
 // Interfaces mejoradas para grupos CoomÜnity
@@ -109,12 +109,12 @@ interface EnhancedGroupFormData {
   maxMembers: number;
   rules: string;
   enfoqueBienComun: string;
-  objetivosAyni: string[];
+  objetivosReciprocidad: string[];
   especialidadesRequeridas: string[];
 }
 
 interface GroupFilterOptions {
-  ayniBalance: 'all' | 'high' | 'medium' | 'low';
+  reciprocidadBalance: 'all' | 'high' | 'medium' | 'low';
   impactLevel: 'all' | 'alto' | 'medio' | 'bajo';
   collaborationLevel:
     | 'all'
@@ -146,7 +146,7 @@ const categories = [
   'Desarrollo del Ser',
   'Comunidades de Práctica',
   'Gobernanza Consciente',
-  'Círculos de Ayni',
+  'Círculos de Reciprocidad',
   'Medicina Ancestral',
   'Permacultura y Bioconstrucción',
 ];
@@ -185,7 +185,7 @@ const GroupsPageEnhanced: React.FC = () => {
 
   // Filtros avanzados CoomÜnity
   const [filters, setFilters] = useState<GroupFilterOptions>({
-    ayniBalance: 'all',
+    reciprocidadBalance: 'all',
     impactLevel: 'all',
     collaborationLevel: 'all',
     hasProjects: null,
@@ -204,7 +204,7 @@ const GroupsPageEnhanced: React.FC = () => {
     maxMembers: 100,
     rules: '',
     enfoqueBienComun: '',
-    objetivosAyni: [],
+    objetivosReciprocidad: [],
     especialidadesRequeridas: [],
   });
 
@@ -247,14 +247,14 @@ const GroupsPageEnhanced: React.FC = () => {
       selectedCategory === 'Todos' || group.category === selectedCategory;
 
     // Filtros avanzados CoomÜnity
-    const matchesAyniBalance =
-      filters.ayniBalance === 'all' ||
-      (filters.ayniBalance === 'high' &&
-        group.ayniMetrics.ayniBalance >= 0.8) ||
-      (filters.ayniBalance === 'medium' &&
-        group.ayniMetrics.ayniBalance >= 0.6 &&
-        group.ayniMetrics.ayniBalance < 0.8) ||
-      (filters.ayniBalance === 'low' && group.ayniMetrics.ayniBalance < 0.6);
+    const matchesReciprocidadBalance =
+      filters.reciprocidadBalance === 'all' ||
+      (filters.reciprocidadBalance === 'high' &&
+        group.reciprocidadMetrics.reciprocidadBalance >= 0.8) ||
+      (filters.reciprocidadBalance === 'medium' &&
+        group.reciprocidadMetrics.reciprocidadBalance >= 0.6 &&
+        group.reciprocidadMetrics.reciprocidadBalance < 0.8) ||
+      (filters.reciprocidadBalance === 'low' && group.reciprocidadMetrics.reciprocidadBalance < 0.6);
 
     const matchesImpactLevel =
       filters.impactLevel === 'all' ||
@@ -294,8 +294,8 @@ const GroupsPageEnhanced: React.FC = () => {
       case 1: // Mis grupos
         tabFilter = group.isJoined;
         break;
-      case 2: // Grupos con alto Ayni
-        tabFilter = group.ayniMetrics.ayniBalance >= 0.8;
+      case 2: // Grupos con alto Reciprocidad
+        tabFilter = group.reciprocidadMetrics.reciprocidadBalance >= 0.8;
         break;
       case 3: // Grupos de alto impacto
         tabFilter = group.impactMetrics.categoriaImpacto === 'alto';
@@ -307,7 +307,7 @@ const GroupsPageEnhanced: React.FC = () => {
     return (
       matchesSearch &&
       matchesCategory &&
-      matchesAyniBalance &&
+      matchesReciprocidadBalance &&
       matchesImpactLevel &&
       matchesCollaborationLevel &&
       matchesProjects &&
@@ -317,14 +317,14 @@ const GroupsPageEnhanced: React.FC = () => {
     );
   });
 
-  // Manejar unirse a grupo con métricas Ayni
+  // Manejar unirse a grupo con métricas Reciprocidad
   const handleJoinGroup = useCallback(
     async (groupId: string) => {
       try {
         await joinGroupMutation.mutateAsync(groupId);
         setSnackbar({
           open: true,
-          message: '¡Te has unido al grupo y fortalecido el tejido Ayni! 🤝✨',
+          message: '¡Te has unido al grupo y fortalecido el tejido Reciprocidad! 🤝✨',
           severity: 'success',
         });
         refetchGroups();
@@ -345,7 +345,7 @@ const GroupsPageEnhanced: React.FC = () => {
       const groupCreationData: GroupCreationData = {
         ...formData,
         enfoqueBienComun: formData.enfoqueBienComun,
-        objetivosAyni: formData.objetivosAyni,
+        objetivosReciprocidad: formData.objetivosReciprocidad,
         especialidadesRequeridas: formData.especialidadesRequeridas,
       };
 
@@ -365,7 +365,7 @@ const GroupsPageEnhanced: React.FC = () => {
         maxMembers: 100,
         rules: '',
         enfoqueBienComun: '',
-        objetivosAyni: [],
+        objetivosReciprocidad: [],
         especialidadesRequeridas: [],
       });
       refetchGroups();
@@ -412,7 +412,7 @@ const GroupsPageEnhanced: React.FC = () => {
       }}
     >
       <CardContent sx={{ flexGrow: 1 }}>
-        {/* Header del grupo con indicadores Ayni */}
+        {/* Header del grupo con indicadores Reciprocidad */}
         <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
           <Avatar
             src={group.avatar}
@@ -438,8 +438,8 @@ const GroupsPageEnhanced: React.FC = () => {
               {group.type === 'public' && (
                 <PublicIcon sx={{ ml: 1, fontSize: 16 }} />
               )}
-              {group.ayniMetrics.ayniBalance >= 0.9 && (
-                <Tooltip title="Excelente balance Ayni">
+              {group.reciprocidadMetrics.reciprocidadBalance >= 0.9 && (
+                <Tooltip title="Excelente balance Reciprocidad">
                   <HandshakeIcon
                     sx={{ ml: 1, fontSize: 16, color: 'success.main' }}
                   />
@@ -547,16 +547,16 @@ const GroupsPageEnhanced: React.FC = () => {
           <Grid item xs={3}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h6" color="secondary.main">
-                {Math.round(group.ayniMetrics.ayniBalance * 100)}%
+                {Math.round(group.reciprocidadMetrics.reciprocidadBalance * 100)}%
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                Ayni
+                Reciprocidad
               </Typography>
             </Box>
           </Grid>
         </Grid>
 
-        {/* Progreso de balance Ayni */}
+        {/* Progreso de balance Reciprocidad */}
         <Box sx={{ mb: 2 }}>
           <Stack
             direction="row"
@@ -565,27 +565,27 @@ const GroupsPageEnhanced: React.FC = () => {
             sx={{ mb: 0.5 }}
           >
             <Typography variant="caption" fontWeight="bold">
-              Balance Ayni
+              Balance Reciprocidad
             </Typography>
             <Typography
               variant="caption"
               color={
-                group.ayniMetrics.ayniBalance >= 0.8
+                group.reciprocidadMetrics.reciprocidadBalance >= 0.8
                   ? 'success.main'
-                  : group.ayniMetrics.ayniBalance >= 0.6
+                  : group.reciprocidadMetrics.reciprocidadBalance >= 0.6
                     ? 'warning.main'
                     : 'error.main'
               }
             >
-              {group.ayniMetrics.ayniTrend === 'increasing' && '📈 Creciendo'}
-              {group.ayniMetrics.ayniTrend === 'stable' && '➡️ Estable'}
-              {group.ayniMetrics.ayniTrend === 'decreasing' &&
+              {group.reciprocidadMetrics.reciprocidadTrend === 'increasing' && '📈 Creciendo'}
+              {group.reciprocidadMetrics.reciprocidadTrend === 'stable' && '➡️ Estable'}
+              {group.reciprocidadMetrics.reciprocidadTrend === 'decreasing' &&
                 '📉 Necesita atención'}
             </Typography>
           </Stack>
           <LinearProgress
             variant="determinate"
-            value={group.ayniMetrics.ayniBalance * 100}
+            value={group.reciprocidadMetrics.reciprocidadBalance * 100}
             sx={{
               height: 6,
               borderRadius: 3,
@@ -704,7 +704,7 @@ const GroupsPageEnhanced: React.FC = () => {
           >
             {expandedMetrics === group.id
               ? 'Ocultar métricas'
-              : 'Ver métricas Ayni'}
+              : 'Ver métricas Reciprocidad'}
           </Button>
         </Stack>
       </CardActions>
@@ -712,20 +712,20 @@ const GroupsPageEnhanced: React.FC = () => {
       {/* Métricas expandidas */}
       {expandedMetrics === group.id && (
         <Box sx={{ px: 2, pb: 2 }}>
-          <GroupsAyniMetrics
+          <GroupsReciprocidadMetrics
             groupData={{
               id: group.id,
               name: group.name,
-              ayniBalance: group.ayniMetrics.ayniBalance,
-              ayniGiving: group.ayniMetrics.ayniGiving,
-              ayniReceiving: group.ayniMetrics.ayniReceiving,
+              reciprocidadBalance: group.reciprocidadMetrics.reciprocidadBalance,
+              reciprocidadGiving: group.reciprocidadMetrics.reciprocidadGiving,
+              reciprocidadReceiving: group.reciprocidadMetrics.reciprocidadReceiving,
               meritos: group.meritos,
               ondas: group.ondas,
               impactoBienComun: group.impactMetrics.impactoBienComun,
               nivelColaboracion: group.collaborationMetrics.nivelColaboracion,
               elementos: group.elementos,
               proyectosActivos: group.collaborationMetrics.proyectosActivos,
-              intercambiosAyni: group.ayniMetrics.ayniExchanges,
+              intercambiosReciprocidad: group.reciprocidadMetrics.reciprocidadExchanges,
               miembrosActivos: group.collaborationMetrics.miembrosActivos,
               crecimientoSemanal: Math.random() * 10,
               fechaCreacion: group.createdAt,
@@ -814,7 +814,7 @@ const GroupsPageEnhanced: React.FC = () => {
               startIcon={<TuneIcon />}
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
             >
-              Filtros Ayni
+              Filtros Reciprocidad
             </Button>
           </Stack>
 
@@ -830,13 +830,13 @@ const GroupsPageEnhanced: React.FC = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
-                      <InputLabel>Balance Ayni</InputLabel>
+                      <InputLabel>Balance Reciprocidad</InputLabel>
                       <Select
-                        value={filters.ayniBalance}
+                        value={filters.reciprocidadBalance}
                         onChange={(e) =>
-                          handleFilterChange('ayniBalance', e.target.value)
+                          handleFilterChange('reciprocidadBalance', e.target.value)
                         }
-                        label="Balance Ayni"
+                        label="Balance Reciprocidad"
                       >
                         <MenuItem value="all">Todos los niveles</MenuItem>
                         <MenuItem value="high">Alto (80%+)</MenuItem>
@@ -946,11 +946,11 @@ const GroupsPageEnhanced: React.FC = () => {
               iconPosition="start"
             />
             <Tab
-              label="Alto Ayni"
+              label="Alto Reciprocidad"
               icon={
                 <Badge
                   badgeContent={
-                    safeGroups.filter((g) => g.ayniMetrics.ayniBalance >= 0.8)
+                    safeGroups.filter((g) => g.reciprocidadMetrics.reciprocidadBalance >= 0.8)
                       .length
                   }
                   color="success"
@@ -1100,7 +1100,7 @@ const GroupsPageEnhanced: React.FC = () => {
               sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }}
             />
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              No hay círculos con alto nivel de Ayni
+              No hay círculos con alto nivel de Reciprocidad
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
               Los círculos con balance de reciprocidad superior al 80%
@@ -1117,7 +1117,7 @@ const GroupsPageEnhanced: React.FC = () => {
                 },
               }}
             >
-              Crear Círculo Ayni
+              Crear Círculo Reciprocidad
             </Button>
           </Paper>
         )}
@@ -1305,7 +1305,7 @@ const GroupsPageEnhanced: React.FC = () => {
               fullWidth
               multiline
               rows={2}
-              placeholder="Define los acuerdos de convivencia y colaboración basados en el Ayni..."
+              placeholder="Define los acuerdos de convivencia y colaboración basados en el Reciprocidad..."
             />
           </Stack>
         </DialogContent>

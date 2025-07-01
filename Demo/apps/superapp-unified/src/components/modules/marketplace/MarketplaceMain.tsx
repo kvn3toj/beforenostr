@@ -68,6 +68,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { ProductCard, ItemGrid } from './components';
 import { EnhancedMarketplaceCard } from './components';
 import { MobileMarketplaceView } from './components';
+import { EnhancedMarketplaceCardSkeleton } from './components/EnhancedMarketplaceCard.skeleton';
 import {
   useMarketplaceData,
 } from '../../../hooks/useRealBackendData';
@@ -90,6 +91,8 @@ import {
   MarketplaceSearchFilters,
 } from '../../../types/marketplace';
 import { ChatModal } from './components/ChatModal';
+import { MODULE_COLORS } from '../../../theme/colors';
+import { useGuardianColors } from '../../../components/theme/GuardianColorProvider';
 
 const marketplaceCosmicEffects = {
   enableGlow: true,
@@ -105,7 +108,7 @@ const marketplaceCosmicEffects = {
     speed: 0.3,
     opacity: 0.7,
     blur: true,
-    ayniMode: true,
+    reciprocidadMode: true,
   }
 };
 
@@ -145,7 +148,7 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
       name: sellerData.name || 'Vendedor Anónimo',
       avatar: sellerData.avatar || 'https://via.placeholder.com/150',
       isEmprendedorConfiable,
-      ayniScore: sellerData.ayniScore || Math.floor(Math.random() * 50) + 50,
+      reciprocidadScore: sellerData.reciprocidadScore || Math.floor(Math.random() * 50) + 50,
       meritos: sellerData.meritos || Math.floor(Math.random() * 1000),
     },
     stats: {
@@ -170,6 +173,7 @@ const MarketplaceMain: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
+  const { palette, getElementColor } = useGuardianColors();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const queryClient = useQueryClient();
   const [hasEntered, setHasEntered] = useState(false);
@@ -180,6 +184,62 @@ const MarketplaceMain: React.FC = () => {
     error: itemsError,
     refetch: refetchMarketplaceData,
   } = useMarketplaceData();
+
+  const [view, setView] = useState<'grid' | 'list'>('grid');
+  const [currentFilters, setCurrentFilters] = useState<Partial<MarketplaceSearchFilters>>({});
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'success' | 'error' | 'info' | 'warning'; text: string } | null>(null);
+  const [activeQuickViewItem, setActiveQuickViewItem] = useState<MarketplaceItem | null>(null);
+  const [chatModalOpen, setChatModalOpen] = useState(false);
+  const [currentItemForChat, setCurrentItemForChat] = useState<MarketplaceItem | null>(null);
+
+  const handleViewChange = (newView: 'grid' | 'list') => {
+    setView(newView);
+  };
+
+  const handleFiltersChange = useCallback((filters: Partial<MarketplaceSearchFilters>) => {
+    setCurrentFilters(prev => ({ ...prev, ...filters }));
+  }, []);
+
+  const handleQuickView = (item: MarketplaceItem) => {
+    setActiveQuickViewItem(item);
+  };
+
+  const handleFavorite = (itemId: string) => {
+    // Lógica para manejar favoritos
+    console.log(`Toggled favorite for ${itemId}`);
+  };
+
+  const handleShare = (itemId: string) => {
+    // Lógica para compartir
+    console.log(`Shared item ${itemId}`);
+  };
+
+  const handleAddToCart = (itemId: string) => {
+    // Lógica para añadir al carro
+    console.log(`Added item ${itemId} to cart`);
+  };
+
+  const handleOpenCreateModal = () => setShowCreateModal(true);
+  const handleCloseCreateModal = () => setShowCreateModal(false);
+
+  const handleCreateSuccess = () => {
+    setFeedbackMessage({ type: 'success', text: '¡Publicación creada con éxito!' });
+    handleCloseCreateModal();
+    queryClient.invalidateQueries({ queryKey: ['marketplace-items'] });
+  };
+
+  const handleOpenChatModal = (item: MarketplaceItem) => {
+    setCurrentItemForChat(item);
+    setChatModalOpen(true);
+  };
+
+  const filteredItems = useMemo(() => {
+    if (!marketplaceItemsResponse?.items) return [];
+    const items = marketplaceItemsResponse.items.map(mapItemToUIItem);
+    // Aquí se aplicaría la lógica de filtrado basada en currentFilters
+    return items;
+  }, [marketplaceItemsResponse, currentFilters]);
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ['marketplace-items'] });
@@ -202,13 +262,6 @@ const MarketplaceMain: React.FC = () => {
       }
     }
   }, [marketplaceItemsResponse, queryClient, refetchMarketplaceData]);
-
-  const [feedbackMessage, setFeedbackMessage] = useState<{
-    type: 'success' | 'error' | 'warning' | 'info';
-    text: string;
-  } | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
-  const [isRetrying, setIsRetrying] = useState(false);
 
   useEffect(() => {
     if (itemsError) {
@@ -235,21 +288,13 @@ const MarketplaceMain: React.FC = () => {
 
       setTimeout(() => setFeedbackMessage(null), 5000);
     } else if (marketplaceItemsResponse?.success) {
-      if (retryCount > 0) {
-        setFeedbackMessage({
-          type: 'success',
-          text: '✅ Conexión restaurada. Datos actualizados.'
-        });
-        setTimeout(() => setFeedbackMessage(null), 3000);
-        setRetryCount(0);
+      if (feedbackMessage && feedbackMessage.type === 'warning') {
+        setFeedbackMessage(null);
       }
     }
-  }, [itemsError, marketplaceItemsResponse, retryCount]);
+  }, [itemsError, marketplaceItemsResponse]);
 
   const handleRetry = async () => {
-    setIsRetrying(true);
-    setRetryCount(prev => prev + 1);
-
     try {
       await refetchMarketplaceData();
       setFeedbackMessage({
@@ -258,8 +303,6 @@ const MarketplaceMain: React.FC = () => {
       });
     } catch (error) {
       console.error('Error en reintento:', error);
-    } finally {
-      setIsRetrying(false);
     }
   };
 
@@ -268,25 +311,9 @@ const MarketplaceMain: React.FC = () => {
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<MarketplaceItem[]>([]);
-  const [currentFilters, setCurrentFilters] = useState<MarketplaceSearchFilters>({
-    query: '',
-    category: '',
-    priceRange: [0, 5000],
-    location: '',
-    rating: 0,
-    verified: false,
-    sortBy: 'relevance',
-    tags: [],
-    hasDiscount: false,
-  });
-  const [isSearchActive, setIsSearchActive] = useState(false);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [displayedItems, setDisplayedItems] = useState<MarketplaceItem[]>([]);
-  const [chatModalOpen, setChatModalOpen] = useState(false);
-  const [currentItemForChat, setCurrentItemForChat] = useState<MarketplaceItem | null>(null);
 
   const impactProducts = useMemo(() => {
     if (!marketplaceItemsResponse?.items) {
@@ -300,143 +327,6 @@ const MarketplaceMain: React.FC = () => {
       setDisplayedItems(marketplaceItemsResponse.items.map(mapItemToUIItem));
     }
   }, [marketplaceItemsResponse]);
-
-  const handleToggleFavorite = useCallback(
-    (itemId: string) => {
-      if (!user) return;
-      setDisplayedItems(currentItems =>
-        currentItems.map(item =>
-          item.id === itemId ? { ...item, isFavorited: !item.isFavorited } : item
-        )
-      );
-      // TODO: API call to persist favorite status
-    },
-    [user]
-  );
-
-  const handleShare = (itemId: string) => {
-    console.log('Sharing item:', itemId);
-    // Lógica para compartir aquí
-  };
-
-  const handleAddToCart = (itemId: string) => {
-    console.log('Adding to cart:', itemId);
-    // Lógica para agregar al carrito aquí
-  };
-
-  const handleOpenCreateModal = () => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    setIsCreateModalOpen(true);
-  };
-
-  const handleCloseCreateModal = () => {
-    setIsCreateModalOpen(false);
-  };
-
-  const handleCreateSuccess = () => {
-    setIsCreateModalOpen(false);
-    console.log('✅ Item creado exitosamente');
-  };
-
-  const handleSearchResults = useCallback(
-    (results: MarketplaceItem[]) => {
-      setSearchResults(results);
-      setIsSearchActive(results.length > 0 || currentFilters.query.length > 0);
-    },
-    [currentFilters.query]
-  );
-
-  const handleFiltersChange = (filters: Partial<MarketplaceSearchFilters>) => {
-    setCurrentFilters((prev) => ({
-      ...prev,
-      ...filters,
-    }));
-  };
-
-  const itemsToDisplay = useMemo(() => {
-    if (!marketplaceItemsResponse?.items) {
-      return [];
-    }
-
-    let items = marketplaceItemsResponse.items
-      .map(mapItemToUIItem)
-      .map((item: MarketplaceItem) => ({
-        ...item,
-        isFavorited: displayedItems.some(i => i.id === item.id) ? item.isFavorited : false,
-      }));
-
-    if (currentFilters.query) {
-      items = items.filter((item: MarketplaceItem) =>
-        item.title.toLowerCase().includes(currentFilters.query.toLowerCase())
-      );
-    }
-
-    if (selectedCategory) {
-      items = items.filter((item: MarketplaceItem) => item.category === selectedCategory);
-    }
-
-    if (currentFilters.verified) {
-      items = items.filter((item: MarketplaceItem) => item.seller.isEmprendedorConfiable);
-    }
-
-    switch (currentFilters.sortBy) {
-      case 'price_asc':
-        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => a.priceUSD - b.priceUSD);
-        break;
-      case 'price_desc':
-        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => b.priceUSD - a.priceUSD);
-        break;
-      case 'rating':
-        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => (b.stats.rating || 0) - (a.stats.rating || 0));
-        break;
-      case 'newest':
-         items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        break;
-      case 'trending':
-        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => {
-          if (a.stats.isPopular && !b.stats.isPopular) return -1;
-          if (!a.stats.isPopular && b.stats.isPopular) return 1;
-          return b.stats.views - a.stats.views;
-        });
-        break;
-      case 'impact':
-        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => {
-          const scoreA = a.stats.isSustainable ? 1 : 0;
-          const scoreB = b.stats.isSustainable ? 1 : 0;
-          return scoreB - scoreA;
-        });
-        break;
-      case 'ayni_score':
-        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => b.seller.ayniScore - a.seller.ayniScore);
-        break;
-      case 'consciousness': {
-        const consciousnessOrder: Record<string, number> = {
-          'SEED': 1,
-          'GROWING': 2,
-          'FLOURISHING': 3,
-          'TRANSCENDENT': 4,
-        };
-        items = [...items].sort((a: MarketplaceItem, b: MarketplaceItem) => {
-            const scoreA = consciousnessOrder[a.consciousnessLevel || 'SEED'] || 0;
-            const scoreB = consciousnessOrder[b.consciousnessLevel || 'SEED'] || 0;
-            return scoreB - scoreA;
-        });
-        break;
-      }
-      default:
-        break;
-    }
-
-    return items;
-  }, [
-    marketplaceItemsResponse,
-    displayedItems,
-    selectedCategory,
-    currentFilters,
-  ]);
 
   const marketplaceStats = {
     totalProducts: displayedItems.length,
@@ -473,110 +363,43 @@ const MarketplaceMain: React.FC = () => {
     }));
   }, [marketplaceItemsResponse]);
 
-  const handleOpenChatModal = (item: MarketplaceItem) => {
-    setCurrentItemForChat(item);
-    setChatModalOpen(true);
-  };
-
   if (isLoadingItems) {
     return (
       <RevolutionaryWidget
-        title="💧 GMP - Gamified Match Place"
+        title="🏪 GMP - Gamified Match Place"
         subtitle="Conectando con el ecosistema de intercambio consciente"
         variant="elevated"
-        element="agua"
+        element="tierra"
         cosmicEffects={marketplaceCosmicEffects}
-        cosmicIntensity="medium"
+        cosmicIntensity="subtle"
       >
         <Container maxWidth="xl" sx={{ py: 4 }}>
-          {/* 🌊 Estado de carga consciente principal */}
-          <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center' }}>
+          {/* Estado de carga consciente principal */}
+          <Box sx={{
+            mb: 6,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
             <ConsciousLoadingState
-              element="agua"
+              element="tierra"
               variant="meditation"
               size="large"
               context="marketplace"
-              showProgress={false}
+              showProgress={true}
+              message="Descubriendo tesoros del ecosistema..."
             />
           </Box>
 
-          {/* 💧 Esqueletos conscientes de productos */}
-          <Box sx={{ mb: 4 }}>
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={120}
-              sx={{
-                borderRadius: 3,
-                mb: 3,
-                background: 'linear-gradient(90deg, rgba(78, 205, 196, 0.1) 25%, rgba(78, 205, 196, 0.2) 50%, rgba(78, 205, 196, 0.1) 75%)',
-                backgroundSize: '200px 100%',
-                animation: 'shimmer 1.5s infinite'
-              }}
-            />
-
-            <Grid container spacing={3}>
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
-                  <Card
-                    elevation={0}
-                    sx={{
-                      borderRadius: 3,
-                      overflow: 'hidden',
-                      background: 'rgba(78, 205, 196, 0.02)',
-                      border: '1px solid rgba(78, 205, 196, 0.1)'
-                    }}
-                  >
-                    <Skeleton
-                      variant="rectangular"
-                      height={200}
-                      sx={{
-                        background: 'linear-gradient(90deg, rgba(78, 205, 196, 0.1) 25%, rgba(78, 205, 196, 0.2) 50%, rgba(78, 205, 196, 0.1) 75%)',
-                        backgroundSize: '200px 100%',
-                        animation: 'shimmer 1.5s infinite'
-                      }}
-                    />
-                    <CardContent>
-                      <Skeleton variant="text" width="80%" height={24} sx={{ mb: 1 }} />
-                      <Skeleton variant="text" width="60%" height={20} sx={{ mb: 2 }} />
-                      <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Skeleton variant="text" width="40%" height={20} />
-                        <Skeleton variant="circular" width={32} height={32} />
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-
-          {/* ✨ Mensaje inspirador de carga */}
-          <Box display="flex" flexDirection="column" alignItems="center" gap={2} sx={{ mt: 4 }}>
-            <Typography
-              variant="h6"
-              sx={{
-                color: '#4ECDC4',
-                fontWeight: 500,
-                textAlign: 'center',
-                textShadow: '0 0 10px rgba(78, 205, 196, 0.3)'
-              }}
-            >
-              🌊 Sincronizando con emprendedores confiables...
-            </Typography>
-            <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ maxWidth: 400 }}>
-              Conectando con productos y servicios que priorizan el <strong>Bien Común</strong> y
-              practican la <strong>Reciprocidad (Ayni)</strong> en cada intercambio.
-            </Typography>
-          </Box>
-
-          <style>
-            {`
-              @keyframes shimmer {
-                0% { background-position: -200px 0; }
-                100% { background-position: calc(200px + 100%) 0; }
-              }
-            `}
-          </style>
+          {/* Esqueletos minimalistas de productos */}
+          <Grid container spacing={3}>
+            {Array.from(new Array(8)).map((_, index) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                <EnhancedMarketplaceCardSkeleton />
+              </Grid>
+            ))}
+          </Grid>
         </Container>
       </RevolutionaryWidget>
     );
@@ -584,73 +407,101 @@ const MarketplaceMain: React.FC = () => {
 
   if (itemsError && !marketplaceItems.length) {
     return (
-      <Box sx={{ flexGrow: 1, width: '100%', bgcolor: 'background.default', color: 'text.primary' }}>
-        <Container maxWidth="md" sx={{ py: 8 }}>
-          <Card
-            elevation={0}
+      <RevolutionaryWidget
+        title="🏪 GMP - Gamified Match Place"
+        subtitle="Ecosistema de intercambio consciente"
+        variant="elevated"
+        element="tierra"
+        cosmicEffects={{}}
+      >
+        <Container maxWidth="xl" sx={{ py: 4 }}>
+          <Box
             sx={{
               p: 4,
+              borderRadius: 2,
+              backgroundColor: alpha(palette.background, 0.9),
+              border: `1px solid ${alpha(palette.divider, 0.8)}`,
               textAlign: 'center',
-              background: `linear-gradient(145deg, ${alpha(theme.palette.info.main, 0.05)}, ${alpha(theme.palette.info.main, 0.02)})`,
-              border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
-              borderRadius: 3
+              maxWidth: 600,
+              mx: 'auto',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
             }}
           >
-            <Avatar
+            <Typography
+              variant="h5"
+              component="h2"
+              gutterBottom
               sx={{
-                width: 80,
-                height: 80,
-                margin: '0 auto 16px',
-                background: `linear-gradient(145deg, ${theme.palette.info.main}, ${alpha(theme.palette.info.main, 0.8)})`,
-                fontSize: '2rem'
+                color: palette.text.primary,
+                fontWeight: 600,
+                mb: 2
               }}
             >
-              🛒
-            </Avatar>
-
-            <Typography variant="h5" fontWeight="bold" gutterBottom color="primary">
-              Marketplace en Modo Demo
+              No pudimos conectar con el Marketplace
             </Typography>
 
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 500, mx: 'auto' }}>
-              Estamos mostrando una experiencia de demostración del marketplace CoomÜnity.
-              Explora cómo funciona nuestro sistema de intercambio basado en Reciprocidad y Bien Común.
+            <Typography
+              variant="body1"
+              sx={{
+                color: palette.text.secondary,
+                mb: 3
+              }}
+            >
+              Estamos experimentando dificultades para cargar los productos y servicios.
+              Por favor, intenta nuevamente en unos momentos.
             </Typography>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
               <Button
                 variant="contained"
+                startIcon={<RefreshIcon />}
                 onClick={handleRetry}
-                disabled={isRetrying}
-                startIcon={isRetrying ? <CircularProgress size={20} /> : <RefreshIcon />}
-                sx={{ minWidth: 160 }}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  px: 3,
+                  backgroundColor: MODULE_COLORS.marketplace,
+                  '&:hover': {
+                    backgroundColor: alpha(MODULE_COLORS.marketplace, 0.9),
+                  }
+                }}
               >
-                {isRetrying ? 'Reintentando...' : 'Intentar de Nuevo'}
+                Intentar nuevamente
               </Button>
 
               <Button
                 variant="outlined"
                 onClick={() => window.location.reload()}
                 startIcon={<HomeIcon />}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  px: 3,
+                  borderColor: alpha(MODULE_COLORS.marketplace, 0.5),
+                  color: MODULE_COLORS.marketplace,
+                  '&:hover': {
+                    borderColor: MODULE_COLORS.marketplace,
+                    backgroundColor: alpha(MODULE_COLORS.marketplace, 0.05),
+                  }
+                }}
               >
-                Recargar Página
+                Recargar página
               </Button>
             </Stack>
 
-            {retryCount > 0 && (
+            {feedbackMessage && feedbackMessage.text && (
               <Alert
-                severity="info"
+                severity={feedbackMessage.type || 'info'}
                 sx={{ mt: 3, textAlign: 'left' }}
-                icon={<InfoIcon />}
               >
-                <AlertTitle>Intentos de conexión: {retryCount}</AlertTitle>
-                Continuamos en modo demo para que puedas explorar la plataforma.
-                Los datos que ves son representativos de la experiencia real.
+                {feedbackMessage.text}
               </Alert>
             )}
-          </Card>
+          </Box>
         </Container>
-      </Box>
+      </RevolutionaryWidget>
     );
   }
 
@@ -662,47 +513,138 @@ const MarketplaceMain: React.FC = () => {
     return <MarketplaceAtrium onEnter={() => setHasEntered(true)} />;
   }
 
-  // 🖥️ Layout de escritorio optimizado
   return (
+    <Box sx={{
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.default,
+      minHeight: '100vh',
+      py: { xs: 2, sm: 3, md: 4 }
+    }}>
+      <Container maxWidth="xl">
+        <Grid container spacing={{ xs: 2, md: 4 }}>
+          {!isMobile && (
+            <Grid item xs={12} md={3} lg={2.5}>
+              <Paper
+                elevation={0}
+                variant="outlined"
+                sx={{
+                  p: 2,
+                  borderRadius: theme.shape.borderRadius,
+                  borderColor: theme.palette.divider,
+                  backgroundColor: theme.palette.background.paper,
+                  position: 'sticky',
+                  top: 80,
+                }}
+              >
+                <MarketplaceFilterBar
+                  onSearch={handleFiltersChange}
+                  onOpenAdvancedFilters={() => { console.log("Open advanced filters"); }}
+                  categories={impactCategories}
+                />
+              </Paper>
+            </Grid>
+          )}
+
+          <Grid item xs={12} md={9} lg={9.5}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              justifyContent="space-between"
+              alignItems={{ xs: 'flex-start', sm: 'center' }}
+              mb={3}
+              spacing={2}
+            >
+              <Box>
+                <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+                  Mercado Consciente
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  Descubre productos y servicios que generan Bien Común.
+                </Typography>
+              </Box>
+
+              {!isMobile && (
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleOpenCreateModal}
+                    sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
+                  >
+                    Publicar
+                  </Button>
+                  <IconButton onClick={() => handleViewChange('list')}>
+                    <ViewList color={view === 'list' ? 'primary' : 'inherit'} />
+                  </IconButton>
+                  <IconButton onClick={() => handleViewChange('grid')}>
+                    <GridView color={view === 'grid' ? 'primary' : 'inherit'} />
+                  </IconButton>
+                </Stack>
+              )}
+            </Stack>
+
     <AnimatePresence>
+              {feedbackMessage && (
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <Box data-testid="marketplace-container">
-          <Container maxWidth="xl" sx={{ py: 4 }}>
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <Alert severity={feedbackMessage.type} sx={{ mb: 2 }}>
+                    {feedbackMessage.text}
+                  </Alert>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {isMobile && (
+              <Paper sx={{ p: 1, mb: 2, borderRadius: 2, borderColor: 'divider', backgroundColor: 'background.paper' }} variant="outlined">
             <MarketplaceFilterBar
+                  onSearch={handleFiltersChange}
+                  onOpenAdvancedFilters={() => { console.log("Open advanced filters"); }}
               categories={impactCategories}
-              onSearch={(filters: Partial<MarketplaceSearchFilters>) =>
-                handleFiltersChange({ ...currentFilters, ...filters })
-              }
-              onOpenAdvancedFilters={() => setShowAdvancedSearch(true)}
             />
+              </Paper>
+            )}
 
+            <Box>
+              {isLoadingItems && !itemsError ? (
+                <ConsciousLoadingState />
+              ) : (
             <ItemGrid
-              items={itemsToDisplay}
-              isLoading={isLoadingItems}
-              onToggleFavorite={handleToggleFavorite}
+                  items={filteredItems}
+                  viewMode={view}
+                  onToggleFavorite={handleFavorite}
+                  onShare={handleShare}
               onAddToCart={handleAddToCart}
-              onShare={handleShare}
               onOpenChat={handleOpenChatModal}
-              viewMode={viewMode}
+                  isLoading={isLoadingItems}
             />
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
 
-            <Fab
-              color="primary"
-              aria-label="add"
-              sx={{ position: 'fixed', bottom: 16, right: 16 }}
+      {isMobile && (
+        <Fab
+          sx={{
+            position: 'fixed',
+            bottom: 80,
+            right: 16,
+            bgcolor: 'secondary.main',
+            color: 'secondary.contrastText',
+            '&:hover': {
+              bgcolor: 'secondary.dark'
+            }
+          }}
               onClick={handleOpenCreateModal}
             >
               <AddIcon />
             </Fab>
-          </Container>
+      )}
 
           <CreateItemModal
-            open={isCreateModalOpen}
+        open={showCreateModal}
             onClose={handleCloseCreateModal}
             onSuccess={handleCreateSuccess}
           />
@@ -717,8 +659,6 @@ const MarketplaceMain: React.FC = () => {
             />
           )}
         </Box>
-      </motion.div>
-    </AnimatePresence>
   );
 };
 

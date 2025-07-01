@@ -11,52 +11,52 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
    * Visual variant of the card
    */
   variant?: 'elevated' | 'outlined' | 'ghost' | 'coomunity' | 'gold';
-  
+
   /**
    * Padding size of the card
    */
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  
+
   /**
    * Whether the card is interactive (clickable)
    */
   interactive?: boolean;
-  
+
   /**
    * Whether the card is in a loading state
    */
   loading?: boolean;
-  
+
   /**
    * Whether the card is disabled
    */
   disabled?: boolean;
-  
+
   /**
    * CoomÜnity-specific animation
    */
   animation?: 'none' | 'hover-lift' | 'hover-glow' | 'fade-in' | 'scale-in';
-  
+
   /**
    * Element type (for philosophy alignment)
    */
   element?: 'tierra' | 'agua' | 'fuego' | 'aire';
-  
+
   /**
    * Header content
    */
   header?: React.ReactNode;
-  
+
   /**
    * Footer content
    */
   footer?: React.ReactNode;
-  
+
   /**
    * Additional CSS classes
    */
   className?: string;
-  
+
   /**
    * Children content
    */
@@ -67,17 +67,17 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 /**
  * CoomÜnity Card Component
- * 
+ *
  * A comprehensive card component following the CoomÜnity design system.
  * Supports multiple variants, interactive states, and accessibility features.
- * 
+ *
  * @example
  * ```tsx
  * <Card variant="elevated" padding="md" interactive>
  *   <h3>Card Title</h3>
  *   <p>Card content goes here...</p>
  * </Card>
- * 
+ *
  * <Card variant="coomunity" element="agua" animation="hover-glow">
  *   <p>Philosophy-aligned card</p>
  * </Card>
@@ -103,38 +103,38 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     ref
   ) => {
     // ===== COMPUTED CLASSES =====
-    
+
     const cardClasses = cn(
       // Base classes from design system
       getCardClasses(variant, padding, interactive),
-      
+
       // Element-based styling
       element === 'tierra' && 'border-l-4 border-l-earth-500 bg-gradient-to-r from-earth-50 to-white',
       element === 'agua' && 'border-l-4 border-l-water-500 bg-gradient-to-r from-water-50 to-white',
       element === 'fuego' && 'border-l-4 border-l-fire-500 bg-gradient-to-r from-fire-50 to-white',
       element === 'aire' && 'border-l-4 border-l-air-500 bg-gradient-to-r from-air-50 to-white',
-      
+
       // Animation classes
       animation === 'hover-lift' && interactive && 'coomunity-hover-lift',
       animation === 'hover-glow' && interactive && 'hover:shadow-coomunity-glow transition-shadow duration-200',
       animation === 'fade-in' && 'animate-fade-in',
       animation === 'scale-in' && 'animate-scale-in',
-      
+
       // Loading state
       loading && 'animate-pulse cursor-wait',
-      
+
       // Disabled state
       disabled && 'opacity-50 cursor-not-allowed',
-      
+
       // Interactive state
       interactive && !disabled && 'cursor-pointer',
-      
+
       // Custom classes
       className
     );
 
     // ===== LOADING SKELETON =====
-    
+
     const LoadingSkeleton = () => (
       <div className="animate-pulse">
         <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -144,7 +144,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     );
 
     // ===== HANDLERS =====
-    
+
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
       if (disabled || loading) {
         event.preventDefault();
@@ -161,7 +161,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     };
 
     // ===== RENDER =====
-    
+
     return (
       <div
         ref={ref}
@@ -180,12 +180,12 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
             {header}
           </div>
         )}
-        
+
         {/* Main Content */}
         <div className="flex-1">
           {loading ? <LoadingSkeleton /> : children}
         </div>
-        
+
         {/* Footer */}
         {footer && (
           <div className="mt-4 pt-4 border-t border-gray-200">
@@ -206,13 +206,13 @@ Card.displayName = 'Card';
  */
 export const ModuleCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant' | 'interactive'>>(
   (props, ref) => (
-    <Card 
-      ref={ref} 
-      variant="elevated" 
-      interactive 
+    <Card
+      ref={ref}
+      variant="elevated"
+      interactive
       animation="hover-lift"
       className="min-h-[120px] flex flex-col justify-center items-center text-center"
-      {...props} 
+      {...props}
     />
   )
 );
@@ -220,34 +220,34 @@ export const ModuleCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant' |
 ModuleCard.displayName = 'ModuleCard';
 
 /**
- * Ayni Card - For reciprocity-related content
+ * Reciprocidad Card - For reciprocity-related content
  */
-export const AyniCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant' | 'element'>>(
+export const ReciprocidadCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant' | 'element'>>(
   (props, ref) => (
-    <Card 
-      ref={ref} 
-      variant="coomunity" 
+    <Card
+      ref={ref}
+      variant="coomunity"
       element="aire"
       animation="hover-glow"
       className="border-coomunity-300 bg-gradient-to-br from-coomunity-50 to-coomunity-100"
-      {...props} 
+      {...props}
     />
   )
 );
 
-AyniCard.displayName = 'AyniCard';
+ReciprocidadCard.displayName = 'ReciprocidadCard';
 
 /**
  * Mëritos Card - For achievement and merit content
  */
 export const MeritosCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant'>>(
   (props, ref) => (
-    <Card 
-      ref={ref} 
-      variant="gold" 
+    <Card
+      ref={ref}
+      variant="gold"
       animation="hover-glow"
       className="border-gold-300 bg-gradient-to-br from-gold-50 to-gold-100"
-      {...props} 
+      {...props}
     />
   )
 );
@@ -259,13 +259,13 @@ MeritosCard.displayName = 'MeritosCard';
  */
 export const OndasCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant' | 'element'>>(
   (props, ref) => (
-    <Card 
-      ref={ref} 
-      variant="outlined" 
+    <Card
+      ref={ref}
+      variant="outlined"
       element="agua"
       animation="hover-glow"
       className="border-info-300 bg-gradient-to-br from-info-50 to-info-100 animate-ondas-ripple"
-      {...props} 
+      {...props}
     />
   )
 );
@@ -277,13 +277,13 @@ OndasCard.displayName = 'OndasCard';
  */
 export const MarketplaceCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant' | 'interactive'>>(
   (props, ref) => (
-    <Card 
-      ref={ref} 
-      variant="elevated" 
+    <Card
+      ref={ref}
+      variant="elevated"
       interactive
       animation="hover-lift"
       className="overflow-hidden"
-      {...props} 
+      {...props}
     />
   )
 );
@@ -295,12 +295,12 @@ MarketplaceCard.displayName = 'MarketplaceCard';
  */
 export const SocialCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant'>>(
   (props, ref) => (
-    <Card 
-      ref={ref} 
-      variant="outlined" 
+    <Card
+      ref={ref}
+      variant="outlined"
       animation="fade-in"
       className="border-gray-200 hover:border-coomunity-300 transition-colors duration-200"
-      {...props} 
+      {...props}
     />
   )
 );
@@ -312,13 +312,13 @@ SocialCard.displayName = 'SocialCard';
  */
 export const StatsCard = forwardRef<HTMLDivElement, Omit<CardProps, 'variant' | 'padding'>>(
   (props, ref) => (
-    <Card 
-      ref={ref} 
-      variant="ghost" 
+    <Card
+      ref={ref}
+      variant="ghost"
       padding="lg"
       animation="scale-in"
       className="text-center bg-gradient-to-br from-gray-50 to-white border border-gray-100"
-      {...props} 
+      {...props}
     />
   )
 );
@@ -397,4 +397,4 @@ CardFooter.displayName = 'CardFooter';
 
 export default Card;
 
-export type { CardProps, CardHeaderProps, CardFooterProps }; 
+export type { CardProps, CardHeaderProps, CardFooterProps };

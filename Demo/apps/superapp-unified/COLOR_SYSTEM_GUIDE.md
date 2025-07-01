@@ -174,7 +174,7 @@ const aireColor = COOMUNITY_ELEMENTS.aire.color;         // Aire
 // Métricas de la comunidad
 const ondasColor = COOMUNITY_METRICS.ondas;              // Öndas
 const meritosColor = COOMUNITY_METRICS.meritos;          // Mëritos
-const ayniColor = COOMUNITY_METRICS.ayni;                // Ayni
+const reciprocidadColor = COOMUNITY_METRICS.reciprocidad;                // Reciprocidad
 const lukasColor = COOMUNITY_METRICS.lükas;              // Lükas
 
 // Gradientes de elementos

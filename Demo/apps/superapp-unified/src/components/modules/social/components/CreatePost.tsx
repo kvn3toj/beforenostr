@@ -46,7 +46,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
   authorName = 'Tú',
   authorAvatar = '/assets/images/avatars/current-user.jpg',
   onPostCreated,
-  placeholder = '¿Qué está pasando en tu viaje de CoomÜnity? ¡Comparte tu experiencia con Ayni!'
+  placeholder = '¿Qué está pasando en tu viaje de CoomÜnity? ¡Comparte tu experiencia con Reciprocidad!'
 }) => {
   // Estados locales
   const [content, setContent] = useState('');
@@ -274,7 +274,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
               Hashtags sugeridos para tu publicación:
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {['#CoomÜnity', '#Ayni', '#BienComún', '#Metanöia', '#Colaboración'].map((tag) => (
+              {['#CoomÜnity', '#Reciprocidad', '#BienComún', '#Metanöia', '#Colaboración'].map((tag) => (
                 <Chip
                   key={tag}
                   label={tag}

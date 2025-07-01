@@ -34,7 +34,7 @@ interface MarketplaceItem {
     name: string;
     avatar: string;
     isEmprendedorConfiable: boolean;
-    ayniScore: number;
+    reciprocidadScore: number;
     meritos: number;
   };
   stats: {
@@ -93,7 +93,7 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
       name: sellerData.name || 'Vendedor Anónimo',
       avatar: sellerData.avatar || 'https://via.placeholder.com/150',
       isEmprendedorConfiable,
-      ayniScore: sellerData.ayniScore || Math.floor(Math.random() * 50) + 50,
+      reciprocidadScore: sellerData.reciprocidadScore || Math.floor(Math.random() * 50) + 50,
       meritos: sellerData.meritos || Math.floor(Math.random() * 1000),
     },
     stats: {

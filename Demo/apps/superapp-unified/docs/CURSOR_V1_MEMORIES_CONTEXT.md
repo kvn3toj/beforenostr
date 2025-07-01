@@ -2,7 +2,7 @@
 
 ## 🎯 **Filosofía y Principios Fundamentales**
 
-### **Ayni (Reciprocidad Justa)**
+### **Reciprocidad (Reciprocidad Justa)**
 - Principio central de intercambio equilibrado
 - Base para todas las transacciones y gamificación
 - "Dar y recibir en equilibrio sagrado"
@@ -52,7 +52,7 @@
 ### **Marketplace (GMP - Gamified Match Place)**
 - **Función**: Intercambio de productos Y servicios
 - **NO es**: Solo productos o solo servicios
-- **Características**: Ayni-based, confianza por Méritos
+- **Características**: Reciprocidad-based, confianza por Méritos
 
 ### **ÜPlay (GPL - Gamified Play List)**
 - **Función**: Video player interactivo gamificado
@@ -129,7 +129,7 @@
 ### **Filosofía**
 - ❌ Diseños competitivos/adictivos
 - ❌ Priorizar eficiencia sobre ética
-- ❌ Ignorar principios de Ayni
+- ❌ Ignorar principios de Reciprocidad
 - ❌ Patterns que rompan reciprocidad
 
 ### **Código**

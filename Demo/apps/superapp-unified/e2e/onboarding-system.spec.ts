@@ -48,7 +48,7 @@ test.describe('🎮 CoomÜnity Onboarding System - Comprehensive Testing', () =>
     
     // STAGE 1: Welcome
     await expect(page.locator('text=Bienvenido a CoomÜnity')).toBeVisible();
-    await expect(page.locator('text=Ayni')).toBeVisible();
+    await expect(page.locator('text=Reciprocidad')).toBeVisible();
     await expect(page.locator('text=Bien Común')).toBeVisible();
     
     // Verificar botón de continuar

@@ -443,7 +443,7 @@ export const UPlayCosmicIntegrator: React.FC<UPlayCosmicIntegratorProps> = ({
 
   const alignWithCoomUnityPhilosophy = useCallback(() => {
     communication.alignWithPhilosophy({
-      principles: ['Ayni', 'Bien Común', 'Metanöia', 'Reciprocidad'],
+      principles: ['Reciprocidad', 'Bien Común', 'Metanöia', 'Reciprocidad'],
       values: ['Cooperación', 'Consciencia', 'Transformación'],
       elements: ['fuego', 'agua', 'tierra', 'aire', 'eter'],
     });

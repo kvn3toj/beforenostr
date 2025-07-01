@@ -26,7 +26,7 @@ El Dashboard Semántico HOME establece un **nuevo estándar industrial** para da
 - **Performance Optimization**: 3D effects with 0% impact on UX
 
 ### 🏆 **Market Differentiation**
-- **Unique Value Proposition**: Sistema Solar 3D Balance Ayni (único en industria)
+- **Unique Value Proposition**: Sistema Solar 3D Balance Reciprocidad (único en industria)
 - **Technical Excellence**: A+ (96/100) supera estándares enterprise
 - **User Satisfaction**: Dashboard intuitivo con feedback inmersivo
 - **Scalability**: Widget architecture preparada para 10x growth
@@ -108,9 +108,9 @@ import AutoAwesome from '@mui/icons-material/AutoAwesome';
 
 ```
 src/components/home/
-├── AyniBalanceVisualization.tsx          ✅ Verificado
-├── AyniMetricsCardRevolutionary.tsx      ✅ Verificado
-├── AyniMetricsCard.tsx                   ✅ Verificado
+├── ReciprocidadBalanceVisualization.tsx          ✅ Verificado
+├── ReciprocidadMetricsCardRevolutionary.tsx      ✅ Verificado
+├── ReciprocidadMetricsCard.tsx                   ✅ Verificado
 ├── PrimaryDashboard.tsx                  ✅ Verificado
 ├── WelcomeHeaderRevolutionary.tsx        ✅ Verificado
 ├── WalletOverviewRevolutionary.tsx       ✅ Verificado
@@ -118,8 +118,8 @@ src/components/home/
 ├── ModuleCardsRevolutionary.tsx          ✅ Verificado
 ├── NotificationCenterRevolutionary.tsx   ✅ Verificado
 └── widgets/                              ✅ 7 widgets verificados
-    ├── AyniBalanceFullWidget.tsx
-    └── AyniWalletWidget.tsx
+    ├── ReciprocidadBalanceFullWidget.tsx
+    └── ReciprocidadWalletWidget.tsx
 
 src/pages/
 ├── HomePage.tsx                          ✅ Verificado
@@ -191,14 +191,14 @@ text.secondary: '#5A5A5A',  // 6.54:1 ratio (AA compliant)
 
 1. **Box** (25+ usos en HOME)
 
-   - **Archivos principales**: `AyniBalanceVisualization.tsx`, `AyniMetricsCardRevolutionary.tsx`
+   - **Archivos principales**: `ReciprocidadBalanceVisualization.tsx`, `ReciprocidadMetricsCardRevolutionary.tsx`
    - **Uso principal**: Sistema solar 3D, contenedores cósmicos con perspective
    - **Patrón único**: `perspective: '1500px', transformStyle: 'preserve-3d'`
    - **Fortaleza HOME**: Efectos visuales avanzados con GPU optimization
 
 2. **Typography** (20+ usos en HOME)
 
-   - **Archivos principales**: `AyniMetricsCardRevolutionary.tsx`, `PrimaryDashboard.tsx`
+   - **Archivos principales**: `ReciprocidadMetricsCardRevolutionary.tsx`, `PrimaryDashboard.tsx`
    - **Uso principal**: Títulos cósmicos con gradientes elementales
    - **Patrón único**: `WebkitBackgroundClip: 'text'` para gradientes
    - **Fortaleza HOME**: Jerarquía visual dramática con semántica clara
@@ -220,20 +220,20 @@ text.secondary: '#5A5A5A',  // 6.54:1 ratio (AA compliant)
 5. **Tooltip** (10+ usos en HOME)
 
    - **Archivos principales**: Elementos interactivos del dashboard
-   - **Uso principal**: Información contextual de balance Ayni
+   - **Uso principal**: Información contextual de balance Reciprocidad
    - **Patrón único**: Cosmic themed tooltips con delays optimizados
    - **Fortaleza HOME**: UX informativa no intrusiva
 
 6. **Chip** (10+ usos en HOME)
 
-   - **Archivos principales**: `AyniMetricsCardRevolutionary.tsx`, status indicators
-   - **Uso principal**: Estados elementales y niveles Ayni con gradientes
+   - **Archivos principales**: `ReciprocidadMetricsCardRevolutionary.tsx`, status indicators
+   - **Uso principal**: Estados elementales y niveles Reciprocidad con gradientes
    - **Patrón único**: `background: 'linear-gradient(135deg, color1, color2)'`
    - **Fortaleza HOME**: Visual status elegante y semántico
 
 7. **LinearProgress** (8+ usos en HOME)
 
-   - **Archivos principales**: Balance Ayni y progreso elemental
+   - **Archivos principales**: Balance Reciprocidad y progreso elemental
    - **Uso principal**: Progreso de elementos (fuego, agua, tierra, aire)
    - **Patrón único**: Gradientes elementales personalizados por elemento
    - **Fortaleza HOME**: Feedback visual inmersivo y contextual
@@ -253,7 +253,7 @@ text.secondary: '#5A5A5A',  // 6.54:1 ratio (AA compliant)
    - **Fortaleza HOME**: Acciones destacadas visualmente
 
 10. **Collapse** (5+ usos en HOME)
-    - **Archivos principales**: `AyniBalanceVisualization.tsx`, expandable panels
+    - **Archivos principales**: `ReciprocidadBalanceVisualization.tsx`, expandable panels
     - **Uso principal**: Progressive disclosure de métricas detalladas
     - **Patrón único**: Smooth cosmic transitions con timing cuidadoso
     - **Fortaleza HOME**: Información jerarquizada elegante
@@ -299,7 +299,7 @@ text.secondary: '#5A5A5A',  // 6.54:1 ratio (AA compliant)
     border: '2px solid rgba(255, 107, 53, 0.4)', // ✅ Cosmic border
   }}
 >
-  <AyniPlanet3D /> {/* ✅ Sistema solar completo */}
+  <ReciprocidadPlanet3D /> {/* ✅ Sistema solar completo */}
 </Box>
 ```
 
@@ -311,19 +311,19 @@ text.secondary: '#5A5A5A',  // 6.54:1 ratio (AA compliant)
 
 #### Componentes HOME que implementan este patrón (Verificado):
 
-- `AyniBalanceVisualization.tsx` ✅
-- `AyniMetricsCardRevolutionary.tsx` ✅
+- `ReciprocidadBalanceVisualization.tsx` ✅
+- `ReciprocidadMetricsCardRevolutionary.tsx` ✅
 - `WelcomeHeaderRevolutionary.tsx` ✅
 - `WalletOverviewRevolutionary.tsx` ✅
 - `QuickActionsGridRevolutionary.tsx` ✅
-- `AyniBalanceFullWidget.tsx` ✅
-- `AyniWalletWidget.tsx` ✅
+- `ReciprocidadBalanceFullWidget.tsx` ✅
+- `ReciprocidadWalletWidget.tsx` ✅
 
 ### 🎯 **Patrón de Spacing Fibonacci HOME** (Verificado)
 
 ```typescript
 // 🏠 SISTEMA HOME: Espaciado áureo específico dashboard
-// Implementado en: AyniBalanceFullWidget.tsx, widgets HOME
+// Implementado en: ReciprocidadBalanceFullWidget.tsx, widgets HOME
 padding: {
   xs: '24px',     // Móvil - widgets compactos
   sm: '32px',     // Tablet pequeña - balance visual
@@ -349,17 +349,17 @@ borderRadius: {
 ```typescript
 // 🏠 ESPECÍFICO HOME: Gradientes del Dashboard (8+ componentes HOME)
 const homeDashboardGradients = {
-  // Balance Ayni principal (título principal) - Verificado en código
-  ayniTitle:
+  // Balance Reciprocidad principal (título principal) - Verificado en código
+  reciprocidadTitle:
     'linear-gradient(135deg, #FFD700, #FF6B35, #E91E63, #9C27B0, #00BCD4)',
 
-  // Elementos individuales (AyniBalanceVisualization.tsx) - Verificado
+  // Elementos individuales (ReciprocidadBalanceVisualization.tsx) - Verificado
   fuego: 'linear-gradient(135deg, #FF6B35 0%, #FF8A65 100%)',
   agua: 'linear-gradient(135deg, #00BCD4 0%, #4FC3F7 100%)',
   tierra: 'linear-gradient(135deg, #66BB6A 0%, #81C784 100%)',
   aire: 'linear-gradient(135deg, #FFD54F 0%, #FFEB3B 100%)',
 
-  // Fondo dashboard específico - Verificado en AyniMetricsCardRevolutionary.tsx
+  // Fondo dashboard específico - Verificado en ReciprocidadMetricsCardRevolutionary.tsx
   dashboardBackground: `
     radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.03) 0%, transparent 40%),
     radial-gradient(circle at 80% 70%, rgba(0, 188, 212, 0.03) 0%, transparent 40%),
@@ -374,9 +374,9 @@ const homeDashboardGradients = {
 
 #### 📍 **Ubicaciones específicas HOME (Verificadas)**:
 
-- `AyniBalanceVisualization.tsx`: Sistema completo de gradientes elementales ✅
-- `AyniMetricsCardRevolutionary.tsx`: Gradientes cósmicos y planetarios ✅
-- `AyniBalanceFullWidget.tsx`: Combinación de todos los gradientes ✅
+- `ReciprocidadBalanceVisualization.tsx`: Sistema completo de gradientes elementales ✅
+- `ReciprocidadMetricsCardRevolutionary.tsx`: Gradientes cósmicos y planetarios ✅
+- `ReciprocidadBalanceFullWidget.tsx`: Combinación de todos los gradientes ✅
 - `PrimaryDashboard.tsx`: Gradientes responsivos ✅
 - `widgets/*.tsx`: Variaciones de glassmorphism ✅
 
@@ -415,7 +415,7 @@ MuiButton: {
 
 ```typescript
 // 🏠 ESPECÍFICO HOME: Cards con efectos cósmicos
-// Implementado en: AyniBalanceFullWidget.tsx, widgets HOME
+// Implementado en: ReciprocidadBalanceFullWidget.tsx, widgets HOME
 MuiCard: {
   styleOverrides: {
     root: {
@@ -449,7 +449,7 @@ MuiCard: {
 
 ```typescript
 // 🏠 PATRÓN HOME: Transparencias cósmicas refinadas
-// Implementado en: AyniBalanceVisualization.tsx, todos los widgets
+// Implementado en: ReciprocidadBalanceVisualization.tsx, todos los widgets
 background: alpha('#FF6B35', 0.03),      // Sutil para fondo cósmico
 border: `2px solid ${alpha('#FF6B35', 0.3)}`, // Bordes elementales
 color: alpha('#FFFFFF', 0.9),            // Texto cósmico legible
@@ -458,7 +458,7 @@ boxShadow: `
   inset 0 0 20px ${alpha('#000', 0.3)}    // Profundidad interior
 `,
 
-// 🏠 ESPECÍFICO HOME: Partículas cósmicas (Verificado en AyniMetricsCardRevolutionary)
+// 🏠 ESPECÍFICO HOME: Partículas cósmicas (Verificado en ReciprocidadMetricsCardRevolutionary)
 '&::before': {
   background: `
     radial-gradient(2px 2px at 20px 30px, ${alpha('#fff', 0.6)}, transparent),
@@ -474,7 +474,7 @@ boxShadow: `
 ```typescript
 // 🏠 ESPECÍFICO HOME: Breakpoints optimizados para dashboard
 sx={{
-  // Balance Ayni título principal (Verificado en PrimaryDashboard.tsx)
+  // Balance Reciprocidad título principal (Verificado en PrimaryDashboard.tsx)
   fontSize: {
     xs: '3rem',      // ⚠️ CORRECCIÓN: 3rem móvil (no 2.5rem)
     sm: '4rem',      // ⚠️ CORRECCIÓN: 4rem tablet (no 3.5rem)
@@ -490,7 +490,7 @@ sx={{
     lg: '64px'       // XL dashboard premium - Verificado
   },
 
-  // Sistema solar 3D responsive (Verificado en AyniBalanceVisualization)
+  // Sistema solar 3D responsive (Verificado en ReciprocidadBalanceVisualization)
   minHeight: {
     xs: '300px',     // Móvil - compact solar system - Verificado
     sm: '400px',     // Tablet - medium solar system - Verificado
@@ -509,19 +509,19 @@ sx={{
 - **Zero violations** en 25+ componentes HOME específicos (Verificado)
 - **Bundle optimization** para dashboard: imports específicos reducen peso
 - **Tree-shaking** effectiveness del sistema cósmico optimizado
-- **Ejemplo HOME**: `AyniBalanceVisualization.tsx` usa 15+ imports específicos ✅
+- **Ejemplo HOME**: `ReciprocidadBalanceVisualization.tsx` usa 15+ imports específicos ✅
 
 ### ✅ **2. Consistencia Cósmica HOME (A+)**
 
 - **Revolutionary pattern** unificado en todos los widgets HOME (Verificado)
 - **Glassmorphism system** consistente en 7 widgets principales ✅
 - **Responsive dashboard** con breakpoints específicos HOME (Verificado)
-- **Ejemplo HOME**: Mismo patrón visual en `AyniMetricsCardRevolutionary` → `AyniBalanceFullWidget` ✅
+- **Ejemplo HOME**: Mismo patrón visual en `ReciprocidadMetricsCardRevolutionary` → `ReciprocidadBalanceFullWidget` ✅
 
 ### ✅ **3. Accesibilidad Dashboard WCAG (A+)**
 
-- **Contraste cósmico** AA compliant en elementos de balance Ayni
-- **ARIA semántico** específico para dashboard (`Balance Ayni Principal`) ✅
+- **Contraste cósmico** AA compliant en elementos de balance Reciprocidad
+- **ARIA semántico** específico para dashboard (`Balance Reciprocidad Principal`) ✅
 - **Focus management** optimizado para navegación 3D
 - **Ejemplo HOME**: Sistema solar 3D con navegación por teclado ✅
 
@@ -608,7 +608,7 @@ export const HomePatternLibrary = {
   gradients: {
     location: 'src/styles/gradients/cosmic-home.css',
     patterns: [
-      'ayni-title-gradient',
+      'reciprocidad-title-gradient',
       'elemental-fuego-gradient', 
       'elemental-agua-gradient',
       'widget-glassmorphism-gradient'
@@ -694,7 +694,7 @@ export const HomePatternLibrary = {
 - **Widget Consistency**: 100% ✅ (7 widgets unified pattern verificados)
 - **Responsive Dashboard**: 98% ✅ (Mobile-first cosmic design verificado)
 - **Cosmic Animation Performance**: 92% ✅ (3D effects smooth verificados)
-- **Balance Ayni UX**: 96% ✅ (Sistema solar intuitivo verificado)
+- **Balance Reciprocidad UX**: 96% ✅ (Sistema solar intuitivo verificado)
 
 ---
 
@@ -828,7 +828,7 @@ El **Dashboard Semántico HOME** no solo está en un **nivel excepcional A+** t�
 
 ---
 
-_Análisis técnico HOME Dashboard realizado y verificado el ${new Date().toLocaleDateString()} - Evaluación específica del Dashboard Semántico Balance Ayni con verificación exhaustiva del código fuente_
+_Análisis técnico HOME Dashboard realizado y verificado el ${new Date().toLocaleDateString()} - Evaluación específica del Dashboard Semántico Balance Reciprocidad con verificación exhaustiva del código fuente_
 
 ## 📑 ÍNDICE EJECUTIVO
 

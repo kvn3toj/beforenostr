@@ -2,7 +2,7 @@
 
 ## 🌟 Resumen de Mejoras
 
-El entorno de la Wallet ha sido completamente mejorado con componentes modernos, mejor UX/UI, y integración profunda con la filosofía CoomÜnity siguiendo los principios Ayni.
+El entorno de la Wallet ha sido completamente mejorado con componentes modernos, mejor UX/UI, y integración profunda con la filosofía CoomÜnity siguiendo los principios Reciprocidad.
 
 ## 📦 Componentes Implementados
 
@@ -14,7 +14,7 @@ El entorno de la Wallet ha sido completamente mejorado con componentes modernos,
 
 - 📊 Métricas visuales atractivas con animaciones Framer Motion
 - 💰 Soporte para múltiples monedas CoomÜnity (COP, ÜCoins, Mëritos, Öndas)
-- 🌱 Sistema de niveles Ayni con progreso visual
+- 🌱 Sistema de niveles Reciprocidad con progreso visual
 - 📈 Indicadores de colaboración y ranking comunitario
 - 👁️ Control de visibilidad de balances
 - 🔄 Estado en tiempo real vs offline
@@ -114,7 +114,7 @@ interface TransactionHistoryProps {
 - **ÜCoins**: Moneda interna colaborativa
 - **Mëritos**: Recompensas por contribución al Bien Común
 - **Öndas**: Energía vibracional positiva
-- **Ayni**: Sistema de reciprocidad equilibrada
+- **Reciprocidad**: Sistema de reciprocidad equilibrada
 - **Bien Común**: Filosofía central de la plataforma
 
 ### 🎨 Experiencia de Usuario Mejorada
@@ -143,7 +143,7 @@ interface TransactionHistoryProps {
 2. **Acciones rápidas** (enviar, recibir, intercambiar)
 3. **Historial completo** de transacciones con filtros
 4. **Gestión de métodos de pago**
-5. **Sistema de niveles Ayni** con progreso visual
+5. **Sistema de niveles Reciprocidad** con progreso visual
 6. **Intercambio de monedas** con tasas automáticas
 7. **Modo offline** con datos simulados realistas
 8. **Integración con backend** NestJS real
@@ -151,7 +151,7 @@ interface TransactionHistoryProps {
 ### 🔄 Pendientes por Implementar
 
 1. **Código QR funcional** para recibir pagos
-2. **Ahorros Ayni** - cuenta de ahorros especial
+2. **Ahorros Reciprocidad** - cuenta de ahorros especial
 3. **Analytics del wallet** con métricas detalladas
 4. **Exportación de historial** (PDF, CSV)
 5. **Notificaciones push** para transacciones
@@ -271,4 +271,4 @@ Los hooks incluyen datos simulados realistas para desarrollo y testing offline.
 - El código está preparado para futuras expansiones
 - La documentación TypeScript es exhaustiva para IntelliSense
 
-¡El wallet de CoomÜnity ahora refleja verdaderamente la filosofía Ayni con una experiencia de usuario excepcional! 🌟
+¡El wallet de CoomÜnity ahora refleja verdaderamente la filosofía Reciprocidad con una experiencia de usuario excepcional! 🌟

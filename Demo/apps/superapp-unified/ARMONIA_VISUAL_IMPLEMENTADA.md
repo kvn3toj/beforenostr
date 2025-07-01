@@ -61,7 +61,7 @@ He implementado un sistema de diseño basado en múltiplos de 8px para espaciado
 │                                                         │
 │ ┌─ COL PRINCIPAL (8/12) ────┬─ COL LATERAL (4/12) ─────┐│
 │ │                           │                          ││
-│ │ 📊 AyniMetricsCard        │ 💰 WalletOverview        ││
+│ │ 📊 ReciprocidadMetricsCard        │ 💰 WalletOverview        ││
 │ │ (harmony-section)         │ (harmony-widget-compact) ││
 │ │ Margin-bottom: 32px       │ Min-height: 150px        ││
 │ │                           │                          ││
@@ -80,7 +80,7 @@ He implementado un sistema de diseño basado en múltiplos de 8px para espaciado
 │                                                         │
 │ ┌─ FILA COMPLETA (harmony-grid) ─────────────────────────┐│
 │ │                                                       ││
-│ │ 🚀 AyniBalanceVisualization │ 🏆 ActiveChallengesWidget││
+│ │ 🚀 ReciprocidadBalanceVisualization │ 🏆 ActiveChallengesWidget││
 │ │ (harmony-widget-expanded)   │ (harmony-widget-expanded)││
 │ │ Min-height: 300px           │ Min-height: 300px       ││
 │ │                             │                         ││
@@ -179,7 +179,7 @@ He implementado un sistema de diseño basado en múltiplos de 8px para espaciado
 - **Altura:** 300px mínima
 - **Spacing:** Amplio para achievements
 
-### 🚀 **AyniBalanceVisualization**
+### 🚀 **ReciprocidadBalanceVisualization**
 
 - **Clase:** `harmony-widget-expanded`
 - **Altura:** 300px mínima

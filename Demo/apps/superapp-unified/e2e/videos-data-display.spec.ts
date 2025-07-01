@@ -30,7 +30,7 @@ test.describe('Videos Data Display - Backend Integration', () => {
     const videoTitles = [
       'Introducción a la Gamificación',
       'Fundamentos de CoomÜnity',
-      'Principios de Ayni'
+      'Principios de Reciprocidad'
     ];
     
     let videosFound = 0;

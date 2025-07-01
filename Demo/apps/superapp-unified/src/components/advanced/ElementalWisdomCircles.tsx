@@ -22,7 +22,7 @@ import {
   Badge,
 } from '@mui/material';
 import {
-  Circle,
+
   GroupAdd,
   Psychology,
   AutoAwesome,
@@ -42,7 +42,7 @@ import {
 } from '@mui/icons-material';
 
 import { COSMIC_ELEMENTS, CosmicElement } from '../ui/CosmicThemeSwitcher';
-import { useAyniIntelligence } from '../../hooks/useAyniIntelligence';
+import { useReciprocidadIntelligence } from '../../hooks/useReciprocidadIntelligence';
 
 // Tipos para los Círculos de Sabiduría
 interface WisdomCircle {
@@ -123,8 +123,8 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
   const [joinDialogOpen, setJoinDialogOpen] = useState(false);
   const [selectedCircle, setSelectedCircle] = useState<WisdomCircle | null>(null);
 
-  // Hook de inteligencia Ayni para recomendaciones
-  const { data: ayniData, recordAction } = useAyniIntelligence(userId);
+  // Hook de inteligencia Reciprocidad para recomendaciones
+  const { data: reciprocidadData, recordAction } = useReciprocidadIntelligence(userId);
 
   // Mock data de círculos por elemento
   const mockCirclesByElement = useMemo((): Record<CosmicElement, WisdomCircle[]> => ({
@@ -399,17 +399,17 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
 
   // Calcular compatibilidad del usuario con cada círculo
   const calculateCompatibility = (circle: WisdomCircle): number => {
-    if (!ayniData) return 75; // Default compatibility
-    
-    const userElementAffinity = ayniData.ayniBalance.elements[circle.element];
+    if (!reciprocidadData) return 75; // Default compatibility
+
+    const userElementAffinity = reciprocidadData.reciprocidadBalance.elements[circle.element];
     const circleEnergyLevel = circle.energyLevel;
     const membershipSize = circle.members.length;
-    
+
     // Algoritmo de compatibilidad
     let compatibility = userElementAffinity * 0.6; // 60% afinidad elemental
     compatibility += (circleEnergyLevel / 100) * 30; // 30% energía del círculo
     compatibility += Math.min(membershipSize / 20, 1) * 10; // 10% tamaño óptimo
-    
+
     return Math.round(compatibility);
   };
 
@@ -433,7 +433,7 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
           impact: 'regional'
         }
       });
-      
+
       onCircleJoin?.(selectedCircle.id);
       setJoinDialogOpen(false);
       setSelectedCircle(null);
@@ -544,14 +544,14 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
                       {circle.name}
                     </Typography>
                     <Stack direction="row" spacing={1} alignItems="center">
-                      <Chip 
-                        label={circle.level} 
-                        size="small" 
-                        sx={{ 
+                      <Chip
+                        label={circle.level}
+                        size="small"
+                        sx={{
                           background: alpha(elementConfig.color, 0.2),
                           color: elementConfig.color,
                           textTransform: 'capitalize'
-                        }} 
+                        }}
                       />
                       {circle.isPrivate && (
                         <Tooltip title="Círculo privado - requiere invitación">
@@ -621,7 +621,7 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
                   <Typography variant="caption" color="text.secondary" gutterBottom>
                     Miembros activos:
                   </Typography>
-                  <AvatarGroup 
+                  <AvatarGroup
                     max={6}
                     sx={{
                       '& .MuiAvatar-root': {
@@ -634,7 +634,7 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
                   >
                     {circle.members.slice(0, 8).map((member) => (
                       <Tooltip key={member.id} title={`${member.name} (${member.role})`}>
-                        <Avatar 
+                        <Avatar
                           src={member.avatar}
                           sx={{
                             background: member.role === 'facilitator' ? '#FFD700' :
@@ -694,8 +694,8 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
                 <Box mb={3} display="flex" alignItems="center" gap={1}>
                   <Schedule sx={{ fontSize: 16, color: 'text.secondary' }} />
                   <Typography variant="caption" color="text.secondary">
-                    Próxima reunión: {circle.meetingSchedule.nextMeeting.toLocaleDateString()} 
-                    {circle.meetingSchedule.frequency === 'weekly' ? ' (semanal)' : 
+                    Próxima reunión: {circle.meetingSchedule.nextMeeting.toLocaleDateString()}
+                    {circle.meetingSchedule.frequency === 'weekly' ? ' (semanal)' :
                      circle.meetingSchedule.frequency === 'lunar_cycle' ? ' (ciclo lunar)' : ''}
                   </Typography>
                 </Box>
@@ -721,7 +721,7 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
                   >
                     {circle.isPrivate ? '🔒 Privado' : '🚀 Unirse'}
                   </Button>
-                  
+
                   <Tooltip title={`Compatibilidad: ${compatibility}%`}>
                     <IconButton
                       sx={{
@@ -750,7 +750,7 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
                       borderRadius: 1.5,
                       mt: 0.5,
                       '& .MuiLinearProgress-bar': {
-                        background: compatibility >= 80 ? '#4CAF50' : 
+                        background: compatibility >= 80 ? '#4CAF50' :
                                    compatibility >= 60 ? '#FF9800' : '#F44336'
                       }
                     }}
@@ -793,12 +793,12 @@ export const ElementalWisdomCircles: React.FC<ElementalWisdomCirclesProps> = ({
             </Box>
           </Box>
         </DialogTitle>
-        
+
         <DialogContent>
           <Typography variant="body1" gutterBottom>
             ¿Estás listo para embarcarte en un viaje de crecimiento y sabiduría colectiva?
           </Typography>
-          
+
           {selectedCircle && (
             <Box mt={2}>
               <Typography variant="subtitle2" gutterBottom>

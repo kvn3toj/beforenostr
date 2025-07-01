@@ -10,7 +10,7 @@
  * - Efectos cósmicos configurables
  * - Integración con filosofía elemental
  * - Performance optimizada con memoización
- * - Modo Ayni para balance y armonía
+ * - Modo Reciprocidad para balance y armonía
  * - Responsive design completo
  * 
  * Design System Scaling Roadmap - Fase 4.1
@@ -66,7 +66,7 @@ import {
   KeyboardArrowDown,
   CheckCircle,
   RadioButtonUnchecked,
-  Balance as AyniIcon,
+  Balance as ReciprocidadIcon,
   Spa as HarmonyIcon
 } from '@mui/icons-material';
 
@@ -97,10 +97,10 @@ interface CosmicEffectsConfig {
   selectionGlow?: boolean;
   sortAnimations?: boolean;
   elementalTheming?: boolean;
-  ayniMode?: boolean;
+  reciprocidadMode?: boolean;
 }
 
-interface AyniMetrics {
+interface ReciprocidadMetrics {
   balance: number;
   harmony: number;
   contributions: number;
@@ -141,9 +141,9 @@ export interface CoomunityDataTableProps<T = any> {
   // Performance
   performance?: PerformanceConfig;
   
-  // Ayni integration
-  ayniMode?: boolean;
-  ayniMetrics?: AyniMetrics;
+  // Reciprocidad integration
+  reciprocidadMode?: boolean;
+  reciprocidadMetrics?: ReciprocidadMetrics;
   
   // Event handlers
   onRowClick?: (row: T, index: number) => void;
@@ -170,7 +170,7 @@ const cosmicRowAnimations = {
     borderLeft: '4px solid #FFB74D',
     transform: 'translateX(4px)',
   },
-  ayniBalance: {
+  reciprocidadBalance: {
     background: 'linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.15) 100%)',
     borderLeft: '4px solid #4CAF50',
   }
@@ -197,7 +197,7 @@ export const CoomunityDataTable = <T extends Record<string, any>>({
     selectionGlow: true,
     sortAnimations: true,
     elementalTheming: true,
-    ayniMode: false
+    reciprocidadMode: false
   },
   element = 'agua', // Agua por defecto para fluidez de datos
   cosmicIntensity = 'medium',
@@ -205,8 +205,8 @@ export const CoomunityDataTable = <T extends Record<string, any>>({
     memoizeRows: true,
     maxVisibleRows: 100
   },
-  ayniMode = false,
-  ayniMetrics,
+  reciprocidadMode = false,
+  reciprocidadMetrics,
   onRowClick,
   onRowSelect,
   onSort,
@@ -236,9 +236,9 @@ export const CoomunityDataTable = <T extends Record<string, any>>({
   const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
   const [exportMenuAnchor, setExportMenuAnchor] = useState<null | HTMLElement>(null);
   
-  // 🌟 Calcular métricas Ayni dinámicas
-  const calculatedAyniMetrics = useMemo(() => {
-    if (!ayniMode || !data.length) return null;
+  // 🌟 Calcular métricas Reciprocidad dinámicas
+  const calculatedReciprocidadMetrics = useMemo(() => {
+    if (!reciprocidadMode || !data.length) return null;
     
     const balance = data.reduce((acc, row, index) => {
       return acc + (selectedRows.has(index) ? 1 : 0);
@@ -254,7 +254,7 @@ export const CoomunityDataTable = <T extends Record<string, any>>({
       contributions,
       reciprocity: Math.round(reciprocity * 100) / 100
     };
-  }, [ayniMode, data, selectedRows]);
+  }, [reciprocidadMode, data, selectedRows]);
   
   // 🔍 Filtrado y búsqueda avanzada
   const filteredData = useMemo(() => {
@@ -452,12 +452,12 @@ export const CoomunityDataTable = <T extends Record<string, any>>({
       
       <Box sx={{ flexGrow: 1 }} />
       
-      {/* Métricas Ayni */}
-      {ayniMode && calculatedAyniMetrics && (
+      {/* Métricas Reciprocidad */}
+      {reciprocidadMode && calculatedReciprocidadMetrics && (
         <Stack direction="row" spacing={1}>
           <Chip
-            icon={<AyniIcon />}
-            label={`Balance: ${calculatedAyniMetrics.balance}`}
+            icon={<ReciprocidadIcon />}
+            label={`Balance: ${calculatedReciprocidadMetrics.balance}`}
             size="small"
             sx={{ 
               background: elementalStyles.headerRow?.background,
@@ -466,7 +466,7 @@ export const CoomunityDataTable = <T extends Record<string, any>>({
           />
           <Chip
             icon={<HarmonyIcon />}
-            label={`Armonía: ${calculatedAyniMetrics.harmony}`}
+            label={`Armonía: ${calculatedReciprocidadMetrics.harmony}`}
             size="small"
             sx={{ 
               background: elementalStyles.headerRow?.background,
@@ -593,7 +593,7 @@ export const CoomunityDataTable = <T extends Record<string, any>>({
                     cursor: onRowClick ? 'pointer' : 'default',
                     ...(isSelected && elementalStyles.selectedRow),
                     ...(isHovered && cosmicEffects.hoverRows && cosmicRowAnimations.hover),
-                    ...(ayniMode && calculatedAyniMetrics?.balance > 0.7 && cosmicRowAnimations.ayniBalance),
+                    ...(reciprocidadMode && calculatedReciprocidadMetrics?.balance > 0.7 && cosmicRowAnimations.reciprocidadBalance),
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
                 >

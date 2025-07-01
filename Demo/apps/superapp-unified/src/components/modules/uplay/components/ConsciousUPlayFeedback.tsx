@@ -52,7 +52,7 @@ const consciousGlow = keyframes`
   }
 `;
 
-const ayniPulse = keyframes`
+const reciprocidadPulse = keyframes`
   0%, 100% {
     background: linear-gradient(135deg, ${SUPERAPP_VIOLET_PALETTE.primary} 0%, ${SUPERAPP_VIOLET_PALETTE.secondary} 100%);
   }
@@ -74,7 +74,7 @@ export type ConsciousUPlayFeedbackType =
   | 'conscious-engagement'   // Compromiso consciente
   | 'collective-growth'      // Crecimiento colectivo
   | 'mindful-progress'       // Progreso consciente
-  | 'ayni-learning'          // Aprendizaje recíproco
+  | 'reciprocidad-learning'          // Aprendizaje recíproco
   | 'bien-comun-knowledge'   // Conocimiento para el bien común
   | 'metacognition'          // Metacognición
   | 'system';
@@ -141,12 +141,12 @@ const getFeedbackConfig = (type: ConsciousUPlayFeedbackType) => {
       borderColor: SUPERAPP_VIOLET_PALETTE.accent,
       tooltip: 'Progreso Consciente: Avanzando con intención y propósito'
     },
-    'ayni-learning': {
+    'reciprocidad-learning': {
       icon: Eco,
       color: SUPERAPP_VIOLET_PALETTE.primary,
       bgGradient: `linear-gradient(135deg, ${alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.1)} 0%, ${alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.1)} 100%)`,
       borderColor: SUPERAPP_VIOLET_PALETTE.primary,
-      tooltip: 'Ayni en Aprendizaje: Dar y recibir conocimiento en equilibrio'
+      tooltip: 'Reciprocidad en Aprendizaje: Dar y recibir conocimiento en equilibrio'
     },
     'bien-comun-knowledge': {
       icon: Diamond,
@@ -185,7 +185,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
-  const config = getFeedbackConfig(feedback.type);
+  const config = getFeedbackConfig(feedback?.type ?? 'system');
   const IconComponent = config.icon;
 
   // 🛡️ Handle loading state - resolve immediately on mount
@@ -199,7 +199,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
 
   // ⏰ Auto-dismiss y progreso - optimized with useCallback
   const handleProgressUpdate = useCallback(() => {
-    if (feedback.duration && feedback.duration > 0 && !isLoading) {
+    if (feedback?.duration && feedback.duration > 0 && !isLoading) {
       const increment = 100 / (feedback.duration / 100);
 
       setProgress(prev => {
@@ -212,10 +212,10 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
         return newProgress;
       });
     }
-  }, [feedback.duration, onDismiss, isLoading]);
+  }, [feedback?.duration, onDismiss, isLoading]);
 
   useEffect(() => {
-    if (!isLoading && feedback.duration && feedback.duration > 0) {
+    if (!isLoading && feedback?.duration && feedback.duration > 0) {
       progressRef.current = setInterval(handleProgressUpdate, 100);
     }
 
@@ -224,7 +224,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
         clearInterval(progressRef.current);
       }
     };
-  }, [handleProgressUpdate, isLoading, feedback.duration]);
+  }, [handleProgressUpdate, isLoading, feedback?.duration]);
 
   const handleDismiss = useCallback(() => {
     if (progressRef.current) {
@@ -312,13 +312,13 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
                   color: config.color,
                   mb: 0.5
                 }}>
-                  {feedback.title}
+                  {feedback?.title ?? 'Sin título'}
                 </Typography>
                 <Typography variant="body2" sx={{
                   color: theme.palette.text.secondary,
                   fontSize: '0.85rem'
                 }}>
-                  {feedback.message}
+                  {feedback?.message ?? 'Sin mensaje'}
                 </Typography>
               </Box>
               <IconButton
@@ -329,7 +329,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
                 <Close fontSize="small" />
               </IconButton>
             </Box>
-            {feedback.duration && (
+            {feedback?.duration && (
               <LinearProgress
                 variant="determinate"
                 value={progress}
@@ -388,7 +388,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
                     fontSize: 64,
                     color: config.color,
                     mb: 2,
-                    animation: `${ayniPulse} 3s ease-in-out infinite`,
+                    animation: `${reciprocidadPulse} 3s ease-in-out infinite`,
                   }}
                 />
                 <Typography variant="h4" sx={{
@@ -396,19 +396,19 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
                   color: config.color,
                   mb: 2
                 }}>
-                  {feedback.title}
+                  {feedback?.title ?? 'Sin título'}
                 </Typography>
                 <Typography variant="h6" sx={{
                   color: theme.palette.text.secondary,
                   mb: 3,
                   lineHeight: 1.6
                 }}>
-                  {feedback.message}
+                  {feedback?.message ?? 'Sin mensaje'}
                 </Typography>
               </Box>
 
               {/* Principio Filosófico */}
-              {feedback.philosophical_principle && (
+              {feedback?.philosophical_principle && (
                 <Box sx={{ mb: 3 }}>
                   <Chip
                     icon={<Healing />}
@@ -426,7 +426,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
               )}
 
               {/* Insight de Aprendizaje */}
-              {feedback.learning_insight && (
+              {feedback?.learning_insight && (
                 <Box sx={{ mb: 3 }}>
                   <Typography variant="body1" sx={{
                     fontStyle: 'italic',
@@ -442,7 +442,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
               )}
 
               {/* Recompensas */}
-              {feedback.rewards && (
+              {feedback?.rewards && (
                 <Box sx={{ mb: 3 }}>
                   <Typography variant="subtitle2" sx={{ mb: 2, color: config.color }}>
                     Recompensas Conscientes
@@ -450,17 +450,17 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
                   <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <Chip
                       icon={<Star />}
-                      label={`${feedback.rewards.meritos} Mëritos`}
+                      label={`${feedback.rewards.meritos ?? 0} Mëritos`}
                       sx={{ backgroundColor: alpha(SUPERAPP_VIOLET_PALETTE.secondary, 0.2), color: SUPERAPP_VIOLET_PALETTE.dark }}
                     />
                     <Chip
                       icon={<Diamond />}
-                      label={`${feedback.rewards.ondas} Öndas`}
+                      label={`${feedback.rewards.ondas ?? 0} Öndas`}
                       sx={{ backgroundColor: alpha(SUPERAPP_VIOLET_PALETTE.light, 0.2), color: SUPERAPP_VIOLET_PALETTE.dark }}
                     />
                     <Chip
                       icon={<Psychology />}
-                      label={`${feedback.rewards.wisdom_points} Sabiduría`}
+                      label={`${feedback.rewards.wisdom_points ?? 0} Sabiduría`}
                       sx={{ backgroundColor: alpha(SUPERAPP_VIOLET_PALETTE.primary, 0.2), color: SUPERAPP_VIOLET_PALETTE.dark }}
                     />
                   </Box>
@@ -469,7 +469,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
 
               {/* Botones de Acción */}
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                {onAction && feedback.action && (
+                {onAction && feedback?.action && (
                   <Tooltip title={config.tooltip}>
                     <Chip
                       icon={<PlayArrow />}
@@ -551,18 +551,18 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
                 color: config.color,
                 mb: 1
               }}>
-                {feedback.title}
+                {feedback?.title ?? 'Sin título'}
               </Typography>
               <Typography variant="body2" sx={{
                 color: theme.palette.text.secondary,
                 lineHeight: 1.5,
                 mb: 2
               }}>
-                {feedback.message}
+                {feedback?.message ?? 'Sin mensaje'}
               </Typography>
 
               {/* Principio Filosófico */}
-              {feedback.philosophical_principle && (
+              {feedback?.philosophical_principle && (
                 <Box sx={{ mb: 2 }}>
                   <Chip
                     icon={<Eco />}
@@ -578,7 +578,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
               )}
 
               {/* Progreso de Aprendizaje */}
-              {feedback.progress_value !== undefined && (
+              {feedback?.progress_value !== undefined && (
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="caption" sx={{ color: config.color, fontWeight: 600 }}>
                     Progreso de Comprensión: {Math.round(feedback.progress_value)}%
@@ -610,7 +610,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
           </Box>
 
           {/* Botones de Acción */}
-          {(onAction && feedback.action) && (
+          {(onAction && feedback?.action) && (
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
               <Chip
                 icon={<PlayArrow />}
@@ -631,7 +631,7 @@ export const ConsciousUPlayFeedback: React.FC<ConsciousUPlayFeedbackProps> = ({
           )}
 
           {/* Progress Bar Auto-dismiss */}
-          {feedback.duration && (
+          {feedback?.duration && (
             <LinearProgress
               variant="determinate"
               value={progress}
@@ -703,14 +703,14 @@ export const useConsciousUPlayFeedback = () => {
     });
   }, [showFeedback]);
 
-  const showAyniLearning = useCallback((reciprocity_action: string) => {
+  const showReciprocidadLearning = useCallback((reciprocity_action: string) => {
     showFeedback({
-      type: 'ayni-learning',
+      type: 'reciprocidad-learning',
       title: 'Aprendizaje Recíproco',
       message: reciprocity_action,
       action: 'Continuar Intercambio',
       duration: 5000,
-      philosophical_principle: 'Ayni - Reciprocidad Educativa',
+      philosophical_principle: 'Reciprocidad - Reciprocidad Educativa',
     });
   }, [showFeedback]);
 
@@ -743,7 +743,7 @@ export const useConsciousUPlayFeedback = () => {
     // Presets específicos
     showLearningFlow,
     showWisdomIntegration,
-    showAyniLearning,
+    showReciprocidadLearning,
     showCollectiveGrowth,
     showMetacognition,
   };

@@ -65,7 +65,7 @@ This document provides a comprehensive overview of the complete design system im
 **File:** `src/styles/animations.css`
 
 - **Micro-interactions:** fade-in, slide-up, hover-lift effects
-- **CoomÜnity-branded animations:** Ayni flow, Mëritos pulse, Öndas wave
+- **CoomÜnity-branded animations:** Reciprocidad flow, Mëritos pulse, Öndas wave
 - **Performance-optimized:** Proper timing functions and reduced motion support
 - **Accessibility:** Respects `prefers-reduced-motion`
 
@@ -92,7 +92,7 @@ export const gradients = {
   coomunity: 'bg-gradient-to-r from-coomunity-500 to-coomunity-600',
   success: 'bg-gradient-to-r from-success-500 to-success-600',
   warning: 'bg-gradient-to-r from-warning-500 to-warning-600',
-  ayni: 'bg-gradient-to-r from-coomunity-500 via-success-500 to-info-500',
+  reciprocidad: 'bg-gradient-to-r from-coomunity-500 via-success-500 to-info-500',
 };
 
 // Focus utilities
@@ -185,7 +185,7 @@ interface ButtonProps {
 **Features:**
 - Advanced animated drawer with Framer Motion
 - Notification filtering system
-- CoomÜnity-specific notification types (ayni, transaction, social, achievement)
+- CoomÜnity-specific notification types (reciprocidad, transaction, social, achievement)
 - AnimatePresence for smooth enter/exit
 - Mobile-first responsive design
 - Badge system for unread counts
@@ -224,12 +224,12 @@ interface ButtonProps {
 
 **Features:**
 - Advanced post card animations
-- CoomÜnity terminology integration (Ayni scores, Mëritos, Öndas)
+- CoomÜnity terminology integration (Reciprocidad scores, Mëritos, Öndas)
 - Interactive engagement system
 - Collaboration features
 - Responsive design with mobile optimization
 - Context menus and action buttons
-- Real-time Ayni flow animations
+- Real-time Reciprocidad flow animations
 
 ### 🎮 Enhanced Video Player
 **File:** `src/components/modules/uplay/components/EnhancedVideoPlayer.tsx`
@@ -249,7 +249,7 @@ interface ButtonProps {
 
 **Features:**
 - Complex product/service display
-- Ayni score integration
+- Reciprocidad score integration
 - Emprendedores Confiables verification
 - Lükas currency display
 - Advanced interaction states
@@ -275,7 +275,7 @@ interface ButtonProps {
 
 ### 🌱 Core Concepts Implemented
 
-1. **Ayni (Reciprocidad)**
+1. **Reciprocidad (Reciprocidad)**
    - Scoring system in social posts
    - Interactive giving mechanisms
    - Balance indicators in transactions
@@ -432,12 +432,12 @@ import {
 
 // Basic card with CoomÜnity styling
 <CoomunityCard variant="coomunity" padding="lg" interactive>
-  <Typography variant="h6">Ayni Exchange</Typography>
+  <Typography variant="h6">Reciprocidad Exchange</Typography>
   <Typography variant="body2">
     Intercambio basado en reciprocidad equilibrada
   </Typography>
   <CoomunityButton variant="primary" size="md">
-    Participar en Ayni
+    Participar en Reciprocidad
   </CoomunityButton>
 </CoomunityCard>
 
@@ -445,7 +445,7 @@ import {
 <EnhancedSocialFeed
   posts={socialPosts}
   onLike={handleLike}
-  onGiveAyni={handleAyniGive}
+  onGiveReciprocidad={handleReciprocidadGive}
   onCollaborate={handleCollaborate}
 />
 
@@ -461,7 +461,7 @@ import { cn, animations, gradients, focus } from '@/utils/styles';
 
 <div className={cn(
   'p-4 rounded-lg',
-  gradients.ayni,
+  gradients.reciprocidad,
   animations.hoverLift,
   focus.visible
 )}>
@@ -515,7 +515,7 @@ The CoomÜnity SuperApp design system implementation represents a **comprehensiv
 1. **Complete Design Foundation:** Tokens, animations, and utilities
 2. **Universal Component Library:** Reusable, accessible, and consistent
 3. **Advanced Feature Integration:** Dark mode, notifications, enhanced modules
-4. **CoomÜnity Philosophy Integration:** Ayni, Mëritos, Öndas, Bien Común
+4. **CoomÜnity Philosophy Integration:** Reciprocidad, Mëritos, Öndas, Bien Común
 5. **Performance Optimization:** 38% reduction in CSS bundle size
 6. **Developer Experience:** Streamlined component creation and maintenance
 

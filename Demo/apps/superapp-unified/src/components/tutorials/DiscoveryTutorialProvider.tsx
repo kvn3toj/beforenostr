@@ -177,7 +177,7 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
       {
         id: 'marketplace-first-purchase',
         title: '🛍️ Tu Primera Compra',
-        content: 'Para tu primera compra, busca productos de bajo riesgo (10-50 Lükas) de vendedores con buenos Mëritos. Lee las descripciones cuidadosamente, verifica la política de Ayni del vendedor, y no olvides calificar después de recibir.',
+        content: 'Para tu primera compra, busca productos de bajo riesgo (10-50 Lükas) de vendedores con buenos Mëritos. Lee las descripciones cuidadosamente, verifica la política de Reciprocidad del vendedor, y no olvides calificar después de recibir.',
         type: 'interactive',
         actionButton: {
           text: 'Ver Productos Recomendados'
@@ -192,7 +192,7 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
       {
         id: 'marketplace-becoming-seller',
         title: '🚀 Convertirse en Vendedor',
-        content: 'Para vender necesitas: completar tu perfil con skills y experiencia, subir tu primer producto/servicio con fotos y descripción detallada, solicitar validación inicial de 3 miembros, y mantener un ratio Ayni balanceado.',
+        content: 'Para vender necesitas: completar tu perfil con skills y experiencia, subir tu primer producto/servicio con fotos y descripción detallada, solicitar validación inicial de 3 miembros, y mantener un ratio Reciprocidad balanceado.',
         type: 'success',
         tips: [
           'Tu primer producto debe resolver un problema real',
@@ -403,12 +403,12 @@ const DISCOVERY_TUTORIALS: Tutorial[] = [
       {
         id: 'wallet-intro',
         title: 'Tu Wallet CoomÜnity',
-        content: '¡Bienvenido a tu wallet CoomÜnity! Aquí gestionas todos tus recursos: Lükas, TOINS, Mëritos y tu balance Ayni. Es el corazón financiero de tu experiencia en la plataforma.',
+        content: '¡Bienvenido a tu wallet CoomÜnity! Aquí gestionas todos tus recursos: Lükas, TOINS, Mëritos y tu balance Reciprocidad. Es el corazón financiero de tu experiencia en la plataforma.',
         type: 'info',
         component: 'WalletMain',
         tips: [
           'Tu wallet es seguro y está protegido por blockchain',
-          'Todas las transacciones siguen el principio de Ayni (reciprocidad)',
+          'Todas las transacciones siguen el principio de Reciprocidad (reciprocidad)',
           'Puedes verificar tu historial completo en cualquier momento'
         ],
         actionButton: {
@@ -605,8 +605,8 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
         return `linear-gradient(45deg, ${palette.primary}, ${palette.accent})`;
       case 'secondary':
         return `linear-gradient(45deg, ${palette.secondary}, ${palette.mystic})`;
-      case 'ayni':
-        return `linear-gradient(135deg, ${getConceptColor('ayni')}, ${palette.accent})`;
+      case 'reciprocidad':
+        return `linear-gradient(135deg, ${getConceptColor('reciprocidad')}, ${palette.accent})`;
       default:
         return `linear-gradient(45deg, ${palette.primary}, ${palette.secondary})`;
     }

@@ -51,7 +51,7 @@ export interface WalletData {
   ondas: number;
   pendingBalance: number;
   monthlyChange: number;
-  ayniLevel: number;
+  reciprocidadLevel: number;
   collaborationScore: number;
   communityRank: string;
   accounts: WalletAccount[];
@@ -70,7 +70,7 @@ export interface WalletAccount {
 
 export interface Transaction {
   id: string;
-  type: 'income' | 'expense' | 'transfer' | 'exchange' | 'reward' | 'ayni';
+  type: 'income' | 'expense' | 'transfer' | 'exchange' | 'reward' | 'reciprocidad';
   amount: number;
   currency: 'COP' | 'UC' | 'MERITOS' | 'ONDAS';
   description: string;
@@ -78,7 +78,7 @@ export interface Transaction {
   status: 'completed' | 'pending' | 'failed' | 'processing';
   from?: string;
   to?: string;
-  ayniScore?: number;
+  reciprocidadScore?: number;
   bienComunContribution?: boolean;
   category?: string;
   metadata?: {
@@ -119,7 +119,7 @@ export const mapBackendWalletToWalletData = (backendWallet: BackendWalletRespons
     status: tx.status.toLowerCase() as Transaction['status'],
     from: tx.fromUser?.name || tx.fromUserId,
     to: tx.toUser?.name || tx.toUserId,
-    ayniScore: Math.floor(Math.random() * 10) + 1, // Simulado por ahora
+    reciprocidadScore: Math.floor(Math.random() * 10) + 1, // Simulado por ahora
     bienComunContribution: tx.type === 'REWARD',
     category: tx.type.toLowerCase(),
   }));
@@ -152,7 +152,7 @@ export const mapBackendWalletToWalletData = (backendWallet: BackendWalletRespons
     ondas: backendWallet.balanceToins,
     pendingBalance: 0, // Por ahora no hay datos de balance pendiente
     monthlyChange: Math.random() * 20 - 10, // Simulado
-    ayniLevel: Math.floor((backendWallet.balanceUnits / 100) * 10), // Basado en balance
+    reciprocidadLevel: Math.floor((backendWallet.balanceUnits / 100) * 10), // Basado en balance
     collaborationScore: Math.random() * 10, // Simulado
     communityRank: `#${Math.floor(Math.random() * 10000) + 1}`, // Simulado
     accounts,

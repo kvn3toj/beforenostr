@@ -446,7 +446,7 @@ export interface MarketplaceItem {
     name: string;
     avatar: string;
     isEmprendedorConfiable: boolean;
-    ayniScore: number;
+    reciprocidadScore: number;
     meritos: number;
   };
   stats: {
@@ -481,11 +481,11 @@ export interface MarketplaceSearchFilters {
     | 'newest'
     | 'trending'
     | 'impact'
-    | 'ayni_score'
+    | 'reciprocidad_score'
     | 'consciousness';
   tags: string[];
   hasDiscount: boolean;
   impactLevel?: 'local' | 'regional' | 'global';
   consciousnessLevel?: 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT';
-  minimumAyniScore?: number;
+  minimumReciprocidadScore?: number;
 }

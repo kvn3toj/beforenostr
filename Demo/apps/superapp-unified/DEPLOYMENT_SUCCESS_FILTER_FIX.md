@@ -21,8 +21,8 @@ t.filter is not a function. (In 't.filter(n=>n.fromUserId===e)', 't.filter' is u
 
 #### **A. Validación Robusta en `useLetsIntegration.ts`**
 ```javascript
-// ✅ Hook useAyniBalance corregido:
-export const useAyniBalance = (userId: string) => {
+// ✅ Hook useReciprocidadBalance corregido:
+export const useReciprocidadBalance = (userId: string) => {
   const { data: transactions } = useUnitsTransactions(userId);
 
   // 🛡️ SOLUCIÓN: Validación robusta de arrays para prevenir errores de filter

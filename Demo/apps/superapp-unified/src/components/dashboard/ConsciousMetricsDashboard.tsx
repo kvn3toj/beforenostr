@@ -28,7 +28,7 @@ import {
 
 // 🌌 MÉTRICAS CONSCIENTES SEGÚN EL ARCHIVO CÓSMICO
 interface ConsciousMetrics {
-  ayniBalance: number; // Equilibrio de reciprocidad (0-100)
+  reciprocidadBalance: number; // Equilibrio de reciprocidad (0-100)
   bienComun: number; // Contribución al bien común (0-100)
   cooperacion: number; // Nivel de cooperación vs competencia (0-100)
   metanoia: number; // Transformación personal medible (0-100)
@@ -43,7 +43,7 @@ interface ConsciousTransaction {
   id: string;
   type: 'dar' | 'recibir' | 'intercambio';
   description: string;
-  ayniValue: number;
+  reciprocidadValue: number;
   timestamp: Date;
   module: 'uplay' | 'marketplace' | 'social' | 'ustats';
 }
@@ -88,7 +88,7 @@ const ConsciousMetricsDashboard: React.FC = () => {
           console.log('📊 Usando métricas conscientes simuladas - Backend en desarrollo');
 
           const simulatedMetrics: ConsciousMetrics = {
-            ayniBalance: Math.floor(Math.random() * 30) + 70, // 70-100 (alto porque es CoomÜnity)
+            reciprocidadBalance: Math.floor(Math.random() * 30) + 70, // 70-100 (alto porque es CoomÜnity)
             bienComun: Math.floor(Math.random() * 25) + 75, // 75-100
             cooperacion: Math.floor(Math.random() * 20) + 80, // 80-100
             metanoia: Math.floor(Math.random() * 40) + 60, // 60-100 (más variable)
@@ -107,7 +107,7 @@ const ConsciousMetricsDashboard: React.FC = () => {
               id: '1',
               type: 'dar',
               description: 'Compartiste conocimiento en video ÜPlay',
-              ayniValue: 15,
+              reciprocidadValue: 15,
               timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2h ago
               module: 'uplay',
             },
@@ -115,7 +115,7 @@ const ConsciousMetricsDashboard: React.FC = () => {
               id: '2',
               type: 'recibir',
               description: 'Recibiste ayuda en Marketplace',
-              ayniValue: -10,
+              reciprocidadValue: -10,
               timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5h ago
               module: 'marketplace',
             },
@@ -123,7 +123,7 @@ const ConsciousMetricsDashboard: React.FC = () => {
               id: '3',
               type: 'intercambio',
               description: 'Colaboración exitosa en Social',
-              ayniValue: 8,
+              reciprocidadValue: 8,
               timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
               module: 'social',
             },
@@ -249,7 +249,7 @@ const ConsciousMetricsDashboard: React.FC = () => {
           🌌 Dashboard de Consciencia CoomÜnity
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
-          Métricas basadas en los principios del Archivo Cósmico: Ayni, Bien Común, Cooperación, Metanöia, Neguentropía y Vocación.
+          Métricas basadas en los principios del Archivo Cósmico: Reciprocidad, Bien Común, Cooperación, Metanöia, Neguentropía y Vocación.
         </Typography>
 
         {/* Status de conexión */}
@@ -266,8 +266,8 @@ const ConsciousMetricsDashboard: React.FC = () => {
       <Grid container spacing={3} mb={4}>
         <Grid item xs={12} sm={6} md={4}>
           <MetricCard
-            title="Balance Ayni"
-            value={metrics.ayniBalance}
+            title="Balance Reciprocidad"
+            value={metrics.reciprocidadBalance}
             icon={<Balance />}
             description="Equilibrio de reciprocidad"
           />
@@ -351,10 +351,10 @@ const ConsciousMetricsDashboard: React.FC = () => {
         </Grid>
       </Grid>
 
-      {/* 📊 Transacciones Recientes de Ayni */}
+      {/* 📊 Transacciones Recientes de Reciprocidad */}
       <Card sx={{ p: 3 }}>
         <Typography variant="h6" fontWeight={600} gutterBottom>
-          🔄 Transacciones Recientes de Ayni
+          🔄 Transacciones Recientes de Reciprocidad
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
@@ -369,12 +369,12 @@ const ConsciousMetricsDashboard: React.FC = () => {
                 p={2}
                 sx={{
                   backgroundColor: alpha(
-                    transaction.ayniValue > 0 ? '#4CAF50' : '#F44336',
+                    transaction.reciprocidadValue > 0 ? '#4CAF50' : '#F44336',
                     0.1
                   ),
                   borderRadius: 2,
                   border: `1px solid ${alpha(
-                    transaction.ayniValue > 0 ? '#4CAF50' : '#F44336',
+                    transaction.reciprocidadValue > 0 ? '#4CAF50' : '#F44336',
                     0.2
                   )}`,
                 }}
@@ -388,8 +388,8 @@ const ConsciousMetricsDashboard: React.FC = () => {
                   </Typography>
                 </Box>
                 <Chip
-                  label={`${transaction.ayniValue > 0 ? '+' : ''}${transaction.ayniValue} Ayni`}
-                  color={transaction.ayniValue > 0 ? 'success' : 'error'}
+                  label={`${transaction.reciprocidadValue > 0 ? '+' : ''}${transaction.reciprocidadValue} Reciprocidad`}
+                  color={transaction.reciprocidadValue > 0 ? 'success' : 'error'}
                   variant="outlined"
                 />
               </Box>
@@ -397,7 +397,7 @@ const ConsciousMetricsDashboard: React.FC = () => {
           </Stack>
         ) : (
           <Typography variant="body2" color="text.secondary" textAlign="center" py={4}>
-            No hay transacciones recientes de Ayni
+            No hay transacciones recientes de Reciprocidad
           </Typography>
         )}
       </Card>

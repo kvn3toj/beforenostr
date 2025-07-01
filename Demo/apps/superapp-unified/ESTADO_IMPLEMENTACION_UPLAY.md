@@ -73,7 +73,7 @@
   - "Gamificación Avanzada" (5/10 participantes)
 
 - **Challenges mock**:
-  - "Maestro del Ayni" (Completa 5 videos sobre reciprocidad)
+  - "Maestro del Reciprocidad" (Completa 5 videos sobre reciprocidad)
   - "Explorador de Contenido" (Mira videos de 3 categorías diferentes)
 
 - **Social Feed mock**:

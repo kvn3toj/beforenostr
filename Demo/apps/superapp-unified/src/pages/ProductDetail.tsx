@@ -29,7 +29,7 @@ const mapBackendItemToProduct = (item: any): Product => {
     description: item.description,
     fullDescription: item.fullDescription || item.description,
     price: item.price,
-    currency: item.currency || 'LUKAS',
+    currency: item.currency || 'UNIT',
     category: item.category,
     tags: item.tags || [],
     images: item.images && item.images.length > 0 ? item.images : ['https://via.placeholder.com/800x600'],

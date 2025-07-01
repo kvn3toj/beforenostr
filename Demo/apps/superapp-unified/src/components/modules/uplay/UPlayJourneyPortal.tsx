@@ -42,7 +42,7 @@ const UPlayJourneyPortal: React.FC = () => {
   // The actual playlist/journey data might be passed via location state from the dashboard.
   const journeyData: JourneyData = location.state?.journeyData || {
     id: journeyId || 'default-journey',
-    title: 'La Senda del Ayni',
+    title: 'La Senda del Reciprocidad',
     inspirationalQuote: 'El universo no te da lo que pides con tus pensamientos; te da lo que pides con tus acciones.',
     purpose: 'Este viaje te sumergirá en el principio ancestral de la reciprocidad. Aprenderás a ver el mundo no como un lugar de transacciones, sino de intercambios sagrados de energía y valor.',
     imageUrl: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop',
@@ -51,8 +51,8 @@ const UPlayJourneyPortal: React.FC = () => {
       ondas: 80,
     },
     videos: [
-        { id: 'video1', title: 'Introducción al Ayni' },
-        { id: 'video2', title: 'Ayni en la Comunidad' },
+        { id: 'video1', title: 'Introducción al Reciprocidad' },
+        { id: 'video2', title: 'Reciprocidad en la Comunidad' },
     ],
   };
 

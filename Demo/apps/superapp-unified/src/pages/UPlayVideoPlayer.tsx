@@ -146,7 +146,7 @@ const getVideoData = (videoId: string): VideoData => {
       // Map specific CoomÜnity videos to relevant YouTube content
       const youtubeVideoMap: Record<string, string> = {
         'coomunity-intro': 'https://www.youtube.com/embed/gKA4JjkiU4A', // The Five Minute Communitarian
-        'ayni-deep-dive': 'https://www.youtube.com/embed/5J4UaAskcHg', // What is Reciprocity
+        'reciprocidad-deep-dive': 'https://www.youtube.com/embed/5J4UaAskcHg', // What is Reciprocity
         'ondas-energia': 'https://www.youtube.com/embed/EwzWTIdhYRQ', // Towards an ontology of the commons
       };
 
@@ -160,27 +160,27 @@ const getVideoData = (videoId: string): VideoData => {
       id: 'coomunity-intro',
       title: 'Introducción a CoomÜnity: Filosofía y Principios',
       description:
-        'Descubre los fundamentos de CoomÜnity: Ayni, Bien Común, Öndas y la economía colaborativa que transforma vidas.',
+        'Descubre los fundamentos de CoomÜnity: Reciprocidad, Bien Común, Öndas y la economía colaborativa que transforma vidas.',
       url: getVideoUrl('/assets/vid1.mp4', 'coomunity-intro'),
       duration: 240,
       questions: [],
       category: 'Fundamentos',
       difficulty: 'easy',
       estimatedRewards: { merits: 120, ondas: 50 },
-      tags: ['Filosofía', 'Ayni', 'Bien Común', 'Öndas'],
+      tags: ['Filosofía', 'Reciprocidad', 'Bien Común', 'Öndas'],
     },
-    'ayni-deep-dive': {
-      id: 'ayni-deep-dive',
-      title: 'Ayni: El Arte de la Reciprocidad Equilibrada',
+    'reciprocidad-deep-dive': {
+      id: 'reciprocidad-deep-dive',
+      title: 'Reciprocidad: El Arte de la Reciprocidad Equilibrada',
       description:
-        'Profundiza en el concepto de Ayni y cómo aplicar la reciprocidad en tu vida diaria para crear armonía.',
-      url: getVideoUrl('/assets/vid2.mp4', 'ayni-deep-dive'),
+        'Profundiza en el concepto de Reciprocidad y cómo aplicar la reciprocidad en tu vida diaria para crear armonía.',
+      url: getVideoUrl('/assets/vid2.mp4', 'reciprocidad-deep-dive'),
       duration: 320,
       questions: [],
       category: 'Principios',
       difficulty: 'medium',
       estimatedRewards: { merits: 180, ondas: 75 },
-      tags: ['Ayni', 'Reciprocidad', 'Equilibrio', 'Armonía'],
+      tags: ['Reciprocidad', 'Reciprocidad', 'Equilibrio', 'Armonía'],
     },
     'ondas-energia': {
       id: 'ondas-energia',
@@ -231,8 +231,8 @@ const getPlaylistVideos = (): PlaylistVideo[] => [
     isCompleted: false,
   },
   {
-    id: 'ayni-deep-dive',
-    title: 'Ayni: El Arte de la Reciprocidad',
+    id: 'reciprocidad-deep-dive',
+    title: 'Reciprocidad: El Arte de la Reciprocidad',
     duration: 320,
     hasQuestions: true,
     difficulty: 'medium',

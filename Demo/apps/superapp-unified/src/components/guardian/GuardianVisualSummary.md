@@ -18,7 +18,7 @@ The Guardian Agents have been successfully invoked to enhance the entire CoomÜn
 - **Five Elements Rotating Circle**: Animated conic gradient representing the balance of elements
 - **Floating Element Icons**: Dynamic floating animations for each element
 - **Guardian Gradients**: Text gradients using primary and accent colors
-- **Progress Visualization**: Ayni progress displayed in the center of the elements circle
+- **Progress Visualization**: Reciprocidad progress displayed in the center of the elements circle
 
 #### 2. Guardian Theme Selector
 - **Real-time Preview**: Instant theme switching for testing
@@ -35,12 +35,12 @@ The Guardian Agents have been successfully invoked to enhance the entire CoomÜn
 #### Core Elements
 - **Fuego (Fire)**: `#f5a623` - Action, passion, transformation
 - **Agua (Water)**: `#0891b2` - Flow, trust, adaptability  
-- **Tierra (Earth)**: `#16a34a` - Stability, growth, Ayni
+- **Tierra (Earth)**: `#16a34a` - Stability, growth, Reciprocidad
 - **Aire (Air)**: `#a855f7` - Vision, inspiration, wisdom
 - **Éter (Ether)**: `#f59e0b` - Transcendence, unity, illumination
 
 #### CoomÜnity Concepts
-- **Ayni (Reciprocity)**: Earth green for balance
+- **Reciprocidad (Reciprocity)**: Earth green for balance
 - **Mëritos (Merit)**: Fire gold for achievement  
 - **Öndas (Energy)**: Air violet for vibration
 - **Lukas (Currency)**: Water blue for flow
@@ -150,7 +150,7 @@ All Guardian colors are automatically applied as CSS variables:
 
 The Guardian Visual System embodies:
 
-1. **Ayni (Reciprocity)**: Balanced color relationships
+1. **Reciprocidad (Reciprocity)**: Balanced color relationships
 2. **Metanöia (Transformation)**: Dynamic theme switching
 3. **Neguentropía (Order)**: Organized color hierarchies
 4. **Bien Común (Common Good)**: Accessible design for all
@@ -182,7 +182,7 @@ Four pre-configured gradients available:
 - `--guardian-gradient-primary`: Fire to Earth
 - `--guardian-gradient-secondary`: Water to Air  
 - `--guardian-gradient-cosmic`: Multi-element cosmic blend
-- `--guardian-gradient-ayni`: Water to Earth (reciprocity)
+- `--guardian-gradient-reciprocidad`: Water to Earth (reciprocity)
 
 ## 🎉 Results
 

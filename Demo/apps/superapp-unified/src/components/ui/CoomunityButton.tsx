@@ -27,7 +27,7 @@ export interface CoomunityButtonProps extends Omit<ButtonProps, 'variant' | 'siz
   animated?: boolean;
   pulse?: boolean;
   glow?: boolean;
-  ayniLevel?: 1 | 2 | 3 | 4 | 5; // Nivel de Ayni para styling especial
+  reciprocidadLevel?: 1 | 2 | 3 | 4 | 5; // Nivel de Reciprocidad para styling especial
 }
 
 const CoomunityButton: React.FC<CoomunityButtonProps> = ({
@@ -43,7 +43,7 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
   animated = true,
   pulse = false,
   glow = false,
-  ayniLevel,
+  reciprocidadLevel,
   children,
   disabled,
   className,
@@ -254,11 +254,11 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
     }
   };
 
-  // Estilos de Ayni
-  const getAyniStyles = () => {
-    if (!ayniLevel) return {};
+  // Estilos de Reciprocidad
+  const getReciprocidadStyles = () => {
+    if (!reciprocidadLevel) return {};
 
-    const ayniColors = {
+    const reciprocidadColors = {
       1: { color: '#ef4444', glow: 'rgba(239, 68, 68, 0.3)' },
       2: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.3)' },
       3: { color: '#10b981', glow: 'rgba(16, 185, 129, 0.3)' },
@@ -266,7 +266,7 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
       5: { color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.3)' },
     };
 
-    const ayniColor = ayniColors[ayniLevel];
+    const reciprocidadColor = reciprocidadColors[reciprocidadLevel];
 
     return {
       '&::before': {
@@ -276,21 +276,21 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
         left: 0,
         right: 0,
         bottom: 0,
-        background: `linear-gradient(45deg, transparent 30%, ${ayniColor.color}20 50%, transparent 70%)`,
+        background: `linear-gradient(45deg, transparent 30%, ${reciprocidadColor.color}20 50%, transparent 70%)`,
         opacity: 0,
         transition: 'opacity 0.3s ease',
       },
       '&:hover::before': {
         opacity: 1,
       },
-      boxShadow: glow ? `0 0 20px ${ayniColor.glow}` : 'none',
+      boxShadow: glow ? `0 0 20px ${reciprocidadColor.glow}` : 'none',
     };
   };
 
   const buttonStyles = {
     ...getVariantStyles(),
     ...getSizeStyles(),
-    ...getAyniStyles(),
+    ...getReciprocidadStyles(),
     borderRadius: rounded ? '50px' : '8px',
     width: fullWidth ? '100%' : 'auto',
     animation: pulse ? 'pulse 2s infinite' : 'none',

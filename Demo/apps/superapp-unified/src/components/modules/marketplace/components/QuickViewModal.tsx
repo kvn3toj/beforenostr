@@ -118,7 +118,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
               <Avatar src={item.seller.avatar} alt={item.seller.name} sx={{ width: 48, height: 48 }} />
               <Box>
                 <Typography variant="subtitle1" fontWeight="bold">{item.seller.name}</Typography>
-                <Chip label={`Ayni: ${item.seller.ayniScore}%`} size="small" color="success" variant='outlined' />
+                <Chip label={`Reciprocidad: ${item.seller.reciprocidadScore}%`} size="small" color="success" variant='outlined' />
               </Box>
             </Stack>
 

@@ -2,7 +2,7 @@
  * 📊 LETS Analytics Dashboard - Sistema de Métricas Avanzadas
  * 
  * Dashboard completo para monitorear el sistema LETS con métricas
- * de Ayni, confianza, circulación de Ünits y salud del ecosistema
+ * de Reciprocidad, confianza, circulación de Ünits y salud del ecosistema
  */
 
 import React, { useState } from 'react';
@@ -158,10 +158,10 @@ const LetsAnalyticsDashboard: React.FC = () => {
     </Card>
   );
 
-  // Componente para el índice de Ayni
-  const AyniIndexCard = () => {
-    const ayniPercentage = (analytics?.ayniIndex || 0) * 100;
-    const getAyniColor = (index: number) => {
+  // Componente para el índice de Reciprocidad
+  const ReciprocidadIndexCard = () => {
+    const reciprocidadPercentage = (analytics?.reciprocidadIndex || 0) * 100;
+    const getReciprocidadColor = (index: number) => {
       if (index >= 80) return 'success';
       if (index >= 60) return 'warning';
       return 'error';
@@ -175,7 +175,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
               <BalanceIcon sx={{ fontSize: 32, color: 'primary.main' }} />
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Índice de Ayni (Reciprocidad)
+                  Índice de Reciprocidad (Reciprocidad)
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Balance de dar y recibir en la comunidad
@@ -188,21 +188,21 @@ const LetsAnalyticsDashboard: React.FC = () => {
                 variant="h2" 
                 sx={{ 
                   fontWeight: 700, 
-                  color: `${getAyniColor(ayniPercentage)}.main` 
+                  color: `${getReciprocidadColor(reciprocidadPercentage)}.main` 
                 }}
               >
-                {ayniPercentage.toFixed(1)}%
+                {reciprocidadPercentage.toFixed(1)}%
               </Typography>
               <LinearProgress
                 variant="determinate"
-                value={ayniPercentage}
+                value={reciprocidadPercentage}
                 sx={{
                   height: 8,
                   borderRadius: 4,
                   mt: 2,
                   backgroundColor: 'grey.200',
                   '& .MuiLinearProgress-bar': {
-                    backgroundColor: `${getAyniColor(ayniPercentage)}.main`,
+                    backgroundColor: `${getReciprocidadColor(reciprocidadPercentage)}.main`,
                     borderRadius: 4
                   }
                 }}
@@ -219,12 +219,12 @@ const LetsAnalyticsDashboard: React.FC = () => {
             </Stack>
 
             <Alert 
-              severity={getAyniColor(ayniPercentage)} 
+              severity={getReciprocidadColor(reciprocidadPercentage)} 
               sx={{ mt: 2 }}
             >
-              {ayniPercentage >= 80 && "¡Excelente! La comunidad mantiene un equilibrio saludable de reciprocidad."}
-              {ayniPercentage >= 60 && ayniPercentage < 80 && "Buen nivel de reciprocidad, pero hay espacio para mejorar."}
-              {ayniPercentage < 60 && "La comunidad necesita más equilibrio entre dar y recibir."}
+              {reciprocidadPercentage >= 80 && "¡Excelente! La comunidad mantiene un equilibrio saludable de reciprocidad."}
+              {reciprocidadPercentage >= 60 && reciprocidadPercentage < 80 && "Buen nivel de reciprocidad, pero hay espacio para mejorar."}
+              {reciprocidadPercentage < 60 && "La comunidad necesita más equilibrio entre dar y recibir."}
             </Alert>
           </Stack>
         </CardContent>
@@ -321,7 +321,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tabValue} onChange={handleTabChange}>
           <Tab label="Resumen General" />
-          <Tab label="Ayni & Confianza" />
+          <Tab label="Reciprocidad & Confianza" />
           <Tab label="Tendencias" />
           <Tab label="Salud del Sistema" />
         </Tabs>
@@ -331,7 +331,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
       <TabPanel value={tabValue} index={0}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <AyniIndexCard />
+            <ReciprocidadIndexCard />
           </Grid>
         </Grid>
       </TabPanel>
@@ -342,15 +342,15 @@ const LetsAnalyticsDashboard: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography variant="h6" sx={{ mb: 3 }}>
-                  🤝 Métricas de Ayni y Confianza
+                  🤝 Métricas de Reciprocidad y Confianza
                 </Typography>
                 
                 <Alert severity="info" sx={{ mb: 3 }}>
-                  El sistema Ayni mide el equilibrio entre dar y recibir en la comunidad. 
+                  El sistema Reciprocidad mide el equilibrio entre dar y recibir en la comunidad. 
                   Un índice alto indica una economía colaborativa saludable.
                 </Alert>
 
-                <AyniIndexCard />
+                <ReciprocidadIndexCard />
               </CardContent>
             </Card>
           </Grid>
@@ -376,7 +376,7 @@ const LetsAnalyticsDashboard: React.FC = () => {
                       Aquí se mostrarían gráficos de líneas con las tendencias de:
                       <br />• Volumen de transacciones por día
                       <br />• Crecimiento de usuarios activos
-                      <br />• Evolución del índice Ayni
+                      <br />• Evolución del índice Reciprocidad
                       <br />• Distribución de categorías en el tiempo
                     </Typography>
                   </Stack>

@@ -555,15 +555,15 @@
   border-left: 4px solid var(--color-info-500);
 }
 
-/* === AYNI BALANCE VISUALIZATION === */
-.ayni-balance-circle {
+/* === RECIPROCIDAD BALANCE VISUALIZATION === */
+.reciprocidad-balance-circle {
   position: relative;
   width: 200px;
   height: 200px;
   margin: 0 auto;
 }
 
-.ayni-balance-bg {
+.reciprocidad-balance-bg {
   position: absolute;
   inset: 0;
   border-radius: 50%;
@@ -576,7 +576,7 @@
   opacity: 0.3;
 }
 
-.ayni-balance-indicator {
+.reciprocidad-balance-indicator {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -658,12 +658,12 @@
     transform: translateY(-4px);
   }
   
-  .ayni-balance-circle {
+  .reciprocidad-balance-circle {
     width: 150px;
     height: 150px;
   }
   
-  .ayni-balance-indicator {
+  .reciprocidad-balance-indicator {
     width: 120px;
     height: 120px;
     margin: -60px 0 0 -60px;

@@ -485,14 +485,14 @@ export class LetsService {
       const mockExchanges = [
         {
           id: 'ke1',
-          title: 'Principios de Ayni en la Práctica',
+          title: 'Principios de Reciprocidad en la Práctica',
           description:
             'Sesión práctica sobre cómo aplicar los principios de reciprocidad en intercambios comerciales',
           teacherId: 'teacher1',
           teacherName: 'María González',
           copId: filters.copId || 'cop1',
           sessionType: 'workshop',
-          knowledgeAreas: ['ayni', 'economia_colaborativa', 'intercambios'],
+          knowledgeAreas: ['reciprocidad', 'economia_colaborativa', 'intercambios'],
           unitsCost: 25,
           durationHours: 2,
           maxParticipants: 10,
@@ -653,7 +653,7 @@ export class LetsService {
           items: [
             {
               id: 'ke1',
-              title: 'Principios de Ayni en la Práctica',
+              title: 'Principios de Reciprocidad en la Práctica',
               reason: 'Te interesa la economía colaborativa',
               unitsCost: 25,
               confidence: 0.85,
@@ -750,7 +750,7 @@ export class LetsService {
           type: 'transaction',
           title: 'Intercambio Completado',
           message:
-            'Has recibido 25 Ünits de María González por la sesión de Ayni',
+            'Has recibido 25 Ünits de María González por la sesión de Reciprocidad',
           timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // Hace 2 horas
           read: false,
           metadata: {
@@ -776,12 +776,12 @@ export class LetsService {
           id: 'notif3',
           type: 'knowledge_exchange',
           title: 'Recordatorio de Sesión',
-          message: 'Tu sesión "Principios de Ayni" comienza en 24 horas',
+          message: 'Tu sesión "Principios de Reciprocidad" comienza en 24 horas',
           timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // Hace 12 horas
           read: true,
           metadata: {
             exchangeId: 'ke1',
-            exchangeTitle: 'Principios de Ayni en la Práctica',
+            exchangeTitle: 'Principios de Reciprocidad en la Práctica',
             scheduledAt: new Date(
               Date.now() + 12 * 60 * 60 * 1000
             ).toISOString(),

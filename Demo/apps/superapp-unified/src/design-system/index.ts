@@ -240,7 +240,7 @@ export const applyPerformanceBasedEffects = (baseEffects: any) => {
 export const DESIGN_SYSTEM_VERSION = '2.1.0';
 export const EXTRACTION_DATE = '2024-01-20';
 export const SOURCE_COMPONENTS = [
-  'AyniMetricsCardRevolutionary.tsx (920 líneas)',
+  'ReciprocidadMetricsCardRevolutionary.tsx (920 líneas)',
   'ModuleCardsRevolutionary.tsx (663 líneas)',
   'NotificationCenterRevolutionary.tsx (747 líneas)', 
   'LiveActivityFeed.tsx (737 líneas - glassmorphism)'

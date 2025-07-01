@@ -18,7 +18,7 @@ interface ContentAnalysis {
   energy: 'low' | 'medium' | 'high';
   topics: string[];
   coomunityPhilosophy: {
-    ayni: number; // 0-1 reciprocity detection
+    reciprocidad: number; // 0-1 reciprocity detection
     bienComun: number; // 0-1 common good detection
     cooperation: number; // 0-1 cooperation vs competition
     sustainability: number; // 0-1 sustainability focus
@@ -319,7 +319,7 @@ export class AIThemingEngine {
     const words = content.toLowerCase().split(/\s+/);
 
     // Análisis de sentimiento (simplificado)
-    const positiveWords = ['bien', 'excelente', 'bueno', 'positivo', 'éxito', 'ayni', 'colaborar', 'cooperar', 'compartir'];
+    const positiveWords = ['bien', 'excelente', 'bueno', 'positivo', 'éxito', 'reciprocidad', 'colaborar', 'cooperar', 'compartir'];
     const negativeWords = ['mal', 'terrible', 'malo', 'negativo', 'fracaso', 'competir', 'individual'];
 
     const positiveCount = words.filter(word => positiveWords.includes(word)).length;
@@ -335,13 +335,13 @@ export class AIThemingEngine {
     const energy: ContentAnalysis['energy'] = energyCount > 3 ? 'high' : energyCount > 1 ? 'medium' : 'low';
 
     // Análisis de filosofía CoomÜnity
-    const ayniWords = ['ayni', 'reciprocidad', 'intercambio', 'dar', 'recibir', 'equilibrio'];
+    const reciprocidadWords = ['reciprocidad', 'reciprocidad', 'intercambio', 'dar', 'recibir', 'equilibrio'];
     const bienComunWords = ['bien común', 'comunidad', 'colectivo', 'todos', 'juntos', 'compartir'];
     const cooperationWords = ['cooperar', 'colaborar', 'equipo', 'unir', 'conjunto'];
     const sustainabilityWords = ['sostenible', 'sustentable', 'futuro', 'preservar', 'cuidar'];
 
     const coomunityPhilosophy = {
-      ayni: Math.min(1, words.filter(word => ayniWords.includes(word)).length / 10),
+      reciprocidad: Math.min(1, words.filter(word => reciprocidadWords.includes(word)).length / 10),
       bienComun: Math.min(1, words.filter(word => bienComunWords.includes(word)).length / 10),
       cooperation: Math.min(1, words.filter(word => cooperationWords.includes(word)).length / 10),
       sustainability: Math.min(1, words.filter(word => sustainabilityWords.includes(word)).length / 10)
@@ -662,7 +662,7 @@ export class AIThemingEngine {
     if (analysis.sentiment === 'positive') aguaScore += 0.3;
     if (analysis.emotionalTone === 'calm') aguaScore += 0.4;
     if (context.preferences.animation === 'enhanced') aguaScore += 0.2;
-    if (analysis.coomunityPhilosophy.ayni > 0.5) aguaScore += 0.1;
+    if (analysis.coomunityPhilosophy.reciprocidad > 0.5) aguaScore += 0.1;
 
     // Tierra - Estabilidad y crecimiento
     let tierraScore = 0;
@@ -746,7 +746,7 @@ export class AIThemingEngine {
 
     if (element === 'agua') {
       if (analysis.sentiment === 'positive') reasons.push('Contenido positivo');
-      if (analysis.coomunityPhilosophy.ayni > 0.5) reasons.push('Principios de reciprocidad presentes');
+      if (analysis.coomunityPhilosophy.reciprocidad > 0.5) reasons.push('Principios de reciprocidad presentes');
     }
 
     // ... más lógica de razones

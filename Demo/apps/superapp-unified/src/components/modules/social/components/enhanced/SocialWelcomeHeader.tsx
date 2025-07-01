@@ -118,7 +118,7 @@ export const SocialWelcomeHeader: React.FC<SocialWelcomeHeaderProps> = ({
           </Stack>
 
           <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
-            Tu red social de <strong>Ayni</strong> y <strong>Bien Común</strong>
+            Tu red social de <strong>Reciprocidad</strong> y <strong>Bien Común</strong>
           </Typography>
 
           <Stack
@@ -240,7 +240,7 @@ export const SocialWelcomeHeader: React.FC<SocialWelcomeHeaderProps> = ({
               23
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Ayni Hoy
+              Reciprocidad Hoy
             </Typography>
           </Box>
           <Box sx={{ textAlign: 'center' }}>

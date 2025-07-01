@@ -108,7 +108,7 @@ test.describe('Builder.io Rules Validation', () => {
     await page.waitForSelector('[data-testid="horizontal-player-container"]');
     
     // Verificar información del video
-    await expect(page.locator('text=La Reciprocidad: Principio Universal del Ayni')).toBeVisible();
+    await expect(page.locator('text=La Reciprocidad: Principio Universal del Reciprocidad')).toBeVisible();
     await expect(page.locator('text=4:30')).toBeVisible();
     
     // Verificar chips informativos

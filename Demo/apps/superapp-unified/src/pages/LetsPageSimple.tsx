@@ -36,7 +36,7 @@ const LetsPageSimple: React.FC = () => {
     totalTransactions: 1247,
     activeUsers: 89,
     totalUnitsCirculating: 3456,
-    ayniIndex: 0.87,
+    reciprocidadIndex: 0.87,
   };
 
   return (
@@ -95,7 +95,7 @@ const LetsPageSimple: React.FC = () => {
                   🔄 Sistema LETS CoomÜnity
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 3, opacity: 0.9 }}>
-                  Local Exchange Trading System - Economía Colaborativa basada en Ayni
+                  Local Exchange Trading System - Economía Colaborativa basada en Reciprocidad
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 3, opacity: 0.8 }}>
                   Intercambia productos, servicios y conocimientos usando Ünits, nuestra moneda local 
@@ -112,7 +112,7 @@ const LetsPageSimple: React.FC = () => {
                     sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
                   />
                   <Chip
-                    label="⚖️ Principio Ayni"
+                    label="⚖️ Principio Reciprocidad"
                     sx={{ bgcolor: 'rgba(255,255,255,0.2)', color: 'white' }}
                   />
                   <Chip

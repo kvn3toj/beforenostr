@@ -1,8 +1,8 @@
-# 🚀 PLAN DE IMPLEMENTACIÓN: WIDGET BALANCE AYNI MEJORADO
+# 🚀 PLAN DE IMPLEMENTACIÓN: WIDGET BALANCE RECIPROCIDAD MEJORADO
 
 ## 📋 RESUMEN EJECUTIVO
 
-**Proyecto:** Transformación del Widget Balance Ayni de CoomÜnity SuperApp  
+**Proyecto:** Transformación del Widget Balance Reciprocidad de CoomÜnity SuperApp  
 **Objetivo:** Evolucionar de "demostración técnica impresionante" a "herramienta útil y comprensible"  
 **Duración Total:** 6-8 semanas  
 **ROI Proyectado:** +180% en adopción de usuario, +200% en comprensión UX  
@@ -42,10 +42,10 @@
 
 ##### **T1.1.1: Panel de Información Contextual**
 ```typescript
-// 📁 src/components/home/ayni-improved/AyniInfoPanel.tsx
-interface AyniInfoPanelProps {
+// 📁 src/components/home/reciprocidad-improved/ReciprocidadInfoPanel.tsx
+interface ReciprocidadInfoPanelProps {
   sections: {
-    'que-es-ayni': {
+    'que-es-reciprocidad': {
       title: string;
       description: string;
       tips: string[];
@@ -64,7 +64,7 @@ interface AyniInfoPanelProps {
 ```
 
 **Criterios de Aceptación:**
-- ✅ Panel contextual con explicación clara de Ayni
+- ✅ Panel contextual con explicación clara de Reciprocidad
 - ✅ Tooltips educativos para cada elemento
 - ✅ Recomendaciones actionables para mejorar balance
 - ✅ Diseño responsive y accesible
@@ -76,7 +76,7 @@ interface AyniInfoPanelProps {
 
 ##### **T1.2.1: Sistema de Modos Adaptativos**
 ```typescript
-// 📁 src/hooks/ayni-improved/useAdaptiveMode.ts
+// 📁 src/hooks/reciprocidad-improved/useAdaptiveMode.ts
 const useAdaptiveMode = () => {
   const [deviceCapability, setDeviceCapability] = useState<'high' | 'medium' | 'low'>('high');
   
@@ -114,7 +114,7 @@ const useAdaptiveMode = () => {
 
 ##### **T1.2.2: Touch Optimized Controls**
 ```typescript
-// 📁 src/components/home/ayni-improved/TouchOptimizedControls.tsx
+// 📁 src/components/home/reciprocidad-improved/TouchOptimizedControls.tsx
 const TouchOptimizedControls = () => {
   return (
     <TouchContainer>
@@ -137,8 +137,8 @@ const TouchOptimizedControls = () => {
 **Prioridad:** 🔥 CRÍTICA
 
 ### **📊 Entregables Fase 1**
-- [ ] AyniInfoPanel.tsx con información contextual
-- [ ] AyniProgressionStates.tsx con niveles claros
+- [ ] ReciprocidadInfoPanel.tsx con información contextual
+- [ ] ReciprocidadProgressionStates.tsx con niveles claros
 - [ ] useAdaptiveMode.ts hook para performance
 - [ ] TouchOptimizedControls.tsx para móvil
 - [ ] Tests unitarios básicos (coverage 40%+)
@@ -165,20 +165,20 @@ const TouchOptimizedControls = () => {
 
 ##### **T2.1.1: Separación de Componentes**
 ```
-📁 src/components/home/ayni-improved/
-├── AyniBalanceWidget.tsx          # Componente principal
+📁 src/components/home/reciprocidad-improved/
+├── ReciprocidadBalanceWidget.tsx          # Componente principal
 ├── core/
-│   ├── AyniHeader.tsx            # Header con título y estado
-│   ├── AyniSolarSystem.tsx       # Sistema 3D separado
-│   ├── AyniMetricsPanel.tsx      # Panel de información
-│   └── AyniControls.tsx          # Controles de configuración
+│   ├── ReciprocidadHeader.tsx            # Header con título y estado
+│   ├── ReciprocidadSolarSystem.tsx       # Sistema 3D separado
+│   ├── ReciprocidadMetricsPanel.tsx      # Panel de información
+│   └── ReciprocidadControls.tsx          # Controles de configuración
 ├── hooks/
-│   ├── useAyniPhysics.ts         # Lógica de física separada
+│   ├── useReciprocidadPhysics.ts         # Lógica de física separada
 │   ├── useElementalBalance.ts    # Cálculos elementales
-│   └── useAyniMetrics.ts         # Métricas y estadísticas
+│   └── useReciprocidadMetrics.ts         # Métricas y estadísticas
 └── utils/
-    ├── ayniCalculations.ts       # Utilidades de cálculo
-    └── ayniAnimations.ts         # Utilidades de animación
+    ├── reciprocidadCalculations.ts       # Utilidades de cálculo
+    └── reciprocidadAnimations.ts         # Utilidades de animación
 ```
 
 **Criterios de Aceptación:**
@@ -193,8 +193,8 @@ const TouchOptimizedControls = () => {
 
 ##### **T2.1.2: Sistema de Hooks Especializados**
 ```typescript
-// 📁 src/hooks/ayni-improved/useAyniPhysics.ts
-export const useAyniPhysics = (elements: ElementStats) => {
+// 📁 src/hooks/reciprocidad-improved/useReciprocidadPhysics.ts
+export const useReciprocidadPhysics = (elements: ElementStats) => {
   const [orbitalPositions, setOrbitalPositions] = useState<OrbitalPosition[]>([]);
   const [physicsMetrics, setPhysicsMetrics] = useState<PhysicsMetrics>();
   
@@ -221,8 +221,8 @@ export const useAyniPhysics = (elements: ElementStats) => {
 
 ##### **T2.2.1: Sistema de Métricas Históricas**
 ```typescript
-// 📁 src/components/home/ayni-improved/AyniMetricsDetailPanel.tsx
-interface AyniMetricsDisplay {
+// 📁 src/components/home/reciprocidad-improved/ReciprocidadMetricsDetailPanel.tsx
+interface ReciprocidadMetricsDisplay {
   current: {
     balance: number;
     trend: 'up' | 'down' | 'stable';
@@ -260,16 +260,16 @@ interface AyniMetricsDisplay {
 
 ##### **T2.2.2: Gráfico de Tendencia Temporal**
 ```typescript
-// 📁 src/components/home/ayni-improved/AyniTrendChart.tsx
-const AyniTrendChart = () => {
+// 📁 src/components/home/reciprocidad-improved/ReciprocidadTrendChart.tsx
+const ReciprocidadTrendChart = () => {
   return (
     <ResponsiveContainer>
       <LineChart data={historicalData}>
         <Line dataKey="balance" stroke="#FFD700" strokeWidth={3} />
-        <Area dataKey="balance" fill="url(#ayniGradient)" />
+        <Area dataKey="balance" fill="url(#reciprocidadGradient)" />
         <XAxis dataKey="date" />
         <YAxis domain={[0, 100]} />
-        <Tooltip content={<CustomAyniTooltip />} />
+        <Tooltip content={<CustomReciprocidadTooltip />} />
         <ReferenceLine y={80} stroke="#4CAF50" strokeDasharray="5 5" />
       </LineChart>
     </ResponsiveContainer>
@@ -290,8 +290,8 @@ const AyniTrendChart = () => {
 
 ##### **T2.3.1: Panel de Controles Contextual**
 ```typescript
-// 📁 src/components/home/ayni-improved/AyniControlPanel.tsx
-const AyniControlPanel = () => {
+// 📁 src/components/home/reciprocidad-improved/ReciprocidadControlPanel.tsx
+const ReciprocidadControlPanel = () => {
   return (
     <ControlsContainer>
       <ViewModeToggle
@@ -358,7 +358,7 @@ const AyniControlPanel = () => {
 
 ##### **T3.1.1: Sistema Level of Detail (LOD)**
 ```typescript
-// 📁 src/hooks/ayni-improved/useLevelOfDetail.ts
+// 📁 src/hooks/reciprocidad-improved/useLevelOfDetail.ts
 const useLevelOfDetail = (elementDistance: number, userInteracting: boolean) => {
   return useMemo(() => {
     if (userInteracting) return 'high'; // Siempre alta calidad durante interacción
@@ -380,7 +380,7 @@ const useLevelOfDetail = (elementDistance: number, userInteracting: boolean) => 
 
 ##### **T3.1.2: Smart Animation Management**
 ```typescript
-// 📁 src/hooks/ayni-improved/useSmartAnimations.ts
+// 📁 src/hooks/reciprocidad-improved/useSmartAnimations.ts
 const useSmartAnimations = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isInteracting, setIsInteracting] = useState(false);
@@ -407,17 +407,17 @@ const useSmartAnimations = () => {
 
 ##### **T3.2.1: Tests Unitarios Comprehensivos**
 ```typescript
-// 📁 src/components/home/ayni-improved/__tests__/
-├── AyniBalanceWidget.test.tsx       # Tests del componente principal
+// 📁 src/components/home/reciprocidad-improved/__tests__/
+├── ReciprocidadBalanceWidget.test.tsx       # Tests del componente principal
 ├── hooks/
-│   ├── useAyniPhysics.test.ts      # Tests de lógica de física
+│   ├── useReciprocidadPhysics.test.ts      # Tests de lógica de física
 │   ├── useAdaptiveMode.test.ts     # Tests de modo adaptativo
 │   └── useSmartAnimations.test.ts  # Tests de animaciones
 ├── utils/
-│   ├── ayniCalculations.test.ts    # Tests de cálculos
-│   └── ayniAnimations.test.ts      # Tests de utilidades
+│   ├── reciprocidadCalculations.test.ts    # Tests de cálculos
+│   └── reciprocidadAnimations.test.ts      # Tests de utilidades
 └── integration/
-    └── AyniWidget.integration.test.tsx # Tests de integración
+    └── ReciprocidadWidget.integration.test.tsx # Tests de integración
 ```
 
 **Criterios de Aceptación:**
@@ -432,18 +432,18 @@ const useSmartAnimations = () => {
 
 ##### **T3.2.2: Tests E2E Específicos**
 ```typescript
-// 📁 e2e/ayni-widget-improved.spec.ts
-describe('Widget Ayni Mejorado', () => {
+// 📁 e2e/reciprocidad-widget-improved.spec.ts
+describe('Widget Reciprocidad Mejorado', () => {
   test('should show contextual information on first visit', async ({ page }) => {
     await page.goto('/home');
-    await expect(page.locator('[data-testid="ayni-info-panel"]')).toBeVisible();
-    await expect(page.locator('[data-testid="que-es-ayni-section"]')).toBeVisible();
+    await expect(page.locator('[data-testid="reciprocidad-info-panel"]')).toBeVisible();
+    await expect(page.locator('[data-testid="que-es-reciprocidad-section"]')).toBeVisible();
   });
 
   test('should adapt to mobile performance', async ({ page, isMobile }) => {
     if (isMobile) {
       await page.goto('/home');
-      await expect(page.locator('[data-testid="ayni-widget-mobile-mode"]')).toBeVisible();
+      await expect(page.locator('[data-testid="reciprocidad-widget-mobile-mode"]')).toBeVisible();
       // Verificar que no hay animaciones pesadas
     }
   });
@@ -488,13 +488,13 @@ describe('Widget Ayni Mejorado', () => {
 
 ##### **T4.1.1: Panel de Debug para Desarrollo**
 ```typescript
-// 📁 src/components/home/ayni-improved/AyniDebugPanel.tsx
-const AyniDebugPanel = () => {
+// 📁 src/components/home/reciprocidad-improved/ReciprocidadDebugPanel.tsx
+const ReciprocidadDebugPanel = () => {
   if (process.env.NODE_ENV !== 'development') return null;
 
   return (
     <DebugContainer>
-      <h4>Ayni Widget Debug</h4>
+      <h4>Reciprocidad Widget Debug</h4>
       <MetricsDisplay>
         <div>FPS: {currentFPS}</div>
         <div>Render Time: {renderTime}ms</div>
@@ -522,8 +522,8 @@ const AyniDebugPanel = () => {
 
 ##### **T4.1.2: Testing Utilities**
 ```typescript
-// 📁 src/components/home/ayni-improved/testing/ayniTestUtils.ts
-export const createAyniTestUtils = () => {
+// 📁 src/components/home/reciprocidad-improved/testing/reciprocidadTestUtils.ts
+export const createReciprocidadTestUtils = () => {
   return {
     setBalance: (value: number) => (mockState.balance = value),
     setElement: (element: string, value: number) => (mockState.elements[element] = value),
@@ -548,7 +548,7 @@ export const createAyniTestUtils = () => {
 
 ##### **T4.2.1: Documentación Técnica**
 ```markdown
-# 📚 DOCUMENTACIÓN WIDGET AYNI MEJORADO
+# 📚 DOCUMENTACIÓN WIDGET RECIPROCIDAD MEJORADO
 
 ## Arquitectura
 - Diagrama de componentes
@@ -767,20 +767,20 @@ interface TechnicalKPIs {
 ### **🔄 FEATURE FLAGS STRATEGY**
 
 ```typescript
-interface AyniWidgetFeatureFlags {
+interface ReciprocidadWidgetFeatureFlags {
   // Componentes principales
-  'ayni-improved-enabled': boolean;        // Master switch
-  'ayni-info-panel': boolean;             // Panel contextual
-  'ayni-adaptive-mode': boolean;          // Performance adaptativo
-  'ayni-historical-metrics': boolean;     // Métricas históricas
-  'ayni-advanced-controls': boolean;      // Controles avanzados
+  'reciprocidad-improved-enabled': boolean;        // Master switch
+  'reciprocidad-info-panel': boolean;             // Panel contextual
+  'reciprocidad-adaptive-mode': boolean;          // Performance adaptativo
+  'reciprocidad-historical-metrics': boolean;     // Métricas históricas
+  'reciprocidad-advanced-controls': boolean;      // Controles avanzados
   
   // Optimizaciones
-  'ayni-lod-system': boolean;            // Level of Detail
-  'ayni-smart-animations': boolean;      // Animaciones inteligentes
+  'reciprocidad-lod-system': boolean;            // Level of Detail
+  'reciprocidad-smart-animations': boolean;      // Animaciones inteligentes
   
   // Debug y desarrollo
-  'ayni-debug-panel': boolean;           // Panel de debug
+  'reciprocidad-debug-panel': boolean;           // Panel de debug
 }
 ```
 
@@ -921,20 +921,20 @@ interface ROIMetrics {
 
 ```mermaid
 graph TB
-    A[AyniBalanceWidget] --> B[AyniHeader]
-    A --> C[AyniSolarSystem]
-    A --> D[AyniMetricsPanel]
-    A --> E[AyniControls]
+    A[ReciprocidadBalanceWidget] --> B[ReciprocidadHeader]
+    A --> C[ReciprocidadSolarSystem]
+    A --> D[ReciprocidadMetricsPanel]
+    A --> E[ReciprocidadControls]
     
-    C --> F[useAyniPhysics]
-    D --> G[useAyniMetrics]
+    C --> F[useReciprocidadPhysics]
+    D --> G[useReciprocidadMetrics]
     E --> H[useAdaptiveMode]
     
     F --> I[PhysicsEngine]
     G --> J[MetricsCalculator]
     H --> K[PerformanceDetector]
     
-    L[AyniDebugPanel] -.-> A
+    L[ReciprocidadDebugPanel] -.-> A
     M[TestUtils] -.-> A
 ```
 
@@ -942,11 +942,11 @@ graph TB
 
 ```mermaid
 journey
-    title Usuario Descubre Balance Ayni Mejorado
+    title Usuario Descubre Balance Reciprocidad Mejorado
     section Primera Visita
       Ve widget: 5: Usuario
       Lee información contextual: 8: Usuario
-      Comprende concepto Ayni: 9: Usuario
+      Comprende concepto Reciprocidad: 9: Usuario
       Interactúa con elementos: 7: Usuario
     section Uso Regular
       Revisa métricas diarias: 8: Usuario
@@ -1046,7 +1046,7 @@ interface PerformanceBudget {
 
 ### **🎯 RESUMEN EJECUTIVO**
 
-Este plan de implementación transforma el Widget Balance Ayni de CoomÜnity de una demostración técnica compleja a una herramienta útil y comprensible que realmente sirve a los usuarios.
+Este plan de implementación transforma el Widget Balance Reciprocidad de CoomÜnity de una demostración técnica compleja a una herramienta útil y comprensible que realmente sirve a los usuarios.
 
 ### **🚀 BENEFICIOS CLAVE**
 - **+183% mejora** en comprensión del usuario
@@ -1063,15 +1063,15 @@ Este plan de implementación transforma el Widget Balance Ayni de CoomÜnity de 
 
 ### **🔮 VISIÓN A LARGO PLAZO**
 
-El Widget Balance Ayni Mejorado se convertirá en:
+El Widget Balance Reciprocidad Mejorado se convertirá en:
 - **Referencia de UX** dentro del ecosistema CoomÜnity
 - **Caso de estudio** para otros widgets complejos
-- **Herramienta real** que ayuda a usuarios a mejorar su Ayni
+- **Herramienta real** que ayuda a usuarios a mejorar su Reciprocidad
 - **Base sólida** para futuras innovaciones en gamificación
 
 ---
 
-**💫 "De complejidad técnica a claridad humana - El Balance Ayni que realmente importa"**
+**💫 "De complejidad técnica a claridad humana - El Balance Reciprocidad que realmente importa"**
 
 ---
 

@@ -829,7 +829,7 @@ model UserChallenge {
 // =====================================================================
 
 enum Currency {
-  LUKAS
+  UNIT
   USD
   EUR
   BTC
@@ -858,7 +858,7 @@ model MarketplaceItem {
   name        String
   description String                @db.Text
   price       Float
-  currency    Currency              @default(LUKAS)
+  currency    Currency              @default(UNIT)
   itemType    MarketplaceItemType   @default(SERVICE)
   status      MarketplaceItemStatus @default(ACTIVE)
 

@@ -21,7 +21,7 @@ export type ConcilioTheme =
   | 'guardian-harmony'     // Elementos + Guardianes (Principal)
   | 'autumn-serenity'      // Otoñal + Calma
   | 'cosmic-transcendence' // Cósmico + Elevación
-  | 'ayni-balance'         // Reciprocidad + Equilibrio
+  | 'reciprocidad-balance'         // Reciprocidad + Equilibrio
   | 'bien-comun'           // Bien Común + Comunidad
 
 // 🎨 PALETA MAESTRA DEL CONCILIO
@@ -52,7 +52,7 @@ export interface ConcilioColorSystem {
   // Colores Semánticos Conscientes
   consciousness: {
     elevation: string;     // Para métricas espirituales
-    harmony: string;       // Para balance Ayni
+    harmony: string;       // Para balance Reciprocidad
     growth: string;        // Para progreso personal
     community: string;     // Para bien común
     wisdom: string;        // Para conocimiento
@@ -234,7 +234,7 @@ export const CONCILIO_THEMES: Record<ConcilioTheme, ConcilioColorSystem> = {
     },
   },
 
-  'ayni-balance': {
+  'reciprocidad-balance': {
     primary: {
       main: '#10B981',      // Verde equilibrio
       light: '#6EE7B7',
@@ -388,7 +388,7 @@ export const MODULE_THEME_MAPPING = {
   social: 'bien-comun',
   wallet: 'guardian-harmony',
   consciousness: 'cosmic-transcendence',
-  profile: 'ayni-balance',
+  profile: 'reciprocidad-balance',
   ustats: 'bien-comun',
 } as const;
 
@@ -407,7 +407,7 @@ export const CONCILIO_SHADOWS = {
   medium: '0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05)',
   elevated: '0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04)',
   cosmic: '0 25px 50px rgba(139, 92, 246, 0.25)',
-  ayni: '0 25px 50px rgba(16, 185, 129, 0.25)',
+  reciprocidad: '0 25px 50px rgba(16, 185, 129, 0.25)',
 } as const;
 
 export default {

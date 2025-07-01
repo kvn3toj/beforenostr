@@ -18,7 +18,7 @@
 **Problema detectado:**
 
 - El Home aún muestra 8+ elementos simultáneamente
-- WelcomeHeader + AyniMetricsCard + WalletOverview + QuickActionsGrid + ModuleCards + AyniBalanceVisualization + NotificationCenter
+- WelcomeHeader + ReciprocidadMetricsCard + WalletOverview + QuickActionsGrid + ModuleCards + ReciprocidadBalanceVisualization + NotificationCenter
 - Usuario debe procesar demasiada información de una vez
 
 **Evidencia en código:**
@@ -27,12 +27,12 @@
 // ❌ PROBLEMA: Demasiados componentes simultaneos
 <Grid container spacing={4}>
   {/* Panel principal - 400px height */}
-  <AyniMetricsCard />
+  <ReciprocidadMetricsCard />
 
   {/* Panel lateral - 3 componentes más */}
   <WalletOverview />
   <QuickActionsGrid />
-  <AyniBalanceVisualization />
+  <ReciprocidadBalanceVisualization />
 
   {/* Sección completa adicional */}
   <ModuleCards />
@@ -52,7 +52,7 @@
 - **Espaciados inconsistentes:** `spacing={3}` vs `spacing={4}` vs `sx={{ mb: 2 }}`
 - **Border radius mezclados:** `borderRadius: 2` vs `borderRadius: 3` vs `borderRadius: 3`
 - **Typography variants:** `variant="h5"` vs clases CSS `.text-h2`
-- **Color tokens:** `alpha('#6366f1', 0.08)` vs variables CSS `var(--ayni-primary)`
+- **Color tokens:** `alpha('#6366f1', 0.08)` vs variables CSS `var(--reciprocidad-primary)`
 
 **Evidencia en código:**
 
@@ -67,7 +67,7 @@
 
 **Problemas identificados:**
 
-- **Jerarquía visual confusa:** Balance Ayni compite con Wallet Overview
+- **Jerarquía visual confusa:** Balance Reciprocidad compite con Wallet Overview
 - **Orden de prioridad no lógico:** QuickActions está antes que ModuleCards
 - **Agrupación conceptual pobre:** Elementos relacionados están separados
 
@@ -75,8 +75,8 @@
 
 ```
 Header (Prioridad 1)
-├── Balance Ayni (Prioridad 1) | Wallet (Prioridad ?)
-├── Quick Actions (Prioridad ?) | Ayni Visualization (Prioridad ?)
+├── Balance Reciprocidad (Prioridad 1) | Wallet (Prioridad ?)
+├── Quick Actions (Prioridad ?) | Reciprocidad Visualization (Prioridad ?)
 └── Module Cards (Prioridad 2)
 ```
 
@@ -146,12 +146,12 @@ background: `linear-gradient(135deg, ${alpha('#6366f1', 0.08)}, ${alpha('#8b5cf6
 ┌─────────────────────────────────────┐
 │  Smart Header (1 elemento)         │
 │  - Saludo + Primary Action          │
-│  - Balance Ayni integrado           │
+│  - Balance Reciprocidad integrado           │
 └─────────────────────────────────────┘
 
 ┌─────────────────────────────────────┐
 │  Primary Dashboard (1 elemento)    │
-│  - Balance Ayni HERO                │
+│  - Balance Reciprocidad HERO                │
 │  - Quick access a detalles          │
 └─────────────────────────────────────┘
 
@@ -265,7 +265,7 @@ const useSmartInterface = (user, balance, activity) => {
     // Balance bajo: Focus en equilibrar
     if (balance < 0.6) {
       return {
-        primaryAction: 'Equilibrar Ayni',
+        primaryAction: 'Equilibrar Reciprocidad',
         modules: ['Marketplace', 'Social'],
         insights: 'how-to-give',
       };
@@ -294,7 +294,7 @@ const useSmartFeedback = () => {
     const feedbackTypes = {
       'balance-improvement': {
         icon: '🌟',
-        message: '¡Tu balance Ayni mejoró!',
+        message: '¡Tu balance Reciprocidad mejoró!',
         action: 'Ver nuevas oportunidades',
         duration: 5000,
       },
@@ -333,7 +333,7 @@ const useSmartKeyboard = () => {
       'Ctrl+K': 'Búsqueda rápida',
 
       // Context shortcuts
-      B: 'Ver balance Ayni',
+      B: 'Ver balance Reciprocidad',
       A: 'Acciones rápidas',
       M: 'Módulos',
       N: 'Notificaciones',
@@ -401,7 +401,7 @@ const useHomeAnalytics = () => {
 
 | KPI                           | Baseline | Target Fase 2 | Impacto   |
 | ----------------------------- | -------- | ------------- | --------- |
-| **Balance Ayni Engagement**   | 45%      | 75%           | **+67%**  |
+| **Balance Reciprocidad Engagement**   | 45%      | 75%           | **+67%**  |
 | **Module Completion Rate**    | 30%      | 55%           | **+83%**  |
 | **Quick Action Usage**        | 25%      | 60%           | **+140%** |
 | **Cross-module Navigation**   | 15%      | 40%           | **+167%** |
@@ -446,7 +446,7 @@ const SmartHeader: React.FC = () => {
           <Typography variant="h2" className="text-4xl font-extrabold">
             {Math.round(balance * 100)}%
           </Typography>
-          <Typography variant="caption">Balance Ayni</Typography>
+          <Typography variant="caption">Balance Reciprocidad</Typography>
         </Box>
       </Stack>
 
@@ -489,7 +489,7 @@ const PrimaryDashboard: React.FC = () => {
           {balance}%
         </Typography>
         <Typography variant="h6" color="text.secondary">
-          Balance Ayni Actual
+          Balance Reciprocidad Actual
         </Typography>
         <SmartProgressIndicator value={balance} />
       </Box>

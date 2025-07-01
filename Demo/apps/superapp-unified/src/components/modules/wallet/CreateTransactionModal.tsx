@@ -426,7 +426,7 @@ export const CreateTransactionModal: React.FC<CreateTransactionModalProps> = ({
               <Alert severity="info">
                 <Typography variant="body2">
                   <strong>ÜCoins:</strong> Esta transacción utilizará la moneda interna de CoomÜnity.
-                  Los ÜCoins están diseñados para fomentar la reciprocidad (Ayni) en nuestra comunidad.
+                  Los ÜCoins están diseñados para fomentar la reciprocidad (Reciprocidad) en nuestra comunidad.
                 </Typography>
               </Alert>
             )}

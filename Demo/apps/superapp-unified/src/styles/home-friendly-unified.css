@@ -61,9 +61,9 @@
   font-weight: 500 !important;
 }
 
-/* ===== MÉTRICAS AYNI CARD ===== */
+/* ===== MÉTRICAS RECIPROCIDAD CARD ===== */
 .home-metrics-card,
-.ayni-metrics-card {
+.reciprocidad-metrics-card {
   background: var(--card-bg-primary) !important;
   border: 1px solid var(--card-border) !important;
   border-radius: 24px !important;
@@ -73,7 +73,7 @@
 }
 
 .home-metrics-card:hover,
-.ayni-metrics-card:hover {
+.reciprocidad-metrics-card:hover {
   box-shadow: var(--card-shadow-hover) !important;
   transform: translateY(-2px) !important;
 }
@@ -82,7 +82,7 @@
 .home-metrics-card h2,
 .home-metrics-card .MuiTypography-h2,
 .home-metrics-card .MuiTypography-h3,
-.ayni-metrics-card .MuiTypography-h3 {
+.reciprocidad-metrics-card .MuiTypography-h3 {
   color: var(--home-heading-primary) !important;
   font-weight: 700 !important;
   margin-bottom: 24px !important;
@@ -90,10 +90,10 @@
 
 /* Valores de métricas principales */
 .home-metrics-card .metric-value,
-.ayni-metrics-card .metric-value,
+.reciprocidad-metrics-card .metric-value,
 .home-metrics-card .MuiTypography-h1,
-.ayni-metrics-card .MuiTypography-h1 {
-  color: var(--metric-ayni) !important;
+.reciprocidad-metrics-card .MuiTypography-h1 {
+  color: var(--metric-reciprocidad) !important;
   font-weight: 800 !important;
   font-size: clamp(2rem, 5vw, 3.5rem) !important;
   line-height: 1.1 !important;
@@ -102,9 +102,9 @@
 
 /* Etiquetas de métricas */
 .home-metrics-card .metric-label,
-.ayni-metrics-card .metric-label,
+.reciprocidad-metrics-card .metric-label,
 .home-metrics-card .MuiTypography-body2,
-.ayni-metrics-card .MuiTypography-body2 {
+.reciprocidad-metrics-card .MuiTypography-body2 {
   color: var(--home-text-secondary) !important;
   font-weight: 500 !important;
   font-size: 0.9rem !important;
@@ -435,7 +435,7 @@
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .home-metrics-card,
-  .ayni-metrics-card {
+  .reciprocidad-metrics-card {
     padding: 20px !important;
     margin-bottom: 16px !important;
   }
@@ -498,7 +498,7 @@
 
   .home-welcome-header,
   .home-metrics-card,
-  .ayni-metrics-card,
+  .reciprocidad-metrics-card,
   .wallet-card,
   .action-card,
   .module-card,
@@ -517,7 +517,7 @@
   .home-container,
   .home-welcome-header,
   .home-metrics-card,
-  .ayni-metrics-card {
+  .reciprocidad-metrics-card {
     background: #ffffff !important;
     border: 1px solid #cccccc !important;
     box-shadow: none !important;

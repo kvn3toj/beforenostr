@@ -3,6 +3,8 @@
  * Helpers para convertir variables CSS a valores compatibles con Material-UI
  */
 
+import { MODULE_COLORS } from '../theme/colors';
+
 // Mapa de variables CSS a valores hexadecimales
 export const cssVariables = {
   // Primary colors
@@ -191,36 +193,6 @@ export const elementColors = {
 } as const;
 
 /**
- * Colores de los módulos principales - Centralizados y consistentes
- */
-export const moduleColors = {
-  uplay: {
-    primary: primaryColors[500],     // '#6366f1' - Índigo
-    secondary: secondaryColors[500], // '#8b5cf6' - Violeta
-    gradient: `linear-gradient(135deg, ${primaryColors[500]} 0%, ${secondaryColors[500]} 100%)`,
-    element: 'fuego'
-  },
-  marketplace: {
-    primary: successColors[500],     // '#10b981' - Verde
-    secondary: successColors[600],   // '#059669' - Verde más oscuro
-    gradient: `linear-gradient(135deg, ${successColors[500]} 0%, ${successColors[600]} 100%)`,
-    element: 'tierra'
-  },
-  social: {
-    primary: secondaryColors[500],   // '#8b5cf6' - Violeta
-    secondary: secondaryColors[600], // '#7c3aed' - Violeta más oscuro
-    gradient: `linear-gradient(135deg, ${secondaryColors[500]} 0%, ${secondaryColors[600]} 100%)`,
-    element: 'agua'
-  },
-  ustats: {
-    primary: warningColors[500],     // '#f59e0b' - Amarillo
-    secondary: warningColors[600],   // '#d97706' - Amarillo más oscuro
-    gradient: `linear-gradient(135deg, ${warningColors[500]} 0%, ${warningColors[600]} 100%)`,
-    element: 'aire'
-  }
-} as const;
-
-/**
  * Helper para obtener colores de elemento
  */
 export const getElementColor = (element: keyof typeof elementColors) => {
@@ -229,9 +201,10 @@ export const getElementColor = (element: keyof typeof elementColors) => {
 
 /**
  * Helper para obtener colores de módulo
+ * Usa los MODULE_COLORS importados de theme/colors.ts para evitar duplicados
  */
-export const getModuleColor = (module: keyof typeof moduleColors) => {
-  return moduleColors[module];
+export const getModuleColor = (module: keyof typeof MODULE_COLORS) => {
+  return MODULE_COLORS[module];
 };
 
 /**
@@ -239,4 +212,4 @@ export const getModuleColor = (module: keyof typeof moduleColors) => {
  */
 export const createGradient = (color1: string, color2: string, direction = '135deg') => {
   return `linear-gradient(${direction}, ${color1} 0%, ${color2} 100%)`;
-}; 
+};

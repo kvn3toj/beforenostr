@@ -26,8 +26,8 @@ import {
 
 interface SmartHeaderProps {
   userName?: string;
-  ayniBalance: number;
-  ayniLevel: string;
+  reciprocidadBalance: number;
+  reciprocidadLevel: string;
   primaryAction: {
     label: string;
     onClick: () => void;
@@ -59,7 +59,7 @@ const getSmartGreeting = (userName: string, balance: number, level: string) => {
 
 const getSmartSubtitle = (balance: number, level: string) => {
   if (balance >= 0.8) {
-    return `${level} • Excelente equilibrio Ayni`;
+    return `${level} • Excelente equilibrio Reciprocidad`;
   } else if (balance >= 0.6) {
     return `${level} • Fortalece tu balance`;
   } else {
@@ -94,8 +94,8 @@ const getActionUrgencyStyle = (urgency: string = 'medium') => {
 
 export const SmartHeader: React.FC<SmartHeaderProps> = ({
   userName = 'CoomÜnity',
-  ayniBalance,
-  ayniLevel,
+  reciprocidadBalance,
+  reciprocidadLevel,
   primaryAction,
   isBackendConnected,
   notificationCount,
@@ -105,7 +105,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const balancePercentage = Math.round(ayniBalance * 100);
+  const balancePercentage = Math.round(reciprocidadBalance * 100);
   const actionStyle = getActionUrgencyStyle(primaryAction.urgency);
 
   return (
@@ -174,7 +174,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
                 textShadow: '0 2px 4px rgba(0,0,0,0.3)',
               }}
             >
-              {getSmartGreeting(userName, ayniBalance, ayniLevel)}
+              {getSmartGreeting(userName, reciprocidadBalance, reciprocidadLevel)}
             </Typography>
             <Typography
               variant="body1"
@@ -186,7 +186,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
                 textShadow: '0 1px 2px rgba(0,0,0,0.2)',
               }}
             >
-              {getSmartSubtitle(ayniBalance, ayniLevel)}
+              {getSmartSubtitle(reciprocidadBalance, reciprocidadLevel)}
             </Typography>
 
             {/* Connection status - minimal */}
@@ -261,7 +261,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
           justifyContent="space-between"
           spacing={isMobile ? 3 : 4}
         >
-          {/* Balance Ayni - Integrated display */}
+          {/* Balance Reciprocidad - Integrated display */}
           <Box
             sx={{
               textAlign: isMobile ? 'center' : 'left',
@@ -294,9 +294,9 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
                   className="text-sm font-medium"
                   sx={{ opacity: 0.9, mb: 'var(--space-1)' }}
                 >
-                  Balance Ayni
+                  Balance Reciprocidad
                 </Typography>
-                {ayniBalance >= 0.8 && (
+                {reciprocidadBalance >= 0.8 && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <AutoAwesomeIcon sx={{ fontSize: 16, color: 'white' }} />
                     <Typography
@@ -311,7 +311,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
                     </Typography>
                   </Box>
                 )}
-                {ayniBalance >= 0.6 && ayniBalance < 0.8 && (
+                {reciprocidadBalance >= 0.6 && reciprocidadBalance < 0.8 && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <TrendingUpIcon sx={{ fontSize: 16, color: 'white' }} />
                     <Typography
@@ -326,7 +326,7 @@ export const SmartHeader: React.FC<SmartHeaderProps> = ({
                     </Typography>
                   </Box>
                 )}
-                {ayniBalance < 0.6 && (
+                {reciprocidadBalance < 0.6 && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <PsychologyIcon sx={{ fontSize: 16, color: 'white' }} />
                     <Typography

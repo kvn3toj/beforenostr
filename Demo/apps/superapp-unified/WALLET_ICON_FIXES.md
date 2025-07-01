@@ -49,7 +49,7 @@
 
 ### Wallet Overview
 
-- `Nature` (para Ayni/reciprocidad)
+- `Nature` (para Reciprocidad/reciprocidad)
 - `Lightbulb` (para Öndas/energía vibracional)
 - `Star` (para Mëritos)
 - `AttachMoney` (para balance COP)
@@ -66,7 +66,7 @@
 ### Transaction History
 
 - `TrendingUp/TrendingDown` (ingresos/gastos)
-- `Nature` (transacciones Ayni)
+- `Nature` (transacciones Reciprocidad)
 - `CheckCircle/Error/Warning` (estados)
 - `Download` (exportar historial)
 

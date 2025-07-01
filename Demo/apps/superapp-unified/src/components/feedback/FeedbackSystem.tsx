@@ -12,7 +12,7 @@ import FeedbackButton from '../common/FeedbackButton';
  * - Botón flotante (visible cuando el modo está activo)
  * - Modal de recopilación de feedback
  *
- * Siguiendo los principios de Ayni y contribuyendo al Bien Común.
+ * Siguiendo los principios de Reciprocidad y contribuyendo al Bien Común.
  */
 const FeedbackSystem: React.FC = () => {
   const {

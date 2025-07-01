@@ -18,6 +18,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Badge from '@mui/material/Badge';
 import { useTheme, alpha } from '@mui/material';
 
+// 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
+import { RevolutionaryWidget } from '../../design-system';
+
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -36,7 +39,7 @@ import StarIcon from '@mui/icons-material/Star';
 interface IntelligentNotification {
   id: string;
   type:
-    | 'ayni'
+    | 'reciprocidad'
     | 'meritos'
     | 'social'
     | 'marketplace'
@@ -85,8 +88,8 @@ interface IntelligentNotificationCenterProps {
 
 // 🎯 Configuración de tipos de notificación
 const notificationConfig = {
-  ayni: {
-    label: 'Ayni',
+  reciprocidad: {
+    label: 'Reciprocidad',
     color: 'success' as const,
     description: 'Reciprocidad y balance',
   },
@@ -443,44 +446,53 @@ export const IntelligentNotificationCenter: React.FC<
 
   return (
     <Box className={className}>
-      <Card
-        elevation={3}
-        sx={{
+      <RevolutionaryWidget
+        title="🔔 Centro de Notificaciones Inteligente"
+        subtitle={`${filteredNotifications.length} de ${notifications.length} notificaciones`}
+        variant="elevated"
+        element="aire"
+        cosmicIntensity="medium"
+        cosmicEffects={{
+          enableGlow: true,
+          enableAnimations: true,
+          enableParticles: true,
+          glowIntensity: 1.0,
+          particleConfig: {
+            count: 4,
+            size: 3,
+            color: '#64B5F6',
+            speed: 1.5,
+            opacity: 0.6,
+            blur: true
+          }
+        }}
+        interactionMode="hover"
+        style={{
           maxWidth: 600,
           maxHeight: 600,
-          overflow: 'hidden',
-          background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.default, 0.98)} 100%)`,
-          backdropFilter: 'blur(10px)',
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+          overflow: 'hidden'
         }}
+        onRefresh={() => console.log('🔄 Refreshing notifications...')}
+        onExpand={() => console.log('🔍 Expanding notifications...')}
       >
-        {/* Header */}
-        <Box
-          sx={{
-            p: 2,
-            bgcolor: alpha(theme.palette.primary.main, 0.08),
-            borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-          }}
-        >
+        {/* Header con controles avanzados */}
+        <Box sx={{ mb: 2 }}>
           <Stack
             direction="row"
             alignItems="center"
             justifyContent="space-between"
+            sx={{ mb: 2 }}
           >
             <Stack direction="row" alignItems="center" spacing={2}>
               <Badge
                 badgeContent={notificationStats?.unread || 0}
                 color="error"
               >
-                <NotificationsActiveIcon color="primary" />
+                <NotificationsActiveIcon sx={{ color: '#64B5F6', fontSize: 28 }} />
               </Badge>
               <Box>
-                <Typography variant="h6" fontWeight="bold">
-                  Centro de Notificaciones
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {filteredNotifications.length} de {notifications.length}{' '}
-                  notificaciones
+                <Typography variant="caption" sx={{ color: alpha('#fff', 0.8) }}>
+                  Sistema de notificaciones con IA
                 </Typography>
               </Box>
             </Stack>
@@ -492,9 +504,12 @@ export const IntelligentNotificationCenter: React.FC<
                   onClick={() => setShowAiInsights(!showAiInsights)}
                   sx={{
                     bgcolor: showAiInsights
-                      ? alpha(theme.palette.info.main, 0.1)
+                      ? alpha('#64B5F6', 0.2)
                       : 'transparent',
-                    color: showAiInsights ? 'info.main' : 'text.secondary',
+                    color: showAiInsights ? '#64B5F6' : alpha('#fff', 0.7),
+                    '&:hover': {
+                      bgcolor: alpha('#64B5F6', 0.1)
+                    }
                   }}
                 >
                   <SmartToyIcon />
@@ -503,7 +518,14 @@ export const IntelligentNotificationCenter: React.FC<
 
               {onMarkAllAsRead && (
                 <Tooltip title="Marcar todas como leídas">
-                  <IconButton size="small" onClick={onMarkAllAsRead}>
+                  <IconButton
+                    size="small"
+                    onClick={onMarkAllAsRead}
+                    sx={{
+                      color: alpha('#fff', 0.7),
+                      '&:hover': { color: '#4CAF50' }
+                    }}
+                  >
                     <MarkEmailReadIcon />
                   </IconButton>
                 </Tooltip>
@@ -511,28 +533,59 @@ export const IntelligentNotificationCenter: React.FC<
 
               {onClearAll && (
                 <Tooltip title="Limpiar todas">
-                  <IconButton size="small" onClick={onClearAll}>
+                  <IconButton
+                    size="small"
+                    onClick={onClearAll}
+                    sx={{
+                      color: alpha('#fff', 0.7),
+                      '&:hover': { color: '#F44336' }
+                    }}
+                  >
                     <DeleteSweepIcon />
                   </IconButton>
                 </Tooltip>
               )}
 
               {onClose && (
-                <IconButton size="small" onClick={onClose}>
+                <IconButton
+                  size="small"
+                  onClick={onClose}
+                  sx={{
+                    color: alpha('#fff', 0.7),
+                    '&:hover': { color: '#FF9800' }
+                  }}
+                >
                   <CloseIcon />
                 </IconButton>
               )}
             </Stack>
           </Stack>
 
-          {/* Filters */}
-          <Box sx={{ mt: 2 }}>
+          {/* Filtros cósmicos */}
+          <Box>
             <ToggleButtonGroup
               value={currentFilter}
               exclusive
               onChange={handleFilterChange}
               size="small"
-              sx={{ '& .MuiToggleButton-root': { px: 2, py: 0.5 } }}
+              sx={{
+                '& .MuiToggleButton-root': {
+                  px: 2,
+                  py: 0.5,
+                  color: alpha('#fff', 0.7),
+                  border: `1px solid ${alpha('#64B5F6', 0.3)}`,
+                  '&.Mui-selected': {
+                    backgroundColor: alpha('#64B5F6', 0.2),
+                    color: '#64B5F6',
+                    '&:hover': {
+                      backgroundColor: alpha('#64B5F6', 0.3),
+                    }
+                  },
+                  '&:hover': {
+                    backgroundColor: alpha('#64B5F6', 0.1),
+                  }
+                }
+              }}
             >
               <ToggleButton value="all">
                 Todas ({notifications.length})
@@ -548,34 +601,36 @@ export const IntelligentNotificationCenter: React.FC<
           </Box>
         </Box>
 
-        {/* Notifications List */}
+        {/* Lista de notificaciones con scroll cósmico */}
         <Box
           sx={{
-            p: 2,
             maxHeight: 400,
             overflow: 'auto',
             '&::-webkit-scrollbar': {
               width: 8,
             },
             '&::-webkit-scrollbar-track': {
-              bgcolor: alpha(theme.palette.grey[300], 0.3),
+              bgcolor: alpha('#fff', 0.1),
               borderRadius: 4,
             },
             '&::-webkit-scrollbar-thumb': {
-              bgcolor: alpha(theme.palette.primary.main, 0.5),
+              bgcolor: alpha('#64B5F6', 0.5),
               borderRadius: 4,
+              '&:hover': {
+                bgcolor: alpha('#64B5F6', 0.7),
+              }
             },
           }}
         >
           {filteredNotifications.length === 0 ? (
             <Box sx={{ textAlign: 'center', py: 4 }}>
               <NotificationsIcon
-                sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }}
+                sx={{ fontSize: 48, color: alpha('#fff', 0.3), mb: 2 }}
               />
-              <Typography variant="body1" color="text.secondary">
+              <Typography variant="body1" sx={{ color: alpha('#fff', 0.7) }}>
                 No hay notificaciones para mostrar
               </Typography>
-              <Typography variant="caption" color="text.disabled">
+              <Typography variant="caption" sx={{ color: alpha('#fff', 0.5) }}>
                 Cambia el filtro para ver más notificaciones
               </Typography>
             </Box>
@@ -594,13 +649,13 @@ export const IntelligentNotificationCenter: React.FC<
           )}
         </Box>
 
-        {/* Footer con estadísticas */}
+        {/* Footer con estadísticas cósmicas */}
         {notificationStats && (
           <Box
             sx={{
-              p: 1.5,
-              bgcolor: alpha(theme.palette.background.default, 0.5),
-              borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+              mt: 2,
+              pt: 2,
+              borderTop: `1px solid ${alpha('#fff', 0.1)}`,
             }}
           >
             <Stack direction="row" spacing={2} justifyContent="center">
@@ -608,19 +663,26 @@ export const IntelligentNotificationCenter: React.FC<
                 icon={<StarIcon />}
                 label={`Engagement: ${Math.round(notificationStats.avgEngagement || 0)}%`}
                 size="small"
-                variant="outlined"
+                sx={{
+                  bgcolor: alpha('#FFD54F', 0.2),
+                  color: '#FFD54F',
+                  border: `1px solid ${alpha('#FFD54F', 0.3)}`,
+                }}
               />
               <Chip
                 icon={<TrendingUpIcon />}
                 label={`${notificationStats.high} alta prioridad`}
                 size="small"
-                color="warning"
-                variant="outlined"
+                sx={{
+                  bgcolor: alpha('#FF9800', 0.2),
+                  color: '#FF9800',
+                  border: `1px solid ${alpha('#FF9800', 0.3)}`,
+                }}
               />
             </Stack>
           </Box>
         )}
-      </Card>
+      </RevolutionaryWidget>
     </Box>
   );
 };

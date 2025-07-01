@@ -23,7 +23,7 @@
 ### ✅ Funcionalidades Verificadas
 - [x] **Stepper UI** con navegación entre pasos
 - [x] **Validación de formularios** con mensajes específicos
-- [x] **Quiz filosófico** (Ayni, Bien Común, Cooperación)
+- [x] **Quiz filosófico** (Reciprocidad, Bien Común, Cooperación)
 - [x] **Toast notifications** (Sonner) para feedback
 - [x] **Responsive design** y accesibilidad
 - [x] **Estados de loading** durante validaciones
@@ -136,7 +136,7 @@ export const invitationAPI = {
 - **Redirección automática** al login post-registro
 
 ### 🎯 Filosofía CoomÜnity Integrada
-- **Ayni (Reciprocidad):** Pregunta específica en quiz
+- **Reciprocidad (Reciprocidad):** Pregunta específica en quiz
 - **Bien Común:** Evaluación de prioridades colectivas
 - **Cooperación:** Visión sobre colaboración
 - **Términos y condiciones:** Aceptación explícita de filosofía

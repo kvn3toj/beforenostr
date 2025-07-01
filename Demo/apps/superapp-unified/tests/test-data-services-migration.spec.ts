@@ -85,7 +85,7 @@ test.describe('🔄 Migración de Servicios de Datos Core - Fase 2.3', () => {
     await page.waitForLoadState('networkidle');
 
     // Buscar elementos relacionados con méritos
-    const meritElements = page.locator('text=/mérito|merit|🏆|colabora|ayni|bien común/i', { timeout: 10000 });
+    const meritElements = page.locator('text=/mérito|merit|🏆|colabora|reciprocidad|bien común/i', { timeout: 10000 });
     
     if (await meritElements.count() > 0) {
       console.log('🏅 Elementos de méritos encontrados');

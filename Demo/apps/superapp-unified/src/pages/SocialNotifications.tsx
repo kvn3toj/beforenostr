@@ -65,12 +65,12 @@ import { useAuth } from '../contexts/AuthContext';
 
 interface NotificationItem {
   id: string;
-  type: 'ayni_completed' | 'circle_invitation' | 'connection_request' | 'message' | 'achievement' | 'event' | 'system';
+  type: 'reciprocidad_completed' | 'circle_invitation' | 'connection_request' | 'message' | 'achievement' | 'event' | 'system';
   title: string;
   message: string;
   time: string;
   priority: 'high' | 'medium' | 'low';
-  category: 'ayni' | 'collaboration' | 'network' | 'system';
+  category: 'reciprocidad' | 'collaboration' | 'network' | 'system';
   isRead: boolean;
   avatar?: string;
   actionUrl?: string;
@@ -102,15 +102,15 @@ const SocialNotifications: React.FC = () => {
   const mockNotifications: NotificationItem[] = [
     {
       id: '1',
-      type: 'ayni_completed',
-      title: 'Intercambio Ayni Completado',
+      type: 'reciprocidad_completed',
+      title: 'Intercambio Reciprocidad Completado',
       message: 'Tu intercambio de conocimiento con Ana María ha sido equilibrado. ¡Has ganado 15 Öndas!',
       time: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
       priority: 'high',
-      category: 'ayni',
+      category: 'reciprocidad',
       isRead: false,
       avatar: '/images/user-ana.jpg',
-      actionUrl: '/social/ayni/exchange/123',
+      actionUrl: '/social/reciprocidad/exchange/123',
     },
     {
       id: '2',
@@ -186,7 +186,7 @@ const SocialNotifications: React.FC = () => {
 
   const tabs = [
     { label: 'Todas', value: 'all', icon: <Notifications /> },
-    { label: 'Ayni', value: 'ayni', icon: <Handshake /> },
+    { label: 'Reciprocidad', value: 'reciprocidad', icon: <Handshake /> },
     { label: 'Círculos', value: 'collaboration', icon: <Group /> },
     { label: 'Conexiones', value: 'network', icon: <PersonAdd /> },
     { label: 'Sistema', value: 'system', icon: <Settings /> },
@@ -235,7 +235,7 @@ const SocialNotifications: React.FC = () => {
     };
 
     switch (type) {
-      case 'ayni_completed':
+      case 'reciprocidad_completed':
         return <Handshake {...iconProps} />;
       case 'circle_invitation':
         return <Group {...iconProps} />;

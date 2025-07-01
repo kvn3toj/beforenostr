@@ -32,7 +32,7 @@ export const TypographySection: React.FC = () => {
     {
       variant: 'h2',
       name: 'H2 - Título Secundario',
-      text: 'El poder de la reciprocidad y el Ayni',
+      text: 'El poder de la reciprocidad y el Reciprocidad',
     },
     {
       variant: 'h3',

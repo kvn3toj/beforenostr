@@ -32,7 +32,7 @@ Configuración completa de las nuevas herramientas Cursor v1.0 para maximizar el
 ### **2. 🧠 Memories System** ✅ DOCUMENTADO
 
 #### **Contexto CoomÜnity Definido**
-- **Filosofía**: Ayni, Bien Común, Economía Colaborativa
+- **Filosofía**: Reciprocidad, Bien Común, Economía Colaborativa
 - **Arquitectura**: Backend NestJS (3002), Admin (3000), SuperApp (3001)
 - **Módulos**: Marketplace (GMP), ÜPlay (GPL), Social, UStats
 - **Patrones**: React + TypeScript + MUI + Tailwind
@@ -55,7 +55,7 @@ Configuración completa de las nuevas herramientas Cursor v1.0 para maximizar el
 
 #### **Análisis Beta Program**
 - **Notebook**: `analytics/coomunity_beta_analysis.ipynb`
-- **Métricas**: Potencial Ayni, distribución geográfica, predicciones
+- **Métricas**: Potencial Reciprocidad, distribución geográfica, predicciones
 - **Insights**: 35 candidatos beta analizados con IA
 - **Exportación**: Datos enriquecidos para la SuperApp
 
@@ -93,7 +93,7 @@ Configuración completa de las nuevas herramientas Cursor v1.0 para maximizar el
 
 ## **📊 MÉTRICAS DE ADOPCIÓN BETA**
 
-| **Región** | **Candidatos** | **Potencial Ayni** | **Idioma Principal** |
+| **Región** | **Candidatos** | **Potencial Reciprocidad** | **Idioma Principal** |
 |------------|----------------|---------------------|----------------------|
 | LATAM | 15 | 72.3/100 | ES/PT |
 | Europa | 8 | 68.1/100 | EN/FR/DE |

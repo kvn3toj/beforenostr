@@ -88,7 +88,7 @@ body {
 }
 
 /* Porcentaje principal */
-.ayni-metrics-card .MuiTypography-h1,
+.reciprocidad-metrics-card .MuiTypography-h1,
 .percentage-display,
 [data-testid*='percentage'] {
   color: var(--guardian-text-primary) !important;
@@ -226,8 +226,8 @@ body {
 }
 
 /* ===== 🌈 MÉTRICAS ESPECÍFICAS COOMUNITY ===== */
-.metric-ayni,
-[data-metric='ayni'] {
+.metric-reciprocidad,
+[data-metric='reciprocidad'] {
   color: var(--guardian-accent-dark) !important;
   font-weight: 700 !important;
 }
@@ -275,7 +275,7 @@ body {
     font-size: 2rem !important;
   }
 
-  .ayni-metrics-card .MuiTypography-h1 {
+  .reciprocidad-metrics-card .MuiTypography-h1 {
     font-size: 4rem !important;
   }
 }
@@ -285,7 +285,7 @@ body {
     font-size: 1.5rem !important;
   }
 
-  .ayni-metrics-card .MuiTypography-h1 {
+  .reciprocidad-metrics-card .MuiTypography-h1 {
     font-size: 3rem !important;
   }
 }

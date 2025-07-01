@@ -483,9 +483,9 @@ test.describe('🌌 ÜPlay Cosmic Transformation - SAGE Guardian Quality Assuran
   });
 
   test('🧘 CoomÜnity Philosophy Alignment', async ({ page }) => {
-    // Test 1: Ayni (Reciprocity) Implementation
-    const ayniElements = await page.locator('[data-testid*="ayni"], [aria-label*="reciprocity"]').count();
-    expect(ayniElements).toBeGreaterThan(0);
+    // Test 1: Reciprocidad (Reciprocity) Implementation
+    const reciprocidadElements = await page.locator('[data-testid*="reciprocidad"], [aria-label*="reciprocity"]').count();
+    expect(reciprocidadElements).toBeGreaterThan(0);
 
     // Test 2: Bien Común (Common Good) Features
     const bienComunElements = await page.locator('[data-testid*="bien-comun"], [aria-label*="common-good"]').count();

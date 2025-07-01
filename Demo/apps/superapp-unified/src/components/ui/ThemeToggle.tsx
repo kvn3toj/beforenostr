@@ -353,7 +353,7 @@ export const ThemeControlPanel: React.FC = () => {
                     isDark ? 'text-gray-300' : 'text-gray-600'
                   )}
                 >
-                  Economía Colaborativa • Ayni • Bien Común
+                  Economía Colaborativa • Reciprocidad • Bien Común
                 </Typography>
               </Box>
             </Box>
@@ -378,7 +378,7 @@ export const ThemeControlPanel: React.FC = () => {
                 )}
               />
               <Chip
-                label="Ayni"
+                label="Reciprocidad"
                 size="small"
                 className={cn(
                   isDark 

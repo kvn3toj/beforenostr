@@ -66,7 +66,7 @@ const CONSCIOUS_NAV_ITEMS = [
 const useConsciousBadges = () => {
   // Esto eventualmente conectará con el backend para obtener:
   // - Métritos ganados recientes
-  // - Notificaciones de Ayni
+  // - Notificaciones de Reciprocidad
   // - Mensajes comunitarios
   // - Updates de ÜPlay
   // - Intercambios pendientes

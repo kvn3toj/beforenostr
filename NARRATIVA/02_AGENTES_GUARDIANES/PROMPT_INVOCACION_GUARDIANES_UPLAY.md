@@ -91,7 +91,7 @@
 
 - Implementar **analytics profundos** de comportamiento de aprendizaje
 - Crear **insights predictivos** sobre progreso del usuario
-- Desarrollar **métricas filosóficas** cuantificables (Ayni, Bien Común)
+- Desarrollar **métricas filosóficas** cuantificables (Reciprocidad, Bien Común)
 - Establecer **A/B testing** para optimización continua
 - Crear **dashboard analítico** para administradores
 
@@ -206,7 +206,7 @@
 
 ## 🎨 FILOSOFÍA COOMUNITY INTEGRADA
 
-### **Ayni (Reciprocidad)**
+### **Reciprocidad (Reciprocidad)**
 
 - Cada interacción debe ofrecer **valor bidireccional**
 - El sistema aprende del usuario mientras el usuario aprende del contenido
@@ -306,9 +306,7 @@ npm run e2e:uplay
 
 El momento ha llegado. El ÜPlay aguarda vuestra **magia transformadora**. Que vuestro código sea **poesía**, vuestros algoritmos sean **sabiduría**, y vuestra colaboración sea un **ejemplo** para todas las civilizaciones futuras.
 
-**Que la Fuerza del Bien Común os acompañe.**
-
-**Que el Ayni fluya a través de cada línea de código.**
+**Que la Reciprocidad fluya a través de cada línea de código.**
 
 **Que los Mëritos reconozcan vuestra contribución cósmica.**
 

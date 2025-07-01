@@ -47,7 +47,7 @@ Phase 2 successfully implemented advanced component-level enhancements for the C
 - **Loading Integration**: Skeleton loading states during data fetch
 - **Improved Accessibility**: Better focus management and screen reader support
 
-#### **AyniMetricsCard**
+#### **ReciprocidadMetricsCard**
 - **Enhanced Element Icons**: Advanced tooltips with keywords and descriptions
 - **Refresh Functionality**: Interactive refresh button with loading states
 - **Animated Metrics**: Staggered animations for metric display
@@ -105,7 +105,7 @@ src/
 ├── components/
 │   └── home/
 │       ├── ModuleCards.tsx (Enhanced)
-│       └── AyniMetricsCard.tsx (Enhanced)
+│       └── ReciprocidadMetricsCard.tsx (Enhanced)
 └── e2e/
     └── home-phase2-enhancements.spec.ts (NEW)
 ```

@@ -460,7 +460,7 @@ export class AnalyticsService {
           },
           {
             id: '2',
-            title: 'Principios de Ayni',
+            title: 'Principios de Reciprocidad',
             views: 1800,
             duration: 240,
           },
@@ -532,11 +532,11 @@ export class AnalyticsService {
 
       const totalContent = totalPlaylists + totalMundos + totalContentItems;
 
-      // Métricas de Ayni (simuladas por ahora)
-      const ayniMetrics = {
+      // Métricas de Reciprocidad (simuladas por ahora)
+      const reciprocidadMetrics = {
         totalLukas: Math.floor(Math.random() * 10000) + 5000,
         totalOndas: Math.floor(Math.random() * 50000) + 25000,
-        ayniBalance: {
+        reciprocidadBalance: {
           given: Math.floor(Math.random() * 1000) + 500,
           received: Math.floor(Math.random() * 1000) + 500,
         },
@@ -567,7 +567,7 @@ export class AnalyticsService {
           recentEvents: recentEngagement.length,
         },
         recentActivity: recentActivity.slice(0, 5), // Últimas 5 actividades
-        ayniMetrics,
+        reciprocidadMetrics,
         summary: {
           userGrowth: Math.floor(Math.random() * 20) + 5, // % crecimiento simulado
           engagementRate: Math.random() * 30 + 70, // % entre 70-100
@@ -587,10 +587,10 @@ export class AnalyticsService {
         breakdown: { playlists: 0, mundos: 0, contentItems: 0 },
         engagement: { totalEvents: 0, recentEvents: 0 },
         recentActivity: [],
-        ayniMetrics: {
+        reciprocidadMetrics: {
           totalLukas: 0,
           totalOndas: 0,
-          ayniBalance: { given: 0, received: 0 },
+          reciprocidadBalance: { given: 0, received: 0 },
           trustLevel: 0,
         },
         summary: {

@@ -21,7 +21,7 @@ const friendlyPalette = {
     900: '#312e81',
   },
 
-  // Verdes para balance Ayni
+  // Verdes para balance Reciprocidad
   secondary: {
     50: '#f0fdf4',
     100: '#dcfce7',

@@ -16,6 +16,9 @@ import Divider from '@mui/material/Divider';
 import Badge from '@mui/material/Badge';
 import { useTheme, alpha } from '@mui/material';
 
+// 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
+import { RevolutionaryWidget, REVOLUTIONARY_PRESETS } from '../../design-system';
+
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import TimerIcon from '@mui/icons-material/Timer';
@@ -101,7 +104,7 @@ export const ActiveChallengesWidget: React.FC<ActiveChallengesWidgetProps> = ({
         id: 'challenge-2',
         title: 'Intercambio Comunitario',
         description:
-          'Participa en 10 intercambios Ayni con diferentes miembros',
+          'Participa en 10 intercambios Reciprocidad con diferentes miembros',
         category: 'community',
         difficulty: 'easy',
         type: 'daily',
@@ -588,69 +591,32 @@ export const ActiveChallengesWidget: React.FC<ActiveChallengesWidgetProps> = ({
   };
 
   return (
-    <Card
-      className={`glassmorphism-card interactive-card-advanced active-challenges-widget ${className}`}
-      sx={{
-        background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)} 0%, ${alpha(theme.palette.background.paper, 0.8)} 100%)`,
-        border: `1px solid ${alpha('#fff', 0.1)}`,
-        borderRadius: 3,
-        overflow: 'hidden',
-        position: 'relative',
-        transition: 'all 0.4s ease-in-out',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: `0 8px 32px ${alpha(theme.palette.warning.main, 0.3)}`,
-        },
+    <RevolutionaryWidget
+      title="🏆 Retos Activos"
+      subtitle={`${challengeStats.active} activos • ${challengeStats.available} disponibles`}
+      variant="elevated"
+      element="fuego"
+      cosmicIntensity="medium"
+      cosmicEffects={{
+        enableGlow: true,
+        enableAnimations: true,
+        enableParticles: true,
+        glowIntensity: 1.2,
+        particleConfig: {
+          count: 5,
+          size: 3,
+          color: '#FFD54F',
+          speed: 0.8,
+          opacity: 0.7,
+          blur: true
+        }
       }}
+      interactionMode="hover"
+      className={`active-challenges-widget ${className}`}
+      style={{ minHeight: '400px' }}
+      onRefresh={() => console.log('🔄 Refreshing challenges...')}
+      onExpand={() => setExpanded(!expanded)}
     >
-      <CardContent sx={{ p: 3 }}>
-        {/* Header */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mb: 3,
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: 2,
-                background: 'linear-gradient(135deg, #FFD54F 0%, #FF8A65 100%)',
-                color: 'white',
-                animation: 'pulse 2s ease-in-out infinite',
-              }}
-            >
-              <EmojiEventsIcon />
-            </Box>
-            <Box>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 'bold', color: 'white' }}
-              >
-                Retos Activos
-              </Typography>
-              <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
-                {challengeStats.active} activos • {challengeStats.available}{' '}
-                disponibles
-              </Typography>
-            </Box>
-          </Box>
-
-          <IconButton
-            onClick={handleExpandToggle}
-            sx={{
-              color: theme.palette.warning.main,
-              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.3s ease',
-            }}
-          >
-            <ExpandMoreIcon />
-          </IconButton>
-        </Box>
-
         {/* Estadísticas rápidas */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {[
@@ -713,8 +679,7 @@ export const ActiveChallengesWidget: React.FC<ActiveChallengesWidgetProps> = ({
             </Grid>
           </Box>
         )}
-      </CardContent>
-    </Card>
+    </RevolutionaryWidget>
   );
 };
 

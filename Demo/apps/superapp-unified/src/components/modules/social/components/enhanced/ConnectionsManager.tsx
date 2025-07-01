@@ -45,7 +45,7 @@ interface Connection {
   name: string;
   level: string;
   trustScore: number;
-  ayniBalance: number;
+  reciprocidadBalance: number;
   lastInteraction: string;
   isOnline: boolean;
   connectionType: 'collaborator' | 'mentor' | 'mentee' | 'peer';
@@ -54,13 +54,10 @@ interface Connection {
   recentActivity: string;
 }
 
-interface UserStats {
-  ayniBalance: number;
-  socialLevel: string;
-  connectionsCount: number;
-  collaborationsCount: number;
-  trustScore: number;
-}
+import { UserStatsReciprocidad } from '@/types/reciprocidad.types';
+
+// Usar el tipo consolidado - alias temporal para compatibilidad
+type UserStats = UserStatsReciprocidad;
 
 interface ConnectionsManagerProps {
   connections: any[]; // Datos del backend
@@ -77,7 +74,7 @@ const mockConnections: Connection[] = [
     name: 'Ana María Rodríguez',
     level: 'Guardiana de Sabiduría',
     trustScore: 4.9,
-    ayniBalance: 0.95,
+    reciprocidadBalance: 0.95,
     lastInteraction: '2h',
     isOnline: true,
     connectionType: 'mentor',
@@ -90,7 +87,7 @@ const mockConnections: Connection[] = [
     name: 'Carlos Mendoza',
     level: 'Tejedor de Redes',
     trustScore: 4.7,
-    ayniBalance: 0.82,
+    reciprocidadBalance: 0.82,
     lastInteraction: '1d',
     isOnline: false,
     connectionType: 'collaborator',
@@ -103,7 +100,7 @@ const mockConnections: Connection[] = [
     name: 'Luz Elena Castro',
     level: 'Colaboradora Equilibrada',
     trustScore: 4.8,
-    ayniBalance: 0.88,
+    reciprocidadBalance: 0.88,
     lastInteraction: '3h',
     isOnline: true,
     connectionType: 'peer',
@@ -150,7 +147,7 @@ const ConnectionCard: React.FC<{
     }
   };
 
-  const getAyniBalanceColor = (balance: number) => {
+  const getReciprocidadBalanceColor = (balance: number) => {
     if (balance >= 0.8) return 'success';
     if (balance >= 0.6) return 'warning';
     return 'error';
@@ -265,9 +262,9 @@ const ConnectionCard: React.FC<{
             />
             <Chip
               icon={<Handshake sx={{ fontSize: 14 }} />}
-              label={`${Math.round(connection.ayniBalance * 100)}%`}
+              label={`${Math.round(connection.reciprocidadBalance * 100)}%`}
               size="small"
-              color={getAyniBalanceColor(connection.ayniBalance)}
+              color={getReciprocidadBalanceColor(connection.reciprocidadBalance)}
               variant="outlined"
             />
           </Stack>
@@ -376,7 +373,7 @@ export const ConnectionsManager: React.FC<ConnectionsManagerProps> = ({
       >
         <CardContent>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
-            🤝 Mis Conexiones Ayni
+            🤝 Mis Conexiones Reciprocidad
           </Typography>
           <Stack spacing={2}>
             <Stack direction="row" spacing={2}>
@@ -390,10 +387,10 @@ export const ConnectionsManager: React.FC<ConnectionsManagerProps> = ({
               </Box>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h5" fontWeight="bold" color="success.main">
-                  {Math.round(userStats.ayniBalance * 100)}%
+                  {Math.round(userStats.reciprocidadBalance * 100)}%
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  Balance Ayni
+                  Balance Reciprocidad
                 </Typography>
               </Box>
               <Box sx={{ textAlign: 'center' }}>
@@ -408,7 +405,7 @@ export const ConnectionsManager: React.FC<ConnectionsManagerProps> = ({
 
             <LinearProgress
               variant="determinate"
-              value={userStats.ayniBalance * 100}
+              value={userStats.reciprocidadBalance * 100}
               sx={{
                 height: 8,
                 borderRadius: 4,
@@ -568,7 +565,7 @@ export const ConnectionsManager: React.FC<ConnectionsManagerProps> = ({
         </MenuItem>
         <MenuItem onClick={handleMenuClose}>
           <Handshake sx={{ mr: 1 }} />
-          Proponer intercambio Ayni
+          Proponer intercambio Reciprocidad
         </MenuItem>
         <MenuItem onClick={handleMenuClose}>
           <Favorite sx={{ mr: 1 }} />

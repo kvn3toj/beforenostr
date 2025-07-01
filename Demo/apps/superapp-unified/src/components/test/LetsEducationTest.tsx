@@ -163,10 +163,10 @@ export const LetsEducationTest: React.FC = () => {
 
           <Box sx={{ mb: 2 }}>
             <Typography variant="body2">
-              <strong>¿Mostrar tooltip para "ayni"?:</strong> 
+              <strong>¿Mostrar tooltip para "reciprocidad"?:</strong> 
               <Chip 
-                label={shouldShowTooltip('ayni') ? 'Sí' : 'No'} 
-                color={shouldShowTooltip('ayni') ? 'warning' : 'success'}
+                label={shouldShowTooltip('reciprocidad') ? 'Sí' : 'No'} 
+                color={shouldShowTooltip('reciprocidad') ? 'warning' : 'success'}
                 size="small" 
                 sx={{ ml: 1 }}
               />
@@ -226,9 +226,9 @@ export const LetsEducationTest: React.FC = () => {
             <Button 
               variant="outlined" 
               size="small"
-              onClick={() => markConceptAsUnderstood('ayni')}
+              onClick={() => markConceptAsUnderstood('reciprocidad')}
             >
-              Entender: Ayni
+              Entender: Reciprocidad
             </Button>
             
             <Button 

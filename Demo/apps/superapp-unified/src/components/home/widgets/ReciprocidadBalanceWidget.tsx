@@ -17,7 +17,7 @@ import {
   Star,
 } from '@mui/icons-material';
 
-import { useAyniMetrics } from '../../../hooks/home/useAyniMetrics';
+import { useReciprocidadMetrics } from '@/hooks/home';
 
 // Un componente de tarjeta de métrica reutilizable
 const MetricItem: React.FC<{ icon: React.ReactNode; label: string; value: string | number; color: string }> = ({ icon, label, value, color }) => {
@@ -49,8 +49,8 @@ const MetricItem: React.FC<{ icon: React.ReactNode; label: string; value: string
   );
 };
 
-export const AyniBalanceWidget: React.FC = () => {
-  const { data: metrics, isLoading, error } = useAyniMetrics();
+export const ReciprocidadBalanceWidget: React.FC = () => {
+  const { data: metrics, isLoading, error } = useReciprocidadMetrics();
   const theme = useTheme();
 
   if (isLoading) {
@@ -64,46 +64,46 @@ export const AyniBalanceWidget: React.FC = () => {
   if (error || !metrics) {
     return (
       <Alert severity="warning">
-        No se pudieron cargar las métricas de Ayni.
+        No se pudieron cargar las métricas de Reciprocidad.
       </Alert>
     );
   }
 
-  const ayniMetrics = [
+  const reciprocidadMetrics = [
     {
       icon: <Balance sx={{ fontSize: 24 }} />,
-      label: 'Balance Ayni',
-      value: `${(metrics.balanceAyni * 100).toFixed(0)}%`,
+      label: 'Balance de Reciprocidad',
+      value: `${(metrics.metricas.balance * 100).toFixed(0)}%`,
       color: theme.palette.primary.main,
     },
     {
       icon: <Favorite sx={{ fontSize: 24 }} />,
       label: 'Puntaje Reciprocidad',
-      value: metrics.reciprocityScore.toFixed(1),
+      value: metrics.metricas.puntuacion.toFixed(1),
       color: theme.palette.success.main,
     },
     {
       icon: <VolunteerActivism sx={{ fontSize: 24 }} />,
       label: 'Aportes al Bien Común',
-      value: metrics.bienComunContributions,
+      value: metrics.metricas.contribucionesBienComun,
       color: theme.palette.error.main,
     },
     {
       icon: <TrendingUp sx={{ fontSize: 24 }} />,
       label: 'Crecimiento Semanal',
-      value: `${metrics.weeklyGrowth}%`,
+      value: `${metrics.metricas.crecimientoSemanal}%`,
       color: theme.palette.info.main,
     },
     {
       icon: <SwapHoriz sx={{ fontSize: 24 }} />,
       label: 'Transacciones',
-      value: metrics.totalTransactions,
+      value: metrics.metricas.transaccionesTotales,
       color: theme.palette.warning.main,
     },
      {
       icon: <Star sx={{ fontSize: 24 }} />,
       label: 'Méritos Obtenidos',
-      value: metrics.meritos,
+      value: metrics.metricas.meritos,
       color: theme.palette.secondary.main,
     },
   ];
@@ -111,10 +111,10 @@ export const AyniBalanceWidget: React.FC = () => {
   return (
     <Box>
        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        Balance Ayni
+        Balance de Reciprocidad
       </Typography>
       <Grid container spacing={{ xs: 2, md: 3 }} >
-        {ayniMetrics.map((item) => (
+        {reciprocidadMetrics.map((item) => (
           <Grid item xs={12} sm={6} md={4} key={item.label}>
             <MetricItem {...item} />
           </Grid>

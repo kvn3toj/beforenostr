@@ -173,15 +173,15 @@ export interface RevolutionaryWidgetProps extends RevolutionaryTemplateProps {
   onMinimize?: () => void;
 }
 
-// 📈 MÉTRICAS AYNI
-export interface AyniMetrics {
+// 📈 MÉTRICAS DE RECIPROCIDAD
+export interface ReciprocidadMetrics {
   ondas: number;
   meritos: number;
-  ayniLevel: string;
-  nextLevel: string;
-  ayniProgress: number;
-  bienComunContributions: number;
-  balanceAyni: number;
+  nivel: string;
+  siguienteNivel: string;
+  progreso: number;
+  contribucionesBienComun: number;
+  balance: number;
 }
 
 // 🌟 ESTADÍSTICAS ELEMENTALES

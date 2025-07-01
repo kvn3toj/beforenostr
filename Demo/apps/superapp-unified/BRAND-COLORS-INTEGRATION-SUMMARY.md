@@ -132,7 +132,7 @@ export const COOMUNITY_THEME_PALETTES = {
 - ✅ **5 Variantes:** primary, secondary, element, consciousness, ghost
 - ✅ **Animaciones Conscientes:** Motion components con spring physics
 - ✅ **Estados Interactivos:** hover, active, disabled con transiciones suaves
-- ✅ **Efectos Especiales:** Glowing effect, ayni animations
+- ✅ **Efectos Especiales:** Glowing effect, reciprocidad animations
 - ✅ **Colores Oficiales:** 100% basado en paleta de marca
 
 **Variantes Disponibles:**
@@ -196,7 +196,7 @@ export const BRAND_GRADIENTS = {
   secondary: 'linear-gradient(135deg, #005CA9 0%, #142C46 100%)',
   elements: 'linear-gradient(90deg, #D6075C 0%, #005CA9 100%)',
   consciousness: 'linear-gradient(45deg, #5C2483 0%, #FBBA00 100%)',
-  ayni: 'linear-gradient(135deg, #3E8638 0%, #FBBA00 100%)',
+  reciprocidad: 'linear-gradient(135deg, #3E8638 0%, #FBBA00 100%)',
 };
 ```
 
